@@ -56,8 +56,16 @@ vi.mock('uniswap/src/features/telemetry/send', () => ({
 vi.mock('uniswap/src/features/earn/EarnVaultChip', () => ({
   EARN_VAULT_CHIP_FRAME_PROPS: {},
   EARN_VAULT_CHIP_MAX_WIDTH: 320,
-  EarnVaultChip: (): JSX.Element => <div />,
+  EarnVaultChip: ({ layout = 'horizontal', vault }: { layout?: string; vault: EarnVaultInfo }): JSX.Element => (
+    <div data-testid={`chip-${vault.id}`} data-layout={layout} />
+  ),
 }))
+
+const mockUseMedia = vi.hoisted(() => vi.fn())
+vi.mock('@universe/mycelium', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@universe/mycelium')>()
+  return { ...actual, useMedia: mockUseMedia }
+})
 
 vi.mock('~/components/Tokens/loading', () => ({
   LoadingBubble: (): JSX.Element => <div />,
@@ -120,6 +128,7 @@ describe(EarnVaultsSection, () => {
   beforeEach(() => {
     Element.prototype.scrollIntoView = mockScrollIntoView
     vi.clearAllMocks()
+    mockUseMedia.mockReturnValue({ md: false })
     window.history.replaceState(null, '', '/')
     store.dispatch(setExploreEarnCoachmarkDismissed(false))
   })
@@ -148,6 +157,23 @@ describe(EarnVaultsSection, () => {
       entry_point: 'explore_chip',
       surface: 'web',
     })
+  })
+
+  it('renders horizontal chips in a grid above the md breakpoint', () => {
+    mockUseEarnVaults.mockReturnValue(createUseEarnVaultsResult({ vaults: [VAULT] }))
+
+    render(<EarnVaultsSection />)
+
+    expect(screen.getByTestId('chip-vault-a')).toHaveAttribute('data-layout', 'horizontal')
+  })
+
+  it('renders vertical chips in a carousel at the md breakpoint', () => {
+    mockUseMedia.mockReturnValue({ md: true })
+    mockUseEarnVaults.mockReturnValue(createUseEarnVaultsResult({ vaults: [VAULT] }))
+
+    render(<EarnVaultsSection />)
+
+    expect(screen.getByTestId('chip-vault-a')).toHaveAttribute('data-layout', 'vertical')
   })
 
   it('shows the Earn coachmark copy and dismisses it on click', async () => {

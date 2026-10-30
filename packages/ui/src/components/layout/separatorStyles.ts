@@ -3,8 +3,8 @@
  * (Separator.web.tsx / Separator.native.tsx). Platform-neutral: react-native
  * appears in type position only, so the web bundle stays RN-free.
  */
+import { type UseSporeColorsReturn } from '@universe/mycelium/theme-hooks-compat'
 import type { DimensionValue, ViewStyle } from 'react-native'
-import { type UseSporeColorsReturn } from 'ui/src/hooks/useSporeColors'
 import { gap, padding, spacing } from 'ui/src/theme'
 
 export const spacingTokens = { ...spacing, ...padding, ...gap }

@@ -1,7 +1,7 @@
-import { TokensOrderBy } from '@uniswap/client-data-api/dist/data/v2/types_pb'
-import { useMemo } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { HistoryDuration, TokensOrderBy } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { useListCategoriesQuery } from 'uniswap/src/data/apiClients/dataApiService/categories/useListCategoriesQuery'
-import { useExploreListTokens } from 'uniswap/src/data/apiClients/dataApiService/explore/useExploreListTokens'
+import { getListTokensQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/tokens/queries'
 import {
   rankedTokenToCardItem,
   type RankedTokenCardItem,
@@ -22,20 +22,22 @@ export function useTrendingCarouselTokens(): {
   const trendingCategoryId = trendingCategory?.id
   const { chains: chainIds } = useEnabledChains()
 
-  // TODO(CONS-3522): swap to the non-paginated ListTokens query; the carousel never pages.
-  const { multichainTokens, isLoading: tokensLoading } = useExploreListTokens({
-    chainIds,
-    orderBy: TokensOrderBy.VOLUME_1D,
-    ascending: false,
-    pageSize: TRENDING_CAROUSEL_TOKEN_COUNT,
-    categoryId: trendingCategoryId,
-    enabled: trendingCategoryId !== undefined,
-  })
-
-  const tokens = useMemo(
-    () => multichainTokens.flatMap((token) => rankedTokenToCardItem(token) ?? []),
-    [multichainTokens],
+  const { data: tokens, isLoading: tokensLoading } = useQuery(
+    getListTokensQueryOptions({
+      // Disable the query when there's no category id
+      params:
+        trendingCategoryId === undefined
+          ? undefined
+          : {
+              chainIds,
+              page: { pageSize: TRENDING_CAROUSEL_TOKEN_COUNT },
+              sort: { orderBy: TokensOrderBy.VOLUME_1D, ascending: false },
+              sparklineDuration: HistoryDuration.DAY,
+              filter: { categoryIds: [trendingCategoryId] },
+            },
+      select: (data) => (data?.multichainTokens ?? []).flatMap((token) => rankedTokenToCardItem(token) ?? []),
+    }),
   )
 
-  return { tokens, isLoading: categoriesPending || tokensLoading, trendingCategory }
+  return { tokens: tokens ?? [], isLoading: categoriesPending || tokensLoading, trendingCategory }
 }

@@ -1,6 +1,5 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { isMobileWeb } from '@universe/environment'
-import { Flex } from '@universe/mycelium'
 import { TestID } from '@universe/test'
 import { startTransition, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -9,6 +8,7 @@ import { InlineExpandoRow } from 'uniswap/src/components/ExpandoRow/InlineExpand
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
+import { CollapsiblePinnedColumnScope } from '~/components/Table/PinnedColumns/collapse/CollapsiblePinnedColumnScope'
 import { useSimplePagination } from '~/pages/Explore/hooks/useSimplePagination'
 import { TokenData } from '~/pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
 import {
@@ -20,8 +20,9 @@ import { sortPortfolioTokenData } from '~/pages/Portfolio/Tokens/Table/sortPortf
 import { TokensTableInner } from '~/pages/Portfolio/Tokens/Table/TokensTableInner'
 import { flattenTokenDataToSingleChainRows } from '~/pages/Portfolio/Tokens/Table/tokenTableRowUtils'
 
-const TOKENS_TABLE_MAX_HEIGHT = 700
-const HIDDEN_TABLE_MAX_HEIGHT = isMobileWeb ? 350 : TOKENS_TABLE_MAX_HEIGHT
+// Touch browsers don't axis-lock a box that scrolls both ways, so a vertical swipe on it also
+// drifts the table sideways; on mobile the page owns vertical scroll instead.
+const TOKENS_TABLE_MAX_HEIGHT = isMobileWeb ? undefined : 700
 const HIDDEN_PAGE_SIZE = 20
 
 interface TokensTableProps {
@@ -32,7 +33,7 @@ interface TokensTableProps {
   error?: Error | undefined
 }
 
-// The Hidden Tokens table has extra pagination and resizing logic due to mWeb performance constraints
+// The Hidden Tokens table has extra pagination logic due to mWeb performance constraints
 function HiddenTokensTable({
   hidden,
   loading,
@@ -70,7 +71,7 @@ function HiddenTokensTable({
       hideHeader
       loading={loading}
       error={error}
-      maxHeight={HIDDEN_TABLE_MAX_HEIGHT}
+      maxHeight={TOKENS_TABLE_MAX_HEIGHT}
       showUnrealizedPnlPercent
       virtualized
       loadMore={isMobileWeb ? loadMore : undefined}
@@ -111,7 +112,8 @@ function TokensTableContent({ visible, hidden, loading, refetching, error }: Tok
     // - Both tables use ScrollSyncPane with scrollGroup="portfolio-tokens" for coordination
     // - DO NOT remove this outer ScrollSync wrapper without updating the Table components
     <ScrollSync horizontal vertical={false}>
-      <Flex gap="$spacing16">
+      {/* One collapse drives both tables: they share a horizontal scroll, so their token columns must match. */}
+      <CollapsiblePinnedColumnScope gap="$spacing16">
         <TokensTableInner
           tokenData={sortedVisible}
           loading={tableLoading}
@@ -140,7 +142,7 @@ function TokensTableContent({ visible, hidden, loading, refetching, error }: Tok
             )}
           </>
         )}
-      </Flex>
+      </CollapsiblePinnedColumnScope>
     </ScrollSync>
   )
 }

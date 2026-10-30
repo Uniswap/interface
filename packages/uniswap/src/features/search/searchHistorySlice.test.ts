@@ -1,13 +1,66 @@
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { UniverseChainId } from '@universe/chains'
-import { SearchHistoryResultType } from 'uniswap/src/features/search/SearchHistoryResult'
+import {
+  MultichainTokenSearchHistoryResult,
+  PoolSearchHistoryResult,
+  SearchHistoryResult,
+  SearchHistoryResultType,
+  TokenSearchHistoryResult,
+  WalletByAddressSearchHistoryResult,
+} from 'uniswap/src/features/search/SearchHistoryResult'
 import {
   addToSearchHistory,
   clearSearchHistory,
   initialSearchHistoryState,
+  SearchHistoryState,
   searchHistoryReducer,
   searchResultId,
 } from 'uniswap/src/features/search/searchHistorySlice'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
+
+const WALLET_RESULT: WalletByAddressSearchHistoryResult = {
+  type: SearchHistoryResultType.WalletByAddress,
+  address: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+}
+
+const POOL_RESULT: PoolSearchHistoryResult = {
+  type: SearchHistoryResultType.Pool,
+  chainId: UniverseChainId.Mainnet,
+  poolId: '0x88e6A0c2dDD26FEEb64F039a2c41296FcB3f5640',
+  protocolVersion: ProtocolVersion.V3,
+  feeTier: 500,
+  token0CurrencyId: buildCurrencyId(UniverseChainId.Mainnet, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'),
+  token1CurrencyId: buildCurrencyId(UniverseChainId.Mainnet, '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'),
+}
+
+function tokenAddress(i: number): Address {
+  return `0x${i.toString(16).padStart(40, '0')}`
+}
+
+function token(i: number): TokenSearchHistoryResult {
+  return { type: SearchHistoryResultType.Token, chainId: UniverseChainId.Mainnet, address: tokenAddress(i) }
+}
+
+function multichainToken(i: number): MultichainTokenSearchHistoryResult {
+  return {
+    type: SearchHistoryResultType.MultichainToken,
+    multichainId: `mc:${i}`,
+    name: `Token ${i}`,
+    symbol: `T${i}`,
+    tokenCurrencyIds: [buildCurrencyId(UniverseChainId.Mainnet, tokenAddress(i))],
+  }
+}
+
+function range(n: number): number[] {
+  return Array.from({ length: n }, (_, i) => i)
+}
+
+function addAll(results: SearchHistoryResult[]): SearchHistoryState {
+  return results.reduce(
+    (state, searchResult) => searchHistoryReducer(state, addToSearchHistory({ searchResult })),
+    initialSearchHistoryState,
+  )
+}
 
 describe('searchHistorySlice', () => {
   describe('searchResultId', () => {
@@ -208,6 +261,40 @@ describe('searchHistorySlice', () => {
       )
 
       expect(state.results).toHaveLength(1)
+    })
+
+    it('moves a re-searched result to the front without duplicating it', () => {
+      const state = addAll([WALLET_RESULT, token(0), WALLET_RESULT])
+
+      expect(state.results.map((r) => r.type)).toEqual([
+        SearchHistoryResultType.WalletByAddress,
+        SearchHistoryResultType.Token,
+      ])
+    })
+
+    it('caps each type separately so token searches do not evict pool or wallet recents', () => {
+      const state = addAll([WALLET_RESULT, POOL_RESULT, ...range(40).map(token)])
+
+      const tokens = state.results.filter((r) => r.type === SearchHistoryResultType.Token)
+      expect(tokens).toHaveLength(30)
+      expect(tokens[0]).toMatchObject({ address: tokenAddress(39) })
+      expect(state.results.filter((r) => r.type === SearchHistoryResultType.Pool)).toHaveLength(1)
+      expect(state.results.filter((r) => r.type === SearchHistoryResultType.WalletByAddress)).toHaveLength(1)
+    })
+
+    it('keeps adding when persisted history holds an unrecognized type', () => {
+      const unknownEntry = { type: 99, searchId: 'unknown-1' } as unknown as SearchHistoryResult
+
+      const state = searchHistoryReducer({ results: [unknownEntry] }, addToSearchHistory({ searchResult: token(0) }))
+
+      expect(state.results).toEqual([expect.objectContaining({ address: tokenAddress(0) }), unknownEntry])
+    })
+
+    it('counts token and multichain token results against the same cap', () => {
+      const state = addAll(range(20).flatMap((i) => [token(i), multichainToken(i)]))
+
+      expect(state.results).toHaveLength(30)
+      expect(state.results[0]).toMatchObject({ multichainId: 'mc:19' })
     })
   })
 

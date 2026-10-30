@@ -13,7 +13,7 @@ import { FORMAT_DATE_MEDIUM, useLocalizedDayjs } from 'uniswap/src/features/lang
 import { AuctionEventName, ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
-import { NumberType } from 'utilities/src/format/types'
+import { formatCommittedUsd } from 'uniswap/src/features/toucan/formatCommittedUsd'
 import { useEvent } from 'utilities/src/react/hooks'
 import { WalletHoverCard } from '~/components/HoverCard/WalletHoverCard/WalletHoverCard'
 import {
@@ -71,7 +71,12 @@ function CreatorAvatar({ avatarUrl }: { avatarUrl: string | undefined }): JSX.El
       flexShrink={0}
     >
       {avatarUrl ? (
-        <UniversalImage uri={avatarUrl} size={{ width: 20, height: 20 }} />
+        <UniversalImage
+          uri={avatarUrl}
+          size={{ width: 20, height: 20 }}
+          // X avatar URLs go stale when the creator changes their picture.
+          fallback={<Person size="$icon.12" color="$neutral2" />}
+        />
       ) : (
         <Person size="$icon.12" color="$neutral2" />
       )}
@@ -141,10 +146,11 @@ export function TokenProvenance(): JSX.Element | null {
   // Keyed on the auction where there is one, so switching auctions is a new visit; otherwise on the
   // token, since a launchpad is shared by every token it launched and navigating between two of them
   // does not have to remount this module.
-  const provenanceKey =
+  const auctionKey =
     auction && chainId !== undefined
       ? `${chainId}:${normalizeAddress(auction.address, AddressStringFormat.Lowercase)}`
-      : provenance && `${provenance.launchpad.id}:${chainId}:${tokenAddress}`
+      : undefined
+  const provenanceKey = provenance && (auctionKey ?? `${provenance.launchpad.id}:${chainId}:${tokenAddress}`)
   // Served attribution arrives with the token, ahead of the auction lookup, so without this the key
   // would settle on the launchpad and then flip to the auction — two impressions for one visit.
   // The lookup's own status carries that offline too, where `isAuctionOnlyPending` stops waiting.
@@ -178,11 +184,6 @@ export function TokenProvenance(): JSX.Element | null {
     return null
   }
 
-  // Nothing served carries a first-trade time, so the auction's creation date stands in for one and is
-  // only shown once a pool exists — an upcoming or failed launch has never traded.
-  const displayProvenance =
-    poolAvailability === PoolAvailability.HasPool ? provenance : { ...provenance, launchedAt: undefined }
-
   const auctionData =
     auction && chainId !== undefined
       ? getTokenProvenanceData({
@@ -202,6 +203,7 @@ export function TokenProvenance(): JSX.Element | null {
     if (chainId !== undefined) {
       sendAnalyticsEvent(AuctionEventName.AuctionSelectorOpened, {
         chain_id: chainId,
+        token_address: tokenAddress,
         auction_count: selectableAuctions.length,
         entry_point: 'tdp_provenance_module',
       })
@@ -234,7 +236,9 @@ export function TokenProvenance(): JSX.Element | null {
       <TokenProvenanceContent
         onDetailsPress={onDetailsPress}
         onLaunchpadPress={onLaunchpadPress}
-        provenance={displayProvenance}
+        provenance={provenance}
+        tokenAddress={tokenAddress}
+        auctionAddress={auction?.address}
         auctionData={auctionData}
         onShowAuctions={hasSelector ? onShowAuctions : undefined}
       />
@@ -253,12 +257,16 @@ export function TokenProvenance(): JSX.Element | null {
 /** Renders normalized provenance. Auction-only details must belong to this provenance's auction. */
 export function TokenProvenanceContent({
   provenance,
+  tokenAddress,
+  auctionAddress,
   auctionData,
   onShowAuctions,
   onDetailsPress,
   onLaunchpadPress,
 }: {
   provenance: LaunchProvenance
+  tokenAddress?: string
+  auctionAddress?: string
   auctionData?: TokenProvenanceData
   onShowAuctions?: () => void
   onDetailsPress?: (destination: AuctionHistoryDestination) => void
@@ -281,9 +289,8 @@ export function TokenProvenanceContent({
   const onExplainerClose = (): void => setIsExplainerOpen(false)
 
   return (
-    <Flex testID={TestID.TokenDetailsProvenance} gap="$gap20" width="100%" $md={{ gap: '$gap16' }}>
-      <Text variant="heading3">{t('toucan.auction.info')}</Text>
-      <Flex row flexWrap="wrap" rowGap="$spacing20">
+    <>
+      <Flex testID={TestID.TokenDetailsProvenance} row flexWrap="wrap" rowGap="$spacing20" width="100%">
         {auctionData && (
           <ProvenanceCell label={t('tdp.provenance.launchedBy')}>
             <WalletHoverCard address={auctionData.creator.address} chainId={auctionData.creator.chainId}>
@@ -319,11 +326,13 @@ export function TokenProvenanceContent({
           </ProvenanceCell>
         )}
 
-        <ProvenanceCell label={t('tdp.provenance.firstTraded')}>
-          <Text variant="subheading1" color="$neutral1">
-            {provenance.launchedAt ? localizedDayjs(provenance.launchedAt).format(FORMAT_DATE_MEDIUM) : '--'}
-          </Text>
-        </ProvenanceCell>
+        {provenance.firstTradedAt && (
+          <ProvenanceCell label={t('tdp.provenance.firstTraded')}>
+            <Text variant="subheading1" color="$neutral1">
+              {localizedDayjs(provenance.firstTradedAt).format(FORMAT_DATE_MEDIUM)}
+            </Text>
+          </ProvenanceCell>
+        )}
 
         <ProvenanceCell label={t('tdp.provenance.launchpad')}>
           <ProvenanceLaunchpadLink
@@ -331,6 +340,7 @@ export function TokenProvenanceContent({
             {...getLaunchpadDestination({ provenance })}
             element={ElementName.ProvenanceInfoLaunchpad}
             launchMethod={getAnalyticsLaunchMethod(provenance.method)}
+            tokenAddress={tokenAddress}
             onPress={onLaunchpadPress}
           >
             <Flex row gap="$spacing8" alignItems="center">
@@ -381,7 +391,7 @@ export function TokenProvenanceContent({
                     ? t('tdp.auctions.failedToLaunch')
                     : auctionData.raised.usd !== undefined
                       ? t('tdp.provenance.raised', {
-                          amount: convertFiatAmountFormatted(auctionData.raised.usd, NumberType.FiatTokenStats),
+                          amount: formatCommittedUsd({ usd: auctionData.raised.usd, convertFiatAmountFormatted }),
                         })
                       : '--'}
                 </Text>
@@ -432,7 +442,12 @@ export function TokenProvenanceContent({
         )}
       </Flex>
 
-      <LaunchMethodExplainerModal method={provenance.method} isOpen={isExplainerOpen} onClose={onExplainerClose} />
-    </Flex>
+      <LaunchMethodExplainerModal
+        method={provenance.method}
+        auctionAddress={auctionAddress}
+        isOpen={isExplainerOpen}
+        onClose={onExplainerClose}
+      />
+    </>
   )
 }

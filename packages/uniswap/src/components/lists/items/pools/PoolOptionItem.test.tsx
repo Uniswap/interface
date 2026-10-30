@@ -74,9 +74,7 @@ function renderPoolOptionItem({
 }: {
   feeTier: number
   hookAddress?: string
-} & Partial<
-  Pick<ComponentProps<typeof PoolOptionItem>, 'identityPlacement' | 'searchStats' | 'rightElement'>
->): ReturnType<typeof render> {
+} & Partial<Pick<ComponentProps<typeof PoolOptionItem>, 'searchStats'>>): ReturnType<typeof render> {
   return render(
     <PoolOptionItem
       token0CurrencyInfo={token0CurrencyInfo}
@@ -98,38 +96,11 @@ describe('PoolOptionItem', () => {
     vi.mocked(useUniswapHookProvenance).mockReturnValue(() => undefined)
   })
 
-  it('renders the pool address as the subtitle by default', () => {
-    const { getByText } = renderPoolOptionItem({ feeTier: 500 })
-    expect(getByText(ellipseMiddle({ str: POOL_ID, charsStart: 6 }))).toBeTruthy()
-  })
-
-  describe('identityPlacement="subtitle"', () => {
-    it('replaces the address with the version and fee tier', () => {
-      const { getByText, queryByText } = renderPoolOptionItem({ feeTier: 500, identityPlacement: 'subtitle' })
-      expect(getByText('v4')).toBeTruthy()
-      expect(getByText('0.05%')).toBeTruthy()
-      expect(queryByText(ellipseMiddle({ str: POOL_ID, charsStart: 6 }))).toBeNull()
-    })
-
-    it('renders the hook after the fee tier, with the Uniswap mark before the name', () => {
-      const hookAddress = '0x0010d0d5db05933fa0d9f7038d365e1541a41888'
-      vi.mocked(useHookRegistryMap).mockReturnValue(
-        buildHookRegistryMap(
-          new HookListResponse({
-            hooks: [new HookEntry({ address: hookAddress, chain: 'Ethereum', chainId: 1, name: 'StablePairHook' })],
-          }),
-        ),
-      )
-      vi.mocked(useUniswapHookProvenance).mockReturnValue(() => UniswapHookProvenance.Built)
-
-      renderPoolOptionItem({ feeTier: 500, hookAddress, identityPlacement: 'subtitle' })
-
-      const pill = document.querySelector(`[data-testid="${TestID.PoolOptionItemHookBadge}"]`)
-      const pillHtml = pill?.innerHTML ?? ''
-      const markIndex = pillHtml.indexOf(TestID.UniswapBuiltHookMark)
-      expect(markIndex).toBeGreaterThan(-1)
-      expect(pillHtml.indexOf('StablePairHook')).toBeGreaterThan(markIndex)
-    })
+  it('renders the version and fee tier as the subtitle in place of the pool address', () => {
+    const { getByText, queryByText } = renderPoolOptionItem({ feeTier: 500 })
+    expect(getByText('v4')).toBeTruthy()
+    expect(getByText('0.05%')).toBeTruthy()
+    expect(queryByText(ellipseMiddle({ str: POOL_ID, charsStart: 6 }))).toBeNull()
   })
 
   describe('searchStats', () => {
@@ -142,16 +113,6 @@ describe('PoolOptionItem', () => {
     it('renders nothing on the right when both stats are absent', () => {
       const { queryByText } = renderPoolOptionItem({ feeTier: 500, searchStats: {} })
       expect(queryByText(/vol$/)).toBeNull()
-      expect(queryByText(/APR$/)).toBeNull()
-    })
-
-    it('prefers an explicit rightElement over the stats', () => {
-      const { getByText, queryByText } = renderPoolOptionItem({
-        feeTier: 500,
-        searchStats: { volume1dUsd: 1, apr: 1 },
-        rightElement: <>menu</>,
-      })
-      expect(getByText('menu')).toBeTruthy()
       expect(queryByText(/APR$/)).toBeNull()
     })
   })

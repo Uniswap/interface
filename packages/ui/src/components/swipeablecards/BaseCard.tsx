@@ -1,6 +1,6 @@
+import { AnimatedFlex } from '@universe/mycelium'
 import { PropsWithChildren, useEffect, useState } from 'react'
 import { type SharedValue, useAnimatedStyle, useSharedValue, withSpring } from 'ui/src/animations'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 
 export const SWIPEABLE_CARD_Y_OFFSET = 8
 const SCALE_FACTOR = 0.025

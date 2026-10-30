@@ -1,7 +1,7 @@
 import { isExtensionApp, isMobileWeb, isWebAppDesktop } from '@universe/environment'
-import { Flex, TouchableArea } from '@universe/mycelium'
+import { Flex, TouchableArea, useIsShortMobileDevice } from '@universe/mycelium'
 import { forwardRef, memo, useCallback } from 'react'
-import { useIsShortMobileDevice, useShakeAnimation } from 'ui/src'
+import { useShakeAnimation } from 'ui/src'
 import {
   AmountInputPresets,
   PRESET_BUTTON_PROPS,

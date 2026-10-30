@@ -11,7 +11,7 @@
  * DropdownMenuSubTrigger / DropdownMenuSubContent / DropdownMenuPortal.
  *
  * The legacy Radix scaffolding in `src/components/dropdown-menu.tsx` stays
- * untouched for its existing consumers (dev-portal, labs/rh-cca); this is
+ * untouched for its existing consumers (dev-portal, apps/pools-xyz); this is
  * the forward-facing layer — the FilterSelect compat adapters ride it.
  *
  * Class strings are FULL literals collected in

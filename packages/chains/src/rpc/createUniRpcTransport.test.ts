@@ -1,6 +1,9 @@
+import { HttpRequestError } from 'viem'
 import { mainnet } from 'viem/chains'
 import { afterEach, beforeEach, describe, expect, type Mock, test, vi } from 'vitest'
+import { createUniRpcRoutedTransport } from './createUniRpcRoutedTransport'
 import { createUniRpcTransportFactory } from './createUniRpcTransport'
+import { ForbiddenHttpRequestError } from './ForbiddenHttpRequestError'
 
 // Logger references __DEV__ which isn't defined in the node test env. Mock it
 // to keep observer/error paths from blowing up on the unrelated global.
@@ -214,5 +217,62 @@ describe('createUniRpcTransportFactory — generic transport contract', () => {
     const buildTransport = createUniRpcTransportFactory({ session: { type: 'cookies' } })
 
     await expect(sendRequest(buildTransport, { rpcUrl: RPC_URL, headers: STATIC_HEADERS })).rejects.toThrow()
+  })
+})
+
+describe('createUniRpcTransportFactory — 403 is not retried', () => {
+  function respondWith(status: number): void {
+    ;(globalThis.fetch as Mock).mockImplementation(
+      async () =>
+        new Response(JSON.stringify({ message: 'Forbidden' }), {
+          status,
+          headers: { 'content-type': 'application/json' },
+        }),
+    )
+  }
+
+  test('a 403 makes a single fetch at viem default retryCount and keeps status 403', async () => {
+    respondWith(403)
+    const buildTransport = createUniRpcTransportFactory({ session: { type: 'cookies' } })
+    const transport = buildTransport({ config: { rpcUrl: RPC_URL, headers: STATIC_HEADERS } })({ chain: mainnet })
+
+    const error = await transport.request({ method: 'eth_blockNumber', params: [] }).catch((e: unknown) => e)
+
+    expect(error).toBeInstanceOf(ForbiddenHttpRequestError)
+    // The session gate and RPC observability key on HttpRequestError + status.
+    expect(error).toBeInstanceOf(HttpRequestError)
+    expect((error as HttpRequestError).status).toBe(403)
+    expect(globalThis.fetch).toHaveBeenCalledTimes(1)
+  })
+
+  test('the routed transport wrapping it does not retry a 403 either', async () => {
+    respondWith(403)
+    const buildTransport = createUniRpcTransportFactory({
+      session: { type: 'headers', getSessionHeaders: vi.fn().mockResolvedValue({}) },
+    })
+    const routed = createUniRpcRoutedTransport({
+      resolveRpcConfig: () => ({ rpcUrl: RPC_URL, isUniRpc: true }),
+      buildUniRpcTransport: () => buildTransport({ config: { rpcUrl: RPC_URL, headers: STATIC_HEADERS } }),
+      buildLegacyTransport: () => {
+        throw new Error('legacy transport should not be built')
+      },
+    })({ chain: mainnet })
+
+    await expect(routed.request({ method: 'eth_blockNumber', params: [] })).rejects.toBeInstanceOf(
+      ForbiddenHttpRequestError,
+    )
+    expect(globalThis.fetch).toHaveBeenCalledTimes(1)
+  })
+
+  test('other retryable statuses still retry', async () => {
+    respondWith(503)
+    const buildTransport = createUniRpcTransportFactory({ session: { type: 'cookies' } })
+    const transport = buildTransport({ config: { rpcUrl: RPC_URL, headers: STATIC_HEADERS } })({
+      chain: mainnet,
+      retryCount: 1,
+    })
+
+    await expect(transport.request({ method: 'eth_blockNumber', params: [] })).rejects.toBeInstanceOf(HttpRequestError)
+    expect(globalThis.fetch).toHaveBeenCalledTimes(2)
   })
 })

@@ -23,6 +23,11 @@ export interface ShimmerProps {
    */
   shimmerDurationSeconds?: number
   /**
+   * Web only: CSS `animation-delay` for the sweep (e.g. `'0.2s'`), so sibling
+   * shimmers can be staggered. Ignored on native.
+   */
+  animationDelay?: string
+  /**
    * Extra classes merged onto the wrapper (layout, sizing — e.g. `w-full`
    * where a legacy call site passed `width="100%"`). Applied on web via
    * `cn()`; on native the wrapper is a React Native `View`, where uniwind

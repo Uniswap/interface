@@ -1,5 +1,5 @@
 import type { MarginQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
-import type { MarginVenue } from 'uniswap/src/features/transactions/margin/types'
+import { MarginDirection, type MarginVenue } from 'uniswap/src/features/transactions/margin/types'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import type { MarginMarket } from '~/constants/margin'
 import { getDefaultMarginMarket } from '~/pages/Swap/Margin/__fixtures__/marginCatalog'
@@ -48,7 +48,7 @@ function quoteFixture(overrides: Partial<MarginQuoteResponse['display']> = {}): 
     action: 'open',
     chainId: 1,
     swapper: '0x0000000000000000000000000000000000000001',
-    direction: 'LONG',
+    direction: MarginDirection.LONG,
     exposureToken: { address: MARKET.collateral.address, chainId: 1, decimals: 18 },
     counterToken: { address: MARKET.debt.address, chainId: 1, decimals: 6 },
     display: { size: `${2n * 10n ** 18n}`, leverage: '2', effectivePrice: FILL_X18, ...overrides },
@@ -62,7 +62,7 @@ function quoteFixture(overrides: Partial<MarginQuoteResponse['display']> = {}): 
 // size figure is denominated in and valued against.
 const SHORT_MARKET = {
   ...MARKET,
-  direction: 'SHORT',
+  direction: MarginDirection.SHORT,
   displaySymbol: 'USDC',
   collateral: MARKET.debt,
   debt: MARKET.collateral,
@@ -71,7 +71,7 @@ const SHORT_MARKET = {
 function renderBlock(
   quote: MarginQuoteResponse,
   market: MarginMarket = MARKET,
-  direction: 'LONG' | 'SHORT' = 'LONG',
+  direction: MarginDirection = MarginDirection.LONG,
 ): HTMLElement {
   const info = { market, direction, maxLeverage: 5, quote } as unknown as DerivedMarginInfo
   return render(<MarginSizeBlock derivedMarginInfo={info} />).container
@@ -105,7 +105,7 @@ describe('MarginSizeBlock', () => {
   it('values a SHORT against its debt leg, not the collateral one', () => {
     registry.marketOverride = SHORT_MARKET
     registry.markPriceX18 = `${4000n * 10n ** 18n}`
-    const container = renderBlock(quoteFixture(), SHORT_MARKET, 'SHORT')
+    const container = renderBlock(quoteFixture(), SHORT_MARKET, MarginDirection.SHORT)
     // 2 units of the exposure (WETH, unwrapped to ETH) at the $4,000 registry mark.
     expect(container.textContent).toContain('ETH')
     expect(container.textContent).not.toContain('USDC')

@@ -301,18 +301,22 @@ test.describe(
       /** Drag the sheet's handlebar down far past the dismiss threshold with real touch input. */
       async function dragDismissSheet(page: Page): Promise<void> {
         const frame = page.locator(OPEN_SHEET).last()
-        const box = await frame.boundingBox()
+        // Raw CDP touches skip actionability waits, so measure the handlebar only once the frame's
+        // slide-in has finished — mid-animation the touch lands below the handle and pans instead.
+        await frame.evaluate((el) => Promise.all(el.getAnimations().map((animation) => animation.finished)))
+        const box = await frame.locator('[data-sheet-handle]').boundingBox()
         expect(box).not.toBeNull()
         if (!box) {
           return
         }
         const cdp = await page.context().newCDPSession(page)
-        const startY = box.y + 12
-        await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: 224, y: startY }] })
+        const x = box.x + box.width / 2
+        const startY = box.y + box.height / 2
+        await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x, y: startY }] })
         for (let step = 1; step <= 12; step++) {
           await cdp.send('Input.dispatchTouchEvent', {
             type: 'touchMove',
-            touchPoints: [{ x: 224, y: startY + step * 40 }],
+            touchPoints: [{ x, y: startY + step * 40 }],
           })
           await page.waitForTimeout(16)
         }

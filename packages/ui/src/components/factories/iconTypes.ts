@@ -3,11 +3,15 @@
  * overlay, media and group-pseudo blocks that make up `IconProps`. Split from iconTokens.ts to
  * keep both files within lint size limits.
  */
+import { type DynamicColor } from '@universe/mycelium/theme-hooks-compat'
+import type { OpaqueColorValue } from 'react-native'
 import type { IconColorToken, IconSpaceValue } from 'ui/src/components/factories/iconTokens'
-import type { DynamicColor } from 'ui/src/hooks/useSporeColors'
 import type { IconSizeTokens } from 'ui/src/theme/tokens'
 
 export type IconColorValue = IconColorToken | (string & {})
+
+// Icons also accept native PlatformColor / DynamicColorIOS values; mycelium's DynamicColor is string-only.
+export type IconDynamicColor = DynamicColor | OpaqueColorValue
 
 export type IconDimensionValue = number | (string & {})
 
@@ -128,7 +132,7 @@ export type IconOverrideStyle = IconStyleOverlay & {
   // object form included so ui icons stay assignable to mycelium GeneratedIcon slots (INFRA-3320
   // pools carry it); resolveSizePx already honors it, same as the base `size` prop
   size?: IconSizeTokens | number | { width: number; height: number }
-  color?: IconColorValue | DynamicColor | null
+  color?: IconColorValue | IconDynamicColor | null
   width?: IconDimensionValue
   height?: IconDimensionValue
 }

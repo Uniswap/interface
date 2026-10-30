@@ -58,7 +58,7 @@ export function useRecoveryPrivyAuth(): RecoveryPrivyAuth {
   })
 
   // Expo's `useGetEncryptedAuthorizationKey` handles PAT-based auth internally, so we
-  // ignore the `accessToken` / `privyAppId` params that the web implementation needs.
+  // ignore the `accessToken` / `privyAppId` / `privyClientId` params that the web implementation needs.
   const fetchEncryptedBlob = useEvent(async ({ keyId }: { keyId: string }): Promise<string> => {
     const { ciphertext } = await getEncryptedAuthorizationKey({ id: keyId })
     return ciphertext

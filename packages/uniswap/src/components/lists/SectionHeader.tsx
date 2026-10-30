@@ -7,6 +7,7 @@ import { EarnSparkle } from '@universe/mycelium/icons/EarnSparkle'
 import { Heart } from '@universe/mycelium/icons/Heart'
 import { Person } from '@universe/mycelium/icons/Person'
 import { Pools } from '@universe/mycelium/icons/Pools'
+import { RocketLaunch } from '@universe/mycelium/icons/RocketLaunch'
 import { Search } from '@universe/mycelium/icons/Search'
 import { Shuffle } from '@universe/mycelium/icons/Shuffle'
 import { TrendUp } from '@universe/mycelium/icons/TrendUp'
@@ -175,7 +176,7 @@ function getSectionIcon(section: OnchainItemSectionName): JSX.Element | null {
     case OnchainItemSectionName.TopAuctions:
       return <TrendUp color="$neutral2" size="$icon.16" />
     case OnchainItemSectionName.Auctions:
-      return <Coins color="$neutral2" size="$icon.16" />
+      return <RocketLaunch color="$neutral2" size="$icon.16" />
     default:
       return null
   }

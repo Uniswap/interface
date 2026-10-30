@@ -1,0 +1,20 @@
+product_area: walletconnect
+platforms: [mobile, extension]
+nxProjects: [wallet, uniswap, "@uniswap/extension", "@uniswap/mobile"]
+owners: ["@uniswap/consumer-engagement-fe"]
+
+# Casebook area-registry metadata (read by the engine in apps/cli/src/casebook).
+# These drive Testlio suite naming, the PR-comment label, and CI routing.
+label: WalletConnect
+suiteNamePrefix: WalletConnect
+ghLabel: casebook:walletconnect
+# Reviewer GitHub team for the auto-opened catalog companion PR.
+# NOTE: not resolvable from .github/CODEOWNERS (sparse) — convention/best-guess,
+# confirm with the wallet pod lead before requesting review.
+reviewerTeam: consumer-engagement-fe
+
+# Test-wallet aliases referenced by this area's cases. Symbolic only: real mnemonics live in
+# the QA vault / Testlio TL handoff, keyed by the same alias. Never put a secret here.
+wallets:
+  TW-WALLETCONNECT-01: "funded signer account (ETH + USDC on mainnet), single mnemonic"
+  TW-WALLETCONNECT-02: "multi-account wallet (>=2 signer accounts) for account-switch cases"

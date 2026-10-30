@@ -130,9 +130,8 @@
     }
   }
 
-  /* One full 360° turn per refresh press (refresh-button-compat), mirroring
-   * the legacy injected `rotate360` rule in ui/src/loading/RefreshIcon.web.tsx
-   * — same 1s duration, easing curve, and single iteration (CSS's default
+  /* One full 360° turn per refresh press (refresh-button-compat): 1s
+   * duration, the Spore easing curve, and a single iteration (CSS's default
    * iteration count). */
   --animate-spore-refresh-spin: spore-refresh-spin 1s cubic-bezier(0.83, 0, 0.17, 1);
 

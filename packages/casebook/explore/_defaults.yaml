@@ -1,0 +1,23 @@
+product_area: explore
+# Platforms: web + mobile only. Extension deliberately excluded — apps/extension has no
+# Explore page, no Token Detail Page, and does not mount the shared SearchModal for
+# discovery (its only search usage is the send-recipient panel, owned by the send area).
+platforms: [web, mobile]
+nxProjects: ["@universe/web", uniswap, "@uniswap/mobile"]
+owners: ["@uniswap/consumer-engagement-fe"]
+
+# Casebook area-registry metadata (read by the engine in apps/cli/src/casebook).
+# These drive Testlio suite naming, the PR-comment label, and CI routing.
+label: Explore
+suiteNamePrefix: Explore
+ghLabel: casebook:explore
+# Reviewer GitHub team for the auto-opened catalog companion PR.
+# CONVENTION / best-guess — NOT resolvable from .github/CODEOWNERS (sparse; explore falls
+# through to no explicit owner). Confirm with the pod lead before requesting review; fall
+# back to the nearest CODEOWNERS match if the slug is rejected.
+reviewerTeam: consumer-engagement-fe
+
+# Test-wallet aliases referenced by this area's cases. Symbolic only: real mnemonics live in
+# the QA vault / Testlio TL handoff, keyed by the same alias. Never put a secret here.
+wallets:
+  TW-EXPLORE-01: "funded wallet connected on mainnet; cross-network Explore filtering and TDP testnet/mainnet mode checks (no funds are moved)"

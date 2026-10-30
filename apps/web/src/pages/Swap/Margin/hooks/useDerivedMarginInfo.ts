@@ -19,11 +19,10 @@ import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPri
 import { marginPairKey } from 'uniswap/src/features/transactions/margin/marginPairKey'
 import { buildMarginOpenQuoteRequest } from 'uniswap/src/features/transactions/margin/stores/marginFormStore/buildMarginQuoteRequest'
 import { useMarginFormStore } from 'uniswap/src/features/transactions/margin/stores/marginFormStore/useMarginFormStore'
-import type {
+import {
   MarginDirection,
-  MarginPaymentToken,
-  MarginSide,
-  MarginVenue,
+  type MarginPaymentToken,
+  type MarginVenue,
 } from 'uniswap/src/features/transactions/margin/types'
 import { currencyId, normalizeCurrencyIdForMapLookup } from 'uniswap/src/utils/currencyId'
 import { useDebounceWithStatus } from 'utilities/src/time/timing'
@@ -51,7 +50,7 @@ const NO_EXCLUSIONS: MarginVenue[] = []
 
 export interface DerivedMarginInfo {
   market: MarginMarket
-  side: MarginSide
+  side: MarginDirection
   // Ground truth for every pre-trade direction signal (CTA label, size preview, liq unit symbol):
   // the selected market's direction, falling back to the quote's own, falling back to a derivation
   // off the market's token addresses. NEVER the raw side toggle — it can diverge from the actual
@@ -184,15 +183,20 @@ export function useDerivedMarginInfo({
   const requestDirection =
     market.direction ??
     marginMarketDirection({ collateralToken: market.collateral.address, debtToken: market.debt.address })
-  const exposureToken = requestDirection === 'SHORT' ? market.debt.address : market.collateral.address
-  const counterToken = requestDirection === 'SHORT' ? market.collateral.address : market.debt.address
+  const exposureToken = requestDirection === MarginDirection.SHORT ? market.debt.address : market.collateral.address
+  const counterToken = requestDirection === MarginDirection.SHORT ? market.collateral.address : market.debt.address
+  // Decimals the view renders with — from the market, not guessed from the token address in the adapter.
+  const tokenDecimals = {
+    exposure: requestDirection === MarginDirection.SHORT ? market.debt.decimals : market.collateral.decimals,
+    counter: requestDirection === MarginDirection.SHORT ? market.collateral.decimals : market.debt.decimals,
+  }
 
   // Memoized: this object is the query key, and a fresh identity per render churns the
   // placeholderData closure and every downstream memo for no wire-level change.
   const quoteParams: MarginQuoteRequest | undefined = useMemo(
     () =>
       buildMarginOpenQuoteRequest({
-        chainId: MARGIN_CHAIN_ID,
+        positionChainId: MARGIN_CHAIN_ID,
         exposureToken,
         counterToken,
         direction: requestDirection,
@@ -227,6 +231,7 @@ export function useDerivedMarginInfo({
     error: quoteError,
   } = useMarginQuoteQuery({
     params: quoteParams,
+    tokenDecimals,
     refetchInterval: MARGIN_QUOTE_REFETCH_MS,
     staleTime: MARGIN_QUOTE_REFETCH_MS,
     // Bridge the prior quote across a LEVERAGE change (same market, new query key) so `quote`

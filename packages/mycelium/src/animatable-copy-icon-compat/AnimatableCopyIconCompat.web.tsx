@@ -1,9 +1,8 @@
 /**
  * Web leg of the `AnimatableCopyIcon` compat (INFRA-3653) — the drop-in twin
- * of the legacy `ui/src` `AnimatableCopyIcon`
- * (`packages/ui/src/components/AnimatableCopyIcon/AnimatableCopyIcon.tsx`):
- * two absolutely-positioned layers in a relative box sized to `size` —
- * CopySheets fades out while CheckmarkCircle fades in and rises
+ * of the legacy `ui/src` `AnimatableCopyIcon`: two absolutely-positioned
+ * layers in a relative box sized to `size` — CopySheets fades out while
+ * CheckmarkCircle fades in and rises
  * (`translateY 5 → 0`) when `isCopied` flips.
  *
  * Timing is the legacy driver's, number-exact: the layer leaving the visible

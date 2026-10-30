@@ -4,6 +4,7 @@ import { TestID } from '@universe/test'
 import type { PropsWithChildren } from 'react'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { buildCurrencyInfo } from 'uniswap/src/features/dataApi/utils/buildCurrency'
+import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/utils/currencyId'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { MARGIN_CHAIN_ID, type MarginMarket, type MarginPairGroup, type MarginTokenInfo } from '~/constants/margin'
@@ -60,13 +61,13 @@ const LONG_ETH_USDC: MarginPairGroup = {
   pairKey: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2-0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
   base: WETH,
   quote: USDC,
-  direction: 'LONG',
+  direction: MarginDirection.LONG,
   pairs: [
     {
       key: 'weth-usdc-MORPHO',
       debt: USDC,
       venue: 'MORPHO',
-      direction: 'LONG',
+      direction: MarginDirection.LONG,
       lltvWad: '860000000000000000',
       maxLeverage: 3,
       borrowRateBps: 420,
@@ -75,7 +76,7 @@ const LONG_ETH_USDC: MarginPairGroup = {
       key: 'weth-usdc-AAVE_V3',
       debt: USDC,
       venue: 'AAVE_V3',
-      direction: 'LONG',
+      direction: MarginDirection.LONG,
       lltvWad: '0',
       maxLeverage: 5,
       borrowRateBps: 510,
@@ -87,13 +88,13 @@ const LONG_CBBTC_USDC: MarginPairGroup = {
   pairKey: '0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf-0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
   base: CBBTC,
   quote: USDC,
-  direction: 'LONG',
+  direction: MarginDirection.LONG,
   pairs: [
     {
       key: 'cbbtc-usdc-MORPHO',
       debt: USDC,
       venue: 'MORPHO',
-      direction: 'LONG',
+      direction: MarginDirection.LONG,
       lltvWad: '860000000000000000',
       maxLeverage: 4,
       borrowRateBps: 380,
@@ -107,13 +108,13 @@ const LONG_ETH_USDT: MarginPairGroup = {
   pairKey: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2-0xdac17f958d2ee523a2206206994597c13d831ec7',
   base: WETH,
   quote: USDT,
-  direction: 'LONG',
+  direction: MarginDirection.LONG,
   pairs: [
     {
       key: 'weth-usdt-MORPHO',
       debt: USDT,
       venue: 'MORPHO',
-      direction: 'LONG',
+      direction: MarginDirection.LONG,
       lltvWad: '860000000000000000',
       maxLeverage: 2,
       borrowRateBps: 650,
@@ -128,7 +129,7 @@ const SHORT_ETH_USDC: MarginPairGroup = {
   pairKey: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48-0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
   base: WETH,
   quote: USDC,
-  direction: 'SHORT',
+  direction: MarginDirection.SHORT,
   pairs: [
     {
       key: 'usdc-weth-AAVE_V3',
@@ -152,7 +153,8 @@ const {
 } = vi.hoisted(() => ({
   // Per-test override for the collapsed trigger's market; defaults to a static AAVE_V4 market.
   mockMarket: { current: undefined as MarginMarket | undefined },
-  mockSide: { current: 'long' as 'long' | 'short' },
+  // Filled in below: vi.hoisted runs before the MarginDirection import is bound.
+  mockSide: {} as { current: MarginDirection },
   // Per-test registry. Defaults are filled in below, once the fixtures exist.
   mockGroups: { current: [] as MarginPairGroup[] },
   mockIsLoading: { current: false },
@@ -164,6 +166,7 @@ const {
   // Hoisted so the spy identity is stable across renders and assertable.
   setMarginFormState: vi.fn(),
 }))
+mockSide.current = MarginDirection.LONG
 
 const DEFAULT_GROUPS: MarginPairGroup[] = [LONG_ETH_USDC, LONG_CBBTC_USDC, SHORT_ETH_USDC]
 
@@ -199,9 +202,8 @@ vi.mock('~/pages/Swap/Margin/hooks/useMarginCurrencyInfos', async (importOrigina
 
 // Form store without its provider: pairKey + side selectors, spied actions.
 vi.mock('uniswap/src/features/transactions/margin/stores/marginFormStore/useMarginFormStore', () => ({
-  useMarginFormStore: (
-    selector: (s: { pairKey: string; side: 'long' | 'short'; excludedVenues: never[] }) => unknown,
-  ) => selector({ pairKey: 'test-pair', side: mockSide.current, excludedVenues: [] }),
+  useMarginFormStore: (selector: (s: { pairKey: string; side: MarginDirection; excludedVenues: never[] }) => unknown) =>
+    selector({ pairKey: 'test-pair', side: mockSide.current, excludedVenues: [] }),
   useMarginFormStoreActions: () => ({ setMarginFormState }),
 }))
 
@@ -213,7 +215,7 @@ beforeEach(() => {
 
 afterEach(() => {
   mockMarket.current = undefined
-  mockSide.current = 'long'
+  mockSide.current = MarginDirection.LONG
   mockIsLoading.current = false
   mockMarketUnresolved.current = false
   mockMarketsError.current = undefined
@@ -256,7 +258,7 @@ describe('MarginMarketSelector', () => {
   })
 
   it('titles a short row with the base token name, never the stablecoin name', () => {
-    mockSide.current = 'short'
+    mockSide.current = MarginDirection.SHORT
     const { getAllByTestId, getByText, queryByText } = render(<MarginMarketSelector />)
     expect(getAllByTestId(TestID.MarginPairRow)).toHaveLength(1)
     expect(getByText('Ethereum')).toBeTruthy()
@@ -293,7 +295,7 @@ describe('MarginMarketSelector', () => {
     mockGroups.current = []
     const { getByTestId, rerender } = render(<MarginMarketSelector />)
     expect(getByTestId(TestID.MarginMarketsEmpty).textContent).toBe('No long markets available')
-    mockSide.current = 'short'
+    mockSide.current = MarginDirection.SHORT
     rerender(<MarginMarketSelector />)
     expect(getByTestId(TestID.MarginMarketsEmpty).textContent).toBe('No short markets available')
   })
@@ -325,7 +327,7 @@ describe('MarginMarketSelector', () => {
     expect(setMarginFormState).toHaveBeenCalledWith({
       pairKey: LONG_ETH_USDC.pairKey,
       paymentToken: undefined,
-      side: 'long',
+      side: MarginDirection.LONG,
     })
     // The two-venue group is the one that used to branch; nothing about it names a venue now.
     expect(LONG_ETH_USDC.pairs.length).toBeGreaterThan(1)
@@ -359,20 +361,20 @@ describe('MarginMarketSelector', () => {
     fireEvent.click(getAllByTestId(TestID.MarginPairRow)[0]!)
     expect(setMarginFormState).toHaveBeenCalledWith(expect.objectContaining({ pairKey: LONG_ETH_USDC.pairKey }))
 
-    mockSide.current = 'short'
+    mockSide.current = MarginDirection.SHORT
     rerender(<MarginMarketSelector />)
     fireEvent.click(getAllByTestId(TestID.MarginPairRow)[0]!)
     // A short's pairKey is the reversed pair, so the flip has to re-read the group, not reuse the key.
     expect(setMarginFormState).toHaveBeenLastCalledWith({
       pairKey: SHORT_ETH_USDC.pairKey,
       paymentToken: undefined,
-      side: 'short',
+      side: MarginDirection.SHORT,
     })
   })
 
   it('names the empty side rather than listing the other one when a pair has no opposite group', () => {
     mockGroups.current = [LONG_ETH_USDC]
-    mockSide.current = 'short'
+    mockSide.current = MarginDirection.SHORT
     const { getByTestId, queryAllByTestId } = render(<MarginMarketSelector />)
     expect(queryAllByTestId(TestID.MarginPairRow)).toHaveLength(0)
     expect(getByTestId(TestID.MarginMarketsEmpty).textContent).toBe('No short markets available')
@@ -381,14 +383,14 @@ describe('MarginMarketSelector', () => {
   it('writes side long for a long group', () => {
     const { getAllByTestId } = render(<MarginMarketSelector />)
     fireEvent.click(getAllByTestId(TestID.MarginPairRow)[1]!)
-    expect(setMarginFormState).toHaveBeenCalledWith(expect.objectContaining({ side: 'long' }))
+    expect(setMarginFormState).toHaveBeenCalledWith(expect.objectContaining({ side: MarginDirection.LONG }))
   })
 
   it('writes the side from the group, not the pair', () => {
-    mockSide.current = 'short'
-    // SHORT_ETH_USDC's only pair carries no `direction`, so reading the pair would write 'long'.
+    mockSide.current = MarginDirection.SHORT
+    // SHORT_ETH_USDC's only pair carries no `direction`, so reading the pair would write LONG.
     const { getAllByTestId } = render(<MarginMarketSelector />)
     fireEvent.click(getAllByTestId(TestID.MarginPairRow)[0]!)
-    expect(setMarginFormState).toHaveBeenCalledWith(expect.objectContaining({ side: 'short' }))
+    expect(setMarginFormState).toHaveBeenCalledWith(expect.objectContaining({ side: MarginDirection.SHORT }))
   })
 })

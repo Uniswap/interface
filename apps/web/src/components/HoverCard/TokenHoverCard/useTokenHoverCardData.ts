@@ -1,7 +1,9 @@
 import { GraphQLApi } from '@universe/api'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
-import { useTokenMarketStats } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
+import {
+  useTokenMarketStats,
+  useTokenPriceConfidenceScore,
+} from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { getPortfolioChartPercentChange } from 'uniswap/src/features/portfolio/portfolioChartPercentChange'
@@ -40,12 +42,11 @@ export function useTokenHoverCardData({
   price?: number
   pricePercentChange?: number
   priceAbsoluteChange?: number
-  statsEnabled: boolean
+  priceConfidenceScore?: number
   volume24hUsd?: number
   tvlUsd?: number
   statsLoading: boolean
 } {
-  const statsEnabled = useFeatureFlag(FeatureFlags.SearchV2UI)
   // Only fetch currencyInfo when using the token prop path (and only once the card is actually
   // hovered open); use the prop directly otherwise.
   const { data: derivedCurrencyInfo, isLoading: currencyInfoLoading } = useCurrencyInfoWithLoading(
@@ -92,7 +93,12 @@ export function useTokenHoverCardData({
     isLoading: statsLoading,
   } = useTokenMarketStats(currencyInfo?.currencyId, {
     isMultichainAggregateView: isMultichainAsset,
-    skip: !statsEnabled || !isOpen,
+    skip: !isOpen,
+  })
+
+  const priceConfidenceScore = useTokenPriceConfidenceScore(currencyInfo?.currencyId, {
+    multichain: isMultichainAsset,
+    skip: !isOpen,
   })
 
   const price = entries.length > 0 ? entries[entries.length - 1].value : undefined
@@ -121,7 +127,7 @@ export function useTokenHoverCardData({
     price,
     pricePercentChange: priceChange?.percentChange,
     priceAbsoluteChange,
-    statsEnabled,
+    priceConfidenceScore,
     volume24hUsd,
     tvlUsd,
     statsLoading,

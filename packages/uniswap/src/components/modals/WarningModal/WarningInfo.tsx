@@ -9,10 +9,17 @@ import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
+/** The shell WarningInfo renders its info content in. */
+export type WarningInfoShell = 'tooltip' | 'modal'
+
 type WarningInfoProps = {
   tooltipProps: Omit<InfoTooltipProps, 'button' | 'trigger'>
   modalProps: Omit<WarningModalProps, 'onClose' | 'isOpen'>
-  infoButton?: ReactNode
+  /**
+   * Shown in both shells. Pass a function when the button styles itself per shell: it is called
+   * with the shell this component picked, so callers never re-derive it from the platform.
+   */
+  infoButton?: ReactNode | ((shell: WarningInfoShell) => ReactNode)
   mobileBanner?: ReactNode
   trigger?: ReactNode
   triggerPlacement?: 'start' | 'end'
@@ -79,7 +86,7 @@ export function WarningInfo({
     return (
       <InfoTooltip
         {...tooltipProps}
-        button={infoButton}
+        button={typeof infoButton === 'function' ? infoButton('tooltip') : infoButton}
         trigger={trigger}
         triggerPlacement={triggerPlacement}
         onOpenChange={handleTooltipOpenChange}
@@ -105,7 +112,7 @@ export function WarningInfo({
         </Flex>
       </TouchableArea>
       <WarningModal isOpen={showModal} {...modalProps} onClose={(): void => setShowModal(false)}>
-        {infoButton}
+        {typeof infoButton === 'function' ? infoButton('modal') : infoButton}
         {mobileBanner}
       </WarningModal>
     </>

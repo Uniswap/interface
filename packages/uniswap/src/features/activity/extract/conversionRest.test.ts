@@ -32,6 +32,8 @@ import {
   SAMPLE_SEED_ADDRESS_4,
   SAMPLE_SEED_ADDRESS_5,
   SAMPLE_SEED_ADDRESS_6,
+  SAMPLE_SEED_ADDRESS_7,
+  SAMPLE_SEED_ADDRESS_8,
 } from 'uniswap/src/test/fixtures'
 
 /**
@@ -674,6 +676,215 @@ describe(parseSwapTransaction, () => {
       inputCurrencyAmountRaw: '1000000000000000000000',
       // Should be 950 (the amount to owner), NOT 50 (the fee) or 1000 (total)
       outputCurrencyAmountRaw: '950000000000000000000',
+    })
+  })
+
+  describe('permissioned token adapter wrap and unwrap', () => {
+    const POOL_MANAGER_ADDRESS = SAMPLE_SEED_ADDRESS_3
+    const SEC_TOKEN_MOCK = { ...ERC20_TOKEN_MOCK, address: SAMPLE_SEED_ADDRESS_7, symbol: 'SEC' }
+    const ADAPTER_TOKEN_MOCK = { ...ERC20_TOKEN_MOCK, address: SAMPLE_SEED_ADDRESS_8, symbol: 'v4SEC' }
+    const SEC_AMOUNT = { amount: 93.45794392523365, raw: '93457943925233644859' }
+
+    it('Swap: uses the payment token as input when the received adapter token is burned to unwrap', () => {
+      const MOCK_PERMISSIONED_BUY: OnChainTransaction = {
+        ...TRANSACTION_BASE,
+        label: OnChainTransactionLabel.SWAP,
+        transfers: [
+          {
+            direction: Direction.RECEIVE,
+            asset: { case: 'token', value: SEC_TOKEN_MOCK },
+            amount: SEC_AMOUNT,
+            from: ADAPTER_TOKEN_MOCK.address,
+            to: FROM_ADDRESS,
+          },
+          {
+            direction: Direction.RECEIVE,
+            asset: { case: 'token', value: ADAPTER_TOKEN_MOCK },
+            amount: SEC_AMOUNT,
+            from: POOL_MANAGER_ADDRESS,
+            to: FROM_ADDRESS,
+          },
+          {
+            direction: Direction.SEND,
+            asset: { case: 'token', value: ADAPTER_TOKEN_MOCK },
+            amount: SEC_AMOUNT,
+            from: FROM_ADDRESS,
+            to: ZERO_ADDRESS,
+          },
+          {
+            direction: Direction.SEND,
+            asset: { case: 'token', value: ERC20_TOKEN_MOCK },
+            amount: { amount: 100, raw: '100000000000000000000' },
+            from: FROM_ADDRESS,
+            to: POOL_MANAGER_ADDRESS,
+          },
+        ],
+      } as OnChainTransaction
+
+      expect(parseSwapTransaction(MOCK_PERMISSIONED_BUY)).toEqual({
+        type: TransactionType.Swap,
+        inputCurrencyId: `1-${ERC20_ASSET_ADDRESS}`,
+        outputCurrencyId: `1-${SEC_TOKEN_MOCK.address}`,
+        transactedUSDValue: undefined,
+        inputCurrencyAmountRaw: '100000000000000000000',
+        outputCurrencyAmountRaw: SEC_AMOUNT.raw,
+      })
+    })
+
+    it('Swap: parses a permissioned token sale where the owner never holds the adapter token', () => {
+      const MOCK_PERMISSIONED_SALE: OnChainTransaction = {
+        ...TRANSACTION_BASE,
+        label: OnChainTransactionLabel.SWAP,
+        transfers: [
+          {
+            direction: Direction.RECEIVE,
+            asset: { case: 'token', value: ERC20_TOKEN_MOCK },
+            amount: { amount: 99.999999, raw: '99999999000000000000' },
+            from: POOL_MANAGER_ADDRESS,
+            to: FROM_ADDRESS,
+          },
+          {
+            direction: Direction.SEND,
+            asset: { case: 'token', value: SEC_TOKEN_MOCK },
+            amount: SEC_AMOUNT,
+            from: FROM_ADDRESS,
+            to: ADAPTER_TOKEN_MOCK.address,
+          },
+        ],
+      } as OnChainTransaction
+
+      expect(parseSwapTransaction(MOCK_PERMISSIONED_SALE)).toEqual({
+        type: TransactionType.Swap,
+        inputCurrencyId: `1-${SEC_TOKEN_MOCK.address}`,
+        outputCurrencyId: `1-${ERC20_ASSET_ADDRESS}`,
+        transactedUSDValue: undefined,
+        inputCurrencyAmountRaw: SEC_AMOUNT.raw,
+        outputCurrencyAmountRaw: '99999999000000000000',
+      })
+    })
+  })
+
+  it('Swap: keeps a partially refunded input token as the input', () => {
+    const MOCK_REFUNDED_SWAP: OnChainTransaction = {
+      ...TRANSACTION_BASE,
+      label: OnChainTransactionLabel.SWAP,
+      transfers: [
+        {
+          direction: Direction.SEND,
+          asset: { case: 'token', value: ERC20_TOKEN_MOCK },
+          amount: { amount: 100, raw: '100000000000000000000' },
+          from: FROM_ADDRESS,
+          to: TO_ADDRESS,
+        },
+        {
+          direction: Direction.RECEIVE,
+          asset: { case: 'token', value: ERC20_TOKEN_MOCK },
+          amount: { amount: 2, raw: '2000000000000000000' },
+          from: TO_ADDRESS,
+          to: FROM_ADDRESS,
+        },
+        {
+          direction: Direction.RECEIVE,
+          asset: { case: 'token', value: WRAPPED_TOKEN_MOCK },
+          amount: { amount: 1, raw: '1000000000000000000' },
+          from: TO_ADDRESS,
+          to: FROM_ADDRESS,
+        },
+      ],
+    } as OnChainTransaction
+
+    expect(parseSwapTransaction(MOCK_REFUNDED_SWAP)).toEqual({
+      type: TransactionType.Swap,
+      inputCurrencyId: `1-${ERC20_ASSET_ADDRESS}`,
+      outputCurrencyId: `1-${WRAPPED_NATIVE_ADDRESS}`,
+      transactedUSDValue: undefined,
+      inputCurrencyAmountRaw: '100000000000000000000',
+      outputCurrencyAmountRaw: '1000000000000000000',
+    })
+  })
+
+  it('Swap: keeps a net-zero token when every sent token nets to zero', () => {
+    const MOCK_NET_ZERO_SENT_SWAP: OnChainTransaction = {
+      ...TRANSACTION_BASE,
+      label: OnChainTransactionLabel.SWAP,
+      transfers: [
+        {
+          direction: Direction.SEND,
+          asset: { case: 'token', value: ERC20_TOKEN_MOCK },
+          amount: { amount: 1, raw: '1000000000000000000' },
+          from: FROM_ADDRESS,
+          to: TO_ADDRESS,
+        },
+        {
+          direction: Direction.RECEIVE,
+          asset: { case: 'token', value: ERC20_TOKEN_MOCK },
+          amount: { amount: 1, raw: '1000000000000000000' },
+          from: TO_ADDRESS,
+          to: FROM_ADDRESS,
+        },
+        {
+          direction: Direction.RECEIVE,
+          asset: { case: 'token', value: WRAPPED_TOKEN_MOCK },
+          amount: { amount: 2, raw: '2000000000000000000' },
+          from: TO_ADDRESS,
+          to: FROM_ADDRESS,
+        },
+      ],
+    } as OnChainTransaction
+
+    expect(parseSwapTransaction(MOCK_NET_ZERO_SENT_SWAP)).toEqual({
+      type: TransactionType.Swap,
+      inputCurrencyId: `1-${ERC20_ASSET_ADDRESS}`,
+      outputCurrencyId: `1-${WRAPPED_NATIVE_ADDRESS}`,
+      transactedUSDValue: undefined,
+      inputCurrencyAmountRaw: '1000000000000000000',
+      outputCurrencyAmountRaw: '2000000000000000000',
+    })
+  })
+
+  it('Swap: falls back to all transfers when netting leaves only a refund on the received side', () => {
+    const MOCK_REFUNDED_SWAP_WITH_FORWARDED_OUTPUT: OnChainTransaction = {
+      ...TRANSACTION_BASE,
+      label: OnChainTransactionLabel.SWAP,
+      transfers: [
+        {
+          direction: Direction.SEND,
+          asset: { case: 'token', value: NATIVE_TOKEN_MOCK },
+          amount: { amount: 1, raw: '1000000000000000000' },
+          from: FROM_ADDRESS,
+          to: TO_ADDRESS,
+        },
+        {
+          direction: Direction.RECEIVE,
+          asset: { case: 'token', value: NATIVE_TOKEN_MOCK },
+          amount: { amount: 0.1, raw: '100000000000000000' },
+          from: TO_ADDRESS,
+          to: FROM_ADDRESS,
+        },
+        {
+          direction: Direction.RECEIVE,
+          asset: { case: 'token', value: VAULT_SHARE_TOKEN_MOCK },
+          amount: { amount: 500, raw: '500000000000000000000' },
+          from: TO_ADDRESS,
+          to: FROM_ADDRESS,
+        },
+        {
+          direction: Direction.SEND,
+          asset: { case: 'token', value: VAULT_SHARE_TOKEN_MOCK },
+          amount: { amount: 500, raw: '500000000000000000000' },
+          from: FROM_ADDRESS,
+          to: SAMPLE_SEED_ADDRESS_4,
+        },
+      ],
+    } as OnChainTransaction
+
+    expect(parseSwapTransaction(MOCK_REFUNDED_SWAP_WITH_FORWARDED_OUTPUT)).toEqual({
+      type: TransactionType.Swap,
+      inputCurrencyId: `1-${NATIVE_ADDRESS}`,
+      outputCurrencyId: `1-${VAULT_SHARE_TOKEN_MOCK.address}`,
+      transactedUSDValue: undefined,
+      inputCurrencyAmountRaw: '1000000000000000000',
+      outputCurrencyAmountRaw: '500000000000000000000',
     })
   })
 })
@@ -1676,7 +1887,7 @@ describe(extractRestOnChainTransactionDetails, () => {
       expect(txns[0]?.typeInfo).toMatchObject({
         type: TransactionType.Swap,
         inputCurrencyId: `1-${ERC20_ASSET_ADDRESS}`,
-        outputCurrencyId: `1-${WRAPPED_NATIVE_ADDRESS}`,
+        outputCurrencyId: `1-${VAULT_SHARE_TOKEN_MOCK.address}`,
       })
     })
 

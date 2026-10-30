@@ -1,10 +1,9 @@
-import { ColorTokens, Flex } from '@universe/mycelium'
+import { ColorTokens, Flex, flexStyles } from '@universe/mycelium'
 import React, { PropsWithChildren, useMemo } from 'react'
 import { Edge } from 'react-native-safe-area-context'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Screen } from 'src/components/layout/Screen'
 import { HorizontalEdgeGestureTarget } from 'src/components/layout/screens/EdgeGestureTarget'
-import { flexStyles } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 

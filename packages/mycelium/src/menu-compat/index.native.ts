@@ -1,12 +1,9 @@
 /**
- * Native stub for the web-only menu compat. The native leg is deferred per
- * INFRA-3021 (native keeps the legacy ContextMenu.native implementation until
- * the uniwind track lands). Components and className compilers throw at
- * render/call time so an accidental native import fails loudly instead of
- * silently rendering nothing. Platform-neutral values (width constants, the
- * sheet container style object, an inert host context) are exported for real
- * so cross-platform importers resolve every symbol the web leg exports — a
- * missing export would surface as an opaque bundler resolution error instead.
+ * Native entry for the menu compat. `DropdownMenuSheetItemCompat` and `getMenuItemColorCompat` are
+ * real; the rest of the menu family stays web-only (native menus render through
+ * `uniswap/src/components/menus/ContextMenu.native`), so those components and className compilers
+ * throw at render/call time instead of silently rendering nothing. Platform-neutral values are
+ * exported for real so cross-platform importers resolve every symbol the web leg exports.
  */
 import * as React from 'react'
 
@@ -22,6 +19,8 @@ export type {
   DropdownMenuSheetItemLabelStyleInputs,
   MenuContentContainerStyles,
 } from './compile'
+export { DropdownMenuSheetItemCompat } from './DropdownMenuSheetItemCompat'
+export { getMenuItemColorCompat } from './types'
 export type {
   ContextMenuCompatHandle,
   ContextMenuCompatProps,
@@ -41,7 +40,7 @@ export type {
 export const MenuCompatHostContext = React.createContext<{ insideMenu: boolean }>({ insideMenu: false })
 
 function throwNativeStub(name: string): never {
-  throw new Error(`${name} is web-only; the native leg is deferred (INFRA-3021).`)
+  throw new Error(`${name} is web-only; see menu-compat/index.native.ts.`)
 }
 
 export function ContextMenuCompat(): never {
@@ -50,10 +49,6 @@ export function ContextMenuCompat(): never {
 
 export function MenuContentCompat(): never {
   return throwNativeStub('MenuContentCompat')
-}
-
-export function DropdownMenuSheetItemCompat(): never {
-  return throwNativeStub('DropdownMenuSheetItemCompat')
 }
 
 export function CheckCircleFilledGlyph(): never {
@@ -82,10 +77,6 @@ export function dropdownMenuSheetItemLabelClassName(): never {
 
 export function dropdownMenuSheetItemSubheaderClassName(): never {
   return throwNativeStub('dropdownMenuSheetItemSubheaderClassName')
-}
-
-export function getMenuItemColorCompat(): never {
-  return throwNativeStub('getMenuItemColorCompat')
 }
 
 export function resolveMenuColor(): never {

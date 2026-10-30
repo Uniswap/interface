@@ -1,6 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react'
 import { TestID } from '@universe/test'
 import type { ReactNode } from 'react'
+import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { PriceChartData } from '~/components/Charts/PriceChart'
 import { DataQuality, PriceChartType } from '~/components/Charts/utils'
 import type { MarginMarket } from '~/constants/margin'
@@ -222,7 +223,13 @@ describe('MarginChartPane state machine', () => {
         pnlUsd: 514,
         pnlPct: 30.24,
         accruedUsd: 50,
-        ticker: { normalizedAccrued: 50, normalizedDebt: 1786, apyBps: 400, direction: 'LONG', mark: 2000 },
+        ticker: {
+          normalizedAccrued: 50,
+          normalizedDebt: 1786,
+          apyBps: 400,
+          direction: MarginDirection.LONG,
+          mark: 2000,
+        },
       },
     })
     render(<MarginChartPane />)
@@ -286,7 +293,13 @@ describe('MarginChartPane state machine', () => {
         leverage: '2x',
         venue: 'MORPHO',
         accruedUsd: 50,
-        ticker: { normalizedAccrued: 50, normalizedDebt: 1786, apyBps: 400, direction: 'LONG', mark: 2000 },
+        ticker: {
+          normalizedAccrued: 50,
+          normalizedDebt: 1786,
+          apyBps: 400,
+          direction: MarginDirection.LONG,
+          mark: 2000,
+        },
       },
     })
     const { rerender } = render(<MarginChartPane />)
@@ -300,7 +313,13 @@ describe('MarginChartPane state machine', () => {
         leverage: '2x',
         venue: 'MORPHO',
         accruedUsd: 80,
-        ticker: { normalizedAccrued: 80, normalizedDebt: 1786, apyBps: 400, direction: 'LONG', mark: 2000 },
+        ticker: {
+          normalizedAccrued: 80,
+          normalizedDebt: 1786,
+          apyBps: 400,
+          direction: MarginDirection.LONG,
+          mark: 2000,
+        },
       },
     })
     rerender(<MarginChartPane />)

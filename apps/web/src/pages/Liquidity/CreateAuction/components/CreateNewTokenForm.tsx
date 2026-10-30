@@ -167,7 +167,7 @@ export function CreateNewTokenForm({ createNew }: { createNew: CreateNewTokenFor
 
   const { status: imageStatus, errorReason: imageErrorReason, start: startImageUpload } = useTokenImageUpload()
   const isImageProcessing = imageStatus === 'uploading' || imageStatus === 'verifying'
-  // Blob preview (step-local upload) wins until the Pinata URL loads in the background; see
+  // Blob preview (step-local upload) wins until the gateway URL loads in the background; see
   // `useTokenImageUpload` + `localImagePreviewUri` on the store.
   const displayImageUri = resolveCreateNewTokenDisplayImageSrc(createNew.localImagePreviewUri, createNew.imageUrl)
 

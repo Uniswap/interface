@@ -39,6 +39,7 @@ export function PortfolioOverview({ evmAddress, chainIds }: PortfolioChartSectio
   const {
     data: chartData,
     loading: chartLoading,
+    isUnavailable: isChartUnavailable,
     chartColor,
   } = usePortfolioChartData({
     evmAddress,
@@ -70,7 +71,8 @@ export function PortfolioOverview({ evmAddress, chainIds }: PortfolioChartSectio
   // Hide the chart (and its tap-through to the details/PnL screen) on an empty wallet — a zero
   // total balance is meaningless to chart. Matches `isEmptyWalletBalance`: a defined, non-positive total.
   const isEmptyPortfolio = portfolioData?.balanceUSD !== undefined && portfolioData.balanceUSD <= 0
-  const canShowChart = !isEmptyPortfolio && chartData.length > 0
+  const canOpenChartDetails = !isEmptyPortfolio && chartData.length > 0
+  const canShowChart = canOpenChartDetails && !isChartUnavailable
 
   const openPortfolioChartDetails = useCallback(() => {
     sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
@@ -80,7 +82,7 @@ export function PortfolioOverview({ evmAddress, chainIds }: PortfolioChartSectio
   }, [])
 
   const chartNavigationIcon = useMemo((): JSX.Element | undefined => {
-    if (!canShowChart) {
+    if (!canOpenChartDetails) {
       return undefined
     }
 
@@ -89,11 +91,11 @@ export function PortfolioOverview({ evmAddress, chainIds }: PortfolioChartSectio
         <RotatableChevron color="$neutral3" direction="right" size="$icon.16" />
       </Flex>
     )
-  }, [canShowChart])
+  }, [canOpenChartDetails])
 
   return (
     <Flex py="$spacing20" px="$spacing24">
-      {canShowChart ? (
+      {canOpenChartDetails ? (
         <TouchableArea testID={TestID.PortfolioChartToggle} activeOpacity={1} onPress={openPortfolioChartDetails}>
           <Flex row alignItems="flex-start">
             <Flex flex={1}>
@@ -112,20 +114,22 @@ export function PortfolioOverview({ evmAddress, chainIds }: PortfolioChartSectio
                   evmOwner={evmAddress}
                   endText={chartNavigationIcon}
                   chartPeriod={chartPeriod}
-                  overridePercentChange={chartPercentChange?.percentChange}
-                  overrideAbsoluteChangeUSD={chartPercentChange?.absoluteChangeUSD}
+                  overridePercentChange={canShowChart ? chartPercentChange?.percentChange : undefined}
+                  overrideAbsoluteChangeUSD={canShowChart ? chartPercentChange?.absoluteChangeUSD : undefined}
                 />
               </Coachmark>
             </Flex>
-            <PortfolioChart
-              data={chartData}
-              loading={chartLoading}
-              chartColor={chartColor}
-              isExpanded={false}
-              chartPeriod={chartPeriod}
-              isTotalValueMatch={isTotalValueMatch}
-              onChartPeriodChange={noop}
-            />
+            {canShowChart && (
+              <PortfolioChart
+                data={chartData}
+                loading={chartLoading}
+                chartColor={chartColor}
+                isExpanded={false}
+                chartPeriod={chartPeriod}
+                isTotalValueMatch={isTotalValueMatch}
+                onChartPeriodChange={noop}
+              />
+            )}
           </Flex>
         </TouchableArea>
       ) : (

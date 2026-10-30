@@ -1,5 +1,15 @@
 import { isIOS } from '@universe/environment'
-import { Flex, Separator, spacing, TouchableArea, zIndexes } from '@universe/mycelium'
+import {
+  Flex,
+  Separator,
+  spacing,
+  TouchableArea,
+  zIndexes,
+  flexStyles,
+  AnimatedFlex,
+  DropdownMenuSheetItem,
+} from '@universe/mycelium'
+import { Portal } from '@universe/mycelium/portal'
 import { useIsDarkMode } from '@universe/mycelium/theme-hooks-compat'
 import { withSporeCurve } from '@universe/tailwind/animations/reanimated'
 import isEqual from 'lodash/isEqual'
@@ -18,10 +28,6 @@ import { Modal, NativeSyntheticEvent, useWindowDimensions, View } from 'react-na
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
 import { FullWindowOverlay } from 'react-native-screens'
-import { flexStyles } from 'ui/src'
-import { DropdownMenuSheetItem } from 'ui/src/components/dropdownMenuSheet/DropdownMenuSheetItem'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
-import { Portal } from 'ui/src/components/portal/Portal'
 import { ContextMenuHandle, ContextMenuProps } from 'uniswap/src/components/menus/ContextMenu'
 import { useContextMenuTracking } from 'uniswap/src/components/menus/hooks/useContextMenuTracking'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'

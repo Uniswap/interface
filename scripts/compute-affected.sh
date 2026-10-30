@@ -20,13 +20,18 @@ fi
 # the PR head and its target branch, so the first parent is exactly
 # the base the PR will merge into — the same base nx-set-shas derives
 # from a full-history `git merge-base origin/<base> HEAD`.
-# Fail open: if the checkout isn't that merge commit, run everything.
+# Merge-queue runs pass QUEUE_BASE_SHA (the entry ahead in the queue, or the
+# trunk tip): the queue commit has no second parent, so HEAD^2 cannot find it.
+# Fail open: if neither base is available, run everything.
 # evaluate_affected_gate/action.yml derives the same base for its `paths`
 # check — the two must agree on the diff they inspect; keep them in sync.
-if git rev-parse --verify --quiet HEAD^2 > /dev/null; then
+if [[ -n "${QUEUE_BASE_SHA:-}" ]] && git rev-parse --verify --quiet "${QUEUE_BASE_SHA}^{commit}" > /dev/null; then
+  BASE_SHA="$QUEUE_BASE_SHA"
+  echo "🔀 - merge queue entry, diffing against $BASE_SHA"
+elif git rev-parse --verify --quiet HEAD^2 > /dev/null; then
   BASE_SHA=$(git rev-parse HEAD^1)
 else
-  run_all "⚠️ - Could not determine the PR merge base, running all checks"
+  run_all "⚠️ - Could not determine the merge base, running all checks"
   exit 0
 fi
 
@@ -117,10 +122,10 @@ fi
 #              the exact PR class it exists to catch). Split out of SCRIPTS because gating
 #              these on the `uniswap` nx project ran the 66s security-gate
 #              suite on 59% of PRs instead of 20%, for 28 tests taking 115ms.
-#   WORKBENCH, RH_CCA — the transitive package closure of each program's
-#              tsconfig references: a packages/mycelium change can break
-#              workbench's typecheck without touching labs/. Their own workflow
-#              files are absent because a change to either exits into run-all.
+#   WORKBENCH — the transitive package closure of the program's tsconfig
+#              references: a packages/mycelium change can break workbench's
+#              typecheck without touching labs/. Its own workflow file is
+#              absent because a change to it exits into run-all.
 #
 # Rows split on their FIRST `|`, so patterns may use alternation freely.
 PATH_FILTERS=(
@@ -129,7 +134,6 @@ PATH_FILTERS=(
   "CONFIG|^config/"
   "SANDBOX|^labs/sandbox/"
   "WORKBENCH|^(labs/workbench/|packages/(mycelium|environment|config|logger|privacy|tailwind)/|bun\.lock$|package\.json$|\.bun-version$|\.nvmrc$)"
-  "RH_CCA|^(labs/rh-cca/|packages/(api|config|encoding|environment|logger|mycelium|prices|privacy|react-query|sessions|tailwind|trpc|ui|uniswap|utilities|websocket)/|config/(tsconfig|vitest-presets|oxlint-plugins)/|oxlint\.config\.ts$|\.oxfmtrc\.json$|tsconfig\.base\.json$|bun\.lock$|package\.json$|\.bun-version$|\.nvmrc$)"
 )
 for filter in "${PATH_FILTERS[@]}"; do
   name="${filter%%|*}"
@@ -142,6 +146,34 @@ for filter in "${PATH_FILTERS[@]}"; do
     echo "$name=false" >> "$GITHUB_OUTPUT"
   fi
 done
+
+# CASEBOOK — the regression-catalog workflow. Its gate matches the diff against
+# each case's `code_paths` / `automationRefs` (not nx projects), so the relevance
+# test mirrors that: the diff touches a catalog, the engine, or a path some case
+# covers. Prefixes are read from the checked-out catalogs (same trust level as
+# the nx run below); `stem.*` entries become `stem.` prefixes, `dir` entries
+# match `dir*` — both supersets, erring toward running. Fail open on any
+# extraction problem.
+CASEBOOK=false
+if grep -qE '^(packages/casebook/|apps/cli/src/casebook/|scripts/casebook\.ts$)' <<< "$CHANGED_PATHS"; then
+  CASEBOOK=true
+elif [[ ! -d packages/casebook ]]; then
+  : # no catalog package in this tree yet — nothing for the gate to match
+elif ! compgen -G 'packages/casebook/*/scenarios/*.md' > /dev/null; then
+  # The package exists but the glob found no cases: a layout this script does not
+  # understand. Fail open — the engine's own discovery decides, not this heuristic.
+  echo "⚠️ - packages/casebook exists but no scenarios matched, running casebook"
+  CASEBOOK=true
+elif ! CASEBOOK_PREFIXES=$(grep -hoE '^ +- (path: )?[A-Za-z0-9_.@-]+(/[A-Za-z0-9_.@-]+)+/?' packages/casebook/*/scenarios/*.md 2>/dev/null \
+  | sed -E 's/^ +- (path: )?//; s/\.\*$//' | sort -u) || [[ -z "$CASEBOOK_PREFIXES" ]]; then
+  echo "⚠️ - could not read casebook code_paths, running casebook"
+  CASEBOOK=true
+elif awk 'NR == FNR { prefixes[$0] = 1; next } { for (prefix in prefixes) if (index($0, prefix) == 1) { found = 1; exit } } END { exit !found }' \
+  <(printf '%s\n' "$CASEBOOK_PREFIXES") <(printf '%s\n' "$CHANGED_PATHS"); then
+  CASEBOOK=true
+fi
+if [[ "$CASEBOOK" == true ]]; then echo "🔎 - CASEBOOK paths touched"; else echo "⏭️ - CASEBOOK paths untouched"; fi
+echo "CASEBOOK=$CASEBOOK" >> "$GITHUB_OUTPUT"
 
 # Fail open: a broken affected computation must run everything, not
 # silently skip it.

@@ -6,6 +6,7 @@ import type {
   MarginPositionLeg,
   MarginQuoteResponse,
 } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
+import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { describe, expect, it } from 'vitest'
 import { MARGIN_CHAIN_ID } from '~/constants/margin'
 import type { MarginMarket } from '~/constants/margin'
@@ -74,7 +75,7 @@ const mkLeg = (over?: Partial<MarginPositionLeg>): MarginPositionLeg => ({
 // means unattributable.
 const mkPos = (over?: Partial<MarginActivePosition>): MarginActivePosition => ({
   positionId: 'pos-1',
-  direction: 'LONG',
+  direction: MarginDirection.LONG,
   exposureToken: EXPOSURE_TOKEN,
   counterToken: COUNTER_TOKEN,
   size: '0',
@@ -122,7 +123,7 @@ const mkQuote = (over?: Partial<MarginQuoteResponse>): MarginQuoteResponse => ({
   action: 'open',
   chainId: MARGIN_CHAIN_ID,
   swapper: '0xswapper',
-  direction: 'LONG',
+  direction: MarginDirection.LONG,
   exposureToken: EXPOSURE_TOKEN,
   counterToken: COUNTER_TOKEN,
   legs: [],
@@ -166,7 +167,7 @@ describe('positionsForMarket', () => {
       mkPos({ legs: [mkLeg({ venue: 'AAVE_V3' })] }), // ✗ other venue
       mkPos({ legs: [] }), // ✓ absent leg → MORPHO
       mkPos({ entryPrice: '0', openedAt: '0' }), // ✗ no attributable basis
-      mkPos({ direction: 'SHORT' }), // ✗ reversed venue roles (same pair, opposite direction)
+      mkPos({ direction: MarginDirection.SHORT }), // ✗ reversed venue roles (same pair, opposite direction)
     ]
     expect(positionsForMarket({ positions, market: mkMarket() })).toHaveLength(2)
   })
@@ -219,8 +220,8 @@ describe('composeMarginChartOverlays', () => {
 
     const short = composeMarginChartOverlays(
       mkInput({
-        market: mkMarket({ direction: 'SHORT' }),
-        positions: [mkPos({ direction: 'SHORT', liquidationPrice: X18(2500) })],
+        market: mkMarket({ direction: MarginDirection.SHORT }),
+        positions: [mkPos({ direction: MarginDirection.SHORT, liquidationPrice: X18(2500) })],
       }),
     )
     expect(short.zone).toMatchObject({ side: 'above', edgePrice: 2500 })
@@ -448,7 +449,10 @@ describe('composeMarginChartOverlays', () => {
 
     // SHORT: mark 2000, liq 2500 → price must RISE 25%.
     const short = composeMarginChartOverlays(
-      mkInput({ market: mkMarket({ direction: 'SHORT' }), positions: [mkPos({ liquidationPrice: X18(2500) })] }),
+      mkInput({
+        market: mkMarket({ direction: MarginDirection.SHORT }),
+        positions: [mkPos({ liquidationPrice: X18(2500) })],
+      }),
     )
     expect(short.priceLines.find((l) => l.id === 'liq')?.distanceSignedPct).toBeCloseTo(25, 8)
 
@@ -627,7 +631,7 @@ describe('composeMarginChartOverlays', () => {
       normalizedAccrued: 50,
       normalizedDebt: 1786,
       apyBps: 400,
-      direction: 'LONG',
+      direction: MarginDirection.LONG,
       mark: 2000,
     })
   })
@@ -649,7 +653,7 @@ describe('composeMarginChartOverlays', () => {
 
   it('SHORT accrued rides the mark; ticker carries direction + mark for the chip', () => {
     const shortPos = mkEconPos({
-      direction: 'SHORT',
+      direction: MarginDirection.SHORT,
       size: raw(1, 18), // SHORT: exposure leg (size) is the debt leg — 1 WETH
       legs: [mkLeg({ debt: raw(1, 18) })],
       accruedInterest: raw(1, 15), // 0.001 WETH debt units
@@ -660,7 +664,7 @@ describe('composeMarginChartOverlays', () => {
     const out = composeMarginChartOverlays(
       mkInput({
         market: mkMarket({
-          direction: 'SHORT',
+          direction: MarginDirection.SHORT,
           collateral: { address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', symbol: 'USDC', decimals: 6 },
           debt: { address: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', symbol: 'WETH', decimals: 18 },
         }),
@@ -669,7 +673,7 @@ describe('composeMarginChartOverlays', () => {
     )
     // accrued 0.001 WETH × mark 2000 = 2 USD.
     expect(out.legend?.accruedUsd).toBeCloseTo(2, 6)
-    expect(out.legend?.ticker).toMatchObject({ direction: 'SHORT', mark: 2000, normalizedDebt: 1 })
+    expect(out.legend?.ticker).toMatchObject({ direction: MarginDirection.SHORT, mark: 2000, normalizedDebt: 1 })
   })
 
   it('computes autoscale bounds from the PRE-merge line set (merged BE still widens bounds)', () => {
@@ -776,9 +780,9 @@ describe('composeMarginChartOverlays', () => {
       collateral: 2,
       collateralAtOpen: 0, // mkEconPos leaves collateralAtOpen at mkPos's default '0'
       debt: 1786,
-      direction: 'LONG',
+      direction: MarginDirection.LONG,
     })
-    expect(out.usdBasis).toEqual({ direction: 'LONG', collateral: 2, debt: 1786, costBasisUsd: 1700 })
+    expect(out.usdBasis).toEqual({ direction: MarginDirection.LONG, collateral: 2, debt: 1786, costBasisUsd: 1700 })
     expect(out.primaryLeverage).toBe('2x')
   })
 

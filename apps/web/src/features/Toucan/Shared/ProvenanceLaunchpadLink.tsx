@@ -3,7 +3,8 @@ import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import { type LaunchProvenance, LaunchProvenanceMethod } from 'uniswap/src/features/dataApi/launchProvenance'
-import type { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { type ElementName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import type { TokenProvenanceAnalyticsProperties } from 'uniswap/src/features/telemetry/types'
 import { sanitizeUrl } from 'utilities/src/format/urls'
@@ -86,11 +87,13 @@ export function ProvenanceLaunchpadLink({
   isExternal,
   element,
   launchMethod,
+  tokenAddress,
   onPress,
   children,
 }: {
   launchpad: LaunchProvenance['launchpad']
   element: ElementName
+  tokenAddress?: string
   launchMethod: NonNullable<TokenProvenanceAnalyticsProperties['launch_method']>
   /** Reports the in-app launches navigation; an external destination is covered by `Trace` alone. */
   onPress?: () => void
@@ -119,6 +122,14 @@ export function ProvenanceLaunchpadLink({
       placement="top"
       size={TooltipSize.Small}
       fitContent
+      // Fires on every hover-in, like the other `MouseoverTooltip` open events.
+      onOpen={() =>
+        sendAnalyticsEvent(UniswapEventName.TooltipOpened, {
+          element,
+          tooltip_name: 'provenance_launchpad_tooltip',
+          token_address: tokenAddress,
+        })
+      }
       text={
         <Flex gap="$spacing4">
           <Text variant="body4" color="$neutral1">

@@ -1,5 +1,6 @@
 import type { TFunction } from 'i18next'
 import type { MarginActivePosition, MarginPlanResponse } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
+import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { describe, expect, it } from 'vitest'
 import { buildMarginActiveRows, marginAccruedInterestPerDay } from '~/pages/Swap/Margin/marginActiveRows'
 
@@ -44,7 +45,7 @@ function makePosition({
   return {
     status: 'ACTIVE',
     positionId: 'pos-1',
-    direction: 'LONG',
+    direction: MarginDirection.LONG,
     exposureToken: { address: collateralToken, chainId: 1, decimals: 18 },
     counterToken: { address: debtToken, chainId: 1, decimals: 6 },
     size: '1',
@@ -208,7 +209,7 @@ describe('marginAccruedInterestPerDay', () => {
     const result = marginAccruedInterestPerDay({
       position: accruing(),
       debtDecimals: 6,
-      direction: 'LONG',
+      direction: MarginDirection.LONG,
       nowMs: NOW,
     })
     expect(result).toEqual({ accrued: 5, perDayUsd: 0.5 })
@@ -220,7 +221,7 @@ describe('marginAccruedInterestPerDay', () => {
     const result = marginAccruedInterestPerDay({
       position: accruing(),
       debtDecimals: 6,
-      direction: 'SHORT',
+      direction: MarginDirection.SHORT,
       nowMs: NOW,
     })
     expect(result).toEqual({ accrued: 5, perDayUsd: 1000 })
@@ -233,7 +234,7 @@ describe('marginAccruedInterestPerDay', () => {
       marginAccruedInterestPerDay({
         position: accruing({ openedAt: '0' }),
         debtDecimals: 6,
-        direction: 'LONG',
+        direction: MarginDirection.LONG,
         nowMs: NOW,
       }),
     ).toBeUndefined()
@@ -244,7 +245,7 @@ describe('marginAccruedInterestPerDay', () => {
       marginAccruedInterestPerDay({
         position: accruing({ accruedInterest: undefined }),
         debtDecimals: 6,
-        direction: 'LONG',
+        direction: MarginDirection.LONG,
         nowMs: NOW,
       }),
     ).toBeUndefined()
@@ -256,7 +257,7 @@ describe('marginAccruedInterestPerDay', () => {
     const result = marginAccruedInterestPerDay({
       position: accruing(),
       debtDecimals: 6,
-      direction: 'LONG',
+      direction: MarginDirection.LONG,
       nowMs: Number(OPENED_AT) * 1000,
     })
     expect(result).toEqual({ accrued: 5, perDayUsd: 5 })

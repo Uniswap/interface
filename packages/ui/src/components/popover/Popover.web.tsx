@@ -1,4 +1,5 @@
 import { Popover as PopoverPrimitive, type PopoverRootActions } from '@base-ui/react/popover'
+import { useSporeColors } from '@universe/mycelium'
 import { OVERLAY_PORTAL_CONTAINER_ATTRIBUTE } from '@universe/mycelium/popover-compat'
 import {
   createContext,
@@ -53,7 +54,6 @@ import type {
   PopoverProps,
   PopoverVia,
 } from 'ui/src/components/popover/types'
-import { useSporeColors } from 'ui/src/hooks/useSporeColors'
 import { zIndexes } from 'ui/src/theme/zIndexes'
 import { useEvent } from 'utilities/src/react/hooks'
 

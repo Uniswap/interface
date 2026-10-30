@@ -1,4 +1,5 @@
 export { ButtonCompat, getContrastTextClass } from './ButtonCompat'
+export { PRESS_SCALE } from './press-scale'
 export type {
   ButtonCompatProps,
   ButtonEmphasis,

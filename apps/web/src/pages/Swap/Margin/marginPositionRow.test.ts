@@ -3,6 +3,7 @@ import type {
   MarginMarketRow,
   MarginTerminalPosition,
 } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
+import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { describe, expect, it } from 'vitest'
 import {
   hasMarginOpenedAt,
@@ -28,7 +29,7 @@ function activeFixture(overrides: Partial<MarginActivePosition> = {}): MarginAct
   return {
     status: 'ACTIVE',
     positionId: '3',
-    direction: 'LONG',
+    direction: MarginDirection.LONG,
     exposureToken: WETH,
     counterToken: USDC,
     size: '1000000000000000000',
@@ -51,7 +52,7 @@ function terminalFixture(overrides: Partial<MarginTerminalPosition> = {}): Margi
   return {
     status: 'COMPLETED',
     positionId: '4',
-    direction: 'LONG',
+    direction: MarginDirection.LONG,
     exposureToken: WETH,
     counterToken: USDC,
     size: '1000000000000000000',
@@ -76,7 +77,7 @@ describe('marginPositionTokens', () => {
 
   // A short's exposure IS its debt leg — swapping these silently divides amounts by the wrong decimals.
   it('flips the legs for a SHORT', () => {
-    expect(marginPositionTokens(activeFixture({ direction: 'SHORT' }))).toEqual({
+    expect(marginPositionTokens(activeFixture({ direction: MarginDirection.SHORT }))).toEqual({
       collateralToken: USDC.address,
       collateralDecimals: 6,
       debtToken: WETH.address,
@@ -90,7 +91,7 @@ describe('marginMarketRowTokens', () => {
     const row = {
       exposureToken: WETH,
       counterToken: USDC,
-      direction: 'SHORT',
+      direction: MarginDirection.SHORT,
     } as MarginMarketRow
     expect(marginMarketRowTokens(row)).toMatchObject({ collateralToken: USDC.address, debtToken: WETH.address })
   })
@@ -194,7 +195,7 @@ describe('marginEquityContributedAtOpen', () => {
   // margin, not 1.5.
   it('carries a SHORT extra turn (L+1)', () => {
     const position = activeFixture({
-      direction: 'SHORT',
+      direction: MarginDirection.SHORT,
       collateralAtOpen: '3000000',
       openedLeverage: '2',
     })
@@ -220,7 +221,7 @@ describe('marginEquityContributedAtOpen', () => {
     expect(
       marginEquityContributedAtOpen({ position: activeFixture({ collateralAtOpen: '0', openedLeverage: '2' }) }),
     ).toBeUndefined()
-    for (const direction of ['LONG', 'SHORT'] as const) {
+    for (const direction of [MarginDirection.LONG, MarginDirection.SHORT] as const) {
       expect(
         marginEquityContributedAtOpen({
           position: activeFixture({ direction, collateralAtOpen: '3000000', openedLeverage: '0' }),
@@ -240,7 +241,11 @@ describe('marginEquityContributedAtOpen', () => {
 
   // A short already underwater at open carries no margin to report, and 0 is a claim — not nothing.
   it('reports nothing for a negative opened leverage', () => {
-    const position = activeFixture({ direction: 'SHORT', collateralAtOpen: '3000000', openedLeverage: '-3' })
+    const position = activeFixture({
+      direction: MarginDirection.SHORT,
+      collateralAtOpen: '3000000',
+      openedLeverage: '-3',
+    })
     expect(marginEquityContributedAtOpen({ position })).toBeUndefined()
   })
 })

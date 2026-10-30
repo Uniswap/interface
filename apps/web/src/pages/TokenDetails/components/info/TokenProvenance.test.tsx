@@ -17,6 +17,7 @@ import {
   type AuctionDisplayDataSources,
   useAuctionDisplayDataSources,
 } from '~/features/Toucan/Auction/hooks/useAuctionDisplayDataSources'
+import { UNISWAP_CCA_LAUNCHPAD_ID } from '~/pages/Launches/launchesModel'
 import { TokenProvenance, TokenProvenanceContent } from '~/pages/TokenDetails/components/info/TokenProvenance'
 import type { TDPState } from '~/pages/TokenDetails/context/createTDPStore'
 import { TokenDetailsAuctionDisplayProvider } from '~/pages/TokenDetails/context/TokenDetailsAuctionDisplayProvider'
@@ -25,6 +26,7 @@ import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
 import type { TokenDetailsAuctionSource } from '~/pages/TokenDetails/hooks/useTokenDetailsAuction'
 import { mocked } from '~/test-utils/mocked'
 import { act, fireEvent, render, renderWithUniswapContext, screen, waitFor } from '~/test-utils/render'
+import { SERVED_CROWD_CCA_PROVENANCE, SERVED_CUSTOM_CCA_PROVENANCE } from '~/test-utils/tokenDetails/fixtures'
 
 vi.mock('uniswap/src/data/apiClients/dataApiService/auctions/AuctionServiceClient', () => ({
   AuctionServiceClient: { getLatestCheckpoint: vi.fn() },
@@ -66,8 +68,8 @@ vi.mock('uniswap/src/features/dataApi/useTokenLaunchProvenance', () => ({ useTok
 
 beforeEach(() => {
   mocked(sendAnalyticsEvent).mockReset()
-  // Unattributed by default, so every auction case exercises the page's own fallback.
-  mocked(useTokenLaunchProvenance).mockReturnValue(undefined)
+  // The auction refines the served record, so auction cases need the backend to have attributed the token.
+  mocked(useTokenLaunchProvenance).mockReturnValue(SERVED_CUSTOM_CCA_PROVENANCE)
 })
 
 afterEach(() => {
@@ -75,6 +77,11 @@ afterEach(() => {
 })
 
 const AUCTION_ADDRESS = '0x1111111111111111111111111111111111111111'
+/** A registry row that names our launchpad without recording the mechanism. */
+const SERVED_UNCLASSIFIED_CCA: LaunchProvenance = {
+  launchpad: { id: UNISWAP_CCA_LAUNCHPAD_ID, name: 'Uniswap CCA' },
+  method: LaunchProvenanceMethod.Unknown,
+}
 
 const auction = {
   chainId: UniverseChainId.Mainnet,
@@ -251,6 +258,7 @@ describe('TokenProvenance', () => {
     { status: TokenDetailsSourceState.Error, error: new Error('Auction lookup failed') },
   ])('renders nothing when the auction source is $status', (auctionSource) => {
     mockStore(auctionSource)
+    mocked(useTokenLaunchProvenance).mockReturnValue(undefined)
     mocked(useAuctionDisplayDataSources).mockReturnValue(LIVE)
 
     render(<TokenProvenanceWithDisplay />)
@@ -281,7 +289,19 @@ describe('TokenProvenance', () => {
 
   it('renders nothing for a token with no attributed launch and no auction', () => {
     mockStore({ status: TokenDetailsSourceState.NotFound })
+    mocked(useTokenLaunchProvenance).mockReturnValue(undefined)
     mocked(useAuctionDisplayDataSources).mockReturnValue(LIVE)
+
+    render(<TokenProvenanceWithDisplay />)
+
+    expect(screen.queryByTestId(TestID.TokenDetailsProvenance)).toBeNull()
+    expect(sendAnalyticsEvent).not.toHaveBeenCalled()
+  })
+
+  it('renders nothing for an auction the backend has not attributed', () => {
+    mockStore({ status: TokenDetailsSourceState.Found, auction, auctions: [auction] })
+    mocked(useAuctionDisplayDataSources).mockReturnValue(ENDED_WITH_RAISE)
+    mocked(useTokenLaunchProvenance).mockReturnValue(undefined)
 
     render(<TokenProvenanceWithDisplay />)
 
@@ -295,7 +315,6 @@ describe('TokenProvenance', () => {
 
     render(<TokenProvenanceWithDisplay />)
 
-    expect(screen.getByText('Info')).toBeInTheDocument()
     expect(screen.getByText('@uniswap').closest('a')).toHaveAttribute('href', 'https://x.com/uniswap')
     expect(screen.getByText('Uniswap')).toBeInTheDocument()
     expect(screen.getByText(/raised$/)).toBeInTheDocument()
@@ -327,6 +346,7 @@ describe('TokenProvenance', () => {
       UniverseChainId.Robinhood,
     )
     mocked(useAuctionDisplayDataSources).mockReturnValue(ENDED_WITH_RAISE)
+    mocked(useTokenLaunchProvenance).mockReturnValue(SERVED_CROWD_CCA_PROVENANCE)
 
     render(<TokenProvenanceWithDisplay />)
 
@@ -343,15 +363,16 @@ describe('TokenProvenance', () => {
   })
 
   it.each([
-    [AuctionType.CUSTOM, 'Custom Auction'],
-    [AuctionType.CROWD, 'Crowd Launch'],
-  ])('shows the served method %s', (auctionType, label) => {
+    [AuctionType.CUSTOM, SERVED_CUSTOM_CCA_PROVENANCE, 'Custom Auction'],
+    [AuctionType.CROWD, SERVED_CROWD_CCA_PROVENANCE, 'Crowd Launch'],
+  ])('shows the served method %s', (auctionType, served, label) => {
     mockStore({
       status: TokenDetailsSourceState.Found,
       auction: { ...auction, auctionType },
       auctions: [{ ...auction, auctionType }],
     })
     mocked(useAuctionDisplayDataSources).mockReturnValue(LIVE)
+    mocked(useTokenLaunchProvenance).mockReturnValue(served)
 
     render(<TokenProvenanceWithDisplay />)
 
@@ -366,6 +387,7 @@ describe('TokenProvenance', () => {
     const unclassified = { ...auction, isQuickLaunch, auctionType: AuctionType.UNSPECIFIED }
     mockStore({ status: TokenDetailsSourceState.Found, auction: unclassified, auctions: [unclassified] })
     mocked(useAuctionDisplayDataSources).mockReturnValue(LIVE)
+    mocked(useTokenLaunchProvenance).mockReturnValue(SERVED_UNCLASSIFIED_CCA)
 
     render(<TokenProvenanceWithDisplay />)
 
@@ -377,31 +399,38 @@ describe('TokenProvenance', () => {
   })
 
   it.each([
-    [AuctionType.CUSTOM, 'Custom Auction', 'custom', 'auction_only'],
-    [AuctionType.CROWD, 'Crowd Launch', 'crowd', 'trading'],
-  ] as const)('renders and reports the served method %s', (auctionType, label, analyticsType, pageLayout) => {
-    mockStore({
-      status: TokenDetailsSourceState.Found,
-      auction: { ...auction, auctionType },
-      auctions: [{ ...auction, auctionType }],
-    })
-    mocked(useAuctionDisplayDataSources).mockReturnValue(LIVE)
+    [AuctionType.CUSTOM, SERVED_CUSTOM_CCA_PROVENANCE, 'Custom Auction', 'custom', 'auction_only', 'uniswap-cca'],
+    [AuctionType.CROWD, SERVED_CROWD_CCA_PROVENANCE, 'Crowd Launch', 'crowd', 'trading', 'pools'],
+  ] as const)(
+    'renders and reports the served method %s',
+    (auctionType, served, label, analyticsType, pageLayout, launchpad) => {
+      mockStore({
+        status: TokenDetailsSourceState.Found,
+        auction: { ...auction, auctionType },
+        auctions: [{ ...auction, auctionType }],
+      })
+      mocked(useAuctionDisplayDataSources).mockReturnValue(LIVE)
+      mocked(useTokenLaunchProvenance).mockReturnValue(served)
 
-    render(<TokenProvenanceWithDisplay />)
+      render(<TokenProvenanceWithDisplay />)
 
-    expect(screen.getByTestId(TestID.TokenDetailsProvenanceLaunchMethod)).toHaveTextContent(label)
-    expect(sendAnalyticsEvent).toHaveBeenCalledExactlyOnceWith(AuctionEventName.ProvenanceModuleViewed, {
-      surface: 'tdp',
-      chain_id: UniverseChainId.Mainnet,
-      auction_type: analyticsType,
-      launch_method: analyticsType,
-      entry_point: 'tdp_provenance_module',
-      has_auction_history: false,
-      auction_phase: 'live',
-      pool_availability: 'no_pool',
-      page_layout: pageLayout,
-    })
-  })
+      expect(screen.getByTestId(TestID.TokenDetailsProvenanceLaunchMethod)).toHaveTextContent(label)
+      expect(sendAnalyticsEvent).toHaveBeenCalledExactlyOnceWith(AuctionEventName.ProvenanceModuleViewed, {
+        surface: 'tdp',
+        chain_id: UniverseChainId.Mainnet,
+        auction_type: analyticsType,
+        launch_method: analyticsType,
+        entry_point: 'tdp_provenance_module',
+        has_auction_history: false,
+        auction_phase: 'live',
+        pool_availability: 'no_pool',
+        page_layout: pageLayout,
+        token_address: '0x3333333333333333333333333333333333333333',
+        auction_address: AUCTION_ADDRESS,
+        launchpad,
+      })
+    },
+  )
 
   it('logs one settled impression across re-renders with only the allowed dimensions', () => {
     mockStore({ status: TokenDetailsSourceState.Found, auction, auctions: [auction] })
@@ -419,6 +448,9 @@ describe('TokenProvenance', () => {
       auction_phase: 'ended',
       pool_availability: 'has_pool',
       page_layout: 'trading',
+      token_address: '0x3333333333333333333333333333333333333333',
+      auction_address: AUCTION_ADDRESS,
+      launchpad: UNISWAP_CCA_LAUNCHPAD_ID,
       has_auction_history: true,
     })
   })
@@ -449,6 +481,7 @@ describe('TokenProvenance', () => {
     const unclassified = { ...auction, auctionType: AuctionType.UNSPECIFIED }
     mockStore({ status: TokenDetailsSourceState.Found, auction: unclassified, auctions: [unclassified] })
     mocked(useAuctionDisplayDataSources).mockReturnValue(LIVE)
+    mocked(useTokenLaunchProvenance).mockReturnValue(SERVED_UNCLASSIFIED_CCA)
 
     render(<TokenProvenanceWithDisplay />)
 
@@ -462,6 +495,9 @@ describe('TokenProvenance', () => {
       pool_availability: 'no_pool',
       page_layout: 'trading',
       has_auction_history: false,
+      token_address: '0x3333333333333333333333333333333333333333',
+      auction_address: AUCTION_ADDRESS,
+      launchpad: UNISWAP_CCA_LAUNCHPAD_ID,
     })
     expect(useAuctionDisplayDataSources).toHaveBeenCalledWith(
       expect.objectContaining({ tokenAddress: auction.tokenAddress }),
@@ -621,7 +657,12 @@ describe('TokenProvenance', () => {
         .mock.calls.filter(([event]) => event === AuctionEventName.AuctionSelectorOpened)
         .map(([, payload]) => payload)
     expect(selectorOpened()).toEqual([
-      { chain_id: UniverseChainId.Mainnet, auction_count: 2, entry_point: 'tdp_provenance_module' },
+      {
+        chain_id: UniverseChainId.Mainnet,
+        token_address: expect.any(String),
+        auction_count: 2,
+        entry_point: 'tdp_provenance_module',
+      },
     ])
     // Opening the selector is not a navigation: the ADP event belongs to selecting an auction.
     expect(sendAnalyticsEvent).not.toHaveBeenCalledWith(
@@ -650,20 +691,28 @@ describe('TokenProvenance', () => {
       auction_phase: 'ended',
       pool_availability: 'has_pool',
       page_layout: 'trading',
+      token_address: '0x3333333333333333333333333333333333333333',
+      auction_address: AUCTION_ADDRESS,
+      launchpad: UNISWAP_CCA_LAUNCHPAD_ID,
       destination: 'auction_details',
     })
   })
-  it('shows the first-traded date only once the token has a pool', () => {
+  it('shows the served first trade and never the auction creation date', () => {
     mockStore({ status: TokenDetailsSourceState.Found, auction, auctions: [auction] })
-    // The auction's creation date stands in for a first trade, which a live auction has never had.
-    mocked(useAuctionDisplayDataSources).mockReturnValue(LIVE)
+    mocked(useAuctionDisplayDataSources).mockReturnValue(ENDED_WITH_RAISE)
     const { rerender } = render(<TokenProvenanceWithDisplay />)
+    expect(screen.queryByText('First traded')).toBeNull()
     expect(screen.queryByText('Aug 8, 2026')).toBeNull()
 
-    mocked(useAuctionDisplayDataSources).mockReturnValue(ENDED_WITH_RAISE)
+    mocked(useTokenLaunchProvenance).mockReturnValue({
+      launchpad: { id: 'uniswap-cca', name: 'Uniswap CCA Custom Launch' },
+      method: LaunchProvenanceMethod.CustomAuction,
+      firstTradedAt: new Date('2026-09-01T12:00:00Z'),
+    })
     rerender(<TokenProvenanceWithDisplay />)
 
-    expect(screen.getByText('Aug 8, 2026')).toBeInTheDocument()
+    expect(screen.getByText('First traded')).toBeInTheDocument()
+    expect(screen.getByText('Sep 1, 2026')).toBeInTheDocument()
   })
   it('waits for the auction lookup before reporting an offline visit', () => {
     mockStore({ status: TokenDetailsSourceState.Loading })
@@ -691,7 +740,7 @@ describe('TokenProvenanceContent', () => {
   const provenance: LaunchProvenance = {
     launchpad: { id: 'pons', name: 'Pons', logoUrl: 'https://example.com/pons.png' },
     method: LaunchProvenanceMethod.ThirdParty,
-    launchedAt: new Date('2026-09-01T12:00:00Z'),
+    firstTradedAt: new Date('2026-09-01T12:00:00Z'),
   }
   const NO_CREATOR = {
     name: '--',
@@ -765,6 +814,31 @@ describe('TokenProvenanceContent', () => {
     expect(screen.queryByRole('link', { name: 'Details' })).toBeNull()
   })
 
+  it('shows a $0 raise as $0, not the missing-stat dash', () => {
+    render(
+      <TokenProvenanceContent
+        provenance={{ ...provenance, method: LaunchProvenanceMethod.InstantLaunch }}
+        auctionData={{ creator: NO_CREATOR, raised: { usd: 0, failed: false, count: 7, destination: undefined } }}
+      />,
+    )
+
+    expect(screen.getByText('$0 raised')).toBeInTheDocument()
+  })
+
+  it('falls back to the person icon when the creator avatar fails to load', () => {
+    const avatarUrl = 'https://pbs.twimg.com/profile_images/stale.jpg'
+    const { container } = render(
+      <TokenProvenanceContent
+        provenance={provenance}
+        auctionData={{ creator: { ...NO_CREATOR, name: '@creator', avatarUrl }, raised: undefined }}
+      />,
+    )
+
+    fireEvent.error(container.querySelector(`img[src="${avatarUrl}"]`) as HTMLImageElement)
+
+    expect(container.querySelector(`img[src="${avatarUrl}"]`)).toBeNull()
+  })
+
   it('opens the wallet hover card on the creator, even when an X handle is what it shows', async () => {
     // The card reads the wallet's portfolio, so it needs the Uniswap context the page has.
     renderWithUniswapContext(
@@ -816,15 +890,15 @@ describe('TokenProvenanceContent', () => {
     },
   )
 
-  it('keeps the launchpad while omitting an unknown method and missing date', () => {
+  it('keeps the launchpad while omitting an unknown method and an unserved first trade', () => {
     render(
       <TokenProvenanceContent
-        provenance={{ ...provenance, method: LaunchProvenanceMethod.Unknown, launchedAt: undefined }}
+        provenance={{ ...provenance, method: LaunchProvenanceMethod.Unknown, firstTradedAt: undefined }}
       />,
     )
 
     expect(screen.getByText('Pons')).toBeInTheDocument()
-    expect(screen.getByText('--')).toBeInTheDocument()
+    expect(screen.queryByText('First traded')).toBeNull()
     expect(screen.queryByTestId(TestID.TokenDetailsProvenanceLaunchMethod)).toBeNull()
   })
 

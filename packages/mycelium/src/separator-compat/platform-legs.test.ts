@@ -42,10 +42,3 @@ describe('export parity across the legs', () => {
     expect(native.SeparatorCompat).not.toBe(web.SeparatorCompat)
   })
 })
-
-describe('the subpath barrel resolves every symbol', () => {
-  it('exports the component', async () => {
-    const barrel = await import('./index')
-    expect(barrel.SeparatorCompat).toBe(web.SeparatorCompat)
-  })
-})

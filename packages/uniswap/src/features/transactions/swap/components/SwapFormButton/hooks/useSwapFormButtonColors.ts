@@ -1,6 +1,7 @@
 import { chainIdToPlatform } from '@universe/chains'
-import type { ColorTokens } from '@universe/mycelium'
-import { type ButtonProps, useColorsFromTokenColor } from 'ui/src'
+import type { ButtonTextCompatProps } from '@universe/mycelium/button-frame-compat'
+import { useColorsFromTokenColor } from '@universe/mycelium/theme-hooks-compat'
+import { type ButtonProps } from 'ui/src'
 import { useActiveAccount } from 'uniswap/src/features/accounts/store/hooks'
 import { useIsShowingWebFORNudge, useIsWebFORNudgeEnabled } from 'uniswap/src/features/providers/webForNudgeProvider'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
@@ -15,7 +16,7 @@ import {
 } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 
 type ButtonColors = Pick<ButtonProps, 'backgroundColor' | 'variant' | 'emphasis'> & {
-  buttonTextColor?: ColorTokens
+  buttonTextColor?: ButtonTextCompatProps['color']
 }
 
 export const useSwapFormButtonColors = (tokenColor?: string): ButtonColors => {
@@ -45,7 +46,7 @@ export const useSwapFormButtonColors = (tokenColor?: string): ButtonColors => {
   // If disabled, use defaults for background color
   // Checks if web for nudge is enabled and uses accent2 if it is
   // Otherwise, we'll try and use the color from the token (i.e. swapping on Web > TDP)
-  const buttonBackgroundColor = ((): ColorTokens | undefined => {
+  const buttonBackgroundColor = ((): ButtonColors['backgroundColor'] => {
     if (disabled || isPermissionedBlocking) {
       return undefined
     }
@@ -84,7 +85,7 @@ export const useSwapFormButtonColors = (tokenColor?: string): ButtonColors => {
     return 'primary'
   })()
 
-  const buttonTextColor = ((): ColorTokens | undefined => {
+  const buttonTextColor = ((): ButtonColors['buttonTextColor'] => {
     if (promptWebFORNudge) {
       return '$accent1'
     }

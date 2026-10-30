@@ -43,7 +43,7 @@ export function RecoveryFlowScreen({ navigation, route: { params } }: Props): JS
   const [isPasskeyLoading, setIsPasskeyLoading] = useState(false)
   const [oauthError, setOauthError] = useState<string | undefined>()
 
-  const privyAppId = getPrivyConfig().appId
+  const { appId: privyAppId, clientId: privyClientId } = getPrivyConfig()
 
   const onPinDecryptSuccess = useEvent(
     async ({
@@ -80,6 +80,7 @@ export function RecoveryFlowScreen({ navigation, route: { params } }: Props): JS
   const flow = useRecoveryFlow({
     privy,
     privyAppId,
+    privyClientId,
     onPinDecryptSuccess,
     setOauthError,
   })

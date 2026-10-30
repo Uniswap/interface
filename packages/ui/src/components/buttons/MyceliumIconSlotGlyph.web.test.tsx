@@ -19,7 +19,7 @@ import { SharedUIUniswapProvider } from 'ui/src/test/render'
 
 const GLYPH = 'slot-glyph'
 
-/** The button label lane's box, per size — mirrors ThemedIcon.web.tsx's table. */
+/** The button label lane's box, per size — mirrors the compat's `ICON_SIZE_PX` (no public export). */
 const BUTTON_LABEL_ICON_SIZE_PX = { xxsmall: 13.8, xsmall: 16.1, small: 16.1, medium: 20.7, large: 20.7 } as const
 
 function glyphStyle(rendered: RenderResult): CSSStyleDeclaration {

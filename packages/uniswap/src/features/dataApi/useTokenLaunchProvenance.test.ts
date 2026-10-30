@@ -1,3 +1,4 @@
+import { Timestamp } from '@bufbuild/protobuf'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { cleanup, renderHook, waitFor } from '@testing-library/react-native'
 import { GetTokenResponse } from '@uniswap/client-data-api/dist/data/v2/api_pb'
@@ -50,6 +51,25 @@ describe(useTokenLaunchProvenance, () => {
         method: LaunchProvenanceMethod.InstantLaunch,
       }),
     )
+  })
+
+  it('reads the first trade off the served token', async () => {
+    const firstTradedAt = new Date('2026-09-01T12:00:00Z')
+    mockGetToken.mockResolvedValue(
+      new GetTokenResponse({
+        token: {
+          launchProvenance: {
+            launchpad: { id: 'uniswap-cca', name: 'Uniswap CCA' },
+            launchMethod: LaunchMethod.CUSTOM,
+          },
+          firstTradedAt: Timestamp.fromDate(firstTradedAt),
+        },
+      }),
+    )
+
+    const { result } = renderHook(() => useTokenLaunchProvenance(BANKR_TOKEN), { wrapper: Wrapper })
+
+    await waitFor(() => expect(result.current?.firstTradedAt).toEqual(firstTradedAt))
   })
 
   it('shows nothing rather than the previous token while the next one loads', async () => {

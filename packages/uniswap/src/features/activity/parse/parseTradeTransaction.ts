@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Direction, OnChainTransaction, OnChainTransactionLabel } from '@uniswap/client-data-api/dist/data/v1/types_pb'
-import { areAddressesEqual } from '@universe/chains'
+import { AddressStringFormat, areAddressesEqual, normalizeAddress } from '@universe/chains'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { extractDappInfo } from 'uniswap/src/features/activity/utils/extractDappInfo'
 import { AssetCase } from 'uniswap/src/features/activity/utils/remote'
@@ -64,6 +64,55 @@ function excludeFOTFeeTransfers(
       addressInput2: { address: ownerAddress, chainId },
     })
   })
+}
+
+/**
+ * Drops tokens the owner sends and receives in equal totals, such as a wrapper received from a pool and burned to unwrap.
+ * Keeps the original transfers if that would leave either side empty.
+ */
+function excludeNetZeroTokenTransfers({
+  sentTransfers,
+  receivedTransfers,
+}: {
+  sentTransfers: OnChainTransaction['transfers']
+  receivedTransfers: OnChainTransaction['transfers']
+}): { sentTransfers: OnChainTransaction['transfers']; receivedTransfers: OnChainTransaction['transfers'] } {
+  const getTokenKey = (t: OnChainTransaction['transfers'][number]): string | undefined =>
+    t.asset.value?.address ? normalizeAddress(t.asset.value.address, AddressStringFormat.Lowercase) : undefined
+
+  const sumByToken = (transfers: OnChainTransaction['transfers']): Map<string, BigNumber> => {
+    const totals = new Map<string, BigNumber>()
+    for (const t of transfers) {
+      const tokenKey = getTokenKey(t)
+      if (tokenKey) {
+        totals.set(tokenKey, (totals.get(tokenKey) ?? BigNumber.from(0)).add(BigNumber.from(t.amount?.raw ?? '0')))
+      }
+    }
+    return totals
+  }
+
+  const sentTotals = sumByToken(sentTransfers)
+  const receivedTotals = sumByToken(receivedTransfers)
+  const netZeroTokenKeys = new Set(
+    [...receivedTotals].filter(([tokenKey, received]) => sentTotals.get(tokenKey)?.eq(received)).map(([key]) => key),
+  )
+
+  if (netZeroTokenKeys.size === 0) {
+    return { sentTransfers, receivedTransfers }
+  }
+
+  const isNotNetZero = (t: OnChainTransaction['transfers'][number]): boolean => {
+    const tokenKey = getTokenKey(t)
+    return tokenKey === undefined || !netZeroTokenKeys.has(tokenKey)
+  }
+  const netSentTransfers = sentTransfers.filter(isNotNetZero)
+  const netReceivedTransfers = receivedTransfers.filter(isNotNetZero)
+
+  if (netSentTransfers.length === 0 || netReceivedTransfers.length === 0) {
+    return { sentTransfers, receivedTransfers }
+  }
+
+  return { sentTransfers: netSentTransfers, receivedTransfers: netReceivedTransfers }
 }
 
 /**
@@ -149,6 +198,32 @@ export function parseNFTTradeTransaction(transaction: OnChainTransaction): NFTTr
 }
 
 /**
+ * Picks the sent and received tokens that represent the swap, or undefined if either side has no usable transfer
+ */
+function findPrimarySwapLegs({
+  sentTransfers,
+  receivedTransfers,
+}: {
+  sentTransfers: OnChainTransaction['transfers']
+  receivedTransfers: OnChainTransaction['transfers']
+}):
+  | {
+      primarySent: { tokenAddress: string; amount: BigNumber }
+      primaryReceived: { tokenAddress: string; amount: BigNumber }
+    }
+  | undefined {
+  const primarySent = findPrimaryTokenAndAmount(sentTransfers)
+  if (!primarySent) {
+    return undefined
+  }
+  const primaryReceived = findPrimaryTokenAndAmount(receivedTransfers, primarySent.tokenAddress)
+  if (!primaryReceived) {
+    return undefined
+  }
+  return { primarySent, primaryReceived }
+}
+
+/**
  * Parse a swap or on-chain uniswapX transaction from the REST API
  */
 export function parseSwapTransaction(transaction: OnChainTransaction): ConfirmedSwapTransactionInfo | undefined {
@@ -176,15 +251,19 @@ export function parseSwapTransaction(transaction: OnChainTransaction): Confirmed
     direction: 'received',
   })
 
-  const primarySent = findPrimaryTokenAndAmount(filteredSentTransfers)
-  if (!primarySent) {
-    return undefined
-  }
+  const netTransfers = excludeNetZeroTokenTransfers({
+    sentTransfers: filteredSentTransfers,
+    receivedTransfers: filteredReceivedTransfers,
+  })
 
-  const primaryReceived = findPrimaryTokenAndAmount(filteredReceivedTransfers, primarySent.tokenAddress)
-  if (!primaryReceived) {
+  // Netting can leave a side whose only remaining transfers are refunds or self-transfers, so fall back to the full lists
+  const primaryLegs =
+    findPrimarySwapLegs(netTransfers) ??
+    findPrimarySwapLegs({ sentTransfers: filteredSentTransfers, receivedTransfers: filteredReceivedTransfers })
+  if (!primaryLegs) {
     return undefined
   }
+  const { primarySent, primaryReceived } = primaryLegs
 
   // Try to parse transactedValue from the sent transfer if available
   // Note: REST API transfers may not have transactedValue, but we check for it

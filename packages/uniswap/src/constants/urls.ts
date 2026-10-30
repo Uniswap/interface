@@ -105,6 +105,7 @@ export const UniswapHelpUrls = {
       '43107626487437-What-are-Continuous-Clearing-Auctions#what-is-a-graduation-threshold',
     ),
     toucanLaunchAuctionHelp: createHelpArticleUrl('46569604134157'),
+    toucanPoolsLaunchHelp: createHelpArticleUrl('47943121516685-Launching-and-trading-tokens-on-pools-xyz'),
     // Deep-links into specific sections of the published CCA launch guide; anchors match the article's headings.
     toucanLaunchAuctionConfigureAuctionHelp: createHelpArticleUrl(
       '46569604134157-Launching-a-Continuous-Clearing-Auction',

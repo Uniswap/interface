@@ -35,6 +35,7 @@ export function TokenItemChart({
     tokenName: tokenItemData.symbol,
     backgroundColor: colors.surface1.val,
     defaultColor: colors.neutral3.val,
+    colorOverrides: tokenItemData.colorOverrides,
   })
 
   const convertedPriceHistory = useMemo(

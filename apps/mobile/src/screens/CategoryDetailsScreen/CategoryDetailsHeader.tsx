@@ -8,7 +8,7 @@ import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { useGetCategoryQuery } from 'uniswap/src/data/apiClients/dataApiService/categories/useGetCategoryQuery'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { CategoryDescriptionText } from 'uniswap/src/features/tokenCategories/CategoryDescriptionText'
-import { getTokenCategoryIcon } from 'uniswap/src/features/tokenCategories/categoryIcons'
+import { getCategoryIcon } from 'uniswap/src/features/tokenCategories/categoryIcons'
 import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
 import { calculateDelta } from 'uniswap/src/utils/calculateDelta'
 import { openUri } from 'uniswap/src/utils/linking'
@@ -94,7 +94,7 @@ export const CategoryDetailsHeader = memo(function CategoryDetailsHeader({
   category: TokenCategory
 }): JSX.Element {
   const { t } = useTranslation()
-  const Icon = getTokenCategoryIcon(category)
+  const Icon = getCategoryIcon(category)
   const { data: detail, isLoading: isDetailLoading } = useGetCategoryQuery(category.id)
   const aggregates = detail?.category.stats
 

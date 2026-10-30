@@ -18,6 +18,11 @@ import { ONE_DAY_MS, ONE_HOUR_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useDebounce } from 'utilities/src/time/timing'
 import { Table } from '~/components/Table'
 import { Cell } from '~/components/Table/Cell'
+import {
+  FLUSH_CELL_PADDING,
+  FLUSH_COLLAPSED_COLUMN_WIDTH,
+  FLUSH_HEADER_CELL_PADDING,
+} from '~/components/Table/PinnedColumns/collapse/utils'
 import { TableText } from '~/components/Table/shared/TableText'
 import { HeaderCell } from '~/components/Table/styled'
 import { MouseoverTooltip } from '~/components/Tooltip'
@@ -25,7 +30,7 @@ import { OrderDirection } from '~/data/util'
 import { EXPLORE_API_PAGE_SIZE } from '~/features/Explore/state/constants'
 import { AuctionQuickFilter, useExploreTablesFilterStore } from '~/features/Explore/state/exploreTablesFilterStore'
 import { CommittedVolumeTooltipContent } from '~/features/Toucan/Auction/Banners/AuctionStatsBanner/CommittedVolumeTooltipContent'
-import { approximateNumberFromRaw, formatCompactFromRaw } from '~/features/Toucan/Auction/utils/fixedPointFdv'
+import { approximateNumberFromRaw } from '~/features/Toucan/Auction/utils/fixedPointFdv'
 import { buildTokenMarketPriceKey } from '~/features/Toucan/hooks/tokenMarketPriceKeys'
 import { useAuctionTokenPrices } from '~/features/Toucan/hooks/useTopAuctions/useAuctionTokenPrices'
 import type { EnrichedAuction } from '~/features/Toucan/hooks/useTopAuctions/useTopAuctions'
@@ -260,6 +265,8 @@ function filterAuctionsBySearchString(auctions: readonly EnrichedAuction[], filt
 
 /** How recently an auction must have been created to count as "New" in the quick filters. */
 const NEW_AUCTION_MAX_AGE_MS = 7 * ONE_DAY_MS
+/** Fits TokenNameCell's stacked name + symbol, matching the Tokens table. */
+const COMPACT_ROW_HEIGHT = 64
 
 /**
  * Filters auctions by the single quick-filter dimension shared by the pills and the Status dropdown.
@@ -542,16 +549,21 @@ function ToucanTableComponent({
         id: 'tokenName',
         // Column sizes sum to 1120 (table max width minus padding) so all columns fit without
         // horizontal scroll — the token column gives up the Launchpad column's width when present.
-        size: media.lg ? 160 : launchpadLabel !== undefined ? 268 : 320,
+        size: media.lg ? 190 : launchpadLabel !== undefined ? 268 : 320,
+        meta: { collapsedWidth: FLUSH_COLLAPSED_COLUMN_WIDTH },
         header: () => (
-          <HeaderCell justifyContent="flex-start">
-            <Text variant="body3" color="$neutral2" fontWeight="500">
+          <HeaderCell justifyContent="flex-start" {...(media.lg ? FLUSH_HEADER_CELL_PADDING : undefined)}>
+            <Text variant="body3" color="$neutral2" fontWeight="500" numberOfLines={1}>
               {t('explore.table.column.token')}
             </Text>
           </HeaderCell>
         ),
         cell: (tokenName) => (
-          <Cell justifyContent="flex-start" loading={showLoadingSkeleton}>
+          <Cell
+            justifyContent="flex-start"
+            loading={showLoadingSkeleton}
+            {...(media.lg ? FLUSH_CELL_PADDING : undefined)}
+          >
             {tokenName.getValue?.()}
           </Cell>
         ),
@@ -663,27 +675,15 @@ function ToucanTableComponent({
         cell: (row) => {
           const value = row.getValue?.()
           const auction = value?.auction.auction
-          const commitedVolumeUsd =
+          const committedVolumeUsd =
             auction?.totalBidVolumeUsd !== undefined ? Number(auction.totalBidVolumeUsd) : undefined
-          const commitedVolumeRaw = auction?.totalBidVolume
-          const commitedVolumeFormatted =
-            commitedVolumeRaw && auction?.currencyTokenDecimals
-              ? formatCompactFromRaw({
-                  raw: BigInt(commitedVolumeRaw),
-                  decimals: auction?.currencyTokenDecimals,
-                })
-              : undefined
-
-          const committedVolumeDisplay =
-            commitedVolumeUsd !== undefined
-              ? convertFiatAmountFormatted(commitedVolumeUsd, NumberType.FiatTokenStats)
-              : commitedVolumeFormatted
+          const committedVolumeDisplay = getAuctionCommittedVolumeDisplay(auction, convertFiatAmountFormatted)
 
           return (
             <Cell justifyContent="flex-end" loading={showLoadingSkeleton}>
               <Flex flexDirection="column" alignItems="flex-end" gap="$spacing4">
                 <AnimatedNumber
-                  numericValue={commitedVolumeUsd}
+                  numericValue={committedVolumeUsd}
                   textVariant="$body2"
                   value={committedVolumeDisplay ?? '-'}
                 />
@@ -749,6 +749,7 @@ function ToucanTableComponent({
                 preBidEndBlockTimestamp={timeRemaining?.preBidEndBlockTimestamp}
                 tokenAddress={enrichedAuction?.auction?.tokenAddress}
                 chainId={enrichedAuction?.auction?.chainId}
+                isGraduated={enrichedAuction?.auction?.isGraduated}
                 totalBidVolume={enrichedAuction?.auction?.totalBidVolume}
                 requiredCurrencyRaised={enrichedAuction?.auction?.requiredCurrencyRaised}
                 // QuickLaunch: progress-bar + "Live on Uniswap" treatment for quick launches.
@@ -790,9 +791,11 @@ function ToucanTableComponent({
         loadMore={loadMore}
         maxWidth={1200}
         defaultPinnedColumns={['tokenName']}
+        compactRowHeight={COMPACT_ROW_HEIGHT}
         hiddenRows={sortedHiddenAuctionTableValues}
         showHiddenRowsLabel={t('toucan.auction.showHiddenAuctions')}
         hideHiddenRowsLabel={t('toucan.auction.hideHiddenAuctions')}
+        collapsiblePinnedColumnId={media.lg ? 'tokenName' : undefined}
       />
       <Flex justifyContent="center" alignItems="center">
         <Text lineHeight={12} flex={1} width="75%" color="$neutral3" textAlign="center" variant="body4">

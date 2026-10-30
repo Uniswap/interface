@@ -23,7 +23,7 @@ import {
 } from '~/features/Liquidity/LPIncentives/LpIncentivesInfoTooltip'
 import { LpIncentivesRewardsModal } from '~/features/Liquidity/LPIncentives/LpIncentivesRewardsModal'
 import { formatUsdTotal } from '~/features/Liquidity/utils/formatUsdTotal'
-import { rightEdgeFadeStyle, useWheelHorizontalScroll } from '~/pages/Explore/categories/useWheelHorizontalScroll'
+import { edgeFadeMaskStyle, useHorizontalScrollFades } from '~/hooks/useHorizontalScrollFades'
 import { usePendingLPTransactionsChangeListener } from '~/state/transactions/hooks'
 
 /** Right page gutters (px) the mWeb carousel cancels so it bleeds to the viewport edge. */
@@ -52,7 +52,7 @@ export function PositionsSummaryChips({
   bleedGutters,
 }: PositionsSummaryChipsProps): JSX.Element {
   const { t } = useTranslation()
-  const { scrollerRef, showRightFade } = useWheelHorizontalScroll()
+  const { scrollerRef, edgeFades } = useHorizontalScrollFades()
   const { convertFiatAmountFormatted } = useLocalizationContext()
   const trace = useTrace()
   // Keys its query on having an address, so a disconnected wallet doesn't fetch.
@@ -98,7 +98,7 @@ export function PositionsSummaryChips({
       className="scrollbar-hidden"
       $md={{ overflow: 'scroll', scrollbarWidth: 'none', ...carouselBleedStyle(bleedGutters?.md) }}
       $sm={carouselBleedStyle(bleedGutters?.sm)}
-      $platform-web={rightEdgeFadeStyle(showRightFade)}
+      $platform-web={edgeFadeMaskStyle(edgeFades)}
     >
       <SummaryChip label={t('pool.positions.summary.totalLiquidity')}>
         {/* A dash means unknown, a de-emphasized zero means the server said zero — never `?? 0`,

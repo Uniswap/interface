@@ -73,7 +73,13 @@ function renderRow(): ReturnType<typeof renderWithProviders> {
     throw new Error('Expected a classic trade')
   }
   return renderWithProviders(
-    <RouteDiagramInfo trade={trade} gasFee={GAS_FEE} diagram={diagram} logoUrlByTokenKey={new Map()} />,
+    <RouteDiagramInfo
+      trade={trade}
+      gasFee={GAS_FEE}
+      diagram={diagram}
+      logoUrlByTokenKey={new Map()}
+      colorOverridesByTokenKey={new Map()}
+    />,
   )
 }
 
@@ -143,7 +149,13 @@ describe(RouteDiagramInfo, () => {
       chainId: UniverseChainId.Mainnet,
     })!
     const { getByTestId } = renderWithProviders(
-      <RouteDiagramInfo trade={trade!} gasFee={GAS_FEE} diagram={withWrap} logoUrlByTokenKey={new Map()} />,
+      <RouteDiagramInfo
+        trade={trade!}
+        gasFee={GAS_FEE}
+        diagram={withWrap}
+        logoUrlByTokenKey={new Map()}
+        colorOverridesByTokenKey={new Map()}
+      />,
     )
     act(() => {
       rtlFireEvent.click(getByTestId(TestID.SwapRouteDiagramView) as unknown as Element)

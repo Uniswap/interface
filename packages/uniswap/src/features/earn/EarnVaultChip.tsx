@@ -23,7 +23,23 @@ export const EARN_VAULT_CHIP_FRAME_PROPS = {
   $md: { maxWidth: '100%' },
 } as const
 
-export function EarnVaultChip({ onPress, vault }: { vault: EarnVaultInfo; onPress: () => void }): JSX.Element {
+// Logo stacked over the text; the parent (e.g. a carousel slot) owns the width.
+const EARN_VAULT_CHIP_VERTICAL_PROPS = {
+  row: false,
+  alignItems: 'flex-start',
+  width: '100%',
+  maxWidth: '100%',
+} as const
+
+export function EarnVaultChip({
+  onPress,
+  vault,
+  layout = 'horizontal',
+}: {
+  vault: EarnVaultInfo
+  onPress: () => void
+  layout?: 'horizontal' | 'vertical'
+}): JSX.Element {
   const { t } = useTranslation()
   const { formatPercent } = useLocalizationContext()
   const currencyInfo = useCurrencyInfo(vault.displayCurrencyId)
@@ -32,6 +48,7 @@ export function EarnVaultChip({ onPress, vault }: { vault: EarnVaultInfo; onPres
   return (
     <TouchableArea
       {...EARN_VAULT_CHIP_FRAME_PROPS}
+      {...(layout === 'vertical' ? EARN_VAULT_CHIP_VERTICAL_PROPS : undefined)}
       hoverStyle={{ backgroundColor: '$surface2' }}
       testID={`${TestID.EarnVaultChipPrefix}${currency?.symbol}`}
       onPress={onPress}
@@ -44,7 +61,7 @@ export function EarnVaultChip({ onPress, vault }: { vault: EarnVaultInfo; onPres
         symbol={currency?.symbol}
         name={currency?.name}
       />
-      <Flex flex={1} minWidth={0}>
+      <Flex flex={1} minWidth={0} alignSelf={layout === 'vertical' ? 'stretch' : undefined}>
         <Text variant="body2" color="$neutral1" numberOfLines={1}>
           {currency?.symbol ?? '-'}
         </Text>

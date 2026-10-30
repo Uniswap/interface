@@ -8,8 +8,8 @@
  * exists: the call sites moving onto it are overlays that must escape a
  * transformed ancestor (`RecentlyConnectedModal` says so in a comment at its
  * portal), and a portal HOST rendered inside the React tree (Tamagui's own
- * `PortalHost`, a `<div style="display:contents">`, or the native
- * `AppPortalHost`) cannot do that.
+ * `PortalHost`, a `<div style="display:contents">`, or a native
+ * `PortalHost`) cannot do that.
  *
  * The mechanism, the wrapper element and the z-index arithmetic are all
  * ported from `@tamagui/portal`'s web `Portal`, which was already doing

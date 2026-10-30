@@ -1,17 +1,7 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
-  "ignore": [
-    "**/*.native.ts",
-    "**/*.web.ts",
-    "**/*.native.tsx",
-    "**/*.web.tsx"
-  ],
-  "ignoreDependencies": [
-    "typescript",
-    "oxlint",
-    "@types/.+",
-    "@vitest/coverage-v8"
-  ],
+  "ignore": ["**/*.native.ts", "**/*.web.ts", "**/*.native.tsx", "**/*.web.tsx"],
+  "ignoreDependencies": ["typescript", "oxlint", "@types/.+", "@vitest/coverage-v8"],
   "workspaces": {
     ".": {
       "ignoreDependencies": [
@@ -47,15 +37,10 @@
       ]
     },
     "apps/dev-portal": {
-      "ignoreDependencies": [
-        "@babel/preset-typescript",
-        "babel-plugin-react-compiler"
-      ]
+      "ignoreDependencies": ["@babel/preset-typescript", "babel-plugin-react-compiler"]
     },
     "apps/extension": {
-      "entry": [
-        "src/entrypoints/**/*.{ts,tsx}"
-      ],
+      "entry": ["src/entrypoints/**/*.{ts,tsx}"],
       "ignoreDependencies": [
         "@svgr/webpack",
         "@tailwindcss/vite",
@@ -126,6 +111,11 @@
         "react-native-quick-base64",
         "react-native-quick-crypto"
       ]
+    },
+    "apps/pools-xyz": {
+      "entry": ["server.ts", "functions/vercel-entry.ts", "scripts/**/*.ts"],
+      "ignore": ["app/components/ui/**"],
+      "ignoreDependencies": ["ws"]
     },
     "apps/web": {
       "entry": [
@@ -225,53 +215,29 @@
       ]
     },
     "labs/workbench": {
-      "entry": [
-        "functions/vercel-entry.ts",
-        "scripts/build-vercel.ts",
-        "scripts/vercel-ignore.ts"
-      ],
-      "ignore": [
-        "app/components/ui/**"
-      ]
+      "entry": ["functions/vercel-entry.ts", "scripts/build-vercel.ts", "scripts/vercel-ignore.ts"],
+      "ignore": ["app/components/ui/**"]
     },
     "config/vitest-presets": {
-      "ignoreDependencies": [
-        "identity-obj-proxy"
-      ]
+      "ignoreDependencies": ["identity-obj-proxy"]
     },
     "packages/api": {
-      "ignoreDependencies": [
-        "expo-secure-store"
-      ]
+      "ignoreDependencies": ["expo-secure-store"]
     },
     "packages/compliance": {
-      "ignoreDependencies": [
-        "@universe/api",
-        "@universe/environment"
-      ]
+      "ignoreDependencies": ["@universe/api", "@universe/environment"]
     },
     "packages/config-cli": {
-      "entry": [
-        "src/main.ts"
-      ]
+      "entry": ["src/main.ts"]
     },
     "packages/embedded-wallet": {
-      "ignoreDependencies": [
-        "react-native-argon2",
-        "react-native-passkey"
-      ]
+      "ignoreDependencies": ["react-native-argon2", "react-native-passkey"]
     },
     "packages/environment": {
-      "ignoreDependencies": [
-        "react-native",
-        "react-native-device-info"
-      ]
+      "ignoreDependencies": ["react-native", "react-native-device-info"]
     },
     "packages/gating": {
-      "ignoreDependencies": [
-        "@statsig/react-native-bindings",
-        "react"
-      ]
+      "ignoreDependencies": ["@statsig/react-native-bindings", "react"]
     },
     "packages/mycelium": {
       "ignoreDependencies": [
@@ -294,37 +260,22 @@
         "uppercamelcase",
         "utilities"
       ],
-      "ignore": [
-        "src/components/icons/**"
-      ]
+      "ignore": ["src/components/icons/**"]
     },
     "packages/notifications": {
       "ignoreDependencies": []
     },
     "packages/prices": {
-      "ignoreDependencies": [
-        "@testing-library/react"
-      ]
+      "ignoreDependencies": ["@testing-library/react"]
     },
     "packages/sessions": {
-      "ignoreDependencies": [
-        "@bufbuild/protobuf",
-        "@tanstack/react-query",
-        "openapi-typescript-codegen"
-      ]
+      "ignoreDependencies": ["@bufbuild/protobuf", "@tanstack/react-query", "openapi-typescript-codegen"]
     },
     "packages/transactional": {
-      "ignoreDependencies": [
-        "@react-email/preview-server",
-        "@universe/mycelium",
-        "@universe/tailwind"
-      ]
+      "ignoreDependencies": ["@react-email/preview-server", "@universe/mycelium", "@universe/tailwind"]
     },
     "packages/ui": {
-      "ignore": [
-        "src/components/icons/**",
-        "src/components/logos/**"
-      ],
+      "ignore": ["src/components/icons/**", "src/components/logos/**"],
       "ignoreDependencies": [
         "@react-native-masked-view/masked-view",
         "@shopify/react-native-skia",
@@ -335,7 +286,6 @@
         "fs-extra",
         "moti",
         "react-native-keyboard-controller",
-        "uniwind",
         "uppercamelcase"
       ]
     },
@@ -374,32 +324,17 @@
       ]
     },
     "packages/websocket": {
-      "ignoreDependencies": [
-        "partysocket"
-      ]
+      "ignoreDependencies": ["partysocket"]
     },
     "tools/uniswap-nx": {
-      "ignoreDependencies": [
-        "@nx/devkit",
-        "tslib"
-      ]
+      "ignoreDependencies": ["@nx/devkit", "tslib"]
     },
     "packages/tailwind": {
-      "ignoreDependencies": [
-        "@tailwindcss/node",
-        "@tailwindcss/oxide"
-      ]
+      "ignoreDependencies": ["@tailwindcss/node", "@tailwindcss/oxide"]
     },
     "apps/unilens": {
-      "entry": [
-        "src/entrypoints/**/*.{ts,tsx}"
-      ],
-      "ignoreDependencies": [
-        "@tailwindcss/vite",
-        "@wxt-dev/module-react",
-        "react-native-web",
-        "vite"
-      ]
+      "entry": ["src/entrypoints/**/*.{ts,tsx}"],
+      "ignoreDependencies": ["@tailwindcss/vite", "@wxt-dev/module-react", "react-native-web", "vite"]
     }
   }
 }

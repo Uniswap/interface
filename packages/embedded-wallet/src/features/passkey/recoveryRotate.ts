@@ -44,6 +44,7 @@ export async function rotateRecoveryWithRecoveryAuth({
   email,
   accessToken,
   privyAppId,
+  privyClientId,
   walletId,
   privyUserId,
   authMethodType,
@@ -55,6 +56,7 @@ export async function rotateRecoveryWithRecoveryAuth({
   email: string
   accessToken: string
   privyAppId: string
+  privyClientId: string
   walletId: string
   privyUserId: string
   authMethodType: RecoveryAuthMethodType
@@ -69,6 +71,7 @@ export async function rotateRecoveryWithRecoveryAuth({
       email,
       accessToken,
       privyAppId,
+      privyClientId,
       rotate: true,
       retainPrivateKey: true,
     })

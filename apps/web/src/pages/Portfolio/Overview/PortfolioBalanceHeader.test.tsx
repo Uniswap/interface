@@ -72,6 +72,7 @@ describe('PortfolioBalanceHeader', () => {
         selectedCategory={PortfolioChartCategory.Total}
         isPortfolioZero={false}
         isLoading={false}
+        isBalanceLoading={false}
       />,
     )
 
@@ -94,6 +95,7 @@ describe('PortfolioBalanceHeader', () => {
         selectedCategory={PortfolioChartCategory.Total}
         isPortfolioZero={false}
         isLoading={false}
+        isBalanceLoading={false}
       />,
     )
 
@@ -113,6 +115,7 @@ describe('PortfolioBalanceHeader', () => {
         selectedCategory={PortfolioChartCategory.Total}
         isPortfolioZero={false}
         isLoading={false}
+        isBalanceLoading={false}
         hoveredData={makeSeries([105])[0]}
       />,
     )
@@ -141,6 +144,7 @@ describe('PortfolioBalanceHeader', () => {
         selectedCategory={PortfolioChartCategory.Total}
         isPortfolioZero={true}
         isLoading={false}
+        isBalanceLoading={false}
       />,
     )
 
@@ -160,6 +164,7 @@ describe('PortfolioBalanceHeader', () => {
         selectedCategory={PortfolioChartCategory.Total}
         isPortfolioZero={false}
         isLoading={true}
+        isBalanceLoading={false}
       />,
     )
 
@@ -179,6 +184,7 @@ describe('PortfolioBalanceHeader', () => {
         selectedCategory={PortfolioChartCategory.Total}
         isPortfolioZero={false}
         isLoading={false}
+        isBalanceLoading={false}
       />,
     )
 
@@ -203,6 +209,7 @@ describe('PortfolioBalanceHeader', () => {
         selectedCategory={PortfolioChartCategory.Total}
         isPortfolioZero={false}
         isLoading={false}
+        isBalanceLoading={false}
       />,
     )
 
@@ -226,6 +233,7 @@ describe('PortfolioBalanceHeader', () => {
         selectedCategory={PortfolioChartCategory.Total}
         isPortfolioZero={false}
         isLoading={false}
+        isBalanceLoading={false}
       />,
     )
 
@@ -245,10 +253,74 @@ describe('PortfolioBalanceHeader', () => {
         selectedCategory={PortfolioChartCategory.Total}
         isPortfolioZero={true}
         isLoading={false}
+        isBalanceLoading={false}
       />,
     )
 
     expect(screen.getByText(withText(/\$0/))).toBeInTheDocument()
+  })
+
+  it('omits the delta row when hideDelta is set', () => {
+    render(
+      <PortfolioBalanceHeader
+        portfolioTotalBalanceUSD={110}
+        series={makeSeries([100, 110])}
+        chartPercentChange={{ percentChange: 10, absoluteChangeUSD: 10 }}
+        tokensPercentChange={undefined}
+        poolsPercentChange={undefined}
+        earnPercentChange={undefined}
+        selectedPeriod={ChartPeriod.DAY}
+        selectedCategory={PortfolioChartCategory.Total}
+        isPortfolioZero={false}
+        isLoading={false}
+        isBalanceLoading={false}
+        hideDelta
+      />,
+    )
+
+    expect(screen.queryByTestId('price-chart-delta')).not.toBeInTheDocument()
+  })
+
+  it('renders the wallet balance while the chart is still loading', () => {
+    render(
+      <PortfolioBalanceHeader
+        portfolioTotalBalanceUSD={15741.99}
+        series={[]}
+        chartPercentChange={undefined}
+        tokensPercentChange={undefined}
+        poolsPercentChange={undefined}
+        earnPercentChange={undefined}
+        selectedPeriod={ChartPeriod.DAY}
+        selectedCategory={PortfolioChartCategory.Total}
+        isPortfolioZero={false}
+        isLoading={true}
+        isBalanceLoading={false}
+      />,
+    )
+
+    expect(screen.getByText(withText(/15,741\.99/))).toBeInTheDocument()
+    expect(screen.queryByTestId('price-chart-delta')).not.toBeInTheDocument()
+  })
+
+  it('renders a placeholder while wallet balances are loading even when the chart has loaded', () => {
+    render(
+      <PortfolioBalanceHeader
+        portfolioTotalBalanceUSD={undefined}
+        series={makeSeries([100, 110])}
+        chartPercentChange={{ percentChange: 10, absoluteChangeUSD: 10 }}
+        tokensPercentChange={undefined}
+        poolsPercentChange={undefined}
+        earnPercentChange={undefined}
+        selectedPeriod={ChartPeriod.DAY}
+        selectedCategory={PortfolioChartCategory.Total}
+        isPortfolioZero={false}
+        isLoading={false}
+        isBalanceLoading={true}
+      />,
+    )
+
+    expect(screen.getByText('$00.00')).toBeInTheDocument()
+    expect(screen.queryByText(withText(/\$110/))).not.toBeInTheDocument()
   })
 
   it('renders a placeholder when balance and chart values are unavailable for a non-zero portfolio', () => {
@@ -264,6 +336,7 @@ describe('PortfolioBalanceHeader', () => {
         selectedCategory={PortfolioChartCategory.Total}
         isPortfolioZero={false}
         isLoading={true}
+        isBalanceLoading={false}
       />,
     )
 
@@ -285,6 +358,7 @@ describe('PortfolioBalanceHeader', () => {
         selectedCategory={PortfolioChartCategory.Total}
         isPortfolioZero={false}
         isLoading={false}
+        isBalanceLoading={false}
       />,
     )
 
@@ -306,6 +380,7 @@ describe('PortfolioBalanceHeader', () => {
         selectedCategory={PortfolioChartCategory.Total}
         isPortfolioZero={false}
         isLoading={false}
+        isBalanceLoading={false}
       />,
     )
 
@@ -328,6 +403,7 @@ describe('PortfolioBalanceHeader', () => {
         selectedCategory={PortfolioChartCategory.Tokens}
         isPortfolioZero={false}
         isLoading={false}
+        isBalanceLoading={false}
       />,
     )
 
@@ -351,6 +427,7 @@ describe('PortfolioBalanceHeader', () => {
         selectedCategory={PortfolioChartCategory.Pools}
         isPortfolioZero={false}
         isLoading={false}
+        isBalanceLoading={false}
       />,
     )
 
@@ -376,6 +453,7 @@ describe('PortfolioBalanceHeader', () => {
         selectedCategory={PortfolioChartCategory.Total}
         isPortfolioZero={false}
         isLoading={false}
+        isBalanceLoading={false}
       />,
     )
 
@@ -401,6 +479,7 @@ describe('PortfolioBalanceHeader', () => {
         selectedCategory={PortfolioChartCategory.Total}
         isPortfolioZero={false}
         isLoading={false}
+        isBalanceLoading={false}
       />,
     )
 
@@ -424,6 +503,7 @@ describe('PortfolioBalanceHeader', () => {
         selectedCategory={PortfolioChartCategory.Tokens}
         isPortfolioZero={false}
         isLoading={false}
+        isBalanceLoading={false}
       />,
     )
 
@@ -446,6 +526,7 @@ describe('PortfolioBalanceHeader', () => {
         selectedCategory={PortfolioChartCategory.Earn}
         isPortfolioZero={false}
         isLoading={false}
+        isBalanceLoading={false}
       />,
     )
 

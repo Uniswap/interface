@@ -6,67 +6,39 @@ import { useTranslation } from 'react-i18next'
 import { GridView } from 'ui/src/components/icons/GridView'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
-import { useListCategoriesQuery } from 'uniswap/src/data/apiClients/dataApiService/categories/useListCategoriesQuery'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { bucketTokenCategories } from 'uniswap/src/features/tokenCategories/bucketTokenCategories'
-import { getTokenCategoryIcon } from 'uniswap/src/features/tokenCategories/categoryIcons'
+import { bucketCategories } from 'uniswap/src/features/tokenCategories/bucketTokenCategories'
+import { getCategoryIcon } from 'uniswap/src/features/tokenCategories/categoryIcons'
 import { getTokenCategoryClassLabel } from 'uniswap/src/features/tokenCategories/getTokenCategoryClassLabel'
-import { TokenCategory, TokenCategoryStats } from 'uniswap/src/features/tokenCategories/types'
+import type { Category, CategoryKind } from 'uniswap/src/features/tokenCategories/types'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { AdaptiveDropdown } from '~/components/Dropdowns/AdaptiveDropdown'
 import { InternalMenuItem } from '~/components/Dropdowns/Dropdown'
 import { ExploreFilterChip } from '~/pages/Explore/categories/ExploreCategoryChips'
-import { isCategoryUnsupportedChain } from '~/pages/Explore/categories/useExploreCategory'
-import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
+import {
+  type CategoryRowStats,
+  isEmptyCategoryStats,
+  useNetworkScopedCategoryStats,
+} from '~/pages/Explore/categories/useNetworkScopedCategoryStats'
 
 const DROPDOWN_WIDTH = 328
 const DROPDOWN_MAX_HEIGHT = 400
-
-const EMPTY_CATEGORY_STATS: TokenCategoryStats = {
-  tokenCount: 0,
-  priceChange24hPct: 0,
-  volume1h: 0,
-  volume1d: 0,
-  volume1w: 0,
-  volume1m: 0,
-  volume1y: 0,
-}
-
-/**
- * Category stats scoped to the Explore network filter; empty on those chains reads as zeroed stats.
- * A chain without category coverage shows All networks stats, since picking a category there resets the filter.
- */
-function useNetworkScopedStats(): (category: TokenCategory) => TokenCategoryStats | undefined {
-  const chainId = useChainIdFromUrlParam()
-  const chainIds = useMemo(() => (chainId && !isCategoryUnsupportedChain(chainId) ? [chainId] : undefined), [chainId])
-  const { data: scopedCategories, isPlaceholderData } = useListCategoriesQuery({ chainIds })
-
-  return useMemo(() => {
-    // keepPreviousData serves the prior chain's stats on a network switch; fall back until the scoped
-    // response lands so a category empty on the previous chain isn't wrongly disabled on this one.
-    if (!scopedCategories || isPlaceholderData) {
-      return (category: TokenCategory) => category.stats
-    }
-    const scopedStatsById = new Map(scopedCategories.map((category) => [category.id, category.stats]))
-    return (category: TokenCategory) => scopedStatsById.get(category.id) ?? EMPTY_CATEGORY_STATS
-  }, [scopedCategories, isPlaceholderData])
-}
 
 function CategoryRow({
   category,
   stats,
   onSelect,
 }: {
-  category: TokenCategory
-  stats: TokenCategoryStats | undefined
-  onSelect: (category: TokenCategory) => void
+  category: Category
+  stats: CategoryRowStats | undefined
+  onSelect: (category: Category) => void
 }): JSX.Element {
   const locale = useCurrentLocale()
-  const Icon = getTokenCategoryIcon(category)
-  const isEmpty = stats?.tokenCount === 0
+  const Icon = getCategoryIcon(category)
+  const isEmpty = isEmptyCategoryStats(stats)
   const onPress = useEvent(() => onSelect(category))
 
   return (
@@ -87,25 +59,27 @@ function CategoryRow({
           </Text>
           {stats !== undefined && (
             <Text variant="body3" color="$neutral3">
-              {stats.tokenCount.toLocaleString(locale)}
+              {stats.count.toLocaleString(locale)}
             </Text>
           )}
         </Flex>
       </Flex>
-      <RelativeChange change={stats?.priceChange24hPct} variant="body3" arrowSize="$icon.12" />
+      <RelativeChange change={stats?.change24hPct} variant="body3" arrowSize="$icon.12" />
     </InternalMenuItem>
   )
 }
 
 /** "More" control at the end of the Explore category chip row, listing every category bucketed by class. */
-export function MoreCategoriesDropdown({
+export function MoreCategoriesDropdown<K extends CategoryKind>({
+  kind,
   categories,
   selectedCategoryId,
   position,
   onSelectCategory,
 }: {
-  /** Ordered category list; buckets preserve this order. */
-  categories: TokenCategory[]
+  kind: K
+  /** Ordered category list of that kind; buckets preserve this order. */
+  categories: Extract<Category, { kind: K }>[]
   selectedCategoryId?: string
   /** Slot of the More control in the chip row, for analytics. */
   position: number
@@ -114,8 +88,8 @@ export function MoreCategoriesDropdown({
   const { t } = useTranslation()
   const trace = useTrace()
   const [isOpen, toggleOpen] = useState(false)
-  const buckets = useMemo(() => bucketTokenCategories(categories), [categories])
-  const getScopedStats = useNetworkScopedStats()
+  const buckets = useMemo(() => bucketCategories(categories), [categories])
+  const { getScopedStats } = useNetworkScopedCategoryStats(kind)
 
   // Only the trigger opens the menu (outside clicks only close it), so this is the one place an open happens.
   const onToggleOpen = useEvent((): void => {
@@ -130,7 +104,7 @@ export function MoreCategoriesDropdown({
     toggleOpen(!isOpen)
   })
 
-  const onSelect = useEvent((category: TokenCategory): void => {
+  const onSelect = useEvent((category: Category): void => {
     toggleOpen(false)
     if (category.id === selectedCategoryId) {
       return

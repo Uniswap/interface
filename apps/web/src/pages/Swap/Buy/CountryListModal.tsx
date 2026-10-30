@@ -8,6 +8,7 @@ import {
   type UniversalListStyle,
   useMedia,
 } from '@universe/mycelium'
+import { useScrollbarStyles } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
 import {
   forwardRef,
@@ -19,7 +20,7 @@ import {
   useState,
 } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ModalCloseIcon, useScrollbarStyles } from 'ui/src'
+import { ModalCloseIcon } from 'ui/src'
 import { Search } from 'ui/src/components/icons/Search'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useFilteredCountryData } from 'uniswap/src/features/fiatOnRamp/hooks/useFilteredCountryData'

@@ -1,5 +1,6 @@
 import { AuctionFdvWarningConfigKey, DynamicConfigs, useDynamicConfigValue } from '@universe/gating'
 import { useMemo } from 'react'
+import { formatCommittedUsd } from 'uniswap/src/features/toucan/formatCommittedUsd'
 import { FiatNumberType, NumberType } from 'utilities/src/format/types'
 import { approximateNumberFromRaw, formatCompactFromRaw } from '~/features/Toucan/Auction/utils/fixedPointFdv'
 import type { EnrichedAuction } from '~/features/Toucan/hooks/useTopAuctions/useTopAuctions'
@@ -11,7 +12,7 @@ export function getAuctionCommittedVolumeDisplay(
 ): string | undefined {
   const committedVolumeUsd = auction?.totalBidVolumeUsd !== undefined ? Number(auction.totalBidVolumeUsd) : undefined
   if (committedVolumeUsd !== undefined) {
-    return convertFiatAmountFormatted(committedVolumeUsd, NumberType.FiatTokenStats)
+    return formatCommittedUsd({ usd: committedVolumeUsd, convertFiatAmountFormatted })
   }
   const raw = auction?.totalBidVolume
   return raw && auction.currencyTokenDecimals !== undefined

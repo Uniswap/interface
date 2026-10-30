@@ -27,7 +27,7 @@ import { Cell } from '~/components/Table/Cell'
 import { HeaderCell } from '~/components/Table/styled'
 import { hasRow } from '~/components/Table/utils/hasRow'
 import { PORTFOLIO_TABLE_ROW_HEIGHT } from '~/pages/Portfolio/constants'
-import { MAX_LIMITS_LOADING_ROWS } from '~/pages/Portfolio/Overview/constants'
+import { MAX_LIMITS_LOADING_ROWS, MINI_TABLE_MOBILE_BLEED_PX } from '~/pages/Portfolio/Overview/constants'
 import { TableSectionHeader } from '~/pages/Portfolio/Overview/TableSectionHeader'
 
 /**
@@ -200,7 +200,7 @@ export const OpenLimitsTable = memo(function OpenLimitsTable({
         ),
         cell: (info) => {
           return (
-            <Cell loading={showLoadingSkeleton} justifyContent="flex-start">
+            <Cell loading={showLoadingSkeleton} justifyContent="flex-start" $md={{ pl: '$none' }}>
               {hasRow<UniswapXOrderDetails>(info) && <LimitInfoCell order={info.row.original} />}
             </Cell>
           )
@@ -219,7 +219,7 @@ export const OpenLimitsTable = memo(function OpenLimitsTable({
         ),
         cell: (info) => {
           return (
-            <Cell loading={showLoadingSkeleton} justifyContent="flex-end">
+            <Cell loading={showLoadingSkeleton} justifyContent="flex-end" $md={{ pr: '$none' }}>
               {hasRow<UniswapXOrderDetails>(info) && <LimitActionCell order={info.row.original} />}
             </Cell>
           )
@@ -263,18 +263,20 @@ export const OpenLimitsTable = memo(function OpenLimitsTable({
       subtitle={t('portfolio.overview.limits.table.openLimits', { count: openLimitOrders.length })}
       contentGap="$spacing2"
     >
-      <Table
-        mobileFullBleed
-        hideHeader
-        columns={columns}
-        data={limitedOrders}
-        loading={tableLoading}
-        error={false}
-        rowWrapper={rowWrapper}
-        loadingRowsCount={MAX_LIMITS_LOADING_ROWS}
-        rowHeight={PORTFOLIO_TABLE_ROW_HEIGHT}
-        compactRowHeight={PORTFOLIO_TABLE_ROW_HEIGHT}
-      />
+      <Flex $md={{ mx: -MINI_TABLE_MOBILE_BLEED_PX }}>
+        <Table
+          mobileFullBleed
+          hideHeader
+          columns={columns}
+          data={limitedOrders}
+          loading={tableLoading}
+          error={false}
+          rowWrapper={rowWrapper}
+          loadingRowsCount={MAX_LIMITS_LOADING_ROWS}
+          rowHeight={PORTFOLIO_TABLE_ROW_HEIGHT}
+          compactRowHeight={PORTFOLIO_TABLE_ROW_HEIGHT}
+        />
+      </Flex>
     </TableSectionHeader>
   )
 })

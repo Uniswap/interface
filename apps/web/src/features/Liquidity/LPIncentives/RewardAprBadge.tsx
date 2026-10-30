@@ -79,6 +79,7 @@ function TokenTintedBadge({
   const { tokenColor } = useSrcColor({
     src: currencyInfo?.logoUrl ?? undefined,
     currencyName: currencyInfo?.currency.name,
+    colorOverrides: currencyInfo?.colorOverrides,
   })
   const { validTokenColor, lightTokenColor } = useColorsFromTokenColor(tokenColor ?? undefined)
 

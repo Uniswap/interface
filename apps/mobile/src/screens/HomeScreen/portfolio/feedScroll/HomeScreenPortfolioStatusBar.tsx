@@ -1,7 +1,6 @@
+import { AnimatedFlex, useSporeColors } from '@universe/mycelium'
 import { interpolateColor, useAnimatedStyle, useDerivedValue } from 'react-native-reanimated'
 import { useHomeScreenPortfolioScroll } from 'src/screens/HomeScreen/portfolio/context/HomeScreenPortfolioScrollContext'
-import { useSporeColors } from 'ui/src'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 
 interface HomeScreenPortfolioStatusBarProps {

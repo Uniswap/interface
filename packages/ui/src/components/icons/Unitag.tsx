@@ -1,9 +1,9 @@
 import { isMobileApp, isWebApp } from '@universe/environment'
+import { useIsDarkMode } from '@universe/mycelium'
 import { UNITAG_DARK, UNITAG_DARK_SMALL, UNITAG_LIGHT, UNITAG_LIGHT_SMALL } from '@universe/mycelium/assets'
 import { UniversalImage, UniversalImageStyleProps } from '@universe/mycelium/universal-image'
 import { memo, useMemo } from 'react'
 import { ICON_SIZE_TOKEN_PX } from 'ui/src/components/factories/iconTokens'
-import { useIsDarkMode } from 'ui/src/hooks/useIsDarkMode'
 import { IconSizeTokens } from 'ui/src/theme'
 
 const style: UniversalImageStyleProps = {

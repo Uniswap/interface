@@ -28,11 +28,13 @@ import { ErrorCallout } from '~/components/ErrorCallout'
 import { LPGeoRestrictionBanner } from '~/components/GeoRestriction/LPGeoRestrictionBanner'
 import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
 import { MouseoverTooltip } from '~/components/Tooltip'
+import { AcceptUpdatedInitialPriceRow } from '~/features/Liquidity/AcceptUpdatedInitialPriceRow'
 import { BaseQuoteFiatAmount } from '~/features/Liquidity/BaseQuoteFiatAmount'
 import {
   getLiquidityRangeChartProps,
   WrappedLiquidityPositionRangeChart,
 } from '~/features/Liquidity/charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
+import type { InitialPriceAcceptance } from '~/features/Liquidity/Create/hooks/useInitialPriceAcceptance'
 import { PoolOutOfSyncError } from '~/features/Liquidity/Create/PoolOutOfSyncError'
 import { useIsLiquiditySagaRunning } from '~/features/Liquidity/hooks/useIsLiquiditySagaRunning'
 import { LiquidityPositionInfoBadges } from '~/features/Liquidity/LiquidityPositionInfoBadges'
@@ -59,6 +61,8 @@ export interface ReviewModalProps {
   currencyAmountsUSDValue?: CurrencyAmountMap
   feeAmounts?: CurrencyAmountMap
   refundedAmounts?: CurrencyAmountMap
+  /** Set by callers that can create a pool: a market move past the bound blocks confirm until accepted. */
+  initialPriceAcceptance?: InitialPriceAcceptance
   isDisabled?: boolean
   gasFeeEstimateUSD?: Maybe<CurrencyAmount<Currency>>
   transactionError: string | boolean
@@ -132,7 +136,8 @@ export function ReviewModal({
   currencyAmountsUSDValue,
   feeAmounts,
   refundedAmounts,
-  isDisabled,
+  initialPriceAcceptance,
+  isDisabled: isDisabledByCaller,
   gasFeeEstimateUSD,
   transactionError,
   steps,
@@ -161,6 +166,15 @@ export function ReviewModal({
   const token1CurrencyInfo = useCurrencyInfo(token1)
   const chainId = token0?.chainId
 
+  // A new pool's market price moved past the bound under review: confirm waits for the user to accept it.
+  const {
+    updatedPrice,
+    priceChangePercent,
+    requiresAcceptance = false,
+    acceptUpdatedPrice,
+  } = initialPriceAcceptance ?? {}
+  const isDisabled = isDisabledByCaller || requiresAcceptance
+
   // The signing-surface half of the gate, for both callers (create and migrate). Read here rather
   // than threaded in from the form step on purpose: the form gate fails open while the compliance
   // answer is in flight, so a user can press Continue and open this modal before the verdict lands.
@@ -172,11 +186,11 @@ export function ReviewModal({
   // Guards both callers' submit handlers (`handleCreate`, migration's `handleConfirm`) at the
   // boundary, so neither can dispatch a liquidity saga while the block is up.
   const handleConfirm = useCallback(() => {
-    if (isGeoRestricted) {
+    if (isGeoRestricted || requiresAcceptance) {
       return
     }
     onConfirm()
-  }, [isGeoRestricted, onConfirm])
+  }, [isGeoRestricted, requiresAcceptance, onConfirm])
 
   const { formatNumberOrString, formatCurrencyAmount } = useLocalizationContext()
 
@@ -324,6 +338,19 @@ export function ReviewModal({
                 base={baseCurrency}
                 quote={quoteCurrency}
               />
+              {requiresAcceptance &&
+                updatedPrice &&
+                priceChangePercent !== undefined &&
+                acceptUpdatedPrice &&
+                !currentTransactionStep && (
+                  <AcceptUpdatedInitialPriceRow
+                    updatedPrice={updatedPrice}
+                    priceChangePercent={priceChangePercent}
+                    base={baseCurrency}
+                    quote={quoteCurrency}
+                    onAccept={acceptUpdatedPrice}
+                  />
+                )}
             </Flex>
           )}
           <Flex gap="$spacing12" pb="$spacing8" mt="$spacing32">

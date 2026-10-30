@@ -80,6 +80,7 @@ import {
 import { hasButtonCompatDimensions } from './dimensions'
 import { buttonCompatNativeDimensions, buttonCompatNativeDroppedDimensionNames } from './native-dimensions'
 import type { ButtonCompatProps, ButtonTextProps } from './native-props'
+import { PRESS_SCALE } from './press-scale'
 import { buttonTextDroppedStyleNames } from './text-props'
 
 // The public type + helper surface mirrors the web leg exactly.
@@ -87,9 +88,6 @@ export { getContrastTextClass } from './compile'
 export type { ButtonEmphasis, ButtonFocusScaling, ButtonIconPosition, ButtonSize, ButtonVariant } from './compile'
 // Named so a consumer can type a standalone shared handler outside JSX.
 export type { ButtonPressHandler, NativeButtonPressEvent, WebButtonPressEvent } from './press-handler'
-
-/** Legacy CustomButtonFrame pressStyle scale (commonPressStyle). */
-const PRESS_SCALE = 0.98
 
 /** SpinningLoader.native's full turn. */
 const SPINNER_DEGREES = 360

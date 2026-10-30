@@ -49,6 +49,7 @@ function createCategoryOption(id: string, name: string, englishName = name): Cat
       name,
       englishName,
       description: '',
+      kind: 'token',
       categoryClass: TokenCategoryClass.Sector,
       grouped: false,
       topTokens: [],
@@ -89,7 +90,7 @@ function createSearchResultParams(
 
 describe('useSectionsForSearchResultsUtils', () => {
   describe('getAllSections', () => {
-    it('appends auction results after token, pool, and wallet sections on the All tab', () => {
+    it('leads with auction results ahead of token, pool, and wallet sections on the All tab', () => {
       const sections = getAllSections({
         auctionSearchResultsSection: [createSection(OnchainItemSectionName.Auctions)],
         earnSearchResultsSection: undefined,
@@ -103,10 +104,10 @@ describe('useSectionsForSearchResultsUtils', () => {
       })
 
       expect(sections.map((section) => section.sectionKey)).toEqual([
+        OnchainItemSectionName.Auctions,
         OnchainItemSectionName.Tokens,
         OnchainItemSectionName.Pools,
         OnchainItemSectionName.Wallets,
-        OnchainItemSectionName.Auctions,
       ])
     })
 
@@ -125,10 +126,10 @@ describe('useSectionsForSearchResultsUtils', () => {
 
       expect(sections.map((section) => section.sectionKey)).toEqual([
         OnchainItemSectionName.Earn,
+        OnchainItemSectionName.Auctions,
         OnchainItemSectionName.Tokens,
         OnchainItemSectionName.Pools,
         OnchainItemSectionName.Wallets,
-        OnchainItemSectionName.Auctions,
       ])
     })
 
@@ -147,9 +148,9 @@ describe('useSectionsForSearchResultsUtils', () => {
 
       expect(sections.map((section) => section.sectionKey)).toEqual([
         OnchainItemSectionName.Wallets,
+        OnchainItemSectionName.Auctions,
         OnchainItemSectionName.Tokens,
         OnchainItemSectionName.Pools,
-        OnchainItemSectionName.Auctions,
       ])
     })
 
@@ -164,8 +165,8 @@ describe('useSectionsForSearchResultsUtils', () => {
       })
 
       expect(sections.map((section) => section.sectionKey)).toEqual([
-        OnchainItemSectionName.Tokens,
         OnchainItemSectionName.Auctions,
+        OnchainItemSectionName.Tokens,
       ])
     })
   })
@@ -250,17 +251,49 @@ describe('useSectionsForSearchResultsUtils', () => {
   })
 
   describe('getSearchTypes', () => {
-    it('requests tokens and pools on web, adding auctions and categories when enabled', () => {
-      expect(getSearchTypes({ auctionSearchEnabled: false, categorySearchEnabled: false })).toEqual([
-        SearchType.TOKEN,
-        SearchType.POOL,
-      ])
-      expect(getSearchTypes({ auctionSearchEnabled: true, categorySearchEnabled: true })).toEqual([
-        SearchType.TOKEN,
-        SearchType.POOL,
-        SearchType.AUCTION,
-        SearchType.CATEGORY,
-      ])
+    it('requests tokens and pools on every tab when auction search is off', () => {
+      for (const activeTab of [SearchTab.All, SearchTab.Tokens, SearchTab.Pools, SearchTab.Auctions]) {
+        expect(
+          getSearchTypes({
+            activeTab,
+            auctionSearchEnabled: false,
+            categorySearchEnabled: true,
+            tokenGroupSearchEnabled: true,
+          }),
+        ).toEqual([SearchType.TOKEN, SearchType.POOL, SearchType.CATEGORY, SearchType.TOKEN_GROUP])
+      }
+    })
+
+    it('requests auctions with tokens on All and alone on Auctions', () => {
+      expect(
+        getSearchTypes({
+          activeTab: SearchTab.All,
+          auctionSearchEnabled: true,
+          categorySearchEnabled: true,
+          tokenGroupSearchEnabled: true,
+        }),
+      ).toEqual([SearchType.TOKEN, SearchType.POOL, SearchType.AUCTION, SearchType.CATEGORY, SearchType.TOKEN_GROUP])
+      expect(
+        getSearchTypes({
+          activeTab: SearchTab.Auctions,
+          auctionSearchEnabled: true,
+          categorySearchEnabled: true,
+          tokenGroupSearchEnabled: true,
+        }),
+      ).toEqual([SearchType.AUCTION])
+    })
+
+    it('keeps auctions and All-only categories out of the Tokens and Pools request', () => {
+      for (const activeTab of [SearchTab.Tokens, SearchTab.Pools]) {
+        expect(
+          getSearchTypes({
+            activeTab,
+            auctionSearchEnabled: true,
+            categorySearchEnabled: true,
+            tokenGroupSearchEnabled: true,
+          }),
+        ).toEqual([SearchType.TOKEN, SearchType.POOL, SearchType.TOKEN_GROUP])
+      }
     })
   })
 })

@@ -1,4 +1,5 @@
-import { DynamicColor, useSporeColors } from 'ui/src/hooks/useSporeColors'
+import { useSporeColors } from '@universe/mycelium'
+import { DynamicColor } from '@universe/mycelium/theme-hooks-compat'
 import type { SporeColorToken, SporeThemeKeys } from 'ui/src/theme/color/types'
 
 export type ColorHexFromThemeKey = {

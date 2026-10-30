@@ -10,7 +10,7 @@ import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import type { MarginQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import type { MarginVenue } from 'uniswap/src/features/transactions/margin/types'
+import { MarginDirection, type MarginVenue } from 'uniswap/src/features/transactions/margin/types'
 import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
 import { MARGIN_CHAIN_ID, type MarginMarket } from '~/constants/margin'
@@ -127,8 +127,8 @@ function MarginReviewAmounts({
   // display.size is denominated in the exposure leg — a short's is its debt leg, a long's its
   // collateral — so it is decoded off the QUOTE's own declared exposure decimals. Reading the form
   // market's would render at the wrong scale for a quote whose pair drifted from the form's.
-  const exposureSymbol = direction === 'SHORT' ? marginUnwrapSymbol(market.debt) : market.displaySymbol
-  const exposureLogoUrl = direction === 'SHORT' ? debtLogoUrl : collateralLogoUrl
+  const exposureSymbol = direction === MarginDirection.SHORT ? marginUnwrapSymbol(market.debt) : market.displaySymbol
+  const exposureLogoUrl = direction === MarginDirection.SHORT ? debtLogoUrl : collateralLogoUrl
   const notional =
     quote.display.size !== undefined
       ? usableWireAmount({ raw: quote.display.size, decimals: quote.exposureToken.decimals })
@@ -173,7 +173,7 @@ function MarginReviewAmounts({
         value={borrowing === undefined ? '—' : tokenAmount(borrowing, marginUnwrapSymbol(market.debt))}
         logoUrl={debtLogoUrl ?? undefined}
         symbol={marginUnwrapSymbol(market.debt)}
-        trailing={direction === 'SHORT' ? leverageChip : undefined}
+        trailing={direction === MarginDirection.SHORT ? leverageChip : undefined}
       />
       <AmountSection
         label={t('margin.review.totalSize')}
@@ -181,7 +181,7 @@ function MarginReviewAmounts({
         usd={fiat(notionalUsd)}
         logoUrl={exposureLogoUrl ?? undefined}
         symbol={exposureSymbol}
-        trailing={direction === 'SHORT' ? undefined : leverageChip}
+        trailing={direction === MarginDirection.SHORT ? undefined : leverageChip}
       />
     </>
   )
@@ -221,7 +221,7 @@ function MarginReviewDetails({
     execPriceX18: quote.display.effectivePrice,
     markPriceX18: impactMark.priceX18,
     swapSide: 'BUY_COLLATERAL',
-    direction: direction ?? 'LONG',
+    direction: direction ?? MarginDirection.LONG,
   })
 
   const health = quote.display.healthFactor
@@ -435,8 +435,8 @@ function MarginOpenReviewSheet({
     }
   })
 
-  const title = direction === 'SHORT' ? t('margin.review.titleShort') : t('margin.review.titleLong')
-  const ctaLabel = direction === 'SHORT' ? t('margin.cta.openShort') : t('margin.cta.openLong')
+  const title = direction === MarginDirection.SHORT ? t('margin.review.titleShort') : t('margin.review.titleLong')
+  const ctaLabel = direction === MarginDirection.SHORT ? t('margin.cta.openShort') : t('margin.cta.openLong')
   // The venue check ADDS to the existing gates (a quote at all, no quote error, no plan in flight);
   // none of them are relaxed by it.
   //

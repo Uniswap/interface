@@ -11,6 +11,7 @@ import {
   PlanTransactionDetails,
   SendTokenTransactionInfo,
   TransactionDetails,
+  TransactionStatus,
   TransactionType,
   UniswapXOrderDetails,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
@@ -22,6 +23,7 @@ import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/utils/currencyId'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { unique } from 'utilities/src/primitives/array'
 import { flattenObjectOfObjects } from 'utilities/src/primitives/objects'
+import { ONE_DAY_MS } from 'utilities/src/time/time'
 
 export const selectTransactions = (state: UniswapState): TransactionsState => state.transactions
 
@@ -41,6 +43,23 @@ export const selectSwapTransactionsCount = createSelector(selectTransactions, (t
 type PlatformAddresses = {
   evmAddress: Address | null
   svmAddress: Address | null
+}
+
+// Bank-rail on-ramps (ACH, SEPA) legitimately stay pending for 2–5 business days
+const ON_RAMP_MAX_PENDING_MS = 10 * ONE_DAY_MS
+
+const FOR_MAX_PENDING_MS: Partial<Record<TransactionType, number>> = {
+  [TransactionType.OnRampPurchase]: ON_RAMP_MAX_PENDING_MS,
+  [TransactionType.OnRampTransfer]: ON_RAMP_MAX_PENDING_MS,
+  [TransactionType.OffRampSale]: ONE_DAY_MS,
+}
+
+/** FOR providers can leave a record Pending forever; past its window it's noise in activity and the pending badge */
+function isStalePendingFORTransaction(tx: TransactionDetails): boolean {
+  const maxPendingMs = FOR_MAX_PENDING_MS[tx.typeInfo.type]
+  return (
+    maxPendingMs !== undefined && tx.status === TransactionStatus.Pending && Date.now() - tx.addedTime > maxPendingMs
+  )
 }
 
 export type AddressTransactionsSelector = Selector<UniswapState, TransactionDetails[] | undefined, [PlatformAddresses]>
@@ -70,6 +89,9 @@ export function makeSelectAddressTransactions(): AddressTransactionsSelector {
       // Remove dummy local FOR transactions from TransactionList, notification badge, etc.
       // this is what prevents the local transactions from actually appearing in the activity tab.
       if (tx.typeInfo.type === TransactionType.LocalOnRamp || tx.typeInfo.type === TransactionType.LocalOffRamp) {
+        return false
+      }
+      if (isStalePendingFORTransaction(tx)) {
         return false
       }
       /*

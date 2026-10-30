@@ -1,0 +1,21 @@
+product_area: connectors
+platforms: [web]
+nxProjects: ["@universe/web", uniswap]
+owners: ["@uniswap/platform-and-infra"]
+
+# Casebook area-registry metadata (read by the engine in apps/cli/src/casebook).
+# These drive Testlio suite naming, the PR-comment label, and CI routing.
+label: Connectors
+suiteNamePrefix: Connectors
+ghLabel: "casebook:connectors"
+# Reviewer GitHub team for the auto-opened catalog companion PR. CODEOWNERS is silent on
+# apps/web/src/components/Web3Provider + connection; platform-and-infra owns wallet
+# connection plumbing (confirmed in review of #36515).
+reviewerTeam: platform-and-infra
+
+# Test-wallet aliases referenced by this area's cases. Symbolic only: real mnemonics live in
+# the QA vault / Testlio TL handoff, keyed by the same alias. Never put a secret here.
+wallets:
+  TW-CONNECTORS-01: "injected-connector wallet (MetaMask / Rabby / Coinbase extension), funded on mainnet"
+  TW-CONNECTORS-02: "Coinbase Smart Wallet (passkey-backed), assigned per tester"
+  TW-CONNECTORS-03: "embedded (passkey) Uniswap wallet with an existing account"

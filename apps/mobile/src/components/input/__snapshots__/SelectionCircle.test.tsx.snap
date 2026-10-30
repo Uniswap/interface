@@ -11,5 +11,9 @@ exports[`renders selection circle 1`] = `
       style="width: 10px; height: 10px; border-top-left-radius: 999999px; border-top-right-radius: 999999px; border-bottom-right-radius: 999999px; border-bottom-left-radius: 999999px; opacity: 1;"
     />
   </div>
+  <div
+    class="css-view-175oi2r r-bottom-1p0dtai r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-pointerEvents-12vffkv"
+    data-testid="portal-layer"
+  />
 </DocumentFragment>
 `;

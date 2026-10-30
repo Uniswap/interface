@@ -1,7 +1,12 @@
-import { FlexProps, TouchableArea, TouchableAreaProps } from '@universe/mycelium'
-import { useIsShortMobileDevice, useSporeColors } from 'ui/src'
+import {
+  FlexProps,
+  TouchableArea,
+  TouchableAreaProps,
+  useIsShortMobileDevice,
+  useSporeColors,
+} from '@universe/mycelium'
+import { PRESS_SCALE } from '@universe/mycelium/button-compat'
 import { Arrow } from 'ui/src/components/arrow/Arrow'
-import { PRESS_SCALE } from 'ui/src/components/buttons/Button/components/CustomButtonFrame/constants'
 import { iconSizes } from 'ui/src/theme'
 
 type SwapArrowButtonProps = Pick<

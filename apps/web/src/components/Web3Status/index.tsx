@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next'
 import { Button, ButtonProps, Popover } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
 import { useActiveAddresses, useConnectionStatus } from 'uniswap/src/features/accounts/store/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { ElementName, InterfaceEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -92,6 +93,7 @@ function Web3StatusInner() {
   const { t } = useTranslation()
   const activeAddresses = useActiveAddresses()
   const { isConnecting } = useConnectionStatus()
+  const { isTestnetModeEnabled } = useEnabledChains()
   const ref = useRef<HTMLDivElement>(null)
   const [, setRef] = useAtom(Web3StatusRef)
 
@@ -156,6 +158,11 @@ function Web3StatusInner() {
                 loading={false}
                 ref={ref}
                 icon={<StatusIcon size={24} showMiniIcons={false} />}
+                // Trims the inset around the avatar's own whitespace. Right: the avatar sits as far from the
+                // screen edge as the logo does on the left. Left: with the nav row's $md gap dropped beside
+                // the search icon, the two land 20px apart; the testnet pill sits between them and keeps
+                // the row gap, so it keeps the full left inset.
+                $md={isTestnetModeEnabled ? { pr: '$spacing4' } : { pl: '$spacing1', pr: '$spacing4' }}
               >
                 <AddressAndChevronContainer>
                   <Text variant="body2" marginRight={hasUnitag ? '$spacing8' : undefined}>

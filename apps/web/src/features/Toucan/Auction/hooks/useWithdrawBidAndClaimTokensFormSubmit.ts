@@ -27,11 +27,14 @@ import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { getAuctionWithdrawBaseAnalyticsProperties } from '~/features/Toucan/Auction/analytics'
 import { AuctionBidStatus } from '~/features/Toucan/Auction/store/types'
 import { useAuctionStore, useAuctionStoreActions } from '~/features/Toucan/Auction/store/useAuctionStore'
+import { assertSignableWithdraw, type WithdrawSettleRequest } from '~/features/Toucan/Auction/utils/withdrawSettleGuard'
 
 export interface PreparedWithdrawBidAndClaimTokensTransaction {
   txRequest: ValidatedTransactionRequest
   info: ToucanWithdrawBidAndClaimTokensTransactionInfo
   requestId: string
+  /** What was requested; `txRequest` is re-checked against it and the live account at submit. */
+  settleRequest: WithdrawSettleRequest
 }
 
 export interface WithdrawBidAndClaimTokensSubmitState {
@@ -215,6 +218,7 @@ export function useWithdrawBidAndClaimTokensFormSubmit({
 
       let txRequest: ValidatedTransactionRequest | undefined
       let requestId: string
+      let settleRequest: WithdrawSettleRequest
 
       // Use the simpler exitBidPosition API for pre-claim window single bid exit
       if (useSimpleExitApi && bidId) {
@@ -238,6 +242,7 @@ export function useWithdrawBidAndClaimTokensFormSubmit({
           chainId: response.exitBid.chainId,
         })
         requestId = response.requestId
+        settleRequest = { method: 'exitBidPosition', auctionContractAddress, chainId, bidId }
       } else {
         // Use the batch exitBidAndClaimTokens API for normal operations
         const response: ExitBidAndClaimTokensResponse = await exitBidAndClaimTokensMutation.mutateAsync({
@@ -264,6 +269,12 @@ export function useWithdrawBidAndClaimTokensFormSubmit({
           chainId: response.exitBidAndClaimTokens.chainId,
         })
         requestId = response.requestId
+        settleRequest = {
+          method: 'exitBidAndClaimTokens',
+          auctionContractAddress,
+          chainId,
+          bids: bidsToProcess.map((bid) => ({ bidId: bid.bidId, isExited: bid.isExited })),
+        }
       }
 
       if (!txRequest) {
@@ -272,6 +283,10 @@ export function useWithdrawBidAndClaimTokensFormSubmit({
         )
         return undefined
       }
+
+      // Refused here so a mismatched answer is never cached or shown for review; the submit path
+      // checks again against the account that is live when the user confirms.
+      assertSignableWithdraw({ request: settleRequest, txRequest, account: evmAccount.address })
 
       const info: ToucanWithdrawBidAndClaimTokensTransactionInfo = {
         type: TransactionType.ToucanWithdrawBidAndClaimTokens,
@@ -286,6 +301,7 @@ export function useWithdrawBidAndClaimTokensFormSubmit({
         txRequest,
         info,
         requestId,
+        settleRequest,
       }
 
       preparedTransactionRef.current = { signature, data: preparedTransaction }
@@ -315,6 +331,19 @@ export function useWithdrawBidAndClaimTokensFormSubmit({
 
     if (!chainId) {
       handleWithdrawBidAndClaimTokensFailure(new Error('Missing chain ID for Toucan withdraw submission'))
+      return undefined
+    }
+
+    try {
+      assertSignableWithdraw({
+        request: preparedTransaction.settleRequest,
+        txRequest: preparedTransaction.txRequest,
+        account: evmAccount.address,
+      })
+    } catch (error) {
+      handleWithdrawBidAndClaimTokensFailure(
+        error instanceof Error ? error : new Error('Refused the prepared withdrawal'),
+      )
       return undefined
     }
 

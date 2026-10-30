@@ -1,8 +1,8 @@
+import { useSporeColors } from '@universe/mycelium'
 import React, { PropsWithChildren } from 'react'
 import { useDispatch } from 'react-redux'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { ModalsState } from 'src/features/modals/ModalsState'
-import { useSporeColors } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalProps } from 'uniswap/src/components/modals/ModalProps'
 

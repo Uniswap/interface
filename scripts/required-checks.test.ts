@@ -215,13 +215,13 @@ describe('repo ci-checks.json', () => {
 
   test('the only ci-passed needs outside main’s requiredChecks are the known ungated ones', () => {
     // `affected` is the gate job — not gated here because ci-passed asserts it
-    // directly, independently of the base ref. The other three are deliberately
+    // directly, independently of the base ref. The other four are deliberately
     // advisory (per repo owner): they are in `needs` but gate no base, and
     // before `defaultTarget` they incidentally gated unmatched bases and
     // nothing else. Anything new in `needs` must be gated or added here, so a
     // job cannot slip in without someone making that call.
     expect(needs.filter((job) => !resolve('main').requiredChecks.includes(job)).sort()).toEqual(
-      ['affected', 'dev-portal', 'dev-portal-e2e', 'sessions'].sort(),
+      ['affected', 'casebook', 'dev-portal', 'dev-portal-e2e', 'sessions'].sort(),
     )
   })
 
@@ -275,11 +275,17 @@ describe('affected-outputs wiring', () => {
     'utf8',
   )
 
-  const rows = [...SCRIPT.matchAll(/^ {2}"([A-Z_0-9]+)\|/gm)].map((match) => match[1]!)
+  // PATH_FILTERS rows, plus the rows the script computes outside the table (CASEBOOK reads the catalogs).
+  const rows = [
+    ...[...SCRIPT.matchAll(/^ {2}"([A-Z_0-9]+)\|/gm)].map((match) => match[1]!),
+    ...[...SCRIPT.matchAll(/^echo "([A-Z_0-9]+)=/gm)].map((match) => match[1]!),
+  ]
   const declaredInputs = [...SCRIPT_TESTS.matchAll(/^ {6}([a-z0-9-]+):$/gm)].map((match) => match[1]!)
 
   test('both files parse, so a shape change fails loudly instead of testing nothing', () => {
     expect(rows.length).toBeGreaterThan(0)
+    // The second extraction has its own anchor; if the script stops emitting CASEBOOK that way this catches it.
+    expect(rows).toContain('CASEBOOK')
     expect(declaredInputs).toContain('run-all')
   })
 

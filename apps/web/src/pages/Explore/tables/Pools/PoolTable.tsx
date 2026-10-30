@@ -45,6 +45,12 @@ import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
 import { Portal } from '~/components/Popups/Portal'
 import { Table } from '~/components/Table'
 import { Cell } from '~/components/Table/Cell'
+import { CollapsibleCellLayout } from '~/components/Table/PinnedColumns/collapse/CollapsibleCellLayout'
+import {
+  FLUSH_CELL_PADDING,
+  FLUSH_COLLAPSED_COLUMN_WIDTH,
+  FLUSH_HEADER_CELL_PADDING,
+} from '~/components/Table/PinnedColumns/collapse/utils'
 import { ClickableHeaderRow, HeaderArrow, HeaderSortText } from '~/components/Table/shared/SortableHeader'
 import { EllipsisText, TableText } from '~/components/Table/shared/TableText'
 import { HeaderCell } from '~/components/Table/styled'
@@ -100,6 +106,7 @@ const TableWrapper: ForwardRefExoticComponent<FlexCompatProps & RefAttributes<HT
 
 // Taller than the default row: the Pool column stacks the pair name over its protocol/fee/hook line.
 const ROW_HEIGHT = 64
+const MOBILE_POOL_COLUMN_SIZE_PX = 210
 
 interface PoolTableValues {
   index: number
@@ -387,18 +394,23 @@ function PoolDescription({
   const currencies = reverse ? [currency1, currency0] : [currency0, currency1]
 
   return (
-    <Flex row gap="$gap8" alignItems="center" maxWidth="100%">
-      <DoubleCurrencyLogo
-        currencies={currencies}
-        // The row already carries each leg's served logo, so the pair logo needn't fetch them per token.
-        servedLogos={[
-          { currency: currency0, logoUrl: token0?.logo },
-          { currency: currency1, logoUrl: token1?.logo },
-        ]}
-        // 32px matches the Explore tokens table's logo, so the two tabs' rows line up.
-        size={iconSizes.icon32}
-      />
-      <Flex flex={1} minWidth={0} gap="$spacing2">
+    <CollapsibleCellLayout
+      flush
+      gapPx={8}
+      logo={
+        <DoubleCurrencyLogo
+          currencies={currencies}
+          // The row already carries each leg's served logo, so the pair logo needn't fetch them per token.
+          servedLogos={[
+            { currency: currency0, logoUrl: token0?.logo },
+            { currency: currency1, logoUrl: token1?.logo },
+          ]}
+          // 32px matches the Explore tokens table's logo, so the two tabs' rows line up.
+          size={iconSizes.icon32}
+        />
+      }
+    >
+      <Flex gap="$spacing2">
         <EllipsisText>
           {baseSymbol}/{quoteSymbol}
         </EllipsisText>
@@ -411,7 +423,7 @@ function PoolDescription({
           hookRegistry={hookRegistry}
         />
       </Flex>
-    </Flex>
+    </CollapsibleCellLayout>
   )
 }
 
@@ -779,16 +791,21 @@ export function PoolsTable({
         : null,
       columnHelper.accessor((row) => row.poolDescription, {
         id: 'poolDescription',
-        size: media.lg ? 210 : 240,
+        size: media.lg ? MOBILE_POOL_COLUMN_SIZE_PX : 240,
+        meta: { collapsedWidth: FLUSH_COLLAPSED_COLUMN_WIDTH },
         header: () => (
-          <HeaderCell justifyContent="flex-start">
-            <Text variant="body3" color="$neutral2">
+          <HeaderCell justifyContent="flex-start" {...(media.lg ? FLUSH_HEADER_CELL_PADDING : undefined)}>
+            <Text variant="body3" color="$neutral2" numberOfLines={1}>
               {t('common.pool')}
             </Text>
           </HeaderCell>
         ),
         cell: (poolDescription) => (
-          <Cell justifyContent="flex-start" loading={showLoadingSkeleton}>
+          <Cell
+            justifyContent="flex-start"
+            loading={showLoadingSkeleton}
+            {...(media.lg ? FLUSH_CELL_PADDING : undefined)}
+          >
             {poolDescription.getValue?.()}
           </Cell>
         ),
@@ -949,6 +966,8 @@ export function PoolsTable({
       defaultPinnedColumns={['index', 'poolDescription']}
       virtualized={virtualized}
       stickyTopOffset={stickyTopOffset}
+      // Mobile: the pinned pool column (the only pinned one once `index` is hidden) collapses to its pair logo on horizontal scroll.
+      collapsiblePinnedColumnId={media.lg ? 'poolDescription' : undefined}
     />
   )
 }

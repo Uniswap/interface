@@ -135,3 +135,9 @@ skills-lock.json
 .i18n/*
 !.i18n/glossary/
 !.i18n/memory/
+
+
+# Casebook Testlio exports are generated on demand, never committed
+packages/casebook/*/exports/testlio_*_manual_import.csv
+# Casebook's local git-churn cache (--precompute-fragility); rebuilt on demand
+.casebook-fragility-cache.json

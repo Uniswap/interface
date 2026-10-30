@@ -41,6 +41,9 @@ const MODAL_CSS = `
 .uw-attachment-content-center[data-state='closed'] { animation: uw-modal-exit-down 100ms cubic-bezier(0.17, 0.67, 0.45, 1) forwards; }
 .uw-attachment-content-top[data-state='open'] { animation: uw-attachment-enter-from-above 120ms cubic-bezier(0.17, 0.67, 0.45, 1); }
 .uw-attachment-content-top[data-state='closed'] { animation: uw-modal-exit-up 100ms cubic-bezier(0.17, 0.67, 0.45, 1) forwards; }
+.uw-modal-content-center:focus-visible, .uw-modal-content-top:focus-visible,
+.uw-attachment-content-center:focus-visible, .uw-attachment-content-top:focus-visible,
+.uw-sheet-frame:focus-visible { outline: none; }
 .uw-sheet-overlay[data-state='open'] { animation: uw-modal-fade-in 500ms cubic-bezier(0.25, 0.1, 0.25, 1); }
 .uw-sheet-frame[data-state='open'] { animation: uw-sheet-enter 200ms ease-in-out; }
 /* The sheet is force-mounted while closed (Tamagui Sheet parity), so 'closed' is a static hidden
@@ -348,6 +351,7 @@ export function useSheetDrag({
         return
       }
 
+      isTouchDragActive = event.pointerType === 'touch'
       const startY = event.clientY
       let lastY = startY
       let lastTimestamp = performance.now()
@@ -370,6 +374,7 @@ export function useSheetDrag({
       const endDrag = (dismiss: boolean): void => {
         removeActiveDragListeners?.()
         removeActiveDragListeners = undefined
+        isTouchDragActive = false
         if (dismiss && onCloseRef.current) {
           // Slide out from the dragged position via inline styles (the frame stays mounted while
           // closed, so the inline transform must be driven off-screen rather than left in place;
@@ -403,11 +408,24 @@ export function useSheetDrag({
     // Tracks the in-flight drag's window listeners so BOTH endDrag and the effect cleanup remove
     // them — an unmount/close mid-drag previously leaked all three.
     let removeActiveDragListeners: (() => void) | undefined
+    let isTouchDragActive = false
+    // Even under touch-action: none, Chromium turns a fast touch release into a fling and swallows
+    // the next tap (~300ms) as "tap to stop fling" — no click, so the trigger can't reopen the sheet.
+    // Consuming the drag's touchmove prevents the fling. Bound for the open lifetime, not per drag,
+    // so it is already registered when the touchstart is hit-tested and the touchmoves stay cancelable.
+    const onTouchMove = (event: TouchEvent): void => {
+      if (isTouchDragActive && event.cancelable) {
+        event.preventDefault()
+      }
+    }
     frame.addEventListener('pointerdown', onPointerDown)
+    frame.addEventListener('touchmove', onTouchMove, { passive: false })
     return () => {
       frame.removeEventListener('pointerdown', onPointerDown)
+      frame.removeEventListener('touchmove', onTouchMove)
       removeActiveDragListeners?.()
       removeActiveDragListeners = undefined
+      isTouchDragActive = false
     }
   }, [isOpen, isTouchDevice, frame])
 }

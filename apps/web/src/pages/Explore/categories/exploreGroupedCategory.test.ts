@@ -8,7 +8,17 @@ import {
 } from '~/pages/Explore/categories/exploreGroupedCategory'
 
 function makeCategory(id: string, categoryClass: TokenCategoryClass, grouped = false): TokenCategory {
-  return { id, name: id, englishName: id, description: '', categoryClass, grouped, topTokens: [], topGroups: [] }
+  return {
+    id,
+    kind: 'token',
+    name: id,
+    englishName: id,
+    description: '',
+    categoryClass,
+    grouped,
+    topTokens: [],
+    topGroups: [],
+  }
 }
 
 const CATEGORIES = [

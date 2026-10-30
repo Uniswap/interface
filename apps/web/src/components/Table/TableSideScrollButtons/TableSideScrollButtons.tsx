@@ -14,8 +14,8 @@ type TableSideScrollButtonsProps<T extends RowData> = {
   onScrollButtonPress: (direction: 'left' | 'right') => () => void
   table: TanstackTable<T>
   isSticky: boolean
-  /** CSS width expression tracking an overridden pinned-region width (see TableProps.pinnedWidthOverride). */
-  pinnedWidthOverride?: string
+  /** CSS width expression tracking an overridden pinned-region width (see getPinnedRegionWidthCss). */
+  pinnedWidthOverride?: `calc(${string})`
 }
 
 export function TableSideScrollButtons<T extends RowData>({
@@ -35,12 +35,12 @@ export function TableSideScrollButtons<T extends RowData>({
           <Flex
             position="absolute"
             top={scrollButtonTop}
-            left={pinnedWidthOverride ? `calc(${pinnedWidthOverride})` : table.getLeftTotalSize()}
+            left={pinnedWidthOverride ?? table.getLeftTotalSize()}
             pl="$spacing12"
             zIndex={zIndexes.mask}
             className={ENTER_EXIT_PRESET_CLASSES.fadeInOut}
-            // the legacy 200ms animation preset also glided mounted top/left repositions; scoped to geometry (not `all`) per the color-flash rule
-            transition={`top ${SPORE_ANIMATION_CURVE_CSS['200ms']}, left ${SPORE_ANIMATION_CURVE_CSS['200ms']}`}
+            // the legacy 200ms preset also glided mounted top repositions; `left` stays instant so the button tracks a scroll-linked pinned-column collapse (getPinnedRegionWidthCss) instead of easing behind it
+            transition={`top ${SPORE_ANIMATION_CURVE_CSS['200ms']}`}
           >
             <TableScrollButton onPress={onScrollButtonPress('left')} direction="left" />
           </Flex>

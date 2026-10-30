@@ -15,6 +15,7 @@ import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import type { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useCurrencyInfo, useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { buildCurrencyId, buildNativeCurrencyId, normalizeCurrencyIdForMapLookup } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
@@ -115,7 +116,7 @@ function MarginPendingRow({ pending }: { pending: MarginPendingPlan }): JSX.Elem
   const subtitle = buildPendingRowSubtitle({ pending, paymentChainId, paymentInfo, formatNumberOrString, t })
   const direction = pending.direction ?? marginMarketDirection(pending)
   const directionStyle = getMarginDirectionStyle(direction)
-  const directionLabel = direction === 'SHORT' ? t('margin.side.short') : t('margin.side.long')
+  const directionLabel = direction === MarginDirection.SHORT ? t('margin.side.short') : t('margin.side.long')
 
   // isExecuting mirrors the single-flight lock; executingPlanId can't be used here — create-driven
   // runs hold the lock as 'PENDING_CREATE', so a planId comparison would never match.

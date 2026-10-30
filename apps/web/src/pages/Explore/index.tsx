@@ -19,9 +19,11 @@ import { MAX_WIDTH_MEDIA_BREAKPOINT } from '~/constants/breakpoints'
 import { getTokenExploreURL } from '~/data/util'
 import { ExploreTablesFilterStoreContextProvider } from '~/features/Explore/state/exploreTablesFilterStore'
 import { useToucanAuctionSupportedChains } from '~/features/Toucan/supportedChains'
+import { edgeFadeMaskStyle, useHorizontalScrollFades } from '~/hooks/useHorizontalScrollFades'
 import { ADD_LIQUIDITY_PATH } from '~/pages/AddLiquidity/poolLinkParams'
 import { AuctionQuickFilters } from '~/pages/Explore/AuctionQuickFilters'
 import { AuctionStatusFilter as AuctionStatusFilterComponent } from '~/pages/Explore/AuctionStatusFilter'
+import { ExplorePoolCategoryChips } from '~/pages/Explore/categories/ExplorePoolCategoryChips'
 import {
   EXPLORE_STICKY_SCROLL_OFFSET_PX,
   EXPLORE_TOKEN_SECTION_ID,
@@ -61,7 +63,12 @@ const DEFAULT_TAB_NAV_MARGIN_TOP = 80
 // Stable identity so `<Page />` (a bare component reference) doesn't remount the pools tab on
 // every render — `surface` is required on `ExploreTopPoolTable`, so it can't be left off silently.
 const ExplorePoolsTabTable = memo(function ExplorePoolsTabTable() {
-  return <ExploreTopPoolTable surface="explore" />
+  return (
+    <>
+      <ExplorePoolCategoryChips />
+      <ExploreTopPoolTable surface="explore" />
+    </>
+  )
 })
 
 function usePages(): Array<Page> {
@@ -101,7 +108,6 @@ const HEADER_TAB_VARIANTS = {
   disabled: { true: 'text-neutral3 cursor-default', false: '' },
 } as const
 
-// Parity-pinned conversion: packages/tailwind/src/parity/styled-factory/web/frames.ts buildHeaderTab.
 // The legacy component rendered an <h3> (Text variant heading3), styled display:inline by the Text base.
 // text-decoration is spelled as BOTH arbitrary properties on purpose: cn.ts folds the curated
 // underline utilities and `[text-decoration:…]` into one classGroup, so only the `-line` spelling
@@ -111,7 +117,7 @@ const HEADER_TAB_VARIANTS = {
 // check-client-build's at-rule parser for every rule after it.
 const HeaderTab = styled('h3', {
   platform: 'web',
-  base: '[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap cursor-pointer [text-decoration-line:none] [text-decoration:none] duration-[0.2s] select-none text-neutral2 text-[24px] leading-[28.8px] [font-weight:485] [font-family:var(--stext-font-book)] active:opacity-[0.6] media-md:text-[20px] media-sm:text-[16px]',
+  base: '[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap cursor-pointer [text-decoration-line:none] [text-decoration:none] duration-[0.2s] select-none text-neutral2 text-[24px] leading-[28.8px] [font-weight:485] [font-family:var(--stext-font-book)] active:opacity-[0.6] media-md:text-[20px] media-sm:text-subheading-1 media-sm:leading-[24px]',
   variants: HEADER_TAB_VARIANTS,
   // The ClickableTamaguiStyle base hover (opacity 0.8) + the variant overrides (opacity 1) —
   // later rules win via the house tailwind-merge.
@@ -129,6 +135,7 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   const { t } = useTranslation()
   const media = useMedia()
   const tabNavRef = useRef<HTMLDivElement>(null)
+  const { scrollerRef: auctionActionsScrollerRef, edgeFades: auctionActionsEdgeFades } = useHorizontalScrollFades()
   const Pages = usePages()
   const [params] = useSearchParams()
   const navigate = useNavigate()
@@ -214,7 +221,7 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
     }
   }, [tab, Pages])
 
-  const filteredChainIds = useFilteredChainIds()
+  const filteredChainIds = useFilteredChainIds(undefined, { singleModeNetworks: true })
   const tabSupportedNetworks = useMemo(() => {
     // No SVM support for transactions or pools
     if (currentKey === ExploreTab.Pools || currentKey === ExploreTab.Transactions) {
@@ -245,7 +252,7 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
           {showTrendingShelf && <ExploreTrendingShelfSection />}
           {showAssetShelf && <ExploreAssetShelfSection />}
           {showEarnSection && (
-            <Flex mt={showHeroShelf ? '$none' : '$spacing32'}>
+            <Flex mt={showHeroShelf ? '$none' : '$spacing32'} $md={{ mt: showHeroShelf ? '$none' : '$spacing20' }}>
               <EarnVaultsSection />
             </Flex>
           )}
@@ -258,6 +265,7 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
             mx="auto"
             mb="$spacing4"
             $md={{
+              ...(showEarnSection && { mt: '$spacing20' }),
               mb: EXPLORE_SECTION_MWEB_GAP,
             }}
             alignItems="center"
@@ -321,7 +329,8 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
                 )
               })}
             </Flex>
-            {!showExploreCategoryTables && (
+            {/* Auctions has no filters; an empty wrapper would still add the column gap on mobile. */}
+            {!showExploreCategoryTables && currentKey !== ExploreTab.Toucan && (
               <Flex row gap="$spacing8" justifyContent="flex-start" $md={{ width: '100%' }}>
                 {currentKey === ExploreTab.Pools && (
                   <Flex row>
@@ -361,17 +370,20 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
                 alignItems: 'flex-start',
                 gap: '$spacing16',
               }}
+              $md={{ paddingTop: '$spacing12' }}
             >
-              <Text variant="subheading1" color="$neutral1">
-                {t('toucan.auctions')}
+              <Text variant="subheading1" color="$neutral1" $md={{ variant: 'subheading2' }}>
+                {t('toucan.allAuctions')}
               </Text>
               {/* Actions can exceed small viewports — scroll the whole row in place instead of stacking or widening the page. */}
               <Flex
+                ref={media.md ? auctionActionsScrollerRef : undefined}
                 row
                 gap="$spacing8"
                 justifyContent="flex-start"
                 alignItems="center"
                 className="scrollbar-hidden"
+                $platform-web={media.md ? edgeFadeMaskStyle(auctionActionsEdgeFades) : undefined}
                 $md={{ width: '100%', '$platform-web': { overflowX: 'auto' } }}
               >
                 <Button size="small" icon={<Plus />} fill={false} onPress={() => navigate('/liquidity/launch-auction')}>

@@ -1,9 +1,8 @@
 import { isTestEnv } from '@universe/environment'
-import { Flex } from '@universe/mycelium'
+import { Flex, useIsDarkMode } from '@universe/mycelium'
 import React, { lazy, Suspense } from 'react'
 import { UniconProps } from 'ui/src/components/Unicon/types'
 import { getUniconColors, getUniconsDeterministicHash } from 'ui/src/components/Unicon/utils'
-import { useIsDarkMode } from 'ui/src/hooks/useIsDarkMode'
 import { isEVMAddressWithChecksum } from 'utilities/src/addresses/evm/evm'
 import { isSVMAddress } from 'utilities/src/addresses/svm/svm'
 

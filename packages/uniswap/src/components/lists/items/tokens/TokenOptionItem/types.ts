@@ -53,7 +53,7 @@ export interface TokenOptionItemProps extends ModifierPressProps {
   issuer?: RWAIssuerDisplay
   showIssuerTag?: boolean
   searchStats?: SearchTokenStats
-  /** Search V2: best Earn vault APY for this token; shown in place of the symbol when present. */
+  /** Search: best Earn vault APY for this token; shown in place of the symbol when present. */
   earnApyPercent?: number
   hideContextMenu?: boolean
   symbolMaxCharacters?: number

@@ -36,12 +36,7 @@ function createLivePricesClient(): WebSocketClient<TokenSubscriptionParams, Toke
 
   const fetchClient = createLivePricesFetchClient({ subscriptionApiUrl })
 
-  const subscriptionHandler = createPriceSubscriptionHandler({
-    client: fetchClient,
-    onError: (error, operation) => {
-      logger.warn('LivePrices', operation, `Error in ${operation}`, { error })
-    },
-  })
+  const subscriptionHandler = createPriceSubscriptionHandler({ client: fetchClient })
 
   return createWebSocketClient<TokenSubscriptionParams, TokenPriceMessage['data']>({
     config: { url: wsUrl, debug },
@@ -51,8 +46,12 @@ function createLivePricesClient(): WebSocketClient<TokenSubscriptionParams, Toke
     parseMessage: parseTokenPriceMessage,
     parseConnectionMessage,
     createSubscriptionKey: (_channel, params) => createPriceKey(params.chainId, params.tokenAddress),
-    onError: (error) => {
-      logger.warn('LivePrices', 'WebSocket', 'WebSocket error', { error })
+    onError: (error, operation) => {
+      if (operation) {
+        logger.warn('LivePrices', operation, `Error in ${operation}`, { error })
+      } else {
+        logger.warn('LivePrices', 'WebSocket', 'WebSocket error', { error })
+      }
     },
     onRawMessage: (message) => {
       const parsed = parseTokenPriceMessage(message)

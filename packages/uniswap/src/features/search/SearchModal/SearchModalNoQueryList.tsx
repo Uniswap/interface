@@ -1,5 +1,5 @@
 import { UniverseChainId } from '@universe/chains'
-import { FeatureFlags, useFeatureFlag, useIsTokenCategoriesEnabled } from '@universe/gating'
+import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { Flex, Text } from '@universe/mycelium'
 import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -33,7 +33,7 @@ interface SearchModalNoQueryListProps {
   activeTab: SearchTab
   auctionSearchEnabled?: boolean
   onSelect?: SearchModalListProps['onSelect']
-  /** Search V2: shows "View all" under the All tab's trimmed sections; called with the section's tab. */
+  /** Shows "View all" under the All tab's trimmed sections; called with the section's tab. */
   onViewAll?: (tab: SearchTab) => void
   renderedInModal: boolean
   contentContainerStyle?: StyleProp<ViewStyle>
@@ -56,7 +56,6 @@ export const SearchModalNoQueryList = memo(function SearchModalNoQueryListInner(
 }: SearchModalNoQueryListProps): JSX.Element {
   const { t } = useTranslation()
 
-  const isSearchV2UIEnabled = useFeatureFlag(FeatureFlags.SearchV2UI)
   const isTokenCategoriesEnabled = useIsTokenCategoriesEnabled()
 
   const {
@@ -82,7 +81,7 @@ export const SearchModalNoQueryList = memo(function SearchModalNoQueryListInner(
 
   const { navigateToCategoryDetails } = useUniswapContext()
   const viewAllCategory = useEvent((categoryId: string): void => {
-    navigateToCategoryDetails?.({ categoryId })
+    navigateToCategoryDetails?.({ categoryId, kind: 'token' })
     onSelect?.()
   })
   const onViewAllCategory = navigateToCategoryDetails ? viewAllCategory : undefined
@@ -95,14 +94,11 @@ export const SearchModalNoQueryList = memo(function SearchModalNoQueryListInner(
       isTokenCategoriesEnabled && onViewAll
         ? withViewAllFooters({ sections, truncatedSectionKeys: 'all', onViewAll, onViewAllCategory })
         : sections
-    return isSearchV2UIEnabled ? withSectionGaps(withFooters) : withFooters
-  }, [isSearchV2UIEnabled, isTokenCategoriesEnabled, onViewAll, onViewAllCategory, activeTab, sections])
+    return withSectionGaps(withFooters)
+  }, [isTokenCategoriesEnabled, onViewAll, onViewAllCategory, activeTab, sections])
 
   // Element and object props are memoized so SearchModalList's memo isn't busted every render.
-  const loadingElement = useMemo(
-    () => (isSearchV2UIEnabled ? <SearchModalListSkeleton pillCount={skeletonPillCount} /> : undefined),
-    [isSearchV2UIEnabled, skeletonPillCount],
-  )
+  const loadingElement = useMemo(() => <SearchModalListSkeleton pillCount={skeletonPillCount} />, [skeletonPillCount])
 
   const searchFilters = useMemo(
     (): SearchModalListProps['searchFilters'] => ({

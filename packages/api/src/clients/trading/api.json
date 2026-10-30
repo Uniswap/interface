@@ -158,6 +158,9 @@
             "$ref": "#/components/parameters/swapStepsEnabledHeader"
           },
           {
+            "$ref": "#/components/parameters/experimentalRoutingHeader"
+          },
+          {
             "$ref": "#/components/parameters/agentInfoHeader"
           }
         ],
@@ -2090,6 +2093,304 @@
         },
         "x-internal": true
       }
+    },
+    "/margin/markets": {
+      "get": {
+        "operationId": "MarginMarkets",
+        "summary": "Discover the margin markets a chain can trade",
+        "description": "The market picker's feed. One row per `(exposureToken, counterToken, direction)`.\n\n**Indicative by construction, and that is the point.** Rates move every block, so no listing agrees with a quote taken seconds later. The quote re-reads on chain and stamps its bounds into router calldata, so a stale row costs a re-quote and never a bad execution. That is what makes this endpoint cacheable.\n\n**The ceiling is policy, not a promise.** `maxLeverage` comes from the same policy function the quote refuses on, applied to the same `maxLtv` the support check read, so the quote never refuses a leverage under it for the ceiling alone. The router checks health at the leverage swap's fill, though, which pays the pool's price up to its slippage bound rather than the oracle mark, so a quote near the ceiling can still be refused with a 422 `MARGIN_LEVERAGE_EXCEEDS_MAX` once that swap is priced. Never recompute it client-side from `lltv`: the LTV cliff buffer SCALES the ceiling rather than subtracting from it, so 86% at 400bps is 82.56% and not 82%.\n\n**Each market yields BOTH readings.** A venue market is a (collateral, debt) pair, and the same on-chain position is a long of its collateral and a short of its debt. Shorting a token is only expressible as a market whose debt it is, so emitting one reading would leave a caller unable to find the side they wanted.\n\n**Always paginated**, on the same contract as `GET /orders` and `GET /plans`: `limit` (default and max 20) plus an opaque `cursor` in, `nextCursor` out. There is no unbounded response. Not user-scoped, so there is no `swapper`.\n\n`borrowRate` and `availableBorrowLiquidity` are best-effort per venue and absent rather than zero when unread, since a zero rate and an unread rate are different facts. A venue the quote would refuse (its adapter disallowed on the router, or its market identity unreadable) is left off the row, and a row with no venue left is not served.\n\nA failed chain or discovery read is a 503 `MARGIN_MARKET_READ_UNAVAILABLE`, never a 200 with an empty page.",
+        "parameters": [
+          {
+            "name": "chainId",
+            "in": "query",
+            "required": true,
+            "description": "The chain the markets live on.",
+            "schema": {
+              "$ref": "#/components/schemas/ChainId"
+            }
+          },
+          {
+            "name": "exposureToken",
+            "in": "query",
+            "required": false,
+            "description": "Narrows to rows whose exposure is this token, in TRADER terms: it is the market's collateral on a LONG row and its debt on a SHORT one.",
+            "schema": {
+              "$ref": "#/components/schemas/Address"
+            }
+          },
+          {
+            "name": "counterToken",
+            "in": "query",
+            "required": false,
+            "description": "Narrows to rows whose counter side is this token.",
+            "schema": {
+              "$ref": "#/components/schemas/Address"
+            }
+          },
+          {
+            "name": "direction",
+            "in": "query",
+            "required": false,
+            "description": "Narrows to one side.",
+            "schema": {
+              "$ref": "#/components/schemas/MarginDirection"
+            }
+          },
+          {
+            "name": "venues",
+            "in": "query",
+            "required": false,
+            "description": "Comma-separated LENDING allowlist, e.g. `MORPHO,AAVE_V3`. A named subset also re-decides `headlineVenue` over that subset, so it filters the answer and not only the search. An unrecognised value is a 400 rather than a silent drop, since answering over a different set than was asked for is undetectable by the caller.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "description": "Opaque. Echo `nextCursor` back verbatim to get the following page. A KEYSET cursor over the row order, not an offset: the catalogue is rebuilt on a timer, and an offset taken against one build silently skips or repeats rows against the next. A cursor that is not base64 is a 400 `RequestValidationError`; one that is base64 but does not parse is a 400 `MARGIN_INVALID_CURSOR`. Neither restarts at page one, which would loop a client forever.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Rows per page. Defaults to 20 and caps at 20, matching `GET /orders` and `GET /plans`, so a client that already pages those needs no second set of rules. **Every** response is bounded whether or not a caller asks: nothing about this endpoint limits its own size, and the row count grows whenever governance allows a market.",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 20,
+              "default": 20
+            }
+          },
+          {
+            "$ref": "#/components/parameters/agentInfoHeader"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The markets this chain can trade.",
+            "headers": {
+              "x-agent-info-status": {
+                "$ref": "#/components/headers/agentInfoStatusHeader"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MarginMarketsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/MarginBadRequest400"
+          },
+          "403": {
+            "$ref": "#/components/responses/MarginDisabled403"
+          },
+          "503": {
+            "$ref": "#/components/responses/MarginUnavailable503"
+          }
+        },
+        "x-internal": true
+      }
+    },
+    "/margin/positions": {
+      "get": {
+        "operationId": "MarginPositions",
+        "summary": "A wallet's margin positions on a chain",
+        "description": "The positions tab's feed. One row per `(exposureToken, counterToken, direction)`, aggregated at read time from the legs a wallet actually holds.\n\n**Everything here is read on chain, per request.** There is no index and no store behind it: position accounts are a pure CREATE2 function of `(swapper, subId)`, so the addresses are known offchain for free and the only question the chain answers is which of them hold anything. That is what makes the feed correct from a device that has never seen this wallet before, and correct in the same block an open lands. A health factor is the one number a caller must not act on stale, which is why none of this is cached.\n\n**Legs are the unit of truth.** A logical position can span venues, and venues liquidate independently, so a row's risk numbers are the NEAREST leg's rather than an average. Balances add across legs; risk does not.\n\n**Risk is in TRADER terms.** `oraclePrice` and `liquidationPrice` are both reciprocated on a SHORT, so the price distance to liquidation equals `healthFactor` in either direction: `oraclePrice / liquidationPrice` on a LONG, `liquidationPrice / oraclePrice` on a SHORT. A row that mixed frames would still satisfy every type check and be wrong by a factor of the price.\n\n**`maxWithdrawable` is bounded by the BUFFERED ceiling, not the raw LLTV.** There is no on-chain guard on a withdraw, so this figure is the whole guard. Never recompute it client-side from `lltv`.\n\n**Always paginated**, on the same keyset contract and the same cursor as `GET /margin/markets`: `limit` (default and max 20) plus an opaque `cursor` in, `nextCursor` out.\n\nCost-basis fields (`entryPrice`, `openedAt`, and the PnL fields) come from the position store and are ABSENT rather than zero for a position the store has not indexed: a zero PnL is a claim, an absent one is not. A non-`ACTIVE` `status` is served from the store, newest first, on its own opaque `cursor`; echo `nextCursor` back to page. Use a cursor only with the status that returned it.",
+        "parameters": [
+          {
+            "name": "swapper",
+            "in": "query",
+            "required": true,
+            "description": "The wallet whose positions to read. Not taken from the session: a caller may legitimately read another address, and every number here is public on chain.",
+            "schema": {
+              "$ref": "#/components/schemas/Address"
+            }
+          },
+          {
+            "name": "chainId",
+            "in": "query",
+            "required": true,
+            "description": "The chain the positions live on.",
+            "schema": {
+              "$ref": "#/components/schemas/ChainId"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "description": "Selects the tab. Unset means `ACTIVE`. Terminal statuses parse and return an empty page until the event consumer ships.",
+            "schema": {
+              "$ref": "#/components/schemas/MarginPositionStatus"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "description": "Opaque. Echo `nextCursor` back verbatim. A KEYSET cursor over the row order, the same one `GET /margin/markets` issues. A cursor that is not base64 is a 400 `RequestValidationError`; one that is base64 but does not parse is a 400 `MARGIN_INVALID_CURSOR`. Neither restarts at page one, which would loop a client forever.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Rows per page. Defaults to 20 and caps at 20, matching `GET /margin/markets`, `GET /orders` and `GET /plans`.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/agentInfoHeader"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "This wallet's positions on this chain.",
+            "headers": {
+              "x-agent-info-status": {
+                "$ref": "#/components/headers/agentInfoStatusHeader"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MarginPositionsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/MarginBadRequest400"
+          },
+          "403": {
+            "$ref": "#/components/responses/MarginDisabled403"
+          },
+          "503": {
+            "$ref": "#/components/responses/MarginUnavailable503"
+          }
+        },
+        "x-internal": true
+      }
+    },
+    "/margin/quote": {
+      "post": {
+        "tags": [
+          "margin"
+        ],
+        "summary": "Get a margin quote",
+        "description": "Prices a margin action (opening, closing, or managing a leveraged position) and returns both the execution subtree `POST /plan` consumes and the projections a confirmation modal renders.\n\nOne endpoint prices every action, in either direction. The market is addressed in TRADER terms (`exposureToken`, `counterToken`, `direction`), never in venue terms: `direction` alone decides which side is collateral and which is debt, so a client never sends a collateral/debt pair and never reorders the pair to mean short.\n\nThe body is a shared block plus exactly one of ten action keys. Two shared blocks are required-or-forbidden per key rather than optional: the wallet block (`walletToken`, `walletChainId`, `swapConfig`) is forbidden on `increaseLeverage` and `decreaseLeverage` and required on the other eight, and the top-level `slippageTolerance` is forbidden on `addEquity` and `withdrawEquity` and required on the other eight. See `MarginQuoteRequest` for the per-key rules.\n\nTwo tolerances, neither defaulting from the other: the top-level `slippageTolerance` bounds the LEVERAGE leg, the flash-accounted debt-funded swap inside the router, and is always an explicit percentage because it derives the calldata bounds that act as the MEV backstop. `swapConfig.slippageTolerance` bounds the WALLET-side swap and is required as well; `autoSlippage` is refused on both legs.\n\nUnits: amounts are decimal strings in the token's native decimals, leverage is a decimal string, and prices, the liquidation health factors and borrow rates are unsuffixed 18-decimal fixed point. Every response enum is serialized, including at its default value.\n\n**All ten action keys are served.**\n\n`close` is the one with nothing to solve and a risk none of the others carry: the debt it must clear KEEPS GROWING between the read and the router repaying it, so `debtToRepay` deliberately EXCEEDS what the position owes. The over-buy is the projected accrual over the inclusion window plus a small safety margin, and a trailing `SWEEP` returns whatever the buffer did not need. A close therefore reports `debtRepaid` (the debt itself) and `collateralReturned`, and reports NO leverage, liquidation price or health factor, because the position it describes will not exist. A position whose collateral cannot cover buying its debt back within the slippage-padded cap is refused with a 422 `MARGIN_CLOSE_UNFUNDABLE` rather than answered with a negative payout.\n\nA composite populates MORE than one operation, in the order they execute, and the equity side sits on opposite ends depending on which way it moves. A supply goes FIRST, because it strictly lowers LTV, so the borrow that follows is the only step raising it. A withdrawal goes LAST, matching what the router does. Both withdraw composites currently pay out ONLY in the position's collateral token, for the same reason the bare `withdrawEquity` does.\n\nWhich direction an action swaps in is decided by the SOLVE, not by the key. A target above what the position already holds buys collateral with borrowed funds and emits `INCREASE_POSITION` with `collateralToBuy` and `maxDebtIn`; a target below it sells collateral to repay debt and emits `DECREASE_POSITION` with `debtToRepay` and `maxCollateralIn`. `addEquityAndDecreaseLeverage` does BOTH depending on the numbers: deleveraging does not imply selling, it implies the equity grew faster than the size, so a modest target still buys while an aggressive one sells. The bound is always on the side the router gives up.\n\nAll six leverage-target keys (`increaseLeverage`, `decreaseLeverage` and the four equity composites) price whichever leg the solve's sign calls for, through the same v4 quoter: a target the position reaches by buying prices a leverage leg, and one it can only reach by selling prices a deleverage leg. So `addEquityAndDecreaseLeverage` normally still BUYS, and a target low enough to need a sale is priced as a `DECREASE_POSITION` rather than refused. What IS refused is a target that leaves the position exactly where it is with no equity moving, which is a `MARGIN_INTENT_MISMATCH` rather than an empty operation.\n\n`increaseLeverage` and `decreaseLeverage` hold EQUITY and move only the debt, which is the mirror of the equity keys. Both price a leverage-side leg, so both require the top-level `slippageTolerance`, and both forbid the wallet rail entirely: nothing crosses the wallet boundary, so neither serves a `funding` block. The key is an ASSERTION about which way leverage moves, checked before the leverage leg is priced (on the two add composites the wallet-side funding swap is priced first, since the target is measured against the equity it actually delivers, so a funding refusal precedes an intent mismatch there): a target on the wrong side of the position's current leverage is refused with `MARGIN_INTENT_MISMATCH` naming the key that fits (an `increaseLeverage` aimed below current leverage names `decreaseLeverage`, and the composites are corrected on their leverage axis only), while a target exactly at the current leverage satisfies either key. A target past the buffered LTV ceiling is refused with a 422 `MARGIN_LEVERAGE_EXCEEDS_MAX`.\n\nThe two equity keys hold size, so they borrow nothing, swap nothing on the leverage side and move no debt: their whole effect is on the collateral, which makes leverage fall on an add and rise on a withdrawal. Neither serves an `effectivePrice`, because there is no swap for one to describe, and their single operation is `ADD_COLLATERAL` or `WITHDRAW`.\n\n`withdrawEquity` currently pays out ONLY in the position's collateral token: its `walletToken` must equal that collateral, and any other value is refused with `MARGIN_FUNDING_SWAP_UNSUPPORTED`, because the swap that would sell the proceeds is not priced yet. A withdrawal is also held back from the venue's liquidation threshold by the LTV cliff buffer, so a request that would land the position on the edge is refused with a 422 `MARGIN_LEVERAGE_EXCEEDS_MAX` even when it is under the venue's own limit.",
+        "operationId": "margin_quote",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/agentInfoHeader"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MarginQuoteRequest"
+              },
+              "examples": {
+                "longOpenMorpho": {
+                  "summary": "3x long WETH against USDC, 1 WETH of equity, held at Morpho",
+                  "description": "Equity is paid in WETH, which is also the collateral token for a long, so no funding swap is needed. `open` carries the whole action; the wallet block and the leverage leg's `slippageTolerance` are both required for this key.",
+                  "value": {
+                    "positionChainId": 1,
+                    "exposureToken": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+                    "counterToken": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+                    "direction": "LONG",
+                    "swapper": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+                    "slippageTolerance": 0.5,
+                    "walletToken": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+                    "walletChainId": 1,
+                    "swapConfig": {
+                      "slippageTolerance": 0.5
+                    },
+                    "open": {
+                      "leverageTarget": "3",
+                      "venues": [
+                        "MORPHO"
+                      ],
+                      "amount": "1000000000000000000"
+                    }
+                  }
+                },
+                "shortOpenAaveV3": {
+                  "summary": "2x short WETH against USDC, 2000 USDC of equity, held at Aave v3",
+                  "description": "Equity is paid in USDC, which is the collateral token for a short, so again no funding swap. Only `direction` and the action key differ from the long request.",
+                  "value": {
+                    "positionChainId": 1,
+                    "exposureToken": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+                    "counterToken": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+                    "direction": "SHORT",
+                    "swapper": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+                    "slippageTolerance": 0.5,
+                    "walletToken": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+                    "walletChainId": 1,
+                    "swapConfig": {
+                      "slippageTolerance": 0.5
+                    },
+                    "open": {
+                      "leverageTarget": "2",
+                      "venues": [
+                        "AAVE_V3"
+                      ],
+                      "amount": "2000000000"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/MarginQuoteSuccess200"
+          },
+          "400": {
+            "$ref": "#/components/responses/MarginBadRequest400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized401"
+          },
+          "403": {
+            "$ref": "#/components/responses/MarginDisabled403"
+          },
+          "422": {
+            "$ref": "#/components/responses/MarginUnprocessable422"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimitedErr429"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalErr500"
+          },
+          "503": {
+            "$ref": "#/components/responses/MarginUnavailable503"
+          },
+          "504": {
+            "$ref": "#/components/responses/Timeout504"
+          }
+        },
+        "x-internal": true
+      }
     }
   },
   "components": {
@@ -3084,6 +3385,122 @@
                   }
                 }
               ]
+            }
+          }
+        }
+      },
+      "MarginBadRequest400": {
+        "description": "The request was refused before anything was priced. `errorCode` is `RequestValidationError` when the body or query failed schema validation, which on `POST /margin/quote` includes sending no action key or more than one, a wallet block or `slippageTolerance` on a key that forbids it, a `leverageTarget` at or below 1, an `autoSlippage` or a missing or 100% `swapConfig.slippageTolerance`, an `amount` that is zero, has leading zeros or exceeds 2^128 - 1, and a `positionId` with leading zeros or above 2^256 - 1; it is `BadRequest` when the request parsed but the margin domain refused it, with the margin code in `detail`, optionally followed by `: ` and a corrective hint.\n\nOn `POST /margin/quote` the codes are: `MARGIN_MARKET_NOT_SUPPORTED`, the chain has no margin configuration (or no v4 quoter), the position's venue is not configured, or none of the named `venues` is configured (an unsupported pair is not this code: it is a 422 `MARGIN_NO_ELIGIBLE_VENUE` on `open` and `MARGIN_POSITION_NOT_FOUND` on the manage keys); `MARGIN_INTENT_MISMATCH`, the action key contradicts the numbers. A leverage target on the wrong side of the position's current leverage names the key to send instead on its leverage axis only (`MARGIN_INTENT_MISMATCH: decreaseLeverage` for an `increaseLeverage` aimed below current leverage, and likewise for the composites), a `close` of a position with no debt names `withdrawEquity`, whose full `collateralAmount` is that position's exit, a withdrawal of every last unit of collateral from a position that still owes debt, or a withdraw composite taking out all of the equity, names `close`, and a target that moves nothing, or an `open` whose target buys no collateral at all, carries no suffix; `MARGIN_POSITION_NOT_FOUND`, no live position with that `positionId` for this `swapper` on this market; `MARGIN_FUNDING_SWAP_UNSUPPORTED`, `walletChainId` differs from `positionChainId` on any key that carries the wallet block, pay-out keys included, since cross-chain funding is a bridge rather than a swap and is not served yet, or a pay-out key (`close`, `withdrawEquity` and the withdraw composites) named a `walletToken` other than the position's collateral, with the suffix `pays out in <collateral address>` naming the token to send as `walletToken` instead; `MARGIN_SLIPPAGE_TOLERANCE_REQUIRED`, a leg that swaps reached pricing without an explicit tolerance, a backstop behind the schema, which requires both; `MARGIN_LEVERAGE_EXCEEDS_MAX` on `open` only, every venue that carries the pair has a buffered leverage ceiling below `leverageTarget`, so lowering it is the fix (on the manage keys the same code is a 422, because the position's own state decides it).\n\nOn `GET /margin/markets` the codes are: `MARGIN_MARKET_NOT_SUPPORTED`, the chain has no margin configuration; `MARGIN_INVALID_CURSOR`, a `cursor` that does not decode, refused rather than restarting at page one. An unrecognised `venues` value is a `RequestValidationError`.",
+        "headers": {
+          "x-agent-info-status": {
+            "$ref": "#/components/headers/agentInfoStatusHeader"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Err400"
+            }
+          }
+        }
+      },
+      "MarginDisabled403": {
+        "description": "Margin trading is switched off in this environment: `detail` is `MARGIN_TRADING_DISABLED` and `errorCode` is `Forbidden`. The kill switch is read per request and checked before any margin logic runs, so nothing about the request is wrong and nothing in it can be changed to get through. Production and staging default closed; dev, preview and local default open.",
+        "headers": {
+          "x-agent-info-status": {
+            "$ref": "#/components/headers/agentInfoStatusHeader"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Err403"
+            }
+          }
+        }
+      },
+      "MarginQuoteSuccess200": {
+        "description": "A priced margin action. `execution` is the subtree `POST /plan` consumes and is echoed back verbatim to create a plan; `display` is what the confirmation modal renders and is ignored by `/plan`. Every enum field is serialized, including at its protobuf default value, and every `repeated` field is serialized, as `[]` when empty; `optional` fields are absent when unset rather than sent as zeroes.",
+        "headers": {
+          "x-agent-info-status": {
+            "$ref": "#/components/headers/agentInfoStatusHeader"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/MarginQuoteResponse"
+            },
+            "examples": {
+              "longOpenMorpho": {
+                "summary": "3x long WETH against USDC, 1 WETH of equity, held at Morpho",
+                "description": "The shape is authoritative; the numbers are illustrative. Equity is paid in WETH, which is the collateral token for a long, so no wallet-side swap was priced and `funding` is absent. `collateralToBuy` is 2 WETH: 1 WETH of equity at 3x leaves 2 WETH to buy with borrowed USDC, and `maxDebtIn` is the expected USDC spend padded up by the 0.5% leverage-leg tolerance. `positionId` and `legs[].subId` are absent because an open has no position yet; `gasEstimate` is omitted here.",
+                "value": {
+                  "requestId": "9b0a2f3c-1f2e-4f7a-9c1b-2f0f6f5a1e77",
+                  "execution": {
+                    "positionChainId": 1,
+                    "swapper": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+                    "exposureToken": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+                    "counterToken": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+                    "direction": "LONG",
+                    "intent": "MARGIN_INTENT_OPEN",
+                    "leverageTarget": "3",
+                    "slippageTolerance": 0.5,
+                    "legs": [
+                      {
+                        "venue": "MORPHO",
+                        "operations": [
+                          {
+                            "type": "INCREASE_POSITION",
+                            "collateralToBuy": "2000000000000000000",
+                            "maxDebtIn": "4961259854",
+                            "effectivePrice": "2468288485000000000000"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  "display": {
+                    "size": "3000000000000000000",
+                    "leverage": "3",
+                    "effectivePrice": "2468288485000000000000",
+                    "liquidationPrice": "1889363354108527132727",
+                    "healthFactor": "1289999999999999999",
+                    "borrowRate": "45000000000000000",
+                    "oraclePrice": "2437278726800000000000"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "MarginUnavailable503": {
+        "description": "A venue's on-chain state could not be read. `errorCode` is `ServiceUnavailable` and `detail` is `MARGIN_MARKET_READ_UNAVAILABLE`. Retryable. On `POST /margin/quote`: a market snapshot, a token's decimals, the v4 quoter read that prices a leverage leg (an RPC failure, not a revert for want of a pool) or, on `close`, the borrow rate that sizes the accrual buffer was unavailable, or a venue's oracle answered a zero mark, so the mark and the risk numbers cannot be derived; an unavailable gas oracle does NOT produce this, since `gasEstimate` is indicative and is simply omitted. On `GET /margin/markets`: a market-discovery read (router or adapter multicall) failed.",
+        "headers": {
+          "x-agent-info-status": {
+            "$ref": "#/components/headers/agentInfoStatusHeader"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Err503"
+            }
+          }
+        }
+      },
+      "MarginUnprocessable422": {
+        "description": "The request is well formed but cannot be priced as asked. `errorCode` is `UnprocessableEntity` and `detail` is the margin code with no suffix: `MARGIN_NO_ELIGIBLE_VENUE`, on `open`, no venue can hold this market at all (none supports the pair, none has an allowed adapter, or none has an oracle the service can mark against), which a later block may change, or the market, or every venue named for it, is not one `GET /margin/markets` lists, since positions and account allocation only ever look there, and on a manage key that supplies collateral or borrows, the position's adapter is not allowed on the router (decreases, withdrawals and `close` are still served), and on any key a token of the pair answers like no ERC20 (no code, or no `decimals()`); `MARGIN_INSUFFICIENT_BORROW_LIQUIDITY`, on `open`, every eligible venue would have to lend more than it can (the manage keys do not check lendable balance); `MARGIN_SWAP_INSUFFICIENT_LIQUIDITY`, a swap leg cannot be priced or bounded: no route for the wallet-side swap, a wallet-side swap whose floor at `swapConfig.slippageTolerance` rounds to zero, no v4 pool to price the leverage leg through, a leverage swap wider than the router's uint128 amount, or a fill so small that its slippage bound rounds to zero, which the router refuses outright; `MARGIN_SWAP_PRICE_IMPACT`, the leverage leg would fill more than 150bps above the pool's own marginal price, measured against the route rather than against any oracle, and on leverage that cost is an instant drawdown multiplied by the leverage. Never raised on `close`, where refusing would leave the caller unable to exit; `MARGIN_LEVERAGE_EXCEEDS_MAX` on the manage keys, the position AFTER the action would sit at or past the venue's buffered LTV ceiling, including a `withdrawEquity` that walks it there (on `open` the same code is a 400 when the target itself is past every venue's ceiling, since lowering `leverageTarget` is the fix), and on `open` and every action that buys, the debt the leverage swap may spend at its slippage bound, valued at the venue's mark, would land the position at or past that ceiling even though the target is under it; `MARGIN_POSITION_UNDERWATER`, on the six leverage-target keys, the venue reports the position's debt at or above its collateral value, so there is no equity for a leverage target to multiply; `MARGIN_CLOSE_UNFUNDABLE`, on `close` the collateral the position holds cannot cover buying its debt back within the slippage-padded cap, so the exit cannot be funded from the position itself and is refused rather than reported as a negative payout.",
+        "headers": {
+          "x-agent-info-status": {
+            "$ref": "#/components/headers/agentInfoStatusHeader"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Err422"
             }
           }
         }
@@ -4183,7 +4600,8 @@
             "items": {
               "$ref": "#/components/schemas/IntegratorFee"
             },
-            "maxItems": 4
+            "maxItems": 4,
+            "minItems": 1
           },
           "walletExecutionContext": {
             "$ref": "#/components/schemas/WalletExecutionContext",
@@ -6082,6 +6500,7 @@
           },
           "route": {
             "type": "array",
+            "description": "The pools used by the route, as a list of paths. Empty when Guidestar routes the quote; read `swapSteps` instead.",
             "items": {
               "type": "array",
               "items": {
@@ -6110,7 +6529,7 @@
           },
           "routeString": {
             "type": "string",
-            "description": "The route in string format."
+            "description": "The route in string format. When Guidestar routes the quote, this is a free-form summary intended for debugging rather than the standard path format, so do not parse it."
           },
           "quoteId": {
             "$ref": "#/components/schemas/quoteId"
@@ -6151,7 +6570,7 @@
           },
           "swapSteps": {
             "type": "array",
-            "description": "Universal Router swap step sequence. Additive, opt-in via the `x-universal-router-swapsteps` header. When present, mirrors the inputs to `SwapRouter.encodeSwaps`. Only emitted when GuideStar wins the hybrid quoter race (`EXACT_INPUT` today; broader coverage once UniRoute's transformer ships).",
+            "description": "The Universal Router swap sequence for this quote, in execution order. Present only when Guidestar routes the quote, which requires the `x-universal-router-swapsteps` header. Amounts are in the token's smallest unit.",
             "items": {
               "$ref": "#/components/schemas/SwapStep"
             }
@@ -6163,7 +6582,6 @@
         }
       },
       "SwapStep": {
-        "x-internal": true,
         "description": "Universal Router swap step. Discriminated by the `type` field.",
         "oneOf": [
           {
@@ -6190,7 +6608,6 @@
         ]
       },
       "V2SwapExactInStep": {
-        "x-internal": true,
         "type": "object",
         "properties": {
           "type": {
@@ -6230,7 +6647,6 @@
         ]
       },
       "V2SwapExactOutStep": {
-        "x-internal": true,
         "type": "object",
         "properties": {
           "type": {
@@ -6270,7 +6686,6 @@
         ]
       },
       "V3SwapExactInStep": {
-        "x-internal": true,
         "type": "object",
         "properties": {
           "type": {
@@ -6308,7 +6723,6 @@
         ]
       },
       "V3SwapExactOutStep": {
-        "x-internal": true,
         "type": "object",
         "properties": {
           "type": {
@@ -6346,7 +6760,6 @@
         ]
       },
       "V4SwapStep": {
-        "x-internal": true,
         "type": "object",
         "properties": {
           "type": {
@@ -6368,7 +6781,6 @@
         ]
       },
       "WrapEthStep": {
-        "x-internal": true,
         "type": "object",
         "properties": {
           "type": {
@@ -6391,7 +6803,6 @@
         ]
       },
       "UnwrapWethStep": {
-        "x-internal": true,
         "type": "object",
         "properties": {
           "type": {
@@ -6414,7 +6825,6 @@
         ]
       },
       "V4Action": {
-        "x-internal": true,
         "description": "V4 action. Discriminated by the `action` field.",
         "oneOf": [
           {
@@ -6447,7 +6857,6 @@
         ]
       },
       "V4SwapExactIn": {
-        "x-internal": true,
         "type": "object",
         "properties": {
           "action": {
@@ -6487,7 +6896,6 @@
         ]
       },
       "V4SwapExactInSingle": {
-        "x-internal": true,
         "type": "object",
         "properties": {
           "action": {
@@ -6525,7 +6933,6 @@
         ]
       },
       "V4SwapExactOut": {
-        "x-internal": true,
         "type": "object",
         "properties": {
           "action": {
@@ -6565,7 +6972,6 @@
         ]
       },
       "V4SwapExactOutSingle": {
-        "x-internal": true,
         "type": "object",
         "properties": {
           "action": {
@@ -6603,7 +7009,6 @@
         ]
       },
       "V4Settle": {
-        "x-internal": true,
         "type": "object",
         "properties": {
           "action": {
@@ -6626,7 +7031,6 @@
         ]
       },
       "V4SettleAll": {
-        "x-internal": true,
         "type": "object",
         "properties": {
           "action": {
@@ -6649,7 +7053,6 @@
         ]
       },
       "V4Take": {
-        "x-internal": true,
         "type": "object",
         "properties": {
           "action": {
@@ -6676,7 +7079,6 @@
         ]
       },
       "V4TakeAll": {
-        "x-internal": true,
         "type": "object",
         "properties": {
           "action": {
@@ -6699,7 +7101,6 @@
         ]
       },
       "V4TakePortion": {
-        "x-internal": true,
         "type": "object",
         "properties": {
           "action": {
@@ -6753,7 +7154,6 @@
         ]
       },
       "SwapPathKey": {
-        "x-internal": true,
         "type": "object",
         "properties": {
           "intermediateCurrency": {
@@ -9060,6 +9460,1642 @@
         "type": "boolean",
         "default": false,
         "description": "Only with swapSource \"UNIVERSAL_ROUTER\". Set it to true when your bridge guarantees how much will arrive; the calldata then checks the router's balance and reverts if it holds less than `amount`. Leave it off if `amount` is just an estimate, or a good fill can revert over a small shortfall. Details: /docs/trading/swapping-api/start-building/integration-guide#swapping-funds-already-in-the-universal-router"
+      },
+      "Err403": {
+        "type": "object",
+        "properties": {
+          "errorCode": {
+            "default": "Forbidden",
+            "type": "string"
+          },
+          "detail": {
+            "type": "string"
+          }
+        }
+      },
+      "MarginDirection": {
+        "type": "string",
+        "enum": [
+          "LONG",
+          "SHORT"
+        ],
+        "description": "Which side of the pair the position is exposed to. `LONG` borrows the counter token and buys the exposure token, so collateral is the exposure token and debt is the counter token. `SHORT` borrows the exposure token and sells it for the counter token, so collateral is the counter token and debt is the exposure token. The market is always addressed in trader terms: a client never sends a collateral/debt pair and never reorders `exposureToken`/`counterToken` to mean short."
+      },
+      "MarginDisplay": {
+        "type": "object",
+        "description": "What the confirmation modal renders: projections of the position IF this action executes. Present state lives on the positions read, not here. Ignored by `POST /plan`: projections are not execution inputs.\n\nTwo prices, never mixed: `oraclePrice` is the venue's own mark and drives every risk output, while `effectivePrice` is what the leverage swap realizes and drives sizing. They differ by the spread, and substituting one for the other sizes a position against a figure the swap will not achieve.\n\nA `close` describes a position that will not exist, so it reports `size` `\"0\"`, `effectivePrice`, `oraclePrice`, `collateralReturned` and `debtRepaid` only: no leverage, liquidation price, buffer, health factor or borrow rate, because zeroes there would read as real, and `legs` is `[]`.",
+        "properties": {
+          "size": {
+            "type": "string",
+            "pattern": "^[0-9]+$",
+            "description": "Exposure asset, native decimals, summed across legs. `\"0\"` on `close`."
+          },
+          "leverage": {
+            "$ref": "#/components/schemas/marginLeverage",
+            "description": "Position over equity as a decimal string. Echoes the request's target on `open` and the six leverage-target keys, and is DERIVED from the position on `addEquity` and `withdrawEquity`, where leverage follows from the collateral moving. Absent on `close`."
+          },
+          "effectivePrice": {
+            "$ref": "#/components/schemas/marginFixedPoint18",
+            "description": "The quoted fill including fees, impact and slippage, size-weighted across legs. A property of a swap, so it is absent on `addEquity` and `withdrawEquity`, which perform none: reporting the mark there would be the exact substitution this field exists to prevent. In TRADER terms (counter per exposure): on a short, the reciprocal of the operation's `effectivePrice`."
+          },
+          "liquidationPrice": {
+            "$ref": "#/components/schemas/marginFixedPoint18",
+            "description": "The oracle price at which LTV reaches LLTV. Multi-leg: the nearest leg's, because legs liquidate independently. Absent on `close`. In TRADER terms (counter per exposure), the same frame as `oraclePrice` and `effectivePrice`."
+          },
+          "healthFactor": {
+            "$ref": "#/components/schemas/marginFixedPoint18",
+            "description": "collateral x LLTV / debt; liquidatable below 1, that is below `\"1000000000000000000\"`. Nearest leg. The one risk number that normalizes across venues, so it is what a client bands into Healthy / Caution / Risky; the band thresholds are a product call and stay client-side. Absent on `close`."
+          },
+          "borrowRate": {
+            "$ref": "#/components/schemas/marginFixedPoint18",
+            "description": "Annualized borrow rate on the debt, size-weighted across legs. Absent when the selected venue's rate read supplied none, and on `close`."
+          },
+          "oraclePrice": {
+            "$ref": "#/components/schemas/marginFixedPoint18",
+            "description": "The venue's liquidation-reference price, in TRADER terms (counter per exposure): reciprocated on a short, the same frame as `effectivePrice` and `liquidationPrice`."
+          },
+          "collateralReturned": {
+            "$ref": "#/components/schemas/tokenAmount",
+            "description": "`close` only: the collateral handed back after the router has sold what `maxCollateralIn` allows to buy the debt back. The floor of the payout, since the cap is padded against the caller."
+          },
+          "debtRepaid": {
+            "$ref": "#/components/schemas/tokenAmount",
+            "description": "`close` only: the debt the position owed as read, which is what the close clears. Smaller than the operation's `debtToRepay`, whose excess the `SWEEP` returns."
+          }
+        },
+        "required": []
+      },
+      "MarginEquityAction": {
+        "type": "object",
+        "description": "`addEquity` and `withdrawEquity`. Size is held and leverage follows, so no leverage target.\n\n`amount` is denominated in `walletToken` on `addEquity` and in the COLLATERAL token on `withdrawEquity`. That asymmetry is deliberate: how much collateral can leave before health hits the floor is answerable from the position alone, so denominating a withdrawal in `walletToken` would make whether it is allowed move with the funding route. It also matches the on-chain primitive, which takes a collateral amount.",
+        "properties": {
+          "positionId": {
+            "$ref": "#/components/schemas/marginPositionId"
+          },
+          "amount": {
+            "$ref": "#/components/schemas/tokenAmount"
+          }
+        },
+        "required": [
+          "positionId",
+          "amount"
+        ]
+      },
+      "MarginEquityLeverageAction": {
+        "type": "object",
+        "description": "The four composites. Both axes move, so both magnitudes are carried.",
+        "properties": {
+          "positionId": {
+            "$ref": "#/components/schemas/marginPositionId"
+          },
+          "leverageTarget": {
+            "$ref": "#/components/schemas/marginLeverage"
+          },
+          "amount": {
+            "$ref": "#/components/schemas/tokenAmount",
+            "description": "The equity magnitude, in `walletToken`'s native decimals."
+          }
+        },
+        "required": [
+          "positionId",
+          "leverageTarget",
+          "amount"
+        ]
+      },
+      "MarginExecution": {
+        "type": "object",
+        "description": "Everything `POST /plan` needs, and nothing it does not. This subtree is what a client echoes back to create a plan; `display` never is.",
+        "properties": {
+          "positionChainId": {
+            "$ref": "#/components/schemas/ChainId"
+          },
+          "swapper": {
+            "$ref": "#/components/schemas/senderWalletAddress"
+          },
+          "exposureToken": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "counterToken": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "direction": {
+            "$ref": "#/components/schemas/MarginDirection",
+            "description": "Echoed from the request. Always present, including at its default `LONG`."
+          },
+          "intent": {
+            "$ref": "#/components/schemas/MarginIntent",
+            "description": "Which action was priced, derived from the request's action key. Always present."
+          },
+          "positionId": {
+            "$ref": "#/components/schemas/marginPositionId",
+            "description": "The position addressed. Absent on `open`."
+          },
+          "leverageTarget": {
+            "$ref": "#/components/schemas/marginLeverage",
+            "description": "Echoed from the request. Present iff the action key names a leverage target: `open` and the six leverage-target keys. Absent on `close`, `addEquity` and `withdrawEquity`."
+          },
+          "slippageTolerance": {
+            "$ref": "#/components/schemas/slippageTolerance",
+            "description": "The leverage leg's confirmed tolerance, echoed from the top-level `slippageTolerance`. Absent on `addEquity` and `withdrawEquity`, which forbid it because they price no leverage leg. There is no AMM allowlist beside it: the leverage leg is v4 by construction, so it could not honour one; the wallet-side swap carries its own in the request's `swapConfig.protocols`."
+          },
+          "funding": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MarginFunding"
+              }
+            ],
+            "description": "The wallet-side swap as priced. Present IFF a swap was actually priced, so its presence is the signal that one happened. Absent when the action moves no equity in (`close`, `increaseLeverage`, `decreaseLeverage`, `withdrawEquity` and the two withdraw composites), and absent when `walletToken` already IS the position's collateral, since paying in the collateral itself needs no swap and a block whose input and output name the same token and amount describes no trade."
+          },
+          "legs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MarginExecutionLeg"
+            },
+            "description": "Always present. One entry today: a single venue carries the whole position."
+          }
+        },
+        "required": [
+          "positionChainId",
+          "swapper",
+          "exposureToken",
+          "counterToken",
+          "direction",
+          "intent",
+          "legs"
+        ]
+      },
+      "MarginExecutionLeg": {
+        "type": "object",
+        "description": "One venue's share of the action, as an ordered list of on-chain operations. One venue carries the whole position today, so `legs` has exactly one entry.",
+        "properties": {
+          "venue": {
+            "$ref": "#/components/schemas/MarginVenue",
+            "description": "The lending venue this leg routes to. Always present, including at its default `MORPHO`."
+          },
+          "subId": {
+            "$ref": "#/components/schemas/marginPositionId",
+            "description": "Server-resolved on the manage keys, where it is the `positionId` the request addressed. Absent on `open` until plan create allocates one."
+          },
+          "operations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MarginOperation"
+            },
+            "description": "Ordered, in the sequence they execute. One on the simple keys. A composite populates more than one, with the equity side on opposite ends depending on which way it moves: a supply (`ADD_COLLATERAL`) goes FIRST, because it strictly lowers LTV, and a withdrawal (`WITHDRAW`) goes LAST, matching what the router does. `close` is a `DECREASE_POSITION` followed by a `SWEEP`."
+          }
+        },
+        "required": [
+          "venue",
+          "operations"
+        ]
+      },
+      "MarginFunding": {
+        "type": "object",
+        "description": "The wallet-side swap as priced, in the same shape `/quote` uses for an ordinary swap, so the funding leg reads natively rather than inventing a fourth swap-quote vocabulary. Present IFF a swap was actually priced, so its presence is the signal that one happened. `output.minimumAmount` is the equity the position was SIZED on, not `output.amount`: collateral the swap does not deliver is collateral the venue never receives. Carries no `protocols` and no `autoSlippage`: the first was a request echo that no consumer read and that could not express absence, and the second is a request-side mode whose only useful answer is the percent it resolved to, which `slippageTolerance` already carries.",
+        "properties": {
+          "tokenInChainId": {
+            "$ref": "#/components/schemas/ChainId",
+            "description": "Where `walletToken` sits. Equal to `tokenOutChainId` today, since cross-chain funding is not served."
+          },
+          "input": {
+            "$ref": "#/components/schemas/QuoteInput",
+            "description": "The caller's spend in `walletToken`. Exact-in, so `maximumAmount` equals `amount`."
+          },
+          "output": {
+            "$ref": "#/components/schemas/QuoteOutput",
+            "description": "The collateral bought. `minimumAmount` is the floor the position is sized against; `recipient` is the `swapper`."
+          },
+          "slippageTolerance": {
+            "$ref": "#/components/schemas/slippageTolerance",
+            "description": "The wallet-side tolerance the floor was derived at, which `POST /plan` re-derives against. Echoed from `swapConfig.slippageTolerance`, which is required in practice today since `autoSlippage` is not resolved yet."
+          },
+          "minBridgeOut": {
+            "$ref": "#/components/schemas/tokenAmount",
+            "description": "Cross-chain pay-in only: the guaranteed bridge floor. Not populated today, since cross-chain funding is refused with `MARGIN_FUNDING_SWAP_UNSUPPORTED`."
+          },
+          "priceImpact": {
+            "type": "number",
+            "description": "How far this swap lands from the pool's price, as a percent, exactly as `/quote` reports it. Reported, never refused: this leg spends the caller's own funds at the tolerance they chose, unlike the leverage leg, whose impact is multiplied by leverage and is refused past a ceiling with a 422 `MARGIN_SWAP_PRICE_IMPACT`. Absent when the quote carried no measurement, which is not the same as zero."
+          }
+        },
+        "required": [
+          "tokenInChainId",
+          "input",
+          "output"
+        ]
+      },
+      "MarginIntent": {
+        "type": "string",
+        "enum": [
+          "MARGIN_INTENT_OPEN",
+          "MARGIN_INTENT_CLOSE",
+          "MARGIN_INTENT_INCREASE_LEVERAGE",
+          "MARGIN_INTENT_DECREASE_LEVERAGE",
+          "MARGIN_INTENT_ADD_EQUITY",
+          "MARGIN_INTENT_WITHDRAW_EQUITY",
+          "MARGIN_INTENT_ADD_EQUITY_AND_INCREASE_LEVERAGE",
+          "MARGIN_INTENT_ADD_EQUITY_AND_DECREASE_LEVERAGE",
+          "MARGIN_INTENT_WITHDRAW_EQUITY_AND_INCREASE_LEVERAGE",
+          "MARGIN_INTENT_WITHDRAW_EQUITY_AND_DECREASE_LEVERAGE"
+        ],
+        "description": "The action that was priced, carried as the proto enum's full member name (`MARGIN_INTENT_OPEN`, not `OPEN`). Mirrors the request's action key one to one, so a client can tell what it got without re-deriving it from its own request, and matches the vocabulary of the `MARGIN_INTENT_MISMATCH` error and the plan steps. Always present, including at its default `MARGIN_INTENT_OPEN`."
+      },
+      "MarginLeverageAction": {
+        "type": "object",
+        "description": "`increaseLeverage` and `decreaseLeverage`. Equity is held, so no amount.",
+        "properties": {
+          "positionId": {
+            "$ref": "#/components/schemas/marginPositionId"
+          },
+          "leverageTarget": {
+            "$ref": "#/components/schemas/marginLeverage"
+          }
+        },
+        "required": [
+          "positionId",
+          "leverageTarget"
+        ]
+      },
+      "MarginLeverageLeg": {
+        "type": "object",
+        "description": "The LEVERAGE leg's controls: the flash-accounted, debt-funded swap inside the router. Required on every action that moves leverage, and forbidden on `addEquity` and `withdrawEquity`, which hold size and let leverage follow.",
+        "properties": {
+          "slippageTolerance": {
+            "$ref": "#/components/schemas/slippageTolerance",
+            "description": "The leverage leg's tolerance, always an explicit percentage. Independent of `swapConfig.slippageTolerance`; neither defaults from the other. There is deliberately no `autoSlippage` counterpart here, because this tolerance derives `maxDebtIn`/`maxCollateralIn`, which stamp into calldata as the MEV backstop, and a routing heuristic must not size a binding fund-safety bound."
+          }
+        },
+        "required": [
+          "slippageTolerance"
+        ]
+      },
+      "MarginMarketRow": {
+        "type": "object",
+        "description": "One row per (exposureToken, counterToken, direction). A venue market is a (collateral, debt) pair, and each one produces BOTH readings: the same on-chain position is a long of its collateral and a short of its debt, and shorting a token is only ever expressible as a market whose debt it is. Carries no `oraclePrice`: a mark belongs to a VENUE's oracle and two venues on one market need not agree, so a row-level price is a number no venue necessarily quoted. Carries no `feeBps` either: a pool fee tier is not a cost, since a 5bps pool with thin liquidity fills worse than a 30bps pool with depth. `effectivePrice` on a quote answers that, carrying the fee and the impact together.",
+        "properties": {
+          "exposureToken": {
+            "$ref": "#/components/schemas/MarginTokenMetadata"
+          },
+          "counterToken": {
+            "$ref": "#/components/schemas/MarginTokenMetadata"
+          },
+          "direction": {
+            "$ref": "#/components/schemas/MarginDirection"
+          },
+          "headlineVenue": {
+            "$ref": "#/components/schemas/MarginVenue"
+          },
+          "maxLeverage": {
+            "type": "string"
+          },
+          "venues": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MarginMarketVenue"
+            }
+          }
+        }
+      },
+      "MarginMarketVenue": {
+        "type": "object",
+        "description": "What one venue offers for a pair, for the advanced breakdown. The scalars beside `venues` on the row are the HEADLINE venue's; read `headlineVenue` rather than matching them back.",
+        "properties": {
+          "venue": {
+            "$ref": "#/components/schemas/MarginVenue"
+          },
+          "adapter": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "venueMarketId": {
+            "type": "string",
+            "description": "Morpho's market id. Absent where the (adapter, pair) IS the market."
+          },
+          "maxLeverage": {
+            "type": "string",
+            "description": "Decimal string, derived from the venue's BORROW-side LTV with the LTV cliff buffer already applied. Server-authored: a client must not compute this from `lltv`, or its ceiling and the quote's refusal disagree. The policy ceiling, not a guarantee: a quote near it can still be refused once its swap is priced. Note the buffer SCALES the ceiling rather than subtracting from it, so 86% at 400bps is 82.56% and not 82%."
+          },
+          "lltv": {
+            "type": "string",
+            "description": "The liquidation boundary itself, 18-decimal fixed point. Shown, never used to derive the ceiling."
+          },
+          "borrowRate": {
+            "type": "string",
+            "description": "Annual borrow rate, 18-decimal fixed point. Read from chain through the same function `POST /margin/quote` reads it through, so the venue a picker recommends is the venue a quote would pick for the same reason. Absent when the venue's rate read failed, which is not a rate of zero."
+          },
+          "availableBorrowLiquidity": {
+            "type": "string",
+            "description": "What the venue can actually lend, in raw debt-token units. On Aave this is `min(virtual balance, borrow cap - debt)`: the cap usually binds first, so the balance alone overstates it. Absent when the read failed, and always absent on `AAVE_V4`, whose liquidity is not read."
+          }
+        }
+      },
+      "MarginMarketsResponse": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "string"
+          },
+          "markets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MarginMarketRow"
+            }
+          },
+          "nextCursor": {
+            "type": "string",
+            "description": "Absent on the last page, which is how a client knows to stop. Present means more rows exist, never that the next page is non-empty."
+          }
+        },
+        "description": "A page of markets. Rows are in a total order over (exposureToken, counterToken, direction), so a token's rows are contiguous and a cursor resolves to the same row across a catalogue rebuild."
+      },
+      "MarginOpenAction": {
+        "type": "object",
+        "description": "`open`. No `positionId`: the server allocates one at plan create.",
+        "properties": {
+          "leverageTarget": {
+            "$ref": "#/components/schemas/marginLeverage"
+          },
+          "venues": {
+            "$ref": "#/components/schemas/MarginVenues"
+          },
+          "amount": {
+            "$ref": "#/components/schemas/tokenAmount",
+            "description": "The equity magnitude, in `walletToken`'s native decimals."
+          }
+        },
+        "required": [
+          "leverageTarget",
+          "venues",
+          "amount"
+        ]
+      },
+      "MarginOperation": {
+        "type": "object",
+        "description": "The confirmed bounds for one operation. Which fields are set follows from `type`; they are the numbers that stamp into router calldata, so token amounts are in the token's native decimals while LTV and prices are 18-decimal fixed point.",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/MarginOperationType",
+            "description": "Which on-chain router call this operation compiles to. Always present."
+          },
+          "collateralToBuy": {
+            "$ref": "#/components/schemas/tokenAmount",
+            "description": "`INCREASE_POSITION` only: the exact-out buy of the collateral asset."
+          },
+          "maxDebtIn": {
+            "$ref": "#/components/schemas/tokenAmount",
+            "description": "`INCREASE_POSITION` only: the binding cap on debt spent, the expected debt padded UP by the leverage leg's `slippageTolerance`. Mandatory and non-zero on-chain, since the router refuses a zero bound outright; a fill too small to bound is refused as a 422 `MARGIN_SWAP_INSUFFICIENT_LIQUIDITY`. Derived from the top-level tolerance and never from `swapConfig`'s, so widening the wallet-side swap cannot loosen the MEV backstop."
+          },
+          "debtToRepay": {
+            "$ref": "#/components/schemas/tokenAmount",
+            "description": "`DECREASE_POSITION` only: the debt cleared at the venue. On `close` this deliberately EXCEEDS the debt read at quote time by the projected accrual over the inclusion window, so the repay does not come up short and revert; the trailing `SWEEP` returns the excess."
+          },
+          "maxCollateralIn": {
+            "$ref": "#/components/schemas/tokenAmount",
+            "description": "`DECREASE_POSITION` only: the cap on collateral sold to raise `debtToRepay`, padded UP by the leverage leg's `slippageTolerance`."
+          },
+          "maxLtvAfter": {
+            "$ref": "#/components/schemas/marginFixedPoint18",
+            "description": "The health assertion the router checks AFTER executing, so the calldata enforces the ceiling the quote refused to cross rather than trusting the fill to respect it. Set on every operation of the equity keys and the six leverage-target keys; absent on `open`, on `close` and on `SWEEP`."
+          },
+          "amount": {
+            "$ref": "#/components/schemas/tokenAmount",
+            "description": "`ADD_COLLATERAL` and `WITHDRAW` only: the magnitude in the collateral token, always positive, since the direction is the operation's own. On an add that was funded by a wallet-side swap this is the swap's FLOOR (`funding.output.minimumAmount`) rather than its expected output, because collateral the swap does not deliver is collateral the venue never receives."
+          },
+          "minHopPrice": {
+            "$ref": "#/components/schemas/marginFixedPoint18",
+            "description": "Optional per-hop bound; `\"0\"` disables it. 18-decimal on the wire, X36 at encode. Not populated today."
+          },
+          "effectivePrice": {
+            "$ref": "#/components/schemas/marginFixedPoint18",
+            "description": "This operation's quoted fill, and the price-drift reference when `POST /plan` re-stamps. On the venue's own (collateral, debt) orientation, debt per collateral, so a short's reads inverted relative to `display.effectivePrice`. Present on `INCREASE_POSITION` and `DECREASE_POSITION`, the two operations that swap; absent on the rest."
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "MarginOperationType": {
+        "type": "string",
+        "enum": [
+          "INCREASE_POSITION",
+          "DECREASE_POSITION",
+          "ADD_COLLATERAL",
+          "WITHDRAW",
+          "SWEEP"
+        ],
+        "description": "One on-chain call inside the router's `execute([...actions])` stream. Which fields of the operation are set follows from this type. `INCREASE_POSITION` buys collateral with borrowed debt; `DECREASE_POSITION` sells collateral to repay debt; `ADD_COLLATERAL` and `WITHDRAW` move collateral across the wallet boundary without swapping; `SWEEP` carries no fields and returns whatever a `close`'s deliberate debt over-buy did not need, so the dust is not stranded in a position the caller believes is gone."
+      },
+      "MarginPendingPlan": {
+        "type": "object",
+        "description": "The one plan-store read, and a deliberately weaker guarantee than the rest of this response: session-scoped and TTL-bound, so absent rather than wrong once a row ages out. Acceptable only because no funds are at risk in that state.",
+        "properties": {
+          "planId": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Epoch milliseconds. Rendered as a string by proto3 JSON; the client does not sort on it."
+          },
+          "currentStep": {
+            "type": "integer",
+            "description": "0-based index of the first step that is not COMPLETE."
+          },
+          "cancellable": {
+            "type": "boolean",
+            "description": "False once an in-progress step carries a proof: that transaction may have landed, so cancelling could strand what it moved."
+          },
+          "marketKey": {
+            "type": "string"
+          },
+          "venue": {
+            "$ref": "#/components/schemas/MarginVenue"
+          },
+          "collateralToken": {
+            "type": "string"
+          },
+          "debtToken": {
+            "type": "string"
+          },
+          "stepCount": {
+            "type": "integer"
+          }
+        }
+      },
+      "MarginPositionAction": {
+        "type": "object",
+        "description": "`close`. The whole position, so structurally neither a leverage target nor an amount.",
+        "properties": {
+          "positionId": {
+            "$ref": "#/components/schemas/marginPositionId"
+          }
+        },
+        "required": [
+          "positionId"
+        ]
+      },
+      "MarginPositionLeg": {
+        "type": "object",
+        "description": "One venue's share of a position. Legs liquidate independently, which is why the row's risk numbers are the nearest leg's rather than a blend.",
+        "properties": {
+          "venue": {
+            "$ref": "#/components/schemas/MarginVenue"
+          },
+          "subId": {
+            "type": "string",
+            "description": "The `positionId` handle every quote action key echoes back. Returned whether or not a screen renders it."
+          },
+          "account": {
+            "type": "string",
+            "description": "The MarginAccount this leg lives at, derived offchain from (swapper, subId)."
+          },
+          "debt": {
+            "type": "string"
+          },
+          "borrowRate": {
+            "type": "string",
+            "description": "Best effort, like the markets feed: absent when the venue's rate read did not return, never zero, because an unread rate and a zero rate differ."
+          }
+        }
+      },
+      "MarginPositionRow": {
+        "type": "object",
+        "description": "One logical position, keyed on (exposureToken, counterToken, direction) \u2014 the same key the markets cursor orders on, which is why both endpoints page identically. Balances add across legs; risk does not.",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/MarginPositionStatus"
+          },
+          "direction": {
+            "$ref": "#/components/schemas/MarginDirection"
+          },
+          "exposureToken": {
+            "$ref": "#/components/schemas/MarginTokenMetadata"
+          },
+          "counterToken": {
+            "$ref": "#/components/schemas/MarginTokenMetadata"
+          },
+          "size": {
+            "type": "string",
+            "description": "Exposure held, in exposure-token base units."
+          },
+          "legs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MarginPositionLeg"
+            }
+          },
+          "entryPrice": {
+            "type": "string",
+            "description": "Cost basis. Absent in v1 pending the margin event consumer."
+          },
+          "openedAt": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Cost basis. Absent in v1 pending the margin event consumer."
+          },
+          "accruedInterest": {
+            "type": "string",
+            "description": "Cost basis. Absent in v1 pending the margin event consumer."
+          },
+          "unrealizedPnl": {
+            "type": "string",
+            "description": "Cost basis. Absent in v1 pending the margin event consumer."
+          },
+          "roe": {
+            "type": "string",
+            "description": "Cost basis. Absent in v1 pending the margin event consumer."
+          },
+          "equity": {
+            "type": "string",
+            "description": "Collateral net of debt, each leg's debt valued at its own venue mark, in COLLATERAL-token base units: the exposure token on a LONG, the counter token on a SHORT, so scale it by that token's decimals. Absent when a leg's mark could not be read."
+          },
+          "leverage": {
+            "type": "string",
+            "description": "Collateral over equity, as a decimal string (`\"1.83\"`): the encoding `POST /margin/quote` serves as `display.leverage` and reads back as a leverage target, never a raw WAD integer. Absent when the position is underwater: with no equity there is no finite leverage, and `healthFactor` is below 1e18.",
+            "pattern": "^[0-9]+(\\.[0-9]+)?$"
+          },
+          "oraclePrice": {
+            "type": "string",
+            "description": "The nearest leg's VENUE mark, in trader terms. This is the price risk is measured against, and it is not the price a swap would fill at."
+          },
+          "liquidationPrice": {
+            "type": "string",
+            "description": "Nearest leg, in trader terms. `oraclePrice / liquidationPrice` equals `healthFactor` on a LONG; on a SHORT, where both prices are reciprocated, `liquidationPrice / oraclePrice` does."
+          },
+          "buffer": {
+            "type": "string",
+            "description": "How far the mark can move before the nearest leg liquidates, as a WAD fraction of the mark. Zero at or past liquidation, never negative: `healthFactor` says how far past."
+          },
+          "healthFactor": {
+            "type": "string",
+            "description": "Nearest leg. Below 1e18 is liquidatable."
+          },
+          "borrowRate": {
+            "type": "string",
+            "description": "Debt-weighted across legs that reported one. Legs whose rate read failed are excluded rather than counted as zero."
+          },
+          "maxWithdrawable": {
+            "type": "string",
+            "description": "Collateral that can be withdrawn while staying under the BUFFERED ceiling. There is no on-chain guard on a withdraw, so this figure is the whole guard \u2014 do not recompute it from `lltv`."
+          },
+          "closedAt": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Terminal only. Absent in v1 pending the margin event consumer."
+          },
+          "exitPrice": {
+            "type": "string",
+            "description": "Terminal only. Absent in v1 pending the margin event consumer."
+          },
+          "realizedPnl": {
+            "type": "string",
+            "description": "Terminal only. Absent in v1 pending the margin event consumer."
+          }
+        }
+      },
+      "MarginPositionStatus": {
+        "type": "string",
+        "enum": [
+          "ACTIVE",
+          "COMPLETED",
+          "LIQUIDATED",
+          "PARTIALLY_LIQUIDATED"
+        ],
+        "description": "Only `ACTIVE` is served today. The walk finds positions that still exist, so a terminal row has to come from events rather than from the chain's current state."
+      },
+      "MarginPositionsResponse": {
+        "type": "object",
+        "description": "A page of positions. Rows are in a total order over (exposureToken, counterToken, direction), the same order the markets feed uses.",
+        "properties": {
+          "requestId": {
+            "type": "string"
+          },
+          "positions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MarginPositionRow"
+            }
+          },
+          "nextCursor": {
+            "type": "string",
+            "description": "Absent on the last page, which is how a client knows to stop. Present means more rows exist, never that the next page is non-empty."
+          },
+          "pendingPlans": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MarginPendingPlan"
+            },
+            "description": "The margin plans this swapper started and has not finished, newest first, so a client can offer to resume or cancel one. Terminal plans are excluded server-side, and so is a plan whose execute deadline has passed, since its MARGIN_EXECUTE can only revert; one with an in-progress step carrying a proof stays, uncancellable, because that transaction may have landed. Served on the first page only: a request carrying `cursor` gets [] here, so concatenating pages never repeats a plan. Serializes as [] when the read ran and found nothing; it cannot express \"not read\", so a degraded plan-store read logs a warning and reports empty rather than failing the page."
+          }
+        }
+      },
+      "MarginProtocols": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/ProtocolItemsAmm"
+        },
+        "description": "The AMM allowlist for the swap legs, distinct from `venues`, which is the lending allowlist. Only Uniswap AMM protocols are eligible: a margin leg is flash-accounted inside the router, so UniswapX order types cannot serve it."
+      },
+      "MarginQuoteAddEquityAndDecreaseLeverageRequest": {
+        "type": "object",
+        "description": "Add equity and lower leverage in one action. Both axes move, so both magnitudes are carried. Equity crosses the wallet boundary, so `walletToken`, `walletChainId` and `swapConfig` are required. Leverage moves, so the leverage leg's `slippageTolerance` is required. The nine other action keys are forbidden, which is what makes EXACTLY ONE enforceable: the ten `oneOf` branches alone do not say it, because a pair drawn from two different peer-rule groups (say `open` with `increaseLeverage`) matches exactly one branch.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/MarginQuoteRequestBase"
+          },
+          {
+            "$ref": "#/components/schemas/MarginWalletBlock"
+          },
+          {
+            "$ref": "#/components/schemas/MarginLeverageLeg"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "addEquityAndDecreaseLeverage": {
+                "$ref": "#/components/schemas/MarginEquityLeverageAction"
+              }
+            },
+            "required": [
+              "addEquityAndDecreaseLeverage"
+            ]
+          }
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "open"
+              ]
+            },
+            {
+              "required": [
+                "close"
+              ]
+            },
+            {
+              "required": [
+                "increaseLeverage"
+              ]
+            },
+            {
+              "required": [
+                "decreaseLeverage"
+              ]
+            },
+            {
+              "required": [
+                "addEquity"
+              ]
+            },
+            {
+              "required": [
+                "withdrawEquity"
+              ]
+            },
+            {
+              "required": [
+                "addEquityAndIncreaseLeverage"
+              ]
+            },
+            {
+              "required": [
+                "withdrawEquityAndIncreaseLeverage"
+              ]
+            },
+            {
+              "required": [
+                "withdrawEquityAndDecreaseLeverage"
+              ]
+            }
+          ]
+        }
+      },
+      "MarginQuoteAddEquityAndIncreaseLeverageRequest": {
+        "type": "object",
+        "description": "Add equity and raise leverage in one action. Both axes move, so both magnitudes are carried. Equity crosses the wallet boundary, so `walletToken`, `walletChainId` and `swapConfig` are required. Leverage moves, so the leverage leg's `slippageTolerance` is required. The nine other action keys are forbidden, which is what makes EXACTLY ONE enforceable: the ten `oneOf` branches alone do not say it, because a pair drawn from two different peer-rule groups (say `open` with `increaseLeverage`) matches exactly one branch.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/MarginQuoteRequestBase"
+          },
+          {
+            "$ref": "#/components/schemas/MarginWalletBlock"
+          },
+          {
+            "$ref": "#/components/schemas/MarginLeverageLeg"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "addEquityAndIncreaseLeverage": {
+                "$ref": "#/components/schemas/MarginEquityLeverageAction"
+              }
+            },
+            "required": [
+              "addEquityAndIncreaseLeverage"
+            ]
+          }
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "open"
+              ]
+            },
+            {
+              "required": [
+                "close"
+              ]
+            },
+            {
+              "required": [
+                "increaseLeverage"
+              ]
+            },
+            {
+              "required": [
+                "decreaseLeverage"
+              ]
+            },
+            {
+              "required": [
+                "addEquity"
+              ]
+            },
+            {
+              "required": [
+                "withdrawEquity"
+              ]
+            },
+            {
+              "required": [
+                "addEquityAndDecreaseLeverage"
+              ]
+            },
+            {
+              "required": [
+                "withdrawEquityAndIncreaseLeverage"
+              ]
+            },
+            {
+              "required": [
+                "withdrawEquityAndDecreaseLeverage"
+              ]
+            }
+          ]
+        }
+      },
+      "MarginQuoteAddEquityRequest": {
+        "type": "object",
+        "description": "Add equity and let leverage fall. Size is held, so there is no leverage swap to bound. Equity crosses the wallet boundary, so `walletToken`, `walletChainId` and `swapConfig` are required. Leverage is not targeted, so the top-level `slippageTolerance` is forbidden. The nine other action keys are forbidden, which is what makes EXACTLY ONE enforceable: the ten `oneOf` branches alone do not say it, because a pair drawn from two different peer-rule groups (say `open` with `increaseLeverage`) matches exactly one branch.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/MarginQuoteRequestBase"
+          },
+          {
+            "$ref": "#/components/schemas/MarginWalletBlock"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "addEquity": {
+                "$ref": "#/components/schemas/MarginEquityAction"
+              }
+            },
+            "required": [
+              "addEquity"
+            ]
+          }
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "slippageTolerance"
+              ]
+            },
+            {
+              "required": [
+                "open"
+              ]
+            },
+            {
+              "required": [
+                "close"
+              ]
+            },
+            {
+              "required": [
+                "increaseLeverage"
+              ]
+            },
+            {
+              "required": [
+                "decreaseLeverage"
+              ]
+            },
+            {
+              "required": [
+                "withdrawEquity"
+              ]
+            },
+            {
+              "required": [
+                "addEquityAndIncreaseLeverage"
+              ]
+            },
+            {
+              "required": [
+                "addEquityAndDecreaseLeverage"
+              ]
+            },
+            {
+              "required": [
+                "withdrawEquityAndIncreaseLeverage"
+              ]
+            },
+            {
+              "required": [
+                "withdrawEquityAndDecreaseLeverage"
+              ]
+            }
+          ]
+        }
+      },
+      "MarginQuoteCloseRequest": {
+        "type": "object",
+        "description": "Close the whole position. Structurally neither a leverage target nor an amount: it is the entire position. Equity crosses the wallet boundary, so `walletToken`, `walletChainId` and `swapConfig` are required. Leverage moves, so the leverage leg's `slippageTolerance` is required. The nine other action keys are forbidden, which is what makes EXACTLY ONE enforceable: the ten `oneOf` branches alone do not say it, because a pair drawn from two different peer-rule groups (say `open` with `increaseLeverage`) matches exactly one branch.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/MarginQuoteRequestBase"
+          },
+          {
+            "$ref": "#/components/schemas/MarginWalletBlock"
+          },
+          {
+            "$ref": "#/components/schemas/MarginLeverageLeg"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "close": {
+                "$ref": "#/components/schemas/MarginPositionAction"
+              }
+            },
+            "required": [
+              "close"
+            ]
+          }
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "open"
+              ]
+            },
+            {
+              "required": [
+                "increaseLeverage"
+              ]
+            },
+            {
+              "required": [
+                "decreaseLeverage"
+              ]
+            },
+            {
+              "required": [
+                "addEquity"
+              ]
+            },
+            {
+              "required": [
+                "withdrawEquity"
+              ]
+            },
+            {
+              "required": [
+                "addEquityAndIncreaseLeverage"
+              ]
+            },
+            {
+              "required": [
+                "addEquityAndDecreaseLeverage"
+              ]
+            },
+            {
+              "required": [
+                "withdrawEquityAndIncreaseLeverage"
+              ]
+            },
+            {
+              "required": [
+                "withdrawEquityAndDecreaseLeverage"
+              ]
+            }
+          ]
+        }
+      },
+      "MarginQuoteDecreaseLeverageRequest": {
+        "type": "object",
+        "description": "Lower leverage on an existing position. Equity is held, so nothing crosses the wallet boundary. `walletToken`, `walletChainId` and `swapConfig` are forbidden. Leverage moves, so the leverage leg's `slippageTolerance` is required. The nine other action keys are forbidden, which is what makes EXACTLY ONE enforceable: the ten `oneOf` branches alone do not say it, because a pair drawn from two different peer-rule groups (say `open` with `increaseLeverage`) matches exactly one branch.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/MarginQuoteRequestBase"
+          },
+          {
+            "$ref": "#/components/schemas/MarginLeverageLeg"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "decreaseLeverage": {
+                "$ref": "#/components/schemas/MarginLeverageAction"
+              }
+            },
+            "required": [
+              "decreaseLeverage"
+            ]
+          }
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "swapConfig"
+              ]
+            },
+            {
+              "required": [
+                "walletToken"
+              ]
+            },
+            {
+              "required": [
+                "walletChainId"
+              ]
+            },
+            {
+              "required": [
+                "open"
+              ]
+            },
+            {
+              "required": [
+                "close"
+              ]
+            },
+            {
+              "required": [
+                "increaseLeverage"
+              ]
+            },
+            {
+              "required": [
+                "addEquity"
+              ]
+            },
+            {
+              "required": [
+                "withdrawEquity"
+              ]
+            },
+            {
+              "required": [
+                "addEquityAndIncreaseLeverage"
+              ]
+            },
+            {
+              "required": [
+                "addEquityAndDecreaseLeverage"
+              ]
+            },
+            {
+              "required": [
+                "withdrawEquityAndIncreaseLeverage"
+              ]
+            },
+            {
+              "required": [
+                "withdrawEquityAndDecreaseLeverage"
+              ]
+            }
+          ]
+        }
+      },
+      "MarginQuoteIncreaseLeverageRequest": {
+        "type": "object",
+        "description": "Raise leverage on an existing position. Equity is held, so nothing crosses the wallet boundary. `walletToken`, `walletChainId` and `swapConfig` are forbidden. Leverage moves, so the leverage leg's `slippageTolerance` is required. The nine other action keys are forbidden, which is what makes EXACTLY ONE enforceable: the ten `oneOf` branches alone do not say it, because a pair drawn from two different peer-rule groups (say `open` with `increaseLeverage`) matches exactly one branch.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/MarginQuoteRequestBase"
+          },
+          {
+            "$ref": "#/components/schemas/MarginLeverageLeg"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "increaseLeverage": {
+                "$ref": "#/components/schemas/MarginLeverageAction"
+              }
+            },
+            "required": [
+              "increaseLeverage"
+            ]
+          }
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "swapConfig"
+              ]
+            },
+            {
+              "required": [
+                "walletToken"
+              ]
+            },
+            {
+              "required": [
+                "walletChainId"
+              ]
+            },
+            {
+              "required": [
+                "open"
+              ]
+            },
+            {
+              "required": [
+                "close"
+              ]
+            },
+            {
+              "required": [
+                "decreaseLeverage"
+              ]
+            },
+            {
+              "required": [
+                "addEquity"
+              ]
+            },
+            {
+              "required": [
+                "withdrawEquity"
+              ]
+            },
+            {
+              "required": [
+                "addEquityAndIncreaseLeverage"
+              ]
+            },
+            {
+              "required": [
+                "addEquityAndDecreaseLeverage"
+              ]
+            },
+            {
+              "required": [
+                "withdrawEquityAndIncreaseLeverage"
+              ]
+            },
+            {
+              "required": [
+                "withdrawEquityAndDecreaseLeverage"
+              ]
+            }
+          ]
+        }
+      },
+      "MarginQuoteOpenRequest": {
+        "type": "object",
+        "description": "Open a new position. The server allocates the position id at plan create, so no `positionId` is sent. Equity crosses the wallet boundary, so `walletToken`, `walletChainId` and `swapConfig` are required. Leverage moves, so the leverage leg's `slippageTolerance` is required. The nine other action keys are forbidden, which is what makes EXACTLY ONE enforceable: the ten `oneOf` branches alone do not say it, because a pair drawn from two different peer-rule groups (say `open` with `increaseLeverage`) matches exactly one branch.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/MarginQuoteRequestBase"
+          },
+          {
+            "$ref": "#/components/schemas/MarginWalletBlock"
+          },
+          {
+            "$ref": "#/components/schemas/MarginLeverageLeg"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "open": {
+                "$ref": "#/components/schemas/MarginOpenAction"
+              }
+            },
+            "required": [
+              "open"
+            ]
+          }
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "close"
+              ]
+            },
+            {
+              "required": [
+                "increaseLeverage"
+              ]
+            },
+            {
+              "required": [
+                "decreaseLeverage"
+              ]
+            },
+            {
+              "required": [
+                "addEquity"
+              ]
+            },
+            {
+              "required": [
+                "withdrawEquity"
+              ]
+            },
+            {
+              "required": [
+                "addEquityAndIncreaseLeverage"
+              ]
+            },
+            {
+              "required": [
+                "addEquityAndDecreaseLeverage"
+              ]
+            },
+            {
+              "required": [
+                "withdrawEquityAndIncreaseLeverage"
+              ]
+            },
+            {
+              "required": [
+                "withdrawEquityAndDecreaseLeverage"
+              ]
+            }
+          ]
+        }
+      },
+      "MarginQuoteRequest": {
+        "description": "Prices one margin action. The request is the shared block plus EXACTLY ONE of the ten action keys: `open`, `close`, `increaseLeverage`, `decreaseLeverage`, `addEquity`, `withdrawEquity`, `addEquityAndIncreaseLeverage`, `addEquityAndDecreaseLeverage`, `withdrawEquityAndIncreaseLeverage`, `withdrawEquityAndDecreaseLeverage`. Sending none of them, or more than one, is rejected: both are structural, not field-presence rules applied after the fact.\n\nEvery field inside an action key is required, so what a caller must send follows entirely from which action it is doing. There are no optional fields inside a key and no field whose absence carries meaning.\n\nTwo shared blocks are required-or-forbidden per key, never optional. The wallet block (`walletToken`, `walletChainId`, `swapConfig`) is forbidden on `increaseLeverage` and `decreaseLeverage`, which hold equity, and required on the other eight. The top-level `slippageTolerance`, the leverage leg's, is forbidden on `addEquity` and `withdrawEquity`, which hold size, and required on the other eight. Each variant below states its own rule.\n\nAmounts are decimal strings in the token's native decimals. Leverage is a decimal string. Prices, the liquidation health factors and borrow rates are unsuffixed 18-decimal fixed point.\n\nUnknown fields are rejected with a 400 rather than ignored, so a retired or misspelled field fails loudly instead of silently doing nothing. This cannot be stated in the schema itself: the variants compose their shared blocks with `allOf`, and `additionalProperties: false` under `allOf` would reject the very fields the sibling blocks contribute.",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/MarginQuoteOpenRequest"
+          },
+          {
+            "$ref": "#/components/schemas/MarginQuoteCloseRequest"
+          },
+          {
+            "$ref": "#/components/schemas/MarginQuoteIncreaseLeverageRequest"
+          },
+          {
+            "$ref": "#/components/schemas/MarginQuoteDecreaseLeverageRequest"
+          },
+          {
+            "$ref": "#/components/schemas/MarginQuoteAddEquityRequest"
+          },
+          {
+            "$ref": "#/components/schemas/MarginQuoteWithdrawEquityRequest"
+          },
+          {
+            "$ref": "#/components/schemas/MarginQuoteAddEquityAndIncreaseLeverageRequest"
+          },
+          {
+            "$ref": "#/components/schemas/MarginQuoteAddEquityAndDecreaseLeverageRequest"
+          },
+          {
+            "$ref": "#/components/schemas/MarginQuoteWithdrawEquityAndIncreaseLeverageRequest"
+          },
+          {
+            "$ref": "#/components/schemas/MarginQuoteWithdrawEquityAndDecreaseLeverageRequest"
+          }
+        ]
+      },
+      "MarginQuoteRequestBase": {
+        "type": "object",
+        "description": "The fields every margin action sends, whichever action key it uses. Never sent on its own: a request is one of the ten `MarginQuote*Request` variants, each of which is this block plus its action key and that key's required peers.",
+        "properties": {
+          "positionChainId": {
+            "$ref": "#/components/schemas/ChainId",
+            "description": "The chain the POSITION lives on. Named rather than left as a bare `chainId` because two chains are in play: with one of them unqualified a client reasonably reads it as \"the\" chain, sets it to the chain it is paying from, and silently gets a cross-chain funding flow it never asked for."
+          },
+          "exposureToken": {
+            "$ref": "#/components/schemas/Address",
+            "description": "The token the position is exposed to. Which side of the market this is depends on `direction`, never on the order of the pair."
+          },
+          "counterToken": {
+            "$ref": "#/components/schemas/Address",
+            "description": "The other side of the market. Which side of the market this is depends on `direction`, never on the order of the pair."
+          },
+          "direction": {
+            "$ref": "#/components/schemas/MarginDirection"
+          },
+          "swapper": {
+            "$ref": "#/components/schemas/senderWalletAddress"
+          }
+        },
+        "required": [
+          "positionChainId",
+          "exposureToken",
+          "counterToken",
+          "direction",
+          "swapper"
+        ]
+      },
+      "MarginQuoteResponse": {
+        "type": "object",
+        "description": "A priced margin action. `execution` is what `POST /plan` consumes; `display` is what the confirmation modal renders and is ignored by `/plan`.\n\nEvery enum field is serialized, including at its protobuf default value, so an absent enum never has to be read as a default, and every `repeated` field is serialized, as `[]` when empty. `optional` fields are absent when unset.",
+        "properties": {
+          "requestId": {
+            "$ref": "#/components/schemas/RequestId"
+          },
+          "execution": {
+            "$ref": "#/components/schemas/MarginExecution"
+          },
+          "display": {
+            "$ref": "#/components/schemas/MarginDisplay"
+          },
+          "gasEstimate": {
+            "type": "object",
+            "description": "Indicative gas estimate for the resulting plan, and INDICATIVE is the operative word: the transaction does not exist at quote time, so there is no calldata to estimate against. Exactly one of `eip1559` and `legacy` is set. `gasLimit` is a per-intent measured fallback rather than a per-request estimate; `maxFeePerGas` and `maxPriorityFeePerGas` are live network readings. No `strategy` is served: the fee comes from an urgency path that returns none, so any strategy shown would describe an algorithm that did not run. Absent entirely when the gas oracle is unavailable, which does not fail the quote.",
+            "properties": {
+              "eip1559": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "EIP1559"
+                    ]
+                  },
+                  "gasLimit": {
+                    "$ref": "#/components/schemas/gasLimit"
+                  },
+                  "gasFee": {
+                    "$ref": "#/components/schemas/gasFee"
+                  },
+                  "maxPriorityFeePerGas": {
+                    "$ref": "#/components/schemas/maxPriorityFeePerGas"
+                  },
+                  "maxFeePerGas": {
+                    "$ref": "#/components/schemas/maxFeePerGas"
+                  }
+                }
+              },
+              "legacy": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "LEGACY"
+                    ]
+                  },
+                  "gasLimit": {
+                    "$ref": "#/components/schemas/gasLimit"
+                  },
+                  "gasFee": {
+                    "$ref": "#/components/schemas/gasFee"
+                  },
+                  "gasPrice": {
+                    "$ref": "#/components/schemas/gasPrice"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "required": [
+          "requestId",
+          "execution",
+          "display"
+        ]
+      },
+      "MarginQuoteWithdrawEquityAndDecreaseLeverageRequest": {
+        "type": "object",
+        "description": "Withdraw equity and lower leverage in one action. Both axes move, so both magnitudes are carried. Equity crosses the wallet boundary, so `walletToken`, `walletChainId` and `swapConfig` are required. Leverage moves, so the leverage leg's `slippageTolerance` is required. The nine other action keys are forbidden, which is what makes EXACTLY ONE enforceable: the ten `oneOf` branches alone do not say it, because a pair drawn from two different peer-rule groups (say `open` with `increaseLeverage`) matches exactly one branch.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/MarginQuoteRequestBase"
+          },
+          {
+            "$ref": "#/components/schemas/MarginWalletBlock"
+          },
+          {
+            "$ref": "#/components/schemas/MarginLeverageLeg"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "withdrawEquityAndDecreaseLeverage": {
+                "$ref": "#/components/schemas/MarginEquityLeverageAction"
+              }
+            },
+            "required": [
+              "withdrawEquityAndDecreaseLeverage"
+            ]
+          }
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "open"
+              ]
+            },
+            {
+              "required": [
+                "close"
+              ]
+            },
+            {
+              "required": [
+                "increaseLeverage"
+              ]
+            },
+            {
+              "required": [
+                "decreaseLeverage"
+              ]
+            },
+            {
+              "required": [
+                "addEquity"
+              ]
+            },
+            {
+              "required": [
+                "withdrawEquity"
+              ]
+            },
+            {
+              "required": [
+                "addEquityAndIncreaseLeverage"
+              ]
+            },
+            {
+              "required": [
+                "addEquityAndDecreaseLeverage"
+              ]
+            },
+            {
+              "required": [
+                "withdrawEquityAndIncreaseLeverage"
+              ]
+            }
+          ]
+        }
+      },
+      "MarginQuoteWithdrawEquityAndIncreaseLeverageRequest": {
+        "type": "object",
+        "description": "Withdraw equity and raise leverage in one action. Both axes move, so both magnitudes are carried. Equity crosses the wallet boundary, so `walletToken`, `walletChainId` and `swapConfig` are required. Leverage moves, so the leverage leg's `slippageTolerance` is required. The nine other action keys are forbidden, which is what makes EXACTLY ONE enforceable: the ten `oneOf` branches alone do not say it, because a pair drawn from two different peer-rule groups (say `open` with `increaseLeverage`) matches exactly one branch.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/MarginQuoteRequestBase"
+          },
+          {
+            "$ref": "#/components/schemas/MarginWalletBlock"
+          },
+          {
+            "$ref": "#/components/schemas/MarginLeverageLeg"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "withdrawEquityAndIncreaseLeverage": {
+                "$ref": "#/components/schemas/MarginEquityLeverageAction"
+              }
+            },
+            "required": [
+              "withdrawEquityAndIncreaseLeverage"
+            ]
+          }
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "open"
+              ]
+            },
+            {
+              "required": [
+                "close"
+              ]
+            },
+            {
+              "required": [
+                "increaseLeverage"
+              ]
+            },
+            {
+              "required": [
+                "decreaseLeverage"
+              ]
+            },
+            {
+              "required": [
+                "addEquity"
+              ]
+            },
+            {
+              "required": [
+                "withdrawEquity"
+              ]
+            },
+            {
+              "required": [
+                "addEquityAndIncreaseLeverage"
+              ]
+            },
+            {
+              "required": [
+                "addEquityAndDecreaseLeverage"
+              ]
+            },
+            {
+              "required": [
+                "withdrawEquityAndDecreaseLeverage"
+              ]
+            }
+          ]
+        }
+      },
+      "MarginQuoteWithdrawEquityRequest": {
+        "type": "object",
+        "description": "Withdraw equity and let leverage rise. Size is held, so there is no leverage swap to bound. `amount` here is denominated in the COLLATERAL token, not `walletToken`; the one place the \"amount is always walletToken\" rule breaks. Equity crosses the wallet boundary, so `walletToken`, `walletChainId` and `swapConfig` are required. Leverage is not targeted, so the top-level `slippageTolerance` is forbidden. The nine other action keys are forbidden, which is what makes EXACTLY ONE enforceable: the ten `oneOf` branches alone do not say it, because a pair drawn from two different peer-rule groups (say `open` with `increaseLeverage`) matches exactly one branch.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/MarginQuoteRequestBase"
+          },
+          {
+            "$ref": "#/components/schemas/MarginWalletBlock"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "withdrawEquity": {
+                "$ref": "#/components/schemas/MarginEquityAction"
+              }
+            },
+            "required": [
+              "withdrawEquity"
+            ]
+          }
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "slippageTolerance"
+              ]
+            },
+            {
+              "required": [
+                "open"
+              ]
+            },
+            {
+              "required": [
+                "close"
+              ]
+            },
+            {
+              "required": [
+                "increaseLeverage"
+              ]
+            },
+            {
+              "required": [
+                "decreaseLeverage"
+              ]
+            },
+            {
+              "required": [
+                "addEquity"
+              ]
+            },
+            {
+              "required": [
+                "addEquityAndIncreaseLeverage"
+              ]
+            },
+            {
+              "required": [
+                "addEquityAndDecreaseLeverage"
+              ]
+            },
+            {
+              "required": [
+                "withdrawEquityAndIncreaseLeverage"
+              ]
+            },
+            {
+              "required": [
+                "withdrawEquityAndDecreaseLeverage"
+              ]
+            }
+          ]
+        }
+      },
+      "MarginSwapConfig": {
+        "type": "object",
+        "description": "Execution policy for the WALLET-side swap, and nothing else. It names no token, no chain, no amount and no trade type: identity lives at the top level in `walletToken`/`walletChainId`, the magnitude lives in the action key, and exact-in versus exact-out follows from whether the action pays in or pays out.\n\n`slippageTolerance` is required and must be below 100, since at 100% the floor the position is sized on is zero. `autoSlippage` is refused by name with a `RequestValidationError`, as on the leverage leg: this tolerance derives that floor, and a resolved auto-slippage value is not visible to the sizing path.\n\nKept separate from `walletToken` because the two have different lifetimes: `walletToken` is always meaningful, while this block can be moot, since paying in the collateral token needs no funding swap at all and whether one is needed is a routing outcome not knowable at request time.",
+        "properties": {
+          "slippageTolerance": {
+            "$ref": "#/components/schemas/slippageTolerance",
+            "description": "The WALLET-side swap\u2019s tolerance, from 0 up to but excluding 100. Derives `funding.output.minimumAmount`, which is the equity the position is sized on \u2014 not `funding.output.amount`."
+          },
+          "protocols": {
+            "$ref": "#/components/schemas/MarginProtocols"
+          },
+          "routingPreference": {
+            "$ref": "#/components/schemas/RoutingPreference",
+            "description": "Defaults to `BEST_PRICE`, matching every other quote in this API. This leg is the slowest call in a margin quote, and `FASTEST` takes roughly a second off it for a handful of basis points -- which `slippageTolerance` already floors before the position is sized. Send `FASTEST` when the quote is indicative and the latency matters more than the last few bps."
+          }
+        },
+        "required": [
+          "slippageTolerance"
+        ]
+      },
+      "MarginTokenMetadata": {
+        "type": "object",
+        "description": "A token as a response carries it. No symbol or name: this endpoint resolves markets, not token metadata, and a client merges display fields from its own token lists by address.",
+        "properties": {
+          "address": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "chainId": {
+            "$ref": "#/components/schemas/ChainId"
+          },
+          "decimals": {
+            "type": "integer"
+          }
+        }
+      },
+      "MarginVenue": {
+        "type": "string",
+        "enum": [
+          "MORPHO",
+          "AAVE_V3",
+          "AAVE_V4"
+        ],
+        "description": "A lending venue the position can be held at."
+      },
+      "MarginVenues": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/MarginVenue"
+        },
+        "minItems": 1,
+        "description": "The LENDING allowlist for the position, distinct from `protocols`, which is the AMM allowlist for the swap legs. At least one venue must be named; the server ranks the allowed venues and serves the best one."
+      },
+      "MarginWalletBlock": {
+        "type": "object",
+        "description": "The wallet-side block: the token crossing the wallet boundary, where it sits, and how its swap should execute. Required in full on every action that moves equity, and forbidden in full on `increaseLeverage` and `decreaseLeverage`, which hold equity. It is never genuinely optional: whether it applies follows from the action key alone.",
+        "properties": {
+          "walletToken": {
+            "$ref": "#/components/schemas/Address",
+            "description": "The token crossing the wallet boundary. Deliberately not named `tokenIn`: `close` and the `withdrawEquity*` keys pay OUT, so an \"in\" name would be wrong on four of the ten keys. Flow direction is read off the action key and never restated here. The action key's `amount` is denominated in this token, except on `withdrawEquity`."
+          },
+          "walletChainId": {
+            "$ref": "#/components/schemas/ChainId",
+            "description": "Where `walletToken` sits. Differing from `positionChainId` means cross-chain funding, which is pay-in only."
+          },
+          "swapConfig": {
+            "$ref": "#/components/schemas/MarginSwapConfig"
+          }
+        },
+        "required": [
+          "walletToken",
+          "walletChainId",
+          "swapConfig"
+        ]
+      },
+      "marginFixedPoint18": {
+        "type": "string",
+        "description": "An unsuffixed 18-decimal fixed-point value as an integer string: divide by 10^18 to read it. Prices, the liquidation buffer, health factors, borrow rates, LTVs and equity shares all use this scale regardless of the tokens' own decimals. Every field on this scale is non-negative, `buffer` included: it is a distance to liquidation, not a signed move.",
+        "pattern": "^[0-9]+$"
+      },
+      "marginLeverage": {
+        "type": "string",
+        "description": "Leverage as a decimal string (`\"3\"`, `\"2.55\"`), never a number. Leverage is money-adjacent, so it is carried as a string to keep it out of float rounding. Must be greater than 1: leverage buys collateral with borrowed funds, so 1x buys nothing and opens no position. Rejected at the boundary rather than deep in sizing.",
+        "pattern": "^[0-9]+(\\.[0-9]+)?$"
+      },
+      "marginPositionId": {
+        "type": "string",
+        "description": "The id of an existing margin position, as a decimal integer string with no leading zeros, at most 2^256 - 1 (the router's uint256 subId). Absent on `open`, where the server allocates it at plan create.",
+        "pattern": "^(0|[1-9][0-9]*)$"
       }
     },
     "parameters": {
@@ -9093,10 +11129,19 @@
         }
       },
       "swapStepsEnabledHeader": {
-        "x-internal": true,
         "name": "x-universal-router-swapsteps",
         "in": "header",
-        "description": "Opts the request into Universal Router SwapSteps mode. Additive and opt-in: when set to `true`, the response's `ClassicQuote` may include a `swapSteps[]` array describing the Universal Router step sequence (the inputs to `SwapRouter.encodeSwaps`). The field is only populated when the GuideStar quoter wins the hybrid quote race (currently `EXACT_INPUT`; broader coverage will follow once UniRoute's transformer ships). Omitting or setting `false` preserves the existing response shape.",
+        "description": "Opts the request into Universal Router swap steps mode. Required for Guidestar routing, together with `x-api-experimental`. When Guidestar routes the quote, the `CLASSIC` quote includes a `swapSteps` array describing the Universal Router swap sequence. Omitting the header or setting it to `false` keeps the standard response shape.",
+        "required": false,
+        "schema": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "experimentalRoutingHeader": {
+        "name": "x-api-experimental",
+        "in": "header",
+        "description": "Requests Guidestar routing. Requires `x-universal-router-swapsteps: true`. Supported for `EXACT_INPUT` quotes on Ethereum (1), Base (8453), and Robinhood Chain (4663); any other request, including one without the swap steps header, returns a 400 `InputValidationError`. A Guidestar request does not fall back to standard routing: if Guidestar cannot produce a quote, the request returns a 404. Guidestar routing is in beta and its behavior may change. Omitting the header or setting it to `false` keeps standard routing.",
         "required": false,
         "schema": {
           "type": "boolean",
@@ -9325,6 +11370,18 @@
         "type": "apiKey",
         "in": "header",
         "name": "x-api-key"
+      }
+    },
+    "headers": {
+      "agentInfoStatusHeader": {
+        "description": "Present, with the fixed value `malformed`, only when the request carried an `x-agent-info` header that failed to parse and was dropped; the value never echoes anything from the request. Absent when `x-agent-info` parsed, was not sent, or was sent with an empty value, which the gateway treats as not sent. Set by the API gateway once it has resolved the route and before it proxies the request, so it is returned on every response, including gateway-generated errors such as 400, 401, 403, and 429. It reports attribution only; the request itself succeeds or fails independently of it.",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "malformed"
+          ]
+        }
       }
     }
   },

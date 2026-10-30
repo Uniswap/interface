@@ -1,6 +1,5 @@
 /**
- * `@universe/mycelium/flex-loader-compat` — the compat `FlexLoader`, replacing the
- * legacy Tamagui `FlexLoader` from `packages/ui/src/loading/FlexLoader.tsx`.
+ * The compat `FlexLoader`, which replaced the legacy Tamagui `FlexLoader` from `ui/src`.
  *
  * Platform-neutral throughout: the component composes `FlexCompat` by its
  * BASE specifier, so Metro resolves the flex compat's `.native.tsx` leg and

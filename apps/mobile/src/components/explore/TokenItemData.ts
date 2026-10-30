@@ -1,8 +1,10 @@
 import { UniverseChainId } from '@universe/chains'
+import type { TokenColorOverrides } from '@universe/mycelium'
 
 export type TokenItemData = {
   name: string
   logoUrl: string
+  colorOverrides?: TokenColorOverrides
   chainId: UniverseChainId
   address: Address | null
   symbol: string

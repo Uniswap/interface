@@ -1,14 +1,19 @@
 import { isDevEnv } from '@universe/environment'
 import { createContext, useContext, useState } from 'react'
+import type { TokenCategoryDefaultSort } from 'uniswap/src/features/tokenCategories/types'
 import type { StoreApi, UseBoundStore } from 'zustand'
 import { create, useStore } from 'zustand'
 import { devtools } from 'zustand/middleware'
 import { useShallow } from 'zustand/react/shallow'
 import { TokenSortMethod } from '~/components/Tokens/constants'
+import { tokenSortMethodToOrderBy } from '~/features/Explore/state/listTokens/utils/topTokensOrderByMappings'
 
-interface TokenTableSortState {
+interface TokenTableSort {
   sortMethod: TokenSortMethod
   sortAscending: boolean
+}
+
+interface TokenTableSortState extends TokenTableSort {
   actions: {
     setSort: (category: TokenSortMethod) => boolean
   }
@@ -16,15 +21,23 @@ interface TokenTableSortState {
 
 type TokenTableSortStore = UseBoundStore<StoreApi<TokenTableSortState>>
 
-const INITIAL_SORT_METHOD = TokenSortMethod.VOLUME
-const INITIAL_SORT_ASCENDING = false
+const DEFAULT_TOKEN_TABLE_SORT: TokenTableSort = { sortMethod: TokenSortMethod.VOLUME, sortAscending: false }
 
-export function createTokenTableSortStore(): TokenTableSortStore {
+export function getTokenTableSort(defaultSort: TokenCategoryDefaultSort | undefined): TokenTableSort {
+  if (!defaultSort) {
+    return DEFAULT_TOKEN_TABLE_SORT
+  }
+  const sortMethod = Object.values(TokenSortMethod).find(
+    (method) => tokenSortMethodToOrderBy[method] === defaultSort.orderBy,
+  )
+  return sortMethod ? { sortMethod, sortAscending: defaultSort.ascending } : DEFAULT_TOKEN_TABLE_SORT
+}
+
+export function createTokenTableSortStore(initialSort: TokenTableSort = DEFAULT_TOKEN_TABLE_SORT): TokenTableSortStore {
   return create<TokenTableSortState>()(
     devtools(
       (set) => ({
-        sortMethod: INITIAL_SORT_METHOD,
-        sortAscending: INITIAL_SORT_ASCENDING,
+        ...initialSort,
         actions: {
           setSort: (category) => {
             let newSortAscending = false
@@ -48,8 +61,14 @@ export function createTokenTableSortStore(): TokenTableSortStore {
 
 const TokenTableSortStoreContext = createContext<TokenTableSortStore | null>(null)
 
-export function TokenTableSortStoreContextProvider({ children }: { children: React.ReactNode }): JSX.Element {
-  const [store] = useState(() => createTokenTableSortStore())
+export function TokenTableSortStoreContextProvider({
+  children,
+  initialSort,
+}: {
+  children: React.ReactNode
+  initialSort?: TokenTableSort
+}): JSX.Element {
+  const [store] = useState(() => createTokenTableSortStore(initialSort))
 
   return <TokenTableSortStoreContext.Provider value={store}>{children}</TokenTableSortStoreContext.Provider>
 }

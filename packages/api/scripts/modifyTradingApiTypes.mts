@@ -369,6 +369,10 @@ async function main(): Promise<void> {
     let stepTypeSource = await readFile(stepTypePath)
     for (const name of [
       'MARGIN_PRE_SWAP',
+      // The BE emits a single MARGIN_EXECUTE step for EVERY action key (open/close/adjust); `intent`
+      // distinguishes them. Without it here the enum lacks the value the plan actually carries and the
+      // status poll throws on it (planStepTypeToTradingRoute). proto PLAN_STEP_TYPE_MARGIN_EXECUTE = 16.
+      'MARGIN_EXECUTE',
       'MARGIN_OPEN',
       'MARGIN_CLOSE',
       'MARGIN_BRIDGE',

@@ -7,6 +7,7 @@ export const tokenCategory = createFixture<TokenCategory>()(() => ({
   name: 'DeFi',
   englishName: 'DeFi',
   description: faker.lorem.sentence(),
+  kind: 'token',
   categoryClass: TokenCategoryClass.Sector,
   grouped: false,
   topTokens: [],

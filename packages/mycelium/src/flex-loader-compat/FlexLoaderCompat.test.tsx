@@ -1,9 +1,8 @@
 /**
  * Behavior contract for the `FlexLoader` compat, asserted on the rendered
- * DOM. The legacy reference is `ui/src/loading/FlexLoader.tsx`. Class
- * assertions compare against a directly rendered `FlexCompat` instead of
- * literal class strings, so the contract is "same emission as the flex
- * compat", not a copy of its class manifest.
+ * DOM. Class assertions compare against a directly rendered `FlexCompat`
+ * instead of literal class strings, so the contract is "same emission as the
+ * flex compat", not a copy of its class manifest.
  */
 import { cleanup, render } from '@testing-library/react'
 import { afterEach, describe, expect, it } from 'vitest'

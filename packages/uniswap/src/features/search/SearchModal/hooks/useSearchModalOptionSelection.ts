@@ -30,7 +30,7 @@ export interface SearchModalOptionSelection {
 export type OnSelectSearchModalOption = (selection: SearchModalOptionSelection) => void
 
 /**
- * The single select path for search modal options (vertical rows and Search V2 recents pills): register history,
+ * The single select path for search modal options (vertical rows and recents pills): register history,
  * send analytics, navigate. Handlers are stable so the memoized pill row doesn't re-render with the list.
  */
 export function useSearchModalOptionSelection({
@@ -101,7 +101,7 @@ export function useSearchModalOptionSelection({
       case OnchainItemListOptionType.Unitag:
         return getExternalProfileUrl?.({ address: item.address })
       case OnchainItemListOptionType.Category:
-        return getCategoryDetailsUrl?.({ categoryId: item.category.id })
+        return getCategoryDetailsUrl?.({ categoryId: item.category.id, kind: item.category.kind })
       default:
         return undefined
     }
@@ -137,7 +137,7 @@ export function useSearchModalOptionSelection({
         navigateToAuction?.({ auctionAddress: item.auctionAddress, chainId: item.chainId })
         break
       case OnchainItemListOptionType.Category:
-        navigateToCategoryDetails?.({ categoryId: item.category.id })
+        navigateToCategoryDetails?.({ categoryId: item.category.id, kind: item.category.kind })
         break
       default:
         // RwaCollection rows expand in place (RwaCollectionItem owns their issuer selection).

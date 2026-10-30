@@ -1,5 +1,6 @@
 // Main factory function
 export { createWebSocketClient } from './client/createWebSocketClient'
+export { ConnectionGoneError } from './errors'
 export { createZustandConnectionStore } from './store/createZustandConnectionStore'
 // Store types (for consumers who need to access connection state)
 export type { ConnectionStore, CreateZustandConnectionStoreOptions } from './store/types'

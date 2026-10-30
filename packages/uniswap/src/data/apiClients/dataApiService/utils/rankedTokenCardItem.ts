@@ -1,3 +1,4 @@
+import type { PlainMessage } from '@bufbuild/protobuf'
 import type { RankedMultichainToken } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import type { UniverseChainId } from '@universe/chains'
 import type { ChartPoint } from 'uniswap/src/components/charts/computeChartPaths'
@@ -23,7 +24,7 @@ export interface RankedTokenCardItem {
   sparkline: ChartPoint[]
 }
 
-export function rankedTokenToCardItem(token: RankedMultichainToken): RankedTokenCardItem | undefined {
+export function rankedTokenToCardItem(token: PlainMessage<RankedMultichainToken>): RankedTokenCardItem | undefined {
   const mc = token.multichainToken
   const supportedAddresses = Object.fromEntries(
     Object.entries(mc?.addresses ?? {}).filter(([chainId]) => isUniverseChainId(Number(chainId))),

@@ -2,6 +2,7 @@ import { UniverseChainId } from '@universe/chains'
 import { TestID } from '@universe/test'
 import { TokenCategoryClass } from 'uniswap/src/features/tokenCategories/types'
 import { tokenCategory } from 'uniswap/src/test/fixtures/tokenCategory'
+import { COLLAPSE_TEXT_VISIBILITY_VAR } from '~/components/Table/PinnedColumns/collapse/utils'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { TokenDescription } from '~/pages/Explore/tables/Tokens/TokenDescription'
 import { render, screen, within } from '~/test-utils/render'
@@ -108,9 +109,27 @@ describe('TokenDescription', () => {
       />,
     )
 
-    expect(screen.getByTestId(TestID.TokenRowCategoryTag)).toBeInTheDocument()
+    expect(screen.getByTestId(TestID.TokenName).parentElement).toContainElement(
+      screen.getByTestId(TestID.TokenRowCategoryTag),
+    )
     expect(screen.getByText('Stocks')).toBeInTheDocument()
     expect(screen.queryByText('DeFi')).toBeNull()
+  })
+
+  it('renders no category tag when compact', () => {
+    render(
+      <TokenDescription
+        name="Tesla"
+        symbol="TSLAon"
+        address={USDC_OPTIMISM}
+        chainId={UniverseChainId.Optimism}
+        categoryIds={['stocks']}
+        isCompact
+      />,
+    )
+
+    expect(screen.queryByTestId(TestID.TokenRowCategoryTag)).toBeNull()
+    expect(screen.getByText('TSLAon')).toBeInTheDocument()
   })
 
   it('renders the issuer logo with an "Issued by" label before the category tag', () => {
@@ -160,6 +179,19 @@ describe('TokenDescription', () => {
     )
 
     expect(screen.queryByTestId(TestID.TokenRowIssuerTag)).toBeNull()
+  })
+
+  it('hides the name and symbol with the pinned column collapse, leaving the logo', () => {
+    render(
+      <TokenDescription name="USD Coin" symbol="USDC" address={USDC_OPTIMISM} chainId={UniverseChainId.Optimism} />,
+    )
+
+    // jsdom drops calc() opacity, so pin the visibility the collapse flips once the text has faded.
+    const textBlock = screen
+      .getByTestId(TestID.TokenName)
+      .closest<HTMLElement>(`[style*="${COLLAPSE_TEXT_VISIBILITY_VAR}"]`)
+    expect(textBlock).toContainElement(screen.getByText('USDC'))
+    expect(textBlock).not.toContainElement(screen.getByTestId('token-logo'))
   })
 
   it('renders no tag for a token without categories', () => {

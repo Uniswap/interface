@@ -80,15 +80,10 @@ export function buildRwaFromListRwasAsset(asset: ListRwasAssetSource): Rwa | und
   }
 }
 
-export function buildRwaSearchIndex(assets: ListRwasAssetSource[]): RwaSearchIndex {
-  const rwas: Rwa[] = []
+/** Indexes every issuer deployment of `rwas` so a token option can be matched back to its asset and issuer. */
+export function buildRwaSearchIndexFromRwas(rwas: Rwa[]): RwaSearchIndex {
   const byChainAddress = new Map<string, RwaSearchIndexEntry>()
-  for (const asset of assets) {
-    const rwa = buildRwaFromListRwasAsset(asset)
-    if (!rwa) {
-      continue
-    }
-    rwas.push(rwa)
+  for (const rwa of rwas) {
     for (const issuer of rwa.issuerTokens) {
       for (const chainToken of issuer.chainTokens) {
         byChainAddress.set(rwaChainAddressKey(chainToken.chainId, chainToken.address), { rwa, issuer })
@@ -96,6 +91,12 @@ export function buildRwaSearchIndex(assets: ListRwasAssetSource[]): RwaSearchInd
     }
   }
   return { rwas, byChainAddress }
+}
+
+export function buildRwaSearchIndex(assets: ListRwasAssetSource[]): RwaSearchIndex {
+  return buildRwaSearchIndexFromRwas(
+    assets.map(buildRwaFromListRwasAsset).filter((rwa): rwa is Rwa => rwa !== undefined),
+  )
 }
 
 export function findRwaForToken(

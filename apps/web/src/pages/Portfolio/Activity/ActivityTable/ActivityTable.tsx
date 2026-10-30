@@ -1,5 +1,5 @@
 import { ColumnDef, createColumnHelper, Row } from '@tanstack/react-table'
-import { Flex, Text, useIsTouchDevice } from '@universe/mycelium'
+import { Flex, Text, useIsTouchDevice, useMedia } from '@universe/mycelium'
 import { ArrowRight } from '@universe/mycelium/icons/ArrowRight'
 import { TestID } from '@universe/test'
 import { memo, useMemo } from 'react'
@@ -15,6 +15,9 @@ import { TimeCell } from '~/pages/Portfolio/Activity/ActivityTable/TimeCell'
 import { TransactionTypeCell } from '~/pages/Portfolio/Activity/ActivityTable/TransactionTypeCell'
 import { PORTFOLIO_TABLE_ROW_HEIGHT } from '~/pages/Portfolio/constants'
 
+const TIME_COLUMN_SIZE_PX = 160
+const COLLAPSED_TIME_COLUMN_SIZE_PX = 80
+
 interface ActivityTableProps {
   data: TransactionDetails[]
   loading?: boolean
@@ -24,8 +27,11 @@ interface ActivityTableProps {
 
 export function useActivityTableColumns({
   showLoadingSkeleton,
+  collapsibleTimeColumn = false,
 }: {
   showLoadingSkeleton: boolean
+  /** Mobile: the time cell cross-fades to its abbreviated form as the pinned column collapses. */
+  collapsibleTimeColumn?: boolean
 }): ColumnDef<TransactionDetails, any>[] {
   const { t } = useTranslation()
   const isTouchDevice = useIsTouchDevice()
@@ -48,14 +54,19 @@ export function useActivityTableColumns({
           }
           return (
             <Cell justifyContent="flex-start" alignItems="flex-start">
-              <TimeCell timestamp={info.row.original.addedTime} showFullDateOnHover={true} />
+              <TimeCell
+                timestamp={info.row.original.addedTime}
+                showFullDateOnHover={true}
+                collapsible={collapsibleTimeColumn}
+              />
             </Cell>
           )
         },
-        minSize: 160,
-        size: 160,
+        minSize: TIME_COLUMN_SIZE_PX,
+        size: TIME_COLUMN_SIZE_PX,
         meta: {
           flexGrow: 0,
+          collapsedWidth: COLLAPSED_TIME_COLUMN_SIZE_PX,
         },
       }),
 
@@ -160,7 +171,7 @@ export function useActivityTableColumns({
         },
       }),
     ],
-    [t, columnHelper, showLoadingSkeleton, isTouchDevice],
+    [t, columnHelper, showLoadingSkeleton, isTouchDevice, collapsibleTimeColumn],
   )
 }
 
@@ -170,8 +181,10 @@ function ActivityTableInner({ data, loading = false, error = false, rowWrapper }
   // Initialize address lookup for batch fetching
   useActivityAddressLookup(data)
 
+  const media = useMedia()
   const columns = useActivityTableColumns({
     showLoadingSkeleton,
+    collapsibleTimeColumn: media.lg,
   })
 
   return (
@@ -188,6 +201,7 @@ function ActivityTableInner({ data, loading = false, error = false, rowWrapper }
       maxWidth={1200}
       headerTestId={TestID.PortfolioActivityTableHeader}
       virtualized={true}
+      collapsiblePinnedColumnId={media.lg ? 'addedTime' : undefined}
     />
   )
 }

@@ -1,9 +1,7 @@
-// Pins `ThemedIcon.web.tsx`'s local `BUTTON_LABEL_ICON_SIZE_PX` to the compat's own size
-// table. That table (`button-compat/compile.ts`'s `ICON_SIZE_PX`) has no public subpath
-// export, so it cannot be imported and compared directly — but the compat EMITS it as the
-// icon wrapper's `[&_svg]:size-[<px>px]` class, and that emission is read here instead of
-// the constant. A drift on either side (the local clone table, or the compat's table) moves
-// exactly one of the two numbers and fails the comparison.
+// Pins the box `ThemedIconCompat` clones onto a Button's glyph to the box it emits as the icon
+// wrapper's `[&_svg]:size-[<px>px]` class. The size table (`button-compat/compile.ts`'s
+// `ICON_SIZE_PX`) has no public subpath export, so the emitted class is read instead of the
+// constant; the clone and the class drifting apart fails the comparison.
 import { render, type RenderResult } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 
@@ -20,7 +18,7 @@ const SIZES = ['xxsmall', 'xsmall', 'small', 'medium', 'large'] as const
 
 const GLYPH_TEST_ID = 'button-label-glyph'
 
-/** The box `ThemedIcon` CLONED onto the glyph, off the glyph's own resolved inline style. */
+/** The box `ThemedIconCompat` CLONED onto the glyph, off the glyph's own resolved inline style. */
 function clonedGlyphBoxPx(rendered: RenderResult): { width: number; height: number } {
   const glyph = rendered.container.querySelector<HTMLElement>(`[data-testid="${GLYPH_TEST_ID}"]`)
   if (!glyph) {
@@ -62,7 +60,7 @@ function renderButtonWithGlyph(size: (typeof SIZES)[number]): RenderResult {
   )
 }
 
-describe("ThemedIcon's cloned glyph box tracks the compat's button-lane size table", () => {
+describe("ThemedIconCompat's cloned glyph box tracks the compat's button-lane size table", () => {
   it.each(SIZES)('%s: the cloned box equals the box the compat emits', (size) => {
     const rendered = renderButtonWithGlyph(size)
 

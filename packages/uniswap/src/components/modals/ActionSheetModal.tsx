@@ -1,7 +1,7 @@
 import { Flex, flexStyles, ScrollView, Text, TouchableArea } from '@universe/mycelium'
+import { useDeviceDimensions } from '@universe/mycelium/theme-hooks-compat'
 import { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { BottomSheetDetachedModal } from 'uniswap/src/components/modals/Modal'
 import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
 

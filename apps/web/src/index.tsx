@@ -5,7 +5,7 @@ import { ApiInit, getEntryGatewayUrl, provideSessionService } from '@universe/ap
 import { ComplianceClientProvider } from '@universe/compliance'
 import { isDevEnv, isE2eTestEnv, isTestEnv, localDevDatadogEnabled } from '@universe/environment'
 import type { StatsigUser } from '@universe/gating'
-import { getIsHashcashSolverEnabled, getIsTurnstileSolverEnabled } from '@universe/gating'
+import { getIsHashcashSolverEnabled, getIsTurnstileSolverEnabled, StatsigCustomAppValue } from '@universe/gating'
 import { PortalProvider } from '@universe/mycelium/portal'
 import {
   type ChallengeSolver,
@@ -182,6 +182,8 @@ function StatsigProvider({ children }: PropsWithChildren) {
       customIDs: { address: account.address ?? '' },
       custom: {
         appVersion: getConfig().appVersion || 'unknown',
+        // pools.xyz (apps/pools-xyz) shares this Statsig client; gate conditions split the two surfaces on this attribute.
+        app: StatsigCustomAppValue.Interface,
       },
     }),
     [deviceId, account.address],

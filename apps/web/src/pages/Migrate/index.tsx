@@ -28,6 +28,7 @@ import { ErrorCallout } from '~/components/ErrorCallout'
 import { LoadingRows } from '~/components/Loader/styled'
 import { getLPBaseAnalyticsProperties } from '~/features/Liquidity/analytics'
 import { FormStepsWrapper, FormWrapper } from '~/features/Liquidity/Create/FormWrapper'
+import { useInitialPriceAcceptance } from '~/features/Liquidity/Create/hooks/useInitialPriceAcceptance'
 import { useLiquidityUrlState } from '~/features/Liquidity/Create/hooks/useLiquidityUrlState'
 import { useLPSlippageValue } from '~/features/Liquidity/Create/hooks/useLPSlippageValues'
 import { DEFAULT_POSITION_STATE, MigratingPosition, PositionFlowStep } from '~/features/Liquidity/Create/types'
@@ -104,6 +105,7 @@ function MigrateInner({
     openReviewModal,
     closeReviewModal: onClose,
   } = useMigrateReviewModal({ setTransactionError })
+  const initialPriceAcceptance = useInitialPriceAcceptance()
 
   const { currency0Amount, currency1Amount } = positionInfo
 
@@ -237,6 +239,7 @@ function MigrateInner({
         currencyAmounts={{ TOKEN0: currency0Amount, TOKEN1: currency1Amount }}
         currencyAmountsUSDValue={{ TOKEN0: currency0FiatAmount, TOKEN1: currency1FiatAmount }}
         feeAmounts={{ TOKEN0: positionInfo.fee0Amount, TOKEN1: positionInfo.fee1Amount }}
+        initialPriceAcceptance={initialPriceAcceptance}
         isDisabled={!txInfo?.action}
         refundedAmounts={refundedAmounts}
         transactionError={transactionError}

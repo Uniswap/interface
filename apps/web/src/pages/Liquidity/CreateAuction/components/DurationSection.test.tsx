@@ -1,6 +1,7 @@
 import userEvent from '@testing-library/user-event'
 import { useRef, useState } from 'react'
 import i18n from 'uniswap/src/i18n'
+import { vi } from 'vitest'
 import { DurationSection, type DurationSectionHandle } from '~/pages/Liquidity/CreateAuction/components/DurationSection'
 import { CreateAuctionStoreContext } from '~/pages/Liquidity/CreateAuction/store/CreateAuctionStoreContext'
 import { createCreateAuctionStore } from '~/pages/Liquidity/CreateAuction/store/createCreateAuctionStore'
@@ -15,6 +16,12 @@ const PRE_BID_PERIOD = i18n.t('toucan.createAuction.step.configureAuction.preBid
 const PRE_BID_RANGE_ERROR = i18n.t('toucan.createAuction.step.configureAuction.preBid.range.error')
 
 type Duration = { startTime: Date | undefined; endTime: Date | undefined; preBidStartTime: Date | undefined }
+
+// The calendar opens on the start date's month, so near a month end "a few days after the
+// start" lands in the next month and isn't a clickable cell. Pin the clock mid-month; only
+// Date is faked, so user-event still runs on real timers.
+vi.useFakeTimers({ toFake: ['Date'] })
+vi.setSystemTime(new Date(2026, 5, 15, 12))
 
 const START = new Date(Date.now() + MS_PER_DAY)
 const END = new Date(Date.now() + 6 * MS_PER_DAY)
@@ -62,6 +69,10 @@ describe('DurationSection pre-bid module', () => {
   // present, so a `??=` reads as an unnecessary nullish assignment to the type-aware lint.
   beforeAll(() => {
     Element.prototype.scrollIntoView = () => {}
+  })
+
+  afterAll(() => {
+    vi.useRealTimers()
   })
 
   it('offers the module but does not show it until it is added', () => {

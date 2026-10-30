@@ -79,6 +79,14 @@ export const DEFAULT_SCRUB_PATTERNS: ScrubPattern[] = [
     pattern: /(?:api[_-]?key|token|secret|authorization)['":\s]*[a-zA-Z0-9_-]{32,}/gi,
     replacement: '[API_KEY_REDACTED]',
   },
+  // Ahead of the address rule: on longer hex (a tx hash, a private key, a
+  // signature, calldata) the 40-char match would redact only the head and
+  // leave the rest in the log.
+  {
+    name: 'long_hex',
+    pattern: /0x[a-fA-F0-9]{41,}/g,
+    replacement: '[HEX_REDACTED]',
+  },
   {
     name: 'ethereum_address',
     pattern: /0x[a-fA-F0-9]{40}/g,

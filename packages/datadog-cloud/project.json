@@ -11,6 +11,10 @@
       "options": { "cwd": "{projectRoot}/dashboards" },
       "dependsOn": ["^prepare", "prepare"]
     },
+    "test": {
+      "command": "vitest run",
+      "options": { "cwd": "{projectRoot}" }
+    },
     "typecheck": {},
     "format": {},
     "format:check": {},

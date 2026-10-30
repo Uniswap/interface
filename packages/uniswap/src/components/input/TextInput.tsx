@@ -1,6 +1,7 @@
 import { isWebApp } from '@universe/environment'
+import { useSporeColors } from '@universe/mycelium'
 import { forwardRef, useEffect } from 'react'
-import { Input, InputProps, Input as TextInputBase, useSporeColors } from 'ui/src'
+import { Input, InputProps, Input as TextInputBase } from 'ui/src'
 
 export type TextInputProps = InputProps
 

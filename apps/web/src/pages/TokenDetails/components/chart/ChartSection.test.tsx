@@ -58,6 +58,7 @@ vi.mock('~/pages/TokenDetails/context/useTDPStore', () => ({
 function mockChart({ loading = false, empty = true } = {}): void {
   vi.mocked(useTokenPriceChartPanel).mockReturnValue({
     pricePercentChange: undefined,
+    priceConfidenceScore: undefined,
     stale: false,
     showInvalidSkeleton: empty,
     isError: false,
@@ -127,6 +128,7 @@ describe('ChartSection price-discovery impressions', () => {
       auction_type: 'custom',
       launch_method: 'custom',
       entry_point: 'chart_empty_state',
+      auction_address: '0x1111111111111111111111111111111111111111',
       auction_phase: 'live',
       pool_availability: 'no_pool',
       page_layout: 'auction_only',

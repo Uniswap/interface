@@ -1,7 +1,7 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import type { Currency } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
-import { Flex } from '@universe/mycelium'
+import { Flex, useMedia } from '@universe/mycelium'
 import { createSerializer, useQueryStates } from 'nuqs'
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -23,6 +23,7 @@ import { usePoolsAprRange } from '~/features/Liquidity/PoolsFilter/aprRange'
 import { PoolsFilter } from '~/features/Liquidity/PoolsFilter/PoolsFilter'
 import { getProtocolVersionFromLabel } from '~/features/Liquidity/utils/protocolVersion'
 import { useDebounce } from '~/hooks/useDebounce'
+import { edgeFadeMaskStyle, useHorizontalScrollFades } from '~/hooks/useHorizontalScrollFades'
 import { buildPoolSearchParams } from '~/pages/AddLiquidity/poolLinkParams'
 import {
   BROWSER_FILTER_PARSERS,
@@ -49,6 +50,8 @@ const serializeBrowserFilters = createSerializer(BROWSER_FILTER_PARSERS)
 
 export function PoolBrowser(): JSX.Element {
   const { t } = useTranslation()
+  const media = useMedia()
+  const { scrollerRef: toolbarScrollerRef, edgeFades: toolbarEdgeFades } = useHorizontalScrollFades()
   const navigate = useNavigate()
   const location = useLocation()
   const entryPoint = (location.state as { entryPoint?: string } | null)?.entryPoint
@@ -199,6 +202,7 @@ export function PoolBrowser(): JSX.Element {
       {/* Token selectors + Filters row. Scrolled horizontally in its own bounds on mobile (rather
           than wrapped) so the whole page never gains a document-level horizontal scrollbar. */}
       <Flex
+        ref={media.md ? toolbarScrollerRef : undefined}
         row
         justifyContent="space-between"
         alignItems="center"
@@ -208,6 +212,7 @@ export function PoolBrowser(): JSX.Element {
         height="40px"
         mb="$spacing16"
         className="scrollbar-hidden"
+        $platform-web={media.md ? edgeFadeMaskStyle(toolbarEdgeFades) : undefined}
         $md={{ justifyContent: 'flex-start', '$platform-web': { overflowX: 'auto' } }}
       >
         {/* `fill={false}` on both: filling would make each selector `flex: 1 basis-0` and split this

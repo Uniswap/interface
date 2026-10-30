@@ -2,7 +2,7 @@ import { renderHook } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { useBidsListData } from '~/features/Toucan/Auction/hooks/useBidsListData'
 import { useWithdrawButtonState } from '~/features/Toucan/Auction/hooks/useWithdrawButtonState'
-import type { AuctionDetails, BidTokenInfo } from '~/features/Toucan/Auction/store/types'
+import type { AuctionDetails, AuctionProgressData, BidTokenInfo } from '~/features/Toucan/Auction/store/types'
 import { AuctionBidStatus, AuctionOutcome, AuctionProgressState, UserBid } from '~/features/Toucan/Auction/store/types'
 
 const ONE_Q96 = '79228162514264337593543950336'
@@ -44,14 +44,19 @@ const mockStoreState = {
   auctionDetails,
   onchainCheckpoint: null,
   checkpointData: null,
-  progress: { state: AuctionProgressState.ENDED, outcome: AuctionOutcome.FAILED },
+  progress: { state: AuctionProgressState.ENDED, outcome: AuctionOutcome.FAILED } as Pick<
+    AuctionProgressData,
+    'state' | 'outcome'
+  > &
+    Partial<AuctionProgressData>,
   optimisticBid: null,
   pendingWithdrawalBidIds: new Set<string>(),
   awaitingConfirmationBidIds: new Set<string>(),
 }
 
 vi.mock('~/features/Toucan/Auction/store/useAuctionStore', () => ({
-  useAuctionStore: (selector: (state: typeof mockStoreState) => unknown) => selector(mockStoreState),
+  useAuctionStore: (selector: (state: typeof mockStoreState) => unknown) =>
+    selector({ ...mockStoreState, progress: { isFinalPricePending: false, ...mockStoreState.progress } }),
 }))
 vi.mock('~/features/Toucan/Auction/hooks/useBidTokenInfo', () => ({
   useBidTokenInfo: () => ({ bidTokenInfo, loading: false }),
@@ -134,6 +139,20 @@ describe('useBidsListData', () => {
 
     expect(result.current.isLoading).toBe(true)
     expect(result.current.bidItems).toEqual([])
+  })
+
+  // A served verdict settles the outcome before the final checkpoint, but the fallback price can
+  // lag it and would place an outbid bid in range.
+  it('stays in its loading state on a graduated auction until the final price loads', () => {
+    mockStoreState.progress = {
+      state: AuctionProgressState.ENDED,
+      outcome: AuctionOutcome.GRADUATED,
+      isFinalPricePending: true,
+    }
+
+    const { result } = renderHook(() => useBidsListData())
+
+    expect(result.current.isLoading).toBe(true)
   })
 })
 

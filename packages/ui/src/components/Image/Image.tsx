@@ -1,3 +1,5 @@
+import { useSporeColors } from '@universe/mycelium'
+import { type UseSporeColorsReturn } from '@universe/mycelium/theme-hooks-compat'
 import { type ComponentType, forwardRef, useRef } from 'react'
 import {
   type DimensionValue,
@@ -13,7 +15,6 @@ import {
 import { buildPressHandlers, type PressTracker } from 'ui/src/components/Image/buildPressHandlers'
 import { isWebRender } from 'ui/src/components/Image/isWebRender'
 import { useIsXsBreakpoint } from 'ui/src/components/Image/useIsXsBreakpoint'
-import { useSporeColors, type UseSporeColorsReturn } from 'ui/src/hooks/useSporeColors'
 import { borderRadii, gap, padding, spacing } from 'ui/src/theme'
 
 const spacingTokens = { ...spacing, ...padding, ...gap }

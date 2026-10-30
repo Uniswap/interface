@@ -29,7 +29,7 @@ export function getTokenDetailsProvenanceProperties(
   display: TokenDetailsAuctionDisplay,
   context: ProvenanceAnalyticsContext,
 ): TokenProvenanceAnalyticsProperties | undefined {
-  const { chainId, launchMethod, phase, poolAvailability, provenance } = display
+  const { auction, chainId, launchMethod, phase, poolAvailability, provenance, tokenAddress } = display
   if (chainId === undefined) {
     return undefined
   }
@@ -40,6 +40,9 @@ export function getTokenDetailsProvenanceProperties(
       launchMethod,
       phase,
       poolAvailability,
+      tokenAddress: tokenAddress ?? auction?.tokenAddress,
+      auctionAddress: auction?.address,
+      launchpadId: provenance?.launchpad.id,
       ...context,
     }),
     // The auction classifies the page's layout; provenance classifies the launch itself, which is

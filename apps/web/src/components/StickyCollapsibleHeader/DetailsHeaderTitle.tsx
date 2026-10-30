@@ -1,6 +1,7 @@
 import type { UniverseChainId } from '@universe/chains'
 import { Flex, Text } from '@universe/mycelium'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
+import { TooltipCompat as Tooltip } from '@universe/mycelium/tooltip-compat'
 import type { TestIDType } from '@universe/test'
 import type { CSSProperties, ReactNode } from 'react'
 import { Link } from 'react-router'
@@ -66,6 +67,8 @@ interface DetailsHeaderTitleProps {
   titleHref?: string
   /** Floor for the name's width, for surfaces whose name can legitimately be empty. */
   titleMinWidth?: number
+  /** Tooltip on the name (tap on touch, hover on mouse), e.g. the full name once it ellipsizes. */
+  titleTooltip?: ReactNode
   /** Icons/badges rendered inline after the ticker. */
   titleAdornments?: ReactNode
   /** Second line shown on mobile web, where the inline ticker is hidden. */
@@ -83,7 +86,7 @@ interface DetailsHeaderTitleProps {
    * whose `metadataRow` is a horizontal scroller has to opt in: otherwise the column is floored at the
    * scroller's max-content width and overflows the header instead of the scroller carrying the overflow.
    */
-  shrinkTitleColumn?: boolean
+  truncateTitleColumn?: boolean
   /** Right-hand cluster (share/report actions, network filter). */
   actions?: ReactNode
   dataTestId?: TestIDType
@@ -124,11 +127,12 @@ export function DetailsHeaderTitle({
   showLogoNetworkBadgeOnMobileOnly = false,
   titleHref,
   titleMinWidth,
+  titleTooltip,
   titleAdornments,
   mobileSubtitle,
   metadataRow,
   showMetadataRowOnMobile = false,
-  shrinkTitleColumn = false,
+  truncateTitleColumn = false,
   actions,
   dataTestId,
   children,
@@ -159,7 +163,7 @@ export function DetailsHeaderTitle({
         <Flex
           gap={isCompact ? '$gap4' : '$gap8'}
           $md={{ gap: '$none' }}
-          {...(shrinkTitleColumn ? { shrink: true } : {})}
+          {...(truncateTitleColumn ? { shrink: true } : {})}
           transition={HEADER_TRANSITION}
         >
           <Flex row flex={1} alignItems="flex-end" gap="$gap8" $sm={{ width: '100%' }}>
@@ -171,20 +175,22 @@ export function DetailsHeaderTitle({
               />
             ) : (
               <TitleLink href={titleHref} style={TITLE_LINK_STYLE}>
-                <Text
-                  tag="h1"
-                  variant={getHeaderTitleVariant({ isCompact, media })}
-                  // Adornments are unshrinkable pills, so the name is what yields when the title line runs
-                  // out of room: it ellipsizes (see EllipsisTamaguiStyle) instead of pushing the last
-                  // adornment past the header edge. Shrinking needs a non-auto min-width, since a nowrap
-                  // text's min-content is its full width.
-                  flexShrink={1}
-                  minWidth={titleMinWidth ?? 0}
-                  transition={HEADER_TRANSITION}
-                  {...EllipsisTamaguiStyle}
-                >
-                  {name}
-                </Text>
+                <TitleTooltip tooltip={titleTooltip}>
+                  <Text
+                    tag="h1"
+                    variant={getHeaderTitleVariant({ isCompact, media })}
+                    // Adornments are unshrinkable pills, so the name is what yields when the title line runs
+                    // out of room: it ellipsizes (see EllipsisTamaguiStyle) instead of pushing the last
+                    // adornment past the header edge. Shrinking needs a non-auto min-width, since a nowrap
+                    // text's min-content is its full width.
+                    flexShrink={1}
+                    minWidth={titleMinWidth ?? 0}
+                    transition={HEADER_TRANSITION}
+                    {...EllipsisTamaguiStyle}
+                  >
+                    {name}
+                  </Text>
+                </TitleTooltip>
                 {!isCompact && !media.md && (
                   <Text
                     tag="h2"
@@ -214,6 +220,26 @@ export function DetailsHeaderTitle({
       ) : null}
       {children}
     </Flex>
+  )
+}
+
+// Renders no wrapper without a tooltip. The trigger sits between the flex row and the h1, so it has to
+// shrink and drop its min-content floor itself or the h1 can no longer ellipsize.
+function TitleTooltip({ tooltip, children }: { tooltip?: ReactNode; children: ReactNode }): JSX.Element {
+  if (!tooltip) {
+    return <>{children}</>
+  }
+
+  return (
+    <Tooltip placement="top" delay={{ close: 0 }}>
+      <Tooltip.Trigger minWidth={0} flexShrink={1}>
+        {children}
+      </Tooltip.Trigger>
+      <Tooltip.Content>
+        <Text variant="body4">{tooltip}</Text>
+        <Tooltip.Arrow />
+      </Tooltip.Content>
+    </Tooltip>
   )
 }
 

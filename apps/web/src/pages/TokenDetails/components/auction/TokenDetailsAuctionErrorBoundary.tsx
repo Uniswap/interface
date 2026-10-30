@@ -7,13 +7,16 @@ function AuctionSectionErrorFallback(): null {
   return null
 }
 
-/** Auction surfaces are optional context on the token page; one crashing must not take the page down. */
-export function TokenDetailsAuctionErrorBoundary({ children }: PropsWithChildren): JSX.Element {
+/** Auction surfaces and launch info are optional context on the token page; one crashing must not take the page down. */
+export function TokenDetailsAuctionErrorBoundary({
+  children,
+  fallback = AuctionSectionErrorFallback,
+}: PropsWithChildren<{ fallback?: () => JSX.Element | null }>): JSX.Element {
   const tokenIdentity = useTDPStore((s) => `${s.currencyChainId}:${s.address}`)
 
   // Cached token navigation can keep this section mounted; a new token must not inherit its error.
   return (
-    <ErrorBoundary key={tokenIdentity} fallback={AuctionSectionErrorFallback}>
+    <ErrorBoundary key={tokenIdentity} fallback={fallback}>
       {children}
     </ErrorBoundary>
   )

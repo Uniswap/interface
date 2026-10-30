@@ -24,7 +24,7 @@ import {
 import { MARGIN_POSITIONS_QUERY_KEY } from 'uniswap/src/data/apiClients/tradingApi/useMarginPositionsQuery'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import type { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
+import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { useEvent } from 'utilities/src/react/hooks'
 import { MARGIN_CHAIN_ID, type MarginMarket } from '~/constants/margin'
 import { useAccount } from '~/hooks/useAccount'
@@ -157,7 +157,7 @@ export function planTitle({
 }): string {
   switch (intent) {
     case 'OPEN':
-      return direction === 'SHORT' ? t('margin.cta.openShort') : t('margin.plan.title.open')
+      return direction === MarginDirection.SHORT ? t('margin.cta.openShort') : t('margin.plan.title.open')
     case 'CLOSE':
       return t('margin.plan.title.close')
     case 'ADJUST':

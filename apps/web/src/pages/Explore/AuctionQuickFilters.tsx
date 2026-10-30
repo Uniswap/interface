@@ -1,5 +1,5 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { Flex } from '@universe/mycelium'
+import { Flex, useMedia } from '@universe/mycelium'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CheckmarkCircle } from 'ui/src/components/icons/CheckmarkCircle'
@@ -15,6 +15,7 @@ import {
   useExploreTablesFilterStore,
   useExploreTablesFilterStoreActions,
 } from '~/features/Explore/state/exploreTablesFilterStore'
+import { edgeFadeMaskStyle, useHorizontalScrollFades } from '~/hooks/useHorizontalScrollFades'
 import { ExploreFilterChip } from '~/pages/Explore/categories/ExploreCategoryChips'
 import { useSyncAuctionQuickFilterParam } from '~/pages/Explore/hooks/useAuctionQuickFilterParam'
 
@@ -34,6 +35,8 @@ export function AuctionQuickFilters() {
   const { t } = useTranslation()
   const quickFilter = useExploreTablesFilterStore((s) => s.quickFilter)
   const { setQuickFilter } = useExploreTablesFilterStoreActions()
+  const media = useMedia()
+  const { scrollerRef, edgeFades } = useHorizontalScrollFades()
   // QuickLaunch: quick-launch chip is flag-gated; classification from the backend, see isQuickLaunchAuction.
   const isQuickLaunchFilterEnabled = useFeatureFlag(FeatureFlags.QuickLaunch)
   // Keep the selected filter in the URL so specific tabs are directly linkable.
@@ -78,10 +81,12 @@ export function AuctionQuickFilters() {
   return (
     // Chips can exceed small viewports — scroll them in place instead of wrapping or widening the page.
     <Flex
+      ref={media.md ? scrollerRef : undefined}
       row
       alignItems="center"
       gap="$spacing4"
       className="scrollbar-hidden"
+      $platform-web={media.md ? edgeFadeMaskStyle(edgeFades) : undefined}
       $md={{ '$platform-web': { overflowX: 'auto' } }}
     >
       {options.map((option) => {

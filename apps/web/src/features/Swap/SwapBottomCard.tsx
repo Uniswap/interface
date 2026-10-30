@@ -1,9 +1,16 @@
 import { UniverseChainId } from '@universe/chains'
-import { Flex, Text, TouchableArea, type TouchableAreaEvent } from '@universe/mycelium'
+import {
+  ElementAfterText,
+  Flex,
+  Text,
+  TouchableArea,
+  type TouchableAreaEvent,
+  useIsDarkMode,
+  useSporeColors,
+} from '@universe/mycelium'
 import { Presence } from '@universe/mycelium/presence'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ElementAfterText, useIsDarkMode, useSporeColors } from 'ui/src'
 import { ArrowUpRight } from 'ui/src/components/icons/ArrowUpRight'
 import { X } from 'ui/src/components/icons/X'
 import { opacify } from 'ui/src/theme'

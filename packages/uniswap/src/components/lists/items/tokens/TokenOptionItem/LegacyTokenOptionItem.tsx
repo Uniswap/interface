@@ -1,10 +1,9 @@
 import { isWebApp, isWebPlatform } from '@universe/environment'
-import { Flex, Text, TouchableArea } from '@universe/mycelium'
+import { Flex, Text, TouchableArea, AnimatedFlex } from '@universe/mycelium'
 import { withSporeCurve } from '@universe/tailwind/animations/reanimated'
 import { memo, useCallback, useState } from 'react'
 import { useAnimatedStyle } from 'react-native-reanimated'
 import { Check } from 'ui/src/components/icons/Check'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { CONTEXT_MENU_ACTIONS } from 'uniswap/src/components/lists/items/tokens/TokenOptionItem/contextMenuActions'
 import {

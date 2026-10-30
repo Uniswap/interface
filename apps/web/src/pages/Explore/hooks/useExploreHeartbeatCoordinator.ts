@@ -24,8 +24,8 @@ type UseExploreHeartbeatCoordinatorParams = {
 }
 
 /**
- * Drives the Explore refresh loop every minute: the always-visible stats section plus the active
- * tab's query.
+ * Drives the Explore refresh loop every minute: the always-visible stats section and trending shelf,
+ * plus the active tab's query.
  */
 export function useExploreHeartbeatCoordinator({ tab, enabled }: UseExploreHeartbeatCoordinatorParams): void {
   const queryClient = useQueryClient()
@@ -40,8 +40,9 @@ export function useExploreHeartbeatCoordinator({ tab, enabled }: UseExploreHeart
 
   const refresh = async (): Promise<void> => {
     const tasks: Promise<unknown>[] = [
-      // Stats section is always visible — refresh protocol stats on every tick
+      // Stats section and trending shelf sit above the tabs, so they refresh on every tick
       queryClient.refetchQueries({ queryKey: [...GET_PROTOCOL_STATS_QUERY_KEY_PREFIX], type: 'active' }),
+      queryClient.refetchQueries({ queryKey: [ReactQueryCacheKey.DataApiService, 'listTokens'], type: 'active' }),
     ]
 
     switch (tab) {

@@ -113,6 +113,7 @@ describe('TradeTokenBanner', () => {
       auction_type: 'unknown',
       launch_method: 'unknown',
       entry_point: 'adp_trade_token_banner',
+      token_address: TOKEN_ADDRESS,
       auction_phase: 'live',
       pool_availability: 'has_pool',
       page_layout: 'trading',
@@ -190,6 +191,7 @@ describe('TradeTokenBanner', () => {
     expect(impressions[0]?.[1]).toMatchObject({
       surface: 'adp',
       entry_point: 'adp_trade_token_banner',
+      token_address: UNDERLYING_ADDRESS,
       auction_phase: 'live',
     })
   })

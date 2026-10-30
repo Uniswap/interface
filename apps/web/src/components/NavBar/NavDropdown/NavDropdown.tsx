@@ -1,6 +1,7 @@
 import { Flex, type FlexCompatProps } from '@universe/mycelium'
+import { useScrollbarStyles } from '@universe/mycelium/theme-hooks-compat'
 import { forwardRef, ReactNode, RefObject } from 'react'
-import { Popover, useScrollbarStyles, WebBottomSheet } from 'ui/src'
+import { Popover, WebBottomSheet } from 'ui/src'
 import { INTERFACE_NAV_HEIGHT, zIndexes } from 'ui/src/theme'
 import { MWEB_BOTTOM_INSET } from '~/utils/mwebBottomInset'
 
@@ -37,10 +38,9 @@ const NavDropdownContent = forwardRef<HTMLDivElement, NavDropdownContentProps>(f
         platformWeb?.overflow === undefined ? { overflowY: 'auto', overflowX: 'hidden', ...platformWeb } : platformWeb
       }
       // The legacy `padded` variant table's `false` branch was empty, so `false` is a no-op.
-      // `py`/`pl`/`pr` were authored as '12px'/'16px'/'4px' strings; numeric px is the same value.
       {...(padded
         ? // Smaller right padding allows scrollbar to be closer to container edge
-          { py: 12, pl: 16, pr: 4 }
+          { pt: 8, pb: 12, pl: 16, pr: 4 }
         : {})}
       {...rest}
     />

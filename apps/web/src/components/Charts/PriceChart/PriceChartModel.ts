@@ -261,8 +261,9 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
       },
       rightPriceScale: {
         borderVisible: false,
-        ...(hideYAxis && { visible: false, minimumWidth: 0 }),
+        visible: !hideYAxis,
         scaleMargins,
+        entireTextOnly: true,
       },
     })
 

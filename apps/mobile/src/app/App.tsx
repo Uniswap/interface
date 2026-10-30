@@ -16,6 +16,7 @@ import {
   Storage,
   WALLET_FEATURE_FLAG_NAMES,
 } from '@universe/gating'
+import { flexStyles, useIsDarkMode } from '@universe/mycelium'
 import { FloatingOverlayProvider } from '@universe/mycelium/floating-overlay'
 import {
   type ChallengeSolver,
@@ -73,7 +74,6 @@ import { useSyncWidgetUserDefaults } from 'src/features/widgets/useSyncWidgetUse
 import { SystemBannerPortalProvider } from 'src/notification-service/notification-renderer/SystemBannerPortal'
 import { initDynamicIntlPolyfills, loadIntlPolyfillsForLocale } from 'src/polyfills/intl-delayed'
 import { useDatadogUserAttributesTracking } from 'src/screens/HomeScreen/useDatadogUserAttributesTracking'
-import { flexStyles, useIsDarkMode } from 'ui/src'
 import { TestnetModeBanner } from 'uniswap/src/components/banners/TestnetModeBanner'
 import { BlankUrlProvider } from 'uniswap/src/contexts/UrlContext'
 import { initializePortfolioQueryOverrides } from 'uniswap/src/data/apiClients/dataApiService/balances/portfolioBalanceOverrides'
@@ -223,7 +223,7 @@ function App(): JSX.Element | null {
   }
 
   return (
-    // Must wrap AppPortalProvider (inside SharedWalletReduxProvider): its root PortalHost needs the
+    // Must wrap the PortalProvider that SharedWalletProvider mounts (inside SharedWalletReduxProvider): its PortalHost needs the
     // gesture root's context or portaled content (Popover, ActionSheetDropdown) throws under RNGH 3.
     <GestureHandlerRootView style={flexStyles.fill}>
       <StatsigProviderWrapper user={statsigUser} storageProvider={statsigMMKVStorageProvider} onInit={onStatsigInit}>

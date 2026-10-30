@@ -4,8 +4,8 @@ import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber
 import { AnimatedNumberDirection } from 'uniswap/src/components/AnimatedNumber/types'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { useNowMs } from 'utilities/src/time/useNowMs'
 import { useAbbreviatedTimeString } from '~/components/Table/utils/useAbbreviatedTimeString'
-import { useSyncedNowMs } from '~/components/Table/utils/useSyncedNowMs'
 import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
 
 const StyledExternalLink = forwardRef<HTMLElement, AnchorProps>(function StyledExternalLink(props, ref) {
@@ -54,7 +54,7 @@ export const TimestampCell = ({ timestamp, link }: { timestamp: number; link: st
     .replace(/\s(am|pm)/, '$1')
 
   const abbreviatedTime = useAbbreviatedTimeString(timestamp * 1000)
-  const now = useSyncedNowMs()
+  const now = useNowMs(ONE_SECOND_MS)
   const elapsedSeconds = Math.floor((now - timestamp * ONE_SECOND_MS) / ONE_SECOND_MS)
 
   return (

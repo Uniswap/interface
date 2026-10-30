@@ -1,7 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
 import { TokenCountAllocatedToLpForAuctionRequest } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/auction_pb'
+import { AuctionOverridesConfigKey, DynamicConfigs, useDynamicConfigValue } from '@universe/gating'
 import { useMemo } from 'react'
 import { AuctionQueryClient } from 'uniswap/src/data/apiClients/liquidityService/AuctionQueryClient'
+import { isAuctionLpPercentOverridesMap } from 'uniswap/src/features/gating/typeGuards'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { formatTokenPriceSubscript } from '~/features/Toucan/Auction/BidDistributionChart/utils/tokenFormatters'
@@ -12,7 +14,7 @@ import { formatCompactFromRaw } from '~/features/Toucan/Auction/utils/fixedPoint
 import { getAuctionTokenDecimals, mergeAuctionTokenMetadata } from '~/features/Toucan/Auction/utils/tokenMetadata'
 import {
   AuctionMetadataOverride,
-  getAuctionLpPercentOverride,
+  DEFAULT_AUCTION_LP_PERCENT_OVERRIDES,
   getAuctionMetadata,
 } from '~/features/Toucan/Config/config'
 import { useBlockTimestamp } from '~/hooks/useBlockTimestamp'
@@ -119,17 +121,19 @@ export function useAuctionStatsData(): AuctionStatsData {
     enabled: Boolean(auctionDetails?.address && auctionDetails.chainId),
   })
 
+  const lpPercentOverrides = useDynamicConfigValue({
+    config: DynamicConfigs.AuctionOverrides,
+    key: AuctionOverridesConfigKey.LpPercentCommitted,
+    defaultValue: DEFAULT_AUCTION_LP_PERCENT_OVERRIDES,
+    customTypeGuard: isAuctionLpPercentOverridesMap,
+  })
+
   const percentCommittedToLpFormatted = useMemo(() => {
     // A curated override wins over the computed value when the indexed on-chain
     // allocation doesn't reflect the intended split for a specific auction.
-    if (auctionDetails) {
-      const lpPercentOverride = getAuctionLpPercentOverride({
-        chainId: auctionDetails.chainId,
-        auctionAddress: auctionDetails.address,
-      })
-      if (lpPercentOverride !== undefined) {
-        return formatPercent(lpPercentOverride, 1)
-      }
+    const lpPercentOverride = auctionDetails ? lpPercentOverrides[auctionDetails.auctionId] : undefined
+    if (lpPercentOverride !== undefined) {
+      return formatPercent(lpPercentOverride, 1)
     }
 
     // Denominator is the FULL token supply (tokenTotalSupply), not the auctioned slice
@@ -154,7 +158,7 @@ export function useAuctionStatsData(): AuctionStatsData {
     } catch {
       return null
     }
-  }, [auctionDetails, formatPercent, lpAllocationResponse?.tokenCountAllocatedToLp])
+  }, [auctionDetails, formatPercent, lpAllocationResponse?.tokenCountAllocatedToLp, lpPercentOverrides])
 
   // Get auction start block timestamp
   const auctionStartBlockNumber = auctionDetails?.startBlock ? Number(auctionDetails.startBlock) : undefined

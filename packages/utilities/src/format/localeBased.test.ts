@@ -1,5 +1,14 @@
-import { formatNumber } from 'utilities/src/format/localeBased'
+import { formatNumber, formatNumberOrString } from 'utilities/src/format/localeBased'
+import { TYPE_TO_FORMATTER_RULES } from 'utilities/src/format/localeBasedFormats'
 import { NumberType } from 'utilities/src/format/types'
+
+const { mockLogger } = vi.hoisted(() => ({
+  mockLogger: { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn(), setDatadogEnabled: vi.fn() },
+}))
+
+vi.mock('utilities/src/logger/logger', () => ({
+  logger: mockLogger,
+}))
 
 it('formats token reference numbers correctly', () => {
   expect(formatNumber({ input: 1234567000000000, type: NumberType.TokenNonTx, locale: 'en-US' })).toBe('>999T')
@@ -190,4 +199,82 @@ it('formats the full-precision swap price (tooltip fallback for an abbreviated r
   expect(formatNumber({ input: 1241790000, type: NumberType.SwapPriceFull, locale: 'en-US' })).toBe('1,241,790,000')
   expect(formatNumber({ input: 1234567.8901, type: NumberType.SwapPriceFull, locale: 'en-US' })).toBe('1,234,570')
   expect(formatNumber({ input: 0, type: NumberType.SwapPriceFull, locale: 'en-US' })).toBe('0')
+})
+
+describe('formatNumber with negative input', () => {
+  it('formats the magnitude by the same rules and keeps the sign, instead of reading the "<" floor', () => {
+    expect(formatNumber({ input: -5, type: NumberType.FiatTokenQuantity, locale: 'en-US' })).toBe('-$5.00')
+    expect(formatNumber({ input: -1234, type: NumberType.FiatTokenStats, locale: 'en-US' })).toBe('-$1.2K')
+    expect(formatNumber({ input: -0.5, type: NumberType.FiatTokenPrice, locale: 'en-US' })).toBe('-$0.500')
+    expect(formatNumber({ input: -1234, type: NumberType.TokenNonTx, locale: 'en-US' })).toBe('-1,234.00')
+    expect(formatNumber({ input: -5, type: NumberType.FiatTokenQuantity, locale: 'de-DE' })).toBe('-5,00\u00a0$')
+  })
+
+  it('flips a bound with the sign', () => {
+    expect(formatNumber({ input: -0.003, type: NumberType.FiatTokenQuantity, locale: 'en-US' })).toBe('>-$0.01')
+    expect(formatNumber({ input: -0.0005, type: NumberType.TokenNonTx, locale: 'en-US' })).toBe('>-0.001')
+    expect(formatNumber({ input: -0.0005, type: NumberType.TokenNonTx, locale: 'de-DE' })).toBe('>-0,001')
+    expect(formatNumber({ input: -2e15, type: NumberType.TokenNonTx, locale: 'en-US' })).toBe('<-999T')
+    expect(formatNumber({ input: -2e18, type: NumberType.FiatTokenStats, locale: 'en-US' })).toBe('<-$999,999T')
+  })
+
+  it('leaves the single-rule types as Intl renders them', () => {
+    expect(formatNumber({ input: -5, type: NumberType.PortfolioBalance, locale: 'en-US' })).toBe('-$5.00')
+    expect(formatNumber({ input: -0.05, type: NumberType.Percentage, locale: 'en-US' })).toBe('-5%')
+  })
+
+  it('reads negative zero as zero', () => {
+    expect(formatNumber({ input: -0, type: NumberType.PortfolioBalance, locale: 'en-US' })).toBe('$0.00')
+  })
+})
+
+describe('formatNumber with non-finite input', () => {
+  it('renders the placeholder instead of "$NaN"', () => {
+    expect(formatNumber({ input: NaN, type: NumberType.FiatTokenQuantity, locale: 'en-US' })).toBe('-')
+    expect(formatNumber({ input: NaN, type: NumberType.TokenNonTx, locale: 'en-US', placeholder: 'N/A' })).toBe('N/A')
+    expect(formatNumberOrString({ price: 'abc', type: NumberType.FiatTokenPrice, locale: 'en-US' })).toBe('-')
+  })
+
+  it('renders the placeholder for infinities', () => {
+    expect(formatNumber({ input: Infinity, type: NumberType.FiatTokenQuantity, locale: 'en-US' })).toBe('-')
+    expect(formatNumber({ input: -Infinity, type: NumberType.FiatTokenQuantity, locale: 'en-US' })).toBe('-')
+  })
+
+  // The placeholder hides an upstream bug from users, so it must still reach Datadog.
+  it.each([NaN, Infinity, -Infinity])('warns for %s', (input) => {
+    formatNumber({ input, type: NumberType.FiatTokenQuantity, locale: 'en-US' })
+
+    expect(mockLogger.warn).toHaveBeenCalledOnce()
+    expect(mockLogger.warn).toHaveBeenCalledWith('localeBased', 'formatNumber', expect.any(String), {
+      type: NumberType.FiatTokenQuantity,
+      input: String(input),
+    })
+  })
+
+  it('does not warn for missing input', () => {
+    formatNumber({ input: null, type: NumberType.FiatTokenQuantity, locale: 'en-US' })
+    formatNumber({ input: undefined, type: NumberType.FiatTokenQuantity, locale: 'en-US' })
+
+    expect(mockLogger.warn).not.toHaveBeenCalled()
+  })
+})
+
+// formatNumber flips a bound for negative inputs by reading its leading `<`/`>`, so every rule that
+// renders a bound must put the marker first.
+describe('bounded formatter rules', () => {
+  const rules = Object.entries(TYPE_TO_FORMATTER_RULES).flatMap(([type, { rules: typeRules }]) =>
+    typeRules.map((rule, index) => ({ name: `${type} rule ${index}`, rule })),
+  )
+
+  it.each(rules)('$name puts any bound marker first', ({ rule }) => {
+    const renderings = [
+      typeof rule.formatter === 'string' ? rule.formatter : undefined,
+      rule.postFormatModifier?.('X'),
+    ].filter((rendering): rendering is string => rendering !== undefined)
+    for (const rendering of renderings) {
+      if (/[<>]/.test(rendering)) {
+        expect(rendering).toMatch(/^[<>]/)
+      }
+    }
+  })
 })

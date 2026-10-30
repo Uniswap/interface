@@ -31,16 +31,20 @@ interface RwaCategoryTableProps {
   category: RwaCategory
   enableSorting?: boolean
   chainScope?: RwaChainScope
+  /** Show an empty or failed result as loading, for a host about to replace this table. */
+  holdEmptyResult?: boolean
 }
 
 function useRwaCategoryTableRows({
   category,
   chainScope,
   sort,
+  holdEmptyResult = false,
 }: {
   category: RwaCategory
   chainScope?: RwaChainScope
   sort?: ExploreRwaRowsSort
+  holdEmptyResult?: boolean
 }): Omit<ExploreRwaRowsResult, 'refetch'> & { rowsKey: string } {
   const urlChainId = useChainIdFromUrlParam()
   const chainId = chainScope ? chainScope.chainId : urlChainId
@@ -53,10 +57,11 @@ function useRwaCategoryTableRows({
   const rowsKey = [category, chainId, sort?.orderBy ?? volumeOrderBy, sort?.ascending ?? false, searchQuery ?? ''].join(
     ':',
   )
-  return { ...result, rowsKey }
+  const held = holdEmptyResult && (result.isError || result.rows.length === 0)
+  return { ...result, isLoading: result.isLoading || held, isError: result.isError && !held, rowsKey }
 }
 
-function SortableRwaCategoryTable({ category, chainScope }: Omit<RwaCategoryTableProps, 'enableSorting'>): JSX.Element {
+function SortableRwaCategoryTable(props: Omit<RwaCategoryTableProps, 'enableSorting'>): JSX.Element {
   const { sortMethod, sortAscending, orderDirection } = useStocksTableSortSelection()
   const volumeOrderBy = useSelectedVolumeOrderBy()
   const sort = useMemo(
@@ -73,7 +78,7 @@ function SortableRwaCategoryTable({ category, chainScope }: Omit<RwaCategoryTabl
     fetchNextPage,
     isSortedByServer,
     isSearchedByServer,
-  } = useRwaCategoryTableRows({ category, chainScope, sort })
+  } = useRwaCategoryTableRows({ ...props, sort })
 
   return (
     <RwaExploreTableShell
@@ -84,7 +89,7 @@ function SortableRwaCategoryTable({ category, chainScope }: Omit<RwaCategoryTabl
       hasNextPage={hasNextPage}
       isFetchingNextPage={isFetchingNextPage}
       fetchNextPage={fetchNextPage}
-      categoryId={RWA_CATEGORY_IDS[category]}
+      categoryId={RWA_CATEGORY_IDS[props.category]}
       isSortedByServer={isSortedByServer}
       isSearchedByServer={isSearchedByServer}
       enableSorting
@@ -95,12 +100,9 @@ function SortableRwaCategoryTable({ category, chainScope }: Omit<RwaCategoryTabl
   )
 }
 
-function NonSortableRwaCategoryTable({
-  category,
-  chainScope,
-}: Omit<RwaCategoryTableProps, 'enableSorting'>): JSX.Element {
+function NonSortableRwaCategoryTable(props: Omit<RwaCategoryTableProps, 'enableSorting'>): JSX.Element {
   const { rows, rowsKey, isLoading, isError, hasNextPage, isFetchingNextPage, fetchNextPage, isSearchedByServer } =
-    useRwaCategoryTableRows({ category, chainScope })
+    useRwaCategoryTableRows(props)
 
   return (
     <RwaExploreTableShell
@@ -111,21 +113,21 @@ function NonSortableRwaCategoryTable({
       hasNextPage={hasNextPage}
       isFetchingNextPage={isFetchingNextPage}
       fetchNextPage={fetchNextPage}
-      categoryId={RWA_CATEGORY_IDS[category]}
+      categoryId={RWA_CATEGORY_IDS[props.category]}
       isSearchedByServer={isSearchedByServer}
     />
   )
 }
 
 /** RWA category table — parent asset rows expand to per-issuer breakdown. */
-export function RwaCategoryTable({ category, enableSorting = false, chainScope }: RwaCategoryTableProps): JSX.Element {
+export function RwaCategoryTable({ enableSorting = false, ...props }: RwaCategoryTableProps): JSX.Element {
   if (enableSorting) {
     return (
       <StocksTableSortStoreContextProvider>
-        <SortableRwaCategoryTable category={category} chainScope={chainScope} />
+        <SortableRwaCategoryTable {...props} />
       </StocksTableSortStoreContextProvider>
     )
   }
 
-  return <NonSortableRwaCategoryTable category={category} chainScope={chainScope} />
+  return <NonSortableRwaCategoryTable {...props} />
 }

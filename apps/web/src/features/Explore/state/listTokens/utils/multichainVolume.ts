@@ -118,12 +118,9 @@ export function getChainIdsByVolume({
 }
 
 /**
- * pickPrimaryDeployment constrained to the registry + rollout-flag filtered network set: the
- * row identity (chain, address, testId, analytics chain id, TDP link target) must come from the
- * same set that gates existence, count, hover, and link mode. Reachable with a stale cached
- * response fetched while a rollout flag was still on, whose highest-volume leg is now disabled.
- * Preserves pickPrimaryDeployment's precedence (explicit chainId match, then highest-volume leg,
- * then first entry) within the allowed set; returns undefined when the filtered set is empty.
+ * Picks the primary deployment for a ranked token, constrained to the allowed chain ids.
+ * The primary deployment is the canonical chain if it is allowed, otherwise the lowest
+ * allowed chain id. Returns undefined if no allowed deployments exist.
  */
 export function pickAllowedPrimaryDeployment({
   rankedToken,
@@ -131,8 +128,8 @@ export function pickAllowedPrimaryDeployment({
   allowedChainIds,
 }: {
   rankedToken: RankedMultichainToken
-  chainId: number | undefined
-  allowedChainIds: readonly UniverseChainId[]
+  chainId: UniverseChainId | undefined
+  allowedChainIds: UniverseChainId[]
 }): { chainId: number; address: string } | undefined {
   const allowed = getAllowedAddressChainIds(rankedToken, allowedChainIds)
   const addresses = Object.fromEntries(
@@ -140,6 +137,16 @@ export function pickAllowedPrimaryDeployment({
       allowed.has(Number(chainIdKey) as UniverseChainId),
     ),
   )
-  const chainStats = rankedToken.chainStats.filter((cs) => allowed.has(cs.chainId as UniverseChainId))
-  return pickPrimaryDeployment({ addresses, chainId, chainStats })
+  const deploymentOn = (id: number): { chainId: number; address: string } | undefined =>
+    pickPrimaryDeployment({ addresses, chainId: id })
+
+  if (chainId !== undefined) {
+    return deploymentOn(chainId)
+  }
+  const canonicalChainId = rankedToken.multichainToken?.canonicalChainId
+  const canonical = canonicalChainId ? deploymentOn(canonicalChainId) : undefined
+  if (canonical) {
+    return canonical
+  }
+  return allowed.size > 0 ? deploymentOn(Math.min(...allowed)) : undefined
 }

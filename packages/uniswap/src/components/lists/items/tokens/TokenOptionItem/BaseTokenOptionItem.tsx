@@ -13,6 +13,7 @@ import { TokenOptionWarningBadge } from 'uniswap/src/components/lists/items/toke
 import { useSearchFdvLabel } from 'uniswap/src/components/lists/items/useSearchFdvLabel'
 import { getWarningIconColors } from 'uniswap/src/components/warnings/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { isLowPriceConfidence } from 'uniswap/src/features/prices/priceConfidence'
 import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/warnings/safetyUtils'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { shortenAddress } from 'utilities/src/addresses'
@@ -56,7 +57,11 @@ export const BaseTokenOptionItem = memo(function BaseTokenOptionItemInner(
   const isSingleChainMultichainResult = networkCount !== undefined && networkCount === 1
   const statsElement =
     searchStats?.priceUsd != null ? (
-      <TokenOptionItemStats priceUsd={searchStats.priceUsd} pricePercentChange1d={searchStats.pricePercentChange1d} />
+      <TokenOptionItemStats
+        priceUsd={searchStats.priceUsd}
+        pricePercentChange1d={searchStats.pricePercentChange1d}
+        isLowPriceConfidence={isLowPriceConfidence(searchStats.priceConfidenceScore)}
+      />
     ) : undefined
 
   // search and token selector only badge >=Medium severity (Low/info-only warnings are too noisy to surface here);

@@ -8,7 +8,7 @@ import { currencyIdToRestContractInput } from 'uniswap/src/features/dataApi/util
 import type { CurrencyId } from 'uniswap/src/types/currency'
 
 function selectLaunchProvenance(data: PlainMessage<GetTokenResponse> | undefined): LaunchProvenance | undefined {
-  return toLaunchProvenance({ provenance: data?.token?.launchProvenance })
+  return toLaunchProvenance({ provenance: data?.token?.launchProvenance, firstTradedAt: data?.token?.firstTradedAt })
 }
 
 /**

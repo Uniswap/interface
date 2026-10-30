@@ -1,4 +1,25 @@
-import { getLowPriceRangeScaleFactor } from '~/components/Charts/PriceChart/PriceChartModel'
+import type { IChartApi, UTCTimestamp } from 'lightweight-charts'
+import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
+import { getLowPriceRangeScaleFactor, PriceChartModel } from '~/components/Charts/PriceChart/PriceChartModel'
+import { PriceChartType } from '~/components/Charts/utils'
+
+const { mockApplyOptions } = vi.hoisted(() => ({ mockApplyOptions: vi.fn() }))
+
+vi.mock('lightweight-charts', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('lightweight-charts')>()),
+  createChart: () =>
+    ({
+      applyOptions: mockApplyOptions,
+      subscribeCrosshairMove: vi.fn(),
+      addSeries: () => ({
+        setData: vi.fn(),
+        applyOptions: vi.fn(),
+        createPriceLine: vi.fn(),
+        removePriceLine: vi.fn(),
+      }),
+      timeScale: () => ({ fitContent: vi.fn() }),
+    }) as unknown as IChartApi,
+}))
 
 const SCALED = 1_000_000_000
 const UNSCALED = 1
@@ -27,5 +48,39 @@ describe(getLowPriceRangeScaleFactor, () => {
     const maxScalable = Number.MAX_SAFE_INTEGER / 100 / SCALED
     expect(getLowPriceRangeScaleFactor({ min: maxScalable, max: maxScalable })).toBe(SCALED)
     expect(getLowPriceRangeScaleFactor({ min: maxScalable * 1.01, max: maxScalable * 1.01 })).toBe(UNSCALED)
+  })
+})
+
+describe('PriceChartModel.updateOptions', () => {
+  const colors = new Proxy({}, { get: () => ({ val: '#000000' }) })
+  const params = {
+    locale: 'en-US',
+    colors,
+    format: { convertFiatAmountFormatted: vi.fn() },
+    isLargeScreen: true,
+    type: PriceChartType.LINE,
+    timePeriod: HistoryDuration.Day,
+    data: [1, 2].map((close) => ({
+      time: close as UTCTimestamp,
+      value: close,
+      open: close,
+      high: close,
+      low: close,
+      close,
+    })),
+  } as unknown as ConstructorParameters<typeof PriceChartModel>[1]
+
+  const lastRightPriceScale = (): { visible?: boolean } => mockApplyOptions.mock.lastCall?.[0].rightPriceScale
+
+  beforeEach(() => {
+    mockApplyOptions.mockClear()
+  })
+
+  it('shows the y-axis again after it was hidden', () => {
+    const model = new PriceChartModel(document.createElement('div'), { ...params, hideYAxis: true })
+    expect(lastRightPriceScale().visible).toBe(false)
+
+    model.updateOptions({ ...params, hideYAxis: false })
+    expect(lastRightPriceScale().visible).toBe(true)
   })
 })

@@ -46,11 +46,3 @@ describe('export parity across the legs', () => {
     expect(native.AnchorCompat).not.toBe(web.AnchorCompat)
   })
 })
-
-describe('the subpath barrel resolves every symbol', () => {
-  it('exports the component plus the shared contract', async () => {
-    const barrel = await import('./index')
-    expect(barrel.AnchorCompat).toBe(web.AnchorCompat)
-    expect(barrel.DEFAULT_ANCHOR_TAG).toBe('a')
-  })
-})

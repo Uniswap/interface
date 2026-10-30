@@ -1,8 +1,6 @@
 /**
- * Inline twins of the two `ui/src` generated icons the legacy
- * DropdownMenuSheetItem renders (`CheckCircleFilled`, `ExternalLink`), copied
- * from their SVG sources in `src/assets/icons/`. mycelium cannot
- * import the Tamagui icon pipeline; these carry the identical paths and take
+ * Inline twins of the `CheckCircleFilled` and `ExternalLink` icons the native
+ * leg renders, copied from their SVG sources in `src/assets/icons/`. They take
  * a raw pixel size + CSS color expression instead of theme tokens.
  */
 import type { JSX } from 'react'

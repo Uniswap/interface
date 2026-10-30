@@ -76,7 +76,7 @@ describe('useExploreHeartbeatCoordinator', () => {
     expect(leading).toBe(false)
   })
 
-  it('always refetches stats, and refetches top tokens on the Tokens tab', async () => {
+  it('always refetches stats and the trending shelf, and refetches top tokens on the Tokens tab', async () => {
     renderHook(() => useExploreHeartbeatCoordinator(makeParams({ tab: ExploreTab.Tokens })))
 
     const [callback] = mockUseInterval.mock.calls[0]!
@@ -88,10 +88,13 @@ describe('useExploreHeartbeatCoordinator', () => {
       expect.objectContaining({ queryKey: [...GET_PROTOCOL_STATS_QUERY_KEY_PREFIX] }),
     )
     expect(mockQueryClientRefetchQueries).toHaveBeenCalledWith(
+      expect.objectContaining({ queryKey: [ReactQueryCacheKey.DataApiService, 'listTokens'], type: 'active' }),
+    )
+    expect(mockQueryClientRefetchQueries).toHaveBeenCalledWith(
       expect.objectContaining({ queryKey: [ReactQueryCacheKey.TopTokens], predicate: isShallowInfiniteQuery }),
       { cancelRefetch: false },
     )
-    expect(mockQueryClientRefetchQueries).toHaveBeenCalledTimes(2)
+    expect(mockQueryClientRefetchQueries).toHaveBeenCalledTimes(3)
   })
 
   it('refetches top pools on the Pools tab without cancelling in-flight fetches', async () => {
@@ -109,7 +112,7 @@ describe('useExploreHeartbeatCoordinator', () => {
       }),
       { cancelRefetch: false },
     )
-    expect(mockQueryClientRefetchQueries).toHaveBeenCalledTimes(2)
+    expect(mockQueryClientRefetchQueries).toHaveBeenCalledTimes(3)
   })
 
   describe('isShallowInfiniteQuery', () => {
@@ -146,12 +149,12 @@ describe('useExploreHeartbeatCoordinator', () => {
       }),
       { cancelRefetch: false },
     )
-    // Stats + listTransactions only: the tab has a single data source, so a second transactions
+    // Stats + trending shelf + listTransactions only: the tab has a single data source, so a second transactions
     // refetch here would mean a stale one survived alongside it.
-    expect(mockQueryClientRefetchQueries).toHaveBeenCalledTimes(2)
+    expect(mockQueryClientRefetchQueries).toHaveBeenCalledTimes(3)
   })
 
-  it('only refetches stats on the Toucan tab', async () => {
+  it('only refetches stats and the trending shelf on the Toucan tab', async () => {
     renderHook(() => useExploreHeartbeatCoordinator(makeParams({ tab: ExploreTab.Toucan })))
 
     const [callback] = mockUseInterval.mock.calls[0]!
@@ -159,6 +162,6 @@ describe('useExploreHeartbeatCoordinator', () => {
       await callback()
     })
 
-    expect(mockQueryClientRefetchQueries).toHaveBeenCalledTimes(1)
+    expect(mockQueryClientRefetchQueries).toHaveBeenCalledTimes(2)
   })
 })

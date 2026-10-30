@@ -1,8 +1,9 @@
-import { useIsTokenCategoriesEnabledWithLoading } from '@universe/gating'
+import { DynamicConfigs, useIsTokenCategoriesEnabledWithLoading } from '@universe/gating'
 import { useEffect, useMemo, useState } from 'react'
 import { useListCategoriesQuery } from 'uniswap/src/data/apiClients/dataApiService/categories/useListCategoriesQuery'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
-import { useTokenCategoryOrder } from 'uniswap/src/features/tokenCategories/useTokenCategoryOrder'
+import { useCategoryOrder } from 'uniswap/src/features/tokenCategories/useCategoryOrder'
 import { GROUPED_EXPLORE_CATEGORIES } from '~/pages/Explore/categories/exploreGroupedCategory'
 import { ExploreCategory } from '~/pages/Explore/categories/useExploreCategory'
 
@@ -10,6 +11,7 @@ const EMPTY_CATEGORIES: TokenCategory[] = []
 
 /** Valid `?category=` values for the flag-off (and failed-fetch) static chip set. */
 const STATIC_CATEGORY_IDS: ReadonlySet<string> = new Set(GROUPED_EXPLORE_CATEGORIES)
+const NO_CATEGORY_IDS: ReadonlySet<string> = new Set()
 
 /**
  * The ordered category list backing the Explore chip row, plus the ids that are valid `?category=`
@@ -21,6 +23,7 @@ export function useExploreTokenCategories(): {
   orderedCategories: TokenCategory[]
   validCategoryIds: ReadonlySet<string>
   dynamicChipsEnabled: boolean
+  exploreCategoriesEnabled: boolean
   /** True while the first ListCategories attempt is in flight, so a `?category=` id can't be validated yet. */
   categoriesPending: boolean
   /**
@@ -31,6 +34,7 @@ export function useExploreTokenCategories(): {
   categoriesLoading: boolean
 } {
   const { value: tokenCategoriesEnabled, isLoading: flagLoading } = useIsTokenCategoriesEnabledWithLoading()
+  const { isTestnetModeEnabled } = useEnabledChains()
   // Statsig re-enters Loading on every updateUserAsync (wallet connect/switch), which must not collapse a
   // rendered chip row back to the skeleton: only the first report counts as "flag unknown".
   const [flagSettled, setFlagSettled] = useState(!flagLoading)
@@ -45,7 +49,10 @@ export function useExploreTokenCategories(): {
     () => categories?.filter((category) => category.id !== ExploreCategory.All) ?? EMPTY_CATEGORIES,
     [categories],
   )
-  const orderedCategories = useTokenCategoryOrder(backendCategories)
+  const orderedCategories = useCategoryOrder({
+    categories: backendCategories,
+    config: DynamicConfigs.TokenCategoriesOrder,
+  })
 
   return useMemo(() => {
     const dynamicChipsEnabled = tokenCategoriesEnabled && orderedCategories.length > 0
@@ -53,14 +60,26 @@ export function useExploreTokenCategories(): {
     const categoriesPending = tokenCategoriesEnabled && categories === undefined && isFetching && failureCount === 0
     // Static ids stay valid even when dynamic — a response missing one (e.g. dropped by the
     // unmapped-class filter) must not degrade existing static deep links to All.
+    const exploreCategoriesEnabled = !isTestnetModeEnabled
+    const staticCategoryIds = exploreCategoriesEnabled ? STATIC_CATEGORY_IDS : NO_CATEGORY_IDS
     return {
       orderedCategories,
       validCategoryIds: dynamicChipsEnabled
-        ? new Set([...STATIC_CATEGORY_IDS, ...orderedCategories.map((category) => category.id)])
-        : STATIC_CATEGORY_IDS,
+        ? new Set([...staticCategoryIds, ...orderedCategories.map((category) => category.id)])
+        : staticCategoryIds,
       dynamicChipsEnabled,
+      exploreCategoriesEnabled,
       categoriesPending,
       categoriesLoading: (flagLoading && !flagSettled) || categoriesPending,
     }
-  }, [tokenCategoriesEnabled, flagLoading, flagSettled, orderedCategories, categories, isFetching, failureCount])
+  }, [
+    tokenCategoriesEnabled,
+    isTestnetModeEnabled,
+    flagLoading,
+    flagSettled,
+    orderedCategories,
+    categories,
+    isFetching,
+    failureCount,
+  ])
 }

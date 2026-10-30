@@ -1,6 +1,5 @@
-import { Flex, FlexProps, Text, TouchableArea } from '@universe/mycelium'
+import { Flex, FlexProps, Text, TouchableArea, useIsDarkMode } from '@universe/mycelium'
 import { BaseSyntheticEvent, useCallback } from 'react'
-import { useIsDarkMode } from 'ui/src/hooks/useIsDarkMode'
 import { MenuContentItem } from 'wallet/src/components/menu/types'
 
 type MenuContentProps = {

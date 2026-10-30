@@ -17,18 +17,21 @@ bun scripts/swap-ui/ledger.ts --files         # confirm your batch files and the
 ```
 
 - Check each file's blocker classes. `store-read`, `flags`, `telemetry`,
-  `modal-shell`, `uniswap-runtime`, `types-pending` are your normal work. If a file
-  shows `ui-src`, dry-run the migration codemod on it:
+  `modal-shell`, `uniswap-runtime`, `types-pending` are your normal work. `ui-src` means
+  the file imports the legacy `ui/src` component library, which swap-ui cannot depend
+  on. Tamagui itself is gone from the repo, so there is no styling to convert, only
+  imports. For each `ui/src` import:
 
-  ```bash
-  bun scripts/tamagui-migration/codemod/cli.ts <file>
-  ```
-
-  "Would convert" means you convert it inside your batch as step 0: rerun with
-  `--write`, then `bunx nx sync`, and confirm the diff is import lines only. Any
-  manual-lane flag (`animation-prop`, `styled-call`, `group-state-prop`, etc.) means
-  the file leaves your batch: note it on the issue and move on. Never hand-convert
-  Tamagui styling yourself.
+  - A primitive with a mycelium equivalent (`Flex`, `Text`, `Button`, `TouchableArea`,
+    icons at `@universe/mycelium/icons/<Name>`, logos at `/logos/<Name>`, svg assets at
+    `/assets/...`, hooks at `/theme-hooks-compat`): swap the import line, same props.
+    Confirm the file exists under `packages/mycelium/src` first.
+  - A component with no mycelium leg (`RoutingLabel`, `UniswapXText`, `RoutingDiagram`,
+    the dotted separator, the full Across wordmark): it stays in the adapter and reaches
+    the view as a slot. Count it against the slot budget.
+  - `Trans`: the raw react-i18next import is banned and the escaping one lives in
+    `ui/src/i18n`, which swap-ui cannot import. The adapter composes the translated node
+    and passes it in; the view only places it. `RoutingCaption` shows the shape.
 - If any file imports `useBottomSheetInternal`, reanimated shared values, or anything
   under `TransactionModal`/`CurrentScreen`: it is shell-tier and exempt. Remove it from
   your batch and note it on the issue.
@@ -105,7 +108,7 @@ step 2.**
 | Typecheck + lint fast loop | `bun nx affected -t check:fast` | green while editing |
 | Batch's own unit tests | `bunx nx test uniswap -- <old dir>` and `bunx nx test swap-ui` | green; moved render tests use props fixtures, hook tests stay adapter-side |
 | Full gate | `bun nx affected -t check` | green before the PR |
-| Boundary self-check | `bun scripts/swap-ui/ledger.ts --files \| grep <your files>` + grep your views for `uniswap/src`, `ui/src`, `@universe/gating`, `@tanstack/react-query`, telemetry | zero hits in view files |
+| Boundary self-check | `bun scripts/swap-ui/ledger.ts --files \| grep <your files>` + grep your views for `uniswap/src`, `ui/src`, `@universe/gating`, `@tanstack/react-query`, telemetry | zero hits in view files; your adapters print `ADAPTER` |
 | Boundary positive control | add a temp `uniswap/src` import to one view, confirm lint fails, delete it (verify `git status` is clean before continuing) | the rule actually fired |
 | **Zero-pixel evidence (executed, not staged)** | replay the canonical recorded flows per `scripts/swap-ui/EVIDENCE.md`: argent flow replay on iOS sim, Playwright canonical states on the deployed web preview (never a local dev server), extension per recipe. Capture on base and head, pixel-diff | **zero diff.** In M1 there are no intentional pixel changes: any diff is a bug in your extraction. If you cannot explain a diff within an hour, post it on the issue and stop; never fix a diff by tweaking styles |
 | Interaction e2e | run the recipe's flows for the surfaces your batch touches: keyboard attach/detach, tap targets on changed views, form/review transition when applicable | flows green on head |
@@ -135,7 +138,7 @@ PR, move to In Review. Decisions live on the issue, never only in a thread.
 
 1. Reaching props requires a logic change → stop; separate PR or the file stays.
 2. Prop count balloons past ~1.5x → stop; boundary design escalation.
-3. `ui-src` import that the codemod flags as manual-lane → the file leaves the batch; note it.
+3. `ui-src` import with no mycelium equivalent and no clean slot → stop; note it on the issue.
 4. View wants a 5th slot → stop; it is a layout shell, wrong split.
 5. Unexplained pixel diff after an hour → post it, stop.
 6. Shell-tier file in your batch → remove it, note it. Never touch the flag mount

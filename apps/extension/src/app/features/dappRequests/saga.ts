@@ -1,6 +1,6 @@
 /* oxlint-disable max-lines */
 import { type Provider } from '@ethersproject/providers'
-import { providerErrors, rpcErrors, serializeError } from '@metamask/rpc-errors'
+import { JsonRpcError, providerErrors, rpcErrors, serializeError } from '@metamask/rpc-errors'
 import { Platform, UniverseChainId } from '@universe/chains'
 import { FeatureFlags, getFeatureFlag } from '@universe/gating'
 import { createSearchParams } from 'react-router'
@@ -47,6 +47,7 @@ import getCalldataInfoFromTransaction from 'src/background/utils/getCalldataInfo
 import { call, put, select, take } from 'typed-redux-saga'
 import { hexadecimalStringToInt, toSupportedChainId, toSupportedDappChainId } from 'uniswap/src/features/chains/utils'
 import { DappRequestType, DappResponseType } from 'uniswap/src/features/dappRequests/types'
+import { isSelfCallWithData } from 'uniswap/src/features/dappRequests/utils'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'
@@ -431,6 +432,25 @@ function* assertDappChainUnchanged({ url, reviewedChainId }: { url: string; revi
   }
 }
 
+/**
+ * A self-call with data runs the account's delegated code as its own root key, so dapps must never
+ * reach it. Checks against the account that signs, since the dapp-supplied `from` can be omitted or
+ * spoofed. Backstops the content script guard, which only knows the connected addresses it was last sent.
+ */
+function assertNotSelfCallWithData({
+  signer,
+  calls,
+  chainId,
+}: {
+  signer: Address
+  calls: { to?: string; data?: string }[]
+  chainId: UniverseChainId
+}): void {
+  if (calls.some(({ to, data }) => isSelfCallWithData({ from: signer, to, data, chainId }))) {
+    throw providerErrors.unsupportedMethod('Self-calls with data are not supported')
+  }
+}
+
 export function* handleSendTransaction({
   request,
   senderTabInfo,
@@ -447,6 +467,7 @@ export function* handleSendTransaction({
   const transactionRequest = request.transaction
   const { lastChainId, activeConnectedAddress, connectedAccounts } = dappInfo
   const account = getActiveSignerConnectedAccount(connectedAccounts, activeConnectedAddress)
+  assertNotSelfCallWithData({ signer: account.address, calls: [transactionRequest], chainId: lastChainId })
   const chainId = toSupportedChainId(request.transaction.chainId)
   if (request.transaction.chainId && chainId) {
     if (lastChainId !== chainId) {
@@ -723,6 +744,7 @@ export function* handleSendCalls({
     yield* call(assertDappChainUnchanged, { url: senderTabInfo.frameUrl, reviewedChainId: chainId })
 
     const activeAccount = getActiveSignerConnectedAccount(dappInfo.connectedAccounts, dappInfo.activeConnectedAddress)
+    assertNotSelfCallWithData({ signer: activeAccount.address, calls: request.calls, chainId })
     const batchId = request.id || generateBatchId()
 
     if (is4337) {
@@ -828,9 +850,14 @@ export function* handleSendCalls({
       extra: { request },
     })
 
+    // Keep the code of a deliberate RPC error, like the 4200 self-call rejection, instead of flattening it to -32603.
+    const rpcError =
+      error instanceof JsonRpcError
+        ? error
+        : rpcErrors.internal(error instanceof Error ? error.message : 'Failed to send calls')
     const errorResponse: ErrorResponse = {
       type: DappResponseType.ErrorResponse,
-      error: serializeError(rpcErrors.internal(error instanceof Error ? error.message : 'Failed to send calls')),
+      error: serializeError(rpcError),
       requestId: request.requestId,
     }
     yield* call(dappResponseMessageChannel.sendMessageToFrame, senderTabInfo, errorResponse)

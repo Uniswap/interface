@@ -7,7 +7,7 @@ import { ChevronsOut } from '@universe/mycelium/icons/ChevronsOut'
 import { useMedia, useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
 import { curveCardinal, scaleLinear } from 'd3'
-import { type ComponentProps, useCallback, useMemo, useState } from 'react'
+import { type ComponentProps, type ReactNode, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { v2TokenToCurrency } from 'uniswap/src/features/dataApi/utils/parsedToken'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -18,7 +18,7 @@ import { LineChart } from '~/components/Charts/SparklineChart/LineChart'
 import { DeltaArrow, getDeltaTextColor } from '~/components/DeltaArrow/DeltaArrow'
 import { DoubleCurrencyLogo, type ServedLogo } from '~/components/Logo/DoubleLogo'
 import type { PoolData } from '~/data/pools/poolData'
-import { calculate24hLpFeesUsd } from '~/data/pools/poolStats'
+import { get24hLpFeesUsd } from '~/data/pools/poolStats'
 import { toHistoryDuration, TimePeriod } from '~/data/util'
 import { useLiquidityServicePoolPriceChartData } from '~/features/Liquidity/charts/useLiquidityServicePoolPriceChartData'
 import { LiquidityPositionInfoBadges } from '~/features/Liquidity/LiquidityPositionInfoBadges'
@@ -106,26 +106,40 @@ export function PoolInfoSparkline({ poolData, width: overrideWidth }: { poolData
   )
 }
 
-export function StatCell({ label, value, delta }: { label: string; value: string; delta?: number }) {
+export function StatCell({
+  label,
+  value,
+  delta,
+  size = 'small',
+}: {
+  label: string
+  value: ReactNode
+  delta?: number
+  /** `large` is the pool details page's stats grid. */
+  size?: 'small' | 'large'
+}) {
   const { formatPercent } = useLocalizationContext()
+  const isLarge = size === 'large'
 
   return (
-    <Flex gap="$spacing4" flex={1}>
-      <Text variant="body3" color="$neutral2">
+    <Flex gap={isLarge ? '$gap8' : '$spacing4'} flex={1}>
+      <Text variant={isLarge ? 'body2' : 'body3'} color="$neutral2">
         {label}
       </Text>
-      <Flex row alignItems="center" gap="$spacing4">
-        <Text variant="subheading2" color="$neutral1">
+      <Flex row alignItems="center" gap={isLarge ? '$gap8' : '$spacing4'}>
+        <Text variant={isLarge ? 'heading3' : 'subheading2'} color="$neutral1" numberOfLines={isLarge ? 1 : undefined}>
           {value}
         </Text>
-        {delta !== undefined && delta !== 0 && (
-          <Flex row alignItems="center" gap="$spacing2">
-            <DeltaArrow delta={delta} formattedDelta={formatPercent(Math.abs(delta))} size={12} />
-            <Text variant="body4" color={getDeltaTextColor(delta)}>
-              {formatPercent(Math.abs(delta))}
-            </Text>
-          </Flex>
-        )}
+        {delta !== undefined &&
+          delta !== 0 && (
+            // The large value's taller line box sits the delta high; nudge it onto the baseline.
+            <Flex row alignItems="center" gap="$spacing2" pt={isLarge ? 3 : 0}>
+              <DeltaArrow delta={delta} formattedDelta={formatPercent(Math.abs(delta))} size={12} />
+              <Text variant="body4" color={getDeltaTextColor(delta)}>
+                {formatPercent(Math.abs(delta))}
+              </Text>
+            </Flex>
+          )}
       </Flex>
     </Flex>
   )
@@ -238,13 +252,7 @@ export function PoolStatsContent({
     poolData.token1Price && poolData.token0Price ? poolData.token1Price / poolData.token0Price : undefined
 
   // Still derived: GetPool serves an APR but no 24h fee figure.
-  const fees24h = calculate24hLpFeesUsd({
-    volume24h: poolData.volumeUSD24H,
-    feeTier: poolData.feeTier?.feeAmount,
-    isDynamic: poolData.feeTier?.isDynamic,
-    protocolVersion: poolData.protocolVersion,
-    protocolFeePips: poolData.protocolFeePips,
-  })
+  const fees24h = get24hLpFeesUsd(poolData)
 
   return (
     <>

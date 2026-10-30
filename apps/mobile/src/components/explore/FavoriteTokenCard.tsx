@@ -108,7 +108,6 @@ function FavoriteTokenCard({
   if (showLoading) {
     return (
       <Loader.Favorite
-        contrast
         borderWidth="$spacing1"
         borderColor="transparent"
         height={ESTIMATED_FAVORITE_TOKEN_CARD_LOADER_HEIGHT}

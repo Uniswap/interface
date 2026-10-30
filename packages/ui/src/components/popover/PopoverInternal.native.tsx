@@ -1,3 +1,4 @@
+import { useSporeColors } from '@universe/mycelium'
 import { FloatingOverlayAnchor, FloatingOverlayArrow } from '@universe/mycelium/floating-overlay'
 import { cloneElement, isValidElement, type ReactElement, useContext, useEffect } from 'react'
 import { Pressable, type StyleProp, type ViewStyle } from 'react-native'
@@ -13,7 +14,6 @@ import type {
   PopoverCloseProps,
   PopoverTriggerProps,
 } from 'ui/src/components/popover/types'
-import { useSporeColors } from 'ui/src/hooks/useSporeColors'
 import { logger } from 'utilities/src/logger/logger'
 
 /**

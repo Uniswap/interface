@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react'
-import type { MarginVenue } from 'uniswap/src/features/transactions/margin/types'
+import { MarginDirection, type MarginVenue } from 'uniswap/src/features/transactions/margin/types'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { marginMarketKey, type MarginMarket, type MarginTokenInfo } from '~/constants/margin'
 import { useMarginVenueAllowlist } from '~/pages/Swap/Margin/hooks/useMarginVenueAllowlist'
@@ -30,7 +30,7 @@ function marketFixture({ venue, maxLeverage }: { venue: MarginVenue; maxLeverage
     collateral: WETH,
     debt: USDC,
     venue,
-    direction: 'LONG',
+    direction: MarginDirection.LONG,
     lltvWad: '860000000000000000',
     maxLeverage,
     shouldUseNativeEquity: true,
