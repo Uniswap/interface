@@ -63,13 +63,31 @@ export function useListPoolsAsPoolStats({
     () => infiniteData?.pages.reduce((count, page) => count + page.pools.length, 0),
     [infiniteData?.pages],
   )
-  const allPools = useMemo(
-    () =>
-      infiniteData?.pages.flatMap((page: ListPoolsResponse) =>
-        page.pools.flatMap((rankedPool) => normalizeRankedPool(rankedPool) ?? []),
-      ),
-    [infiniteData?.pages],
-  )
+  // Collapse duplicate pool keys across fetched pages (and within a page). Explore / TDP have
+  // shown the same pool twice with identical stats when a page boundary or cache overlap
+  // repeated a row — keep the first occurrence so the table is one row per pool.
+  const allPools = useMemo(() => {
+    if (!infiniteData?.pages) {
+      return undefined
+    }
+    const seen = new Set<string>()
+    const pools: NonNullable<ReturnType<typeof normalizeRankedPool>>[] = []
+    for (const page of infiniteData.pages) {
+      for (const rankedPool of page.pools) {
+        const pool = normalizeRankedPool(rankedPool)
+        if (!pool) {
+          continue
+        }
+        const key = `${pool.chainId}:${pool.poolId}`
+        if (seen.has(key)) {
+          continue
+        }
+        seen.add(key)
+        pools.push(pool)
+      }
+    }
+    return pools
+  }, [infiniteData?.pages])
 
   const pools = useMemo(() => allPools?.map(convertPoolToPoolStat), [allPools])
 
