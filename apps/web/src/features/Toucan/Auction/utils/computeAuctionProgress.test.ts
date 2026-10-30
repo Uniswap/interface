@@ -228,4 +228,55 @@ describe('computeAuctionProgress', () => {
     expect(progress.isGraduated).toBe(true)
     expect(progress.outcome).toBe(AuctionOutcome.GRADUATED)
   })
+
+  describe('served graduation verdict', () => {
+    it.each([
+      [true, '999', AuctionOutcome.GRADUATED],
+      [false, '1000', AuctionOutcome.FAILED],
+    ])('isGraduated=%s overrides an ended checkpoint that raised %s', (isGraduated, currencyRaised, outcome) => {
+      const progress = computeAuctionProgress({
+        currentBlock: 201,
+        auctionDetails: makeAuctionDetails({ isGraduated }),
+        checkpointData: makeCheckpoint(currencyRaised),
+        checkpointLoadState: SETTLED,
+      })
+      expect(progress).toMatchObject({ hasMetThreshold: isGraduated, isGraduated, outcome })
+    })
+
+    it.each([AuctionCheckpointLoadState.Idle, AuctionCheckpointLoadState.Loading, AuctionCheckpointLoadState.Error])(
+      'decides an ended auction while its checkpoint is %s, with the final price still pending',
+      (checkpointLoadState) => {
+        const progress = computeAuctionProgress({
+          currentBlock: 201,
+          auctionDetails: makeAuctionDetails({ isGraduated: true }),
+          checkpointData: null,
+          checkpointLoadState,
+        })
+        expect(progress).toMatchObject({ outcome: AuctionOutcome.GRADUATED, isFinalPricePending: true })
+      },
+    )
+
+    it.each([
+      ['loaded', makeCheckpoint('999')],
+      ['settled empty', null],
+    ])('clears the pending final price once the checkpoint has %s', (_, checkpointData) => {
+      const progress = computeAuctionProgress({
+        currentBlock: 201,
+        auctionDetails: makeAuctionDetails({ isGraduated: true }),
+        checkpointData,
+        checkpointLoadState: SETTLED,
+      })
+      expect(progress.isFinalPricePending).toBe(false)
+    })
+
+    it('is ignored while the auction is in progress', () => {
+      const progress = computeAuctionProgress({
+        currentBlock: 150,
+        auctionDetails: makeAuctionDetails({ isGraduated: true }),
+        checkpointData: makeCheckpoint('999'),
+        checkpointLoadState: SETTLED,
+      })
+      expect(progress).toMatchObject({ hasMetThreshold: false, outcome: AuctionOutcome.ACTIVE })
+    })
+  })
 })
