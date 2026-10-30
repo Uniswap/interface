@@ -30,6 +30,7 @@ import {
   getContrastTextClass,
   type ButtonIconPosition,
 } from '../button-compat/compile'
+import { PRESS_SCALE } from '../button-compat/press-scale'
 import { cn } from '../cn'
 import { warnUnsupportedNativeProps } from '../compat/native-diagnostics'
 import { nativeCompatProps } from '../compat/native-props'
@@ -45,9 +46,6 @@ import { getMaybeHexOrRgbColor } from './custom-color'
 import type { ButtonFrameCompatProps, ButtonFramePressHandler } from './native-props'
 
 export type { ButtonFrameCompatProps } from './native-props'
-
-/** Legacy CustomButtonFrame pressStyle scale (commonPressStyle). */
-const PRESS_SCALE = 0.98
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 

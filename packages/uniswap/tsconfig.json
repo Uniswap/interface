@@ -55,6 +55,9 @@
     },
     {
       "path": "../test"
+    },
+    {
+      "path": "../swap-ui"
     }
   ],
   "compilerOptions": {

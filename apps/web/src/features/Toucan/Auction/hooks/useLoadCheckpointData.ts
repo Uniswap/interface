@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { GetLatestCheckpointRequest } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { EVMUniverseChainId, AddressStringFormat, normalizeAddress } from '@universe/chains'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { auctionQueries } from 'uniswap/src/data/apiClients/dataApiService/auctions/auctionQueries'
 import { useAuctionCheckpointDiagnostics } from '~/features/Toucan/Auction/hooks/useAuctionCheckpointDiagnostics'
 import { AuctionCheckpointLoadState, AuctionProgressState } from '~/features/Toucan/Auction/store/types'
@@ -49,6 +49,7 @@ export function useLoadCheckpointData(
     isSuccess,
     isError,
     error,
+    refetch,
   } = useQuery(
     auctionQueries.getLatestCheckpoint({
       params: new GetLatestCheckpointRequest({
@@ -59,6 +60,21 @@ export function useLoadCheckpointData(
       refetchInterval: pollingInterval,
     }),
   )
+
+  // Polling stops at ENDED, so the last poll can predate bids landing in the final interval. A page
+  // that watched the auction end refetches exactly once, otherwise its stale below-threshold
+  // checkpoint resolves the outcome to FAILED until reload. An auction first seen already ended
+  // needs nothing: its first fetch already happened after the end block.
+  const [hasSeenLive, setHasSeenLive] = useState(false)
+  if (isAuctionActive && !hasSeenLive) {
+    setHasSeenLive(true)
+  }
+  const shouldFetchFinalCheckpoint = isEnabled && hasSeenLive && progressState === AuctionProgressState.ENDED
+  useEffect(() => {
+    if (shouldFetchFinalCheckpoint) {
+      void refetch()
+    }
+  }, [shouldFetchFinalCheckpoint, refetch])
 
   // Settled-vs-in-flight, published to the store so the outcome classifier can tell an unresolved
   // checkpoint from one that resolved empty. Terminal by construction: the query retries a bounded

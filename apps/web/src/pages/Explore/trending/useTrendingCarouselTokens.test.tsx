@@ -69,7 +69,7 @@ describe(useTrendingCarouselTokens, () => {
     await waitFor(() => expect(listTokens).toHaveBeenCalledTimes(1))
     const request = listTokens.mock.calls[0]?.[0] as ListTokensRequest
     expect(request.chainIds).toEqual(ENABLED_CHAIN_IDS)
-    expect(request.page).toEqual({ pageSize: TRENDING_CAROUSEL_TOKEN_COUNT, pageToken: '' })
+    expect(request.page).toEqual({ pageSize: TRENDING_CAROUSEL_TOKEN_COUNT })
     expect(request.sort).toEqual({ orderBy: TokensOrderBy.VOLUME_1D, ascending: false })
     expect(request.sparklineDuration).toBe(HistoryDuration.DAY)
     expect(request.filter).toEqual({ categoryIds: [TRENDING_CATEGORY_ID] })

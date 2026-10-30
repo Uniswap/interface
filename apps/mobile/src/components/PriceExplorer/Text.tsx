@@ -1,4 +1,3 @@
-import { isAndroid } from '@universe/environment'
 import { Flex, Text } from '@universe/mycelium'
 import { Caret } from '@universe/mycelium/icons/Caret'
 import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
@@ -190,13 +189,7 @@ export function RelativeChangeText({
   }))
 
   return (
-    <Flex
-      row
-      alignItems="center"
-      gap="$spacing2"
-      mt={isAndroid ? '$none' : '$spacing2'}
-      testID={TestID.RelativePriceChange}
-    >
+    <Flex row alignItems="center" gap="$spacing2" testID={TestID.RelativePriceChange}>
       {loading && (
         // We use `no-shimmer` here to speed up the first render and so that this skeleton renders
         // at the exact same time as the animated number skeleton.

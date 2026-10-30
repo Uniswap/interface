@@ -33,7 +33,7 @@ function exactBalance(balance: PortfolioBalance): number {
 }
 
 // Currency → the wire's payment-token shape (native ETH → the 0x0 sentinel address).
-function toMarginPaymentToken(currency: Currency): MarginPaymentToken {
+export function toMarginPaymentToken(currency: Currency): MarginPaymentToken {
   return {
     address: currency.isNative ? MARGIN_NATIVE_TOKEN_ADDRESS : currency.address,
     symbol: currency.symbol ?? '',

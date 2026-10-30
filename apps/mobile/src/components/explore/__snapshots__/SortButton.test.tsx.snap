@@ -47,7 +47,12 @@ exports[`SortButton > renders without error 1`] = `
   </div>
   <div
     class="css-view-175oi2r r-bottom-1p0dtai r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-pointerEvents-12vffkv"
-    style="z-index: 1070;"
-  />
+    data-testid="portal-layer"
+  >
+    <div
+      class="css-view-175oi2r r-bottom-1p0dtai r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-pointerEvents-12vffkv"
+      style="z-index: 6071;"
+    />
+  </div>
 </DocumentFragment>
 `;

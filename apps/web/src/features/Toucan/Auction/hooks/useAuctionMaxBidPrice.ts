@@ -1,3 +1,4 @@
+import { calculateMaxValidBidQ96, isMaxBidPriceReached } from '@universe/cca'
 import { useMemo, useRef } from 'react'
 import {
   getMaxBidPriceQ96,
@@ -8,7 +9,6 @@ import { NumberType } from 'utilities/src/format/types'
 import { useVerifyWalletParams } from '~/features/Toucan/Auction/hooks/useVerifyWalletParams'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
 import { approximateNumberFromRaw, computeFdvBidTokenRaw } from '~/features/Toucan/Auction/utils/fixedPointFdv'
-import { calculateMaxValidBidQ96, isMaxBidPriceReached } from '~/features/Toucan/Auction/utils/ticks'
 
 export interface AuctionMaxBidPrice {
   /** The hook's raw ceiling in Q96. Undefined when the auction imposes none. */

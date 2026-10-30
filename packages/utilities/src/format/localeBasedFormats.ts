@@ -479,6 +479,8 @@ export type Format = string | FormatCreator
 // each rule must contain either an `upperBound` or an `exact` value.
 // upperBound => number will use that formatter as long as it is < upperBound
 // exact => number will use that formatter if it is === exact
+// A rule that renders a bound ("<$0.01", ">$999T") puts the `<`/`>` marker first: formatNumber flips it for
+// negative inputs (localeBased.test.ts pins this for every rule).
 export type FormatterRule =
   | {
       upperBound?: undefined

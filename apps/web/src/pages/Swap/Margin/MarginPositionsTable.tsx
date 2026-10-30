@@ -1,11 +1,12 @@
 import { createColumnHelper, type Row } from '@tanstack/react-table'
 import { Flex as MyceliumFlex } from '@universe/mycelium'
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
+import { HeightAnimator } from '@universe/mycelium/height-animator'
 import { TestID } from '@universe/test'
 import type { TFunction } from 'i18next'
 import { memo, type ReactNode, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, HeightAnimator } from 'ui/src'
+import { Button } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { SpinningLoader } from 'ui/src/loading/SpinningLoader'
@@ -20,7 +21,7 @@ import { useMarginPositionsQuery } from 'uniswap/src/data/apiClients/tradingApi/
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import type { MarginManageAction } from 'uniswap/src/features/transactions/margin/types'
+import { MarginDirection, type MarginManageAction } from 'uniswap/src/features/transactions/margin/types'
 /* oxlint-disable max-lines */
 import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -212,7 +213,7 @@ const PairCell = memo(function PairCell({
   const market = resolveMarketForPosition({ position, resolveMarket })
   const direction = position.direction
   const directionStyle = getMarginDirectionStyle(direction)
-  const directionLabel = direction === 'SHORT' ? t('margin.side.short') : t('margin.side.long')
+  const directionLabel = direction === MarginDirection.SHORT ? t('margin.side.short') : t('margin.side.long')
   // A still-open position that was liquidated is only partially liquidated (collateral remains).
   const liquidationBadge = getMarginLiquidationBadge({ liquidated: position.liquidated, status: 'open' })
   return (
@@ -523,7 +524,7 @@ const HistoryPairCell = memo(function HistoryPairCell({
   })
   const direction = row.direction
   const directionStyle = getMarginDirectionStyle(direction)
-  const directionLabel = direction === 'SHORT' ? t('margin.side.short') : t('margin.side.long')
+  const directionLabel = direction === MarginDirection.SHORT ? t('margin.side.short') : t('margin.side.long')
   return (
     <PairIdentity
       market={market}

@@ -1,10 +1,9 @@
-import { Flex, Text } from '@universe/mycelium'
+import { Flex, Text, useSporeColors } from '@universe/mycelium'
+import { useShadowPropsMedium } from '@universe/mycelium/theme-hooks-compat'
 import { useRef } from 'react'
 import { CoachmarkProps } from 'ui/src/components/coachmark/Coachmark'
 import { Tooltip } from 'ui/src/components/tooltip/Tooltip'
 import type { TooltipFrameStyleProps } from 'ui/src/components/tooltip/types'
-import { useSporeColors } from 'ui/src/hooks/useSporeColors'
-import { useShadowPropsMedium } from 'ui/src/theme/shadows'
 import { useOnClickOutside } from 'utilities/src/react/hooks'
 
 const DEFAULT_COACHMARK_WIDTH = 190

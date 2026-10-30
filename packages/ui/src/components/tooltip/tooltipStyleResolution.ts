@@ -1,4 +1,5 @@
 import { isProdEnv } from '@universe/environment'
+import { type UseSporeColorsReturn } from '@universe/mycelium/theme-hooks-compat'
 import type { CSSProperties } from 'react'
 import {
   TOOLTIP_ANIMATION_OFFSET,
@@ -10,7 +11,6 @@ import {
   TOOLTIP_CONTENT_PADDING,
 } from 'ui/src/components/tooltip/shared'
 import type { TooltipAnimationDirection, TooltipFrameStyleProps } from 'ui/src/components/tooltip/types'
-import type { UseSporeColorsReturn } from 'ui/src/hooks/useSporeColors'
 // `gap` aliased: it collides with the style prop destructured in resolveTooltipStyleProps.
 import { borderRadii, gap as gapTokens, padding as paddingTokens, spacing } from 'ui/src/theme'
 

@@ -27,6 +27,12 @@ const SearchIcon = styled('div', {
   base: 'w-[20px] h-[20px]',
 })
 
+// The shared Search glyph bakes in fillOpacity 0.63; on mobile the nav icon matches the hamburger's full opacity.
+const NavSearchIcon = styled('div', {
+  platform: 'web',
+  base: 'w-[20px] h-[20px] media-md:[&_path]:[fill-opacity:1]',
+})
+
 export const SearchBar = () => {
   const { t } = useTranslation()
   const isNavSearchInputVisible = useIsSearchBarVisible()
@@ -99,9 +105,9 @@ export const SearchBar = () => {
         </TouchableArea>
       ) : (
         <NavIcon onClick={openSearchModal} label={placeholderText}>
-          <SearchIcon data-testid={TestID.NavSearchIcon}>
+          <NavSearchIcon data-testid={TestID.NavSearchIcon}>
             <Search size="$icon.20" color="$neutral2" />
-          </SearchIcon>
+          </NavSearchIcon>
         </NavIcon>
       )}
     </Trace>

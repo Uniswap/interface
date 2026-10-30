@@ -20,8 +20,8 @@ const WEB_SHIMMER_DURATION_SECONDS = 1
 export const SHIMMER_WRAPPER_CLASSES = `flex flex-col items-stretch basis-auto ${RESET_CLASSES} shrink-0`
 
 /**
- * Same sweep as the legacy `ui/src/loading/Shine.web.tsx`: a translucent
- * mask whose position animates across the wrapped content.
+ * Same sweep as the legacy ui `Shine` it replaced: a translucent mask whose
+ * position animates across the wrapped content.
  */
 const SHIMMER_STYLE: CSSProperties = {
   WebkitMaskImage: 'linear-gradient(-75deg, rgba(0,0,0,0.5) 30%, #000 50%, rgba(0,0,0,0.5) 70%)',
@@ -41,6 +41,7 @@ export function Shimmer({
   children,
   disabled = false,
   shimmerDurationSeconds = WEB_SHIMMER_DURATION_SECONDS,
+  animationDelay,
   className,
   testID,
   flexDirection,
@@ -69,7 +70,9 @@ export function Shimmer({
       className={cn(SHIMMER_WRAPPER_CLASSES, className)}
       data-testid={testID}
       style={
-        disabled ? layoutStyle : { ...layoutStyle, ...SHIMMER_STYLE, animationDuration: `${shimmerDurationSeconds}s` }
+        disabled
+          ? layoutStyle
+          : { ...layoutStyle, ...SHIMMER_STYLE, animationDuration: `${shimmerDurationSeconds}s`, animationDelay }
       }
     >
       {children}

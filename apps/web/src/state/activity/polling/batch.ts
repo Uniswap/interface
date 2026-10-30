@@ -1,3 +1,6 @@
+import { isEVMChain } from '@universe/chains'
+import { isValidHexString } from '@universe/encoding'
+import { getPublicClient } from '@wagmi/core'
 import { useEffect, useMemo } from 'react'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { logger } from 'utilities/src/logger/logger'
@@ -5,6 +8,7 @@ import { useEvent } from 'utilities/src/react/hooks'
 import { ONE_HOUR_MS } from 'utilities/src/time/time'
 import type { GetCallsStatusResult, GetCallsStatusTransactionReceipt } from 'wallet/src/features/dappRequests/types'
 import type { Web3Provider } from '~/chains'
+import { wagmiConfig } from '~/connection/wagmiConfig'
 import { useAccount } from '~/hooks/useAccount'
 import { useEthersWeb3Provider } from '~/hooks/useEthersProvider'
 import { ActivityUpdateTransactionType, OnActivityUpdate } from '~/state/activity/types'
@@ -42,10 +46,36 @@ function usePendingBatches(): PendingBatchDetails[] {
   }, [account.status, account.connector?.id, transactions])
 }
 
-/** The number of times wallet_getCallsStatus has failed to respond / given a malformed response before we give up */
+/** Consecutive wallet_getCallsStatus errors before we fall back to checking the batch's tx on-chain */
 const FAILURE_COUNT_THRESHOLD = 4
-/** The number of times wallet_getCallsStatus has returned a failure for a given batch */
+/**
+ * Consecutive errors before giving up on a batch with no known tx hash (~30s at the 1s poll interval).
+ * Failing it is a guess (it may well have landed), so a brief wallet RPC outage must not trigger it.
+ */
+const NO_HASH_FAILURE_COUNT_THRESHOLD = 30
+/** The number of consecutive times wallet_getCallsStatus has failed for a given batch */
 const FAILURE_COUNT_MAP: Record<string, number> = {}
+
+async function fetchOnChainStatus(params: {
+  hash?: string
+  chainId: number
+}): Promise<TransactionStatus.Success | TransactionStatus.Failed | undefined> {
+  const { hash, chainId } = params
+  // 0x + 32 bytes: a tx hash rather than an arbitrary hex batch id
+  if (!hash || !isValidHexString(hash) || hash.length !== 66 || !isEVMChain(chainId)) {
+    return undefined
+  }
+  try {
+    const receipt = await getPublicClient(wagmiConfig, { chainId })?.getTransactionReceipt({ hash })
+    if (!receipt) {
+      return undefined
+    }
+    return receipt.status === 'success' ? TransactionStatus.Success : TransactionStatus.Failed
+  } catch {
+    // viem throws while the tx is unmined; an RPC outage also lands here and just means "no answer yet"
+    return undefined
+  }
+}
 
 function finalizeBatch(params: {
   hash?: string
@@ -102,10 +132,28 @@ export async function pollPendingBatches(params: {
         const hash = receipt?.transactionHash
         finalizeBatch({ transaction, onActivityUpdate, hash, status: TransactionStatus.Failed })
       }
+      if (result.status >= 100 && result.status < 200) {
+        // The wallet is answering, so only an unbroken run of errors counts toward giving up
+        delete FAILURE_COUNT_MAP[transaction.batchInfo.batchId]
+      }
     } catch (error) {
-      FAILURE_COUNT_MAP[transaction.batchInfo.batchId] = (FAILURE_COUNT_MAP[transaction.batchInfo.batchId] ?? 0) + 1
-      if (FAILURE_COUNT_MAP[transaction.batchInfo.batchId] >= FAILURE_COUNT_THRESHOLD) {
-        const connectorId = transaction.batchInfo.connectorId
+      const { batchId, chainId, connectorId } = transaction.batchInfo
+      const failureCount = (FAILURE_COUNT_MAP[batchId] ?? 0) + 1
+      FAILURE_COUNT_MAP[batchId] = failureCount
+      if (failureCount < FAILURE_COUNT_THRESHOLD) {
+        continue
+      }
+
+      // The wallet can't tell us, but the chain can when we have a tx hash: a CAIP-345 hash from
+      // wallet_sendCalls, or a batch id that is itself the tx hash (only a guess, so it can still give up).
+      const onChainStatus = await fetchOnChainStatus({ hash: transaction.hash, chainId })
+      if (onChainStatus) {
+        finalizeBatch({ transaction, onActivityUpdate, hash: transaction.hash, status: onChainStatus })
+        continue
+      }
+
+      const hasKnownTxHash = transaction.hash !== batchId
+      if (!hasKnownTxHash && failureCount >= NO_HASH_FAILURE_COUNT_THRESHOLD) {
         logger.error(error, { tags: { file: 'batch.ts', function: 'pollAllPendingBatches' }, extra: { connectorId } })
         finalizeBatch({ transaction, onActivityUpdate, status: TransactionStatus.Failed })
       }

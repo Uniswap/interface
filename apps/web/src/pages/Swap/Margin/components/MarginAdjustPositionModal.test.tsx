@@ -7,6 +7,7 @@ import {
   type MarginActivePosition,
   type MarginQuoteResponse,
 } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
+import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { logger } from 'utilities/src/logger/logger'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { MARGIN_CHAIN_ID } from '~/constants/margin'
@@ -177,7 +178,7 @@ function positionFixture(overrides: Partial<MarginActivePosition> = {}): MarginA
   return {
     positionId: SUB_ID,
     status: 'ACTIVE',
-    direction: 'LONG',
+    direction: MarginDirection.LONG,
     exposureToken: {
       address: MARKET.collateral.address,
       chainId: MARGIN_CHAIN_ID,
@@ -209,7 +210,7 @@ function quoteFixture(overrides: Partial<MarginQuoteResponse> = {}): MarginQuote
     action: 'addEquityAndIncreaseLeverage',
     chainId: MARGIN_CHAIN_ID,
     swapper: SWAPPER,
-    direction: 'LONG',
+    direction: MarginDirection.LONG,
     exposureToken: {
       address: MARKET.collateral.address,
       chainId: MARGIN_CHAIN_ID,
@@ -272,7 +273,7 @@ const SHORT_MARKET = {
   displaySymbol: 'USDC',
   collateral: MARKET.debt,
   debt: MARKET.collateral,
-  direction: 'SHORT',
+  direction: MarginDirection.SHORT,
 } as typeof MARKET
 
 function renderModal(
@@ -436,7 +437,7 @@ describe('MarginAdjustPositionModal', () => {
     // against a SHORT-SHAPED market and on the exact value: with the LONG market's 18 decimals against
     // 6-decimal raw equity the prefill is 0.000000002, which `not.toHaveValue('')` happily accepts.
     it('leaves a SHORT usable, since its counter token is already the collateral', () => {
-      renderModal({ direction: 'SHORT', oraclePrice: '0' }, SHORT_MARKET)
+      renderModal({ direction: MarginDirection.SHORT, oraclePrice: '0' }, SHORT_MARKET)
       // equity 2000000000 at the collateral leg's 6 decimals.
       expect(screen.getByLabelText(MARGIN_LABEL)).toHaveValue('2000')
     })

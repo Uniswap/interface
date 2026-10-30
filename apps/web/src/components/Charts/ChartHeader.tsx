@@ -1,7 +1,7 @@
 import { GraphQLApi } from '@universe/api'
 import { Flex, type FlexCompatProps, Text } from '@universe/mycelium'
 import { UTCTimestamp } from 'lightweight-charts'
-import { ReactElement, ReactNode } from 'react'
+import { PointerEvent, ReactElement, ReactNode, useState } from 'react'
 import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { FiatNumberType, NumberType } from 'utilities/src/format/types'
@@ -122,6 +122,8 @@ function HeaderTimeDisplay({ time, timePlaceholder }: HeaderTimeDisplayProps) {
 interface ChartHeaderProps extends HeaderValueDisplayProps, HeaderTimeDisplayProps {
   protocolData?: ChartHeaderProtocolInfo[]
   additionalFields?: ReactNode
+  /** Catches the pointer over the header, so content in it (e.g. a tooltip) can be hovered instead of scrubbing the chart. */
+  blocksChartHover?: boolean
 }
 
 export function ChartHeader({
@@ -131,12 +133,35 @@ export function ChartHeader({
   timePlaceholder,
   protocolData,
   additionalFields,
+  blocksChartHover = false,
 }: ChartHeaderProps) {
   const isHovered = !!time
+  const [heldSize, setHeldSize] = useState<{ width: number; height: number }>()
+
+  function holdSize(event: PointerEvent<HTMLElement>): void {
+    const { width, height } = event.currentTarget.getBoundingClientRect()
+    setHeldSize({ width, height })
+  }
+
+  function releaseSize(): void {
+    setHeldSize(undefined)
+  }
 
   return (
     <Flex row position="absolute" width="100%" gap="$gap8" alignItems="flex-start" zIndex="$mask" id="chart-header">
-      <Flex position="absolute" gap="$gap4" pb="$padding8" pr="$padding8" pointerEvents="none">
+      <Flex
+        position="absolute"
+        gap="$gap4"
+        pb="$padding8"
+        pr="$padding8"
+        pointerEvents={blocksChartHover ? 'auto' : 'none'}
+        // Catching the pointer mid-scrub clears the crosshair, swapping the date for the resting content. If that
+        // shrank the header out from under the cursor, the chart would take the pointer back and loop, so hold the size.
+        minWidth={heldSize?.width}
+        minHeight={heldSize?.height}
+        onPointerEnter={holdSize}
+        onPointerLeave={releaseSize}
+      >
         <HeaderValueDisplay value={value} valueFormatterType={valueFormatterType} isHovered={isHovered} />
         <Flex row gap="$gap8" $sm={{ flexDirection: 'column' }} {...EllipsisTamaguiStyle}>
           {additionalFields}

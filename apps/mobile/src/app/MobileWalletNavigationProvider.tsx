@@ -289,7 +289,11 @@ function useNavigateToCategoryDetails(): (args: NavigateToCategoryDetailsArgs) =
   const dispatch = useDispatch()
 
   return useCallback(
-    ({ categoryId }: NavigateToCategoryDetailsArgs): void => {
+    ({ categoryId, kind }: NavigateToCategoryDetailsArgs): void => {
+      // Mobile has no pool discovery, so a pool category has no screen to open.
+      if (kind === 'pool') {
+        return
+      }
       closeKeyboardBeforeCallback(() => {
         const isExploreScreen = navigationRef.getCurrentRoute()?.name === MobileScreens.Explore
         dispatch(closeAllModals())

@@ -6,13 +6,13 @@ import { memo, type ReactNode } from 'react'
 import { useNavigate } from 'react-router'
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { getTokenCategoryIcon } from 'uniswap/src/features/tokenCategories/categoryIcons'
+import { getCategoryIcon } from 'uniswap/src/features/tokenCategories/categoryIcons'
 import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { CategoryHoverCard } from '~/components/HoverCard/CategoryHoverCard/CategoryHoverCard'
 import { LoadingBubble } from '~/components/Tokens/loading'
-import { rightEdgeFadeStyle, useWheelHorizontalScroll } from '~/pages/Explore/categories/useWheelHorizontalScroll'
+import { edgeFadeMaskStyle, useHorizontalScrollFades } from '~/hooks/useHorizontalScrollFades'
 import {
   type CategoryDetailsNavState,
   createCategoryDetailsNavState,
@@ -68,7 +68,7 @@ function CategoryChipRow({ categories }: { categories: TokenCategory[] }): JSX.E
     address: s.address,
     currencyChainId: s.currencyChainId,
   }))
-  const { scrollerRef, showRightFade } = useWheelHorizontalScroll()
+  const { scrollerRef, edgeFades } = useHorizontalScrollFades()
   const getNavigationState = useEvent(() => createCategoryDetailsNavState({ tokenSymbol }))
 
   const logCategoryPress = useEvent((category: TokenCategory, index: number): void => {
@@ -94,7 +94,7 @@ function CategoryChipRow({ categories }: { categories: TokenCategory[] }): JSX.E
       maxWidth="100%"
       className="scrollbar-hidden"
       testID={TestID.TokenDetailsCollections}
-      $platform-web={{ overflowX: 'auto', overscrollBehaviorX: 'none', ...rightEdgeFadeStyle(showRightFade) }}
+      $platform-web={{ overflowX: 'auto', overscrollBehaviorX: 'none', ...edgeFadeMaskStyle(edgeFades) }}
     >
       <ChipRow>
         {categories.map((category, index) => (
@@ -125,7 +125,7 @@ const CategoryChip = memo(function CategoryChip({
   onPress: (category: TokenCategory, index: number) => void
   onModifierPress: (category: TokenCategory, index: number) => void
 }): JSX.Element {
-  const Icon = getTokenCategoryIcon(category)
+  const Icon = getCategoryIcon(category)
   const onPressChip = useEvent(() => onPress(category, index))
   const onModifierPressChip = useEvent(() => onModifierPress(category, index))
 

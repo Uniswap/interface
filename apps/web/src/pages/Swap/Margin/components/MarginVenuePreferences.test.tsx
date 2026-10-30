@@ -2,7 +2,7 @@ import { fireEvent, within } from '@testing-library/react'
 import { TestID } from '@universe/test'
 import type { PropsWithChildren } from 'react'
 import { deriveMarginVenues } from 'uniswap/src/features/transactions/margin/stores/marginFormStore/marginVenuePreferences'
-import type { MarginVenue } from 'uniswap/src/features/transactions/margin/types'
+import { MarginDirection, type MarginVenue } from 'uniswap/src/features/transactions/margin/types'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { MarginPair, MarginPairGroup, MarginTokenInfo } from '~/constants/margin'
 import { MarginVenuePreferencesModal } from '~/pages/Swap/Margin/components/MarginVenuePreferences'
@@ -65,7 +65,7 @@ const GROUP: MarginPairGroup = {
   pairKey: 'weth-usdc',
   base: WETH,
   quote: USDC,
-  direction: 'LONG',
+  direction: MarginDirection.LONG,
   pairs: [pair({ venue: 'MORPHO' }), pair({ venue: 'AAVE_V3', maxLeverage: 3, borrowRateBps: 510 })],
 }
 

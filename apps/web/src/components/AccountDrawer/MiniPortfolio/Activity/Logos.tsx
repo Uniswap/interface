@@ -1,6 +1,5 @@
-import { Flex } from '@universe/mycelium'
+import { Flex, useSporeColors } from '@universe/mycelium'
 import { styled, type StyledComponent } from '@universe/mycelium/styled'
-import { useSporeColors } from 'ui/src'
 import { FadePresence, FadePresenceAnimationType } from '~/theme/components/FadePresence'
 
 const LOGO_CONTAINER_VARIANTS = {} as const

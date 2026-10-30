@@ -1,13 +1,20 @@
 import { ProtocolVersion as RestProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { AddressStringFormat, normalizeAddress, type UniverseChainId } from '@universe/chains'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { Flex, type FlexCompatProps, Text, type TextCompatProps } from '@universe/mycelium'
+import {
+  Flex,
+  type FlexCompatProps,
+  Text,
+  type TextCompatProps,
+  useIsDarkMode,
+  useSporeColors,
+} from '@universe/mycelium'
 import { useQueryState } from 'nuqs'
 import { forwardRef, useEffect, useMemo, useState } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router'
-import { Separator, useIsDarkMode, useSporeColors } from 'ui/src'
+import { Separator } from 'ui/src'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { type ParsedToken, v2TokenToCurrency, v2UnwrapToken } from 'uniswap/src/features/dataApi/utils/parsedToken'
@@ -25,6 +32,8 @@ import { useScrollCompact } from '~/hooks/useScrollCompact'
 import { useDynamicMetatags } from '~/pages/metatags'
 import { ChartSection } from '~/pages/PoolDetails/components/ChartSection'
 import { OrderBook } from '~/pages/PoolDetails/components/ChartSection/OrderBook'
+import { PdpPoolStats, PdpPoolTokens } from '~/pages/PoolDetails/components/PdpPoolInfo'
+import { PdpWalletPositions } from '~/pages/PoolDetails/components/PdpWalletPositions'
 import { PoolDetailsBreadcrumb } from '~/pages/PoolDetails/components/PoolDetailsHeader/PoolDetailsBreadcrumb'
 import { PoolDetailsHeader } from '~/pages/PoolDetails/components/PoolDetailsHeader/PoolDetailsHeader'
 import { PoolDetailsLink } from '~/pages/PoolDetails/components/PoolDetailsLink'
@@ -136,9 +145,9 @@ export function PoolDetailsPage() {
   const { poolAddress } = useParams<{ poolAddress: string }>()
   const urlChain = useChainIdFromUrlParam()
   const chainInfo = urlChain ? getChainInfo(urlChain) : undefined
-  const isLiquidityDepthChartEnabled = useFeatureFlag(FeatureFlags.LpPdpDepthChart)
+  const isPdpRevampEnabled = useFeatureFlag(FeatureFlags.PdpRevamp)
   const [chartParam] = useQueryState('chart')
-  const showOrderBook = isLiquidityDepthChartEnabled && chartParam?.toLowerCase() === 'depth'
+  const showOrderBook = chartParam?.toLowerCase() === 'depth'
   const { data: poolData, loading: poolLoading } = useLiquidityServicePoolData({
     poolIdOrAddress: normalizeAddress(poolAddress ?? '', AddressStringFormat.Lowercase),
     chainId: chainInfo?.id,
@@ -228,6 +237,56 @@ export function PoolDetailsPage() {
     return null
   }
 
+  const rewardsDistribution = showRewardsDistribution && (
+    <LpIncentivesPoolDetailsRewardsDistribution rewardsCampaign={poolData?.rewardsCampaign} />
+  )
+
+  const legacyPoolInfoSections = (
+    <>
+      {rewardsDistribution}
+      <PoolDetailsStats
+        poolData={poolData}
+        isReversed={isReversed}
+        tokenAColor={color0}
+        tokenBColor={color1}
+        chainId={chainInfo.id}
+        loading={loading}
+        poolApr={poolData?.apr}
+        rewards={poolRewards}
+        totalApr={poolData?.totalApr}
+      />
+      <TokenDetailsWrapper>
+        <TokenDetailsHeader>{t('common.links')}</TokenDetailsHeader>
+        <LinksContainer>
+          {poolData?.protocolVersion !== RestProtocolVersion.V4 && (
+            <PoolDetailsLink address={poolAddress} chainId={chainInfo.id} tokens={[token0, token1]} loading={loading} />
+          )}
+          <PoolDetailsLink
+            address={poolData?.token0.address}
+            chainId={chainInfo.id}
+            tokens={[poolData?.token0]}
+            loading={loading}
+          />
+          <PoolDetailsLink
+            address={poolData?.token1.address}
+            chainId={chainInfo.id}
+            tokens={[poolData?.token1]}
+            loading={loading}
+          />
+        </LinksContainer>
+      </TokenDetailsWrapper>
+    </>
+  )
+
+  // The PDP revamp moves these under the chart, leaving the side column to the pool actions and the wallet's positions.
+  const pdpPoolInfoSections = (
+    <>
+      {rewardsDistribution}
+      <PdpPoolStats poolData={poolData} loading={loading} rewards={poolRewards} />
+      <PdpPoolTokens tokens={[token0, token1]} chainId={chainInfo.id} loading={loading} />
+    </>
+  )
+
   return (
     <>
       <Helmet>
@@ -279,13 +338,14 @@ export function PoolDetailsPage() {
                 tokenBColor={isReversed ? color0 : color1}
               />
             </Flex>
-            <Separator />
+            {isPdpRevampEnabled ? pdpPoolInfoSections : <Separator />}
             <PoolDetailsTableTab
               poolAddress={poolAddress}
               chainId={chainInfo.id}
               token0={token0}
               token1={token1}
               isPoolDataLoading={poolLoading}
+              showWalletPositions={!isPdpRevampEnabled}
             />
           </LeftColumn>
           <Flex
@@ -327,46 +387,11 @@ export function PoolDetailsPage() {
                   />
                 )}
             </Flex>
-            {showRewardsDistribution && (
-              <LpIncentivesPoolDetailsRewardsDistribution rewardsCampaign={poolData?.rewardsCampaign} />
+            {isPdpRevampEnabled ? (
+              <PdpWalletPositions poolAddress={poolAddress} chainId={chainInfo.id} />
+            ) : (
+              legacyPoolInfoSections
             )}
-            <PoolDetailsStats
-              poolData={poolData}
-              isReversed={isReversed}
-              tokenAColor={color0}
-              tokenBColor={color1}
-              chainId={chainInfo.id}
-              loading={loading}
-              poolApr={poolData?.apr}
-              protocolFeePips={protocolFeePips}
-              rewards={poolRewards}
-              totalApr={poolData?.totalApr}
-            />
-            <TokenDetailsWrapper>
-              <TokenDetailsHeader>{t('common.links')}</TokenDetailsHeader>
-              <LinksContainer>
-                {poolData?.protocolVersion !== RestProtocolVersion.V4 && (
-                  <PoolDetailsLink
-                    address={poolAddress}
-                    chainId={chainInfo.id}
-                    tokens={[token0, token1]}
-                    loading={loading}
-                  />
-                )}
-                <PoolDetailsLink
-                  address={poolData?.token0.address}
-                  chainId={chainInfo.id}
-                  tokens={[poolData?.token0]}
-                  loading={loading}
-                />
-                <PoolDetailsLink
-                  address={poolData?.token1.address}
-                  chainId={chainInfo.id}
-                  tokens={[poolData?.token1]}
-                  loading={loading}
-                />
-              </LinksContainer>
-            </TokenDetailsWrapper>
           </Flex>
         </PageWrapper>
       </Trace>

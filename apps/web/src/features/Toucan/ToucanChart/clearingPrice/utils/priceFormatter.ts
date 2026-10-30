@@ -1,8 +1,4 @@
-import { getSubscriptNotationParts } from 'utilities/src/format/getSubscriptNotationParts'
-import { toSubscript } from 'utilities/src/format/toSubscript'
-
-/** Threshold for using subscript notation (number of leading zeros after decimal) */
-const SUBSCRIPT_THRESHOLD = 4
+import { subscriptDust } from 'utilities/src/format/subscriptDust'
 
 interface FormatPriceValueParams {
   price: number
@@ -21,9 +17,8 @@ interface FormatPriceValueParams {
 function formatPriceValue({ price, scaleFactor, locale }: FormatPriceValueParams): string {
   const originalPrice = price / scaleFactor
 
-  // Prices are non-negative by domain — guard against any upstream rounding/buffer
-  // that pushes a tick value below zero, since Math.abs() below would silently
-  // strip the sign and render a negative tick as a positive subscript value.
+  // Prices are non-negative by domain — a tick that upstream rounding/buffer pushed
+  // below zero reads "0", not a negative price.
   if (originalPrice <= 0) {
     return '0'
   }
@@ -36,15 +31,9 @@ function formatPriceValue({ price, scaleFactor, locale }: FormatPriceValueParams
     }).format(originalPrice)
   }
 
-  const subscriptParts = getSubscriptNotationParts({
-    value: originalPrice,
-    subscriptThreshold: SUBSCRIPT_THRESHOLD,
-    maxSigDigits: 4,
-    minSigDigits: 2,
-  })
-
-  if (subscriptParts?.usesSubscript) {
-    return `0.0${toSubscript(subscriptParts.leadingZeros)}${subscriptParts.significantPart}`
+  const dust = subscriptDust(originalPrice)
+  if (dust !== undefined) {
+    return dust
   }
 
   // Use standard formatting with appropriate precision

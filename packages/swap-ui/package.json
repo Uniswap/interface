@@ -1,0 +1,39 @@
+{
+  "name": "@universe/swap-ui",
+  "version": "0.0.0",
+  "dependencies": {
+    "@universe/mycelium": "workspace:^",
+    "react-i18next": "15.7.4",
+    "utilities": "workspace:^"
+  },
+  "peerDependencies": {
+    "react": "19.2.3"
+  },
+  "devDependencies": {
+    "@storybook/react": "8.5.2",
+    "@testing-library/react": "16.3.0",
+    "@types/node": "22.19.17",
+    "@vitest/coverage-v8": "3.2.1",
+    "jsdom": "20.0.3",
+    "react": "19.2.3",
+    "vitest": "3.2.1",
+    "vitest-presets": "workspace:^"
+  },
+  "scripts": {
+    "typecheck": "nx typecheck swap-ui",
+    "check": "nx check swap-ui",
+    "check:fast": "nx check:fast swap-ui",
+    "check:deps:usage": "nx check:deps:usage swap-ui",
+    "test": "nx test swap-ui",
+    "format": "nx format swap-ui",
+    "format:check": "nx format:check swap-ui",
+    "lint": "nx lint swap-ui",
+    "lint:fix": "nx lint:fix swap-ui"
+  },
+  "nx": {
+    "includedScripts": []
+  },
+  "main": "src/index.ts",
+  "private": true,
+  "sideEffects": false
+}

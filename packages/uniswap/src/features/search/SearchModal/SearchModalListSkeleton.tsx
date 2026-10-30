@@ -1,5 +1,4 @@
-import { Flex, iconSizes, Text } from '@universe/mycelium'
-import { Skeleton } from 'ui/src'
+import { Flex, iconSizes, Skeleton, Text } from '@universe/mycelium'
 import { OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { SECTION_HEADER_LAYOUT, SECTION_HEADER_TITLE_VARIANT } from 'uniswap/src/components/lists/SectionHeader'
 import { SelectorBaseListSkeleton } from 'uniswap/src/components/lists/SelectorBaseList'

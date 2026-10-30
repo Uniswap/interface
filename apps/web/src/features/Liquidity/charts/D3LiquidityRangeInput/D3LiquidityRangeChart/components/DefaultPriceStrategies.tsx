@@ -1,5 +1,4 @@
-import { clickableStyle, cn, Flex, type FlexCompatProps, Text } from '@universe/mycelium'
-import { Shine } from 'ui/src'
+import { clickableStyle, cn, Flex, type FlexCompatProps, Shine, Text } from '@universe/mycelium'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import i18n from 'uniswap/src/i18n'

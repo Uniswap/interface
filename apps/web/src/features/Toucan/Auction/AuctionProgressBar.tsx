@@ -3,7 +3,7 @@ import { ProgressBar } from '~/features/Toucan/Shared/ProgressBar'
 
 interface AuctionProgressBarProps {
   percentage: number
-  color?: ColorTokens
+  color?: ColorTokens | (string & {})
 }
 
 export function AuctionProgressBar({ percentage, color }: AuctionProgressBarProps) {

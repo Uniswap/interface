@@ -321,7 +321,7 @@ export function PoolDetailsTransactionsTable({
         error={Boolean(error)}
         loadMore={loadMore}
         maxHeight={600}
-        defaultPinnedColumns={['timestamp', 'swap-type']}
+        defaultPinnedColumns={media.lg ? ['timestamp'] : ['timestamp', 'swap-type']}
         forcePinning={media.xxl}
       />
     </TableWrapper>

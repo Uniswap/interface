@@ -1,8 +1,8 @@
-import { Flex } from '@universe/mycelium'
+import { Flex, AnimatedFlex, useIsShortMobileDevice, useSporeColors } from '@universe/mycelium'
+import { ThemedSpinnerCompat } from '@universe/mycelium/button-frame-compat'
 import { useEffect, useMemo, useRef } from 'react'
 import { useAnimatedStyle, useSharedValue, withSequence, withTiming } from 'react-native-reanimated'
-import { Button, ThemedSpinningLoader, useIsShortMobileDevice, useSporeColors } from 'ui/src'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
+import { Button } from 'ui/src'
 import {
   getPlanProgressEstimates,
   NO_ANIMATION_INDEX,
@@ -118,7 +118,7 @@ export function PendingSwapButtonContent({
 
   const icon = useMemo(() => {
     return (
-      <ThemedSpinningLoader isDisabled={false} emphasis="secondary" size={size} variant="branded" typeOfButton="icon" />
+      <ThemedSpinnerCompat isDisabled={false} emphasis="secondary" size={size} variant="branded" typeOfButton="icon" />
     )
   }, [size])
 

@@ -262,7 +262,7 @@
     "prices": "bun run --cwd packages/prices",
     "privacy": "bun run --cwd packages/privacy",
     "react-query": "bun run --cwd packages/react-query",
-    "rh-cca": "bun run --cwd labs/rh-cca",
+    "pools-xyz": "bun run --cwd apps/pools-xyz",
     "sandbox": "bun run --cwd labs/sandbox",
     "sessions": "bun run --cwd packages/sessions",
     "transactional": "bun run --cwd packages/transactional",
@@ -276,7 +276,16 @@
     "websocket": "bun run --cwd packages/websocket",
     "tailwind": "bun run --cwd packages/tailwind",
     "experiments": "bun run --cwd packages/experiments",
-    "embedded-wallet": "bun run --cwd packages/embedded-wallet"
+    "embedded-wallet": "bun run --cwd packages/embedded-wallet",
+    "swap-ui": "bun run --cwd packages/swap-ui",
+    "casebook": "bun scripts/casebook.ts",
+    "casebook:validate": "bun scripts/casebook.ts --validate",
+    "casebook:fix": "bun scripts/casebook.ts --fix",
+    "casebook:matrix": "bun scripts/casebook.ts --coverage-matrix",
+    "casebook:gaps": "bun scripts/casebook.ts --automatable-gaps",
+    "casebook:generate": "bun scripts/casebook.ts --generate-docs",
+    "casebook:testlio": "bun scripts/casebook.ts --testlio-export",
+    "cca": "bun run --cwd packages/cca"
   },
   "workspaces": [
     "apps/*",

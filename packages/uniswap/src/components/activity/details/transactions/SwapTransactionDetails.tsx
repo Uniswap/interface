@@ -1,5 +1,5 @@
 import { TradeType } from '@uniswap/sdk-core'
-import { useSporeColors } from 'ui/src'
+import { useSporeColors } from '@universe/mycelium'
 import { Arrow } from 'ui/src/components/arrow/Arrow'
 import { iconSizes } from 'ui/src/theme'
 import {

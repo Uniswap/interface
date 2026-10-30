@@ -2,7 +2,7 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import type { UniverseChainId } from '@universe/chains'
 import { Flex, Text } from '@universe/mycelium'
 import { TestID } from '@universe/test'
-import { useCallback, useState } from 'react'
+import { type ReactNode, useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getBlockExplorerIcon } from 'uniswap/src/components/chains/BlockExplorerIcon'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
@@ -35,7 +35,8 @@ import { useTDPEffectiveCurrency } from '~/pages/TokenDetails/hooks/useTDPEffect
 import { useTDPPermissionedState } from '~/pages/TokenDetails/hooks/useTDPPermissionedState'
 import { useTokenAddressCopy } from '~/pages/TokenDetails/hooks/useTokenAddressCopy'
 
-export function TokenDescription() {
+/** With `launchInfo`, the section becomes the token's Info module: provenance first, then the about details. */
+export function TokenDescription({ launchInfo }: { launchInfo?: ReactNode }) {
   const { t } = useTranslation()
   const trace = useTrace()
   const currentLanguage = useCurrentLanguage()
@@ -142,8 +143,18 @@ export function TokenDescription() {
 
   return (
     <Flex testID={TestID.TokenDetailsAboutSection} gap="$gap20" width="100%" $md={{ gap: '$gap16' }}>
-      <Text variant="heading3">{t('common.about')}</Text>
-      <DescriptionBody description={localizedDescription} />
+      <Text variant="heading3">{launchInfo ? t('toucan.auction.info') : t('common.about')}</Text>
+      {launchInfo}
+      {/* Info already has content above, so a missing description drops out instead of saying so. */}
+      {!launchInfo && <DescriptionBody description={localizedDescription} />}
+      {!!launchInfo && !!localizedDescription && (
+        <Flex gap="$spacing4">
+          <Text variant="body3" color="$neutral2">
+            {t('common.description')}
+          </Text>
+          <DescriptionBody description={localizedDescription} />
+        </Flex>
+      )}
       <Flex row flexWrap="wrap" gap="$gap12" alignItems="center" width="100%" testID={TestID.TokenDetailsAboutLinks}>
         {showVerifiedPill && (
           <>

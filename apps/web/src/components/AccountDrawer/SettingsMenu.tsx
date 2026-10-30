@@ -15,8 +15,8 @@ import { useEnableCustomGasFeeEntry } from 'uniswap/src/features/gas/hooks/useEn
 import { useCurrentLanguage, useLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { AnalyticsToggle } from '~/components/AccountDrawer/AnalyticsToggle'
 import { useOnDisconnect } from '~/components/AccountDrawer/DisconnectButton'
+import { PrivacyToggles } from '~/components/AccountDrawer/PrivacyToggles'
 import { SettingsButton } from '~/components/AccountDrawer/SettingsButton'
 import { SlideOutMenu } from '~/components/AccountDrawer/SlideOutMenu'
 import { TestnetsToggle } from '~/components/AccountDrawer/TestnetsToggle'
@@ -66,18 +66,18 @@ export function SettingsMenu({
           <SectionHeader title={t('settings.section.preferences')} />
           <ThemeToggleWithLabel />
           <SettingsButton
-            icon={<Coins size="$icon.24" color="$neutral2" />}
-            title={t('settings.setting.currency.title')}
-            currentState={activeLocalCurrency}
-            onClick={openLocalCurrencySettings}
-            testId="local-currency-settings-button"
-          />
-          <SettingsButton
             icon={<Language size="$icon.24" color="$neutral2" />}
             title={t('common.language')}
             currentState={languageInfo.displayName}
             onClick={openLanguageSettings}
             testId={TestID.LanguageSettingsButton}
+          />
+          <SettingsButton
+            icon={<Coins size="$icon.24" color="$neutral2" />}
+            title={t('settings.setting.currency.title')}
+            currentState={activeLocalCurrency}
+            onClick={openLocalCurrencySettings}
+            testId="local-currency-settings-button"
           />
           <SettingsButton
             icon={
@@ -109,7 +109,7 @@ export function SettingsMenu({
               testId={TestID.WalletSettingsRecoveryPhrase}
             />
           )}
-          <AnalyticsToggle />
+          <PrivacyToggles />
         </Flex>
 
         <Flex gap="$gap8">

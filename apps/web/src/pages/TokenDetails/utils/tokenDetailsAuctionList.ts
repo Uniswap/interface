@@ -2,40 +2,25 @@ import type { PlainMessage } from '@bufbuild/protobuf'
 import type { Auction } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { areEvmAddressesEqual } from '@universe/chains'
 import { timestampToMs } from 'uniswap/src/data/apiClients/dataApiService/utils/protoTimestamp'
+import { AuctionTimePhase, getAuctionTimePhase } from 'uniswap/src/features/toucan/auctionTimePhase'
 
-export enum TokenDetailsAuctionListPhase {
-  Live = 'LIVE',
-  Upcoming = 'UPCOMING',
-  Ended = 'ENDED',
-  Unknown = 'UNKNOWN',
+const PHASE_ORDER: Record<AuctionTimePhase, number> = {
+  [AuctionTimePhase.Live]: 0,
+  [AuctionTimePhase.Upcoming]: 1,
+  // A missing end-time estimate is a transient block-time lookup failure, so a possibly live auction outranks a finished one.
+  [AuctionTimePhase.Unknown]: 2,
+  [AuctionTimePhase.Ended]: 3,
 }
 
-const PHASE_ORDER: Record<TokenDetailsAuctionListPhase, number> = {
-  [TokenDetailsAuctionListPhase.Live]: 0,
-  [TokenDetailsAuctionListPhase.Upcoming]: 1,
-  [TokenDetailsAuctionListPhase.Ended]: 2,
-  [TokenDetailsAuctionListPhase.Unknown]: 3,
+function getAuctionListPhase({ auction, nowMs }: { auction: PlainMessage<Auction>; nowMs: number }): AuctionTimePhase {
+  return getAuctionTimePhase({
+    startTimeMs: timestampToMs(auction.estimatedStartTime),
+    endTimeMs: timestampToMs(auction.estimatedEndTime),
+    nowMs,
+  }).phase
 }
 
-export function getAuctionListPhase({
-  auction,
-  nowMs,
-}: {
-  auction: PlainMessage<Auction>
-  nowMs: number
-}): TokenDetailsAuctionListPhase {
-  const startMs = timestampToMs(auction.estimatedStartTime)
-  const endMs = timestampToMs(auction.estimatedEndTime)
-  if (startMs === undefined || endMs === undefined) {
-    return TokenDetailsAuctionListPhase.Unknown
-  }
-  if (nowMs < startMs) {
-    return TokenDetailsAuctionListPhase.Upcoming
-  }
-  return nowMs >= endMs ? TokenDetailsAuctionListPhase.Ended : TokenDetailsAuctionListPhase.Live
-}
-
-/** Live auctions ending soonest first, then upcoming by start, then ended most recent first. */
+/** Live auctions ending soonest first, then upcoming by start, then unknown, then ended most recent first. */
 export function sortTokenDetailsAuctions({
   auctions,
   nowMs,
@@ -47,13 +32,13 @@ export function sortTokenDetailsAuctions({
     const phase = getAuctionListPhase({ auction, nowMs })
     const startMs = timestampToMs(auction.estimatedStartTime) ?? 0
     const endMs = timestampToMs(auction.estimatedEndTime) ?? 0
-    if (phase === TokenDetailsAuctionListPhase.Live) {
+    if (phase === AuctionTimePhase.Live) {
       return endMs
     }
-    if (phase === TokenDetailsAuctionListPhase.Upcoming) {
+    if (phase === AuctionTimePhase.Upcoming) {
       return startMs
     }
-    return phase === TokenDetailsAuctionListPhase.Ended ? -endMs : 0
+    return phase === AuctionTimePhase.Ended ? -endMs : 0
   }
   return auctions
     .map((auction) => ({ auction, phase: PHASE_ORDER[getAuctionListPhase({ auction, nowMs })], key: sortKey(auction) }))
@@ -75,6 +60,6 @@ export function countOtherActiveAuctions({
       return false
     }
     const phase = getAuctionListPhase({ auction, nowMs })
-    return phase === TokenDetailsAuctionListPhase.Live || phase === TokenDetailsAuctionListPhase.Upcoming
+    return phase === AuctionTimePhase.Live || phase === AuctionTimePhase.Upcoming
   }).length
 }

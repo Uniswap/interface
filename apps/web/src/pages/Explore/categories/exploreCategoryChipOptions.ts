@@ -5,8 +5,8 @@ import { Briefcase } from 'ui/src/components/icons/Briefcase'
 import { Etf } from 'ui/src/components/icons/Etf'
 import { Nut } from 'ui/src/components/icons/Nut'
 import { Ranking } from 'ui/src/components/icons/Ranking'
-import { getTokenCategoryIcon } from 'uniswap/src/features/tokenCategories/categoryIcons'
-import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
+import { getCategoryIcon } from 'uniswap/src/features/tokenCategories/categoryIcons'
+import type { Category, CategoryKind } from 'uniswap/src/features/tokenCategories/types'
 import {
   useExploreTablesFilterStore,
   useExploreTablesFilterStoreActions,
@@ -15,8 +15,8 @@ import { ExploreCategory } from '~/pages/Explore/categories/useExploreCategory'
 
 /**
  * Categories spotlit as chips after All by default; the remainder live in the More dropdown.
- * The spotlit set is the head of the ordered list, so the token_categories_order Statsig config
- * controls both which categories get a chip and their order.
+ * The spotlit set is the head of the ordered list minus empty categories, so the per-kind order Statsig
+ * config controls both which categories get a chip and their order.
  */
 const SPOTLIT_CHIP_COUNT = 4
 
@@ -24,45 +24,55 @@ export interface ExploreCategoryChipOption {
   id: string
   label: string
   icon?: GeneratedIcon
-  category?: TokenCategory
+  category?: Category
 }
 
-function toChipOption(category: TokenCategory): ExploreCategoryChipOption {
-  return { id: category.id, label: category.name, icon: getTokenCategoryIcon(category), category }
+function toChipOption(category: Category): ExploreCategoryChipOption {
+  return { id: category.id, label: category.name, icon: getCategoryIcon(category), category }
 }
 
-function getAllChipOption(t: TFunction): ExploreCategoryChipOption {
+export function getAllChipOption(t: TFunction): ExploreCategoryChipOption {
   return { id: ExploreCategory.All, label: t('common.all'), icon: Ranking }
 }
 
-function getSpotlitCategories(categories: TokenCategory[]): TokenCategory[] {
-  return categories.slice(0, SPOTLIT_CHIP_COUNT)
+type IsCategoryEmpty = (category: Category) => boolean
+
+function getSpotlitCategories<T extends Category>(categories: T[], isCategoryEmpty: IsCategoryEmpty): T[] {
+  return categories.filter((category) => !isCategoryEmpty(category)).slice(0, SPOTLIT_CHIP_COUNT)
 }
 
 /** Ids in the default chip row (All + spotlit head); a selection outside this set claims the flex slot. */
-function getSpotlitCategoryIds(categories: TokenCategory[]): ReadonlySet<string> {
-  return new Set<string>([ExploreCategory.All, ...getSpotlitCategories(categories).map((category) => category.id)])
+function getSpotlitCategoryIds(categories: Category[], isCategoryEmpty: IsCategoryEmpty): ReadonlySet<string> {
+  return new Set<string>([
+    ExploreCategory.All,
+    ...getSpotlitCategories(categories, isCategoryEmpty).map((category) => category.id),
+  ])
 }
 
 /**
  * Remembers the most recent non-spotlit selection so the flex slot keeps showing it after moving
  * back to a spotlit category, only ceding the slot to the next non-spotlit selection. Kept in the
  * Explore filter store rather than local state so it outlives the chip row's remount on a tab switch.
+ * Keyed per kind so a pick on one tab never lands in the other tab's row.
  */
 export function useFlexSlotCategoryId({
+  kind,
   categories,
   selectedCategoryId,
+  isCategoryEmpty,
 }: {
-  categories: TokenCategory[]
+  kind: CategoryKind
+  categories: Category[]
   selectedCategoryId: string
+  isCategoryEmpty: IsCategoryEmpty
 }): string | undefined {
-  const flexSlotCategoryId = useExploreTablesFilterStore((s) => s.flexSlotCategoryId)
+  const flexSlotCategoryId = useExploreTablesFilterStore((s) => s.flexSlotCategoryIds[kind])
   const { setFlexSlotCategoryId } = useExploreTablesFilterStoreActions()
   useEffect(() => {
-    if (!getSpotlitCategoryIds(categories).has(selectedCategoryId)) {
-      setFlexSlotCategoryId(selectedCategoryId)
+    if (!getSpotlitCategoryIds(categories, isCategoryEmpty).has(selectedCategoryId)) {
+      setFlexSlotCategoryId({ kind, categoryId: selectedCategoryId })
     }
-  }, [categories, selectedCategoryId, setFlexSlotCategoryId])
+  }, [kind, categories, isCategoryEmpty, selectedCategoryId, setFlexSlotCategoryId])
   return flexSlotCategoryId
 }
 
@@ -81,20 +91,25 @@ export function getStaticCategoryChipOptions(t: TFunction): ExploreCategoryChipO
  * spotlit head of the ordered list. The last spotlit slot is a flex slot: a non-spotlit selection
  * (deep link or the More dropdown) takes it over, and `flexSlotCategoryId` keeps the most recent one
  * there after moving back to a spotlit category, so the row always shows the same number of chips.
+ * An empty category only gets a chip while selected, so a deep link to one still has an active chip.
  */
 export function deriveCategoryChipOptions({
+  kind,
   categories,
   selectedCategoryId,
   flexSlotCategoryId,
+  isCategoryEmpty,
   t,
 }: {
-  categories: TokenCategory[]
+  kind: CategoryKind
+  categories: Category[]
   selectedCategoryId?: string
   /** The most recent non-spotlit selection (see useFlexSlotCategoryId). */
   flexSlotCategoryId?: string
+  isCategoryEmpty: IsCategoryEmpty
   t: TFunction
 }): ExploreCategoryChipOption[] {
-  const options = [getAllChipOption(t), ...getSpotlitCategories(categories).map(toChipOption)]
+  const options = [getAllChipOption(t), ...getSpotlitCategories(categories, isCategoryEmpty).map(toChipOption)]
 
   // The current selection wins the flex slot over the persisted id so the active category always has a chip.
   for (const candidateId of [selectedCategoryId, flexSlotCategoryId]) {
@@ -102,9 +117,13 @@ export function deriveCategoryChipOptions({
       continue
     }
     const fetched = categories.find((category) => category.id === candidateId)
-    // Static ids stay valid deep links even when the response omits them, so the selected chip
+    if (fetched && candidateId !== selectedCategoryId && isCategoryEmpty(fetched)) {
+      continue
+    }
+    // Static token ids stay valid deep links even when the response omits them, so the selected chip
     // must fall back to the static option rather than leaving the row with no active chip.
-    const fallback = getStaticCategoryChipOptions(t).find((option) => option.id === candidateId)
+    const fallback =
+      kind === 'token' ? getStaticCategoryChipOptions(t).find((option) => option.id === candidateId) : undefined
     const candidate = fetched ? toChipOption(fetched) : fallback
     if (candidate) {
       if (options.length <= SPOTLIT_CHIP_COUNT) {

@@ -51,6 +51,24 @@ describe('getToken', () => {
     })
   })
 
+  test('passes the curated light-theme color through for the OG card', async () => {
+    mockDataApiServicePost.mockResolvedValue({
+      token: {
+        symbol: 'UNI',
+        name: 'Uniswap',
+        project: { logoUrl: 'https://example.com/uni.png', colors: { light: '#E6358C', dark: '#F50DB4' } },
+      },
+    })
+
+    const result = await getToken({
+      networkName: 'ethereum',
+      tokenAddress: '0x1f9840a85d5af5bf1d1762f925bdaddc4201f984',
+      url: 'https://app.uniswap.org/explore/tokens/ethereum/0x1f9840a85d5af5bf1d1762f925bdaddc4201f984',
+    })
+
+    expect(result?.tokenData).toEqual({ symbol: 'UNI', overrideColor: '#E6358C' })
+  })
+
   test('queries the native token under its REST address', async () => {
     mockDataApiServicePost.mockResolvedValue({ token: { symbol: 'ETH', name: 'Ethereum' } })
 

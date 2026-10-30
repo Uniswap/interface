@@ -1,5 +1,5 @@
 import { isProdEnv } from '@universe/environment'
-import type { UseSporeColorsReturn } from 'ui/src/hooks/useSporeColors'
+import { type UseSporeColorsReturn } from '@universe/mycelium/theme-hooks-compat'
 import { logger } from 'utilities/src/logger/logger'
 
 // Cached lazily on first resolve (not at module load, when env vars may not be

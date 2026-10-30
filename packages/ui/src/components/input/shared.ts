@@ -1,10 +1,11 @@
+import { isWebPlatform } from '@universe/environment'
 /**
  * Style/interaction assembly shared by both Input platform legs (INFRA-3318): resolves the
  * legacy Tamagui cascade (default frame → style props → $platform-web → RN `style` →
  * $md/$sm → groupHover/hover/focus/focusVisible) against the live theme and owns the
  * interactive visual state the legs feed from their platform events.
  */
-import { isWebPlatform } from '@universe/environment'
+import { useSporeColors } from '@universe/mycelium'
 import { useState } from 'react'
 import type { TextInputProps as RNTextInputProps, TextStyle } from 'react-native'
 import { useIsMdBreakpoint, useIsSmBreakpoint } from 'ui/src/components/input/inputRuntime'
@@ -17,7 +18,6 @@ import {
   resolveTamaguiSpaceVars,
 } from 'ui/src/components/input/inputStyleResolution'
 import type { InputForwardProps, InputProps } from 'ui/src/components/input/types'
-import { useSporeColors } from 'ui/src/hooks/useSporeColors'
 
 export type InputVisualState = {
   /** RN prop surface left for the platform element after the style layer is consumed. */

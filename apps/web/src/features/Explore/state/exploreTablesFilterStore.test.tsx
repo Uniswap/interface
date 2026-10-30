@@ -31,9 +31,10 @@ describe('exploreTablesFilterStore', () => {
 
   it('starts with no flex slot category and holds the last one set', () => {
     const store = createExploreTablesFilterStore()
-    expect(store.getState().flexSlotCategoryId).toBeUndefined()
+    expect(store.getState().flexSlotCategoryIds).toEqual({})
 
-    store.getState().actions.setFlexSlotCategoryId('defi')
-    expect(store.getState().flexSlotCategoryId).toBe('defi')
+    store.getState().actions.setFlexSlotCategoryId({ kind: 'token', categoryId: 'defi' })
+    store.getState().actions.setFlexSlotCategoryId({ kind: 'pool', categoryId: 'defi-pools' })
+    expect(store.getState().flexSlotCategoryIds).toEqual({ token: 'defi', pool: 'defi-pools' })
   })
 })

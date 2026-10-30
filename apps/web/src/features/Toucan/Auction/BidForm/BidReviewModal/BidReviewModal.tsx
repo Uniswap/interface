@@ -70,7 +70,7 @@ export function BidReviewModal({
     checkpointData: state.checkpointData,
   }))
 
-  // QuickLaunch: no max-FDV input — the bid's ceiling is the synthetic 25,000 ETH FDV cap (no
+  // QuickLaunch: no max-FDV input — the bid's ceiling is the chain's synthetic quick-launch FDV cap (no
   // longer a 50x-of-reference cap), not a user choice, so the review omits the max-FDV summary
   // and the partial-fill explainer (neither applies).
   const isQuickLaunch = useIsQuickLaunchAuction()

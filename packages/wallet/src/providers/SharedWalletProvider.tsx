@@ -1,9 +1,9 @@
 import { Store } from '@reduxjs/toolkit'
 import { ComplianceClientProvider } from '@universe/compliance'
+import { PortalProvider } from '@universe/mycelium/portal'
 import { ReactNode } from 'react'
 import { Provider as ReduxProvider } from 'react-redux'
 import { SharedPersistQueryClientProvider } from 'uniswap/src/data/reactQuery/SharedPersistQueryClientProvider'
-import { AppPortalProvider } from 'wallet/src/providers/portal-provider'
 
 interface SharedProviderProps {
   children: ReactNode
@@ -17,7 +17,7 @@ export function SharedWalletProvider({ reduxStore, children }: SharedProviderPro
     <ReduxProvider store={reduxStore}>
       <SharedPersistQueryClientProvider>
         <ComplianceClientProvider>
-          <AppPortalProvider>{children}</AppPortalProvider>
+          <PortalProvider>{children}</PortalProvider>
         </ComplianceClientProvider>
       </SharedPersistQueryClientProvider>
     </ReduxProvider>

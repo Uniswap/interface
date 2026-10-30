@@ -28,7 +28,13 @@ const MODAL_MAX_WIDTH = 880
 const MODAL_SANKEY_HEIGHT = 440
 const MODAL_NODE_ICON_SIZE = 18
 
-export function RouteDiagramInfo({ trade, gasFee, diagram, logoUrlByTokenKey }: RouteDiagramInfoProps): JSX.Element {
+export function RouteDiagramInfo({
+  trade,
+  gasFee,
+  diagram,
+  logoUrlByTokenKey,
+  colorOverridesByTokenKey,
+}: RouteDiagramInfoProps): JSX.Element {
   const { t } = useTranslation()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const openModal = useCallback((): void => setIsModalOpen(true), [])
@@ -89,6 +95,7 @@ export function RouteDiagramInfo({ trade, gasFee, diagram, logoUrlByTokenKey }: 
             height={MODAL_SANKEY_HEIGHT}
             iconSize={MODAL_NODE_ICON_SIZE}
             logoUrlByTokenKey={logoUrlByTokenKey}
+            colorOverridesByTokenKey={colorOverridesByTokenKey}
             onNavigate={closeModal}
           />
           <Text variant="body3" lineHeight={20} color="$neutral2">

@@ -1,11 +1,6 @@
 import type { PlainMessage } from '@bufbuild/protobuf'
 import type { Auction } from '@uniswap/client-launches/dist/data/v1/auction_pb'
-import {
-  countOtherActiveAuctions,
-  getAuctionListPhase,
-  sortTokenDetailsAuctions,
-  TokenDetailsAuctionListPhase,
-} from '~/pages/TokenDetails/utils/tokenDetailsAuctionList'
+import { countOtherActiveAuctions, sortTokenDetailsAuctions } from '~/pages/TokenDetails/utils/tokenDetailsAuctionList'
 
 const NOW_SECONDS = 1_000_000
 const NOW = NOW_SECONDS * 1000
@@ -69,43 +64,48 @@ const endedRecent = auction({
   start: NOW_SECONDS - 2_000,
   end: NOW_SECONDS - 100,
 })
+const upcomingNoEnd = auction({
+  auctionId: 'upcomingNoEnd',
+  address: '0x00000000000000000000000000000000000000a8',
+  start: NOW_SECONDS + 1_000,
+})
+const endedNoStart = auction({
+  auctionId: 'endedNoStart',
+  address: '0x00000000000000000000000000000000000000a9',
+  end: NOW_SECONDS - 5_000,
+})
 const unknown = auction({
   auctionId: 'unknown',
   address: '0x00000000000000000000000000000000000000a7',
   start: NOW_SECONDS - 100,
 })
 
-describe('getAuctionListPhase', () => {
-  it.each([
-    [live, TokenDetailsAuctionListPhase.Live],
-    [upcomingSoon, TokenDetailsAuctionListPhase.Upcoming],
-    [endedRecent, TokenDetailsAuctionListPhase.Ended],
-    [unknown, TokenDetailsAuctionListPhase.Unknown],
-  ])('classifies %o', (fixture, phase) => {
-    expect(getAuctionListPhase({ auction: fixture, nowMs: NOW })).toBe(phase)
-  })
-
-  it('treats the end instant as ended', () => {
-    expect(getAuctionListPhase({ auction: endedRecent, nowMs: (NOW_SECONDS - 100) * 1000 })).toBe(
-      TokenDetailsAuctionListPhase.Ended,
-    )
-  })
-})
-
 describe('sortTokenDetailsAuctions', () => {
-  it('orders live by time left, then upcoming by start, then ended most recent first', () => {
+  it('orders live by time left, then upcoming by start, then unknown, then ended most recent first', () => {
     const sorted = sortTokenDetailsAuctions({
-      auctions: [unknown, endedOld, upcomingLater, live, endedRecent, upcomingSoon, liveSooner],
+      auctions: [
+        unknown,
+        endedOld,
+        upcomingLater,
+        endedNoStart,
+        live,
+        endedRecent,
+        upcomingNoEnd,
+        upcomingSoon,
+        liveSooner,
+      ],
       nowMs: NOW,
     })
     expect(sorted.map((a) => a.auctionId)).toEqual([
       'liveSooner',
       'live',
       'upcomingSoon',
+      'upcomingNoEnd',
       'upcomingLater',
-      'endedRecent',
-      'endedOld',
       'unknown',
+      'endedRecent',
+      'endedNoStart',
+      'endedOld',
     ])
   })
 })
@@ -114,11 +114,11 @@ describe('countOtherActiveAuctions', () => {
   it('counts live and upcoming auctions other than the primary one', () => {
     expect(
       countOtherActiveAuctions({
-        auctions: [live, upcomingSoon, endedRecent, unknown],
+        auctions: [live, upcomingSoon, upcomingNoEnd, endedRecent, endedNoStart, unknown],
         primaryAuctionAddress: live.address,
         nowMs: NOW,
       }),
-    ).toBe(1)
+    ).toBe(2)
   })
 
   it('counts every active auction when there is no primary', () => {

@@ -1,6 +1,8 @@
 import { Flex, Text } from '@universe/mycelium'
 import type { TextCompatProps as TextProps } from '@universe/mycelium'
 import { useMemo } from 'react'
+import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
+import { formatDotDecimalForLocale, getLocaleNumberSeparators } from 'utilities/src/format/localeNumberSeparators'
 import { parseForSubscriptNotation, trimFractionalTrailingZeros } from 'utilities/src/format/parseForSubscriptNotation'
 import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
 
@@ -48,6 +50,8 @@ export function SubscriptZeroPrice({
   color = '$neutral1',
   disableTooltip,
 }: SubscriptZeroPriceProps): JSX.Element {
+  const locale = useCurrentLocale()
+  const decimalSeparator = useMemo(() => getLocaleNumberSeparators(locale).decimal, [locale])
   const parsed = useMemo(
     () =>
       parseForSubscriptNotation({
@@ -55,8 +59,9 @@ export function SubscriptZeroPrice({
         minSigDigits: minSignificantDigits,
         maxSigDigits: maxSignificantDigits,
         subscriptThreshold,
+        locale,
       }),
-    [value, minSignificantDigits, maxSignificantDigits, subscriptThreshold],
+    [value, minSignificantDigits, maxSignificantDigits, subscriptThreshold, locale],
   )
 
   const sizeProps = fontSize !== undefined ? { fontSize, lineHeight } : {}
@@ -66,9 +71,9 @@ export function SubscriptZeroPrice({
       return null
     }
     const decimalPlaces = parsed.leadingZeros + maxSignificantDigits
-    const fullNumber = trimFractionalTrailingZeros(value.toFixed(decimalPlaces))
+    const fullNumber = formatDotDecimalForLocale(trimFractionalTrailingZeros(value.toFixed(decimalPlaces)), locale)
     return `${prefix ?? ''}${fullNumber}${symbol ? ` ${symbol}` : ''}`
-  }, [parsed.useSubscript, parsed.leadingZeros, value, maxSignificantDigits, prefix, symbol])
+  }, [parsed.useSubscript, parsed.leadingZeros, value, maxSignificantDigits, prefix, symbol, locale])
 
   if (!parsed.useSubscript) {
     return (
@@ -88,7 +93,7 @@ export function SubscriptZeroPrice({
   const subscriptContent = (
     <Flex row alignItems="baseline" flexWrap="nowrap" gap="$none">
       <Text variant={variant} color={color} {...sizeProps}>
-        {prefix ?? ''}0.0
+        {prefix ?? ''}0{decimalSeparator}0
       </Text>
       <Text
         variant={variant}

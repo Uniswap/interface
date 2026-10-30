@@ -10,7 +10,12 @@ import type { PositionInfo } from 'uniswap/src/features/positions/types'
 import sourceTranslations from 'uniswap/src/i18n/locales/source/en-US.json'
 import { WETH } from 'uniswap/src/test/fixtures/lib/sdk'
 import { describe, expect, it } from 'vitest'
-import { FeesCellContent, getPositionValueDistribution, RangeCellContent } from '~/features/Liquidity/PositionsTableRow'
+import {
+  CreatedCellContent,
+  FeesCellContent,
+  getPositionValueDistribution,
+  RangeCellContent,
+} from '~/features/Liquidity/PositionsTableRow'
 import { render, screen } from '~/test-utils/render'
 
 const ONE_UNIT = '1000000000000000000'
@@ -174,6 +179,30 @@ describe('FeesCellContent', () => {
     await userEvent.hover(screen.getByText('$12.34'))
 
     expect(screen.queryByText(V2_FEES_TOOLTIP)).toBeNull()
+  })
+})
+
+describe('CreatedCellContent', () => {
+  const nowSeconds = Math.floor(Date.now() / 1_000)
+
+  it('renders a dash without a creation time', () => {
+    render(<CreatedCellContent position={{ createdAt: undefined } as PositionInfo} />)
+
+    expect(screen.getByText(EN_DASH)).toBeInTheDocument()
+  })
+
+  it('renders the age of a position younger than a week', () => {
+    // Mid-bucket, so the age reads "3h" regardless of when within the second the test runs.
+    render(<CreatedCellContent position={{ createdAt: nowSeconds - 3.5 * 60 * 60 } as PositionInfo} />)
+
+    expect(screen.getByText('3h ago')).toBeInTheDocument()
+  })
+
+  it('renders the date of a position a week or older', () => {
+    render(<CreatedCellContent position={{ createdAt: nowSeconds - 10 * 24 * 60 * 60 } as PositionInfo} />)
+
+    expect(screen.getByText(/^\d{2}\/\d{2}\/\d{4}$/)).toBeInTheDocument()
+    expect(screen.queryByText(/ago/)).toBeNull()
   })
 })
 

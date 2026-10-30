@@ -3,7 +3,9 @@ import { iconSizes, Text } from '@universe/mycelium'
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
+import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { formatCommittedUsd } from 'uniswap/src/features/toucan/formatCommittedUsd'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
 import type { PriceChartData } from '~/components/Charts/PriceChart'
@@ -56,19 +58,20 @@ function AuctionHoverCardContentInner({
 }: AuctionHoverCardContentProps): JSX.Element {
   const { t } = useTranslation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
+  const locale = useCurrentLocale()
 
   const formattedFdv = fdvUsd !== undefined ? convertFiatAmountFormatted(fdvUsd, NumberType.FiatTokenStats) : ''
   const committed =
     committedVolumeUsd !== undefined
       ? t('toucan.auction.hoverCard.committed', {
-          amount: convertFiatAmountFormatted(committedVolumeUsd, NumberType.FiatTokenStats),
+          amount: formatCommittedUsd({ usd: committedVolumeUsd, convertFiatAmountFormatted }),
         })
       : undefined
   const participation =
     bidderCount !== undefined
-      ? t('toucan.auction.hoverCard.bidders', { count: bidderCount })
+      ? t('toucan.auction.hoverCard.bidders', { count: bidderCount, bidderCount: bidderCount.toLocaleString(locale) })
       : bidCount !== undefined
-        ? t('toucan.auction.hoverCard.bids', { count: bidCount })
+        ? t('toucan.auction.hoverCard.bids', { count: bidCount, bidCount: bidCount.toLocaleString(locale) })
         : undefined
   // Committed volume and bidders come from the search row, so they can stand alone when GetAuction and the
   // 1D series both come back empty (common for a pre-launch token).

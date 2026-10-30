@@ -1,7 +1,7 @@
 /**
  * Locale pins for ButtonCompat's NATIVE size tables (INFRA-3297). Same
- * module-reset-and-remock discipline as text-compat's
- * needs-small-font-drift.test.ts — see that file for the mock rationale.
+ * module-reset-and-remock discipline as
+ * text-compat/needs-small-font.test.ts — see that file for the mock rationale.
  *
  * Default-locale values are pinned as literals rather than re-derived: they
  * are the pre-INFRA-3297 tables byte-for-byte, so this proves the locale gate
@@ -20,10 +20,7 @@ vi.mock('utilities/src/device/locales', () => ({
 // The tables import needs-small-font extensionless; under this jsdom config
 // that resolves to the constant-true web stub, which would pin every case to
 // the CJK column regardless of locale.
-vi.mock(
-  '../segmented-control-compat/needs-small-font',
-  () => import('../segmented-control-compat/needs-small-font.native'),
-)
+vi.mock('../text-compat/needs-small-font', () => import('../text-compat/needs-small-font.native'))
 
 function setDeviceLanguage(languageCode: string): void {
   mockState.locales = [{ languageCode, languageTag: languageCode }]

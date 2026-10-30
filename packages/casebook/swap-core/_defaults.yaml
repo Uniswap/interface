@@ -1,0 +1,13 @@
+product_area: swap.core
+platforms: [web]
+nxProjects: ["@universe/web", uniswap]
+owners: ["@uniswap/swap-fe"]
+
+# Casebook area-registry metadata (read by the engine in apps/cli/src/casebook).
+# These drive Testlio suite naming, the PR-comment label, and CI routing.
+label: Swap
+suiteNamePrefix: Swap
+ghLabel: casebook:swap
+# Reviewer GitHub team for the auto-opened catalog companion PR.
+# Sourced from .github/CODEOWNERS "Swap Pod" (@uniswap/swap-fe).
+reviewerTeam: swap-fe

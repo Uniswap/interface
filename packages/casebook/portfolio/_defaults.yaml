@@ -1,0 +1,27 @@
+product_area: portfolio
+platforms: [web, extension, mobile]
+nxProjects: ["@universe/web", uniswap, wallet, "@uniswap/extension", "@uniswap/mobile"]
+owners: ["@uniswap/consumer-engagement-fe"]
+
+# Casebook area-registry metadata (read by the engine in apps/cli/src/casebook).
+# These drive Testlio suite naming, the PR-comment label, and CI routing.
+label: Portfolio
+suiteNamePrefix: Portfolio
+ghLabel: casebook:portfolio
+# Reviewer GitHub team for the auto-opened catalog companion PR.
+# NOTE: not resolvable from .github/CODEOWNERS (sparse) — this slug is a convention
+# per the seeding blueprint and MUST be confirmed with the pod lead before requesting review.
+reviewerTeam: consumer-engagement-fe
+
+# Area-boundary note: full NFT-tab visuals and NFT detail flows are owned by the
+# nft area catalog; this area covers only hidden-NFT visibility on the portfolio
+# NFTs tab (see portfolio-hidden-nfts-tab), per the seeding blueprint's justify note.
+
+# Test-wallet aliases referenced by this area's cases. Symbolic only: real mnemonics live in
+# the QA vault / Testlio TL handoff, keyed by the same alias. Never put a secret here.
+wallets:
+  TW-PORTFOLIO-01: "freshly imported wallet, $0.00 total balance, no tokens or NFTs"
+  TW-PORTFOLIO-02: "funded wallet: ETH + several ERC-20 balances and at least one NFT on mainnet"
+  TW-PORTFOLIO-03: "multi-account wallet (up to 4 signer accounts) for the account switcher"
+  TW-PORTFOLIO-04: "view-only account imported by ENS name, no signing keys"
+  TW-PORTFOLIO-05: "funded wallet holding the same token across multiple chains plus at least one user-hidden token (multichain token UX, hide/unhide)"

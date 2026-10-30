@@ -29,10 +29,7 @@
     "./animatable-copy-icon-compat": "./src/animatable-copy-icon-compat/index.ts",
     "./animate-presence-pager": "./src/animate-presence-pager/index.ts",
     "./animated-flex-compat": "./src/animated-flex-compat/index.ts",
-    "./dynamic-size-text": "./src/dynamic-size-text/index.ts",
     "./flex-compat": "./src/flex-compat/index.ts",
-    "./flex-loader-compat": "./src/flex-loader-compat/index.ts",
-    "./loader-compat": "./src/loader-compat/index.ts",
     "./floating-overlay": "./src/floating-overlay/index.ts",
     "./height-animator": "./src/height-animator/index.ts",
     "./width-animator": "./src/width-animator/index.ts",
@@ -49,11 +46,9 @@
     "./filter-select-compat": "./src/filter-select-compat/index.ts",
     "./compat": "./src/compat/index.ts",
     "./compat/primitive-marker": "./src/compat/primitive-marker.ts",
-    "./compat/native-style": "./src/compat/native-style.ts",
     "./segmented-control-compat": "./src/segmented-control-compat/index.ts",
     "./shimmer": "./src/shimmer/index.ts",
     "./shimmer.css": "./src/shimmer/shimmer.css",
-    "./text-loader-wrapper": "./src/text-loader-wrapper/index.ts",
     "./styled": "./src/styled/index.ts",
     "./tokens": "./src/tokens.ts",
     "./tooltip-compat": "./src/tooltip-compat/index.ts",
@@ -66,20 +61,12 @@
     "./button-compat.css": "./src/button-compat/button-compat.css",
     "./checkbox-compat": "./src/checkbox-compat/index.ts",
     "./avatar-compat": "./src/avatar-compat/index.ts",
-    "./input-compat": "./src/input-compat/index.ts",
-    "./separator-compat": "./src/separator-compat/index.ts",
-    "./switch-compat": "./src/switch-compat/index.ts",
-    "./spinning-loader-compat": "./src/spinning-loader-compat/index.ts",
     "./modal-close-icon": "./src/modal-close-icon/index.ts",
-    "./anchor-compat": "./src/anchor-compat/index.ts",
     "./refresh-button-compat": "./src/refresh-button-compat/index.ts",
-    "./element-after-text": "./src/element-after-text/index.ts",
     "./web-bottom-sheet-compat": "./src/web-bottom-sheet-compat/index.ts",
-    "./touchable-text-link": "./src/touchable-text-link/index.ts",
     "./universal-image": "./src/universal-image/index.ts",
     "./universal-image/testing": "./src/universal-image/testing/universal-image-mock.tsx",
-    "./linear-gradient-compat": "./src/linear-gradient-compat/index.ts",
-    "./scroll-view-compat": "./src/scroll-view-compat/index.ts"
+    "./linear-gradient-compat": "./src/linear-gradient-compat/index.ts"
   },
   "dependencies": {
     "@base-ui/react": "1.6.0",
@@ -100,6 +87,7 @@
     "@radix-ui/react-switch": "1.2.6",
     "@radix-ui/react-tabs": "1.1.13",
     "@radix-ui/react-tooltip": "1.2.8",
+    "@rn-primitives/portal": "1.5.2",
     "@tanstack/react-query": "5.90.20",
     "@universe/config": "workspace:^",
     "@universe/environment": "workspace:^",
@@ -116,7 +104,6 @@
     "viem": "2.49.0"
   },
   "peerDependencies": {
-    "@rn-primitives/portal": ">=1.5.0",
     "expo-image": ">=56.0.0",
     "expo-linear-gradient": ">=56.0.0",
     "react": ">=18.0.0",
@@ -129,9 +116,6 @@
     "tailwindcss": ">=4.0.0"
   },
   "peerDependenciesMeta": {
-    "@rn-primitives/portal": {
-      "optional": true
-    },
     "expo-image": {
       "optional": true
     },
@@ -158,7 +142,6 @@
     }
   },
   "devDependencies": {
-    "@rn-primitives/portal": "1.5.2",
     "@tailwindcss/oxide": "4.3.2",
     "@testing-library/react": "16.3.0",
     "@types/node": "22.19.17",

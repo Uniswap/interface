@@ -26,13 +26,17 @@ describe('getRGBColor — input validation', () => {
     expect(fetchSpy).not.toHaveBeenCalled()
   })
 
-  it('returns the USDC override without fetching when the CoinGecko URL version changes', async () => {
-    expect(await getRGBColor('https://coin-images.coingecko.com/coins/images/6319/large/USDC.png?1769615602')).toEqual({
+  it('returns the curated color without fetching the logo', async () => {
+    expect(await getRGBColor('https://assets.example.com/usdc.png', true, '#0066D9')).toEqual({
       red: 0,
       green: 102,
       blue: 217,
     })
     expect(fetchSpy).not.toHaveBeenCalled()
+  })
+
+  it('returns the curated color even when the token has no logo', async () => {
+    expect(await getRGBColor(undefined, true, '#0066D9')).toEqual({ red: 0, green: 102, blue: 217 })
   })
 
   it('returns DEFAULT_COLOR without fetching for file:// URLs', async () => {

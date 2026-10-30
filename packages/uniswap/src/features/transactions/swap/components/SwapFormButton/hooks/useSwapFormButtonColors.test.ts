@@ -28,7 +28,8 @@ const {
 // Mock only the function the hook calls. Avoid `importOriginal` here — pulling all of
 // `ui/src` brings in Tamagui's full module graph (heavy in JSDOM) for a single override.
 // The hook itself only uses ButtonProps / ColorTokens as types (erased at runtime).
-vi.mock('ui/src', () => ({
+vi.mock('@universe/mycelium/theme-hooks-compat', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@universe/mycelium/theme-hooks-compat')>()),
   useColorsFromTokenColor: (...args: unknown[]) => mockUseColorsFromTokenColor(...args),
 }))
 

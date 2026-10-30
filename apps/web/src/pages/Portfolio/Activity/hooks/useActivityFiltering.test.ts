@@ -314,4 +314,28 @@ describe('useActivityFiltering — local transaction filter bypass bug', () => {
       }),
     )
   })
+
+  it.each([
+    { evmAddress: undefined, svmAddress: 'So1ana' },
+    { evmAddress: '0x123', svmAddress: 'So1ana' },
+  ])('requests server filters for wallets with a Solana address (evm: $evmAddress)', ({ evmAddress, svmAddress }) => {
+    mockActivityData([])
+
+    const { result } = renderHook(() =>
+      useActivityFiltering({
+        evmAddress,
+        svmAddress,
+        chainId: undefined,
+        selectedTransactionType: ActivityFilterType.Swaps,
+        selectedTimePeriod: 'all',
+      }),
+    )
+
+    expect(useActivityData).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        filterTransactionTypes: [TransactionTypeFilter.SWAP],
+      }),
+    )
+    expect(result.current.isUsingServerFiltering).toBe(true)
+  })
 })

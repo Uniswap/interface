@@ -161,7 +161,7 @@ export interface TextCompatExtraProps {
   /** Text the loader's size derives from (default `'000.00'`). */
   loadingPlaceholderText?: string
   onTextLayout?(this: void, event: unknown): void
-  /** Native-only font auto-scaling; the web Text ignores it (useEnableFontScaling web stub). */
+  /** Native-only font auto-scaling; the web Text ignores it, matching the legacy web Text. */
   allowFontScaling?: boolean
   /** Native-only companion to allowFontScaling. */
   maxFontSizeMultiplier?: number

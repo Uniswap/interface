@@ -3,32 +3,12 @@ import {
   SafetyLevel as RestSafetyLevel,
 } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import { GraphQLApi, TradingApi } from '@universe/api'
+import { ProtectionResult, SafetyLevel } from 'uniswap/src/features/dataApi/safetyEnums'
 import { AttackType } from 'uniswap/src/features/dataApi/types'
+import { fromV2Verdict as mapV2Verdict } from 'uniswap/src/features/tokens/warnings/tokenProtection'
 import { logger } from 'utilities/src/logger/logger'
 
-/**
- * Canonical app-domain token safety vocabulary, owned by dataApi alongside `TokenList` and
- * `AttackType` (see types.ts). `SafetyInfo`/`CurrencyInfo` migrate onto these enums, and every
- * data source (REST protobuf, trading-api, v2 verdict strings, legacy GraphQL) adapts *toward*
- * them via the mappers below — deleting GraphQL later deletes only its mapper.
- *
- * String values intentionally match the GraphQL wire values so the type flip cannot change any
- * persisted or analytics-visible strings.
- */
-export enum SafetyLevel {
-  Blocked = 'BLOCKED',
-  MediumWarning = 'MEDIUM_WARNING',
-  StrongWarning = 'STRONG_WARNING',
-  Verified = 'VERIFIED',
-}
-
-export enum ProtectionResult {
-  Benign = 'BENIGN',
-  Malicious = 'MALICIOUS',
-  Spam = 'SPAM',
-  Unknown = 'UNKNOWN',
-  Warning = 'WARNING',
-}
+export { ProtectionResult, SafetyLevel } from 'uniswap/src/features/dataApi/safetyEnums'
 
 /** Legacy GraphQL → domain; deleted with the GraphQL data paths. */
 export function fromGraphQLSafetyLevel(level: GraphQLApi.SafetyLevel | undefined): SafetyLevel | undefined {
@@ -112,23 +92,11 @@ export function fromTradingApiSafetyLevel(level: TradingApi.SafetyLevel | undefi
 
 /** data.v2 `TokenSafety.verdict` strings → domain. */
 export function fromV2Verdict(verdict: string | undefined): ProtectionResult {
-  switch (verdict) {
-    case 'Benign':
-      return ProtectionResult.Benign
-    case 'Malicious':
-      return ProtectionResult.Malicious
-    case 'Spam':
-      return ProtectionResult.Spam
-    case 'Warning':
-      return ProtectionResult.Warning
-    default:
-      // Warn on non-empty unrecognized verdicts so v2 schema drift is detectable
-      // instead of silently degrading (e.g. a malicious verdict falling to Unknown).
-      if (verdict) {
-        logger.warn('features/dataApi/safety.ts', 'fromV2Verdict', `Unrecognized v2 verdict: ${verdict}`)
-      }
-      return ProtectionResult.Unknown
-  }
+  // Log non-empty unrecognized verdicts so v2 schema drift is detectable instead of silently
+  // degrading (e.g. a malicious verdict falling to Unknown).
+  return mapV2Verdict(verdict, (unrecognized) =>
+    logger.warn('features/dataApi/safety.ts', 'fromV2Verdict', `Unrecognized v2 verdict: ${unrecognized}`),
+  )
 }
 
 /**

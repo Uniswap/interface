@@ -3,9 +3,9 @@ import type { Launch, Launchpad } from '@uniswap/client-launches/dist/launches/v
 import { UniverseChainId, normalizeTokenAddressForCache } from '@universe/chains'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
+import { resolveIpfsGatewayUrl } from 'utilities/src/format/gatewayUrls'
 import { getTokenDetailsURL } from '~/data/util'
 import { POOLS_URL } from '~/pages/Launches/constants'
-import { resolveLaunchIpfsImageUrl } from '~/pages/Launches/data/resolveLaunchIpfsImageUrl'
 import { getAuctionDetailsURL } from '~/utils/auctionDetailsUrl'
 import { getChainUrlParam } from '~/utils/params/chainParams'
 
@@ -189,15 +189,14 @@ export function toLaunchItems({
           : (UNSUPPORTED_CHAIN_LABELS[token.chainId] ?? `Chain ${token.chainId}`),
         logoChainId: supportedChainId,
         // The launch image ListLaunches serves is IPFS content for the large majority of rows,
-        // arriving either raw as `ipfs://<cid>` or already baked against ipfs.io — so it wants
-        // the same CDN resolution the launchpad registry logos get rather than the shared
-        // `uriToHttpUrls` ipfs.io path. `resolveLaunchIpfsImageUrl` has the sampled split and the
-        // reasoning.
+        // arriving either raw as `ipfs://<cid>` or already baked against ipfs.io (~80% / ~13% of
+        // chain-4663 token logos when sampled), so it is resolved onto the dedicated gateway here,
+        // before it reaches color extraction or any non-`UniversalImage` sink.
         //
         // Nothing here establishes where those CIDs are pinned: unlike the curated launchpad
-        // registry this value is creator-supplied, and the resolver validates CID shape only. A
-        // CID the CDN cannot resolve costs a 404 and the logo, nothing more.
-        logoUrl: resolveLaunchIpfsImageUrl(token.logoUrl),
+        // registry this value is creator-supplied. A CID the gateway cannot resolve costs a 404
+        // and the logo, nothing more.
+        logoUrl: resolveIpfsGatewayUrl(token.logoUrl),
         volume24hUsd: launch.stats?.volume24hUsd,
         fdvUsd: launch.stats?.fdvUsd,
         liquidityUsd: launch.stats?.tvlUsd,

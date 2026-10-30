@@ -17,6 +17,7 @@ const config: StorybookConfig = {
     '../../../packages/ui/**/*.mdx',
     '../../../packages/uniswap/src/**/*.stories.?(ts|tsx|js|jsx)',
     '../../../packages/uniswap/**/*.mdx',
+    '../../../packages/swap-ui/src/**/*.stories.?(ts|tsx|js|jsx)',
   ],
   addons: [
     getAbsolutePath('@storybook/preset-create-react-app'),

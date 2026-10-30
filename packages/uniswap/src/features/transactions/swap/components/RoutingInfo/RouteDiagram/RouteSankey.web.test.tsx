@@ -55,6 +55,7 @@ function renderSankey(): ReturnType<typeof renderWithProviders> {
       height={360}
       iconSize={18}
       logoUrlByTokenKey={new Map()}
+      colorOverridesByTokenKey={new Map()}
     />,
   )
 }

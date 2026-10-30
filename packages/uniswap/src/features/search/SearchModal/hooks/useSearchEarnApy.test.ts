@@ -77,22 +77,16 @@ describe(useSearchEarnApy, () => {
     mockUseEarnVaults.mockReturnValue({ vaults: VAULTS } as unknown as ReturnType<typeof useEarnVaults>)
   })
 
-  it('resolves the APY per row when enabled', () => {
-    const { result } = renderHook(() => useSearchEarnApy({ enabled: true }))
+  it('resolves the APY per row', () => {
+    const { result } = renderHook(() => useSearchEarnApy())
     expect(result.current([USDC_ID])).toBe(4.21)
     expect(result.current([WBTC_ID])).toBeUndefined()
     expect(mockUseEarnVaults).toHaveBeenCalledWith({ enabled: true })
   })
 
-  it('skips the vaults query and returns nothing when disabled', () => {
-    const { result } = renderHook(() => useSearchEarnApy({ enabled: false }))
-    expect(result.current([USDC_ID])).toBeUndefined()
-    expect(mockUseEarnVaults).toHaveBeenCalledWith({ enabled: false })
-  })
-
   it('skips the vaults query in testnet mode', () => {
     mockUseEnabledChains.mockReturnValue({ isTestnetModeEnabled: true } as ReturnType<typeof useEnabledChains>)
-    renderHook(() => useSearchEarnApy({ enabled: true }))
+    renderHook(() => useSearchEarnApy())
     expect(mockUseEarnVaults).toHaveBeenCalledWith({ enabled: false })
   })
 })

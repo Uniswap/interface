@@ -10,5 +10,4 @@ export const labsProjectDirs: Record<string, string[]> = {
   '@universe/sandbox': ['labs/sandbox/'],
   // workbench renders @universe/mycelium components, so mycelium changes must redeploy it
   '@universe/workbench': ['labs/workbench/', 'packages/mycelium/'],
-  '@universe/rh-cca': ['labs/rh-cca/', 'packages/mycelium/'],
 }

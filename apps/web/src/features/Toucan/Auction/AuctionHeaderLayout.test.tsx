@@ -60,8 +60,8 @@ vi.mock('@universe/gating', async (importOriginal) => {
   return { ...actual, useDynamicConfigValue: () => [] }
 })
 
-vi.mock('~/pages/Explore/categories/useWheelHorizontalScroll', () => ({
-  useWheelHorizontalScroll: () => ({ scrollerRef: { current: null }, showRightFade: true }),
+vi.mock('~/hooks/useHorizontalScrollFades', () => ({
+  useHorizontalScrollFades: () => ({ scrollerRef: () => {}, edgeFades: { left: false, right: true } }),
 }))
 
 const SYMBOL = 'HOOD'

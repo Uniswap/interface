@@ -10,6 +10,7 @@ import { deriveTokenFromMultichainToken } from 'uniswap/src/data/apiClients/data
 import { normalizeBackendNativeAddress } from 'uniswap/src/data/apiClients/dataApiService/utils/dataApiMultichainToken'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
+import { formatColorOverrides } from 'uniswap/src/features/dataApi/utils/formatColorOverrides'
 import { restV2TokenToCurrencyInfo } from 'uniswap/src/features/dataApi/utils/restV2TokenToCurrencyInfo'
 import { usePortfolioBalances } from 'uniswap/src/features/portfolio/balances/hooks'
 import {
@@ -113,6 +114,7 @@ export function useCreateTDPContext(): {
       src: extractedColorSrc,
       currencyName: currency?.name,
       backgroundColor: colors.surface2.val,
+      colorOverrides: formatColorOverrides(token?.project?.colors),
     }).tokenColor ?? undefined
 
   const { pageQueryLoading, chainDataLoading, multichainTokenLoaded } = useMemo(() => {

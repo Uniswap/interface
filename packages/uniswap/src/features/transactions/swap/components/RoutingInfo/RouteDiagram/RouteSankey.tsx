@@ -1,4 +1,5 @@
 import type { UniverseChainId } from '@universe/chains'
+import type { TokenColorOverrides } from '@universe/mycelium'
 import type { RouteDiagram } from 'uniswap/src/utils/routingDiagram/routeGraph/buildRouteDiagram'
 import { PlatformSplitStubError } from 'utilities/src/errors'
 
@@ -10,6 +11,7 @@ export interface RouteSankeyProps {
   /** Diameter of the token logo centred on each node bar. */
   iconSize: number
   logoUrlByTokenKey: ReadonlyMap<string, string>
+  colorOverridesByTokenKey: ReadonlyMap<string, TokenColorOverrides>
   /** Called after a same-tab navigation so the host can close its modal. */
   onNavigate?: () => void
 }

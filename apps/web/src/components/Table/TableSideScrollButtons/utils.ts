@@ -1,5 +1,8 @@
 export const SCROLL_EDGE_TOLERANCE_PX = 1
 
+/** Matches `TableScrollButton`, whose press the pinned-column collapse reads as the user scrolling. */
+export const TABLE_SCROLL_BUTTON_SELECTOR = '[data-table-scroll-button]'
+
 /** Spacer TableHead renders above a sticky header (`<Flex height={12} />`) — keep in sync. */
 const STICKY_HEADER_GAP_PX = 12
 

@@ -2,7 +2,17 @@ import { selectTokenRowCategoryTag } from 'uniswap/src/features/tokenCategories/
 import { TokenCategory, TokenCategoryClass } from 'uniswap/src/features/tokenCategories/types'
 
 function makeCategory(id: string, categoryClass: TokenCategoryClass): TokenCategory {
-  return { id, name: id, englishName: id, description: '', categoryClass, grouped: false, topTokens: [], topGroups: [] }
+  return {
+    id,
+    kind: 'token',
+    name: id,
+    englishName: id,
+    description: '',
+    categoryClass,
+    grouped: false,
+    topTokens: [],
+    topGroups: [],
+  }
 }
 
 const stocks = makeCategory('stocks', TokenCategoryClass.Asset)

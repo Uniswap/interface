@@ -1,9 +1,9 @@
+import { useSporeColors } from '@universe/mycelium'
 import { memo } from 'react'
 import { Platform } from 'react-native'
 import { IconProps } from 'ui/src/components/factories/createIcon'
 import { resolveIconColor } from 'ui/src/components/factories/iconTokens'
 import { Cloud, GoogleDrive } from 'ui/src/components/icons'
-import { useSporeColors } from 'ui/src/hooks/useSporeColors'
 
 function _OSDynamicCloudIcon({ color, ...rest }: IconProps): JSX.Element {
   const colors = useSporeColors()

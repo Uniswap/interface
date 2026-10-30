@@ -1,6 +1,7 @@
 import { UniverseChainId } from '@universe/chains'
+import { useSporeColors } from '@universe/mycelium'
+import { useExtractedColors } from '@universe/mycelium/theme-hooks-compat'
 import { useMemo } from 'react'
-import { useExtractedColors, useSporeColors } from 'ui/src'
 import { GlobalColorNames, colors as GlobalColors, GlobalPalette, opacify } from 'ui/src/theme'
 import { assert } from 'utilities/src/errors'
 import { hexToRGB } from 'utilities/src/theme/colors'

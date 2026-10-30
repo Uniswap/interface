@@ -3,11 +3,13 @@ import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes
 import { TestID } from '@universe/test'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { PositionFlowStep, type PositionState } from '~/features/Liquidity/Create/types'
+import { useLPGeoRestriction } from '~/features/Liquidity/useLPGeoRestriction'
 import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 import { HookReviewGate } from '~/pages/CreatePosition/HookReviewGate'
 import { render, screen } from '~/test-utils/render'
 
 vi.mock('~/pages/CreatePosition/CreateLiquidityContextProvider', () => ({ useCreateLiquidityContext: vi.fn() }))
+vi.mock('~/features/Liquidity/useLPGeoRestriction', () => ({ useLPGeoRestriction: vi.fn() }))
 
 // The real Modal is a Radix dialog / bottom sheet; render straight through like the other modal specs.
 // `isDismissible` is surfaced so the locked backdrop is observable.
@@ -45,7 +47,16 @@ function mockContext({ step, ...positionState }: Partial<PositionState> & { step
     },
     setPositionState,
     step,
+    currencies: { display: { TOKEN0: undefined, TOKEN1: undefined } },
   } as unknown as ReturnType<typeof useCreateLiquidityContext>)
+}
+
+function mockGeoRestricted(isGeoRestricted: boolean): void {
+  vi.mocked(useLPGeoRestriction).mockReturnValue({
+    isGeoRestricted,
+    restrictedTokenSymbol: isGeoRestricted ? 'TSLA' : undefined,
+    unavailableLabel: 'Not available in your region',
+  })
 }
 
 function renderGate(): { onDecline: ReturnType<typeof vi.fn> } {
@@ -59,6 +70,7 @@ const modalTitle = (): HTMLElement | null => screen.queryByText('Adding hook')
 describe('HookReviewGate', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    mockGeoRestricted(false)
   })
 
   // SelectTokensStep owns the review on its own step; a second mount there would show two modals.
@@ -95,6 +107,15 @@ describe('HookReviewGate', () => {
   // through the flow never sees the review a second time.
   it('stays closed once the hook has been approved', () => {
     mockContext({ step: PositionFlowStep.PRICE_RANGE, hook: HOOK, userApprovedHook: HOOK })
+    renderGate()
+    expect(modalTitle()).not.toBeInTheDocument()
+  })
+
+  // Nothing can be deposited into a region-blocked pair, and the add route's region modal would
+  // otherwise stack on this one.
+  it('stays closed while the pair is geo-restricted', () => {
+    mockGeoRestricted(true)
+    mockContext({ step: PositionFlowStep.PRICE_RANGE, hook: HOOK })
     renderGate()
     expect(modalTitle()).not.toBeInTheDocument()
   })

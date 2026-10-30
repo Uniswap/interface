@@ -25,7 +25,9 @@ export { useIsTouchDevice } from './useIsTouchDevice'
 export { useMedia, type MediaState } from './useMedia'
 export { useScrollbarStyles } from './useScrollbarStyles'
 export { useShadowPropsMedium, useShadowPropsShort, type ShadowProps } from './useShadowProps'
-export { useExtractedTokenColor } from './useExtractedTokenColor'
+export { useExtractedColors } from './extracted-colors'
+export { passesContrast } from './token-color-utils'
+export { type TokenColorOverrides, useExtractedTokenColor } from './useExtractedTokenColor'
 export { useIsShortMobileDevice } from './useIsShortMobileDevice'
 export {
   useSporeColors,

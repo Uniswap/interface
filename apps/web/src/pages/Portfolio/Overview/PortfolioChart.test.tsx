@@ -1,4 +1,4 @@
-import { ChartPeriod } from '@uniswap/client-data-api/dist/data/v1/api_pb'
+import { ChartPeriod, WalletBalanceCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { TestID } from '@universe/test'
 import { UTCTimestamp } from 'lightweight-charts'
 import type { PortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/buildPortfolioBalance'
@@ -79,8 +79,10 @@ const defaultProps = {
   poolsPercentChange: 12.5,
   earnPercentChange: undefined,
   isLoading: false,
+  isBalanceLoading: false,
   isChartEmpty: false,
   error: null,
+  unavailableChartCategories: [],
   selectedPeriod: ChartPeriod.DAY,
   setSelectedPeriod: vi.fn(),
   portfolioTotalBalanceUSD: 110,
@@ -189,6 +191,37 @@ describe('PortfolioChart', () => {
     render(<PortfolioChart {...defaultProps} hasCategoryBreakdown={false} />)
 
     expect(screen.queryByTestId(TestID.PortfolioChartCategorySelector)).not.toBeInTheDocument()
+  })
+
+  describe('when a requested category is missing from the chart', () => {
+    const partialProps = {
+      ...defaultProps,
+      unavailableChartCategories: [WalletBalanceCategory.EARN_VAULTS],
+      availableCategories: [PortfolioChartCategory.Tokens],
+      hasCategoryBreakdown: false,
+    }
+
+    it('shows the chart error state and hides the delta on Total', () => {
+      render(<PortfolioChart {...partialProps} />)
+
+      expect(screen.getByText('Chart unavailable')).toBeInTheDocument()
+      expect(screen.queryByTestId('chart-body')).not.toBeInTheDocument()
+      expect(screen.queryByText(/today/i)).not.toBeInTheDocument()
+    })
+
+    it('keeps the category selector so the categories that loaded stay viewable', () => {
+      render(<PortfolioChart {...partialProps} />)
+
+      expect(screen.getByTestId(TestID.PortfolioChartCategorySelector)).toBeInTheDocument()
+    })
+
+    it('renders the selected category chart and its delta', () => {
+      render(<PortfolioChart {...partialProps} selectedCategory={PortfolioChartCategory.Tokens} />)
+
+      expect(screen.getByTestId('chart-body')).toBeInTheDocument()
+      expect(screen.queryByText('Chart unavailable')).not.toBeInTheDocument()
+      expect(screen.getByText(/today/i)).toBeInTheDocument()
+    })
   })
 
   it('shows the tokens-first scrub breakdown while scrubbing the Total chart', () => {

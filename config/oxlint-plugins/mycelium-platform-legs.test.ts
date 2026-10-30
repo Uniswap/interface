@@ -103,6 +103,11 @@ describe('mycelium platform-leg manifest', () => {
     expect(manifest.entryPoints['./icons'].namedExports).toEqual(manifest.entryPoints['./icons/*'].namedExports)
   })
 
+  // Same hand-duplication for the logos pair (the GoogleChromeLogo native holdout).
+  test("'./logos' and './logos/*' namedExports stay identical", () => {
+    expect(manifest.entryPoints['./logos'].namedExports).toEqual(manifest.entryPoints['./logos/*'].namedExports)
+  })
+
   test('every leg status is from the closed enum', () => {
     for (const [key, entry] of Object.entries(manifest.entryPoints)) {
       expect(LEG_STATUSES.has(entry.web ?? ''), `${key} web status "${entry.web}"`).toBe(true)

@@ -80,7 +80,7 @@ export function filterNetworkOptions({
   searchQuery: string
 }): FilteredNetworkOptionsResult {
   const normalizedSearchQuery = normalizeNetworkSearchQuery(searchQuery)
-  const shouldShowTieredOptions = Boolean(tieredOptions?.withBalances.length)
+  const shouldShowTieredOptions = Boolean(tieredOptions?.withBalances.length || tieredOptions?.lowLiquidity?.length)
   const showAllNetworks = shouldIncludeAllNetworksOption({
     includeAllNetworks,
     normalizedSearchQuery,
@@ -111,12 +111,16 @@ export function filterNetworkOptions({
     otherNetworks: tieredOptions.otherNetworks.filter((option) =>
       doesChainMatchSearchQuery(option.chainId, normalizedSearchQuery),
     ),
+    lowLiquidity: tieredOptions.lowLiquidity?.filter((option) =>
+      doesChainMatchSearchQuery(option.chainId, normalizedSearchQuery),
+    ),
   }
 
   return {
     filteredChainIds: [
       ...filteredTieredOptions.withBalances.map((option) => option.chainId),
       ...filteredTieredOptions.otherNetworks.map((option) => option.chainId),
+      ...(filteredTieredOptions.lowLiquidity?.map((option) => option.chainId) ?? []),
     ],
     filteredTieredOptions,
     showAllNetworks,

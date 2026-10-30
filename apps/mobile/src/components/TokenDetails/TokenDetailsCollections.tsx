@@ -61,7 +61,7 @@ export const TokenDetailsCollections = memo(function TokenDetailsCollections(): 
   return (
     <Flex gap="$spacing12" testID={TestID.TokenDetailsCollections}>
       <Text color="$neutral2" mx="$spacing16" variant="subheading2">
-        {t('explore.collections.title')}
+        {t('explore.categories.title')}
       </Text>
       {categories.length === 0 ? (
         <Flex row gap="$spacing8" px="$spacing16">

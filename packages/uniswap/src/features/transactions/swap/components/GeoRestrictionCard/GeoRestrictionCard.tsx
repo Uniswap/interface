@@ -1,6 +1,5 @@
-import { Text, TouchableArea } from '@universe/mycelium'
+import { InlineCard, Text, TouchableArea } from '@universe/mycelium'
 import { useTranslation } from 'react-i18next'
-import { InlineCard } from 'ui/src'
 import { ExternalLink } from 'ui/src/components/icons/ExternalLink'
 import { GlobeFilled } from 'ui/src/components/icons/GlobeFilled'
 import { GeoRestrictionModal } from 'uniswap/src/features/transactions/swap/components/GeoRestrictionCard/GeoRestrictionModal'

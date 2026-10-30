@@ -1,21 +1,21 @@
 import { Flex, Skeleton, Text, TouchableArea } from '@universe/mycelium'
 import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
-import { opacifyRaw, useSporeColors } from '@universe/mycelium/theme-hooks-compat'
+import { opacifyRaw, useSporeColors, useColorsFromTokenColor } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
-import { useColorsFromTokenColor } from 'ui/src'
 import { AuctionEventName, ElementName } from 'uniswap/src/features/telemetry/constants'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import { PulsingIndicatorDot } from '~/features/Toucan/Auction/Banners/AuctionIntro/PulsingIndicatorDot'
+import { AuctionDisplayPhase } from '~/features/Toucan/Auction/utils/resolveAuctionDisplayState'
 import { TokenDetailsMoreAuctionsChip } from '~/pages/TokenDetails/components/auction/TokenDetailsAuctionListEntry'
 import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
 import { useAuctionCountdown } from '~/pages/TokenDetails/hooks/useAuctionCountdown'
 import { useTokenDetailsAuctionDisplay } from '~/pages/TokenDetails/hooks/useTokenDetailsAuctionDisplay'
 import { useTokenDetailsCcaAuctions } from '~/pages/TokenDetails/hooks/useTokenDetailsCcaAuctions'
 import {
-  shouldReserveLiveAuctionBannerSpace,
-  shouldShowLiveAuctionBanner,
+  shouldReserveAuctionBannerSpace,
+  shouldShowAuctionBanner,
 } from '~/pages/TokenDetails/utils/tokenDetailsAuctionDisplay'
 import {
   getTokenDetailsProvenanceProperties,
@@ -27,12 +27,28 @@ function AuctionCountdown({
   endsAtMs,
   onComplete,
   color,
+  isUpcoming,
 }: {
   endsAtMs: number
   onComplete: () => void
   color: string
+  isUpcoming: boolean
 }): JSX.Element {
+  const { t } = useTranslation()
   const countdown = useAuctionCountdown({ endsAtMs, onComplete })
+
+  if (isUpcoming) {
+    return (
+      <Flex row alignItems="center" gap="$spacing4">
+        <Text variant="body2" color="$neutral2">
+          {t('tdp.auction.startsIn')}
+        </Text>
+        <Text variant="body2" color="$neutral1">
+          {countdown}
+        </Text>
+      </Flex>
+    )
+  }
 
   return (
     <>
@@ -45,8 +61,8 @@ function AuctionCountdown({
 }
 
 /**
- * "Auction in progress ›" row above the chart and swap widget while a tradeable Custom auction token's
- * auction is still live. Links to the Auction Details page.
+ * "Upcoming auction ›" / "Auction in progress ›" row above the chart and swap widget while a tradeable Custom
+ * auction token's auction has not ended. Links to the Auction Details page.
  */
 export function TokenDetailsAuctionBanner(): JSX.Element | null {
   const { t } = useTranslation()
@@ -61,11 +77,12 @@ export function TokenDetailsAuctionBanner(): JSX.Element | null {
   const auctionCount = useTokenDetailsCcaAuctions().length
   const { auction, chainId, phaseEndsAtMs, refetchCurrentBlock } = display
 
-  if (!auction || chainId === undefined || !shouldReserveLiveAuctionBannerSpace(display)) {
+  if (!auction || chainId === undefined || !shouldReserveAuctionBannerSpace(display)) {
     return null
   }
 
-  const isPlaceholder = !shouldShowLiveAuctionBanner(display)
+  const isPlaceholder = !shouldShowAuctionBanner(display)
+  const isUpcoming = display.phase === AuctionDisplayPhase.Upcoming
 
   const auctionUrl = getAuctionDetailsURL({ chainId, auctionAddress: auction.address })
   if (!auctionUrl) {
@@ -100,13 +117,18 @@ export function TokenDetailsAuctionBanner(): JSX.Element | null {
     >
       <Flex row alignItems="center" gap="$spacing16" flexWrap="wrap" minWidth={0}>
         <Text variant="body2" color="$neutral1">
-          {t('tdp.auction.inProgress')}
+          {isUpcoming ? t('tdp.auction.upcoming') : t('tdp.auction.inProgress')}
         </Text>
         {!isPlaceholder && <TokenDetailsMoreAuctionsChip />}
       </Flex>
       <Flex row alignItems="center" gap="$spacing8" ml="auto" flexShrink={0}>
         {phaseEndsAtMs !== undefined && (
-          <AuctionCountdown endsAtMs={phaseEndsAtMs} onComplete={refetchCurrentBlock} color={accentColor} />
+          <AuctionCountdown
+            endsAtMs={phaseEndsAtMs}
+            onComplete={refetchCurrentBlock}
+            color={accentColor}
+            isUpcoming={isUpcoming}
+          />
         )}
         <RotatableChevron direction="right" size="$icon.20" color="$neutral2" />
       </Flex>

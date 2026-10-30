@@ -1,7 +1,6 @@
 /**
- * The `AnimatableCopyIcon` compat prop contract: the legacy surface
- * (`ui/src/components/AnimatableCopyIcon/AnimatableCopyIcon.tsx`,
- * `CopyIconProps`) carried name-for-name, so
+ * The `AnimatableCopyIcon` compat prop contract: the legacy ui surface
+ * (`CopyIconProps`) carried name-for-name, so
  * `<AnimatableCopyIcon isCopied={copied} size={16} textColor="$neutral2" />`
  * call sites convert as a mechanical barrel swap.
  */
@@ -25,6 +24,6 @@ export interface CopyIconProps {
   dataTestId?: string
 }
 
-/** Legacy defaults (`AnimatableCopyIcon.tsx`). */
+/** Legacy ui defaults. */
 export const DEFAULT_COPY_ICON_COLOR: SporeColorToken = '$neutral2'
 export const COPY_ICON_CHECKMARK_COLOR: SporeColorToken = '$statusSuccess'

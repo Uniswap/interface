@@ -1,4 +1,5 @@
 import { renderHook } from '@testing-library/react'
+import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { marginMarketKey, MARGIN_CHAIN_ID, type MarginMarket, type MarginTokenInfo } from '~/constants/margin'
@@ -31,7 +32,7 @@ function marketFixture({ collateral, debt }: { collateral: MarginTokenInfo; debt
     collateral,
     debt,
     venue: 'MORPHO',
-    direction: 'LONG',
+    direction: MarginDirection.LONG,
     lltvWad: '860000000000000000',
     maxLeverage: 5,
     shouldUseNativeEquity: false,

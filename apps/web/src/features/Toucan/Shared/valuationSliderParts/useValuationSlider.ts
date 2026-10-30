@@ -1,6 +1,6 @@
+import { calculateMaxValidBidQ96, snapToNearestTick } from '@universe/cca'
 import { useEffect, useMemo, useRef } from 'react'
 import { useEvent } from 'utilities/src/react/hooks'
-import { calculateMaxValidBidQ96, snapToNearestTick } from '~/features/Toucan/Auction/utils/ticks'
 import { MAX_PERCENTAGE, SLIDER_RESOLUTION } from '~/features/Toucan/Shared/valuationSliderParts/constants'
 import { positionToTickOffset, tickOffsetToPosition } from '~/features/Toucan/Shared/valuationSliderParts/curve'
 import type { ClampParams, ValuationSliderProps } from '~/features/Toucan/Shared/valuationSliderParts/types'

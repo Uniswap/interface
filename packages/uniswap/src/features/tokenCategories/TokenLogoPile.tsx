@@ -1,6 +1,7 @@
 import { Flex, spacing } from '@universe/mycelium'
+import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
-import type { TokenCategoryPileLogo } from 'uniswap/src/features/tokenCategories/types'
+import { type CategoryPileLogo, isPoolCategoryPileLogo } from 'uniswap/src/features/tokenCategories/types'
 
 const MAX_VISIBLE_LOGOS = 3
 /** Each subsequent logo tucks a third of its width under its predecessor. */
@@ -8,8 +9,8 @@ const OVERLAP_RATIO = 1 / 3
 /** `$surface1` ring separating overlapping logos. Rendered as wrapper padding, then pulled back out of layout. */
 const RING_WIDTH = spacing.spacing2
 
-/** Up to three overlapping logos, first on top, for category rows and cards; feed it `getCategoryPileLogos`. */
-export function TokenLogoPile({ logos, size }: { logos: TokenCategoryPileLogo[]; size: number }): JSX.Element {
+/** Up to three overlapping logos (token circles or pool pair circles), first on top, for category rows and cards; feed it `getCategoryPileLogos`. */
+export function TokenLogoPile({ logos, size }: { logos: CategoryPileLogo[]; size: number }): JSX.Element {
   const visibleLogos = logos.slice(0, MAX_VISIBLE_LOGOS)
 
   return (
@@ -26,7 +27,20 @@ export function TokenLogoPile({ logos, size }: { logos: TokenCategoryPileLogo[];
           zIndex={visibleLogos.length - index}
         >
           {/* Network badge omitted: at pile sizes it covers most of the logo. */}
-          <TokenLogo hideNetworkLogo name={logo.name} size={size} symbol={logo.symbol} url={logo.logoUrl} />
+          {isPoolCategoryPileLogo(logo) ? (
+            <SplitLogo
+              size={size}
+              chainId={null}
+              inputCurrencyInfo={undefined}
+              outputCurrencyInfo={undefined}
+              inputLogoUrl={logo.token0.logoUrl}
+              outputLogoUrl={logo.token1.logoUrl}
+              inputFallbackSymbol={logo.token0.symbol}
+              outputFallbackSymbol={logo.token1.symbol}
+            />
+          ) : (
+            <TokenLogo hideNetworkLogo name={logo.name} size={size} symbol={logo.symbol} url={logo.logoUrl} />
+          )}
         </Flex>
       ))}
     </Flex>

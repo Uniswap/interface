@@ -6,7 +6,7 @@ import { type MarginActivePosition } from 'uniswap/src/data/apiClients/tradingAp
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import type { MarginPaymentToken } from 'uniswap/src/features/transactions/margin/types'
+import { MarginDirection, type MarginPaymentToken } from 'uniswap/src/features/transactions/margin/types'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -138,7 +138,9 @@ export function MarginAddModal({
   const debtLogos = { url: debtLogoUrl ?? undefined, symbol: marginUnwrapSymbol(market.debt) }
   // The Size row reads the EXPOSURE leg — a short's is its debt leg, a long's its collateral.
   const sizeLogos =
-    position.direction === 'SHORT' ? debtLogos : { url: collateralLogoUrl ?? undefined, symbol: market.displaySymbol }
+    position.direction === MarginDirection.SHORT
+      ? debtLogos
+      : { url: collateralLogoUrl ?? undefined, symbol: market.displaySymbol }
 
   return (
     <MarginActionModalShell

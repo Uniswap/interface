@@ -2,7 +2,11 @@ import type { Currency } from '@uniswap/sdk-core'
 import { useLayoutEffect, useMemo } from 'react'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { useTokenPriceChange, useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
+import {
+  useTokenPriceChange,
+  useTokenPriceConfidenceScore,
+  useTokenSpotPrice,
+} from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { buildCurrencyId, currencyId } from 'uniswap/src/utils/currencyId'
 import { DataQuality, PriceChartType } from '~/components/Charts/utils'
 import { TimePeriod } from '~/data/util'
@@ -34,6 +38,7 @@ export function useTokenPriceChartPanel({
 }: UseTokenPriceChartPanelParams): {
   priceQuery: ReturnType<typeof useTokenPriceChartData>
   pricePercentChange: number | undefined
+  priceConfidenceScore: number | undefined
   showInvalidSkeleton: boolean
   isError: boolean
   stale: boolean
@@ -51,6 +56,12 @@ export function useTokenPriceChartPanel({
     isMultichainAggregateView: variables.multichain,
     // The V2 spot price must poll or the displayed price would freeze — REST token queries have no built-in polling
     refetchInterval: disablePricePolling ? undefined : PollingInterval.KindaFast,
+    skip,
+  })
+
+  // Same currency and multichain flag as the spot price, so the score is for the price actually shown.
+  const priceConfidenceScore = useTokenPriceConfidenceScore(spotCurrencyId, {
+    multichain: variables.multichain,
     skip,
   })
 
@@ -83,6 +94,7 @@ export function useTokenPriceChartPanel({
   return {
     priceQuery,
     pricePercentChange,
+    priceConfidenceScore,
     showInvalidSkeleton: priceQuery.dataQuality === DataQuality.INVALID,
     isError: priceQuery.isError ?? false,
     stale: priceQuery.dataQuality === DataQuality.STALE,

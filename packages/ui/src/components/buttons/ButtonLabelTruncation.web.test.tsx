@@ -1,5 +1,5 @@
-// Pins the single-line-ellipsis default that ui's `CustomButtonText.web.tsx` wrapper
-// supplies; the shared compat cell itself emits only `whitespace-nowrap`.
+// Pins the single-line-ellipsis default `ButtonTextCompat` supplies on web; the shared
+// button text cell itself emits only `whitespace-nowrap`.
 import { render, type RenderResult } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 
@@ -82,7 +82,7 @@ describe('button label keeps legacy numberOfLines: 1 truncation', () => {
     expect(classes).toContain('whitespace-nowrap')
   })
 
-  // A SOLE `Button.Text` child gets re-wrapped in a second `CustomButtonText`, because
+  // A SOLE `Button.Text` child gets re-wrapped in a second `ButtonTextCompat`, because
   // `useIsStringOrTransTag` treats any lone non-`Flex` element as a Trans-ish label; the
   // `Flex` is what routes children down the un-re-wrapped branch.
   it('Button.Text nested in a Flex reaches the wrapper once and still carries the clipping classes', () => {

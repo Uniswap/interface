@@ -26,6 +26,7 @@ import {
   type TokenMetadataData,
 } from 'uniswap/src/features/dataApi/tokenDetails/tokenMetadataUtils'
 import { currencyIdToRestContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
+import { formatColorOverrides } from 'uniswap/src/features/dataApi/utils/formatColorOverrides'
 import type { CurrencyId } from 'uniswap/src/types/currency'
 
 export type { TokenMarketStats } from 'uniswap/src/features/dataApi/tokenDetails/tokenMarketStatsUtils'
@@ -139,6 +140,53 @@ export function useTokenPriceChange(currencyId: CurrencyId, options?: UseTokenPr
   return useMemo(() => {
     return isMultichainAggregation ? multichainPercentChange1d : singleChainPercentChange1d
   }, [isMultichainAggregation, multichainPercentChange1d, singleChainPercentChange1d])
+}
+
+function selectConfidenceScore(data: PlainMessage<GetTokenResponse> | undefined): number | undefined {
+  return data?.token?.price?.confidenceScore
+}
+
+function selectMultichainConfidenceScore(
+  data: PlainMessage<GetTokenMultiChainResponse> | undefined,
+): number | undefined {
+  return data?.token?.price?.confidenceScore
+}
+
+export interface UseTokenPriceConfidenceScoreOptions {
+  multichain?: boolean
+  skip?: boolean
+}
+
+/**
+ * Returns the data API's 0-1 confidence in the token's spot price (see `isLowPriceConfidence`).
+ * Reads the same GetToken / GetTokenMultiChain queries as `useTokenSpotPrice`, so it shares their cache entries.
+ */
+export function useTokenPriceConfidenceScore(
+  currencyId: CurrencyId | undefined,
+  options?: UseTokenPriceConfidenceScoreOptions,
+): number | undefined {
+  const isMultichain = options?.multichain ?? false
+
+  const restTokenIdentifier = useMemo(
+    () => (currencyId ? currencyIdToRestContractInput(currencyId) : undefined),
+    [currencyId],
+  )
+  const { data: singleChainConfidenceScore } = useQuery(
+    getGetTokenQueryOptions({
+      params: restTokenIdentifier,
+      enabled: !options?.skip && !isMultichain && !!restTokenIdentifier,
+      select: selectConfidenceScore,
+    }),
+  )
+  const { data: multichainConfidenceScore } = useQuery(
+    getGetTokenMultiChainQueryOptions({
+      params: restTokenIdentifier ? { identifier: { case: 'token', value: restTokenIdentifier } } : undefined,
+      enabled: !options?.skip && isMultichain && !!restTokenIdentifier,
+      select: selectMultichainConfidenceScore,
+    }),
+  )
+
+  return isMultichain ? multichainConfidenceScore : singleChainConfidenceScore
 }
 
 export interface UseTokenMarketStatsParams {
@@ -257,6 +305,7 @@ function selectTokenMetadata(data: PlainMessage<GetTokenResponse> | undefined): 
     name: token.name,
     symbol: token.symbol,
     logoUrl: token.project?.logoUrl,
+    colorOverrides: formatColorOverrides(token.project?.colors),
     description: token.project?.description,
     descriptionTranslations: token.project?.descriptionTranslations,
     homepageUrl: token.project?.homepageUrl,

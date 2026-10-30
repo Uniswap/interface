@@ -1,5 +1,5 @@
 import { UniverseChainId } from '@universe/chains'
-import { useIsDarkMode } from 'ui/src'
+import { useIsDarkMode } from '@universe/mycelium'
 import { GeneratedIcon } from 'ui/src/components/factories/createIcon'
 import { BlockExplorer } from 'ui/src/components/icons/BlockExplorer'
 import { ArbiscanLogoDark } from 'ui/src/components/logos/ArbiscanLogoDark'

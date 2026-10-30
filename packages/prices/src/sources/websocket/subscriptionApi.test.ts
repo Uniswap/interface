@@ -1,5 +1,6 @@
-import type { FetchClient } from '@universe/api'
+import { FetchError, type FetchClient } from '@universe/api'
 import { createPriceSubscriptionHandler } from '@universe/prices/src/sources/websocket/subscriptionApi'
+import { ConnectionGoneError } from '@universe/websocket'
 import { describe, expect, it, vi } from 'vitest'
 
 const LEGACY_TYPE = 'EVENT_SUBSCRIPTION_TYPE_TOKEN_PRICE'
@@ -135,14 +136,13 @@ describe('createPriceSubscriptionHandler channel routing', () => {
     ])
   })
 
-  it('reports RPC failures through onError instead of throwing', async () => {
-    const onError = vi.fn()
+  it('rejects on RPC failure so the websocket client can react', async () => {
     const post = vi.fn(async () => {
       throw new Error('boom')
     })
-    const handler = createPriceSubscriptionHandler({ client: { post } as unknown as FetchClient, onError })
-    await handler.subscribe(CONNECTION_ID, mainnetToken)
-    expect(onError).toHaveBeenCalledWith(expect.any(Error), 'subscribe')
+    const handler = createPriceSubscriptionHandler({ client: { post } as unknown as FetchClient })
+    await expect(handler.subscribe(CONNECTION_ID, mainnetToken)).rejects.toThrow('boom')
+    await expect(handler.refreshSession?.(CONNECTION_ID)).rejects.toThrow('boom')
   })
 
   it('skips the RPC entirely for empty batches', async () => {
@@ -151,5 +151,42 @@ describe('createPriceSubscriptionHandler channel routing', () => {
     await handler.subscribeBatch?.(CONNECTION_ID, [])
     await handler.unsubscribeBatch?.(CONNECTION_ID, [])
     expect(calls).toHaveLength(0)
+  })
+})
+
+describe('expired connection ids', () => {
+  function handlerFailingWith(error: unknown) {
+    const post = vi.fn(async () => {
+      throw error
+    })
+    return createPriceSubscriptionHandler({ client: { post } as unknown as FetchClient })
+  }
+
+  function fetchError(status: number, data?: unknown): FetchError {
+    return new FetchError({ response: new Response(null, { status }), data })
+  }
+
+  it('rejects with ConnectionGoneError for the Connect NotFound on every RPC', async () => {
+    const notFound = fetchError(404, { code: 'not_found', message: 'Connection not found' })
+    const handler = handlerFailingWith(notFound)
+
+    await expect(handler.refreshSession?.(CONNECTION_ID)).rejects.toMatchObject({
+      name: 'ConnectionGoneError',
+      connectionId: CONNECTION_ID,
+      cause: notFound,
+    })
+    await expect(handler.subscribe(CONNECTION_ID, mainnetToken)).rejects.toBeInstanceOf(ConnectionGoneError)
+    await expect(handler.unsubscribeBatch?.(CONNECTION_ID, [mainnetToken])).rejects.toBeInstanceOf(ConnectionGoneError)
+  })
+
+  it('passes other failures through unchanged', async () => {
+    for (const error of [
+      fetchError(404),
+      fetchError(401, { code: 'unauthenticated' }),
+      fetchError(500, { code: 'internal' }),
+      new Error('Connection not found'),
+    ]) {
+      await expect(handlerFailingWith(error).refreshSession?.(CONNECTION_ID)).rejects.toBe(error)
+    }
   })
 })

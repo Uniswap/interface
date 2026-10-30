@@ -11,7 +11,6 @@ import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { LiquidityPositionStatusIndicator } from 'uniswap/src/features/positions/components/LiquidityPositionStatusIndicator'
-import { useGetRangeDisplay } from 'uniswap/src/features/positions/hooks/useGetRangeDisplay'
 import { lpStatusConfig } from 'uniswap/src/features/positions/lpStatusConfig'
 import type { PositionInfo } from 'uniswap/src/features/positions/types'
 import { getExactSharePercent, getFeeLabel, getProtocolVersionLabel } from 'uniswap/src/features/positions/utils'
@@ -21,11 +20,13 @@ import { currencyId } from 'uniswap/src/utils/currencyId'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
 import { ONE_DAY_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
+import { CollapsibleCellLayout } from '~/components/Table/PinnedColumns/collapse/CollapsibleCellLayout'
 import { TableText } from '~/components/Table/shared/TableText'
 import { TableRowHoverContext } from '~/components/Table/TableRowHoverContext'
 import { useAbbreviatedTimeString } from '~/components/Table/utils/useAbbreviatedTimeString'
 import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
 import { DISTRIBUTION_CHART_WIDTH, DistributionChips } from '~/features/Liquidity/DistributionChips'
+import { usePositionRangeDisplay } from '~/features/Liquidity/hooks/usePositionRangeDisplay'
 import { LiquidityPositionDropdownMenu } from '~/features/Liquidity/LiquidityPositionDropdownMenu'
 import { PoolAprTooltip } from '~/features/Liquidity/LPIncentives/PoolAprTooltip'
 import { RewardAprBadge } from '~/features/Liquidity/LPIncentives/RewardAprBadge'
@@ -49,9 +50,13 @@ export function PoolCellContent({ position }: { position: PositionInfo }): JSX.E
   const [baseInfo, quoteInfo] = reversed ? [currency1Info, currency0Info] : [currency0Info, currency1Info]
 
   return (
-    <Flex row alignItems="center" gap="$spacing8" shrink width="100%">
-      <SplitLogo chainId={position.chainId} inputCurrencyInfo={baseInfo} outputCurrencyInfo={quoteInfo} size={32} />
-      <Flex shrink gap="$spacing2">
+    <CollapsibleCellLayout
+      gapPx={8}
+      logo={
+        <SplitLogo chainId={position.chainId} inputCurrencyInfo={baseInfo} outputCurrencyInfo={quoteInfo} size={32} />
+      }
+    >
+      <Flex gap="$spacing2">
         <Text variant="body3" color="$neutral1" numberOfLines={1}>
           {baseAmount.currency.symbol} / {quoteAmount.currency.symbol}
         </Text>
@@ -84,7 +89,7 @@ export function PoolCellContent({ position }: { position: PositionInfo }): JSX.E
           )}
         </Flex>
       </Flex>
-    </Flex>
+    </CollapsibleCellLayout>
   )
 }
 
@@ -121,45 +126,14 @@ export function RangeCellContent({ position }: { position: PositionInfo }): JSX.
   const rowHovered = useContext(TableRowHoverContext)
   const hasCurrentPrice = position.poolOrPair?.token0Price !== undefined
   const statusConfig = lpStatusConfig[position.status]
-
-  const pricesInverted = shouldReverseForWaterfall(position.currency0Amount.currency, position.currency1Amount.currency)
-
-  const isV2 = position.version === ProtocolVersion.V2
-
-  const priceOrdering = useMemo(() => {
-    if (isV2) {
-      return {
-        quote: position.currency1Amount.currency,
-        base: position.currency0Amount.currency,
-      }
-    }
-    if (!position.position) {
-      return {}
-    }
-    return {
-      priceLower: position.position.token0PriceLower,
-      priceUpper: position.position.token0PriceUpper,
-      quote: position.position.amount1.currency,
-      base: position.position.amount0.currency,
-    }
-  }, [isV2, position])
-
-  const { minPrice, maxPrice, tokenASymbol } = useGetRangeDisplay({
-    priceOrdering,
-    tickSpacing: position.tickSpacing,
-    tickLower: position.tickLower,
-    tickUpper: position.tickUpper,
-    pricesInverted,
-  })
-
-  const hasRange = isV2 || (position.tickLower !== undefined && position.tickUpper !== undefined)
+  const { minPrice, maxPrice, tokenASymbol, pricesInverted, hasRange } = usePositionRangeDisplay(position)
 
   return (
     <Flex gap="$spacing4" width="100%">
       {hasRange ? (
         <Flex row alignItems="baseline" gap="$spacing4">
           <Text variant="body3" color="$neutral1" numberOfLines={1} flexShrink={0}>
-            {isV2 ? '0' : minPrice} → {isV2 ? '∞' : maxPrice}
+            {minPrice} → {maxPrice}
           </Text>
           <Text variant="body3" color="$neutral2" numberOfLines={1} flexShrink={1} minWidth={0}>
             {tokenASymbol}
@@ -288,11 +262,8 @@ export function AprCellContent({ position }: { position: PositionInfo }): JSX.El
 const ONE_WEEK_MS = 7 * ONE_DAY_MS
 
 export function CreatedCellContent({ position }: { position: PositionInfo }): JSX.Element {
-  const { t } = useTranslation()
   const locale = useCurrentLocale()
   const { createdAt } = position
-  const createdAtMs = createdAt ? createdAt * ONE_SECOND_MS : 0
-  const abbreviated = useAbbreviatedTimeString(createdAtMs)
 
   if (!createdAt) {
     return (
@@ -302,10 +273,8 @@ export function CreatedCellContent({ position }: { position: PositionInfo }): JS
     )
   }
 
+  const createdAtMs = createdAt * ONE_SECOND_MS
   const isOlderThanWeek = Date.now() - createdAtMs >= ONE_WEEK_MS
-  const label = isOlderThanWeek
-    ? new Date(createdAtMs).toLocaleDateString(locale, { year: 'numeric', month: '2-digit', day: '2-digit' })
-    : `${abbreviated} ${t('common.ago')}`
   const fullDateTime = new Date(createdAtMs).toLocaleString(locale, {
     year: 'numeric',
     month: 'short',
@@ -316,10 +285,25 @@ export function CreatedCellContent({ position }: { position: PositionInfo }): JS
 
   return (
     <MouseoverTooltip text={fullDateTime} placement="top" size={TooltipSize.Max}>
-      <TableText variant="body3" color="$neutral2">
-        {label}
-      </TableText>
+      {isOlderThanWeek ? (
+        <TableText variant="body3" color="$neutral2">
+          {new Date(createdAtMs).toLocaleDateString(locale, { year: 'numeric', month: '2-digit', day: '2-digit' })}
+        </TableText>
+      ) : (
+        <CreatedAgo createdAtMs={createdAtMs} />
+      )}
     </MouseoverTooltip>
+  )
+}
+
+/** Its own component because the age ticks every second, which rows showing a date don't need. */
+function CreatedAgo({ createdAtMs }: { createdAtMs: number }): JSX.Element {
+  const { t } = useTranslation()
+  const abbreviated = useAbbreviatedTimeString(createdAtMs)
+  return (
+    <TableText variant="body3" color="$neutral2">
+      {`${abbreviated} ${t('common.ago')}`}
+    </TableText>
   )
 }
 

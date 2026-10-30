@@ -1,4 +1,4 @@
-import { Flex } from '@universe/mycelium'
+import { Flex, useIsShortMobileDevice } from '@universe/mycelium'
 import {
   forwardRef,
   memo,
@@ -12,7 +12,6 @@ import {
   useState,
 } from 'react'
 import type { LayoutChangeEvent } from 'react-native'
-import { useIsShortMobileDevice } from 'ui/src'
 import { type TextInputProps } from 'uniswap/src/components/input/TextInput'
 import { DecimalPad } from 'uniswap/src/features/transactions/components/DecimalPadInput/DecimalPad'
 import { KeyAction, type KeyLabel } from 'uniswap/src/features/transactions/components/DecimalPadInput/types'

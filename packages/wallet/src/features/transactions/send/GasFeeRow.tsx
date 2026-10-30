@@ -1,11 +1,10 @@
 import { GasFeeResult } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
 import { isWebPlatform } from '@universe/environment'
-import { Flex, iconSizes, SpinningLoader, Text } from '@universe/mycelium'
+import { Flex, iconSizes, SpinningLoader, Text, AnimatedFlex } from '@universe/mycelium'
 import { Gas } from '@universe/mycelium/icons/Gas'
 import { useTranslation } from 'react-i18next'
 import { FadeIn } from 'react-native-reanimated'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { NetworkFeeWarning } from 'uniswap/src/components/gas/NetworkFeeWarning'
 import { useGasFeeFormattedDisplayAmounts } from 'uniswap/src/features/gas/hooks'
 

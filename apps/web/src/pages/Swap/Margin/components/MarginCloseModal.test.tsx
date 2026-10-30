@@ -2,6 +2,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react'
 import { TestID } from '@universe/test'
 import type { ReactNode } from 'react'
 import type { MarginActivePosition, MarginQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
+import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { logger } from 'utilities/src/logger/logger'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { MARGIN_CHAIN_ID } from '~/constants/margin'
@@ -91,7 +92,7 @@ function positionFixture(overrides: Partial<MarginActivePosition> = {}): MarginA
   return {
     positionId: SUB_ID,
     status: 'ACTIVE',
-    direction: 'LONG',
+    direction: MarginDirection.LONG,
     exposureToken: {
       address: MARKET.collateral.address,
       chainId: MARGIN_CHAIN_ID,
@@ -121,7 +122,7 @@ function quoteFixture(overrides: Partial<MarginQuoteResponse> = {}): MarginQuote
     action: 'close',
     chainId: MARGIN_CHAIN_ID,
     swapper: SWAPPER,
-    direction: 'LONG',
+    direction: MarginDirection.LONG,
     exposureToken: {
       address: MARKET.collateral.address,
       chainId: MARGIN_CHAIN_ID,
@@ -246,6 +247,7 @@ describe('MarginCloseModal', () => {
     expect(request).toEqual({ chainId: MARGIN_CHAIN_ID, swapper: SWAPPER, marginQuote: debtFreeQuoteFixture() })
     expect(mockFetchMarginQuote).toHaveBeenCalledWith(
       expect.objectContaining({ swapper: SWAPPER, close: { positionId: SUB_ID } }),
+      { tokenDecimals: { exposure: MARKET.collateral.decimals, counter: MARKET.debt.decimals } },
     )
     expect(onClose).toHaveBeenCalledTimes(1)
   })
@@ -400,13 +402,13 @@ describe('MarginCloseModal', () => {
   describe('the zero-price sentinel on a SHORT', () => {
     const SHORT_MARKET = {
       ...MARKET,
-      direction: 'SHORT' as const,
+      direction: MarginDirection.SHORT,
       collateral: MARKET.debt,
       debt: MARKET.collateral,
     }
     // 4,000 USDC of collateral against 1 WETH of debt: held = 1000 equity + 1 x mark.
     const SHORT_POSITION = positionFixture({
-      direction: 'SHORT',
+      direction: MarginDirection.SHORT,
       exposureToken: { address: MARKET.collateral.address, chainId: MARGIN_CHAIN_ID, decimals: 18 },
       counterToken: { address: MARKET.debt.address, chainId: MARGIN_CHAIN_ID, decimals: 6 },
       size: '1000000000000000000',

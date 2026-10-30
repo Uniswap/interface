@@ -1,5 +1,6 @@
 import { screen } from '@testing-library/react'
 import type { MarginActivePosition } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
+import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { describe, expect, it, vi } from 'vitest'
 import { MARGIN_CHAIN_ID } from '~/constants/margin'
 import { getDefaultMarginMarket } from '~/pages/Swap/Margin/__fixtures__/marginCatalog'
@@ -39,7 +40,7 @@ describe('MarginPairHeading', () => {
       return {
         positionId: '7',
         status: 'ACTIVE',
-        direction: 'LONG',
+        direction: MarginDirection.LONG,
         exposureToken: {
           address: MARKET.collateral.address,
           chainId: MARGIN_CHAIN_ID,
@@ -102,12 +103,16 @@ describe('MarginPairHeading', () => {
       collateral: MARKET.debt,
       debt: MARKET.collateral,
       displaySymbol: MARKET.debt.symbol,
-      direction: 'SHORT' as const,
+      direction: MarginDirection.SHORT,
     }
 
     it('sizes a short by its exposure (debt) leg, not the stable collateral', () => {
       render(
-        <MarginPairHeading market={SHORT_MARKET} variant="direction" position={position({ direction: 'SHORT' })} />,
+        <MarginPairHeading
+          market={SHORT_MARKET}
+          variant="direction"
+          position={position({ direction: MarginDirection.SHORT })}
+        />,
       )
       // Decoding against the 6dp collateral would print ~53,000,000,000; the stable ticker would
       // replace ETH — the exact line pins both the amount and the exposure symbol.

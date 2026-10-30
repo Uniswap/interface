@@ -1,45 +1,53 @@
 import { settings } from '../../config'
 import { MonitorDefinition } from '../../types'
 import {
-  MIN_ALB_REQUESTS_5M,
+  LATENCY_AGGREGATION,
+  LATENCY_ROLLUP_ADJECTIVE,
+  LATENCY_ROLLUP_LABEL,
+  LATENCY_WINDOW,
+  LATENCY_WINDOW_LABEL,
+  MIN_REQUESTS_AGGREGATE_LATENCY,
   PRIVY_EMBEDDED_WALLET_RUNBOOK,
   SERVICE_README_URL,
   TEAM,
   albTagFilter,
   apmTagFilter,
+  volumeGatedPercentile,
 } from './constants'
 
 const env = settings.environment
 const albFilter = albTagFilter(env)
 const apmFilter = apmTagFilter(env)
 
-// Whole-service web-request count, used to volume-gate the aggregate p95 below.
-const apmHits = `sum:trace.web.request.hits{${apmFilter}}.as_count()`
+// Whole-service request counts, used to volume-gate the aggregate p95s below.
+const apmHits = `sum:trace.web.request.hits{${apmFilter}}`
 
-// Whole-service ALB request count, used to volume-gate the ALB p95 below (same idiom
-// as the APM aggregate p95 and the ALB/APM error-rate monitors in errors.ts).
-const albHits = `sum:aws.applicationelb.request_count{${albFilter}}.as_count()`
+const albHits = `sum:aws.applicationelb.request_count{${albFilter}}`
+
+// Warnings sit ~1.2-1.3x above the 30-day prod baseline maximum (2026-07-18..08-17, incident
+// excluded), criticals ~2x or more. Alert copy names both: one body serves warn and alert.
+const albP95Thresholds = { critical: 2, warning: 0.6 }
+
+const apmAggregateThresholds = { critical: 1.5, warning: 1 }
 
 export const privyEmbeddedWalletLatencyMonitors: MonitorDefinition[] = [
   {
     id: 'privy_embedded_wallet_latency_p95',
     name: 'P95 Latency on privy-embedded-wallet',
     type: 'query alert',
-    // Volume-gate: scale p95 by (hits / clamp_min(hits, floor)) so a single slow request
-    // in a low-traffic window (prod ALB sees as few as 2-20 req/min) can't dominate the
-    // 1-minute p95 bucket and page on its own. Same idiom as the APM aggregate p95 below.
-    query: `avg(last_5m):( avg:aws.applicationelb.target_response_time.p95{${albFilter}} * ${albHits} / clamp_min(${albHits}, ${MIN_ALB_REQUESTS_5M}) ) > 2`,
-    alertBody: `P95 ALB target response time for privy-embedded-wallet has exceeded 2 seconds. Requires at least ${MIN_ALB_REQUESTS_5M} requests in the window before it can alert.`,
+    query: `${LATENCY_AGGREGATION}(${LATENCY_WINDOW}):${volumeGatedPercentile(`avg:aws.applicationelb.target_response_time.p95{${albFilter}}`, { hits: albHits, floor: MIN_REQUESTS_AGGREGATE_LATENCY })} > ${albP95Thresholds.critical}`,
+    alertBody: `ALB target response time for privy-embedded-wallet crossed a latency threshold (warning ${albP95Thresholds.warning}s, critical ${albP95Thresholds.critical}s) over a ${LATENCY_ROLLUP_ADJECTIVE} window within the last ${LATENCY_WINDOW_LABEL}, across at least ${MIN_REQUESTS_AGGREGATE_LATENCY} requests. CloudWatch publishes this percentile per minute, so the figure is the mean of the ALB's per-minute P95s over the window, not a true ${LATENCY_ROLLUP_LABEL} P95 — read it as "the typical P95 was elevated for ${LATENCY_ROLLUP_LABEL}".`,
     recoveryBody: 'P95 ALB target response time for privy-embedded-wallet has recovered.',
     team: TEAM,
     priority: 3,
-    thresholds: { critical: 2, warning: 1.5 },
+    thresholds: albP95Thresholds,
     logQuery: 'service:privy-embedded-wallet',
     runbookUrl: PRIVY_EMBEDDED_WALLET_RUNBOOK,
     readmeUrl: SERVICE_README_URL,
     dashboards: [],
-    notifyNoData: true,
-    noDataTimeframe: 30,
+    // No-data below the request floor means "too quiet to judge", not an outage; traffic loss is
+    // owned by privy_embedded_wallet_zero_traffic and privy_embedded_wallet_no_traffic_floor.
+    notifyNoData: false,
   },
   {
     id: 'privy_embedded_wallet_latency_p99',
@@ -65,14 +73,12 @@ export const privyEmbeddedWalletLatencyMonitors: MonitorDefinition[] = [
     id: 'privy_embedded_wallet_apm_p95_aggregate',
     name: 'APM P95 latency on privy-embedded-wallet (aggregate)',
     type: 'query alert',
-    // Volume-gate the p95 (same gate as the per-endpoint latency monitors) so a single
-    // slow request in a low-traffic window can't trip the aggregate.
-    query: `avg(last_5m):( p95:trace.web.request{${apmFilter}} * ${apmHits} / clamp_min(${apmHits}, ${MIN_ALB_REQUESTS_5M}) ) > 1.5`,
-    alertBody: `Service-wide P95 application latency for privy-embedded-wallet has exceeded 1.5s. Investigate per-endpoint breakdown via the service dashboard. Requires at least ${MIN_ALB_REQUESTS_5M} requests in the window before it can alert.`,
+    query: `${LATENCY_AGGREGATION}(${LATENCY_WINDOW}):${volumeGatedPercentile(`p95:trace.web.request{${apmFilter}}`, { hits: apmHits, floor: MIN_REQUESTS_AGGREGATE_LATENCY })} > ${apmAggregateThresholds.critical}`,
+    alertBody: `Service-wide P95 application latency for privy-embedded-wallet crossed a latency threshold (warning ${apmAggregateThresholds.warning}s, critical ${apmAggregateThresholds.critical}s) over a ${LATENCY_ROLLUP_ADJECTIVE} window within the last ${LATENCY_WINDOW_LABEL}, across at least ${MIN_REQUESTS_AGGREGATE_LATENCY} requests. This is a true ${LATENCY_ROLLUP_LABEL} P95 (the trace metric is a distribution, so Datadog merges the sketches over the window). Investigate per-endpoint breakdown via the service dashboard.`,
     recoveryBody: 'APM P95 latency has recovered.',
     team: TEAM,
     priority: 3,
-    thresholds: { critical: 1.5, warning: 1 },
+    thresholds: apmAggregateThresholds,
     logQuery: 'service:privy-embedded-wallet',
     runbookUrl: PRIVY_EMBEDDED_WALLET_RUNBOOK,
     readmeUrl: SERVICE_README_URL,

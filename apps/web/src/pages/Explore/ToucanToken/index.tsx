@@ -205,6 +205,7 @@ function ToucanTokenContent({ isModalOpen, onCloseModal }: { isModalOpen: boolea
     outcome,
     isGraduated,
     currentBlockNumber,
+    auctionTokenAddress,
   } = useAuctionStore((state) => ({
     auctionState: state.progress.state,
     auctionDetails: state.auctionDetails,
@@ -213,6 +214,7 @@ function ToucanTokenContent({ isModalOpen, onCloseModal }: { isModalOpen: boolea
     outcome: state.progress.outcome,
     isGraduated: state.progress.isGraduated,
     currentBlockNumber: state.currentBlockNumber,
+    auctionTokenAddress: state.auctionDetails?.tokenAddress,
   }))
   const { canPlaceBid, showMobileWithdrawButton, hasUserBids, showAuctionGraduated } = useBidFormState()
   // Mirror the post-auction panel so the mobile fixed button never double-renders alongside a
@@ -280,7 +282,8 @@ function ToucanTokenContent({ isModalOpen, onCloseModal }: { isModalOpen: boolea
       logImpression={Boolean(auctionDetails?.token)}
       page={InterfacePageName.AuctionDetailsPage}
       properties={{
-        tokenAddress: auctionAddress,
+        tokenAddress: auctionTokenAddress,
+        auctionAddress,
         chainName,
         tokenSymbol: auctionDetails?.token?.currency.symbol,
         tokenName: auctionDetails?.token?.currency.name,

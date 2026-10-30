@@ -1,5 +1,7 @@
+import { RwaCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { SearchAuction, SearchResponse, SearchType } from '@uniswap/client-data-api/dist/data/v2/search_pb'
+import { RankedTokenGroup } from '@uniswap/client-data-api/dist/data/v2/tokenGroups_pb'
 import { Pool, RankedPool, Token } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { UniverseChainId } from '@universe/chains'
 import { type SearchResults, toSearchResults, useSearchResults } from 'uniswap/src/features/dataApi/searchResults'
@@ -106,6 +108,7 @@ describe(useSearchResults, () => {
     expect(results.pools.map((pool) => pool.poolId)).toEqual(['0xpool'])
     expect(results.auctions).toEqual([auction])
     expect(results.categoryIds).toEqual(['stablecoins'])
+    expect(results.tokenGroups).toEqual([])
   })
 })
 
@@ -128,5 +131,43 @@ describe(toSearchResults, () => {
     expect(results.pools.map((pool) => pool.poolId)).toEqual(['0xkept'])
     expect(results.auctions).toEqual([])
     expect(results.categoryIds).toEqual([])
+    expect(results.tokenGroups).toEqual([])
+  })
+
+  it('maps each token group onto the grouped-table row shape with its category', () => {
+    const results = toSearchResults({
+      response: new SearchResponse({
+        tokenGroups: [
+          new RankedTokenGroup({
+            group: { id: 'tsla', displayName: 'Tesla', ticker: 'TSLA', categoryId: 'stocks' },
+            stats: { price: 248.42, priceChange1d: 1.31, volume1d: 12_400_000 },
+            members: [
+              {
+                multichainToken: {
+                  symbol: 'TSLAON',
+                  name: 'Tesla (Ondo)',
+                  addresses: { [UniverseChainId.Mainnet]: '0xondo' },
+                  issuer: { id: 'ondo', displayName: 'Ondo', logoUrl: '' },
+                  price: { spotUsd: 247.9, percentChange1d: 1.3 },
+                },
+                stats: { volume1d: 8_000_000 },
+              },
+            ],
+          }),
+          // No ticker = not a row.
+          new RankedTokenGroup({ group: { id: 'blank', categoryId: 'stocks' } }),
+        ],
+      }),
+      chainFilter: null,
+      size: 2,
+    })
+
+    expect(results.tokenGroups).toHaveLength(1)
+    expect(results.tokenGroups[0]).toMatchObject({
+      symbol: 'TSLA',
+      name: 'Tesla',
+      categories: [RwaCategory.STOCKS],
+      issuerTokens: [{ symbol: 'TSLAON', issuer: 'ondo', chainTokens: [{ chainId: UniverseChainId.Mainnet }] }],
+    })
   })
 })

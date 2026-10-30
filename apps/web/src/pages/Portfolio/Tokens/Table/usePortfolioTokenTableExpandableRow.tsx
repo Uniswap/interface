@@ -40,7 +40,5 @@ export function usePortfolioTokenTableExpandableRow({
       (subRowCount - 1) * EXPANDABLE_ASSET_ISSUER_GAP_PX,
     onParentToggle,
     wrapEmbeddedSubRow,
-    // Portfolio columns flex-grow, so the shell must not be wider than the header/flat rows.
-    extendShellBeyondRowContent: false,
   })
 }

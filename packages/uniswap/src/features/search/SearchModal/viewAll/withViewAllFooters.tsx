@@ -12,7 +12,6 @@ const SECTION_VIEW_ALL_TAB: Partial<Record<OnchainItemSectionName, SearchTab>> =
   [OnchainItemSectionName.Pools]: SearchTab.Pools,
   [OnchainItemSectionName.TrendingPools]: SearchTab.Pools,
   [OnchainItemSectionName.Auctions]: SearchTab.Auctions,
-  [OnchainItemSectionName.TopAuctions]: SearchTab.Auctions,
 }
 
 /**

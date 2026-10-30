@@ -2,19 +2,16 @@ import React from 'react'
 import { GenericImportForm } from 'src/features/import/GenericImportForm'
 import { fireEvent, render, screen } from 'src/test/test-utils'
 import { noOpFunction } from 'utilities/src/test/utils'
-import { AppPortalProvider } from 'wallet/src/providers/portal-provider'
 
 describe(GenericImportForm, () => {
   it('renders a placeholder when there is no value', async () => {
     const tree = render(
-      <AppPortalProvider>
-        <GenericImportForm
-          errorMessage={undefined}
-          placeholderLabel="seed phrase"
-          value={undefined}
-          onChange={noOpFunction}
-        />
-      </AppPortalProvider>,
+      <GenericImportForm
+        errorMessage={undefined}
+        placeholderLabel="seed phrase"
+        value={undefined}
+        onChange={noOpFunction}
+      />,
     )
 
     expect(await screen.findByText('seed phrase')).toBeDefined()
@@ -23,14 +20,12 @@ describe(GenericImportForm, () => {
 
   it('renders a value', async () => {
     render(
-      <AppPortalProvider>
-        <GenericImportForm
-          errorMessage={undefined}
-          placeholderLabel="seed phrase"
-          value="hello"
-          onChange={noOpFunction}
-        />
-      </AppPortalProvider>,
+      <GenericImportForm
+        errorMessage={undefined}
+        placeholderLabel="seed phrase"
+        value="hello"
+        onChange={noOpFunction}
+      />,
     )
 
     expect(await screen.queryByText('seed phrase')).toBeNull()
@@ -39,14 +34,12 @@ describe(GenericImportForm, () => {
 
   it('renders an error message', async () => {
     render(
-      <AppPortalProvider>
-        <GenericImportForm
-          errorMessage="there is an error"
-          placeholderLabel="seed phrase"
-          value="wrong value"
-          onChange={noOpFunction}
-        />
-      </AppPortalProvider>,
+      <GenericImportForm
+        errorMessage="there is an error"
+        placeholderLabel="seed phrase"
+        value="wrong value"
+        onChange={noOpFunction}
+      />,
     )
 
     // In jsdom the autofocused input starts focused, which hides the error; blur to show it

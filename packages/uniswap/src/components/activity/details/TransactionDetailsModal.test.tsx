@@ -109,10 +109,6 @@ vi.mock('uniswap/src/features/language/localizedDayjs', () => ({
   FORMAT_DATE_TIME_MEDIUM: 'MMMM D, YYYY h:mm A',
 }))
 
-vi.mock('ui/src/loading/Skeleton', () => ({
-  Skeleton: (): JSX.Element => <></>,
-}))
-
 describe('TransactionDetails Components', () => {
   it('renders TransactionDetailsHeader without error', () => {
     const transactionActions = [

@@ -1,5 +1,14 @@
 import { useFocusEffect } from '@react-navigation/core'
-import { ColorTokens, Flex, fonts, spacing, Text, TouchableArea } from '@universe/mycelium'
+import {
+  ColorTokens,
+  Flex,
+  fonts,
+  spacing,
+  Text,
+  TouchableArea,
+  AnimatedFlex,
+  useIsShortMobileDevice,
+} from '@universe/mycelium'
 import { useDeviceDimensions, useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
 import React, { forwardRef, RefObject, useCallback, useEffect, useImperativeHandle, useRef } from 'react'
@@ -7,9 +16,8 @@ import { useTranslation } from 'react-i18next'
 import { NativeSyntheticEvent, TextInput as RNTextInput, TextInputSelectionChangeEventData } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { useFiatOnRampContext } from 'src/features/fiatOnRamp/FiatOnRampContext'
-import { useIsShortMobileDevice, useShakeAnimation } from 'ui/src'
+import { useShakeAnimation } from 'ui/src'
 import { ArrowDownArrowUp } from 'ui/src/components/icons'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
 import { AmountInput } from 'uniswap/src/components/AmountInput/AmountInput'
 import { useDeferredCaret } from 'uniswap/src/components/CurrencyInputPanel/hooks/useDeferredCaret'

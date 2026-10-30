@@ -1,10 +1,7 @@
 /**
  * The menu-family compat prop contracts (INFRA-3021): drop-in types for the
- * legacy `ContextMenu` / `MenuOptionItem` (packages/uniswap) and
- * `MenuContent` / `DropdownMenuSheetItem` (packages/ui) surfaces, reproduced
- * without the Tamagui runtime. The parity suite in
- * `packages/tailwind/src/parity/menu` asserts key coverage and whole-type
- * assignability against the real legacy types.
+ * `ContextMenu` / `MenuOptionItem` / `MenuContent` surfaces in packages/uniswap,
+ * plus the menu item itself, without the Tamagui runtime.
  */
 import type * as React from 'react'
 import type { ColorValue } from '../compat/props'
@@ -47,7 +44,6 @@ export interface MenuOptionItemCompat {
 
 export type MenuOptionItemWithIdCompat = MenuOptionItemCompat & { id: string }
 
-/** Drop-in for `DropdownMenuSheetItemProps` (ui/src/components/dropdownMenuSheet). */
 export interface DropdownMenuSheetItemCompatProps {
   label: string
   icon?: React.ReactNode
@@ -157,18 +153,18 @@ export interface ContextMenuCompatProps {
 }
 
 /**
- * Mirror of `getMenuItemColor` (ui/src/components/dropdownMenuSheet/utils.ts):
- * override > destructive ($statusCritical) > disabled ($neutral2) > $neutral1.
+ * Menu item text/icon color: override > destructive ($statusCritical) > disabled ($neutral2) > $neutral1.
+ * Generic so callers get their own override color type back.
  */
-export function getMenuItemColorCompat({
+export function getMenuItemColorCompat<T extends MenuCompatColorValue = MenuCompatColorValue>({
   overrideColor,
   destructive,
   disabled,
 }: {
-  overrideColor?: MenuCompatColorValue
+  overrideColor?: T
   destructive?: boolean
   disabled?: boolean
-}): MenuCompatColorValue {
+}): T | '$statusCritical' | '$neutral2' | '$neutral1' {
   if (overrideColor) {
     return overrideColor
   }

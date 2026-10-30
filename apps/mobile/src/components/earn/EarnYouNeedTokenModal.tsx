@@ -1,7 +1,6 @@
-import { Flex } from '@universe/mycelium'
+import { Flex, useExtractedTokenColor } from '@universe/mycelium'
 import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import { useCallback } from 'react'
-import { useExtractedTokenColor } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import type { BaseModalProps } from 'uniswap/src/components/modals/ModalProps'
 import { useEarnMainnetActionCurrencyForToken } from 'uniswap/src/features/earn/hooks/useEarnMainnetActionCurrency'
@@ -34,6 +33,7 @@ export function EarnYouNeedTokenModal({
     tokenName: currencyInfo?.currency.name,
     backgroundColor: colors.surface1.val,
     defaultColor: colors.accent1.val,
+    colorOverrides: currencyInfo?.colorOverrides,
   })
 
   const handleSwapForToken = useCallback(() => {

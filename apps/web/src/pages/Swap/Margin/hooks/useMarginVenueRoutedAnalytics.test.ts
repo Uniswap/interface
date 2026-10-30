@@ -2,7 +2,7 @@ import { renderHook } from '@testing-library/react'
 import { FetchError } from '@universe/api'
 import type { MarginQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
-import type { MarginVenue } from 'uniswap/src/features/transactions/margin/types'
+import { MarginDirection, type MarginVenue } from 'uniswap/src/features/transactions/margin/types'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { useMarginVenueRoutedAnalytics } from '~/pages/Swap/Margin/hooks/useMarginVenueRoutedAnalytics'
 
@@ -20,7 +20,7 @@ type Props = Parameters<typeof useMarginVenueRoutedAnalytics>[0]
 function baseProps(overrides: Partial<Props> = {}): Props {
   return {
     pairKey: PAIR_KEY,
-    direction: 'LONG',
+    direction: MarginDirection.LONG,
     quote: quoteWithVenue('MORPHO'),
     quoteError: null,
     allowedVenues: ['AAVE_V3', 'MORPHO'],
@@ -46,7 +46,7 @@ describe('useMarginVenueRoutedAnalytics', () => {
     expect(mockSendAnalyticsEvent).toHaveBeenCalledTimes(1)
     expect(mockSendAnalyticsEvent).toHaveBeenCalledWith(InterfaceEventName.MarginVenueRouted, {
       pairKey: PAIR_KEY,
-      direction: 'LONG',
+      direction: MarginDirection.LONG,
       venue: 'MORPHO',
       allowlistSent: ['AAVE_V3', 'MORPHO'],
       excludedCount: 0,

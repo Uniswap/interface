@@ -24,13 +24,7 @@ import { CollapsibleTokenCell } from '~/pages/Launches/CollapsibleTokenCell'
 import { LaunchItem } from '~/pages/Launches/launchesModel'
 import { formatDurationShort } from '~/pages/Launches/launchFormat'
 import { LAUNCHPAD_COLUMN_META, LAUNCHPAD_COLUMN_WIDTH, LaunchpadCellContent } from '~/pages/Launches/LaunchpadCell'
-import {
-  getCollapseTouchActionCss,
-  getConsumedScrollMarginCss,
-  getTokenColumnWidthCss,
-} from '~/pages/Launches/tokenColumnCollapse'
 import { usePrefetchLaunchTokenDetails } from '~/pages/Launches/usePrefetchLaunchTokenDetails'
-import { useTokenColumnCollapse } from '~/pages/Launches/useTokenColumnCollapse'
 
 interface LaunchTableValue {
   launch: LaunchItem
@@ -164,24 +158,6 @@ export function LaunchTable({
   const media = useMedia()
   const { scheduleHoverPrefetch, cancelHoverPrefetch, prefetchNow } = usePrefetchLaunchTokenDetails()
 
-  // Mobile: the pinned token column collapses to just the logo as the table scrolls horizontally,
-  // freeing viewport width for the data columns (interaction model: useTokenColumnCollapse docs).
-  const collapseRootRef = useTokenColumnCollapse({ enabled: media.lg })
-  const tokenColumnWidthOverride = media.lg ? getTokenColumnWidthCss() : undefined
-  const tokenColumnMeta = useMemo(
-    () =>
-      tokenColumnWidthOverride
-        ? {
-            widthOverride: tokenColumnWidthOverride,
-            trailingMarginCss: getConsumedScrollMarginCss(),
-            touchActionCss: getCollapseTouchActionCss(),
-            // The collapsed column parks under-scrolling values right beside the logo, where the
-            // shared 95% pinned background lets them ghost through.
-            opaquePinnedBackground: true,
-          }
-        : undefined,
-    [tokenColumnWidthOverride],
-  )
   // Mobile full-bleed: the table breaks out of the full page gutter on the right, and the last
   // column carries that same distance as trailing margin, so the scroll end rests with the normal
   // content margin. Both come from PAGE_GUTTER_*_PX.
@@ -258,7 +234,6 @@ export function LaunchTable({
       columnHelper.accessor((row) => row.launch, {
         id: 'tokenName',
         size: media.lg ? getTokenDescriptionColumnSize(true) : 238,
-        ...(tokenColumnMeta ? { meta: tokenColumnMeta } : {}),
         header: () => <HeaderLabel justifyContent="flex-start">{t('explore.table.column.token')}</HeaderLabel>,
         cell: (cell) => {
           const launch = cell.getValue?.()
@@ -390,7 +365,7 @@ export function LaunchTable({
     ]
 
     return filteredColumns.filter((column): column is NonNullable<(typeof filteredColumns)[number]> => Boolean(column))
-  }, [media.lg, t, loading, sortBy, ascending, onSort, tokenColumnMeta, trailingGutterCss])
+  }, [media.lg, t, loading, sortBy, ascending, onSort, trailingGutterCss])
 
   return (
     // The negative right margins are the mobile full-bleed breakout, taking the table to the
@@ -402,7 +377,6 @@ export function LaunchTable({
     // re-anchor the sticky table header to it, and paired with overflowY: visible (the one mix CSS
     // allows) so nothing vertical gets clipped.
     <Flex
-      ref={collapseRootRef}
       alignSelf="stretch"
       $lg={{ mr: -PAGE_GUTTER_PX }}
       $md={{ mr: -PAGE_GUTTER_MD_PX }}
@@ -417,7 +391,9 @@ export function LaunchTable({
         rowHeight={ROW_HEIGHT}
         compactRowHeight={ROW_HEIGHT}
         defaultPinnedColumns={['index', 'tokenName']}
-        pinnedWidthOverride={tokenColumnWidthOverride}
+        // Mobile: the pinned token column collapses to just the logo as the table scrolls horizontally,
+        // freeing viewport width for the data columns.
+        collapsiblePinnedColumnId={media.lg ? 'tokenName' : undefined}
       />
     </Flex>
   )

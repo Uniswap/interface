@@ -57,6 +57,20 @@ export function waitForStatsigReady(timeoutMs = DEFAULT_STATSIG_READY_TIMEOUT_MS
 type GateOverride = [string, boolean]
 type ConfigOverride = [string, Record<string, unknown>]
 
+/**
+ * LocalOverrideAdapter stores every override twice: under its name and under
+ * the DJB2 hash of that name, a digits-only key. Only the named entries are
+ * ours to show or count.
+ */
+export function isOverrideName(key: string): boolean {
+  return !/^\d+$/.test(key)
+}
+
+/** The adapter's `getAllOverrides()` record for one kind, with the hashed duplicates dropped. */
+export function namedOverrideEntries<T>(record: Record<string, T>): Array<[string, T]> {
+  return Object.entries(record).filter(([key]) => isOverrideName(key))
+}
+
 export function getOverrides(client: PrecomputedEvaluationsInterface): {
   configOverrides: ConfigOverride[]
   gateOverrides: GateOverride[]
@@ -65,9 +79,8 @@ export function getOverrides(client: PrecomputedEvaluationsInterface): {
     ? getOverrideAdapter().getAllOverrides()
     : { gate: {}, dynamicConfig: {}, layer: {} }
 
-  const filterNumbers = (value: [string, unknown]): boolean => isNaN(parseInt(value[0], 10))
-  const gateOverrides = Object.entries(statsigOverrides.gate).filter(filterNumbers)
-  const configOverrides = Object.entries(statsigOverrides.dynamicConfig).filter(filterNumbers)
+  const gateOverrides = namedOverrideEntries(statsigOverrides.gate)
+  const configOverrides = namedOverrideEntries(statsigOverrides.dynamicConfig)
 
   return { configOverrides, gateOverrides }
 }

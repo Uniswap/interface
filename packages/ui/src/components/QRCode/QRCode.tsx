@@ -2,11 +2,11 @@
 // Custom matrix renderer from: https://github.com/awesomejerry/react-native-qrcode-svg/pull/139/files
 
 import { isWebPlatform } from '@universe/environment'
+import { useSporeColors } from '@universe/mycelium'
 import { create, QRCodeErrorCorrectionLevel, QRCodeSegment } from 'qrcode'
 import { useMemo } from 'react'
 import Svg, { Defs, G, LinearGradient, Path, Rect, Stop } from 'react-native-svg'
 import type { BaseQRProps } from 'ui/src/components/QRCode/types'
-import { useSporeColors } from 'ui/src/hooks/useSporeColors'
 
 // size of the SVG element of the eye for the SVG we use in particular.
 const SVG_SIZE = 40

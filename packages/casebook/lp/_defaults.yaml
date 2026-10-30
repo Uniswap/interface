@@ -1,0 +1,12 @@
+product_area: lp.add_remove
+platforms: [web]
+nxProjects: ["@universe/web", uniswap]
+owners: ["@uniswap/apps-lp"]
+
+# Casebook area-registry metadata (read by the engine in apps/cli/src/casebook).
+# These drive Testlio suite naming, the PR-comment label, and CI routing.
+label: LP
+suiteNamePrefix: LP
+suiteName: LP - Add & Remove Liquidity
+ghLabel: casebook:lp
+reviewerTeam: apps-lp

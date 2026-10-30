@@ -41,7 +41,7 @@ describe('TokenCategoryTag', () => {
     const category = tokenCategory({ id: 'defi', name: 'DeFi', categoryClass: TokenCategoryClass.Sector })
     const { getByText } = render(<TokenCategoryTag category={category} />)
     fireEvent.press(getByText('DeFi'))
-    expect(mockUniswapContext.navigateToCategoryDetails).toHaveBeenCalledWith({ categoryId: 'defi' })
+    expect(mockUniswapContext.navigateToCategoryDetails).toHaveBeenCalledWith({ categoryId: 'defi', kind: 'token' })
   })
 
   it('logs the press with the enclosing surface and its own element', () => {
@@ -53,6 +53,7 @@ describe('TokenCategoryTag', () => {
       section: SectionName.NavbarSearch,
       element: ElementName.TokenRowCategoryTag,
       category_id: 'defi',
+      category_kind: 'token',
     })
   })
 })

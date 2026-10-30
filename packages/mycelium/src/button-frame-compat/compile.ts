@@ -30,7 +30,7 @@
 import type { ButtonEmphasis, ButtonSize, ButtonVariant } from '../button-compat/compile'
 import { composeCompatClassName, composeCompatEmission, type CompatEmission } from '../compat/compose'
 import type { ColorValue, CompatProps } from '../compat/props'
-import { BASE_CLASSES as FLEX_BASE_CLASSES, flexStyleClasses } from '../flex-compat/flex-style-classes'
+import { flexStyleClasses } from '../flex-compat/flex-style-classes'
 import type { FlexCompatStyleProps } from '../flex-compat/props'
 import type { TextCompatStyleProps } from '../text-compat/props'
 import { styleClasses as textStyleClasses } from '../text-compat/style-classes'
@@ -97,15 +97,6 @@ export function buttonFrameOpenClassName(props: ButtonFrameOpenProps): string {
     styleClasses: buttonFrameStyleClasses,
   })
 }
-
-/**
- * `FlexCompat`'s frame defaults minus the flex-direction/alignment the button
- * frame sets itself — exported for the legs' documentation tests only.
- * The button frame does NOT apply these: the legacy frame's computed defaults
- * are already baked into `buttonCompatFrameClassName`'s base (verified
- * head-to-head by the workbench board).
- */
-export const FLEX_COMPAT_BASE_CLASSES = FLEX_BASE_CLASSES
 
 /* ----------------------------- IconButtonFrame ----------------------------- */
 

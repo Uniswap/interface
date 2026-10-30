@@ -68,6 +68,21 @@ function PaymentTokenRow({
   )
 }
 
+// Logs the pick and maps the market default to undefined, so the default keeps re-resolving on
+// market switch.
+export function resolveMarginPaymentTokenPick({
+  token,
+  market,
+}: {
+  token: MarginPaymentToken
+  market: MarginMarket
+}): MarginPaymentToken | undefined {
+  if (isPaymentTokenDifferentFromCollateral({ token, market })) {
+    sendAnalyticsEvent(InterfaceEventName.MarginPaymentTokenSelected, { symbol: token.symbol, marketKey: market.key })
+  }
+  return isMarketDefaultPaymentToken({ token, market }) ? undefined : token
+}
+
 export function MarginPaymentTokenSelector({
   isOpen: controlledIsOpen,
   market: marketOverride,
@@ -114,11 +129,7 @@ export function MarginPaymentTokenSelector({
     if (!market) {
       return
     }
-    if (isPaymentTokenDifferentFromCollateral({ token, market })) {
-      sendAnalyticsEvent(InterfaceEventName.MarginPaymentTokenSelected, { symbol: token.symbol, marketKey: market.key })
-    }
-    // Picking the market default resolves to undefined so the default keeps re-resolving on market switch.
-    const resolved = isMarketDefaultPaymentToken({ token, market }) ? undefined : token
+    const resolved = resolveMarginPaymentTokenPick({ token, market })
     if (isControlled) {
       controlledOnSelect(resolved)
     } else {

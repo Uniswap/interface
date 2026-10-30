@@ -64,7 +64,7 @@ exports[`FavoriteTokenCard > renders without error 1`] = `
     style="gap: 2px;"
   >
     <div
-      class="css-view-175oi2r"
+      class="css-view-175oi2r r-position-bnwqim"
     >
       <div
         class="css-view-175oi2r"
@@ -77,7 +77,7 @@ exports[`FavoriteTokenCard > renders without error 1`] = `
       </div>
     </div>
     <div
-      class="css-view-175oi2r"
+      class="css-view-175oi2r r-position-bnwqim"
     >
       <div
         class="css-view-175oi2r"
@@ -90,5 +90,9 @@ exports[`FavoriteTokenCard > renders without error 1`] = `
       </div>
     </div>
   </div>
+  <div
+    class="css-view-175oi2r r-bottom-1p0dtai r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-pointerEvents-12vffkv"
+    data-testid="portal-layer"
+  />
 </DocumentFragment>
 `;

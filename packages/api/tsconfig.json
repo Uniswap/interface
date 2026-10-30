@@ -5,7 +5,7 @@
     "emitDeclarationOnly": true,
     "noEmit": false,
     "paths": {
-      "@universe/api/*": ["./src/*"]
+      "@universe/api/*": ["./*"]
     },
     "types": ["chrome", "node"]
   },

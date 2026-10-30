@@ -20,6 +20,10 @@
  * $VERCEL_AFFECTED_ALL=true skips detection and emits every project — the
  * workflow_dispatch lever for redeploying after a transient failure.
  *
+ * $VERCEL_AFFECTED_PRODUCTION=true marks a production run (push to main, or
+ * a dispatch on main): projects flagged `previewOnly` are dropped from it,
+ * whichever path chose them.
+ *
  * $VERCEL_AFFECTED_PROJECTS (comma/space-separated Vercel project names)
  * skips detection and emits exactly the named projects — the scoped
  * workflow_dispatch lever for redeploying a single project on demand. Unlike
@@ -56,9 +60,19 @@ export type DeployableProject = {
    * Projects without dirs use NX affected.
    */
   dirs?: string[]
+  /** Deploy PR previews only, never a production deployment from main. */
+  previewOnly?: true
+  /**
+   * Repo-relative directory the deploy job writes into the pulled
+   * .vercel/project.json before `vercel build`, overriding the dashboard's
+   * Root Directory, so each branch builds the app from where that branch
+   * keeps it. `vercel deploy` still checks a non-empty dashboard value
+   * against the checkout, so a project that sets this keeps that field empty.
+   */
+  rootDirectory?: string
 }
 
-const DEPLOYABLE_PROJECTS: DeployableProject[] = [
+export const DEPLOYABLE_PROJECTS: DeployableProject[] = [
   {
     name: '@universe/workbench',
     vercelProject: 'workbench',
@@ -72,10 +86,13 @@ const DEPLOYABLE_PROJECTS: DeployableProject[] = [
     dirs: labsProjectDirs['@universe/sandbox'],
   },
   {
-    name: '@universe/rh-cca',
+    name: '@universe/pools-xyz',
     vercelProject: 'universe-rh-cca',
     projectId: 'prj_pzxwKP6jDElhfM0KGs1vsXhwgwmx',
-    dirs: labsProjectDirs['@universe/rh-cca'],
+    // Pools runs on ECS (dev.pools.xyz tracks main). A production build here
+    // only served main against the prod backend behind Vercel SSO.
+    previewOnly: true,
+    rootDirectory: 'apps/pools-xyz',
   },
   {
     name: '@universe/dev-portal',
@@ -114,10 +131,28 @@ export function selectRequestedProjects(raw: string | undefined, projects: Deplo
   return { kind: 'selected', selected: projects.filter((p) => requested.includes(p.vercelProject)) }
 }
 
+/** Drops `previewOnly` projects from a production run. */
+export function deployableForTarget(projects: DeployableProject[], production: boolean): DeployableProject[] {
+  return production ? projects.filter((project) => !project.previewOnly) : projects
+}
+
+/** The keys the deploy job reads; name/dirs are detection detail. */
+export function toMatrix(
+  projects: DeployableProject[],
+): { vercelProject: string; projectId: string; rootDirectory?: string }[] {
+  return projects.map(({ vercelProject, projectId, rootDirectory }) =>
+    rootDirectory === undefined ? { vercelProject, projectId } : { vercelProject, projectId, rootDirectory },
+  )
+}
+
 function emit(projects: DeployableProject[]): never {
-  // name/dirs are detection detail — the workflow matrix only needs the keys it reads
-  const matrix = projects.map(({ vercelProject, projectId }) => ({ vercelProject, projectId }))
-  console.log(JSON.stringify(matrix))
+  const production = process.env.VERCEL_AFFECTED_PRODUCTION === 'true'
+  const deployable = deployableForTarget(projects, production)
+  const skipped = projects.filter((project) => !deployable.includes(project))
+  if (skipped.length > 0) {
+    log(`Production run — skipping preview-only project(s): ${skipped.map((p) => p.vercelProject).join(', ')}`)
+  }
+  console.log(JSON.stringify(toMatrix(deployable)))
   process.exit(0)
 }
 

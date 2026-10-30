@@ -4,7 +4,7 @@ import { isQuickLaunchAuction } from '~/features/Toucan/utils/quickLaunchClassif
 import { getChainUrlParam } from '~/utils/params/chainParams'
 
 /**
- * pools.xyz — the standalone quick-launch product (labs/rh-cca). Quick launches are created and
+ * pools.xyz — the standalone quick-launch product (apps/pools-xyz). Quick launches are created and
  * bid on there, so discovery surfaces link them out to its token page instead of the web app's
  * auction page. Token pages are `/t/:chain/:address`.
  */

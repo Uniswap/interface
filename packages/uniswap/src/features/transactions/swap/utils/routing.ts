@@ -205,6 +205,7 @@ export function planStepTypeToTradingRoute(stepType: TradingApi.PlanStepType): E
     case TradingApi.PlanStepType.CHAINED:
     case TradingApi.PlanStepType.VAULT_DEPOSIT:
     case TradingApi.PlanStepType.VAULT_WITHDRAW:
+    case TradingApi.PlanStepType.MARGIN_EXECUTE:
     case TradingApi.PlanStepType.MARGIN_PRE_SWAP:
     case TradingApi.PlanStepType.MARGIN_OPEN:
     case TradingApi.PlanStepType.MARGIN_CLOSE:

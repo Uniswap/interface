@@ -26,8 +26,6 @@
     "src/tokens.parity.test.ts",
     "src/scripts/text-compat-tokens.test.ts",
     "src/ui-icon-assignability.test.ts",
-    "src/dynamic-size-text/DynamicSizeTextCompat.web.test.tsx",
-    "src/text-compat/needs-small-font-drift.test.ts",
     "src/unicon/address-alias.test.tsx",
     "src/unicon/legacy-drift.test.ts",
     "src/global.d.ts",

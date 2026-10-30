@@ -483,6 +483,7 @@ describe('sendSearchOptionItemClickedAnalytics', () => {
       query_text: '',
       selected_search_result_name: 'Auction Token',
       selected_search_result_address: '0xauction',
+      token_address: '0xtoken',
       searchChainFilter: null,
       searchTabFilter: SearchTab.All,
     })

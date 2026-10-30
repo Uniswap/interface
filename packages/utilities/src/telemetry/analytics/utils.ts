@@ -2,6 +2,11 @@ import { isWebApp } from '@universe/environment'
 // oxlint-disable-next-line no-restricted-imports -- Platform-specific implementation needs internal types
 import { type TestnetModeConfig } from 'utilities/src/telemetry/analytics/analytics'
 
+/** Decodes the value `setAllowAnalytics` persists under `ALLOW_ANALYTICS_ATOM_KEY`; absent means allowed. */
+export function parseAllowAnalytics(stored: string | null | undefined): boolean {
+  return stored !== 'false'
+}
+
 export function getProcessedEvent({
   eventName,
   eventProperties,

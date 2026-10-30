@@ -42,6 +42,8 @@ interface PortfolioBalanceHeaderProps {
   selectedCategory: PortfolioChartCategory
   isPortfolioZero: boolean
   isLoading: boolean
+  isBalanceLoading: boolean
+  hideDelta?: boolean
   hoveredData?: PriceChartData
 }
 
@@ -60,6 +62,8 @@ export function PortfolioBalanceHeader({
   selectedCategory,
   isPortfolioZero,
   isLoading,
+  isBalanceLoading,
+  hideDelta = false,
   hoveredData,
 }: PortfolioBalanceHeaderProps): JSX.Element {
   const { t } = useTranslation()
@@ -104,8 +108,9 @@ export function PortfolioBalanceHeader({
     }
   }, [selectedCategory, tokensValue, poolsValue, earnValue, fallbackBalanceUSD, portfolioTotalBalanceUSD])
   const balance = hoveredData?.value ?? categoryBalanceUSD ?? latestChartData?.close ?? zeroPortfolioBalance
+  const isHeadlineLoading = isBalanceLoading || (isLoading && balance === undefined)
   const isHovering = !!hoveredData
-  const showDelta = !isLoading && !isPortfolioZero && series.length >= 2 && !!displayedChartData
+  const showDelta = !hideDelta && !isLoading && !isPortfolioZero && series.length >= 2 && !!displayedChartData
   const shouldTreatAsStablecoin = useMemo(() => {
     const { min, max } = getCandlestickPriceBounds(series)
     return isLowVarianceRange({ min, max, duration: chartPeriodToHistoryDuration(selectedPeriod) })
@@ -136,7 +141,7 @@ export function PortfolioBalanceHeader({
             <AnimatedNumber
               value={convertFiatAmountFormatted(balance, NumberType.PortfolioBalance)}
               numericValue={balance}
-              loading={isLoading}
+              loading={isHeadlineLoading}
               textVariant="$heading2"
               color={isPortfolioZero ? '$neutral3' : '$neutral1'}
               disableAnimations={isHovering}

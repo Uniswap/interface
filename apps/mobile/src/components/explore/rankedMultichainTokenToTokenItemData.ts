@@ -5,6 +5,7 @@ import {
   normalizeBackendNativeAddress,
   pickPrimaryDeployment,
 } from 'uniswap/src/data/apiClients/dataApiService/utils/dataApiMultichainToken'
+import { formatColorOverrides } from 'uniswap/src/features/dataApi/utils/formatColorOverrides'
 
 /** Converts a v2 RankedMultichainToken (from ListTokens) into mobile's TokenItemData shape. */
 export function rankedMultichainTokenToTokenItemData({
@@ -41,6 +42,7 @@ export function rankedMultichainTokenToTokenItemData({
   return {
     name: multichainToken.name,
     logoUrl: multichainToken.project?.logoUrl ?? '',
+    colorOverrides: formatColorOverrides(multichainToken.project?.colors),
     chainId,
     address: normalizeBackendNativeAddress({ chainId, address: deployment.address }),
     symbol: multichainToken.symbol,

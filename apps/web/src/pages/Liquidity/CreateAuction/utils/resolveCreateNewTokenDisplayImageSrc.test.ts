@@ -10,7 +10,7 @@ describe('resolveCreateNewTokenDisplayImageSrc', () => {
 
   it('falls back to resolving imageUrl when there is no local preview', () => {
     expect(resolveCreateNewTokenDisplayImageSrc('', 'ipfs://bafkreitest')).toBe(
-      'https://gateway.pinata.cloud/ipfs/bafkreitest',
+      'https://ipfs.pools.xyz/ipfs/bafkreitest',
     )
   })
 

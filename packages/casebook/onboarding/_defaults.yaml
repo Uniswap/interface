@@ -1,0 +1,23 @@
+product_area: onboarding
+platforms: [mobile, extension]
+nxProjects: ["@uniswap/mobile", "@uniswap/extension", wallet]
+owners: ["@uniswap/consumer-engagement-fe"]
+
+# Casebook area-registry metadata (read by the engine in apps/cli/src/casebook).
+# These drive Testlio suite naming, the PR-comment label, and CI routing.
+label: Onboarding
+suiteNamePrefix: Onboarding
+ghLabel: casebook:onboarding
+# Reviewer GitHub team for the auto-opened catalog companion PR.
+# CODEOWNERS is silent on the onboarding paths — wallet-fe is a convention/best-guess
+# (teamResolved=false in the area blueprint) and must be confirmed with the pod lead.
+reviewerTeam: consumer-engagement-fe
+
+# Test-wallet aliases referenced by this area's cases. Symbolic only: real mnemonics live in
+# the QA vault / Testlio TL handoff, keyed by the same alias. Never put a secret here.
+wallets:
+  TW-ONBOARDING-01: "non-funded wallet imported from its recovery phrase (QA vault, by alias); clean-install import and seed-phrase removal cases"
+  TW-ONBOARDING-02: "mnemonic that derives multiple funded accounts (account selection on import)"
+  TW-ONBOARDING-03: "view-only account: public address with a resolvable ENS name, no signing keys"
+  TW-ONBOARDING-04: "mnemonic backed up to iCloud (iOS restore from backup)"
+  TW-ONBOARDING-05: "mnemonic backed up to Google Drive (Android restore from backup)"

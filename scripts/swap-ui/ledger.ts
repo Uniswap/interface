@@ -6,17 +6,27 @@
  * zero imports from business logic or analytics code.
  *
  * A file is MOVABLE into @universe/swap-ui when it has zero blockers.
- * The policies behind the blocker classes live in scripts/swap-ui/POLICIES.md.
+ * A file that imports from @universe/swap-ui is an ADAPTER: the packages/uniswap
+ * side of a finished split. It reads stores and derives props on purpose, so it
+ * is reported on its own and never counted as a view, movable or blocked.
+ * The policies behind the classes live in scripts/swap-ui/POLICIES.md.
+ *
+ * Changelog (schema = JSON shape, heuristic = classification rules):
+ *   schema 1 / heuristic 1: initial ledger, every .tsx in the swap tree is a view.
+ *   schema 2 / heuristic 2: adapters. Files importing @universe/swap-ui get
+ *     files[].adapter = true and are counted in ledger.adapters instead of
+ *     total / movable / byClass, are left out of --batches, and print as
+ *     ADAPTER in --files.
  *
  * Deliberately dependency-free (node builtins only) so CI can run it without
- * an install, same constraint as scripts/tamagui-migration/tamagui-census.ts.
+ * an install.
  *
  * Usage:
  *   bun scripts/swap-ui/ledger.ts                  # console summary
  *   bun scripts/swap-ui/ledger.ts --json <path>    # machine-readable ledger
  *   bun scripts/swap-ui/ledger.ts --html <path>    # static HTML report
  *   bun scripts/swap-ui/ledger.ts --summary <path> # markdown summary (CI step summary)
- *   bun scripts/swap-ui/ledger.ts --files          # per-file detail
+ *   bun scripts/swap-ui/ledger.ts --files          # per-file detail (ADAPTER / MOVABLE / blocker classes)
  *   bun scripts/swap-ui/ledger.ts --batches        # suggested work batches (grouped, sized, ordered)
  */
 
@@ -27,9 +37,11 @@ const REPO_ROOT = new URL('../..', import.meta.url).pathname
 const SWAP_ROOT = join(REPO_ROOT, 'packages/uniswap/src/features/transactions/swap')
 
 /** Bump when the JSON shape changes (consumers pin this). */
-export const SCHEMA_VERSION = 1
+export const SCHEMA_VERSION = 2
 /** Bump when classification rules change (what counts as a blocker), independent of shape. */
-export const HEURISTIC_VERSION = 1
+export const HEURISTIC_VERSION = 2
+/** Importing the package marks a file as the uniswap-side adapter of an extracted view. */
+export const ADAPTER_SOURCE = '@universe/swap-ui'
 
 /** Blocker classes, ordered by how we expect them to drain. */
 export const BLOCKER_CLASSES = [
@@ -38,7 +50,7 @@ export const BLOCKER_CLASSES = [
   'query', // @tanstack/react-query, adapter concern
   'telemetry', // Trace / sendAnalyticsEvent, wrapper stays in uniswap
   'modal-shell', // uniswap Modal shells, views render content, adapters own shells
-  'ui-src', // Tamagui, resolves via mycelium conversion (migration lane)
+  'ui-src', // legacy ui/src component library; import swap to mycelium, or slot
   'uniswap-runtime', // other value imports from uniswap/src, must be severed or slotted
   'types-pending', // type-only uniswap/src imports, replaced by swap-ui-owned prop types
 ] as const
@@ -47,10 +59,13 @@ export type BlockerClass = (typeof BLOCKER_CLASSES)[number]
 
 export interface FileEntry {
   path: string
+  /** Always empty for adapters: their store reads and derivations are the point, not blockers. */
   blockers: Partial<Record<BlockerClass, string[]>>
   movable: boolean
   /** Platform-split stub (throws PlatformSplitStubError), trivially clean, not a real view. */
   stub: boolean
+  /** Imports @universe/swap-ui: the uniswap side of a finished split, never a move candidate. */
+  adapter: boolean
 }
 
 export interface Ledger {
@@ -58,9 +73,11 @@ export interface Ledger {
   heuristicVersion: number
   generatedAt: string
   scanRoot: string
+  /** View files (real views + platform stubs). Adapters are listed in files[] but not counted here. */
   total: number
   movable: number
   stubs: number
+  adapters: number
   /** Class definitions ship in the JSON so consumers never re-encode them. */
   blockerClasses: Record<BlockerClass, { short: string; definition: string; drains: string }>
   byClass: Record<BlockerClass, number>
@@ -105,11 +122,11 @@ export const BLOCKER_DEFS: Record<BlockerClass, { short: string; definition: str
     drains: 'The view exports the modal CONTENT as a plain component; the adapter wraps it in the shell.',
   },
   'ui-src': {
-    short: 'still on Tamagui',
+    short: 'imports ui/src',
     definition:
-      'Imports ui/src. The package must be mycelium-only, so any ui/src import, even a tamagui-free one, keeps the file in place until it converts.',
+      'Imports the legacy ui/src component library. The package is mycelium-only, so every ui/src import keeps the file in place until it is swapped or slotted.',
     drains:
-      'The Tamagui-migration conversion lane: mechanical barrel swaps (Flex/Text/Button/TouchableArea) or the manual lanes (AnimatedFlex/Reanimated, styled()). Fold split+convert into one PR when both touch a file.',
+      'Swap the import for the mycelium equivalent (same props) when one exists. A component with no mycelium leg stays in the adapter and reaches the view as a slot. The guide preflight lists both cases.',
   },
   'uniswap-runtime': {
     short: 'other uniswap value imports',
@@ -123,7 +140,7 @@ export const BLOCKER_DEFS: Record<BlockerClass, { short: string; definition: str
     definition:
       "An `import type` from uniswap/src (DerivedSwapInfo, Warning, GasFeeResult...). No runtime coupling, but package graphs don't distinguish type edges, so it still blocks the move.",
     drains:
-      'The view takes a swap-ui-owned prop type instead (the package vocabulary in packages/swap-ui/src/types). There is no shared types package.',
+      'The view takes a swap-ui-owned prop type instead (the package vocabulary in packages/swap-ui/src/types.ts). There is no shared types package.',
   },
 }
 
@@ -215,38 +232,52 @@ export function classify(imp: ParsedImport): { cls: BlockerClass; detail: string
   return undefined
 }
 
-export function scan(): Ledger {
-  const files = walk(SWAP_ROOT).sort()
-  const entries: FileEntry[] = files.map((full) => {
-    const content = readFileSync(full, 'utf8')
-    const stub = content.includes('PlatformSplitStubError')
-    const blockers: Partial<Record<BlockerClass, string[]>> = {}
-    for (const imp of parseImports(content)) {
+export function isAdapter(imports: ParsedImport[]): boolean {
+  return imports.some((imp) => imp.source === ADAPTER_SOURCE || imp.source.startsWith(`${ADAPTER_SOURCE}/`))
+}
+
+/** Classifies one file from its source. Pure, so fixtures can exercise every branch without a tree. */
+export function analyzeFile(path: string, content: string): FileEntry {
+  const imports = parseImports(content)
+  const stub = content.includes('PlatformSplitStubError')
+  const adapter = isAdapter(imports)
+  const blockers: Partial<Record<BlockerClass, string[]>> = {}
+  if (!adapter) {
+    for (const imp of imports) {
       const hit = classify(imp)
       if (hit) {
         ;(blockers[hit.cls] ??= []).push(hit.detail)
       }
     }
-    return {
-      path: relative(SWAP_ROOT, full),
-      blockers,
-      movable: !stub && Object.keys(blockers).length === 0,
-      stub,
-    }
-  })
+  }
+  return {
+    path,
+    blockers,
+    movable: !stub && !adapter && Object.keys(blockers).length === 0,
+    stub,
+    adapter,
+  }
+}
+
+export function scan(root: string = SWAP_ROOT): Ledger {
+  const entries = walk(root)
+    .sort()
+    .map((full) => analyzeFile(relative(root, full), readFileSync(full, 'utf8')))
+  const views = entries.filter((e) => !e.adapter)
 
   const byClass = Object.fromEntries(
-    BLOCKER_CLASSES.map((cls) => [cls, entries.filter((e) => e.blockers[cls]).length]),
+    BLOCKER_CLASSES.map((cls) => [cls, views.filter((e) => e.blockers[cls]).length]),
   ) as Record<BlockerClass, number>
 
   return {
     schemaVersion: SCHEMA_VERSION,
     heuristicVersion: HEURISTIC_VERSION,
     generatedAt: new Date().toISOString(),
-    scanRoot: relative(REPO_ROOT, SWAP_ROOT),
-    total: entries.length,
-    movable: entries.filter((e) => e.movable).length,
-    stubs: entries.filter((e) => e.stub).length,
+    scanRoot: relative(REPO_ROOT, root),
+    total: views.length,
+    movable: views.filter((e) => e.movable).length,
+    stubs: views.filter((e) => e.stub).length,
+    adapters: entries.length - views.length,
     blockerClasses: BLOCKER_DEFS,
     byClass,
     files: entries,
@@ -259,9 +290,11 @@ function topDir(path: string): string {
 }
 
 interface DirRow {
+  /** View files in the directory, adapters excluded (same rule as Ledger.total). */
   total: number
   movable: number
   stubs: number
+  adapters: number
   byClass: Record<string, number>
 }
 
@@ -269,7 +302,12 @@ function groupByDir(ledger: Ledger): Map<string, DirRow> {
   const dirs = new Map<string, DirRow>()
   for (const f of ledger.files) {
     const dir = topDir(f.path)
-    const row = dirs.get(dir) ?? { total: 0, movable: 0, stubs: 0, byClass: {} }
+    const row = dirs.get(dir) ?? { total: 0, movable: 0, stubs: 0, adapters: 0, byClass: {} }
+    if (f.adapter) {
+      row.adapters += 1
+      dirs.set(dir, row)
+      continue
+    }
     row.total += 1
     if (f.movable) {
       row.movable += 1
@@ -291,13 +329,14 @@ function sortedDirs(ledger: Ledger): [string, DirRow][] {
 
 function printSummary(ledger: Ledger): void {
   console.log(`\nswap-ui movability ledger: ${ledger.scanRoot}`)
-  console.log(`scanned ${ledger.total} view files · movable today: ${ledger.movable}\n`)
+  console.log(`scanned ${ledger.total} view files · movable today: ${ledger.movable} · adapters: ${ledger.adapters}\n`)
 
-  const header = ['directory', 'files', 'movable', ...BLOCKER_CLASSES]
+  const header = ['directory', 'files', 'movable', 'adapters', ...BLOCKER_CLASSES]
   const rows = sortedDirs(ledger).map(([dir, row]) => [
     dir,
     String(row.total),
     String(row.movable),
+    String(row.adapters),
     ...BLOCKER_CLASSES.map((cls) => String(row.byClass[cls] ?? 0)),
   ])
   const widths = header.map((h, i) => Math.max(h.length, ...rows.map((r) => r[i]?.length ?? 0)))
@@ -321,7 +360,7 @@ export function renderSummary(ledger: Ledger): string {
   )
   lines.push('')
   lines.push(
-    `**${ledger.total - ledger.stubs} view files** (+ ${ledger.stubs} platform stubs) · **${ledger.movable} movable today**`,
+    `**${ledger.total - ledger.stubs} view files** (+ ${ledger.stubs} platform stubs) · **${ledger.movable} movable today** · **${ledger.adapters} adapters** (already split, import \`${ADAPTER_SOURCE}\`)`,
   )
   lines.push('')
   lines.push('## Blockers by class')
@@ -334,58 +373,79 @@ export function renderSummary(ledger: Ledger): string {
   lines.push('')
   lines.push('## By directory')
   lines.push('')
-  lines.push('| directory | files | movable | stubs |')
-  lines.push('|---|---:|---:|---:|')
+  lines.push('| directory | files | movable | stubs | adapters |')
+  lines.push('|---|---:|---:|---:|---:|')
   for (const [dir, row] of sortedDirs(ledger)) {
-    lines.push(`| ${dir} | ${row.total} | ${row.movable} | ${row.stubs} |`)
+    lines.push(`| ${dir} | ${row.total} | ${row.movable} | ${row.stubs} | ${row.adapters} |`)
   }
   lines.push('')
   lines.push(
-    'A file is MOVABLE when it receives all data via props, emits actions via callbacks, and imports nothing from business logic or analytics code. Policies: `scripts/swap-ui/POLICIES.md`.',
+    'A file is MOVABLE when it receives all data via props, emits actions via callbacks, and imports nothing from business logic or analytics code. A file is an ADAPTER when it imports `@universe/swap-ui`: the uniswap side of a finished split, not counted as a view. Policies: `scripts/swap-ui/POLICIES.md`.',
   )
   lines.push('')
   return lines.join('\n')
 }
 
+/** Status column of --files: ADAPTER, MOVABLE, or each blocker class with its import count. */
+export function fileStatus(f: FileEntry): string {
+  if (f.adapter) {
+    return 'ADAPTER'
+  }
+  if (f.movable) {
+    return 'MOVABLE'
+  }
+  return Object.entries(f.blockers)
+    .map(([cls, details]) => `${cls}(${details?.length})`)
+    .join(' ')
+}
+
 function printFiles(ledger: Ledger): void {
   for (const f of ledger.files) {
-    const status = f.movable
-      ? 'MOVABLE'
-      : Object.entries(f.blockers)
-          .map(([cls, details]) => `${cls}(${details?.length})`)
-          .join(' ')
-    console.log(`${f.path.padEnd(90)} ${status}`)
+    console.log(`${f.path.padEnd(90)} ${fileStatus(f)}`)
   }
 }
 
-function printBatches(ledger: Ledger): void {
-  // Suggested batches: blocked files grouped by directory, ≤5 files each,
-  // ordered flattering-first (review tree, shared rows) per the extraction plan.
-  const WAVE_ORDER = ['review', 'components', 'form', 'SwapFlow', '(root)']
+const BATCH_SIZE = 5
+/** Flattering-first (review tree, shared rows) per the extraction plan. */
+const WAVE_ORDER = ['review', 'components', 'form', 'SwapFlow', '(root)']
+
+export interface Batch {
+  dir: string
+  files: string[]
+}
+
+/** Suggested work batches: blocked views grouped by directory, at most BATCH_SIZE each. Movable files and adapters are done. */
+export function buildBatches(ledger: Ledger): Batch[] {
   const groups = new Map<string, string[]>()
   for (const f of ledger.files) {
-    if (f.movable) {
+    if (f.movable || f.adapter) {
       continue
     }
     const dir = topDir(f.path)
     ;(groups.get(dir) ?? groups.set(dir, []).get(dir))?.push(f.path)
   }
-  let n = 0
+  const batches: Batch[] = []
   for (const dir of [...WAVE_ORDER, ...[...groups.keys()].filter((d) => !WAVE_ORDER.includes(d))]) {
     const files = groups.get(dir)
     if (!files) {
       continue
     }
-    for (let i = 0; i < files.length; i += 5) {
-      n += 1
-      const batch = files.slice(i, i + 5)
-      console.log(`batch ${String(n).padStart(2, '0')} [${dir}], ${batch.length} files`)
-      for (const f of batch) {
-        console.log(`  ${f}`)
-      }
+    for (let i = 0; i < files.length; i += BATCH_SIZE) {
+      batches.push({ dir, files: files.slice(i, i + BATCH_SIZE) })
     }
   }
-  console.log(`\n${n} batches of ≤5 files`)
+  return batches
+}
+
+function printBatches(ledger: Ledger): void {
+  const batches = buildBatches(ledger)
+  batches.forEach((batch, i) => {
+    console.log(`batch ${String(i + 1).padStart(2, '0')} [${batch.dir}], ${batch.files.length} files`)
+    for (const f of batch.files) {
+      console.log(`  ${f}`)
+    }
+  })
+  console.log(`\n${batches.length} batches of ≤${BATCH_SIZE} files`)
 }
 
 export function renderHtml(ledger: Ledger): string {
@@ -408,7 +468,7 @@ export function renderHtml(ledger: Ledger): string {
   const dirRows = dirs
     .map(
       ([dir, r]) =>
-        `<tr><td>${dir}</td><td class="num">${r.total}</td><td class="num">${r.movable}</td><td class="num">${r.stubs}</td></tr>`,
+        `<tr><td>${dir}</td><td class="num">${r.total}</td><td class="num">${r.movable}</td><td class="num">${r.stubs}</td><td class="num">${r.adapters}</td></tr>`,
     )
     .join('\n')
 
@@ -458,6 +518,7 @@ td { padding:7px 12px; border-bottom:1px solid var(--line) }
   border:1px solid var(--line); border-radius:10px; padding:1px 8px; margin:1px 2px }
 .movable-chip { color:var(--good); font-weight:600 }
 .stub-chip { color:var(--ink3) }
+.adapter-chip { color:var(--accent); font-weight:600 }
 .path { font:.78rem "IBM Plex Mono",monospace; word-break:break-all }
 footer { margin-top:64px; color:var(--ink3); font:11px "IBM Plex Mono",monospace;
   border-top:1px solid var(--line); padding-top:16px }
@@ -474,6 +535,7 @@ footer { margin-top:64px; color:var(--ink3); font:11px "IBM Plex Mono",monospace
 <div class="stats">
   <div class="stat"><b>${realViews}</b><span>view files (+ ${ledger.stubs} platform stubs)</span></div>
   <div class="stat hero"><b>${ledger.movable}</b><span>movable today</span></div>
+  <div class="stat"><b>${ledger.adapters}</b><span>adapters (already split)</span></div>
   <div class="stat"><b>${ledger.byClass['store-read']}</b><span>need view/adapter split</span></div>
   <div class="stat"><b>${ledger.byClass['ui-src']}</b><span>waiting on mycelium conversion</span></div>
   <div class="stat"><b>${ledger.byClass['uniswap-runtime']}</b><span>uniswap imports to sever</span></div>
@@ -492,29 +554,31 @@ ${BLOCKER_CLASSES.map(
 </div>
 <h2>By directory</h2>
 <div class="tablewrap"><table>
-<thead><tr><th>directory</th><th style="text-align:right">files</th><th style="text-align:right">movable</th><th style="text-align:right">stubs</th></tr></thead>
+<thead><tr><th>directory</th><th style="text-align:right">files</th><th style="text-align:right">movable</th><th style="text-align:right">stubs</th><th style="text-align:right">adapters</th></tr></thead>
 <tbody>${dirRows}</tbody>
 </table></div>
 <h2>Every file</h2>
 <div class="filters" id="filters" role="group" aria-label="Filter by blocker class">
   <button aria-pressed="true" data-f="all">all</button>
   <button aria-pressed="false" data-f="movable">movable</button>
+  <button aria-pressed="false" data-f="adapter">adapter</button>
   ${BLOCKER_CLASSES.map((c) => `<button aria-pressed="false" data-f="${c}">${c}</button>`).join('\n  ')}
 </div>
 <div class="tablewrap"><table>
 <thead><tr><th>file</th><th>status</th></tr></thead>
 <tbody id="files"></tbody>
 </table></div>
-<footer>generated by scripts/swap-ui/ledger.ts. A file is MOVABLE when it receives all data via props, emits actions via callbacks, and imports nothing from business logic or analytics code.</footer>
+<footer>generated by scripts/swap-ui/ledger.ts. A file is MOVABLE when it receives all data via props, emits actions via callbacks, and imports nothing from business logic or analytics code. A file is an ADAPTER when it imports ${ADAPTER_SOURCE}: the uniswap side of a finished split, listed but not counted as a view.</footer>
 </main>
 <script>
-const DATA = ${JSON.stringify(ledger.files.map((f) => ({ p: f.path, b: Object.keys(f.blockers), m: f.movable, s: f.stub })))};
+const DATA = ${JSON.stringify(ledger.files.map((f) => ({ p: f.path, b: Object.keys(f.blockers), m: f.movable, s: f.stub, a: f.adapter })))};
 const tbody = document.getElementById('files');
 function render(filter) {
   const rows = DATA.filter((f) =>
-    filter === 'all' ? true : filter === 'movable' ? f.m : f.b.includes(filter));
+    filter === 'all' ? true : filter === 'movable' ? f.m : filter === 'adapter' ? f.a : f.b.includes(filter));
   tbody.innerHTML = rows.map((f) => '<tr><td class="path">' + f.p + '</td><td>' +
-    (f.s ? '<span class="chip stub-chip">stub</span>' :
+    (f.a ? '<span class="chip adapter-chip">ADAPTER</span>' :
+     f.s ? '<span class="chip stub-chip">stub</span>' :
      f.m ? '<span class="chip movable-chip">MOVABLE</span>' :
      f.b.map((c) => '<span class="chip">' + c + '</span>').join('')) + '</td></tr>').join('');
 }

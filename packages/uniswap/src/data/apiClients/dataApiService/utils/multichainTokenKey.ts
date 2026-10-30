@@ -1,3 +1,4 @@
+import type { PlainMessage } from '@bufbuild/protobuf'
 import type { RankedMultichainToken } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 
 /**
@@ -8,7 +9,7 @@ import type { RankedMultichainToken } from '@uniswap/client-data-api/dist/data/v
  * unique by construction. Sorted for determinism if a malformed row ever
  * carries several addresses without a multichainId.
  */
-export function multichainTokenKey(token: RankedMultichainToken): string {
+export function multichainTokenKey(token: PlainMessage<RankedMultichainToken>): string {
   const mc = token.multichainToken
   if (mc?.multichainId) {
     return mc.multichainId

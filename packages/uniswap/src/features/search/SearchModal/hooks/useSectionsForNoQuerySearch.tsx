@@ -7,7 +7,6 @@ import { PoolsOrderBy } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { UniverseChainId } from '@universe/chains'
 import { GatedFeature, useIsFeatureGated } from '@universe/compliance'
 import { isMobileApp, isWebApp, isWebPlatform } from '@universe/environment'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TrendUp } from 'ui/src/components/icons/TrendUp'
@@ -24,8 +23,8 @@ import { useListRankedRwasQuery } from 'uniswap/src/data/apiClients/dataApiServi
 import { mapRankedRwaList } from 'uniswap/src/data/apiClients/dataApiService/rwa/mapRankedRwa'
 import { rankedPoolToPoolSearchResult } from 'uniswap/src/data/apiClients/dataApiService/search/search'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { useTopAuctionOptions } from 'uniswap/src/features/dataApi/searchAuctions'
 import { top1DVolumeResultsToTokenOptions, useTop1DVolumeTokens } from 'uniswap/src/features/dataApi/top1DVolumeTokens'
+import { useTopAuctionOptions } from 'uniswap/src/features/dataApi/topAuctions'
 import type { PoolSearchResult } from 'uniswap/src/features/dataApi/types'
 import {
   NUMBER_OF_RESULTS_LONG,
@@ -33,6 +32,7 @@ import {
   NUMBER_OF_RESULTS_SHORT,
   NUMBER_OF_SPOTLIT_CATEGORY_TOKENS_ALL_TAB,
   NUMBER_OF_SPOTLIT_CATEGORY_TOKENS_TOKENS_TAB,
+  NUMBER_OF_TOP_AUCTIONS,
 } from 'uniswap/src/features/search/SearchModal/constants'
 import { useRecentSearchSection } from 'uniswap/src/features/search/SearchModal/hooks/useRecentSearchSection'
 import type { SearchModalSectionResult } from 'uniswap/src/features/search/SearchModal/hooks/useSectionsForSearchResultsUtils'
@@ -131,7 +131,6 @@ export function useSectionsForNoQuerySearch({
   auctionSearchEnabled?: boolean
 }): NoQuerySearchSections {
   const { t } = useTranslation()
-  const isSearchV2UIEnabled = useFeatureFlag(FeatureFlags.SearchV2UI)
   const { chains: enabledChainIds } = useEnabledChains()
   const queryChainIds = useMemo(() => (chainFilter ? [chainFilter] : enabledChainIds), [chainFilter, enabledChainIds])
 
@@ -244,8 +243,7 @@ export function useSectionsForNoQuerySearch({
   })
 
   // Load top auctions (sorted by committed volume)
-  const skipTopAuctionsQuery =
-    !auctionSearchEnabled || !isWebApp || (activeTab !== SearchTab.Auctions && activeTab !== SearchTab.All)
+  const skipTopAuctionsQuery = !auctionSearchEnabled || !isWebApp || activeTab !== SearchTab.Auctions
   const {
     data: topAuctionOptions,
     isLoading: topAuctionsLoading,
@@ -253,8 +251,8 @@ export function useSectionsForNoQuerySearch({
     refetch: refetchTopAuctions,
   } = useTopAuctionOptions({
     chainFilter,
+    size: NUMBER_OF_TOP_AUCTIONS,
     skip: skipTopAuctionsQuery,
-    size: activeTab === SearchTab.All ? NUMBER_OF_RESULTS_SHORT : NUMBER_OF_RESULTS_LONG,
   })
   const topAuctionsSection = useOnchainItemListSection({
     sectionKey: OnchainItemSectionName.TopAuctions,
@@ -302,10 +300,9 @@ export function useSectionsForNoQuerySearch({
             ...tokenShelfSections,
             ...(trendingPoolSection ?? []),
             ...(favoriteWalletsSection ?? []),
-            ...(topAuctionsSection ?? []),
           ]
         : [...(recentSearchSection ?? []), ...tokenShelfSections],
-    [favoriteWalletsSection, recentSearchSection, tokenShelfSections, topAuctionsSection, trendingPoolSection],
+    [favoriteWalletsSection, recentSearchSection, tokenShelfSections, trendingPoolSection],
   )
   const poolsLoading = topPoolsLoading || Boolean(topPools?.length && !trendingPoolOptions.length)
   const poolsInitialLoading = isWebPlatform && topPoolsLoading
@@ -357,8 +354,8 @@ export function useSectionsForNoQuerySearch({
         return {
           data: allSections,
           isLoading: tokensLoading,
-          // Web's All tab also renders pools and auctions; holding on trending alone would shift the pane as they land.
-          isInitialLoading: tokensInitialLoading || poolsInitialLoading || auctionsLoading,
+          // Web's All tab also renders pools; holding on trending alone would shift the pane as they land.
+          isInitialLoading: tokensInitialLoading || poolsInitialLoading,
           error: tokensShelfError,
           refetch: refetchTokensShelf,
         }
@@ -385,6 +382,6 @@ export function useSectionsForNoQuerySearch({
 
   return useMemo((): NoQuerySearchSections => {
     const { isInitialLoading, ...result } = tabResult
-    return { ...holdQueryResult({ result, hold: isSearchV2UIEnabled && isInitialLoading }), skeletonPillCount }
-  }, [tabResult, isSearchV2UIEnabled, skeletonPillCount])
+    return { ...holdQueryResult({ result, hold: isInitialLoading }), skeletonPillCount }
+  }, [tabResult, skeletonPillCount])
 }

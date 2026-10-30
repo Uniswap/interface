@@ -8,7 +8,7 @@ import type {
 } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import type { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import type { MarginManageAction } from 'uniswap/src/features/transactions/margin/types'
+import { MarginDirection, type MarginManageAction } from 'uniswap/src/features/transactions/margin/types'
 import { NumberType } from 'utilities/src/format/types'
 import type { MarginMarketResolver } from '~/pages/Swap/Margin/hooks/useResolveMarginMarket'
 import { formatLeverage, formatSignedFiat, rawToNumber } from '~/pages/Swap/Margin/marginFormat'
@@ -115,7 +115,7 @@ export function buildCompletionToastMessage({
               currencyInfos,
             }))
       const direction = marginMarketDirection({ collateralToken: plan.collateralToken, debtToken: plan.debtToken })
-      return direction === 'SHORT'
+      return direction === MarginDirection.SHORT
         ? t('margin.toast.openedShort', { size, leverage: formatLeverage(leverage) })
         : t('margin.toast.openedLong', { size, leverage: formatLeverage(leverage) })
     }

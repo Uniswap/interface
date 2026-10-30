@@ -160,6 +160,7 @@ const STEP_TYPE_TO_IS_TRADE_STEP: Record<TradingApi.PlanStepType, boolean> = {
   [TradingApi.PlanStepType.CHAINED]: true,
   [TradingApi.PlanStepType.VAULT_DEPOSIT]: true,
   [TradingApi.PlanStepType.VAULT_WITHDRAW]: true,
+  [TradingApi.PlanStepType.MARGIN_EXECUTE]: true,
   [TradingApi.PlanStepType.MARGIN_PRE_SWAP]: true,
   [TradingApi.PlanStepType.MARGIN_OPEN]: true,
   [TradingApi.PlanStepType.MARGIN_CLOSE]: true,

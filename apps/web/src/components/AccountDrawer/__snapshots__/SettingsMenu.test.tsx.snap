@@ -111,61 +111,6 @@ exports[`SettingsMenu > renders for embedded wallet user (Login Methods + Log ou
         </div>
         <div
           class="[container-name:true] flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 [container-type:normal] [cursor:pointer] bg-transparent flex-row items-center justify-between mx-[var(--c-mx)] px-[12px] py-[12px] rounded-[12px] [transition:transform_80ms_ease-in-out,_opacity_80ms_ease-in-out] hover:bg-[color:var(--ch-bg)] active:opacity-[0.75] active:[transform:scale(0.98)] focus-visible:[transform:scaleX(0.98)_scaleY(0.98)] focus-visible:[outline-offset:1px] focus-visible:[outline-style:solid] focus-visible:[outline-width:1px] focus-visible:[outline-color:var(--neutral3)] group"
-          data-testid="local-currency-settings-button"
-          role="button"
-          style="--c-mx: -12px; --ch-bg: var(--surface2);"
-          tabindex="0"
-        >
-          <div
-            class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center gap-[12px]"
-          >
-            <svg
-              fill="none"
-              stroke-width="8"
-              style="width: 24px; height: 24px;"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M7.5 18.01C7.5 18.74 7.72001 19.4 8.13 19.97C5.45 19.8 3 18.82 3 17.01V16.13C4.05 16.95 5.6 17.5 7.5 17.68V18.01ZM7.53998 13.94C7.52998 13.95 7.53003 13.96 7.53003 13.97C7.51003 14.07 7.5 14.17 7.5 14.27V16.18C5.08 15.9 3 14.94 3 13.27V12.39C4.05 13.22 5.61003 13.77 7.53003 13.94H7.53998ZM11.44 10.28C9.92 10.75 8.73001 11.52 8.07001 12.48C5.41001 12.31 3 11.33 3 9.53003V8.84998C4.31 9.87998 6.41 10.48 9 10.48C9.87 10.48 10.69 10.41 11.44 10.28ZM15 8.84998V9.53003C15 9.62003 14.99 9.70003 14.98 9.78003C14.19 9.78003 13.44 9.84997 12.74 9.96997C13.64 9.69997 14.4 9.31998 15 8.84998ZM9 3C6 3 3 3.99999 3 5.98999C3 7.99999 6 8.97998 9 8.97998C12 8.97998 15 7.99999 15 5.98999C15 3.99999 12 3 9 3ZM15 18.76C12.49 18.76 10.35 18.1 9 17.03V18.01C9 20 12 21 15 21C18 21 21 20 21 18.01V17.03C19.65 18.1 17.51 18.76 15 18.76ZM15 11.28C11.69 11.28 9 12.62 9 14.27C9 15.92 11.69 17.26 15 17.26C18.31 17.26 21 15.92 21 14.27C21 12.62 18.31 11.28 15 11.28Z"
-                fill="currentColor"
-              />
-            </svg>
-            <span
-              class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:20px] [font-weight:485] [color:var(--stext-neutral1)]"
-            >
-              Local currency
-            </span>
-          </div>
-          <div
-            class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center gap-[4px] w-[min-content]"
-          >
-            <span
-              class="[display:inline] box-border m-0 [word-wrap:break-word] [font-family:var(--stext-font-book)] text-[14px] [line-height:18px] [font-weight:485] [color:var(--stext-neutral2)] whitespace-nowrap"
-            >
-              USD
-            </span>
-            <div
-              class="flex flex-col basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 items-center justify-center rounded-[999999px] static [transform:var(--c-tr)] transition-transform duration-150 ease-in-out"
-              style="--c-tr: rotate(180deg);"
-            >
-              <svg
-                fill="none"
-                stroke-width="8"
-                style="width: 20px; height: 20px;"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  clip-rule="evenodd"
-                  d="M15.7071 5.29289C16.0976 5.68342 16.0976 6.31658 15.7071 6.70711L10.4142 12L15.7071 17.2929C16.0976 17.6834 16.0976 18.3166 15.7071 18.7071C15.3166 19.0976 14.6834 19.0976 14.2929 18.7071L8.2929 12.7071C7.9024 12.3166 7.9024 11.6834 8.2929 11.2929L14.2929 5.29289C14.6834 4.90237 15.3166 4.90237 15.7071 5.29289Z"
-                  fill="currentColor"
-                  fill-rule="evenodd"
-                />
-              </svg>
-            </div>
-          </div>
-        </div>
-        <div
-          class="[container-name:true] flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 [container-type:normal] [cursor:pointer] bg-transparent flex-row items-center justify-between mx-[var(--c-mx)] px-[12px] py-[12px] rounded-[12px] [transition:transform_80ms_ease-in-out,_opacity_80ms_ease-in-out] hover:bg-[color:var(--ch-bg)] active:opacity-[0.75] active:[transform:scale(0.98)] focus-visible:[transform:scaleX(0.98)_scaleY(0.98)] focus-visible:[outline-offset:1px] focus-visible:[outline-style:solid] focus-visible:[outline-width:1px] focus-visible:[outline-color:var(--neutral3)] group"
           data-testid="language-settings-button"
           role="button"
           style="--c-mx: -12px; --ch-bg: var(--surface2);"
@@ -208,6 +153,61 @@ exports[`SettingsMenu > renders for embedded wallet user (Login Methods + Log ou
               class="[display:inline] box-border m-0 [word-wrap:break-word] [font-family:var(--stext-font-book)] text-[14px] [line-height:18px] [font-weight:485] [color:var(--stext-neutral2)] whitespace-nowrap"
             >
               English
+            </span>
+            <div
+              class="flex flex-col basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 items-center justify-center rounded-[999999px] static [transform:var(--c-tr)] transition-transform duration-150 ease-in-out"
+              style="--c-tr: rotate(180deg);"
+            >
+              <svg
+                fill="none"
+                stroke-width="8"
+                style="width: 20px; height: 20px;"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  clip-rule="evenodd"
+                  d="M15.7071 5.29289C16.0976 5.68342 16.0976 6.31658 15.7071 6.70711L10.4142 12L15.7071 17.2929C16.0976 17.6834 16.0976 18.3166 15.7071 18.7071C15.3166 19.0976 14.6834 19.0976 14.2929 18.7071L8.2929 12.7071C7.9024 12.3166 7.9024 11.6834 8.2929 11.2929L14.2929 5.29289C14.6834 4.90237 15.3166 4.90237 15.7071 5.29289Z"
+                  fill="currentColor"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div
+          class="[container-name:true] flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 [container-type:normal] [cursor:pointer] bg-transparent flex-row items-center justify-between mx-[var(--c-mx)] px-[12px] py-[12px] rounded-[12px] [transition:transform_80ms_ease-in-out,_opacity_80ms_ease-in-out] hover:bg-[color:var(--ch-bg)] active:opacity-[0.75] active:[transform:scale(0.98)] focus-visible:[transform:scaleX(0.98)_scaleY(0.98)] focus-visible:[outline-offset:1px] focus-visible:[outline-style:solid] focus-visible:[outline-width:1px] focus-visible:[outline-color:var(--neutral3)] group"
+          data-testid="local-currency-settings-button"
+          role="button"
+          style="--c-mx: -12px; --ch-bg: var(--surface2);"
+          tabindex="0"
+        >
+          <div
+            class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center gap-[12px]"
+          >
+            <svg
+              fill="none"
+              stroke-width="8"
+              style="width: 24px; height: 24px;"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M7.5 18.01C7.5 18.74 7.72001 19.4 8.13 19.97C5.45 19.8 3 18.82 3 17.01V16.13C4.05 16.95 5.6 17.5 7.5 17.68V18.01ZM7.53998 13.94C7.52998 13.95 7.53003 13.96 7.53003 13.97C7.51003 14.07 7.5 14.17 7.5 14.27V16.18C5.08 15.9 3 14.94 3 13.27V12.39C4.05 13.22 5.61003 13.77 7.53003 13.94H7.53998ZM11.44 10.28C9.92 10.75 8.73001 11.52 8.07001 12.48C5.41001 12.31 3 11.33 3 9.53003V8.84998C4.31 9.87998 6.41 10.48 9 10.48C9.87 10.48 10.69 10.41 11.44 10.28ZM15 8.84998V9.53003C15 9.62003 14.99 9.70003 14.98 9.78003C14.19 9.78003 13.44 9.84997 12.74 9.96997C13.64 9.69997 14.4 9.31998 15 8.84998ZM9 3C6 3 3 3.99999 3 5.98999C3 7.99999 6 8.97998 9 8.97998C12 8.97998 15 7.99999 15 5.98999C15 3.99999 12 3 9 3ZM15 18.76C12.49 18.76 10.35 18.1 9 17.03V18.01C9 20 12 21 15 21C18 21 21 20 21 18.01V17.03C19.65 18.1 17.51 18.76 15 18.76ZM15 11.28C11.69 11.28 9 12.62 9 14.27C9 15.92 11.69 17.26 15 17.26C18.31 17.26 21 15.92 21 14.27C21 12.62 18.31 11.28 15 11.28Z"
+                fill="currentColor"
+              />
+            </svg>
+            <span
+              class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:20px] [font-weight:485] [color:var(--stext-neutral1)]"
+            >
+              Local currency
+            </span>
+          </div>
+          <div
+            class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center gap-[4px] w-[min-content]"
+          >
+            <span
+              class="[display:inline] box-border m-0 [word-wrap:break-word] [font-family:var(--stext-font-book)] text-[14px] [line-height:18px] [font-weight:485] [color:var(--stext-neutral2)] whitespace-nowrap"
+            >
+              USD
             </span>
             <div
               class="flex flex-col basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 items-center justify-center rounded-[999999px] static [transform:var(--c-tr)] transition-transform duration-150 ease-in-out"
@@ -399,6 +399,228 @@ exports[`SettingsMenu > renders for embedded wallet user (Login Methods + Log ou
               </svg>
             </div>
           </div>
+        </div>
+        <div
+          class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center justify-between py-[8px]"
+        >
+          <div
+            class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center gap-[12px] max-w-[var(--c-max-w)] media-xl:max-w-[var(--cC-max-w)]"
+            style="--c-max-w: 80%; --cC-max-w: 70%;"
+          >
+            <svg
+              fill="none"
+              stroke-width="8"
+              style="width: 24px; height: 24px;"
+              viewBox="0 0 20 20"
+            >
+              <path
+                d="M19.1833 7.5C19.1833 8.42 18.4367 9.16667 17.5167 9.16667C17.2817 9.16667 17.0583 9.11663 16.855 9.02913L14.0458 11.8384C14.1333 12.0417 14.1842 12.2642 14.1842 12.5C14.1842 13.42 13.4375 14.1667 12.5175 14.1667C11.5975 14.1667 10.8467 13.42 10.8467 12.5C10.8467 12.2725 10.8925 12.0558 10.975 11.8575L8.15584 9.03829C7.95917 9.11996 7.74333 9.16585 7.5175 9.16585C7.2825 9.16585 7.05918 9.11582 6.85584 9.02832L4.04667 11.8376C4.13417 12.0409 4.18501 12.2634 4.18501 12.4992C4.18501 13.4192 3.43834 14.1659 2.51834 14.1659C1.59834 14.1659 0.847504 13.4192 0.847504 12.4992C0.847504 11.5792 1.58917 10.8325 2.51 10.8325H2.51834C2.74501 10.8325 2.96 10.8784 3.15667 10.9601L5.97667 8.14006C5.89417 7.94256 5.8475 7.72585 5.8475 7.49919C5.8475 6.57919 6.58917 5.83252 7.51 5.83252H7.51834C8.43834 5.83252 9.18501 6.57919 9.18501 7.49919C9.18501 7.73419 9.13501 7.95747 9.04667 8.16081L11.8533 10.9674C12.0542 10.8807 12.2758 10.8325 12.5092 10.8325H12.5175C12.7442 10.8325 12.9592 10.8784 13.1558 10.9601L15.9758 8.14006C15.8933 7.94256 15.8467 7.72585 15.8467 7.49919C15.8467 6.57919 16.5883 5.83252 17.5092 5.83252H17.5175C18.4375 5.83335 19.1833 6.58 19.1833 7.5Z"
+                fill="currentColor"
+              />
+            </svg>
+            <div
+              class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+            >
+              <span
+                class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:20px] [font-weight:485] [color:var(--stext-neutral1)]"
+              >
+                <div
+                  class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center gap-[8px]"
+                >
+                  <span
+                    class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:20px] [font-weight:485] [color:var(--stext-neutral1)]"
+                  >
+                    Allow analytics
+                  </span>
+                  <div
+                    class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+                    data-base-ui-tooltip-trigger=""
+                    data-slot="tooltip-compat-trigger"
+                    id="base-ui-_r_7_"
+                  >
+                    <svg
+                      fill="none"
+                      stroke-width="8"
+                      style="width: 16px; height: 16px;"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M7.99992 1.33325C4.31792 1.33325 1.33325 4.31792 1.33325 7.99992C1.33325 11.6819 4.31792 14.6666 7.99992 14.6666C11.6819 14.6666 14.6666 11.6819 14.6666 7.99992C14.6666 4.31792 11.6819 1.33325 7.99992 1.33325ZM8.49992 10.9999C8.49992 11.2759 8.27592 11.4999 7.99992 11.4999C7.72392 11.4999 7.49992 11.2759 7.49992 10.9999V7.95256C7.49992 7.67656 7.72392 7.45256 7.99992 7.45256C8.27592 7.45256 8.49992 7.67656 8.49992 7.95256V10.9999ZM8.01327 6.33325C7.64527 6.33325 7.34318 6.03459 7.34318 5.66659C7.34318 5.29859 7.63859 4.99992 8.00659 4.99992H8.01327C8.38193 4.99992 8.67993 5.29859 8.67993 5.66659C8.67993 6.03459 8.38127 6.33325 8.01327 6.33325Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </span>
+            </div>
+          </div>
+          <button
+            aria-checked="true"
+            aria-selected="true"
+            role="switch"
+            style="appearance: none; margin: 0px; outline: none; position: relative; box-sizing: border-box; display: flex; flex-direction: row; align-items: center; justify-content: flex-start; height: 32px; width: 60px; min-height: 32px; min-width: 60px; flex-shrink: 0; padding: 4px; border-radius: 9999px; background-color: rgb(255, 55, 199); cursor: pointer; pointer-events: auto; transition: background-color 80ms ease-in-out;"
+            type="button"
+          >
+            <span
+              style="position: relative; box-sizing: border-box; display: flex; align-items: center; justify-content: center; min-height: 24px; width: 24px; border-radius: 9999px; background-color: rgb(255, 255, 255); transform: translateX(28px); transition: transform 80ms ease-in-out, background-color 80ms ease-in-out;"
+            >
+              <span
+                style="display: flex; align-items: center; justify-content: center; opacity: 1; transform: translateX(0px); transition: opacity 100ms ease-in-out, transform 100ms ease-in-out;"
+              >
+                <svg
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-width="8"
+                  style="width: 14px; height: 14px; color: rgb(255, 55, 199);"
+                  viewBox="0 0 48 48"
+                >
+                  <line
+                    stroke="currentColor"
+                    x1="11"
+                    x2="18"
+                    y1="26"
+                    y2="33"
+                  />
+                  <line
+                    stroke="currentColor"
+                    x1="18"
+                    x2="38"
+                    y1="33"
+                    y2="14"
+                  />
+                </svg>
+              </span>
+              <span
+                style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; z-index: -2; box-sizing: border-box; min-height: 24px; width: 24px; border-radius: 9999px; background-color: rgb(255, 255, 255); transform: translateX(0px); transition: width 80ms ease-in-out, transform 80ms ease-in-out, background-color 80ms ease-in-out;"
+              />
+            </span>
+            <span
+              style="position: absolute; top: -6px; right: -6px; bottom: -6px; left: -6px; z-index: -2; border-radius: 9999px; border-style: solid; border-width: 1px; border-color: transparent; pointer-events: none;"
+            />
+            <span
+              style="position: absolute; top: -5px; right: -5px; bottom: -5px; left: -5px; z-index: -1; border-radius: 9999px; border-style: solid; border-width: 2px; border-color: transparent; pointer-events: none;"
+            />
+          </button>
+        </div>
+        <div
+          class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center justify-between py-[8px]"
+        >
+          <div
+            class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center gap-[12px] max-w-[var(--c-max-w)] media-xl:max-w-[var(--cC-max-w)]"
+            style="--c-max-w: 80%; --cC-max-w: 70%;"
+          >
+            <svg
+              fill="currentColor"
+              stroke-width="8"
+              style="width: 24px; height: 24px;"
+              viewBox="0 0 60 60"
+            >
+              <path
+                d="M13.1251 9.76853C12.8252 9.76471 12.534 9.66762 12.2918 9.49073C12.0497 9.31384 11.8686 9.06594 11.7738 8.78146C11.679 8.49697 11.6751 8.19001 11.7627 7.90321C11.8503 7.61641 12.025 7.364 12.2626 7.18103C17.4361 3.52093 23.6665 1.65707 30.0001 1.87478C34.9876 1.87478 42.1501 2.71853 47.8126 6.78728C48.1222 7.00944 48.3315 7.34503 48.3947 7.72086C48.4579 8.0967 48.37 8.48228 48.1501 8.79353C47.9217 9.10149 47.5815 9.30745 47.2028 9.36707C46.824 9.42669 46.437 9.33519 46.1251 9.11229C41.3166 6.05642 35.6935 4.53294 30.0001 4.74353C24.316 4.55042 18.7229 6.2086 14.0626 9.46853C13.7972 9.67975 13.4637 9.78647 13.1251 9.76853Z"
+                fill="currentColor"
+              />
+              <path
+                d="M52.9314 22.9878C52.6996 22.9857 52.4715 22.9285 52.2662 22.8209C52.0608 22.7133 51.8839 22.5584 51.7502 22.369C48.5064 17.794 42.7127 11.7003 30.0002 11.7003C25.7734 11.5939 21.5835 12.51 17.7868 14.3708C13.9902 16.2315 10.6992 18.9819 8.19391 22.3878C7.96893 22.6945 7.63199 22.9 7.25633 22.9597C6.88067 23.0194 6.49663 22.9284 6.18766 22.7065C6.02558 22.5937 5.88871 22.4485 5.78574 22.28C5.68277 22.1115 5.61594 21.9234 5.5895 21.7277C5.56305 21.5321 5.57757 21.333 5.63212 21.1432C5.68668 20.9534 5.78008 20.7771 5.90641 20.6253C8.68394 16.8731 12.3224 13.8432 16.5153 11.7908C20.7083 9.73838 25.3331 8.72347 30.0002 8.83154C40.5189 8.83154 48.3939 12.7315 54.0752 20.719C54.2932 21.0326 54.3781 21.4197 54.3114 21.7957C54.2446 22.1717 54.0316 22.506 53.7189 22.7253C53.4868 22.8861 53.2136 22.9771 52.9314 22.9878Z"
+                fill="currentColor"
+              />
+              <path
+                d="M23.0249 58.1249C22.734 58.1234 22.4502 58.0351 22.2098 57.8715C21.9693 57.7078 21.7831 57.4762 21.6749 57.2061C21.5999 57.0295 21.5619 56.8394 21.5632 56.6475C21.5644 56.4556 21.605 56.266 21.6822 56.0903C21.7595 55.9147 21.8719 55.7567 22.0126 55.6262C22.1532 55.4956 22.319 55.3952 22.4999 55.3311C30.6937 52.1811 35.6249 45.7311 35.6249 38.0624C35.6809 37.3094 35.5739 36.5531 35.311 35.8452C35.0481 35.1374 34.6356 34.4945 34.1017 33.9606C33.5678 33.4267 32.9249 33.0142 32.2171 32.7513C31.5092 32.4884 30.7529 32.3814 29.9999 32.4374C26.5124 32.4374 24.8249 34.3124 24.3749 38.7186C24.1657 40.7795 23.1658 42.679 21.5854 44.0181C20.0051 45.3573 17.9672 46.0318 15.8999 45.8999C14.7882 45.916 13.6853 45.7005 12.6615 45.2669C11.6377 44.8333 10.7154 44.1913 9.95344 43.3817C9.19144 42.572 8.60642 41.6126 8.23565 40.5644C7.86488 39.5162 7.71648 38.4023 7.79992 37.2936C7.90353 31.4965 10.2959 25.9758 14.455 21.9361C18.6141 17.8964 24.2023 15.6658 29.9999 15.7311C35.9446 15.731 41.6478 18.0835 45.8636 22.2748C50.0794 26.466 52.4652 32.1553 52.4999 38.0999C52.3676 42.2856 51.4848 46.4136 49.8937 50.2874C49.7409 50.6329 49.4604 50.9058 49.1109 51.0491C48.7614 51.1924 48.37 51.1949 48.0187 51.0561C47.8444 50.9843 47.6861 50.8787 47.5529 50.7453C47.4198 50.612 47.3144 50.4535 47.2429 50.2791C47.1714 50.1047 47.1352 49.9179 47.1364 49.7294C47.1376 49.5409 47.1762 49.3546 47.2499 49.1811C48.6897 45.6563 49.4959 41.905 49.6312 38.0999C49.6064 32.9131 47.5259 27.9477 43.846 24.2923C40.166 20.637 35.1868 18.5899 29.9999 18.5999C27.4901 18.5502 24.9951 18.996 22.6578 19.9119C20.3206 20.8279 18.1869 22.1958 16.3791 23.9375C14.5712 25.6791 13.1247 27.7603 12.1223 30.0618C11.1199 32.3633 10.5813 34.8399 10.5374 37.3499C10.4606 38.0794 10.5391 38.8169 10.7679 39.5138C10.9966 40.2107 11.3704 40.8513 11.8646 41.3934C12.3588 41.9354 12.9623 42.3666 13.6352 42.6586C14.3081 42.9506 15.0352 43.0967 15.7687 43.0874C16.4439 43.1545 17.1257 43.0872 17.7748 42.8894C18.4239 42.6916 19.0274 42.3671 19.5504 41.9348C20.0733 41.5024 20.5055 40.9708 20.8219 40.3705C21.1383 39.7702 21.3326 39.1132 21.3937 38.4374C22.0687 32.6061 24.9374 29.6436 29.9437 29.6436C31.0782 29.5863 32.2121 29.7688 33.2713 30.1792C34.3305 30.5896 35.2914 31.2187 36.0911 32.0255C36.8908 32.8323 37.5114 33.7986 37.9125 34.8614C38.3135 35.9242 38.486 37.0597 38.4187 38.1936C38.4187 47.0811 32.7937 54.5436 23.4187 58.1249C23.2879 58.1399 23.1557 58.1399 23.0249 58.1249Z"
+                fill="currentColor"
+              />
+              <path
+                d="M37.0689 56.7755C36.7097 56.7697 36.3643 56.6369 36.0939 56.4005C35.9601 56.268 35.8539 56.1103 35.7814 55.9365C35.7089 55.7627 35.6716 55.5763 35.6716 55.388C35.6716 55.1997 35.7089 55.0133 35.7814 54.8395C35.8539 54.6657 35.9601 54.508 36.0939 54.3755C40.3122 50.0029 42.6886 44.1761 42.7314 38.1005C42.7314 35.1755 41.8314 25.6318 30.1689 25.6318C28.4695 25.572 26.7752 25.8512 25.1849 26.4532C23.5947 27.0552 22.1402 27.9679 20.9064 29.138C19.8024 30.2302 18.9297 31.5336 18.3402 32.9703C17.7507 34.407 17.4565 35.9477 17.4751 37.5005C17.4702 37.8802 17.3159 38.2426 17.0457 38.5093C16.7755 38.776 16.411 38.9255 16.0314 38.9255C15.8427 38.928 15.6553 38.893 15.4803 38.8225C15.3052 38.752 15.1459 38.6474 15.0116 38.5148C14.8773 38.3823 14.7706 38.2243 14.6979 38.0502C14.6251 37.8761 14.5876 37.6892 14.5876 37.5005C14.5584 35.5796 14.9113 33.6721 15.6259 31.8888C16.3405 30.1056 17.4025 28.4822 18.7501 27.113C20.2439 25.6792 22.0076 24.5564 23.9388 23.8097C25.87 23.0629 27.9303 22.7072 30.0001 22.763C41.4001 22.763 45.4501 31.013 45.4501 38.1005C45.4256 44.8635 42.8084 51.3595 38.1376 56.2505C38.0087 56.4109 37.8462 56.541 37.6615 56.6317C37.4769 56.7224 37.2746 56.7715 37.0689 56.7755Z"
+                fill="currentColor"
+              />
+              <path
+                d="M16.2376 52.0121C15.2602 52.0098 14.2837 51.9534 13.3126 51.8433C13.1255 51.8224 12.9443 51.7648 12.7794 51.6738C12.6145 51.5829 12.4692 51.4604 12.3516 51.3132C12.2341 51.1661 12.1467 50.9973 12.0945 50.8164C12.0422 50.6355 12.026 50.4461 12.047 50.2589C12.0679 50.0718 12.1255 49.8906 12.2164 49.7257C12.3074 49.5609 12.4299 49.4155 12.577 49.298C12.7242 49.1805 12.893 49.0931 13.0739 49.0408C13.2548 48.9885 13.4442 48.9724 13.6313 48.9933C18.3001 49.5183 21.9751 48.6933 24.5813 46.5183C25.7827 45.444 26.7542 44.1376 27.4373 42.6779C28.1205 41.2182 28.5011 39.6353 28.5563 38.0246C28.5656 37.8347 28.6133 37.6487 28.6965 37.4778C28.7797 37.3069 28.8967 37.1546 29.0404 37.0301C29.1841 36.9057 29.3516 36.8117 29.5326 36.7538C29.7137 36.6959 29.9046 36.6753 30.0938 36.6933C30.4718 36.7221 30.8238 36.8966 31.0757 37.1799C31.3275 37.4633 31.4595 37.8333 31.4438 38.2121C31.3648 40.2175 30.8786 42.1859 30.0147 43.9974C29.1509 45.809 27.9274 47.4258 26.4188 48.7496C23.5246 51.02 19.9124 52.1775 16.2376 52.0121Z"
+                fill="currentColor"
+              />
+            </svg>
+            <div
+              class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+            >
+              <span
+                class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:20px] [font-weight:485] [color:var(--stext-neutral1)]"
+              >
+                <div
+                  class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center gap-[8px]"
+                >
+                  <span
+                    class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:20px] [font-weight:485] [color:var(--stext-neutral1)]"
+                  >
+                    Share device identifiers
+                  </span>
+                  <div
+                    class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+                    data-base-ui-tooltip-trigger=""
+                    data-slot="tooltip-compat-trigger"
+                    id="base-ui-_r_9_"
+                  >
+                    <svg
+                      fill="none"
+                      stroke-width="8"
+                      style="width: 16px; height: 16px;"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M7.99992 1.33325C4.31792 1.33325 1.33325 4.31792 1.33325 7.99992C1.33325 11.6819 4.31792 14.6666 7.99992 14.6666C11.6819 14.6666 14.6666 11.6819 14.6666 7.99992C14.6666 4.31792 11.6819 1.33325 7.99992 1.33325ZM8.49992 10.9999C8.49992 11.2759 8.27592 11.4999 7.99992 11.4999C7.72392 11.4999 7.49992 11.2759 7.49992 10.9999V7.95256C7.49992 7.67656 7.72392 7.45256 7.99992 7.45256C8.27592 7.45256 8.49992 7.67656 8.49992 7.95256V10.9999ZM8.01327 6.33325C7.64527 6.33325 7.34318 6.03459 7.34318 5.66659C7.34318 5.29859 7.63859 4.99992 8.00659 4.99992H8.01327C8.38193 4.99992 8.67993 5.29859 8.67993 5.66659C8.67993 6.03459 8.38127 6.33325 8.01327 6.33325Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </span>
+            </div>
+          </div>
+          <button
+            aria-checked="true"
+            aria-selected="true"
+            role="switch"
+            style="appearance: none; margin: 0px; outline: none; position: relative; box-sizing: border-box; display: flex; flex-direction: row; align-items: center; justify-content: flex-start; height: 32px; width: 60px; min-height: 32px; min-width: 60px; flex-shrink: 0; padding: 4px; border-radius: 9999px; background-color: rgb(255, 55, 199); cursor: pointer; pointer-events: auto; transition: background-color 80ms ease-in-out;"
+            type="button"
+          >
+            <span
+              style="position: relative; box-sizing: border-box; display: flex; align-items: center; justify-content: center; min-height: 24px; width: 24px; border-radius: 9999px; background-color: rgb(255, 255, 255); transform: translateX(28px); transition: transform 80ms ease-in-out, background-color 80ms ease-in-out;"
+            >
+              <span
+                style="display: flex; align-items: center; justify-content: center; opacity: 1; transform: translateX(0px); transition: opacity 100ms ease-in-out, transform 100ms ease-in-out;"
+              >
+                <svg
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-width="8"
+                  style="width: 14px; height: 14px; color: rgb(255, 55, 199);"
+                  viewBox="0 0 48 48"
+                >
+                  <line
+                    stroke="currentColor"
+                    x1="11"
+                    x2="18"
+                    y1="26"
+                    y2="33"
+                  />
+                  <line
+                    stroke="currentColor"
+                    x1="18"
+                    x2="38"
+                    y1="33"
+                    y2="14"
+                  />
+                </svg>
+              </span>
+              <span
+                style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; z-index: -2; box-sizing: border-box; min-height: 24px; width: 24px; border-radius: 9999px; background-color: rgb(255, 255, 255); transform: translateX(0px); transition: width 80ms ease-in-out, transform 80ms ease-in-out, background-color 80ms ease-in-out;"
+              />
+            </span>
+            <span
+              style="position: absolute; top: -6px; right: -6px; bottom: -6px; left: -6px; z-index: -2; border-radius: 9999px; border-style: solid; border-width: 1px; border-color: transparent; pointer-events: none;"
+            />
+            <span
+              style="position: absolute; top: -5px; right: -5px; bottom: -5px; left: -5px; z-index: -1; border-radius: 9999px; border-style: solid; border-width: 2px; border-color: transparent; pointer-events: none;"
+            />
+          </button>
         </div>
       </div>
       <div
@@ -687,61 +909,6 @@ exports[`SettingsMenu > renders for standard wallet user 1`] = `
         </div>
         <div
           class="[container-name:true] flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 [container-type:normal] [cursor:pointer] bg-transparent flex-row items-center justify-between mx-[var(--c-mx)] px-[12px] py-[12px] rounded-[12px] [transition:transform_80ms_ease-in-out,_opacity_80ms_ease-in-out] hover:bg-[color:var(--ch-bg)] active:opacity-[0.75] active:[transform:scale(0.98)] focus-visible:[transform:scaleX(0.98)_scaleY(0.98)] focus-visible:[outline-offset:1px] focus-visible:[outline-style:solid] focus-visible:[outline-width:1px] focus-visible:[outline-color:var(--neutral3)] group"
-          data-testid="local-currency-settings-button"
-          role="button"
-          style="--c-mx: -12px; --ch-bg: var(--surface2);"
-          tabindex="0"
-        >
-          <div
-            class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center gap-[12px]"
-          >
-            <svg
-              fill="none"
-              stroke-width="8"
-              style="width: 24px; height: 24px;"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M7.5 18.01C7.5 18.74 7.72001 19.4 8.13 19.97C5.45 19.8 3 18.82 3 17.01V16.13C4.05 16.95 5.6 17.5 7.5 17.68V18.01ZM7.53998 13.94C7.52998 13.95 7.53003 13.96 7.53003 13.97C7.51003 14.07 7.5 14.17 7.5 14.27V16.18C5.08 15.9 3 14.94 3 13.27V12.39C4.05 13.22 5.61003 13.77 7.53003 13.94H7.53998ZM11.44 10.28C9.92 10.75 8.73001 11.52 8.07001 12.48C5.41001 12.31 3 11.33 3 9.53003V8.84998C4.31 9.87998 6.41 10.48 9 10.48C9.87 10.48 10.69 10.41 11.44 10.28ZM15 8.84998V9.53003C15 9.62003 14.99 9.70003 14.98 9.78003C14.19 9.78003 13.44 9.84997 12.74 9.96997C13.64 9.69997 14.4 9.31998 15 8.84998ZM9 3C6 3 3 3.99999 3 5.98999C3 7.99999 6 8.97998 9 8.97998C12 8.97998 15 7.99999 15 5.98999C15 3.99999 12 3 9 3ZM15 18.76C12.49 18.76 10.35 18.1 9 17.03V18.01C9 20 12 21 15 21C18 21 21 20 21 18.01V17.03C19.65 18.1 17.51 18.76 15 18.76ZM15 11.28C11.69 11.28 9 12.62 9 14.27C9 15.92 11.69 17.26 15 17.26C18.31 17.26 21 15.92 21 14.27C21 12.62 18.31 11.28 15 11.28Z"
-                fill="currentColor"
-              />
-            </svg>
-            <span
-              class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:20px] [font-weight:485] [color:var(--stext-neutral1)]"
-            >
-              Local currency
-            </span>
-          </div>
-          <div
-            class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center gap-[4px] w-[min-content]"
-          >
-            <span
-              class="[display:inline] box-border m-0 [word-wrap:break-word] [font-family:var(--stext-font-book)] text-[14px] [line-height:18px] [font-weight:485] [color:var(--stext-neutral2)] whitespace-nowrap"
-            >
-              USD
-            </span>
-            <div
-              class="flex flex-col basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 items-center justify-center rounded-[999999px] static [transform:var(--c-tr)] transition-transform duration-150 ease-in-out"
-              style="--c-tr: rotate(180deg);"
-            >
-              <svg
-                fill="none"
-                stroke-width="8"
-                style="width: 20px; height: 20px;"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  clip-rule="evenodd"
-                  d="M15.7071 5.29289C16.0976 5.68342 16.0976 6.31658 15.7071 6.70711L10.4142 12L15.7071 17.2929C16.0976 17.6834 16.0976 18.3166 15.7071 18.7071C15.3166 19.0976 14.6834 19.0976 14.2929 18.7071L8.2929 12.7071C7.9024 12.3166 7.9024 11.6834 8.2929 11.2929L14.2929 5.29289C14.6834 4.90237 15.3166 4.90237 15.7071 5.29289Z"
-                  fill="currentColor"
-                  fill-rule="evenodd"
-                />
-              </svg>
-            </div>
-          </div>
-        </div>
-        <div
-          class="[container-name:true] flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 [container-type:normal] [cursor:pointer] bg-transparent flex-row items-center justify-between mx-[var(--c-mx)] px-[12px] py-[12px] rounded-[12px] [transition:transform_80ms_ease-in-out,_opacity_80ms_ease-in-out] hover:bg-[color:var(--ch-bg)] active:opacity-[0.75] active:[transform:scale(0.98)] focus-visible:[transform:scaleX(0.98)_scaleY(0.98)] focus-visible:[outline-offset:1px] focus-visible:[outline-style:solid] focus-visible:[outline-width:1px] focus-visible:[outline-color:var(--neutral3)] group"
           data-testid="language-settings-button"
           role="button"
           style="--c-mx: -12px; --ch-bg: var(--surface2);"
@@ -784,6 +951,61 @@ exports[`SettingsMenu > renders for standard wallet user 1`] = `
               class="[display:inline] box-border m-0 [word-wrap:break-word] [font-family:var(--stext-font-book)] text-[14px] [line-height:18px] [font-weight:485] [color:var(--stext-neutral2)] whitespace-nowrap"
             >
               English
+            </span>
+            <div
+              class="flex flex-col basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 items-center justify-center rounded-[999999px] static [transform:var(--c-tr)] transition-transform duration-150 ease-in-out"
+              style="--c-tr: rotate(180deg);"
+            >
+              <svg
+                fill="none"
+                stroke-width="8"
+                style="width: 20px; height: 20px;"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  clip-rule="evenodd"
+                  d="M15.7071 5.29289C16.0976 5.68342 16.0976 6.31658 15.7071 6.70711L10.4142 12L15.7071 17.2929C16.0976 17.6834 16.0976 18.3166 15.7071 18.7071C15.3166 19.0976 14.6834 19.0976 14.2929 18.7071L8.2929 12.7071C7.9024 12.3166 7.9024 11.6834 8.2929 11.2929L14.2929 5.29289C14.6834 4.90237 15.3166 4.90237 15.7071 5.29289Z"
+                  fill="currentColor"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div
+          class="[container-name:true] flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 [container-type:normal] [cursor:pointer] bg-transparent flex-row items-center justify-between mx-[var(--c-mx)] px-[12px] py-[12px] rounded-[12px] [transition:transform_80ms_ease-in-out,_opacity_80ms_ease-in-out] hover:bg-[color:var(--ch-bg)] active:opacity-[0.75] active:[transform:scale(0.98)] focus-visible:[transform:scaleX(0.98)_scaleY(0.98)] focus-visible:[outline-offset:1px] focus-visible:[outline-style:solid] focus-visible:[outline-width:1px] focus-visible:[outline-color:var(--neutral3)] group"
+          data-testid="local-currency-settings-button"
+          role="button"
+          style="--c-mx: -12px; --ch-bg: var(--surface2);"
+          tabindex="0"
+        >
+          <div
+            class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center gap-[12px]"
+          >
+            <svg
+              fill="none"
+              stroke-width="8"
+              style="width: 24px; height: 24px;"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M7.5 18.01C7.5 18.74 7.72001 19.4 8.13 19.97C5.45 19.8 3 18.82 3 17.01V16.13C4.05 16.95 5.6 17.5 7.5 17.68V18.01ZM7.53998 13.94C7.52998 13.95 7.53003 13.96 7.53003 13.97C7.51003 14.07 7.5 14.17 7.5 14.27V16.18C5.08 15.9 3 14.94 3 13.27V12.39C4.05 13.22 5.61003 13.77 7.53003 13.94H7.53998ZM11.44 10.28C9.92 10.75 8.73001 11.52 8.07001 12.48C5.41001 12.31 3 11.33 3 9.53003V8.84998C4.31 9.87998 6.41 10.48 9 10.48C9.87 10.48 10.69 10.41 11.44 10.28ZM15 8.84998V9.53003C15 9.62003 14.99 9.70003 14.98 9.78003C14.19 9.78003 13.44 9.84997 12.74 9.96997C13.64 9.69997 14.4 9.31998 15 8.84998ZM9 3C6 3 3 3.99999 3 5.98999C3 7.99999 6 8.97998 9 8.97998C12 8.97998 15 7.99999 15 5.98999C15 3.99999 12 3 9 3ZM15 18.76C12.49 18.76 10.35 18.1 9 17.03V18.01C9 20 12 21 15 21C18 21 21 20 21 18.01V17.03C19.65 18.1 17.51 18.76 15 18.76ZM15 11.28C11.69 11.28 9 12.62 9 14.27C9 15.92 11.69 17.26 15 17.26C18.31 17.26 21 15.92 21 14.27C21 12.62 18.31 11.28 15 11.28Z"
+                fill="currentColor"
+              />
+            </svg>
+            <span
+              class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:20px] [font-weight:485] [color:var(--stext-neutral1)]"
+            >
+              Local currency
+            </span>
+          </div>
+          <div
+            class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center gap-[4px] w-[min-content]"
+          >
+            <span
+              class="[display:inline] box-border m-0 [word-wrap:break-word] [font-family:var(--stext-font-book)] text-[14px] [line-height:18px] [font-weight:485] [color:var(--stext-neutral2)] whitespace-nowrap"
+            >
+              USD
             </span>
             <div
               class="flex flex-col basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 items-center justify-center rounded-[999999px] static [transform:var(--c-tr)] transition-transform duration-150 ease-in-out"
@@ -872,6 +1094,228 @@ exports[`SettingsMenu > renders for standard wallet user 1`] = `
         >
           Privacy and security
         </span>
+        <div
+          class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center justify-between py-[8px]"
+        >
+          <div
+            class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center gap-[12px] max-w-[var(--c-max-w)] media-xl:max-w-[var(--cC-max-w)]"
+            style="--c-max-w: 80%; --cC-max-w: 70%;"
+          >
+            <svg
+              fill="none"
+              stroke-width="8"
+              style="width: 24px; height: 24px;"
+              viewBox="0 0 20 20"
+            >
+              <path
+                d="M19.1833 7.5C19.1833 8.42 18.4367 9.16667 17.5167 9.16667C17.2817 9.16667 17.0583 9.11663 16.855 9.02913L14.0458 11.8384C14.1333 12.0417 14.1842 12.2642 14.1842 12.5C14.1842 13.42 13.4375 14.1667 12.5175 14.1667C11.5975 14.1667 10.8467 13.42 10.8467 12.5C10.8467 12.2725 10.8925 12.0558 10.975 11.8575L8.15584 9.03829C7.95917 9.11996 7.74333 9.16585 7.5175 9.16585C7.2825 9.16585 7.05918 9.11582 6.85584 9.02832L4.04667 11.8376C4.13417 12.0409 4.18501 12.2634 4.18501 12.4992C4.18501 13.4192 3.43834 14.1659 2.51834 14.1659C1.59834 14.1659 0.847504 13.4192 0.847504 12.4992C0.847504 11.5792 1.58917 10.8325 2.51 10.8325H2.51834C2.74501 10.8325 2.96 10.8784 3.15667 10.9601L5.97667 8.14006C5.89417 7.94256 5.8475 7.72585 5.8475 7.49919C5.8475 6.57919 6.58917 5.83252 7.51 5.83252H7.51834C8.43834 5.83252 9.18501 6.57919 9.18501 7.49919C9.18501 7.73419 9.13501 7.95747 9.04667 8.16081L11.8533 10.9674C12.0542 10.8807 12.2758 10.8325 12.5092 10.8325H12.5175C12.7442 10.8325 12.9592 10.8784 13.1558 10.9601L15.9758 8.14006C15.8933 7.94256 15.8467 7.72585 15.8467 7.49919C15.8467 6.57919 16.5883 5.83252 17.5092 5.83252H17.5175C18.4375 5.83335 19.1833 6.58 19.1833 7.5Z"
+                fill="currentColor"
+              />
+            </svg>
+            <div
+              class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+            >
+              <span
+                class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:20px] [font-weight:485] [color:var(--stext-neutral1)]"
+              >
+                <div
+                  class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center gap-[8px]"
+                >
+                  <span
+                    class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:20px] [font-weight:485] [color:var(--stext-neutral1)]"
+                  >
+                    Allow analytics
+                  </span>
+                  <div
+                    class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+                    data-base-ui-tooltip-trigger=""
+                    data-slot="tooltip-compat-trigger"
+                    id="base-ui-_r_2_"
+                  >
+                    <svg
+                      fill="none"
+                      stroke-width="8"
+                      style="width: 16px; height: 16px;"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M7.99992 1.33325C4.31792 1.33325 1.33325 4.31792 1.33325 7.99992C1.33325 11.6819 4.31792 14.6666 7.99992 14.6666C11.6819 14.6666 14.6666 11.6819 14.6666 7.99992C14.6666 4.31792 11.6819 1.33325 7.99992 1.33325ZM8.49992 10.9999C8.49992 11.2759 8.27592 11.4999 7.99992 11.4999C7.72392 11.4999 7.49992 11.2759 7.49992 10.9999V7.95256C7.49992 7.67656 7.72392 7.45256 7.99992 7.45256C8.27592 7.45256 8.49992 7.67656 8.49992 7.95256V10.9999ZM8.01327 6.33325C7.64527 6.33325 7.34318 6.03459 7.34318 5.66659C7.34318 5.29859 7.63859 4.99992 8.00659 4.99992H8.01327C8.38193 4.99992 8.67993 5.29859 8.67993 5.66659C8.67993 6.03459 8.38127 6.33325 8.01327 6.33325Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </span>
+            </div>
+          </div>
+          <button
+            aria-checked="true"
+            aria-selected="true"
+            role="switch"
+            style="appearance: none; margin: 0px; outline: none; position: relative; box-sizing: border-box; display: flex; flex-direction: row; align-items: center; justify-content: flex-start; height: 32px; width: 60px; min-height: 32px; min-width: 60px; flex-shrink: 0; padding: 4px; border-radius: 9999px; background-color: rgb(255, 55, 199); cursor: pointer; pointer-events: auto; transition: background-color 80ms ease-in-out;"
+            type="button"
+          >
+            <span
+              style="position: relative; box-sizing: border-box; display: flex; align-items: center; justify-content: center; min-height: 24px; width: 24px; border-radius: 9999px; background-color: rgb(255, 255, 255); transform: translateX(28px); transition: transform 80ms ease-in-out, background-color 80ms ease-in-out;"
+            >
+              <span
+                style="display: flex; align-items: center; justify-content: center; opacity: 1; transform: translateX(0px); transition: opacity 100ms ease-in-out, transform 100ms ease-in-out;"
+              >
+                <svg
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-width="8"
+                  style="width: 14px; height: 14px; color: rgb(255, 55, 199);"
+                  viewBox="0 0 48 48"
+                >
+                  <line
+                    stroke="currentColor"
+                    x1="11"
+                    x2="18"
+                    y1="26"
+                    y2="33"
+                  />
+                  <line
+                    stroke="currentColor"
+                    x1="18"
+                    x2="38"
+                    y1="33"
+                    y2="14"
+                  />
+                </svg>
+              </span>
+              <span
+                style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; z-index: -2; box-sizing: border-box; min-height: 24px; width: 24px; border-radius: 9999px; background-color: rgb(255, 255, 255); transform: translateX(0px); transition: width 80ms ease-in-out, transform 80ms ease-in-out, background-color 80ms ease-in-out;"
+              />
+            </span>
+            <span
+              style="position: absolute; top: -6px; right: -6px; bottom: -6px; left: -6px; z-index: -2; border-radius: 9999px; border-style: solid; border-width: 1px; border-color: transparent; pointer-events: none;"
+            />
+            <span
+              style="position: absolute; top: -5px; right: -5px; bottom: -5px; left: -5px; z-index: -1; border-radius: 9999px; border-style: solid; border-width: 2px; border-color: transparent; pointer-events: none;"
+            />
+          </button>
+        </div>
+        <div
+          class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center justify-between py-[8px]"
+        >
+          <div
+            class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center gap-[12px] max-w-[var(--c-max-w)] media-xl:max-w-[var(--cC-max-w)]"
+            style="--c-max-w: 80%; --cC-max-w: 70%;"
+          >
+            <svg
+              fill="currentColor"
+              stroke-width="8"
+              style="width: 24px; height: 24px;"
+              viewBox="0 0 60 60"
+            >
+              <path
+                d="M13.1251 9.76853C12.8252 9.76471 12.534 9.66762 12.2918 9.49073C12.0497 9.31384 11.8686 9.06594 11.7738 8.78146C11.679 8.49697 11.6751 8.19001 11.7627 7.90321C11.8503 7.61641 12.025 7.364 12.2626 7.18103C17.4361 3.52093 23.6665 1.65707 30.0001 1.87478C34.9876 1.87478 42.1501 2.71853 47.8126 6.78728C48.1222 7.00944 48.3315 7.34503 48.3947 7.72086C48.4579 8.0967 48.37 8.48228 48.1501 8.79353C47.9217 9.10149 47.5815 9.30745 47.2028 9.36707C46.824 9.42669 46.437 9.33519 46.1251 9.11229C41.3166 6.05642 35.6935 4.53294 30.0001 4.74353C24.316 4.55042 18.7229 6.2086 14.0626 9.46853C13.7972 9.67975 13.4637 9.78647 13.1251 9.76853Z"
+                fill="currentColor"
+              />
+              <path
+                d="M52.9314 22.9878C52.6996 22.9857 52.4715 22.9285 52.2662 22.8209C52.0608 22.7133 51.8839 22.5584 51.7502 22.369C48.5064 17.794 42.7127 11.7003 30.0002 11.7003C25.7734 11.5939 21.5835 12.51 17.7868 14.3708C13.9902 16.2315 10.6992 18.9819 8.19391 22.3878C7.96893 22.6945 7.63199 22.9 7.25633 22.9597C6.88067 23.0194 6.49663 22.9284 6.18766 22.7065C6.02558 22.5937 5.88871 22.4485 5.78574 22.28C5.68277 22.1115 5.61594 21.9234 5.5895 21.7277C5.56305 21.5321 5.57757 21.333 5.63212 21.1432C5.68668 20.9534 5.78008 20.7771 5.90641 20.6253C8.68394 16.8731 12.3224 13.8432 16.5153 11.7908C20.7083 9.73838 25.3331 8.72347 30.0002 8.83154C40.5189 8.83154 48.3939 12.7315 54.0752 20.719C54.2932 21.0326 54.3781 21.4197 54.3114 21.7957C54.2446 22.1717 54.0316 22.506 53.7189 22.7253C53.4868 22.8861 53.2136 22.9771 52.9314 22.9878Z"
+                fill="currentColor"
+              />
+              <path
+                d="M23.0249 58.1249C22.734 58.1234 22.4502 58.0351 22.2098 57.8715C21.9693 57.7078 21.7831 57.4762 21.6749 57.2061C21.5999 57.0295 21.5619 56.8394 21.5632 56.6475C21.5644 56.4556 21.605 56.266 21.6822 56.0903C21.7595 55.9147 21.8719 55.7567 22.0126 55.6262C22.1532 55.4956 22.319 55.3952 22.4999 55.3311C30.6937 52.1811 35.6249 45.7311 35.6249 38.0624C35.6809 37.3094 35.5739 36.5531 35.311 35.8452C35.0481 35.1374 34.6356 34.4945 34.1017 33.9606C33.5678 33.4267 32.9249 33.0142 32.2171 32.7513C31.5092 32.4884 30.7529 32.3814 29.9999 32.4374C26.5124 32.4374 24.8249 34.3124 24.3749 38.7186C24.1657 40.7795 23.1658 42.679 21.5854 44.0181C20.0051 45.3573 17.9672 46.0318 15.8999 45.8999C14.7882 45.916 13.6853 45.7005 12.6615 45.2669C11.6377 44.8333 10.7154 44.1913 9.95344 43.3817C9.19144 42.572 8.60642 41.6126 8.23565 40.5644C7.86488 39.5162 7.71648 38.4023 7.79992 37.2936C7.90353 31.4965 10.2959 25.9758 14.455 21.9361C18.6141 17.8964 24.2023 15.6658 29.9999 15.7311C35.9446 15.731 41.6478 18.0835 45.8636 22.2748C50.0794 26.466 52.4652 32.1553 52.4999 38.0999C52.3676 42.2856 51.4848 46.4136 49.8937 50.2874C49.7409 50.6329 49.4604 50.9058 49.1109 51.0491C48.7614 51.1924 48.37 51.1949 48.0187 51.0561C47.8444 50.9843 47.6861 50.8787 47.5529 50.7453C47.4198 50.612 47.3144 50.4535 47.2429 50.2791C47.1714 50.1047 47.1352 49.9179 47.1364 49.7294C47.1376 49.5409 47.1762 49.3546 47.2499 49.1811C48.6897 45.6563 49.4959 41.905 49.6312 38.0999C49.6064 32.9131 47.5259 27.9477 43.846 24.2923C40.166 20.637 35.1868 18.5899 29.9999 18.5999C27.4901 18.5502 24.9951 18.996 22.6578 19.9119C20.3206 20.8279 18.1869 22.1958 16.3791 23.9375C14.5712 25.6791 13.1247 27.7603 12.1223 30.0618C11.1199 32.3633 10.5813 34.8399 10.5374 37.3499C10.4606 38.0794 10.5391 38.8169 10.7679 39.5138C10.9966 40.2107 11.3704 40.8513 11.8646 41.3934C12.3588 41.9354 12.9623 42.3666 13.6352 42.6586C14.3081 42.9506 15.0352 43.0967 15.7687 43.0874C16.4439 43.1545 17.1257 43.0872 17.7748 42.8894C18.4239 42.6916 19.0274 42.3671 19.5504 41.9348C20.0733 41.5024 20.5055 40.9708 20.8219 40.3705C21.1383 39.7702 21.3326 39.1132 21.3937 38.4374C22.0687 32.6061 24.9374 29.6436 29.9437 29.6436C31.0782 29.5863 32.2121 29.7688 33.2713 30.1792C34.3305 30.5896 35.2914 31.2187 36.0911 32.0255C36.8908 32.8323 37.5114 33.7986 37.9125 34.8614C38.3135 35.9242 38.486 37.0597 38.4187 38.1936C38.4187 47.0811 32.7937 54.5436 23.4187 58.1249C23.2879 58.1399 23.1557 58.1399 23.0249 58.1249Z"
+                fill="currentColor"
+              />
+              <path
+                d="M37.0689 56.7755C36.7097 56.7697 36.3643 56.6369 36.0939 56.4005C35.9601 56.268 35.8539 56.1103 35.7814 55.9365C35.7089 55.7627 35.6716 55.5763 35.6716 55.388C35.6716 55.1997 35.7089 55.0133 35.7814 54.8395C35.8539 54.6657 35.9601 54.508 36.0939 54.3755C40.3122 50.0029 42.6886 44.1761 42.7314 38.1005C42.7314 35.1755 41.8314 25.6318 30.1689 25.6318C28.4695 25.572 26.7752 25.8512 25.1849 26.4532C23.5947 27.0552 22.1402 27.9679 20.9064 29.138C19.8024 30.2302 18.9297 31.5336 18.3402 32.9703C17.7507 34.407 17.4565 35.9477 17.4751 37.5005C17.4702 37.8802 17.3159 38.2426 17.0457 38.5093C16.7755 38.776 16.411 38.9255 16.0314 38.9255C15.8427 38.928 15.6553 38.893 15.4803 38.8225C15.3052 38.752 15.1459 38.6474 15.0116 38.5148C14.8773 38.3823 14.7706 38.2243 14.6979 38.0502C14.6251 37.8761 14.5876 37.6892 14.5876 37.5005C14.5584 35.5796 14.9113 33.6721 15.6259 31.8888C16.3405 30.1056 17.4025 28.4822 18.7501 27.113C20.2439 25.6792 22.0076 24.5564 23.9388 23.8097C25.87 23.0629 27.9303 22.7072 30.0001 22.763C41.4001 22.763 45.4501 31.013 45.4501 38.1005C45.4256 44.8635 42.8084 51.3595 38.1376 56.2505C38.0087 56.4109 37.8462 56.541 37.6615 56.6317C37.4769 56.7224 37.2746 56.7715 37.0689 56.7755Z"
+                fill="currentColor"
+              />
+              <path
+                d="M16.2376 52.0121C15.2602 52.0098 14.2837 51.9534 13.3126 51.8433C13.1255 51.8224 12.9443 51.7648 12.7794 51.6738C12.6145 51.5829 12.4692 51.4604 12.3516 51.3132C12.2341 51.1661 12.1467 50.9973 12.0945 50.8164C12.0422 50.6355 12.026 50.4461 12.047 50.2589C12.0679 50.0718 12.1255 49.8906 12.2164 49.7257C12.3074 49.5609 12.4299 49.4155 12.577 49.298C12.7242 49.1805 12.893 49.0931 13.0739 49.0408C13.2548 48.9885 13.4442 48.9724 13.6313 48.9933C18.3001 49.5183 21.9751 48.6933 24.5813 46.5183C25.7827 45.444 26.7542 44.1376 27.4373 42.6779C28.1205 41.2182 28.5011 39.6353 28.5563 38.0246C28.5656 37.8347 28.6133 37.6487 28.6965 37.4778C28.7797 37.3069 28.8967 37.1546 29.0404 37.0301C29.1841 36.9057 29.3516 36.8117 29.5326 36.7538C29.7137 36.6959 29.9046 36.6753 30.0938 36.6933C30.4718 36.7221 30.8238 36.8966 31.0757 37.1799C31.3275 37.4633 31.4595 37.8333 31.4438 38.2121C31.3648 40.2175 30.8786 42.1859 30.0147 43.9974C29.1509 45.809 27.9274 47.4258 26.4188 48.7496C23.5246 51.02 19.9124 52.1775 16.2376 52.0121Z"
+                fill="currentColor"
+              />
+            </svg>
+            <div
+              class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+            >
+              <span
+                class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:20px] [font-weight:485] [color:var(--stext-neutral1)]"
+              >
+                <div
+                  class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center gap-[8px]"
+                >
+                  <span
+                    class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:20px] [font-weight:485] [color:var(--stext-neutral1)]"
+                  >
+                    Share device identifiers
+                  </span>
+                  <div
+                    class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+                    data-base-ui-tooltip-trigger=""
+                    data-slot="tooltip-compat-trigger"
+                    id="base-ui-_r_4_"
+                  >
+                    <svg
+                      fill="none"
+                      stroke-width="8"
+                      style="width: 16px; height: 16px;"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M7.99992 1.33325C4.31792 1.33325 1.33325 4.31792 1.33325 7.99992C1.33325 11.6819 4.31792 14.6666 7.99992 14.6666C11.6819 14.6666 14.6666 11.6819 14.6666 7.99992C14.6666 4.31792 11.6819 1.33325 7.99992 1.33325ZM8.49992 10.9999C8.49992 11.2759 8.27592 11.4999 7.99992 11.4999C7.72392 11.4999 7.49992 11.2759 7.49992 10.9999V7.95256C7.49992 7.67656 7.72392 7.45256 7.99992 7.45256C8.27592 7.45256 8.49992 7.67656 8.49992 7.95256V10.9999ZM8.01327 6.33325C7.64527 6.33325 7.34318 6.03459 7.34318 5.66659C7.34318 5.29859 7.63859 4.99992 8.00659 4.99992H8.01327C8.38193 4.99992 8.67993 5.29859 8.67993 5.66659C8.67993 6.03459 8.38127 6.33325 8.01327 6.33325Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </span>
+            </div>
+          </div>
+          <button
+            aria-checked="true"
+            aria-selected="true"
+            role="switch"
+            style="appearance: none; margin: 0px; outline: none; position: relative; box-sizing: border-box; display: flex; flex-direction: row; align-items: center; justify-content: flex-start; height: 32px; width: 60px; min-height: 32px; min-width: 60px; flex-shrink: 0; padding: 4px; border-radius: 9999px; background-color: rgb(255, 55, 199); cursor: pointer; pointer-events: auto; transition: background-color 80ms ease-in-out;"
+            type="button"
+          >
+            <span
+              style="position: relative; box-sizing: border-box; display: flex; align-items: center; justify-content: center; min-height: 24px; width: 24px; border-radius: 9999px; background-color: rgb(255, 255, 255); transform: translateX(28px); transition: transform 80ms ease-in-out, background-color 80ms ease-in-out;"
+            >
+              <span
+                style="display: flex; align-items: center; justify-content: center; opacity: 1; transform: translateX(0px); transition: opacity 100ms ease-in-out, transform 100ms ease-in-out;"
+              >
+                <svg
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-width="8"
+                  style="width: 14px; height: 14px; color: rgb(255, 55, 199);"
+                  viewBox="0 0 48 48"
+                >
+                  <line
+                    stroke="currentColor"
+                    x1="11"
+                    x2="18"
+                    y1="26"
+                    y2="33"
+                  />
+                  <line
+                    stroke="currentColor"
+                    x1="18"
+                    x2="38"
+                    y1="33"
+                    y2="14"
+                  />
+                </svg>
+              </span>
+              <span
+                style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; z-index: -2; box-sizing: border-box; min-height: 24px; width: 24px; border-radius: 9999px; background-color: rgb(255, 255, 255); transform: translateX(0px); transition: width 80ms ease-in-out, transform 80ms ease-in-out, background-color 80ms ease-in-out;"
+              />
+            </span>
+            <span
+              style="position: absolute; top: -6px; right: -6px; bottom: -6px; left: -6px; z-index: -2; border-radius: 9999px; border-style: solid; border-width: 1px; border-color: transparent; pointer-events: none;"
+            />
+            <span
+              style="position: absolute; top: -5px; right: -5px; bottom: -5px; left: -5px; z-index: -1; border-radius: 9999px; border-style: solid; border-width: 2px; border-color: transparent; pointer-events: none;"
+            />
+          </button>
+        </div>
       </div>
       <div
         class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 gap-[8px]"

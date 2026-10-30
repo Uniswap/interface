@@ -1,6 +1,6 @@
 /**
  * Full-window overlay portal (INFRA-2958), the Tamagui-free replacement for
- * `ui/src/components/portal/Portal`'s web leg. Web is a true document-level
+ * `ui/src/components/portal/Portal`. Web is a true document-level
  * `createPortal` into `document.body`; native teleports into a
  * provider-mounted overlay layer. `PortalProvider` belongs at the app root.
  */

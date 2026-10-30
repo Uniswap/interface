@@ -1,16 +1,23 @@
 import { isMobileApp } from '@universe/environment'
-import { Flex, Text, zIndexes } from '@universe/mycelium'
+import { zIndexes } from '@universe/mycelium'
 import AcrossLogoFull from '@universe/mycelium/assets/logos/svg/across-logo-full.svg'
+import {
+  AcrossApiLabel,
+  AcrossPoweredBy,
+  AcrossRoutingCaption,
+  AcrossRoutingRow,
+  BestRouteLabel,
+} from '@universe/swap-ui'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { OrderRouting } from 'ui/src/components/icons/OrderRouting'
-import { AcrossLogo } from 'ui/src/components/logos/AcrossLogo'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
+/** Shell adapter: owns both info popovers; the row, labels and caption come from swap-ui. */
 export function AcrossRoutingInfo(): JSX.Element {
   const { t } = useTranslation()
 
@@ -27,64 +34,41 @@ export function AcrossRoutingInfo(): JSX.Element {
     [t],
   )
 
-  const commonTooltipProps = useMemo(
-    () => ({
-      text: (
-        <Text variant="body4" color="$neutral2">
-          {t('swap.details.orderRoutingInfo')}
-        </Text>
-      ),
-      placement: 'top' as const,
-    }),
-    [t],
-  )
+  const commonTooltipProps = useMemo(() => ({ text: <AcrossRoutingCaption />, placement: 'top' as const }), [])
 
   const commonInfoButton = useMemo(
     () =>
       isMobileApp ? (
-        <Flex centered gap="$spacing16">
-          <LearnMoreLink textVariant="buttonLabel3" url={UniswapHelpUrls.articles.acrossRoutingInfo} />
-          <Flex row alignItems="center" gap="$spacing6" justifyContent="center">
-            <Text color="$neutral3" variant="buttonLabel4">
-              {t('swap.details.poweredBy')}
-            </Text>
-            <Flex>
-              <AcrossLogoFull color="$neutral3" />
-            </Flex>
-          </Flex>
-        </Flex>
+        <AcrossPoweredBy
+          learnMoreLink={<LearnMoreLink textVariant="buttonLabel3" url={UniswapHelpUrls.articles.acrossRoutingInfo} />}
+          logo={<AcrossLogoFull color="$neutral3" />}
+        />
       ) : undefined,
-    [t],
+    [],
   )
 
   return (
-    <Flex row alignItems="center" justifyContent="space-between" width="100%">
-      <WarningInfo
-        infoButton={commonInfoButton}
-        modalProps={commonModalProps}
-        tooltipProps={commonTooltipProps}
-        triggerPlacement="end"
-        analyticsTitle="Across order routing"
-      >
-        <Text color="$neutral2" variant="body3">
-          {t('common.bestRoute')}
-        </Text>
-      </WarningInfo>
-
-      <WarningInfo
-        infoButton={commonInfoButton}
-        modalProps={commonModalProps}
-        tooltipProps={commonTooltipProps}
-        trigger={
-          <Flex row shrink justifyContent="flex-end" gap="$spacing6" alignItems="center">
-            <AcrossLogo size="$icon.16" />
-            <Text color="$neutral1" variant="body3">
-              Across API
-            </Text>
-          </Flex>
-        }
-        analyticsTitle="Across order routing (API)"
-      />
-    </Flex>
+    <AcrossRoutingRow
+      info={
+        <WarningInfo
+          infoButton={commonInfoButton}
+          modalProps={commonModalProps}
+          tooltipProps={commonTooltipProps}
+          triggerPlacement="end"
+          analyticsTitle="Across order routing"
+        >
+          <BestRouteLabel wrapped={false} />
+        </WarningInfo>
+      }
+      apiInfo={
+        <WarningInfo
+          infoButton={commonInfoButton}
+          modalProps={commonModalProps}
+          tooltipProps={commonTooltipProps}
+          trigger={<AcrossApiLabel />}
+          analyticsTitle="Across order routing (API)"
+        />
+      }
+    />
   )
 }

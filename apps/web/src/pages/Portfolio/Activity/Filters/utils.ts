@@ -147,7 +147,6 @@ export function getTransactionTypesForFilter(filterType: string): TransactionTyp
 /**
  * Maps ActivityFilterType to server-side TransactionTypeFilter for API requests.
  * Returns undefined for 'All' filter (no server-side filtering needed).
- * This is used when connected to an EVM-only wallet for server-side filtering.
  */
 export const SERVER_FILTER_MAP: Record<ActivityFilterType, TransactionTypeFilter[] | undefined> = {
   [ActivityFilterType.All]: undefined,

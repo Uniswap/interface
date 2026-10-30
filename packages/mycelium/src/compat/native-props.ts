@@ -102,23 +102,6 @@ const NATIVE_HINT_PROP_KEYS = [
 type NativeForwardableProps = CompatAriaProps & CompatLegacyA11yProps & CompatInertProps & CompatBehavioralProps
 
 /**
- * Every prop key the legs forward to their native host via `nativeCompatProps`,
- * for the pinning tests. The behavioral press props are NOT here — they forward
- * through `nativePressProps` (INFRA-3536), which carries the disabled/attach
- * gating `nativeCompatProps`' unconditional copy loop cannot express.
- */
-export const NATIVE_FORWARDED_PROP_KEYS: readonly string[] = [
-  ...ARIA_PROP_KEYS,
-  ...A11Y_PROP_KEYS,
-  ...NATIVE_HINT_PROP_KEYS,
-  ...GESTURE_RESPONDER_PROP_KEYS,
-  'accessibilityState',
-  'nativeID',
-  'role',
-  'testID',
-]
-
-/**
  * Build the native host's non-style props. `disabled` has no RN `View`
  * counterpart, so it becomes `accessibilityState.disabled` (the
  * `TouchableAreaCompat.native.tsx` precedent) merged over any explicit

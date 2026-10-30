@@ -472,10 +472,8 @@ export class ExtensionEthMethodHandler extends BaseMethodHandler<WindowEthereumR
   }
 
   async handleEthSendTransaction(request: EthSendTransactionRequest, source: MessageEventSource | null): Promise<void> {
-    // Reject transactions where from === to and data !== undefined (self-calls with data)
     if (
-      isSelfCallWithData({
-        from: request.transaction.from,
+      this.isSelfCallToConnectedAccount({
         to: request.transaction.to,
         data: request.transaction.data,
         chainId: toSupportedChainId(request.transaction.chainId) ?? undefined,
@@ -602,6 +600,25 @@ export class ExtensionEthMethodHandler extends BaseMethodHandler<WindowEthereumR
     })
   }
 
+  /**
+   * The background signs with the active connected account and never reads the dapp-supplied
+   * `from`, so a dapp can omit or spoof it. Judge self-calls by whether `to` is one of the
+   * wallet's connected accounts instead.
+   */
+  private isSelfCallToConnectedAccount({
+    to,
+    data,
+    chainId,
+  }: {
+    to?: string
+    data?: string
+    chainId?: UniverseChainId
+  }): boolean {
+    return (this.getConnectedAddresses() ?? []).some((address) =>
+      isSelfCallWithData({ from: address, to, data, chainId }),
+    )
+  }
+
   private isValidRequestAddress(address: string): boolean {
     return (this.getConnectedAddresses() ?? []).some((connectedAddress) =>
       areAddressesEqual({
@@ -635,14 +652,9 @@ export class ExtensionEthMethodHandler extends BaseMethodHandler<WindowEthereumR
    * This method allows dapps to send a batch of calls to the wallet
    */
   async handleWalletSendCalls(request: WalletSendCallsRequest, source: MessageEventSource | null): Promise<void> {
-    // Reject if any calls have from === to and data !== undefined
+    const chainId = toSupportedChainId(request.chainId) ?? undefined
     const hasSelfCallWithData = request.calls.some((call) =>
-      isSelfCallWithData({
-        from: request.from,
-        to: call.to,
-        data: call.data,
-        chainId: toSupportedChainId(request.chainId) ?? undefined,
-      }),
+      this.isSelfCallToConnectedAccount({ to: call.to, data: call.data, chainId }),
     )
 
     if (hasSelfCallWithData) {

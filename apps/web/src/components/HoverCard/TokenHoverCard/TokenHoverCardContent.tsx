@@ -5,6 +5,7 @@ import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { isLowPriceConfidence } from 'uniswap/src/features/prices/priceConfidence'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
 import type { PriceChartData } from '~/components/Charts/PriceChart'
@@ -24,6 +25,7 @@ export interface TokenHoverCardContentProps {
   price?: number | null
   pricePercentChange?: number | null
   priceAbsoluteChange?: number | null
+  priceConfidenceScore?: number
   priceData?: PriceChartData[]
   chartLoading?: boolean
   volume24hUsd?: number
@@ -40,11 +42,9 @@ const STATS_LOADING_PLACEHOLDER = '$000.0K 24H vol · $0.0M TVL'
 /** Body while the deferred CurrencyInfo fetch is in flight, or the no-data treatment once it settles empty. */
 export function TokenHoverCardPlaceholder({
   unavailable,
-  showStats = false,
   maxWidth,
 }: {
   unavailable: boolean
-  showStats?: boolean
   maxWidth?: number
 }): JSX.Element {
   return (
@@ -70,7 +70,7 @@ export function TokenHoverCardPlaceholder({
     >
       <PriceAndChangeRow loading formattedPrice="" />
       <HoverCardChartSkeleton />
-      {showStats && <HoverCardStatsRow loading loadingPlaceholderText={STATS_LOADING_PLACEHOLDER} stats={[]} />}
+      <HoverCardStatsRow loading loadingPlaceholderText={STATS_LOADING_PLACEHOLDER} stats={[]} />
     </HoverCardBody>
   )
 }
@@ -79,10 +79,12 @@ function PriceAndChangeRow({
   loading,
   formattedPrice,
   pricePercentChange,
+  showLowPriceConfidence = false,
 }: {
   loading: boolean
   formattedPrice: string
   pricePercentChange?: number | null
+  showLowPriceConfidence?: boolean
 }): JSX.Element {
   const { t } = useTranslation()
   return (
@@ -90,6 +92,7 @@ function PriceAndChangeRow({
       loading={loading}
       loadingPlaceholderText="$0,000.00"
       value={formattedPrice}
+      lowPricingConfidence={showLowPriceConfidence}
       caption={
         pricePercentChange != null ? (
           <Flex row gap="$spacing4" alignItems="center">
@@ -114,6 +117,7 @@ function TokenHoverCardContentInner({
   price,
   pricePercentChange,
   priceAbsoluteChange,
+  priceConfidenceScore,
   priceData,
   chartLoading = false,
   volume24hUsd,
@@ -176,6 +180,7 @@ function TokenHoverCardContentInner({
           loading={chartLoading}
           formattedPrice={formattedPrice}
           pricePercentChange={pricePercentChange}
+          showLowPriceConfidence={isLowPriceConfidence(priceConfidenceScore)}
         />
       )}
       <HoverCardChart loading={chartLoading} data={priceData} change={change} />

@@ -258,11 +258,19 @@ export function LiquidityPositionInfoBadges({
           </PositionInfoBadge>
         )
 
+        // A truncating badge has to be able to shrink below its 160px label cap, or a narrow row (mWeb pool
+        // header) overflows into its neighbors. Every wrapper defaults to flexShrink 0, so the wrapper opts in.
+        const wrapperShrinkProps = badge.truncate ? { shrink: true, minWidth: 0 } : undefined
+
         if (!tooltipContent && !tooltipNode) {
-          return <Flex key={key}>{content}</Flex>
+          return (
+            <Flex key={key} {...wrapperShrinkProps}>
+              {content}
+            </Flex>
+          )
         }
 
-        return (
+        const tooltip = (
           <Tooltip allowFlip stayInFrame placement="top" key={key}>
             <Tooltip.Trigger>{content}</Tooltip.Trigger>
             <Tooltip.Content maxWidth="fit-content">
@@ -274,6 +282,14 @@ export function LiquidityPositionInfoBadges({
               )}
             </Tooltip.Content>
           </Tooltip>
+        )
+
+        return wrapperShrinkProps ? (
+          <Flex key={key} {...wrapperShrinkProps}>
+            {tooltip}
+          </Flex>
+        ) : (
+          tooltip
         )
       })}
       {hookEntry && chainId && showHookDetails ? (

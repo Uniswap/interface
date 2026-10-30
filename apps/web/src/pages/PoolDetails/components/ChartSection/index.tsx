@@ -7,7 +7,7 @@ import { SegmentedControl } from '@universe/mycelium/segmented-control-compat'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { useAtomValue } from 'jotai/utils'
 import { createParser, useQueryState } from 'nuqs'
-import { useMemo, useState } from 'react'
+import { type ReactNode, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getLowVarianceAxisDecimals } from 'uniswap/src/components/charts/utils'
 import { v2TokenToCurrency } from 'uniswap/src/features/dataApi/utils/parsedToken'
@@ -221,10 +221,21 @@ function useV2Reserves(poolData?: PoolData): V2Reserves | undefined {
   )
 }
 
+// The shared container reverses its row so a lone control sits right; the PDP revamp wants it left.
+function PdpChartActionsContainer({ children }: { children: ReactNode }): JSX.Element {
+  const isPdpRevampEnabled = useFeatureFlag(FeatureFlags.PdpRevamp)
+  return isPdpRevampEnabled ? (
+    <Flex row alignItems="center" mt="$spacing12" width="100%">
+      {children}
+    </Flex>
+  ) : (
+    <ChartActionsContainer>{children}</ChartActionsContainer>
+  )
+}
+
 export function ChartSection(props: ChartSectionProps) {
   const media = useMedia()
   const { t } = useTranslation()
-  const isLiquidityDepthChartEnabled = useFeatureFlag(FeatureFlags.LpPdpDepthChart)
   const [zoomActions, setZoomActions] = useState<D3LiquidityPoolChartZoomActions | null>(null)
   const v2Reserves = useV2Reserves(props.poolData)
 
@@ -324,32 +335,21 @@ export function ChartSection(props: ChartSectionProps) {
     }
   }, [activeQuery.chartType, timePeriod, setTimePeriod, t])
 
-  const availableChartOptions = useMemo(
-    () =>
-      isLiquidityDepthChartEnabled
-        ? PDP_CHART_SELECTOR_OPTIONS
-        : PDP_CHART_SELECTOR_OPTIONS.filter((o) => o !== ChartType.DEPTH),
-    [isLiquidityDepthChartEnabled],
-  )
-
-  // When the depth flag is off but the URL still holds ?chart=depth, reflect it as liquidity in the toggle.
-  const displayChartType = isLiquidityDepthChartEnabled ? selectedChartType : activeQuery.chartType
-
   return (
     <Flex testID="pdp-chart-container">
       <Flex height="$spacing48" justifyContent="center" mb="$spacing24">
         <ChartTypeToggle
           variant="text"
-          availableOptions={availableChartOptions}
-          currentChartType={displayChartType}
+          availableOptions={PDP_CHART_SELECTOR_OPTIONS}
+          currentChartType={selectedChartType}
           onChartTypeChange={(c: ChartType) => {
-            if (c !== displayChartType) {
+            if (c !== selectedChartType) {
               sendAnalyticsEvent(InterfaceEventName.ChartSettingSelected, {
                 page: InterfacePageName.PoolDetailsPage,
                 selection: 'chart_type',
                 chart_type: c,
                 time_period: timePeriod,
-                previous_value: displayChartType,
+                previous_value: selectedChartType,
                 chain_id: analyticsChainId,
                 pool_id: poolId,
               })
@@ -364,16 +364,16 @@ export function ChartSection(props: ChartSectionProps) {
       {ChartBody}
       {activeQuery.chartType === ChartType.LIQUIDITY ? (
         zoomActions ? (
-          <ChartActionsContainer>
+          <PdpChartActionsContainer>
             <ZoomButtons
               onZoomIn={zoomActions.zoomIn}
               onZoomOut={zoomActions.zoomOut}
               onReset={zoomActions.resetView}
             />
-          </ChartActionsContainer>
+          </PdpChartActionsContainer>
         ) : null
       ) : (
-        <ChartActionsContainer>
+        <PdpChartActionsContainer>
           <Flex $md={{ width: '100%' }}>
             <SegmentedControl
               fullWidth={media.md}
@@ -397,7 +397,7 @@ export function ChartSection(props: ChartSectionProps) {
               }}
             />
           </Flex>
-        </ChartActionsContainer>
+        </PdpChartActionsContainer>
       )}
     </Flex>
   )

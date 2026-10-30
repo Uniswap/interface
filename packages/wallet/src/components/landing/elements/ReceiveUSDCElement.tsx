@@ -1,6 +1,6 @@
-import { Flex, Text } from '@universe/mycelium'
+import { Flex, Text, useIsDarkMode } from '@universe/mycelium'
 import { USDC_LOGO } from '@universe/mycelium/assets'
-import { Image, useIsDarkMode } from 'ui/src'
+import { Image } from 'ui/src'
 import { colors, imageSizes, opacify, validColor } from 'ui/src/theme'
 
 // As we're using this color only in this component, we define it here instead in colors.ts

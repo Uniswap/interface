@@ -9,6 +9,7 @@ import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { ExplorerDataType, getExplorerLink, openUri } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
+import { resolveIpfsGatewayUrl } from 'utilities/src/format/gatewayUrls'
 import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -54,7 +55,6 @@ import {
   TokenMode,
 } from '~/pages/Liquidity/CreateAuction/types'
 import { getPrimaryStablecoin, getRaiseCurrencyAddress } from '~/pages/Liquidity/CreateAuction/utils'
-import { resolveTokenImageSrc } from '~/pages/Liquidity/CreateAuction/utils/resolveTokenImageSrc'
 
 // oxlint-disable-next-line complexity
 export function ReviewLaunchStep(): JSX.Element | null {
@@ -231,7 +231,7 @@ export function ReviewLaunchStep(): JSX.Element | null {
     undefined
   const launchTokenLogoUrl =
     tokenForm.mode === TokenMode.CREATE_NEW
-      ? resolveTokenImageSrc(tokenForm.imageUrl)
+      ? resolveIpfsGatewayUrl(tokenForm.imageUrl) || undefined
       : (tokenForm.existingTokenCurrencyInfo?.logoUrl ?? undefined)
 
   // Quick launch has no editable start time, so a stale start is fixed by refreshing the preset

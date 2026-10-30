@@ -6,7 +6,8 @@ import { render, screen } from 'src/test/test-utils'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 
-vi.mock('ui/src/utils/colors/hooks/useExtractedTokenColor', () => ({
+vi.mock('@universe/mycelium', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@universe/mycelium')>()),
   useExtractedTokenColor: () => ({ tokenColor: '#123456', tokenColorLoading: false }),
 }))
 

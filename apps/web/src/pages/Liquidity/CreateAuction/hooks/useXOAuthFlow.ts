@@ -81,25 +81,41 @@ export function useXOAuthFlow({ onVerified }: { onVerified?: () => void } = {}):
     }
 
     setError(null)
+
+    // Mobile browsers only honor window.open inside the tap's user activation, which the getXAuthUrl round
+    // trip would consume — so open a blank placeholder now and navigate it once the auth URL arrives.
+    const popup = window.open('', 'x_oauth', 'width=600,height=700')
+    popupRef.current = popup
+
+    if (!popup) {
+      setError(t('toucan.createAuction.step.tokenInfo.xProfile.popupBlocked'))
+      return
+    }
+
     setIsLoading(true)
 
     XVerificationClient.getXAuthUrl(new GetXAuthUrlRequest({ walletAddress: address }))
       .then(({ authUrl, state }) => {
+        // The user closed the placeholder while the URL was loading; the close-poller resets loading.
+        if (popup.closed) {
+          return
+        }
+
         // Use localStorage, not sessionStorage: the OAuth popup opens cross-origin (x.com), and under
         // COOP `same-origin-allow-popups` (set on some deploys) it lands in a
         // separate browsing-context group with a fresh, unshared sessionStorage. localStorage is shared
         // across that boundary, so the callback can read the state back. Cleared on read in the callback.
         localStorage.setItem('x_oauth_state', state)
 
-        const popup = window.open(authUrl, 'x_oauth', 'width=600,height=700')
-        popupRef.current = popup
-
-        if (!popup) {
-          setIsLoading(false)
-          setError(t('toucan.createAuction.step.tokenInfo.xProfile.popupBlocked'))
-        }
+        // replace() keeps the blank placeholder out of the popup's history.
+        popup.location.replace(authUrl)
       })
       .catch((err: unknown) => {
+        // Closing the placeholder re-enables the button, so a newer tap may own the loading/error state now.
+        if (popupRef.current !== popup) {
+          return
+        }
+        popup.close()
         setIsLoading(false)
         setError(
           err instanceof Error ? err.message : t('toucan.createAuction.step.tokenInfo.xProfile.failedToInitiate'),

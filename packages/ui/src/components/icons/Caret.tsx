@@ -1,9 +1,9 @@
+import { useSporeColors } from '@universe/mycelium'
 import { memo } from 'react'
 import { withAnimated } from 'ui/src/components/factories/animated'
 import { IconProps } from 'ui/src/components/factories/createIcon'
 import { resolveIconColor } from 'ui/src/components/factories/iconTokens'
 import { ArrowChange } from 'ui/src/components/icons/ArrowChange'
-import { useSporeColors } from 'ui/src/hooks/useSporeColors'
 import { IconSizeTokens } from 'ui/src/theme'
 
 type Props = {

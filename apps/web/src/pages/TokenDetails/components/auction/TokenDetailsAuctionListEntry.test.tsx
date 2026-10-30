@@ -109,6 +109,7 @@ describe('TokenDetailsAuctionListEntry', () => {
     expect(screen.getAllByTestId(TestID.TokenDetailsAuctionListRow)).toHaveLength(4)
     expect(sendAnalyticsEvent).toHaveBeenCalledWith(AuctionEventName.AuctionSelectorOpened, {
       chain_id: UniverseChainId.Mainnet,
+      token_address: '0x3333333333333333333333333333333333333333',
       auction_count: 4,
       entry_point: 'tdp_other_auctions',
     })
@@ -168,6 +169,7 @@ describe('TokenDetailsAuctionListEntry', () => {
     fireEvent.click(chip)
     expect(sendAnalyticsEvent).toHaveBeenCalledWith(AuctionEventName.AuctionSelectorOpened, {
       chain_id: UniverseChainId.Mainnet,
+      token_address: '0x3333333333333333333333333333333333333333',
       auction_count: 2,
       entry_point: 'tdp_auction_banner',
     })

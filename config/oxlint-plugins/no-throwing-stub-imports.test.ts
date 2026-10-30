@@ -171,12 +171,21 @@ export function PositionsStatusChips(): JSX.Element {
     // presence's went real under INFRA-3344 (#39550); see the dedicated
     // regression guards.
     const source = `
-import { MenuCompat } from '@universe/mycelium/menu-compat'
+import { MenuContentCompat } from '@universe/mycelium/menu-compat'
 import { PopoverCompat } from '@universe/mycelium/popover-compat'
-export { MenuCompat, PopoverCompat }
+export { MenuContentCompat, PopoverCompat }
 `
     const diagnostics = lintFixture({ source, platform: 'native' })
     expect(diagnostics).toHaveLength(2)
+  })
+
+  test('menu-compat: the subpath fires on native, the root re-exports stay silent (real manifest)', () => {
+    // Metro resolves the exact subpath target (the web barrel), so native must import from the root.
+    const subpath = `import { DropdownMenuSheetItemCompat } from '@universe/mycelium/menu-compat'\nexport { DropdownMenuSheetItemCompat }`
+    expect(lintFixture({ source: subpath, platform: 'native' })).toHaveLength(1)
+    const root = `import { DropdownMenuSheetItem, getMenuItemColor } from '@universe/mycelium'\nexport { DropdownMenuSheetItem, getMenuItemColor }`
+    expect(lintFixture({ source: root, platform: 'native' })).toHaveLength(0)
+    expect(lintFixture({ source: root, platform: 'both' })).toHaveLength(0)
   })
 
   // Regression guard for a merge-driven manifest flip: presence's native leg
@@ -334,7 +343,7 @@ export type { FloatingOverlayRootProps }
 
   test("under 'both', a non-suffixed file importing a native-throwing entry fires the native leg (real manifest)", () => {
     const diagnostics = lintFixture({
-      source: `import { MenuCompat } from '@universe/mycelium/menu-compat'\nexport { MenuCompat }`,
+      source: `import { MenuContentCompat } from '@universe/mycelium/menu-compat'\nexport { MenuContentCompat }`,
       platform: 'both',
     })
     expect(diagnostics).toHaveLength(1)

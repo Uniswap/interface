@@ -1,14 +1,13 @@
 import type { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Platform } from '@universe/chains'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { Flex } from '@universe/mycelium'
+import { Flex, IconButton, Shine } from '@universe/mycelium'
 import { UNISWAP_LOGO } from '@universe/mycelium/assets'
 import { TestID } from '@universe/test'
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, IconButton, Image } from 'ui/src'
+import { Button, Image } from 'ui/src'
 import { Settings } from 'ui/src/components/icons/Settings'
-import { Shine } from 'ui/src/loading/Shine'
 import { iconSizes } from 'ui/src/theme'
 import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { TestnetModeBanner } from 'uniswap/src/components/banners/TestnetModeBanner'
@@ -145,7 +144,7 @@ export function AuthenticatedHeader({
                 <IconButton
                   size="small"
                   emphasis="text-only"
-                  icon={<Image height={iconSizes.icon24} source={UNISWAP_LOGO} width={iconSizes.icon24} />}
+                  icon={<Image height={iconSizes.icon20} source={UNISWAP_LOGO} width={iconSizes.icon20} />}
                   borderRadius="$rounded32"
                   hoverStyle={{
                     backgroundColor: '$surface2',

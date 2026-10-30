@@ -11,25 +11,25 @@ describe('getLaunchMethodCopy', () => {
       label: 'toucan.launchMethod.custom',
       explainerTitle: 'toucan.launchMethod.custom.title',
       explainerDescription: 'toucan.launchMethod.custom.description',
-      learnMoreUrl: UniswapHelpUrls.articles.toucanIntro,
+      learnMoreUrl: UniswapHelpUrls.articles.toucanLaunchAuctionHelp,
     })
   })
 
-  it('returns Crowd Launch copy with the temporary pools.xyz help link', () => {
+  it('returns Crowd Launch copy with the pools.xyz help article', () => {
     expect(getLaunchMethodCopy({ method: LaunchProvenanceMethod.CrowdLaunch, t })).toEqual({
       label: 'toucan.launchMethod.crowd',
       explainerTitle: 'toucan.launchMethod.crowd.title',
       explainerDescription: 'toucan.launchMethod.crowd.description',
-      learnMoreUrl: 'https://pools.xyz',
+      learnMoreUrl: UniswapHelpUrls.articles.toucanPoolsLaunchHelp,
     })
   })
 
-  it('returns Instant Launch copy with the temporary pools.xyz help link', () => {
+  it('returns Instant Launch copy with the pools.xyz help article', () => {
     expect(getLaunchMethodCopy({ method: LaunchProvenanceMethod.InstantLaunch, t })).toEqual({
       label: 'toucan.launchMethod.instant',
       explainerTitle: 'toucan.launchMethod.instant.title',
       explainerDescription: 'toucan.launchMethod.instant.description',
-      learnMoreUrl: 'https://pools.xyz',
+      learnMoreUrl: UniswapHelpUrls.articles.toucanPoolsLaunchHelp,
     })
   })
 

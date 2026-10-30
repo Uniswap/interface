@@ -1,7 +1,6 @@
 /**
  * Behavior contract for the ElementAfterText compat (INFRA-3601), asserted on
- * the rendered DOM against the legacy reference
- * (`ui/src/components/text/ElementAfterText.tsx`): a centered row carrying
+ * the rendered DOM against the legacy ui component's behavior: a centered row carrying
  * the text (legacy default color/variant unless overridden) with the element
  * after it — rendered inline on desktop web, wrapped on other web surfaces
  * (where the RN-only layout event never fires and the wrapper never

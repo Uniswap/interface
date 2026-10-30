@@ -35,6 +35,11 @@ export function is401Error(error: unknown): boolean {
   return false
 }
 
+/** A 403 is a geo/compliance or permissioned-pool block: retrying the same request gets the same answer. */
+export function is403Error(error: unknown): boolean {
+  return error instanceof FetchError && error.response.status === 403
+}
+
 export function is404Error(error: unknown): boolean {
   return error instanceof FetchError && !!error.response.status && error.response.status === 404
 }

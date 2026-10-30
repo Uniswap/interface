@@ -1,3 +1,4 @@
+import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { NumberType } from 'utilities/src/format/types'
 import { describe, expect, it } from 'vitest'
 import { parseUnits } from '~/chains'
@@ -136,7 +137,7 @@ describe('computeShowInitialSkeleton', () => {
 })
 
 describe('computeDisplayedLeverage', () => {
-  const BASE = { collateral: 1, debt: 0, mark: 1, deltaE: 0n, collateralDecimals: 18, direction: 'LONG' as const }
+  const BASE = { collateral: 1, debt: 0, mark: 1, deltaE: 0n, collateralDecimals: 18, direction: MarginDirection.LONG }
 
   // `locked` READS OUT the position's own leverage, so it is not capped: showing the cap for a position
   // that drifted above it misstates the position itself. The slider pins its own thumb at cap, so an
@@ -191,7 +192,7 @@ describe('computeDisplayedLeverage on an unprojectable drift', () => {
     mark: 0,
     deltaE: 0n,
     collateralDecimals: 18,
-    direction: 'LONG' as const,
+    direction: MarginDirection.LONG,
   }
 
   it('falls back to the position leverage rather than rendering a non-finite value', () => {

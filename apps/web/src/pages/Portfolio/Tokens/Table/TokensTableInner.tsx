@@ -1,6 +1,7 @@
 import { type ColumnDef, Row } from '@tanstack/react-table'
 import { SharedEventName } from '@uniswap/analytics-events'
 import { TouchableArea } from '@universe/mycelium'
+import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -66,6 +67,7 @@ export function TokensTableInner({
   loadMore?: ({ onComplete }: { onComplete?: () => void }) => void
 }) {
   const { t } = useTranslation()
+  const media = useMedia()
   const { value: isModalVisible, setTrue: openModal, setFalse: closeModal } = useBooleanState(false)
   const hasData = tokenData.length > 0
   const showLoadingSkeleton = loading || (!!error && !hasData)
@@ -229,6 +231,8 @@ export function TokensTableInner({
         centerArrows
         virtualized={virtualized}
         loadMore={loadMore}
+        // Mobile: the pinned token column collapses to its logo on horizontal scroll.
+        collapsiblePinnedColumnId={media.lg ? 'currencyInfo' : undefined}
       />
     </>
   )

@@ -1,9 +1,9 @@
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
-import { useIsTouchDevice } from '@universe/mycelium'
+import { useIsTouchDevice, IconButton, getMenuItemColor } from '@universe/mycelium'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { getMenuItemColor, IconButton, Separator, Tooltip } from 'ui/src'
+import { Separator, Tooltip } from 'ui/src'
 import type {
   MarginActivePosition,
   MarginDecreaseActivity,

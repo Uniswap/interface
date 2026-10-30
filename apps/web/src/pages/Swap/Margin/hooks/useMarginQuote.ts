@@ -17,7 +17,11 @@ import {
   type MarginLeverageIntent,
 } from 'uniswap/src/features/transactions/margin/stores/marginFormStore/marginActionKey'
 import { buildMarginSwapConfig } from 'uniswap/src/features/transactions/margin/stores/marginFormStore/marginSwapConfig'
-import type { MarginManageAction, MarginPaymentToken } from 'uniswap/src/features/transactions/margin/types'
+import {
+  MarginDirection,
+  type MarginManageAction,
+  type MarginPaymentToken,
+} from 'uniswap/src/features/transactions/margin/types'
 import { useDebounceWithStatus } from 'utilities/src/time/timing'
 import type { Address } from '~/chains'
 import { MARGIN_CHAIN_ID, MARGIN_DEBOUNCE_MS, MARGIN_QUOTE_REFETCH_MS, type MarginMarket } from '~/constants/margin'
@@ -124,8 +128,14 @@ export function useMarginQuote({
 
   const positionId = position.positionId
   const direction = position.direction
-  const exposureToken = direction === 'SHORT' ? market.debt.address : market.collateral.address
-  const counterToken = direction === 'SHORT' ? market.collateral.address : market.debt.address
+  const exposureToken = direction === MarginDirection.SHORT ? market.debt.address : market.collateral.address
+  const counterToken = direction === MarginDirection.SHORT ? market.collateral.address : market.debt.address
+  // The view renders amounts in these decimals; resolved from the market here rather than guessed from
+  // the token address inside the quote adapter. Mirrors the exposure/counter address split above.
+  const tokenDecimals = {
+    exposure: direction === MarginDirection.SHORT ? market.debt.decimals : market.collateral.decimals,
+    counter: direction === MarginDirection.SHORT ? market.collateral.decimals : market.debt.decimals,
+  }
 
   // 1 keeps this finite for a position with no finite leverage — an increase off any real target is
   // unambiguous either way.
@@ -157,9 +167,27 @@ export function useMarginQuote({
       return undefined
     }
 
+    // close pays OUT through a swap: it names the payout token (the position's collateral — the
+    // volatile leg on a long, the stable on a short) and a swapConfig, but no amount (full close). The
+    // equity keys instead denominate their amount by action key: an add in the named token, a withdraw
+    // in the COLLATERAL (its token is discarded server-side).
+    const rail =
+      actionKey === 'close'
+        ? {
+            token: direction === MarginDirection.SHORT ? counterToken : exposureToken,
+            chainId: MARGIN_CHAIN_ID,
+            slippageTolerance: bpsToPercent(slippageToleranceBps),
+          }
+        : buildMarginSwapConfig({
+            token: debouncedPayToken,
+            chainId: debouncedPayChainId ? Number(debouncedPayChainId) : undefined,
+            amountRaw: debouncedAmount,
+            slippageToleranceBps,
+          })
+
     return buildMarginQuoteRequest({
       actionKey,
-      chainId: MARGIN_CHAIN_ID,
+      positionChainId: MARGIN_CHAIN_ID,
       exposureToken,
       counterToken,
       direction,
@@ -167,16 +195,7 @@ export function useMarginQuote({
       positionId,
       leverageTarget,
       slippageTolerance: bpsToPercent(slippageToleranceBps),
-      // The rail rides only on the keys that move equity — the builder drops it everywhere else.
-      // The ACTION KEY alone decides how the server reads `amount`: an equity add is denominated in
-      // the named token, a withdraw in the COLLATERAL, and a withdraw's token is discarded server-side.
-      // So a withdraw's amount must arrive in collateral units whatever token the picker holds.
-      swapConfig: buildMarginSwapConfig({
-        token: debouncedPayToken,
-        chainId: debouncedPayChainId ? Number(debouncedPayChainId) : undefined,
-        amountRaw: debouncedAmount,
-        slippageToleranceBps,
-      }),
+      swapConfig: rail,
     })
   }, [
     enabled,
@@ -199,6 +218,7 @@ export function useMarginQuote({
     error: quoteError,
   } = useMarginQuoteQuery({
     params,
+    tokenDecimals,
     refetchInterval: MARGIN_QUOTE_REFETCH_MS,
     staleTime: MARGIN_QUOTE_REFETCH_MS,
     // Keep the prior quote visible across a param change (leverage drag, ΔE edit) so the before/after

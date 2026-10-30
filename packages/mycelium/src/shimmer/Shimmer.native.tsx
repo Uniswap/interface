@@ -22,7 +22,7 @@ const ONE_SECOND_MS = 1000
 /**
  * Native `Shimmer`: a Reanimated glare sweep overlaid on the content and
  * clipped by the container — the same effect (and default timing) as the
- * legacy `ui/src/loading/Shine.native.tsx`. Masking via
+ * legacy ui `Shine` it replaced. Masking via
  * @react-native-masked-view is not Fabric-compatible, so the glare is an
  * overlay, not a mask.
  *

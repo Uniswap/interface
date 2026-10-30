@@ -1,10 +1,11 @@
 import { act, renderHook } from '@testing-library/react'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { Q96 } from '~/features/Toucan/Auction/BidDistributionChart/utils/q96'
 import { useBidFormController } from '~/features/Toucan/Auction/hooks/useBidFormController'
 import type { AuctionDetails } from '~/features/Toucan/Auction/store/types'
+import { quickLaunchMaxBidCapQ96 } from '~/features/Toucan/Auction/utils/ticks'
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
@@ -56,6 +57,12 @@ vi.mock('uniswap/src/features/transactions/hooks/useUSDCPrice', () => ({
 
 vi.mock('~/features/Toucan/Auction/hooks/useDurationRemaining', () => ({
   useDurationRemaining: () => undefined,
+}))
+
+// Off by default, as the `quick_launch` flag is; the quick-launch block switches it on.
+const mockQuickLaunchState = { isQuickLaunch: false }
+vi.mock('~/features/Toucan/Auction/hooks/useIsQuickLaunchAuction', () => ({
+  useIsQuickLaunchAuction: () => mockQuickLaunchState.isQuickLaunch,
 }))
 
 // The controller reads the auction's bid price ceiling, which resolves through
@@ -339,5 +346,64 @@ describe('useBidFormController — late-arriving ceiling vs the untouched defaul
     // published: no phantom "Your bid" indicator at a default prefill the user never chose.
     expect(published.every((price) => price === null)).toBe(true)
     expect(lastPublished).toBeNull()
+  })
+})
+
+describe('useBidFormController — quick-launch ceiling per chain', () => {
+  // A ~$1k-FDV preset floor (1e-6 native per token), one-hundredth ticks: both chains' caps sit
+  // thousands of ticks above it, so the pegged price is the cap snapped to the grid.
+  const QL_FLOOR_Q96 = Q96 / 10n ** 6n
+  const QL_TICK_Q96 = QL_FLOOR_Q96 / 100n
+
+  function quickLaunchAuction(chainId: number): AuctionDetails {
+    return {
+      ...buildAuctionDetails(),
+      chainId,
+      floorPrice: QL_FLOOR_Q96.toString(),
+      clearingPrice: QL_FLOOR_Q96.toString(),
+      tickSize: QL_TICK_Q96.toString(),
+    } as AuctionDetails
+  }
+
+  function expectPeggedToCap(maxPriceQ96: bigint | undefined, capQ96: bigint): void {
+    expect(maxPriceQ96).toBeDefined()
+    const price = maxPriceQ96 ?? 0n
+    expect((price - QL_FLOOR_Q96) % QL_TICK_Q96).toBe(0n)
+    expect(price <= capQ96).toBe(true)
+    expect(capQ96 - price < QL_TICK_Q96).toBe(true)
+  }
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockQuickLaunchState.isQuickLaunch = true
+    mockStoreState.auctionAddress = '0x0000000000000000000000000000000000000003'
+    mockStoreState.checkpointData = null
+    mockStoreState.totalCleared = null
+    mockStoreState.selectedTickPrice = null
+    mockMaxBidPriceState.maxBidPriceQ96 = undefined
+    mockMaxBidPriceState.maxValidBidQ96 = undefined
+    mockMaxBidPriceState.isMaxBidPriceReached = false
+    mockBudgetState.budgetAmountIsZero = false
+  })
+
+  afterEach(() => {
+    mockQuickLaunchState.isQuickLaunch = false
+  })
+
+  it('bids an Arc quick launch up to the 50,000,000 USDC cap', () => {
+    mockStoreState.auctionDetails = quickLaunchAuction(5042)
+
+    const { result } = renderHook(() => useBidFormController({}))
+
+    expect(quickLaunchMaxBidCapQ96(5042)).toBe(Q96 / 20n)
+    expectPeggedToCap(result.current.maxPriceQ96, Q96 / 20n)
+  })
+
+  it('bids an ETH-native quick launch up to the 25,000 ETH cap', () => {
+    mockStoreState.auctionDetails = quickLaunchAuction(4663)
+
+    const { result } = renderHook(() => useBidFormController({}))
+
+    expectPeggedToCap(result.current.maxPriceQ96, Q96 / 40_000n)
   })
 })

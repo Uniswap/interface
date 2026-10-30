@@ -1,16 +1,10 @@
 import { isWebAppDesktop } from '@universe/environment'
-import { Flex, Text, TouchableArea } from '@universe/mycelium'
+import { Flex, Text, TouchableArea, useExtractedTokenColor, useSporeColors } from '@universe/mycelium'
+import { useColorsFromTokenColor } from '@universe/mycelium/theme-hooks-compat'
 import { atom } from 'jotai'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-  Button,
-  getContrastPassingTextColor,
-  ModalCloseIcon,
-  useColorsFromTokenColor,
-  useExtractedTokenColor,
-  useSporeColors,
-} from 'ui/src'
+import { Button, getContrastPassingTextColor, ModalCloseIcon } from 'ui/src'
 import { ArrowUpCircle } from 'ui/src/components/icons/ArrowUpCircle'
 import { EnvelopeHeart } from 'ui/src/components/icons/EnvelopeHeart'
 import { OrderRouting } from 'ui/src/components/icons/OrderRouting'
@@ -134,6 +128,7 @@ export function BridgedAssetModal({
     tokenName: currentCurrencyInfo?.currency.name,
     backgroundColor: colors.surface1.val,
     defaultColor: colors.accent1.val,
+    colorOverrides: currentCurrencyInfo?.colorOverrides,
   })
   const { validTokenColor } = useColorsFromTokenColor(tokenColor ?? undefined)
   const textColor = useMemo(() => {
