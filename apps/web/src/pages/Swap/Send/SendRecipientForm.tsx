@@ -1,5 +1,5 @@
 import { Platform, areAddressesEqual } from '@universe/chains'
-import { Flex, type FlexCompatProps, Text, TouchableArea, type TouchableAreaCompatProps } from '@universe/mycelium'
+import { Flex, type FlexCompatProps, Text, TouchableArea } from '@universe/mycelium'
 import { Unitag } from '@universe/mycelium/icons/Unitag'
 import { X } from '@universe/mycelium/icons/X'
 import { useShadowPropsMedium } from '@universe/mycelium/theme-hooks-compat'
@@ -20,12 +20,14 @@ import { useSendContext } from '~/pages/Swap/Send/state/SendContext'
 
 const SEND_RECIPIENT_INPUT_PADDING = 16
 
+// Use Flex (not TouchableArea) so the editable recipient input is not nested
+// inside a role="button" control on web.
 const RecipientWrapper = ({
   isDisabled,
   isFocused,
   ...props
-}: TouchableAreaCompatProps & { isDisabled?: boolean; isFocused?: boolean }): JSX.Element => (
-  <TouchableArea
+}: FlexCompatProps & { isDisabled?: boolean; isFocused?: boolean }): JSX.Element => (
+  <Flex
     backgroundColor={isFocused ? '$surface1' : '$surface2'}
     borderRadius="$rounded16"
     padding={SEND_RECIPIENT_INPUT_PADDING}
@@ -340,6 +342,8 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
               </Text>
               <SendRecipientInput
                 ref={inputNode}
+                aria-label={capitalize(t('common.to'))}
+                accessibilityLabel={capitalize(t('common.to'))}
                 autoComplete="off"
                 autoCorrect={false}
                 autoCapitalize="none"
@@ -380,7 +384,11 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
                   )}
                 </Flex>
               </TouchableArea>
-              <TouchableArea onPress={clearValidatedRecipient}>
+              <TouchableArea
+                aria-label="Clear recipient"
+                accessibilityLabel="Clear recipient"
+                onPress={clearValidatedRecipient}
+              >
                 <X size="$icon.20" color="$neutral3" />
               </TouchableArea>
             </Flex>
