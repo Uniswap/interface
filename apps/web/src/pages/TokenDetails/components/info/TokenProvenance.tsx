@@ -13,7 +13,7 @@ import { FORMAT_DATE_MEDIUM, useLocalizedDayjs } from 'uniswap/src/features/lang
 import { AuctionEventName, ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
-import { NumberType } from 'utilities/src/format/types'
+import { formatCommittedUsd } from 'uniswap/src/features/toucan/formatCommittedUsd'
 import { useEvent } from 'utilities/src/react/hooks'
 import { WalletHoverCard } from '~/components/HoverCard/WalletHoverCard/WalletHoverCard'
 import {
@@ -71,7 +71,12 @@ function CreatorAvatar({ avatarUrl }: { avatarUrl: string | undefined }): JSX.El
       flexShrink={0}
     >
       {avatarUrl ? (
-        <UniversalImage uri={avatarUrl} size={{ width: 20, height: 20 }} />
+        <UniversalImage
+          uri={avatarUrl}
+          size={{ width: 20, height: 20 }}
+          // X avatar URLs go stale when the creator changes their picture.
+          fallback={<Person size="$icon.12" color="$neutral2" />}
+        />
       ) : (
         <Person size="$icon.12" color="$neutral2" />
       )}
@@ -386,7 +391,7 @@ export function TokenProvenanceContent({
                     ? t('tdp.auctions.failedToLaunch')
                     : auctionData.raised.usd !== undefined
                       ? t('tdp.provenance.raised', {
-                          amount: convertFiatAmountFormatted(auctionData.raised.usd, NumberType.FiatTokenStats),
+                          amount: formatCommittedUsd({ usd: auctionData.raised.usd, convertFiatAmountFormatted }),
                         })
                       : '--'}
                 </Text>

@@ -33,7 +33,6 @@ import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
 import { toSeconds } from '~/pages/TokenDetails/utils/tokenDetailsAuctionDisplay'
 import { sortTokenDetailsAuctions } from '~/pages/TokenDetails/utils/tokenDetailsAuctionList'
 
-// TODO(CONS-3362): read the graduated/failed result from data-api once it serves one, instead of resolving it here.
 function useAuctionListRowResult({
   auction,
   chainId,
@@ -78,7 +77,9 @@ function AuctionListRow({
   const { result, raisedUsd } = useAuctionListRowResult({ auction, chainId })
   const launched = isEnded && result === AuctionDisplayResult.Successful
   const failed = isEnded && result === AuctionDisplayResult.Failed
-  const amountUsd = launched ? raisedUsd : parseFiniteNumber(auction.totalBidVolumeUsd)
+  // A served verdict can land before the checkpoint that prices the raise; show committed until it does.
+  const showRaised = launched && raisedUsd !== undefined
+  const amountUsd = showRaised ? raisedUsd : parseFiniteNumber(auction.totalBidVolumeUsd)
   const amount = amountUsd === undefined ? '—' : formatCommittedUsd({ usd: amountUsd, convertFiatAmountFormatted })
   const amountColor = isUpcoming ? '$neutral3' : failed ? '$neutral2' : '$neutral1'
 
@@ -121,7 +122,7 @@ function AuctionListRow({
           </Text>
           {!isUpcoming && (
             <Text variant="body4" color={failed ? '$neutral3' : '$neutral2'}>
-              {launched ? t('tdp.auctions.raised') : t('tdp.auctions.committed')}
+              {showRaised ? t('tdp.auctions.raised') : t('tdp.auctions.committed')}
             </Text>
           )}
         </Flex>

@@ -10,6 +10,7 @@ export async function storeEncryptedBlob(_params: {
   accessToken: string
   blob: string
   privyAppId: string
+  privyClientId: string
 }): Promise<{ keyId: string }> {
   throw new PlatformSplitStubError('storeEncryptedBlob')
 }
@@ -18,6 +19,7 @@ export async function fetchEncryptedBlob(_params: {
   accessToken: string
   keyId: string
   privyAppId: string
+  privyClientId: string
 }): Promise<string> {
   throw new PlatformSplitStubError('fetchEncryptedBlob')
 }

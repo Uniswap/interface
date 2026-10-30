@@ -68,7 +68,7 @@
     "zustand": "5.0.6"
   },
   "devDependencies": {
-    "@playwright/test": "1.58.2",
+    "@playwright/test": "1.61.1",
     "@tailwindcss/oxide": "4.3.2",
     "@testing-library/dom": "10.4.0",
     "@testing-library/react": "16.3.0",

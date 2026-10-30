@@ -814,6 +814,31 @@ describe('TokenProvenanceContent', () => {
     expect(screen.queryByRole('link', { name: 'Details' })).toBeNull()
   })
 
+  it('shows a $0 raise as $0, not the missing-stat dash', () => {
+    render(
+      <TokenProvenanceContent
+        provenance={{ ...provenance, method: LaunchProvenanceMethod.InstantLaunch }}
+        auctionData={{ creator: NO_CREATOR, raised: { usd: 0, failed: false, count: 7, destination: undefined } }}
+      />,
+    )
+
+    expect(screen.getByText('$0 raised')).toBeInTheDocument()
+  })
+
+  it('falls back to the person icon when the creator avatar fails to load', () => {
+    const avatarUrl = 'https://pbs.twimg.com/profile_images/stale.jpg'
+    const { container } = render(
+      <TokenProvenanceContent
+        provenance={provenance}
+        auctionData={{ creator: { ...NO_CREATOR, name: '@creator', avatarUrl }, raised: undefined }}
+      />,
+    )
+
+    fireEvent.error(container.querySelector(`img[src="${avatarUrl}"]`) as HTMLImageElement)
+
+    expect(container.querySelector(`img[src="${avatarUrl}"]`)).toBeNull()
+  })
+
   it('opens the wallet hover card on the creator, even when an X handle is what it shows', async () => {
     // The card reads the wallet's portfolio, so it needs the Uniswap context the page has.
     renderWithUniswapContext(
