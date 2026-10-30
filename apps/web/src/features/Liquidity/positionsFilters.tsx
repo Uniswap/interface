@@ -65,7 +65,7 @@ export function ProtocolFilterDropdown({
     <Dropdown
       isOpen={isOpen}
       toggleOpen={setIsOpen}
-      menuLabel={<Text variant="buttonLabel3">{t('common.protocol')}</Text>}
+      menuLabel={<Text variant="buttonLabel3" whiteSpace="nowrap">{t('common.protocol')}</Text>}
       dropdownStyle={{ width: 160 }}
       containerStyle={filterContainerStyle({ fullWidth, fitContent })}
       alignRight={alignRight}
@@ -121,7 +121,7 @@ export function StatusFilterDropdown({
     <Dropdown
       isOpen={isOpen}
       toggleOpen={setIsOpen}
-      menuLabel={<Text variant="buttonLabel3">{t('common.status')}</Text>}
+      menuLabel={<Text variant="buttonLabel3" whiteSpace="nowrap">{t('common.status')}</Text>}
       dropdownStyle={{ width: 160 }}
       containerStyle={filterContainerStyle({ fullWidth, fitContent })}
       alignRight={alignRight}
