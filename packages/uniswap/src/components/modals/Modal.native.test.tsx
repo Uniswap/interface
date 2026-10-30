@@ -6,11 +6,16 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { render } from 'uniswap/src/test/test-utils'
 
 const sheetPropsSpy = vi.hoisted(() => vi.fn())
+const bottomInsetCoverFooterSpy = vi.hoisted(() => vi.fn())
 const loggerWarnSpy = vi.hoisted(() => vi.fn())
 
 // jsdom resolves this platform-split hook's `.web` leg, which throws instead of returning a value.
 vi.mock('uniswap/src/utils/useKeyboardLayout', () => ({
   useKeyboardLayout: () => ({ isVisible: false, containerHeight: 0 }),
+}))
+
+vi.mock('uniswap/src/components/modals/useBottomInsetCoverFooter', () => ({
+  useBottomInsetCoverFooter: bottomInsetCoverFooterSpy,
 }))
 
 vi.mock('utilities/src/logger/logger', () => ({
@@ -31,6 +36,7 @@ vi.mock('@gorhom/bottom-sheet', async () => {
 })
 
 type SheetProps = {
+  footerComponent?: unknown
   enableContentPanningGesture?: boolean
   enableHandlePanningGesture?: boolean
   enablePanDownToClose?: boolean
@@ -232,5 +238,19 @@ describe('Modal handle-less sheet warning', () => {
   it('stays quiet while the sheet still renders a handle', () => {
     expect(warningsFor({ hideHandlebar: true })).toEqual([])
     expect(warningsFor({ fullScreen: true, renderBehindTopInset: true })).toEqual([])
+  })
+})
+
+describe('Modal bottom inset cover', () => {
+  it('hands the sheet whatever footer the bottom inset cover hook resolves', () => {
+    const resolvedFooter = vi.fn()
+    bottomInsetCoverFooterSpy.mockReturnValueOnce(resolvedFooter)
+
+    const sheet = sheetPropsFor({ renderBehindBottomInset: true, coverBottomInsetOnAndroid: true })
+
+    expect(sheet.footerComponent).toBe(resolvedFooter)
+    expect(bottomInsetCoverFooterSpy).toHaveBeenCalledWith(
+      expect.objectContaining({ renderBehindBottomInset: true, coverBottomInsetOnAndroid: true }),
+    )
   })
 })

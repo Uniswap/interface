@@ -16,6 +16,7 @@ import { ElementName, InterfacePageName, UniswapEventName } from 'uniswap/src/fe
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Dropdown } from '~/components/Dropdowns/Dropdown'
 import { useNetworkFilterChainIds } from '~/components/NetworkFilter/useFilteredChains'
+import { edgeFadeMaskStyle, useHorizontalScrollFades } from '~/hooks/useHorizontalScrollFades'
 import { ExploreFilterChip } from '~/pages/Explore/categories/ExploreCategoryChips'
 import { getLaunchpadLogoBorderRadius, LaunchpadLogo } from '~/pages/Launches/LaunchpadLogo'
 import { LaunchQuickFilter } from '~/pages/Launches/useLaunchesList'
@@ -48,6 +49,8 @@ export function LaunchQuickSelects({
   onSelect: (filter: LaunchQuickFilter) => void
 }): JSX.Element {
   const { t } = useTranslation()
+  const media = useMedia()
+  const { scrollerRef, edgeFades } = useHorizontalScrollFades()
 
   const chips = useMemo(
     () => [
@@ -72,7 +75,15 @@ export function LaunchQuickSelects({
 
   return (
     // Chips can exceed small viewports — scroll them in place instead of wrapping or widening the page.
-    <Flex row gap="$gap4" maxWidth="100%" className="scrollbar-hidden" $md={{ '$platform-web': { overflowX: 'auto' } }}>
+    <Flex
+      ref={media.md ? scrollerRef : undefined}
+      row
+      gap="$gap4"
+      maxWidth="100%"
+      className="scrollbar-hidden"
+      $platform-web={media.md ? edgeFadeMaskStyle(edgeFades) : undefined}
+      $md={{ '$platform-web': { overflowX: 'auto' } }}
+    >
       {chips.map((chip) => (
         <ExploreFilterChip
           key={chip.value}

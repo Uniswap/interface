@@ -1,0 +1,28 @@
+product_area: nft
+platforms: [web, extension, mobile]
+nxProjects: ["@universe/web", uniswap, wallet, "@uniswap/extension", "@uniswap/mobile"]
+owners: ["@uniswap/consumer-engagement-fe"]
+
+# Casebook area-registry metadata (read by the engine in apps/cli/src/casebook).
+# These drive Testlio suite naming, the PR-comment label, and CI routing.
+label: NFT
+suiteNamePrefix: NFT
+ghLabel: casebook:nft
+reviewerTeam: consumer-engagement-fe
+
+# Area-boundary note: the seeding blueprint lists
+# packages/uniswap/src/features/expandableAsset/ as an nft code_path, but that module
+# was evaluated and found OUT OF SCOPE for this area — it is consumed only by the
+# apps/web Explore/RWA pages and the SearchBar, not by any NFT surface. Its existing
+# unit tests belong to the explore/RWA catalogs. Recommend removing it from the nft
+# blueprint entry so a future regeneration pass does not re-flag it.
+
+# Test-wallet aliases referenced by this area's cases. Symbolic only: real mnemonics live in
+# the QA vault / Testlio TL handoff, keyed by the same alias. Never put a secret here.
+wallets:
+  TW-NFT-01: "funded EVM wallet holding several visible NFTs across chains (e.g. the mock Hayden account)"
+  TW-NFT-02: "wallet holding one or more hidden/spam NFTs plus visible ones"
+  TW-NFT-03: "view-only (read-only) wallet holding NFTs"
+  TW-NFT-04: "fresh wallet with zero NFTs (empty state)"
+  TW-NFT-05: "funded wallet on Base/Zora with gas for minting"
+  TW-NFT-06: "funded wallet on Avalanche with gas for purchasing"

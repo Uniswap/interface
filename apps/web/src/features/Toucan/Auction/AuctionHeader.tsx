@@ -1,5 +1,4 @@
 import type { EVMUniverseChainId } from '@universe/chains'
-import { DynamicConfigs, useDynamicConfigValue, VerifiedAuctionsConfigKey } from '@universe/gating'
 import { Flex, Text } from '@universe/mycelium'
 import { CheckmarkCircle } from '@universe/mycelium/icons/CheckmarkCircle'
 import { Fire } from '@universe/mycelium/icons/Fire'
@@ -15,6 +14,7 @@ import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useTokenWarningCardText } from 'uniswap/src/features/tokens/warnings/safetyUtils'
+import { useVerifiedAuctionIds } from 'uniswap/src/features/toucan/useVerifiedAuctionIds'
 import { shortenAddress } from 'utilities/src/addresses'
 import { BreadcrumbNavContainer, BreadcrumbNavLink, CurrentPageBreadcrumb } from '~/components/BreadcrumbNav'
 import { DetailsHeaderSubtitleMobile } from '~/components/StickyCollapsibleHeader/DetailsHeaderSubtitleMobile'
@@ -34,7 +34,7 @@ import {
   shouldShowAuctionTokenWarning,
 } from '~/features/Toucan/utils/auctionTokenProtection'
 import { isPoolsSupportedChain } from '~/features/Toucan/utils/quickLaunchLinks'
-import { useWheelHorizontalScroll } from '~/pages/Explore/categories/useWheelHorizontalScroll'
+import { useHorizontalScrollFades } from '~/hooks/useHorizontalScrollFades'
 import { TokenDetailsHeaderAddressCopyMobile } from '~/pages/TokenDetails/components/header/TokenDetailsHeaderAddressCopyMobile'
 import { usePrefetchTokenDetailsAuction } from '~/pages/TokenDetails/hooks/usePrefetchTokenDetailsAuction'
 
@@ -165,7 +165,7 @@ const AuctionHeaderMetadataRow = ({ tickerItem }: { tickerItem?: ReactNode }) =>
   const media = useMedia()
   const colors = useSporeColors()
   const auctionDetails = useAuctionStore((state) => state.auctionDetails)
-  const { scrollerRef, showRightFade } = useWheelHorizontalScroll()
+  const { scrollerRef, edgeFades } = useHorizontalScrollFades()
   const {
     isLocked,
     isPermanentlyLocked,
@@ -236,11 +236,11 @@ const AuctionHeaderMetadataRow = ({ tickerItem }: { tickerItem?: ReactNode }) =>
   return (
     /*
      * Horizontal carousel, same treatment as the token card carousels: the row scrolls instead of
-     * wrapping, so the badges never shrink and never land on a second line, and a right-edge
-     * CarouselEdgeFade hints at the content still off-screen. Making the row a scroll container is
+     * wrapping, so the badges never shrink and never land on a second line, and
+     * CarouselEdgeFades hint at the content still off-screen on either side. Making the row a scroll container is
      * also what lets it be narrower than its content — a flex item that scrolls has an automatic
      * minimum size of 0, where a nowrap row is floored at its min-content width and overflows the
-     * header instead. useWheelHorizontalScroll adds vertical-wheel support for plain mice.
+     * header instead. useHorizontalScrollFades adds vertical-wheel support for plain mice.
      * The shared column collapses its gap at $md, so add the separation back for the mweb stack.
      */
     <Flex position="relative" maxWidth="100%" minWidth={0} flexShrink={1} $sm={{ mt: '$spacing2' }}>
@@ -259,13 +259,17 @@ const AuctionHeaderMetadataRow = ({ tickerItem }: { tickerItem?: ReactNode }) =>
           </Fragment>
         ))}
       </Flex>
-      {showRightFade && (
-        <CarouselEdgeFade
-          side="right"
-          fadeWidth={CAROUSEL_FADE_WIDTH_SMALL}
-          surfaceColor={colors.surface1.val}
-          opacity={1}
-        />
+      {(['left', 'right'] as const).map(
+        (side) =>
+          edgeFades[side] && (
+            <CarouselEdgeFade
+              key={side}
+              side={side}
+              fadeWidth={CAROUSEL_FADE_WIDTH_SMALL}
+              surfaceColor={colors.surface1.val}
+              opacity={1}
+            />
+          ),
       )}
     </Flex>
   )
@@ -393,7 +397,7 @@ const AuctionTokenInfo = ({
       // nothing to show.
       showMetadataRowOnMobile
       // The metadata row is a horizontal scroller, so the column has to be allowed to be narrower than it.
-      shrinkTitleColumn
+      truncateTitleColumn
     />
   )
 }
@@ -405,11 +409,7 @@ export const AuctionHeader = ({ isCompact = false }: { isCompact?: boolean }) =>
   // with the token-launched banner (both resolve through useAuctionRedemption).
   const { isRedeemable, realTokenAddress } = useAuctionRedemption()
 
-  const verifiedAuctionIds: string[] = useDynamicConfigValue({
-    config: DynamicConfigs.VerifiedAuctions,
-    key: VerifiedAuctionsConfigKey.VerifiedAuctionIds,
-    defaultValue: [],
-  })
+  const verifiedAuctionIds = useVerifiedAuctionIds()
 
   const verified = useMemo(() => {
     if (!auctionDetails?.auctionId) {

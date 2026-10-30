@@ -41,11 +41,3 @@ describe('export parity across the legs', () => {
     expect(native.ElementAfterTextCompat).not.toBe(web.ElementAfterTextCompat)
   })
 })
-
-describe('the subpath barrel resolves every symbol', () => {
-  it('exports the component plus the shared contract', async () => {
-    const barrel = await import('./index')
-    expect(barrel.ElementAfterTextCompat).toBe(web.ElementAfterTextCompat)
-    expect(barrel.DEFAULT_TEXT_PROPS).toEqual({ color: '$neutral1', variant: 'body2' })
-  })
-})

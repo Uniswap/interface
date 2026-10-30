@@ -7,9 +7,10 @@ import {
   Text,
   TouchableArea,
   validColor,
+  AnimatedFlex,
 } from '@universe/mycelium'
 import { ENS_LOGO } from '@universe/mycelium/assets'
-import { useIsDarkMode, useSporeColors } from '@universe/mycelium/theme-hooks-compat'
+import { useIsDarkMode, useSporeColors, useExtractedColors } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
 import React, { memo, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -21,9 +22,8 @@ import { Favorite } from 'src/components/icons/Favorite'
 import { LongText } from 'src/components/text/LongText'
 import { ProfileContextMenu } from 'src/features/externalProfile/ProfileContextMenu'
 import { openModal } from 'src/features/modals/modalSlice'
-import { getUniconColors, Image, useExtractedColors } from 'ui/src'
+import { getUniconColors, Image } from 'ui/src'
 import { SendAction, XTwitter } from 'ui/src/components/icons'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { DEP_accentColors, imageSizes } from 'ui/src/theme'
 import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
 import { DisplayNameType } from 'uniswap/src/features/accounts/types'

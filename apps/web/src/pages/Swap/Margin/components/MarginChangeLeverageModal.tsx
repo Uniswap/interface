@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { type MarginActivePosition } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { useEvent } from 'utilities/src/react/hooks'
 import { type MarginMarket } from '~/constants/margin'
 import { MarginAdjustBeforeAfterSection } from '~/pages/Swap/Margin/components/MarginAdjustBeforeAfterRows'
@@ -90,7 +91,9 @@ export function MarginChangeLeverageModal({
   const debtLogos = { url: debtLogoUrl ?? undefined, symbol: marginUnwrapSymbol(market.debt) }
   // The Size row reads the EXPOSURE leg — a short's is its debt leg, a long's its collateral.
   const sizeLogos =
-    position.direction === 'SHORT' ? debtLogos : { url: collateralLogoUrl ?? undefined, symbol: market.displaySymbol }
+    position.direction === MarginDirection.SHORT
+      ? debtLogos
+      : { url: collateralLogoUrl ?? undefined, symbol: market.displaySymbol }
 
   return (
     <MarginActionModalShell

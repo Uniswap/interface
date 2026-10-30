@@ -9,7 +9,7 @@ export interface CategoryDefinitionTooltipProps {
   onPressViewAll: () => void
 }
 
-/** Info icon that shows the category definition on hover; only its "View collection" link navigates. */
+/** Info icon that shows the category definition on hover; only its "View category" link navigates. */
 export function CategoryDefinitionTooltip(_props: CategoryDefinitionTooltipProps): JSX.Element | null {
   throw new PlatformSplitStubError('CategoryDefinitionTooltip')
 }

@@ -1,7 +1,8 @@
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
+import { HeightAnimator } from '@universe/mycelium/height-animator'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { HeightAnimator, Input, Popover, Tooltip } from 'ui/src'
+import { Input, Popover, Tooltip } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { Settings } from 'ui/src/components/icons/Settings'
 import type { MarginQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
@@ -10,6 +11,7 @@ import {
   useMarginFormStore,
   useMarginFormStoreActions,
 } from 'uniswap/src/features/transactions/margin/stores/marginFormStore/useMarginFormStore'
+import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
 import { MarginPriceImpactRow } from '~/pages/Swap/Margin/components/MarginPriceImpactRow'
@@ -261,7 +263,7 @@ function MarginRateDetails({
     execPriceX18: quote.display.effectivePrice,
     markPriceX18: impactMark.priceX18,
     swapSide: 'BUY_COLLATERAL',
-    direction: direction ?? 'LONG',
+    direction: direction ?? MarginDirection.LONG,
   })
 
   const markIsStale = impactMark.isStale

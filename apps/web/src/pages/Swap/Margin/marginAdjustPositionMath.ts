@@ -1,5 +1,5 @@
 import type { MarginActivePosition } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
-import type { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
+import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 
 // Client display math only: server-echoed values win once a quote resolves. These drive the
 // instant before/after preview while the user edits the unified Adjust-position modal.
@@ -32,7 +32,7 @@ export function driftLeverageForEquityDelta({
     return undefined
   }
   const collateralAfter = collateral + deltaCollateral
-  const isShort = direction === 'SHORT'
+  const isShort = direction === MarginDirection.SHORT
   const ltvAfter = isShort ? (debt * mark) / collateralAfter : debt / (collateralAfter * mark)
   // Both remaining arms are genuinely +Infinity. Non-positive collateral is a withdrawal past the whole
   // position — it flips the LTV's sign, which would slip under the `>= 1` test and report a LOW leverage

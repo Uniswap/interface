@@ -198,7 +198,8 @@ vi.mock('uniswap/src/components/modals/Modal', () => ({
   Modal: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }))
 
-vi.mock('ui/src/components/layout/AnimatedFlex', () => ({
+vi.mock('@universe/mycelium', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@universe/mycelium')>()),
   AnimatedFlex: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
 }))
 

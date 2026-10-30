@@ -757,6 +757,8 @@ export default defineConfig({
               'apps/dev-portal/**/*.tsx',
               'apps/mission-control/**/*.ts',
               'apps/mission-control/**/*.tsx',
+              'apps/pools-xyz/**/*.ts',
+              'apps/pools-xyz/**/*.tsx',
             ],
             rules: {
               'universe-custom/no-throwing-stub-imports': ['error' as const, { platform: 'web' }],
@@ -786,6 +788,9 @@ export default defineConfig({
               // @universe/tailwind in 4 files.
               'packages/tailwind/**/*.ts',
               'packages/tailwind/**/*.tsx',
+              // swap-ui views render through packages/uniswap adapters on web and mobile.
+              'packages/swap-ui/**/*.ts',
+              'packages/swap-ui/**/*.tsx',
             ],
             rules: {
               'universe-custom/no-throwing-stub-imports': ['error' as const, { platform: 'both' }],
@@ -1183,6 +1188,15 @@ export default defineConfig({
               'universe-custom/import-boundary': 'error' as const,
             },
           },
+          {
+            // Activates the swap-ui-package fence (import-boundaries.json):
+            // @universe/swap-ui views take data via props and emit callbacks;
+            // no business logic, store, analytics or platform imports.
+            files: ['packages/swap-ui/src/**/*.ts', 'packages/swap-ui/src/**/*.tsx'],
+            rules: {
+              'universe-custom/import-boundary': 'error' as const,
+            },
+          },
         ]
       : []),
     ...(!isFastLint
@@ -1406,14 +1420,21 @@ export default defineConfig({
       },
     },
 
-    // ── labs/rh-cca ───────────────────────────────────────────────────
+    // ── apps/pools-xyz ────────────────────────────────────────────────
     {
       // Runtime boundaries read process.env directly (SERVER_RUNTIME/PORT are
       // deploy-time, not app config) and implement react-router's 4-param
       // handleRequest contract — same relaxations dev-portal's boundary gets.
       // deployTarget.ts resolves the deploy target at build time: Node-only,
-      // resolved before Vite exists, so getConfig() can't serve it.
-      files: ['labs/rh-cca/server.ts', 'labs/rh-cca/app/entry.server.tsx', 'labs/rh-cca/deployTarget.ts'],
+      // resolved before Vite exists, so getConfig() can't serve it; the same
+      // holds for the Playwright config.
+      files: [
+        'apps/pools-xyz/server.ts',
+        'apps/pools-xyz/app/entry.server.tsx',
+        'apps/pools-xyz/deployTarget.ts',
+        'apps/pools-xyz/playwright.config.ts',
+        'apps/pools-xyz/playwright.staging.config.ts',
+      ],
       rules: {
         'max-params': 'off',
         ...(!isFastLint && {
@@ -1425,7 +1446,7 @@ export default defineConfig({
       // Vendored shadcn/ui sources (what `bunx shadcn add` emits) are kept
       // pristine so upstream diffs stay reviewable; shadcn components render
       // plain divs by design.
-      files: ['labs/rh-cca/app/components/ui/**', 'labs/rh-cca/app/lib/utils.ts'],
+      files: ['apps/pools-xyz/app/components/ui/**', 'apps/pools-xyz/app/lib/utils.ts'],
       rules: {
         'typescript/explicit-function-return-type': 'off',
         'react/forbid-elements': 'off',

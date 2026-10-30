@@ -48,6 +48,7 @@ export interface ConnectionConfig {
  * Subscription handler - consumers provide REST API implementation
  * for managing server-side subscription lifecycle
  */
+/** Methods reject on failure; reject with ConnectionGoneError when the server no longer knows the connection. */
 export interface SubscriptionHandler<TParams = unknown> {
   subscribe: (connectionId: string, params: TParams) => Promise<void>
   unsubscribe: (connectionId: string, params: TParams) => Promise<void>
@@ -78,7 +79,8 @@ export interface CreateWebSocketClientOptions<TParams, TMessage> {
   parseMessage: (raw: unknown) => { channel: string; key: string; data: TMessage } | null
   parseConnectionMessage: (raw: unknown) => { connectionId: string } | null
   createSubscriptionKey: (channel: string, params: TParams) => string
-  onError?: (error: unknown) => void
+  /** `operation` names the subscription RPC that failed; absent for socket-level errors. */
+  onError?: (error: unknown, operation?: string) => void
   onRawMessage?: (message: unknown) => void
   /**
    * Interval (ms) for automatically refreshing the server session.

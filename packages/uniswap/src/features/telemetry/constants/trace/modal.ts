@@ -135,6 +135,8 @@ export const ModalName = {
   LaunchTokenSelection: 'launch-token-selection-modal',
   Legal: 'legal',
   LowNativeBalanceWarning: 'low-native-balance-warning',
+  LowPriceConfidence: 'low-price-confidence',
+  LpGeoRestriction: 'lp-geo-restriction-modal',
   LpIncentivesRewards: 'lp-incentives-rewards',
   ManageWalletsModal: 'manage-wallets-modal',
   MarginAdd: 'margin-add-modal',

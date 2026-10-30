@@ -22,10 +22,13 @@ const EXPLORE_AUCTIONS_PATH = '/explore/auctions'
  */
 export function LaunchMethodExplainerModal({
   method,
+  auctionAddress,
   isOpen,
   onClose,
 }: {
   method: LaunchProvenanceMethod
+  /** Absent for a launch with no auction behind it. */
+  auctionAddress?: string
   isOpen: boolean
   onClose: () => void
 }): JSX.Element | null {
@@ -57,7 +60,7 @@ export function LaunchMethodExplainerModal({
         <Trace
           logImpression={isOpen}
           eventOnTrigger={AuctionEventName.AuctionTypeExplainerOpened}
-          properties={{ launch_method: getAnalyticsLaunchMethod(method) }}
+          properties={{ launch_method: getAnalyticsLaunchMethod(method), auction_address: auctionAddress }}
         />
         <TouchableArea
           position="absolute"
@@ -93,24 +96,22 @@ export function LaunchMethodExplainerModal({
             </Text>
           </Flex>
 
-          {copy.learnMoreUrl !== footerHref && (
-            <Trace
-              logPress
-              element={ElementName.LaunchMethodLearnMore}
-              properties={{ launch_method: getAnalyticsLaunchMethod(method), destination: 'help' }}
+          <Trace
+            logPress
+            element={ElementName.LaunchMethodLearnMore}
+            properties={{ launch_method: getAnalyticsLaunchMethod(method), destination: 'help' }}
+          >
+            <Anchor
+              href={copy.learnMoreUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              variant="buttonLabel3"
+              color="$neutral1"
+              textDecorationLine="none"
             >
-              <Anchor
-                href={copy.learnMoreUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                variant="buttonLabel3"
-                color="$neutral1"
-                textDecorationLine="none"
-              >
-                {t('common.button.learn')}
-              </Anchor>
-            </Trace>
-          )}
+              {t('common.button.learn')}
+            </Anchor>
+          </Trace>
         </Flex>
 
         <Flex row gap="$spacing12" width="100%">

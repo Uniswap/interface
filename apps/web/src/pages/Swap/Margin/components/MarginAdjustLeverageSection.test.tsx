@@ -1,4 +1,5 @@
 import { screen } from '@testing-library/react'
+import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { describe, expect, it, vi } from 'vitest'
 import { MarginAdjustLeverageSection } from '~/pages/Swap/Margin/components/MarginAdjustLeverageSection'
 import { render } from '~/test-utils/render'
@@ -26,7 +27,7 @@ const BASE = {
   cap: 5.56,
   // WETH/USDC Morpho: 86%.
   lltvWad: '860000000000000000',
-  direction: 'LONG' as const,
+  direction: MarginDirection.LONG,
   onLeverageDraftChange: vi.fn(),
   onCommitLeverageDraft: vi.fn(),
   onSliderChange: vi.fn(),

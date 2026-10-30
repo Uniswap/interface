@@ -14,8 +14,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Apple",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -31,8 +31,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Email",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -48,8 +48,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Google",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -65,8 +65,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Token 1",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -82,8 +82,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Token 2",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -99,8 +99,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "{{amount}} UNI",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -333,8 +333,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Beta",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -350,8 +350,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Blog",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -367,8 +367,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "OK",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -384,8 +384,42 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Explorer",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:common.privacyChoices.optOut",
+      {
+        "unitId": "common.privacyChoices.optOut",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "5d1160c8a782fcfc275fe20ba2a3055c30316c1f7544530db94824fb986c5a53",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Trong trường hợp việc này được coi là bán, chia sẻ hoặc quảng cáo nhắm mục tiêu theo luật hiện hành, bạn có thể từ chối bằng cách tắt tùy chọn “{{settingName}}” trong phần cài đặt.",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-10-16T19-35-32Z",
+        "approvedAt": "2026-10-16T19:35:32.755Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:common.privacyChoices.policy",
+      {
+        "unitId": "common.privacyChoices.policy",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "5109ab4492e4bed49a87e4aa498a04262721ad8e42c81975e8a854e6d4e976cc",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Để biết thêm thông tin về các thực hành quyền riêng tư của chúng tôi, vui lòng xem <privacyLink>Chính sách quyền riêng tư</privacyLink> của chúng tôi.",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-10-16T19-35-32Z",
+        "approvedAt": "2026-10-16T19:35:32.755Z",
         "approvedBy": "agent"
       }
     ],
@@ -401,8 +435,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Uniswap v2",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -418,8 +452,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Uniswap v3",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -435,8 +469,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Uniswap v4",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -452,8 +486,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Token A",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -469,8 +503,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Token B",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -486,8 +520,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Euro",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -505,6 +539,261 @@
         "status": "clean",
         "agentRunId": "vi-VN-2026-09-18T15-36-03Z",
         "approvedAt": "2026-09-18T15:36:03.283Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:disclosures.autoRouter",
+      {
+        "unitId": "disclosures.autoRouter",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "1769525d3c38507cb4b1bdc3cb4a598af59b2e5d1a004c2bcb302a769bf8b857",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Auto Router là thuật toán đường dẫn giao dịch được các Sản phẩm sử dụng để phân tích các đường dẫn tiềm năng cho một giao dịch tài sản kỹ thuật số trên các Tích hợp đủ điều kiện và cung cấp cho người dùng thông tin về đường dẫn giao dịch được ước tính mang lại số lượng tài sản kỹ thuật số nhận được lớn nhất tại thời điểm đó, dựa trên mô phỏng thực hiện theo các tham số định tuyến khách quan đã được công bố.",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-10-15T22-15-59Z",
+        "approvedAt": "2026-10-15T22:15:59.786Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:disclosures.autoRouterParameters",
+      {
+        "unitId": "disclosures.autoRouterParameters",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "aeb91f7c1ff41c721069194cc98de27e3bfaeca2025f1b791b5c01a955b18f35",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Các tham số sau được mã hóa cứng vào phần mềm định tuyến của các Sản phẩm (“Auto Router”): (i) ước tính chi phí gas qua mô phỏng (có thể giảm ưu tiên các tuyến có phí mạng cao); (ii) ước tính trượt giá qua mô phỏng (sẽ hoàn tác giao dịch không đạt mức trượt giá tối đa do người dùng chỉ định hoặc tốt hơn); (iii) thanh khoản pool, được đo bằng tổng giá trị khóa trên các nguồn thanh khoản (sẽ giảm ưu tiên hoặc loại trừ các pool dưới ngưỡng chỉ định); (iv) số lần tối đa lệnh hoán đổi của người dùng có thể được “tách” để bộ định tuyến đánh giá liệu việc tách lệnh hoán đổi giữa nhiều nguồn thanh khoản có mang lại giá tốt hơn hay không; (v) số “bước nhảy” tối đa, nghĩa là các chuỗi chuyển đổi tài sản kỹ thuật số tiềm năng kết thúc bằng việc người dùng nhận được token đầu ra mong muốn; và (vi) số đường dẫn định tuyến tiềm năng tối đa mà thuật toán Auto Router sẽ đánh giá khi tạo tuyến đề xuất. Auto Router không khám phá các pool có phí lớn hơn 11%, như một biện pháp bảo vệ người dùng khỏi ảnh hưởng giá bất ngờ do phí LP cao bất thường. Các tham số phần mềm định tuyến này không phải là tham số mặc định cấp giao dịch mà người dùng có thể cấu hình. Phần mềm định tuyến của các Sản phẩm áp dụng các tham số định tuyến này một cách thống nhất và có thể xem mã nguồn <uniRouteLink>tại đây</uniRouteLink>.",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-10-15T22-15-59Z",
+        "approvedAt": "2026-10-15T22:15:59.786Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:disclosures.customization",
+      {
+        "unitId": "disclosures.customization",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "62979328997006241effade715257423f44996c1f2899ab5f7e15b31851362ab",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Các tham số mặc định cấp giao dịch hoàn toàn có thể được người dùng các Sản phẩm tùy chỉnh. Bằng cách thay đổi các tham số này, người dùng có thể thấy thêm các tuyến cho giao dịch của mình. Để biết thêm thông tin về cách thay đổi các tham số mặc định, xem <slippageLink>Cách thay đổi trượt giá trên ứng dụng Web Uniswap</slippageLink>, <swapDeadlinesLink>Cách thay đổi thời hạn hoán đổi trên giao diện Uniswap</swapDeadlinesLink> và <tradeOptionsLink>Cách thay đổi tùy chọn giao dịch mặc định</tradeOptionsLink>. Uniswap Labs duy trì các chính sách và quy trình nội bộ về các tham số mặc định và định kỳ đánh giá lại các tham số mặc định để đảm bảo tuân thủ các chính sách và quy trình đó. Uniswap Labs không nhận thấy bất kỳ xung đột lợi ích trọng yếu nào giữa Uniswap Labs và người dùng các Sản phẩm phát sinh từ các tham số mặc định. Uniswap Labs không nhận thù lao từ bất kỳ nguồn thanh khoản nào để được đưa vào phân tích định tuyến. Các hoạt động phát triển kinh doanh, bao gồm hỗ trợ hệ sinh thái cho các tích hợp bên thứ ba, hỗ trợ nhà tạo lập thị trường (như khoản vay hoặc chương trình khuyến khích), quyền truy cập API và đồng tiếp thị, đều tách biệt với và không ảnh hưởng đến phân tích định tuyến.",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-10-15T22-15-59Z",
+        "approvedAt": "2026-10-15T22:15:59.786Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:disclosures.defaultParameters",
+      {
+        "unitId": "disclosures.defaultParameters",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "6384103f15d7e3393252e304756e6c94b8f8a5a33326c3024bae82defe2771a2",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Các tham số mặc định cấp giao dịch sau hiện đang có hiệu lực trên các Sản phẩm: mức chấp nhận trượt giá; thời hạn hoán đổi; các pool và địa điểm giao dịch hoặc hệ thống giao dịch sổ cái phân tán đủ điều kiện; và phí ưu tiên. Các tham số mặc định có thể thay đổi theo thời gian. Các tham số mặc định được đặt dựa trên các tiêu chí khách quan và thường được cấu hình để giảm rủi ro cho người dùng.",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-10-15T22-15-59Z",
+        "approvedAt": "2026-10-15T22:15:59.786Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:disclosures.feeCalculation",
+      {
+        "unitId": "disclosures.feeCalculation",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "40c78c254e0b59dd6e93159cc60e13ee83bd2cf876440febf93320a598fb304c",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Sử dụng một thuật toán khách quan, được áp dụng thống nhất, các Sản phẩm hiển thị Phí Gas và Phí ưu tiên được tính tự động cho mỗi giao dịch. Các phép tính thuật toán này được thiết kế để cân bằng giữa tốc độ giao dịch và phí phải trả.",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-10-15T22-15-59Z",
+        "approvedAt": "2026-10-15T22:15:59.786Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:disclosures.gasFees",
+      {
+        "unitId": "disclosures.gasFees",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "537acd8dfac10d9eec9e024bf4664b063e4804e4664d00d5daaf21d3bcf9e4f6",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Phí Gas được trả cho các trình xác thực blockchain cho mỗi giao dịch, và được yêu cầu bởi mọi mạng blockchain hiện hành. Mỗi mạng yêu cầu người dùng trả phí Gas cho mọi giao dịch.",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-10-15T22-15-59Z",
+        "approvedAt": "2026-10-15T22:15:59.786Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:disclosures.gasLimit",
+      {
+        "unitId": "disclosures.gasLimit",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "e2996676536051b909f7239dab48bda7c4273c64c13fd6d22569c6e1f196def1",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Giới hạn Gas là đơn vị Gas tối đa mà giao dịch của người dùng được phép tiêu thụ.",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-10-15T22-15-59Z",
+        "approvedAt": "2026-10-15T22:15:59.786Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:disclosures.integrations",
+      {
+        "unitId": "disclosures.integrations",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "0eae2dac9b2b0532da6271502d9dfedc5863c5cff281fa85a4f38949d44fbe43",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Các Sản phẩm được tích hợp với các địa điểm giao dịch hoặc hệ thống giao dịch sổ cái phân tán sau: UniswapX; Giao thức Uniswap (v4, v3, v2); Tempo; và Jupiter (gọi chung là “các Tích hợp”). Uniswap Labs duy trì các chính sách và quy trình nội bộ về các Tích hợp, bao gồm các biện pháp kiểm soát để đánh giá, tiếp nhận và kiểm toán các Tích hợp và các tích hợp được đề xuất. Theo các chính sách và quy trình đó, các Tích hợp được đánh giá dựa trên các tiêu chí khách quan, bao gồm thanh khoản, bảo mật, tính minh bạch, khả năng xác minh, tính trung lập, khả năng kiểm toán và độ trễ. Các Tích hợp có thể thay đổi theo thời gian. Trước khi bất kỳ nguồn thanh khoản mới nào được tích hợp vào các Sản phẩm, nguồn đó phải được đánh giá theo các tiêu chí này. Tất cả các nguồn thanh khoản đã tích hợp – bao gồm Giao thức Uniswap (v4, v3, v2) và UniswapX – được đánh giá lại định kỳ để xác định liệu chúng nên tiếp tục được giữ lại hay bị loại bỏ. Việc đánh giá lại cũng sẽ được kích hoạt khi có thay đổi trọng yếu đối với hồ sơ rủi ro của nguồn thanh khoản. Một nguồn thanh khoản có thể bị loại khỏi tính toán định tuyến ngay lập tức nếu phát sinh lo ngại về bảo mật, mà không cần chờ đợt đánh giá lại định kỳ tiếp theo.",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-10-15T22-15-59Z",
+        "approvedAt": "2026-10-15T22:15:59.786Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:disclosures.liquiditySources",
+      {
+        "unitId": "disclosures.liquiditySources",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "416f99fc4657215fea96c3ac83bf83227def10efe5a873ea9c6802607dc6d174",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Để biết thêm thông tin về các nguồn thanh khoản có thể truy cập qua các Sản phẩm và các tiêu chí dùng để đánh giá chúng, xem <tradeOptionsLink>Cách thay đổi tùy chọn giao dịch mặc định</tradeOptionsLink>.",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-10-15T22-15-59Z",
+        "approvedAt": "2026-10-15T22:15:59.786Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:disclosures.maxBaseFee",
+      {
+        "unitId": "disclosures.maxBaseFee",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "f3c3237a31031b1b4c4fae6f63b8a4406d6efa21087f5ce1348f569204603681",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Phí cơ sở tối đa là mức phí cơ sở cao nhất trên mỗi đơn vị gas mà người dùng sẵn sàng trả. Phí cơ sở do mạng đặt ra, theo từng khối.",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-10-15T22-15-59Z",
+        "approvedAt": "2026-10-15T22:15:59.786Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:disclosures.priorityFees",
+      {
+        "unitId": "disclosures.priorityFees",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "ffef081c895ce81ee27feb4dfbfa63d9a91f9850c6a66727de0c4b8a84fde1b9",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Phí ưu tiên, khi áp dụng, là khoản phí tùy chọn mà người dùng có thể trả cho các trình xác thực để giao dịch của họ được xử lý nhanh hơn.",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-10-15T22-15-59Z",
+        "approvedAt": "2026-10-15T22:15:59.786Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:disclosures.products",
+      {
+        "unitId": "disclosures.products",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "76f70bc50491b1d2da127941c761d2bdeaac620c5f29f5ca37444147c5b46389",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Uniswap Labs tạo và vận hành (a) giao diện người dùng được lưu trữ trên trang web tại <appLink>app.uniswap.org</appLink> (“Giao diện”), (b) ứng dụng ví di động (“Uniswap Wallet”), và (c) một API cùng các sản phẩm và dịch vụ khác (gọi chung là “các Sản phẩm”) cho phép người dùng chuẩn bị và gửi giao dịch trên các blockchain công khai bằng ví tự lưu ký của chính họ. Uniswap Labs duy trì các quy trình nội bộ để bảo vệ an ninh của các Sản phẩm, bao gồm việc kịp thời điều tra các sự cố nghi ngờ và ngăn chặn truy cập trái phép bằng cơ chế cấp quyền cho nhân viên và các biện pháp bảo mật khác. Uniswap Labs đóng góp vào việc phát triển Giao thức Uniswap (v4, v3, v2) và UniswapX, mỗi bên là một bộ hợp đồng thông minh tự trị, mã nguồn mở được triển khai trên các blockchain công khai, nhưng không sở hữu, kiểm soát hay vận hành Giao thức Uniswap (v4, v3, v2) hoặc UniswapX. Uniswap Labs không phải là nhà môi giới-kinh doanh chứng khoán và không đăng ký với hoặc chịu sự quản lý của Ủy ban Chứng khoán và Giao dịch Hoa Kỳ liên quan đến việc tạo, cung cấp hoặc vận hành các Sản phẩm. Một số tài sản có thể không khả dụng trên các Sản phẩm, và một số tài sản có thể không khả dụng ở một số khu vực pháp lý nhất định. Để biết thêm thông tin, xem <unsupportedTokenPolicyLink>Chính sách Token không được hỗ trợ</unsupportedTokenPolicyLink>.",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-10-15T22-15-59Z",
+        "approvedAt": "2026-10-15T22:15:59.786Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:disclosures.routing",
+      {
+        "unitId": "disclosures.routing",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "8cb99ca1a941d16151b298eb5e476d4271bc551d192b817a5213d9dd04b92979",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Khi chuẩn bị giao dịch của người dùng, phần mềm định tuyến của các Sản phẩm phân tích các đường dẫn tiềm năng cho một giao dịch trên các Tích hợp và cung cấp cho người dùng thông tin về đường dẫn giao dịch được ước tính mang lại số lượng tài sản kỹ thuật số nhận được lớn nhất tại thời điểm đó, dựa trên kết quả mô phỏng thực hiện. Để làm điều đó, theo mặc định, các Sản phẩm sẽ xem xét các nguồn thanh khoản có sẵn trên các Tích hợp. Người dùng giữ toàn quyền điều chỉnh cấu hình mặc định và bật/tắt các nguồn thanh khoản mà phần mềm định tuyến của các Sản phẩm sẽ xem xét. Bằng cách thay đổi các nguồn thanh khoản mà các Sản phẩm xem xét, người dùng có thể thấy thêm các tuyến cho giao dịch của mình.",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-10-15T22-15-59Z",
+        "approvedAt": "2026-10-15T22:15:59.786Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:disclosures.slippage",
+      {
+        "unitId": "disclosures.slippage",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "1f3379ed1d4df8d857eb8c4b099890188f9c71ca13bc2c9f933de0e37014de4c",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Trượt giá là chênh lệch giữa giá dự kiến của một lệnh hoán đổi tại thời điểm gửi và giá thực hiện thực tế khi lệnh hoán đổi được thực hiện trên chuỗi. Trượt giá có thể phát sinh từ biến động giá thông thường, thay đổi về thanh khoản khả dụng, độ trễ và tắc nghẽn mạng, hoặc tác động thị trường từ lệnh hoán đổi của người dùng. Trượt giá là rủi ro vốn có của giao dịch. Nếu mức chấp nhận trượt giá được đặt quá cao, người dùng có thể không nhận được giá trị dự kiến từ giao dịch và/hoặc giá trị của giao dịch có thể bị các bên khác chiếm lấy. Ngược lại, nếu mức chấp nhận trượt giá được đặt quá thấp, người dùng có thể không thực hiện được giao dịch. Sử dụng một thuật toán được áp dụng thống nhất, các Sản phẩm hiển thị mức chấp nhận trượt giá tối đa được tính tự động, thường nằm trong khoảng từ khoảng 0,5% đến 5,5%, tùy thuộc vào các yếu tố như mạng được chọn và quy mô lệnh hoán đổi.",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-10-15T22-15-59Z",
+        "approvedAt": "2026-10-15T22:15:59.786Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:disclosures.swapDeadline",
+      {
+        "unitId": "disclosures.swapDeadline",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "05679769a825cb1b067e25c3b12d9dfa5db5e336a897e9ea58e2d754819f3670",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Thời hạn hoán đổi là khoảng thời gian một lệnh hoán đổi được phép ở trạng thái chờ trên chuỗi trước khi bị hoàn tác. Các Sản phẩm áp dụng thời hạn giao dịch mặc định là 30 phút, nghĩa là lệnh hoán đổi sẽ bị hoàn tác nếu chưa được thực hiện trong vòng 30 phút sau khi gửi. Điều này nhằm cung cấp cho người dùng sự bảo vệ bổ sung trước các biến động giá đáng kể ngoài ý muốn.",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-10-15T22-15-59Z",
+        "approvedAt": "2026-10-15T22:15:59.786Z",
         "approvedBy": "agent"
       }
     ],
@@ -554,8 +843,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "{{apy}} APY",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -571,8 +860,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Earn",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -588,8 +877,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "{{apy}} APY",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -605,8 +894,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Venmo",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -622,8 +911,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "API",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -673,8 +962,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Launchpad",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -690,8 +979,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "APR",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -1332,8 +1621,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "PnL {{value}} ({{pct}})",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -3061,8 +3350,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "{{venue}} · {{lltv}}% LLTV",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -4479,8 +4768,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "RoE",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -4496,8 +4785,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "PnL",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -5000,8 +5289,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Long",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -5017,8 +5306,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Short",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -5539,8 +5828,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "PnL/RoE",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -6169,6 +6458,23 @@
       }
     ],
     [
+      "vi-VN:i18next-json:network.filter.lowLiquidity",
+      {
+        "unitId": "network.filter.lowLiquidity",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "05a25d34314db561ef070b425ba6015bd5c105d2dda3c7da3082d5a742c3267f",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Thanh khoản thấp",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-10-19T20-15-55Z",
+        "approvedAt": "2026-10-19T20:15:55.421Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "vi-VN:i18next-json:notification.auction.open.failed",
       {
         "unitId": "notification.auction.open.failed",
@@ -6197,8 +6503,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "APR",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -6214,8 +6520,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "$100k – $1M",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -6231,8 +6537,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "$10M+",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -6248,8 +6554,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "<$100k",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -6288,6 +6594,40 @@
       }
     ],
     [
+      "vi-VN:i18next-json:pool.position.earned.suffix",
+      {
+        "unitId": "pool.position.earned.suffix",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "4844fdfbc864ac106bb9742de65edfbcb5257a4e7ee2d8c500b80cdafa148524",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "đã kiếm được",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-10-21T15-26-51Z",
+        "approvedAt": "2026-10-21T15:26:51.148Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:pool.position.liquidity.suffix",
+      {
+        "unitId": "pool.position.liquidity.suffix",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "ead2523743ee17aed6605ba71358fd4820c5102cefa92b72d4574db2cddf575e",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Thanh lý",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-10-21T15-26-51Z",
+        "approvedAt": "2026-10-21T15:26:51.148Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "vi-VN:i18next-json:portfolio.defi.title",
       {
         "unitId": "portfolio.defi.title",
@@ -6299,8 +6639,25 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "DeFi",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:position.initialPrice.marketUpdated",
+      {
+        "unitId": "position.initialPrice.marketUpdated",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "a54fccb1b9e62fcbf3c5d1b992c9dc12bf09b76415f09564ce0adde7d922d185",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Giá thị trường đã cập nhật",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-10-15T21-01-19Z",
+        "approvedAt": "2026-10-15T21:01:19.637Z",
         "approvedBy": "agent"
       }
     ],
@@ -6333,8 +6690,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Airdrop / spam",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -6350,8 +6707,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "The Badger",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -6418,8 +6775,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "$TICKER",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -6486,8 +6843,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "demo",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -6651,8 +7008,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Crowd Launch",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -6668,8 +7025,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Instant Launch",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -6702,8 +7059,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Crowd",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -6719,8 +7076,54 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Instant",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:rhcca.position.priceUnavailable",
+      {
+        "unitId": "rhcca.position.priceUnavailable",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "abc5fecda607e617b5af85dd8280f49b97736d30dcf49ad622118c302b123465",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Dữ liệu giá token hiện không khả dụng",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "fluency",
+            "severity": "minor",
+            "detail": "\"Token\" is capitalized mid-sentence; Vietnamese sentence case keeps the common loanword lowercase (cf. corpus usage \"số lượng token\", \"mua token\").",
+            "evidence": {
+              "sourceSpan": "Token pricing data",
+              "targetSpan": "giá Token"
+            },
+            "alternative": "Dữ liệu giá token hiện không khả dụng"
+          }
+        ],
+        "agentRunId": "vi-VN-2026-10-20T20-10-45Z",
+        "approvedAt": "2026-10-20T20:10:45.414Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:search.results.auction.startsIn",
+      {
+        "unitId": "search.results.auction.startsIn",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "f63d3a93c65b2b7e8c6b1a29a7efe1834ae62f4887bd58edfb759de7b6b15f1c",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Bắt đầu sau {{time}}",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-10-20T18-21-13Z",
+        "approvedAt": "2026-10-20T18:21:13.061Z",
         "approvedBy": "agent"
       }
     ],
@@ -6753,8 +7156,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "{{apr}} APR",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -6770,8 +7173,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "{{apy}} APY",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -6787,8 +7190,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "OK",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -6804,8 +7207,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "ENS",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -6889,6 +7292,40 @@
       }
     ],
     [
+      "vi-VN:i18next-json:settings.setting.shareDeviceIdentifiers.message",
+      {
+        "unitId": "settings.setting.shareDeviceIdentifiers.message",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "e2ba15a1a8521d2d7db3051027b805d819f8bcd2e8e7d9700b0edc9cea9b2f74",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Chúng tôi có thể chia sẻ mã định danh thiết bị với các đối tác quảng cáo để quảng bá dịch vụ của chúng tôi trên các trang web và nền tảng khác.",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-10-16T19-35-32Z",
+        "approvedAt": "2026-10-16T19:35:32.755Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:settings.setting.shareDeviceIdentifiers.title",
+      {
+        "unitId": "settings.setting.shareDeviceIdentifiers.title",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "ef41776a003a42bf066f2cb1cc0886b40fef5dfea0420467b3af57f131d66b59",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Chia sẻ mã định danh thiết bị",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-10-16T19-35-32Z",
+        "approvedAt": "2026-10-16T19:35:32.755Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "vi-VN:i18next-json:swap.router.label.client",
       {
         "unitId": "swap.router.label.client",
@@ -6898,10 +7335,10 @@
         "sourceHash": "67f08c24234cb273b998815b9d3db5ac19519714b89e68789e9782b449f21ded",
         "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
-        "translation": "Uniswap Client",
+        "translation": "Client Uniswap",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-15T22-15-59Z",
+        "approvedAt": "2026-10-15T22:15:59.786Z",
         "approvedBy": "agent"
       }
     ],
@@ -7560,8 +7997,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Launchpad",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -7617,6 +8054,71 @@
       }
     ],
     [
+      "vi-VN:i18next-json:token.price.lowConfidence.tag",
+      {
+        "unitId": "token.price.lowConfidence.tag",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "29e142b8be7d28e49cc799fb06f36a7121919415c29811315c90594e4c4ffc60",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Độ tin cậy thấp",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:token.price.lowConfidence.title",
+      {
+        "unitId": "token.price.lowConfidence.title",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "ef586d27ebbd87e6bfa32e637715042e8d9e8f612ea9de3124b29361e235f99d",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Độ tin cậy giá thấp",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:token.price.lowConfidence.tooltip",
+      {
+        "unitId": "token.price.lowConfidence.tooltip",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "2a666cdba05106c279a946878c66c546f38ddd6e4f754ea3212935e61a271a1a",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Giá token dựa trên dữ liệu thị trường hạn chế hoặc có thể kém chất lượng.",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "fluency",
+            "severity": "minor",
+            "detail": "\"Token\" is capitalized mid-phrase although it is a common noun here, not a proper name or sentence start; shipped prose uses lowercase \"token\" (e.g. \"nhận token\", \"Giá trị...token\"). Inconsistent casing of a kept-English term.",
+            "evidence": {
+              "targetSpan": "Giá Token",
+              "sourceSpan": "Token price",
+              "rule": "glossary: \"token\" — DO NOT TRANSLATE (kept English, lowercase in prose per shipped corpus)"
+            },
+            "alternative": "Giá token",
+            "reviewDimension": "term-type-agreement"
+          }
+        ],
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "vi-VN:i18next-json:tokens.selector.categoryFilter.clear_one",
       {
         "unitId": "tokens.selector.categoryFilter.clear_one",
@@ -7664,6 +8166,23 @@
         "status": "clean",
         "agentRunId": "vi-VN-2026-09-23T16-13-07Z",
         "approvedAt": "2026-09-23T16:13:07.460Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:toucan.allAuctions",
+      {
+        "unitId": "toucan.allAuctions",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "a6d3fee9c816e67519ea5a4ff5371433980d102f27650c5b854c671857a6200d",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Tất cả phiên đấu giá",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-10-19T14-33-58Z",
+        "approvedAt": "2026-10-19T14:33:58.420Z",
         "approvedBy": "agent"
       }
     ],
@@ -7736,6 +8255,23 @@
       }
     ],
     [
+      "vi-VN:i18next-json:toucan.auction.finalFdv",
+      {
+        "unitId": "toucan.auction.finalFdv",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "67e17d632a561ea1d2f2f936e394bfe8f9f05219f620b70d8f3e160a866c4b03",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "FDV cuối cùng",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-10-21T16-46-43Z",
+        "approvedAt": "2026-10-21T16:46:43.372Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "vi-VN:i18next-json:toucan.auction.introBanner.auctionStartsInTime",
       {
         "unitId": "toucan.auction.introBanner.auctionStartsInTime",
@@ -7798,8 +8334,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "<value>{{fdv}}</value> FDV",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -7868,6 +8404,23 @@
         "status": "clean",
         "agentRunId": "vi-VN-2026-09-16T16-27-57Z",
         "approvedAt": "2026-09-16T16:27:57.575Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:toucan.bidDetails.description.outOfRangeInProgressAwaitingThreshold",
+      {
+        "unitId": "toucan.bidDetails.description.outOfRangeInProgressAwaitingThreshold",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "c9e6b4e257d95f81a7ea9c178152998f40e0db3bf41df207c687a579fa60174f",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Lệnh này đã ngừng được thực hiện vì giá vượt quá FDV tối đa <highlight>{{valuationSummary}}</highlight> của bạn. Bạn có thể hoàn lại phần ngân sách chưa dùng khi khối lượng được thực hiện của phiên đấu giá đạt ngưỡng ra mắt <highlight>{{launchThreshold}}</highlight>, và rút số token đã nhận khi phiên đấu giá kết thúc. Nếu không bao giờ đạt được ngưỡng này, bạn có thể rút toàn bộ ngân sách khi phiên đấu giá kết thúc.",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-10-20T16-10-24Z",
+        "approvedAt": "2026-10-20T16:10:24.059Z",
         "approvedBy": "agent"
       }
     ],
@@ -8121,8 +8674,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "$TICKER",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -8168,8 +8721,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Crowd Launch",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -8298,8 +8851,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Instant Launch",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -8349,8 +8902,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Pools.trade",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ],
@@ -8689,8 +9242,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "<icon /> <gradient>UniswapX</gradient> <info />",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
-        "approvedAt": "2026-10-15T16:29:44.396Z",
+        "agentRunId": "vi-VN-2026-10-21T17-37-32Z",
+        "approvedAt": "2026-10-21T17:37:32.885Z",
         "approvedBy": "agent"
       }
     ]

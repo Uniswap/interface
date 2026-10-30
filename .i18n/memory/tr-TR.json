@@ -14,8 +14,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "Apple",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -31,8 +31,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "Google",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -48,8 +48,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "Token 1",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -65,8 +65,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "Token 2",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -82,8 +82,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "{{amount}} UNI",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -349,8 +349,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "Beta",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -366,8 +366,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "Blog",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -389,6 +389,40 @@
       }
     ],
     [
+      "tr-TR:i18next-json:common.privacyChoices.optOut",
+      {
+        "unitId": "common.privacyChoices.optOut",
+        "providerId": "i18next-json",
+        "locale": "tr-TR",
+        "domain": "product-ui",
+        "sourceHash": "5d1160c8a782fcfc275fe20ba2a3055c30316c1f7544530db94824fb986c5a53",
+        "glossaryHash": "d4f3cc593a54cc46cd6b9fef757a9f9f958660e0ed4e1d2c4386462c4ef49361",
+        "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
+        "translation": "Geçerli yasalar kapsamında bunun satış, paylaşım veya hedefli reklamcılık olarak nitelendirildiği durumlarda, ayarlarınızdaki “{{settingName}}” anahtarını kapatarak bundan vazgeçebilirsiniz.",
+        "status": "clean",
+        "agentRunId": "tr-TR-2026-10-16T19-35-30Z",
+        "approvedAt": "2026-10-16T19:35:30.087Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "tr-TR:i18next-json:common.privacyChoices.policy",
+      {
+        "unitId": "common.privacyChoices.policy",
+        "providerId": "i18next-json",
+        "locale": "tr-TR",
+        "domain": "product-ui",
+        "sourceHash": "5109ab4492e4bed49a87e4aa498a04262721ad8e42c81975e8a854e6d4e976cc",
+        "glossaryHash": "d4f3cc593a54cc46cd6b9fef757a9f9f958660e0ed4e1d2c4386462c4ef49361",
+        "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
+        "translation": "Gizlilik uygulamalarımız hakkında daha fazla bilgi için lütfen <privacyLink>Gizlilik Politikamızı</privacyLink> inceleyin.",
+        "status": "clean",
+        "agentRunId": "tr-TR-2026-10-16T19-35-30Z",
+        "approvedAt": "2026-10-16T19:35:30.087Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "tr-TR:i18next-json:common.protocol.v2",
       {
         "unitId": "common.protocol.v2",
@@ -400,8 +434,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "Uniswap v2",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -417,8 +451,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "Uniswap v3",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -434,8 +468,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "Uniswap v4",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -451,8 +485,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "Token A",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -468,8 +502,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "Token B",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -489,16 +523,17 @@
           {
             "category": "accuracy",
             "severity": "major",
-            "detail": "Source is the lowercase NOUN 'transfer' (paired with i=755 'transfers', used in count/label contexts like '1 previous transfer'), but the proposal 'Transfer et' is an imperative VERB phrase ('do a transfer'). Inserted into a noun slot it produces broken UI copy.",
+            "detail": "Source 'transfer' is a lowercase noun (activity-type label, paired with 'transfers' at i=754), but 'Transfer et' is a capitalized imperative verb ('do a transfer'). This changes the part of speech and meaning of the label — users would read it as an action command, not an activity category.",
             "evidence": {
               "sourceSpan": "transfer",
               "targetSpan": "Transfer et"
             },
-            "alternative": "transfer"
+            "alternative": "transfer",
+            "reviewDimension": "term-type-agreement"
           }
         ],
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -514,8 +549,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "Euro",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -533,6 +568,261 @@
         "status": "clean",
         "agentRunId": "tr-TR-2026-09-18T15-35-36Z",
         "approvedAt": "2026-09-18T15:35:36.667Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "tr-TR:i18next-json:disclosures.autoRouter",
+      {
+        "unitId": "disclosures.autoRouter",
+        "providerId": "i18next-json",
+        "locale": "tr-TR",
+        "domain": "product-ui",
+        "sourceHash": "1769525d3c38507cb4b1bdc3cb4a598af59b2e5d1a004c2bcb302a769bf8b857",
+        "glossaryHash": "d4f3cc593a54cc46cd6b9fef757a9f9f958660e0ed4e1d2c4386462c4ef49361",
+        "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
+        "translation": "Auto Router, Ürünler tarafından kullanılan ve uygun Entegrasyonlar genelinde bir dijital varlık işlemi için olası yolları analiz eden bir işlem yolu algoritmasıdır; açıklanan nesnel yönlendirme parametreleri kapsamında simüle edilmiş yürütmeye dayanarak, o anda alınacak dijital varlık sayısının en yüksek olacağı tahmin edilen işlem yolu hakkında kullanıcıya bilgi sağlar.",
+        "status": "clean",
+        "agentRunId": "tr-TR-2026-10-15T22-15-14Z",
+        "approvedAt": "2026-10-15T22:15:14.328Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "tr-TR:i18next-json:disclosures.autoRouterParameters",
+      {
+        "unitId": "disclosures.autoRouterParameters",
+        "providerId": "i18next-json",
+        "locale": "tr-TR",
+        "domain": "product-ui",
+        "sourceHash": "aeb91f7c1ff41c721069194cc98de27e3bfaeca2025f1b791b5c01a955b18f35",
+        "glossaryHash": "d4f3cc593a54cc46cd6b9fef757a9f9f958660e0ed4e1d2c4386462c4ef49361",
+        "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
+        "translation": "Aşağıdaki parametreler, Ürünlerin yönlendirme yazılımına («Auto Router») sabit olarak kodlanmıştır: (i) simülasyon yoluyla gas maliyetlerinin tahmini (yüksek ağ ücretli rotaların önceliğini düşürebilir); (ii) simülasyon yoluyla slippage tahmini (kullanıcının belirttiği maksimum slippage miktarını veya daha iyisini karşılamayan bir işlemi geri alır); (iii) likidite kaynakları genelinde kilitli toplam değerle ölçülen havuz likiditesi (belirli bir eşiğin altına düşen havuzların önceliğini düşürür veya bunları hariç tutar); (iv) kullanıcının takasının birden fazla likidite kaynağı arasında bölünmesinin daha iyi bir fiyat sağlayıp sağlamayacağını yönlendiricinin değerlendirebilmesi için takasın «bölünebileceği» maksimum sayı; (v) kullanıcının istediği çıktı token varlığını almasıyla sonuçlanan olası dijital varlık dönüşüm dizileri anlamına gelen maksimum «sıçrama» (hop) sayısı; ve (vi) Auto Router algoritmasının önerilen bir rota oluştururken değerlendireceği maksimum olası yönlendirme yolu sayısı. Auto Router, alışılmadık derecede yüksek LP ücretleri nedeniyle beklenmedik fiyat etkisinden kullanıcıları korumak amacıyla ücretleri %11’in üzerinde olan havuzları keşfetmez. Bu yönlendirme yazılımı parametreleri, kullanıcı tarafından yapılandırılabilen işlem düzeyinde varsayılan parametreler değildir. Ürünlerin yönlendirme yazılımı bu yönlendirme parametrelerini tek tip bir şekilde uygular ve kod <uniRouteLink>buradan</uniRouteLink> görüntülenebilir.",
+        "status": "clean",
+        "agentRunId": "tr-TR-2026-10-15T22-15-14Z",
+        "approvedAt": "2026-10-15T22:15:14.328Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "tr-TR:i18next-json:disclosures.customization",
+      {
+        "unitId": "disclosures.customization",
+        "providerId": "i18next-json",
+        "locale": "tr-TR",
+        "domain": "product-ui",
+        "sourceHash": "62979328997006241effade715257423f44996c1f2899ab5f7e15b31851362ab",
+        "glossaryHash": "d4f3cc593a54cc46cd6b9fef757a9f9f958660e0ed4e1d2c4386462c4ef49361",
+        "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
+        "translation": "İşlem düzeyindeki varsayılan parametreler, Ürünlerin kullanıcıları tarafından tamamen özelleştirilebilir. Bu parametreleri değiştiren kullanıcı, işlemi için ek rotalar görebilir. Varsayılan parametrelerin nasıl değiştirileceği hakkında daha fazla bilgi için bkz. <slippageLink>Uniswap Web uygulamasında slippage nasıl değiştirilir</slippageLink>, <swapDeadlinesLink>Uniswap arayüzünde takas son tarihleri nasıl değiştirilir</swapDeadlinesLink> ve <tradeOptionsLink>Varsayılan işlem seçenekleri nasıl değiştirilir</tradeOptionsLink>. Uniswap Labs, varsayılan parametrelere ilişkin iç politika ve prosedürler uygular ve bu politika ve prosedürlere uygunluğu sağlamak için varsayılan parametreleri düzenli olarak yeniden değerlendirir. Uniswap Labs, varsayılan parametreler sonucunda Uniswap Labs ile Ürünlerin kullanıcıları arasında ortaya çıkan önemli bir çıkar çatışmasından haberdar değildir. Uniswap Labs, yönlendirme analizine dahil edilme karşılığında herhangi bir likidite kaynağından ücret almaz. Üçüncü taraf entegrasyonlarına yönelik ekosistem desteği, piyasa yapıcı desteği (krediler veya teşvik programları gibi), API erişimi ve ortak pazarlama dahil olmak üzere iş geliştirme faaliyetleri, yönlendirme analizinden ayrıdır ve onu etkilemez.",
+        "status": "clean",
+        "agentRunId": "tr-TR-2026-10-15T22-15-14Z",
+        "approvedAt": "2026-10-15T22:15:14.328Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "tr-TR:i18next-json:disclosures.defaultParameters",
+      {
+        "unitId": "disclosures.defaultParameters",
+        "providerId": "i18next-json",
+        "locale": "tr-TR",
+        "domain": "product-ui",
+        "sourceHash": "6384103f15d7e3393252e304756e6c94b8f8a5a33326c3024bae82defe2771a2",
+        "glossaryHash": "d4f3cc593a54cc46cd6b9fef757a9f9f958660e0ed4e1d2c4386462c4ef49361",
+        "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
+        "translation": "Ürünlerde şu anda aşağıdaki işlem düzeyinde varsayılan parametreler geçerlidir: slippage toleransı; takas son tarihi; uygun havuzlar ve işlem platformları veya dağıtık defter işlem sistemleri; ve öncelik ücretleri. Varsayılan parametreler zaman zaman değişebilir. Varsayılan parametreler nesnel kriterlere göre belirlenir ve genellikle kullanıcılara yönelik riski azaltacak şekilde yapılandırılır.",
+        "status": "clean",
+        "agentRunId": "tr-TR-2026-10-15T22-15-14Z",
+        "approvedAt": "2026-10-15T22:15:14.328Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "tr-TR:i18next-json:disclosures.feeCalculation",
+      {
+        "unitId": "disclosures.feeCalculation",
+        "providerId": "i18next-json",
+        "locale": "tr-TR",
+        "domain": "product-ui",
+        "sourceHash": "40c78c254e0b59dd6e93159cc60e13ee83bd2cf876440febf93320a598fb304c",
+        "glossaryHash": "d4f3cc593a54cc46cd6b9fef757a9f9f958660e0ed4e1d2c4386462c4ef49361",
+        "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
+        "translation": "Ürünler, nesnel ve tek tip uygulanan bir algoritma kullanarak her işlem için otomatik hesaplanan bir Gas Ücreti ve Öncelik Ücreti sunar. Bu algoritmik hesaplamalar, işlem hızı ile ödenen ücretler arasında denge kurmak üzere tasarlanmıştır.",
+        "status": "clean",
+        "agentRunId": "tr-TR-2026-10-15T22-15-14Z",
+        "approvedAt": "2026-10-15T22:15:14.328Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "tr-TR:i18next-json:disclosures.gasFees",
+      {
+        "unitId": "disclosures.gasFees",
+        "providerId": "i18next-json",
+        "locale": "tr-TR",
+        "domain": "product-ui",
+        "sourceHash": "537acd8dfac10d9eec9e024bf4664b063e4804e4664d00d5daaf21d3bcf9e4f6",
+        "glossaryHash": "d4f3cc593a54cc46cd6b9fef757a9f9f958660e0ed4e1d2c4386462c4ef49361",
+        "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
+        "translation": "Gas Ücretleri her işlem için blokzincir doğrulayıcılarına ödenir ve geçerli her blokzincir ağı tarafından zorunlu tutulur. Kullanıcıların her işlemde Gas ücreti ödemesi her ağ tarafından zorunlu kılınır.",
+        "status": "clean",
+        "agentRunId": "tr-TR-2026-10-15T22-15-14Z",
+        "approvedAt": "2026-10-15T22:15:14.328Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "tr-TR:i18next-json:disclosures.gasLimit",
+      {
+        "unitId": "disclosures.gasLimit",
+        "providerId": "i18next-json",
+        "locale": "tr-TR",
+        "domain": "product-ui",
+        "sourceHash": "e2996676536051b909f7239dab48bda7c4273c64c13fd6d22569c6e1f196def1",
+        "glossaryHash": "d4f3cc593a54cc46cd6b9fef757a9f9f958660e0ed4e1d2c4386462c4ef49361",
+        "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
+        "translation": "Gas Limit, kullanıcının işleminin tüketmesine izin verilen maksimum Gas birimidir.",
+        "status": "clean",
+        "agentRunId": "tr-TR-2026-10-15T22-15-14Z",
+        "approvedAt": "2026-10-15T22:15:14.328Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "tr-TR:i18next-json:disclosures.integrations",
+      {
+        "unitId": "disclosures.integrations",
+        "providerId": "i18next-json",
+        "locale": "tr-TR",
+        "domain": "product-ui",
+        "sourceHash": "0eae2dac9b2b0532da6271502d9dfedc5863c5cff281fa85a4f38949d44fbe43",
+        "glossaryHash": "d4f3cc593a54cc46cd6b9fef757a9f9f958660e0ed4e1d2c4386462c4ef49361",
+        "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
+        "translation": "Ürünler şu işlem platformları veya dağıtık defter işlem sistemleriyle entegredir: UniswapX; Uniswap Protokolü (v4, v3, v2); Tempo; ve Jupiter (topluca «Entegrasyonlar»). Uniswap Labs, Entegrasyonlara ilişkin, Entegrasyonları ve önerilen entegrasyonları değerlendirme, dahil etme ve denetleme kontrollerini içeren iç politika ve prosedürler uygular. Bu politika ve prosedürler uyarınca Entegrasyonlar; likidite, güvenlik, şeffaflık, doğrulanabilirlik, tarafsızlık, denetlenebilirlik ve gecikme dahil nesnel kriterlere göre değerlendirilir. Entegrasyonlar zaman zaman değişebilir. Herhangi bir yeni likidite kaynağı Ürünlere entegre edilmeden önce bu kriterlere göre değerlendirilmelidir. Uniswap Protokolü (v4, v3, v2) ve UniswapX dahil olmak üzere entegre tüm likidite kaynakları, dahil edilmeye devam edip etmeyeceklerinin veya kaldırılıp kaldırılmayacaklarının belirlenmesi için düzenli olarak yeniden değerlendirilir. Likidite kaynağının risk profilinde önemli bir değişiklik olması durumunda da yeniden değerlendirme tetiklenir. Bir güvenlik endişesi ortaya çıkarsa, bir likidite kaynağı bir sonraki düzenli yeniden değerlendirme beklenmeden yönlendirme hesaplamasından derhal kaldırılabilir.",
+        "status": "clean",
+        "agentRunId": "tr-TR-2026-10-15T22-15-14Z",
+        "approvedAt": "2026-10-15T22:15:14.328Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "tr-TR:i18next-json:disclosures.liquiditySources",
+      {
+        "unitId": "disclosures.liquiditySources",
+        "providerId": "i18next-json",
+        "locale": "tr-TR",
+        "domain": "product-ui",
+        "sourceHash": "416f99fc4657215fea96c3ac83bf83227def10efe5a873ea9c6802607dc6d174",
+        "glossaryHash": "d4f3cc593a54cc46cd6b9fef757a9f9f958660e0ed4e1d2c4386462c4ef49361",
+        "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
+        "translation": "Ürünler üzerinden erişilebilen likidite kaynakları ve bunları değerlendirmek için kullanılan kriterler hakkında ek bilgi için bkz. <tradeOptionsLink>Varsayılan işlem seçenekleri nasıl değiştirilir</tradeOptionsLink>.",
+        "status": "clean",
+        "agentRunId": "tr-TR-2026-10-15T22-15-14Z",
+        "approvedAt": "2026-10-15T22:15:14.328Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "tr-TR:i18next-json:disclosures.maxBaseFee",
+      {
+        "unitId": "disclosures.maxBaseFee",
+        "providerId": "i18next-json",
+        "locale": "tr-TR",
+        "domain": "product-ui",
+        "sourceHash": "f3c3237a31031b1b4c4fae6f63b8a4406d6efa21087f5ce1348f569204603681",
+        "glossaryHash": "d4f3cc593a54cc46cd6b9fef757a9f9f958660e0ed4e1d2c4386462c4ef49361",
+        "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
+        "translation": "Maks. Baz Ücret, bir kullanıcının ödemeye razı olduğu gas birimi başına en yüksek baz ücrettir. Baz ücret, ağ tarafından blok başına belirlenir.",
+        "status": "clean",
+        "agentRunId": "tr-TR-2026-10-15T22-15-14Z",
+        "approvedAt": "2026-10-15T22:15:14.328Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "tr-TR:i18next-json:disclosures.priorityFees",
+      {
+        "unitId": "disclosures.priorityFees",
+        "providerId": "i18next-json",
+        "locale": "tr-TR",
+        "domain": "product-ui",
+        "sourceHash": "ffef081c895ce81ee27feb4dfbfa63d9a91f9850c6a66727de0c4b8a84fde1b9",
+        "glossaryHash": "d4f3cc593a54cc46cd6b9fef757a9f9f958660e0ed4e1d2c4386462c4ef49361",
+        "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
+        "translation": "Öncelik Ücretleri, geçerli olduğu durumlarda, kullanıcıların işlemlerinin daha hızlı işlenmesi için doğrulayıcılara ödeyebileceği isteğe bağlı bir ücrettir.",
+        "status": "clean",
+        "agentRunId": "tr-TR-2026-10-15T22-15-14Z",
+        "approvedAt": "2026-10-15T22:15:14.328Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "tr-TR:i18next-json:disclosures.products",
+      {
+        "unitId": "disclosures.products",
+        "providerId": "i18next-json",
+        "locale": "tr-TR",
+        "domain": "product-ui",
+        "sourceHash": "76f70bc50491b1d2da127941c761d2bdeaac620c5f29f5ca37444147c5b46389",
+        "glossaryHash": "d4f3cc593a54cc46cd6b9fef757a9f9f958660e0ed4e1d2c4386462c4ef49361",
+        "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
+        "translation": "Uniswap Labs; (a) <appLink>app.uniswap.org</appLink> adresinde barındırılan bir web sitesi kullanıcı arayüzü («Arayüz»), (b) bir mobil cüzdan uygulaması («Uniswap Wallet») ve (c) kullanıcıların kendi kendine saklamalı (self-custodial) cüzdanlarını kullanarak halka açık blokzincirlerde işlem hazırlayıp göndermelerini sağlayan bir API ile diğer ürün ve hizmetleri (topluca «Ürünler») oluşturur ve işletir. Uniswap Labs; şüpheli olayları derhal soruşturmak ve çalışan kimlik doğrulaması ile diğer güvenlik önlemleri aracılığıyla yetkisiz erişimi önlemek dahil olmak üzere Ürünlerin güvenliğini korumaya yönelik iç prosedürler uygular. Uniswap Labs, her biri halka açık blokzincirlerde dağıtılmış otonom, açık kaynaklı akıllı sözleşme setleri olan Uniswap Protokolü (v4, v3, v2) ile UniswapX geliştirilmesine katkıda bulunur; ancak Uniswap Protokolü (v4, v3, v2) veya UniswapX üzerinde sahiplik, kontrol veya işletme yetkisine sahip değildir. Uniswap Labs bir aracı kurum (broker-dealer) değildir ve Ürünlerin oluşturulması, sunulması veya işletilmesiyle bağlantılı olarak ABD Menkul Kıymetler ve Borsa Komisyonu’na kayıtlı değildir ve onun tarafından düzenlenmemektedir. Belirli varlıklar Ürünlerde mevcut olmayabilir ve belirli varlıklar belirli yargı bölgelerinde kullanılamayabilir. Daha fazla bilgi için bkz. <unsupportedTokenPolicyLink>Desteklenmeyen Token Politikası</unsupportedTokenPolicyLink>.",
+        "status": "clean",
+        "agentRunId": "tr-TR-2026-10-15T22-15-14Z",
+        "approvedAt": "2026-10-15T22:15:14.328Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "tr-TR:i18next-json:disclosures.routing",
+      {
+        "unitId": "disclosures.routing",
+        "providerId": "i18next-json",
+        "locale": "tr-TR",
+        "domain": "product-ui",
+        "sourceHash": "8cb99ca1a941d16151b298eb5e476d4271bc551d192b817a5213d9dd04b92979",
+        "glossaryHash": "d4f3cc593a54cc46cd6b9fef757a9f9f958660e0ed4e1d2c4386462c4ef49361",
+        "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
+        "translation": "Bir kullanıcının işlemi hazırlanırken, Ürünlerin yönlendirme yazılımı Entegrasyonlar üzerindeki olası işlem yollarını analiz eder ve simüle edilmiş yürütme sonuçlarına dayanarak o anda alınacak dijital varlık sayısının en yüksek olacağı tahmin edilen işlem yolu hakkında kullanıcıya bilgi sağlar. Bunu yapmak için Ürünler, varsayılan olarak Entegrasyonlar genelindeki mevcut likidite kaynaklarını dikkate alır. Kullanıcı, varsayılan yapılandırmayı ayarlama ve Ürünlerin yönlendirme yazılımının hangi likidite kaynaklarını dikkate alacağını açıp kapatma konusunda tam takdir yetkisini elinde tutar. Ürünlerin dikkate aldığı likidite kaynaklarını değiştiren kullanıcı, işlemi için ek rotalar görebilir.",
+        "status": "clean",
+        "agentRunId": "tr-TR-2026-10-15T22-15-14Z",
+        "approvedAt": "2026-10-15T22:15:14.328Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "tr-TR:i18next-json:disclosures.slippage",
+      {
+        "unitId": "disclosures.slippage",
+        "providerId": "i18next-json",
+        "locale": "tr-TR",
+        "domain": "product-ui",
+        "sourceHash": "1f3379ed1d4df8d857eb8c4b099890188f9c71ca13bc2c9f933de0e37014de4c",
+        "glossaryHash": "d4f3cc593a54cc46cd6b9fef757a9f9f958660e0ed4e1d2c4386462c4ef49361",
+        "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
+        "translation": "Slippage, bir takasın gönderildiği andaki beklenen fiyatı ile takas zincir üstünde gerçekleştirildiğindeki fiili gerçekleşme fiyatı arasındaki farktır. Slippage; olağan fiyat hareketinden, mevcut likiditedeki değişikliklerden, ağ gecikmesi ve yoğunluğundan veya kullanıcının takasının piyasa etkisinden kaynaklanabilir. Slippage, işlem yapmanın doğasında bulunan bir risktir. Slippage toleransı çok yüksek ayarlanırsa kullanıcı bir işlemden beklenen değeri alamayabilir ve/veya işlemin değeri başka taraflarca ele geçirilebilir. Tersine, Slippage toleransı çok düşük ayarlanırsa kullanıcı işlemi gerçekleştiremeyebilir. Ürünler, tek tip uygulanan bir algoritma kullanarak, seçilen ağ ve takasın büyüklüğü gibi faktörlere bağlı olarak genellikle yaklaşık %0,5 ile %5,5 aralığında kalan, otomatik hesaplanan bir maksimum Slippage toleransı sunar.",
+        "status": "clean",
+        "agentRunId": "tr-TR-2026-10-15T22-15-14Z",
+        "approvedAt": "2026-10-15T22:15:14.328Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "tr-TR:i18next-json:disclosures.swapDeadline",
+      {
+        "unitId": "disclosures.swapDeadline",
+        "providerId": "i18next-json",
+        "locale": "tr-TR",
+        "domain": "product-ui",
+        "sourceHash": "05679769a825cb1b067e25c3b12d9dfa5db5e336a897e9ea58e2d754819f3670",
+        "glossaryHash": "d4f3cc593a54cc46cd6b9fef757a9f9f958660e0ed4e1d2c4386462c4ef49361",
+        "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
+        "translation": "Takas Son Tarihi, bir takasın geri alınmadan önce zincir üstünde beklemede kalmasına izin verilen süredir. Ürünler 30 dakikalık varsayılan bir işlem son tarihi uygular; yani bir takas, gönderimden sonraki 30 dakika içinde gerçekleşmemişse geri alınır. Bu, kullanıcılara istenmeyen önemli fiyat hareketlerine karşı ek koruma sağlamayı amaçlar.",
+        "status": "clean",
+        "agentRunId": "tr-TR-2026-10-15T22-15-14Z",
+        "approvedAt": "2026-10-15T22:15:14.328Z",
         "approvedBy": "agent"
       }
     ],
@@ -582,8 +872,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "{{apy}} APY",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -599,8 +889,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "Earn",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -616,8 +906,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "{{apy}} APY",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -633,8 +923,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "v2 TVL",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -650,8 +940,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "v3 TVL",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -667,8 +957,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "v4 TVL",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -684,8 +974,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "Minimum {{amount}}",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -701,8 +991,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "Venmo",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -718,8 +1008,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "API",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -769,8 +1059,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "Launchpad",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -786,8 +1076,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "APR",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -1426,8 +1716,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "PnL {{value}} ({{pct}})",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -4639,8 +4929,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "RoE",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -4656,8 +4946,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "PnL",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -5161,8 +5451,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "Long",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -5178,8 +5468,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "Short",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -5701,8 +5991,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "PnL/RoE",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -6331,6 +6621,23 @@
       }
     ],
     [
+      "tr-TR:i18next-json:network.filter.lowLiquidity",
+      {
+        "unitId": "network.filter.lowLiquidity",
+        "providerId": "i18next-json",
+        "locale": "tr-TR",
+        "domain": "product-ui",
+        "sourceHash": "05a25d34314db561ef070b425ba6015bd5c105d2dda3c7da3082d5a742c3267f",
+        "glossaryHash": "d4f3cc593a54cc46cd6b9fef757a9f9f958660e0ed4e1d2c4386462c4ef49361",
+        "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
+        "translation": "Düşük likidite",
+        "status": "clean",
+        "agentRunId": "tr-TR-2026-10-19T20-15-42Z",
+        "approvedAt": "2026-10-19T20:15:42.139Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "tr-TR:i18next-json:notification.auction.open.failed",
       {
         "unitId": "notification.auction.open.failed",
@@ -6359,8 +6666,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "APR",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -6376,8 +6683,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "$100k – $1M",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -6393,8 +6700,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "$10M+",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -6410,8 +6717,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "<$100k",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -6463,6 +6770,52 @@
       }
     ],
     [
+      "tr-TR:i18next-json:pool.position.earned.suffix",
+      {
+        "unitId": "pool.position.earned.suffix",
+        "providerId": "i18next-json",
+        "locale": "tr-TR",
+        "domain": "product-ui",
+        "sourceHash": "4844fdfbc864ac106bb9742de65edfbcb5257a4e7ee2d8c500b80cdafa148524",
+        "glossaryHash": "d4f3cc593a54cc46cd6b9fef757a9f9f958660e0ed4e1d2c4386462c4ef49361",
+        "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
+        "translation": "kazanıldı",
+        "status": "clean",
+        "agentRunId": "tr-TR-2026-10-21T15-26-40Z",
+        "approvedAt": "2026-10-21T15:26:40.911Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "tr-TR:i18next-json:pool.position.liquidity.suffix",
+      {
+        "unitId": "pool.position.liquidity.suffix",
+        "providerId": "i18next-json",
+        "locale": "tr-TR",
+        "domain": "product-ui",
+        "sourceHash": "ead2523743ee17aed6605ba71358fd4820c5102cefa92b72d4574db2cddf575e",
+        "glossaryHash": "d4f3cc593a54cc46cd6b9fef757a9f9f958660e0ed4e1d2c4386462c4ef49361",
+        "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
+        "translation": "lik.",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "style",
+            "severity": "minor",
+            "detail": "Source 'liq.' is lowercase (a compact in-row label, sibling of lowercase 'earned' at i2225, rendered lowercase 'kazanıldı'), but the translation capitalizes to 'Lik.', breaking casing consistency within the sibling label group. The shipped 'Liq.' → 'Lik.' pair covers the capitalized source variant, not this lowercase one.",
+            "evidence": {
+              "sourceSpan": "liq.",
+              "targetSpan": "Lik."
+            },
+            "alternative": "lik."
+          }
+        ],
+        "agentRunId": "tr-TR-2026-10-21T15-26-40Z",
+        "approvedAt": "2026-10-21T15:26:40.911Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "tr-TR:i18next-json:portfolio.defi.title",
       {
         "unitId": "portfolio.defi.title",
@@ -6474,8 +6827,25 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "DeFi",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "tr-TR:i18next-json:position.initialPrice.marketUpdated",
+      {
+        "unitId": "position.initialPrice.marketUpdated",
+        "providerId": "i18next-json",
+        "locale": "tr-TR",
+        "domain": "product-ui",
+        "sourceHash": "a54fccb1b9e62fcbf3c5d1b992c9dc12bf09b76415f09564ce0adde7d922d185",
+        "glossaryHash": "d4f3cc593a54cc46cd6b9fef757a9f9f958660e0ed4e1d2c4386462c4ef49361",
+        "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
+        "translation": "Piyasa fiyatı güncellendi",
+        "status": "clean",
+        "agentRunId": "tr-TR-2026-10-15T21-01-00Z",
+        "approvedAt": "2026-10-15T21:01:00.547Z",
         "approvedBy": "agent"
       }
     ],
@@ -6508,8 +6878,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "Airdrop / spam",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -6525,8 +6895,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "The Badger",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -6542,8 +6912,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "Frontrunner",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -6559,8 +6929,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "First Splash",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -6593,8 +6963,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "$TICKER",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -6661,8 +7031,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "demo",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -6814,8 +7184,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "Crowd Launch",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -6831,8 +7201,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "Instant Launch",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -6865,8 +7235,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "Crowd",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -6882,8 +7252,42 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "Instant",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "tr-TR:i18next-json:rhcca.position.priceUnavailable",
+      {
+        "unitId": "rhcca.position.priceUnavailable",
+        "providerId": "i18next-json",
+        "locale": "tr-TR",
+        "domain": "product-ui",
+        "sourceHash": "abc5fecda607e617b5af85dd8280f49b97736d30dcf49ad622118c302b123465",
+        "glossaryHash": "d4f3cc593a54cc46cd6b9fef757a9f9f958660e0ed4e1d2c4386462c4ef49361",
+        "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
+        "translation": "Token fiyat verileri şu anda kullanılamıyor",
+        "status": "clean",
+        "agentRunId": "tr-TR-2026-10-20T20-10-17Z",
+        "approvedAt": "2026-10-20T20:10:17.986Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "tr-TR:i18next-json:search.results.auction.startsIn",
+      {
+        "unitId": "search.results.auction.startsIn",
+        "providerId": "i18next-json",
+        "locale": "tr-TR",
+        "domain": "product-ui",
+        "sourceHash": "f63d3a93c65b2b7e8c6b1a29a7efe1834ae62f4887bd58edfb759de7b6b15f1c",
+        "glossaryHash": "d4f3cc593a54cc46cd6b9fef757a9f9f958660e0ed4e1d2c4386462c4ef49361",
+        "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
+        "translation": "{{time}} sonra başlıyor",
+        "status": "clean",
+        "agentRunId": "tr-TR-2026-10-20T18-20-43Z",
+        "approvedAt": "2026-10-20T18:20:43.222Z",
         "approvedBy": "agent"
       }
     ],
@@ -6916,8 +7320,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "{{apr}} APR",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -6933,8 +7337,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "{{apy}} APY",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -6950,8 +7354,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "ENS",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -7002,6 +7406,40 @@
       }
     ],
     [
+      "tr-TR:i18next-json:settings.setting.shareDeviceIdentifiers.message",
+      {
+        "unitId": "settings.setting.shareDeviceIdentifiers.message",
+        "providerId": "i18next-json",
+        "locale": "tr-TR",
+        "domain": "product-ui",
+        "sourceHash": "e2ba15a1a8521d2d7db3051027b805d819f8bcd2e8e7d9700b0edc9cea9b2f74",
+        "glossaryHash": "d4f3cc593a54cc46cd6b9fef757a9f9f958660e0ed4e1d2c4386462c4ef49361",
+        "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
+        "translation": "Hizmetlerimizi diğer web sitelerinde ve platformlarda tanıtmak için cihaz tanımlayıcılarını reklam ortaklarımızla paylaşabiliriz.",
+        "status": "clean",
+        "agentRunId": "tr-TR-2026-10-16T19-35-30Z",
+        "approvedAt": "2026-10-16T19:35:30.087Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "tr-TR:i18next-json:settings.setting.shareDeviceIdentifiers.title",
+      {
+        "unitId": "settings.setting.shareDeviceIdentifiers.title",
+        "providerId": "i18next-json",
+        "locale": "tr-TR",
+        "domain": "product-ui",
+        "sourceHash": "ef41776a003a42bf066f2cb1cc0886b40fef5dfea0420467b3af57f131d66b59",
+        "glossaryHash": "d4f3cc593a54cc46cd6b9fef757a9f9f958660e0ed4e1d2c4386462c4ef49361",
+        "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
+        "translation": "Cihaz tanımlayıcılarını paylaş",
+        "status": "clean",
+        "agentRunId": "tr-TR-2026-10-16T19-35-30Z",
+        "approvedAt": "2026-10-16T19:35:30.087Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "tr-TR:i18next-json:swap.routing.guidestar.copyPool",
       {
         "unitId": "swap.routing.guidestar.copyPool",
@@ -7030,8 +7468,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "Uniswap API",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -7642,8 +8080,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "Launchpad",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -7699,6 +8137,69 @@
       }
     ],
     [
+      "tr-TR:i18next-json:token.price.lowConfidence.tag",
+      {
+        "unitId": "token.price.lowConfidence.tag",
+        "providerId": "i18next-json",
+        "locale": "tr-TR",
+        "domain": "product-ui",
+        "sourceHash": "29e142b8be7d28e49cc799fb06f36a7121919415c29811315c90594e4c4ffc60",
+        "glossaryHash": "d4f3cc593a54cc46cd6b9fef757a9f9f958660e0ed4e1d2c4386462c4ef49361",
+        "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
+        "translation": "Düşük güven",
+        "status": "clean",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "tr-TR:i18next-json:token.price.lowConfidence.title",
+      {
+        "unitId": "token.price.lowConfidence.title",
+        "providerId": "i18next-json",
+        "locale": "tr-TR",
+        "domain": "product-ui",
+        "sourceHash": "ef586d27ebbd87e6bfa32e637715042e8d9e8f612ea9de3124b29361e235f99d",
+        "glossaryHash": "d4f3cc593a54cc46cd6b9fef757a9f9f958660e0ed4e1d2c4386462c4ef49361",
+        "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
+        "translation": "Düşük fiyat güveni",
+        "status": "clean",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "tr-TR:i18next-json:token.price.lowConfidence.tooltip",
+      {
+        "unitId": "token.price.lowConfidence.tooltip",
+        "providerId": "i18next-json",
+        "locale": "tr-TR",
+        "domain": "product-ui",
+        "sourceHash": "2a666cdba05106c279a946878c66c546f38ddd6e4f754ea3212935e61a271a1a",
+        "glossaryHash": "d4f3cc593a54cc46cd6b9fef757a9f9f958660e0ed4e1d2c4386462c4ef49361",
+        "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
+        "translation": "Token fiyatı, sınırlı veya potansiyel olarak düşük kaliteli piyasa verilerine dayanmaktadır.",
+        "status": "clean",
+        "judgeIssues": [
+          {
+            "category": "style",
+            "severity": "minor",
+            "detail": "'dayanmaktadır' uses the heavy formal -maktadır aspect, slightly stiffer than the app's otherwise plain-formal voice (e.g. simple present in comparable explanatory tooltips). Not misleading; acceptable as shipped.",
+            "evidence": {
+              "sourceSpan": "is based on",
+              "targetSpan": "dayanmaktadır"
+            },
+            "alternative": "Token fiyatı, sınırlı veya potansiyel olarak düşük kaliteli piyasa verilerine dayanır."
+          }
+        ],
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "tr-TR:i18next-json:tokens.selector.categoryFilter.clear_one",
       {
         "unitId": "tokens.selector.categoryFilter.clear_one",
@@ -7746,6 +8247,23 @@
         "status": "clean",
         "agentRunId": "tr-TR-2026-09-23T16-13-00Z",
         "approvedAt": "2026-09-23T16:13:00.192Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "tr-TR:i18next-json:toucan.allAuctions",
+      {
+        "unitId": "toucan.allAuctions",
+        "providerId": "i18next-json",
+        "locale": "tr-TR",
+        "domain": "product-ui",
+        "sourceHash": "a6d3fee9c816e67519ea5a4ff5371433980d102f27650c5b854c671857a6200d",
+        "glossaryHash": "d4f3cc593a54cc46cd6b9fef757a9f9f958660e0ed4e1d2c4386462c4ef49361",
+        "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
+        "translation": "Tüm açık artırmalar",
+        "status": "clean",
+        "agentRunId": "tr-TR-2026-10-19T14-33-28Z",
+        "approvedAt": "2026-10-19T14:33:28.189Z",
         "approvedBy": "agent"
       }
     ],
@@ -7818,6 +8336,23 @@
       }
     ],
     [
+      "tr-TR:i18next-json:toucan.auction.finalFdv",
+      {
+        "unitId": "toucan.auction.finalFdv",
+        "providerId": "i18next-json",
+        "locale": "tr-TR",
+        "domain": "product-ui",
+        "sourceHash": "67e17d632a561ea1d2f2f936e394bfe8f9f05219f620b70d8f3e160a866c4b03",
+        "glossaryHash": "d4f3cc593a54cc46cd6b9fef757a9f9f958660e0ed4e1d2c4386462c4ef49361",
+        "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
+        "translation": "Nihai FDV",
+        "status": "clean",
+        "agentRunId": "tr-TR-2026-10-21T16-46-35Z",
+        "approvedAt": "2026-10-21T16:46:35.221Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "tr-TR:i18next-json:toucan.auction.introBanner.auctionStartsInTime",
       {
         "unitId": "toucan.auction.introBanner.auctionStartsInTime",
@@ -7880,8 +8415,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "<value>{{fdv}}</value> FDV",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -7950,6 +8485,23 @@
         "status": "clean",
         "agentRunId": "tr-TR-2026-09-16T16-27-21Z",
         "approvedAt": "2026-09-16T16:27:21.101Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "tr-TR:i18next-json:toucan.bidDetails.description.outOfRangeInProgressAwaitingThreshold",
+      {
+        "unitId": "toucan.bidDetails.description.outOfRangeInProgressAwaitingThreshold",
+        "providerId": "i18next-json",
+        "locale": "tr-TR",
+        "domain": "product-ui",
+        "sourceHash": "c9e6b4e257d95f81a7ea9c178152998f40e0db3bf41df207c687a579fa60174f",
+        "glossaryHash": "d4f3cc593a54cc46cd6b9fef757a9f9f958660e0ed4e1d2c4386462c4ef49361",
+        "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
+        "translation": "Fiyat, <highlight>{{valuationSummary}}</highlight> olarak belirlediğiniz maksimum FDV değerini aştığı için bu emrin gerçekleşmesi durdu. Açık artırmanın gerçekleşen hacmi <highlight>{{launchThreshold}}</highlight> lansman eşiğine ulaştığında kullanılmayan bütçenizi iade alabilir, aldığınız token’ları açık artırmanın sonunda çekebilirsiniz. Eşiğe hiç ulaşılmazsa açık artırma sona erdiğinde bütçenizin tamamını çekebilirsiniz.",
+        "status": "clean",
+        "agentRunId": "tr-TR-2026-10-20T16-10-08Z",
+        "approvedAt": "2026-10-20T16:10:08.061Z",
         "approvedBy": "agent"
       }
     ],
@@ -8203,8 +8755,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "$TICKER",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -8250,8 +8802,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "Crowd Launch",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -8369,8 +8921,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "Instant Launch",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -8420,8 +8972,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "Pools.trade",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ],
@@ -8760,8 +9312,8 @@
         "styleHash": "f05e8928f764ca4c771d59eb6add19a522b7fb85e4b507bf3b1fa45adeadf1be",
         "translation": "<icon /> <gradient>UniswapX</gradient> <info />",
         "status": "clean",
-        "agentRunId": "tr-TR-2026-10-15T16-28-56Z",
-        "approvedAt": "2026-10-15T16:28:56.966Z",
+        "agentRunId": "tr-TR-2026-10-21T17-36-58Z",
+        "approvedAt": "2026-10-21T17:36:58.841Z",
         "approvedBy": "agent"
       }
     ]

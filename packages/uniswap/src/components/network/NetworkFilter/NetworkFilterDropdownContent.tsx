@@ -1,7 +1,7 @@
 import type { UniverseChainId } from '@universe/chains'
 import { Flex } from '@universe/mycelium'
+import { useScrollbarStyles } from '@universe/mycelium/theme-hooks-compat'
 import { type ReactNode, useEffect } from 'react'
-import { useScrollbarStyles } from 'ui/src'
 import { NetworkFilterContent } from 'uniswap/src/components/network/NetworkFilter/NetworkFilterContent'
 import { NetworkSearchBar } from 'uniswap/src/components/network/NetworkFilter/NetworkSearchBar'
 import type { TieredNetworkOptions } from 'uniswap/src/components/network/NetworkFilter/types'

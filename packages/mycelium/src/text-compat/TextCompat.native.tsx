@@ -20,7 +20,7 @@ import { nativeVariantMaxFontSizeMultiplier } from './native-font'
 import { stripNonNativeDisplayClasses, textNativeStyle } from './native-style'
 import type { TextCompatProps } from './props'
 
-// Legacy `ui/src/components/text/useEnableFontScaling.native.tsx`, transcribed
+// The legacy ui Text's font-scaling rule, transcribed
 // rather than imported (mycelium must never depend on `packages/ui`). Without
 // this, RN's own default (`allowFontScaling: true`, uncapped) tracks the
 // device's Dynamic Type / Larger Text setting in BOTH directions — including

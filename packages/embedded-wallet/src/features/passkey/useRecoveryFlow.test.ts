@@ -55,6 +55,7 @@ describe('useRecoveryFlow', () => {
         useRecoveryFlow({
           privy: buildPrivy(),
           privyAppId: 'app-id',
+          privyClientId: 'client-id',
           onPinDecryptSuccess: vi.fn(),
           setOauthError: vi.fn(),
         }),
@@ -68,7 +69,14 @@ describe('useRecoveryFlow', () => {
       oauthReturn: { pending: true, provider: null, providerEmail: undefined },
     })
     const { result } = renderHook(
-      () => useRecoveryFlow({ privy, privyAppId: 'app-id', onPinDecryptSuccess: vi.fn(), setOauthError: vi.fn() }),
+      () =>
+        useRecoveryFlow({
+          privy,
+          privyAppId: 'app-id',
+          privyClientId: 'client-id',
+          onPinDecryptSuccess: vi.fn(),
+          setOauthError: vi.fn(),
+        }),
       { wrapper: wrapper() },
     )
     expect(result.current.step).toBe(RecoveryStep.OAuthLoading)
@@ -80,6 +88,7 @@ describe('useRecoveryFlow', () => {
         useRecoveryFlow({
           privy: buildPrivy(),
           privyAppId: 'app-id',
+          privyClientId: 'client-id',
           onPinDecryptSuccess: vi.fn(),
           setOauthError: vi.fn(),
         }),
@@ -92,7 +101,14 @@ describe('useRecoveryFlow', () => {
   it('sendCode success moves to EmailCode', async () => {
     const privy = buildPrivy()
     const { result } = renderHook(
-      () => useRecoveryFlow({ privy, privyAppId: 'app-id', onPinDecryptSuccess: vi.fn(), setOauthError: vi.fn() }),
+      () =>
+        useRecoveryFlow({
+          privy,
+          privyAppId: 'app-id',
+          privyClientId: 'client-id',
+          onPinDecryptSuccess: vi.fn(),
+          setOauthError: vi.fn(),
+        }),
       { wrapper: wrapper() },
     )
     act(() => result.current.selectEmailLogin())
@@ -112,7 +128,14 @@ describe('useRecoveryFlow', () => {
       walletAddress: '0xabc',
     } as never)
     const { result } = renderHook(
-      () => useRecoveryFlow({ privy, privyAppId: 'app-id', onPinDecryptSuccess: vi.fn(), setOauthError: vi.fn() }),
+      () =>
+        useRecoveryFlow({
+          privy,
+          privyAppId: 'app-id',
+          privyClientId: 'client-id',
+          onPinDecryptSuccess: vi.fn(),
+          setOauthError: vi.fn(),
+        }),
       { wrapper: wrapper() },
     )
     act(() => result.current.selectEmailLogin())
@@ -142,7 +165,14 @@ describe('useRecoveryFlow', () => {
 
     const onPinDecryptSuccess = vi.fn().mockResolvedValue(undefined)
     const { result } = renderHook(
-      () => useRecoveryFlow({ privy, privyAppId: 'app-id', onPinDecryptSuccess, setOauthError: vi.fn() }),
+      () =>
+        useRecoveryFlow({
+          privy,
+          privyAppId: 'app-id',
+          privyClientId: 'client-id',
+          onPinDecryptSuccess,
+          setOauthError: vi.fn(),
+        }),
       {
         wrapper: wrapper(),
       },
@@ -177,7 +207,14 @@ describe('useRecoveryFlow', () => {
 
     const onPinDecryptSuccess = vi.fn()
     const { result } = renderHook(
-      () => useRecoveryFlow({ privy, privyAppId: 'app-id', onPinDecryptSuccess, setOauthError: vi.fn() }),
+      () =>
+        useRecoveryFlow({
+          privy,
+          privyAppId: 'app-id',
+          privyClientId: 'client-id',
+          onPinDecryptSuccess,
+          setOauthError: vi.fn(),
+        }),
       {
         wrapper: wrapper(),
       },
@@ -203,7 +240,14 @@ describe('useRecoveryFlow', () => {
   it('handleBack steps EmailCode → EmailEntry', async () => {
     const privy = buildPrivy()
     const { result } = renderHook(
-      () => useRecoveryFlow({ privy, privyAppId: 'app-id', onPinDecryptSuccess: vi.fn(), setOauthError: vi.fn() }),
+      () =>
+        useRecoveryFlow({
+          privy,
+          privyAppId: 'app-id',
+          privyClientId: 'client-id',
+          onPinDecryptSuccess: vi.fn(),
+          setOauthError: vi.fn(),
+        }),
       { wrapper: wrapper() },
     )
     act(() => result.current.selectEmailLogin())
@@ -218,7 +262,14 @@ describe('useRecoveryFlow', () => {
   it('initOAuth is a no-op when Privy is not ready', async () => {
     const privy = buildPrivy({ ready: false })
     const { result } = renderHook(
-      () => useRecoveryFlow({ privy, privyAppId: 'app-id', onPinDecryptSuccess: vi.fn(), setOauthError: vi.fn() }),
+      () =>
+        useRecoveryFlow({
+          privy,
+          privyAppId: 'app-id',
+          privyClientId: 'client-id',
+          onPinDecryptSuccess: vi.fn(),
+          setOauthError: vi.fn(),
+        }),
       { wrapper: wrapper() },
     )
     await act(async () => {
@@ -237,7 +288,13 @@ describe('useRecoveryFlow', () => {
     // must advance once Privy reports the linked provider, gated on local `oauthProvider`.
     const { result, rerender } = renderHook(
       ({ privy }: { privy: RecoveryPrivyAuth }) =>
-        useRecoveryFlow({ privy, privyAppId: 'app-id', onPinDecryptSuccess: vi.fn(), setOauthError: vi.fn() }),
+        useRecoveryFlow({
+          privy,
+          privyAppId: 'app-id',
+          privyClientId: 'client-id',
+          onPinDecryptSuccess: vi.fn(),
+          setOauthError: vi.fn(),
+        }),
       { wrapper: wrapper(), initialProps: { privy: buildPrivy() } },
     )
     expect(result.current.step).toBe(RecoveryStep.Login)
@@ -267,7 +324,13 @@ describe('useRecoveryFlow', () => {
 
     const { result, rerender } = renderHook(
       ({ privy }: { privy: RecoveryPrivyAuth }) =>
-        useRecoveryFlow({ privy, privyAppId: 'app-id', onPinDecryptSuccess: vi.fn(), setOauthError: vi.fn() }),
+        useRecoveryFlow({
+          privy,
+          privyAppId: 'app-id',
+          privyClientId: 'client-id',
+          onPinDecryptSuccess: vi.fn(),
+          setOauthError: vi.fn(),
+        }),
       { wrapper: wrapper(), initialProps: { privy: buildPrivy() } },
     )
 
@@ -293,7 +356,13 @@ describe('useRecoveryFlow', () => {
     const setOauthError = vi.fn()
     const { result, rerender } = renderHook(
       ({ privy }: { privy: RecoveryPrivyAuth }) =>
-        useRecoveryFlow({ privy, privyAppId: 'app-id', onPinDecryptSuccess: vi.fn(), setOauthError }),
+        useRecoveryFlow({
+          privy,
+          privyAppId: 'app-id',
+          privyClientId: 'client-id',
+          onPinDecryptSuccess: vi.fn(),
+          setOauthError,
+        }),
       { wrapper: wrapper(), initialProps: { privy: buildPrivy() } },
     )
 
@@ -337,6 +406,7 @@ describe('useRecoveryFlow', () => {
         useRecoveryFlow({
           privy,
           privyAppId: 'app-id',
+          privyClientId: 'client-id',
           onPinDecryptSuccess,
           setOauthError: vi.fn(),
           showAddPasskeyStep: true,
@@ -409,6 +479,7 @@ describe('useRecoveryFlow', () => {
         useRecoveryFlow({
           privy,
           privyAppId: 'app-id',
+          privyClientId: 'client-id',
           onPinDecryptSuccess: vi.fn(),
           setOauthError: vi.fn(),
           showAddPasskeyStep: true,
@@ -453,6 +524,7 @@ describe('useRecoveryFlow', () => {
         useRecoveryFlow({
           privy,
           privyAppId: 'app-id',
+          privyClientId: 'client-id',
           onPinDecryptSuccess: vi.fn(),
           setOauthError: vi.fn(),
           showAddPasskeyStep: true,
@@ -494,6 +566,7 @@ describe('useRecoveryFlow', () => {
         useRecoveryFlow({
           privy,
           privyAppId: 'app-id',
+          privyClientId: 'client-id',
           onPinDecryptSuccess: vi.fn(),
           setOauthError: vi.fn(),
           showAddPasskeyStep: true,
@@ -529,6 +602,7 @@ describe('useRecoveryFlow', () => {
             oauthReturn: { pending: false, provider: 'google', providerEmail: 'stale@example.com' },
           }),
           privyAppId: 'app-id',
+          privyClientId: 'client-id',
           onPinDecryptSuccess: vi.fn(),
           setOauthError: vi.fn(),
         }),

@@ -1,5 +1,6 @@
 import { type ChartData } from 'src/components/charts/SparklineChart'
 import { type PortfolioBalanceBreakdown } from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances'
+import { type PortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/buildPortfolioBalance'
 import { getPortfolioChartPercentChange } from 'uniswap/src/features/portfolio/portfolioChartPercentChange'
 
 export type BreakdownCategoryDisplay = { valueUSD: number | undefined; percentChange: number | undefined }
@@ -29,6 +30,7 @@ type ScrubValues = {
 export function getBreakdownCardProps({
   poolsEnabled,
   poolsUnavailable,
+  chartUnavailable,
   breakdown,
   scrub,
   tokensData,
@@ -38,6 +40,7 @@ export function getBreakdownCardProps({
 }: {
   poolsEnabled: boolean
   poolsUnavailable: boolean
+  chartUnavailable: boolean
   breakdown: PortfolioBalanceBreakdown | undefined
   scrub: ScrubValues
   tokensData: ChartData
@@ -55,23 +58,30 @@ export function getBreakdownCardProps({
   }
 
   if (scrub.total === undefined) {
-    // At rest, derive each category's percent from its chart series for the selected period
-    // (matching the header), rather than the static 24h value from wallet balances.
-    const periodPercentChange = (data: ChartData): number | undefined =>
-      isAllTimePeriod ? undefined : getPortfolioChartPercentChange(data.map((point) => point.value))?.percentChange
+    // At rest, derive each category's percent from its chart series for the selected period (matching the header),
+    // rather than the static 24h value from wallet balances. An unavailable chart falls back to that 24h value,
+    // as the header does.
+    const restPercentChange = (category: PortfolioTotalValue, data: ChartData): number | undefined => {
+      if (chartUnavailable) {
+        return category.percentChange
+      }
+      return isAllTimePeriod
+        ? undefined
+        : getPortfolioChartPercentChange(data.map((point) => point.value))?.percentChange
+    }
 
     return {
       semanticPercentColor: false,
       tokens: hasTokenBalance
-        ? { valueUSD: breakdown.tokens.balanceUSD, percentChange: periodPercentChange(tokensData) }
+        ? { valueUSD: breakdown.tokens.balanceUSD, percentChange: restPercentChange(breakdown.tokens, tokensData) }
         : undefined,
       pools: hasPoolsBalance
-        ? { valueUSD: breakdown.pools.balanceUSD, percentChange: periodPercentChange(poolsData) }
+        ? { valueUSD: breakdown.pools.balanceUSD, percentChange: restPercentChange(breakdown.pools, poolsData) }
         : undefined,
       earn: hasEarnBalance
         ? {
             valueUSD: breakdown.earn.balanceUSD,
-            percentChange: periodPercentChange(earnData),
+            percentChange: restPercentChange(breakdown.earn, earnData),
           }
         : undefined,
     }

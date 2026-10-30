@@ -5,6 +5,7 @@ import type {
   MarginTerminalPosition,
 } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { shortenAddress } from 'utilities/src/addresses'
 import { describe, expect, it } from 'vitest'
 import type { MarginMarket } from '~/constants/margin'
@@ -189,7 +190,7 @@ describe('buildCompletionToastMessage', () => {
   const closedRow = (overrides: Partial<MarginTerminalPosition> = {}): MarginTerminalPosition => ({
     status: 'COMPLETED',
     positionId: 'pos-1',
-    direction: 'LONG',
+    direction: MarginDirection.LONG,
     exposureToken: { address: COLLATERAL, chainId: 1, decimals: 18 },
     counterToken: { address: DEBT, chainId: 1, decimals: 6 },
     size: '0',
@@ -233,7 +234,7 @@ describe('findOpenedLeverageForPlan', () => {
   const position = (overrides: Partial<MarginActivePosition> = {}): MarginActivePosition => ({
     status: 'ACTIVE',
     positionId: 'pos-1',
-    direction: 'LONG',
+    direction: MarginDirection.LONG,
     exposureToken: { address: COLLATERAL, chainId: 1, decimals: 18 },
     counterToken: { address: DEBT, chainId: 1, decimals: 6 },
     size: '0',

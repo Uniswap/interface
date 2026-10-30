@@ -49,7 +49,8 @@ vi.mock('src/components/layout/Screen', () => ({
   Screen: ({ children }: { children: ReactNode }) => children,
 }))
 
-vi.mock('ui/src/components/layout/AnimatedFlex', () => ({
+vi.mock('@universe/mycelium', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@universe/mycelium')>()),
   AnimatedFlex: ({ children }: { children: ReactNode }) => children,
 }))
 

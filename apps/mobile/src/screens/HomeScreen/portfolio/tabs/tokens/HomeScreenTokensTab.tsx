@@ -1,4 +1,4 @@
-import { Flex } from '@universe/mycelium'
+import { Flex, AnimatedFlex } from '@universe/mycelium'
 import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ViewStyle } from 'react-native'
@@ -11,7 +11,6 @@ import { useWalletTabEmptyStyle } from 'src/screens/HomeScreen/portfolio/tabs/co
 import { TabMeasuredLayout } from 'src/screens/HomeScreen/portfolio/tabs/common/TabMeasuredLayout'
 import { WalletPortfolioEmptyState } from 'src/screens/HomeScreen/portfolio/tabs/tokens/empty/WalletPortfolioEmptyState'
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { EmptyTokensList } from 'uniswap/src/components/portfolio/EmptyTokensList'
 import { TOKEN_BALANCE_ITEM_ESTIMATED_HEIGHT } from 'uniswap/src/components/portfolio/TokenBalanceItem/TokenBalanceItem'

@@ -1,7 +1,7 @@
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
 import toucanIntroBackground from '@universe/mycelium/assets/backgrounds/toucan-intro.png'
 import { useTranslation } from 'react-i18next'
-import { Button, Image, useSporeColors } from 'ui/src'
+import { Button, Image } from 'ui/src'
 import { Rocket } from 'ui/src/components/icons/Rocket'
 import { X } from 'ui/src/components/icons/X'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -10,6 +10,8 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { ExternalLink } from '~/theme/components/Links'
 
 const LEARN_MORE_URL = UniswapHelpUrls.articles.toucanIntro
+// Figma's banner mask: a fade to transparent works on either theme's surface, unlike an overlay painted in surface1.
+const BANNER_FADE_MASK = 'linear-gradient(180deg, rgba(0, 0, 0, 0.24) 0%, transparent 100%)'
 
 interface ToucanIntroModalProps {
   isOpen: boolean
@@ -18,29 +20,26 @@ interface ToucanIntroModalProps {
 
 export function ToucanIntroModal({ isOpen, onClose }: ToucanIntroModalProps) {
   const { t } = useTranslation()
-  const colors = useSporeColors()
 
   return (
     <Modal isModalOpen={isOpen} name={ModalName.Dialog} onClose={onClose} maxWidth={440} padding={0}>
       <Flex position="relative" backgroundColor="$surface1" overflow="hidden" flexDirection="column">
-        <Flex position="absolute" top={0} left={0} right={0} height={120} zIndex={0}>
-          <Image source={{ uri: toucanIntroBackground }} width="100%" height="100%" opacity={0.3} />
-          <Flex
-            position="absolute"
-            top={0}
-            left={0}
-            right={0}
-            bottom={0}
-            style={{
-              background: `linear-gradient(180deg, ${colors.transparent.variable} 0%, ${colors.surface1.variable} 100%)`,
-            }}
-          />
+        <Flex
+          position="absolute"
+          top={0}
+          left={0}
+          right={0}
+          height={120}
+          zIndex={0}
+          style={{ maskImage: BANNER_FADE_MASK, WebkitMaskImage: BANNER_FADE_MASK }}
+        >
+          <Image source={{ uri: toucanIntroBackground }} width="100%" height="100%" />
         </Flex>
 
         <TouchableArea
           position="absolute"
-          top="$spacing16"
-          right="$spacing16"
+          top="$spacing8"
+          right="$spacing8"
           p="$spacing8"
           onPress={onClose}
           borderRadius="$rounded8"

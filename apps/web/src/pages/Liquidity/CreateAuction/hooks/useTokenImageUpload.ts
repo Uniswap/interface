@@ -7,6 +7,7 @@ import {
   createTokenFactoryPresignedUrl,
   verifyTokenFactoryImage,
 } from 'uniswap/src/data/apiClients/dataApiService/tokens/tokenFactoryImage'
+import { resolveIpfsGatewayUrl } from 'utilities/src/format/gatewayUrls'
 import { sleep } from 'utilities/src/time/timing'
 import type { CreateAuctionStore } from '~/pages/Liquidity/CreateAuction/store/createCreateAuctionStore'
 import {
@@ -15,7 +16,6 @@ import {
   useCreateAuctionStoreBase,
 } from '~/pages/Liquidity/CreateAuction/store/useCreateAuctionStore'
 import { TokenMode } from '~/pages/Liquidity/CreateAuction/types'
-import { resolveTokenImageSrc } from '~/pages/Liquidity/CreateAuction/utils/resolveTokenImageSrc'
 import { selectTokenImageFile } from '~/pages/Liquidity/CreateAuction/utils/selectTokenImageFile'
 import { uploadImageToPinata } from '~/pages/Liquidity/CreateAuction/utils/uploadImageToPinata'
 
@@ -93,7 +93,7 @@ function scheduleClearLocalWhenGatewayImageReady(options: {
   latestAttemptRef: MutableRefObject<number>
 }): void {
   const { store, cid, objectUrl, attempt, latestAttemptRef } = options
-  const resolved = resolveTokenImageSrc(`ipfs://${cid}`)
+  const resolved = resolveIpfsGatewayUrl(`ipfs://${cid}`)
   if (!resolved) {
     clearLocalImagePreview(store)
     return
@@ -129,7 +129,7 @@ function scheduleClearLocalWhenGatewayImageReady(options: {
  *
  * The picked file is shown immediately via `localImagePreviewUri` (a blob URL) on the token form so it
  * survives leaving step 1. After `ipfs://` is saved, a background preload swaps the blob away only
- * once the Pinata HTTPS URL loads.
+ * once the gateway HTTPS URL loads.
  */
 export function useTokenImageUpload(): UseTokenImageUploadResult {
   const { updateCreateNewTokenField } = useCreateAuctionStoreActions()

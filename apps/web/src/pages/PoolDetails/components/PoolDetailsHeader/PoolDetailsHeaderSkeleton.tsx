@@ -1,8 +1,7 @@
-import { Flex, type FlexCompatProps } from '@universe/mycelium'
+import { Flex, type FlexCompatProps, Shine } from '@universe/mycelium'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
 import { forwardRef, type ForwardRefExoticComponent, type RefAttributes } from 'react'
-import { Shine } from 'ui/src'
 import { ACTION_BUBBLE_SIZE } from '~/components/StickyCollapsibleHeader/constants'
 import {
   getDetailHeaderLogoSize,

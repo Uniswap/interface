@@ -7,6 +7,7 @@
 
 import Foundation
 import OSLog
+import UIKit
 import WidgetKit
 
 let APP_GROUP = "group.com.uniswap.widgets"
@@ -117,6 +118,7 @@ public struct UniswapUserDefaults {
   static let keyAccounts = buildString + ".widgets.accounts"
   static let keyI18n = buildString + ".widgets.i18n"
   static let keyChains = buildString + ".widgets.chains"
+  static let keyTokenColors = buildString + ".widgets.tokenColors"
   
   static let userDefaults = UserDefaults.init(suiteName: APP_GROUP)
   
@@ -224,5 +226,32 @@ public struct UniswapUserDefaults {
       let json = String(data: JSONdata, encoding: String.Encoding.utf8)
       userDefaults!.set(json, forKey: keyEvents)
     }
+  }
+
+  private static func tokenColorKey(chain: String, address: String?) -> String {
+    return "\(chain.lowercased()):\(address?.lowercased() ?? "native")"
+  }
+
+  /// Last background color extracted for a token, so the widget can keep it while a refresh is failing.
+  public static func readTokenColor(chain: String, address: String?) -> UIColor? {
+    guard let colors = userDefaults?.dictionary(forKey: keyTokenColors),
+          let rgba = colors[tokenColorKey(chain: chain, address: address)] as? [Double],
+          rgba.count == 4 else {
+      return nil
+    }
+    return UIColor(red: rgba[0], green: rgba[1], blue: rgba[2], alpha: rgba[3])
+  }
+
+  public static func writeTokenColor(chain: String, address: String?, color: UIColor) {
+    guard let userDefaults = userDefaults else {
+      return
+    }
+    var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0, alpha: CGFloat = 0
+    guard color.getRed(&red, green: &green, blue: &blue, alpha: &alpha) else {
+      return
+    }
+    var colors = userDefaults.dictionary(forKey: keyTokenColors) ?? [:]
+    colors[tokenColorKey(chain: chain, address: address)] = [red, green, blue, alpha].map { Double($0) }
+    userDefaults.set(colors, forKey: keyTokenColors)
   }
 }

@@ -1,5 +1,5 @@
 import type { MarginQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
-import type { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
+import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { describe, expect, it } from 'vitest'
 import type { MarginTokenInfo } from '~/constants/margin'
 import {
@@ -61,11 +61,11 @@ describe('marginVenueLabel', () => {
 // collateral as the stable leg, so the unit tracks debt instead.
 describe('marginPriceUnitSymbol', () => {
   it('uses the collateral symbol for LONG (collateral is the volatile leg), unwrapped', () => {
-    expect(marginPriceUnitSymbol({ direction: 'LONG', collateral: WETH_T, debt: USDC_T })).toBe('ETH')
+    expect(marginPriceUnitSymbol({ direction: MarginDirection.LONG, collateral: WETH_T, debt: USDC_T })).toBe('ETH')
   })
 
   it('uses the debt symbol for SHORT (debt is the volatile leg), unwrapped', () => {
-    expect(marginPriceUnitSymbol({ direction: 'SHORT', collateral: USDC_T, debt: WETH_T })).toBe('ETH')
+    expect(marginPriceUnitSymbol({ direction: MarginDirection.SHORT, collateral: USDC_T, debt: WETH_T })).toBe('ETH')
   })
 
   it('defaults a missing direction to LONG (pre-shorts data)', () => {
@@ -109,12 +109,12 @@ describe('getMarginLiquidationBadge', () => {
 
 describe('getMarginDirectionStyle', () => {
   it('maps SHORT to the critical color', () => {
-    const style = getMarginDirectionStyle('SHORT')
+    const style = getMarginDirectionStyle(MarginDirection.SHORT)
     expect(style.color).toBe('$statusCritical')
   })
 
   it('maps LONG and undefined (pre-shorts data) to the success color', () => {
-    for (const direction of ['LONG', undefined] as const) {
+    for (const direction of [MarginDirection.LONG, undefined] as const) {
       const style = getMarginDirectionStyle(direction)
       expect(style.color).toBe('$statusSuccess')
     }
@@ -216,21 +216,27 @@ describe('marginHealthFromLeverage', () => {
   // without it a NaN leverage reaches the balance-sheet math and reads at-risk rather than unknown. The
   // LONG reaches undefined either way now that each debt-free arm is pinned to its own input — so this
   // case is pinning the contract, not the guard, on that half.
-  it.each(['LONG', 'SHORT'] as const)('reports no health for a NaN leverage (%s)', (direction) => {
-    expect(marginHealthFromLeverage({ leverage: Number.NaN, lltvWad, direction })).toBeUndefined()
-  })
+  it.each([MarginDirection.LONG, MarginDirection.SHORT] as const)(
+    'reports no health for a NaN leverage (%s)',
+    (direction) => {
+      expect(marginHealthFromLeverage({ leverage: Number.NaN, lltvWad, direction })).toBeUndefined()
+    },
+  )
 
   // The opposite claim, and the reason the guard above is NaN-only: +Infinity is a position AT OR PAST
   // liquidation (driftLeverageForEquityDelta returns it for ltvAfter >= 1, leverageX18ToNumber for
   // equity <= 0). Swallowing it as "unknown" paints the neutral track at the exact moment it must read
   // at-risk — the math below yields NaN, which the tier scale reports as the worst tier.
-  it.each(['LONG', 'SHORT'] as const)('reports at-risk, not unknown, at or past liquidation (%s)', (direction) => {
-    const health = marginHealthFromLeverage({ leverage: Number.POSITIVE_INFINITY, lltvWad, direction })
-    if (health === undefined) {
-      throw new Error('expected a health figure at liquidation, not "unknown"')
-    }
-    expect(getMarginHealthStatus(health).key).toBe('atRisk')
-  })
+  it.each([MarginDirection.LONG, MarginDirection.SHORT] as const)(
+    'reports at-risk, not unknown, at or past liquidation (%s)',
+    (direction) => {
+      const health = marginHealthFromLeverage({ leverage: Number.POSITIVE_INFINITY, lltvWad, direction })
+      if (health === undefined) {
+        throw new Error('expected a health figure at liquidation, not "unknown"')
+      }
+      expect(getMarginHealthStatus(health).key).toBe('atRisk')
+    },
+  )
 
   // HF = LLTV·L/(L−1). 3.28x and 3.50x both land in Caution, which is why a before→after Health row
   // across that move collapses to a single label.
@@ -241,7 +247,7 @@ describe('marginHealthFromLeverage', () => {
     [4, 1.1467],
     [5, 1.075],
   ])('LONG at %sx exposure implies a health factor of ~%s', (leverage, expected) => {
-    expect(marginHealthFromLeverage({ leverage, lltvWad, direction: 'LONG' })).toBeCloseTo(expected, 3)
+    expect(marginHealthFromLeverage({ leverage, lltvWad, direction: MarginDirection.LONG })).toBeCloseTo(expected, 3)
   })
 
   // A short's balance sheet is one turn higher, so at the SAME requested number it is safer: exposure
@@ -253,19 +259,23 @@ describe('marginHealthFromLeverage', () => {
     [3, 1.1467],
     [4, 1.075],
   ])('SHORT at %sx exposure implies a health factor of ~%s', (leverage, expected) => {
-    expect(marginHealthFromLeverage({ leverage, lltvWad, direction: 'SHORT' })).toBeCloseTo(expected, 3)
+    expect(marginHealthFromLeverage({ leverage, lltvWad, direction: MarginDirection.SHORT })).toBeCloseTo(expected, 3)
   })
 
   it('treats a long at 1x as debt-free rather than dividing by zero', () => {
-    expect(marginHealthFromLeverage({ leverage: 1, lltvWad, direction: 'LONG' })).toBe(Number.POSITIVE_INFINITY)
+    expect(marginHealthFromLeverage({ leverage: 1, lltvWad, direction: MarginDirection.LONG })).toBe(
+      Number.POSITIVE_INFINITY,
+    )
   })
 
   it('treats a short with no exposure as debt-free', () => {
-    expect(marginHealthFromLeverage({ leverage: 0, lltvWad, direction: 'SHORT' })).toBe(Number.POSITIVE_INFINITY)
+    expect(marginHealthFromLeverage({ leverage: 0, lltvWad, direction: MarginDirection.SHORT })).toBe(
+      Number.POSITIVE_INFINITY,
+    )
   })
 
   it('reports no constraint for a venue that publishes no LLTV', () => {
-    expect(marginHealthFromLeverage({ leverage: 4, lltvWad: '0', direction: 'LONG' })).toBeUndefined()
+    expect(marginHealthFromLeverage({ leverage: 4, lltvWad: '0', direction: MarginDirection.LONG })).toBeUndefined()
   })
 })
 
@@ -273,28 +283,30 @@ describe('marginLeverageTrackColor', () => {
   const lltvWad = '860000000000000000'
 
   it('tracks the same tiers the health row reports', () => {
-    expect(marginLeverageTrackColor({ leverage: 2, lltvWad, direction: 'LONG' })).toBe('$statusSuccess')
-    expect(marginLeverageTrackColor({ leverage: 3.28, lltvWad, direction: 'LONG' })).toBe('$statusWarning')
-    expect(marginLeverageTrackColor({ leverage: 3.5, lltvWad, direction: 'LONG' })).toBe('$statusWarning')
-    expect(marginLeverageTrackColor({ leverage: 5, lltvWad, direction: 'LONG' })).toBe('$statusCritical')
+    expect(marginLeverageTrackColor({ leverage: 2, lltvWad, direction: MarginDirection.LONG })).toBe('$statusSuccess')
+    expect(marginLeverageTrackColor({ leverage: 3.28, lltvWad, direction: MarginDirection.LONG })).toBe(
+      '$statusWarning',
+    )
+    expect(marginLeverageTrackColor({ leverage: 3.5, lltvWad, direction: MarginDirection.LONG })).toBe('$statusWarning')
+    expect(marginLeverageTrackColor({ leverage: 5, lltvWad, direction: MarginDirection.LONG })).toBe('$statusCritical')
   })
 
   // The bands sit one turn lower for a short. Painting it off the long branch would call 3x green
   // where it is amber, and 4.56x amber where it is red.
   it('shifts the bands down a turn for a short', () => {
-    expect(marginLeverageTrackColor({ leverage: 2, lltvWad, direction: 'SHORT' })).toBe('$statusSuccess')
-    expect(marginLeverageTrackColor({ leverage: 3, lltvWad, direction: 'SHORT' })).toBe('$statusWarning')
-    expect(marginLeverageTrackColor({ leverage: 4, lltvWad, direction: 'SHORT' })).toBe('$statusCritical')
+    expect(marginLeverageTrackColor({ leverage: 2, lltvWad, direction: MarginDirection.SHORT })).toBe('$statusSuccess')
+    expect(marginLeverageTrackColor({ leverage: 3, lltvWad, direction: MarginDirection.SHORT })).toBe('$statusWarning')
+    expect(marginLeverageTrackColor({ leverage: 4, lltvWad, direction: MarginDirection.SHORT })).toBe('$statusCritical')
   })
 
   it('stays green with no exposure', () => {
-    expect(marginLeverageTrackColor({ leverage: 1, lltvWad, direction: 'LONG' })).toBe('$statusSuccess')
-    expect(marginLeverageTrackColor({ leverage: 0, lltvWad, direction: 'SHORT' })).toBe('$statusSuccess')
+    expect(marginLeverageTrackColor({ leverage: 1, lltvWad, direction: MarginDirection.LONG })).toBe('$statusSuccess')
+    expect(marginLeverageTrackColor({ leverage: 0, lltvWad, direction: MarginDirection.SHORT })).toBe('$statusSuccess')
   })
 
   it('goes neutral, not green, for a venue that publishes no LLTV', () => {
-    expect(marginLeverageTrackColor({ leverage: 4, lltvWad: '0', direction: 'LONG' })).toBe('$neutral3')
-    expect(marginLeverageTrackColor({ leverage: 10, lltvWad: '0', direction: 'SHORT' })).toBe('$neutral3')
+    expect(marginLeverageTrackColor({ leverage: 4, lltvWad: '0', direction: MarginDirection.LONG })).toBe('$neutral3')
+    expect(marginLeverageTrackColor({ leverage: 10, lltvWad: '0', direction: MarginDirection.SHORT })).toBe('$neutral3')
   })
 })
 
@@ -335,11 +347,11 @@ describe('formatLiqDistanceSuffix', () => {
 // The debt leg is stable for a long and volatile for a short, so only a short needs the mark.
 describe('accruedUsd', () => {
   it('passes a long through — its debt is already the USD leg', () => {
-    expect(accruedUsd({ accrued: 12.5, direction: 'LONG', mark: 2000 })).toBe(12.5)
+    expect(accruedUsd({ accrued: 12.5, direction: MarginDirection.LONG, mark: 2000 })).toBe(12.5)
   })
 
   it('values a short at the mark — its debt is the volatile leg', () => {
-    expect(accruedUsd({ accrued: 0.01, direction: 'SHORT', mark: 2000 })).toBeCloseTo(20)
+    expect(accruedUsd({ accrued: 0.01, direction: MarginDirection.SHORT, mark: 2000 })).toBeCloseTo(20)
   })
 
   it('treats an unknown direction as a long, matching the display fallback', () => {
@@ -409,11 +421,14 @@ describe('projectedDebtAmount', () => {
   // and '0' is the wire's absent sentinel for effectivePrice — either way `exposure * 0 * …` reports a
   // leveraged LONG as borrowing nothing, on a figure the user reads before opening.
   it('reports nothing rather than zero debt when the price is unusable', () => {
-    const quote = quoteFixture({ direction: 'LONG', display: { size: '3000000000000000000', leverage: '3' } })
+    const quote = quoteFixture({
+      direction: MarginDirection.LONG,
+      display: { size: '3000000000000000000', leverage: '3' },
+    })
     expect(projectedDebtAmount({ quote, mark: 0 })).toBeUndefined()
 
     const zeroFill = quoteFixture({
-      direction: 'LONG',
+      direction: MarginDirection.LONG,
       display: { size: '3000000000000000000', leverage: '3', effectivePrice: '0' },
     })
     expect(projectedDebtAmount({ quote: zeroFill })).toBeUndefined()
@@ -421,37 +436,47 @@ describe('projectedDebtAmount', () => {
 
   // 3 WETH at $2,000 on 3x: equity funds one turn, the borrow funds the other two.
   it('borrows the slice of a LONG notional its equity does not fund', () => {
-    const quote = quoteFixture({ direction: 'LONG', display: { size: '3000000000000000000', leverage: '3' } })
+    const quote = quoteFixture({
+      direction: MarginDirection.LONG,
+      display: { size: '3000000000000000000', leverage: '3' },
+    })
     expect(projectedDebtAmount({ quote, mark: 2000 })).toBeCloseTo(4000, 6)
   })
 
   // A short's exposure IS its debt leg, so the projected size already IS the projected debt — no mark
   // and no leverage needed.
   it('reads a SHORT debt straight off the projected size', () => {
-    const quote = quoteFixture({ direction: 'SHORT', display: { size: '3000000000000000000' } })
+    const quote = quoteFixture({ direction: MarginDirection.SHORT, display: { size: '3000000000000000000' } })
     expect(projectedDebtAmount({ quote })).toBe(3)
   })
 
   // Only `open` reports an effectivePrice; a manage quote's caller passes the position's oracle instead.
   it('falls back to the quote effective price where the caller holds no mark', () => {
     const quote = quoteFixture({
-      direction: 'LONG',
+      direction: MarginDirection.LONG,
       display: { size: '1000000000000000000', leverage: '2', effectivePrice: '2000000000000000000000' },
     })
     expect(projectedDebtAmount({ quote })).toBeCloseTo(1000, 6)
   })
 
   it('reports nothing where an input the branch needs is absent', () => {
-    expect(projectedDebtAmount({ quote: quoteFixture({ direction: 'LONG', display: {} }), mark: 2000 })).toBeUndefined()
+    expect(
+      projectedDebtAmount({ quote: quoteFixture({ direction: MarginDirection.LONG, display: {} }), mark: 2000 }),
+    ).toBeUndefined()
     // No leverage, and no mark to fall back on.
     expect(
-      projectedDebtAmount({ quote: quoteFixture({ direction: 'LONG', display: { size: '1000000000000000000' } }) }),
+      projectedDebtAmount({
+        quote: quoteFixture({ direction: MarginDirection.LONG, display: { size: '1000000000000000000' } }),
+      }),
     ).toBeUndefined()
   })
 
   // 1x is unlevered: nothing is borrowed, and the formula must not report a negative debt below it.
   it('floors an unlevered LONG at zero', () => {
-    const quote = quoteFixture({ direction: 'LONG', display: { size: '1000000000000000000', leverage: '1' } })
+    const quote = quoteFixture({
+      direction: MarginDirection.LONG,
+      display: { size: '1000000000000000000', leverage: '1' },
+    })
     expect(projectedDebtAmount({ quote, mark: 2000 })).toBe(0)
   })
 })
@@ -468,13 +493,15 @@ describe('exposureUsdValue', () => {
 describe('collateralHeld', () => {
   // A long holds its collateral AS its exposure — equity/debt are ignored on this branch.
   it('is the exposure for a long', () => {
-    expect(collateralHeld({ direction: 'LONG', exposure: 2, equity: 999, debt: 999, mark: 2000 })).toBe(2)
+    expect(collateralHeld({ direction: MarginDirection.LONG, exposure: 2, equity: 999, debt: 999, mark: 2000 })).toBe(2)
   })
 
   // A short's collateral is the counter leg it deposited: equity + debt marked back to collateral.
   // 1000 USDC equity + 1 WETH debt × $2000 = 3000 USDC — never `size` (the 1e18 WETH debt leg).
   it('reconstructs a short from equity plus the debt marked to collateral', () => {
-    expect(collateralHeld({ direction: 'SHORT', exposure: 999, equity: 1000, debt: 1, mark: 2000 })).toBe(3000)
+    expect(collateralHeld({ direction: MarginDirection.SHORT, exposure: 999, equity: 1000, debt: 1, mark: 2000 })).toBe(
+      3000,
+    )
   })
 
   // An undefined direction (open form before a market resolves) takes the collateral/long branch.
@@ -492,17 +519,21 @@ describe('marginHealthFromLeverage — non-positive leverage', () => {
   const LLTV = `${86n * 10n ** 16n}` // 0.86
 
   it('reports a debt-free SHORT as unbounded health', () => {
-    expect(marginHealthFromLeverage({ leverage: 0, lltvWad: LLTV, direction: 'SHORT' })).toBe(Number.POSITIVE_INFINITY)
+    expect(marginHealthFromLeverage({ leverage: 0, lltvWad: LLTV, direction: MarginDirection.SHORT })).toBe(
+      Number.POSITIVE_INFINITY,
+    )
   })
 
   it('reports a LONG with a non-positive leverage as UNKNOWN, never as unbounded health', () => {
     for (const leverage of [0, -1]) {
-      expect(marginHealthFromLeverage({ leverage, lltvWad: LLTV, direction: 'LONG' })).toBeUndefined()
+      expect(marginHealthFromLeverage({ leverage, lltvWad: LLTV, direction: MarginDirection.LONG })).toBeUndefined()
     }
   })
 
   it("still reports a LONG's real debt-free floor of 1x as unbounded health", () => {
-    expect(marginHealthFromLeverage({ leverage: 1, lltvWad: LLTV, direction: 'LONG' })).toBe(Number.POSITIVE_INFINITY)
+    expect(marginHealthFromLeverage({ leverage: 1, lltvWad: LLTV, direction: MarginDirection.LONG })).toBe(
+      Number.POSITIVE_INFINITY,
+    )
   })
 })
 
@@ -511,8 +542,8 @@ describe('marginHealthFromLeverage — non-positive leverage', () => {
 // a SHORT's is the stable leg, worth its face amount.
 describe('collateralUsdValue', () => {
   it('values a LONG at the mark and a SHORT at face', () => {
-    expect(collateralUsdValue({ collateralAmount: 2, mark: 2000, direction: 'LONG' })).toBe(4000)
-    expect(collateralUsdValue({ collateralAmount: 2000, mark: 2000, direction: 'SHORT' })).toBe(2000)
+    expect(collateralUsdValue({ collateralAmount: 2, mark: 2000, direction: MarginDirection.LONG })).toBe(4000)
+    expect(collateralUsdValue({ collateralAmount: 2000, mark: 2000, direction: MarginDirection.SHORT })).toBe(2000)
   })
 })
 
@@ -589,16 +620,16 @@ describe('collateralHeld without a usable mark', () => {
   const BASE = { exposure: 2, equity: 1000, debt: 1 }
 
   it('refuses a SHORT, whose collateral is equity + debt x mark', () => {
-    expect(collateralHeld({ ...BASE, direction: 'SHORT', mark: undefined })).toBeUndefined()
+    expect(collateralHeld({ ...BASE, direction: MarginDirection.SHORT, mark: undefined })).toBeUndefined()
   })
 
   it('still answers a LONG, whose collateral IS its exposure', () => {
-    expect(collateralHeld({ ...BASE, direction: 'LONG', mark: undefined })).toBe(2)
+    expect(collateralHeld({ ...BASE, direction: MarginDirection.LONG, mark: undefined })).toBe(2)
     expect(collateralHeld({ ...BASE, direction: undefined, mark: undefined })).toBe(2)
   })
 
   it('solves a SHORT normally once the mark is known', () => {
-    expect(collateralHeld({ ...BASE, direction: 'SHORT', mark: 2000 })).toBe(3000)
+    expect(collateralHeld({ ...BASE, direction: MarginDirection.SHORT, mark: 2000 })).toBe(3000)
   })
 })
 
@@ -610,17 +641,21 @@ describe('marginHealthFromLeverage on inputs that are not position states', () =
   const LLTV = (86n * 10n ** 16n).toString() // 0.86
 
   it('reports a SHORT at a NEGATIVE leverage as unknown, not debt-free', () => {
-    expect(marginHealthFromLeverage({ leverage: -2, lltvWad: LLTV, direction: 'SHORT' })).toBeUndefined()
+    expect(marginHealthFromLeverage({ leverage: -2, lltvWad: LLTV, direction: MarginDirection.SHORT })).toBeUndefined()
   })
 
   it('reports a LONG between 0 and 1 as unknown, not debt-free', () => {
-    expect(marginHealthFromLeverage({ leverage: 0.5, lltvWad: LLTV, direction: 'LONG' })).toBeUndefined()
+    expect(marginHealthFromLeverage({ leverage: 0.5, lltvWad: LLTV, direction: MarginDirection.LONG })).toBeUndefined()
   })
 
   // The two arms that ARE real debt-free states must keep reporting so.
   it('still reports the genuine debt-free states', () => {
-    expect(marginHealthFromLeverage({ leverage: 0, lltvWad: LLTV, direction: 'SHORT' })).toBe(Number.POSITIVE_INFINITY)
-    expect(marginHealthFromLeverage({ leverage: 1, lltvWad: LLTV, direction: 'LONG' })).toBe(Number.POSITIVE_INFINITY)
+    expect(marginHealthFromLeverage({ leverage: 0, lltvWad: LLTV, direction: MarginDirection.SHORT })).toBe(
+      Number.POSITIVE_INFINITY,
+    )
+    expect(marginHealthFromLeverage({ leverage: 1, lltvWad: LLTV, direction: MarginDirection.LONG })).toBe(
+      Number.POSITIVE_INFINITY,
+    )
   })
 })
 
@@ -656,8 +691,8 @@ describe('quoteLiqDistanceSignedPct on unusable wire prices', () => {
 // path via marginLeverageTrackColor — an unguarded BigInt throw there takes the control down.
 describe('marginHealthFromLeverage on an unusable LLTV', () => {
   it.each(['0.86', '8.6e17', '', 'not-a-number', '0'])('reports no health for lltvWad %p', (lltvWad) => {
-    expect(() => marginHealthFromLeverage({ leverage: 3, lltvWad, direction: 'LONG' })).not.toThrow()
-    expect(marginHealthFromLeverage({ leverage: 3, lltvWad, direction: 'LONG' })).toBeUndefined()
+    expect(() => marginHealthFromLeverage({ leverage: 3, lltvWad, direction: MarginDirection.LONG })).not.toThrow()
+    expect(marginHealthFromLeverage({ leverage: 3, lltvWad, direction: MarginDirection.LONG })).toBeUndefined()
   })
 })
 
@@ -679,7 +714,10 @@ describe('leverageX18ToNumber on an unparseable wire value', () => {
 describe('marginHealthFromLeverage on a NaN leverage', () => {
   const LLTV = (86n * 10n ** 16n).toString()
 
-  it.each(['SHORT', 'LONG'] as const)('reports unknown health rather than a tier (%s)', (direction) => {
-    expect(marginHealthFromLeverage({ leverage: Number.NaN, lltvWad: LLTV, direction })).toBeUndefined()
-  })
+  it.each([MarginDirection.SHORT, MarginDirection.LONG] as const)(
+    'reports unknown health rather than a tier (%s)',
+    (direction) => {
+      expect(marginHealthFromLeverage({ leverage: Number.NaN, lltvWad: LLTV, direction })).toBeUndefined()
+    },
+  )
 })

@@ -76,10 +76,12 @@ function fakeSharedPlanResponse(overrides: Partial<TradingApi.PlanResponse> = {}
 function fakeQuoteResponse(overrides: Partial<MarginQuoteResponse> = {}): MarginQuoteResponse {
   return {
     requestId: 'req-1',
+    // The verbatim wire execution the adapter carries through; POST /plan reads exactly this.
+    execution: fakeWireQuoteResponse().execution,
     action: 'increaseLeverage',
     chainId: 1,
     swapper: '0xswapper',
-    direction: 'LONG',
+    direction: TradingApi.MarginDirection.LONG,
     exposureToken: { address: '0xcollateral', chainId: 1, decimals: 18 },
     counterToken: { address: '0xdebt', chainId: 1, decimals: 6 },
     positionId: '3',
@@ -112,6 +114,41 @@ function fakeQuoteResponse(overrides: Partial<MarginQuoteResponse> = {}): Margin
   }
 }
 
+// The wire envelope the POST actually returns (execution/operations/funding); fetchMarginQuote adapts
+// it to the view fixture above. Shaped to the generated types so a wire rename fails to compile here.
+function fakeWireQuoteResponse(): TradingApi.MarginQuoteResponse {
+  return {
+    requestId: 'req-1',
+    execution: {
+      positionChainId: 1,
+      swapper: '0xswapper',
+      exposureToken: '0xcollateral',
+      counterToken: '0xdebt',
+      direction: TradingApi.MarginDirection.LONG,
+      intent: TradingApi.MarginIntent.MARGIN_INTENT_INCREASE_LEVERAGE,
+      positionId: '3',
+      leverageTarget: '3',
+      slippageTolerance: 0.5,
+      legs: [
+        {
+          venue: TradingApi.MarginVenue.MORPHO,
+          subId: '3',
+          operations: [
+            { type: TradingApi.MarginOperationType.INCREASE_POSITION, collateralToBuy: '200', maxDebtIn: '410' },
+          ],
+        },
+      ],
+    },
+    display: {
+      size: '1200',
+      leverage: '3',
+      healthFactor: '1800000000000000000',
+      liquidationPrice: '900000000000000000',
+    },
+    gasEstimate: { eip1559: { gasLimit: '21000', gasFee: '1000000000000000' } },
+  }
+}
+
 describe('MarginApiClient plan methods (shared /plan facade)', () => {
   beforeEach(() => {
     mocks.createNewPlan.mockReset()
@@ -120,13 +157,20 @@ describe('MarginApiClient plan methods (shared /plan facade)', () => {
     mocks.cancelExistingPlan.mockReset()
   })
 
-  it('createMarginPlan posts a CHAINED body carrying the verbatim marginQuote', async () => {
+  it('createMarginPlan posts a CHAINED body with the proto-shaped marginQuote (requestId + execution only)', async () => {
     mocks.createNewPlan.mockResolvedValue(fakeSharedPlanResponse())
     const marginQuote = fakeQuoteResponse()
 
     await MarginApiClient.createMarginPlan({ chainId: 1, swapper: '0xswapper', marginQuote })
 
-    expect(mocks.createNewPlan).toHaveBeenCalledWith(expect.objectContaining({ routing: 'CHAINED', marginQuote }))
+    // POST /plan strict-decodes marginQuote as the proto MarginQuoteResponse; the flat display view's
+    // extra keys (action, swapper, paymentSwap, …) make it reject. Only the wire fields are echoed.
+    expect(mocks.createNewPlan).toHaveBeenCalledWith(
+      expect.objectContaining({
+        routing: 'CHAINED',
+        marginQuote: { requestId: marginQuote.requestId, execution: marginQuote.execution },
+      }),
+    )
   })
 
   it('createMarginPlan throws for a RECOVER request (no shared /plan representation yet)', async () => {
@@ -236,6 +280,48 @@ describe('MarginApiClient plan methods (shared /plan facade)', () => {
     expect(result.steps[0]?.stepType).toBe('MARGIN_CLOSE')
   })
 
+  // The deployed plan service emits ONE MARGIN_EXECUTE step for every margin action and names the action
+  // only on marginIntent.intent (the proto enum's full member name). Resolve it back to the action step
+  // type the executor and activity extractor branch on, and collapse the wire intent to the FE vocabulary.
+  it.each([
+    ['MARGIN_INTENT_OPEN', 'OPEN', 'MARGIN_OPEN'],
+    ['MARGIN_INTENT_CLOSE', 'CLOSE', 'MARGIN_CLOSE'],
+    ['MARGIN_INTENT_INCREASE_LEVERAGE', 'ADJUST', 'MARGIN_ADJUST'],
+    ['MARGIN_INTENT_ADD_EQUITY', 'ADJUST', 'MARGIN_ADJUST'],
+  ])(
+    'getMarginPlan resolves a MARGIN_EXECUTE step under %s to intent %s / step %s',
+    async (wireIntent, expectedIntent, expectedStepType) => {
+      mocks.getExistingPlan.mockResolvedValue(
+        fakeSharedPlanResponse({
+          status: TradingApi.PlanStatus.AWAITING_ACTION,
+          marginIntent: {
+            intent: wireIntent,
+            subId: '0',
+            marketKey: 'mk',
+            collateralToken: '0xcollateral',
+            debtToken: '0xdebt',
+            venue: 'MORPHO',
+          },
+          steps: [
+            {
+              stepIndex: 0,
+              method: TradingApi.PlanStepMethod.SEND_TX,
+              payloadType: TradingApi.PlanStepPayloadType.TX,
+              payload: { to: '0xto', data: '0x', chainId: 1 },
+              status: TradingApi.PlanStepStatus.AWAITING_ACTION,
+              stepType: TradingApi.PlanStepType.MARGIN_EXECUTE,
+            },
+          ],
+        }),
+      )
+
+      const result = await MarginApiClient.getMarginPlan({ planId: 'plan-42' })
+
+      expect(result.intent).toBe(expectedIntent)
+      expect(result.steps[0]?.stepType).toBe(expectedStepType)
+    },
+  )
+
   it('getMarginPlan throws when the plan carries no marginIntent', async () => {
     mocks.getExistingPlan.mockResolvedValue(fakeSharedPlanResponse({ marginIntent: undefined }))
 
@@ -264,28 +350,32 @@ describe('MarginApiClient plan methods (shared /plan facade)', () => {
 describe('MarginApiClient.fetchMarginQuote', () => {
   beforeEach(() => {
     mocks.post.mockReset()
-    mocks.post.mockResolvedValue(fakeQuoteResponse())
+    mocks.post.mockResolvedValue(fakeWireQuoteResponse())
   })
 
   // Every manage action goes to the one dispatcher — /margin/close_quote and
   // /margin/adjust_quote are retired routes.
   it('POSTs to margin/quote with the action-keyed request body', async () => {
     const request: MarginQuoteRequest = {
-      chainId: 1,
+      positionChainId: 1,
       exposureToken: '0xcollateral',
       counterToken: '0xdebt',
-      direction: 'LONG',
+      direction: TradingApi.MarginDirection.LONG,
       swapper: '0xswapper',
       slippageTolerance: 0.5,
       increaseLeverage: { positionId: '3', leverageTarget: '3' },
     }
+    mocks.post.mockResolvedValue(fakeWireQuoteResponse())
 
-    const result = await MarginApiClient.fetchMarginQuote(request)
+    const result = await MarginApiClient.fetchMarginQuote(request, { tokenDecimals: { exposure: 18, counter: 6 } })
 
     expect(mocks.post).toHaveBeenCalledWith(
       expect.stringContaining('margin/quote'),
       expect.objectContaining({ body: JSON.stringify(request) }),
     )
     expect(result.requestId).toBe('req-1')
+    // POST /plan reads `marginQuote.execution` (and re-derives every bound from it), so the adapter
+    // must carry the wire execution subtree through UNTOUCHED rather than only the flat display view.
+    expect(result.execution).toEqual(fakeWireQuoteResponse().execution)
   })
 })

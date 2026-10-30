@@ -37,10 +37,8 @@ export interface TableColumnMeta {
   widthOverride?: string
   /** CSS margin expression rendered after this column in header and body cells — e.g. a full-bleed table's scroll-end gutter, or scroll travel consumed by a column transition. Contributes to the rows' scrollable width. */
   trailingMarginCss?: string
-  /** `touch-action` for this column's header and body cells — e.g. holding back horizontal panning so a pinned column can absorb the gesture itself. Unset leaves the browser default. */
-  touchActionCss?: string
-  /** Drop the 95% translucency from this column's pinned cell background. Set it where content scrolling underneath would otherwise ghost through a narrow pinned column. */
-  opaquePinnedBackground?: boolean
+  /** Painted width once fully collapsed, for the column named by `TableProps.collapsiblePinnedColumnId`. Defaults to the logo-only width. */
+  collapsedWidth?: number
 }
 
 export type TableBodyProps<T extends RowData = unknown> = {
@@ -81,6 +79,13 @@ export type TableProps<T extends RowData = unknown> = {
    * same amount — see the add-liquidity pool browser.
    */
   stickyTopOffset?: number
+  /**
+   * Mobile: the named column — which must be the first pinned one, so it sits at the scroll edge —
+   * collapses to its logo as the table scrolls horizontally (see `useCollapsiblePinnedColumn`). Its
+   * `size` is the expanded width and `meta.collapsedWidth` the collapsed one; the cell renders with
+   * `CollapsibleCellLayout`. Leave undefined on desktop so the column renders untouched.
+   */
+  collapsiblePinnedColumnId?: string
   defaultPinnedColumns?: string[]
   forcePinning?: boolean
   hideHeader?: boolean
@@ -110,8 +115,6 @@ export type TableProps<T extends RowData = unknown> = {
   hideHiddenRowsLabel?: string
   /** When true, shows native browser scrollbar instead of hiding it */
   showScrollbar?: boolean
-  /** CSS width expression for the pinned region when columns use `TableColumnMeta.widthOverride` — keeps the pinned divider overlay and left scroll button aligned with the rendered width. */
-  pinnedWidthOverride?: string
   /** Below md, while the rows scroll sideways, run the table through AppBody's right gutter to the screen edge; scrolled to the end, the last column still rests at the gutter. Only for tables sitting directly in that gutter. */
   mobileFullBleed?: boolean
   /** When true, only visible flat rows are rendered (window scroll, or container scroll when maxHeight is set). Does not support getSubRows / renderUnifiedExpandableRow — expansion UI is skipped. */

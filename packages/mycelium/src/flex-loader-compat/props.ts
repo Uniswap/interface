@@ -1,7 +1,7 @@
 /**
  * The `FlexLoader` compat prop contract: the legacy surface
- * (`ui/src/loading/FlexLoader.tsx`, `{ repeat?: number } & FlexProps &
- * ViewProps`) carried on the compat `Flex` prop model, so
+ * (`{ repeat?: number } & FlexProps & ViewProps`) carried on the compat `Flex`
+ * prop model, so
  * `<FlexLoader borderRadius="$rounded12" height={24} width={100} />` call
  * sites convert as a mechanical barrel swap. The legacy `& ViewProps` half is
  * dropped: it added no surface the parity-verified `FlexCompatProps` doesn't

@@ -1,14 +1,15 @@
-import { Flex, Text } from '@universe/mycelium'
-import { useTranslation } from 'react-i18next'
-import { Button } from 'ui/src'
-import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { SharedEventName } from '@uniswap/analytics-events'
+import { AcceptNewQuoteRow as AcceptNewQuoteRowView } from '@universe/swap-ui'
+import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { Trace } from 'uniswap/src/features/telemetry/Trace'
-import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
+import { useEvent } from 'utilities/src/react/hooks'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 function calculatePercentageDifference({
   derivedSwapInfo,
@@ -33,6 +34,7 @@ function calculatePercentageDifference({
   return `${percentage.greaterThan(0) ? '+' : ''}${percentage.toFixed(2)}`
 }
 
+/** Adapter: maps the two swap infos onto the swap-ui view and logs the accept press. */
 export function AcceptNewQuoteRow({
   acceptedDerivedSwapInfo,
   derivedSwapInfo,
@@ -42,8 +44,8 @@ export function AcceptNewQuoteRow({
   derivedSwapInfo: DerivedSwapInfo<CurrencyInfo, CurrencyInfo>
   onAcceptTrade: () => void
 }): JSX.Element {
-  const { t } = useTranslation()
   const { formatCurrencyAmount } = useLocalizationContext()
+  const trace = useTrace()
 
   const derivedCurrencyField =
     derivedSwapInfo.exactCurrencyField === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
@@ -60,43 +62,19 @@ export function AcceptNewQuoteRow({
     acceptedDerivedSwapInfo,
   })
 
+  // Replaces the old `<Trace logPress>` wrapper: Trace injects its press handler onto the child
+  // element, which a props-driven view would silently ignore. Same event and payload.
+  const onAccept = useEvent((): void => {
+    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, { ...trace, element: ElementName.AcceptNewRate })
+    onAcceptTrade()
+  })
+
   return (
-    <Flex
-      row
-      shrink
-      alignItems="center"
-      borderColor="$surface3"
-      borderRadius="$rounded16"
-      borderWidth="$spacing1"
-      gap="$spacing12"
-      justifyContent="space-between"
-      pl="$spacing12"
-      pr="$spacing8"
-      py="$spacing8"
-    >
-      <Flex fill>
-        <Text color="$neutral2" variant="body3">
-          {t('swap.details.updatedPrice')}
-        </Text>
-        <Flex row alignItems="center">
-          <Text color="$neutral1" numberOfLines={1} variant="body3">
-            {formattedDerivedAmount} {derivedSymbol} <Text color="$neutral2">({percentageDifference}%)</Text>
-          </Text>
-        </Flex>
-      </Flex>
-      <Trace logPress element={ElementName.AcceptNewRate}>
-        <Button
-          px="$spacing8"
-          width="auto"
-          variant="branded"
-          emphasis="secondary"
-          size="small"
-          flex={0}
-          onPress={onAcceptTrade}
-        >
-          {t('common.button.accept')}
-        </Button>
-      </Trace>
-    </Flex>
+    <AcceptNewQuoteRowView
+      amount={formattedDerivedAmount}
+      symbol={derivedSymbol ?? undefined}
+      percentageDifference={percentageDifference ?? undefined}
+      onAccept={onAccept}
+    />
   )
 }

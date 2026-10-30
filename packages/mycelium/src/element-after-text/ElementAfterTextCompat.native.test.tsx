@@ -2,9 +2,8 @@
  * Behavioral contract of the native ElementAfterText leg (INFRA-3601), run
  * under react-test-renderer with the shared minimal react-native stand-in
  * (the `FloatingOverlay.native.test.tsx` precedent for exercising a
- * `.native.tsx` leg directly). Asserted against the legacy reference:
- * `ui/src/components/text/ElementAfterText.tsx` and
- * `usePostTextElementPositionProps` in `ui/src/utils/layout.ts`.
+ * `.native.tsx` leg directly). Asserted against the behavior of the legacy ui
+ * component and its `usePostTextElementPositionProps` hook.
  */
 import { createElement, type JSX } from 'react'
 import { act, create, type ReactTestInstance, type ReactTestRenderer } from 'react-test-renderer'

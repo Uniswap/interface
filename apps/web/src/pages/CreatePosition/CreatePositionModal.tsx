@@ -14,6 +14,7 @@ import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { isSignerMnemonicAccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { getLPBaseAnalyticsProperties } from '~/features/Liquidity/analytics'
+import { useInitialPriceAcceptance } from '~/features/Liquidity/Create/hooks/useInitialPriceAcceptance'
 import { ReviewModal, ReviewModalProps } from '~/features/Liquidity/ReviewModal'
 import { getPoolIdOrAddressFromCreatePositionInfo } from '~/features/Liquidity/utils/getPoolIdOrAddressFromCreatePositionInfo'
 import { useAccount } from '~/hooks/useAccount'
@@ -53,6 +54,7 @@ export function CreatePositionModal({
     poolOrPair,
     ticks,
   } = useCreateLiquidityContext()
+  const initialPriceAcceptance = useInitialPriceAcceptance()
   const { t } = useTranslation()
 
   const disableOneClickSwap = useSetOverrideOneClickSwapFlag()
@@ -164,6 +166,7 @@ export function CreatePositionModal({
       formattedAmounts={formattedAmounts}
       currencyAmounts={currencyAmounts}
       currencyAmountsUSDValue={currencyAmountsUSDValue}
+      initialPriceAcceptance={initialPriceAcceptance}
       isDisabled={!txInfo?.action}
       gasFeeEstimateUSD={gasFeeEstimateUSD}
       transactionError={transactionError}

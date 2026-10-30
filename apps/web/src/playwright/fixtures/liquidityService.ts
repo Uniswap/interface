@@ -1,7 +1,9 @@
+import { readFileSync } from 'node:fs'
 import type { MethodInfo, ServiceType } from '@bufbuild/protobuf'
 // oxlint-disable-next-line no-restricted-imports -- Liquidity Service fixtures need direct Playwright imports
 import { type Page } from '@playwright/test'
 import { LiquidityService } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/api_connect'
+import { ChainId } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/types_pb'
 import { LiquidityService as LiquidityServiceV2 } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/api_connect'
 import { getUniswapServiceUrls } from '~/config'
 import { parseConnectRequestBody } from '~/playwright/fixtures/dataApi'
@@ -195,11 +197,20 @@ export async function stubGetPositionFields({
 export async function mockGetWalletPositions({ page, mockPath }: { page: Page; mockPath: string }): Promise<void> {
   const matcher = matchesLiquidityServiceMethod(LiquidityServiceV2, LiquidityServiceV2.methods.getWalletPositions)
   await page.route(matcher, async (route) => {
-    const body = parseConnectRequestBody(route.request()) as { modifier?: { hiddenOnly?: boolean } } | null
+    const body = parseConnectRequestBody(route.request()) as {
+      modifier?: { hiddenOnly?: boolean }
+      chainIds?: (keyof typeof ChainId | number)[]
+    } | null
     if (body?.modifier?.hiddenOnly) {
       await route.fulfill({ contentType: 'application/json', body: JSON.stringify({ positions: [] }) })
       return
     }
-    await route.fulfill({ path: mockPath })
+    // Honor the chain filter like the service does, so a Blast-only exposure check doesn't see mainnet positions.
+    const requestedChainIds = body?.chainIds?.map((id) => (typeof id === 'number' ? id : ChainId[id]))
+    const mock = JSON.parse(readFileSync(mockPath, 'utf8')) as { positions: { chainId: number }[] }
+    const positions = requestedChainIds?.length
+      ? mock.positions.filter((position) => requestedChainIds.includes(position.chainId))
+      : mock.positions
+    await route.fulfill({ contentType: 'application/json', body: JSON.stringify({ ...mock, positions }) })
   })
 }

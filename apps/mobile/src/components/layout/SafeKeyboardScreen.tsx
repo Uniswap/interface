@@ -1,10 +1,9 @@
 import { isIOS } from '@universe/environment'
-import { Flex } from '@universe/mycelium'
+import { Flex, flexStyles } from '@universe/mycelium'
 import React, { PropsWithChildren, useState } from 'react'
 import { ScrollView, ScrollViewProps, StyleSheet } from 'react-native'
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller'
 import { Screen, ScreenProps } from 'src/components/layout/Screen'
-import { flexStyles } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { useKeyboardLayout } from 'uniswap/src/utils/useKeyboardLayout'
 

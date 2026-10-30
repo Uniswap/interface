@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router'
+import { getAuctionLaunchMethod } from 'uniswap/src/features/dataApi/launchProvenance'
 import { AuctionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import type { TokenProvenanceAnalyticsProperties } from 'uniswap/src/features/telemetry/types'
@@ -7,7 +8,6 @@ import { getTokenDetailsURL } from '~/data/util'
 import { useAuctionDisplayState } from '~/features/Toucan/Auction/hooks/useAuctionDisplayState'
 import { useAuctionTradingToken } from '~/features/Toucan/Auction/hooks/useAuctionTradingToken'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
-import { getLaunchProvenanceFromAuction } from '~/features/Toucan/Auction/utils/auctionLaunchMethod'
 import { buildProvenanceAnalyticsProperties } from '~/features/Toucan/Auction/utils/provenanceAnalytics'
 import { usePrefetchTokenDetailsAuction } from '~/pages/TokenDetails/hooks/usePrefetchTokenDetailsAuction'
 import { getChainUrlParam } from '~/utils/params/chainParams'
@@ -38,9 +38,12 @@ export function useNavigateToAuctionTokenDetails({
       ? buildProvenanceAnalyticsProperties({
           surface: 'adp',
           chainId: auctionDetails.chainId,
-          launchMethod: getLaunchProvenanceFromAuction({ auction: auctionDetails }).method,
+          launchMethod: getAuctionLaunchMethod({ auction: auctionDetails }),
           phase: displayState.phase,
           poolAvailability: displayState.poolAvailability,
+          // The TDP reports its own page token, so a receipt-token auction reports the underlying one it trades as.
+          tokenAddress: tradingTokenAddress ?? auctionDetails.tokenAddress,
+          auctionAddress: auctionDetails.address,
           entry_point: entryPoint,
         })
       : undefined

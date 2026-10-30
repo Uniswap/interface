@@ -1,8 +1,8 @@
 import type { SkPath } from '@shopify/react-native-skia'
 import { Canvas, Skia } from '@shopify/react-native-skia'
+import { useSporeColors } from '@universe/mycelium'
 import { useEffect, useMemo } from 'react'
 import { Easing, useSharedValue, withTiming } from 'react-native-reanimated'
-import { useSporeColors } from 'ui/src/hooks/useSporeColors'
 import { AnimatedArc } from 'wallet/src/components/landing/shapes/AnimatedArc'
 
 // Helper to convert degrees to radians

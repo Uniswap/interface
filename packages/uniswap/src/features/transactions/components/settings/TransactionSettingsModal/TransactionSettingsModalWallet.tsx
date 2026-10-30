@@ -1,5 +1,5 @@
 import { isExtensionApp } from '@universe/environment'
-import { useSporeColors } from 'ui/src'
+import { useSporeColors } from '@universe/mycelium'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import {

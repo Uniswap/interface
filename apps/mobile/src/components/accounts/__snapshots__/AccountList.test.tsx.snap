@@ -131,5 +131,9 @@ exports[`AccountList > renders without error 1`] = `
     </div>
     ExpoLinearGradient
   </div>
+  <div
+    class="css-view-175oi2r r-bottom-1p0dtai r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-pointerEvents-12vffkv"
+    data-testid="portal-layer"
+  />
 </DocumentFragment>
 `;

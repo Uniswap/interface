@@ -1,3 +1,4 @@
+import { type UseSporeColorsReturn } from '@universe/mycelium/theme-hooks-compat'
 import { type CSSProperties, useCallback, useSyncExternalStore } from 'react'
 import {
   popoverNoop,
@@ -11,7 +12,6 @@ import {
   POPOVER_TRANSITION_DURATION_MS,
 } from 'ui/src/components/popover/shared'
 import type { PopoverFrameStyleProps, PopoverPresenceStyle, PopoverVia } from 'ui/src/components/popover/types'
-import type { UseSporeColorsReturn } from 'ui/src/hooks/useSporeColors'
 import { media } from 'ui/src/theme/media'
 
 /**

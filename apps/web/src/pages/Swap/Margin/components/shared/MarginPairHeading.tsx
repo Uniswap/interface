@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import type { MarginActivePosition } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { NumberType } from 'utilities/src/format/types'
 import { MARGIN_CHAIN_ID, type MarginMarket } from '~/constants/margin'
 import { MarginVenueLogo } from '~/pages/Swap/Margin/components/MarginVenueLogo'
@@ -82,7 +83,7 @@ function DirectionSubtitle({
   const { formatNumberOrString } = useLocalizationContext()
   const direction = position.direction
   const directionStyle = getMarginDirectionStyle(direction)
-  const directionLabel = direction === 'SHORT' ? t('margin.side.short') : t('margin.side.long')
+  const directionLabel = direction === MarginDirection.SHORT ? t('margin.side.short') : t('margin.side.long')
   // `size` is denominated in the exposure leg — a long's is its collateral, a short's its debt leg.
   const leg = marginExposureLeg({ market, direction })
   const size = Number(position.size) / 10 ** leg.decimals

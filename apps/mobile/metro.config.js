@@ -98,6 +98,17 @@ finalConfig.resolver.resolveRequest = (context, moduleName, platform) => {
       ? prevResolveRequest(context, 'zod/v3', platform)
       : context.resolveRequest(context, 'zod/v3', platform)
   }
+  // @universe/api's `./src/*` export targets are extensionless so bundlers can pick the platform
+  // leg (`.native.ts`), but Metro only accepts an exact file there: it would warn and fall back to
+  // file-based resolution on every deep import. Resolve them file-based directly, as before the
+  // package had an exports map.
+  // TODO: remove along with @universe/api's `./src/*` export, once no deep imports remain.
+  if (moduleName === '@universe/api/src' || moduleName.startsWith('@universe/api/src/')) {
+    const fileBasedContext = { ...context, unstable_enablePackageExports: false }
+    return prevResolveRequest
+      ? prevResolveRequest(fileBasedContext, moduleName, platform)
+      : context.resolveRequest(fileBasedContext, moduleName, platform)
+  }
   if (prevResolveRequest) {
     return prevResolveRequest(context, moduleName, platform)
   }

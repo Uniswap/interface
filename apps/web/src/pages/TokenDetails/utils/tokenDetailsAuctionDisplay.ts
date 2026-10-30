@@ -2,8 +2,12 @@ import type { PlainMessage, Timestamp } from '@bufbuild/protobuf'
 import type { Auction } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import type { EVMUniverseChainId } from '@universe/chains'
 import { timestampToMs } from 'uniswap/src/data/apiClients/dataApiService/utils/protoTimestamp'
-import { type LaunchProvenance, LaunchProvenanceMethod } from 'uniswap/src/features/dataApi/launchProvenance'
-import { getAuctionLaunchMethod, mergeLaunchProvenance } from '~/features/Toucan/Auction/utils/auctionLaunchMethod'
+import {
+  getAuctionLaunchMethod,
+  type LaunchProvenance,
+  LaunchProvenanceMethod,
+} from 'uniswap/src/features/dataApi/launchProvenance'
+import { mergeLaunchProvenance } from '~/features/Toucan/Auction/utils/auctionLaunchMethod'
 import {
   AuctionDisplayPhase,
   PoolAvailability,
@@ -18,9 +22,11 @@ export interface TokenDetailsAuctionDisplay {
   /** Present only when the TDP resolved an auction on an EVM chain; the other fields are inert without it. */
   auction: PlainMessage<Auction> | undefined
   chainId: EVMUniverseChainId | undefined
+  /** The page's token, which an auction-less launch (Instant) has no other source for. */
+  tokenAddress?: string
   /** Classified by the served enum, never inferred from isQuickLaunch; `Unknown` without an auction. */
   launchMethod: LaunchProvenanceMethod
-  /** Where the token launched, from GetToken and the auction together; undefined when neither attributes it. */
+  /** Where the token launched; undefined unless GetToken attributes it, and the auction only refines that record. */
   provenance: LaunchProvenance | undefined
   phase: AuctionDisplayPhase
   result: AuctionDisplayResult
@@ -46,9 +52,11 @@ export function resolveTokenDetailsAuctionDisplay({
   currencyRaised,
   pools,
   servedProvenance,
+  tokenAddress,
 }: {
   auction: PlainMessage<Auction> | undefined
   chainId: EVMUniverseChainId | undefined
+  tokenAddress?: string
   currentBlock: CurrentBlockState
   currencyRaised: CurrencyRaisedState
   pools: TokenPoolState
@@ -67,6 +75,7 @@ export function resolveTokenDetailsAuctionDisplay({
     ...state,
     auction,
     chainId,
+    tokenAddress,
     launchMethod: auction ? getAuctionLaunchMethod({ auction }) : LaunchProvenanceMethod.Unknown,
     provenance: mergeLaunchProvenance({ served: servedProvenance, auction }),
     phaseEndsAtMs,
@@ -75,36 +84,28 @@ export function resolveTokenDetailsAuctionDisplay({
   }
 }
 
-export type LiveAuctionBannerInputs = Pick<
-  TokenDetailsAuctionDisplay,
-  'launchMethod' | 'phase' | 'poolAvailability'
-> & {
+export type AuctionBannerInputs = Pick<TokenDetailsAuctionDisplay, 'launchMethod' | 'phase' | 'poolAvailability'> & {
   /** Latched by the provider, so a pool refetch cannot retract a banner the viewer is already looking at. */
   hasConfirmedPool: boolean
   /** Latched and online-aware, so the reserved row belongs to the first load and collapses when offline. */
   isInitialLoading: boolean
 }
 
-/** Tradeable Custom auction tokens (pool exists) with a live auction get a banner pointing back at it. */
-export function shouldShowLiveAuctionBanner({
-  launchMethod,
-  phase,
-  poolAvailability,
-  hasConfirmedPool,
-}: LiveAuctionBannerInputs): boolean {
+function isOpenCustomAuction({ launchMethod, phase }: Pick<AuctionBannerInputs, 'launchMethod' | 'phase'>): boolean {
   return (
     launchMethod === LaunchProvenanceMethod.CustomAuction &&
-    phase === AuctionDisplayPhase.Live &&
-    (poolAvailability === PoolAvailability.HasPool || hasConfirmedPool)
+    (phase === AuctionDisplayPhase.Upcoming || phase === AuctionDisplayPhase.Live)
   )
 }
 
-/** The pool lookup settles well after the rest of the page, so the live banner holds its row until then. */
-export function shouldReserveLiveAuctionBannerSpace(display: LiveAuctionBannerInputs): boolean {
+/** Tradeable Custom auction tokens (pool exists) with an upcoming or live auction get a banner pointing at it. */
+export function shouldShowAuctionBanner(display: AuctionBannerInputs): boolean {
   return (
-    shouldShowLiveAuctionBanner(display) ||
-    (display.launchMethod === LaunchProvenanceMethod.CustomAuction &&
-      display.phase === AuctionDisplayPhase.Live &&
-      display.isInitialLoading)
+    isOpenCustomAuction(display) && (display.poolAvailability === PoolAvailability.HasPool || display.hasConfirmedPool)
   )
+}
+
+/** The pool lookup settles well after the rest of the page, so the banner holds its row until then. */
+export function shouldReserveAuctionBannerSpace(display: AuctionBannerInputs): boolean {
+  return shouldShowAuctionBanner(display) || (isOpenCustomAuction(display) && display.isInitialLoading)
 }

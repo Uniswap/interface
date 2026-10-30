@@ -33,12 +33,14 @@ export function useExploreTokenItems({
   categoryId,
   pageSize = EXPLORE_LIST_TOKENS_PAGE_SIZE,
   skip,
+  metadataDisplayType,
 }: {
   selectedNetwork: UniverseChainId | null
   orderBy: ExploreOrderBy
   categoryId?: string
   pageSize?: number
   skip?: boolean
+  metadataDisplayType?: TokenMetadataDisplayType
 }): ExploreTokenItemsResult {
   const { chains: enabledChainIds } = useEnabledChains()
   const chainIds = useMemo(
@@ -46,7 +48,7 @@ export function useExploreTokenItems({
     [selectedNetwork, enabledChainIds],
   )
   const { orderBy: v2OrderBy, ascending } = exploreOrderByToV2Sort(orderBy)
-  const tokenMetadataDisplayType = getTokenMetadataDisplayType(orderBy)
+  const tokenMetadataDisplayType = metadataDisplayType ?? getTokenMetadataDisplayType(orderBy)
 
   const { multichainTokens, hasData, isLoading, error, refetch, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useExploreListTokens({

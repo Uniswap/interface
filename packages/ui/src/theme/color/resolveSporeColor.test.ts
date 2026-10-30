@@ -1,4 +1,4 @@
-import type { UseSporeColorsReturn } from 'ui/src/hooks/useSporeColors'
+import { type UseSporeColorsReturn } from '@universe/mycelium/theme-hooks-compat'
 import { resolveSporeColor } from 'ui/src/theme/color/resolveSporeColor'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 

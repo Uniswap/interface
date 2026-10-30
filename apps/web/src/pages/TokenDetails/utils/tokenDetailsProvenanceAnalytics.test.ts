@@ -53,6 +53,8 @@ describe('TDP provenance analytics', () => {
     expect(properties).toEqual({
       surface: 'tdp',
       chain_id: UniverseChainId.Mainnet,
+      token_address: AUCTION.tokenAddress,
+      auction_address: AUCTION.address,
       auction_type: 'custom',
       launch_method: 'custom',
       auction_phase: 'live',
@@ -76,16 +78,25 @@ describe('TDP provenance analytics', () => {
   it('classifies a served launch the page found no auction for', () => {
     const display = resolve({
       auction: undefined,
+      tokenAddress: AUCTION.tokenAddress,
       servedProvenance: {
         launchpad: { id: 'pons', name: 'Pons' },
         method: LaunchProvenanceMethod.InstantLaunch,
       },
     })
+    const properties = getTokenDetailsProvenanceProperties(display, {})
 
     // The launch is an Instant Launch; the page it is shown on is still an ordinary trading TDP.
-    expect(getTokenDetailsProvenanceProperties(display, {})).toEqual(
-      expect.objectContaining({ launch_method: 'instant', auction_type: 'unknown', page_layout: 'trading' }),
+    expect(properties).toEqual(
+      expect.objectContaining({
+        launch_method: 'instant',
+        auction_type: 'unknown',
+        page_layout: 'trading',
+        token_address: AUCTION.tokenAddress,
+        launchpad: 'pons',
+      }),
     )
+    expect(properties).not.toHaveProperty('auction_address')
   })
 
   it('does not build or send auction properties without a chain', () => {

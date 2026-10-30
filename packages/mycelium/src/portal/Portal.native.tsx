@@ -1,21 +1,17 @@
 /**
- * Native portal primitive, on `@rn-primitives/portal` — the same host-based
- * teleport `ui/src/components/portal/Portal.native.tsx` already ships
- * (`PrimitivePortal` into a named `PortalHost`). Delegating rather than
- * hand-rolling a second host keeps one native portal mechanism in the repo, so
- * repointing that leg here is an import swap with no on-device behavior change
- * to re-evidence.
+ * Native portal primitive, on `@rn-primitives/portal` (`PrimitivePortal` into
+ * a named `PortalHost`), the same mechanism the legacy `ui/src` native portal
+ * used. Delegating rather than hand-rolling a host keeps one native portal
+ * mechanism in the repo.
  *
- * What this leg adds over the primitive is the two things `ui/src` gets from
- * elsewhere: the resolved z-index (shared with the web leg through `stack.ts`)
- * and a per-provider scope. `@rn-primitives/portal`'s registry is module-global
+ * What this leg adds over the primitive: the resolved z-index (shared with the
+ * web leg through `stack.ts`) and a per-provider scope. `@rn-primitives/portal`'s registry is module-global
  * keyed by host name, so `PortalProvider` mints its own host name from `useId`
  * and hands it down with the stack registry; two providers therefore cannot see
  * each other's portals, matching the web leg's per-provider stacking scope.
  *
- * Wrapper parity with the `ui/src` portal: each entry is wrapped in an
- * absolutely-filled `box-none` `View` carrying the resolved z-index, so
- * full-screen overlay placement and touch pass-through are unchanged.
+ * Each entry is wrapped in an absolutely-filled `box-none` `View` carrying the
+ * resolved z-index: full-screen overlay placement with touch pass-through.
  *
  * KNOWN DIVERGENCE FROM THE WEB LEG, pinned by a test rather than only
  * described here. Children are re-parented into the host's subtree, so they are
@@ -26,14 +22,7 @@
  * inside this primitive: React Native has no DOM to relocate into, so a
  * host-based portal necessarily renders at the host. Anything a native portal's
  * children need must be passed as props or provided above the
- * `PortalProvider`. It is the constraint the `ui/src` leg already lives with,
- * so repointing it here would not introduce it.
- *
- * NOTE: no call site imports this leg yet. Native was already Tamagui-free
- * through `ui/src/components/portal/Portal.native.tsx`, so repointing it here
- * is a consolidation that needs on-device evidence, not part of removing
- * Tamagui. This leg exists so the primitive's two legs match and the entry
- * point is honest on both platforms.
+ * `PortalProvider`.
  */
 import { Portal as PrimitivePortal, PortalHost } from '@rn-primitives/portal'
 import { createContext, type JSX, useContext, useEffect, useId, useMemo } from 'react'

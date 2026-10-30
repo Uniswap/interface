@@ -25,12 +25,18 @@ function aggregateBalancesByChain(
   return balanceByChain
 }
 
-function partitionChainsByBalance(
-  chainIds: UniverseChainId[],
-  balanceByChain: Map<UniverseChainId, number>,
-): TieredNetworkOptions {
+function partitionChainsByBalance({
+  chainIds,
+  balanceByChain,
+  lowLiquidityChainIds,
+}: {
+  chainIds: UniverseChainId[]
+  balanceByChain: Map<UniverseChainId, number>
+  lowLiquidityChainIds?: UniverseChainId[]
+}): TieredNetworkOptions {
   const withBalances: NetworkSelectorOption[] = []
   const otherNetworks: NetworkSelectorOption[] = []
+  const lowLiquidity: NetworkSelectorOption[] = []
 
   for (const chainId of chainIds) {
     const balanceUSD = balanceByChain.get(chainId) ?? 0
@@ -40,7 +46,9 @@ function partitionChainsByBalance(
       balanceUSD,
     }
 
-    if (balanceUSD > 0) {
+    if (lowLiquidityChainIds?.includes(chainId)) {
+      lowLiquidity.push(option)
+    } else if (balanceUSD > 0) {
       withBalances.push(option)
     } else {
       otherNetworks.push(option)
@@ -49,27 +57,29 @@ function partitionChainsByBalance(
 
   withBalances.sort((a, b) => b.balanceUSD - a.balanceUSD)
 
-  return { withBalances, otherNetworks }
+  return { withBalances, otherNetworks, lowLiquidity }
 }
 
 export function useNetworkSelectorOptions({
   addresses,
   chainIds,
+  lowLiquidityChainIds,
   enabled = true,
 }: {
   addresses: AddressGroup
   chainIds: UniverseChainId[]
+  lowLiquidityChainIds?: UniverseChainId[]
   enabled?: boolean
 }): TieredNetworkOptions | undefined {
   const { data: portfolioBalancesById } = usePortfolioBalancesForAddressById(addresses)
 
   return useMemo(() => {
-    // If network filter is not enabled or there are no portfolio balances, return undefined
-    if (!enabled || !portfolioBalancesById) {
+    const hasLowLiquidityChains = Boolean(lowLiquidityChainIds?.length)
+    if (!enabled || (!portfolioBalancesById && !hasLowLiquidityChains)) {
       return undefined
     }
 
-    const balanceByChain = aggregateBalancesByChain(portfolioBalancesById)
-    return partitionChainsByBalance(chainIds, balanceByChain)
-  }, [enabled, portfolioBalancesById, chainIds])
+    const balanceByChain = portfolioBalancesById ? aggregateBalancesByChain(portfolioBalancesById) : new Map()
+    return partitionChainsByBalance({ chainIds, balanceByChain, lowLiquidityChainIds })
+  }, [enabled, portfolioBalancesById, chainIds, lowLiquidityChainIds])
 }

@@ -38,8 +38,6 @@ export type {
   TextCompatPseudoProps,
   TextCompatStyleProps,
 } from './text-compat/props'
-export { DynamicSizeTextCompat as DynamicSizeText } from './dynamic-size-text/DynamicSizeTextCompat'
-export type { DynamicSizeTextFitOptions, DynamicSizeTextProps } from './dynamic-size-text/props'
 export { ViewCompat as View } from './view-compat/ViewCompat'
 export type { ViewCompatProps, ViewCompatPseudoProps, ViewCompatStyleProps } from './view-compat/props'
 export { TouchableAreaCompat as TouchableArea } from './touchable-area/TouchableAreaCompat'
@@ -296,9 +294,8 @@ export type { WebBottomSheetProps } from './web-bottom-sheet-compat/props'
 
 /**
  * Tamagui → Tailwind migration surface (INFRA-3653): the compat
- * `AnimatableCopyIcon` under the same names the legacy `ui/src` barrel uses
- * (`AnimatableCopyIcon`, `CopyIconProps` —
- * `ui/src/components/AnimatableCopyIcon/AnimatableCopyIcon.tsx`), so
+ * `AnimatableCopyIcon` under the same names the legacy `ui/src` barrel used
+ * (`AnimatableCopyIcon`, `CopyIconProps`), so
  * `<AnimatableCopyIcon isCopied={copied} size={16} />` call sites convert as
  * a mechanical barrel swap. The `./animatable-copy-icon-compat` subpath
  * export remains.
@@ -315,8 +312,7 @@ export type { CopyIconProps } from './animatable-copy-icon-compat'
  * packages/tailwind/src/parity/{separator,switch,spinning-loader}; web and
  * native legs. `SwitchProps` rides along under its legacy barrel name; the
  * other two prop types keep their compat names (the legacy barrel never
- * exported them). The `./separator-compat`, `./switch-compat`, and
- * `./spinning-loader-compat` subpath exports remain.
+ * exported them).
  */
 export { SeparatorCompat as Separator } from './separator-compat/SeparatorCompat'
 export type { SeparatorCompatProps, SeparatorCompatStyleProps } from './separator-compat/props'
@@ -327,12 +323,11 @@ export type { SpinningLoaderCompatProps } from './spinning-loader-compat/props'
 
 /**
  * Tamagui → Tailwind migration surface: the compat `FlexLoader` under the
- * same names the legacy `ui/src` barrel uses (`FlexLoader`,
- * `FlexLoaderProps` — `ui/src/loading/FlexLoader.tsx`), so
+ * same names the legacy `ui/src` barrel used (`FlexLoader`,
+ * `FlexLoaderProps`), so
  * `<FlexLoader borderRadius="$rounded12" height={24} width={100} />` call
  * sites convert as a mechanical barrel swap. The placeholder blocks only —
- * call sites keep wrapping in `Shimmer`/`Skeleton` for the sweep. The
- * `./flex-loader-compat` subpath export remains.
+ * call sites keep wrapping in `Shimmer`/`Skeleton` for the sweep.
  */
 export { FlexLoaderCompat as FlexLoader } from './flex-loader-compat'
 export type { FlexLoaderProps } from './flex-loader-compat'
@@ -363,7 +358,7 @@ export type { ThemeKeys, ThemeName } from './compat/theme-name-keys'
 // useExtractedTokenColor requires an ambient @tanstack/react-query QueryClientProvider (the
 // extraction rides useQuery), like the legacy hook.
 export { MobileDeviceHeight } from './theme-hooks-compat/device-height'
-export { useExtractedTokenColor } from './theme-hooks-compat/useExtractedTokenColor'
+export { type TokenColorOverrides, useExtractedTokenColor } from './theme-hooks-compat/useExtractedTokenColor'
 export { useIsDarkMode } from './theme-hooks-compat/useIsDarkMode'
 export { useIsShortMobileDevice } from './theme-hooks-compat/useIsShortMobileDevice'
 export { useMedia } from './theme-hooks-compat/useMedia'
@@ -391,3 +386,11 @@ export type { SpacerCompatProps as SpacerProps } from './spacer-compat/SpacerCom
 // Hand-swap only: this compat doesn't inert its positioner, so an open tooltip
 // swallows clicks beneath it (INFRA-3930).
 export { TooltipCompat as Tooltip } from './tooltip-compat'
+
+// Directory import (not the `./menu-compat` subpath) so Metro resolves `menu-compat/index.native.ts`
+// on native; the subpath's exports target is exact and always lands on the web barrel.
+export {
+  DropdownMenuSheetItemCompat as DropdownMenuSheetItem,
+  getMenuItemColorCompat as getMenuItemColor,
+} from './menu-compat'
+export type { DropdownMenuSheetItemCompatProps as DropdownMenuSheetItemProps } from './menu-compat'

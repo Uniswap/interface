@@ -1,7 +1,7 @@
-import { Flex } from '@universe/mycelium'
+import { Flex, useIsShortMobileDevice } from '@universe/mycelium'
 import { TestID } from '@universe/test'
 import { memo } from 'react'
-import { Button, useIsShortMobileDevice } from 'ui/src'
+import { Button } from 'ui/src'
 import { useCexTransferProviders } from 'uniswap/src/features/fiatOnRamp/useCexTransferProviders'
 import {
   useIsShowingWebFORNudge,

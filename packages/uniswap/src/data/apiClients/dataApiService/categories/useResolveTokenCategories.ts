@@ -1,7 +1,8 @@
+import { DynamicConfigs } from '@universe/gating'
 import { useMemo } from 'react'
 import { useAllTokenCategories } from 'uniswap/src/data/apiClients/dataApiService/categories/useAllTokenCategories'
 import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
-import { useTokenCategoryOrder } from 'uniswap/src/features/tokenCategories/useTokenCategoryOrder'
+import { useCategoryOrder } from 'uniswap/src/features/tokenCategories/useCategoryOrder'
 
 const EMPTY_CATEGORIES: TokenCategory[] = []
 
@@ -25,7 +26,7 @@ export function useResolveTokenCategories({
     const resolved = knownCategories.filter((category) => ids.has(category.id))
     return resolved.length > 0 ? resolved : EMPTY_CATEGORIES
   }, [categoryIds, knownCategories])
-  const orderedCategories = useTokenCategoryOrder(categories)
+  const orderedCategories = useCategoryOrder({ categories, config: DynamicConfigs.TokenCategoriesOrder })
   const hasCategoryIds = (categoryIds?.length ?? 0) > 0
 
   return { categories: orderedCategories, isLoading: isTokenLoading || (isCategoriesLoading && hasCategoryIds) }

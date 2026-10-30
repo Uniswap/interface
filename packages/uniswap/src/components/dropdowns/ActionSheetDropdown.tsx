@@ -9,6 +9,7 @@ import {
   zIndexes,
 } from '@universe/mycelium'
 import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
+import { Portal } from '@universe/mycelium/portal'
 import { Presence } from '@universe/mycelium/presence'
 import { useDeviceDimensions, useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import React, {
@@ -26,7 +27,6 @@ import type { LayoutChangeEvent, View } from 'react-native'
 import { GestureResponderEvent } from 'react-native'
 import Animated, { useSharedValue } from 'react-native-reanimated'
 import { OverKeyboardContent } from 'ui/src'
-import { Portal } from 'ui/src/components/portal/Portal'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { Backdrop } from 'uniswap/src/components/dropdowns/ActionSheetDropdownBackdrop'
 import {

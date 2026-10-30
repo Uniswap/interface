@@ -1,7 +1,7 @@
+import { snapToNearestTick } from '@universe/cca'
 import type { IChartApi, ISeriesApi, MouseEventParams, Time } from 'lightweight-charts'
 import { priceToQ96WithDecimals, q96ToPriceString } from '~/features/Toucan/Auction/BidDistributionChart/utils/q96'
 import type { BidTokenInfo } from '~/features/Toucan/Auction/store/types'
-import { snapToNearestTick } from '~/features/Toucan/Auction/utils/ticks'
 import type { ToucanChartData } from '~/features/Toucan/ToucanChart/renderer'
 
 export function getSelectedTickPriceFromChartClick(params: {

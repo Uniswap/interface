@@ -1,7 +1,6 @@
 /**
  * `@universe/mycelium/refresh-button-compat` — the compat `RefreshButton`
- * (INFRA-3489), replacing the legacy `ui/src` `RefreshButton` composite from
- * `packages/ui/src/components/RefreshButton/`.
+ * (INFRA-3489), which replaced the legacy `ui/src` `RefreshButton`.
  *
  * The component is imported by its BASE specifier so Metro resolves the
  * `.native.tsx` leg (a deliberate throwing stub — the render is web-guarded

@@ -43,6 +43,7 @@ import {
   type UnitagEventName,
   type WalletEventName,
 } from 'uniswap/src/features/telemetry/constants'
+import type { CategoryKind } from 'uniswap/src/features/tokenCategories/types'
 import { type TokenProtectionWarning } from 'uniswap/src/features/tokens/warnings/types'
 import type { MarginManageAction } from 'uniswap/src/features/transactions/margin/types'
 import type { SwapFormButtonAction } from 'uniswap/src/features/transactions/swap/types/swapFormButtonAction'
@@ -533,6 +534,9 @@ type InterfaceSearchResultSelectionProperties = {
 
   // Token specific properties
   token_type?: 'token' | 'multichain_token'
+
+  // Auction specific properties; the auction address is `selected_search_result_address`
+  token_address?: string
 } & TokenSafetyAnalyticsProperties &
   ITraceContext
 
@@ -687,13 +691,14 @@ export type LiquidityAnalyticsProperties = ITraceContext & {
   is_permissioned: boolean | undefined
 }
 
-/**
- * Token Provenance surfaces (Auction Info module, TDP <-> ADP navigation). Bounded display dimensions on
- * purpose: wallet addresses, bid or claim amounts and claim eligibility must never be attached.
- */
+/** Token Provenance surfaces (Auction Info module, TDP <-> ADP navigation). */
 export type TokenProvenanceAnalyticsProperties = {
   surface: 'tdp' | 'adp'
   chain_id: number
+  token_address?: string
+  auction_address?: string
+  /** Registry id of the attributed launchpad; `pools` for Crowd and Instant launches. */
+  launchpad?: string
   auction_type: 'crowd' | 'custom' | 'unknown'
   auction_phase: 'loading' | 'unknown' | 'upcoming' | 'live' | 'ended'
   pool_availability: 'has_pool' | 'loading' | 'error' | 'no_pool'
@@ -712,8 +717,17 @@ export type TokenProvenanceAnalyticsProperties = {
   destination?: 'auction_details' | 'pools' | 'explore_auctions'
 }
 
+export type AuctionClaimCardViewedProperties = {
+  surface: 'tdp'
+  chain_id: number
+  token_address: string
+  auction_address: string
+  claim_type: 'claim' | 'refund'
+}
+
 export type AuctionSelectorAnalyticsProperties = {
   chain_id: number
+  token_address: string
   auction_count: number
   entry_point: 'tdp_auction_banner' | 'tdp_other_auctions' | 'tdp_provenance_module'
 }
@@ -1449,12 +1463,15 @@ export type UniverseEventProperties = {
   [AuctionEventName.AuctionBannerViewed]: TokenProvenanceAnalyticsProperties
   [AuctionEventName.ProvenanceModuleViewed]: TokenProvenanceAnalyticsProperties
   [AuctionEventName.ChartEmptyStateViewed]: TokenProvenanceAnalyticsProperties
+  [AuctionEventName.AuctionClaimCardViewed]: AuctionClaimCardViewedProperties
   [AuctionEventName.AuctionTypeExplainerOpened]: {
     launch_method: NonNullable<TokenProvenanceAnalyticsProperties['launch_method']>
+    auction_address?: string
   }
   [AuctionEventName.AuctionSelectorOpened]: AuctionSelectorAnalyticsProperties
   [AuctionEventName.AuctionSelectorAuctionClicked]: {
     chain_id: number
+    auction_address: string
     position_rank: number
     time_remaining_seconds?: number
     auction_status?: 'upcoming' | 'live' | 'ended'
@@ -1603,8 +1620,10 @@ export type UniverseEventProperties = {
     is_from_more_menu?: boolean
     /** Explore category row slot, 0-based: All is 0, More is last. Selections made inside More carry More's slot. */
     tab_position?: number
-    /** Token category chips on the TDP (Collections pills, Related tokens), in the token selector, and row category tags */
+    /** Token category chips on the TDP (Categories pills, Related tokens), in the token selector, and row category tags */
     category_id?: string
+    /** ElementName.TokenRowCategoryTag — which taxonomy the tagged category belongs to */
+    category_kind?: CategoryKind
     tags_rendered_count?: number
     /** Token selector filter chips — whether the press turned the chip on */
     active?: boolean
@@ -1793,6 +1812,7 @@ export type UniverseEventProperties = {
   [SwapEventName.SwapTokensReversed]: undefined
   [UniswapEventName.TooltipOpened]: ITraceContext & {
     tooltip_name: string
+    token_address?: string
   }
   [UniswapEventName.DelegationDetected]: {
     chainId: number

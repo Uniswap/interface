@@ -1,8 +1,8 @@
+import { calculateMinValidBidQ96, isBidBelowMinimum } from '@universe/cca'
 import { useMemo } from 'react'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 import { q96ToPriceString } from '~/features/Toucan/Auction/BidDistributionChart/utils/q96'
-import { calculateMinValidBidQ96, isBidBelowMinimum } from '~/features/Toucan/Auction/utils/ticks'
 
 interface UseMinValidBidParams {
   clearingPriceQ96: bigint | undefined

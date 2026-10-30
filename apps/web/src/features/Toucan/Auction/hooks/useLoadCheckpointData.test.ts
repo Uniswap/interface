@@ -10,7 +10,7 @@ import {
   AuctionDetailsLoadState,
   AuctionOutcome,
 } from '~/features/Toucan/Auction/store/types'
-import { render } from '~/test-utils/render'
+import { act, render, waitFor } from '~/test-utils/render'
 
 const AUCTION_ADDRESS = '0x9D908e12c463e6ae0f074bF3Af56DedeD0cA1949'
 const START_BLOCK = '100'
@@ -19,6 +19,7 @@ const ENDED_BLOCK = 201
 const REQUIRED_CURRENCY_RAISED = '1000'
 /** Above the threshold — a graduated auction, which must never transit a FAILED outcome. */
 const RAISED_ABOVE_TARGET = '1500'
+const RAISED_BELOW_TARGET = '500'
 
 const mockUseQuery = vi.fn()
 
@@ -42,13 +43,15 @@ function queryResult({
   isSuccess = false,
   isError = false,
   error,
+  refetch = vi.fn(),
 }: {
   data?: unknown
   isSuccess?: boolean
   isError?: boolean
   error?: Error
+  refetch?: () => unknown
 }) {
-  return { data, isSuccess, isError, error }
+  return { data, isSuccess, isError, error, refetch }
 }
 
 /** A settled response carrying a checkpoint with the given raised amount. */
@@ -203,5 +206,70 @@ describe('useLoadCheckpointData', () => {
       expect(store.getState().progress.outcome).toBe(AuctionOutcome.GRADUATED)
       expect(outcomes).not.toContain(AuctionOutcome.FAILED)
     })
+  })
+})
+
+describe('final checkpoint when the auction ends', () => {
+  const LIVE_BLOCK = Number(START_BLOCK) + 1
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  function endAuction(store: ReturnType<typeof load>['store'], block = ENDED_BLOCK): void {
+    act(() => store.getState().actions.setCurrentBlockNumberAndUpdateProgress(block))
+  }
+
+  it('refetches exactly once when the page watches the auction end, then stays unpolled', () => {
+    const refetch = vi.fn()
+    mockUseQuery.mockReturnValue(
+      queryResult({ data: { checkpoint: { currencyRaised: '1' } }, isSuccess: true, refetch }),
+    )
+    const { store } = load({ ended: false })
+    expect(refetch).not.toHaveBeenCalled()
+
+    endAuction(store)
+    endAuction(store, ENDED_BLOCK + 1)
+    endAuction(store, ENDED_BLOCK + 2)
+
+    expect(refetch).toHaveBeenCalledTimes(1)
+    const lastOptions = mockUseQuery.mock.lastCall?.[0] as { refetchInterval?: number | false }
+    expect(lastOptions.refetchInterval).toBe(false)
+  })
+
+  it('does not refetch an auction that had already ended when the page loaded', () => {
+    const refetch = vi.fn()
+    mockUseQuery.mockReturnValue(
+      queryResult({ data: { checkpoint: { currencyRaised: '1' } }, isSuccess: true, refetch }),
+    )
+    const { store } = load({ ended: true })
+
+    endAuction(store, ENDED_BLOCK + 1)
+
+    expect(refetch).not.toHaveBeenCalled()
+  })
+
+  it('resolves to GRADUATED when the post-end checkpoint crosses the threshold', async () => {
+    // Real react-query here: with polling off at ENDED, the only way the second response can reach
+    // the store is the transition refetch. The live poll interval (12s on mainnet) outlasts the test.
+    const { useQuery: actualUseQuery } =
+      await vi.importActual<typeof import('@tanstack/react-query')>('@tanstack/react-query')
+    const queryFn = vi
+      .fn()
+      .mockResolvedValueOnce({ checkpoint: { currencyRaised: RAISED_BELOW_TARGET } })
+      .mockResolvedValue({ checkpoint: { currencyRaised: RAISED_ABOVE_TARGET } })
+    mockUseQuery.mockImplementation((options: object) => actualUseQuery({ ...options, queryFn } as never))
+
+    const { store, outcomes } = load({ address: '0x00000000000000000000000000000000000017a9', ended: false })
+    await waitFor(() => expect(store.getState().checkpointData?.currencyRaised).toBe(RAISED_BELOW_TARGET))
+    expect(store.getState().currentBlockNumber).toBe(LIVE_BLOCK)
+
+    endAuction(store)
+
+    await waitFor(() => expect(store.getState().progress.outcome).toBe(AuctionOutcome.GRADUATED))
+    expect(queryFn).toHaveBeenCalledTimes(2)
+    // The stale checkpoint does classify as FAILED for the length of the refetch; what matters is
+    // that it no longer sticks.
+    expect(outcomes.at(-1)).toBe(AuctionOutcome.GRADUATED)
   })
 })

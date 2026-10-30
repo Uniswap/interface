@@ -1,10 +1,9 @@
 import { Text, TouchableArea, heights } from '@universe/mycelium'
-import { useMedia } from '@universe/mycelium/theme-hooks-compat'
+import { useMedia, useShadowPropsMedium } from '@universe/mycelium/theme-hooks-compat'
 import type React from 'react'
 import type { ComponentProps } from 'react'
 import { Popover } from 'ui/src'
 import { AdaptiveWebPopoverContent } from 'ui/src/components/popover/AdaptiveWebPopoverContent'
-import { useShadowPropsMedium } from 'ui/src/theme/shadows'
 import type { ModalNameType } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 

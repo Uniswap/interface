@@ -10,6 +10,7 @@ export enum ElementName {
   AboutPageSwapCard = 'about-page-swap-card',
   AboutPageSwapElement = 'about-page-swap-element',
   AcceptNewRate = 'accept-new-rate',
+  AcceptUpdatedInitialPrice = 'accept-updated-initial-price',
   AccountCard = 'account-card',
   AccountDrawerButton = 'account-drawer-button',
   AccountDrawerClaimReward = 'account-drawer-claim-reward',

@@ -1,8 +1,7 @@
 /**
  * Native leg: children must leave their writing position and appear in the
  * provider's overlay layer, carrying the same resolved z-index the web leg
- * puts on its wrapper. Nothing imports this leg yet (see the note in
- * `Portal.native.tsx`), so these tests are what pins its behavior.
+ * puts on its wrapper.
  */
 import { render, screen } from '@testing-library/react'
 import { createContext, useContext } from 'react'

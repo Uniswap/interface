@@ -31,7 +31,7 @@ const baseProps: AuctionHoverCardContentProps = {
   pricePercentChange: 8.33,
   priceData: [point(1, 1.1354), point(2, 1.23)],
   committedVolumeUsd: 188_800,
-  bidderCount: 982,
+  bidderCount: 16_741,
   loading: false,
   isCopied: false,
   onCopy: vi.fn(),
@@ -50,7 +50,7 @@ describe('AuctionHoverCardContent', () => {
     expect(screen.getByText('FDV')).toBeInTheDocument()
     expect(screen.queryByText('today')).not.toBeInTheDocument()
     expect(screen.getByText('$188.8K committed')).toBeInTheDocument()
-    expect(screen.getByText('982 bidders')).toBeInTheDocument()
+    expect(screen.getByText('16,741 bidders')).toBeInTheDocument()
     expect(screen.getByTestId('hover-card-chart')).toHaveAttribute('data-points', '2')
   })
 
@@ -82,7 +82,7 @@ describe('AuctionHoverCardContent', () => {
     render(<AuctionHoverCardContent {...baseProps} fdvUsd={undefined} pricePercentChange={undefined} priceData={[]} />)
 
     expect(screen.getByText('$188.8K committed')).toBeInTheDocument()
-    expect(screen.getByText('982 bidders')).toBeInTheDocument()
+    expect(screen.getByText('16,741 bidders')).toBeInTheDocument()
     expect(screen.queryByText('$1.2M')).not.toBeInTheDocument()
     // No headline and no series: the stats stand alone rather than under a "chart unavailable" block.
     expect(screen.queryByTestId('hover-card-chart')).not.toBeInTheDocument()

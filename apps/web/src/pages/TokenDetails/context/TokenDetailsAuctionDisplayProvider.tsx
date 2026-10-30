@@ -75,8 +75,16 @@ export function TokenDetailsAuctionDisplayProvider({ children }: { children: Rea
   })
   const display = useMemo(
     () =>
-      resolveTokenDetailsAuctionDisplay({ auction, chainId, currentBlock, currencyRaised, pools, servedProvenance }),
-    [auction, chainId, currentBlock, currencyRaised, pools, servedProvenance],
+      resolveTokenDetailsAuctionDisplay({
+        auction,
+        chainId,
+        currentBlock,
+        currencyRaised,
+        pools,
+        servedProvenance,
+        tokenAddress: address,
+      }),
+    [auction, chainId, currentBlock, currencyRaised, pools, servedProvenance, address],
   )
   const isOnline = useSyncExternalStore(subscribeToOnlineStatus, getOnlineStatus, getOnlineStatus)
   const [initialLoading, setInitialLoading] = useState<InitialAuctionLoading>({ pageKey, pending: undefined })

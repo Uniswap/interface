@@ -1,5 +1,5 @@
 import { getStatsigClient } from '@universe/gating/src/sdk/statsig'
-import { waitForStatsigReady } from '@universe/gating/src/utils'
+import { isOverrideName, namedOverrideEntries, waitForStatsigReady } from '@universe/gating/src/utils'
 import { afterEach, beforeEach, describe, expect, it, type Mock, vi } from 'vitest'
 
 vi.mock('@universe/gating/src/sdk/statsig', () => ({
@@ -116,5 +116,24 @@ describe('waitForStatsigReady', () => {
 
     // Should have cleaned up both the timer and listener
     expect(client.off).toHaveBeenCalledWith('values_updated', expect.any(Function))
+  })
+})
+
+describe('namedOverrideEntries', () => {
+  it('drops the digits-only DJB2 mirror keys and keeps the named overrides', () => {
+    expect(namedOverrideEntries({ gate_a: true, '1234567890': true, gate_b: false, '987654321': false })).toEqual([
+      ['gate_a', true],
+      ['gate_b', false],
+    ])
+  })
+
+  it('keeps a name that merely starts with a digit', () => {
+    expect(isOverrideName('1inch_gate')).toBe(true)
+    expect(isOverrideName('42')).toBe(false)
+    expect(namedOverrideEntries({ '1inch_gate': true, '42': true })).toEqual([['1inch_gate', true]])
+  })
+
+  it('is empty for an empty record', () => {
+    expect(namedOverrideEntries({})).toEqual([])
   })
 })

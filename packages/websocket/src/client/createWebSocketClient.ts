@@ -1,3 +1,4 @@
+import { withConnectionGoneDetection } from '@universe/websocket/src/client/withConnectionGoneDetection'
 import { SubscriptionManager } from '@universe/websocket/src/subscriptions/SubscriptionManager'
 import type {
   ConnectionStatus,
@@ -154,7 +155,10 @@ export function createWebSocketClient<TParams, TMessage>(
     if (!socket || overloadRetryTimer !== null || isLive(socket)) {
       return
     }
-    const dead = socket
+    replaceSocket(socket)
+  }
+
+  function replaceSocket(dead: WebSocketLike): void {
     stopSessionRefreshTimer()
     // Null first: the handlers registered on `dead` gate on `socket ===
     // thisSocket`, so its close event lands after the swap and is ignored.
@@ -188,6 +192,32 @@ export function createWebSocketClient<TParams, TMessage>(
       () => {
         reviveTimer = null
         swapInFreshSocket()
+      },
+      addJitter(0, REVIVE_JITTER_MS),
+    )
+  }
+
+  /** Replaces a socket the server no longer knows, even if it still reads OPEN.
+   * Shares the revive cooldown and jitter: a server-side lapse reaches every tab at once. */
+  function retireGoneConnection(connectionId: string): void {
+    if (!socket || connectionId !== subscriptionManager.getConnectionId()) {
+      return
+    }
+    if (overloadRetryTimer !== null || reviveTimer !== null) {
+      return
+    }
+    const now = Date.now()
+    if (now - lastReviveAt < REVIVE_COOLDOWN_MS) {
+      return
+    }
+    lastReviveAt = now
+    const gone = socket
+    reviveTimer = setTimeout(
+      () => {
+        reviveTimer = null
+        if (socket === gone) {
+          replaceSocket(gone)
+        }
       },
       addJitter(0, REVIVE_JITTER_MS),
     )
@@ -251,9 +281,9 @@ export function createWebSocketClient<TParams, TMessage>(
 
   // Subscription manager handles all subscription logic
   const subscriptionManager = new SubscriptionManager<TParams, TMessage>({
-    handler: subscriptionHandler,
+    handler: withConnectionGoneDetection(subscriptionHandler, retireGoneConnection),
     createKey: createSubscriptionKey,
-    onError: (error) => onError?.(error),
+    onError: (error, operation) => onError?.(error, operation),
     onSubscriptionCountChange: (count): void => {
       if (count > 0) {
         // Cancel any pending disconnect — new subscriptions arrived

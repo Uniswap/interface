@@ -10,7 +10,7 @@ export type TableScrollButtonProps = {
 
 export function TableScrollButton({ onPress, direction }: TableScrollButtonProps): JSX.Element {
   return (
-    <TouchableArea onPress={onPress}>
+    <TouchableArea onPress={onPress} data-table-scroll-button>
       <Flex
         boxShadow="0 0 20px 0 rgba(0, 0, 0, 0.1)"
         borderRadius="$roundedFull"

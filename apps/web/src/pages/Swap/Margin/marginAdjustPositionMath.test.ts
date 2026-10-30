@@ -1,4 +1,5 @@
 import type { MarginActivePosition } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
+import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { describe, expect, it } from 'vitest'
 import {
   currentEquityRawFromPosition,
@@ -8,11 +9,11 @@ import {
 
 // LONG: collateral 3 WETH, debt 6000 USDC, mark 3000. LTV = 6000/(3·3000) = 0.667, so the balance
 // sheet — and a long's exposure — is 1/(1−0.667) = 3.
-const LONG_BASE = { collateral: 3, debt: 6000, mark: 3000, direction: 'LONG' as const }
+const LONG_BASE = { collateral: 3, debt: 6000, mark: 3000, direction: MarginDirection.LONG }
 
 // SHORT: collateral 2000 USDC (stable leg), debt 0.5 WETH (volatile leg), mark 2000 (pre-inverted).
 // LTV = (0.5·2000)/2000 = 0.5, a balance-sheet 2x — which carries exactly 1x of exposure.
-const SHORT_BASE = { collateral: 2000, debt: 0.5, mark: 2000, direction: 'SHORT' as const }
+const SHORT_BASE = { collateral: 2000, debt: 0.5, mark: 2000, direction: MarginDirection.SHORT }
 
 describe('driftLeverageForEquityDelta', () => {
   it('matches the current leverage at deltaCollateral 0 (LONG)', () => {

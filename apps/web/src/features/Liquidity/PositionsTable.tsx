@@ -2,7 +2,7 @@
 
 import { createColumnHelper } from '@tanstack/react-table'
 import type { PositionStatus } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
-import { Flex, Text, TouchableArea } from '@universe/mycelium'
+import { Flex, Text, TouchableArea, useMedia } from '@universe/mycelium'
 import { TestID } from '@universe/test'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -14,19 +14,13 @@ import { getPoolDetailsURL } from 'uniswap/src/utils/linking'
 import { useEvent } from 'utilities/src/react/hooks'
 import { Table } from '~/components/Table'
 import { Cell } from '~/components/Table/Cell'
-import { HeaderArrow, HeaderSortText } from '~/components/Table/shared/SortableHeader'
-import { HeaderCell } from '~/components/Table/styled'
-import {
-  getColumnLabel,
-  type ColumnId,
-  type PositionSort,
-  type PositionSortField,
-} from '~/features/Liquidity/PositionsTableColumns'
+import { type ColumnId, type PositionSort, type PositionSortField } from '~/features/Liquidity/PositionsTableColumns'
 import {
   hasActiveControlBarFilter,
   PositionsTableControlBar,
   type PositionsTableControlBarProps,
 } from '~/features/Liquidity/PositionsTableControlBar'
+import { HeaderLabel } from '~/features/Liquidity/PositionsTableHeaderLabel'
 import {
   AprCellContent,
   CreatedCellContent,
@@ -41,6 +35,7 @@ import { useAppHeaderHeight } from '~/hooks/useAppHeaderHeight'
 import { useScrollClampGuard } from '~/hooks/useScrollClampGuard'
 
 const ROW_HEIGHT = 64
+const POOL_COLUMN_SIZE_PX = 204
 const TABLE_MAX_WIDTH = 1200
 const NO_OMITTED_COLUMNS: readonly ColumnId[] = []
 // Trimmed from the pool page's positions table, which reads as a compact summary beneath the pool's
@@ -88,47 +83,6 @@ interface PositionsTableProps extends PositionsTableControlBarProps, PositionsSo
   readOnly?: boolean
 }
 
-type CellAlign = 'flex-start' | 'flex-end' | 'center'
-
-function HeaderLabel({
-  id,
-  align,
-  sortField,
-  sort,
-  onSort,
-}: {
-  id: ColumnId
-  align: CellAlign
-  sortField?: PositionSortField
-  sort?: PositionSort
-  onSort?: (field: PositionSortField) => void
-}): JSX.Element {
-  const { t } = useTranslation()
-  const label = getColumnLabel(id, t)
-
-  if (!sortField || !onSort) {
-    return (
-      <HeaderCell justifyContent={align}>
-        <Text variant="body3" color="$neutral2" userSelect="none">
-          {label}
-        </Text>
-      </HeaderCell>
-    )
-  }
-
-  const isActive = sort?.field === sortField
-  return (
-    <HeaderCell justifyContent={align} clickable>
-      <TouchableArea hoverable onPress={() => onSort(sortField)}>
-        <Flex row alignItems="center" gap="$spacing4" justifyContent={align}>
-          {isActive && <HeaderArrow orderDirection={sort.direction} size="$icon.16" />}
-          <HeaderSortText active={isActive}>{label}</HeaderSortText>
-        </Flex>
-      </TouchableArea>
-    </HeaderCell>
-  )
-}
-
 function usePositionsTableColumns({
   loading,
   sort,
@@ -144,10 +98,10 @@ function usePositionsTableColumns({
 }) {
   return useMemo(() => {
     const columnHelper = createColumnHelper<PositionRow>()
-    const columns = [
+    const allColumns = [
       columnHelper.display({
         id: 'pool' satisfies ColumnId,
-        size: 204,
+        size: POOL_COLUMN_SIZE_PX,
         header: () => <HeaderLabel id="pool" align="flex-start" />,
         cell: (info) => {
           const position = info.row?.original?.position
@@ -244,7 +198,7 @@ function usePositionsTableColumns({
     ]
     // Callers drop the columns their surrounding page already answers, which also buys back the
     // row width they took (the pool-scoped table sheds 336px this way and stops side-scrolling).
-    return columns.filter((column) => !omittedColumns.some((id) => id === column.id))
+    return allColumns.filter((column) => !omittedColumns.some((id) => id === column.id))
   }, [loading, sort, onSort, readOnly, omittedColumns])
 }
 
@@ -279,8 +233,15 @@ function PositionsTableBase({
   const { t } = useTranslation()
   // Rows sit behind the error modal as static skeletons, so the cells must render in their loading
   // state when either loading or errored (matches PoolTable).
-  const columns = usePositionsTableColumns({ loading: loading || !!error, sort, onSort, readOnly, omittedColumns })
+  const columns = usePositionsTableColumns({
+    loading: loading || !!error,
+    sort,
+    onSort,
+    readOnly,
+    omittedColumns,
+  })
 
+  const media = useMedia()
   const headerHeight = useAppHeaderHeight()
   // A shorter filtered result would otherwise clamp the window scroll and read as a jump to the
   // top; the guard reserves min-height while the user is scrolled into the list.
@@ -345,6 +306,7 @@ function PositionsTableBase({
           loadingRowsCount={5}
           loadMore={loadMore}
           windowScrollY
+          collapsiblePinnedColumnId={media.lg ? 'pool' : undefined}
         />
       </Flex>
     </Flex>

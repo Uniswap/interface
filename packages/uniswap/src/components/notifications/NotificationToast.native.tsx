@@ -1,8 +1,7 @@
-import { spacing } from '@universe/mycelium'
+import { spacing, AnimatedFlex } from '@universe/mycelium'
 import { useCallback, useMemo } from 'react'
 import { Directions, FlingGestureHandler, FlingGestureHandlerGestureEvent, State } from 'react-native-gesture-handler'
 import { useAnimatedStyle, useSharedValue, withDelay, withSpring } from 'react-native-reanimated'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import type { NotificationToastProps } from 'uniswap/src/components/notifications/NotificationToast'
 import { NotificationToastContent } from 'uniswap/src/components/notifications/NotificationToastContent'
 import {

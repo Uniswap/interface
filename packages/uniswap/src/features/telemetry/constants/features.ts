@@ -119,11 +119,11 @@ export enum AuctionEventName {
   AuctionCreateSubmitted = 'Auction Create Submitted',
   AuctionCreateFailed = 'Auction Create Failed',
   AuctionCreateCompleted = 'Auction Create Completed',
-  // Token Provenance: the TDP Auction Info module and TDP <-> ADP navigation. Payloads are the closed
-  // TokenProvenanceAnalyticsProperties set, never wallet, bid or claim data.
+  // Token Provenance: the TDP Auction Info module, TDP <-> ADP navigation and the TDP claim card.
   AuctionBannerViewed = 'Auction Banner Viewed',
   ProvenanceModuleViewed = 'Provenance Module Viewed',
   ChartEmptyStateViewed = 'Chart Empty State Viewed',
+  AuctionClaimCardViewed = 'Auction Claim Card Viewed',
   AuctionTypeExplainerOpened = 'Auction Type Explainer Opened',
   AuctionSelectorOpened = 'Auction Selector Opened',
   AuctionSelectorAuctionClicked = 'Auction Selector Auction Clicked',

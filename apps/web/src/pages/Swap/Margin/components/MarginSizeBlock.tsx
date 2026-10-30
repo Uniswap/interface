@@ -1,8 +1,9 @@
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
 import type { ColorTokens } from '@universe/mycelium'
+import { HeightAnimator } from '@universe/mycelium/height-animator'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { HeightAnimator, Popover, Separator } from 'ui/src'
+import { Popover, Separator } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { Sliders } from 'ui/src/components/icons/Sliders'
 import { X } from 'ui/src/components/icons/X'
@@ -14,6 +15,7 @@ import {
   useMarginFormStore,
   useMarginFormStoreActions,
 } from 'uniswap/src/features/transactions/margin/stores/marginFormStore/useMarginFormStore'
+import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
 import { MARGIN_CHAIN_ID } from '~/constants/margin'
@@ -129,7 +131,7 @@ export function MarginSizeBlock({ derivedMarginInfo }: { derivedMarginInfo: Deri
   const debtLogoUrl = getMarginCurrencyInfo({ currencyInfos, currencyId: marginTokenCurrencyId(market.debt) })?.logoUrl
 
   // display.size is denominated in the exposure leg — a short's is its debt leg, a long's its collateral.
-  const isShort = direction === 'SHORT'
+  const isShort = direction === MarginDirection.SHORT
   const exposureSymbol = isShort ? marginUnwrapSymbol(market.debt) : market.displaySymbol
   const exposureLogoUrl = isShort ? debtLogoUrl : collateralLogoUrl
   const notional =

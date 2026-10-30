@@ -57,10 +57,7 @@ export function computeIsGraduated({
   return raised >= required
 }
 
-/**
- * Derives the explicit auction outcome. There is no failure flag on-chain or in the API:
- * a failed launch is an ended auction that never graduated.
- */
+/** Derives the explicit auction outcome: a failed launch is an ended auction that never graduated. */
 function computeOutcome({
   state,
   hasMetThreshold,
@@ -134,11 +131,15 @@ export function computeAuctionProgress({
     }
   }
 
-  // Graduation occurs when currencyRaised >= requiredCurrencyRaised; undefined until both load.
-  const hasMetThreshold = computeIsGraduated({
-    currencyRaised: checkpointData?.currencyRaised,
-    requiredCurrencyRaised: auctionDetails?.requiredCurrencyRaised,
-  })
+  // Graduation occurs when currencyRaised >= requiredCurrencyRaised; undefined until both load. Once the
+  // auction ends, the contract's served verdict outranks a checkpoint that can lag or fail, and keeps
+  // every surface on the same answer as resolveAuctionResult.
+  const hasMetThreshold =
+    (state === AuctionProgressState.ENDED ? auctionDetails?.isGraduated : undefined) ??
+    computeIsGraduated({
+      currencyRaised: checkpointData?.currencyRaised,
+      requiredCurrencyRaised: auctionDetails?.requiredCurrencyRaised,
+    })
 
   const checkpointSettledEmpty = checkpointLoadState === AuctionCheckpointLoadState.Success && !checkpointData
 
@@ -151,5 +152,9 @@ export function computeAuctionProgress({
     // and `outcome` are the fields that distinguish undecided from genuinely below target.
     isGraduated: hasMetThreshold === true,
     outcome: computeOutcome({ state, hasMetThreshold, checkpointSettledEmpty }),
+    isFinalPricePending:
+      state === AuctionProgressState.ENDED &&
+      !checkpointData &&
+      checkpointLoadState !== AuctionCheckpointLoadState.Success,
   }
 }

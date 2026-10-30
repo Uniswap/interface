@@ -1,8 +1,7 @@
 /**
  * Behavior contract for the RefreshButton compat web leg (INFRA-3489),
- * asserted on the rendered DOM. The legacy reference is
- * `ui/src/components/RefreshButton/RefreshButton.web.tsx` +
- * `RefreshButtonIcon.tsx` + `ui/src/loading/RefreshIcon.web.tsx`.
+ * asserted on the rendered DOM. The "legacy" behaviors below are those of the
+ * deleted `ui/src` RefreshButton this compat replaced.
  *
  * Resolution note: this suite imports the base specifier; the mycelium vitest
  * config resolves `.web.tsx` first, so the web leg is what renders here.

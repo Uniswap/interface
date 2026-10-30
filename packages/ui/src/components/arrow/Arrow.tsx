@@ -1,8 +1,8 @@
+import { useSporeColors } from '@universe/mycelium'
 import { memo } from 'react'
 import { IconProps } from 'ui/src/components/factories/createIcon'
 import { resolveIconColor } from 'ui/src/components/factories/iconTokens'
 import { ArrowDown } from 'ui/src/components/icons/ArrowDown'
-import { useSporeColors } from 'ui/src/hooks/useSporeColors'
 
 type Direction = 'n' | 'e' | 's' | 'w' | 'ne' | 'se'
 

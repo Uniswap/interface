@@ -2,7 +2,7 @@ import { Flex, fonts, Text } from '@universe/mycelium'
 import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { CategoryDescriptionText } from 'uniswap/src/features/tokenCategories/CategoryDescriptionText'
-import { getTokenCategoryIcon } from 'uniswap/src/features/tokenCategories/categoryIcons'
+import { getCategoryIcon } from 'uniswap/src/features/tokenCategories/categoryIcons'
 import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
 import { LoadingBubble } from '~/components/Tokens/loading'
 import { InlineLearnMoreLink } from '~/pages/Explore/categories/InlineLearnMoreLink'
@@ -15,7 +15,7 @@ function renderLearnMoreLink(label: string): JSX.Element {
 }
 
 export function CategoryDetailsHeader({ category }: { category: TokenCategory }): JSX.Element {
-  const Icon = getTokenCategoryIcon(category)
+  const Icon = getCategoryIcon(category)
 
   return (
     <Flex row gap="$spacing16" alignItems="flex-start" width="100%">

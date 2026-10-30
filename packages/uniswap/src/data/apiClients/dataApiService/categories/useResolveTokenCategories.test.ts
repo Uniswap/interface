@@ -4,14 +4,14 @@ import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
 import { tokenCategory } from 'uniswap/src/test/fixtures/tokenCategory'
 
 const mockUseAllTokenCategories = vi.fn()
-const mockUseTokenCategoryOrder = vi.fn()
+const mockUseCategoryOrder = vi.fn()
 
 vi.mock('uniswap/src/data/apiClients/dataApiService/categories/useAllTokenCategories', () => ({
   useAllTokenCategories: (): unknown => mockUseAllTokenCategories(),
 }))
 
-vi.mock('uniswap/src/features/tokenCategories/useTokenCategoryOrder', () => ({
-  useTokenCategoryOrder: (categories: TokenCategory[]): unknown => mockUseTokenCategoryOrder(categories),
+vi.mock('uniswap/src/features/tokenCategories/useCategoryOrder', () => ({
+  useCategoryOrder: ({ categories }: { categories: TokenCategory[] }): unknown => mockUseCategoryOrder(categories),
 }))
 
 const defi = tokenCategory({ id: 'defi', name: 'DeFi' })
@@ -23,7 +23,7 @@ function mockAllCategories({ isLoading }: { isLoading: boolean }): void {
 describe('useResolveTokenCategories', () => {
   beforeEach(() => {
     mockAllCategories({ isLoading: false })
-    mockUseTokenCategoryOrder.mockImplementation((categories: TokenCategory[]) => categories)
+    mockUseCategoryOrder.mockImplementation((categories: TokenCategory[]) => categories)
   })
 
   afterEach(() => {
@@ -43,9 +43,9 @@ describe('useResolveTokenCategories', () => {
   })
 
   it('applies the canonical order (ListCategories order, then Statsig pins), not the token’s own id order', () => {
-    mockUseTokenCategoryOrder.mockImplementation((categories: TokenCategory[]) => [...categories].reverse())
+    mockUseCategoryOrder.mockImplementation((categories: TokenCategory[]) => [...categories].reverse())
     const { result } = renderHook(() => useResolveTokenCategories({ categoryIds: ['stocks', 'defi'] }))
-    expect(mockUseTokenCategoryOrder).toHaveBeenLastCalledWith([defi, stocks])
+    expect(mockUseCategoryOrder).toHaveBeenLastCalledWith([defi, stocks])
     expect(result.current.categories).toEqual([stocks, defi])
   })
 

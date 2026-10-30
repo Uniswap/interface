@@ -1,7 +1,7 @@
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { calculateMaxValidBidQ96 } from '@universe/cca'
 import { q96ToRawAmount } from '~/features/Toucan/Auction/BidDistributionChart/utils/q96'
 import { evaluateMaxPrice } from '~/features/Toucan/Auction/utils/evaluateMaxPrice'
-import { calculateMaxValidBidQ96 } from '~/features/Toucan/Auction/utils/ticks'
 
 // Sepolia auction 0xA91986C3…, the first deployment carrying a MaxBidPriceValidationHook.
 // Floor 1e-08/token, tick 1e-10/token, ceiling 1e-06/token — 9900 ticks above the floor.

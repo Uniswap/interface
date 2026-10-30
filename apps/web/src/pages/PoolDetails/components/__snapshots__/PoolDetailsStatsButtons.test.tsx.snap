@@ -8,24 +8,34 @@ exports[`PoolDetailsStatsButton > loading skeleton shown correctly 1`] = `
   >
     <div
       class="flex items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row w-[var(--c-w)]"
-      style="--c-w: 50%; animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
+      style="--c-w: 50%;"
     >
       <div
-        class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[24px] rounded-[12px] [background:var(--c-b)]"
-        style="--c-w: 95%; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
-      />
+        class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+        style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+      >
+        <div
+          class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[24px] rounded-[12px] [background:var(--c-b)]"
+          style="--c-w: 95%; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
+        />
+      </div>
     </div>
     <span
       class="flex flex-col items-stretch basis-auto box-border relative shrink-0 w-[6px] h-[6px] min-w-[6px] min-h-[6px] [pointer-events:none]"
     />
     <div
       class="flex items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row w-[var(--c-w)]"
-      style="--c-w: 50%; animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
+      style="--c-w: 50%;"
     >
       <div
-        class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[24px] rounded-[12px] [background:var(--c-b)]"
-        style="--c-w: 95%; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
-      />
+        class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+        style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+      >
+        <div
+          class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[24px] rounded-[12px] [background:var(--c-b)]"
+          style="--c-w: 95%; --c-b: linear-gradient(to left, rgba(19, 19, 19, 0.08) 25%, rgba(38,38,38,0.08) 50%, rgba(19, 19, 19, 0.08) 75%);"
+        />
+      </div>
     </div>
   </div>
 </DocumentFragment>

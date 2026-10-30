@@ -40,7 +40,7 @@ test.describe(
     test('should go to the selected result when recent results are shown', async ({ page }) => {
       await page.getByTestId(TestID.NavSearchIcon).click()
       await expect(page.getByTestId(`section-header-${OnchainItemSectionName.RecentSearches}`)).toBeVisible()
-      await expect(page.getByTestId(`token-option-${UNI[1].chainId}-${UNI[1].symbol}`)).toBeVisible()
+      await expect(page.getByRole('button', { name: UNI[1].symbol, exact: true })).toBeVisible()
     })
 
     test('should clear recent searches when the clear button is clicked', async ({ page }) => {

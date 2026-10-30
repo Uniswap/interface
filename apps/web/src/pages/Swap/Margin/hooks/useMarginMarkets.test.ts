@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react'
 import type { MarginMarketRow, MarginMarketsResponse } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
 import { marginPairKey } from 'uniswap/src/features/transactions/margin/marginPairKey'
-import type { MarginDirection, MarginVenue } from 'uniswap/src/features/transactions/margin/types'
+import { MarginDirection, type MarginVenue } from 'uniswap/src/features/transactions/margin/types'
 import { shortenAddress } from 'utilities/src/addresses'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { marginMarketKey, type MarginMarket, type MarginPairGroup, type MarginTokenInfo } from '~/constants/margin'
@@ -68,19 +68,19 @@ function marketFixture({
   }
 }
 
-const longWethUsdc = marketFixture({ collateral: WETH, debt: USDC, direction: 'LONG', venue: 'MORPHO' })
-const shortWethUsdc = marketFixture({ collateral: USDC, debt: WETH, direction: 'SHORT', venue: 'MORPHO' })
-const morphoWethUsdc = marketFixture({ collateral: WETH, debt: USDC, direction: 'LONG', venue: 'MORPHO' })
-const aaveWethUsdc = marketFixture({ collateral: WETH, debt: USDC, direction: 'LONG', venue: 'AAVE_V3' })
-const longCbbtcUsdc = marketFixture({ collateral: CBBTC, debt: USDC, direction: 'LONG', venue: 'MORPHO' })
+const longWethUsdc = marketFixture({ collateral: WETH, debt: USDC, direction: MarginDirection.LONG, venue: 'MORPHO' })
+const shortWethUsdc = marketFixture({ collateral: USDC, debt: WETH, direction: MarginDirection.SHORT, venue: 'MORPHO' })
+const morphoWethUsdc = marketFixture({ collateral: WETH, debt: USDC, direction: MarginDirection.LONG, venue: 'MORPHO' })
+const aaveWethUsdc = marketFixture({ collateral: WETH, debt: USDC, direction: MarginDirection.LONG, venue: 'AAVE_V3' })
+const longCbbtcUsdc = marketFixture({ collateral: CBBTC, debt: USDC, direction: MarginDirection.LONG, venue: 'MORPHO' })
 // Same exposure leg as longWethUsdc, different counter leg — the D23 shape.
-const longWethUsdt = marketFixture({ collateral: WETH, debt: USDT, direction: 'LONG', venue: 'MORPHO' })
+const longWethUsdt = marketFixture({ collateral: WETH, debt: USDT, direction: MarginDirection.LONG, venue: 'MORPHO' })
 
 describe('groupMarketsIntoPairs', () => {
   it('splits a long and a short of the same pair into two groups', () => {
     const groups = groupMarketsIntoPairs({ markets: [longWethUsdc, shortWethUsdc], liveByKey: new Map() })
     expect(groups).toHaveLength(2)
-    expect(groups.map((g) => g.direction).sort()).toEqual(['LONG', 'SHORT'])
+    expect(groups.map((g) => g.direction).sort()).toEqual([MarginDirection.LONG, MarginDirection.SHORT])
   })
 
   it('keeps two venues of one pair in a single group', () => {
@@ -130,8 +130,8 @@ describe('groupMarketsIntoPairs', () => {
       [shortWethUsdc, longWethUsdc],
     ]) {
       expect(groupMarketsIntoPairs({ markets, liveByKey: new Map() }).map((group) => group.direction)).toEqual([
-        'LONG',
-        'SHORT',
+        MarginDirection.LONG,
+        MarginDirection.SHORT,
       ])
     }
   })
@@ -151,8 +151,8 @@ function rowFixture({
   // One row now covers a whole pair; pass several to exercise the per-venue expansion.
   venues?: Array<{ venue: MarginVenue; maxLeverage: string }>
 }): MarginMarketRow {
-  const exposure = direction === 'SHORT' ? debt : collateral
-  const counter = direction === 'SHORT' ? collateral : debt
+  const exposure = direction === MarginDirection.SHORT ? debt : collateral
+  const counter = direction === MarginDirection.SHORT ? collateral : debt
   return {
     exposureToken: { address: exposure.address, chainId: 1, decimals: exposure.decimals },
     counterToken: { address: counter.address, chainId: 1, decimals: counter.decimals },
@@ -172,7 +172,7 @@ function rowFixture({
   }
 }
 
-const WETH_USDC_ROW = rowFixture({ collateral: WETH, debt: USDC, venue: 'MORPHO', direction: 'LONG' })
+const WETH_USDC_ROW = rowFixture({ collateral: WETH, debt: USDC, venue: 'MORPHO', direction: MarginDirection.LONG })
 
 const LIVE_RESPONSE: MarginMarketsResponse = { requestId: 'req-1', markets: [WETH_USDC_ROW] }
 
@@ -219,7 +219,7 @@ describe('useMarginMarkets', () => {
   // Currency-info can only be requested once this response names its tokens, so every market renders
   // at least once with no symbols resolved. A raw wire address must never stand in for a symbol.
   it('degrades symbols to shortened addresses while currency-info is unresolved', () => {
-    mockRows([rowFixture({ collateral: CBBTC, debt: USDC, venue: 'MORPHO', direction: 'LONG' })])
+    mockRows([rowFixture({ collateral: CBBTC, debt: USDC, venue: 'MORPHO', direction: MarginDirection.LONG })])
     const { result } = renderHook(() => useMarginMarkets())
     const [market] = result.current.markets
     const shortCollateral = shortenAddress({ address: CBBTC.address })
@@ -234,18 +234,18 @@ describe('useMarginMarkets', () => {
 
   it("orders a pair's long before its short regardless of wire order", () => {
     mockRows([
-      rowFixture({ collateral: USDC, debt: WETH, venue: 'MORPHO', direction: 'SHORT' }),
-      rowFixture({ collateral: WETH, debt: USDC, venue: 'MORPHO', direction: 'LONG' }),
+      rowFixture({ collateral: USDC, debt: WETH, venue: 'MORPHO', direction: MarginDirection.SHORT }),
+      rowFixture({ collateral: WETH, debt: USDC, venue: 'MORPHO', direction: MarginDirection.LONG }),
     ])
     const { result } = renderHook(() => useMarginMarkets())
-    expect(result.current.markets.map((m) => m.direction)).toEqual(['LONG', 'SHORT'])
+    expect(result.current.markets.map((m) => m.direction)).toEqual([MarginDirection.LONG, MarginDirection.SHORT])
   })
 
   // Which asset leads is the server's call now, not a client address list — the payload's row order
   // is the ranking, so listing a new asset first is enough to surface it first.
   it('ranks base tokens by where the payload first mentions them', () => {
-    const cbbtcRow = rowFixture({ collateral: CBBTC, debt: USDC, venue: 'MORPHO', direction: 'LONG' })
-    const wethRow = rowFixture({ collateral: WETH, debt: USDC, venue: 'MORPHO', direction: 'LONG' })
+    const cbbtcRow = rowFixture({ collateral: CBBTC, debt: USDC, venue: 'MORPHO', direction: MarginDirection.LONG })
+    const wethRow = rowFixture({ collateral: WETH, debt: USDC, venue: 'MORPHO', direction: MarginDirection.LONG })
     mockRows([cbbtcRow, wethRow])
     const { result, rerender } = renderHook(() => useMarginMarkets())
     expect(result.current.groups.map((group) => group.base.address)).toEqual([CBBTC.address, WETH.address])
@@ -259,17 +259,17 @@ describe('useMarginMarkets', () => {
   // cold load lands on. The short arrives FIRST on the wire and still loses to its long.
   it('pins the auto-adopted default to the leading pair group, long side', () => {
     mockRows([
-      rowFixture({ collateral: USDC, debt: WETH, venue: 'MORPHO', direction: 'SHORT' }),
-      rowFixture({ collateral: CBBTC, debt: USDC, venue: 'MORPHO', direction: 'LONG' }),
-      rowFixture({ collateral: WETH, debt: USDC, venue: 'MORPHO', direction: 'LONG' }),
-      rowFixture({ collateral: WETH, debt: USDT, venue: 'MORPHO', direction: 'LONG' }),
+      rowFixture({ collateral: USDC, debt: WETH, venue: 'MORPHO', direction: MarginDirection.SHORT }),
+      rowFixture({ collateral: CBBTC, debt: USDC, venue: 'MORPHO', direction: MarginDirection.LONG }),
+      rowFixture({ collateral: WETH, debt: USDC, venue: 'MORPHO', direction: MarginDirection.LONG }),
+      rowFixture({ collateral: WETH, debt: USDT, venue: 'MORPHO', direction: MarginDirection.LONG }),
     ])
     const { result } = renderHook(() => useMarginMarkets())
     expect(result.current.groups.map(groupShape)).toEqual([
-      ['WETH', 'USDC', 'LONG'],
-      ['WETH', 'USDC', 'SHORT'],
-      ['WETH', 'USDT', 'LONG'],
-      ['cbBTC', 'USDC', 'LONG'],
+      ['WETH', 'USDC', MarginDirection.LONG],
+      ['WETH', 'USDC', MarginDirection.SHORT],
+      ['WETH', 'USDT', MarginDirection.LONG],
+      ['cbBTC', 'USDC', MarginDirection.LONG],
     ])
     expect(result.current.groups.at(0)?.pairKey).toBe(
       marginPairKey({ collateralToken: WETH.address, debtToken: USDC.address }),
@@ -286,8 +286,8 @@ describe('useMarginMarkets', () => {
   // through the hook, each with its own pairKey.
   it('keeps one exposure token listed against two counter tokens as two groups', () => {
     mockRows([
-      rowFixture({ collateral: WETH, debt: USDC, venue: 'MORPHO', direction: 'LONG' }),
-      rowFixture({ collateral: WETH, debt: USDT, venue: 'AAVE_V3', direction: 'LONG' }),
+      rowFixture({ collateral: WETH, debt: USDC, venue: 'MORPHO', direction: MarginDirection.LONG }),
+      rowFixture({ collateral: WETH, debt: USDT, venue: 'AAVE_V3', direction: MarginDirection.LONG }),
     ])
     const { result } = renderHook(() => useMarginMarkets())
     expect(result.current.groups).toHaveLength(2)
@@ -300,8 +300,8 @@ describe('useMarginMarkets', () => {
 
   it('orders two venues of one pair by venue', () => {
     mockRows([
-      rowFixture({ collateral: WETH, debt: USDC, venue: 'MORPHO', direction: 'LONG' }),
-      rowFixture({ collateral: WETH, debt: USDC, venue: 'AAVE_V3', direction: 'LONG' }),
+      rowFixture({ collateral: WETH, debt: USDC, venue: 'MORPHO', direction: MarginDirection.LONG }),
+      rowFixture({ collateral: WETH, debt: USDC, venue: 'AAVE_V3', direction: MarginDirection.LONG }),
     ])
     const { result } = renderHook(() => useMarginMarkets())
     expect(result.current.markets.map((m) => m.venue)).toEqual(['AAVE_V3', 'MORPHO'])
@@ -315,7 +315,7 @@ describe('useMarginMarkets', () => {
         collateral: WETH,
         debt: USDC,
         venue: 'MORPHO',
-        direction: 'LONG',
+        direction: MarginDirection.LONG,
         venues: [
           { venue: 'MORPHO', maxLeverage: '3' },
           { venue: 'AAVE_V3', maxLeverage: '5.5' },
@@ -335,7 +335,7 @@ describe('useMarginMarkets', () => {
         collateral: WETH,
         debt: USDC,
         venue: 'MORPHO',
-        direction: 'LONG',
+        direction: MarginDirection.LONG,
         venues: [
           { venue: 'MORPHO', maxLeverage: '3' },
           { venue: 'AAVE_V3', maxLeverage: '5' },
@@ -356,7 +356,7 @@ describe('useMarginMarkets', () => {
         collateral: WETH,
         debt: USDC,
         venue: 'MORPHO',
-        direction: 'LONG',
+        direction: MarginDirection.LONG,
         venues: [
           { venue: 'MORPHO', maxLeverage: '3' },
           { venue: 'COMPOUND_V3', maxLeverage: '4' },
@@ -402,7 +402,7 @@ describe('useMarginMarkets', () => {
         collateral: WETH,
         debt: USDC,
         venue: 'MORPHO',
-        direction: 'LONG',
+        direction: MarginDirection.LONG,
         venues: [
           { venue: 'MORPHO', maxLeverage: '3' },
           { venue: 'AAVE_V3', maxLeverage: '5' },
@@ -426,7 +426,7 @@ describe('useMarginMarkets', () => {
         collateral: WETH,
         debt: USDC,
         venue: 'AAVE_V3',
-        direction: 'LONG',
+        direction: MarginDirection.LONG,
         venues: [{ venue: 'AAVE_V3', maxLeverage: '5' }],
       }),
     ])

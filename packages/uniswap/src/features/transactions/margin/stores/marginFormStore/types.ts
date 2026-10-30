@@ -1,14 +1,14 @@
 import type {
+  MarginDirection,
   MarginPairKey,
   MarginPaymentToken,
-  MarginSide,
   MarginVenue,
 } from 'uniswap/src/features/transactions/margin/types'
 
 export interface MarginFormState {
   // Venue-free: the form picks a market pair, the server routes it over the allowlist.
   pairKey: MarginPairKey
-  side: MarginSide
+  side: MarginDirection
   // Raw user-entered payment amount, in payment-token display units.
   marginAmount: string
   leverage: number

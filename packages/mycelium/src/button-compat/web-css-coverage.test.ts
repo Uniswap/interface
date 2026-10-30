@@ -63,7 +63,7 @@
  * is the only mycelium consumer whose coverage is a bare `@source` line — the
  * positional, silently-breakable mechanism the assertion exists to hold. The
  * other consumers (apps/dev-portal, apps/mission-control, labs/workbench,
- * labs/rh-cca) get theirs from `content` globs in a `@config` JS config instead,
+ * apps/pools-xyz) get theirs from `content` globs in a `@config` JS config instead,
  * which is a different mechanism to pin (and one `compile()` cannot evaluate
  * without a module loader); pinning those belongs with whoever owns those
  * entries. Reading a consumer file by path keeps this a one-way dependency:

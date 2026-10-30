@@ -1,10 +1,9 @@
 import { isWebPlatform } from '@universe/environment'
-import { Text, type TextCompatProps as TextProps } from '@universe/mycelium'
+import { Text, type TextCompatProps as TextProps, AnimatedFlex, type AnimatedFlexProps } from '@universe/mycelium'
 import { fonts, spacing } from '@universe/mycelium/tokens'
 import { withSporeCurve } from '@universe/tailwind/animations/reanimated'
 import type { EntryExitAnimationFunction } from 'react-native-reanimated'
 import { Unitag } from 'ui/src/components/icons/Unitag'
-import { AnimatedFlex, type AnimatedFlexProps } from 'ui/src/components/layout/AnimatedFlex'
 import { UNITAG_SUFFIX } from 'uniswap/src/features/unitags/constants'
 
 export function UnitagName({
@@ -24,8 +23,6 @@ export function UnitagName({
   displayUnitagSuffix?: boolean
   textProps?: TextProps
 }): JSX.Element {
-  // Typed against AnimatedFlex's own props: it still takes the legacy prop surface, which the
-  // mycelium compat types don't satisfy.
   const iconContainerProps: AnimatedFlexProps = displayIconInline
     ? {}
     : {

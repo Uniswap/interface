@@ -1,9 +1,9 @@
-// Pins the glyph box and colour `IconButton.web.tsx` clones onto its `icon`. The compat's web
-// leg hands `icon` through untouched and sizes it with a `[&_svg]:size-[<px>px]` wrapper class,
-// which a `createIcon` glyph's inline `width`/`height` default beats in a real browser — so
-// without the clone every size renders the factory's `$icon.8` box. The expected boxes are read
-// from the compat's own exported table, never transcribed.
 import { render, type RenderResult } from '@testing-library/react'
+// Pins the glyph box and colour the compat `IconButton` clones onto a `createIcon` glyph `icon`.
+// The `[&_svg]:size-[<px>px]` wrapper class alone loses to the glyph's inline `width`/`height`
+// default in a real browser — so without the clone every size renders the factory's `$icon.8` box. The expected boxes are read
+// from the compat's own exported table, never transcribed.
+import { IconButton } from '@universe/mycelium'
 import { ICON_BUTTON_ICON_SIZE_PX } from '@universe/mycelium/button-frame-compat'
 import { describe, expect, it, vi } from 'vitest'
 
@@ -12,7 +12,6 @@ vi.mock('expo-blur', () => ({
   BlurView: () => null,
 }))
 
-import { IconButton } from 'ui/src/components/buttons/IconButton/IconButton'
 import { AlertCircleFilled } from 'ui/src/components/icons/AlertCircleFilled'
 import { Faceid } from 'ui/src/components/icons/Faceid'
 import { SharedUIUniswapProvider } from 'ui/src/test/render'

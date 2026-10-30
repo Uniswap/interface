@@ -110,7 +110,7 @@ const ICON_POSITION_CLASSES: Record<ButtonIconPosition, string> = {
   after: 'flex-row-reverse',
 }
 
-// FOCUS_SCALE presets from CustomButtonFrame/constants.ts
+// Focus-scale presets transcribed from the legacy CustomButtonFrame
 const FOCUS_SCALING_CLASSES: Record<ButtonFocusScaling, string> = {
   default: 'focus-visible:scale-x-[0.98] focus-visible:scale-y-[0.905]',
   equal: 'focus-visible:scale-x-[0.98] focus-visible:scale-y-[0.98]',

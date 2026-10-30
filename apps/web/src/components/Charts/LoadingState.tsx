@@ -1,9 +1,9 @@
-import { Flex, type FlexCompatProps as FlexProps, Text } from '@universe/mycelium'
+import { Flex, type FlexCompatProps as FlexProps, Shine, Text } from '@universe/mycelium'
 import { opacify, useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import { lighten } from 'polished'
 import { PropsWithChildren, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Shine, WaveLoader } from 'ui/src'
+import { WaveLoader } from 'ui/src'
 import { ChartType } from '~/components/Charts/utils'
 import { ChartBarCrossedWithBackground } from '~/components/Table/ErrorBox'
 
@@ -221,7 +221,7 @@ export function ChartSkeleton({
 
   return (
     <Flex row width="100%" alignItems="center" position="relative" {...flexProps}>
-      <Shine fill disabled={isDisabled}>
+      <Shine className="flex-1" disabled={isDisabled}>
         <Flex>
           <ChartLoadingState
             type={type}

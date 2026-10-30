@@ -16,6 +16,8 @@ vi.mock('react-router', async (importOriginal) => ({
   useNavigate: () => mockNavigate,
 }))
 
+const AUCTION_ADDRESS = '0x1111111111111111111111111111111111111111'
+
 function explainerOpenedPayloads(sendEvent: ReturnType<typeof vi.spyOn>): unknown[] {
   return sendEvent.mock.calls
     .filter(([event]) => event === AuctionEventName.AuctionTypeExplainerOpened)
@@ -31,13 +33,15 @@ describe('LaunchMethodExplainerModal', () => {
     render(<LaunchMethodExplainerModal method={LaunchProvenanceMethod.CustomAuction} isOpen onClose={vi.fn()} />)
 
     expect(screen.getByText('Custom Auctions')).toBeInTheDocument()
-    expect(screen.getByText('Learn more').closest('a')).toHaveAttribute('href', UniswapHelpUrls.articles.toucanIntro)
+    const learnMore = screen.getByRole('link', { name: 'Learn more' })
+    expect(learnMore).toHaveAttribute('href', UniswapHelpUrls.articles.toucanLaunchAuctionHelp)
+    expect(learnMore).toHaveAttribute('target', '_blank')
     expect(screen.getByText('Explore auctions')).toBeInTheDocument()
     expect(screen.getByText(/powered by Uniswap’s CCA protocol\.$/)).toBeInTheDocument()
     expect(screen.queryByRole('link', { name: 'pools.xyz' })).toBeNull()
   })
 
-  it('renders the Crowd Launch copy and pools.xyz link', () => {
+  it('renders the Crowd Launch copy, pools.xyz help article, and pools.xyz link', () => {
     render(<LaunchMethodExplainerModal method={LaunchProvenanceMethod.CrowdLaunch} isOpen onClose={vi.fn()} />)
 
     expect(screen.getByText('Crowd Launches')).toBeInTheDocument()
@@ -48,11 +52,13 @@ describe('LaunchMethodExplainerModal', () => {
     expect(poolsLink).toHaveAttribute('href', 'https://pools.xyz')
     expect(poolsLink).toHaveAttribute('target', '_blank')
     expect(poolsLink).toHaveAttribute('rel', 'noopener noreferrer')
-    expect(screen.queryByRole('link', { name: 'Learn more' })).toBeNull()
+    const learnMore = screen.getByRole('link', { name: 'Learn more' })
+    expect(learnMore).toHaveAttribute('href', UniswapHelpUrls.articles.toucanPoolsLaunchHelp)
+    expect(learnMore).toHaveAttribute('target', '_blank')
     expect(screen.queryByText('Explore auctions')).toBeNull()
   })
 
-  it('renders the Instant Launch copy and pools.xyz link', () => {
+  it('renders the Instant Launch copy, pools.xyz help article, and pools.xyz link', () => {
     render(<LaunchMethodExplainerModal method={LaunchProvenanceMethod.InstantLaunch} isOpen onClose={vi.fn()} />)
 
     expect(screen.getByText('Instant Launches')).toBeInTheDocument()
@@ -63,7 +69,9 @@ describe('LaunchMethodExplainerModal', () => {
     expect(poolsLink).toHaveAttribute('href', 'https://pools.xyz')
     expect(poolsLink).toHaveAttribute('target', '_blank')
     expect(poolsLink).toHaveAttribute('rel', 'noopener noreferrer')
-    expect(screen.queryByRole('link', { name: 'Learn more' })).toBeNull()
+    const learnMore = screen.getByRole('link', { name: 'Learn more' })
+    expect(learnMore).toHaveAttribute('href', UniswapHelpUrls.articles.toucanPoolsLaunchHelp)
+    expect(learnMore).toHaveAttribute('target', '_blank')
     expect(screen.queryByText('Explore auctions')).toBeNull()
   })
 
@@ -87,11 +95,15 @@ describe('LaunchMethodExplainerModal', () => {
     [LaunchProvenanceMethod.CustomAuction, 'custom'],
     [LaunchProvenanceMethod.CrowdLaunch, 'crowd'],
     [LaunchProvenanceMethod.InstantLaunch, 'instant'],
-  ])('records opening %s once, with only its bounded launch method', async (method, launch_method) => {
+  ])('records opening %s once, with its launch method and auction', async (method, launch_method) => {
     const sendEvent = vi.spyOn(analytics, 'sendEvent').mockImplementation(() => undefined)
 
-    const { rerender } = render(<LaunchMethodExplainerModal method={method} isOpen onClose={vi.fn()} />)
-    expect(explainerOpenedPayloads(sendEvent)).toEqual([expect.objectContaining({ launch_method })])
+    const { rerender } = render(
+      <LaunchMethodExplainerModal method={method} auctionAddress={AUCTION_ADDRESS} isOpen onClose={vi.fn()} />,
+    )
+    expect(explainerOpenedPayloads(sendEvent)).toEqual([
+      expect.objectContaining({ launch_method, auction_address: AUCTION_ADDRESS }),
+    ])
 
     // Let Trace's 50ms development dedupe expire so a re-render would be free to send again.
     await act(() => new Promise<void>((resolve) => setTimeout(resolve, 51)))

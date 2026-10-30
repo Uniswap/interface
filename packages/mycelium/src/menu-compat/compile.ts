@@ -1,11 +1,9 @@
 /**
  * The menu-family class compilers (INFRA-3021): pure prop → Tailwind class
  * functions for the visual vocabulary — the MenuContent container card, the
- * DropdownMenuSheetItem frame, and the item label. Values are copied verbatim
- * from the legacy sources (`ContextMenuContent.tsx`,
- * `DropdownMenuSheetItem.tsx`); the parity matrices in
- * `packages/tailwind/src/parity/menu` diff the output against the real
- * Tamagui CSSOM per prop, state, and theme.
+ * DropdownMenuSheetItemCompat frame, and the item label. Values match
+ * uniswap's `ContextMenuContent.tsx` and the native leg's style props
+ * (`DropdownMenuSheetItemCompat.native.tsx`); keep them in sync.
  */
 import { cn } from '../cn'
 import { type CompatEmission, composeCompatEmission } from '../compat/compose'
@@ -100,7 +98,7 @@ export interface DropdownMenuSheetItemFrameStyleInputs {
 }
 
 /**
- * The DropdownMenuSheetItem frame, verbatim from its TouchableArea props:
+ * The DropdownMenuSheetItemCompat frame, matching the native leg's TouchableArea props:
  * group marker, row layout, 8px vertical / 12|8px horizontal padding, 12px
  * radius, no text selection, pointer cursor unless disabled, theme background
  * with the hovered-surface hover state.
@@ -157,7 +155,7 @@ function resolveLabelColor({
   destructive,
   disabled,
 }: Pick<DropdownMenuSheetItemLabelStyleInputs, 'textColor' | 'destructive' | 'disabled'>): string {
-  // Mirror of getMenuItemColor: override > destructive > disabled > neutral1.
+  // Same order as getMenuItemColorCompat: override > destructive > disabled > neutral1.
   const resolved = textColor || (destructive ? '$statusCritical' : disabled ? '$neutral2' : '$neutral1')
   if (typeof resolved !== 'string') {
     // The legacy type admits Tamagui Variable objects; no call site passes
@@ -168,17 +166,17 @@ function resolveLabelColor({
 }
 
 function dropdownMenuSheetItemLabelProps(inputs: DropdownMenuSheetItemLabelStyleInputs): TextCompatProps {
-  const { variant, destructive, disabled, allowMultiline = false } = inputs
+  const { variant, destructive, disabled, textColor, allowMultiline = false } = inputs
   return {
     flexShrink: 1,
     ...(allowMultiline ? {} : { numberOfLines: 1 }),
     variant: variant === 'small' ? 'buttonLabel3' : 'buttonLabel2',
     color: resolveLabelColor(inputs),
-    '$group-hover': destructive ? undefined : { color: disabled ? '$neutral2' : '$neutral1Hovered' },
+    '$group-hover': destructive || textColor ? undefined : { color: disabled ? '$neutral2' : '$neutral1Hovered' },
   }
 }
 
-/** Compile the item label className: the exact Text props DropdownMenuSheetItem renders. */
+/** Compile the item label className: the Text props the native leg renders. */
 export function dropdownMenuSheetItemLabelClassName(inputs: DropdownMenuSheetItemLabelStyleInputs): string {
   return textCompatClassName(dropdownMenuSheetItemLabelProps(inputs))
 }

@@ -3,13 +3,13 @@ import { GasFeeResult, TradingApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
 import { isWebApp } from '@universe/environment'
 import { Flex, Text, UniversalImage, UniversalImageResizeMode } from '@universe/mycelium'
+import { IndicativeLoadingWrapper } from '@universe/swap-ui'
 import { useTranslation } from 'react-i18next'
 import { UniswapXText } from 'ui/src'
 import { UniswapX } from 'ui/src/components/icons/UniswapX'
 import { borderRadii, iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { NetworkFeeWarning } from 'uniswap/src/components/gas/NetworkFeeWarning'
-import { IndicativeLoadingWrapper } from 'uniswap/src/components/misc/IndicativeLoadingWrapper'
 import {
   useFormattedUniswapXGasFeeInfo,
   useGasFeeFormattedDisplayAmounts,

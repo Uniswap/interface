@@ -1,5 +1,4 @@
 import { UniverseChainId } from '@universe/chains'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { memo, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { StyleProp, ViewStyle } from 'react-native'
@@ -28,7 +27,7 @@ interface SearchModalResultsListProps {
   auctionSearchEnabled?: boolean
   onSelect?: SearchModalListProps['onSelect']
   onResetFilters?: () => void
-  /** Search V2: shows "View all" under All-tab sections with more results; called with the section's tab. */
+  /** Shows "View all" under All-tab sections with more results; called with the section's tab. */
   onViewAll?: (tab: SearchTab) => void
   renderedInModal: boolean
   contentContainerStyle?: StyleProp<ViewStyle>
@@ -56,7 +55,6 @@ function SearchModalResultsListInner({
 }: SearchModalResultsListProps): JSX.Element {
   const { t } = useTranslation()
   const isOffline = useIsOffline()
-  const isSearchV2UIEnabled = useFeatureFlag(FeatureFlags.SearchV2UI)
 
   const searchQuery = debouncedParsedSearchFilter ?? debouncedSearchFilter
   const shouldPrioritizeWallets =
@@ -128,11 +126,11 @@ function SearchModalResultsListInner({
     if (isOfflineWithNoData) {
       return []
     }
-    if (!isSearchV2UIEnabled || activeTab !== SearchTab.All) {
+    if (activeTab !== SearchTab.All) {
       return sections
     }
     return withSectionGaps(onViewAll ? withViewAllFooters({ sections, truncatedSectionKeys, onViewAll }) : sections)
-  }, [isOfflineWithNoData, isSearchV2UIEnabled, onViewAll, activeTab, sections, truncatedSectionKeys])
+  }, [isOfflineWithNoData, onViewAll, activeTab, sections, truncatedSectionKeys])
 
   const searchFilters = useMemo(
     (): SearchModalListProps['searchFilters'] => ({
@@ -151,7 +149,7 @@ function SearchModalResultsListInner({
       // lagging key (e.g. a cached 400 for an empty query) would otherwise replace the loading skeleton.
       hasError={!isOffline && Boolean(error) && !userIsTyping && !isLoading}
       loading={!isOffline && (userIsTyping || isLoading)}
-      loadingElement={isSearchV2UIEnabled ? RESULTS_LIST_SKELETON : undefined}
+      loadingElement={RESULTS_LIST_SKELETON}
       refetch={refetch}
       sections={displayedSections}
       searchFilters={searchFilters}

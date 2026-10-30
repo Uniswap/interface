@@ -1,3 +1,5 @@
+import { TradingApi } from '@universe/api'
+
 // Shared margin primitives used by both the form store (uniswap) and the web trade surface.
 // Venue-free market identity: lowercased `${collateral}-${debt}` (see marginPairKey). Role-ordered,
 // so a pair's long and its short stay distinct keys. This is what the FORM speaks — a manage request
@@ -8,8 +10,6 @@ export type MarginPairKey = string
 // identity is not. The builder lives in the web app because it composes app-level constants, so this
 // package declares the type only.
 export type MarginMarketKey = string
-
-export type MarginSide = 'long' | 'short'
 
 // The five position-management actions the row overflow menu and the drawer icon row both expose.
 // The user's action, not the wire shape: each one resolves to an action key through
@@ -23,9 +23,12 @@ export type MarginManageAction = 'add' | 'withdraw' | 'leverage' | 'adjust' | 'c
 // rather than switching exhaustively over this type.
 export type MarginVenue = 'MORPHO' | 'AAVE_V3' | 'AAVE_V4' | 'COMPOUND_V3'
 
-// Position/market direction (wire, prod-exact casing). Absent on data predating shorts — derive from
-// the pair's token identity (marginMarketDirection).
-export type MarginDirection = 'LONG' | 'SHORT'
+// Position/market direction — the generated wire enum (LONG/SHORT), re-exported as the margin
+// surface's canonical direction so call sites read MarginDirection.SHORT and a renamed wire value
+// fails to compile here. Absent on data predating shorts — derive from the pair's token identity
+// (marginMarketDirection).
+export const MarginDirection = TradingApi.MarginDirection
+export type MarginDirection = TradingApi.MarginDirection
 
 // Payment token selected to fund an open / add-collateral (native ETH = isNative).
 export interface MarginPaymentToken {

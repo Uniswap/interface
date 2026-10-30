@@ -104,7 +104,7 @@ export function buildFlagGroups(extras: {
     {
       name: 'LP',
       flags: [
-        { flag: FeatureFlags.LpPdpDepthChart, label: 'Enable LP PDP Depth Chart toggle' },
+        { flag: FeatureFlags.PdpRevamp, label: 'Enable PDP revamp' },
         { flag: FeatureFlags.LiquidityBatchedTransactions, label: 'Enable Batched Transactions for LP flow' },
       ],
     },
@@ -197,8 +197,11 @@ export function buildFlagGroups(extras: {
       ],
     },
     {
-      name: 'Token Categories',
-      flags: [{ flag: FeatureFlags.TokenCategories, label: 'Enable Token Categories' }],
+      name: 'Categories',
+      flags: [
+        { flag: FeatureFlags.TokenCategories, label: 'Enable Token Categories' },
+        { flag: FeatureFlags.PoolCategories, label: 'Enable Pool Categories' },
+      ],
     },
     {
       name: 'Misc',

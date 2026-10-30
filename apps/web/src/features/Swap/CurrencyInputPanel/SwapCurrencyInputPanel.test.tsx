@@ -11,8 +11,19 @@ vi.mock('uniswap/src/features/accounts/store/hooks', () => ({
   useActiveAddresses: vi.fn(),
 }))
 
+// jsdom has no layout, so the measured width the real hook scales against is always 0.
+vi.mock('uniswap/src/components/CurrencyInputPanel/hooks/useCurrencyInputFontSize', () => ({
+  useCurrencyInputFontSize: vi.fn(({ value }: { value?: string }) => ({
+    fontSize: value && value.length > 10 ? 24 : 36,
+    lineHeight: value && value.length > 10 ? 28.8 : 43.2,
+    onLayout: vi.fn(),
+    onExtraElementLayout: vi.fn(),
+  })),
+}))
+
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
+import { TestID } from '@universe/test'
 import { nativeOnChain, USDT } from 'uniswap/src/constants/tokens'
 import { useActiveAddresses } from 'uniswap/src/features/accounts/store/hooks'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -157,5 +168,13 @@ describe('SwapCurrencyInputPanel balance formatting', () => {
       // Should display "0 USDT" or similar
       expect(container.textContent).toMatch(/0.*USDT|USDT.*0/)
     })
+  })
+
+  it('shrinks the amount font for long values', () => {
+    mockUseCurrencyBalance.mockReturnValue(undefined)
+
+    const { getByTestId } = render(<SwapCurrencyInputPanel {...defaultProps} value="0.0123456789012345" />)
+
+    expect(getByTestId(TestID.AmountInputIn).style.fontSize).toBe('24px')
   })
 })

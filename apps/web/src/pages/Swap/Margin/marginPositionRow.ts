@@ -5,7 +5,7 @@ import type {
   MarginPositionLeg,
   MarginTokenMetadata,
 } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
-import type { MarginDirection, MarginVenue } from 'uniswap/src/features/transactions/margin/types'
+import { MarginDirection, type MarginVenue } from 'uniswap/src/features/transactions/margin/types'
 import { rawToNumber } from '~/pages/Swap/Margin/marginFormat'
 
 // The wire speaks TRADER terms (exposure/counter). The venue, the router calldata and every display
@@ -23,8 +23,8 @@ function venueTerms(row: {
   exposureToken: MarginTokenMetadata
   counterToken: MarginTokenMetadata
 }): MarginVenueTerms {
-  const collateral = row.direction === 'SHORT' ? row.counterToken : row.exposureToken
-  const debt = row.direction === 'SHORT' ? row.exposureToken : row.counterToken
+  const collateral = row.direction === MarginDirection.SHORT ? row.counterToken : row.exposureToken
+  const debt = row.direction === MarginDirection.SHORT ? row.exposureToken : row.counterToken
   return {
     collateralToken: collateral.address,
     collateralDecimals: collateral.decimals,
@@ -131,5 +131,5 @@ export function marginEquityContributedAtOpen({ position }: { position: MarginAc
     return undefined
   }
   // marginOpenedLeverage guarantees a finite positive, so turns cannot be 0 or non-finite.
-  return contributed / (openedLeverage + (position.direction === 'SHORT' ? 1 : 0))
+  return contributed / (openedLeverage + (position.direction === MarginDirection.SHORT ? 1 : 0))
 }

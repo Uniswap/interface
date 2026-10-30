@@ -3,6 +3,7 @@
  * legacy Tamagui `styled(Stack)` cascade emitted, inline styles only. No
  * react-native imports — not even in type position.
  */
+import { useSporeColors } from '@universe/mycelium'
 import { type CSSProperties, useSyncExternalStore } from 'react'
 import type { SeparatorProps } from 'ui/src/components/layout/Separator'
 import {
@@ -11,7 +12,6 @@ import {
   spacingTokens,
   subscribeNoop,
 } from 'ui/src/components/layout/separatorStyles'
-import { useSporeColors } from 'ui/src/hooks/useSporeColors'
 import { breakpoints } from 'ui/src/theme'
 
 export type { SeparatorProps } from 'ui/src/components/layout/Separator'

@@ -1,3 +1,4 @@
+import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { useMemo } from 'react'
 import type { Rwa } from 'uniswap/src/data/apiClients/dataApiService/rwa/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -46,6 +47,7 @@ export function ExpandableAssetTable({
 }: ExpandableAssetTableProps): JSX.Element {
   const { chains: enabledChainIds } = useEnabledChains()
   const chainFilter = useChainIdFromUrlParam()
+  const media = useMedia()
 
   const showLoadingSkeleton = isLoading
 
@@ -88,6 +90,8 @@ export function ExpandableAssetTable({
       collapseExpandedRowsKey={collapseExpandedRowsKey}
       rowWrapper={rowWrapper}
       renderUnifiedExpandableRow={renderUnifiedExpandableRow}
+      // Mobile: the pinned token column collapses to its logo as the table scrolls horizontally.
+      collapsiblePinnedColumnId={media.lg ? 'tokenDescription' : undefined}
     />
   )
 }

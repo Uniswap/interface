@@ -6,8 +6,10 @@ import { useState } from 'react'
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter/NetworkFilter'
+import { useNetworkSelectorOptions } from 'uniswap/src/components/network/NetworkFilter/useNetworkSelectorOptions'
 import { COLLAPSED_SEARCH_WIDTH } from '~/components/ExpandableSearchInput/ExpandableSearchInput'
 import { useNetworkFilterChainIds } from '~/components/NetworkFilter/useFilteredChains'
+import { useActiveAddresses } from '~/features/accounts/store/hooks'
 import { PoolsFilterModal } from '~/features/Liquidity/PoolsFilter/PoolsFilterModal'
 import { countActivePoolsFilters } from '~/features/Liquidity/PoolsFilter/toRequest'
 import { EMPTY_POOLS_FILTER_STATE, type PoolsAprRange, type PoolsFilterState } from '~/types/poolsFilter'
@@ -62,6 +64,8 @@ export function PoolsFilter({
     setIsOpen(false)
   }
   const { chainIds, allNetworksChainIds } = useNetworkFilterChainIds(networks)
+  const activeAddresses = useActiveAddresses()
+  const tieredNetworkOptions = useNetworkSelectorOptions({ addresses: activeAddresses, chainIds })
 
   return (
     <Flex row gap="$spacing8" alignItems="center">
@@ -72,6 +76,7 @@ export function PoolsFilter({
         chainIds={chainIds}
         allNetworksChainIds={allNetworksChainIds}
         selectedChain={value.chainId ?? null}
+        tieredOptions={tieredNetworkOptions}
         onPressChain={(chainId) => onApply({ ...value, chainId: chainId ?? undefined })}
       />
       <Flex position="relative">

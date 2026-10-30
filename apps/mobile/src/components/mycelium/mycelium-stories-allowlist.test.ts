@@ -211,12 +211,7 @@ describe('mycelium story imports stay on native-safe surfaces', () => {
 
   it('finds the story files (walker sanity check)', () => {
     const names = storyFiles.map((file) => relative(SRC_ROOT, file))
-    expect(names).toEqual(
-      expect.arrayContaining([
-        'components/mycelium/ShimmerMigration.stories.tsx',
-        'components/mycelium/FloatingOverlayMigration.stories.tsx',
-      ]),
-    )
+    expect(names).toEqual(expect.arrayContaining(['components/mycelium/FloatingOverlayMigration.stories.tsx']))
   })
 
   it('every imported mycelium symbol is allowlisted', () => {

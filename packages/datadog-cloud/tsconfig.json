@@ -12,5 +12,5 @@
     "forceConsistentCasingInFileNames": true
   },
   "include": ["./**/*.ts"],
-  "exclude": ["node_modules", "bin", "dashboards", "oxlint.config.ts"]
+  "exclude": ["node_modules", "bin", "dashboards", "oxlint.config.ts", "vitest.config.ts", "**/*.test.ts"]
 }

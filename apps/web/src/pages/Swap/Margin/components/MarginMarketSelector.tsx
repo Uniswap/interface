@@ -13,7 +13,7 @@ import {
   useMarginFormStore,
   useMarginFormStoreActions,
 } from 'uniswap/src/features/transactions/margin/stores/marginFormStore/useMarginFormStore'
-import type { MarginVenue } from 'uniswap/src/features/transactions/margin/types'
+import { MarginDirection, type MarginVenue } from 'uniswap/src/features/transactions/margin/types'
 import { useEvent } from 'utilities/src/react/hooks'
 import { MARGIN_CHAIN_ID, type MarginPairGroup } from '~/constants/margin'
 import { MarginSideToggle } from '~/pages/Swap/Margin/components/MarginSideToggle'
@@ -146,7 +146,7 @@ function PairHeaderButton({
               backgroundColor={directionStyle.backgroundColor}
             >
               <Text variant="buttonLabel4" color={directionStyle.color}>
-                {direction === 'SHORT' ? t('margin.side.short') : t('margin.side.long')}
+                {direction === MarginDirection.SHORT ? t('margin.side.short') : t('margin.side.long')}
               </Text>
             </Flex>
           </Flex>
@@ -293,7 +293,7 @@ export function MarginMarketSelector(): JSX.Element {
 
   const { groups, isLoading } = useMarginMarkets()
   const filteredGroups = useMemo(() => {
-    const bySide = groups.filter((group) => (group.direction === 'SHORT' ? 'short' : 'long') === side)
+    const bySide = groups.filter((group) => group.direction === side)
     const normalized = query.trim().toLowerCase()
     if (!normalized) {
       return bySide
@@ -313,7 +313,7 @@ export function MarginMarketSelector(): JSX.Element {
 
   const emptyCopy = query.trim()
     ? t('margin.selector.empty')
-    : side === 'short'
+    : side === MarginDirection.SHORT
       ? t('margin.selector.emptySideShort')
       : t('margin.selector.emptySideLong')
 
@@ -330,7 +330,7 @@ export function MarginMarketSelector(): JSX.Element {
     setMarginFormState({
       pairKey: group.pairKey,
       paymentToken: undefined,
-      side: group.direction === 'SHORT' ? 'short' : 'long',
+      side: group.direction,
     })
     setIsOpen(false)
   })

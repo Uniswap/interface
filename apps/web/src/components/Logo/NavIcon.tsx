@@ -1,7 +1,6 @@
-import { Flex, type FlexCompatProps } from '@universe/mycelium'
+import { Flex, type FlexCompatProps, useSporeColors } from '@universe/mycelium'
 import { forwardRef, type ForwardRefExoticComponent, type RefAttributes, SVGProps, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useSporeColors } from 'ui/src'
 
 function Logo({ color, onClick }: { color: string; onClick?: () => void }) {
   return (

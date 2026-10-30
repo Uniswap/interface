@@ -1,6 +1,6 @@
 /**
- * Web leg of the `ElementAfterText` compat (INFRA-3601). The legacy component
- * (`ui/src/components/text/ElementAfterText.tsx`) has two renderings:
+ * Web leg of the `ElementAfterText` compat (INFRA-3601). The legacy ui
+ * component had two renderings:
  *
  * - Desktop web (and Android): the element renders inline after the Text in a
  *   centered row.

@@ -94,48 +94,6 @@ function buildOverrideKey({ chainId, tokenAddress }: AuctionMetadataOverrideKey)
   return `${chainId}-${tokenAddress.toLowerCase()}`
 }
 
-function parseOverrideKey(key: string): AuctionMetadataOverrideKey | undefined {
-  const separatorIndex = key.indexOf('-')
-  if (separatorIndex === -1) {
-    return undefined
-  }
-
-  const chainId = Number(key.slice(0, separatorIndex))
-  const tokenAddress = key.slice(separatorIndex + 1)
-  if (!Number.isInteger(chainId) || !tokenAddress) {
-    return undefined
-  }
-
-  return { chainId, tokenAddress }
-}
-
-/**
- * Find auctions whose overridden name/symbol matches the search query.
- * Lets users search by the display name/symbol we override even when the
- * backend only indexes the original token metadata.
- */
-export function findAuctionOverrideMatches(query: string): Array<{ chainId: number; tokenAddress: string }> {
-  const normalizedQuery = query.trim().toLowerCase()
-  if (!normalizedQuery) {
-    return []
-  }
-
-  const matches: Array<{ chainId: number; tokenAddress: string }> = []
-  for (const [key, override] of Object.entries(AUCTION_METADATA_OVERRIDES)) {
-    // oxlint-disable-next-line universe-custom/no-tolowercase-address-currencyid -- token name for case-insensitive search, not an address
-    const name = override.tokenName?.toLowerCase() ?? ''
-    // oxlint-disable-next-line universe-custom/no-tolowercase-address-currencyid -- token symbol for case-insensitive search, not an address
-    const symbol = override.tokenSymbol?.toLowerCase() ?? ''
-    if (name.includes(normalizedQuery) || symbol.includes(normalizedQuery)) {
-      const parsed = parseOverrideKey(key)
-      if (parsed) {
-        matches.push(parsed)
-      }
-    }
-  }
-  return matches
-}
-
 export const DEFAULT_VERIFIED_AUCTION_IDS = [
   '8453_0x7e867b47a94df05188c08575e8B9a52F3F69c469',
   '1_0x9084CB9a700a52909Cbef3113dB8BaC01C01EfD6',

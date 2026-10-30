@@ -8,8 +8,29 @@ import {
   SearchHistoryResultType,
 } from 'uniswap/src/features/search/SearchHistoryResult'
 
-// Sized for the Search V2 recents pill row (RECENT_SEARCH_PILLS_MAX_COUNT); other surfaces slice further on read.
-const SEARCH_HISTORY_LENGTH = 30
+// Capped per type so a burst of one type can't evict another tab's recents.
+const SEARCH_HISTORY_LENGTH_PER_TYPE = 30
+
+// Multichain and single-chain tokens share the Tokens tab, so they share a cap.
+function capKey(result: SearchHistoryResult): SearchHistoryResultType {
+  return result.type === SearchHistoryResultType.MultichainToken ? SearchHistoryResultType.Token : result.type
+}
+
+/** Dedupes by searchId (first occurrence wins) and keeps at most SEARCH_HISTORY_LENGTH_PER_TYPE per type. */
+function trimSearchHistory(results: SearchHistoryResult[]): SearchHistoryResult[] {
+  const seenIds = new Set<string | undefined>()
+  const countByType = new Map<SearchHistoryResultType, number>()
+  return results.filter((result) => {
+    if (seenIds.has(result.searchId)) {
+      return false
+    }
+    seenIds.add(result.searchId)
+    const key = capKey(result)
+    const count = (countByType.get(key) ?? 0) + 1
+    countByType.set(key, count)
+    return count <= SEARCH_HISTORY_LENGTH_PER_TYPE
+  })
+}
 
 export function searchResultId(searchResult: SearchHistoryResult): string {
   switch (searchResult.type) {
@@ -67,15 +88,8 @@ const slice = createSlice({
         return
       }
 
-      // Store search results with a standard searchId to prevent duplicates
       const searchId = searchResultId(searchResult)
-      // Optimistically push search result to array
-      state.results.unshift({ ...searchResult, searchId })
-      // Filter out to only uniques & keep size under SEARCH_HISTORY_LENGTH
-      state.results = state.results
-        // oxlint-disable-next-line max-params
-        .filter((result, index, self) => index === self.findIndex((value) => value.searchId === result.searchId))
-        .slice(0, SEARCH_HISTORY_LENGTH)
+      state.results = trimSearchHistory([{ ...searchResult, searchId }, ...state.results])
     },
     clearSearchHistory: (state) => {
       state.results = []

@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { type MarginActivePosition } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
 import { formatUnits, parseUnits } from '~/chains'
@@ -111,7 +112,7 @@ export function MarginWithdrawModal({
   // Number('Infinity') is truthy, and formatting a non-finite value throws inside the formatter.
   const amountHuman = Number(amount)
   const amountUsd =
-    usableMark === undefined && direction !== 'SHORT'
+    usableMark === undefined && direction !== MarginDirection.SHORT
       ? undefined
       : collateralUsdValue({
           collateralAmount: Number.isFinite(amountHuman) ? amountHuman : 0,
@@ -124,7 +125,9 @@ export function MarginWithdrawModal({
   const debtLogos = { url: debtLogoUrl ?? undefined, symbol: marginUnwrapSymbol(market.debt) }
   // The Size row reads the EXPOSURE leg — a short's is its debt leg, a long's its collateral.
   const sizeLogos =
-    direction === 'SHORT' ? debtLogos : { url: collateralLogoUrl ?? undefined, symbol: market.displaySymbol }
+    direction === MarginDirection.SHORT
+      ? debtLogos
+      : { url: collateralLogoUrl ?? undefined, symbol: market.displaySymbol }
   const hasDebt = BigInt(marginPositionDebt(position)) !== 0n
 
   return (

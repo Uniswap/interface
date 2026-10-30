@@ -14,7 +14,7 @@ import { cloneElement, type ReactElement } from 'react'
  *
  * The marker is a registered symbol, but `packages/ui` is not blocked from
  * importing this module — `packages/ui` already depends on
- * `@universe/mycelium` (see `ui/src/animations/components/HeightAnimator.tsx`
+ * `@universe/mycelium` (see `ui/src/components/factories/createIcon.tsx`
  * for a working deep import, and the `ui`→`mycelium` edge in the Nx project
  * graph). `WithInjectedColors` (the legacy `TouchableArea` injector) imports
  * `isMyceliumPrimitive`/`isMyceliumIcon` directly from

@@ -1,7 +1,6 @@
-import { Flex } from '@universe/mycelium'
+import { Flex, Skeleton } from '@universe/mycelium'
 import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
-import { Skeleton } from 'ui/src'
 import type { MarginActivePosition, MarginQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'

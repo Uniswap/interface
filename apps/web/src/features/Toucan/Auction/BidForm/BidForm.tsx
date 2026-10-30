@@ -3,12 +3,10 @@ import { UniverseChainId, AddressStringFormat, normalizeAddress } from '@univers
 // tamagui-ignore
 import { Flex } from '@universe/mycelium'
 import { styled } from '@universe/mycelium/styled'
+import { useColorsFromTokenColor } from '@universe/mycelium/theme-hooks-compat'
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-// useColorsFromTokenColor stays on ui/src: the theme-hooks-compat twin returns
-// plain `string | undefined`, which useBidFormController's param type rejects.
-import { useColorsFromTokenColor } from 'ui/src'
 import { useIsModeMismatch } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
 import { AuctionEventName } from 'uniswap/src/features/telemetry/constants'
@@ -77,8 +75,8 @@ export function BidForm({ onInputChange, onBidSubmitted }: BidFormProps): JSX.El
   const isAuctionEnded = auctionProgressState === AuctionProgressState.ENDED
   const { validTokenColor } = useColorsFromTokenColor(tokenColor)
 
-  // QuickLaunch: quick launches hide the max-FDV input/slider; the bid is placed at the fixed
-  // 25,000 ETH FDV ceiling — no longer a 50x-of-reference cap
+  // QuickLaunch: quick launches hide the max-FDV input/slider; the bid is placed at the chain's
+  // fixed quick-launch FDV ceiling — no longer a 50x-of-reference cap
   // (see quickLaunchMaxValuationDisplay in useBidFormController).
   const isQuickLaunch = useIsQuickLaunchAuction()
 

@@ -1,12 +1,14 @@
+import { WalletBalanceCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { FeatureFlags } from '@universe/gating'
 import { TestID } from '@universe/test'
 import type { PortfolioBalanceBreakdown } from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { PortfolioOverview } from '~/pages/Portfolio/Overview/Overview'
-import { render, screen } from '~/test-utils/render'
+import { fireEvent, render, screen } from '~/test-utils/render'
 
 const mockPortfolioPoolsBalancesEnabled = vi.hoisted(() => ({ value: true }))
 const mockShowDemoView = vi.hoisted(() => ({ value: false }))
+const mockBalanceMismatch = vi.hoisted(() => vi.fn((_input: unknown) => ({ isTotalValueMatch: true })))
 const mockPortfolioBreakdown = vi.hoisted(
   (): {
     value: PortfolioBalanceBreakdown | undefined
@@ -35,7 +37,14 @@ const defaultChartData = {
 const mockChartQuery = vi.hoisted(
   (): {
     value: {
-      data: { points?: { timestamp: bigint; value: number }[] } | undefined
+      data:
+        | {
+            points?: { timestamp: bigint; value: number }[]
+            tokens?: { timestamp: bigint; value: number }[]
+            pools?: { timestamp: bigint; value: number }[]
+            earn?: { timestamp: bigint; value: number }[]
+          }
+        | undefined
       isPending: boolean
       isPlaceholderData?: boolean
     }
@@ -68,7 +77,7 @@ vi.mock('uniswap/src/features/dataApi/balances/balancesRest', () => ({
 }))
 
 vi.mock('uniswap/src/features/portfolio/usePortfolioChartBalanceMismatch', () => ({
-  usePortfolioChartBalanceMismatch: () => ({ isTotalValueMatch: true }),
+  usePortfolioChartBalanceMismatch: mockBalanceMismatch,
 }))
 
 vi.mock('~/components/emptyWallet/EmptyWalletCards', () => ({
@@ -110,12 +119,16 @@ vi.mock('~/pages/Portfolio/Overview/PortfolioChart', () => ({
     earnValue,
     isLoading,
     isChartEmpty,
+    unavailableChartCategories,
+    setSelectedCategory,
   }: {
     tokensValue?: { balanceUSD: number }
     poolsValue?: { balanceUSD: number }
     earnValue?: { balanceUSD: number }
     isLoading: boolean
     isChartEmpty: boolean
+    unavailableChartCategories: number[]
+    setSelectedCategory: (category: string) => void
   }) => (
     <div
       data-testid={TestID.PortfolioTotalBalance}
@@ -124,8 +137,10 @@ vi.mock('~/pages/Portfolio/Overview/PortfolioChart', () => ({
       data-earn-balance-usd={earnValue?.balanceUSD}
       data-loading={String(isLoading)}
       data-chart-empty={String(isChartEmpty)}
+      data-unavailable-chart-categories={unavailableChartCategories.join(',')}
     >
       Portfolio Chart
+      <button onClick={() => setSelectedCategory('tokens')}>select tokens</button>
     </div>
   ),
 }))
@@ -140,6 +155,7 @@ describe('PortfolioOverview', () => {
     mockShowDemoView.value = false
     mockPortfolioBreakdown.value = undefined
     mockChartQuery.value = { data: defaultChartData, isPending: false }
+    mockBalanceMismatch.mockClear()
   })
 
   it('marks the chart loading while the chart query is pending', () => {
@@ -231,5 +247,45 @@ describe('PortfolioOverview', () => {
     expect(screen.getByTestId(TestID.PortfolioTotalBalance)).toHaveAttribute('data-token-balance-usd', '8368.94')
     expect(screen.getByTestId(TestID.PortfolioTotalBalance)).toHaveAttribute('data-pool-balance-usd', '7373.05')
     expect(screen.getByTestId(TestID.PortfolioTotalBalance)).toHaveAttribute('data-earn-balance-usd', '3259.01')
+  })
+
+  it('reports a requested category the chart response left empty', () => {
+    mockChartQuery.value = {
+      data: { ...defaultChartData, tokens: defaultChartData.points, pools: [], earn: [] },
+      isPending: false,
+    }
+
+    render(<PortfolioOverview />)
+
+    expect(screen.getByTestId(TestID.PortfolioTotalBalance)).toHaveAttribute(
+      'data-unavailable-chart-categories',
+      `${WalletBalanceCategory.POOLS},${WalletBalanceCategory.EARN_VAULTS}`,
+    )
+  })
+
+  it('compares the selected category chart with that category balance', () => {
+    mockPortfolioBreakdown.value = {
+      total: { balanceUSD: 110, percentChange: undefined, absoluteChangeUSD: undefined },
+      tokens: { balanceUSD: 60, percentChange: undefined, absoluteChangeUSD: undefined },
+      pools: { balanceUSD: 50, percentChange: undefined, absoluteChangeUSD: undefined },
+      failedChainIds: [],
+      earn: { balanceUSD: 0, percentChange: undefined, absoluteChangeUSD: undefined },
+    }
+    mockChartQuery.value = {
+      data: {
+        ...defaultChartData,
+        tokens: [
+          { timestamp: 1700000000n, value: 55 },
+          { timestamp: 1700003600n, value: 60 },
+        ],
+      },
+      isPending: false,
+    }
+
+    render(<PortfolioOverview />)
+    expect(mockBalanceMismatch).toHaveBeenLastCalledWith({ lastChartValue: 110, portfolioTotalBalanceUSD: 110 })
+
+    fireEvent.click(screen.getByText('select tokens'))
+    expect(mockBalanceMismatch).toHaveBeenLastCalledWith({ lastChartValue: 60, portfolioTotalBalanceUSD: 60 })
   })
 })

@@ -54,6 +54,7 @@ export function PortfolioChartDetailsScreen(): JSX.Element {
     poolsData,
     earnData,
     loading: chartLoading,
+    isUnavailable: isChartUnavailable,
     chartColor,
   } = usePortfolioChartData({
     evmAddress: activeAccount.address,
@@ -106,14 +107,16 @@ export function PortfolioChartDetailsScreen(): JSX.Element {
     portfolioTotalBalanceUSD: breakdown?.total.balanceUSD,
   })
 
-  const canShowChart = chartData.length > 0
+  const canShowChart = chartData.length > 0 && !isChartUnavailable
   const isAllTimePeriod = chartPeriod === ChartPeriod.MAX
+  const headerChartPeriod = isChartUnavailable ? ChartPeriod.DAY : canShowChart ? chartPeriod : undefined
 
   const breakdownCardProps = useMemo(
     () =>
       getBreakdownCardProps({
         poolsEnabled: portfolioPoolsBalancesEnabled,
         poolsUnavailable,
+        chartUnavailable: isChartUnavailable,
         breakdown,
         scrub: {
           total: chartScrubFiatValue,
@@ -129,6 +132,7 @@ export function PortfolioChartDetailsScreen(): JSX.Element {
     [
       portfolioPoolsBalancesEnabled,
       poolsUnavailable,
+      isChartUnavailable,
       breakdown,
       chartScrubFiatValue,
       chartScrubTokensValue,
@@ -229,11 +233,11 @@ export function PortfolioChartDetailsScreen(): JSX.Element {
             // This screen's heartbeat coordinator refreshes balances on its 60s full tick instead.
             disablePolling
             evmOwner={activeAccount.address}
-            chartPeriod={canShowChart ? chartPeriod : undefined}
+            chartPeriod={headerChartPeriod}
             overrideBalanceUSD={chartScrubFiatValue}
             overridePercentChange={canShowChart ? chartPercentChange?.percentChange : undefined}
             overrideAbsoluteChangeUSD={canShowChart ? chartPercentChange?.absoluteChangeUSD : undefined}
-            hidePercentChange={isAllTimePeriod}
+            hidePercentChange={canShowChart && isAllTimePeriod}
           />
           {breakdownCardProps && <PortfolioBalanceBreakdownCard {...breakdownCardProps} />}
           <Flex>
@@ -244,6 +248,7 @@ export function PortfolioChartDetailsScreen(): JSX.Element {
               isExpanded={true}
               chartPeriod={chartPeriod}
               isTotalValueMatch={isTotalValueMatch}
+              isUnavailable={isChartUnavailable}
               onChartPeriodChange={setChartPeriod}
               onScrub={handleScrub}
             />

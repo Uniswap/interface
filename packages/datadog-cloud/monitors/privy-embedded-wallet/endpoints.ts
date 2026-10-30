@@ -3,13 +3,22 @@ import { MonitorDefinition } from '../../types'
 import { snakeCase } from '../../util'
 import {
   APM_METRIC_PREFIX,
+  LATENCY_AGGREGATION,
+  LATENCY_ROLLUP_ADJECTIVE,
+  LATENCY_WINDOW,
+  LATENCY_WINDOW_LABEL,
   MIN_REQUESTS_5M,
+  MIN_REQUESTS_PER_RPC_LATENCY,
+  MIN_WEB_SERVER_ERRORS,
+  minFailuresToAlert,
   PRIVY_EMBEDDED_WALLET_RUNBOOK,
   SERVICE_README_URL,
   TEAM,
   apmTagFilter,
   rateDenominatorFloor,
+  volumeGatedPercentile,
   webResourceName,
+  webServerErrors,
 } from './constants'
 
 const env = settings.environment
@@ -43,38 +52,17 @@ interface EndpointSpec {
 }
 
 /**
- * All 19 endpoints from the SRE plan, with baselines and reasoning.
+ * All 20 endpoints from the SRE plan.
  *
- * Baseline data (from load-test traffic, `env:local`):
- *
- *   Challenge                : N=1103, P95=6.4ms, P99=17ms     → critical 0.5s
- *   WalletSignIn             : N=6,    P95=401ms               → critical 2s
- *   PrepareAddAuthenticator  : N=9,    P95=29ms                → critical 1s
- *   Disconnect               : N=5,    P95=44ms                → critical 0.5s
- *   GetRecoveryConfig        : N=5,    P95=40ms                → critical 0.5s
- *   ListAuthenticators       : N=2,    P95=28ms                → critical 0.5s
- *   OprfEvaluate             : N=2,    P95=158ms               → critical 1s
- *   SetupRecovery            : N=1,    P95=231ms               → critical 2s
- *   ExecuteRecovery          : N=1,    P95=325ms               → critical 2s
- *   DeleteRecovery           : N=1,    P95=259ms               → critical 2s
- *   ReportDecryptionResult   : N=1,    P95=183ms               → critical 1s
- *
- *   No baseline yet (estimated based on operation class):
- *   CreateWallet             : multiple Privy API calls + MPC → critical 5s
- *   SignMessage              : Privy MPC sign                  → critical 3s
- *   SignTransaction          : Privy MPC sign                  → critical 3s
- *   SignTypedData            : Privy MPC sign                  → critical 3s
- *   Sign7702Authorization    : Privy MPC sign                  → critical 3s
- *   AddAuthenticator         : Privy quorum update             → critical 3s
- *   DeleteAuthenticator      : Privy quorum update             → critical 3s
- *   ExportSeedPhrase         : Privy + recovery key            → critical 5s
- *   ExportSeedPhraseWithRecovery : Privy + recovery flow       → critical 5s
+ * `latency` is the gated 30-minute p95 in seconds. Where an endpoint has enough prod traffic to
+ * measure, warning sits ~1.2-1.5x and critical ~2x above its 30-day baseline maximum. Endpoints
+ * too sparse to measure borrow the thresholds of the nearest comparable endpoint.
  */
 const endpoints: EndpointSpec[] = [
   // High-volume canary — strictest latency budget. P1 because every other
   // endpoint requires a prior Challenge round-trip; Challenge degradation
   // takes down the entire service surface.
-  { name: 'Challenge', latency: { critical: 0.5, warning: 0.2 }, errorRate: { critical: 2 }, priority: 1 },
+  { name: 'Challenge', latency: { critical: 1, warning: 0.7 }, errorRate: { critical: 2 }, priority: 1 },
 
   // Auth + session. WalletSignIn is the primary auth flow — failures here
   // lock users out of their wallets entirely. P1 to match its success-rate
@@ -82,51 +70,51 @@ const endpoints: EndpointSpec[] = [
   { name: 'WalletSignIn', latency: { critical: 2, warning: 1 }, errorRate: { critical: 5 }, priority: 1 },
   {
     name: 'PrepareAddAuthenticator',
-    latency: { critical: 1, warning: 0.5 },
+    latency: { critical: 1, warning: 0.6 },
     errorRate: { critical: 5 },
     priority: 3,
   },
-  { name: 'AddAuthenticator', latency: { critical: 3, warning: 2 }, errorRate: { critical: 5 }, priority: 2 },
+  { name: 'AddAuthenticator', latency: { critical: 1, warning: 0.6 }, errorRate: { critical: 5 }, priority: 2 },
   {
     name: 'DeleteAuthenticator',
-    latency: { critical: 3, warning: 2 },
+    latency: { critical: 1, warning: 0.6 },
     errorRate: { critical: 5 },
     priority: 2,
   },
   {
     name: 'ListAuthenticators',
-    latency: { critical: 0.5, warning: 0.2 },
+    latency: { critical: 0.4, warning: 0.25 },
     errorRate: { critical: 5 },
     priority: 3,
   },
   { name: 'Disconnect', latency: { critical: 0.5, warning: 0.2 }, errorRate: { critical: 5 }, priority: 3 },
 
   // Wallet creation + signing
-  { name: 'CreateWallet', latency: { critical: 5, warning: 3 }, errorRate: { critical: 5 }, priority: 1 },
-  { name: 'SignMessage', latency: { critical: 3, warning: 2 }, errorRate: { critical: 5 }, priority: 1 },
-  { name: 'SignTransaction', latency: { critical: 3, warning: 2 }, errorRate: { critical: 5 }, priority: 1 },
-  { name: 'SignTypedData', latency: { critical: 3, warning: 2 }, errorRate: { critical: 5 }, priority: 1 },
+  { name: 'CreateWallet', latency: { critical: 2.5, warning: 1.5 }, errorRate: { critical: 5 }, priority: 1 },
+  { name: 'SignMessage', latency: { critical: 1, warning: 0.6 }, errorRate: { critical: 5 }, priority: 1 },
+  { name: 'SignTransaction', latency: { critical: 1, warning: 0.6 }, errorRate: { critical: 5 }, priority: 1 },
+  { name: 'SignTypedData', latency: { critical: 1, warning: 0.6 }, errorRate: { critical: 5 }, priority: 1 },
   {
     name: 'Sign7702Authorization',
-    latency: { critical: 3, warning: 2 },
+    latency: { critical: 1, warning: 0.6 },
     errorRate: { critical: 5 },
     priority: 1,
   },
 
   // Crypto / recovery
-  { name: 'OprfEvaluate', latency: { critical: 1, warning: 0.5 }, errorRate: { critical: 5 }, priority: 2 },
-  { name: 'SetupRecovery', latency: { critical: 2, warning: 1 }, errorRate: { critical: 5 }, priority: 2 },
-  { name: 'ExecuteRecovery', latency: { critical: 2, warning: 1 }, errorRate: { critical: 5 }, priority: 2 },
+  { name: 'OprfEvaluate', latency: { critical: 1, warning: 0.6 }, errorRate: { critical: 5 }, priority: 2 },
+  { name: 'SetupRecovery', latency: { critical: 1.5, warning: 0.9 }, errorRate: { critical: 5 }, priority: 2 },
+  { name: 'ExecuteRecovery', latency: { critical: 1.5, warning: 0.9 }, errorRate: { critical: 5 }, priority: 2 },
   {
     name: 'GetRecoveryConfig',
-    latency: { critical: 0.5, warning: 0.2 },
+    latency: { critical: 1.5, warning: 0.9 },
     errorRate: { critical: 5 },
     priority: 3,
   },
-  { name: 'DeleteRecovery', latency: { critical: 2, warning: 1 }, errorRate: { critical: 5 }, priority: 2 },
+  { name: 'DeleteRecovery', latency: { critical: 1.5, warning: 0.9 }, errorRate: { critical: 5 }, priority: 2 },
   {
     name: 'ReportDecryptionResult',
-    latency: { critical: 1, warning: 0.5 },
+    latency: { critical: 1.5, warning: 0.9 },
     errorRate: { critical: 5 },
     priority: 3,
   },
@@ -134,13 +122,13 @@ const endpoints: EndpointSpec[] = [
   // Seed phrase export — P0 latency + paired security anomaly monitor in security.ts.
   {
     name: 'ExportSeedPhrase',
-    latency: { critical: 5, warning: 3 },
+    latency: { critical: 2, warning: 1 },
     errorRate: { critical: 5 },
     priority: 1,
   },
   {
     name: 'ExportSeedPhraseWithRecovery',
-    latency: { critical: 5, warning: 3 },
+    latency: { critical: 2, warning: 1 },
     errorRate: { critical: 5 },
     priority: 1,
   },
@@ -149,14 +137,13 @@ const endpoints: EndpointSpec[] = [
 function endpointLatencyMonitor(spec: EndpointSpec): MonitorDefinition {
   const id = snakeCase(spec.name)
   const metric = `${APM_METRIC_PREFIX}_${spec.name}`
-  // Volume-gate: scale p95 by (hits / clamp_min(hits, floor)) so a lone slow request in a quiet window can't page.
-  const hits = `count:${metric}{${apmFilter}}.as_count()`
+  const hits = `count:${metric}{${apmFilter}}`
   return {
     id: `privy_embedded_wallet_${id}_latency_p95`,
     name: `P95 latency on ${spec.name}`,
     type: 'query alert',
-    query: `avg(last_5m):( p95:${metric}{${apmFilter}} * ${hits} / clamp_min(${hits}, ${MIN_REQUESTS_5M}) ) > ${spec.latency.critical}`,
-    alertBody: `P95 latency on \`${spec.name}\` exceeded ${spec.latency.critical}s over the last 5 minutes. Requires at least ${MIN_REQUESTS_5M} requests in the window before it can alert.${spec.notes ? `\n\n${spec.notes}` : ''}`,
+    query: `${LATENCY_AGGREGATION}(${LATENCY_WINDOW}):${volumeGatedPercentile(`p95:${metric}{${apmFilter}}`, { hits, floor: MIN_REQUESTS_PER_RPC_LATENCY })} > ${spec.latency.critical}`,
+    alertBody: `P95 latency on \`${spec.name}\` crossed a latency threshold (warning ${spec.latency.warning}s, critical ${spec.latency.critical}s) over a ${LATENCY_ROLLUP_ADJECTIVE} window within the last ${LATENCY_WINDOW_LABEL}, across at least ${MIN_REQUESTS_PER_RPC_LATENCY} requests. Datadog resolves this P95 below the bucket's slowest request, so at least two slow calls are needed to produce the figure. Buckets under ${MIN_REQUESTS_PER_RPC_LATENCY} requests report no data instead of alerting.${spec.notes ? `\n\n${spec.notes}` : ''}`,
     recoveryBody: `P95 latency on \`${spec.name}\` has recovered.`,
     team: TEAM,
     priority: spec.priority,
@@ -172,13 +159,15 @@ function endpointLatencyMonitor(spec: EndpointSpec): MonitorDefinition {
 
 function endpointErrorMonitor(spec: EndpointSpec): MonitorDefinition {
   const id = snakeCase(spec.name)
-  // Rate from the entry web span (5xx-only via webResourceName), not the handler-span
-  // `.errors` metric which also counts handled 4xx and paged on routine activity.
-  // 4xx spikes are still watched by privy_embedded_wallet_4xx_anomaly.
+  // Rate from the entry web span with 4xx filtered out (webServerErrors), not the handler-span
+  // `.errors` metric which counts every thrown error. The web span's own error flag also covers some
+  // handled 4xx, so the filter is required. Client errors do not page from here; the only cover for
+  // them is the Slack-only 4xx anomaly and 401 spike monitors in errors.ts.
   const resource = webResourceName(spec.name)
-  const errors = `sum:trace.web.request.errors{${apmFilter},resource_name:${resource}}.as_count()`
+  const errors = webServerErrors(`${apmFilter},resource_name:${resource}`)
   const hits = `sum:trace.web.request.hits{${apmFilter},resource_name:${resource}}.as_count()`
   const minRequests = rateDenominatorFloor(spec.errorRate.critical, MIN_REQUESTS_5M)
+  const minFailures = minFailuresToAlert(spec.errorRate.critical, minRequests)
   return {
     id: `privy_embedded_wallet_${id}_error_rate`,
     name: `5xx error rate on ${spec.name}`,
@@ -188,7 +177,7 @@ function endpointErrorMonitor(spec: EndpointSpec): MonitorDefinition {
     // `notifyNoData: false` below (do not flip it to true). The `hits` denominator is
     // floored via clamp_min so a lone 5xx in a low-traffic window cannot trip the rate.
     query: `sum(last_5m):( ${errors} / clamp_min(${hits}, ${minRequests}) ) * 100 > ${spec.errorRate.critical}`,
-    alertBody: `5xx (server) error rate on \`${spec.name}\` is above ${spec.errorRate.critical}% over the last 5 minutes. Handled 4xx (auth / origin / validation failures) are excluded; see the 4xx anomaly monitor for client-error spikes. Requires at least ${minRequests} requests in the window before the rate can alert.`,
+    alertBody: `5xx (server) error rate on \`${spec.name}\` is above ${spec.errorRate.critical}% over the last 5 minutes. Handled 4xx (auth / origin / validation failures) are excluded and never page from this monitor; client-error spikes are covered only by the Slack-only 4xx anomaly and 401 spike monitors. The rate needs at least ${MIN_WEB_SERVER_ERRORS} server errors in the window, and the denominator is floored at ${minRequests} requests, so one server fault in a quiet window cannot reach ${spec.errorRate.critical}% — it takes at least ${minFailures}.`,
     recoveryBody: `5xx error rate on \`${spec.name}\` has recovered.`,
     team: TEAM,
     priority: spec.priority,

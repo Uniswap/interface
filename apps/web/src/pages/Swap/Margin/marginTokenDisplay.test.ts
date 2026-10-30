@@ -1,4 +1,5 @@
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { buildCurrencyId, buildNativeCurrencyId, normalizeCurrencyIdForMapLookup } from 'uniswap/src/utils/currencyId'
 import { shortenAddress } from 'utilities/src/addresses'
 import { describe, expect, it } from 'vitest'
@@ -84,8 +85,8 @@ describe('marginPairLegs', () => {
   })
   it('falls back to direction when neither leg is a known quote token', () => {
     const dai: MarginTokenInfo = { address: '0x6B175474E89094C44Da98b954EedeAC495271d0F', symbol: 'DAI', decimals: 18 }
-    expect(marginPairLegs({ collateral: WETH_T, debt: dai, direction: 'LONG' }).quote.symbol).toBe('DAI')
-    expect(marginPairLegs({ collateral: dai, debt: WETH_T, direction: 'SHORT' }).quote.symbol).toBe('DAI')
+    expect(marginPairLegs({ collateral: WETH_T, debt: dai, direction: MarginDirection.LONG }).quote.symbol).toBe('DAI')
+    expect(marginPairLegs({ collateral: dai, debt: WETH_T, direction: MarginDirection.SHORT }).quote.symbol).toBe('DAI')
   })
   it('falls back to collateral-first when both legs are quote tokens and no direction is given', () => {
     const { base, quote } = marginPairLegs({ collateral: USDT_T, debt: USDC_T })
@@ -96,11 +97,13 @@ describe('marginPairLegs', () => {
 
 describe('marginExposureLeg', () => {
   it('is the collateral leg for a long', () => {
-    expect(marginExposureLeg({ market: { collateral: WETH_T, debt: USDC_T }, direction: 'LONG' }).symbol).toBe('WETH')
+    expect(
+      marginExposureLeg({ market: { collateral: WETH_T, debt: USDC_T }, direction: MarginDirection.LONG }).symbol,
+    ).toBe('WETH')
   })
   // The decimals are the point: a short sized in 18-dec WETH but scaled by the stable's 6 renders 1e12.
   it('is the debt leg — and its decimals — for a short', () => {
-    const leg = marginExposureLeg({ market: { collateral: USDC_T, debt: WETH_T }, direction: 'SHORT' })
+    const leg = marginExposureLeg({ market: { collateral: USDC_T, debt: WETH_T }, direction: MarginDirection.SHORT })
     expect(leg.symbol).toBe('WETH')
     expect(leg.decimals).toBe(18)
   })
@@ -108,10 +111,14 @@ describe('marginExposureLeg', () => {
 
 describe('marginMarketDirection', () => {
   it('is LONG for stable debt against volatile collateral', () => {
-    expect(marginMarketDirection({ collateralToken: WETH_T.address, debtToken: USDC_T.address })).toBe('LONG')
+    expect(marginMarketDirection({ collateralToken: WETH_T.address, debtToken: USDC_T.address })).toBe(
+      MarginDirection.LONG,
+    )
   })
   it('is SHORT for stable collateral against volatile debt', () => {
-    expect(marginMarketDirection({ collateralToken: USDC_T.address, debtToken: WETH_T.address })).toBe('SHORT')
+    expect(marginMarketDirection({ collateralToken: USDC_T.address, debtToken: WETH_T.address })).toBe(
+      MarginDirection.SHORT,
+    )
   })
   it('is case-insensitive on addresses', () => {
     expect(
@@ -119,7 +126,7 @@ describe('marginMarketDirection', () => {
         collateralToken: WETH_T.address.toLowerCase(),
         debtToken: USDC_T.address.toLowerCase(),
       }),
-    ).toBe('LONG')
+    ).toBe(MarginDirection.LONG)
   })
 })
 

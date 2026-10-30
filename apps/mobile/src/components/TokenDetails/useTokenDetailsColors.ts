@@ -15,6 +15,7 @@ export function useTokenDetailsColors({ currencyId }: { currencyId: string }): {
     tokenName: metadata.symbol,
     backgroundColor: colors.surface1.val,
     defaultColor: colors.neutral3.val,
+    colorOverrides: metadata.colorOverrides,
   })
 
   return {

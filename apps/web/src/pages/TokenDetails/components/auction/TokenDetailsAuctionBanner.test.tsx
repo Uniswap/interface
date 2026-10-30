@@ -102,6 +102,8 @@ describe('TokenDetailsAuctionBanner', () => {
       auction_type: 'custom',
       launch_method: 'custom',
       entry_point: 'tdp_auction_banner',
+      token_address: '0x3333333333333333333333333333333333333333',
+      auction_address: AUCTION_ADDRESS,
       auction_count: 3,
       auction_phase: 'live',
       pool_availability: 'has_pool',
@@ -203,7 +205,7 @@ describe('TokenDetailsAuctionBanner', () => {
     },
   )
 
-  it('does not reserve a live-banner placeholder for an upcoming auction', () => {
+  it('reserves the banner row for an upcoming auction while the pool lookup resolves', () => {
     mockDisplay({
       phase: AuctionDisplayPhase.Upcoming,
       poolAvailability: PoolAvailability.Loading,
@@ -212,7 +214,7 @@ describe('TokenDetailsAuctionBanner', () => {
 
     render(<TokenDetailsAuctionBanner />)
 
-    expect(screen.queryByTestId(TestID.TokenDetailsAuctionBanner)).toBeNull()
+    expect(screen.getByTestId(TestID.TokenDetailsAuctionBanner)).toHaveAttribute('aria-busy', 'true')
   })
 
   it('removes the initial placeholder when a fresh response confirms there is no pool', () => {
@@ -242,12 +244,17 @@ describe('TokenDetailsAuctionBanner', () => {
     expect(screen.queryByTestId(TestID.TokenDetailsAuctionBanner)).toBeNull()
   })
 
-  it('renders nothing before the auction starts', () => {
-    mockDisplay({ phase: AuctionDisplayPhase.Upcoming, phaseEndsAtMs: undefined })
+  it('counts down to the start of an upcoming auction and links to the auction page', () => {
+    mockDisplay({ phase: AuctionDisplayPhase.Upcoming, currentBlock: { status: 'success', blockNumber: 50n } })
 
     render(<TokenDetailsAuctionBanner />)
 
-    expect(screen.queryByTestId(TestID.TokenDetailsAuctionBanner)).toBeNull()
+    expect(screen.getByText('Upcoming auction')).toBeInTheDocument()
+    expect(screen.queryByText('Auction in progress')).toBeNull()
+    expect(screen.getByText('Starts in')).toBeInTheDocument()
+    expect(screen.getByText(/^7d 12h 59m$/)).toBeInTheDocument()
+    fireEvent.click(screen.getByTestId(TestID.TokenDetailsAuctionBanner))
+    expect(mockNavigate).toHaveBeenCalledTimes(1)
   })
 
   it('renders nothing when pool availability could not be confirmed', () => {

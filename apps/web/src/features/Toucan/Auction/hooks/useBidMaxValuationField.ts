@@ -1,3 +1,4 @@
+import { snapToNearestTick } from '@universe/cca'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useFiatTokenConversion } from 'uniswap/src/features/transactions/hooks/useFiatTokenConversion'
@@ -11,7 +12,6 @@ import {
   snapTokenDisplayValue,
 } from '~/features/Toucan/Auction/utils/bidMaxPrice'
 import { evaluateMaxPrice, type MinValuationErrorDetails } from '~/features/Toucan/Auction/utils/evaluateMaxPrice'
-import { snapToNearestTick } from '~/features/Toucan/Auction/utils/ticks'
 import { tryParseCurrencyAmount } from '~/lib/utils/tryParseCurrencyAmount'
 
 export type { MaxValuationFieldState } from '~/features/Toucan/Auction/hooks/useBidMaxValuationField.types'

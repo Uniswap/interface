@@ -1,3 +1,4 @@
+import { AnimatedFlex } from '@universe/mycelium'
 import { useEffect } from 'react'
 import { useAnimatedStyle, useSharedValue, withDelay, withSpring } from 'react-native-reanimated'
 import type { AnimateInOrderProps } from 'ui/src/animations/components/AnimateInOrder'
@@ -6,7 +7,6 @@ import {
   ANIMATE_IN_ORDER_SPRING,
   DEFAULT_ENTER_STYLE,
 } from 'ui/src/animations/components/AnimateInOrder.constants'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 
 export { ANIMATE_IN_ORDER_DELAY_MS } from 'ui/src/animations/components/AnimateInOrder.constants'
 

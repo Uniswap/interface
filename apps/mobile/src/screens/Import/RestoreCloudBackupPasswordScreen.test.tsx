@@ -10,7 +10,6 @@ import { RestoreCloudBackupPasswordScreen } from 'src/screens/Import/RestoreClou
 import { act, fireEvent, render } from 'src/test/test-utils'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
-import { AppPortalProvider } from 'wallet/src/providers/portal-provider'
 
 vi.mock('src/features/CloudBackup/RNCloudStorageBackupsManager', async (importOriginal) => ({
   ...(await importOriginal<typeof import('src/features/CloudBackup/RNCloudStorageBackupsManager')>()),
@@ -33,17 +32,15 @@ describe(RestoreCloudBackupPasswordScreen, () => {
   it('shows an unconfirmed upload without counting it as an incorrect password or completing restore', async () => {
     vi.mocked(restoreMnemonicFromCloudStorage).mockRejectedValueOnce({ code: CloudBackupErrorCode.UploadNotConfirmed })
     const screen = render(
-      <AppPortalProvider>
-        <RestoreCloudBackupPasswordScreen
-          navigation={
-            { getState: () => ({ index: 0 }), setOptions: setOptionsSpy } as unknown as NativeStackNavigationProp<
-              OnboardingStackParamList,
-              OnboardingScreens.RestoreCloudBackupPassword
-            >
-          }
-          route={{ ...routeProp, params: { ...routeProp.params, mnemonicId: 'mnemonic' } }}
-        />
-      </AppPortalProvider>,
+      <RestoreCloudBackupPasswordScreen
+        navigation={
+          { getState: () => ({ index: 0 }), setOptions: setOptionsSpy } as unknown as NativeStackNavigationProp<
+            OnboardingStackParamList,
+            OnboardingScreens.RestoreCloudBackupPassword
+          >
+        }
+        route={{ ...routeProp, params: { ...routeProp.params, mnemonicId: 'mnemonic' } }}
+      />,
     )
 
     fireEvent.changeText(screen.getByPlaceholderText('account.cloud.password.input'), 'password')
@@ -59,23 +56,21 @@ describe(RestoreCloudBackupPasswordScreen, () => {
 
   it('renders correctly', () => {
     const tree = render(
-      <AppPortalProvider>
-        <RestoreCloudBackupPasswordScreen
-          navigation={
-            {
-              getState: () => ({
-                index: 0,
-              }),
-              setOptions: setOptionsSpy,
-            } as unknown as NativeStackNavigationProp<
-              OnboardingStackParamList,
-              OnboardingScreens.RestoreCloudBackupPassword,
-              undefined
-            >
-          }
-          route={routeProp}
-        />
-      </AppPortalProvider>,
+      <RestoreCloudBackupPasswordScreen
+        navigation={
+          {
+            getState: () => ({
+              index: 0,
+            }),
+            setOptions: setOptionsSpy,
+          } as unknown as NativeStackNavigationProp<
+            OnboardingStackParamList,
+            OnboardingScreens.RestoreCloudBackupPassword,
+            undefined
+          >
+        }
+        route={routeProp}
+      />,
     ).toJSON()
 
     expect(tree).toMatchSnapshot()
@@ -83,23 +78,21 @@ describe(RestoreCloudBackupPasswordScreen, () => {
 
   it('renders the enter-recovery-phrase link when restoring a mnemonic', () => {
     const tree = render(
-      <AppPortalProvider>
-        <RestoreCloudBackupPasswordScreen
-          navigation={
-            {
-              getState: () => ({
-                index: 0,
-              }),
-              setOptions: setOptionsSpy,
-            } as unknown as NativeStackNavigationProp<
-              OnboardingStackParamList,
-              OnboardingScreens.RestoreCloudBackupPassword,
-              undefined
-            >
-          }
-          route={restoreMnemonicRouteProp}
-        />
-      </AppPortalProvider>,
+      <RestoreCloudBackupPasswordScreen
+        navigation={
+          {
+            getState: () => ({
+              index: 0,
+            }),
+            setOptions: setOptionsSpy,
+          } as unknown as NativeStackNavigationProp<
+            OnboardingStackParamList,
+            OnboardingScreens.RestoreCloudBackupPassword,
+            undefined
+          >
+        }
+        route={restoreMnemonicRouteProp}
+      />,
     ).toJSON()
 
     expect(tree).toMatchSnapshot()

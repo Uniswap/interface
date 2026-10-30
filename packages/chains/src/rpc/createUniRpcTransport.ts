@@ -1,4 +1,5 @@
 import { http } from 'viem'
+import { createThrowOnForbiddenResponse } from './ForbiddenHttpRequestError'
 import type { UniRpcConfig } from './getUniRpcConfig'
 import { HEADER_RESOLVE_TIMEOUT_MS, withTimeout } from './withTimeout'
 
@@ -74,6 +75,7 @@ interface UniRpcTransportInput {
 export function createUniRpcTransportFactory(ctx: UniRpcTransportFactoryCtx) {
   return (input: UniRpcTransportInput) => {
     const { config } = input
+    const onFetchResponse = createThrowOnForbiddenResponse(config.rpcUrl)
 
     if (ctx.session.type === 'headers') {
       const { getSessionHeaders } = ctx.session
@@ -99,6 +101,7 @@ export function createUniRpcTransportFactory(ctx: UniRpcTransportFactoryCtx) {
             },
           }
         },
+        onFetchResponse,
         timeout: UNIRPC_TIMEOUT_MS,
       })
     }
@@ -111,6 +114,7 @@ export function createUniRpcTransportFactory(ctx: UniRpcTransportFactoryCtx) {
       onFetchRequest: (_request, init) => {
         patchJsonRpcIdInInit(init)
       },
+      onFetchResponse,
       timeout: UNIRPC_TIMEOUT_MS,
     })
   }

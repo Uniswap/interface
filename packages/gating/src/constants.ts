@@ -1,6 +1,9 @@
+/** `custom.app` on the Statsig user — the surface a gate condition targets. Interface (apps/web) and Pools (apps/pools-xyz) share one client key. */
 export enum StatsigCustomAppValue {
   Mobile = 'mobile',
   Extension = 'extension',
+  Interface = 'interface',
+  Pools = 'pools',
 }
 
 /**

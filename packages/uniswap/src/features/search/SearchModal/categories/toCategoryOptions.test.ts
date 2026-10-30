@@ -7,6 +7,7 @@ function makeCategory(id: string): TokenCategory {
     name: id,
     englishName: id,
     description: '',
+    kind: 'token',
     categoryClass: TokenCategoryClass.Sector,
     grouped: false,
     topTokens: [],

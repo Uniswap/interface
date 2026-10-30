@@ -38,6 +38,7 @@ function renderCell({
   startOffsetSeconds,
   endOffsetSeconds,
   preBidEndOffsetSeconds,
+  isGraduated,
   totalBidVolume,
   requiredCurrencyRaised,
   isQuickLaunch,
@@ -47,6 +48,7 @@ function renderCell({
   startOffsetSeconds: number
   endOffsetSeconds: number
   preBidEndOffsetSeconds?: number
+  isGraduated?: boolean
   totalBidVolume?: string
   requiredCurrencyRaised?: string
   isQuickLaunch?: boolean
@@ -62,6 +64,7 @@ function renderCell({
       }
       tokenAddress={tokenAddress}
       chainId={chainId}
+      isGraduated={isGraduated}
       totalBidVolume={totalBidVolume}
       requiredCurrencyRaised={requiredCurrencyRaised}
       isQuickLaunch={isQuickLaunch}
@@ -229,6 +232,19 @@ describe('TimeRemainingCell', () => {
       startOffsetSeconds: -2 * ONE_DAY_SECONDS,
       endOffsetSeconds: -ONE_DAY_SECONDS,
       totalBidVolume: '100',
+      requiredCurrencyRaised: '500',
+    })
+
+    expect(screen.getByText('Failed')).toBeInTheDocument()
+    expect(screen.queryByText('Swap')).not.toBeInTheDocument()
+  })
+
+  it('shows Failed when the served verdict says the auction did not graduate despite enough committed volume', () => {
+    renderCell({
+      startOffsetSeconds: -2 * ONE_DAY_SECONDS,
+      endOffsetSeconds: -ONE_DAY_SECONDS,
+      isGraduated: false,
+      totalBidVolume: '1000',
       requiredCurrencyRaised: '500',
     })
 

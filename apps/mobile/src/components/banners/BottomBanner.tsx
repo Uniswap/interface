@@ -1,8 +1,7 @@
-import { ColorTokens, Flex, Text, TouchableArea } from '@universe/mycelium'
+import { ColorTokens, Flex, Text, TouchableArea, AnimatedFlex } from '@universe/mycelium'
 import { X } from '@universe/mycelium/icons/X'
 import React from 'react'
 import { FadeIn, FadeOut, useAnimatedStyle, withTiming } from 'react-native-reanimated'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 
 export const BANNER_HEIGHT = 45
 

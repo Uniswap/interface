@@ -1,4 +1,4 @@
-import { Flex, Text, iconSizes, spacing } from '@universe/mycelium'
+import { Flex, Text, iconSizes, spacing, AnimatedFlex } from '@universe/mycelium'
 import { TestID } from '@universe/test'
 import React, { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -10,7 +10,6 @@ import { TokenDetailsFavoriteButton } from 'src/components/TokenDetails/TokenDet
 import { useTokenDetailsCurrentChainBalance } from 'src/components/TokenDetails/useTokenDetailsCurrentChainBalance'
 import { Ellipsis } from 'ui/src/components/icons'
 import { Lock } from 'ui/src/components/icons/Lock'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { ContextMenu } from 'uniswap/src/components/menus/ContextMenu'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'

@@ -44,6 +44,9 @@ export function Navbar() {
 
   const { isTestnetModeEnabled } = useEnabledChains()
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
+  // On mobile the right-row glyphs sit 20px apart, spaced per item instead of by the row gap. The testnet
+  // pill doesn't follow that rhythm, so with it shown the row keeps the default gap.
+  const isCompactMobileRow = !isTestnetModeEnabled
 
   return (
     <Flex
@@ -74,10 +77,15 @@ export function Navbar() {
           {isSearchBarVisible ? <SearchBar /> : null}
         </Flex>
 
-        <NavItemsRow justifyContent="flex-end">
+        <NavItemsRow justifyContent="flex-end" $md={isCompactMobileRow ? { gap: '$none' } : undefined}>
           {!isSearchBarVisible && <SearchBar />}
           {!isEmbeddedWalletEnabled && isLandingPage && !isSmallScreen && <NewUserCTAButton />}
-          {!isConnected && <PreferenceMenu />}
+          {!isConnected && (
+            // NavIcon pads its glyph 14px per side, so the menu overlaps search's tap box to land 20px from it.
+            <Flex $md={isCompactMobileRow ? { ml: -8, mr: '$spacing6' } : undefined}>
+              <PreferenceMenu />
+            </Flex>
+          )}
           {isTestnetModeEnabled && <TestnetModeTooltip />}
           <Web3Status />
         </NavItemsRow>

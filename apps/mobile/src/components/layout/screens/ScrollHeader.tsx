@@ -1,5 +1,5 @@
 import { useScrollToTop } from '@react-navigation/native'
-import { type ColorTokens, Flex } from '@universe/mycelium'
+import { type ColorTokens, Flex, AnimatedFlex } from '@universe/mycelium'
 import React, { ReactElement, useMemo } from 'react'
 import { StyleProp, ViewStyle } from 'react-native'
 import {
@@ -11,7 +11,6 @@ import {
 } from 'react-native-reanimated'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { WithScrollToTop } from 'src/components/layout/screens/WithScrollToTop'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes, zIndexes } from 'ui/src/theme'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 

@@ -7,7 +7,7 @@ import type {
 } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { buildCurrencyInfo } from 'uniswap/src/features/dataApi/utils/buildCurrency'
-import type { MarginDirection, MarginVenue } from 'uniswap/src/features/transactions/margin/types'
+import { MarginDirection, type MarginVenue } from 'uniswap/src/features/transactions/margin/types'
 import { buildCurrencyId, normalizeCurrencyIdForMapLookup } from 'uniswap/src/utils/currencyId'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { MARGIN_CHAIN_ID } from '~/constants/margin'
@@ -95,15 +95,15 @@ function positionFixture({
   collateralToken,
   debtToken,
   venue = 'MORPHO',
-  direction = 'LONG',
+  direction = MarginDirection.LONG,
 }: {
   collateralToken: string
   debtToken: string
   venue?: MarginVenue
   direction?: MarginDirection
 }): MarginActivePosition {
-  const exposureToken = direction === 'SHORT' ? debtToken : collateralToken
-  const counterToken = direction === 'SHORT' ? collateralToken : debtToken
+  const exposureToken = direction === MarginDirection.SHORT ? debtToken : collateralToken
+  const counterToken = direction === MarginDirection.SHORT ? collateralToken : debtToken
   return {
     status: 'ACTIVE',
     positionId: '7',
@@ -149,7 +149,7 @@ describe('useResolveMarginMarket', () => {
     const row: MarginMarketRow = {
       exposureToken: { address: WETH_ADDRESS, chainId: MARGIN_CHAIN_ID, decimals: 18 },
       counterToken: { address: CBBTC_ADDRESS, chainId: MARGIN_CHAIN_ID, decimals: 8 },
-      direction: 'SHORT',
+      direction: MarginDirection.SHORT,
       headlineVenue: 'MORPHO',
       maxLeverage: '5',
       lltv: '860000000000000000',
@@ -183,7 +183,7 @@ describe('useResolveMarginMarket', () => {
       collateralToken: CBBTC_ADDRESS,
       debtToken: WETH_ADDRESS,
       venue: 'MORPHO',
-      direction: 'SHORT',
+      direction: MarginDirection.SHORT,
     })
     const { result } = renderHook(() => useResolveMarginMarket({ positions: [position] }))
 
@@ -205,9 +205,13 @@ describe('useResolveMarginMarket', () => {
       currencyInfoFixture({ address: WETH_ADDRESS, symbol: 'WETH', name: 'Wrapped Ether', decimals: 18 }),
     ])
 
-    const position = positionFixture({ collateralToken: USDC_ADDRESS, debtToken: WETH_ADDRESS, direction: 'SHORT' })
+    const position = positionFixture({
+      collateralToken: USDC_ADDRESS,
+      debtToken: WETH_ADDRESS,
+      direction: MarginDirection.SHORT,
+    })
     const { result } = renderHook(() => useResolveMarginMarket({ positions: [position] }))
 
-    expect(result.current(tokensFor(position))?.direction).toBe('SHORT')
+    expect(result.current(tokensFor(position))?.direction).toBe(MarginDirection.SHORT)
   })
 })

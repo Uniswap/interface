@@ -38,19 +38,23 @@ export function PoolDetailsTableTab({
   token0,
   token1,
   isPoolDataLoading,
+  showWalletPositions = true,
 }: {
   poolAddress: string
   chainId: UniverseChainId
   token0?: ParsedToken
   token1?: ParsedToken
   isPoolDataLoading?: boolean
+  /** False when the page lists the wallet's positions elsewhere, which drops the Positions tab. */
+  showWalletPositions?: boolean
 }) {
   const { t } = useTranslation()
   const [activeTable, setActiveTable] = useState<PoolDetailsTableTabs>(PoolDetailsTableTabs.TRANSACTIONS)
   const account = useAccount()
   const { sort, onSort } = usePositionSort()
+  // No account disables the query, so the tab never appears.
   const { positions, isPlaceholderData } = usePoolPositions({
-    account: account.address,
+    account: showWalletPositions ? account.address : undefined,
     chainId,
     poolIdOrAddress: poolAddress,
     sort,

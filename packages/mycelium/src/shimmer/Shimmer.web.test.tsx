@@ -28,6 +28,18 @@ describe('Shimmer (web)', () => {
     expect(html).toContain('animation-duration:2.5s')
   })
 
+  it('applies animationDelay to the sweep, and drops it with the effect when disabled', () => {
+    expect(renderToStaticMarkup(<Shimmer animationDelay="0.2s">x</Shimmer>)).toContain('animation-delay:0.2s')
+    expect(renderToStaticMarkup(<Shimmer>x</Shimmer>)).not.toContain('animation-delay')
+    expect(
+      renderToStaticMarkup(
+        <Shimmer disabled animationDelay="0.2s">
+          x
+        </Shimmer>,
+      ),
+    ).not.toContain('animation-delay')
+  })
+
   it('keeps children mounted without the effect when disabled', () => {
     const html = renderToStaticMarkup(
       <Shimmer disabled>

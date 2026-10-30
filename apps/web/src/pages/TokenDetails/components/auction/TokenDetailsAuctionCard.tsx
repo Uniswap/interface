@@ -1,11 +1,11 @@
 import { Flex, Skeleton, Text, TouchableArea } from '@universe/mycelium'
-import { opacifyRaw, useSporeColors } from '@universe/mycelium/theme-hooks-compat'
+import { opacifyRaw, useSporeColors, useColorsFromTokenColor } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
 import type { TFunction } from 'i18next'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
-import { Button, getContrastPassingTextColor, useColorsFromTokenColor } from 'ui/src'
+import { Button, getContrastPassingTextColor } from 'ui/src'
 import { AuctionEventName } from 'uniswap/src/features/telemetry/constants'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import { PulsingIndicatorDot } from '~/features/Toucan/Auction/Banners/AuctionIntro/PulsingIndicatorDot'
@@ -184,6 +184,7 @@ export function TokenDetailsAuctionCard(): JSX.Element | null {
 
       <LaunchMethodExplainerModal
         method={launchMethod}
+        auctionAddress={auction.address}
         isOpen={isExplainerOpen}
         onClose={() => setIsExplainerOpen(false)}
       />

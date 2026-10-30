@@ -1,3 +1,4 @@
+import { useColorsFromTokenColor } from '@universe/mycelium/theme-hooks-compat'
 import { useOnReviewPress } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useOnReviewPress'
 import { useSwapFormButtonColors } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useSwapFormButtonColors'
 import { useSwapFormButtonText } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useSwapFormButtonText'
@@ -112,8 +113,8 @@ vi.mock(
   }),
 )
 
-vi.mock('ui/src', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('ui/src')>()
+vi.mock('@universe/mycelium/theme-hooks-compat', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@universe/mycelium/theme-hooks-compat')>()
   return {
     ...actual,
     useColorsFromTokenColor: vi.fn(),
@@ -138,7 +139,6 @@ vi.mock('utilities/src/react/hooks', () => ({
 
 import { chainIdToPlatform, isSVMChain } from '@universe/chains'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { useColorsFromTokenColor } from 'ui/src'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useShowGetStarted } from 'uniswap/src/contexts/ShowGetStartedContext'
 import { useActiveAccount, useConnectionStatus } from 'uniswap/src/features/accounts/store/hooks'
