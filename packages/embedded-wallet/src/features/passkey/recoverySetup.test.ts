@@ -35,6 +35,7 @@ describe('encryptAndStoreRecovery', () => {
     email: 'test@example.com',
     accessToken: 'access-token',
     privyAppId: 'test-privy-app-id',
+    privyClientId: 'test-privy-client-id',
   }
 
   beforeEach(() => {

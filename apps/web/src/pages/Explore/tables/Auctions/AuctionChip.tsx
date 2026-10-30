@@ -195,6 +195,7 @@ export function AuctionChip({
         <Text variant="body4" color="$neutral2">
           {isAuctionFailed({
             phase,
+            isGraduated: auctionData.isGraduated,
             totalBidVolume: auctionData.totalBidVolume,
             requiredCurrencyRaised: auctionData.requiredCurrencyRaised,
           })

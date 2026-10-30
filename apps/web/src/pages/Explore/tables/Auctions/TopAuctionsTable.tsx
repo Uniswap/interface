@@ -749,6 +749,7 @@ function ToucanTableComponent({
                 preBidEndBlockTimestamp={timeRemaining?.preBidEndBlockTimestamp}
                 tokenAddress={enrichedAuction?.auction?.tokenAddress}
                 chainId={enrichedAuction?.auction?.chainId}
+                isGraduated={enrichedAuction?.auction?.isGraduated}
                 totalBidVolume={enrichedAuction?.auction?.totalBidVolume}
                 requiredCurrencyRaised={enrichedAuction?.auction?.requiredCurrencyRaised}
                 // QuickLaunch: progress-bar + "Live on Uniswap" treatment for quick launches.

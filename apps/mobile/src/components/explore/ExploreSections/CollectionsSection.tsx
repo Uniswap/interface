@@ -39,7 +39,7 @@ function ViewAllPill({ onPress }: { onPress: () => void }): JSX.Element {
   )
 }
 
-/** Horizontally scrolling category pills in the Collections section on mobile Explore. */
+/** Horizontally scrolling category pills in the Categories section on mobile Explore. */
 export const CollectionsSection = memo(function CollectionsSection(): JSX.Element | null {
   const { t } = useTranslation()
   const navigation = useExploreStackNavigation()
@@ -55,7 +55,7 @@ export const CollectionsSection = memo(function CollectionsSection(): JSX.Elemen
     navigation.navigate(MobileScreens.Collections)
   }, [navigation])
 
-  const header = <ExploreSectionHeader title={t('explore.collections.title')} onPress={onViewAllPress} />
+  const header = <ExploreSectionHeader title={t('explore.categories.title')} onPress={onViewAllPress} />
 
   const renderItem = useCallback(
     ({ item, index }: { item: TokenCategory; index: number }) => (

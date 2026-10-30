@@ -48,13 +48,15 @@ export function TokenLaunchedBanner({
   tradeAvailabilityBlock,
 }: TokenLaunchedBannerProps) {
   const colors = useSporeColors()
-  const { isGraduated, outcome, auctionDetails, checkpointData, tokenColorLoading } = useAuctionStore((state) => ({
-    isGraduated: state.progress.isGraduated,
-    outcome: state.progress.outcome,
-    auctionDetails: state.auctionDetails,
-    checkpointData: state.checkpointData,
-    tokenColorLoading: state.tokenColorLoading,
-  }))
+  const { isGraduated, outcome, isFinalPricePending, auctionDetails, checkpointData, tokenColorLoading } =
+    useAuctionStore((state) => ({
+      isGraduated: state.progress.isGraduated,
+      outcome: state.progress.outcome,
+      isFinalPricePending: state.progress.isFinalPricePending,
+      auctionDetails: state.auctionDetails,
+      checkpointData: state.checkpointData,
+      tokenColorLoading: state.tokenColorLoading,
+    }))
   const clearingPrice = getClearingPrice(checkpointData, auctionDetails)
 
   const tokenAddress = auctionDetails?.tokenAddress
@@ -203,7 +205,7 @@ export function TokenLaunchedBanner({
     priceLoading ||
     bidTokenLoading ||
     auctionTokenDecimals === undefined ||
-    (needsFallback && clearingHistoryLoading) ||
+    (needsFallback && (clearingHistoryLoading || isFinalPricePending)) ||
     tradeAvailabilityLoading ||
     (isRedeemable && (redemptionLoading || realTokenInfoLoading))
   if (isLoading) {

@@ -92,7 +92,6 @@ export function useAuctionDisplayDataSources({
   }, [isAtOrPastEndBlock, wasAtOrPastEndBlock, refetchPools])
 
   const checkpointEnabled = enabled && chainId !== undefined && Boolean(auctionAddress) && isAtOrPastEndBlock
-  // TODO(CONS-3362): determine whether an auction graduated or failed on the backend instead of here.
   // A fresh request can still return a cached amount from before the auction ended.
   const checkpointQuery = useQuery(getAuctionCheckpointQuery({ chainId, auctionAddress, enabled: checkpointEnabled }))
 

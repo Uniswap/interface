@@ -36,6 +36,7 @@ const baseParams = {
   email: 'user@example.com',
   accessToken: 'access-token',
   privyAppId: 'app-id',
+  privyClientId: 'client-id',
   walletId: 'wallet-123',
   privyUserId: 'privy-user-1',
   authMethodType: 'EMAIL' as const,

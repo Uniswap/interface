@@ -25,7 +25,9 @@ interface AuctionStatusCellProps {
   preBidEndBlockTimestamp?: bigint
   tokenAddress?: string
   chainId?: UniverseChainId
-  /** Raw committed volume and launch threshold (same currency units) used to derive the Failed state. */
+  /** Served on-chain graduation verdict; unset until the backend resolves the ended auction. */
+  isGraduated?: boolean
+  /** Raw committed volume and launch threshold (same currency units): the Failed fallback while `isGraduated` is unset. */
   totalBidVolume?: string
   requiredCurrencyRaised?: string
   /** QuickLaunch (flag-gated upstream): progress-bar treatment while live, "Live on Uniswap" once completed. */
@@ -44,6 +46,7 @@ export function TimeRemainingCell({
   preBidEndBlockTimestamp,
   tokenAddress,
   chainId,
+  isGraduated,
   totalBidVolume,
   requiredCurrencyRaised,
   isQuickLaunch = false,
@@ -74,7 +77,7 @@ export function TimeRemainingCell({
   }
 
   // An ended auction that never met its launch threshold failed — no token launched, so no swap CTA.
-  const isFailed = isAuctionFailed({ phase, totalBidVolume, requiredCurrencyRaised })
+  const isFailed = isAuctionFailed({ phase, isGraduated, totalBidVolume, requiredCurrencyRaised })
 
   // "Live on Uniswap" — not "completed" — is the quick-launch end state: the token keeps trading here.
   const isQuickLaunchLaunched = isQuickLaunch && phase === 'completed' && !isFailed

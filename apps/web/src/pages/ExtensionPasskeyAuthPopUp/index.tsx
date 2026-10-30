@@ -87,7 +87,7 @@ function ExtensionPasskeyAuthPopUpContent(): JSX.Element {
   const requestId = passkeyRequestData?.requestId ?? searchParams.get('request_id')
   const encryptionKey = passkeyRequestData?.encryptionKey ?? null
 
-  const { appId: privyAppId } = getPrivyConfig(false)
+  const { appId: privyAppId, clientId: privyClientId } = getPrivyConfig(false)
   const [oauthError, setOauthError] = useState<string | undefined>()
   const handleOAuthError = useCallback((err: string) => setOauthError(err), [])
   const privy = useRecoveryPrivyAuth({ onOAuthError: handleOAuthError })
@@ -109,6 +109,7 @@ function ExtensionPasskeyAuthPopUpContent(): JSX.Element {
   const flow = useRecoveryFlow({
     privy,
     privyAppId,
+    privyClientId,
     onPinDecryptSuccess: bridgeOnPinDecryptSuccess,
     setOauthError,
   })
