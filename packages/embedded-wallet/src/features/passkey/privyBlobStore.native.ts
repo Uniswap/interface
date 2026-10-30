@@ -8,10 +8,11 @@ import { UniswapStaticUrls } from 'uniswap/src/constants/urls'
  */
 export const { storeEncryptedBlob, fetchEncryptedBlob } = createPrivyBlobStore({
   fileTag: 'privyBlobStore.native.ts',
-  buildHeaders: ({ accessToken, privyAppId }) => ({
+  buildHeaders: ({ accessToken, privyAppId, privyClientId }) => ({
     Authorization: `Bearer ${accessToken}`,
     'Content-Type': 'application/json',
     'privy-app-id': privyAppId,
+    'privy-client-id': privyClientId,
     Origin: UniswapStaticUrls.requestOriginUrl,
   }),
 })

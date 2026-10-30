@@ -198,7 +198,7 @@ function CollectionsContent({
             onRetry={onRetry}
           />
         ) : (
-          <BaseCard.EmptyState description={t('explore.collections.empty')} />
+          <BaseCard.EmptyState description={t('explore.categories.empty')} />
         )}
       </Flex>
     )
@@ -246,7 +246,7 @@ function CollectionsContent({
   return (
     <Screen edges={['top', 'left', 'right']}>
       <BackHeader px="$spacing16" py="$spacing12">
-        <Text variant="body1">{t('explore.collections.title')}</Text>
+        <Text variant="body1">{t('explore.categories.title')}</Text>
       </BackHeader>
       <UniversalList
         recycleItems

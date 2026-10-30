@@ -48,7 +48,7 @@ function CategoryOptionItemInner({
         <Flex row alignItems="center" gap="$spacing4">
           <GridView color="$neutral2" size="$icon.16" />
           <Text color="$neutral2" numberOfLines={1} variant="body3">
-            {t('explore.collections.single')}
+            {t('explore.categories.single')}
           </Text>
         </Flex>
       }

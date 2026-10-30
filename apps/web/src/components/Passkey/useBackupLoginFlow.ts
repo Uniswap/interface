@@ -247,6 +247,7 @@ export function useBackupLoginFlow({
       accessToken,
       keyId: encryptedKeyId,
       privyAppId: getPrivyConfig().appId,
+      privyClientId: getPrivyConfig().clientId,
     })
     return reuseBlobRef.current
   })
@@ -313,6 +314,7 @@ export function useBackupLoginFlow({
         email: effectiveEmail,
         accessToken,
         privyAppId: getPrivyConfig().appId,
+        privyClientId: getPrivyConfig().clientId,
         rotate: isRotation,
       })
       // Guard against stale result if user navigated away during async work

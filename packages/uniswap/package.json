@@ -47,7 +47,7 @@
     "@types/poisson-disk-sampling": "2.2.4",
     "@uniswap/analytics-events": "2.43.0",
     "@uniswap/client-data-api": "0.0.279",
-    "@uniswap/client-launches": "0.0.5",
+    "@uniswap/client-launches": "0.0.7",
     "@uniswap/client-liquidity": "1.4.43",
     "@uniswap/client-unirpc-v2": "0.0.4",
     "@uniswap/permit2-sdk": "1.4.0",

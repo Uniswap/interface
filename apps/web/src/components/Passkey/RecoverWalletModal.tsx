@@ -64,7 +64,7 @@ export function RecoverWalletModal(): JSX.Element {
   const [oauthError, setOauthError] = useState<string | undefined>()
   const { openModal: openGetTheApp } = useModalState(ModalName.GetTheApp)
 
-  const { appId: privyAppId } = getPrivyConfig(false)
+  const { appId: privyAppId, clientId: privyClientId } = getPrivyConfig(false)
   const handleOAuthError = useCallback((err: string) => setOauthError(err), [])
   const privy = useRecoveryPrivyAuth({ onOAuthError: handleOAuthError })
   const disableV1EwRotation = useFeatureFlag(FeatureFlags.DisableV1EwRotation)
@@ -126,6 +126,7 @@ export function RecoverWalletModal(): JSX.Element {
   const flow = useRecoveryFlow({
     privy,
     privyAppId,
+    privyClientId,
     onPinDecryptSuccess,
     setOauthError,
     showAddPasskeyStep: true,

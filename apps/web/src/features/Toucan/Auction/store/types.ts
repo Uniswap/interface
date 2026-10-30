@@ -183,6 +183,12 @@ export interface AuctionProgressData {
    */
   isGraduated: boolean
   outcome: AuctionOutcome
+  /**
+   * An ended auction whose final checkpoint has not loaded. A served verdict can settle `outcome`
+   * first, but GetAuction's clearing price can lag the final one, so anything priced off
+   * `getClearingPrice` waits on this rather than reading the fallback.
+   */
+  isFinalPricePending: boolean
 }
 
 // TODO | Toucan - determine if this can be replaced with SDK Token type

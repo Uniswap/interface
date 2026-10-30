@@ -2888,7 +2888,8 @@ describe('the risk-history guard does not error on an empty history', () => {
       'history=""',
       'if [ "$(printf \'%s\' "$history" | jq \'length\' 2>/dev/null || echo 0)" -gt 1 ]; then echo RENDER; else echo SKIP; fi',
     ])
-    expect(new TextDecoder().decode(r.stderr)).toContain('integer expression expected')
+    // bash <= 5.2 says "integer expression expected"; bash 5.3 (Ubuntu 26.04) says "integer expected".
+    expect(new TextDecoder().decode(r.stderr)).toMatch(/integer (expression )?expected/)
   })
 
   test('a history with more than one entry still renders', () => {
