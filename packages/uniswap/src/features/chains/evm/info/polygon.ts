@@ -58,10 +58,11 @@ export const POLYGON_CHAIN_INFO = {
   pendingTransactionsRetryOptions: undefined,
   rpcUrls: {
     [RPCType.Public]: { http: [getUniRpcEndpointUrl(UniverseChainId.Polygon)] },
-    [RPCType.PublicAlt]: { http: ['https://polygon-rpc.com/'] },
+    // polygon-rpc.com returns 403 "API key disabled" for eth_getCode (see #8010).
+    [RPCType.PublicAlt]: { http: ['https://polygon.drpc.org'] },
     // Default feeds wallet-connector rpc maps (cookieless). Unkeyed, CSP-allowed public endpoint.
     [RPCType.Default]: { http: ['https://polygon.drpc.org'] },
-    [RPCType.Fallback]: { http: ['https://polygon-rpc.com/'] },
+    [RPCType.Fallback]: { http: ['https://polygon-bor.publicnode.com'] },
     [RPCType.Interface]: { http: [`https://polygon-mainnet.infura.io/v3/${config.infuraKey}`] },
   },
   tokens,
