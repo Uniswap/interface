@@ -2,6 +2,7 @@ import type { RwaCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { UniverseChainId } from '@universe/chains'
 import type { Rwa } from 'uniswap/src/data/apiClients/dataApiService/rwa/types'
+import type { LaunchProvenanceMethod } from 'uniswap/src/features/dataApi/launchProvenance'
 import {
   type AuctionSearchStats,
   CurrencyInfo,
@@ -163,8 +164,8 @@ export interface AuctionOption extends BaseOption {
   tokenLogoUrl: string | undefined
   currencyInfo: Maybe<CurrencyInfo>
   committedVolumeUsd: number | undefined
-  /** Distinct all-time bidders. Only the top-auctions listing serves it; text-search results leave it unset. */
   uniqueBidderCount?: number
+  launchMethod?: LaunchProvenanceMethod
   isVerified: boolean
   searchStats?: AuctionSearchStats
 }
@@ -188,7 +189,7 @@ export type WebSearchModalOption =
   | CategoryOption
 export type SearchModalOption = MobileExploreSearchModalOption | WebSearchModalOption
 
-/** Search modal rows: single options, or one array rendered as a horizontal row (Search V2 recents pills). */
+/** Search modal rows: single options, or one array rendered as a horizontal row (recent search pills). */
 export type SearchModalListOption = SearchModalOption | SearchModalOption[]
 
 export type TokenSelectorOption = TokenOption | TokenOption[]

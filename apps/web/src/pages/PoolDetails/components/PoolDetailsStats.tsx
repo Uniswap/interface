@@ -20,7 +20,7 @@ import { DeltaArrow } from '~/components/DeltaArrow/DeltaArrow'
 import { LoadingBubble } from '~/components/Tokens/loading'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import type { PoolData } from '~/data/pools/poolData'
-import { calculate24hLpFeesUsd } from '~/data/pools/poolStats'
+import { get24hLpFeesUsd } from '~/data/pools/poolStats'
 import { getTokenDetailsURL } from '~/data/util'
 import { RewardAprBadge } from '~/features/Liquidity/LPIncentives/RewardAprBadge'
 import { useCurrency } from '~/hooks/Tokens'
@@ -187,7 +187,6 @@ interface PoolDetailsStatsProps {
   rewards?: PositionRewardApr[]
   /** Served fee + reward APR (`PoolSummary.total_apr`). */
   totalApr?: number
-  protocolFeePips?: number
 }
 
 export function PoolDetailsStats({
@@ -200,7 +199,6 @@ export function PoolDetailsStats({
   poolApr,
   rewards,
   totalApr,
-  protocolFeePips,
 }: PoolDetailsStatsProps) {
   const { t } = useTranslation()
   const media = useMedia()
@@ -256,13 +254,7 @@ export function PoolDetailsStats({
     )
   }
 
-  const fees24h = calculate24hLpFeesUsd({
-    volume24h: poolData.volumeUSD24H,
-    feeTier: poolData.feeTier?.feeAmount,
-    isDynamic: poolData.feeTier?.isDynamic,
-    protocolVersion: poolData.protocolVersion,
-    protocolFeePips,
-  })
+  const fees24h = get24hLpFeesUsd(poolData)
 
   return (
     <StatsWrapper>

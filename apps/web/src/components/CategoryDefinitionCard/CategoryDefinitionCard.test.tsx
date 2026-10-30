@@ -25,6 +25,7 @@ const stocks = tokenCategory({
   id: 'stocks',
   name: 'Stocks',
   description: 'Tokenized stocks from known issuers',
+  kind: 'token',
   categoryClass: TokenCategoryClass.Asset,
   grouped: false,
   stats: {

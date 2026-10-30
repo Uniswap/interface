@@ -4,7 +4,7 @@ import type { LayoutRectangle, TextStyle } from 'react-native'
 import { Platform, Pressable, Text, View } from 'react-native'
 import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 import { assert } from 'utilities/src/errors'
-import { needsSmallFont } from './needs-small-font'
+import { needsSmallFont } from '../text-compat/needs-small-font'
 import { pruneOptionLayouts } from './option-layouts'
 import {
   containerClasses,

@@ -1,5 +1,5 @@
+import { HeightAnimator } from '@universe/mycelium/height-animator'
 import { useTranslation } from 'react-i18next'
-import { HeightAnimator } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { LPTransactionSettingsStoreContextProvider } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/LPTransactionSettingsStoreContextProvider'

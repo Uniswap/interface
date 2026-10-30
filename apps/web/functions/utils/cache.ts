@@ -2,6 +2,8 @@ import { GraphQLApi } from '@universe/api'
 
 interface TokenData {
   symbol: string
+  /** Backend-curated light-theme color, used for the OG card in place of one averaged from the logo. */
+  overrideColor?: string
 }
 interface AuctionData {
   tokenName: string

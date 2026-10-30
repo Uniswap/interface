@@ -46,6 +46,7 @@ export function BidDetailsModal({
     onchainCheckpoint,
     outcome,
     hasMetThreshold,
+    isFinalPricePending,
     auctionProgressState,
     currentBlockNumber,
   } = useAuctionStore((state) => ({
@@ -54,6 +55,7 @@ export function BidDetailsModal({
     onchainCheckpoint: state.onchainCheckpoint,
     outcome: state.progress.outcome,
     hasMetThreshold: state.progress.hasMetThreshold,
+    isFinalPricePending: state.progress.isFinalPricePending,
     auctionProgressState: state.progress.state,
     currentBlockNumber: state.currentBlockNumber,
   }))
@@ -75,11 +77,11 @@ export function BidDetailsModal({
   const onchainClearingPrice = getClearingPrice(onchainCheckpoint, auctionDetails)
   const { t } = useTranslation()
 
-  // An undecided outcome cannot say whether this bid's funds are refundable, so it stays on the
-  // loading state instead of guessing.
+  // An undecided outcome cannot say whether this bid's funds are refundable, and a pending final
+  // price cannot say whether it was outbid, so both stay on the loading state instead of guessing.
   // TODO | Toucan -- technically should never hit the missing-auctionDetails state, but determine if
   // we need error states
-  if (!auctionDetails || outcome === AuctionOutcome.UNKNOWN) {
+  if (!auctionDetails || outcome === AuctionOutcome.UNKNOWN || isFinalPricePending) {
     return (
       <Modal name={ModalName.BidDetails} isModalOpen={isOpen} onClose={onClose} maxWidth={420} padding={0}>
         <Flex centered p="$spacing8" width="100%">

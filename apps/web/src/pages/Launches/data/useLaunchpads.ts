@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import type { Launchpad } from '@uniswap/client-launches/dist/launches/v1/types_pb'
 import { useMemo } from 'react'
 import { getListLaunchpadsQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/launches/queries'
-import { resolveLaunchIpfsImageUrl } from '~/pages/Launches/data/resolveLaunchIpfsImageUrl'
+import { resolveIpfsGatewayUrl } from 'utilities/src/format/gatewayUrls'
 
 const EMPTY_LAUNCHPADS: PlainMessage<Launchpad>[] = []
 
@@ -23,7 +23,7 @@ export function useLaunchpads(): {
   const launchpads = useMemo(
     () =>
       data?.launchpads
-        ? data.launchpads.map((launchpad) => ({ ...launchpad, logoUrl: resolveLaunchIpfsImageUrl(launchpad.logoUrl) }))
+        ? data.launchpads.map((launchpad) => ({ ...launchpad, logoUrl: resolveIpfsGatewayUrl(launchpad.logoUrl) }))
         : EMPTY_LAUNCHPADS,
     [data],
   )

@@ -90,7 +90,7 @@ function MountedTokenHoverCard({
     price,
     pricePercentChange,
     priceAbsoluteChange,
-    statsEnabled,
+    priceConfidenceScore,
     volume24hUsd,
     tvlUsd,
     statsLoading,
@@ -204,6 +204,7 @@ function MountedTokenHoverCard({
               price={price}
               pricePercentChange={pricePercentChange}
               priceAbsoluteChange={priceAbsoluteChange}
+              priceConfidenceScore={priceConfidenceScore}
               priceData={entries}
               chartLoading={chartLoading}
               volume24hUsd={volume24hUsd}
@@ -217,11 +218,7 @@ function MountedTokenHoverCard({
           ) : (
             // Stays mounted when the fetch settles empty: unmounting mid-hover flickers, and an unmounted
             // Popover can't fire onOpenChange to reset isOpen.
-            <TokenHoverCardPlaceholder
-              unavailable={currencyInfoUnavailable}
-              showStats={statsEnabled}
-              maxWidth={maxContentWidth}
-            />
+            <TokenHoverCardPlaceholder unavailable={currencyInfoUnavailable} maxWidth={maxContentWidth} />
           )}
         </MultichainAddressTransitionPanel>
       }

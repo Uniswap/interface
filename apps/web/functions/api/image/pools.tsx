@@ -8,6 +8,7 @@ import getFont from 'functions/utils/getFont'
 import getNetworkLogoUrl from 'functions/utils/getNetworkLogoURL'
 import getPool from 'functions/utils/getPool'
 import { getRequest } from 'functions/utils/getRequest'
+import { getSatoriImageUrl } from 'functions/utils/getSatoriImageUrl'
 import { type Context } from 'hono'
 import { URL_PARAM_TO_CHAIN_ID } from 'uniswap/src/features/chains/chainUrlParam'
 import { withTimeout } from 'uniswap/src/utils/polling'
@@ -48,10 +49,8 @@ export function PoolImage({
   tokenSymbol1?: string
   children?: React.ReactNode
 }) {
-  // ImageResponse cannot handle webp images: https://github.com/vercel/satori/issues/273#issuecomment-1296323042
-  // TODO: remove this check logic once @vercel/og supports webp, which appears to be in-progress https://github.com/vercel/satori/pull/622
-  const token0Image = token0ImageUrl?.includes('.webp') ? undefined : token0ImageUrl
-  const token1Image = token1ImageUrl?.includes('.webp') ? undefined : token1ImageUrl
+  const token0Image = getSatoriImageUrl(token0ImageUrl)
+  const token1Image = getSatoriImageUrl(token1ImageUrl)
 
   return (
     <div

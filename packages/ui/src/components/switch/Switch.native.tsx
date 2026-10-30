@@ -1,3 +1,4 @@
+import { useSporeColors } from '@universe/mycelium'
 import { memo, useEffect, useMemo } from 'react'
 import { type StyleProp, StyleSheet, type ViewStyle } from 'react-native'
 // RNGH Pressable (not RN's) so the switch's tap gesture coordinates with the RNGH-backed TouchableArea it nests inside.
@@ -11,7 +12,6 @@ import {
   SWITCH_TRACK_WIDTH,
 } from 'ui/src/components/switch/shared'
 import type { SwitchProps } from 'ui/src/components/switch/types'
-import { useSporeColors } from 'ui/src/hooks/useSporeColors'
 import { useEvent } from 'utilities/src/react/hooks'
 
 const ANIMATION_CONFIG = {

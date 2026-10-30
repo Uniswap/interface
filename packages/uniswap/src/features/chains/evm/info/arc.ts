@@ -90,7 +90,8 @@ export const ARC_CHAIN_INFO = {
   // No WETH-style wrapped native on Arc.
   wrappedNativeCurrency: null,
   networkLayer: NetworkLayer.L1,
-  blockTimeMs: 480,
+  // Measured ~508ms (Oct 2026), rounded up so block → time estimates land late, never early.
+  blockTimeMs: 510,
   pendingTransactionsRetryOptions: undefined,
   rpcUrls: {
     [RPCType.Public]: { http: [getUniRpcEndpointUrl(UniverseChainId.Arc)] },

@@ -24,6 +24,9 @@ export interface ProvenanceAnalyticsInput extends ProvenanceAnalyticsContext {
   launchMethod: LaunchProvenanceMethod | undefined
   phase: AuctionDisplayPhase
   poolAvailability: PoolAvailability
+  tokenAddress?: string
+  auctionAddress?: string
+  launchpadId?: string
 }
 
 export function getAnalyticsLaunchMethod(
@@ -68,8 +71,8 @@ const POOL_AVAILABILITY: Record<PoolAvailability, TokenProvenanceAnalyticsProper
 }
 
 /**
- * Allowlisting mapper for the Token Provenance events. It reads only the display-state enums it
- * names; extra wallet, bid or claim fields are discarded before calling the shared analytics client.
+ * Allowlisting mapper for the Token Provenance events: display-state enums plus public contract
+ * identifiers. Extra wallet, bid or claim fields are discarded before calling the shared analytics client.
  */
 export function buildProvenanceAnalyticsProperties({
   surface,
@@ -77,6 +80,9 @@ export function buildProvenanceAnalyticsProperties({
   launchMethod,
   phase,
   poolAvailability,
+  tokenAddress,
+  auctionAddress,
+  launchpadId,
   entry_point,
   auction_count,
   has_auction_history,
@@ -85,6 +91,9 @@ export function buildProvenanceAnalyticsProperties({
   return {
     surface,
     chain_id: chainId,
+    ...(tokenAddress && { token_address: tokenAddress }),
+    ...(auctionAddress && { auction_address: auctionAddress }),
+    ...(launchpadId && { launchpad: launchpadId }),
     auction_type: launchMethod ? AUCTION_TYPE[launchMethod] : 'unknown',
     auction_phase: AUCTION_PHASE[phase],
     pool_availability: POOL_AVAILABILITY[poolAvailability],

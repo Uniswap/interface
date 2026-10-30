@@ -2,14 +2,14 @@ import { Token } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
 import { TestID } from '@universe/test'
 import { createContext, type PropsWithChildren, useContext, useEffect } from 'react'
-import { LaunchProvenanceMethod } from 'uniswap/src/features/dataApi/launchProvenance'
+import { getAuctionLaunchMethod, LaunchProvenanceMethod } from 'uniswap/src/features/dataApi/launchProvenance'
+import { AuctionEventName } from 'uniswap/src/features/telemetry/constants'
 import { logger } from 'utilities/src/logger/logger'
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { useActiveAddress } from '~/features/accounts/store/hooks'
 import { useBidTokenInfo } from '~/features/Toucan/Auction/hooks/useBidTokenInfo'
 import { useWithdrawButtonState } from '~/features/Toucan/Auction/hooks/useWithdrawButtonState'
-import { getLaunchProvenanceFromAuction } from '~/features/Toucan/Auction/utils/auctionLaunchMethod'
 import { TokenDetailsClaimCard } from '~/pages/TokenDetails/components/claim/TokenDetailsClaimCard'
 import { TokenDetailsClaimProvider } from '~/pages/TokenDetails/components/claim/TokenDetailsClaimProvider'
 import type { TDPState } from '~/pages/TokenDetails/context/createTDPStore'
@@ -27,6 +27,9 @@ const mockModalUnmount = vi.fn()
 const mockNavigate = vi.fn()
 const MockSourceUpdates = createContext<object>({})
 
+vi.unmock('uniswap/src/features/telemetry/Trace')
+// Trace's web path does not use React Navigation; avoid loading its native ESM dependency tree.
+vi.mock('@react-navigation/core', () => ({ useFocusEffect: vi.fn() }))
 vi.mock('react-router', async (importOriginal) => ({
   ...(await importOriginal<typeof import('react-router')>()),
   useNavigate: () => mockNavigate,
@@ -35,7 +38,10 @@ vi.mock('~/features/accounts/store/hooks', async (importOriginal) => ({
   ...(await importOriginal<typeof import('~/features/accounts/store/hooks')>()),
   useActiveAddress: vi.fn(),
 }))
-vi.mock('~/features/Toucan/Auction/utils/auctionLaunchMethod', () => ({ getLaunchProvenanceFromAuction: vi.fn() }))
+vi.mock('uniswap/src/features/dataApi/launchProvenance', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('uniswap/src/features/dataApi/launchProvenance')>()),
+  getAuctionLaunchMethod: vi.fn(),
+}))
 vi.mock('~/pages/TokenDetails/context/useTDPStore', () => ({ useTDPStore: vi.fn() }))
 vi.mock('~/pages/TokenDetails/hooks/useTokenDetailsClaimableAllocation', () => ({
   useTokenDetailsClaimableAllocation: vi.fn(),
@@ -136,10 +142,7 @@ describe('TokenDetailsClaimCard', () => {
     vi.clearAllMocks()
     mockUserBidsInitialized = true
     mockWallet('0x1111111111111111111111111111111111111111')
-    mocked(getLaunchProvenanceFromAuction).mockReturnValue({
-      launchpad: { id: 'uniswap-cca', name: 'Uniswap' },
-      method: LaunchProvenanceMethod.CustomAuction,
-    })
+    mocked(getAuctionLaunchMethod).mockReturnValue(LaunchProvenanceMethod.CustomAuction)
     mockTDPStore(AUCTION)
     mockWithdrawButton({ isDisabled: false })
     mocked(useBidTokenInfo).mockReturnValue({
@@ -234,18 +237,37 @@ describe('TokenDetailsClaimCard', () => {
   })
 
   it.each([
-    [ClaimableAllocationState.Claimable, TestID.TokenDetailsClaimButton],
-    [ClaimableAllocationState.Refundable, TestID.TokenDetailsRefundButton],
-  ] as const)('does not report %s impressions, amounts or card clicks', (status, testId) => {
+    [ClaimableAllocationState.Claimable, TestID.TokenDetailsClaimButton, 'claim'],
+    [ClaimableAllocationState.Refundable, TestID.TokenDetailsRefundButton, 'refund'],
+  ] as const)('reports one %s impression without amounts, and no card clicks', (status, testId, claimType) => {
     const sendEvent = vi.spyOn(analytics, 'sendEvent').mockImplementation(() => undefined)
     mockAllocation({ status, amountRaw: 1500n * 10n ** 18n })
 
     render(<ClaimCardTestTree />)
-    expect(sendEvent).not.toHaveBeenCalled()
     fireEvent.click(screen.getByTestId(testId))
 
     expect(screen.getByTestId('withdraw-modal')).toBeInTheDocument()
-    expect(sendEvent).not.toHaveBeenCalled()
+    expect(sendEvent).toHaveBeenCalledExactlyOnceWith(AuctionEventName.AuctionClaimCardViewed, {
+      surface: 'tdp',
+      chain_id: UniverseChainId.Mainnet,
+      token_address: FOLD.address,
+      auction_address: AUCTION.address,
+      claim_type: claimType,
+    })
+  })
+
+  it('keeps one impression across rerenders and records another when a claim turns into a refund', () => {
+    const sendEvent = vi.spyOn(analytics, 'sendEvent').mockImplementation(() => undefined)
+    mockAllocation({ status: ClaimableAllocationState.Claimable, amountRaw: 1500n * 10n ** 18n })
+
+    const { rerender } = render(<ClaimCardTestTree />)
+    rerender(<ClaimCardTestTree />)
+    expect(sendEvent).toHaveBeenCalledOnce()
+
+    mockAllocation({ status: ClaimableAllocationState.Refundable, amountRaw: 3000n * 10n ** 6n })
+    rerender(<ClaimCardTestTree />)
+
+    expect(sendEvent.mock.calls.map(([, properties]) => properties.claim_type)).toEqual(['claim', 'refund'])
   })
 
   it('keeps unavailable-card Retry and View auction functional without sending card telemetry', () => {
@@ -469,10 +491,7 @@ describe('TokenDetailsClaimCard', () => {
 
   it('never mounts a retained claim session for unknown classification', () => {
     mockAllocation({ status: ClaimableAllocationState.Claimable, amountRaw: 500n })
-    mocked(getLaunchProvenanceFromAuction).mockReturnValue({
-      launchpad: { id: 'uniswap-cca', name: 'Uniswap' },
-      method: LaunchProvenanceMethod.Unknown,
-    })
+    mocked(getAuctionLaunchMethod).mockReturnValue(LaunchProvenanceMethod.Unknown)
     render(<ClaimCardTestTree />)
     expect(mockStoreProvider).not.toHaveBeenCalled()
     expect(screen.queryByTestId(TestID.TokenDetailsClaimCard)).not.toBeInTheDocument()

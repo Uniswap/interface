@@ -5,6 +5,7 @@ import type {
   MarginPositionsResponse,
   MarginTerminalPosition,
 } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
+import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { shortenAddress } from 'utilities/src/addresses'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { getDefaultMarginMarket } from '~/pages/Swap/Margin/__fixtures__/marginCatalog'
@@ -54,7 +55,7 @@ const SHORT_MARKET = {
   displaySymbol: 'USDC',
   collateral: MARKET.debt,
   debt: MARKET.collateral,
-  direction: 'SHORT',
+  direction: MarginDirection.SHORT,
 } as typeof MARKET
 
 function resolveMarketForTokens(tokens: { collateralToken: string; debtToken: string }): typeof MARKET | undefined {
@@ -90,7 +91,7 @@ vi.mock('uniswap/src/features/transactions/margin/stores/marginFormStore/useMarg
 const CLOSED_SHORT: MarginTerminalPosition = {
   status: 'COMPLETED',
   positionId: 'pos-closed-short',
-  direction: 'SHORT',
+  direction: MarginDirection.SHORT,
   exposureToken: { address: MARKET.collateral.address, chainId: 1, decimals: MARKET.collateral.decimals },
   counterToken: { address: MARKET.debt.address, chainId: 1, decimals: MARKET.debt.decimals },
   size: '2000000000000000000',
@@ -107,7 +108,7 @@ mockHistory.current = [CLOSED_SHORT]
 const UNRESOLVED_CLOSED: MarginTerminalPosition = {
   status: 'COMPLETED',
   positionId: 'pos-unresolved',
-  direction: 'LONG',
+  direction: MarginDirection.LONG,
   exposureToken: { address: UNRESOLVED_COLLATERAL, chainId: 1, decimals: 18 },
   counterToken: { address: UNRESOLVED_DEBT, chainId: 1, decimals: 6 },
   size: '53000000000000000', // 0.053
@@ -142,7 +143,7 @@ vi.mock('uniswap/src/data/apiClients/tradingApi/useMarginPositionsQuery', () => 
 const OPEN_LONG: MarginActivePosition = {
   status: 'ACTIVE',
   positionId: 'pos-open-long',
-  direction: 'LONG',
+  direction: MarginDirection.LONG,
   exposureToken: { address: MARKET.collateral.address, chainId: 1, decimals: MARKET.collateral.decimals },
   counterToken: { address: MARKET.debt.address, chainId: 1, decimals: MARKET.debt.decimals },
   size: '53000000000000000', // 0.053 WETH
@@ -179,7 +180,7 @@ const UNRESOLVED_OPEN: MarginActivePosition = {
 // equity is 4000 − 1924 = $2,076, so PnL is +$76 (+3.80%). Its exposure is the WETH it borrowed.
 const OPEN_SHORT_VALUED: MarginActivePosition = {
   ...OPEN_LONG,
-  direction: 'SHORT',
+  direction: MarginDirection.SHORT,
   size: '1000000000000000000', // 1 WETH (exposure = the debt leg for a short)
   legs: [{ venue: MARKET.venue, subId: '7', account: mockAccountAddress, debt: '1000000000000000000' }],
   equity: '2076000000', // 4,000 USDC collateral − 1·1,924 mark
@@ -368,7 +369,12 @@ describe('MarginPositionsTable', () => {
 
   it('reports history realized PnL in USD, so both tabs of this table agree', () => {
     mockHistory.current = [
-      { ...CLOSED_SHORT, direction: 'LONG', realizedPnlUsd: '-1234560000', realizedPnl: '5000000000000000000' },
+      {
+        ...CLOSED_SHORT,
+        direction: MarginDirection.LONG,
+        realizedPnlUsd: '-1234560000',
+        realizedPnl: '5000000000000000000',
+      },
     ]
     render(<MarginPositionsTable />)
     fireEvent.click(screen.getByText('Closed'))
@@ -396,7 +402,12 @@ describe('MarginPositionsTable', () => {
 
   it('explains realized PnL on a closed position', () => {
     mockHistory.current = [
-      { ...CLOSED_SHORT, direction: 'LONG', realizedPnlUsd: '-1234560000', realizedPnl: '5000000000000000000' },
+      {
+        ...CLOSED_SHORT,
+        direction: MarginDirection.LONG,
+        realizedPnlUsd: '-1234560000',
+        realizedPnl: '5000000000000000000',
+      },
     ]
     render(<MarginPositionsTable />)
     fireEvent.click(screen.getByText('Closed'))
@@ -404,7 +415,7 @@ describe('MarginPositionsTable', () => {
   })
 
   it('leaves an unexplainable realized figure as a bare dash', () => {
-    mockHistory.current = [{ ...CLOSED_SHORT, direction: 'LONG', realizedPnlUsd: undefined }]
+    mockHistory.current = [{ ...CLOSED_SHORT, direction: MarginDirection.LONG, realizedPnlUsd: undefined }]
     render(<MarginPositionsTable />)
     fireEvent.click(screen.getByText('Closed'))
     expect(screen.queryByTestId(TestID.MarginRealizedTrigger)).not.toBeInTheDocument()

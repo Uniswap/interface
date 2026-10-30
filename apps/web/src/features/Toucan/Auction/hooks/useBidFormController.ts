@@ -1,5 +1,5 @@
+import { snapToNearestTick } from '@universe/cca'
 import { type UniverseChainId, Platform, type EVMUniverseChainId, areEvmAddressesEqual } from '@universe/chains'
-import type { ColorTokens } from '@universe/mycelium'
 import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import { useEffect, useMemo } from 'react'
 import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
@@ -25,7 +25,7 @@ import { useMinValidBid } from '~/features/Toucan/Auction/hooks/useMinValidBid'
 import { useAuctionStore, useAuctionStoreActions } from '~/features/Toucan/Auction/store/useAuctionStore'
 import { getClearingPrice } from '~/features/Toucan/Auction/utils/clearingPrice'
 import { approximateNumberFromRaw } from '~/features/Toucan/Auction/utils/fixedPointFdv'
-import { calculateQuickLaunchMaxBidQ96, snapToNearestTick } from '~/features/Toucan/Auction/utils/ticks'
+import { calculateQuickLaunchMaxBidQ96 } from '~/features/Toucan/Auction/utils/ticks'
 import { getAuctionTokenDecimals } from '~/features/Toucan/Auction/utils/tokenMetadata'
 
 interface UseBidFormControllerResult {
@@ -51,7 +51,7 @@ interface UseBidFormControllerResult {
 }
 
 interface UseBidFormControllerParams {
-  tokenColor?: ColorTokens
+  tokenColor?: string
   onTransactionSubmitted?: () => void
   onInputChange?: () => void
 }
@@ -169,18 +169,18 @@ export function useBidFormController({
     tickSizeQ96,
   })
 
-  // QuickLaunch: no max-FDV input, so the bid uses the fixed product ceiling (the 25,000 ETH FDV
-  // cap in ticks.ts, mirroring pools.trade / labs/rh-cca) instead of the min valid bid — the
-  // order stays active through price discovery instead of silently dropping out.
+  // QuickLaunch: no max-FDV input, so the bid uses the chain's fixed product ceiling (the
+  // quick-launch FDV cap in ticks.ts, shared with apps/pools-xyz via @universe/cca) instead of the
+  // min valid bid — the order stays active through price discovery instead of silently dropping out.
   const isQuickLaunch = useIsQuickLaunchAuction()
 
   const quickLaunchMaxBidQ96 = useMemo(() => {
-    // Falsy guards mirror useMinValidBid's; ticks.ts keeps its own tickSize <= 0n branch for
-    // parity with the rh-cca source (independently unit-tested), it's just unreachable from here.
-    if (!isQuickLaunch || !clearingPriceQ96 || !floorPriceQ96 || !tickSizeQ96) {
+    // Falsy guards mirror useMinValidBid's. The ceiling throws on a non-positive tick, so that is
+    // excluded explicitly; on-chain prices are unsigned, so the other two cannot be negative.
+    if (!isQuickLaunch || !chainId || !clearingPriceQ96 || !floorPriceQ96 || !tickSizeQ96 || tickSizeQ96 < 0n) {
       return undefined
     }
-    const unbounded = calculateQuickLaunchMaxBidQ96({ clearingPriceQ96, floorPriceQ96, tickSizeQ96 })
+    const unbounded = calculateQuickLaunchMaxBidQ96({ chainId, clearingPriceQ96, floorPriceQ96, tickSizeQ96 })
     // A quick launch hides the max-FDV input, so an over-ceiling peg would be a bid the
     // user can neither see nor correct — it would just revert on submission. Clamp to the
     // highest tick the hook accepts. When even that is exhausted the form is already
@@ -190,7 +190,7 @@ export function useBidFormController({
       return ceiling
     }
     return unbounded
-  }, [isQuickLaunch, clearingPriceQ96, floorPriceQ96, tickSizeQ96, maxBidPrice.maxValidBidQ96])
+  }, [isQuickLaunch, chainId, clearingPriceQ96, floorPriceQ96, tickSizeQ96, maxBidPrice.maxValidBidQ96])
 
   const quickLaunchMaxValuationDisplay = useMemo(() => {
     if (!quickLaunchMaxBidQ96 || bidTokenDecimals === undefined || auctionTokenDecimals === undefined) {
@@ -406,7 +406,7 @@ export function useBidFormController({
     // default before any interaction, which must not render a bid indicator) and we have a valid,
     // non-zero max valuation and required parameters.
     // QuickLaunch: no bid line — the user never chose a max FDV, so drawing the synthetic
-    // ceiling (the 25,000 ETH FDV cap) on the chart would only confuse.
+    // ceiling (the quick-launch FDV cap) on the chart would only confuse.
     if (
       hasUserSetMaxValuation &&
       !isQuickLaunch &&

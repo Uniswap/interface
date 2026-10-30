@@ -158,6 +158,7 @@ describe('useNavigateToAuctionTokenDetails', () => {
       expect(impressionProperties).toEqual({
         surface: 'adp',
         chain_id: UniverseChainId.Mainnet,
+        token_address: TOKEN_ADDRESS,
         auction_type: 'unknown',
         launch_method: 'unknown',
         entry_point: entryPoint,

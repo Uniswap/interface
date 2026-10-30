@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { AuctionTimePhase, getAuctionTimePhase } from 'uniswap/src/features/toucan/auctionTimePhase'
 import { getDurationRemainingString } from 'utilities/src/time/duration'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useSharedMachineTimeMs } from 'utilities/src/time/useSharedMachineTimeMs'
@@ -52,9 +53,13 @@ export function useAuctionTimeRemaining({
     }
 
     const startTimestampMs = Number(startBlockTimestamp) * 1000
+    const { phase: timePhase } = getAuctionTimePhase({
+      startTimeMs: startTimestampMs,
+      endTimeMs: endTimestampMs,
+      nowMs: currentTime,
+    })
 
-    // Determine auction state
-    if (currentTime < startTimestampMs) {
+    if (timePhase === AuctionTimePhase.Upcoming) {
       // NOT_STARTED: Auction hasn't begun yet
       const durationString = getDurationRemainingString(startTimestampMs, currentTime)
       return {
@@ -67,7 +72,7 @@ export function useAuctionTimeRemaining({
       }
     }
 
-    if (currentTime >= endTimestampMs) {
+    if (timePhase === AuctionTimePhase.Ended) {
       // COMPLETED: surface completion recency instead of a static "Completed".
       const timeString = t('toucan.auction.timeAgo', { time: completedAgo })
       return {

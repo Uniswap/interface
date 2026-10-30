@@ -1,16 +1,19 @@
 import { Text } from '@universe/mycelium'
 import { type LaunchProvenance, LaunchProvenanceMethod } from 'uniswap/src/features/dataApi/launchProvenance'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import {
   getLaunchpadDestination,
   type LaunchpadDestination,
   ProvenanceLaunchpadLink,
 } from '~/features/Toucan/Shared/ProvenanceLaunchpadLink'
-import { render, screen } from '~/test-utils/render'
+import { act, fireEvent, render, screen } from '~/test-utils/render'
 
 // `sanitizeUrl` warns on a rejected launchpad url; the harness fails any test that reaches console.warn.
 vi.mock('utilities/src/logger/logger', () => ({ logger: { warn: vi.fn() } }))
+vi.mock('uniswap/src/features/telemetry/send', () => ({ sendAnalyticsEvent: vi.fn() }))
 
+const TOKEN_ADDRESS = '0x2222222222222222222222222222222222222222'
 const AUCTION_ADDRESS = '0x1111111111111111111111111111111111111111'
 // oxlint-disable-next-line no-script-url -- the scheme the http(s) guard must reject
 const SCRIPT_URL = 'javascript:alert(1)'
@@ -29,6 +32,7 @@ function renderLink(launchpad: LaunchProvenance['launchpad'], destination: Launc
       {...destination}
       element={ElementName.ProvenanceHeaderLaunchpad}
       launchMethod="third_party"
+      tokenAddress={TOKEN_ADDRESS}
       onPress={vi.fn()}
     >
       <Text>{launchpad.name}</Text>
@@ -46,6 +50,21 @@ describe('ProvenanceLaunchpadLink', () => {
     expect(viewAll).toHaveAttribute('rel', 'noopener noreferrer')
     // The affordance itself keeps its own link, so both lead to the launchpad's listing.
     expect(screen.getByText('Pons').closest('a')).toHaveAttribute('href', 'https://pons.example')
+  })
+
+  it('reports opening the tooltip with where it sits and the token', async () => {
+    renderLink(PONS, { href: 'https://pons.example', isExternal: true })
+
+    // Popper repositions asynchronously on open.
+    await act(async () => {
+      fireEvent.mouseEnter(screen.getByText('Pons'))
+    })
+
+    expect(sendAnalyticsEvent).toHaveBeenCalledWith(UniswapEventName.TooltipOpened, {
+      element: ElementName.ProvenanceHeaderLaunchpad,
+      tooltip_name: 'provenance_launchpad_tooltip',
+      token_address: TOKEN_ADDRESS,
+    })
   })
 
   it('renders children bare with no tooltip when the launchpad has nowhere to lead', () => {

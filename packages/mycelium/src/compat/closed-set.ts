@@ -37,7 +37,6 @@ import { DISPLAY_CLASS } from '../flex-compat/flex-style-classes'
  * values hit the dev throw (production keep-and-warn). This is the one
  * documented openness.
  */
-import { LONG_TAIL_STYLE_PROPS as TEXT_LONG_TAIL_STYLE_PROPS } from '../text-compat/style-props'
 import { FONT_DEFINITIONS, THEME_COLOR_TOKENS, VARIANT_METRICS } from '../text-compat/theme-tokens.generated'
 import { FONT_WEIGHT_TOKEN } from '../text-compat/tokens'
 import {
@@ -49,7 +48,6 @@ import {
 import { ENTER_EXIT_PRESET_CLASSES, ENTER_PRESET_CLASSES, EXIT_PRESET_CLASSES } from './animations'
 import { TEXT_ALIGN_CLASS } from './inherited-text-classes'
 import { REACHABLE_VARIANT_PREFIXES, varIndirectionClasses } from './inline-style'
-import { MEDIA_VARIANT } from './media'
 import {
   ALIGN_ITEMS_CLASS,
   ALIGN_SELF_CLASS,
@@ -61,7 +59,7 @@ import {
   RESET_CLASSES,
   WRAP_CLASS,
 } from './style-classes'
-import { cssPropertyName, LONG_TAIL_STYLE_PROPS, POINTER_EVENTS_BOX_CLASSES } from './style-props'
+import { POINTER_EVENTS_BOX_CLASSES } from './style-props'
 import { COLOR_TOKEN_CLASS, RADIUS_TOKEN_PX, SPACE_TOKEN_PX, THEMED_COLOR_TOKEN_CLASSES } from './tokens'
 
 // ── Static value ladders ───────────────────────────────────────────────
@@ -135,9 +133,6 @@ const ENUMERABLE_LONG_TAIL: Record<string, readonly string[]> = {
   'box-shadow': ['none'],
   transition: ['none'],
 }
-
-/** Every media variant (`media-md:` …) — real max-width/max-height CSS, byte-identical to Tamagui. */
-export const MEDIA_VARIANTS: readonly string[] = Object.values(MEDIA_VARIANT)
 
 // ── Family enumeration (base tier) ─────────────────────────────────────
 
@@ -359,14 +354,4 @@ export function compatFamilyClassEntries(): string[] {
  */
 export function compatTwinClassEntries(): string[] {
   return ['', ...REACHABLE_VARIANT_PREFIXES].flatMap((prefix) => varIndirectionClasses(prefix))
-}
-
-/**
- * Sanity surface for the long-tail twin coverage gates: the union of CSS
- * property names the generic long-tail compilers can emit.
- */
-export function longTailCssProperties(): string[] {
-  return [
-    ...new Set([...LONG_TAIL_STYLE_PROPS.map(cssPropertyName), ...TEXT_LONG_TAIL_STYLE_PROPS.map(cssPropertyName)]),
-  ]
 }

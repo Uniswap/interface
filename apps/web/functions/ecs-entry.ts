@@ -103,4 +103,9 @@ const port = Number(process.env.PORT) || 3000
 
 // oxlint-disable-next-line no-console
 console.log(`[ecs-entry] listening on :${port}`)
-serve({ fetch: root.fetch, port })
+const server = serve({ fetch: root.fetch, port })
+
+// ECS sends SIGTERM after the ALB drains this task; bun as PID 1 would otherwise ignore it until SIGKILL.
+process.on('SIGTERM', () => {
+  server.close(() => process.exit(0))
+})

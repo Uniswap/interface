@@ -1,7 +1,9 @@
 import { GraphQLApi } from '@universe/api'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
-import { useTokenMarketStats } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
+import {
+  useTokenMarketStats,
+  useTokenPriceConfidenceScore,
+} from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { buildCurrencyInfo } from 'uniswap/src/features/dataApi/utils/buildCurrency'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { useTokenHoverCardData } from '~/components/HoverCard/TokenHoverCard/useTokenHoverCardData'
@@ -15,6 +17,7 @@ vi.mock('~/hooks/useTokenPriceChartData', () => ({
 
 vi.mock('uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData', () => ({
   useTokenMarketStats: vi.fn(),
+  useTokenPriceConfidenceScore: vi.fn(),
 }))
 
 const currencyInfo = buildCurrencyInfo({
@@ -40,23 +43,10 @@ describe(useTokenHoverCardData, () => {
   beforeEach(() => {
     mocked(useTokenPriceChartData).mockReturnValue({ entries: [], loading: false } as never)
     mocked(useTokenMarketStats).mockReturnValue({ volume: 188_800, tvl: 2_300_000, isLoading: false } as never)
+    mocked(useTokenPriceConfidenceScore).mockReturnValue(0.004)
   })
 
-  it('skips the market stats query and reports no stats while the search v2 UI flag is off', () => {
-    mocked(useFeatureFlag).mockReturnValue(false)
-
-    const { result } = renderData()
-
-    expect(useTokenMarketStats).toHaveBeenLastCalledWith(
-      currencyInfo.currencyId,
-      expect.objectContaining({ skip: true }),
-    )
-    expect(result.current.statsEnabled).toBe(false)
-  })
-
-  it('fetches volume and TVL once open with the flag on', () => {
-    mocked(useFeatureFlag).mockImplementation((flag) => flag === FeatureFlags.SearchV2UI)
-
+  it('fetches volume and TVL once open', () => {
     const { result } = renderData()
 
     expect(useTokenMarketStats).toHaveBeenLastCalledWith(
@@ -64,16 +54,33 @@ describe(useTokenHoverCardData, () => {
       expect.objectContaining({ skip: false, isMultichainAggregateView: false }),
     )
     expect(result.current).toEqual(
-      expect.objectContaining({ statsEnabled: true, volume24hUsd: 188_800, tvlUsd: 2_300_000, statsLoading: false }),
+      expect.objectContaining({ volume24hUsd: 188_800, tvlUsd: 2_300_000, statsLoading: false }),
     )
   })
 
   it('holds the market stats query until the card is open', () => {
-    mocked(useFeatureFlag).mockImplementation((flag) => flag === FeatureFlags.SearchV2UI)
-
     renderData({ isOpen: false })
 
     expect(useTokenMarketStats).toHaveBeenLastCalledWith(
+      currencyInfo.currencyId,
+      expect.objectContaining({ skip: true }),
+    )
+  })
+
+  it('reads the price confidence score once open', () => {
+    const { result } = renderData()
+
+    expect(useTokenPriceConfidenceScore).toHaveBeenLastCalledWith(
+      currencyInfo.currencyId,
+      expect.objectContaining({ skip: false, multichain: false }),
+    )
+    expect(result.current.priceConfidenceScore).toBe(0.004)
+  })
+
+  it('holds the price confidence query until the card is open', () => {
+    renderData({ isOpen: false })
+
+    expect(useTokenPriceConfidenceScore).toHaveBeenLastCalledWith(
       currencyInfo.currencyId,
       expect.objectContaining({ skip: true }),
     )

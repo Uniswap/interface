@@ -173,6 +173,29 @@ describe(useTokenDetailsAuction, () => {
     })
   })
 
+  it('prefers a live auction over a newer one that already ended', () => {
+    const nowSeconds = BigInt(Math.floor(Date.now() / 1000))
+    const endedRelaunch = {
+      ...AUCTION,
+      estimatedStartTime: { seconds: nowSeconds - 7200n, nanos: 0 },
+      estimatedEndTime: { seconds: nowSeconds - 3600n, nanos: 0 },
+    } as PlainMessage<Auction>
+    const liveAuction = {
+      ...SECOND_AUCTION,
+      estimatedStartTime: { seconds: nowSeconds - 86400n, nanos: 0 },
+      estimatedEndTime: { seconds: nowSeconds + 3600n, nanos: 0 },
+    } as PlainMessage<Auction>
+    mockUseQuery.mockReturnValue(queryResult({ data: { auctions: [endedRelaunch, liveAuction] }, isSuccess: true }))
+
+    const { result } = renderAuction()
+
+    expect(result.current).toEqual({
+      status: TokenDetailsSourceState.Found,
+      auction: liveAuction,
+      auctions: [endedRelaunch, liveAuction],
+    })
+  })
+
   it('does not restore a cached hidden auction when a background refetch fails', () => {
     const error = new Error('unavailable')
     mockUseQuery.mockReturnValue(queryResult({ data: { auctions: [HIDDEN_AUCTION] }, error }))

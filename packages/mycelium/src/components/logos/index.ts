@@ -10,6 +10,5 @@
 // to `currentColor`, which destroys brand palettes) — same rationale as
 // GoogleLogoGradient in components/icons.
 
-// No mycelium consumer yet: the legacy call-site swap is sequenced behind
-// in-flight icon-slot work — delete this note when INFRA-3598 lands the swap.
 export { AnimatedGoogleChromeLogo, GoogleChromeLogo } from './GoogleChromeLogo'
+export { AcrossLogo, AnimatedAcrossLogo } from './AcrossLogo'

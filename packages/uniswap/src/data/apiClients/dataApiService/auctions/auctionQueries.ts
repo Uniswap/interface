@@ -180,7 +180,7 @@ function getListTopAuctionsQueryOptions(
   { params, ...rest }: UseQueryApiHelperHookArgs<ListTopAuctionsRequest, PlainMessage<ListTopAuctionsResponse>>,
 ): QueryOptionsResult<PlainMessage<ListTopAuctionsResponse>, Error, PlainMessage<ListTopAuctionsResponse>, QueryKey> {
   return persistableQueryOptions({
-    queryKey: [ReactQueryCacheKey.AuctionApi, 'listTopAuctions', params],
+    queryKey: auctionQueryKeys.listTopAuctions(params),
     queryFn: async () => {
       if (!params) {
         throw new Error('params required')

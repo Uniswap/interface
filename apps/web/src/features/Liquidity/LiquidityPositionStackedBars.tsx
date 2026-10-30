@@ -36,6 +36,7 @@ function BarSlice({ currencyInfo, share }: { currencyInfo: CurrencyInfo; share: 
     src: currencyInfo.logoUrl ?? undefined,
     currencyName: currencyInfo.currency.name,
     backgroundColor: colors.surface2.val,
+    colorOverrides: currencyInfo.colorOverrides,
   })
 
   return (

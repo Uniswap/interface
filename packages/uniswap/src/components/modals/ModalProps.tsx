@@ -38,6 +38,9 @@ export type ModalProps = PropsWithChildren<{
   position?: 'absolute' | 'relative' | 'static' | 'unset'
   renderBehindTopInset?: boolean
   renderBehindBottomInset?: boolean
+  // native Android only, with renderBehindBottomInset: pins a strip of the sheet background over the bottom
+  // inset so scrolled content doesn't show through the transparent 3-button navigation bar
+  coverBottomInsetOnAndroid?: boolean
   hideKeyboardOnDismiss?: boolean
   hideKeyboardOnSwipeDown?: boolean
   // native only; 'restore' settles the sheet back to its resting position after the keyboard hides (gorhom default: 'none')

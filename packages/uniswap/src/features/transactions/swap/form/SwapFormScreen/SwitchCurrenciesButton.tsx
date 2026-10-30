@@ -1,7 +1,6 @@
-import { Flex } from '@universe/mycelium'
+import { Flex, useIsShortMobileDevice } from '@universe/mycelium'
 import { TestID } from '@universe/test'
 import { memo } from 'react'
-import { useIsShortMobileDevice } from 'ui/src'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import { spacing } from 'ui/src/theme/spacing'
 import { ElementName, SwapEventName } from 'uniswap/src/features/telemetry/constants'

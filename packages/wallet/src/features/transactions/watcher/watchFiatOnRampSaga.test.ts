@@ -1,9 +1,16 @@
+import dayjs from 'dayjs'
 import { expectSaga } from 'redux-saga-test-plan'
 import * as matchers from 'redux-saga-test-plan/matchers'
 import { call, delay } from 'redux-saga/effects'
 import { PollingInterval } from 'uniswap/src/constants/misc'
+import { formatTransactionsByDate } from 'uniswap/src/features/activity/formatTransactionsByDate'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { forceFetchFiatOnRampTransactions, transactionActions } from 'uniswap/src/features/transactions/slice'
+import {
+  forceFetchFiatOnRampTransactions,
+  transactionActions,
+  transactionReducer,
+  TransactionsState,
+} from 'uniswap/src/features/transactions/slice'
 import { TransactionDetails, TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import {
   fiatPurchaseTransactionInfo,
@@ -80,7 +87,7 @@ describe(watchFiatOnRampTransaction, () => {
         ])
         .delay(PollingInterval.Fast)
         // only called once
-        .put(transactionActions.upsertFiatOnRampTransaction(confirmedTx))
+        .put(transactionActions.upsertFORTransaction(confirmedTx))
         .silentRun()
     )
   })
@@ -115,7 +122,7 @@ describe(watchFiatOnRampTransaction, () => {
         .dispatch(forceFetchFiatOnRampTransactions())
         .dispatch(forceFetchFiatOnRampTransactions())
         // only called once
-        .put(transactionActions.upsertFiatOnRampTransaction(confirmedTx))
+        .put(transactionActions.upsertFORTransaction(confirmedTx))
         .silentRun()
     )
   })
@@ -135,8 +142,33 @@ describe(watchFiatOnRampTransaction, () => {
         [matchers.call.fn(sendAnalyticsEvent), undefined],
         [matchers.select(selectActiveAccountAddress), null],
       ])
-      .put(transactionActions.upsertFiatOnRampTransaction(confirmedTx))
+      .put(transactionActions.upsertFORTransaction(confirmedTx))
       .not.call.fn(delay) // Changed from sleep to delay
       .run()
+  })
+
+  it('keeps the original date when a long-pending transaction resolves with a fresh backend createdAt', async () => {
+    const originalAddedTime = dayjs().subtract(9, 'months').valueOf()
+    const storedTx = { ...txDetailsPending, addedTime: originalAddedTime }
+    // Backend re-reports createdAt as "now" when the record is finally polled to completion
+    const resolvedTx = { ...storedTx, status: TransactionStatus.Success, addedTime: Date.now() }
+    const preloadedState: TransactionsState = {
+      [storedTx.from]: { [storedTx.chainId]: { [storedTx.id]: storedTx } },
+    }
+
+    const { storeState } = await expectSaga(watchFiatOnRampTransaction, storedTx)
+      .withReducer(transactionReducer, preloadedState)
+      .provide([
+        [matchers.call.fn(fetchFORTransaction), resolvedTx],
+        [matchers.select(selectActiveAccountAddress), null],
+      ])
+      .run()
+
+    const tx = (storeState as TransactionsState)[storedTx.from]?.[storedTx.chainId]?.[storedTx.id]
+    expect(tx?.status).toEqual(TransactionStatus.Success)
+    expect(tx?.addedTime).toEqual(originalAddedTime)
+
+    const { todayTransactionList } = formatTransactionsByDate(tx ? [tx] : [], dayjs)
+    expect(todayTransactionList).toEqual([])
   })
 })

@@ -2,14 +2,15 @@
  * Direct port of ui's useExtractedTokenColor, composed from existing compat legs;
  * every platform-dependent input rides its own leg. Parity-pinned against the ui source.
  */
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { isSVGUri } from 'utilities/src/format/urls'
 import { useExtractedColors } from './extracted-colors'
-import { getSpecialCaseTokenColor } from './special-case-token-color'
 import { pickContrastPassingTokenColor } from './token-color-utils'
 import { useColorSchemeFromSeed } from './useColorSchemeFromSeed'
 import { useIsDarkMode } from './useIsDarkMode'
 import { useSporeColors } from './useSporeColors'
+
+export type TokenColorOverrides = { light: string; dark: string }
 
 /**
  * Picks a contrast-passing color from a given token image URL and background
@@ -17,6 +18,7 @@ import { useSporeColors } from './useSporeColors'
  * the best of them.
  *
  * @param imageUrl The URL of the image to extract a color from
+ * @param colorOverrides Backend-curated colors for the token; used as-is in place of extraction when set
  * @param tokenName The ticker of the asset (used to derive a color when no logo is available)
  * @param backgroundColor The hex value of the background color to check contrast against
  * @param defaultColor The color returned while the extraction is still loading
@@ -27,14 +29,17 @@ export function useExtractedTokenColor({
   tokenName,
   backgroundColor,
   defaultColor,
+  colorOverrides,
 }: {
   imageUrl: string | null | undefined
   tokenName: string | null | undefined
   backgroundColor: string
   defaultColor: string
+  colorOverrides?: TokenColorOverrides
 }): { tokenColor: string | null; tokenColorLoading: boolean } {
   const sporeColors = useSporeColors()
-  const { colors, colorsLoading } = useExtractedColors(imageUrl)
+  // A curated color makes extraction moot, so don't fetch and decode the logo for it.
+  const { colors, colorsLoading } = useExtractedColors(colorOverrides ? undefined : imageUrl)
   const [tokenColor, setTokenColor] = useState(defaultColor)
   const [tokenColorLoading, setTokenColorLoading] = useState(true)
   const isDarkMode = useIsDarkMode()
@@ -74,12 +79,8 @@ export function useExtractedTokenColor({
     }
   }, [backgroundColor, colors, colorsLoading, isDarkMode])
 
-  const specialCaseTokenColor = useMemo(() => {
-    return getSpecialCaseTokenColor(imageUrl, isDarkMode)
-  }, [imageUrl, isDarkMode])
-
-  if (specialCaseTokenColor) {
-    return { tokenColor: specialCaseTokenColor, tokenColorLoading: false }
+  if (colorOverrides) {
+    return { tokenColor: isDarkMode ? colorOverrides.dark : colorOverrides.light, tokenColorLoading: false }
   }
 
   if (isSVGUri(imageUrl)) {

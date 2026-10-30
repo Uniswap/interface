@@ -1,5 +1,4 @@
-import { Flex } from '@universe/mycelium'
-import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
+import { Flex, LinearGradient } from '@universe/mycelium'
 import { useMemo } from 'react'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { shuffleArray } from 'uniswap/src/components/IconCloud/utils'
@@ -38,15 +37,17 @@ function TokenStrip({ tokens }: { tokens: InteractiveToken[] }): JSX.Element {
  * behind the welcome screen's Uniswap logo, fading out at both edges.
  */
 export function TokenCarousel(): JSX.Element {
-  const colors = useSporeColors()
-
   const tokens = useMemo(() => shuffleArray(approvedERC20).slice(0, CAROUSEL_TOKEN_COUNT), [])
 
   return (
     <>
       <style>{scrollKeyframes}</style>
       <Flex height={TOKEN_SIZE} width="100%" overflow="hidden">
-        <Flex
+        <LinearGradient
+          colors={['$surface1', '$transparent', '$transparent', '$surface1']}
+          locations={[0, 0.4, 0.6, 1]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
           position="absolute"
           height="100%"
           top={0}
@@ -54,9 +55,7 @@ export function TokenCarousel(): JSX.Element {
           right={0}
           bottom={0}
           zIndex={1}
-          style={{
-            background: `linear-gradient(90deg, ${colors.surface1.variable} 0%, ${colors.transparent.variable} 40%, ${colors.transparent.variable} 60%, ${colors.surface1.variable} 100%)`,
-          }}
+          pointerEvents="none"
         />
         <Flex
           row

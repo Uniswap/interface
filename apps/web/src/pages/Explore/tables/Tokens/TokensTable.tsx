@@ -4,7 +4,6 @@ import type { RankedMultichainToken } from '@uniswap/client-data-api/dist/data/v
 import { UniverseChainId } from '@universe/chains'
 import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { Flex, Text } from '@universe/mycelium'
-import { InfoCircle } from '@universe/mycelium/icons/InfoCircle'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
 import { useEffect, useMemo } from 'react'
@@ -24,6 +23,11 @@ import { SparklineChart } from '~/components/Charts/SparklineChart'
 import { DeltaArrow } from '~/components/DeltaArrow/DeltaArrow'
 import { Table } from '~/components/Table'
 import { Cell } from '~/components/Table/Cell'
+import {
+  FLUSH_CELL_PADDING,
+  FLUSH_COLLAPSED_COLUMN_WIDTH,
+  FLUSH_HEADER_CELL_PADDING,
+} from '~/components/Table/PinnedColumns/collapse/utils'
 import { TableText } from '~/components/Table/shared/TableText'
 import { HeaderCell } from '~/components/Table/styled'
 import {
@@ -53,12 +57,9 @@ import { getTokenDescriptionColumnSize, TokenDescription } from '~/pages/Explore
 import { TokenTableHeader } from '~/pages/Explore/tables/Tokens/TokenTableHeader'
 import { useTokenTableSortStore } from '~/pages/Explore/tables/Tokens/tokenTableSortStore'
 import type { TokenTableValue } from '~/pages/Explore/tables/Tokens/tokenTableTypes'
-import { hasVolumeBreakdown } from '~/pages/Explore/tables/Tokens/VolumeByNetworkPopover/utils'
-import { VolumeByNetworkPopover } from '~/pages/Explore/tables/Tokens/VolumeByNetworkPopover/VolumeByNetworkPopover'
+import { TokenVolumeCell } from '~/pages/Explore/tables/Tokens/TokenVolumeCell'
 import { getChainIdFromChainUrlParam, getChainUrlParam } from '~/utils/params/chainParams'
 import { TDP_MULTICHAIN_CHAIN_QUERY_VALUE } from '~/utils/params/chainQueryParam'
-
-const VOLUME_INFO_ICON_WIDTH = 16
 
 const ROW_HEIGHT = 64
 
@@ -102,13 +103,12 @@ export function TokenTable({
   const rwaWhitelist = useRWAWhitelist()
   const plainTokenNames = useIsTokenCategoriesEnabled()
 
+  const { lg: isLg } = useMedia()
+  const textVariant = isLg ? '$body3' : '$body2'
   const tokenTableValues: TokenTableValue[] | undefined = useMemo(
     () =>
       tokens?.flatMap((rankedToken, i) => {
         const mc = rankedToken.multichainToken
-        // Constrained pick: the row identity chain (address, testId, analytics, TDP link target)
-        // must belong to the same filtered set that gates the label/hover/link, or a stale cached
-        // leg on a since-disabled chain could become the row's identity.
         const primary = mc
           ? pickAllowedPrimaryDeployment({
               rankedToken,
@@ -161,7 +161,7 @@ export function TokenTable({
             index: tokenSortIndex,
             multichainId: mc.multichainId,
             rowKey,
-            token: { chainId: chainId as UniverseChainId, address: unwrappedToken.address, price: mc.price?.spotUsd },
+            token: { chainId, address: unwrappedToken.address, price: mc.price?.spotUsd },
             mcToken: rankedToken,
             chainIdsByVolume,
             tokenDescription: (
@@ -171,23 +171,25 @@ export function TokenTable({
                 name={name}
                 symbol={unwrappedToken.symbol}
                 address={unwrappedToken.address}
-                chainId={chainId as UniverseChainId}
+                chainId={chainId}
                 logoUrl={mc.project?.logoUrl}
                 categoryIds={categoryId === undefined ? mc.categoryIds : undefined}
                 issuer={issuer}
+                isCompact={isLg}
+                flush
               />
             ),
             testId: `${TestID.TokenTableRowPrefix}${unwrappedToken.address}`,
             percentChange1hr: (
               <Flex row gap="$gap4" alignItems="center">
                 <DeltaArrow delta={delta1hr} formattedDelta={formatPercent(delta1hrAbs)} />
-                <AnimatedNumber numericValue={delta1hr} textVariant="$body2" value={formatPercent(delta1hrAbs)} />
+                <AnimatedNumber numericValue={delta1hr} textVariant={textVariant} value={formatPercent(delta1hrAbs)} />
               </Flex>
             ),
             percentChange1d: (
               <Flex row gap="$gap4" alignItems="center">
                 <DeltaArrow delta={delta1d} formattedDelta={formatPercent(delta1dAbs)} />
-                <AnimatedNumber numericValue={delta1d} textVariant="$body2" value={formatPercent(delta1dAbs)} />
+                <AnimatedNumber numericValue={delta1d} textVariant={textVariant} value={formatPercent(delta1dAbs)} />
               </Flex>
             ),
             fdv: parseAmount(fdvValue, NumberType.FiatTokenStats),
@@ -242,11 +244,12 @@ export function TokenTable({
       timePeriod,
       tokenSortRank,
       tokens,
+      isLg,
+      textVariant,
     ],
   )
 
   const showLoadingSkeleton = loading || !!error
-
   useEffect(() => {
     if (showLoadingSkeleton) {
       return
@@ -263,7 +266,6 @@ export function TokenTable({
     })
   }, [showLoadingSkeleton, tokens, trace])
 
-  const { lg: isLg } = useMedia()
   const columns = useMemo(() => {
     const columnHelper = createColumnHelper<TokenTableValue>()
     const filteredColumns = [
@@ -287,16 +289,21 @@ export function TokenTable({
         : null,
       columnHelper.accessor((row) => row.tokenDescription, {
         id: 'tokenDescription',
-        ...getFlexColumnSizing(getTokenDescriptionColumnSize(isLg)),
+        ...getFlexColumnSizing(getTokenDescriptionColumnSize(isLg), { collapsedWidth: FLUSH_COLLAPSED_COLUMN_WIDTH }),
         header: () => (
-          <HeaderCell justifyContent="flex-start">
-            <Text variant="body3" color="$neutral2" fontWeight="500">
+          <HeaderCell justifyContent="flex-start" {...(isLg ? FLUSH_HEADER_CELL_PADDING : undefined)}>
+            <Text variant="body3" color="$neutral2" fontWeight="500" numberOfLines={1}>
               {t('explore.table.column.token')}
             </Text>
           </HeaderCell>
         ),
         cell: (tokenDescription) => (
-          <Cell justifyContent="flex-start" loading={showLoadingSkeleton} testId={TestID.NameCell}>
+          <Cell
+            justifyContent="flex-start"
+            loading={showLoadingSkeleton}
+            testId={TestID.NameCell}
+            {...(isLg ? FLUSH_CELL_PADDING : undefined)}
+          >
             <TableText flex={1} minWidth={0} width="100%">
               {tokenDescription.getValue?.()}
             </TableText>
@@ -317,7 +324,7 @@ export function TokenTable({
         ),
         cell: (tokenCell) => (
           <Cell loading={showLoadingSkeleton} testId={TestID.PriceCell} justifyContent="flex-end">
-            <LivePriceCell token={tokenCell.getValue?.()} />
+            <LivePriceCell token={tokenCell.getValue?.()} textVariant={textVariant} />
           </Cell>
         ),
       }),
@@ -370,13 +377,13 @@ export function TokenTable({
           </HeaderCell>
         ),
         cell: (fdv) => {
-          const row = fdv.row?.original as TokenTableValue | undefined
+          const row = fdv.row?.original
           return (
             <Cell loading={showLoadingSkeleton} justifyContent="flex-end" testId={TestID.FdvCell}>
               <AnimatedNumber
                 ellipsis
                 numericValue={row?.fdvRawValue}
-                textVariant="$body2"
+                textVariant={textVariant}
                 value={fdv.getValue?.() ?? '-'}
               />
             </Cell>
@@ -398,71 +405,15 @@ export function TokenTable({
             />
           </HeaderCell>
         ),
-        cell: (volume) => {
-          const row = volume.row?.original as TokenTableValue | undefined
-          if (!row) {
-            return (
-              <Cell loading={showLoadingSkeleton} grow overflow="visible" testId={TestID.VolumeCell}>
-                <AnimatedNumber
-                  ellipsis
-                  alignRight
-                  numericValue={undefined}
-                  textVariant="$body2"
-                  value={volume.getValue?.() ?? '-'}
-                />
-              </Cell>
-            )
-          }
-          // Same gate as the popover's own showPopover, so the icon can never render without a
-          // breakdown behind it (a stats-less leg raises the network count but adds no row).
-          const showBreakdownAffordance = hasVolumeBreakdown({
-            rankedToken: row.mcToken,
-            timePeriod,
-            visibleChainIds: row.chainIdsByVolume,
-          })
-          return (
-            <Cell loading={showLoadingSkeleton} grow overflow="visible" testId={TestID.VolumeCell}>
-              <Flex flex={1} minWidth={0} justifyContent="flex-end">
-                <VolumeByNetworkPopover
-                  rankedToken={row.mcToken}
-                  timePeriod={timePeriod}
-                  visibleChainIds={row.chainIdsByVolume}
-                >
-                  <Flex position="relative">
-                    {/* Named trade: the cell keeps the backend aggregate (the value the column is
-                        sorted by), while the popover header shows the visible-leg sum its rows'
-                        percentages are computed against; they differ when a leg is hidden or
-                        stats-less. Filtering the cell would desync it from the sort order. */}
-                    <AnimatedNumber
-                      ellipsis
-                      alignRight
-                      numericValue={row.volumeRawValue}
-                      textVariant="$body2"
-                      value={volume.getValue?.() ?? '-'}
-                    />
-                    {showBreakdownAffordance ? (
-                      <Flex
-                        centered
-                        position="absolute"
-                        width={VOLUME_INFO_ICON_WIDTH}
-                        alignItems="flex-end"
-                        top={0}
-                        right={-VOLUME_INFO_ICON_WIDTH}
-                        bottom={0}
-                        opacity={0}
-                        cursor="default"
-                        transition="opacity 0.15s ease"
-                        $group-hover={{ opacity: 1 }}
-                      >
-                        <InfoCircle color="$neutral3" size="$icon.12" />
-                      </Flex>
-                    ) : null}
-                  </Flex>
-                </VolumeByNetworkPopover>
-              </Flex>
-            </Cell>
-          )
-        },
+        cell: (volume) => (
+          <TokenVolumeCell
+            row={volume.row?.original}
+            value={volume.getValue?.() ?? '-'}
+            timePeriod={timePeriod}
+            loading={showLoadingSkeleton}
+            textVariant={textVariant}
+          />
+        ),
       }),
       columnHelper.accessor((row) => row.sparkline, {
         id: 'sparkline',
@@ -479,7 +430,7 @@ export function TokenTable({
     ]
 
     return filteredColumns.filter((column): column is NonNullable<(typeof filteredColumns)[number]> => Boolean(column))
-  }, [orderDirection, showLoadingSkeleton, sortMethod, isLg, t, timePeriod])
+  }, [orderDirection, showLoadingSkeleton, sortMethod, isLg, t, textVariant, timePeriod])
 
   return (
     <Table
@@ -495,6 +446,8 @@ export function TokenTable({
       maxWidth={1200}
       defaultPinnedColumns={['index', 'tokenDescription']}
       getRowId={(row) => row.rowKey}
+      // Mobile: the pinned token column (the only pinned one once `index` is hidden) collapses to its logo on horizontal scroll.
+      collapsiblePinnedColumnId={isLg ? 'tokenDescription' : undefined}
     />
   )
 }

@@ -1,10 +1,12 @@
 import { Flex } from '@universe/mycelium'
 import { styled } from '@universe/mycelium/styled'
 import { memo, useMemo } from 'react'
+import type { TokenCategoryDefaultSort } from 'uniswap/src/features/tokenCategories/types'
 import { useExploreTablesFilterStore } from '~/features/Explore/state/exploreTablesFilterStore'
 import { useListTokens } from '~/features/Explore/state/listTokens/useListTokens'
 import { TokenTable } from '~/pages/Explore/tables/Tokens/TokensTable'
 import {
+  getTokenTableSort,
   TokenTableSortStoreContextProvider,
   useTokenTableSortStore,
 } from '~/pages/Explore/tables/Tokens/tokenTableSortStore'
@@ -18,11 +20,12 @@ const TableWrapper = styled(Flex, {
 
 interface TopTokensTableProps {
   categoryId?: string
-  /** Category came from the URL and isn't confirmed yet; terminal states are held as loading. */
-  categoryUnverified?: boolean
+  /** Show an empty or failed result as loading, for a host about to replace this table. */
+  holdEmptyResult?: boolean
+  defaultSort?: TokenCategoryDefaultSort
 }
 
-function TopTokensTableContent({ categoryId, categoryUnverified = false }: TopTokensTableProps): JSX.Element {
+function TopTokensTableContent({ categoryId, holdEmptyResult = false }: TopTokensTableProps): JSX.Element {
   const chainId = useChainIdFromUrlParam()
   const sortMethod = useTokenTableSortStore((s) => s.sortMethod)
   const sortAscending = useTokenTableSortStore((s) => s.sortAscending)
@@ -36,9 +39,7 @@ function TopTokensTableContent({ categoryId, categoryUnverified = false }: TopTo
 
   const { topTokens, tokenSortRank, isLoading, sparklines, isError, loadMore } = useListTokens(chainId, options)
 
-  // An unverified category may be a bogus slug the BE rejects or empties; keep the skeleton up until
-  // ListCategories settles it, since a fallback to All is about to replace this table anyway.
-  const holdUnverifiedResult = categoryUnverified && (isError || topTokens.length === 0)
+  const heldResult = holdEmptyResult && (isError || topTokens.length === 0)
 
   return (
     <TableWrapper testID="top-tokens-explore-table">
@@ -46,18 +47,22 @@ function TopTokensTableContent({ categoryId, categoryUnverified = false }: TopTo
         tokens={topTokens}
         tokenSortRank={tokenSortRank}
         sparklines={sparklines}
-        loading={isLoading || holdUnverifiedResult}
+        loading={isLoading || heldResult}
         loadMore={loadMore}
-        error={isError && !categoryUnverified}
+        error={isError && !heldResult}
         categoryId={categoryId}
       />
     </TableWrapper>
   )
 }
 
-export const TopTokensTable = memo(function TopTokensTable(props: TopTokensTableProps) {
+export const TopTokensTable = memo(function TopTokensTable({ defaultSort, ...props }: TopTokensTableProps) {
+  const initialSort = getTokenTableSort(defaultSort)
   return (
-    <TokenTableSortStoreContextProvider>
+    <TokenTableSortStoreContextProvider
+      key={`${props.categoryId}:${initialSort.sortMethod}:${initialSort.sortAscending}`}
+      initialSort={initialSort}
+    >
       <TopTokensTableContent {...props} />
     </TokenTableSortStoreContextProvider>
   )

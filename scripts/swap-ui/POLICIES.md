@@ -12,6 +12,18 @@ The convention is fenced mechanically: the `swap-ui-views` entry in `config/oxli
 
 The fence is the hard floor for the classes we ban outright. The remaining movability blockers (`ui-src`, `uniswap-runtime`, `types-pending`) drain by refactor and are tracked by the ledger, not the fence.
 
+## What the ledger reports
+
+The ledger sorts every `.tsx` under the swap tree (tests, stories and fixtures excluded) into one of three file classes:
+
+| File class | Rule | Counted as |
+| --- | --- | --- |
+| View | the default: any file that is not a stub or an adapter | a view file; MOVABLE at zero blockers, otherwise blocked by class |
+| Stub | throws `PlatformSplitStubError` (platform-split placeholder) | a view file, trivially clean, never movable |
+| Adapter | imports `@universe/swap-ui` | its own count (`adapters`); not a view, not movable, not blocked, not batched |
+
+An adapter is the `packages/uniswap` side of a finished split (see Policy 4). It reads stores, resolves flags and derives values on purpose, so those imports are not blockers and the ledger records none for it. The rule is import-based: `components/SwapRateRatio.tsx` became the first adapter the moment it rendered `RateRatio` from the package. Heuristic v1 counted such files as blocked views; v2 reports them separately.
+
 ## Policy 1: no analytics in views
 
 Views never import `uniswap/src/features/telemetry` or `utilities/src/telemetry`. No `Trace`, no `sendAnalyticsEvent`, no `ElementName` constants.
@@ -49,7 +61,7 @@ View-model stores like `swapFormScreenStore` (a display-fed provider that derive
 | Layer | What it catches | Where |
 | --- | --- | --- |
 | `swap-ui-views` boundary | banned imports inside swap `views/` dirs (lint error) | `config/oxlint-plugins/import-boundaries.json`, activated for the swap tree in `oxlint.config.ts` |
-| Movability ledger | every blocker class per view file, movable count, batches | `scripts/swap-ui/ledger.ts`, run in CI by `.github/workflows/swap_ui_ledger.yml` |
+| Movability ledger | every blocker class per view file, movable and adapter counts, batches | `scripts/swap-ui/ledger.ts`, run in CI by `.github/workflows/swap_ui_ledger.yml` |
 | Drift pin | the fence can never deny an import the ledger calls clean | `scripts/swap-ui/ledger.test.ts` |
 
 The ledger's blocker classes and how each one drains are defined in the ledger itself (`BLOCKER_DEFS`) and ship inside its JSON output, so downstream tooling never re-encodes them.

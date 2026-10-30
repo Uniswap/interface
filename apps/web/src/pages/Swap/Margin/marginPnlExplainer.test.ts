@@ -1,4 +1,5 @@
 import type { MarginActivePosition } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
+import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { describe, expect, it } from 'vitest'
 import { getDefaultMarginMarket } from '~/pages/Swap/Margin/__fixtures__/marginCatalog'
 import {
@@ -21,7 +22,7 @@ function makePosition(overrides: Partial<MarginActivePosition> = {}): MarginActi
   return {
     status: 'ACTIVE',
     positionId: 'pos-1',
-    direction: 'LONG',
+    direction: MarginDirection.LONG,
     exposureToken: { address: MARKET.collateral.address, chainId: 1, decimals: MARKET.collateral.decimals },
     counterToken: { address: MARKET.debt.address, chainId: 1, decimals: MARKET.debt.decimals },
     size: '20000000000000000',
@@ -43,7 +44,7 @@ function makePosition(overrides: Partial<MarginActivePosition> = {}): MarginActi
 }
 
 function makeBasis(overrides: Partial<MarginUsdBasis> = {}): MarginUsdBasis {
-  return { direction: 'LONG', collateral: 0.02, debt: 18.4, costBasisUsd: 25, ...overrides }
+  return { direction: MarginDirection.LONG, collateral: 0.02, debt: 18.4, costBasisUsd: 25, ...overrides }
 }
 
 function makePnl(overrides: Partial<MarginUsdPnl> = {}): MarginUsdPnl {

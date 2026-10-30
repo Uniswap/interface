@@ -19,7 +19,7 @@ import {
   DUMMY_KEY,
 } from 'utilities/src/telemetry/analytics/constants'
 import { generateAnalyticsLoggers } from 'utilities/src/telemetry/analytics/logging'
-import { getProcessedEvent } from 'utilities/src/telemetry/analytics/utils'
+import { getProcessedEvent, parseAllowAnalytics } from 'utilities/src/telemetry/analytics/utils'
 
 const loggers = generateAnalyticsLoggers('telemetry/analytics.web')
 let allowAnalytics: boolean = true
@@ -42,11 +42,11 @@ async function setAnalyticsAtomDirect(allowed: boolean): Promise<void> {
 
 async function getAnalyticsAtomFromStorage(): Promise<boolean> {
   try {
-    return window.localStorage.getItem(ALLOW_ANALYTICS_ATOM_KEY) !== 'false'
+    return parseAllowAnalytics(window.localStorage.getItem(ALLOW_ANALYTICS_ATOM_KEY))
   } catch {
     const chrome = getChromeWithThrow()
     const res = await chrome.storage.local.get(ALLOW_ANALYTICS_ATOM_KEY)
-    return res[ALLOW_ANALYTICS_ATOM_KEY] !== 'false'
+    return parseAllowAnalytics(res[ALLOW_ANALYTICS_ATOM_KEY])
   }
 }
 

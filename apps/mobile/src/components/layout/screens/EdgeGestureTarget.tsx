@@ -1,6 +1,6 @@
 import { Flex } from '@universe/mycelium'
+import { useDeviceDimensions } from '@universe/mycelium/theme-hooks-compat'
 import React from 'react'
-import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 
 /**
  * Adds a transparent box to the specific edge as a gesture target.

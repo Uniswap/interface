@@ -1,3 +1,4 @@
+import { snapToNearestTick } from '@universe/cca'
 import type { UniverseChainId } from '@universe/chains'
 import { Flex, Text } from '@universe/mycelium'
 import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
@@ -39,7 +40,6 @@ import type { AuctionDetails, BidTokenInfo } from '~/features/Toucan/Auction/sto
 import { AuctionProgressState } from '~/features/Toucan/Auction/store/types'
 import { useAuctionStore, useAuctionStoreActions } from '~/features/Toucan/Auction/store/useAuctionStore'
 import { getClearingPrice } from '~/features/Toucan/Auction/utils/clearingPrice'
-import { snapToNearestTick } from '~/features/Toucan/Auction/utils/ticks'
 import { TooltipContainer } from '~/features/Toucan/Shared/TooltipContainer'
 import { ClearingPriceChartRenderer } from '~/features/Toucan/ToucanChart/clearingPrice/ClearingPriceChartRenderer'
 import { calculateMaxFractionDigits } from '~/features/Toucan/ToucanChart/clearingPrice/utils/yAxisRange'

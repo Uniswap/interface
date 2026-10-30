@@ -10,8 +10,6 @@ import type {
   GetWalletProfitLossResponse,
   GetWalletsBalancesRequest,
   GetWalletsBalancesResponse,
-  ListTokensRequest,
-  ListTokensResponse,
   SubmitReportRequest,
   SubmitDataReportRequest,
   SubmitDataReportResponse,
@@ -35,7 +33,6 @@ export interface DataApiServiceClient {
   listTransactions: (params: PartialMessage<ListTransactionsRequest>) => Promise<ListTransactionsResponse>
   getWalletBalances: (params: PartialMessage<GetWalletBalancesRequest>) => Promise<GetWalletBalancesResponse>
   getWalletsBalances: (params: PartialMessage<GetWalletsBalancesRequest>) => Promise<GetWalletsBalancesResponse>
-  listTokens: (params: PartialMessage<ListTokensRequest>) => Promise<ListTokensResponse>
   getWalletProfitLoss: (params: PartialMessage<GetWalletProfitLossRequest>) => Promise<GetWalletProfitLossResponse>
   getWalletTokenProfitLoss: (
     params: PartialMessage<GetWalletTokenProfitLossRequest>,
@@ -54,7 +51,6 @@ export function createDataApiServiceClient({ rpcClient }: DataApiServiceClientCo
     listTransactions: (params): Promise<ListTransactionsResponse> => rpcClient.listTransactions(params),
     getWalletBalances: (params): Promise<GetWalletBalancesResponse> => rpcClient.getWalletBalances(params),
     getWalletsBalances: (params): Promise<GetWalletsBalancesResponse> => rpcClient.getWalletsBalances(params),
-    listTokens: (params): Promise<ListTokensResponse> => rpcClient.listTokens(params),
     getWalletProfitLoss: (params): Promise<GetWalletProfitLossResponse> => rpcClient.getWalletProfitLoss(params),
     getWalletTokenProfitLoss: (params): Promise<GetWalletTokenProfitLossResponse> =>
       rpcClient.getWalletTokenProfitLoss(params),

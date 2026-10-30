@@ -1,5 +1,5 @@
 import { UniverseChainId } from '@universe/chains'
-import { Flex, Text, View } from '@universe/mycelium'
+import { Flex, Text } from '@universe/mycelium'
 import { styled } from '@universe/mycelium/styled'
 import { TestID } from '@universe/test'
 import { useContext, useMemo } from 'react'
@@ -18,6 +18,7 @@ import { TokenCategoryTag } from 'uniswap/src/features/tokenCategories/TokenCate
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 import { shortenAddress } from 'utilities/src/addresses'
+import { CollapsibleCellLayout } from '~/components/Table/PinnedColumns/collapse/CollapsibleCellLayout'
 import { EllipsisText } from '~/components/Table/shared/TableText'
 import { TableRowHoverContext } from '~/components/Table/TableRowHoverContext'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
@@ -43,6 +44,10 @@ interface TokenDescriptionProps {
   categoryIds?: string[]
   /** Resolved RWA issuer; adds the issuer tag after the name. */
   issuer?: RWAIssuerDisplay
+  /** Mobile layout: smaller name and no category tag. */
+  isCompact?: boolean
+  /** Rendered in a flush pinned column (see `CollapsibleCellLayout`). */
+  flush?: boolean
 }
 
 export function TokenDescription({
@@ -55,6 +60,8 @@ export function TokenDescription({
   chainFilterId,
   categoryIds,
   issuer,
+  isCompact = false,
+  flush = false,
 }: TokenDescriptionProps) {
   const { t } = useTranslation()
   const rowHovered = useContext(TableRowHoverContext)
@@ -74,9 +81,52 @@ export function TokenDescription({
   )
   const resolvedLogoUrl = isNative ? nativeCurrencyInfo?.logoUrl : logoUrl
 
+  const symbolSlot = (
+    <GroupHoverTransition
+      height={SYMBOL_SLOT_HEIGHT}
+      showTransition={!disableHoverTransition}
+      isHovered={rowHovered}
+      defaultContent={
+        <Text
+          variant="body3"
+          $platform-web={{ minWidth: 'fit-content' }}
+          color="$neutral2"
+          height={SYMBOL_SLOT_HEIGHT}
+          width="100%"
+        >
+          {symbol}
+        </Text>
+      }
+      hoverContent={
+        isMultiNetworkRow ? (
+          <Flex row height={SYMBOL_SLOT_HEIGHT} alignItems="center" gap="$gap8" minWidth="100%">
+            <Text variant="body3" color="$neutral2" numberOfLines={1}>
+              {t('explore.tokens.table.networks', { count: chainIdsByVolume.length })}
+            </Text>
+            <NetworkIconList chainIds={chainIdsByVolume} size={12} />
+          </Flex>
+        ) : (
+          <CopyHelper
+            toCopy={address}
+            iconPosition="right"
+            iconSize={iconSizes.icon12}
+            iconColor="$neutral2"
+            color="$neutral2"
+            alwaysShowIcon
+          >
+            <Text variant="body3" color="$neutral2">
+              {shortenAddress({ address, chars: 4, charsEnd: 4 })}
+            </Text>
+          </CopyHelper>
+        )
+      }
+    />
+  )
+
   return (
-    <Flex row gap="$gap8" alignItems="center" justifyContent="flex-start" width="100%">
-      <View pr="$spacing4">
+    <CollapsibleCellLayout
+      flush={flush}
+      logo={
         <TokenLogo
           chainId={logoChainId}
           name={name}
@@ -85,10 +135,16 @@ export function TokenDescription({
           url={resolvedLogoUrl}
           alwaysShowNetworkLogo={chainFilterId !== undefined}
         />
-      </View>
+      }
+    >
       <TokenDetailsContainer>
         <Flex row alignItems="center" gap="$spacing4" minWidth={0}>
-          <EllipsisText variant="body2" flexShrink={1} minWidth={0} data-testid={TestID.TokenName}>
+          <EllipsisText
+            variant={isCompact ? 'body3' : 'body2'}
+            flexShrink={1}
+            minWidth={0}
+            data-testid={TestID.TokenName}
+          >
             {name}
           </EllipsisText>
           {issuer && (
@@ -96,53 +152,15 @@ export function TokenDescription({
               <RWAIssuerTag issuer={issuer} />
             </Flex>
           )}
-          {categoryTag && (
+          {!isCompact && categoryTag && (
             <Flex ml="$spacing4" testID={TestID.TokenRowCategoryTag}>
               <TokenCategoryTag category={categoryTag} />
             </Flex>
           )}
         </Flex>
-        <GroupHoverTransition
-          height={SYMBOL_SLOT_HEIGHT}
-          showTransition={!disableHoverTransition}
-          isHovered={rowHovered}
-          defaultContent={
-            <Text
-              variant="body3"
-              $platform-web={{ minWidth: 'fit-content' }}
-              color="$neutral2"
-              height={SYMBOL_SLOT_HEIGHT}
-              width="100%"
-            >
-              {symbol}
-            </Text>
-          }
-          hoverContent={
-            isMultiNetworkRow ? (
-              <Flex row height={SYMBOL_SLOT_HEIGHT} alignItems="center" gap="$gap8" minWidth="100%">
-                <Text variant="body3" color="$neutral2" numberOfLines={1}>
-                  {t('explore.tokens.table.networks', { count: chainIdsByVolume.length })}
-                </Text>
-                <NetworkIconList chainIds={chainIdsByVolume} size={12} />
-              </Flex>
-            ) : (
-              <CopyHelper
-                toCopy={address}
-                iconPosition="right"
-                iconSize={iconSizes.icon12}
-                iconColor="$neutral2"
-                color="$neutral2"
-                alwaysShowIcon
-              >
-                <Text variant="body3" color="$neutral2">
-                  {shortenAddress({ address, chars: 4, charsEnd: 4 })}
-                </Text>
-              </CopyHelper>
-            )
-          }
-        />
+        {symbolSlot}
       </TokenDetailsContainer>
-    </Flex>
+    </CollapsibleCellLayout>
   )
 }
 

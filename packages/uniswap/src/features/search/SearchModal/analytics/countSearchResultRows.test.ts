@@ -17,7 +17,7 @@ function section(
 
 describe(countSearchResultRows, () => {
   it('counts rows across sections, flattening a pill row to its pills', () => {
-    // Search V2 recents render as one pill row: a single array item holding every pill.
+    // Recents render as one pill row: a single array item holding every pill.
     const recentsPillRow = section(OnchainItemSectionName.RecentSearches, [[tokenOption, tokenOption, tokenOption]])
     expect(countSearchResultRows([recentsPillRow, section(OnchainItemSectionName.Tokens, [tokenOption])])).toBe(4)
   })

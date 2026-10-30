@@ -6,9 +6,10 @@ import { createPrivyBlobStore } from '@universe/embedded-wallet/src/features/pas
  */
 export const { storeEncryptedBlob, fetchEncryptedBlob } = createPrivyBlobStore({
   fileTag: 'privyBlobStore.web.ts',
-  buildHeaders: ({ accessToken, privyAppId }) => ({
+  buildHeaders: ({ accessToken, privyAppId, privyClientId }) => ({
     Authorization: `Bearer ${accessToken}`,
     'Content-Type': 'application/json',
     'privy-app-id': privyAppId,
+    'privy-client-id': privyClientId,
   }),
 })

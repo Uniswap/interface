@@ -6,10 +6,6 @@
   // program because their imports cannot become project references:
   // - tokens.parity.test.ts and
   //   scripts/text-compat-tokens.test.ts import `ui/src/theme`,
-  //   text-compat/needs-small-font-drift.test.ts imports
-  //   `ui/src/utils/needs-small-font.native`,
-  //   dynamic-size-text/DynamicSizeTextCompat.web.test.tsx imports
-  //   `ui/src/theme/fonts` (the `baselBook` fallback-stack drift pin),
   //   unicon/legacy-drift.test.ts imports the legacy Unicon glyph/palette
   //   modules (the INFRA-3516 avatar-identity pin),
   //   unicon/address-alias.test.tsx imports the legacy Unicon hash (the
@@ -23,8 +19,6 @@
   "exclude": [
     "src/tokens.parity.test.ts",
     "src/scripts/text-compat-tokens.test.ts",
-    "src/dynamic-size-text/DynamicSizeTextCompat.web.test.tsx",
-    "src/text-compat/needs-small-font-drift.test.ts",
     "src/ui-icon-assignability.test.ts",
     "src/unicon/address-alias.test.tsx",
     "src/unicon/legacy-drift.test.ts"

@@ -5,10 +5,13 @@ import {
   marginRequestActionKey,
   marginRequestPositionId,
   marginRequestVenueKey,
+  marginRequestWalletChainId,
+  marginRequestWalletToken,
   type MarginActionKey,
   type MarginQuoteRequest,
   type MarginQuoteResponse,
 } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
+import { type MarginTokenDecimals } from 'uniswap/src/data/apiClients/tradingApi/marginQuoteView'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
 const MARGIN_QUOTE_MAX_RETRIES = 2
@@ -88,7 +91,7 @@ export function isSameMarginQuoteSubject({
     // The envelope's own chain as well as the payment leg's: margin is pinned to one chain today, so
     // this cannot differ — but the axis list is the contract, and omitting a required field from it is
     // how the payment chain came to be missing in the first place.
-    previous.chainId === next.chainId &&
+    previous.positionChainId === next.positionChainId &&
     previous.swapper === next.swapper &&
     // The action KEY, not its contents: it is the only discriminator of the amount's denomination (a
     // deposit's rail is in the payment token, a withdrawal's in collateral), so bridging across it
@@ -108,19 +111,25 @@ export function isSameMarginQuoteSubject({
     previous.direction === next.direction &&
     // The payment leg: the equity a deposit buys is priced in ITS decimals, and every native token
     // shares one address sentinel, so the chain is as load-bearing as the token.
-    previous.swapConfig?.token === next.swapConfig?.token &&
-    previous.swapConfig?.chainId === next.swapConfig?.chainId
+    marginRequestWalletToken(previous) === marginRequestWalletToken(next) &&
+    marginRequestWalletChainId(previous) === marginRequestWalletChainId(next)
   )
 }
 
 export function useMarginQuoteQuery({
   params,
+  tokenDecimals,
   ...rest
-}: UseQueryApiHelperHookArgs<MarginQuoteRequest, MarginQuoteResponse>): UseQueryResult<MarginQuoteResponse> {
+}: UseQueryApiHelperHookArgs<MarginQuoteRequest, MarginQuoteResponse> & {
+  // Exposure/counter decimals the view renders with — resolved from the market by the caller, so the
+  // adapter no longer keeps a second address-keyed copy. Derived from the request's tokens, so it does
+  // not belong in the query key.
+  tokenDecimals: MarginTokenDecimals
+}): UseQueryResult<MarginQuoteResponse> {
   return useQuery<MarginQuoteResponse>({
     queryKey: [...MARGIN_QUOTE_QUERY_KEY, params],
     queryFn: params
-      ? async (): Promise<MarginQuoteResponse> => await MarginApiClient.fetchMarginQuote(params)
+      ? async (): Promise<MarginQuoteResponse> => await MarginApiClient.fetchMarginQuote(params, { tokenDecimals })
       : skipToken,
     ...rest,
     // AFTER the spread on purpose: the 422-on-open policy is the whole reason this hook exists rather

@@ -1,6 +1,7 @@
 import { UniverseChainId } from '@universe/chains'
 import { AuctionOptionItem } from 'uniswap/src/components/lists/items/auctions/AuctionOptionItem'
 import { type AuctionOption, OnchainItemListOptionType } from 'uniswap/src/components/lists/items/types'
+import { LaunchProvenanceMethod } from 'uniswap/src/features/dataApi/launchProvenance'
 import { render } from 'uniswap/src/test/test-utils'
 import { ONE_HOUR_MS } from 'utilities/src/time/time'
 
@@ -29,14 +30,30 @@ describe('AuctionOptionItem', () => {
     // The logo falls back to the symbol without a logoUrl, so 'FOO' renders twice.
     expect(getAllByText('FOO').length).toBeGreaterThan(0)
     expect(getByText('0x9999...9999')).toBeTruthy()
-    expect(queryByText('stats.fdv')).toBeNull()
+    expect(queryByText('search.results.stats.committed')).toBeNull()
+  })
+
+  it('shows the launch method in place of the address when the auction carries one', () => {
+    const { getByText, queryByText } = render(
+      <AuctionOptionItem
+        option={{ ...option, launchMethod: LaunchProvenanceMethod.CustomAuction }}
+        onPress={() => {}}
+      />,
+    )
+
+    expect(getByText('toucan.launchMethod.custom')).toBeTruthy()
+    expect(queryByText('0x9999...9999')).toBeNull()
   })
 
   it('keeps the address subtitle and fills the right slot with searchStats', () => {
     const { getByText } = render(
       <AuctionOptionItem
         option={option}
-        searchStats={{ fdvUsd: 1_234_567, endTimeMs: Date.now() + ONE_HOUR_MS }}
+        searchStats={{
+          committedVolumeUsd: 1_234_567,
+          startTimeMs: Date.now() - ONE_HOUR_MS,
+          endTimeMs: Date.now() + ONE_HOUR_MS,
+        }}
         onPress={() => {}}
       />,
     )
@@ -50,13 +67,13 @@ describe('AuctionOptionItem', () => {
     const { getByText, queryByText } = render(
       <AuctionOptionItem
         option={option}
-        searchStats={{ fdvUsd: 1_234_567, endTimeMs: Date.now() + ONE_HOUR_MS }}
+        searchStats={{ committedVolumeUsd: 1_234_567, endTimeMs: Date.now() + ONE_HOUR_MS }}
         rightElement={<>caller-owned</>}
         onPress={() => {}}
       />,
     )
 
     expect(getByText('caller-owned')).toBeTruthy()
-    expect(queryByText('stats.fdv')).toBeNull()
+    expect(queryByText('search.results.stats.committed')).toBeNull()
   })
 })

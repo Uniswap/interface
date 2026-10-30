@@ -169,6 +169,7 @@ export function sendSearchOptionItemClickedAnalytics({
         query_text: searchContext.query ?? '',
         selected_search_result_name: item.tokenName ?? item.tokenSymbol,
         selected_search_result_address: item.auctionAddress,
+        token_address: item.tokenAddress,
       })
       return
     case OnchainItemListOptionType.Category:

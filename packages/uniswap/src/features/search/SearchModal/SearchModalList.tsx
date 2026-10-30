@@ -1,5 +1,4 @@
 import { isHoverable } from '@universe/environment'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { ArrowRight } from '@universe/mycelium/icons/ArrowRight'
 import { TestID } from '@universe/test'
 import { memo, useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
@@ -27,25 +26,22 @@ import type { RenderIssuerRowArgs } from 'uniswap/src/features/expandableAsset/t
 import { countSearchResultRows } from 'uniswap/src/features/search/SearchModal/analytics/countSearchResultRows'
 import { SearchFilterContext } from 'uniswap/src/features/search/SearchModal/analytics/SearchContext'
 import { withCategoryHeaderActions } from 'uniswap/src/features/search/SearchModal/categories/withCategoryHeaderActions'
-import { SEARCH_V2_MAX_SYMBOL_CHARACTERS } from 'uniswap/src/features/search/SearchModal/constants'
+import { SEARCH_MAX_SYMBOL_CHARACTERS } from 'uniswap/src/features/search/SearchModal/constants'
 import { useSearchEarnApy } from 'uniswap/src/features/search/SearchModal/hooks/useSearchEarnApy'
 import {
   SearchModalOptionSelection,
   useSearchModalOptionSelection,
 } from 'uniswap/src/features/search/SearchModal/hooks/useSearchModalOptionSelection'
-import { PoolRowContextMenuButton } from 'uniswap/src/features/search/SearchModal/PoolRowContextMenuButton'
 import { RecentSearchPills } from 'uniswap/src/features/search/SearchModal/RecentSearchPills/RecentSearchPills'
 import { RwaCollectionItem } from 'uniswap/src/features/search/SearchModal/RwaCollectionItem'
 import { RwaIssuerRow } from 'uniswap/src/features/search/SearchModal/RwaIssuerRow'
 import { getRwaCollectionKey } from 'uniswap/src/features/search/SearchModal/stocks/rwaSearchGrouping'
 import { getRwaIssuerCurrencyInfo } from 'uniswap/src/features/search/SearchModal/stocks/useRwaIssuerCurrencyInfos'
-import { TokenRowContextMenuButton } from 'uniswap/src/features/search/SearchModal/TokenRowContextMenuButton'
 import type { SearchModalRowWrapper, SearchModalRowWrapperProps } from 'uniswap/src/features/search/SearchModal/types'
 import {
   searchModalListOptionKey,
   toggleKeyInList,
 } from 'uniswap/src/features/search/SearchModal/utils/searchModalListItem'
-import type { CategoryTagPlacement } from 'uniswap/src/features/tokenCategories/CategoryTagPill'
 import { getRowCategoryTag } from 'uniswap/src/features/tokenCategories/getRowCategoryTag'
 import { useEvent } from 'utilities/src/react/hooks'
 
@@ -88,13 +84,9 @@ export const SearchModalList = memo(function SearchModalListInner({
   onResultsShownChange,
 }: SearchModalListProps): JSX.Element {
   const { chains: enabledChainIds } = useEnabledChains()
-  const isSearchV2UIEnabled = useFeatureFlag(FeatureFlags.SearchV2UI)
-  // V2 frees the right edge for stats by moving the pill beside the name and the chevron inline.
-  const categoryTagPlacement: CategoryTagPlacement = isSearchV2UIEnabled ? 'title' : 'right'
-  const symbolMaxCharacters = isSearchV2UIEnabled ? SEARCH_V2_MAX_SYMBOL_CHARACTERS : undefined
   // Subscribed once here, not per row: `renderItem` is a plain function, so rows can't use hooks.
   const { categories } = useAllTokenCategories()
-  const getEarnApyPercent = useSearchEarnApy({ enabled: isSearchV2UIEnabled })
+  const getEarnApyPercent = useSearchEarnApy()
 
   const resultsShown = useMemo(() => countSearchResultRows(sections), [sections])
   useEffect(() => {
@@ -105,18 +97,9 @@ export const SearchModalList = memo(function SearchModalListInner({
   const { setFocusedRowIndex } = focusedRowStore
   const [expandedItems, setExpandedItems] = useState<string[]>([])
 
-  const wrapTokenRow = useCallback(
-    ({ element, currencyInfo }: { element: JSX.Element; currencyInfo: CurrencyInfo }): JSX.Element =>
-      rowWrapper ? rowWrapper({ element, currencyInfo, variant: 'token' }) : element,
+  const wrapRow = useCallback(
+    (props: SearchModalRowWrapperProps): JSX.Element => (rowWrapper ? rowWrapper(props) : props.element),
     [rowWrapper],
-  )
-
-  // Auction, pool, and wallet rows only get a hover card under Search V2 (token rows always do).
-  // Not gated on the auction-search flag: that governs whether auction rows are fetched at all.
-  const wrapSearchV2Row = useCallback(
-    (props: SearchModalRowWrapperProps): JSX.Element =>
-      isSearchV2UIEnabled && rowWrapper ? rowWrapper(props) : props.element,
-    [isSearchV2UIEnabled, rowWrapper],
   )
 
   // Reset expand-state during render (not in an effect, which would flash a stale expansion for one frame)
@@ -158,8 +141,8 @@ export const SearchModalList = memo(function SearchModalListInner({
           menuControl={menuControl}
           currencyInfo={currencyInfo}
           issuerChainTokens={issuer.chainTokens}
-          // V2 sub-rows' right edge holds issuer stats, so they drop the `…` menu; the collapsed single-issuer row keeps it.
-          hideContextMenu={isSearchV2UIEnabled && ownsTouchable}
+          // Sub-rows' right edge holds issuer stats, so they drop the `…` menu; the collapsed single-issuer row keeps it.
+          hideContextMenu={ownsTouchable}
           modifierPressHref={modifierPressHref}
           onPress={onPress}
           onModifierPress={onModifierPress}
@@ -174,7 +157,7 @@ export const SearchModalList = memo(function SearchModalListInner({
         ? rowWrapper({ element: issuerRow, currencyInfo, variant: 'rwaIssuerChild' })
         : issuerRow
     },
-    [rwaIssuerCurrencyInfos, enabledChainIds, rowWrapper, isSearchV2UIEnabled],
+    [rwaIssuerCurrencyInfos, enabledChainIds, rowWrapper],
   )
 
   // Gate the collapsed single-issuer row's native long-press: only let it open once the issuer's primary-chain
@@ -240,39 +223,23 @@ export const SearchModalList = memo(function SearchModalListInner({
               protocolVersion={item.protocolVersion}
               hookAddress={item.hookAddress}
               feeTier={item.feeTier}
-              identityPlacement={isSearchV2UIEnabled ? 'subtitle' : 'badge'}
-              searchStats={isSearchV2UIEnabled ? { volume1dUsd: item.volume1dUsd, apr: item.apr } : undefined}
+              searchStats={{ volume1dUsd: item.volume1dUsd, apr: item.apr }}
               focusedRowControl={{ rowIndex, setFocusedRowIndex }}
-              rightElement={
-                // V2 gives the right edge to vol/APR, like the token rows; long-press/right-click still opens the menu.
-                !isSearchV2UIEnabled && isHoverable ? (
-                  <FocusedRow rowIndex={rowIndex}>
-                    {(isRowFocused) => (
-                      <PoolRowContextMenuButton
-                        poolId={item.poolId}
-                        chainId={item.chainId}
-                        protocolVersion={item.protocolVersion}
-                        isVisible={isRowFocused}
-                      />
-                    )}
-                  </FocusedRow>
-                ) : undefined
-              }
               modifierPressHref={modifierPressHref}
               onPress={onPress}
               onModifierPress={onModifierPress}
             />
           )
-          return wrapSearchV2Row({ element: poolElement, pool: item, variant: 'pool' })
+          return wrapRow({ element: poolElement, pool: item, variant: 'pool' })
         }
         case OnchainItemListOptionType.Token: {
           const tokenElement = (
             <TokenOptionItem
-              showTokenAddress={!isSearchV2UIEnabled}
+              showIssuerTag
+              hideContextMenu
               option={item}
               displayName={item.rwaName}
               issuer={item.rwaIssuer}
-              showIssuerTag={isSearchV2UIEnabled}
               categoryTag={
                 hideTokenCategoryTag || section.categoryId
                   ? undefined
@@ -282,32 +249,25 @@ export const SearchModalList = memo(function SearchModalListInner({
                       categories,
                     })
               }
-              categoryTagPlacement={categoryTagPlacement}
+              categoryTagPlacement="title"
               contextMenuVariant={TokenContextMenuVariant.Search}
               focusedRowControl={{ rowIndex, setFocusedRowIndex }}
-              searchStats={isSearchV2UIEnabled ? item.currencyInfo.searchStats : undefined}
+              searchStats={item.currencyInfo.searchStats}
               earnApyPercent={getEarnApyPercent([item.currencyInfo.currencyId])}
-              symbolMaxCharacters={symbolMaxCharacters}
-              hideContextMenu={isSearchV2UIEnabled}
-              rightElement={
-                !isSearchV2UIEnabled && isHoverable ? (
-                  <FocusedRow rowIndex={rowIndex}>
-                    {(isRowFocused) => (
-                      <TokenRowContextMenuButton currency={item.currencyInfo.currency} isVisible={isRowFocused} />
-                    )}
-                  </FocusedRow>
-                ) : undefined
-              }
+              symbolMaxCharacters={SEARCH_MAX_SYMBOL_CHARACTERS}
               modifierPressHref={modifierPressHref}
               onPress={onPress}
               onModifierPress={onModifierPress}
             />
           )
-          return wrapTokenRow({ element: tokenElement, currencyInfo: item.currencyInfo })
+          return wrapRow({ element: tokenElement, currencyInfo: item.currencyInfo, variant: 'token' })
         }
         case OnchainItemListOptionType.MultichainToken: {
           const multichainElement = (
             <TokenOptionItem
+              showIssuerTag
+              hideNetworkCount
+              hideContextMenu
               option={{
                 type: OnchainItemListOptionType.Token,
                 currencyInfo: item.primaryCurrencyInfo,
@@ -316,9 +276,7 @@ export const SearchModalList = memo(function SearchModalListInner({
               }}
               displayName={item.rwaName ?? item.multichainResult.name}
               issuer={item.rwaIssuer}
-              showIssuerTag={isSearchV2UIEnabled}
               networkCount={item.multichainResult.tokens.length}
-              hideNetworkCount={isSearchV2UIEnabled}
               categoryTag={
                 hideTokenCategoryTag || section.categoryId
                   ? undefined
@@ -328,11 +286,10 @@ export const SearchModalList = memo(function SearchModalListInner({
                       categories,
                     })
               }
-              categoryTagPlacement={categoryTagPlacement}
-              searchStats={isSearchV2UIEnabled ? item.multichainResult.stats : undefined}
+              categoryTagPlacement="title"
+              searchStats={item.multichainResult.stats}
               earnApyPercent={getEarnApyPercent(item.multichainResult.tokens.map((token) => token.currencyId))}
-              symbolMaxCharacters={symbolMaxCharacters}
-              hideContextMenu={isSearchV2UIEnabled}
+              symbolMaxCharacters={SEARCH_MAX_SYMBOL_CHARACTERS}
               contextMenuVariant={TokenContextMenuVariant.Search}
               multichainData={{
                 tokens: item.multichainResult.tokens,
@@ -344,7 +301,7 @@ export const SearchModalList = memo(function SearchModalListInner({
               onModifierPress={onModifierPress}
             />
           )
-          return wrapTokenRow({ element: multichainElement, currencyInfo: item.primaryCurrencyInfo })
+          return wrapRow({ element: multichainElement, currencyInfo: item.primaryCurrencyInfo, variant: 'token' })
         }
         case OnchainItemListOptionType.RwaCollection: {
           const { rwa } = item
@@ -360,17 +317,14 @@ export const SearchModalList = memo(function SearchModalListInner({
               renderIssuerRow={renderRwaIssuerRow}
               isIssuerMenuReady={isRwaIssuerMenuReady}
               testID={`${TestID.SearchRwaCollectionPrefix}${rwa.symbol}`}
-              searchStats={isSearchV2UIEnabled ? item.searchStats : undefined}
-              showIssuerStats={isSearchV2UIEnabled}
-              showIssuerTag={isSearchV2UIEnabled}
-              categoryTagPlacement={categoryTagPlacement}
+              searchStats={item.searchStats}
               onToggle={() => toggleExpanded(getRwaCollectionKey({ rwa }))}
               onSelect={onSelect}
             />
           )
         }
         case OnchainItemListOptionType.WalletByAddress:
-          return wrapSearchV2Row({
+          return wrapRow({
             variant: 'wallet',
             element: (
               <WalletByAddressOptionItem
@@ -383,7 +337,7 @@ export const SearchModalList = memo(function SearchModalListInner({
             address: item.address,
           })
         case OnchainItemListOptionType.ENSAddress:
-          return wrapSearchV2Row({
+          return wrapRow({
             variant: 'wallet',
             element: (
               <ENSAddressOptionItem
@@ -421,7 +375,7 @@ export const SearchModalList = memo(function SearchModalListInner({
             />
           )
         case OnchainItemListOptionType.Unitag:
-          return wrapSearchV2Row({
+          return wrapRow({
             variant: 'wallet',
             element: (
               <UnitagOptionItem
@@ -438,11 +392,11 @@ export const SearchModalList = memo(function SearchModalListInner({
             <AuctionOptionItem
               option={item}
               focusedRowControl={{ rowIndex, setFocusedRowIndex }}
-              searchStats={isSearchV2UIEnabled ? item.searchStats : undefined}
+              searchStats={item.searchStats}
               onPress={onPress}
             />
           )
-          return wrapSearchV2Row({ element: auctionElement, variant: 'auction', auction: item })
+          return wrapRow({ element: auctionElement, variant: 'auction', auction: item })
         }
         default:
           return <></>
@@ -450,29 +404,25 @@ export const SearchModalList = memo(function SearchModalListInner({
     },
     [
       categories,
-      categoryTagPlacement,
       getModifierPressHref,
       getEarnApyPercent,
       hideTokenCategoryTag,
       isRwaIssuerMenuReady,
-      isSearchV2UIEnabled,
       onSelect,
       recordSelection,
       renderRwaIssuerRow,
       searchFilters,
       selectOption,
       setFocusedRowIndex,
-      symbolMaxCharacters,
       toggleExpanded,
-      wrapTokenRow,
-      wrapSearchV2Row,
+      wrapRow,
     ],
   )
 
   return (
     <SelectorBaseList<SearchModalListOption>
       focusedRowStore={focusedRowStore}
-      autoFocusFirstRowKey={isSearchV2UIEnabled ? resetKey : undefined}
+      autoFocusFirstRowKey={resetKey}
       renderItem={renderItem}
       sections={sectionsWithHeaderActions}
       expandedItems={expandedItems}

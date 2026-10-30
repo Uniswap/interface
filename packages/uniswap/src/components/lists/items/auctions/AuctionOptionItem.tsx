@@ -1,6 +1,7 @@
 import { Flex, iconSizes, Text } from '@universe/mycelium'
 import { CheckmarkCircle } from '@universe/mycelium/icons/CheckmarkCircle'
 import { memo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { AuctionOptionItemStats } from 'uniswap/src/components/lists/items/auctions/AuctionOptionItemStats'
 import { FocusedRowControl, OptionItem } from 'uniswap/src/components/lists/items/OptionItem'
@@ -9,6 +10,7 @@ import { getWarningIconColors } from 'uniswap/src/components/warnings/utils'
 import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
 import type { AuctionSearchStats } from 'uniswap/src/features/dataApi/types'
 import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/warnings/safetyUtils'
+import { getLaunchMethodLabel } from 'uniswap/src/features/toucan/launchMethodLabel'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { shortenAddress } from 'utilities/src/addresses'
 
@@ -27,7 +29,9 @@ function AuctionOptionItemInner({
   rightElement,
   searchStats,
 }: AuctionOptionItemProps): JSX.Element {
+  const { t } = useTranslation()
   const displayName = option.tokenName ?? option.tokenSymbol
+  const launchMethodLabel = option.launchMethod ? getLaunchMethodLabel({ method: option.launchMethod, t }) : undefined
 
   const severity = getTokenWarningSeverity(option.currencyInfo)
   const { colorSecondary: warningIconColor } = getWarningIconColors(severity)
@@ -59,7 +63,7 @@ function AuctionOptionItemInner({
           </Text>
           <Flex shrink>
             <Text color="$neutral3" numberOfLines={1} variant="body3">
-              {shortenAddress({ address: option.tokenAddress })}
+              {launchMethodLabel ?? shortenAddress({ address: option.tokenAddress })}
             </Text>
           </Flex>
         </Flex>

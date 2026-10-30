@@ -1,8 +1,7 @@
-import { Flex } from '@universe/mycelium'
+import { Flex, AnimatedFlex } from '@universe/mycelium'
 import { useDeviceDimensions } from '@universe/mycelium/theme-hooks-compat'
 import React from 'react'
 import { Extrapolate, interpolate, SharedValue, useAnimatedStyle } from 'react-native-reanimated'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 
 export function AnimatedIndicator({
   scroll,

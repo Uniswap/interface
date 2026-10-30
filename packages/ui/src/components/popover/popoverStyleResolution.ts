@@ -1,6 +1,6 @@
+import { type UseSporeColorsReturn } from '@universe/mycelium/theme-hooks-compat'
 import type { CSSProperties } from 'react'
 import type { PopoverFrameStyleProps } from 'ui/src/components/popover/types'
-import type { UseSporeColorsReturn } from 'ui/src/hooks/useSporeColors'
 import { borderRadii, spacing, zIndexes } from 'ui/src/theme'
 import { gap, padding } from 'ui/src/theme/spacing'
 

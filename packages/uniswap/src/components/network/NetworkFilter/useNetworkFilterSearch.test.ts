@@ -86,6 +86,43 @@ describe('useNetworkFilterSearch', () => {
     expect(result.filteredTieredOptions?.otherNetworks.map((option) => option.chainId)).toEqual([])
   })
 
+  it('keeps tiered options when only the low liquidity section is populated', () => {
+    const tieredOptions = {
+      withBalances: [],
+      otherNetworks: [{ chainId: UniverseChainId.Base, label: 'Base', balanceUSD: 0 }],
+      lowLiquidity: [{ chainId: UniverseChainId.Unichain, label: 'Unichain', balanceUSD: 0 }],
+    }
+
+    const result = filterNetworkOptions({
+      chainIds: [UniverseChainId.Base, UniverseChainId.Unichain],
+      tieredOptions,
+      searchQuery: '',
+    })
+
+    expect(result.filteredTieredOptions).toBe(tieredOptions)
+  })
+
+  it('filters the low liquidity section and lists its matches last in filteredChainIds', () => {
+    const tieredOptions = {
+      withBalances: [{ chainId: UniverseChainId.WorldChain, label: 'World Chain', balanceUSD: 900 }],
+      otherNetworks: [{ chainId: UniverseChainId.Base, label: 'Base', balanceUSD: 0 }],
+      lowLiquidity: [
+        { chainId: UniverseChainId.Zora, label: 'Zora', balanceUSD: 0 },
+        { chainId: UniverseChainId.Polygon, label: 'Polygon', balanceUSD: 0 },
+      ],
+    }
+
+    const result = filterNetworkOptions({
+      chainIds: [UniverseChainId.WorldChain, UniverseChainId.Base, UniverseChainId.Zora, UniverseChainId.Polygon],
+      tieredOptions,
+      searchQuery: 'z',
+    })
+
+    expect(result.filteredTieredOptions?.lowLiquidity?.map((option) => option.chainId)).toEqual([UniverseChainId.Zora])
+    expect(result.filteredTieredOptions?.withBalances).toEqual([])
+    expect(result.filteredChainIds).toEqual([UniverseChainId.Zora])
+  })
+
   it('returns filtered data from the hook when search changes', () => {
     const { result } = renderHookWithProviders(() =>
       useNetworkFilterSearch({

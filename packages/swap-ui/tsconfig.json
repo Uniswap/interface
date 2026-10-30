@@ -1,0 +1,21 @@
+{
+  "extends": "../../config/tsconfig/app.json",
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.json", "src/global.d.ts"],
+  "compilerOptions": {
+    "noEmit": false,
+    "emitDeclarationOnly": true,
+    "types": ["node"],
+    "paths": {}
+  },
+  "references": [
+    {
+      "path": "../../config/vitest-presets"
+    },
+    {
+      "path": "../mycelium"
+    },
+    {
+      "path": "../utilities"
+    }
+  ]
+}

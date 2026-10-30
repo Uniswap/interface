@@ -160,6 +160,18 @@ describe('TokenDetailsAuctionListModal', () => {
     expect(failed).not.toHaveTextContent('Raised')
   })
 
+  it('shows committed volume for a served launch whose raise has not loaded', () => {
+    render(
+      <TokenDetailsAuctionListModal auctions={[{ ...ENDED_PENDING, isGraduated: true }]} isOpen onClose={vi.fn()} />,
+    )
+
+    const row = screen.getByTestId(TestID.TokenDetailsAuctionListRow)
+    expect(row).toHaveTextContent('Launched')
+    expect(row).toHaveTextContent('Committed')
+    expect(row).toHaveTextContent('$1.5K')
+    expect(row).not.toHaveTextContent('Raised')
+  })
+
   it.each([LIVE, ENDED_PENDING])('shows unknown committed volume as missing for %o', (entry) => {
     render(<TokenDetailsAuctionListModal auctions={[{ ...entry, totalBidVolumeUsd: '' }]} isOpen onClose={vi.fn()} />)
 
@@ -167,6 +179,13 @@ describe('TokenDetailsAuctionListModal', () => {
     expect(row).toHaveTextContent('—')
     expect(row).toHaveTextContent('Committed')
     expect(row).not.toHaveTextContent('$0')
+  })
+
+  it('shows zero committed volume as $0', () => {
+    render(<TokenDetailsAuctionListModal auctions={[{ ...LIVE, totalBidVolumeUsd: '0' }]} isOpen onClose={vi.fn()} />)
+
+    const row = screen.getByTestId(TestID.TokenDetailsAuctionListRow)
+    expect(row).toHaveTextContent('$0')
   })
 
   it('navigates to the pressed auction and closes', () => {
@@ -179,11 +198,11 @@ describe('TokenDetailsAuctionListModal', () => {
     expect(onClose).toHaveBeenCalledTimes(1)
     expect(sendAnalyticsEvent).toHaveBeenCalledExactlyOnceWith(AuctionEventName.AuctionSelectorAuctionClicked, {
       chain_id: UniverseChainId.Mainnet,
+      auction_address: UPCOMING.address,
       position_rank: 2,
       auction_status: 'upcoming',
       time_remaining_seconds: expect.any(Number),
     })
-    expect(JSON.stringify(vi.mocked(sendAnalyticsEvent).mock.calls)).not.toContain(UPCOMING.address)
   })
 
   it('reports zero remaining seconds for an ended selection without bid or wallet details', () => {
@@ -191,6 +210,7 @@ describe('TokenDetailsAuctionListModal', () => {
     fireEvent.click(screen.getAllByTestId(TestID.TokenDetailsAuctionListRow)[2]!)
     expect(sendAnalyticsEvent).toHaveBeenCalledExactlyOnceWith(AuctionEventName.AuctionSelectorAuctionClicked, {
       chain_id: UniverseChainId.Mainnet,
+      auction_address: expect.any(String),
       position_rank: 3,
       auction_status: 'ended',
       time_remaining_seconds: 0,

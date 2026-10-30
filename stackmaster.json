@@ -1,0 +1,13 @@
+{
+  "install": "bun install",
+  "start": "bun web dev",
+  "autoStart": true,
+  "previewPath": "/swap",
+  "envCopy": [".env", ".env.local", ".env.*.local", "apps/*/.env", ".claude/settings.local.json"],
+  "commitTitleFormat": "conventional",
+  "mobile": {
+    "appDir": "apps/mobile",
+    "build": "bunx nx run mobile:ios:dev --no-bundler",
+    "metro": "bunx nx start mobile --port 8081"
+  }
+}

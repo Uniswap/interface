@@ -10,6 +10,8 @@ import { PoolInfoCell } from '~/pages/Portfolio/Overview/MiniPoolsTable/columns/
 import { PositionCell } from '~/pages/Portfolio/Overview/MiniPoolsTable/columns/PositionCell'
 import { PoolStatusCell } from '~/pages/Portfolio/Overview/MiniPoolsTable/columns/Status'
 
+const POOL_INFO_COLUMN_SIZE_PX = 240
+
 export const useMiniPoolsTableColumns = ({ isLoading, readOnly }: { isLoading: boolean; readOnly?: boolean }) => {
   const { t } = useTranslation()
 
@@ -20,8 +22,8 @@ export const useMiniPoolsTableColumns = ({ isLoading, readOnly }: { isLoading: b
       // First Column - Pool Info
       columnHelper.display({
         id: 'poolInfo',
-        minSize: 240,
-        size: 240,
+        minSize: POOL_INFO_COLUMN_SIZE_PX,
+        size: POOL_INFO_COLUMN_SIZE_PX,
         header: () => <ColumnHeader label={t('common.pool')} justifyContent="flex-start" />,
         cell: (info) => (
           <PositionCell

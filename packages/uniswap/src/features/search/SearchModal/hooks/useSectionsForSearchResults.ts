@@ -37,6 +37,7 @@ import {
 } from 'uniswap/src/features/search/SearchModal/hooks/useSectionsForSearchResultsUtils'
 import { useWalletSearchResults } from 'uniswap/src/features/search/SearchModal/hooks/useWalletSearchResults'
 import { applyRwaGroupingToSearchOptions } from 'uniswap/src/features/search/SearchModal/stocks/applyRwaGrouping'
+import { applyServerTokenGroupsToSearchOptions } from 'uniswap/src/features/search/SearchModal/stocks/applyServerTokenGroups'
 import { useRwaIndex } from 'uniswap/src/features/search/SearchModal/stocks/useRwaIndex'
 import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
 import { isAddressTokenSearchQuery } from 'uniswap/src/features/search/utils'
@@ -65,12 +66,12 @@ export function useSectionsForSearchResults({
   // Category rows render on the All tab only, and never on the extension, which has no Category Details surface.
   const tokenCategoriesEnabled = useIsTokenCategoriesEnabled()
   const categorySearchEnabled = tokenCategoriesEnabled && !isExtensionApp
+  // Server-matched stock / ETF groups replace the browser fold over the v1 list; the flag is the way back.
+  const tokenGroupSearchEnabled = tokenCategoriesEnabled
 
-  // One SearchService request for every type this surface can show. Requesting them all regardless of the
-  // active tab keeps tab switches on the cached response instead of refetching per tab.
   const searchTypes = useMemo(
-    () => getSearchTypes({ auctionSearchEnabled, categorySearchEnabled }),
-    [auctionSearchEnabled, categorySearchEnabled],
+    () => getSearchTypes({ activeTab, auctionSearchEnabled, categorySearchEnabled, tokenGroupSearchEnabled }),
+    [activeTab, auctionSearchEnabled, categorySearchEnabled, tokenGroupSearchEnabled],
   )
   const {
     data: searchResults,
@@ -128,10 +129,9 @@ export function useSectionsForSearchResults({
   )
 
   // Auction search results
-  const { data: auctionSearchResults, refetch: refetchAuctionOverrides } = useSearchAuctionOptions({
+  const auctionSearchResults = useSearchAuctionOptions({
     auctions: searchResults?.auctions,
-    searchQuery: searchFilter,
-    chainFilter,
+    alongsideTokens: activeTab === SearchTab.All,
     skip:
       !auctionSearchEnabled ||
       !isActiveSearchTab(activeTab, SearchTab.Auctions) ||
@@ -149,19 +149,36 @@ export function useSectionsForSearchResults({
       }),
     [isPoolAddressSearch, useMultichainPath, multichainSearchOptions, tokenSearchResults],
   )
-  const groupedTokenOptions = useMemo(
-    () =>
-      rwaIndex.rwas.length
-        ? applyRwaGroupingToSearchOptions({
-            options: tokenOptions,
-            index: rwaIndex,
-            isAddressSearch,
-            chainFilter,
-            plainTokenNames: tokenCategoriesEnabled,
-          })
-        : tokenOptions,
-    [rwaIndex, tokenOptions, isAddressSearch, chainFilter, tokenCategoriesEnabled],
-  )
+  const searchResultTokenGroups = searchResults?.tokenGroups
+  const groupedTokenOptions = useMemo(() => {
+    if (tokenGroupSearchEnabled) {
+      return applyServerTokenGroupsToSearchOptions({
+        options: tokenOptions,
+        groups: searchResultTokenGroups ?? [],
+        searchQuery: searchFilter ?? '',
+        isAddressSearch,
+        plainTokenNames: true,
+      })
+    }
+    // The v1 fold only runs with token categories off, where rows still show the v1 asset names.
+    return rwaIndex.rwas.length
+      ? applyRwaGroupingToSearchOptions({
+          options: tokenOptions,
+          index: rwaIndex,
+          isAddressSearch,
+          chainFilter,
+          plainTokenNames: false,
+        })
+      : tokenOptions
+  }, [
+    tokenGroupSearchEnabled,
+    searchResultTokenGroups,
+    searchFilter,
+    rwaIndex,
+    tokenOptions,
+    isAddressSearch,
+    chainFilter,
+  ])
   const tokenSearchResultsSection = useOnchainItemListSection({
     sectionKey: OnchainItemSectionName.Tokens,
     options: withCategoryOptions({
@@ -197,10 +214,7 @@ export function useSectionsForSearchResults({
 
   const refetch = useCallback(() => {
     void refetchSearchResults()
-    if (auctionSearchEnabled) {
-      void refetchAuctionOverrides()
-    }
-  }, [auctionSearchEnabled, refetchSearchResults, refetchAuctionOverrides])
+  }, [refetchSearchResults])
 
   const tokenAndPoolSections = useMemo(() => {
     return getTokenAndPoolSections({ poolSearchResultsSection, shouldPrioritizePools, tokenSearchResultsSection })

@@ -55,6 +55,9 @@ export const ButtonTextCompat = forwardRef<HTMLSpanElement, ButtonTextCompatProp
       children,
       style,
       testID,
+      // Legacy single-line label, matching the native leg's hardcoded `numberOfLines={1}`.
+      // A value above `1` emits the clamp classes but renders no second line (INFRA-3895).
+      numberOfLines = 1,
       ...open
     } = props
 
@@ -73,7 +76,11 @@ export const ButtonTextCompat = forwardRef<HTMLSpanElement, ButtonTextCompatProp
       lineHeightDisabled,
     })
 
-    const emission = buttonTextOpenEmission({ ...open, color: tokenColor } as CompatProps<TextCompatStyleProps>)
+    const emission = buttonTextOpenEmission({
+      ...open,
+      numberOfLines,
+      color: tokenColor,
+    } as CompatProps<TextCompatStyleProps>)
 
     // Legacy pins a concrete hex/rgb color across every state (its
     // `$group-item-hover` got the same value); inline style wins the cascade

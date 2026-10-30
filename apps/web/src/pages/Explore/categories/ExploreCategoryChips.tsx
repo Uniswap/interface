@@ -60,8 +60,10 @@ function CategoryChip({ option, position, value, onChange, onOpenDefinition }: C
   const Icon = option.icon
   const isTouchDevice = useIsTouchDevice()
   const trace = useTrace()
+  // Hover card and definition sheet are token-only until the pool tooltip lands.
+  const tokenCategory = option.category?.kind === 'token' ? option.category : undefined
   // Touch has no hover card, so the selected chip shows an info icon and its next tap opens the definition.
-  const definitionCategory = isTouchDevice ? option.category : undefined
+  const definitionCategory = isTouchDevice ? tokenCategory : undefined
 
   const onPress = useEvent((): void => {
     if (!active) {
@@ -89,7 +91,7 @@ function CategoryChip({ option, position, value, onChange, onOpenDefinition }: C
   })
 
   return (
-    <CategoryHoverCard category={option.category} section={SectionName.ExploreCategoryChips}>
+    <CategoryHoverCard category={tokenCategory} section={SectionName.ExploreCategoryChips}>
       <FilterChip
         active={active}
         label={option.label}

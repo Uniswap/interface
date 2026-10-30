@@ -2,13 +2,9 @@ import { Currency } from '@uniswap/sdk-core'
 import { type ColorTokens } from '@universe/mycelium'
 // GeneratedIcon has no mycelium equivalent to import here — ui/src icon types stay ui/src by design.
 import { GeneratedIcon } from 'ui/src'
-export enum WarningSeverity {
-  None = 0,
-  Low = 1,
-  Medium = 5,
-  High = 10,
-  Blocked = 11,
-}
+import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/warningSeverity'
+
+export { WarningSeverity }
 
 export type WarningColor = {
   text: ColorTokens

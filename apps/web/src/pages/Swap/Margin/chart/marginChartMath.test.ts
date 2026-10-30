@@ -1,4 +1,5 @@
 import type { MarginActivePosition } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
+import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { describe, expect, it } from 'vitest'
 import { MARGIN_CHAIN_ID } from '~/constants/margin'
 import type { MarginMarket, MarginTokenInfo } from '~/constants/margin'
@@ -25,7 +26,7 @@ const longMarket: MarginMarket = {
   collateral: WETH,
   debt: USDC,
   venue: 'MORPHO',
-  direction: 'LONG',
+  direction: MarginDirection.LONG,
   lltvWad: X18(0.86),
   shouldUseNativeEquity: true,
 }
@@ -35,14 +36,14 @@ const shortMarket: MarginMarket = {
   key: 'usdc-weth-morpho',
   collateral: USDC,
   debt: WETH,
-  direction: 'SHORT',
+  direction: MarginDirection.SHORT,
 }
 
 // LONG position fixture: 2 WETH collateral (= size, the exposure leg), 1786 USDC debt, 1 WETH equity,
 // entry 1712.
 const mkPos = (over?: Partial<MarginActivePosition>): MarginActivePosition => ({
   positionId: 'pos-1',
-  direction: 'LONG',
+  direction: MarginDirection.LONG,
   exposureToken: { address: WETH.address, chainId: MARGIN_CHAIN_ID, decimals: WETH.decimals },
   counterToken: { address: USDC.address, chainId: MARGIN_CHAIN_ID, decimals: USDC.decimals },
   size: raw(2, 18),
@@ -85,12 +86,12 @@ describe('positionEconomics (X18 + raw-decimals fixtures, both directions)', () 
     expect(econ?.collateral).toBeCloseTo(2, 8) // 2 WETH / 1e18 (size, the LONG's exposure leg)
     expect(econ?.collateralAtOpen).toBeCloseTo(2, 8) // collateralAtOpen 2 WETH / 1e18
     expect(econ?.debt).toBeCloseTo(1786, 6) // 1786 USDC / 1e6
-    expect(econ?.direction).toBe('LONG')
+    expect(econ?.direction).toBe(MarginDirection.LONG)
   })
 
   it('SHORT: collateral USDC 6dp, debt WETH 18dp', () => {
     const shortPos = mkPos({
-      direction: 'SHORT',
+      direction: MarginDirection.SHORT,
       // Same pair, opposite venue legs: SHORT borrows the exposure token against counter collateral.
       size: raw(1, 18), // 1 WETH exposure — a SHORT's exposure leg IS its debt leg
       legs: [{ venue: 'MORPHO', subId: 'sub-1', account: '0xacc', debt: raw(1, 18) }],
@@ -104,7 +105,7 @@ describe('positionEconomics (X18 + raw-decimals fixtures, both directions)', () 
     expect(econ?.collateral).toBeCloseTo(3600, 6)
     expect(econ?.collateralAtOpen).toBeCloseTo(3600, 6) // USDC 6dp normalization, not the 18dp default
     expect(econ?.debt).toBeCloseTo(1, 8)
-    expect(econ?.direction).toBe('SHORT')
+    expect(econ?.direction).toBe(MarginDirection.SHORT)
   })
 
   it('undefined without an attributable basis', () => {
@@ -120,7 +121,7 @@ describe('positionEconomics (X18 + raw-decimals fixtures, both directions)', () 
   // this function's comment says it mirrors.
   it('undefined for a SHORT at the zero-price sentinel, rather than a collateral short by the debt leg', () => {
     const shortPos = mkPos({
-      direction: 'SHORT',
+      direction: MarginDirection.SHORT,
       size: raw(1, 18),
       legs: [{ venue: 'MORPHO', subId: 'sub-1', account: '0xacc', debt: raw(1, 18) }],
       entryPrice: X18(1800),
@@ -141,7 +142,7 @@ describe('positionEconomics (X18 + raw-decimals fixtures, both directions)', () 
 
   it('defaults direction to LONG when the market omits it', () => {
     const econ = positionEconomics({ position: mkPos(), market: { ...longMarket, direction: undefined } })
-    expect(econ?.direction).toBe('LONG')
+    expect(econ?.direction).toBe(MarginDirection.LONG)
   })
 
   it('carries no basis of its own — valuation lives in marginUsdPnl', () => {

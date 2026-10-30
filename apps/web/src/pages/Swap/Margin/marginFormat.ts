@@ -5,7 +5,7 @@
    scatter one decoding contract across several, which is the exact failure mode ("a rule with three homes
    is a rule that gets applied to two of them") several of these guards were written to close. */
 import type { MarginQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
-import type { MarginDirection, MarginVenue } from 'uniswap/src/features/transactions/margin/types'
+import { MarginDirection, type MarginVenue } from 'uniswap/src/features/transactions/margin/types'
 import { formatUnits } from '~/chains'
 import type { MarginTokenInfo } from '~/constants/margin'
 import { marginPairLegs, marginUnwrapSymbol } from '~/pages/Swap/Margin/marginTokenDisplay'
@@ -36,8 +36,15 @@ export function marginVenueLabel(venue: string): string {
   return (MARGIN_VENUE_LABELS as Record<string, string | undefined>)[venue] ?? prettifyMarginVenue(venue)
 }
 
-// Convert a 1e18-scaled fixed-point value (WAD / X18) to a JS number for display.
-export function scaledE18ToNumber(value: string): number {
+// Convert a 1e18-scaled fixed-point value (WAD / X18) to a JS number for display. An absent/empty
+// input collapses to 0 rather than throwing: per the "absent ≠ zero" wire contract, event-indexed
+// fields (entryPrice, markPriceX18) arrive omitted until the indexer populates them, and the overlay
+// code already treats a non-positive price as its "draw nothing" sentinel — so 0 is the correct,
+// render-safe reading of an absent value.
+export function scaledE18ToNumber(value: string | undefined | null): number {
+  if (value === undefined || value === null || value === '') {
+    return 0
+  }
   return Number(formatUnits(BigInt(value), 18))
 }
 
@@ -284,13 +291,13 @@ export function marginHealthFromLeverage({
   // a health readout, and the same one the NaN exit above exists to prevent. Unknown, like NaN.
   // Each debt-free arm is pinned to the ONE input it describes, so anything that is not a real position
   // state (a SHORT below 0, a LONG under 1) takes the unknown path rather than the reassuring one.
-  if (direction === 'SHORT' && leverage === 0) {
+  if (direction === MarginDirection.SHORT && leverage === 0) {
     return Number.POSITIVE_INFINITY
   }
   if (leverage <= 0) {
     return undefined
   }
-  if (direction === 'SHORT') {
+  if (direction === MarginDirection.SHORT) {
     return (lltv * (leverage + 1)) / leverage
   }
   if (leverage === 1) {
@@ -401,7 +408,7 @@ export function getMarginDirectionStyle(direction: MarginDirection | undefined):
   color: string
   backgroundColor: string
 } {
-  const isShort = direction === 'SHORT'
+  const isShort = direction === MarginDirection.SHORT
   return {
     color: isShort ? '$statusCritical' : '$statusSuccess',
     backgroundColor: isShort ? '$statusCritical2' : '$statusSuccess2',
@@ -420,7 +427,7 @@ export function collateralUsdValue({
   mark: number
   direction: MarginDirection | undefined
 }): number {
-  return direction === 'SHORT' ? collateralAmount : collateralAmount * mark
+  return direction === MarginDirection.SHORT ? collateralAmount : collateralAmount * mark
 }
 
 // USD value of an EXPOSURE amount (a position's `size`). The exposure is always the volatile leg — a
@@ -442,7 +449,7 @@ export function debtInCollateralUnits({
   mark: number
   direction: MarginDirection | undefined
 }): number {
-  return direction === 'SHORT' ? debtAmount * mark : debtAmount / mark
+  return direction === MarginDirection.SHORT ? debtAmount * mark : debtAmount / mark
 }
 
 // The collateral a position holds, in collateral (human) units — the balance-sheet denominator for its
@@ -469,7 +476,7 @@ export function collateralHeld({
   // only because of which branch reads it — an invariant living in a different file from the `??`.
   mark: number | undefined
 }): number | undefined {
-  if (direction !== 'SHORT') {
+  if (direction !== MarginDirection.SHORT) {
     return exposure
   }
   return mark === undefined ? undefined : equity + debtInCollateralUnits({ debtAmount: debt, mark, direction })
@@ -492,7 +499,7 @@ export function projectedDebtAmount({
     return undefined
   }
   const exposure = rawToNumber({ raw: size, decimals: quote.exposureToken.decimals })
-  if (quote.direction === 'SHORT') {
+  if (quote.direction === MarginDirection.SHORT) {
     return exposure
   }
   const price = mark ?? (effectivePrice === undefined ? undefined : scaledE18ToNumber(effectivePrice))
@@ -526,7 +533,7 @@ export function accruedUsd({
   direction: MarginDirection | undefined
   mark: number
 }): number {
-  return direction === 'SHORT' ? accrued * mark : accrued
+  return direction === MarginDirection.SHORT ? accrued * mark : accrued
 }
 
 // Sign-correct fiat for a signed value. The shared fiat formatter buckets a sub-dust magnitude to

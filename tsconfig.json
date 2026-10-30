@@ -117,6 +117,12 @@
     },
     {
       "path": "packages/test"
+    },
+    {
+      "path": "packages/swap-ui"
+    },
+    {
+      "path": "packages/cca"
     }
   ]
 }

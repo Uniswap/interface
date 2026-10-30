@@ -23,8 +23,6 @@
  * - `adaptToSheet` is accepted but GATED on the Sheet/Dialog track (popover
  *   presentation regardless — see the menu parity exclusions ledger);
  *   `dimBackground`/`onPressAny` stay native-only exactly like legacy web.
- *
- * The parity suite in `packages/tailwind/src/parity/menu` pins all of this.
  */
 import * as React from 'react'
 import { adaptiveWebPopoverContentCompatEmission } from '../popover-compat/compile'

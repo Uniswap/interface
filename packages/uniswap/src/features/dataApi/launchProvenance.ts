@@ -1,5 +1,7 @@
-import type { PlainMessage } from '@bufbuild/protobuf'
+import type { PlainMessage, Timestamp } from '@bufbuild/protobuf'
 import { LaunchMethod, type TokenLaunchProvenance } from '@uniswap/client-data-api/dist/data/v2/types_pb'
+import { type Auction, AuctionType } from '@uniswap/client-launches/dist/data/v1/auction_pb'
+import { timestampToMs } from 'uniswap/src/data/apiClients/dataApiService/utils/protoTimestamp'
 
 export enum LaunchProvenanceMethod {
   CustomAuction = 'CUSTOM_AUCTION',
@@ -31,8 +33,11 @@ interface LaunchProvenanceLaunchpad {
 export interface LaunchProvenance {
   launchpad: LaunchProvenanceLaunchpad
   method: LaunchProvenanceMethod
-  /** Undefined when the source carries no parseable launch time. */
-  launchedAt?: Date
+  /**
+   * The token's earliest swap on this chain — not its launch, and auction bids never count.
+   * Undefined means unknown, never "has not traded".
+   */
+  firstTradedAt?: Date
   /** Auction contract when the source identifies a Uniswap CCA launch. */
   auctionAddress?: string
 }
@@ -53,25 +58,40 @@ const LAUNCH_METHODS: Record<LaunchMethod, LaunchProvenanceMethod> = {
  * launchpad whose mechanism the registry does not record falls back to ThirdParty.
  *
  * Undefined whenever the backend has nothing to attribute — the flag is off, the token predates the
- * backfill, or the registry entry was incomplete — so every caller keeps its pre-provenance path.
+ * backfill, or the registry entry was incomplete — and an unattributed token shows no provenance.
  */
 export function toLaunchProvenance({
   provenance,
+  firstTradedAt,
 }: {
   provenance: PlainMessage<TokenLaunchProvenance> | undefined
+  firstTradedAt?: PlainMessage<Timestamp>
 }): LaunchProvenance | undefined {
   if (!provenance?.launchpad?.id) {
     return undefined
   }
   const { id, name, logoUrl } = provenance.launchpad
+  const firstTradedAtMs = timestampToMs(firstTradedAt)
   return {
     launchpad: { id, name: name || id, logoUrl: logoUrl || undefined },
     // oxlint-disable-next-line typescript/no-unnecessary-condition -- unknown wire values miss the map at runtime
     method: LAUNCH_METHODS[provenance.launchMethod] ?? LaunchProvenanceMethod.ThirdParty,
+    firstTradedAt: firstTradedAtMs === undefined ? undefined : new Date(firstTradedAtMs),
   }
 }
 
 /** The served method names a Continuous Clearing Auction, so the token has one without asking GetAuction. */
 export function isAuctionLaunchMethod(method: LaunchProvenanceMethod | undefined): boolean {
   return method === LaunchProvenanceMethod.CustomAuction || method === LaunchProvenanceMethod.CrowdLaunch
+}
+
+export function getAuctionLaunchMethod({ auction }: { auction: Pick<Auction, 'auctionType'> }): LaunchProvenanceMethod {
+  switch (auction.auctionType) {
+    case AuctionType.CUSTOM:
+      return LaunchProvenanceMethod.CustomAuction
+    case AuctionType.CROWD:
+      return LaunchProvenanceMethod.CrowdLaunch
+    default:
+      return LaunchProvenanceMethod.Unknown
+  }
 }

@@ -36,6 +36,7 @@ import {
 } from '~/features/Liquidity/PoolProgressIndicator/PoolProgressIndicator'
 import { canUnwrapCurrency, getCurrencyWithOptionalUnwrap } from '~/features/Liquidity/utils/currency'
 import { getProtocolVersionFromLabel } from '~/features/Liquidity/utils/protocolVersion'
+import { AddLiquidityGeoRestrictionModal } from '~/pages/AddLiquidity/AddLiquidityGeoRestrictionModal'
 import { type FlowState, resolveAddLiquidityRenderGuard } from '~/pages/AddLiquidity/addLiquidityRenderGuard'
 import { PoolBrowser } from '~/pages/AddLiquidity/PoolBrowser'
 import { ADD_LIQUIDITY_PATH } from '~/pages/AddLiquidity/poolLinkParams'
@@ -336,6 +337,7 @@ function AddLiquidityFormContent({
               />
             </Flex>
             <SharedCreateModals onDeclineHookReview={onLeavePool} />
+            <AddLiquidityGeoRestrictionModal />
           </CreatePositionTxContextProvider>
         </CreateLiquidityContextProvider>
       </LPTransactionSettingsStoreContextProvider>

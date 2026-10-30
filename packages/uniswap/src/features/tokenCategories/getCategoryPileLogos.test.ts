@@ -1,4 +1,5 @@
 import { getCategoryPileLogos } from 'uniswap/src/features/tokenCategories/getCategoryPileLogos'
+import { poolCategory, poolCategoryTopPool } from 'uniswap/src/test/fixtures/poolCategory'
 import { tokenCategory } from 'uniswap/src/test/fixtures/tokenCategory'
 
 // Three products from one issuer share a logo; the groups are what distinguish them.
@@ -28,5 +29,38 @@ describe(getCategoryPileLogos, () => {
 
   it('is empty when the category has neither', () => {
     expect(getCategoryPileLogos(tokenCategory())).toEqual([])
+  })
+
+  it('piles each top pool as a pair, in pool order', () => {
+    const topPools = [
+      poolCategoryTopPool({
+        chainId: 1,
+        poolId: '0xa',
+        token0Symbol: 'ETH',
+        token0LogoUrl: 'https://logos.test/eth.png',
+        token1Symbol: 'USDC',
+        token1LogoUrl: 'https://logos.test/usdc.png',
+      }),
+      poolCategoryTopPool({
+        chainId: 8453,
+        poolId: '0xb',
+        token0Symbol: 'ETH',
+        token0LogoUrl: 'https://logos.test/eth.png',
+        token1Symbol: 'WBTC',
+        token1LogoUrl: 'https://logos.test/wbtc.png',
+      }),
+    ]
+    expect(getCategoryPileLogos(poolCategory({ topPools }))).toEqual([
+      {
+        key: '1-0xa',
+        token0: { key: 'ETH', name: 'ETH', symbol: 'ETH', logoUrl: 'https://logos.test/eth.png' },
+        token1: { key: 'USDC', name: 'USDC', symbol: 'USDC', logoUrl: 'https://logos.test/usdc.png' },
+      },
+      {
+        key: '8453-0xb',
+        token0: { key: 'ETH', name: 'ETH', symbol: 'ETH', logoUrl: 'https://logos.test/eth.png' },
+        token1: { key: 'WBTC', name: 'WBTC', symbol: 'WBTC', logoUrl: 'https://logos.test/wbtc.png' },
+      },
+    ])
   })
 })

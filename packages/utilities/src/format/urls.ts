@@ -1,13 +1,21 @@
 import { isExtensionApp } from '@universe/environment'
+import { uriToGatewayUrls } from 'utilities/src/format/gatewayUrls'
 import { logger } from 'utilities/src/logger/logger'
 
 /**
- * Given a URI that may be ipfs, ipns, http, https, ar, or data protocol, return the fetch-able http(s) URLs for the same content
+ * Given a URI that may be ipfs, ipns, http, https, ar, or data protocol, return the fetch-able http(s) URLs for the same content.
+ * Raw `ipfs://` content, and links baked against a retired public gateway (ipfs.io), resolve through the dedicated gateway
+ * first (see `uriToGatewayUrls`). A link on a gateway that still works is left as given: `UniversalImage` renders only
+ * the first candidate, so re-pointing it would trade a working image for a cold pull with no fallback.
  * @param uri to convert to fetch-able http url
  */
 export function uriToHttpUrls(uri: string, options?: { allowLocalUri?: boolean }): string[] {
   if (uri.startsWith('/')) {
     return options?.allowLocalUri ? [uri] : []
+  }
+  const gatewayUrls = uriToGatewayUrls(uri, { rewrite: 'retired' })
+  if (gatewayUrls) {
+    return gatewayUrls
   }
   const protocol = uri.split(':')[0]?.toLowerCase()
   switch (protocol) {
@@ -30,18 +38,6 @@ export function uriToHttpUrls(uri: string, options?: { allowLocalUri?: boolean }
         return [uri, 'https' + uri.slice(4)]
       }
       return ['https' + uri.slice(4), uri]
-    case 'ipfs': {
-      const hash = uri.match(/^ipfs:(\/\/)?(ipfs\/)?(.*)$/i)?.[3]
-      return [`https://ipfs.io/ipfs/${hash}/`, `https://hardbin.com/ipfs/${hash}/`]
-    }
-    case 'ipns': {
-      const name = uri.match(/^ipns:(\/\/)?(.*)$/i)?.[2]
-      return [`https://ipfs.io/ipns/${name}/`, `https://hardbin.com/ipns/${name}/`]
-    }
-    case 'ar': {
-      const tx = uri.match(/^ar:(\/\/)?(.*)$/i)?.[2]
-      return [`https://arweave.net/${tx}`]
-    }
     default:
       // If protocol equals the full uri, there's no ':' separator — it's a bare path (e.g. "eth-logo.png").
       // Treat it like a local file URI.

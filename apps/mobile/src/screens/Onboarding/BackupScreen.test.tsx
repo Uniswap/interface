@@ -9,7 +9,6 @@ import { renderWithProviders } from 'src/test/render'
 import { render } from 'src/test/test-utils'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
-import { AppPortalProvider } from 'wallet/src/providers/portal-provider'
 import { ACCOUNT, preloadedWalletPackageState } from 'wallet/src/test/fixtures'
 
 vi.mock('wallet/src/features/wallet/accounts/utils', () => ({
@@ -47,12 +46,9 @@ describe(BackupScreen, () => {
   })
 
   it('renders backup options when some are completed', async () => {
-    const tree = renderWithProviders(
-      <AppPortalProvider>
-        <BackupScreen navigation={navigationProp} route={routeProp} />
-      </AppPortalProvider>,
-      { preloadedState: preloadedWalletPackageState({ account: ACCOUNT }) },
-    )
+    const tree = renderWithProviders(<BackupScreen navigation={navigationProp} route={routeProp} />, {
+      preloadedState: preloadedWalletPackageState({ account: ACCOUNT }),
+    })
 
     await act(async () => {
       // Wait for the screen to render

@@ -9,7 +9,11 @@ import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { pickFilteredChainToken } from 'uniswap/src/data/apiClients/dataApiService/rwa/pickPrimaryChainToken'
 import { getIssuerCount, getRwaNetworkCount } from 'uniswap/src/data/apiClients/dataApiService/rwa/rwaMetrics'
 import type { Rwa } from 'uniswap/src/data/apiClients/dataApiService/rwa/types'
-import { TABLE_SUBLINE_HEIGHT, type ExpandableAssetGroupVariant } from 'uniswap/src/features/expandableAsset/types'
+import {
+  TABLE_SUBLINE_HEIGHT,
+  type ExpandableAssetGroupVariant,
+  type IdentityLayoutStyles,
+} from 'uniswap/src/features/expandableAsset/types'
 
 export type ExpandableParentAssetIdentityProps = {
   asset: Rwa
@@ -21,6 +25,7 @@ export type ExpandableParentAssetIdentityProps = {
   categoryTag?: ReactNode
   showNetworkCount?: boolean
   inlineChevron?: boolean
+  layoutStyles?: IdentityLayoutStyles
 }
 
 export function ExpandableParentAssetIdentity({
@@ -33,6 +38,7 @@ export function ExpandableParentAssetIdentity({
   categoryTag,
   showNetworkCount = false,
   inlineChevron = true,
+  layoutStyles,
 }: ExpandableParentAssetIdentityProps): JSX.Element {
   const { t } = useTranslation()
   const issuerCount = getIssuerCount(asset)
@@ -84,18 +90,22 @@ export function ExpandableParentAssetIdentity({
     </Text>
   )
 
+  const logo = (
+    <TokenLogo
+      url={asset.logoUrl}
+      symbol={asset.symbol}
+      name={asset.name}
+      chainId={badgeChainId}
+      size={logoSize}
+      alwaysShowNetworkLogo={Boolean(badgeChainId)}
+      hideNetworkLogo={!badgeChainId}
+    />
+  )
+
   return (
-    <Flex row gap="$spacing12" alignItems="center" width="100%" minWidth={0}>
-      <TokenLogo
-        url={asset.logoUrl}
-        symbol={asset.symbol}
-        name={asset.name}
-        chainId={badgeChainId}
-        size={logoSize}
-        alwaysShowNetworkLogo={Boolean(badgeChainId)}
-        hideNetworkLogo={!badgeChainId}
-      />
-      <Flex flex={1} minWidth={0} gap={variant === 'search' ? '$spacing2' : undefined}>
+    <Flex row gap="$spacing12" alignItems="center" width="100%" minWidth={0} style={layoutStyles?.row}>
+      {layoutStyles?.logo ? <Flex style={layoutStyles.logo}>{logo}</Flex> : logo}
+      <Flex flex={1} minWidth={0} gap={variant === 'search' ? '$spacing2' : undefined} style={layoutStyles?.text}>
         {/* Baseline like OptionItem's title row, so the pill sits identically on every row. */}
         <Flex row alignItems="baseline" gap="$spacing6" minWidth={0}>
           <Text variant={variant === 'search' ? 'body1' : 'body2'} color="$neutral1" numberOfLines={1} flexShrink={1}>

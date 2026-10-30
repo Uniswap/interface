@@ -1,6 +1,5 @@
-import { Flex } from '@universe/mycelium'
+import { Flex, Skeleton } from '@universe/mycelium'
 import { TestID } from '@universe/test'
-import { Skeleton } from 'ui/src'
 import { PILL_HEIGHT, PILL_ROW_PADDING_BOTTOM } from 'uniswap/src/features/search/SearchModal/RecentSearchPills/Pill'
 
 // A typical symbol label's width; the real pills size to their text.

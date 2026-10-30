@@ -3,8 +3,11 @@ import { UniverseChainId } from '@universe/chains'
 import { TestID } from '@universe/test'
 import type { ReactNode } from 'react'
 import { useListCategoriesQuery } from 'uniswap/src/data/apiClients/dataApiService/categories/useListCategoriesQuery'
+import { useListPoolCategoriesQuery } from 'uniswap/src/data/apiClients/dataApiService/categories/useListPoolCategoriesQuery'
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import type { Category, CategoryKind } from 'uniswap/src/features/tokenCategories/types'
+import { poolCategory } from 'uniswap/src/test/fixtures/poolCategory'
 import { tokenCategory } from 'uniswap/src/test/fixtures/tokenCategory'
 import { MoreCategoriesDropdown } from '~/pages/Explore/categories/MoreCategoriesDropdown'
 import { mocked } from '~/test-utils/mocked'
@@ -14,6 +17,9 @@ import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
 vi.mock('uniswap/src/features/telemetry/send', () => ({ sendAnalyticsEvent: vi.fn() }))
 vi.mock('uniswap/src/data/apiClients/dataApiService/categories/useListCategoriesQuery', () => ({
   useListCategoriesQuery: vi.fn(() => ({ data: undefined, isPlaceholderData: false })),
+}))
+vi.mock('uniswap/src/data/apiClients/dataApiService/categories/useListPoolCategoriesQuery', () => ({
+  useListPoolCategoriesQuery: vi.fn(() => ({ data: undefined, isPlaceholderData: false })),
 }))
 vi.mock('~/utils/params/chainParams', async (importOriginal) => ({
   ...(await importOriginal<typeof import('~/utils/params/chainParams')>()),
@@ -34,12 +40,20 @@ const gaming = tokenCategory({ id: 'gaming', name: 'Gaming' })
 const defi = tokenCategory({ id: 'defi', name: 'DeFi' })
 
 function renderDropdown({
+  kind = 'token',
+  categories = [gaming, defi],
   selectedCategoryId = 'all',
   onSelectCategory = vi.fn(),
-}: { selectedCategoryId?: string; onSelectCategory?: (id: string) => void } = {}): void {
+}: {
+  kind?: CategoryKind
+  categories?: Category[]
+  selectedCategoryId?: string
+  onSelectCategory?: (id: string) => void
+} = {}): void {
   render(
     <MoreCategoriesDropdown
-      categories={[gaming, defi]}
+      kind={kind}
+      categories={categories}
       selectedCategoryId={selectedCategoryId}
       position={MORE_POSITION}
       onSelectCategory={onSelectCategory}
@@ -113,13 +127,51 @@ describe('MoreCategoriesDropdown network-scoped stats', () => {
     mocked(useChainIdFromUrlParam).mockReturnValue(UniverseChainId.Base)
     renderDropdown()
 
-    expect(useListCategoriesQuery).toHaveBeenCalledWith({ chainIds: [UniverseChainId.Base] })
+    expect(useListCategoriesQuery).toHaveBeenCalledWith({ chainIds: [UniverseChainId.Base], enabled: true })
   })
 
   it('reads Solana as All networks rather than requesting an unsupported scope', () => {
     mocked(useChainIdFromUrlParam).mockReturnValue(UniverseChainId.Solana)
     renderDropdown()
 
-    expect(useListCategoriesQuery).toHaveBeenCalledWith({ chainIds: undefined })
+    expect(useListCategoriesQuery).toHaveBeenCalledWith({ chainIds: undefined, enabled: true })
+  })
+
+  it('only runs the query for its own kind', () => {
+    mocked(useChainIdFromUrlParam).mockReturnValue(UniverseChainId.Base)
+    renderDropdown({ kind: 'pool', categories: [poolCategory({ id: 'major-pools', name: 'Majors' })] })
+
+    expect(useListPoolCategoriesQuery).toHaveBeenCalledWith({ chainIds: [UniverseChainId.Base], enabled: true })
+    expect(useListCategoriesQuery).toHaveBeenCalledWith({ chainIds: [UniverseChainId.Base], enabled: false })
+  })
+})
+
+describe('MoreCategoriesDropdown pool rows', () => {
+  it('shows the pool count and TVL change', () => {
+    const majors = poolCategory({
+      id: 'major-pools',
+      name: 'Majors',
+      stats: { poolCount: 240, tvl: 1, volume1d: 1, volume1w: 1, volume1m: 1, fees1d: 1, tvlChange24hPct: 1.8 },
+    })
+    renderDropdown({ kind: 'pool', categories: [majors] })
+
+    openMenu()
+    const row = screen.getByTestId(`${TestID.ExploreCategoryRowPrefix}major-pools`)
+    expect(row.textContent).toContain('240')
+    expect(row.textContent).toContain('1.80%')
+  })
+
+  it('disables a category with no pools on the scoped network', () => {
+    const empty = poolCategory({
+      id: 'ai-pools',
+      name: 'AI',
+      stats: { poolCount: 0, tvl: 0, volume1d: 0, volume1w: 0, volume1m: 0, fees1d: 0 },
+    })
+    const onSelectCategory = vi.fn()
+    renderDropdown({ kind: 'pool', categories: [empty], onSelectCategory })
+
+    openMenu()
+    fireEvent.click(screen.getByTestId(`${TestID.ExploreCategoryRowPrefix}ai-pools`))
+    expect(onSelectCategory).not.toHaveBeenCalled()
   })
 })

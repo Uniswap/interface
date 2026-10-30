@@ -1,5 +1,5 @@
 import type { MarginQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
-import type { MarginVenue } from 'uniswap/src/features/transactions/margin/types'
+import { MarginDirection, type MarginVenue } from 'uniswap/src/features/transactions/margin/types'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { marginMarketKey, type MarginMarket } from '~/constants/margin'
 import { MarginRateRows } from '~/pages/Swap/Margin/components/MarginRateRows'
@@ -58,7 +58,7 @@ const QUOTE: MarginQuoteResponse = {
   action: 'open',
   chainId: 1,
   swapper: '0x0000000000000000000000000000000000000001',
-  direction: 'SHORT',
+  direction: MarginDirection.SHORT,
   exposureToken: { address: SHORT_MARKET.debt.address, chainId: 1, decimals: 18 },
   counterToken: { address: SHORT_MARKET.collateral.address, chainId: 1, decimals: 6 },
   display: { effectivePrice: `${3000n * 10n ** 18n}` },
@@ -70,7 +70,7 @@ const QUOTE: MarginQuoteResponse = {
 function derivedMarginInfoFixture(): DerivedMarginInfo {
   return {
     market: SHORT_MARKET,
-    direction: 'SHORT',
+    direction: MarginDirection.SHORT,
     quote: QUOTE,
     paymentToken: { symbol: 'USDC' },
   } as unknown as DerivedMarginInfo

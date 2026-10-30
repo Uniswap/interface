@@ -19,7 +19,7 @@ export function useUpdateCreateAuctionTokenColor(): void {
 
   const imageUrl = useMemo(() => {
     if (tokenForm.mode === TokenMode.CREATE_NEW) {
-      // Prefer the blob preview while the Pinata URL is still warming up; then resolve ipfs:// for
+      // Prefer the blob preview while the gateway URL is still warming up; then resolve ipfs:// for
       // canvas-based extraction (same gateway as logo render).
       return resolveCreateNewTokenDisplayImageSrc(tokenForm.localImagePreviewUri, tokenForm.imageUrl)
     }

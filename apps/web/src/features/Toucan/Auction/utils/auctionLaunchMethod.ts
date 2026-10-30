@@ -1,12 +1,12 @@
 import type { PlainMessage } from '@bufbuild/protobuf'
-import { AuctionType, type Auction } from '@uniswap/client-launches/dist/data/v1/auction_pb'
+import type { Auction } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import {
+  getAuctionLaunchMethod,
   isAuctionLaunchMethod,
   isPoolsLaunchMethod,
   type LaunchProvenance,
   LaunchProvenanceMethod,
 } from 'uniswap/src/features/dataApi/launchProvenance'
-import { parseCreatedAt } from '~/features/Toucan/Auction/utils/parseCreatedAt'
 import { POOLS_BASE_URL, POOLS_HOSTNAME } from '~/features/Toucan/utils/quickLaunchLinks'
 import {
   POOLS_LAUNCHPAD_GROUP_ID,
@@ -27,54 +27,38 @@ const POOLS_LAUNCHPAD: LaunchProvenance['launchpad'] = {
   url: POOLS_BASE_URL,
 }
 
-/** Provenance for a token whose auction the page resolved, with no served attribution to go on. */
-export function getLaunchProvenanceFromAuction({
-  auction,
-}: {
-  auction: Pick<PlainMessage<Auction>, 'createdAt' | 'address' | 'auctionType'>
-}): LaunchProvenance {
-  const { timestampMs } = parseCreatedAt(auction.createdAt)
-  const method = getAuctionLaunchMethod({ auction })
-  return {
-    launchpad: isPoolsLaunchMethod(method) ? POOLS_LAUNCHPAD : UNISWAP_CCA_LAUNCHPAD,
-    method,
-    launchedAt: timestampMs === undefined ? undefined : new Date(timestampMs),
-    auctionAddress: auction.address || undefined,
-  }
-}
-
 /**
- * Served provenance and the page's auction answer different halves of the question, so either alone
- * still produces a full record:
- *
- * - The launchpad only the backend registry knows — an instant launch or a third-party frontend has
- *   no Uniswap auction to infer it from, and a third-party CCA would otherwise read as "Uniswap".
- * - The mechanism and launch time only the auction knows definitively. The served method classifies
- *   a launch the page found no auction for, and covers a token the provenance backfill has not
- *   reached; where both speak, the auction's own type wins.
+ * Whether a token counts as a launch is the backend's call alone: an auction run on an existing
+ * token is attributed only once it graduates without the token having traded first, so a resolved
+ * auction with nothing served is never attributed here.
  *
  * Provenance names the token's earliest eligible launch while the page may have a later auction
- * selected, so a token whose auctions span launchpads is attributed to the first of them.
+ * selected — a Crowd Launch re-auctioned as a Custom one — so the served method wins. The auction's
+ * type only classifies one of our own rows served without a method, which normalizes to ThirdParty;
+ * a third-party row keeps it.
  */
 export function mergeLaunchProvenance({
   served,
   auction,
 }: {
   served: LaunchProvenance | undefined
-  auction: Pick<PlainMessage<Auction>, 'createdAt' | 'address' | 'auctionType'> | undefined
+  auction: Pick<PlainMessage<Auction>, 'address' | 'auctionType'> | undefined
 }): LaunchProvenance | undefined {
   if (!served) {
-    return auction ? getLaunchProvenanceFromAuction({ auction }) : undefined
+    return undefined
   }
   if (!auction) {
     return { ...served, launchpad: resolveServedLaunchpad({ launchpad: served.launchpad, method: served.method }) }
   }
-  const fromAuction = getLaunchProvenanceFromAuction({ auction })
-  const method = fromAuction.method === LaunchProvenanceMethod.Unknown ? served.method : fromAuction.method
+  const method =
+    served.method === LaunchProvenanceMethod.ThirdParty && isUniswapLaunchpad(served.launchpad)
+      ? getAuctionLaunchMethod({ auction })
+      : served.method
   return {
-    ...fromAuction,
+    ...served,
     method,
     launchpad: resolveServedLaunchpad({ launchpad: served.launchpad, method }),
+    auctionAddress: auction.address || undefined,
   }
 }
 
@@ -91,24 +75,17 @@ function resolveServedLaunchpad({
   launchpad: LaunchProvenance['launchpad']
   method: LaunchProvenanceMethod
 }): LaunchProvenance['launchpad'] {
-  if (launchpad.id === UNISWAP_CCA_LAUNCHPAD_ID || launchpad.id === UNISWAP_BONDING_CURVE_LAUNCHPAD_ID) {
+  if (isUniswapLaunchpad(launchpad)) {
     return isPoolsLaunchMethod(method) ? POOLS_LAUNCHPAD : UNISWAP_CCA_LAUNCHPAD
   }
   return launchpad
 }
 
+function isUniswapLaunchpad({ id }: LaunchProvenance['launchpad']): boolean {
+  return id === UNISWAP_CCA_LAUNCHPAD_ID || id === UNISWAP_BONDING_CURVE_LAUNCHPAD_ID
+}
+
 /** Launched through the CCA protocol on Uniswap or pools.xyz; an unclassified auction has no page to offer. */
 export function isCcaAuction({ auction }: { auction: Pick<Auction, 'auctionType'> }): boolean {
   return isAuctionLaunchMethod(getAuctionLaunchMethod({ auction }))
-}
-
-export function getAuctionLaunchMethod({ auction }: { auction: Pick<Auction, 'auctionType'> }): LaunchProvenanceMethod {
-  switch (auction.auctionType) {
-    case AuctionType.CUSTOM:
-      return LaunchProvenanceMethod.CustomAuction
-    case AuctionType.CROWD:
-      return LaunchProvenanceMethod.CrowdLaunch
-    default:
-      return LaunchProvenanceMethod.Unknown
-  }
 }

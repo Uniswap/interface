@@ -1,9 +1,10 @@
+import { isWebPlatform } from '@universe/environment'
 /**
  * Style resolution for the Tamagui-free Input rebuild (INFRA-3318): the legacy Tamagui Input
  * cascade transcribed into token → concrete-value resolution helpers shared by the web and
  * native legs in ./Input.tsx.
  */
-import { isWebPlatform } from '@universe/environment'
+import { type UseSporeColorsReturn } from '@universe/mycelium/theme-hooks-compat'
 import { type DimensionValue, type StyleProp, StyleSheet, type TextStyle } from 'react-native'
 import {
   type ColorTokenValue,
@@ -17,7 +18,6 @@ import {
   spacingTokens,
   WEB_ONLY_STYLE_KEYS,
 } from 'ui/src/components/input/inputStyleProps'
-import type { UseSporeColorsReturn } from 'ui/src/hooks/useSporeColors'
 import { borderRadii, BUTTON_MEDIUM_WEIGHT, defaultWeights, fonts, spacing } from 'ui/src/theme'
 
 // Re-exported so the component and consumers keep one import surface for the style system.

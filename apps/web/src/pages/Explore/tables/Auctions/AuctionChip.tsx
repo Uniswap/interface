@@ -9,9 +9,9 @@ import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 import { useAuctionTimeRemaining } from '~/features/Toucan/Auction/hooks/useAuctionTimeRemaining'
-import { formatCompactFromRaw } from '~/features/Toucan/Auction/utils/fixedPointFdv'
 import { isAuctionFailed } from '~/features/Toucan/Auction/utils/isAuctionFailed'
 import type { EnrichedAuction } from '~/features/Toucan/hooks/useTopAuctions/useTopAuctions'
+import { getAuctionCommittedVolumeDisplay } from '~/features/Toucan/utils/auctionFdvWarning'
 import { computeProjectedFdvTableValue } from '~/features/Toucan/utils/computeProjectedFdv'
 import { getQuickLaunchExternalBidUrl } from '~/features/Toucan/utils/quickLaunchLinks'
 import { useSrcColor } from '~/hooks/useColor'
@@ -185,16 +185,7 @@ export function AuctionChip({
           <AnimatedNumber
             numericValue={committedVolumeUsd}
             textVariant="$body3"
-            value={
-              committedVolumeUsd !== undefined
-                ? convertFiatAmountFormatted(committedVolumeUsd, NumberType.FiatTokenStats)
-                : auctionData.totalBidVolume && auctionData.currencyTokenDecimals
-                  ? formatCompactFromRaw({
-                      raw: BigInt(auctionData.totalBidVolume),
-                      decimals: auctionData.currencyTokenDecimals,
-                    })
-                  : '-'
-            }
+            value={getAuctionCommittedVolumeDisplay(auctionData, convertFiatAmountFormatted) ?? '-'}
           />
         </Flex>
       </Flex>
@@ -204,6 +195,7 @@ export function AuctionChip({
         <Text variant="body4" color="$neutral2">
           {isAuctionFailed({
             phase,
+            isGraduated: auctionData.isGraduated,
             totalBidVolume: auctionData.totalBidVolume,
             requiredCurrencyRaised: auctionData.requiredCurrencyRaised,
           })

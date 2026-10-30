@@ -1,13 +1,14 @@
 import { TradingApi } from '@universe/api'
 import { isWebPlatform } from '@universe/environment'
-import { Text, TouchableArea, zIndexes } from '@universe/mycelium'
+import { zIndexes } from '@universe/mycelium'
+import { ChartBar } from '@universe/mycelium/icons/ChartBar'
 import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
+import { PriceDifferenceCaption, PriceDifferenceLearnMoreButton } from '@universe/swap-ui'
 import { TFunction } from 'i18next'
 import { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ChartBar } from 'ui/src/components/icons/ChartBar'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
-import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
+import { WarningInfo, type WarningInfoShell } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
@@ -29,6 +30,7 @@ function getPriceDifferenceInfo({ t, routing }: { t: TFunction; routing: Trading
   }
 }
 
+/** Shell adapter: owns the tooltip/modal; the caption and learn-more content come from swap-ui. */
 export function MarketPriceDifferenceWarningModal({
   children,
   routing,
@@ -37,34 +39,20 @@ export function MarketPriceDifferenceWarningModal({
   const { t } = useTranslation()
 
   const { caption, link } = getPriceDifferenceInfo({ t, routing })
+  const openLearnMore = async (): Promise<void> => await openUri({ uri: link })
+  // WarningInfo picks the shell; the button is told which one instead of guessing from the platform.
+  const renderLearnMoreButton = (shell: WarningInfoShell): JSX.Element => (
+    <PriceDifferenceLearnMoreButton container={shell} onPress={openLearnMore} />
+  )
 
   return (
     <WarningInfo
-      infoButton={
-        <TouchableArea onPress={async () => await openUri({ uri: link })}>
-          <Text
-            // Legacy web hover color under the TouchableArea group anchor; no-op on native (hover state never fires).
-            className="group-hover:[color:var(--stext-neutral1Hovered)]"
-            color="$neutral1"
-            variant={isWebPlatform ? 'body4' : 'buttonLabel2'}
-          >
-            {t('common.button.learn')}
-          </Text>
-        </TouchableArea>
-      }
+      infoButton={renderLearnMoreButton}
       modalProps={{
         hideIcon: isWebPlatform,
         icon: <ChartBar color="$neutral1" size="$icon.18" />,
         backgroundIconColor: colors.surface2.get(),
-        captionComponent: (
-          <Text
-            color="$neutral2"
-            textAlign={isWebPlatform ? 'left' : 'center'}
-            variant={isWebPlatform ? 'body4' : 'body2'}
-          >
-            {caption}
-          </Text>
-        ),
+        captionComponent: <PriceDifferenceCaption caption={caption} container="modal" />,
         rejectText: t('common.button.close'),
         modalName: ModalName.PriceImpact,
         severity: WarningSeverity.None,

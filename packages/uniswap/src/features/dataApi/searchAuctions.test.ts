@@ -1,13 +1,12 @@
 import { Timestamp, type PlainMessage } from '@bufbuild/protobuf'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { act, renderHook, waitFor } from '@testing-library/react'
-import { SearchAuction } from '@uniswap/client-data-api/dist/data/v2/search_pb'
-import { Auction, AuctionWithStats } from '@uniswap/client-launches/dist/data/v1/auction_pb'
+import { renderHook } from '@testing-library/react'
+import { AuctionLifecycle, SearchAuction } from '@uniswap/client-data-api/dist/data/v2/search_pb'
+import { LaunchMethod } from '@uniswap/client-data-api/dist/data/v2/types_pb'
+import { Auction, AuctionType, AuctionWithStats } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { UniverseChainId } from '@universe/chains'
-import { createElement, type PropsWithChildren } from 'react'
 import { OnchainItemListOptionType } from 'uniswap/src/components/lists/items/types'
-import { fetchAuctionByAddress } from 'uniswap/src/data/apiClients/dataApiService/search/search'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { LaunchProvenanceMethod } from 'uniswap/src/features/dataApi/launchProvenance'
 import {
   auctionWithStatsToAuctionOption,
   searchAuctionToAuctionOption,
@@ -17,21 +16,9 @@ import {
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
 
-type OverrideMatch = { chainId: number; tokenAddress: string }
-type FindAuctionOverrideMatches = (query: string) => OverrideMatch[]
-
-const { actualFindAuctionOverrideMatches, mockFindAuctionOverrideMatches } = vi.hoisted(() => ({
-  actualFindAuctionOverrideMatches: { current: undefined as FindAuctionOverrideMatches | undefined },
-  mockFindAuctionOverrideMatches: vi.fn<FindAuctionOverrideMatches>(),
-}))
-
 vi.mock('@universe/gating', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@universe/gating')>()),
   useDynamicConfigValue: vi.fn(() => []),
-}))
-
-vi.mock('uniswap/src/data/apiClients/dataApiService/search/search', () => ({
-  fetchAuctionByAddress: vi.fn(),
 }))
 
 vi.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
@@ -42,40 +29,24 @@ vi.mock('uniswap/src/features/tokens/useCurrencyInfo', () => ({
   useCurrencyInfos: vi.fn(),
 }))
 
-vi.mock('uniswap/src/features/toucan/auctionMetadata', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('uniswap/src/features/toucan/auctionMetadata')>()
-  actualFindAuctionOverrideMatches.current = actual.findAuctionOverrideMatches
-  mockFindAuctionOverrideMatches.mockImplementation(actual.findAuctionOverrideMatches)
-  return { ...actual, findAuctionOverrideMatches: mockFindAuctionOverrideMatches }
-})
-
-const mockFetchAuctionByAddress = vi.mocked(fetchAuctionByAddress)
 const mockUseEnabledChains = vi.mocked(useEnabledChains)
 const mockUseCurrencyInfos = vi.mocked(useCurrencyInfos)
 
-const OCTRA_TOKEN_ADDRESS = '0x4647e1fe715c9e23959022c2416c71867f5a6e80'
 const OTHER_TOKEN_ADDRESS = '0x0000000000000000000000000000000000000004'
-
-function createWrapper(): ({ children }: PropsWithChildren) => JSX.Element {
-  const queryClient = new QueryClient({
-    defaultOptions: { queries: { retry: false } },
-  })
-
-  return function Wrapper({ children }: PropsWithChildren): JSX.Element {
-    return createElement(QueryClientProvider, { client: queryClient }, children)
-  }
-}
+const HIDDEN_AUCTION_ID = '1_0xD9E8355f9f57185928347a5BdDEe164006b16e58' // Abandoned Interfold auction.
 
 function createSearchAuction({
   auctionId,
   chainId = UniverseChainId.Mainnet,
   tokenAddress = OTHER_TOKEN_ADDRESS,
   tokenName = 'Example Token',
+  lifecycle,
 }: {
   auctionId: string
   chainId?: UniverseChainId
   tokenAddress?: string
   tokenName?: string
+  lifecycle?: AuctionLifecycle
 }): SearchAuction {
   return new SearchAuction({
     auctionId,
@@ -84,6 +55,7 @@ function createSearchAuction({
     tokenAddress,
     tokenName,
     tokenSymbol: 'EX',
+    lifecycle,
   })
 }
 
@@ -103,13 +75,8 @@ function createCurrencyInfo({
   } as unknown as CurrencyInfo
 }
 
-describe('auction override search', () => {
+describe(useSearchAuctionOptions, () => {
   beforeEach(() => {
-    mockFindAuctionOverrideMatches.mockReset()
-    mockFindAuctionOverrideMatches.mockImplementation((query) => {
-      return actualFindAuctionOverrideMatches.current?.(query) ?? []
-    })
-    mockFetchAuctionByAddress.mockReset()
     mockUseEnabledChains.mockReset()
     mockUseEnabledChains.mockReturnValue({
       chains: [UniverseChainId.Mainnet, UniverseChainId.Base],
@@ -119,164 +86,70 @@ describe('auction override search', () => {
     mockUseCurrencyInfos.mockReturnValue([])
   })
 
-  it('matches overridden names and symbols case-insensitively', () => {
-    expect(actualFindAuctionOverrideMatches.current?.('OcTrA')).toEqual([
-      { chainId: UniverseChainId.Mainnet, tokenAddress: OCTRA_TOKEN_ADDRESS },
-    ])
-    expect(actualFindAuctionOverrideMatches.current?.('oCt')).toEqual([
-      { chainId: UniverseChainId.Mainnet, tokenAddress: OCTRA_TOKEN_ADDRESS },
-    ])
-  })
-
-  it('requests exact matched addresses only on the active chain', async () => {
-    const mainnetMatch = { chainId: UniverseChainId.Mainnet, tokenAddress: OCTRA_TOKEN_ADDRESS }
-    const baseMatch = { chainId: UniverseChainId.Base, tokenAddress: OTHER_TOKEN_ADDRESS }
-    const matchedAuction = createSearchAuction({
-      auctionId: '1_0x0000000000000000000000000000000000000001',
-      tokenAddress: OCTRA_TOKEN_ADDRESS,
-    })
-    mockFindAuctionOverrideMatches.mockReturnValue([mainnetMatch, baseMatch])
-    mockFetchAuctionByAddress.mockResolvedValue(matchedAuction)
-
-    const { result } = renderHook(
-      () =>
-        useSearchAuctionOptions({
-          auctions: [],
-          searchQuery: 'octra',
-          chainFilter: UniverseChainId.Mainnet,
-          skip: false,
-        }),
-      { wrapper: createWrapper() },
-    )
-
-    await waitFor(() =>
-      expect(result.current.data.map((auction) => auction.auctionId)).toEqual([matchedAuction.auctionId]),
-    )
-    expect(mockFetchAuctionByAddress).toHaveBeenCalledTimes(1)
-    expect(mockFetchAuctionByAddress).toHaveBeenCalledWith({
-      chainId: UniverseChainId.Mainnet,
-      address: OCTRA_TOKEN_ADDRESS,
-    })
-  })
-
-  it('merges supplementary auctions after primary results and deduplicates by auction id', async () => {
-    const primaryAuction = createSearchAuction({
-      auctionId: '1_0x0000000000000000000000000000000000000001',
-      tokenName: 'Primary auction',
-    })
-    const supplementaryDuplicate = createSearchAuction({
-      auctionId: primaryAuction.auctionId,
-      tokenName: 'Supplementary duplicate',
-    })
-    const supplementaryAuction = createSearchAuction({
-      auctionId: '1_0x0000000000000000000000000000000000000002',
-      tokenName: 'Supplementary auction',
-    })
-    mockFindAuctionOverrideMatches.mockReturnValue([
-      { chainId: UniverseChainId.Mainnet, tokenAddress: OCTRA_TOKEN_ADDRESS },
-      { chainId: UniverseChainId.Mainnet, tokenAddress: OTHER_TOKEN_ADDRESS },
-    ])
-    mockFetchAuctionByAddress.mockResolvedValueOnce(supplementaryDuplicate).mockResolvedValueOnce(supplementaryAuction)
-
-    const { result } = renderHook(
-      () =>
-        useSearchAuctionOptions({
-          auctions: [primaryAuction],
-          searchQuery: 'octra',
-          chainFilter: null,
-          skip: false,
-        }),
-      { wrapper: createWrapper() },
-    )
-
-    await waitFor(() =>
-      expect(result.current.data.map(({ auctionId, tokenName }) => ({ auctionId, tokenName }))).toEqual([
-        { auctionId: primaryAuction.auctionId, tokenName: 'Primary auction' },
-        { auctionId: supplementaryAuction.auctionId, tokenName: 'Supplementary auction' },
-      ]),
-    )
-  })
-
-  it('keeps fulfilled override lookups when another address lookup fails', async () => {
-    const successfulAuction = createSearchAuction({
-      auctionId: '1_0x0000000000000000000000000000000000000002',
-    })
-    mockFindAuctionOverrideMatches.mockReturnValue([
-      { chainId: UniverseChainId.Mainnet, tokenAddress: OCTRA_TOKEN_ADDRESS },
-      { chainId: UniverseChainId.Mainnet, tokenAddress: OTHER_TOKEN_ADDRESS },
-    ])
-    mockFetchAuctionByAddress.mockRejectedValueOnce(new Error('lookup failed')).mockResolvedValueOnce(successfulAuction)
-
-    const { result } = renderHook(
-      () =>
-        useSearchAuctionOptions({
-          auctions: [],
-          searchQuery: 'auction',
-          chainFilter: null,
-          skip: false,
-        }),
-      { wrapper: createWrapper() },
-    )
-
-    await waitFor(() =>
-      expect(result.current.data.map((auction) => auction.auctionId)).toEqual([successfulAuction.auctionId]),
-    )
-  })
-
-  it('returns a stable refetch callback that refreshes the override lookups', async () => {
-    mockFindAuctionOverrideMatches.mockReturnValue([
-      { chainId: UniverseChainId.Mainnet, tokenAddress: OCTRA_TOKEN_ADDRESS },
-    ])
-    mockFetchAuctionByAddress.mockResolvedValue(
+  it.each([
+    [true, ['1_0x0000000000000000000000000000000000000011', '1_0x0000000000000000000000000000000000000012']],
+    [
+      false,
+      [
+        '1_0x0000000000000000000000000000000000000011',
+        '1_0x0000000000000000000000000000000000000012',
+        '1_0x0000000000000000000000000000000000000013',
+        '1_0x0000000000000000000000000000000000000014',
+      ],
+    ],
+  ])('alongside tokens %s, keeps ended auctions only on the Auctions tab', (alongsideTokens, expectedIds) => {
+    const auctions = [
       createSearchAuction({
-        auctionId: '1_0x0000000000000000000000000000000000000001',
-        tokenAddress: OCTRA_TOKEN_ADDRESS,
+        auctionId: '1_0x0000000000000000000000000000000000000011',
+        lifecycle: AuctionLifecycle.LIVE,
+      }),
+      createSearchAuction({
+        auctionId: '1_0x0000000000000000000000000000000000000012',
+        lifecycle: AuctionLifecycle.UPCOMING,
+      }),
+      createSearchAuction({
+        auctionId: '1_0x0000000000000000000000000000000000000013',
+        lifecycle: AuctionLifecycle.FAILED,
+      }),
+      createSearchAuction({
+        auctionId: '1_0x0000000000000000000000000000000000000014',
+        lifecycle: AuctionLifecycle.GRADUATED,
+      }),
+    ]
+
+    const { result } = renderHook(() => useSearchAuctionOptions({ auctions, alongsideTokens, skip: false }))
+
+    expect(result.current.map((auction) => auction.auctionId)).toEqual(expectedIds)
+  })
+
+  it('drops hidden auctions', () => {
+    const visibleAuction = createSearchAuction({ auctionId: '1_0x0000000000000000000000000000000000000002' })
+
+    const { result } = renderHook(() =>
+      useSearchAuctionOptions({
+        auctions: [createSearchAuction({ auctionId: HIDDEN_AUCTION_ID }), visibleAuction],
+        alongsideTokens: false,
+        skip: false,
       }),
     )
 
-    const { result, rerender } = renderHook(
-      () =>
-        useSearchAuctionOptions({
-          auctions: [],
-          searchQuery: 'octra',
-          chainFilter: null,
-          skip: false,
-        }),
-      { wrapper: createWrapper() },
-    )
-    await waitFor(() => expect(mockFetchAuctionByAddress).toHaveBeenCalledTimes(1))
-    const initialRefetch = result.current.refetch
-
-    rerender()
-    expect(result.current.refetch).toBe(initialRefetch)
-
-    await act(async () => {
-      await result.current.refetch()
-    })
-    await waitFor(() => expect(mockFetchAuctionByAddress).toHaveBeenCalledTimes(2))
+    expect(result.current.map((auction) => auction.auctionId)).toEqual([visibleAuction.auctionId])
   })
 
-  it('skips the override lookup when auction search is skipped', () => {
-    mockFindAuctionOverrideMatches.mockReturnValue([
-      { chainId: UniverseChainId.Mainnet, tokenAddress: OCTRA_TOKEN_ADDRESS },
-    ])
-
-    const { result } = renderHook(
-      () =>
-        useSearchAuctionOptions({
-          auctions: undefined,
-          searchQuery: 'octra',
-          chainFilter: null,
-          skip: true,
-        }),
-      { wrapper: createWrapper() },
+  it('returns no options when auction search is skipped', () => {
+    const { result } = renderHook(() =>
+      useSearchAuctionOptions({
+        auctions: [createSearchAuction({ auctionId: '1_0x0000000000000000000000000000000000000002' })],
+        alongsideTokens: false,
+        skip: true,
+      }),
     )
 
-    expect(mockFetchAuctionByAddress).not.toHaveBeenCalled()
-    expect(result.current.data).toEqual([])
+    expect(result.current).toEqual([])
   })
 
-  it('carries the v2 payload FDV and end time onto the row options', async () => {
+  it('carries the v2 payload committed volume and start/end times onto the row options', () => {
+    const startTime = new Date('2026-09-04T12:00:00Z')
     const endTime = new Date('2026-09-04T16:00:00Z')
     const v2Auction = new SearchAuction({
       auctionId: '1_0x0000000000000000000000000000000000000009',
@@ -284,23 +157,21 @@ describe('auction override search', () => {
       chainId: UniverseChainId.Mainnet,
       tokenAddress: OTHER_TOKEN_ADDRESS,
       tokenSymbol: 'EX',
-      fdvUsd: '1234567.89',
+      totalBidVolumeUsd: '1234567.89',
+      estimatedStartTime: Timestamp.fromDate(startTime),
       estimatedEndTime: Timestamp.fromDate(endTime),
     })
 
-    const { result } = renderHook(
-      () =>
-        useSearchAuctionOptions({
-          auctions: [v2Auction],
-          searchQuery: 'example',
-          chainFilter: null,
-          skip: false,
-        }),
-      { wrapper: createWrapper() },
+    const { result } = renderHook(() =>
+      useSearchAuctionOptions({ auctions: [v2Auction], alongsideTokens: false, skip: false }),
     )
 
-    await waitFor(() => expect(result.current.data).toHaveLength(1))
-    expect(result.current.data[0]?.searchStats).toEqual({ fdvUsd: 1234567.89, endTimeMs: endTime.getTime() })
+    expect(result.current).toHaveLength(1)
+    expect(result.current[0]?.searchStats).toEqual({
+      committedVolumeUsd: 1234567.89,
+      startTimeMs: startTime.getTime(),
+      endTimeMs: endTime.getTime(),
+    })
   })
 })
 
@@ -425,7 +296,7 @@ describe('searchAuctions', () => {
       expect(option.currencyInfo).toBe(currencyInfo)
     })
 
-    it('maps FDV and the estimated end time from the v2 payload into the row stats', () => {
+    it('maps committed volume and the estimated end time from the v2 payload into the row stats', () => {
       const endTime = new Date('2026-09-04T16:00:00Z')
       const option = searchAuctionToAuctionOption({
         auction: new SearchAuction({
@@ -434,14 +305,58 @@ describe('searchAuctions', () => {
           auctionAddress: '0x9084CB9a700a52909Cbef3113dB8BaC01C01EfD6',
           tokenAddress: '0x9999B7E3cc6979223Ff1aF980b7D8B90B75d9999',
           tokenSymbol: 'CAP',
-          fdvUsd: '1234567.89',
+          totalBidVolumeUsd: '1234567.89',
           estimatedEndTime: Timestamp.fromDate(endTime),
         }),
         currencyInfo: null,
         isVerified: false,
       })
 
-      expect(option.searchStats).toEqual({ fdvUsd: 1234567.89, endTimeMs: endTime.getTime() })
+      expect(option.searchStats).toEqual({ committedVolumeUsd: 1234567.89, endTimeMs: endTime.getTime() })
+    })
+
+    it('maps the bidder count and launch method from the v2 payload', () => {
+      const option = searchAuctionToAuctionOption({
+        auction: new SearchAuction({
+          auctionId: '1_0xfFDab1083fCbBCEE32997795388B3D61Ebab786E',
+          chainId: UniverseChainId.Mainnet,
+          auctionAddress: '0xfFDab1083fCbBCEE32997795388B3D61Ebab786E',
+          tokenAddress: '0x4c93B9FbF7Fd1777CCBcBc538B1d0a8b58fB1ad6',
+          tokenSymbol: 'STRATO',
+          bidderCount: 292,
+          launchProvenance: {
+            launchpad: { id: 'uniswap-cca', name: 'Uniswap CCA' },
+            launchMethod: LaunchMethod.CUSTOM,
+          },
+        }),
+        currencyInfo: null,
+        isVerified: false,
+      })
+
+      expect(option).toMatchObject({ uniqueBidderCount: 292, launchMethod: LaunchProvenanceMethod.CustomAuction })
+    })
+
+    it.each([
+      [AuctionLifecycle.GRADUATED, true, undefined],
+      [AuctionLifecycle.FAILED, true, undefined],
+      [AuctionLifecycle.UPCOMING, undefined, true],
+      [AuctionLifecycle.LIVE, undefined, undefined],
+    ])('marks lifecycle %s as ended: %s, upcoming: %s', (lifecycle, isEnded, isUpcoming) => {
+      const option = searchAuctionToAuctionOption({
+        auction: new SearchAuction({
+          auctionId: '1_0x9084CB9a700a52909Cbef3113dB8BaC01C01EfD6',
+          chainId: UniverseChainId.Mainnet,
+          tokenAddress: '0x9999B7E3cc6979223Ff1aF980b7D8B90B75d9999',
+          tokenSymbol: 'CAP',
+          totalBidVolumeUsd: '1',
+          lifecycle,
+        }),
+        currencyInfo: null,
+        isVerified: false,
+      })
+
+      expect(option.searchStats?.isEnded).toBe(isEnded)
+      expect(option.searchStats?.isUpcoming).toBe(isUpcoming)
     })
 
     it('leaves the row stats unset when the payload omits both', () => {
@@ -468,6 +383,7 @@ describe('searchAuctions', () => {
           auctionWithStats: new AuctionWithStats(),
           currencyInfo: null,
           isVerified: false,
+          isEnded: false,
         }),
       ).toBeUndefined()
     })
@@ -488,6 +404,7 @@ describe('searchAuctions', () => {
         }),
         currencyInfo: null,
         isVerified: true,
+        isEnded: false,
       })
 
       expect(option).toMatchObject({
@@ -505,7 +422,7 @@ describe('searchAuctions', () => {
       })
     })
 
-    it('maps FDV and the estimated end time into the row stats', () => {
+    it('maps committed volume and the estimated end time into the row stats', () => {
       const endTime = new Date('2026-09-04T16:00:00Z')
       const option = auctionWithStatsToAuctionOption({
         auctionWithStats: new AuctionWithStats({
@@ -515,15 +432,53 @@ describe('searchAuctions', () => {
             address: '0x9084CB9a700a52909Cbef3113dB8BaC01C01EfD6',
             tokenAddress: '0x9999B7E3cc6979223Ff1aF980b7D8B90B75d9999',
             tokenSymbol: 'CAP',
-            fdvUsd: '1234567.89',
+            totalBidVolumeUsd: '1234567.89',
             estimatedEndTime: Timestamp.fromDate(endTime),
           }),
         }),
         currencyInfo: null,
         isVerified: false,
+        isEnded: false,
       })
 
-      expect(option?.searchStats).toEqual({ fdvUsd: 1234567.89, endTimeMs: endTime.getTime() })
+      expect(option?.searchStats).toEqual({ committedVolumeUsd: 1234567.89, endTimeMs: endTime.getTime() })
+    })
+
+    it('maps the auction type to the launch method', () => {
+      const option = auctionWithStatsToAuctionOption({
+        auctionWithStats: new AuctionWithStats({
+          auction: new Auction({
+            auctionId: '1_0x9084CB9a700a52909Cbef3113dB8BaC01C01EfD6',
+            chainId: UniverseChainId.Mainnet,
+            tokenAddress: '0x9999B7E3cc6979223Ff1aF980b7D8B90B75d9999',
+            tokenSymbol: 'CAP',
+            auctionType: AuctionType.CROWD,
+          }),
+        }),
+        currencyInfo: null,
+        isVerified: false,
+        isEnded: false,
+      })
+
+      expect(option?.launchMethod).toBe(LaunchProvenanceMethod.CrowdLaunch)
+    })
+
+    it('marks an auction from the completed listing as ended though the listing omits its times', () => {
+      const option = auctionWithStatsToAuctionOption({
+        auctionWithStats: new AuctionWithStats({
+          auction: new Auction({
+            auctionId: '1_0x9084CB9a700a52909Cbef3113dB8BaC01C01EfD6',
+            chainId: UniverseChainId.Mainnet,
+            tokenAddress: '0x9999B7E3cc6979223Ff1aF980b7D8B90B75d9999',
+            tokenSymbol: 'CAP',
+          }),
+        }),
+        currencyInfo: null,
+        isVerified: false,
+        isEnded: true,
+      })
+
+      expect(option?.searchStats).toEqual({ isEnded: true })
     })
 
     it('leaves the row stats unset when the listing omits both', () => {
@@ -539,6 +494,7 @@ describe('searchAuctions', () => {
         }),
         currencyInfo: null,
         isVerified: false,
+        isEnded: false,
       })
 
       expect(option?.searchStats).toBeUndefined()

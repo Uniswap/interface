@@ -4,7 +4,7 @@ import type { MediaState as MediaQueryState } from '@universe/mycelium/theme-hoo
 import type { ReactNode } from 'react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { DetailsHeaderTitle } from '~/components/StickyCollapsibleHeader/DetailsHeaderTitle'
-import { render, screen } from '~/test-utils/render'
+import { render, screen, waitFor } from '~/test-utils/render'
 
 const mockMedia = vi.fn<() => Partial<MediaQueryState>>()
 
@@ -101,6 +101,22 @@ describe('DetailsHeaderTitle', () => {
       const titleRow = getName().parentElement
       expect(getAdornment().parentElement).toBe(titleRow)
       expect(Array.from(titleRow?.children ?? []).map((child) => child.tagName)).toEqual(['H1', 'H2', 'BUTTON'])
+    })
+  })
+
+  // TDP ellipsizes long names on mweb, so a tap on the name has to reveal the full one.
+  describe('with titleTooltip', () => {
+    it('shows the tooltip on tap and hides it on a tap elsewhere', async () => {
+      const user = userEvent.setup()
+      render(<DetailsHeaderTitle name={NAME} symbol="HOOD" isCompact={false} titleTooltip={`${NAME} full`} />)
+
+      expect(screen.queryByText(`${NAME} full`)).not.toBeInTheDocument()
+
+      await user.pointer({ keys: '[TouchA]', target: getName() })
+      expect(await screen.findByText(`${NAME} full`)).toBeInTheDocument()
+
+      await user.pointer({ keys: '[TouchA]', target: document.body })
+      await waitFor(() => expect(screen.queryByText(`${NAME} full`)).not.toBeInTheDocument())
     })
   })
 

@@ -4,11 +4,16 @@
  * color resolution the composite wrappers share.
  */
 import { isWebPlatform } from '@universe/environment'
+import { useSporeColors } from '@universe/mycelium'
 import { useCallback, useEffect, useState, useSyncExternalStore } from 'react'
 import { Dimensions } from 'react-native'
 import { resolveIconColor } from 'ui/src/components/factories/iconTokens'
-import type { IconColorValue, IconMediaProps, IconOverrideStyle } from 'ui/src/components/factories/iconTypes'
-import { type DynamicColor, useSporeColors } from 'ui/src/hooks/useSporeColors'
+import type {
+  IconColorValue,
+  IconDynamicColor,
+  IconMediaProps,
+  IconOverrideStyle,
+} from 'ui/src/components/factories/iconTypes'
 import { breakpoints, heightBreakpoints } from 'ui/src/theme/breakpoints'
 
 interface MediaSpec {
@@ -152,7 +157,7 @@ export function toDomElement(instance: unknown): Element | null {
  * Structurally `IconProps['color']`, spelled without importing createIcon, which imports this
  * module. `IconColorValue` is `IconColorToken | (string & {})`, so this is that union exactly.
  */
-type ResolvableIconColor = IconColorValue | DynamicColor | null | undefined
+type ResolvableIconColor = IconColorValue | IconDynamicColor | null | undefined
 
 /**
  * Resolves a wrapper's `color` prop to a literal before it hands it to a glyph.

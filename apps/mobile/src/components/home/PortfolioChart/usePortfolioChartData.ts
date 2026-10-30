@@ -6,6 +6,7 @@ import { type ChartData } from 'src/components/charts/SparklineChart'
 import { useGetPortfolioHistoricalValueChartQuery } from 'uniswap/src/data/apiClients/dataApiService/balances/getPortfolioChart'
 import { useWalletBalancesIncludeCategories } from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances'
 import { useRestPortfolioValueModifier } from 'uniswap/src/features/dataApi/balances/useRestPortfolioValueModifier'
+import { getUnavailableChartCategories } from 'uniswap/src/features/portfolio/getUnavailableChartCategories'
 import { logger } from 'utilities/src/logger/logger'
 
 // API returns timestamps as bigint in seconds.
@@ -35,6 +36,8 @@ export function usePortfolioChartData({
   earnData: ChartData
   loading: boolean
   error: Error | null
+  /** The request failed, or a requested category's series is missing so the total would be understated. */
+  isUnavailable: boolean
   chartColor: string
 } {
   const colors = useSporeColors()
@@ -77,6 +80,13 @@ export function usePortfolioChartData({
   const poolsData = useMemo<ChartData>(() => toChartData(chartResponse?.pools), [chartResponse?.pools])
   const earnData = useMemo<ChartData>(() => toChartData(chartResponse?.earn), [chartResponse?.earn])
 
+  const isUnavailable = useMemo(
+    () =>
+      !!error ||
+      getUnavailableChartCategories({ chartData: chartResponse, requestedCategories: includeCategories }).length > 0,
+    [error, chartResponse, includeCategories],
+  )
+
   const first = data[0]
   const last = data[data.length - 1]
   const chartColor = !first || !last || last.value >= first.value ? colors.statusSuccess.val : colors.statusCritical.val
@@ -88,6 +98,7 @@ export function usePortfolioChartData({
     earnData,
     loading: isPending || isFetching,
     error: error ?? null,
+    isUnavailable,
     chartColor,
   }
 }

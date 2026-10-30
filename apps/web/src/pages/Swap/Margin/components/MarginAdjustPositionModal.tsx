@@ -7,7 +7,7 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { useUSDCPrice } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
-import type { MarginPaymentToken } from 'uniswap/src/features/transactions/margin/types'
+import { MarginDirection, type MarginPaymentToken } from 'uniswap/src/features/transactions/margin/types'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -92,7 +92,7 @@ export function MarginAdjustPositionModal({
   // scaling through it (marginPnlSuppression's noPrice, resolveRoutedMarkPriceX18); this disables the
   // sheet instead of guessing.
   const currentEquityRaw =
-    direction === 'SHORT'
+    direction === MarginDirection.SHORT
       ? equityCounterRaw
       : mark > 0
         ? BigInt(Math.round((Number(equityCounterRaw) / 10 ** debtDecimals / mark) * 10 ** collateralDecimals))
@@ -109,7 +109,7 @@ export function MarginAdjustPositionModal({
     // A SHORT's `size` IS its debt leg, so it carries that token's decimals.
     exposure: rawToNumber({
       raw: position.size,
-      decimals: direction === 'SHORT' ? debtDecimals : collateralDecimals,
+      decimals: direction === MarginDirection.SHORT ? debtDecimals : collateralDecimals,
     }),
     // Inert on the only branch that can be undefined: collateralHeld reads `equity` for a SHORT only,
     // and a SHORT's counter token IS its collateral, so it never needs the mark that went missing.
@@ -173,7 +173,7 @@ export function MarginAdjustPositionModal({
   const paymentTokenUsdPrice = paymentTokenPriceObj ? Number(paymentTokenPriceObj.toSignificant(18)) : undefined
   // Collateral's USD price without a second remote lookup: LONG collateral IS the volatile asset
   // (mark IS its USD price); SHORT collateral is the ~$1 stable leg (same convention as collateralUsdValue).
-  const collateralUsdPrice = direction === 'SHORT' ? 1 : mark
+  const collateralUsdPrice = direction === MarginDirection.SHORT ? 1 : mark
 
   const deltaE =
     currentEquityRaw === undefined
@@ -237,7 +237,9 @@ export function MarginAdjustPositionModal({
   const debtLogos = { url: debtLogoUrl ?? undefined, symbol: marginUnwrapSymbol(market.debt) }
   // The Size row reads the EXPOSURE leg — a short's is its debt leg, a long's its collateral.
   const sizeLogos =
-    direction === 'SHORT' ? debtLogos : { url: collateralLogoUrl ?? undefined, symbol: market.displaySymbol }
+    direction === MarginDirection.SHORT
+      ? debtLogos
+      : { url: collateralLogoUrl ?? undefined, symbol: market.displaySymbol }
   const { depositAmountHuman, depositUsdValue, withdrawAmountHuman, equityInHuman } = computeFundingDisplay({
     funding,
     paymentToken,

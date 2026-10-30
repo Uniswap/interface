@@ -4,7 +4,7 @@
  *
  * Anatomy: Popover / PopoverTrigger / PopoverAnchor / PopoverContent /
  * PopoverClose. The legacy Radix scaffolding in `src/components/popover.tsx`
- * stays untouched for its existing consumers (dev-portal, labs/rh-cca);
+ * stays untouched for its existing consumers (dev-portal, apps/pools-xyz);
  * this is the forward-facing layer new web surfaces compose.
  *
  * Class strings are FULL literals collected in `POPOVER_RECIPE_CLASS_NAMES`

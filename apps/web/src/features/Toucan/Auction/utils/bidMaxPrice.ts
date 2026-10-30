@@ -1,5 +1,5 @@
+import { calculateMaxValidBidQ96, snapToNearestTick } from '@universe/cca'
 import { priceToQ96WithDecimals, q96ToPriceString } from '~/features/Toucan/Auction/BidDistributionChart/utils/q96'
-import { calculateMaxValidBidQ96, snapToNearestTick } from '~/features/Toucan/Auction/utils/ticks'
 
 interface ComputeBidMaxPriceQ96Params {
   /** The max-valuation input as a raw bid-token amount. */

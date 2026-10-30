@@ -2,7 +2,7 @@ import { fireEvent, screen } from '@testing-library/react'
 import { TestID } from '@universe/test'
 import type { ReactNode } from 'react'
 import type { MarginQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
-import type { MarginVenue } from 'uniswap/src/features/transactions/margin/types'
+import { MarginDirection, type MarginVenue } from 'uniswap/src/features/transactions/margin/types'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import type { MarginMarket } from '~/constants/margin'
 import { getDefaultMarginMarket } from '~/pages/Swap/Margin/__fixtures__/marginCatalog'
@@ -71,7 +71,7 @@ function quoteFixture({ venue, gasFeeUsd }: { venue: MarginVenue; gasFeeUsd: str
     action: 'open',
     chainId: 1,
     swapper: SWAPPER,
-    direction: 'LONG',
+    direction: MarginDirection.LONG,
     exposureToken: { address: MORPHO_MARKET.collateral.address, chainId: 1, decimals: 18 },
     counterToken: { address: MORPHO_MARKET.debt.address, chainId: 1, decimals: 6 },
     display: {
@@ -91,7 +91,7 @@ const AAVE_QUOTE = quoteFixture({ venue: 'AAVE_V3', gasFeeUsd: `${999n * 10n ** 
 function derivedFixture(quote?: MarginQuoteResponse, over: { quoteError?: unknown } = {}): DerivedMarginInfo {
   return {
     market: MORPHO_MARKET,
-    direction: 'LONG',
+    direction: MarginDirection.LONG,
     leverage: 2,
     quote,
     quoteError: over.quoteError,

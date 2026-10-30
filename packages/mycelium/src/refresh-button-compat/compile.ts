@@ -6,9 +6,8 @@
  * (INFRA-3021) — and the complete universe is pinned by the CSS-existence
  * gate in `packages/tailwind/src/parity/refresh-button/classes-existence.test.ts`.
  *
- * Legacy reference: `ui/src/components/RefreshButton/RefreshButtonIcon.tsx`
- * (the hover-revealed TouchableArea frame) and
- * `ui/src/loading/RefreshIcon.web.tsx` (the injected one-turn spin rule).
+ * Ported from the deleted legacy ui `RefreshButtonIcon` (the hover-revealed
+ * TouchableArea frame) and `RefreshIcon` (the one-turn spin rule).
  *
  * The hover reveal keys off an ANCESTOR group's hover, in BOTH anchor
  * systems: Tailwind's `group-hover:` variant (a mycelium `group` ancestor)

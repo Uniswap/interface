@@ -9,6 +9,12 @@ import { ExpandableIssuerIdentity, ExpandableParentAssetIdentity } from 'uniswap
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 import { Cell } from '~/components/Table/Cell'
+import { FLUSH_COLLAPSIBLE_CELL_STYLES } from '~/components/Table/PinnedColumns/collapse/CollapsibleCellLayout'
+import {
+  FLUSH_CELL_PADDING,
+  FLUSH_COLLAPSED_COLUMN_WIDTH,
+  FLUSH_HEADER_CELL_PADDING,
+} from '~/components/Table/PinnedColumns/collapse/utils'
 import { EllipsisText, TableText } from '~/components/Table/shared/TableText'
 import { HeaderCell } from '~/components/Table/styled'
 import {
@@ -77,6 +83,8 @@ export function useExpandableAssetTableColumns({
     }
 
     const tokenColumnSize = getExpandableAssetTokenColumnSize(media.lg)
+    const layoutStyles = media.lg ? FLUSH_COLLAPSIBLE_CELL_STYLES : undefined
+    const cellPadding = media.lg ? FLUSH_CELL_PADDING : undefined
 
     const columns = [
       !media.lg
@@ -103,17 +111,17 @@ export function useExpandableAssetTableColumns({
         : null,
       columnHelper.display({
         id: 'tokenDescription',
-        ...getFlexColumnSizing(tokenColumnSize),
+        ...getFlexColumnSizing(tokenColumnSize, { collapsedWidth: FLUSH_COLLAPSED_COLUMN_WIDTH }),
         header: () => (
-          <HeaderCell justifyContent="flex-start">
-            <Text variant="body3" color="$neutral2" fontWeight="500">
+          <HeaderCell justifyContent="flex-start" {...(media.lg ? FLUSH_HEADER_CELL_PADDING : undefined)}>
+            <Text variant="body3" color="$neutral2" fontWeight="500" numberOfLines={1}>
               {t('explore.table.column.token')}
             </Text>
           </HeaderCell>
         ),
         cell: (info) => {
           if (!hasRow<ExpandableAssetTableRow>(info)) {
-            return <Cell justifyContent="flex-start" loading={showLoadingSkeleton} />
+            return <Cell justifyContent="flex-start" loading={showLoadingSkeleton} {...cellPadding} />
           }
           const row = info.row.original
           const isExpanded = info.row.getIsExpanded()
@@ -127,6 +135,7 @@ export function useExpandableAssetTableColumns({
                 isExpanded={isExpanded}
                 variant="table"
                 chainFilter={chainFilter}
+                layoutStyles={layoutStyles}
               />
             ) : (
               <ExpandableIssuerIdentity
@@ -137,10 +146,11 @@ export function useExpandableAssetTableColumns({
                 chainFilter={chainFilter}
                 useIssuerNameAsPrimary={isFlatIssuerRow}
                 showIssuerTag
+                layoutStyles={layoutStyles}
               />
             )
           return (
-            <Cell justifyContent="flex-start" loading={showLoadingSkeleton}>
+            <Cell justifyContent="flex-start" loading={showLoadingSkeleton} {...cellPadding}>
               <Flex flex={1} minWidth={0} width="100%">
                 <TableText flex={1} minWidth={0} width="100%">
                   {description}

@@ -22,7 +22,7 @@ import { TimeCell } from '~/pages/Portfolio/Activity/ActivityTable/TimeCell'
 import { filterTransactionDetailsFromActivityItems } from '~/pages/Portfolio/Activity/Filters/utils'
 import { PORTFOLIO_TABLE_ROW_HEIGHT } from '~/pages/Portfolio/constants'
 import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
-import { MAX_ACTIVITY_ROWS } from '~/pages/Portfolio/Overview/constants'
+import { MAX_ACTIVITY_ROWS, MINI_TABLE_MOBILE_BLEED_PX } from '~/pages/Portfolio/Overview/constants'
 import { TableSectionHeader } from '~/pages/Portfolio/Overview/TableSectionHeader'
 import { ViewAllButton } from '~/pages/Portfolio/Overview/ViewAllButton'
 import { PortfolioTab } from '~/pages/Portfolio/types'
@@ -86,9 +86,12 @@ export const MiniActivityTable = memo(function MiniActivityTable({
       columnHelper.accessor((row) => row.typeInfo.type, {
         id: 'type',
         size: 240,
+        meta: {
+          flexGrow: 1,
+        },
         cell: (info) => {
           return (
-            <Cell loading={showLoadingSkeleton} justifyContent="flex-start" p="$spacing8">
+            <Cell loading={showLoadingSkeleton} justifyContent="flex-start" p="$spacing8" $md={{ pl: '$none' }}>
               {hasRow<TransactionDetails>(info) && (
                 <ActivityAmountCell transaction={info.row.original} variant="compact" />
               )}
@@ -107,7 +110,7 @@ export const MiniActivityTable = memo(function MiniActivityTable({
         },
         cell: (info) => {
           return (
-            <Cell loading={showLoadingSkeleton} justifyContent="flex-end" p="$spacing8">
+            <Cell loading={showLoadingSkeleton} justifyContent="flex-end" p="$spacing8" $md={{ pr: '$none' }}>
               {hasRow<TransactionDetails>(info) && (
                 <TimeCell timestamp={info.row.original.addedTime} textAlign="right" />
               )}
@@ -178,18 +181,20 @@ export const MiniActivityTable = memo(function MiniActivityTable({
         contentGap={hasData ? '$gap4' : '$gap16'}
       >
         {hasData ? (
-          <Table
-            mobileFullBleed
-            hideHeader
-            columns={columns}
-            data={transactionData.slice(0, maxActivities)}
-            loading={tableLoading}
-            error={false}
-            rowWrapper={rowWrapper}
-            loadingRowsCount={MAX_ACTIVITY_ROWS}
-            rowHeight={PORTFOLIO_TABLE_ROW_HEIGHT}
-            compactRowHeight={PORTFOLIO_TABLE_ROW_HEIGHT}
-          />
+          <Flex $md={{ mx: -MINI_TABLE_MOBILE_BLEED_PX }}>
+            <Table
+              mobileFullBleed
+              hideHeader
+              columns={columns}
+              data={transactionData.slice(0, maxActivities)}
+              loading={tableLoading}
+              error={false}
+              rowWrapper={rowWrapper}
+              loadingRowsCount={MAX_ACTIVITY_ROWS}
+              rowHeight={PORTFOLIO_TABLE_ROW_HEIGHT}
+              compactRowHeight={PORTFOLIO_TABLE_ROW_HEIGHT}
+            />
+          </Flex>
         ) : (
           <Flex
             row

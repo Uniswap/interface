@@ -19,6 +19,7 @@ import {
   SafetyLevel,
 } from 'uniswap/src/features/dataApi/safety'
 import { AttackType, SafetyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
+import { ATTACK_TYPE_PRIORITY, getAttackTypeFromV2Safety } from 'uniswap/src/features/tokens/warnings/tokenProtection'
 
 // TokenFees.{buy_fee,sell_fee} are fraction-of-1 doubles (e.g. 0.05 === 5%) per the v2 proto.
 // buildCurrency's buyFeeBps/sellFeeBps params want basis points as a string.
@@ -36,17 +37,6 @@ function getTokenListFromSafetyLevel(safetyLevel?: SafetyLevel): TokenList {
       return TokenList.NonDefault
   }
 }
-
-// Attack-type display priority per the Token Protection PRD spec — the single ordered source
-// every mapper below selects from. ExitScamRisk is Blockaid's lowest-confidence bucket, so any
-// more specific signal outranks it.
-const ATTACK_TYPE_PRIORITY: AttackType[] = [
-  AttackType.Honeypot,
-  AttackType.Impersonator,
-  AttackType.Airdrop,
-  AttackType.HighFees,
-  AttackType.ExitScamRisk,
-]
 
 /**
  * Highest-priority attack type among already-domain-mapped values. A non-empty input whose
@@ -137,33 +127,6 @@ export function getRestTokenSafetyInfo(metadata?: Pick<TokenMetadata, 'spamCode'
   }
 
   return { isSpam, spamCodeValue, mappedSafetyLevel: fromRestSafetyLevel(metadata?.safetyLevel) }
-}
-
-const V2_ATTACK_FEATURES: Partial<Record<AttackType, Set<string>>> = {
-  [AttackType.Honeypot]: new Set(['HONEYPOT']),
-  [AttackType.Impersonator]: new Set([
-    'IMPERSONATOR',
-    'IMPERSONATOR_HIGH_CONFIDENCE',
-    'IMPERSONATOR_MEDIUM_CONFIDENCE',
-    'IMPERSONATOR_LOW_CONFIDENCE',
-    'IMPERSONATOR_SENSITIVE_ASSET',
-  ]),
-  [AttackType.Airdrop]: new Set(['AIRDROP_PATTERN']),
-  [AttackType.HighFees]: new Set(['HIGH_TRANSFER_FEE', 'HIGH_BUY_FEE', 'HIGH_SELL_FEE']),
-  [AttackType.ExitScamRisk]: new Set(['EXIT_SCAM_RISK']),
-}
-
-function getAttackTypeFromV2Safety(verdict?: string, features?: string[]): AttackType | undefined {
-  const match = ATTACK_TYPE_PRIORITY.find((attackType) =>
-    features?.some((feature) => V2_ATTACK_FEATURES[attackType]?.has(feature)),
-  )
-  if (match) {
-    return match
-  }
-  if (verdict === 'Malicious' || verdict === 'Warning') {
-    return AttackType.Other
-  }
-  return undefined
 }
 
 // V2 is the canonical data source going forward — its safety shape is flat booleans

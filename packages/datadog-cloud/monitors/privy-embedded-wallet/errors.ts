@@ -3,12 +3,15 @@ import { MonitorDefinition } from '../../types'
 import {
   MIN_ALB_REQUESTS_5M,
   MIN_REQUESTS_5M,
+  MIN_WEB_SERVER_ERRORS,
   PRIVY_EMBEDDED_WALLET_RUNBOOK,
   SERVICE_README_URL,
   TEAM,
   albTagFilter,
   apmTagFilter,
+  minFailuresToAlert,
   rateDenominatorFloor,
+  webServerErrors,
 } from './constants'
 
 const env = settings.environment
@@ -19,6 +22,7 @@ const apmFilter = apmTagFilter(env)
 // (5%) query threshold: the floor is the smallest request count at which one 5xx stays under it.
 const albErrorFloor = rateDenominatorFloor(5, MIN_ALB_REQUESTS_5M)
 const apmErrorFloor = rateDenominatorFloor(5, MIN_REQUESTS_5M)
+const apmErrorMinFailures = Math.max(minFailuresToAlert(5, apmErrorFloor), MIN_WEB_SERVER_ERRORS)
 
 // Highest organic 401 count seen in any single 15m window over a trailing 30 days, measured on
 // the same metric and window the monitor evaluates. Recorded because the threshold below is
@@ -107,13 +111,13 @@ export const privyEmbeddedWalletErrorMonitors: MonitorDefinition[] = [
   },
   {
     // APM-side aggregate error rate as a cross-check on the ALB signal. APM counts
-    // application-thrown errors (status:error spans) which may differ from 5xx if
-    // the framework masks errors as 2xx or vice versa.
+    // error-flagged web spans minus handled 4xx, which may differ from 5xx if the
+    // framework masks errors as 2xx.
     id: 'privy_embedded_wallet_apm_error_rate',
     name: 'APM error rate on privy-embedded-wallet (aggregate)',
     type: 'query alert',
-    query: `sum(last_5m):( sum:trace.web.request.errors{${apmFilter}}.as_count() / clamp_min(sum:trace.web.request.hits{${apmFilter}}.as_count(), ${apmErrorFloor}) ) * 100 > 5`,
-    alertBody: `Service-wide application error rate on privy-embedded-wallet is above 5% over the last 5 minutes. Investigate per-endpoint breakdown via the service dashboard. Requires at least ${apmErrorFloor} requests in the window before the rate can alert.`,
+    query: `sum(last_5m):( ${webServerErrors(apmFilter)} / clamp_min(sum:trace.web.request.hits{${apmFilter}}.as_count(), ${apmErrorFloor}) ) * 100 > 5`,
+    alertBody: `Service-wide server-side error rate on privy-embedded-wallet (handled 4xx excluded; they do not page from this monitor) is above 5% over the last 5 minutes. Investigate per-endpoint breakdown via the service dashboard. The rate needs at least ${MIN_WEB_SERVER_ERRORS} server errors in the window and the denominator is floored at ${apmErrorFloor} requests, so it takes at least ${apmErrorMinFailures} server errors to cross 5%.`,
     team: TEAM,
     priority: 2,
     thresholds: { critical: 5, warning: 2 },

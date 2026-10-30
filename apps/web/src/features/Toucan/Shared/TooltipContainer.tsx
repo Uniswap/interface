@@ -1,6 +1,6 @@
 import { Flex } from '@universe/mycelium'
+import { useShadowPropsShort } from '@universe/mycelium/theme-hooks-compat'
 import { ComponentProps, forwardRef, PropsWithChildren } from 'react'
-import { useShadowPropsShort } from 'ui/src'
 
 type TooltipContainerProps = PropsWithChildren<ComponentProps<typeof Flex>>
 

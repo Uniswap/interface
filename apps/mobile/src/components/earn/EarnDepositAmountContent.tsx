@@ -1,6 +1,6 @@
 /* oxlint-disable max-lines -- Tamagui conversion split one ui/src import into a mycelium import plus a kept ui/src import, pushing the file one line past the cap; not new code */
 import { TradingApi } from '@universe/api'
-import { Button, Flex } from '@universe/mycelium'
+import { Button, Flex, AnimatedFlex, useIsShortMobileDevice } from '@universe/mycelium'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { TextInput as RNTextInput, TextInputProps as RNTextInputProps } from 'react-native'
@@ -28,8 +28,7 @@ import { useEarnAmountInputFontSizing } from 'src/components/earn/useEarnAmountI
 import { useEarnDepositAmountInlineErrors } from 'src/components/earn/useEarnDepositAmountInlineErrors'
 import { Screen } from 'src/components/layout/Screen'
 import { useLayoutHeight } from 'src/utils/useLayoutHeight'
-import { useIsShortMobileDevice, useShakeAnimation } from 'ui/src'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
+import { useShakeAnimation } from 'ui/src'
 import { useBottomSheetContext } from 'uniswap/src/components/modals/BottomSheetContext'
 import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
 import { PillMultiToggle } from 'uniswap/src/components/pill/PillMultiToggle'

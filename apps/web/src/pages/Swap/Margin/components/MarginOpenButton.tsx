@@ -5,6 +5,7 @@ import type {
   MarginCreatePlanRequest,
   MarginQuoteResponse,
 } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
+import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { MARGIN_CHAIN_ID } from '~/constants/margin'
@@ -95,7 +96,7 @@ export function MarginOpenButton({
   if (!account.address) {
     return (
       <Flex row>
-        <Button variant="branded" size="large" fill onPress={accountDrawer.open}>
+        <Button variant="branded" size="medium" fill onPress={accountDrawer.open}>
           {t('common.connectWallet.button')}
         </Button>
       </Flex>
@@ -106,7 +107,7 @@ export function MarginOpenButton({
   const loading = isMarginOpenLoading({ isQuoteLoading, isDebouncing, isFetching, isPlaceholderData })
   const openAction = decideOpenAction({ existing: existingPlan })
 
-  let label = direction === 'SHORT' ? t('margin.cta.reviewShort') : t('margin.cta.reviewLong')
+  let label = direction === MarginDirection.SHORT ? t('margin.cta.openShort') : t('margin.cta.openLong')
   let disabled = false
   // A plan of another intent still holds the executor: the positions-table banner owns resuming it,
   // and nothing on this form can clear it.
@@ -147,8 +148,17 @@ export function MarginOpenButton({
       {/* Sibling of the CTA, not a replacement for it: the button still says what is wrong, and the
           notice carries the sentence plus the way back into the opt-out sheet. */}
       {allowedVenues.length === 0 ? <MarginVenueEmptyNotice /> : null}
+      {/* Neutral at all times (design): the side reads from the Long/Short toggle, not the CTA's color. */}
       <Flex row>
-        <Button variant="branded" size="large" fill loading={loading} disabled={disabled || loading} onPress={onOpen}>
+        <Button
+          variant="default"
+          emphasis="primary"
+          size="medium"
+          fill
+          loading={loading}
+          disabled={disabled || loading}
+          onPress={onOpen}
+        >
           {label}
         </Button>
       </Flex>

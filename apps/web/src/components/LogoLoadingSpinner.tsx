@@ -1,5 +1,5 @@
+import { useSporeColors } from '@universe/mycelium'
 import type { ComponentPropsWithoutRef } from 'react'
-import { useSporeColors } from 'ui/src'
 import { StyledRotatingSVG } from '~/components/Icons/shared'
 
 type StyledRotatingSvgProps = ComponentPropsWithoutRef<typeof StyledRotatingSVG>

@@ -9,6 +9,7 @@ import type { EarnPositionInfo, EarnVaultInfo } from 'uniswap/src/features/earn/
 import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
 import { SignDelegationAuthorizationFn, SwapDelegationInfo } from 'uniswap/src/features/smartWallet/delegation/types'
 import type { EarnAnalyticsEntryPoint } from 'uniswap/src/features/telemetry/types'
+import type { CategoryKind } from 'uniswap/src/features/tokenCategories/types'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import type { TdpChainSelection } from 'uniswap/src/utils/linking'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -36,6 +37,8 @@ export type NavigateToEarnVaultArgs = {
 export type NavigateToCategoryDetailsArgs = {
   /** Backend category id (also the web route slug). */
   categoryId: string
+  /** Picks the token or pool details route. */
+  kind: CategoryKind
 }
 
 /** Stores objects/utils that exist on all platforms, abstracting away app-level specifics for each, in order to allow usage in cross-platform code. */

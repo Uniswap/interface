@@ -4,7 +4,7 @@ import { useUniswapContextSelector } from 'uniswap/src/contexts/UniswapContext'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { CategoryTagPill } from 'uniswap/src/features/tokenCategories/CategoryTagPill'
-import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
+import type { CategoryBase } from 'uniswap/src/features/tokenCategories/types'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
@@ -12,7 +12,7 @@ import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
  * Row-level category tag. Pressing it opens the category's detail page on platforms that have one
  * (`navigateToCategoryDetails` in UniswapContext); elsewhere it renders as a static badge.
  */
-export const TokenCategoryTag = memo(function TokenCategoryTag({ category }: { category: TokenCategory }): JSX.Element {
+export const TokenCategoryTag = memo(function TokenCategoryTag({ category }: { category: CategoryBase }): JSX.Element {
   // Selector form so hosts without a UniswapProvider render a static badge instead of throwing.
   const navigateToCategoryDetails = useUniswapContextSelector((ctx) => ctx.navigateToCategoryDetails)
   const trace = useTrace()
@@ -25,8 +25,9 @@ export const TokenCategoryTag = memo(function TokenCategoryTag({ category }: { c
       ...trace,
       element: ElementName.TokenRowCategoryTag,
       category_id: category.id,
+      category_kind: category.kind,
     })
-    navigateToCategoryDetails?.({ categoryId: category.id })
+    navigateToCategoryDetails?.({ categoryId: category.id, kind: category.kind })
   })
 
   return <CategoryTagPill label={category.name} onPress={navigateToCategoryDetails ? onPress : undefined} />

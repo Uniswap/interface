@@ -15865,4 +15865,44 @@
     <lastmod>2026-10-15T19:48:43.504Z</lastmod>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/ethereum/0xc5c7c21f4e60770ca5991a8832127a40f5236f73</loc>
+    <lastmod>2026-10-22T19:08:04.747Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/arbitrum/0xa976b4506e5ffd55f08fd63dd2ffac368f64b925</loc>
+    <lastmod>2026-10-22T19:08:04.747Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/arbitrum/0x05477c22a5349cee601500da0489dad137fd6bfa</loc>
+    <lastmod>2026-10-22T19:08:04.747Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/base/0xab365f161dd501473a1ff0d2ef0dce94e7398839</loc>
+    <lastmod>2026-10-22T19:08:04.747Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/celo/0x6519d56eb0a69fc0338657784c783b169b8f7d32</loc>
+    <lastmod>2026-10-22T19:08:04.747Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/celo/0x070d575a713eaf5025462d0865fb0dac4b14bc38</loc>
+    <lastmod>2026-10-22T19:08:04.747Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/celo/0x5d8ef8b839be522b9e3d60a51edb5837cd0b2391</loc>
+    <lastmod>2026-10-22T19:08:04.747Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/celo/0x01c3cf91cdf7b34181c7ec8566c0236951fea40f</loc>
+    <lastmod>2026-10-22T19:08:04.747Z</lastmod>
+    <priority>0.8</priority>
+  </url>
 </urlset>

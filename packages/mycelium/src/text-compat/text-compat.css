@@ -26,7 +26,7 @@
     "Roboto Mono", "Courier New", monospace;
 }
 
-/* Matches ui/src/loading/Shine.web.tsx's `shine` keyframes exactly. */
+/* Same keyframes as `myc-shimmer` in shimmer/shimmer.css. */
 @keyframes stext-shine {
   from {
     -webkit-mask-position: 150%;

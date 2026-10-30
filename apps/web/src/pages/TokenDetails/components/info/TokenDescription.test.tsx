@@ -169,6 +169,30 @@ describe('TokenDescription', () => {
     warnSpy.mockRestore()
   })
 
+  describe('with launch info', () => {
+    it('renders one Info module: launch info, labeled description, then links', () => {
+      mockTDPState(USDC_STATE)
+
+      render(<TokenDescription launchInfo={<span>launch info</span>} />)
+
+      expect(screen.getByText('Info')).toBeVisible()
+      expect(screen.queryByText('About')).toBeNull()
+      expect(screen.getByText('launch info')).toBeVisible()
+      expect(screen.getByText('Description')).toBeVisible()
+      expect(screen.getByTestId(TestID.TokenDetailsAboutLinks)).toBeVisible()
+    })
+
+    it('drops the description block instead of the empty-state copy', () => {
+      mocked(useTokenMetadata).mockReturnValue(EMPTY_METADATA)
+      mockTDPState(USDC_STATE)
+
+      render(<TokenDescription launchInfo={<span>launch info</span>} />)
+
+      expect(screen.queryByText('Description')).toBeNull()
+      expect(screen.queryByText('No token information available')).toBeNull()
+    })
+  })
+
   describe('multichain', () => {
     it('renders single-chain pills when only one chain', () => {
       mockTDPState(USDC_STATE)

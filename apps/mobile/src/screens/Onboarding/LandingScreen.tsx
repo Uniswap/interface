@@ -1,7 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ReactNavigationPerformanceView } from '@shopify/react-native-performance-navigation'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { Button, Flex, Text, TouchableArea } from '@universe/mycelium'
+import { Button, Flex, Text, TouchableArea, AnimatedFlex } from '@universe/mycelium'
 import { TestID } from '@universe/test'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -15,7 +15,6 @@ import {
   UNITAG_ELIGIBILITY_TIMEOUT_MS,
 } from 'src/screens/Onboarding/resolveUnitagEligibility'
 import { TermsOfService } from 'src/screens/Onboarding/TermsOfService'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'

@@ -72,6 +72,7 @@ export enum DynamicConfigs {
   Earn = 'earn_config',
   NetworkRequests = 'network_requests',
   Permit2MismatchDelegates = 'permit2_mismatch_delegates',
+  PoolCategoriesOrder = 'pool_categories_order',
   Swap = 'swap_config',
   SyncTransactionSubmissionChainIds = 'sync_transaction_submission_chain_ids',
   TokenCategoriesOrder = 'token_categories_order',
@@ -102,6 +103,7 @@ export enum DynamicConfigs {
   UniswapBuiltHookAddresses = 'uniswap_built_hook_addresses',
   VerifiedAuctions = 'verified_auctions',
   AuctionFdvWarning = 'auction_fdv_warning',
+  AuctionOverrides = 'auction_overrides',
 }
 
 // Config values go here for easy access
@@ -156,7 +158,8 @@ export enum EarnConfigKey {
   SwapToggleMonthlyEarningsThresholdUsd = 'swapToggleMonthlyEarningsThresholdUsd',
 }
 
-export enum TokenCategoriesOrderConfigKey {
+/** Category ids pinned first, in display order; the rest keep backend order. */
+export enum CategoriesOrderConfigKey {
   OrderedCategoryIds = 'orderedCategoryIds',
 }
 
@@ -281,6 +284,10 @@ export enum VerifiedAuctionsConfigKey {
   VerifiedAuctionIds = 'verifiedAuctionIds',
 }
 
+export enum AuctionOverridesConfigKey {
+  LpPercentCommitted = 'lpPercentCommitted',
+}
+
 export enum AuctionFdvWarningConfigKey {
   CommittedVolumeUsdThreshold = 'committedVolumeUsdThreshold',
   BidCountThreshold = 'bidCountThreshold',
@@ -326,9 +333,10 @@ export type DynamicConfigKeys = {
   [DynamicConfigs.Earn]: EarnConfigKey
   [DynamicConfigs.NetworkRequests]: NetworkRequestsConfigKey
   [DynamicConfigs.Permit2MismatchDelegates]: Permit2MismatchDelegatesConfigKey
+  [DynamicConfigs.PoolCategoriesOrder]: CategoriesOrderConfigKey
   [DynamicConfigs.Swap]: SwapConfigKey
   [DynamicConfigs.SyncTransactionSubmissionChainIds]: SyncTransactionSubmissionChainIdsConfigKey
-  [DynamicConfigs.TokenCategoriesOrder]: TokenCategoriesOrderConfigKey
+  [DynamicConfigs.TokenCategoriesOrder]: CategoriesOrderConfigKey
   [DynamicConfigs.TokenCategoriesSearchSpotlight]: TokenCategoriesSearchSpotlightConfigKey
 
   // Wallet
@@ -343,6 +351,7 @@ export type DynamicConfigKeys = {
   // Web
   [DynamicConfigs.AllowedV4WethHookAddresses]: AllowedV4WethHookAddressesConfigKey
   [DynamicConfigs.AuctionFdvWarning]: AuctionFdvWarningConfigKey
+  [DynamicConfigs.AuctionOverrides]: AuctionOverridesConfigKey
   [DynamicConfigs.AstroChain]: AstroChainConfigKey
   [DynamicConfigs.EmbeddedWalletBetaPassphrases]: EmbeddedWalletBetaPassphrasesKey
   [DynamicConfigs.ExternallyConnectableExtension]: ExternallyConnectableExtensionConfigKey
@@ -365,3 +374,7 @@ export type RWAIssuerLogo = {
 }
 
 export type RWAIssuerLogosMap = Record<string, RWAIssuerLogo>
+
+// This type must match the format in the statsig dynamic config auction_overrides, under its lpPercentCommitted key:
+// auction id ("{chainId}_{checksummed auction contract address}") to percent, e.g. 34.6 => "34.6%".
+export type AuctionLpPercentOverridesMap = Record<string, number>

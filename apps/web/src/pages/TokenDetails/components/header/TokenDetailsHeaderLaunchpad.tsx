@@ -19,6 +19,7 @@ import { sendTokenDetailsProvenanceEvent } from '~/pages/TokenDetails/utils/toke
 export type TokenDetailsHeaderLaunchpadModel = LaunchpadDestination & {
   launchpad: LaunchProvenance['launchpad']
   launchMethod: NonNullable<TokenProvenanceAnalyticsProperties['launch_method']>
+  tokenAddress?: string
   /** Reports the in-app launches-list navigation; only the hook reads the display state it needs. */
   onLaunchesPress: () => void
 }
@@ -46,6 +47,7 @@ export function useTokenDetailsHeaderLaunchpad(): TokenDetailsHeaderLaunchpadMod
     launchpad: provenance.launchpad,
     ...getLaunchpadDestination({ provenance }),
     launchMethod: getAnalyticsLaunchMethod(provenance.method),
+    tokenAddress: display.tokenAddress,
     onLaunchesPress,
   }
 }
@@ -55,6 +57,7 @@ export function TokenDetailsHeaderLaunchpad({
   href,
   isExternal,
   launchMethod,
+  tokenAddress,
   onLaunchesPress,
 }: TokenDetailsHeaderLaunchpadModel): JSX.Element {
   return (
@@ -66,6 +69,7 @@ export function TokenDetailsHeaderLaunchpad({
         isExternal={isExternal}
         element={ElementName.ProvenanceHeaderLaunchpad}
         launchMethod={launchMethod}
+        tokenAddress={tokenAddress}
         onPress={onLaunchesPress}
       >
         <Flex row alignItems="center" gap="$spacing6" flexShrink={0} testID={TestID.TokenDetailsHeaderLaunchpad}>

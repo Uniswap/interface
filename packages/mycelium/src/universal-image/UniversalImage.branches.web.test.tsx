@@ -38,6 +38,27 @@ describe('UniversalImage web branches', () => {
     expect(img?.getAttribute('src')).toBe(PNG_URI)
   })
 
+  // The component renders only the first candidate, so the gateway order is what the user sees.
+  it.each([
+    ['an ipfs:// uri', 'ipfs://bafkreicr5qh6v5b2lrn7734xkx7hy7vxgho4fqffahii5xy6bob36uvss4'],
+    ['a url baked against ipfs.io', 'https://ipfs.io/ipfs/bafkreicr5qh6v5b2lrn7734xkx7hy7vxgho4fqffahii5xy6bob36uvss4'],
+  ])('renders %s from the dedicated ipfs gateway', (_label, uri) => {
+    const { getByTestId } = render(<UniversalImage size={{ width: 20, height: 20 }} testID="ipfs" uri={uri} />)
+
+    const img = getByTestId('img-ipfs').querySelector('img')
+    expect(img?.getAttribute('src')).toBe(
+      'https://ipfs.pools.xyz/ipfs/bafkreicr5qh6v5b2lrn7734xkx7hy7vxgho4fqffahii5xy6bob36uvss4',
+    )
+  })
+
+  it('renders a link on a working gateway as given', () => {
+    const uri =
+      'https://turquoise-blank-swallow-685.mypinata.cloud/ipfs/bafybeid677sswggwrqg6cwpbe3p42ywfxk25muowjh7nzzd7jtvfzh7zlm'
+    const { getByTestId } = render(<UniversalImage size={{ width: 20, height: 20 }} testID="pinata" uri={uri} />)
+
+    expect(getByTestId('img-pinata').querySelector('img')?.getAttribute('src')).toBe(uri)
+  })
+
   it('renders an svg uri inside the svg-prefixed container', () => {
     const { getByTestId } = render(<UniversalImage size={{ width: 20, height: 20 }} testID="vector" uri={SVG_URI} />)
 

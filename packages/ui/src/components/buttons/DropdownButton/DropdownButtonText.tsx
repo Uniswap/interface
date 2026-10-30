@@ -28,9 +28,6 @@ function DropdownButtonTextComponent(
     <ButtonTextCompat
       ref={ref}
       className={cn(isExpanded ? DROPDOWN_TEXT_EXPANDED_CLASSES : undefined, className)}
-      // Consumes `ButtonTextCompat` directly, so it never reaches the single-line default
-      // that ui's `CustomButtonText.web.tsx` wrapper supplies.
-      numberOfLines={1}
       {...props}
     />
   )

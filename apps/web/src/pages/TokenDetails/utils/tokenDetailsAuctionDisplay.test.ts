@@ -10,10 +10,10 @@ import {
   type CurrentBlockState,
 } from '~/features/Toucan/Auction/utils/resolveAuctionDisplayState'
 import {
-  type LiveAuctionBannerInputs,
+  type AuctionBannerInputs,
   resolveTokenDetailsAuctionDisplay,
-  shouldReserveLiveAuctionBannerSpace,
-  shouldShowLiveAuctionBanner,
+  shouldReserveAuctionBannerSpace,
+  shouldShowAuctionBanner,
   toSeconds,
 } from '~/pages/TokenDetails/utils/tokenDetailsAuctionDisplay'
 import type { TokenPoolState } from '~/types/tokenPool'
@@ -51,7 +51,7 @@ function resolve(
 function banner(
   display: ReturnType<typeof resolve>,
   { hasConfirmedPool = false, isInitialLoading = false } = {},
-): LiveAuctionBannerInputs {
+): AuctionBannerInputs {
   return { ...display, hasConfirmedPool, isInitialLoading }
 }
 
@@ -67,7 +67,7 @@ describe('resolveTokenDetailsAuctionDisplay', () => {
     })
     expect(display.launchMethod).toBe(LaunchProvenanceMethod.Unknown)
     expect(shouldShowAuctionOnlyLayout(display)).toBe(false)
-    expect(shouldShowLiveAuctionBanner(banner(display))).toBe(false)
+    expect(shouldShowAuctionBanner(banner(display))).toBe(false)
   })
 
   const POOL_CASES: [TokenPoolState, PoolAvailability, boolean][] = [
@@ -89,8 +89,8 @@ describe('resolveTokenDetailsAuctionDisplay', () => {
       expect(display.poolAvailability).toBe(poolAvailability)
       expect(display.shouldShowSwap).toBe(!auctionOnly)
       expect(shouldShowAuctionOnlyLayout(display)).toBe(auctionOnly && phase !== AuctionDisplayPhase.Ended)
-      expect(shouldShowLiveAuctionBanner(banner(display))).toBe(
-        phase === AuctionDisplayPhase.Live && poolAvailability === PoolAvailability.HasPool,
+      expect(shouldShowAuctionBanner(banner(display))).toBe(
+        phase !== AuctionDisplayPhase.Ended && poolAvailability === PoolAvailability.HasPool,
       )
     })
   })
@@ -119,7 +119,7 @@ describe('resolveTokenDetailsAuctionDisplay', () => {
     expect(display.launchMethod).toBe(LaunchProvenanceMethod.Unknown)
     expect(shouldShowAuctionOnlyLayout(display)).toBe(false)
     expect(
-      shouldShowLiveAuctionBanner(
+      shouldShowAuctionBanner(
         banner(
           resolve({ auction: { ...AUCTION, auctionType: AuctionType.UNSPECIFIED, isQuickLaunch }, pools: HAS_POOL }),
         ),
@@ -133,14 +133,22 @@ describe('resolveTokenDetailsAuctionDisplay', () => {
     )
   })
 
-  it('reserves banner space while the pool lookup resolves, only for a live Custom auction', () => {
+  it('reserves banner space while the pool lookup resolves, only for an upcoming or live Custom auction', () => {
     const loading = { isInitialLoading: true }
 
-    expect(shouldReserveLiveAuctionBannerSpace(banner(resolve({ pools: HAS_POOL })))).toBe(true)
-    expect(shouldReserveLiveAuctionBannerSpace(banner(resolve({ pools: { status: 'loading' } }), loading))).toBe(true)
-    expect(shouldReserveLiveAuctionBannerSpace(banner(resolve({ pools: NO_POOL })))).toBe(false)
+    expect(shouldReserveAuctionBannerSpace(banner(resolve({ pools: HAS_POOL })))).toBe(true)
+    expect(shouldReserveAuctionBannerSpace(banner(resolve({ pools: { status: 'loading' } }), loading))).toBe(true)
     expect(
-      shouldReserveLiveAuctionBannerSpace(
+      shouldReserveAuctionBannerSpace(
+        banner(
+          resolve({ currentBlock: { status: 'success', blockNumber: 50n }, pools: { status: 'loading' } }),
+          loading,
+        ),
+      ),
+    ).toBe(true)
+    expect(shouldReserveAuctionBannerSpace(banner(resolve({ pools: NO_POOL })))).toBe(false)
+    expect(
+      shouldReserveAuctionBannerSpace(
         banner(
           resolve({ auction: { ...AUCTION, auctionType: AuctionType.CROWD }, pools: { status: 'loading' } }),
           loading,
@@ -148,7 +156,7 @@ describe('resolveTokenDetailsAuctionDisplay', () => {
       ),
     ).toBe(false)
     expect(
-      shouldReserveLiveAuctionBannerSpace(
+      shouldReserveAuctionBannerSpace(
         banner(resolve({ currentBlock: { status: 'loading' }, pools: { status: 'loading' } }), loading),
       ),
     ).toBe(false)
@@ -156,7 +164,7 @@ describe('resolveTokenDetailsAuctionDisplay', () => {
 
   it('collapses the reserved row instead of shimmering when the pool lookup cannot settle', () => {
     // Offline the provider holds `isInitialLoading` false, so nothing is left waiting on a paused query.
-    expect(shouldReserveLiveAuctionBannerSpace(banner(resolve({ pools: { status: 'loading' } })))).toBe(false)
+    expect(shouldReserveAuctionBannerSpace(banner(resolve({ pools: { status: 'loading' } })))).toBe(false)
   })
 
   it.each([
@@ -165,11 +173,11 @@ describe('resolveTokenDetailsAuctionDisplay', () => {
   ])('keeps the banner shown when a confirmed pool lookup regresses to %s', (_label, pools) => {
     const regressed = banner(resolve({ pools }), { hasConfirmedPool: true })
 
-    expect(shouldShowLiveAuctionBanner(regressed)).toBe(true)
-    expect(shouldReserveLiveAuctionBannerSpace(regressed)).toBe(true)
+    expect(shouldShowAuctionBanner(regressed)).toBe(true)
+    expect(shouldReserveAuctionBannerSpace(regressed)).toBe(true)
   })
 
-  it('drops the latched banner once the auction is no longer live', () => {
+  it('drops the latched banner once the auction has ended', () => {
     const ended = banner(
       resolve({ currentBlock: { status: 'success', blockNumber: 250n }, pools: { status: 'loading' } }),
       {
@@ -177,8 +185,8 @@ describe('resolveTokenDetailsAuctionDisplay', () => {
       },
     )
 
-    expect(shouldShowLiveAuctionBanner(ended)).toBe(false)
-    expect(shouldReserveLiveAuctionBannerSpace(ended)).toBe(false)
+    expect(shouldShowAuctionBanner(ended)).toBe(false)
+    expect(shouldReserveAuctionBannerSpace(ended)).toBe(false)
   })
 
   it('counts down to the indexed end estimate while live', () => {

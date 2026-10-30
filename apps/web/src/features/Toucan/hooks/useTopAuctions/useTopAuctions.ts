@@ -6,7 +6,6 @@ import {
   ListTopAuctionsRequest,
 } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { EVMUniverseChainId, UniverseChainId } from '@universe/chains'
-import { DynamicConfigs, useDynamicConfigValue, VerifiedAuctionsConfigKey } from '@universe/gating'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { auctionQueries } from 'uniswap/src/data/apiClients/dataApiService/auctions/auctionQueries'
@@ -15,10 +14,11 @@ import { isTestnetChain } from 'uniswap/src/features/chains/utils'
 import { selectIsTestnetModeEnabled } from 'uniswap/src/features/settings/selectors'
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { isHiddenAuction } from 'uniswap/src/features/toucan/hiddenAuctions'
+import { useVerifiedAuctionIds } from 'uniswap/src/features/toucan/useVerifiedAuctionIds'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { computePreBidEndBlock } from '~/features/Toucan/Auction/utils/emissionStartBlock'
 import { approximateNumberFromRaw } from '~/features/Toucan/Auction/utils/fixedPointFdv'
-import { DEFAULT_VERIFIED_AUCTION_IDS, getAuctionMetadata } from '~/features/Toucan/Config/config'
+import { getAuctionMetadata } from '~/features/Toucan/Config/config'
 import { isAuctionCompleted } from '~/features/Toucan/hooks/useTopAuctions/isAuctionCompleted'
 import { BlockTimestampRequest, useGetBlockTimestamps, useMultiChainBlockInfo } from '~/hooks/useMultiChainBlockInfo'
 import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
@@ -154,11 +154,7 @@ export function useTopAuctions({
   const chainId = chainIdOverride ?? urlChainId
   const isTestnetModeEnabled = useSelector(selectIsTestnetModeEnabled)
 
-  const verifiedAuctionIds: string[] = useDynamicConfigValue({
-    config: DynamicConfigs.VerifiedAuctions,
-    key: VerifiedAuctionsConfigKey.VerifiedAuctionIds,
-    defaultValue: DEFAULT_VERIFIED_AUCTION_IDS,
-  })
+  const verifiedAuctionIds = useVerifiedAuctionIds()
 
   const params = useMemo(
     () =>

@@ -1,12 +1,11 @@
-import { Flex, Text } from '@universe/mycelium'
-import { useTranslation } from 'react-i18next'
-import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
-import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAlertColor'
+import { PriceDifferenceLabel, PriceDifferenceRow as PriceDifferenceRowView } from '@universe/swap-ui'
+import { toSwapWarningDisplay } from 'uniswap/src/components/modals/WarningModal/utils'
 import { MarketPriceDifferenceWarningModal } from 'uniswap/src/features/transactions/swap/components/PriceDifferenceRow/MarketPriceDifferenceWarning'
 import { usePriceDifference } from 'uniswap/src/features/transactions/swap/components/PriceDifferenceRow/usePriceDifference'
 import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/useSwapWarnings'
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 
+/** Adapter: derives the price difference and warning, then renders the swap-ui row with the label in its info shell. */
 export function PriceDifferenceRow({
   hide,
   derivedSwapInfo,
@@ -14,11 +13,8 @@ export function PriceDifferenceRow({
   hide?: boolean
   derivedSwapInfo: DerivedSwapInfo
 }): JSX.Element | null {
-  const { t } = useTranslation()
-
   const { formattedPriceDifference } = usePriceDifference({ derivedSwapInfo })
   const { priceImpactWarning } = useParsedSwapWarnings()
-  const { text: priceImpactWarningColor } = getAlertColor(priceImpactWarning?.severity)
 
   const trade = derivedSwapInfo.trade.trade
 
@@ -27,20 +23,14 @@ export function PriceDifferenceRow({
   }
 
   return (
-    <Flex row alignItems="center" justifyContent="space-between">
-      <MarketPriceDifferenceWarningModal routing={trade.routing}>
-        <Flex centered row gap="$spacing4">
-          <Text color="$neutral2" variant="body3">
-            {t('swap.priceImpact')}
-          </Text>
-        </Flex>
-      </MarketPriceDifferenceWarningModal>
-      <Flex row centered shrink gap="$spacing6" justifyContent="flex-end">
-        <AlertTriangleFilled color={priceImpactWarningColor} size="$icon.16" />
-        <Text adjustsFontSizeToFit color={priceImpactWarningColor} variant="body3">
-          {formattedPriceDifference}
-        </Text>
-      </Flex>
-    </Flex>
+    <PriceDifferenceRowView
+      value={formattedPriceDifference}
+      warning={toSwapWarningDisplay(priceImpactWarning)}
+      label={
+        <MarketPriceDifferenceWarningModal routing={trade.routing}>
+          <PriceDifferenceLabel />
+        </MarketPriceDifferenceWarningModal>
+      }
+    />
   )
 }

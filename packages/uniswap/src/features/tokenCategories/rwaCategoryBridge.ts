@@ -1,5 +1,5 @@
 import { RwaCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
-import { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
+import type { CategoryBase, TokenCategory } from 'uniswap/src/features/tokenCategories/types'
 import { logger } from 'utilities/src/logger/logger'
 
 /** Backend category ids for the RWA asset categories — ids are the ListCategories contract. */
@@ -15,7 +15,7 @@ export const RWA_CATEGORY_IDS: Partial<Record<RwaCategory, string>> = {
  */
 const NON_RWA_ASSET_CATEGORY_IDS: ReadonlySet<string> = new Set(['majors', 'stablecoins'])
 
-export function isNonRwaAssetCategory(category: TokenCategory): boolean {
+export function isNonRwaAssetCategory(category: CategoryBase): boolean {
   return NON_RWA_ASSET_CATEGORY_IDS.has(category.id)
 }
 

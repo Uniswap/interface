@@ -144,6 +144,40 @@ describe('resolveAuctionDisplayState', () => {
         }).result,
       ).toBe(AuctionDisplayResult.Unknown)
     })
+
+    describe('served graduation verdict', () => {
+      it.each([
+        [true, '999', AuctionDisplayResult.Successful],
+        [false, '1000', AuctionDisplayResult.Failed],
+      ])('isGraduated=%s overrides a checkpoint that raised %s', (isGraduated, currencyRaised, expected) => {
+        expect(
+          resolve({
+            auction: { ...AUCTION, isGraduated },
+            currentBlock: { status: 'success', blockNumber: 200n },
+            currencyRaised: { status: 'success', currencyRaised },
+          }).result,
+        ).toBe(expected)
+      })
+
+      it.each([{ status: 'idle' }, { status: 'loading' }, { status: 'error' }] as const)(
+        'resolves without a checkpoint when currency raised is $status',
+        (currencyRaised) => {
+          const resolveServed = (isGraduated: boolean): ReturnType<typeof resolve> =>
+            resolve({
+              auction: { ...AUCTION, isGraduated },
+              currentBlock: { status: 'success', blockNumber: 200n },
+              currencyRaised,
+            })
+
+          expect(resolveServed(true)).toMatchObject({ result: AuctionDisplayResult.Successful, resultPending: false })
+          expect(resolveServed(false)).toMatchObject({ result: AuctionDisplayResult.Failed, resultPending: false })
+        },
+      )
+
+      it('is ignored before the auction ends', () => {
+        expect(resolve({ auction: { ...AUCTION, isGraduated: true } }).result).toBe(AuctionDisplayResult.Unknown)
+      })
+    })
   })
 
   describe('pool availability and swap visibility', () => {

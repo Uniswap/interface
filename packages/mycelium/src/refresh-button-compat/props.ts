@@ -1,7 +1,6 @@
 /**
- * Shared prop contract for the RefreshButton compat (INFRA-3489), replacing
- * the legacy `ui/src` `RefreshButton`
- * (`packages/ui/src/components/RefreshButton/RefreshButton.tsx`).
+ * Shared prop contract for the RefreshButton compat (INFRA-3489), which
+ * replaced the legacy `ui/src` `RefreshButton`.
  *
  * The legacy surface is `onPress` / `isLoading` / `disabled`. The compat adds
  * one required prop, `tooltipLabel`: the legacy web leg resolves

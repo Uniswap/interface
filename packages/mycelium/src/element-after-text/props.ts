@@ -1,7 +1,6 @@
 /**
- * The `ElementAfterText` compat prop contract (INFRA-3601): the legacy
- * component's full prop surface
- * (`ui/src/components/text/ElementAfterText.tsx`) — a closed four-prop
+ * The `ElementAfterText` compat prop contract (INFRA-3601): the legacy ui
+ * component's full prop surface — a closed four-prop
  * interface with no rest spread. `wrapperProps` and `textProps` are typed
  * against the compat Flex/Text surfaces the component renders with, which
  * carry the legacy prop vocabulary.

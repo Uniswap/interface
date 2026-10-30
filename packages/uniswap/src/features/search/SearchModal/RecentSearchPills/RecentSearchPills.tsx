@@ -28,8 +28,8 @@ interface RecentSearchPillsProps {
 }
 
 /**
- * Search V2 recents as one horizontally scrolling pill row (Figma 1086:13875). Replaces the vertical
- * recent rows so more recents fit above the fold; presses go through the same select path as rows.
+ * Recent searches as one horizontally scrolling pill row (Figma 1086:13875), so more recents fit above the fold;
+ * presses go through the same select path as rows.
  */
 export const RecentSearchPills = memo(function RecentSearchPills({
   options,

@@ -1,10 +1,7 @@
 import { createColumnHelper } from '@tanstack/react-table'
-import { Flex, iconSizes, Text } from '@universe/mycelium'
+import { Text } from '@universe/mycelium'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
-import { ViewDetailsTrailingArrow } from 'uniswap/src/components/portfolio/TokenBalanceItem/ViewDetailsTrailingArrow'
-import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { Cell } from '~/components/Table/Cell'
 import { HeaderCell } from '~/components/Table/styled'
 import { hasRow } from '~/components/Table/utils/hasRow'
@@ -17,7 +14,7 @@ import { Balance } from '~/pages/Portfolio/Tokens/Table/columns/Balance'
 import { ContextMenuButton } from '~/pages/Portfolio/Tokens/Table/columns/ContextMenuButton'
 import { Price } from '~/pages/Portfolio/Tokens/Table/columns/Price'
 import { RelativeChange1D } from '~/pages/Portfolio/Tokens/Table/columns/RelativeChange1D'
-import { TokenDisplay } from '~/pages/Portfolio/Tokens/Table/columns/TokenDisplay'
+import { ChainTokenDisplay, TokenDisplay } from '~/pages/Portfolio/Tokens/Table/columns/TokenDisplay'
 import { UnrealizedPnl } from '~/pages/Portfolio/Tokens/Table/columns/UnrealizedPnl'
 import { Value } from '~/pages/Portfolio/Tokens/Table/columns/Value'
 import {
@@ -54,6 +51,8 @@ export enum TokenColumns {
 
 const EMPTY_HIDDEN_COLUMNS: TokenColumns[] = []
 
+const PINNED_TOKEN_COLUMN_SIZE_PX = 180
+
 export function useTokenColumns({
   hiddenColumns = EMPTY_HIDDEN_COLUMNS,
   showLoadingSkeleton,
@@ -89,7 +88,7 @@ export function useTokenColumns({
       columns.push(
         columnHelper.accessor((row) => (row.type === 'parent' ? row.tokenData.currencyInfo : row.chainToken.chainId), {
           id: 'currencyInfo',
-          size: hasPinnedColumns ? 180 : 196,
+          size: hasPinnedColumns ? PINNED_TOKEN_COLUMN_SIZE_PX : 196,
           header: () => (
             <HeaderCell justifyContent="flex-start">
               <Text variant="body3" color="$neutral2">
@@ -122,11 +121,7 @@ export function useTokenColumns({
                     onNameClick={onTokenNameClick ? () => onTokenNameClick(row) : undefined}
                   />
                 ) : (
-                  <Flex row alignItems="center" gap={14} ml="$spacing6">
-                    <NetworkLogo chainId={row.chainToken.chainId} size={iconSizes.icon20} />
-                    <Text variant="body3">{getChainLabel(row.chainToken.chainId)}</Text>
-                    {!unifiedExpandableRows && <ViewDetailsTrailingArrow />}
-                  </Flex>
+                  <ChainTokenDisplay chainId={row.chainToken.chainId} showDetailsArrow={!unifiedExpandableRows} />
                 )}
               </Cell>
             )

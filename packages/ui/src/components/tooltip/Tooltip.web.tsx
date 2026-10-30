@@ -1,4 +1,5 @@
 import { Tooltip as TooltipPrimitive } from '@base-ui/react/tooltip'
+import { useIsDarkMode, useSporeColors } from '@universe/mycelium'
 import {
   cloneElement,
   createContext,
@@ -49,8 +50,6 @@ import type {
   TooltipTriggerProps,
 } from 'ui/src/components/tooltip/types'
 import { useTooltipTouchSession } from 'ui/src/components/tooltip/useTooltipTouchSession'
-import { useIsDarkMode } from 'ui/src/hooks/useIsDarkMode'
-import { useSporeColors } from 'ui/src/hooks/useSporeColors'
 import { zIndexes } from 'ui/src/theme'
 import { useComposedRefs } from 'utilities/src/react/composeRefs'
 import { useEvent } from 'utilities/src/react/hooks'

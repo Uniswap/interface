@@ -61,7 +61,7 @@ type CreateNewTokenFields = {
   description: string
   imageUrl: string
   /**
-   * `blob:` URL for instant preview after file pick. Cleared after the Pinata-resolved image loads
+   * `blob:` URL for instant preview after file pick. Cleared after the gateway-resolved image loads
    * in the background so later steps keep showing the upload until the gateway URL is ready.
    */
   localImagePreviewUri: string

@@ -30,7 +30,7 @@
     "@shopify/react-native-skia": "2.2.20",
     "@tanstack/react-query": "5.90.20",
     "@uniswap/analytics-events": "2.43.0",
-    "@uniswap/client-data-api": "0.0.271",
+    "@uniswap/client-data-api": "0.0.279",
     "@uniswap/permit2-sdk": "1.4.0",
     "@uniswap/router-sdk": "2.10.3",
     "@uniswap/sdk-core": "7.19.4",

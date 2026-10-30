@@ -24,15 +24,65 @@ describe(uriToHttpUrls, () => {
   })
   it('returns ipfs gateways for ipfs:// urls', () => {
     expect(uriToHttpUrls('ipfs://QmV8AfDE8GFSGQvt3vck8EwAzsPuNTmtP8VcQJE3qxRPaZ')).toEqual([
+      'https://ipfs.pools.xyz/ipfs/QmV8AfDE8GFSGQvt3vck8EwAzsPuNTmtP8VcQJE3qxRPaZ',
       'https://ipfs.io/ipfs/QmV8AfDE8GFSGQvt3vck8EwAzsPuNTmtP8VcQJE3qxRPaZ/',
       'https://hardbin.com/ipfs/QmV8AfDE8GFSGQvt3vck8EwAzsPuNTmtP8VcQJE3qxRPaZ/',
     ])
   })
   it('returns ipfs gateways for wrongly formated ipfs:// urls', () => {
     expect(uriToHttpUrls('ipfs://ipfs/QmSP4nq9fnN9dAiCj42ug9Wa79rqmQerZXZch82VqpiH7U/image.gif')).toEqual([
+      'https://ipfs.pools.xyz/ipfs/QmSP4nq9fnN9dAiCj42ug9Wa79rqmQerZXZch82VqpiH7U/image.gif',
       'https://ipfs.io/ipfs/QmSP4nq9fnN9dAiCj42ug9Wa79rqmQerZXZch82VqpiH7U/image.gif/',
       'https://hardbin.com/ipfs/QmSP4nq9fnN9dAiCj42ug9Wa79rqmQerZXZch82VqpiH7U/image.gif/',
     ])
+  })
+  // ipfs.io stopped serving hotlinked content (2026-09-21) and image components render only the first candidate,
+  // so ipfs content must lead with the dedicated gateway.
+  it('resolves ipfs:// through the dedicated gateway first, not ipfs.io', () => {
+    expect(uriToHttpUrls('ipfs://bafkreicr5qh6v5b2lrn7734xkx7hy7vxgho4fqffahii5xy6bob36uvss4')[0]).toBe(
+      'https://ipfs.pools.xyz/ipfs/bafkreicr5qh6v5b2lrn7734xkx7hy7vxgho4fqffahii5xy6bob36uvss4',
+    )
+  })
+  it('re-points a url baked against ipfs.io at the dedicated gateway, keeping the original as a fallback', () => {
+    const baked = 'https://ipfs.io/ipfs/bafkreicr5qh6v5b2lrn7734xkx7hy7vxgho4fqffahii5xy6bob36uvss4'
+    expect(uriToHttpUrls(baked)).toEqual([
+      'https://ipfs.pools.xyz/ipfs/bafkreicr5qh6v5b2lrn7734xkx7hy7vxgho4fqffahii5xy6bob36uvss4',
+      baked,
+    ])
+  })
+  it.each([
+    ['gateway.ipfs.io', 'https://gateway.ipfs.io/ipfs/bafkreicr5qh6v5b2lrn7734xkx7hy7vxgho4fqffahii5xy6bob36uvss4'],
+    ['hardbin.com', 'https://hardbin.com/ipfs/bafkreicr5qh6v5b2lrn7734xkx7hy7vxgho4fqffahii5xy6bob36uvss4'],
+  ])('re-points a link on the retired %s gateway too', (_host, baked) => {
+    expect(uriToHttpUrls(baked)).toEqual([
+      'https://ipfs.pools.xyz/ipfs/bafkreicr5qh6v5b2lrn7734xkx7hy7vxgho4fqffahii5xy6bob36uvss4',
+      baked,
+    ])
+  })
+
+  // A link on a gateway that still works keeps loading from it: image components render only the first candidate.
+  it.each([
+    [
+      'a Pinata tenant',
+      'https://turquoise-blank-swallow-685.mypinata.cloud/ipfs/bafybeid677sswggwrqg6cwpbe3p42ywfxk25muowjh7nzzd7jtvfzh7zlm',
+    ],
+    [
+      'the public Pinata gateway',
+      'https://gateway.pinata.cloud/ipfs/bafkreicr5qh6v5b2lrn7734xkx7hy7vxgho4fqffahii5xy6bob36uvss4',
+    ],
+    [
+      'a subdomain gateway',
+      'https://bafybeid677sswggwrqg6cwpbe3p42ywfxk25muowjh7nzzd7jtvfzh7zlm.ipfs.dweb.link/logo.png',
+    ],
+  ])('leaves a link on %s as given', (_label, uri) => {
+    expect(uriToHttpUrls(uri)).toEqual([uri])
+  })
+
+  it('returns no gateways for an empty ipfs:// uri', () => {
+    expect(uriToHttpUrls('ipfs://')).toEqual([])
+  })
+  it('returns arweave gateway for ar:// urls', () => {
+    expect(uriToHttpUrls('ar://TX12345')).toEqual(['https://arweave.net/TX12345'])
   })
   it('returns ipns gateways for ipns:// urls', () => {
     expect(uriToHttpUrls('ipns://app.uniswap.org')).toEqual([

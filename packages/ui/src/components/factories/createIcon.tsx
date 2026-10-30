@@ -1,7 +1,9 @@
 import { isWebPlatform } from '@universe/environment'
+import { useSporeColors } from '@universe/mycelium'
 // Marker-only subpath, not the compat barrel: the barrel re-exports the web-only DOM
 // wrapper (compat/index.ts -> ./dom) and this factory is in the native graph.
 import { markIconGlyph } from '@universe/mycelium/compat/primitive-marker'
+import { type UseSporeColorsReturn } from '@universe/mycelium/theme-hooks-compat'
 import { createElement, forwardRef, useRef, useState } from 'react'
 import { Svg, SvgProps } from 'react-native-svg'
 import { withAnimated } from 'ui/src/components/factories/animated'
@@ -15,18 +17,19 @@ import {
   resolveIconStyleProps,
 } from 'ui/src/components/factories/iconTokens'
 import {
+  IconDynamicColor,
   IconGroupPseudoProps,
   IconMediaProps,
   IconOverrideStyle,
   IconStyleOverlay,
 } from 'ui/src/components/factories/iconTypes'
-import { DynamicColor, useSporeColors, UseSporeColorsReturn } from 'ui/src/hooks/useSporeColors'
 import { IconSizeTokens } from 'ui/src/theme'
 
 // Re-exported so the emitted declarations of the ~294 generated icons can name every part of IconProps
 export type {
   IconColorValue,
   IconDimensionValue,
+  IconDynamicColor,
   IconGroupPseudoProps,
   IconMediaProps,
   IconOverrideStyle,
@@ -68,7 +71,7 @@ export type IconProps = IconSvgProps &
   IconGroupPseudoProps & {
     size?: IconSizeTokens | number | { width: number; height: number }
     // we need the string & {} to allow strings but not lose the intellisense autocomplete
-    color?: (IconColorToken | (string & {})) | DynamicColor | null
+    color?: (IconColorToken | (string & {})) | IconDynamicColor | null
     strokeWidth?: number | `$${string}` | (string & {})
     Component?: React.FunctionComponent<SvgPropsWithRef>
     animation?: string | null

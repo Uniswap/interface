@@ -1,4 +1,5 @@
 import { Popover as PopoverPrimitive } from '@base-ui/react/popover'
+import { useSporeColors } from '@universe/mycelium'
 import {
   cloneElement,
   type CSSProperties,
@@ -30,7 +31,6 @@ import type {
   PopoverCloseProps,
   PopoverTriggerProps,
 } from 'ui/src/components/popover/types'
-import { useSporeColors } from 'ui/src/hooks/useSporeColors'
 import type { media } from 'ui/src/theme/media'
 import { useComposedRefs } from 'utilities/src/react/composeRefs'
 

@@ -1,7 +1,10 @@
 import type { Currency } from '@uniswap/sdk-core'
 import { SynchronizedHeartbeatsConfigKey } from '@universe/gating'
+import { Flex } from '@universe/mycelium'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import { LowPriceConfidenceTag } from 'uniswap/src/features/prices/LowPriceConfidenceTag'
+import { isLowPriceConfidence } from 'uniswap/src/features/prices/priceConfidence'
 import { ChartSkeleton } from '~/components/Charts/LoadingState'
 import { PriceChart } from '~/components/Charts/PriceChart'
 import { ChartType, PriceChartType } from '~/components/Charts/utils'
@@ -48,15 +51,16 @@ export function TDPPriceChartPanel({
     SynchronizedHeartbeatsConfigKey.TdpPollIntervalSeconds,
     Boolean(currency),
   )
-  const { priceQuery, pricePercentChange, showInvalidSkeleton, isError, stale } = useTokenPriceChartPanel({
-    variables,
-    priceChartType,
-    setDisableCandlestickUI,
-    timePeriod,
-    currency,
-    disablePricePolling: isSynchronizedHeartbeatsEnabled,
-    keepPreviousData: false,
-  })
+  const { priceQuery, pricePercentChange, priceConfidenceScore, showInvalidSkeleton, isError, stale } =
+    useTokenPriceChartPanel({
+      variables,
+      priceChartType,
+      setDisableCandlestickUI,
+      timePeriod,
+      currency,
+      disablePricePolling: isSynchronizedHeartbeatsEnabled,
+      keepPreviousData: false,
+    })
   // Before and during the auction there is no price to plot, so the empty chart explains the wait
   // instead of reporting missing data. A token that already has history keeps its real chart, and a
   // failed query keeps the error framing so an outage is not mistaken for price discovery.
@@ -108,6 +112,7 @@ export function TDPPriceChartPanel({
     )
   }
 
+  const isLowConfidence = isLowPriceConfidence(priceConfidenceScore)
   return (
     <PriceChart
       data={priceQuery.entries}
@@ -118,6 +123,19 @@ export function TDPPriceChartPanel({
       pricePercentChange={pricePercentChange}
       overrideColor={tokenColor}
       isStablecoin={isStablecoin}
+      blocksChartHover={isLowConfidence}
+      additionalHeaderContent={isLowConfidence ? renderLowPriceConfidenceTag : undefined}
     />
+  )
+}
+
+// Hidden while scrubbing, where the header shows the crosshair's timestamp instead. Not unmounted: catching the
+// pointer mid-scrub reveals the tag under the cursor, and its tooltip only opens for a pointer that enters after the
+// trigger's hover listeners attach.
+function renderLowPriceConfidenceTag({ isHovering }: { isHovering: boolean }): JSX.Element {
+  return (
+    <Flex display={isHovering ? 'none' : 'flex'}>
+      <LowPriceConfidenceTag />
+    </Flex>
   )
 }

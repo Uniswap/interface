@@ -1,6 +1,6 @@
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
+import { useShadowPropsMedium } from '@universe/mycelium/theme-hooks-compat'
 import * as React from 'react'
-import { useShadowPropsMedium } from 'ui/src'
 import { X } from 'ui/src/components/icons/X'
 import { POPUP_MAX_WIDTH } from '~/components/Popups/constants'
 

@@ -1,6 +1,5 @@
 import { RwaCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { TokensOrderBy } from '@uniswap/client-data-api/dist/data/v2/types_pb'
-import { RankingType } from '@universe/api'
 import type { UniverseChainId } from '@universe/chains'
 import {
   Flex,
@@ -30,6 +29,7 @@ import { useExploreTokenItems } from 'src/components/explore/ExploreSections/use
 import { TokenItem } from 'src/components/explore/TokenItem'
 import { Screen } from 'src/components/layout/Screen'
 import { ScrollHeader } from 'src/components/layout/screens/ScrollHeader'
+import { exploreOrderByFromCategoryDefaultSort } from 'src/features/explore/utils'
 import {
   CategoryDetailsHeader,
   CategoryDetailsHeaderSkeleton,
@@ -50,6 +50,7 @@ import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { useEvent } from 'utilities/src/react/hooks'
+import { TokenMetadataDisplayType } from 'wallet/src/features/wallet/types'
 
 const SHOW_HEADER_SCROLL_Y_DISTANCE = 50
 // ~60fps scroll events so the collapsing header tracks the drag rather than stepping.
@@ -116,9 +117,10 @@ function CategoryDetailsContent({ category }: { category: TokenCategory }): JSX.
 
   const { topTokenItems, isLoading, isFetching, fetchNextPage, hasNextPage, error, refetch } = useExploreTokenItems({
     selectedNetwork,
-    orderBy: RankingType.Volume,
+    orderBy: exploreOrderByFromCategoryDefaultSort(category.defaultSort),
     categoryId: category.id,
     skip: isGroupedCategory,
+    metadataDisplayType: TokenMetadataDisplayType.Volume,
   })
 
   const groupingChainIds = useMemo(() => (selectedNetwork ? [selectedNetwork] : []), [selectedNetwork])

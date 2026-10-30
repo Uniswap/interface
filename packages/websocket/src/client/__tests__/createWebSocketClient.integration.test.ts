@@ -494,7 +494,7 @@ describe('createWebSocketClient integration', () => {
 
       await vi.advanceTimersByTimeAsync(0)
 
-      expect(onError).toHaveBeenCalledWith(subscribeError)
+      expect(onError).toHaveBeenCalledWith(subscribeError, 'subscribe')
     })
 
     it('socket error calls onError', () => {
@@ -556,7 +556,7 @@ describe('createWebSocketClient integration', () => {
         data: { data: 'test' },
       })
 
-      expect(onError).toHaveBeenCalledWith(callbackError)
+      expect(onError).toHaveBeenCalledWith(callbackError, 'dispatch')
       expect(messages).toEqual([{ data: 'test' }])
     })
   })

@@ -103,10 +103,7 @@ describe('toLaunchItems detail route', () => {
 })
 
 describe('toLaunchItems token logo', () => {
-  it('resolves an ipfs token logo through the launch IPFS CDN', () => {
-    // A raw `ipfs://<cid>` launch image resolves through the launch CDN rather than the shared
-    // `uriToHttpUrls` ipfs.io path. See `resolveLaunchIpfsImageUrl` for why — hardening against a
-    // recurrence of the ipfs.io CORP header, not a breakage visible today.
+  it('resolves an ipfs token logo through the dedicated IPFS gateway', () => {
     const [item] = toLaunchItems({
       launches: [createLaunch('pons', 'ipfs://bafkreicr5qh6v5b2lrn7734xkx7hy7vxgho4fqffahii5xy6bob36uvss4')],
       launchpadById,

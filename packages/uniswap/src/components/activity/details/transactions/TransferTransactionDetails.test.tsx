@@ -96,10 +96,6 @@ vi.mock('uniswap/src/features/tokens/useCurrencyInfo', () => ({
   },
 }))
 
-vi.mock('ui/src/loading/Skeleton', () => ({
-  Skeleton: (): JSX.Element => <></>,
-}))
-
 describe('TransferTransactionDetails Component', () => {
   it('renders TransferTransactionDetails without error', () => {
     const onClose = vi.fn()

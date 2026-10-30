@@ -1,9 +1,9 @@
 /* oxlint-disable max-lines */
+import { useSporeColors } from '@universe/mycelium'
 import type { TFunction } from 'i18next'
 import { LineStyle, type LineWidth, type UTCTimestamp } from 'lightweight-charts'
 import { useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useSporeColors } from 'ui/src'
 import { opacify } from 'ui/src/theme'
 import type {
   MarginActivePosition,
@@ -11,7 +11,7 @@ import type {
   MarginQuoteResponse,
 } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
 import { useMarginPositionsQuery } from 'uniswap/src/data/apiClients/tradingApi/useMarginPositionsQuery'
-import type { MarginDirection, MarginVenue } from 'uniswap/src/features/transactions/margin/types'
+import { MarginDirection, type MarginVenue } from 'uniswap/src/features/transactions/margin/types'
 import {
   MARGIN_CHAIN_ID,
   MARGIN_MARKETS_REFETCH_MS,
@@ -621,7 +621,7 @@ function buildZone({
   const mark = marginPositionMark({ position: primary })
   const emphasis =
     mark !== undefined ? clamp01((ZONE_EMPHASIS_WINDOW - Math.abs(mark - liqPrice) / mark) / ZONE_EMPHASIS_WINDOW) : 0
-  return { edgePrice: liqPrice, side: direction === 'SHORT' ? 'above' : 'below', emphasis }
+  return { edgePrice: liqPrice, side: direction === MarginDirection.SHORT ? 'above' : 'below', emphasis }
 }
 
 // Position-event markers for the PRIMARY only (spec F10): ▲ at open (entry price, entry time),

@@ -1,13 +1,21 @@
 import type { GasFeeResult } from '@universe/api'
 import type { UniverseChainId } from '@universe/chains'
-import { isMobileApp, isWebPlatform } from '@universe/environment'
-import { Flex, Text } from '@universe/mycelium'
+import { isMobileApp } from '@universe/environment'
+import { zIndexes } from '@universe/mycelium'
+import {
+  BestRouteLabel,
+  infoBodyTextVariant,
+  type InfoContainer,
+  RoutingCaption,
+  type RoutingCaptionDisplay,
+  RoutingCaptionKind,
+  RoutingInfoRow,
+} from '@universe/swap-ui'
 import type { PropsWithChildren } from 'react'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { UniswapXText, Trans } from 'ui/src'
+import { Trans, UniswapXText } from 'ui/src'
 import { OrderRouting } from 'ui/src/components/icons/OrderRouting'
-import { zIndexes } from 'ui/src/theme'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
 import { RoutingDiagram } from 'uniswap/src/components/RoutingDiagram/RoutingDiagram'
@@ -27,6 +35,7 @@ import { summarizeSwapSteps } from 'uniswap/src/utils/routingDiagram/routingProv
 import { useRoutingEntries, useRoutingProvider } from 'uniswap/src/utils/routingDiagram/routingRegistry'
 import { NumberType } from 'utilities/src/format/types'
 
+/** Adapter for the classic/UniswapX routing row: derives the caption display and owns the info shell. */
 export function RoutingHopInfo({
   trade,
   chainId,
@@ -58,27 +67,7 @@ export function RoutingHopInfo({
     return { pools, versions }
   }, [trade])
 
-  const caption = useMemo(() => {
-    const textVariant = isWebPlatform ? 'body4' : 'body2'
-    const textAlign = isWebPlatform ? 'left' : 'center'
-
-    if (isUniswapXTrade) {
-      return (
-        <Text variant={textVariant} textAlign={textAlign} color="$neutral2">
-          <Trans
-            i18nKey="uniswapX.aggregatesLiquidity"
-            components={{
-              logo: (
-                <>
-                  <UniswapXText variant={textVariant}>UniswapX</UniswapXText>
-                </>
-              ),
-            }}
-          />
-        </Text>
-      )
-    }
-
+  const routeCaption = useMemo((): RoutingCaptionDisplay | undefined => {
     // Prefer the classic `route` object diagram whenever it's available (Uniroute sends both
     // `route` and `swapSteps`); fall back to the swapSteps text summary only when the route
     // object is absent (e.g. GuideStar quotes).
@@ -86,35 +75,47 @@ export function RoutingHopInfo({
       const descriptionText =
         routingProvider?.getDescription?.(t) ??
         `${gasFeeFormatted ? t('swap.bestRoute.cost', { gasPrice: gasFeeFormatted }) : ''}${t('swap.route.optimizedGasCost')}`
-
-      return (
-        <Flex gap="$spacing12">
+      return {
+        kind: RoutingCaptionKind.Diagram,
+        diagram: (
           <RoutingDiagram
             routes={routes}
             currencyIn={trade.inputAmount.currency}
             currencyOut={trade.outputAmount.currency}
           />
-          {descriptionText && (
-            <Text variant={textVariant} textAlign={textAlign} color="$neutral2">
-              {descriptionText}
-            </Text>
-          )}
-        </Flex>
-      )
+        ),
+        descriptionText,
+      }
     }
 
     if (swapStepsSummary) {
-      return (
-        <Text variant={textVariant} textAlign={textAlign} color="$neutral2">
-          {t('swap.routing.poolsAndVersions', {
-            count: swapStepsSummary.pools,
-            versions: swapStepsSummary.versions.join(', '),
-          })}
-        </Text>
-      )
+      return {
+        kind: RoutingCaptionKind.PoolsSummary,
+        pools: swapStepsSummary.pools,
+        versions: swapStepsSummary.versions,
+      }
     }
-    return null
-  }, [t, trade, routes, gasFeeFormatted, routingProvider, isUniswapXTrade, swapStepsSummary])
+    return undefined
+  }, [t, trade, routes, gasFeeFormatted, routingProvider, swapStepsSummary])
+
+  // Rendered once per shell slot. The UniswapX sentence is built here because its gradient word
+  // has to match the body text size of the shell it lands in.
+  const renderCaption = (container: InfoContainer): JSX.Element | null => {
+    const caption: RoutingCaptionDisplay | undefined = isUniswapXTrade
+      ? {
+          kind: RoutingCaptionKind.UniswapX,
+          content: (
+            <Trans
+              i18nKey="uniswapX.aggregatesLiquidity"
+              components={{
+                logo: <UniswapXText variant={infoBodyTextVariant(container)}>UniswapX</UniswapXText>,
+              }}
+            />
+          ),
+        }
+      : routeCaption
+    return caption ? <RoutingCaption container={container} caption={caption} /> : null
+  }
 
   const modalTitle =
     !isUniswapXTrade && routingProvider?.name
@@ -131,41 +132,37 @@ export function RoutingHopInfo({
     ) : undefined
 
   return (
-    <Flex row alignItems="center" justifyContent="space-between">
-      <WarningInfo
-        infoButton={learnMoreLink}
-        modalProps={{
-          modalName: ModalName.SwapReview,
-          captionComponent: caption,
-          rejectText: t('common.button.close'),
-          icon: <ModalIcon color={modalIconColor} size="$icon.48" />,
-          backgroundIconColor: false,
-          severity: WarningSeverity.None,
-          title: modalTitle,
-          zIndex: zIndexes.popover,
-        }}
-        tooltipProps={{
-          text: isUniswapXTrade ? (
-            <BestRouteUniswapXTooltip />
-          ) : routes && routes.length > 0 ? (
-            <BestRouteTooltip trade={trade} />
-          ) : (
-            caption
-          ),
-          placement: 'top',
-          maxWidth: isUniswapXTrade || (routes && routes.length > 0) ? 300 : undefined,
-        }}
-        analyticsTitle="Order routing"
-      >
-        <Flex centered row gap="$spacing4">
-          <Text color="$neutral2" variant="body3">
-            {t('common.bestRoute')}
-          </Text>
-        </Flex>
-      </WarningInfo>
-      <Flex row shrink justifyContent="flex-end">
-        <RoutingLabel trade={trade} />
-      </Flex>
-    </Flex>
+    <RoutingInfoRow
+      info={
+        <WarningInfo
+          infoButton={learnMoreLink}
+          modalProps={{
+            modalName: ModalName.SwapReview,
+            captionComponent: renderCaption('modal'),
+            rejectText: t('common.button.close'),
+            icon: <ModalIcon color={modalIconColor} size="$icon.48" />,
+            backgroundIconColor: false,
+            severity: WarningSeverity.None,
+            title: modalTitle,
+            zIndex: zIndexes.popover,
+          }}
+          tooltipProps={{
+            text: isUniswapXTrade ? (
+              <BestRouteUniswapXTooltip />
+            ) : routes && routes.length > 0 ? (
+              <BestRouteTooltip trade={trade} />
+            ) : (
+              renderCaption('tooltip')
+            ),
+            placement: 'top',
+            maxWidth: isUniswapXTrade || (routes && routes.length > 0) ? 300 : undefined,
+          }}
+          analyticsTitle="Order routing"
+        >
+          <BestRouteLabel />
+        </WarningInfo>
+      }
+      label={<RoutingLabel trade={trade} />}
+    />
   )
 }

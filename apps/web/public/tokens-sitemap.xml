@@ -12945,4 +12945,19 @@
     <lastmod>2026-10-15T19:48:43.504Z</lastmod>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/tokens/solana/CSocnzcRpgSCr1naKcNTieWZUxb6rABe45j844m7pump</loc>
+    <lastmod>2026-10-22T19:08:04.747Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/tokens/ethereum/0x54ce4b27caabba24926865f035d432dbde2901f7</loc>
+    <lastmod>2026-10-22T19:08:04.747Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/tokens/robinhood/0x322f0929c4625ed5bad873c95208d54e1c003b2d</loc>
+    <lastmod>2026-10-22T19:08:04.747Z</lastmod>
+    <priority>0.8</priority>
+  </url>
 </urlset>

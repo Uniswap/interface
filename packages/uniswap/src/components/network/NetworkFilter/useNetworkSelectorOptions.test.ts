@@ -228,4 +228,44 @@ describe('useNetworkSelectorOptions', () => {
     expect(otherIds).toContain(UniverseChainId.Mainnet)
     expect(result.current?.withBalances.map((o) => o.chainId)).not.toContain(UniverseChainId.Mainnet)
   })
+
+  describe('lowLiquidityChainIds', () => {
+    it('moves low liquidity chains out of withBalances and otherNetworks, keeping input order', () => {
+      setupMock(mockPortfolioData([mockBalance(UniverseChainId.Zora, 500), mockBalance(UniverseChainId.Base, 100)]))
+
+      const { result } = renderHookWithProviders(() =>
+        useNetworkSelectorOptions({
+          addresses: CONNECTED_ADDRESSES,
+          chainIds: TEST_CHAINS,
+          lowLiquidityChainIds: [UniverseChainId.Zora, UniverseChainId.Optimism],
+        }),
+      )
+
+      expect(result.current?.withBalances.map((o) => o.chainId)).toEqual([UniverseChainId.Base])
+      expect(result.current?.otherNetworks.map((o) => o.chainId)).toEqual([
+        UniverseChainId.Mainnet,
+        UniverseChainId.ArbitrumOne,
+        UniverseChainId.Polygon,
+      ])
+      expect(result.current?.lowLiquidity?.map((o) => o.chainId)).toEqual([
+        UniverseChainId.Optimism,
+        UniverseChainId.Zora,
+      ])
+    })
+
+    it('still tiers options when the wallet is disconnected', () => {
+      setupMock(undefined)
+
+      const { result } = renderHookWithProviders(() =>
+        useNetworkSelectorOptions({
+          addresses: EMPTY_ADDRESSES,
+          chainIds: TEST_CHAINS,
+          lowLiquidityChainIds: [UniverseChainId.Zora],
+        }),
+      )
+
+      expect(result.current?.withBalances).toEqual([])
+      expect(result.current?.lowLiquidity?.map((o) => o.chainId)).toEqual([UniverseChainId.Zora])
+    })
+  })
 })

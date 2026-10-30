@@ -105,6 +105,8 @@ describe('TokenDetailsAuctionCard', () => {
       launch_method: 'custom',
       entry_point: 'tdp_countdown_module',
       auction_count: 3,
+      token_address: '0x3333333333333333333333333333333333333333',
+      auction_address: AUCTION_ADDRESS,
       auction_phase: 'live',
       pool_availability: 'no_pool',
       page_layout: 'auction_only',

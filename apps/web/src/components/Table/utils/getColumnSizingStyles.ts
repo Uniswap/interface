@@ -18,7 +18,8 @@ export function getColumnSizingStyles<Data extends RowData>(column: Column<Data,
   if (column.getIsPinned()) {
     styles.minWidth = size
     styles.flexShrink = 0
-    if (metaFlexGrow !== undefined && metaFlexGrow > 0) {
+    // A widthOverride is the painted width (and what the divider overlay tracks), so it must not grow.
+    if (metaFlexGrow !== undefined && metaFlexGrow > 0 && !meta?.widthOverride) {
       // Opted-in flexible pinned column (e.g. name/token): absorbs leftover width. Every row
       // shares the same free space, so the divider stays aligned across header and body.
       styles.flexGrow = metaFlexGrow
@@ -32,6 +33,41 @@ export function getColumnSizingStyles<Data extends RowData>(column: Column<Data,
   }
 
   return styles
+}
+
+/**
+ * CSS min width of a row's cells: tanstack's total size, with each column's `widthOverride` and
+ * `trailingMarginCss` swapped in so it tracks a scroll-linked collapse (tanstack sizes don't).
+ */
+export function getRowContentMinWidthCss<Data extends RowData>(table: Table<Data>): string {
+  let fixedPx = 0
+  const cssParts: string[] = []
+  for (const column of table.getVisibleLeafColumns()) {
+    const meta = column.columnDef.meta as TableColumnMeta | undefined
+    if (meta?.widthOverride) {
+      cssParts.push(meta.widthOverride)
+    } else {
+      fixedPx += column.getSize()
+    }
+    if (meta?.trailingMarginCss) {
+      cssParts.push(meta.trailingMarginCss)
+    }
+  }
+  return cssParts.length ? `calc(${[`${fixedPx}px`, ...cssParts].join(' + ')})` : `${fixedPx}px`
+}
+
+/**
+ * CSS width of the left-pinned region when a pinned column renders a `widthOverride` (e.g. a
+ * scroll-linked collapse), so the divider overlay and left scroll button track the painted width;
+ * undefined when the tanstack sizes are accurate.
+ */
+export function getPinnedRegionWidthCss<Data extends RowData>(table: Table<Data>): `calc(${string})` | undefined {
+  const columns = table.getLeftVisibleLeafColumns()
+  const overrides = columns.map((column) => (column.columnDef.meta as TableColumnMeta | undefined)?.widthOverride)
+  if (!overrides.some(Boolean)) {
+    return undefined
+  }
+  return `calc(${columns.map((column, i) => overrides[i] ?? `${column.getSize()}px`).join(' + ')})`
 }
 
 /**

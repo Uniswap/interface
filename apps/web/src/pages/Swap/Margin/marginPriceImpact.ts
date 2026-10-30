@@ -4,7 +4,7 @@ import {
   PRICE_DIFFERENCE_WARNING_THRESHOLD,
 } from 'uniswap/src/constants/transactions'
 import type { MarginBounds } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
-import type { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
+import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 
 const WAD = 10n ** 18n
 const BPS_DENOM = 10_000n
@@ -42,8 +42,8 @@ export function marginPriceImpactBps(params: {
     return undefined
   }
 
-  const exec = direction === 'SHORT' ? (WAD * WAD) / execDisplay : execDisplay
-  const mark = direction === 'SHORT' ? (WAD * WAD) / markDisplay : markDisplay
+  const exec = direction === MarginDirection.SHORT ? (WAD * WAD) / execDisplay : execDisplay
+  const mark = direction === MarginDirection.SHORT ? (WAD * WAD) / markDisplay : markDisplay
 
   const adverse = swapSide === 'BUY_COLLATERAL' ? exec - mark : mark - exec
   if (adverse <= 0n) {

@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { isAndroid } from '@universe/environment'
 import { useIsTokenCategoriesEnabled } from '@universe/gating'
-import { Flex, Text } from '@universe/mycelium'
+import { Flex, Text, AnimatedFlex } from '@universe/mycelium'
 import GraphCurve from '@universe/mycelium/assets/backgrounds/graph-curve.svg'
 import { SegmentedControl } from '@universe/mycelium/segmented-control-compat'
 import { opacify, useSporeColors } from '@universe/mycelium/theme-hooks-compat'
@@ -27,14 +27,16 @@ import { TokenSpotData, useTokenPriceHistory } from 'src/components/PriceExplore
 import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
 import { useIsScreenNavigationReady } from 'src/utils/useIsScreenNavigationReady'
 import { useLayoutAnimationOnChange } from 'ui/src/animations'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { getIsStablecoin, isLowVarianceRange } from 'uniswap/src/components/charts/utils'
 import { getTokenCategoryIdsQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/categories/useTokenCategories'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useTokenPriceConfidenceScore } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { LowPriceConfidenceTag } from 'uniswap/src/features/prices/LowPriceConfidenceTag'
+import { isLowPriceConfidence } from 'uniswap/src/features/prices/priceConfidence'
 import { useHapticFeedback } from 'uniswap/src/features/settings/useHapticFeedback/useHapticFeedback'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -63,6 +65,7 @@ type PriceTextProps = {
   spotPrice?: SharedValue<number>
   startingPrice?: number
   shouldTreatAsStablecoin?: boolean
+  showLowPriceConfidence?: boolean
 }
 
 const PriceTextSection = memo(function PriceTextSection({
@@ -72,6 +75,7 @@ const PriceTextSection = memo(function PriceTextSection({
   spotPrice,
   startingPrice,
   shouldTreatAsStablecoin,
+  showLowPriceConfidence = false,
 }: PriceTextProps): JSX.Element {
   const price = useLineChartPrice(spotPrice)
   const currency = useAppFiatCurrencyInfo()
@@ -112,7 +116,8 @@ const PriceTextSection = memo(function PriceTextSection({
         textVariant="$heading2"
         value={formattedValue}
       />
-      <Flex row gap="$spacing4">
+      {/* The iOS offset sits on the row, not the change text, so the change and the tag share a vertical center. */}
+      <Flex row alignItems="center" gap="$spacing12" mt={isAndroid ? '$none' : '$spacing2'}>
         {/*
         We want both the animated number skeleton and the relative change skeleton to hide at the exact same time.
         When multiple skeletons hide in different order, it gives the feeling of things being slower than they actually are.
@@ -124,6 +129,7 @@ const PriceTextSection = memo(function PriceTextSection({
           startingPrice={startingPrice}
           shouldTreatAsStablecoin={shouldTreatAsStablecoin}
         />
+        {showLowPriceConfidence && !loading && isReady && !isScrubbing && <LowPriceConfidenceTag />}
       </Flex>
       <DatetimeText loading={loading || !isReady} />
     </Flex>
@@ -163,6 +169,11 @@ const PriceExplorerContent = memo(function PriceExplorerContentInner(): JSX.Elem
     currencyId,
     initialDuration: HistoryDuration.Day,
     isMultichainAggregateView: shouldQueryMultichainAggregate,
+    skip: !isScreenNavigationReady,
+  })
+
+  const priceConfidenceScore = useTokenPriceConfidenceScore(currencyId, {
+    multichain: shouldQueryMultichainAggregate,
     skip: !isScreenNavigationReady,
   })
 
@@ -272,6 +283,7 @@ const PriceExplorerContent = memo(function PriceExplorerContentInner(): JSX.Elem
           spotPrice={convertedSpot?.value}
           startingPrice={startingPrice}
           shouldTreatAsStablecoin={shouldZoomOut}
+          showLowPriceConfidence={isLowPriceConfidence(priceConfidenceScore)}
         />
 
         <AnimatedFlex entering={chartSectionEntering}>

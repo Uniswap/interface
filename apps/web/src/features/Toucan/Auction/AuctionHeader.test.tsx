@@ -4,6 +4,7 @@ import { PropsWithChildren } from 'react'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { ProtectionResult } from 'uniswap/src/features/dataApi/safety'
 import { AttackType, CurrencyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
+import { DEFAULT_VERIFIED_AUCTION_IDS } from 'uniswap/src/features/toucan/auctionMetadata'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { AuctionHeader } from '~/features/Toucan/Auction/AuctionHeader'
 import { AuctionStoreContext } from '~/features/Toucan/Auction/store/AuctionStoreContext'
@@ -32,7 +33,7 @@ vi.mock('uniswap/src/components/warnings/WarningIcon', () => ({
 // Lightning bolt until the bolt became the pools.trade badge — still the quick-launch-only
 // rendering in the verified-icon slot. Its gate is `!verified && isQuickLaunch` where isQuickLaunch
 // is also Robinhood-chain-gated (pools.trade serves Robinhood launches only), and `verified` is
-// auction-level (a VerifiedAuctions config hit on auctionId, which no fixture here sets), so with
+// auction-level (a VerifiedAuctions config hit on auctionId, which only the verified-slot cases set), so with
 // the Robinhood fixture below it still tracks the flag alone. Same leaf-only swap as the warning
 // above, and for the same reason.
 vi.mock('~/features/Toucan/Shared/PoolsTradeBadge', () => ({
@@ -71,14 +72,17 @@ function renderHeader({
   // The badge is Robinhood-only (pools.trade serves Robinhood Chain launches exclusively), so the
   // fixture defaults to Robinhood to keep the quick-launch probe reachable.
   chainId = UniverseChainId.Robinhood,
+  auctionId,
 }: {
   isQuickLaunch: boolean
   token: CurrencyInfo
   chainId?: EVMUniverseChainId
+  auctionId?: string
 }): void {
   const store = createAuctionStore(AUCTION_ADDRESS, chainId)
   store.getState().actions.setAuctionDetails({
     address: AUCTION_ADDRESS,
+    auctionId,
     chainId,
     tokenAddress: TOKEN_ADDRESS,
     tokenSymbol: 'IMPO',
@@ -134,5 +138,29 @@ describe('AuctionHeader token-protection warning', () => {
     renderHeader({ isQuickLaunch: true, token: CLEAN_TOKEN, chainId: UniverseChainId.Mainnet })
 
     expect(screen.queryByTestId(QUICK_LAUNCH_PROBE)).toBeNull()
+  })
+})
+
+describe('AuctionHeader verified slot', () => {
+  beforeEach(() => {
+    mocked(useFeatureFlag).mockImplementation((flag) => flag === FeatureFlags.QuickLaunch)
+  })
+
+  // Tests have no Statsig value, so this exercises the fallback list Explore, search and top auctions
+  // also use. A verified auction takes the slot the pools.trade badge would otherwise fill.
+  it('treats an auction on the default verified list as verified when Statsig has no value', () => {
+    renderHeader({ isQuickLaunch: true, token: CLEAN_TOKEN, auctionId: DEFAULT_VERIFIED_AUCTION_IDS[0] })
+
+    expect(screen.queryByTestId(QUICK_LAUNCH_PROBE)).toBeNull()
+  })
+
+  it('leaves an auction missing from the verified list unverified', () => {
+    renderHeader({
+      isQuickLaunch: true,
+      token: CLEAN_TOKEN,
+      auctionId: `${UniverseChainId.Robinhood}_${AUCTION_ADDRESS}`,
+    })
+
+    expect(screen.getByTestId(QUICK_LAUNCH_PROBE)).toBeInTheDocument()
   })
 })

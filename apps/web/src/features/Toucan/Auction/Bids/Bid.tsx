@@ -34,6 +34,17 @@ function getStatusText(displayState: BidDisplayState, t: (key: string) => string
   }
 }
 
+/** Its own component because the age ticks every second, which must not re-render the bid card. */
+function BidTimeAgo({ timestampMs, isPending }: { timestampMs: number | undefined; isPending: boolean }): JSX.Element {
+  const { t } = useTranslation()
+  const timeAgo = useTimeAgo(timestampMs)
+  return (
+    <Text fontSize={10} lineHeight={10} color="$neutral2" flexShrink={0}>
+      {isPending ? t('common.time.justNow') : timeAgo}
+    </Text>
+  )
+}
+
 export function Bid({ item, onPress }: BidProps): JSX.Element {
   const { t } = useTranslation()
   const bidStatusColors = useBidStatusColors()
@@ -55,7 +66,6 @@ export function Bid({ item, onPress }: BidProps): JSX.Element {
   const isPending = displayState === 'pending'
   const statusText = getStatusText(displayState, t)
   const statusColor = getDisplayStateColor(displayState, bidStatusColors)
-  const timeAgo = useTimeAgo(timestampMs)
 
   const handlePress = useEvent(() => {
     // Don't allow clicking pending bids to open modal
@@ -87,9 +97,7 @@ export function Bid({ item, onPress }: BidProps): JSX.Element {
                   ({filledPercentageDisplay} {t('toucan.bid.filled')})
                 </Text>
               </Flex>
-              <Text fontSize={10} lineHeight={10} color="$neutral2" flexShrink={0}>
-                {isPending ? t('common.time.justNow') : timeAgo}
-              </Text>
+              <BidTimeAgo timestampMs={timestampMs} isPending={isPending} />
             </Flex>
             <Flex row alignItems="center" gap="$spacing4">
               <Text fontSize={10} lineHeight={10} color={statusColor}>

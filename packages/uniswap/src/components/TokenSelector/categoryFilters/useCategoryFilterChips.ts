@@ -1,4 +1,4 @@
-import { useIsTokenCategoriesEnabled } from '@universe/gating'
+import { DynamicConfigs, useIsTokenCategoriesEnabled } from '@universe/gating'
 import { useEffect, useMemo, useState } from 'react'
 import type { TokenOption } from 'uniswap/src/components/lists/items/types'
 import type { OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
@@ -10,7 +10,7 @@ import {
   resolveActiveChipIds,
 } from 'uniswap/src/components/TokenSelector/categoryFilters/categoryFilterChips'
 import { useAllTokenCategories } from 'uniswap/src/data/apiClients/dataApiService/categories/useAllTokenCategories'
-import { useTokenCategoryOrder } from 'uniswap/src/features/tokenCategories/useTokenCategoryOrder'
+import { useCategoryOrder } from 'uniswap/src/features/tokenCategories/useCategoryOrder'
 import { useEvent } from 'utilities/src/react/hooks'
 
 const NO_CHIPS: CategoryFilterChip[] = []
@@ -39,7 +39,7 @@ export function useCategoryFilterChips({
 }): CategoryFilterChipsState {
   const enabled = useIsTokenCategoriesEnabled()
   const { categories, isLoading: isCategoriesLoading } = useAllTokenCategories()
-  const orderedCategories = useTokenCategoryOrder(categories)
+  const orderedCategories = useCategoryOrder({ categories, config: DynamicConfigs.TokenCategoriesOrder })
   const [selectedIds, setSelectedIds] = useState<string[]>(NO_IDS)
 
   const chips = useMemo(() => {

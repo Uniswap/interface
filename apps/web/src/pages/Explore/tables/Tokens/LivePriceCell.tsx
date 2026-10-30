@@ -1,5 +1,6 @@
 import { areAddressesEqual, Platform } from '@universe/chains'
 import { usePrice } from '@universe/prices'
+import type { AnimatedNumberProps } from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber.web'
 import { DEFAULT_NATIVE_ADDRESS, DEFAULT_NATIVE_ADDRESS_LEGACY } from 'uniswap/src/features/chains/evm/defaults'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -8,7 +9,13 @@ import { NumberType } from 'utilities/src/format/types'
 import { checkIsNative } from '~/hooks/Tokens'
 import type { PriceCellValue } from '~/pages/Explore/tables/Tokens/tokenTableTypes'
 
-export function LivePriceCell({ token }: { token?: PriceCellValue }) {
+export function LivePriceCell({
+  token,
+  textVariant = '$body2',
+}: {
+  token?: PriceCellValue
+  textVariant?: AnimatedNumberProps['textVariant']
+}) {
   const { convertFiatAmountFormatted } = useLocalizationContext()
 
   const chainId = token?.chainId
@@ -29,5 +36,5 @@ export function LivePriceCell({ token }: { token?: PriceCellValue }) {
   const price = remotePrice ?? token?.price
   const formatted = price ? convertFiatAmountFormatted(price, NumberType.FiatTokenPrice) : '-'
 
-  return <AnimatedNumber numericValue={price} textVariant="$body2" value={formatted} />
+  return <AnimatedNumber numericValue={price} textVariant={textVariant} value={formatted} />
 }

@@ -5,6 +5,9 @@ import { TestID } from '@universe/test'
 import { Fragment, memo, type PropsWithChildren, useCallback, useContext, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { AuctionEventName } from 'uniswap/src/features/telemetry/constants'
+import { Trace } from 'uniswap/src/features/telemetry/Trace'
+import type { AuctionClaimCardViewedProperties } from 'uniswap/src/features/telemetry/types'
 import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
 import claimGlowLarge from '~/assets/svg/auction-claim-glow/large.svg'
@@ -56,6 +59,7 @@ interface ClaimCardProps {
   shouldReserveClaimSpace: boolean
   currency: Currency
   bidTokenAddress: string
+  auctionAddress: string
   chainId: EVMUniverseChainId
   onViewAuction: () => void
   retry: () => void
@@ -117,6 +121,8 @@ function ClaimCardFrame({
 function ClaimCardContent({
   allocation,
   currency,
+  auctionAddress,
+  chainId,
   bidTokenAddress,
   bidTokenInfo,
   bidTokenError,
@@ -170,9 +176,28 @@ function ClaimCardContent({
     )
   }
 
-  if (allocation.status === ClaimableAllocationState.Refundable) {
+  const isRefund = allocation.status === ClaimableAllocationState.Refundable
+  const impressionProperties: AuctionClaimCardViewedProperties = {
+    surface: 'tdp',
+    chain_id: chainId,
+    token_address: currency.wrapped.address,
+    auction_address: auctionAddress,
+    claim_type: isRefund ? 'refund' : 'claim',
+  }
+  // Keyed so a claim that turns into a refund (or the reverse) counts as a new view.
+  const impression = (
+    <Trace
+      key={impressionProperties.claim_type}
+      logImpression
+      eventOnTrigger={AuctionEventName.AuctionClaimCardViewed}
+      properties={impressionProperties}
+    />
+  )
+
+  if (isRefund) {
     return (
       <ClaimCardFrame themed>
+        {impression}
         <RefundAmount amountRaw={allocation.amountRaw} bidTokenInfo={bidTokenInfo} />
         {children}
       </ClaimCardFrame>
@@ -181,6 +206,7 @@ function ClaimCardContent({
 
   return (
     <ClaimCardFrame>
+      {impression}
       <Flex flex={1} minWidth={0} gap="$spacing2">
         <Text variant="heading3" color="$white">
           {formatNumberOrString({
@@ -302,12 +328,11 @@ function WithdrawalControls({
 const SETTLED_ALLOCATION: ClaimableAllocation = { status: ClaimableAllocationState.Claimed }
 
 function ClaimCardSession({
-  auctionAddress,
   chainId,
   sessionKey,
   onPresentationChange,
   ...cardProps
-}: ClaimCardProps & ClaimPresentationProps & { auctionAddress: string }): JSX.Element | null {
+}: ClaimCardProps & ClaimPresentationProps): JSX.Element | null {
   const isWithdrawable = isWithdrawableAllocation(cardProps.allocation)
   const [hasWithdrawableAllocation, setHasWithdrawableAllocation] = useState(isWithdrawable)
   if (isWithdrawable && !hasWithdrawableAllocation) {
@@ -342,7 +367,7 @@ function ClaimCardSession({
   // transaction loader alive for this wallet and auction, including after the card disappears.
   return (
     <AuctionStoreInstanceProvider
-      auctionAddress={auctionAddress}
+      auctionAddress={cardProps.auctionAddress}
       chainId={chainId}
       onWithdrawalConfirmed={onWithdrawalConfirmed}
     >

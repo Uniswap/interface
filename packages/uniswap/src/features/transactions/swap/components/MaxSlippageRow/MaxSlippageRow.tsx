@@ -1,6 +1,4 @@
-import { Flex, Text } from '@universe/mycelium'
-import { useTranslation } from 'react-i18next'
-import { IndicativeLoadingWrapper } from 'uniswap/src/components/misc/IndicativeLoadingWrapper'
+import { type SlippageDisplay, SlippageRow, SlippageRowLabel } from '@universe/swap-ui'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { SlippageInfo } from 'uniswap/src/features/transactions/swap/components/MaxSlippageRow/SlippageInfo/SlippageInfo'
@@ -13,15 +11,13 @@ interface MaxSlippageRowProps {
   customSlippageTolerance?: number
 }
 
+/** Adapter: maps the accepted trade onto the swap-ui SlippageRow and wraps its label in the info shell. */
 export function MaxSlippageRow({
   acceptedDerivedSwapInfo,
   autoSlippageTolerance,
   customSlippageTolerance,
 }: MaxSlippageRowProps): JSX.Element {
-  const { t } = useTranslation()
-
-  const formatter = useLocalizationContext()
-  const { formatPercent } = formatter
+  const { formatPercent } = useLocalizationContext()
 
   const acceptedTrade = acceptedDerivedSwapInfo.trade.trade ?? acceptedDerivedSwapInfo.trade.indicativeTrade
   if (!acceptedTrade) {
@@ -42,35 +38,26 @@ export function MaxSlippageRow({
       ? acceptedTrade.slippageTolerance > autoSlippageTolerance
       : false
 
+  const slippage: SlippageDisplay = {
+    tolerance: formatPercent(acceptedTrade.slippageTolerance),
+    isZero: acceptedTrade.slippageTolerance === 0,
+    isCustom: !!customSlippageTolerance,
+    exceedsAuto: showSlippageWarning,
+  }
+
   return (
-    <Flex row alignItems="center" gap="$spacing12" justifyContent="space-between">
-      <SlippageInfo
-        autoSlippageTolerance={autoSlippageTolerance}
-        isCustomSlippage={!!customSlippageTolerance}
-        trade={acceptedTrade}
-      >
-        <Flex row shrink alignItems="center" gap="$spacing4">
-          <Text color="$neutral2" numberOfLines={3} variant="body3">
-            {!acceptedTrade.indicative && isChained(acceptedTrade)
-              ? t('swap.details.slippage.total')
-              : t('swap.details.slippage')}
-          </Text>
-        </Flex>
-      </SlippageInfo>
-      <IndicativeLoadingWrapper loading={showLoadingState}>
-        <Flex centered row gap="$spacing8">
-          {!customSlippageTolerance ? (
-            <Flex centered backgroundColor="$surface3" borderRadius="$rounded6" height={20} px="$spacing8">
-              <Text color="$neutral1" variant="buttonLabel4" lineHeight={16}>
-                {t('swap.settings.slippage.control.auto')}
-              </Text>
-            </Flex>
-          ) : null}
-          <Text color={showSlippageWarning ? '$statusWarning' : '$neutral1'} variant="body3">
-            {acceptedTrade.slippageTolerance === 0 ? t('common.none') : formatPercent(acceptedTrade.slippageTolerance)}
-          </Text>
-        </Flex>
-      </IndicativeLoadingWrapper>
-    </Flex>
+    <SlippageRow
+      label={
+        <SlippageInfo
+          autoSlippageTolerance={autoSlippageTolerance}
+          isCustomSlippage={!!customSlippageTolerance}
+          trade={acceptedTrade}
+        >
+          <SlippageRowLabel isChained={!acceptedTrade.indicative && isChained(acceptedTrade)} />
+        </SlippageInfo>
+      }
+      slippage={slippage}
+      isLoading={showLoadingState}
+    />
   )
 }

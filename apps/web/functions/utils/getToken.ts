@@ -28,6 +28,7 @@ interface DataApiTokenSummary {
   name?: string
   project?: {
     logoUrl?: string
+    colors?: { light?: string; dark?: string }
   }
 }
 
@@ -68,6 +69,7 @@ export default async function getToken({
     url,
     tokenData: {
       symbol: asset.symbol ?? 'UNK',
+      overrideColor: asset.project?.colors?.light || undefined,
     },
     ogImage: asset.project?.logoUrl,
     name: asset.name ?? 'Token',
