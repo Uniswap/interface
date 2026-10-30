@@ -133,7 +133,7 @@
       "devDependencies": {
         "@babel/preset-typescript": "7.26.0",
         "@edge-runtime/vm": "5.0.0",
-        "@playwright/test": "1.58.2",
+        "@playwright/test": "1.61.1",
         "@react-router/dev": "7.18.1",
         "@react-router/serve": "7.18.1",
         "@tailwindcss/vite": "4.3.2",
@@ -222,7 +222,7 @@
         "zustand": "5.0.6",
       },
       "devDependencies": {
-        "@playwright/test": "1.58.2",
+        "@playwright/test": "1.61.1",
         "@tailwindcss/oxide": "4.3.2",
         "@testing-library/dom": "10.4.0",
         "@testing-library/react": "16.3.0",
@@ -524,7 +524,7 @@
         "@trpc/server": "11.8.1",
         "@uniswap/client-compliancev2": "1.2.4",
         "@uniswap/client-data-api": "0.0.279",
-        "@uniswap/client-launches": "0.0.5",
+        "@uniswap/client-launches": "0.0.7",
         "@uniswap/client-liquidity": "1.4.43",
         "@uniswap/client-unirpc-v2": "0.0.4",
         "@uniswap/client-unitag": "0.0.4",
@@ -584,7 +584,7 @@
         "@types/wcag-contrast": "3.0.0",
         "@types/ws": "8.18.1",
         "pixelmatch": "7.2.0",
-        "playwright-core": "1.58.2",
+        "playwright-core": "1.61.1",
         "pngjs": "7.0.0",
         "tailwindcss": "4.3.2",
         "tw-animate-css": "1.4.0",
@@ -666,7 +666,7 @@
         "@uniswap/analytics": "1.7.2",
         "@uniswap/analytics-events": "2.43.0",
         "@uniswap/client-data-api": "0.0.279",
-        "@uniswap/client-launches": "0.0.5",
+        "@uniswap/client-launches": "0.0.7",
         "@uniswap/client-liquidity": "1.4.43",
         "@uniswap/client-notification-service": "0.0.11",
         "@uniswap/liquidity-launcher-sdk": "2.0.0",
@@ -760,7 +760,7 @@
         "@datadog/datadog-ci": "2.48.0",
         "@hpke/chacha20poly1305": "1.8.0",
         "@hpke/core": "1.9.0",
-        "@playwright/test": "1.58.2",
+        "@playwright/test": "1.61.1",
         "@storybook/addon-essentials": "8.5.2",
         "@storybook/addon-interactions": "8.5.2",
         "@storybook/blocks": "8.5.2",
@@ -807,7 +807,7 @@
         "jest-extended": "4.0.2",
         "lint-staged": "14.0.1",
         "nock": "13.3.3",
-        "playwright": "1.58.2",
+        "playwright": "1.61.1",
         "process": "0.11.10",
         "prop-types": "15.8.1",
         "react-compiler-runtime": "19.1.0-rc.3",
@@ -982,7 +982,7 @@
         "@types/react": "19.2.16",
         "@types/react-dom": "19.0.6",
         "pixelmatch": "7.2.0",
-        "playwright-core": "1.58.2",
+        "playwright-core": "1.61.1",
         "pngjs": "7.0.0",
         "tailwindcss": "4.1.16",
         "tw-animate-css": "1.4.0",
@@ -1010,7 +1010,7 @@
         "@uniswap/client-data-api": "0.0.279",
         "@uniswap/client-embeddedwallet": "0.0.16",
         "@uniswap/client-for": "0.1.5",
-        "@uniswap/client-launches": "0.0.5",
+        "@uniswap/client-launches": "0.0.7",
         "@uniswap/client-liquidity": "1.4.43",
         "@uniswap/client-notification-service": "0.0.11",
         "@uniswap/client-privy-embedded-wallet": "0.1.5",
@@ -1628,7 +1628,7 @@
         "@types/poisson-disk-sampling": "2.2.4",
         "@uniswap/analytics-events": "2.43.0",
         "@uniswap/client-data-api": "0.0.279",
-        "@uniswap/client-launches": "0.0.5",
+        "@uniswap/client-launches": "0.0.7",
         "@uniswap/client-liquidity": "1.4.43",
         "@uniswap/client-unirpc-v2": "0.0.4",
         "@uniswap/permit2-sdk": "1.4.0",
@@ -3936,7 +3936,7 @@
 
     "@pkgr/core": ["@pkgr/core@0.3.6", "", {}, "sha512-SEeaJLb3qBNF/OaXnaR1NmmBbFYk1zC0ZH/52fATcRPLFg/p791YrcyFFy44Bo9sLaGuSuLp5Q6axbb/O+v/RA=="],
 
-    "@playwright/test": ["@playwright/test@1.58.2", "", { "dependencies": { "playwright": "1.58.2" }, "bin": { "playwright": "cli.js" } }, "sha512-akea+6bHYBBfA9uQqSYmlJXn61cTa+jbO87xVLCWbTqbWadRVmhxlXATaOjOgcBaWU4ePo0wB41KMFv3o35IXA=="],
+    "@playwright/test": ["@playwright/test@1.61.1", "", { "dependencies": { "playwright": "1.61.1" }, "bin": { "playwright": "cli.js" } }, "sha512-8nKv6+0RJSL9FE4jYOEGXnPeM/Hg12qZpmqzZjRh3qM0Y7c3z1mrOTfFLids72RDQYVh9WpLEfR5WdpNX4fkig=="],
 
     "@pmmmwh/react-refresh-webpack-plugin": ["@pmmmwh/react-refresh-webpack-plugin@0.5.17", "", { "dependencies": { "ansi-html": "^0.0.9", "core-js-pure": "^3.23.3", "error-stack-parser": "^2.0.6", "html-entities": "^2.1.0", "loader-utils": "^2.0.4", "schema-utils": "^4.2.0", "source-map": "^0.7.3" }, "peerDependencies": { "@types/webpack": "4.x || 5.x", "react-refresh": ">=0.10.0 <1.0.0", "sockjs-client": "^1.4.0", "type-fest": ">=0.17.0 <5.0.0", "webpack": ">=4.43.0 <6.0.0", "webpack-dev-server": "3.x || 4.x || 5.x", "webpack-hot-middleware": "2.x", "webpack-plugin-serve": "0.x || 1.x" }, "optionalPeers": ["@types/webpack", "sockjs-client", "type-fest", "webpack-dev-server", "webpack-hot-middleware", "webpack-plugin-serve"] }, "sha512-tXDyE1/jzFsHXjhRZQ3hMl0IVhYe5qula43LDWIhVfjp9G/nT5OQY5AORVOrkEGAUltBJOfOWeETbmhm6kHhuQ=="],
 
@@ -5336,7 +5336,7 @@
 
     "@uniswap/client-for": ["@uniswap/client-for@0.1.5", "", {}, "sha512-c8LkMyMCiA2y1IeZfAWC6vcGCVVv75cyq+SqKWV7qjWe+qZJmmoRdz9v6oFcm5W2YzM2JqOq7ZKlEl+dcJ/rtQ=="],
 
-    "@uniswap/client-launches": ["@uniswap/client-launches@0.0.5", "", {}, "sha512-ejExnlRqsJub2qhzzf19EsjvqRO+63brIMldys+BUiJu9xkty4ZakUbDLhXpIDSJKrpG7Um9qSdOwaM7k39rOw=="],
+    "@uniswap/client-launches": ["@uniswap/client-launches@0.0.7", "", {}, "sha512-h64EpWuBQnKEipGnp6FPdw4SWaF9qc23Q95Zm8kWDU+JE3JZJzKw7Mq+MPvPQ4iRoGVHLjh1e0reaLe1mqSlGw=="],
 
     "@uniswap/client-liquidity": ["@uniswap/client-liquidity@1.4.43", "", {}, "sha512-9zve7bbCZs25WYnNewmLK0OFalvnhTX7x2c72ogGlS+DKACpAczpHc2r1n2onQ4K3cQTkbFp0Ad2WEfy/RAcNg=="],
 
@@ -9004,9 +9004,9 @@
 
     "pkg-up": ["pkg-up@3.1.0", "", { "dependencies": { "find-up": "^3.0.0" } }, "sha512-nDywThFk1i4BQK4twPQ6TA4RT8bDY96yeuCVBWL3ePARCiEKDRSrNGbFIgUJpLp+XeIR65v8ra7WuJOFUBtkMA=="],
 
-    "playwright": ["playwright@1.58.2", "", { "dependencies": { "playwright-core": "1.58.2" }, "optionalDependencies": { "fsevents": "2.3.2" }, "bin": { "playwright": "cli.js" } }, "sha512-vA30H8Nvkq/cPBnNw4Q8TWz1EJyqgpuinBcHET0YVJVFldr8JDNiU9LaWAE1KqSkRYazuaBhTpB5ZzShOezQ6A=="],
+    "playwright": ["playwright@1.61.1", "", { "dependencies": { "playwright-core": "1.61.1" }, "optionalDependencies": { "fsevents": "2.3.2" }, "bin": { "playwright": "cli.js" } }, "sha512-DWnY5o3YbLWK4GovuAVwpqL+1VwGNdUGrRr++8j8PtQQzvAVZUIMjKQ90fY689sEJZJBbZVw1rXaOKSTitkzPQ=="],
 
-    "playwright-core": ["playwright-core@1.58.2", "", { "bin": { "playwright-core": "cli.js" } }, "sha512-yZkEtftgwS8CsfYo7nm0KE8jsvm6i/PTgVtB8DL726wNf6H2IMsDuxCpJj59KDaxCtSnrWan2AeDqM7JBaultg=="],
+    "playwright-core": ["playwright-core@1.61.1", "", { "bin": { "playwright-core": "cli.js" } }, "sha512-h7Qlt6m4REp25qvIdvbDtVmD4LqVXfpRxhORv9L0jzETM05p4fuPJ3dKyuSXQxDSbXnmS79HAgi9589lGSpLkg=="],
 
     "playwright-slack-report": ["playwright-slack-report@1.1.109", "", { "dependencies": { "@slack/web-api": "^7.14.1", "@slack/webhook": "^7.0.7", "commander": "^14.0.3", "https-proxy-agent": "^7.0.6", "zod": "^4.3.6" }, "bin": { "playwright-slack-report": "dist/cli.js" } }, "sha512-vJGIWL9QvQO7GZnj+ctmawx/56jYvuCjSBDRTycreeGgO/YCHguLLZYbRcJlc0WHi7r09XZpVjVfnZLZ3kPSpA=="],
 

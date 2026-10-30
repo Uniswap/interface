@@ -276,6 +276,16 @@ describe('useAuctionCheckpointDiagnostics', () => {
       expect(logger.error).toHaveBeenCalledTimes(1)
     })
 
+    it('stays quiet when GetAuction serves the graduation verdict', () => {
+      load({
+        isSuccess: true,
+        publishedCheckpoint: checkpoint('not-a-number'),
+        auctionDetails: makeAuctionDetails({ isGraduated: true }),
+      })
+
+      expect(logger.error).not.toHaveBeenCalled()
+    })
+
     it('stays quiet when the checkpoint settled empty, which is decidable on its own', () => {
       // Settled-and-empty resolves to FAILED rather than stalling, so it is not a silent wait.
       load({ isSuccess: true, publishedCheckpoint: null })

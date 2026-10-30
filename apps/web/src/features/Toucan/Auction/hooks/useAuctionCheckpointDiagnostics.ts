@@ -48,16 +48,19 @@ export function useAuctionCheckpointDiagnostics({
   isSuccess,
   publishedCheckpoint,
 }: AuctionCheckpointDiagnosticsParams): void {
-  const { progressState, requiredCurrencyRaised, isAuctionDetailsSettled } = useAuctionStore((state) => ({
-    progressState: state.progress.state,
-    requiredCurrencyRaised: state.auctionDetails?.requiredCurrencyRaised,
-    isAuctionDetailsSettled: state.auctionDetailsLoadState === AuctionDetailsLoadState.Success,
-  }))
+  const { progressState, requiredCurrencyRaised, servedIsGraduated, isAuctionDetailsSettled } = useAuctionStore(
+    (state) => ({
+      progressState: state.progress.state,
+      requiredCurrencyRaised: state.auctionDetails?.requiredCurrencyRaised,
+      servedIsGraduated: state.auctionDetails?.isGraduated,
+      isAuctionDetailsSettled: state.auctionDetailsLoadState === AuctionDetailsLoadState.Success,
+    }),
+  )
 
   const errorMessage = error?.message
 
-  // A failed checkpoint leaves the auction's outcome permanently undecided, so the page waits on
-  // data that will never arrive. Only worth reporting once that wait is terminal: `refetchInterval`
+  // A failed checkpoint leaves the auction's outcome (or, with a served verdict, its final price)
+  // permanently undecided, so the page waits on data that will never arrive. Only worth reporting once that wait is terminal: `refetchInterval`
   // is live only while IN_PROGRESS, so a mid-auction failure is retried on the next poll and is
   // ordinary transient noise. Gating on ENDED does not lose that signal, it defers it — `isError`
   // persists, so an auction that ends still unresolved logs on the transition, which is the moment
@@ -115,7 +118,7 @@ export function useAuctionCheckpointDiagnostics({
   // so it is terminal. The outcome deliberately stays UNKNOWN and the page keeps the skeleton — a
   // payload we cannot read is not evidence the auction failed, and rendering "failed to launch" off
   // it would repeat the bug this banner logic exists to avoid — which makes this log the only thing
-  // that surfaces it.
+  // that surfaces it. A served verdict decides the outcome without this comparison, so it is no stall.
   useEffect(() => {
     const isSettledButUndecidable =
       isSuccess &&
@@ -124,6 +127,7 @@ export function useAuctionCheckpointDiagnostics({
       // neither of which is racing the caller's checkpoint write.
       progressState === AuctionProgressState.ENDED &&
       isGraduatedThisRender === undefined &&
+      servedIsGraduated === undefined &&
       // requiredCurrencyRaised arrives on the GetAuction path, which settles independently of the
       // checkpoint. Without this gate, details still in flight would log a stall that resolves itself.
       isAuctionDetailsSettled
@@ -157,6 +161,7 @@ export function useAuctionCheckpointDiagnostics({
     publishedCheckpoint,
     progressState,
     isGraduatedThisRender,
+    servedIsGraduated,
     isAuctionDetailsSettled,
     requiredCurrencyRaised,
     chainId,
