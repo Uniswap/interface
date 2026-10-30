@@ -71,16 +71,25 @@ export function useBidsListData(): UseBidsListDataResult {
   const { t } = useTranslation()
   const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
 
-  const { userBids, auctionDetails, onchainCheckpoint, checkpointData, auctionProgress, outcome, optimisticBid } =
-    useAuctionStore((state) => ({
-      userBids: state.userBids,
-      auctionDetails: state.auctionDetails,
-      onchainCheckpoint: state.onchainCheckpoint,
-      checkpointData: state.checkpointData,
-      auctionProgress: state.progress.state,
-      outcome: state.progress.outcome,
-      optimisticBid: state.optimisticBid,
-    }))
+  const {
+    userBids,
+    auctionDetails,
+    onchainCheckpoint,
+    checkpointData,
+    auctionProgress,
+    outcome,
+    isFinalPricePending,
+    optimisticBid,
+  } = useAuctionStore((state) => ({
+    userBids: state.userBids,
+    auctionDetails: state.auctionDetails,
+    onchainCheckpoint: state.onchainCheckpoint,
+    checkpointData: state.checkpointData,
+    auctionProgress: state.progress.state,
+    outcome: state.progress.outcome,
+    isFinalPricePending: state.progress.isFinalPricePending,
+    optimisticBid: state.optimisticBid,
+  }))
 
   // Only for picking the clearing-price source below. Ended-ness is NOT derived here — it comes
   // from getBidDisplayInfo, which reads it off `outcome`.
@@ -105,7 +114,13 @@ export function useBidsListData(): UseBidsListDataResult {
   // funds to reclaim. #38938 lands `AuctionCheckpointLoadState` (Idle/Loading/Success/Error) on the
   // store; on the rebase onto it, give this the same in-flight/settled/errored shape and log the
   // errored case, rather than inventing a second, differently-named load state here.
-  const isLoading = !bidTokenInfo || !auctionDetails || !clearingPriceRaw || outcome === AuctionOutcome.UNKNOWN
+  const isLoading =
+    !bidTokenInfo ||
+    !auctionDetails ||
+    !clearingPriceRaw ||
+    outcome === AuctionOutcome.UNKNOWN ||
+    // In-range vs outbid is decided by the clearing price, so a lagging fallback would misplace bids.
+    isFinalPricePending
 
   // Sort bids by creation time (newest first)
   const sortedBids = useMemo(() => {

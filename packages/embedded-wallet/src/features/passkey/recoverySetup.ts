@@ -40,6 +40,7 @@ export async function encryptAndStoreRecovery({
   email,
   accessToken,
   privyAppId,
+  privyClientId,
   rotate = false,
   retainPrivateKey = false,
   onProgress,
@@ -48,6 +49,7 @@ export async function encryptAndStoreRecovery({
   email: string
   accessToken: string
   privyAppId: string
+  privyClientId: string
   // Rotation: force a v2 setup-style OprfEvaluate with a fresh nonce even though a v1 config exists.
   rotate?: boolean
   // Return a copy of the generated auth private key so the caller can immediately reuse it (e.g. to
@@ -104,7 +106,7 @@ export async function encryptAndStoreRecovery({
 
     // 6. Store blob at Privy
     onProgress?.('storing')
-    const { keyId } = await storeEncryptedBlob({ accessToken, blob, privyAppId })
+    const { keyId } = await storeEncryptedBlob({ accessToken, blob, privyAppId, privyClientId })
 
     return {
       publicKey,

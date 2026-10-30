@@ -69,11 +69,7 @@ export function getTotalAuctionRaisedUsd(entries: TokenProvenanceAuctionEntry[])
       total += parseFiniteNumber(auction.totalBidVolumeUsd) ?? 0
       continue
     }
-    const result = resolveAuctionResult({
-      phase,
-      currencyRaised,
-      requiredCurrencyRaised: auction.requiredCurrencyRaised,
-    })
+    const result = resolveAuctionResult({ phase, currencyRaised, auction })
     if (result === AuctionDisplayResult.Failed) {
       continue
     }
@@ -131,11 +127,8 @@ function getCreator({
 
 function didFail(entry: TokenProvenanceAuctionEntry): boolean {
   return (
-    resolveAuctionResult({
-      phase: entry.phase,
-      currencyRaised: entry.currencyRaised,
-      requiredCurrencyRaised: entry.auction.requiredCurrencyRaised,
-    }) === AuctionDisplayResult.Failed
+    resolveAuctionResult({ phase: entry.phase, currencyRaised: entry.currencyRaised, auction: entry.auction }) ===
+    AuctionDisplayResult.Failed
   )
 }
 

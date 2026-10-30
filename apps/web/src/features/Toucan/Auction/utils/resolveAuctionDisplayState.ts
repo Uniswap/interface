@@ -35,6 +35,8 @@ export interface AuctionDisplayAuction {
   startBlock?: string
   endBlock?: string
   requiredCurrencyRaised?: string
+  /** The contract's graduation verdict, served once the backend resolves the ended auction; final when set. */
+  isGraduated?: boolean
 }
 
 export interface ResolveAuctionDisplayStateInput {
@@ -90,28 +92,34 @@ export function resolveAuctionPhase({
 export function resolveAuctionResult({
   phase,
   currencyRaised,
-  requiredCurrencyRaised,
+  auction,
 }: {
   phase: AuctionDisplayPhase
   currencyRaised: CurrencyRaisedState
-  requiredCurrencyRaised: string | undefined
+  auction: Pick<AuctionDisplayAuction, 'requiredCurrencyRaised' | 'isGraduated'> | null
 }): AuctionDisplayResult {
-  if (phase !== AuctionDisplayPhase.Ended || currencyRaised.status !== 'success') {
+  if (phase !== AuctionDisplayPhase.Ended) {
     return AuctionDisplayResult.Unknown
   }
 
-  const hasMetThreshold = computeIsGraduated({ currencyRaised: currencyRaised.currencyRaised, requiredCurrencyRaised })
+  if (auction?.isGraduated !== undefined) {
+    return auction.isGraduated ? AuctionDisplayResult.Successful : AuctionDisplayResult.Failed
+  }
+
+  // The verdict is unset until the backend resolves the auction, which runs on a schedule after the end block.
+  if (currencyRaised.status !== 'success') {
+    return AuctionDisplayResult.Unknown
+  }
+
+  const hasMetThreshold = computeIsGraduated({
+    currencyRaised: currencyRaised.currencyRaised,
+    requiredCurrencyRaised: auction?.requiredCurrencyRaised,
+  })
   if (hasMetThreshold === undefined) {
     return AuctionDisplayResult.Unknown
   }
 
-  if (hasMetThreshold) {
-    return AuctionDisplayResult.Successful
-  }
-
-  // Treat a successful post-end checkpoint as the result; indexing lag is tracked in CONS-3362
-  // at the fetch site.
-  return AuctionDisplayResult.Failed
+  return hasMetThreshold ? AuctionDisplayResult.Successful : AuctionDisplayResult.Failed
 }
 
 /** The single reading of a pool count: every surface that gates on "has a pool" must go through this. */
@@ -139,13 +147,16 @@ export function resolveAuctionDisplayState({
 }: ResolveAuctionDisplayStateInput): AuctionDisplayState {
   const phase = resolveAuctionPhase({ auction, currentBlock })
   const poolAvailability = resolvePoolAvailability(pools)
+  const result = resolveAuctionResult({ phase, currencyRaised, auction })
 
   return {
     phase,
-    result: resolveAuctionResult({ phase, currencyRaised, requiredCurrencyRaised: auction?.requiredCurrencyRaised }),
+    result,
     poolAvailability,
     shouldShowSwap: !auction || poolAvailability !== PoolAvailability.NoPool,
     // 'loading' only occurs once the checkpoint query is enabled, which needs a head past the end block.
-    resultPending: phase === AuctionDisplayPhase.Loading || currencyRaised.status === 'loading',
+    resultPending:
+      result === AuctionDisplayResult.Unknown &&
+      (phase === AuctionDisplayPhase.Loading || currencyRaised.status === 'loading'),
   }
 }

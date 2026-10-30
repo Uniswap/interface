@@ -34,7 +34,7 @@ describe('CategoryOptionItem', () => {
       <CategoryOptionItem option={{ type: OnchainItemListOptionType.Category, category }} onPress={vi.fn()} />,
     )
     expect(getByText('DeFi')).toBeTruthy()
-    expect(getByText('explore.collections.single')).toBeTruthy()
+    expect(getByText('explore.categories.single')).toBeTruthy()
     expect(getByText(/categoryDetails.tokenCount/)).toBeTruthy()
     expect(getAllByTestId('token-logo')).toHaveLength(2)
   })
