@@ -64,6 +64,14 @@ describe('auctionCommittedVolumeComparator', () => {
     expect(auctionCommittedVolumeComparator(fiveTokens, oneToken)).toBeLessThan(0)
   })
 
+  it('supports zero-decimal bid tokens in the fallback volume sort', () => {
+    const oneToken = createEnrichedAuction({ totalBidVolume: '1', currencyTokenDecimals: 0 })
+    const fiveTokens = createEnrichedAuction({ totalBidVolume: '5', currencyTokenDecimals: 0 })
+
+    expect(auctionCommittedVolumeComparator(oneToken, fiveTokens)).toBeGreaterThan(0)
+    expect(auctionCommittedVolumeComparator(fiveTokens, oneToken)).toBeLessThan(0)
+  })
+
   it('uses the bid-token fallback when only one side has USD', () => {
     // Mixed case: one row has USD, the other does not — USD is not comparable cross-row,
     // so both fall back to bid-token amounts.
