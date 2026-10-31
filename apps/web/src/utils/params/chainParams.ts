@@ -6,6 +6,12 @@ import { getChainInfo, UNIVERSE_CHAIN_INFO } from 'uniswap/src/features/chains/c
 import { GqlChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
+type ChainInfo = (typeof UNIVERSE_CHAIN_INFO)[keyof typeof UNIVERSE_CHAIN_INFO]
+
+function getChainIdFromParam(value: string, matchesName: (chain: ChainInfo) => boolean): UniverseChainId | undefined {
+  return Object.values(UNIVERSE_CHAIN_INFO).find((chain) => matchesName(chain) || String(chain.id) === value)?.id
+}
+
 // i.e. ?chain=mainnet -> ethereum
 export function searchParamToBackendName(interfaceName: string | null): string | undefined {
   if (interfaceName === null) {
@@ -17,12 +23,12 @@ export function searchParamToBackendName(interfaceName: string | null): string |
 }
 
 export function isChainUrlParam(str: string): boolean {
-  return !!str && Object.values(UNIVERSE_CHAIN_INFO).some((chain) => chain.urlParam === str)
+  return !!str && getChainIdFromChainUrlParam(str) !== undefined
 }
 
 export function getChainIdFromChainUrlParam(chainUrlParam?: string): UniverseChainId | undefined {
   return chainUrlParam !== undefined
-    ? Object.values(UNIVERSE_CHAIN_INFO).find((chain) => chainUrlParam === chain.urlParam)?.id
+    ? getChainIdFromParam(chainUrlParam, (chain) => chainUrlParam === chain.urlParam)
     : undefined
 }
 
@@ -51,6 +57,5 @@ export function getParsedChainId(
     return undefined
   }
 
-  const chainInfo = Object.values(UNIVERSE_CHAIN_INFO).find((i) => i.interfaceName === chain)
-  return chainInfo?.id
+  return getChainIdFromParam(chain, (chainInfo) => chainInfo.interfaceName === chain)
 }
