@@ -20,6 +20,7 @@ import { TokenDetailsSourceState } from '~/pages/TokenDetails/context/tokenDetai
 import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
 import { useTokenDetailsAuctionDisplay } from '~/pages/TokenDetails/hooks/useTokenDetailsAuctionDisplay'
 import { useTokenDetailsCcaAuctions } from '~/pages/TokenDetails/hooks/useTokenDetailsCcaAuctions'
+import { isOutweighedByTrading } from '~/pages/TokenDetails/utils/tokenDetailsAuctionDisplay'
 import { countOtherActiveAuctions } from '~/pages/TokenDetails/utils/tokenDetailsAuctionList'
 
 function useOtherActiveAuctionCount({ auctions }: { auctions: PlainMessage<Auction>[] }): number {
@@ -37,9 +38,15 @@ export function TokenDetailsOtherAuctionsFallback({
   hideSwap: boolean
   showAuctionBanner: boolean
 }): JSX.Element | null {
-  const { auction } = useTokenDetailsAuctionDisplay()
+  const display = useTokenDetailsAuctionDisplay()
   // CCA siblings remain reachable even when the primary used another launch method.
-  if (!auction || hideSwap || showAuctionBanner) {
+  if (
+    !display.auction ||
+    hideSwap ||
+    showAuctionBanner ||
+    display.isTokenVolumeLoading ||
+    isOutweighedByTrading(display)
+  ) {
     return null
   }
   return (

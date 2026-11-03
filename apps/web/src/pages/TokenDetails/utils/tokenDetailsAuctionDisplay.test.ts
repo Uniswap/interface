@@ -11,6 +11,7 @@ import {
 } from '~/features/Toucan/Auction/utils/resolveAuctionDisplayState'
 import {
   type AuctionBannerInputs,
+  isOutweighedByTrading,
   resolveTokenDetailsAuctionDisplay,
   shouldReserveAuctionBannerSpace,
   shouldShowAuctionBanner,
@@ -47,12 +48,19 @@ function resolve(
   })
 }
 
-/** The banner reads two provider latches the pure resolver does not carry. */
+/** The banner reads provider state the pure resolver does not carry. */
 function banner(
   display: ReturnType<typeof resolve>,
-  { hasConfirmedPool = false, isInitialLoading = false } = {},
+  overrides: Partial<AuctionBannerInputs> = {},
 ): AuctionBannerInputs {
-  return { ...display, hasConfirmedPool, isInitialLoading }
+  return {
+    ...display,
+    hasConfirmedPool: false,
+    isInitialLoading: false,
+    tokenVolume30dUsd: undefined,
+    isTokenVolumeLoading: false,
+    ...overrides,
+  }
 }
 
 describe('resolveTokenDetailsAuctionDisplay', () => {
@@ -160,6 +168,29 @@ describe('resolveTokenDetailsAuctionDisplay', () => {
         banner(resolve({ currentBlock: { status: 'loading' }, pools: { status: 'loading' } }), loading),
       ),
     ).toBe(false)
+  })
+
+  it.each([
+    ['hides an auction a heavily traded token dwarfs', '0', 16_500_000_000, false],
+    ['keeps the banner below the volume floor', '0', 49_999, true],
+    ['keeps the banner once bids reach a tenth of monthly volume', '1650000000', 16_500_000_000, true],
+    ['keeps the banner without a token market', '0', undefined, true],
+  ])('%s', (_label, totalBidVolumeUsd, tokenVolume30dUsd, expected) => {
+    const display = resolve({ auction: { ...AUCTION, totalBidVolumeUsd }, pools: HAS_POOL })
+
+    expect(shouldShowAuctionBanner(banner(display, { tokenVolume30dUsd }))).toBe(expected)
+    expect(shouldReserveAuctionBannerSpace(banner(display, { tokenVolume30dUsd, isInitialLoading: true }))).toBe(
+      expected,
+    )
+    expect(isOutweighedByTrading(banner(display, { tokenVolume30dUsd }))).toBe(!expected)
+  })
+
+  it('holds the banner as a placeholder when the pool settles before the token volume', () => {
+    const display = banner(resolve({ pools: HAS_POOL }), { isTokenVolumeLoading: true })
+
+    expect(shouldShowAuctionBanner(display)).toBe(false)
+    expect(shouldReserveAuctionBannerSpace(display)).toBe(true)
+    expect(isOutweighedByTrading(display)).toBe(false)
   })
 
   it('collapses the reserved row instead of shimmering when the pool lookup cannot settle', () => {

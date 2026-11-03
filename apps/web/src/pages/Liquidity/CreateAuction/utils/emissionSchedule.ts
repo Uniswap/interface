@@ -1,9 +1,8 @@
 import {
   deriveBlocks,
   deriveConvexAuctionSteps,
-  getBlockTimeSeconds,
   isLauncherSdkError,
-  timeToBlock,
+  timeToBlockOnChain,
 } from '@uniswap/liquidity-launcher-sdk'
 import { UniverseChainId } from '@universe/chains'
 import { getAuctionOpenTime, isPreBidRangeValid } from '~/pages/Liquidity/CreateAuction/utils/duration'
@@ -58,7 +57,6 @@ export function getAuctionEmissionScheduleError({
     return undefined
   }
 
-  const blockTimeSeconds = getBlockTimeSeconds(chainId)
   const nowUnix = BigInt(Math.floor(nowMs / 1000))
   // Mirrors the request the backend will receive: the auction opens at the pre-bid start when
   // there is one, and `startTime` becomes the emission boundary inside that window.
@@ -67,17 +65,19 @@ export function getAuctionEmissionScheduleError({
   const endTimeUnix = BigInt(Math.floor(endTime.getTime() / 1000))
 
   try {
-    // The schedule depends only on the block span (`endBlock - startBlock`), and `timeToBlock` is
-    // linear in `currentBlock`, so a fixed `0n` keeps this a pure, RPC-free pre-validation.
+    // The schedule depends only on the block span (`endBlock - startBlock`), and the time → block
+    // conversion is linear in `currentBlock`, so a fixed `0n` keeps this a pure, RPC-free
+    // pre-validation. Converting by `chainId` follows the chain's block-time schedule, so a window
+    // that crosses a cadence change (Base Denim, 2s → 200ms) gets its real block span.
     const { startBlock, endBlock } = deriveBlocks({
       startTimeUnix,
       endTimeUnix,
       currentBlock: 0n,
       nowUnix,
-      blockTimeSeconds,
+      chainId,
     })
     const emissionStartBlock = preBidStartTime
-      ? timeToBlock(BigInt(Math.floor(startTime.getTime() / 1000)), 0n, nowUnix, blockTimeSeconds)
+      ? timeToBlockOnChain(chainId, BigInt(Math.floor(startTime.getTime() / 1000)), 0n, nowUnix)
       : startBlock
     deriveConvexAuctionSteps(startBlock, endBlock, {
       prebidBlocks: emissionStartBlock > startBlock ? emissionStartBlock - startBlock : 0n,

@@ -1,6 +1,33 @@
+import { BLOCK_TIME_SCHEDULE_BY_CHAIN, blocksToSeconds } from '@uniswap/liquidity-launcher-sdk'
 import { EVMUniverseChainId } from '@universe/chains'
-import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { AVERAGE_L2_BLOCK_TIME_MS } from 'uniswap/src/features/transactions/hooks/usePollingIntervalByChain'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { getAverageBlockTimeMs } from '~/utils/averageBlockTimeMs'
+
+function hasBlockTimeSchedule(chainId: number | undefined): chainId is number {
+  return chainId !== undefined && chainId in BLOCK_TIME_SCHEDULE_BY_CHAIN
+}
+
+/**
+ * Wall-clock milliseconds from `fromBlock` to `toBlock` (negative when `toBlock < fromBlock`).
+ * Chains whose cadence changed at a hard fork (Base Denim: 2s → 200ms) follow the
+ * liquidity-launcher SDK's block-time schedule, so a span crossing the change is exact; every other
+ * chain uses its chain-constant `blockTimeMs`. Non-integer input (e.g. a NaN from an unparsed
+ * block) takes the constant-rate path so it yields NaN rather than throwing.
+ */
+export function blockSpanMs({
+  chainId,
+  fromBlock,
+  toBlock,
+}: {
+  chainId: number | undefined
+  fromBlock: number
+  toBlock: number
+}): number {
+  if (hasBlockTimeSchedule(chainId) && Number.isSafeInteger(fromBlock) && Number.isSafeInteger(toBlock)) {
+    return blocksToSeconds(chainId, BigInt(fromBlock), BigInt(toBlock)) * ONE_SECOND_MS
+  }
+  return (toBlock - fromBlock) * getAverageBlockTimeMs(chainId)
+}
 
 /**
  * Converts a block number to a Date using an anchor block/timestamp pair.
@@ -23,12 +50,7 @@ export function blockToTimestamp({
   anchorTime: Date
   chainId: EVMUniverseChainId
 }): Date {
-  const chainInfo = getChainInfo(chainId)
-  const blockTimeMs = chainInfo.blockTimeMs ?? AVERAGE_L2_BLOCK_TIME_MS
-  const secPerBlock = blockTimeMs / 1000
-
-  const deltaSec = (block - anchorBlock) * secPerBlock
-  return new Date(anchorTime.getTime() + deltaSec * 1000)
+  return new Date(anchorTime.getTime() + blockSpanMs({ chainId, fromBlock: anchorBlock, toBlock: block }))
 }
 
 /**
@@ -38,6 +60,11 @@ export function blockToTimestamp({
  * chain-constant blockTimeMs. Interpolates between the anchors and extrapolates
  * past currentBlock at the calibrated rate; falls back to the chain constant when
  * no usable live anchor is available.
+ *
+ * Chains with a block-time schedule produce blocks at a protocol-fixed cadence, so
+ * they skip calibration and convert from the anchor along the schedule: an average
+ * rate measured across a cadence change fits neither side of it, and the live pair
+ * may be a stale block observed at wall-clock time, which would shift every result.
  */
 export function calibratedBlockToTimestamp({
   block,
@@ -56,7 +83,13 @@ export function calibratedBlockToTimestamp({
 }): Date {
   const anchorMs = anchorTime.getTime()
   const currentMs = currentTime?.getTime()
-  if (currentBlock === undefined || currentMs === undefined || currentBlock <= anchorBlock || currentMs <= anchorMs) {
+  if (
+    hasBlockTimeSchedule(chainId) ||
+    currentBlock === undefined ||
+    currentMs === undefined ||
+    currentBlock <= anchorBlock ||
+    currentMs <= anchorMs
+  ) {
     return blockToTimestamp({ block, anchorBlock, anchorTime, chainId })
   }
   const msPerBlock = (currentMs - anchorMs) / (currentBlock - anchorBlock)

@@ -65,6 +65,14 @@ vi.mock('uniswap/src/features/ens/api', async (importOriginal) => ({
 }))
 vi.mock('uniswap/src/features/telemetry/send', () => ({ sendAnalyticsEvent: vi.fn() }))
 vi.mock('uniswap/src/features/dataApi/useTokenLaunchProvenance', () => ({ useTokenLaunchProvenance: vi.fn() }))
+vi.mock('~/pages/TokenDetails/hooks/useTDPMultichainAggregate', () => ({
+  useTDPMultichainAggregate: () => ({ isMultichainAggregateView: false }),
+}))
+
+vi.mock('uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData')>()),
+  useTokenMarketStats: () => ({ volume: undefined, isLoading: false }),
+}))
 
 beforeEach(() => {
   mocked(sendAnalyticsEvent).mockReset()

@@ -200,7 +200,7 @@
     "@uniswap/client-launches": "0.0.7",
     "@uniswap/client-liquidity": "1.4.43",
     "@uniswap/client-notification-service": "0.0.11",
-    "@uniswap/liquidity-launcher-sdk": "2.0.0",
+    "@uniswap/liquidity-launcher-sdk": "2.1.0",
     "@uniswap/permit2-sdk": "1.4.0",
     "@uniswap/router-sdk": "2.10.3",
     "@uniswap/sdk-core": "7.19.4",

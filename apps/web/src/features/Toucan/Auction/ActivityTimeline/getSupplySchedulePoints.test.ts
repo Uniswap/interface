@@ -1,5 +1,5 @@
 import { AuctionStep } from '@uniswap/client-launches/dist/data/v1/auction_pb'
-import type { EVMUniverseChainId } from '@universe/chains'
+import { type EVMUniverseChainId, UniverseChainId } from '@universe/chains'
 import { vi } from 'vitest'
 import { getSupplySchedulePoints } from '~/features/Toucan/Auction/ActivityTimeline/getSupplySchedulePoints'
 
@@ -178,5 +178,31 @@ describe('getSupplySchedulePoints', () => {
     expect(points.some((p) => p.isNowPoint)).toBe(false)
     expect(points[points.length - 1].time).toBe((baseParams.anchorTime.getTime() + 12_000) / 1000)
     expect((points[points.length - 1].time as number) * 1000).toBeLessThan(now)
+  })
+
+  it('places Base points from the anchor along the schedule when the live block is stale', () => {
+    // Base Denim: block 53,556,127 is the first 200ms block, at unix 1793901601; 2s blocks before it.
+    // Steps: Denim-100 → Denim+100 at mps 100, Denim+100 → Denim+300 at mps 200.
+    const denimBlock = 53_556_127
+    const denimMs = 1_793_901_601_000
+    // Live block Denim+50 was mined at Denim + 10s but is read 30s later
+    vi.setSystemTime(denimMs + 40_000)
+
+    const points = getSupplySchedulePoints({
+      steps: [makeStep(100, String(denimBlock - 100)), makeStep(200, String(denimBlock + 100))],
+      endBlock: denimBlock + 300,
+      anchorBlock: denimBlock - 100,
+      anchorTime: new Date(denimMs - 200_000),
+      chainId: UniverseChainId.Base,
+      totalSupplyRaw: TOTAL_SUPPLY,
+      actualSold: { currentBlock: denimBlock + 50, totalClearedRaw: BigInt(100_000) },
+    })
+
+    expect(points.map((p) => ({ time: p.time, isNowPoint: p.isNowPoint }))).toEqual([
+      { time: 1_793_901_401, isNowPoint: undefined },
+      { time: 1_793_901_611, isNowPoint: true },
+      { time: 1_793_901_621, isNowPoint: undefined },
+      { time: 1_793_901_661, isNowPoint: undefined },
+    ])
   })
 })

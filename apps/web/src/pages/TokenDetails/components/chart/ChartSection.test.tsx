@@ -85,6 +85,8 @@ function mockDisplay(overrides: Partial<TokenDetailsAuctionDisplayModel> = {}): 
     isInitialLoading: false,
     isAuctionOnlyPending: false,
     hasConfirmedPool: false,
+    tokenVolume30dUsd: undefined,
+    isTokenVolumeLoading: false,
     phaseEndsAtMs: undefined,
     currencyRaised: { status: 'idle' },
     currentBlock: { status: 'success', blockNumber: 150n },

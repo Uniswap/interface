@@ -1,8 +1,10 @@
 import { onlineManager } from '@tanstack/react-query'
+import { HistoryDuration } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { isEVMChain, normalizeTokenAddressForCache } from '@universe/chains'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { createContext, type ReactNode, useMemo, useState, useSyncExternalStore } from 'react'
 import { isAuctionLaunchMethod, LaunchProvenanceMethod } from 'uniswap/src/features/dataApi/launchProvenance'
+import { useTokenMarketStats } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { useTokenLaunchProvenance } from 'uniswap/src/features/dataApi/useTokenLaunchProvenance'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { useAuctionDisplayDataSources } from '~/features/Toucan/Auction/hooks/useAuctionDisplayDataSources'
@@ -10,6 +12,7 @@ import { PoolAvailability } from '~/features/Toucan/Auction/utils/resolveAuction
 import { parseNonNegativeBigInt } from '~/features/Toucan/Auction/utils/safeBigInt'
 import { TokenDetailsSourceState } from '~/pages/TokenDetails/context/tokenDetailsSourceState'
 import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
+import { useTDPMultichainAggregate } from '~/pages/TokenDetails/hooks/useTDPMultichainAggregate'
 import type { TokenDetailsAuctionDisplayModel } from '~/pages/TokenDetails/hooks/useTokenDetailsAuctionDisplay'
 import { useTokenDetailsAuctions } from '~/pages/TokenDetails/hooks/useTokenDetailsAuctions'
 import { resolveTokenDetailsAuctionDisplay } from '~/pages/TokenDetails/utils/tokenDetailsAuctionDisplay'
@@ -55,9 +58,16 @@ export function TokenDetailsAuctionDisplayProvider({ children }: { children: Rea
   // the auction lookup the rest of this display state waits on. Gated with that lookup: served
   // attribution alone renders the provenance module, which the flag still owns.
   const tokenProvenanceEnabled = useFeatureFlag(FeatureFlags.TokenProvenance)
-  const servedProvenance = useTokenLaunchProvenance(
-    tokenProvenanceEnabled && currency ? currencyId(currency) : undefined,
-  )
+  const pageCurrencyId = currency ? currencyId(currency) : undefined
+  const servedProvenance = useTokenLaunchProvenance(tokenProvenanceEnabled ? pageCurrencyId : undefined)
+  // Keyed on the token so the network picker can't flicker the banner.
+  const { isMultichainToken } = useTDPMultichainAggregate()
+  const { volume: tokenVolume30dUsd, isLoading: isTokenVolumeLoading } = useTokenMarketStats(pageCurrencyId, {
+    isMultichainAggregateView: isMultichainToken,
+    skip: auction === undefined,
+    keepPreviousData: false,
+    duration: HistoryDuration.MONTH,
+  })
   // Not the only observer: the claim allocation hook mounts its own instance that keeps polling to the claim block.
   const { currentBlock, currencyRaised, pools, refetchCurrentBlock } = useAuctionDisplayDataSources({
     chainId,
@@ -127,8 +137,18 @@ export function TokenDetailsAuctionDisplayProvider({ children }: { children: Rea
       isInitialLoading,
       isAuctionOnlyPending,
       hasConfirmedPool: nextPoolConfirmation.confirmed,
+      tokenVolume30dUsd,
+      isTokenVolumeLoading,
     }),
-    [display, refetchCurrentBlock, isInitialLoading, isAuctionOnlyPending, nextPoolConfirmation.confirmed],
+    [
+      display,
+      refetchCurrentBlock,
+      isInitialLoading,
+      isAuctionOnlyPending,
+      nextPoolConfirmation.confirmed,
+      tokenVolume30dUsd,
+      isTokenVolumeLoading,
+    ],
   )
 
   return (

@@ -8,6 +8,8 @@ export interface TokenDetailsAuctionDisplayModel extends TokenDetailsAuctionDisp
   isAuctionOnlyPending: boolean
   /** Latches once this auction's pool is confirmed, so a later refetch cannot retract what is already on screen. */
   hasConfirmedPool: boolean
+  tokenVolume30dUsd: number | undefined
+  isTokenVolumeLoading: boolean
   /** Re-reads the chain head so the phase flips from blocks, never from the browser clock. */
   refetchCurrentBlock: () => void
 }

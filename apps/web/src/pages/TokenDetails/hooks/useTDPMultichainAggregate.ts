@@ -3,6 +3,8 @@ import { useMultichainTokenEntries } from '~/pages/TokenDetails/hooks/useMultich
 
 interface UseTDPMultichainAggregateResult {
   isMultichainAggregateView: boolean
+  /** Ignores the network picker, for reads about the whole token rather than the selected chain. */
+  isMultichainToken: boolean
 }
 
 /** Single source of truth for the "all networks" aggregate view, shared by the chart header and stats section so they can't drift on it. */
@@ -14,8 +16,7 @@ export function useTDPMultichainAggregate(): UseTDPMultichainAggregateResult {
   const multichainEntries = useMultichainTokenEntries(multiChainMap)
   const isMultiChainAsset = multichainEntries.length > 1
   // Default to the aggregate view until we know otherwise — better than assuming single-chain.
-  const isMultichainAggregateView =
-    (!multichainTokenLoaded || isMultiChainAsset) && selectedMultichainChainId === undefined
+  const isMultichainToken = !multichainTokenLoaded || isMultiChainAsset
 
-  return { isMultichainAggregateView }
+  return { isMultichainAggregateView: isMultichainToken && selectedMultichainChainId === undefined, isMultichainToken }
 }

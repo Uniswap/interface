@@ -7,6 +7,7 @@ import {
   type LaunchProvenance,
   LaunchProvenanceMethod,
 } from 'uniswap/src/features/dataApi/launchProvenance'
+import { parseFiniteNumber } from 'utilities/src/primitives/number'
 import { mergeLaunchProvenance } from '~/features/Toucan/Auction/utils/auctionLaunchMethod'
 import {
   AuctionDisplayPhase,
@@ -84,11 +85,20 @@ export function resolveTokenDetailsAuctionDisplay({
   }
 }
 
-export type AuctionBannerInputs = Pick<TokenDetailsAuctionDisplay, 'launchMethod' | 'phase' | 'poolAvailability'> & {
+// Anyone can attach an auction to a major like USDT, so the more a token trades, the more bids the banner needs.
+const AUCTION_BANNER_VOLUME_FLOOR_USD = 50_000
+const AUCTION_BANNER_MIN_BIDS_TO_VOLUME = 0.1
+
+export type AuctionBannerInputs = Pick<
+  TokenDetailsAuctionDisplay,
+  'auction' | 'launchMethod' | 'phase' | 'poolAvailability'
+> & {
   /** Latched by the provider, so a pool refetch cannot retract a banner the viewer is already looking at. */
   hasConfirmedPool: boolean
   /** Latched and online-aware, so the reserved row belongs to the first load and collapses when offline. */
   isInitialLoading: boolean
+  tokenVolume30dUsd: number | undefined
+  isTokenVolumeLoading: boolean
 }
 
 function isOpenCustomAuction({ launchMethod, phase }: Pick<AuctionBannerInputs, 'launchMethod' | 'phase'>): boolean {
@@ -98,14 +108,30 @@ function isOpenCustomAuction({ launchMethod, phase }: Pick<AuctionBannerInputs, 
   )
 }
 
-/** Tradeable Custom auction tokens (pool exists) with an upcoming or live auction get a banner pointing at it. */
-export function shouldShowAuctionBanner(display: AuctionBannerInputs): boolean {
-  return (
-    isOpenCustomAuction(display) && (display.poolAvailability === PoolAvailability.HasPool || display.hasConfirmedPool)
-  )
+export function isOutweighedByTrading({
+  auction,
+  tokenVolume30dUsd,
+}: Pick<AuctionBannerInputs, 'auction' | 'tokenVolume30dUsd'>): boolean {
+  if (tokenVolume30dUsd === undefined || tokenVolume30dUsd < AUCTION_BANNER_VOLUME_FLOOR_USD) {
+    return false
+  }
+  return (parseFiniteNumber(auction?.totalBidVolumeUsd) ?? 0) < tokenVolume30dUsd * AUCTION_BANNER_MIN_BIDS_TO_VOLUME
 }
 
-/** The pool lookup settles well after the rest of the page, so the banner holds its row until then. */
+function isBannerAuction(display: AuctionBannerInputs): boolean {
+  return isOpenCustomAuction(display) && !isOutweighedByTrading(display)
+}
+
+function hasPool({ poolAvailability, hasConfirmedPool }: AuctionBannerInputs): boolean {
+  return poolAvailability === PoolAvailability.HasPool || hasConfirmedPool
+}
+
+/** Tradeable Custom auction tokens (pool exists) with an upcoming or live auction get a banner pointing at it. */
+export function shouldShowAuctionBanner(display: AuctionBannerInputs): boolean {
+  return isBannerAuction(display) && !display.isTokenVolumeLoading && hasPool(display)
+}
+
+/** The pool and volume reads settle after the rest of the page, so the banner holds its row until both do. */
 export function shouldReserveAuctionBannerSpace(display: AuctionBannerInputs): boolean {
-  return shouldShowAuctionBanner(display) || (isOpenCustomAuction(display) && display.isInitialLoading)
+  return isBannerAuction(display) && (hasPool(display) || display.isInitialLoading)
 }

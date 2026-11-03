@@ -1,6 +1,7 @@
 import type { PlainMessage } from '@bufbuild/protobuf'
 import { onlineManager } from '@tanstack/react-query'
 import { act, renderHook } from '@testing-library/react'
+import { HistoryDuration } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { AuctionType, type Auction } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { Token } from '@uniswap/sdk-core'
 import { GraphQLApi } from '@universe/api'
@@ -8,6 +9,7 @@ import { UniverseChainId } from '@universe/chains'
 import { useFeatureFlag } from '@universe/gating'
 import type { ReactNode } from 'react'
 import { LaunchProvenanceMethod } from 'uniswap/src/features/dataApi/launchProvenance'
+import { useTokenMarketStats } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { useTokenLaunchProvenance } from 'uniswap/src/features/dataApi/useTokenLaunchProvenance'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { useAuctionDisplayDataSources } from '~/features/Toucan/Auction/hooks/useAuctionDisplayDataSources'
@@ -16,6 +18,7 @@ import { TDPStoreContext } from '~/pages/TokenDetails/context/TDPContext'
 import { TokenDetailsAuctionDisplayProvider } from '~/pages/TokenDetails/context/TokenDetailsAuctionDisplayProvider'
 import { TokenDetailsSourceState } from '~/pages/TokenDetails/context/tokenDetailsSourceState'
 import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
+import { useTDPMultichainAggregate } from '~/pages/TokenDetails/hooks/useTDPMultichainAggregate'
 import type { TokenDetailsAuctionSource } from '~/pages/TokenDetails/hooks/useTokenDetailsAuction'
 import { useTokenDetailsAuctionDisplay } from '~/pages/TokenDetails/hooks/useTokenDetailsAuctionDisplay'
 
@@ -26,6 +29,26 @@ vi.mock('~/features/Toucan/Auction/hooks/useAuctionDisplayDataSources', () => ({
 vi.mock('uniswap/src/features/dataApi/useTokenLaunchProvenance', () => ({
   useTokenLaunchProvenance: vi.fn(),
 }))
+
+vi.mock('~/pages/TokenDetails/hooks/useTDPMultichainAggregate', () => ({
+  useTDPMultichainAggregate: vi.fn(),
+}))
+
+vi.mock('uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData')>()),
+  useTokenMarketStats: vi.fn(),
+}))
+
+const emptyMarketStats = {
+  marketCap: undefined,
+  fdv: undefined,
+  volume: undefined,
+  high52w: undefined,
+  low52w: undefined,
+  tvl: undefined,
+  poolsTvl: undefined,
+  isLoading: false,
+}
 
 const tokenA = new Token(UniverseChainId.Mainnet, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 18)
 const tokenB = new Token(UniverseChainId.Base, '0x2222222222222222222222222222222222222222', 18)
@@ -86,9 +109,77 @@ describe('TokenDetailsAuctionDisplayProvider', () => {
     onlineManager.setOnline(true)
     vi.mocked(useAuctionDisplayDataSources).mockReturnValue(sources)
     vi.mocked(useTokenLaunchProvenance).mockReturnValue(undefined)
+    vi.mocked(useTokenMarketStats).mockReturnValue(emptyMarketStats)
+    vi.mocked(useTDPMultichainAggregate).mockReturnValue({
+      isMultichainAggregateView: false,
+      isMultichainToken: false,
+    })
   })
 
   afterEach(() => onlineManager.setOnline(true))
+
+  it('reads monthly volume for the current token without reusing the previous token data', () => {
+    vi.mocked(useTokenMarketStats).mockReturnValue({ ...emptyMarketStats, volume: 40_000 })
+    const store = createTDPStore(createPageState())
+    const { result, rerender } = renderHook(() => useTokenDetailsAuctionDisplay(), { wrapper: createWrapper(store) })
+
+    expect(useTokenMarketStats).toHaveBeenLastCalledWith(currencyId(tokenA), {
+      duration: HistoryDuration.MONTH,
+      keepPreviousData: false,
+      isMultichainAggregateView: false,
+      skip: false,
+    })
+    expect(result.current.tokenVolume30dUsd).toBe(40_000)
+
+    vi.mocked(useTokenMarketStats).mockReturnValue({ ...emptyMarketStats, isLoading: true })
+    const auctionB = { ...auction, tokenAddress: tokenB.address }
+    act(() =>
+      store.setState(
+        createPageState({
+          token: tokenB,
+          auctionSource: { status: TokenDetailsSourceState.Found, auction: auctionB, auctions: [auctionB] },
+        }),
+      ),
+    )
+
+    expect(useTokenMarketStats).toHaveBeenLastCalledWith(currencyId(tokenB), {
+      duration: HistoryDuration.MONTH,
+      keepPreviousData: false,
+      isMultichainAggregateView: false,
+      skip: false,
+    })
+    expect(result.current.tokenVolume30dUsd).toBeUndefined()
+    expect(result.current.isTokenVolumeLoading).toBe(true)
+
+    vi.mocked(useTokenMarketStats).mockReturnValue({ ...emptyMarketStats, volume: 16_500_000_000 })
+    rerender()
+    expect(result.current.tokenVolume30dUsd).toBe(16_500_000_000)
+    expect(result.current.isTokenVolumeLoading).toBe(false)
+  })
+
+  it('keeps the volume read aggregated when the network picker selects one chain', () => {
+    vi.mocked(useTDPMultichainAggregate).mockReturnValue({
+      isMultichainAggregateView: true,
+      isMultichainToken: true,
+    })
+    const store = createTDPStore(createPageState())
+    renderHook(() => useTokenDetailsAuctionDisplay(), { wrapper: createWrapper(store) })
+    const expectedParams = {
+      duration: HistoryDuration.MONTH,
+      keepPreviousData: false,
+      isMultichainAggregateView: true,
+      skip: false,
+    }
+    expect(useTokenMarketStats).toHaveBeenLastCalledWith(currencyId(tokenA), expectedParams)
+
+    vi.mocked(useTDPMultichainAggregate).mockReturnValue({
+      isMultichainAggregateView: false,
+      isMultichainToken: true,
+    })
+    act(() => store.setState({ selectedMultichainChainId: UniverseChainId.Mainnet }))
+
+    expect(useTokenMarketStats).toHaveBeenLastCalledWith(currencyId(tokenA), expectedParams)
+  })
 
   it('starts one shared display source before canonical content and fails open offline', () => {
     const store = createTDPStore(createPageState({ isPageReady: false }))
@@ -155,6 +246,7 @@ describe('TokenDetailsAuctionDisplayProvider', () => {
     expect(useAuctionDisplayDataSources).toHaveBeenLastCalledWith(expect.objectContaining({ enabled: false }))
     expect(result.current.auction).toBeUndefined()
     expect(result.current.isInitialLoading).toBe(false)
+    expect(useTokenMarketStats).toHaveBeenLastCalledWith(currencyId(tokenA), expect.objectContaining({ skip: true }))
   })
 
   it('keeps canonical and auction identities together across route loading and resolution', () => {

@@ -58,7 +58,7 @@ describe('StatsSection', () => {
     vi.clearAllMocks()
     mocked(useTDPEffectiveCurrency).mockReturnValue(USDC_MAINNET)
     mocked(useTokenSpotPrice).mockReturnValue(undefined)
-    mocked(useTDPMultichainAggregate).mockReturnValue({ isMultichainAggregateView: true })
+    mocked(useTDPMultichainAggregate).mockReturnValue({ isMultichainAggregateView: true, isMultichainToken: true })
     mockTDPState({ selectedMultichainChainId: undefined })
   })
 
@@ -130,7 +130,7 @@ describe('StatsSection', () => {
 
   it('scopes the price and market queries to the selected chain when not on the all-networks view', () => {
     vi.spyOn(console, 'error').mockImplementation(() => {})
-    mocked(useTDPMultichainAggregate).mockReturnValue({ isMultichainAggregateView: false })
+    mocked(useTDPMultichainAggregate).mockReturnValue({ isMultichainAggregateView: false, isMultichainToken: true })
     mockTDPState({ selectedMultichainChainId: UniverseChainId.Mainnet })
     mocked(useTokenSpotPrice).mockReturnValue(123)
     mocked(useTokenMarketStats).mockReturnValue(POPULATED_STATS)

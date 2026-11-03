@@ -61,6 +61,8 @@ function mockDisplay(overrides: Partial<TokenDetailsAuctionDisplayModel> = {}): 
     isInitialLoading: false,
     isAuctionOnlyPending: false,
     hasConfirmedPool: false,
+    tokenVolume30dUsd: undefined,
+    isTokenVolumeLoading: false,
     auction: resolvedAuction,
     chainId: UniverseChainId.Mainnet,
     launchMethod: LaunchProvenanceMethod.CustomAuction,

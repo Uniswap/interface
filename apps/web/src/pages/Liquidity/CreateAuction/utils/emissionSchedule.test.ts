@@ -125,4 +125,25 @@ describe('getAuctionEmissionScheduleError', () => {
       getAuctionEmissionScheduleError({ startTime, endTime, chainId: UniverseChainId.Unichain, nowMs }),
     ).toBeUndefined()
   })
+
+  describe('Base Denim (2s → 200ms blocks at unix 1793901601)', () => {
+    const denimMs = 1_793_901_601_000
+    const beforeDenimNowMs = denimMs - 2 * 60 * 60 * 1000
+
+    it('flags a 2s window before Denim (one 2s block)', () => {
+      const startTime = new Date(beforeDenimNowMs + 60_000)
+      const endTime = new Date(startTime.getTime() + 2_000)
+      expect(
+        getAuctionEmissionScheduleError({ startTime, endTime, chainId: UniverseChainId.Base, nowMs: beforeDenimNowMs }),
+      ).toBe(EmissionScheduleError.WindowTooShort)
+    })
+
+    it('accepts the same 2s window after Denim (ten 200ms blocks), judged from before activation', () => {
+      const startTime = new Date(denimMs + 60_000)
+      const endTime = new Date(startTime.getTime() + 2_000)
+      expect(
+        getAuctionEmissionScheduleError({ startTime, endTime, chainId: UniverseChainId.Base, nowMs: beforeDenimNowMs }),
+      ).toBeUndefined()
+    })
+  })
 })

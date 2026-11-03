@@ -194,6 +194,10 @@ export interface UseTokenMarketStatsParams {
   isMultichainAggregateView?: boolean
   /** Disables the REST queries entirely, e.g. until a hover card is actually open. */
   skip?: boolean
+  /** Defaults to true. Turn off when the previous token's stats must not stand in while this one loads. */
+  keepPreviousData?: boolean
+  /** Window for `volume`. Defaults to a day. */
+  duration?: HistoryDuration
 }
 
 function mapRestTokenMarketStats(stats: PlainMessage<RestTokenMarketStats> | undefined): MarketStatsData | undefined {
@@ -247,7 +251,13 @@ export function useTokenMarketStats(
   currencyId: CurrencyId | undefined,
   params?: UseTokenMarketStatsParams,
 ): UseTokenMarketStatsResult {
-  const { currentPriceOverride, isMultichainAggregateView, skip } = params ?? {}
+  const {
+    currentPriceOverride,
+    isMultichainAggregateView,
+    skip,
+    keepPreviousData,
+    duration = HistoryDuration.DAY,
+  } = params ?? {}
   const isMultichainAggregation = isMultichainAggregateView ?? false
   const enableQueries = !skip
 
@@ -260,11 +270,9 @@ export function useTokenMarketStats(
   )
   const { data: singleChainRestMarket, isLoading: isSingleChainMarketLoading } = useQuery(
     getGetTokenMarketsQueryOptions({
-      params:
-        isMultichainAggregation || !restTokenIdentifier
-          ? undefined
-          : { tokens: [restTokenIdentifier], duration: HistoryDuration.DAY },
+      params: isMultichainAggregation || !restTokenIdentifier ? undefined : { tokens: [restTokenIdentifier], duration },
       enabled: enableQueries,
+      keepPreviousData,
       select: selectMarketStatsData,
     }),
   )
@@ -274,11 +282,12 @@ export function useTokenMarketStats(
       params: restTokenIdentifier
         ? {
             identifier: { case: 'tokens', value: { tokens: [restTokenIdentifier] } },
-            duration: HistoryDuration.DAY,
+            duration,
             chainIds: marketsEnabledChainIds,
           }
         : undefined,
       enabled: enableQueries && isMultichainAggregation,
+      keepPreviousData,
       select: selectMultichainMarketStatsData,
     }),
   )

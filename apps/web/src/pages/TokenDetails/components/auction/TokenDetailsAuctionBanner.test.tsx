@@ -72,6 +72,8 @@ function mockDisplay(overrides: Partial<TokenDetailsAuctionDisplayModel> = {}): 
     isInitialLoading: false,
     isAuctionOnlyPending: false,
     hasConfirmedPool: false,
+    tokenVolume30dUsd: undefined,
+    isTokenVolumeLoading: false,
     phaseEndsAtMs: Date.now() + SEVEN_DAYS_THIRTEEN_HOURS_MS - ONE_SECOND_MS,
     currencyRaised: { status: 'idle' },
     currentBlock: { status: 'success', blockNumber: 150n },

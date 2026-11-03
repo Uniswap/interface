@@ -7,13 +7,13 @@ import type {
   ClearingPriceChartPoint,
   NormalizedClearingPriceSeries,
 } from '~/features/Toucan/ToucanChart/clearingPrice/types'
-import { averageBlockTimeMs } from '~/features/Toucan/ToucanChart/clearingPrice/utils/blockTime'
 import {
   safeParseInt,
   safeParseTimestampMs,
   toUtcTimestampSeconds,
 } from '~/features/Toucan/ToucanChart/clearingPrice/utils/timeConversions'
 import { calculateScaleFactor } from '~/features/Toucan/ToucanChart/clearingPrice/utils/yAxisRange'
+import { blockSpanMs } from '~/utils/blockToTimestamp'
 
 /**
  * Target number of data points to generate across the full time range.
@@ -125,7 +125,8 @@ export function normalizeClearingSeries({
 }: NormalizeSeriesParams): NormalizedClearingPriceSeries | null {
   const auctionStartBlock = safeParseInt(auctionDetails.startBlock) ?? 0
   const auctionEndBlock = safeParseInt(auctionDetails.endBlock) ?? auctionStartBlock + 1
-  const avgMs = averageBlockTimeMs(auctionDetails.chainId)
+  const msFromStart = (block: number): number =>
+    blockSpanMs({ chainId: auctionDetails.chainId, fromBlock: auctionStartBlock, toBlock: block })
   const currentBlock = currentBlockNumber
 
   const auctionStartTimeMs =
@@ -140,20 +141,19 @@ export function normalizeClearingSeries({
   const auctionEndTimeMs =
     auctionEndBlockTimestamp !== undefined
       ? Number(auctionEndBlockTimestamp) * ONE_SECOND_MS
-      : auctionStartTimeMs + (auctionEndBlock - auctionStartBlock) * avgMs
+      : auctionStartTimeMs + msFromStart(auctionEndBlock)
 
   const preBidEndBlockNum = safeParseInt(auctionDetails.preBidEndBlock)
   const preBidEndTimeMs =
     preBidEndBlockNum !== undefined && preBidEndBlockNum > auctionStartBlock
-      ? auctionStartTimeMs + (preBidEndBlockNum - auctionStartBlock) * avgMs
+      ? auctionStartTimeMs + msFromStart(preBidEndBlockNum)
       : undefined
 
   if (currentBlock === undefined) {
     return null
   }
 
-  const currentTimeMs =
-    auctionStartTimeMs + Math.max(0, Math.min(currentBlock, auctionEndBlock) - auctionStartBlock) * avgMs
+  const currentTimeMs = auctionStartTimeMs + Math.max(0, msFromStart(Math.min(currentBlock, auctionEndBlock)))
 
   const auctionEnded = currentBlock >= auctionEndBlock
   const startPointQ96 = auctionDetails.floorPrice || '0'
@@ -179,9 +179,7 @@ export function normalizeClearingSeries({
   ]
 
   for (const entry of historySorted) {
-    const entryMs =
-      safeParseTimestampMs(entry.createdAt) ??
-      auctionStartTimeMs + (Number(entry.startBlock) - auctionStartBlock) * avgMs
+    const entryMs = safeParseTimestampMs(entry.createdAt) ?? auctionStartTimeMs + msFromStart(Number(entry.startBlock))
     const q96 = entry.clearingPrice
     const value = fromQ96ToDecimalWithTokenDecimals({ q96Value: q96, bidTokenDecimals, auctionTokenDecimals })
     points.push({

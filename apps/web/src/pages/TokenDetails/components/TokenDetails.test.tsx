@@ -104,6 +104,11 @@ vi.mock('uniswap/src/features/dataApi/useTokenLaunchProvenance', () => ({
   useTokenLaunchProvenance: () => mockServedProvenance,
 }))
 
+vi.mock('uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData')>()),
+  useTokenMarketStats: () => ({ volume: undefined, isLoading: false }),
+}))
+
 vi.mock('~/features/Toucan/Auction/hooks/useAuctionDisplayDataSources', async (importOriginal) => ({
   ...(await importOriginal<typeof import('~/features/Toucan/Auction/hooks/useAuctionDisplayDataSources')>()),
   useAuctionDisplayDataSources: () => ({

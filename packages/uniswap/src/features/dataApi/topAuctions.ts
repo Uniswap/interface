@@ -9,16 +9,19 @@ import {
 import { type UniverseChainId, Platform } from '@universe/chains'
 import { useCallback, useMemo } from 'react'
 import type { AuctionOption } from 'uniswap/src/components/lists/items/types'
+import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/warningSeverity'
 import {
   auctionQueryKeys,
   loadAuctionServiceClient,
 } from 'uniswap/src/data/apiClients/dataApiService/auctions/queryTypes'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { auctionWithStatsToAuctionOption, buildCurrencyInfoMap } from 'uniswap/src/features/dataApi/searchAuctions'
-import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { auctionWithStatsToAuctionOption } from 'uniswap/src/features/dataApi/searchAuctions'
+import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { useCurrencyInfosWithLoading } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/warnings/safetyUtils'
 import { isHiddenAuction } from 'uniswap/src/features/toucan/hiddenAuctions'
 import { useVerifiedAuctionIds } from 'uniswap/src/features/toucan/useVerifiedAuctionIds'
-import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
+import { buildCurrencyId, normalizeCurrencyIdForMapLookup } from 'uniswap/src/utils/currencyId'
 import { parseFiniteNumber } from 'utilities/src/primitives/number'
 import type { DerivedQueryResult } from 'utilities/src/reactQuery/types'
 
@@ -44,6 +47,10 @@ function rankQualifyingAuctions({
     .filter(({ volumeUsd }) => volumeUsd >= minVolumeUsd)
     .sort((a, b) => b.volumeUsd - a.volumeUsd)
     .map(({ auctionWithStats }) => auctionWithStats)
+}
+
+function showsTokenWarning(currencyInfo: Maybe<CurrencyInfo>): boolean {
+  return getTokenWarningSeverity(currencyInfo) >= WarningSeverity.Medium
 }
 
 async function listTopAuctions(params: ListTopAuctionsRequest): Promise<PlainMessage<ListTopAuctionsResponse>> {
@@ -113,8 +120,8 @@ export function useTopAuctionOptions({
     return [
       ...active.map((auctionWithStats) => ({ auctionWithStats, isEnded: false })),
       ...completed.map((auctionWithStats) => ({ auctionWithStats, isEnded: true })),
-    ].slice(0, size)
-  }, [activeQuery.data, completedQuery.data, size])
+    ]
+  }, [activeQuery.data, completedQuery.data])
 
   const currencyIds = useMemo(
     () =>
@@ -127,31 +134,55 @@ export function useTopAuctionOptions({
     [auctions],
   )
 
-  const currencyInfos = useCurrencyInfos(currencyIds, {
-    skip: auctions.length === 0,
-  })
+  const {
+    data: currencyInfos,
+    isLoading: tokensLoading,
+    isPlaceholderData,
+  } = useCurrencyInfosWithLoading(currencyIds, { skip: skip || auctions.length === 0 })
+  // Placeholder data is the previous token set, so newly listed tokens would pass unchecked.
+  const currencyInfosLoading = tokensLoading || isPlaceholderData
 
-  const currencyInfoMap = useMemo(() => buildCurrencyInfoMap(currencyIds, currencyInfos), [currencyIds, currencyInfos])
+  const currencyInfoByCurrencyId = useMemo(
+    () =>
+      new Map(
+        (currencyInfos ?? []).map((currencyInfo) => [
+          normalizeCurrencyIdForMapLookup(currencyInfo.currencyId),
+          currencyInfo,
+        ]),
+      ),
+    [currencyInfos],
+  )
 
   const auctionOptions = useMemo<AuctionOption[]>(() => {
+    if (currencyInfosLoading) {
+      return []
+    }
     const verifiedSet = new Set(verifiedAuctionIds)
 
     return auctions
       .map(({ auctionWithStats, isEnded }) => {
         const auction = auctionWithStats.auction
-        const currencyId = auction ? buildCurrencyId(auction.chainId, auction.tokenAddress) : undefined
+        const currencyInfo = auction
+          ? currencyInfoByCurrencyId.get(
+              normalizeCurrencyIdForMapLookup(buildCurrencyId(auction.chainId, auction.tokenAddress)),
+            )
+          : undefined
+        if (showsTokenWarning(currencyInfo)) {
+          return undefined
+        }
 
         return auctionWithStatsToAuctionOption({
           auctionWithStats,
-          currencyInfo: currencyId ? (currencyInfoMap.get(currencyId) ?? null) : null,
+          currencyInfo: currencyInfo ?? null,
           isVerified: auction ? verifiedSet.has(auction.auctionId) : false,
           isEnded,
         })
       })
       .filter((option): option is AuctionOption => option !== undefined)
-  }, [auctions, currencyInfoMap, verifiedAuctionIds])
+      .slice(0, size)
+  }, [auctions, currencyInfoByCurrencyId, currencyInfosLoading, verifiedAuctionIds, size])
 
-  const isLoading = activeQuery.isLoading || completedQuery.isLoading
+  const isLoading = activeQuery.isLoading || completedQuery.isLoading || currencyInfosLoading
   const error = auctionOptions.length ? null : (activeQuery.error ?? completedQuery.error)
   return useMemo(
     () => ({ data: auctionOptions, isLoading, error, refetch }),
