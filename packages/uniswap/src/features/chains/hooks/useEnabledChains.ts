@@ -19,11 +19,7 @@ export function useEnabledChains(options?: { platform?: Platform; includeTestnet
   const featureFlaggedChainIds = useFeatureFlaggedChainIds()
   const isTestnetModeEnabled = useSelector(selectIsTestnetModeEnabled)
 
-  const {
-    chains: unorderedChains,
-    gqlChains,
-    defaultChainId,
-  } = useMemo(
+  const { chains: unorderedChains, defaultChainId } = useMemo(
     () =>
       getEnabledChains({
         platform: options?.platform,
@@ -37,8 +33,8 @@ export function useEnabledChains(options?: { platform?: Platform; includeTestnet
   const orderedChains = useOrderedChainIds(unorderedChains)
 
   return useMemo(() => {
-    return { chains: orderedChains, gqlChains, defaultChainId, isTestnetModeEnabled }
-  }, [defaultChainId, gqlChains, isTestnetModeEnabled, orderedChains])
+    return { chains: orderedChains, defaultChainId, isTestnetModeEnabled }
+  }, [defaultChainId, isTestnetModeEnabled, orderedChains])
 }
 
 // use in non hook contexts

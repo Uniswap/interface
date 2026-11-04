@@ -1,0 +1,85 @@
+import { Button, Flex } from '@universe/mycelium'
+import { Check } from '@universe/mycelium/icons/Check'
+import { Passkey } from '@universe/mycelium/icons/Passkey'
+import { TestID } from '@universe/test'
+import { Dispatch, SetStateAction, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { Trace } from 'uniswap/src/features/telemetry/Trace'
+import { useEvent } from 'utilities/src/react/hooks'
+import { Page } from '~/features/wallet/components/GetTheAppModal/constants'
+import { ModalContent } from '~/features/wallet/components/GetTheAppModal/Content'
+import { PasskeyIconHeader } from '~/features/wallet/components/GetTheAppModal/PasskeyIconHeader'
+import { useSignInWithPasskey } from '~/features/wallet/hooks/useSignInWithPasskey'
+import { useModalState } from '~/hooks/useModalState'
+
+export function PasskeyGenerationModal({
+  unitag,
+  setPage,
+  onClose,
+  goBack,
+}: {
+  unitag: string
+  setPage: Dispatch<SetStateAction<Page>>
+  onClose: () => void
+  goBack: () => void
+}) {
+  const { t } = useTranslation()
+  const { closeModal } = useModalState(ModalName.GetTheApp)
+  const [hasWalletCreationSuccess, setHasWalletCreationSuccess] = useState(false)
+
+  const onSuccess = useEvent(async () => {
+    setHasWalletCreationSuccess(true)
+    await new Promise((resolve) => setTimeout(resolve, 500)) // show success state for 500ms
+    closeModal()
+    setPage(Page.DownloadApp)
+  })
+
+  const { signInWithPasskey, isPending } = useSignInWithPasskey({
+    createNewWallet: true,
+    unitag,
+    onSuccess,
+  })
+
+  return (
+    <Trace logImpression modal={ModalName.CreatePasskey}>
+      <ModalContent
+        title={t('onboarding.passkey.secure')}
+        subtext={t('onboarding.passkey.secure.description')}
+        header={<PasskeyIconHeader />}
+        learnMoreLink={UniswapHelpUrls.articles.passkeysInfo}
+        onClose={onClose}
+        goBack={goBack}
+      >
+        <Flex width="100%">
+          <Trace logPress element={ElementName.CreatePasskey}>
+            <Button
+              testID={TestID.CreatePasskey}
+              fill={false}
+              icon={
+                hasWalletCreationSuccess ? (
+                  <Check size="$icon.24" color="$neutral2" />
+                ) : (
+                  <Passkey size="$icon.24" color="$white" />
+                )
+              }
+              emphasis="primary"
+              variant="branded"
+              size="large"
+              disabled={hasWalletCreationSuccess}
+              loading={isPending && !hasWalletCreationSuccess}
+              onPress={() => signInWithPasskey()}
+            >
+              {hasWalletCreationSuccess
+                ? t('onboarding.passkey.create.success')
+                : isPending
+                  ? t('onboarding.passkey.create.pending')
+                  : t('onboarding.passkey.create')}
+            </Button>
+          </Trace>
+        </Flex>
+      </ModalContent>
+    </Trace>
+  )
+}

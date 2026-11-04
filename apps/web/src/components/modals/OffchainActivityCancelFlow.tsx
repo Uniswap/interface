@@ -1,16 +1,16 @@
 import { TradingApi } from '@universe/api'
 import { FeatureFlags, getFeatureFlag } from '@universe/gating'
 import { Button, Flex, type FlexCompatProps, Text } from '@universe/mycelium'
+import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFilled'
 import { TFunction } from 'i18next'
 import { forwardRef, type ForwardRefExoticComponent, type RefAttributes } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { isCancelTimedOut } from 'uniswap/src/features/transactions/cancel/cancelTimeoutStateMachine'
 import { CancelOrderPreCheckResult } from 'uniswap/src/features/transactions/cancel/getCancelOrderTxRequest'
 import { TransactionStatus, UniswapXOrderDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import i18n from 'uniswap/src/i18n'
-import { popupRegistry } from '~/state/popups/registry'
-import { PopupType } from '~/state/popups/types'
+import { popupRegistry } from '~/utils/popups/registry'
+import { PopupType } from '~/utils/popups/types'
 
 // Explicit return types: forwardRef's inferred type isn't nameable under declaration emit (TS2883).
 export const OrderAlertContainer: ForwardRefExoticComponent<FlexCompatProps & RefAttributes<HTMLDivElement>> =

@@ -6,8 +6,10 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { UNI, USDC_BASE } from 'uniswap/src/constants/tokens'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { useTokenPriceChange, useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
+import {
+  useTokenPriceChange,
+  useTokenSpotPriceWithLoading,
+} from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
@@ -15,7 +17,7 @@ import { PortfolioLogo } from '~/components/AccountDrawer/MiniPortfolio/Portfoli
 import { DEFAULT_DELTA_COLOR, DeltaArrow, isDeltaZero } from '~/components/DeltaArrow/DeltaArrow'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { getTokenDetailsURL } from '~/data/util'
-import { useCurrency } from '~/hooks/Tokens'
+import { useCurrency } from '~/hooks/currency/useCurrency'
 import { PillButton } from '~/pages/Landing/components/cards/PillButton'
 import { ValuePropCard } from '~/pages/Landing/components/cards/ValuePropCard'
 import { Computer } from '~/pages/Landing/components/Icons'
@@ -55,11 +57,14 @@ function Token({ chainId, address }: { chainId: UniverseChainId; address: string
     address === 'ETH' || address === NATIVE_CHAIN_ID
       ? buildNativeCurrencyId(chainId)
       : buildCurrencyId(chainId, address)
-  const price = useTokenSpotPrice(currencyId) ?? 0
-  const pricePercentChange = useTokenPriceChange(currencyId) ?? 0
+  // The % change selects from the same GetToken query as the price, so one loading flag covers both.
+  const { price, isLoading } = useTokenSpotPriceWithLoading(currencyId)
+  const pricePercentChange = useTokenPriceChange(currencyId)
   // Use the formatted (displayed) value to decide zero-ness, not the raw delta — a stablecoin can have
   // a tiny non-zero raw change that still rounds to "0.00%", and should render neutral like DeltaArrow does.
-  const formattedPricePercentChange = formatPercent(Math.abs(pricePercentChange))
+  const formattedPricePercentChange = formatPercent(
+    pricePercentChange === undefined ? undefined : Math.abs(pricePercentChange),
+  )
 
   return (
     <Flex
@@ -78,7 +83,7 @@ function Token({ chainId, address }: { chainId: UniverseChainId; address: string
         navigate(
           getTokenDetailsURL({
             address: address === 'ETH' ? NATIVE_CHAIN_ID : address,
-            chain: toGraphQLChain(chainId),
+            chainId,
           }),
         )
       }}
@@ -149,6 +154,8 @@ function Token({ chainId, address }: { chainId: UniverseChainId; address: string
             fontWeight="$medium"
             variant="heading3"
             color="$neutral1"
+            loading={isLoading}
+            loadingPlaceholderText="$0,000.00"
             $xl={{
               fontSize: 18,
               lineHeight: 24,
@@ -180,8 +187,10 @@ function Token({ chainId, address }: { chainId: UniverseChainId; address: string
               textAlign="right"
               variant="heading3"
               fontWeight="$medium"
+              loading={isLoading}
+              loadingPlaceholderText="0.00%"
               color={
-                isDeltaZero(formattedPricePercentChange)
+                pricePercentChange === undefined || isDeltaZero(formattedPricePercentChange)
                   ? DEFAULT_DELTA_COLOR
                   : pricePercentChange < 0
                     ? '$statusCritical'

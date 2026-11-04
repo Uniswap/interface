@@ -40,13 +40,12 @@ const {
   }
 })
 
-// Render Modal children inline so in-modal content is testable without portal/animation machinery
-// (same approach as MarginAdjustPositionModal.test.tsx).
+// Render Modal children inline so in-modal content is testable without portal/animation machinery.
 vi.mock('uniswap/src/components/modals/Modal', () => ({
   Modal: ({ children }: { children: ReactNode }) => children,
 }))
 
-vi.mock('~/hooks/useAccount', () => ({
+vi.mock('~/connection/hooks/useAccount', () => ({
   useAccount: () => ({ address: mockAccountAddress.current }),
 }))
 
@@ -63,8 +62,8 @@ vi.mock('~/pages/Swap/Margin/hooks/useIsPlanInFlight', () => ({
   useIsPlanInFlight: mockUseIsPlanInFlight,
 }))
 
-vi.mock('~/pages/Swap/Margin/hooks/useMarginCurrencyInfos', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('~/pages/Swap/Margin/hooks/useMarginCurrencyInfos')>()),
+vi.mock('~/features/margin/hooks/useMarginCurrencyInfos', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('~/features/margin/hooks/useMarginCurrencyInfos')>()),
   useMarginCurrencyInfos: () => new Map(),
 }))
 

@@ -12,6 +12,7 @@
  * against independent literals (the INFRA-3461 replicated-constants pattern).
  */
 import type { FontVariantToken } from '@universe/tailwind/types'
+import { WEB_BASEL_FONT_STACK } from '../token-constants'
 import { VARIANT_METRICS, type TextVariant } from './theme-tokens.generated'
 
 /** Same keys as the Text `variant` prop and the legacy fonts table (no `$`). */
@@ -68,10 +69,6 @@ export function fontsTableWeight(variant: TextVariantKey): string {
   return VARIANT_METRICS[variant].family === 'medium' ? '500' : '400'
 }
 
-/** Verbatim legacy web Basel stack (fonts.ts baselBook/baselMedium — identical strings on web). */
-const WEB_BASEL_STACK =
-  'Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
-
 /**
  * Legacy web resolution for the mono variant: `resolveFontFamilyForRawDomStyles`
  * falls through to the raw sansSerif table, which holds the mono FILE name —
@@ -89,7 +86,7 @@ export function webFontStylesForVariant(token: FontVariantToken): ResolvedFontSt
   return {
     fontSize: metrics.fontSize,
     lineHeight: metrics.lineHeight,
-    family: metrics.family === 'mono' ? WEB_MONO_FAMILY : WEB_BASEL_STACK,
+    family: metrics.family === 'mono' ? WEB_MONO_FAMILY : WEB_BASEL_FONT_STACK,
     fontWeight: fontsTableWeight(key),
     letterSpacing: VARIANT_LETTER_SPACING[key],
   }

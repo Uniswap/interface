@@ -14,7 +14,7 @@ vi.mock('uniswap/src/data/apiClients/liquidityService/XVerificationClient', () =
   XVerificationClient: { getXAuthUrl: (...args: unknown[]) => mockGetXAuthUrl(...args) },
 }))
 
-vi.mock('~/features/accounts/store/hooks', () => ({
+vi.mock('~/connection/accounts/hooks', () => ({
   useActiveAddress: () => mockActiveAddress(),
 }))
 

@@ -102,7 +102,6 @@
       --critical-secondary: var(--color-critical-secondary-light);
       --critical-secondary-hovered: var(--color-critical-secondary-hovered-light);
       --network-arc: var(--color-network-arc-light);
-      --network-blast: var(--color-network-blast-light);
       --network-bnb: var(--color-network-bnb-light);
       --network-celo: var(--color-network-celo-light);
       --network-linea: var(--color-network-linea-light);
@@ -176,7 +175,6 @@
       --critical-secondary: var(--color-critical-secondary-dark);
       --critical-secondary-hovered: var(--color-critical-secondary-hovered-dark);
       --network-arc: var(--color-network-arc-dark);
-      --network-blast: var(--color-network-blast-dark);
       --network-bnb: var(--color-network-bnb-dark);
       --network-celo: var(--color-network-celo-dark);
       --network-linea: var(--color-network-linea-dark);
@@ -254,7 +252,6 @@
   --color-critical-secondary: var(--critical-secondary);
   --color-critical-secondary-hovered: var(--critical-secondary-hovered);
   --color-network-arc: var(--network-arc);
-  --color-network-blast: var(--network-blast);
   --color-network-bnb: var(--network-bnb);
   --color-network-celo: var(--network-celo);
   --color-network-linea: var(--network-linea);

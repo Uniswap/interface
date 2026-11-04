@@ -33,7 +33,6 @@ const config = defineConfig({
         'src/**/*.d.ts',
         'src/**/*.stories.**',
         'src/abis/**', // auto-generated abis
-        'src/data/__generated__/**', // auto-generated graphql
         '**/node_modules/**',
       ],
     },
@@ -56,4 +55,4 @@ const config = defineConfig({
   },
 })
 
-export default withRnPrimitives(config, 'web')
+export default withRnPrimitives(config)

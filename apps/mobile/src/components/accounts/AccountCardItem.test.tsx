@@ -66,12 +66,6 @@ describe('AccountCardItem', () => {
 
       expect(screen.queryByText('common.text.notAvailable')).toBeTruthy()
     })
-
-    // Cache-fallback behavior: when portfolioValue prop is undefined, PortfolioValue does a
-    // synchronous Apollo cache.readQuery to recover a previously-known value. That path is
-    // exercised in integration (parent AccountList writes the cache via its own query); a
-    // standalone unit test would require pre-populating the test's Apollo cache, which the
-    // mobile test harness does not currently expose.
   })
 
   describe('view only accounts', () => {

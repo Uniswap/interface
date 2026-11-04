@@ -1,18 +1,17 @@
-import { GraphQLApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { DEFAULT_NATIVE_ADDRESS, DEFAULT_NATIVE_ADDRESS_LEGACY } from 'uniswap/src/features/chains/evm/rpc'
 import { WRAPPED_SOL_ADDRESS_SOLANA } from 'uniswap/src/features/chains/svm/defaults'
-import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { RestContract } from 'uniswap/src/features/dataApi/types'
 import { CurrencyId } from 'uniswap/src/types/currency'
-import { currencyIdToChain, currencyIdToGraphQLAddress } from 'uniswap/src/utils/currencyId'
+import { currencyIdToChain, currencyIdToContractAddress } from 'uniswap/src/utils/currencyId'
 
-// Converts CurrencyId to GraphQLApi.ContractInput format for GQL token queries
-export function currencyIdToContractInput(id: CurrencyId): GraphQLApi.ContractInput {
+export type ChainIdContractInput = { chainId: UniverseChainId; address?: string }
+
+export function currencyIdToContractInput(id: CurrencyId): ChainIdContractInput {
   return {
-    chain: toGraphQLChain(currencyIdToChain(id) ?? UniverseChainId.Mainnet),
-    address: currencyIdToGraphQLAddress(id) ?? undefined,
+    chainId: currencyIdToChain(id) ?? UniverseChainId.Mainnet,
+    address: currencyIdToContractAddress(id) ?? undefined,
   }
 }
 
@@ -30,11 +29,11 @@ export function nativeAddressForRest(chainId: UniverseChainId): string {
   return legacyNativeAddress === DEFAULT_NATIVE_ADDRESS_LEGACY ? DEFAULT_NATIVE_ADDRESS : legacyNativeAddress
 }
 
-// Converts CurrencyId to GraphQLApi.ContractInput format for Rest token queries
+// Converts CurrencyId to a chainId-keyed contract for REST token queries
 export function currencyIdToRestContractInput(id: CurrencyId): RestContract {
   const chainId = currencyIdToChain(id) ?? UniverseChainId.Mainnet
   return {
     chainId,
-    address: currencyIdToGraphQLAddress(id) ?? nativeAddressForRest(chainId),
+    address: currencyIdToContractAddress(id) ?? nativeAddressForRest(chainId),
   }
 }

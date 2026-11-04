@@ -112,7 +112,7 @@ fi
 #   SCRIPTS  — the Bun pins sync-bun-version.ts checks, and bun.lock, which
 #              vercel-affected.ts and clean_for_publication.ts need for
 #              `ignore`. Plus import-boundaries.json, which
-#              swap-ui/ledger.test.ts reads — it is in CONFIG too, but that
+#              transactions-ui/ledger.test.ts reads — it is in CONFIG too, but that
 #              row gates a different job.
 #   I18N     — i18n.config.ts's import closure and the locales dir
 #              i18n-config.test.ts reads, plus the .i18n/glossary tree

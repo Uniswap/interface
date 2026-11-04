@@ -1,12 +1,10 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { useIsTokenCategoriesEnabled } from '@universe/gating'
-import { Flex, Text, iconSizes } from '@universe/mycelium'
+import { Flex, Text, iconSizes, Separator } from '@universe/mycelium'
 import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
-import { Separator } from 'ui/src'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
-import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { RWAIssuerTag } from 'uniswap/src/features/rwa/RWAIssuerTag'
 import type { RWAToken } from 'uniswap/src/features/rwa/types'
@@ -45,7 +43,7 @@ export function IssuerTokenCard({ token, primaryName, marketData }: IssuerTokenC
   const tokenSymbol = token.symbol
   const hideNetworkLogo = (token.networkCount ?? 1) > 1
 
-  const url = getTokenDetailsURL({ address: token.address, chainUrlParam: getChainInfo(token.chainId).urlParam })
+  const url = getTokenDetailsURL({ address: token.address, chainId: token.chainId })
 
   const onClick = useEvent((): void => {
     sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {

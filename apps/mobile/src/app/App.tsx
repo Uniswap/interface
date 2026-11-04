@@ -270,7 +270,6 @@ function ApplyPersistedLanguage(): null {
   return null
 }
 
-// Ensures redux state is available inside usePersistedApolloClient for the custom endpoint
 function AppOuter(): JSX.Element | null {
   const jsBundleLoadedRef = useRef(false)
 

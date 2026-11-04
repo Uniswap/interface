@@ -1,9 +1,9 @@
 import { UniverseChainId } from '@universe/chains'
 import { isWebPlatform } from '@universe/environment'
 import { Flex, Text } from '@universe/mycelium'
+import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFilled'
+import { InfoCircle } from '@universe/mycelium/icons/InfoCircle'
 import { Trans } from 'ui/src'
-import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
-import { InfoCircle } from 'ui/src/components/icons/InfoCircle'
 import { INSUFFICIENT_NATIVE_TOKEN_TEXT_VARIANT } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/constants'
 import { type useInsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/useInsufficientNativeTokenWarning'
 

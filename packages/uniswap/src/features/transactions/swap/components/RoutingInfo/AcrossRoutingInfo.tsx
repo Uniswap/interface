@@ -1,16 +1,16 @@
 import { isMobileApp } from '@universe/environment'
 import { zIndexes } from '@universe/mycelium'
 import AcrossLogoFull from '@universe/mycelium/assets/logos/svg/across-logo-full.svg'
+import { OrderRouting } from '@universe/mycelium/icons/OrderRouting'
 import {
   AcrossApiLabel,
   AcrossPoweredBy,
   AcrossRoutingCaption,
   AcrossRoutingRow,
   BestRouteLabel,
-} from '@universe/swap-ui'
+} from '@universe/transactions-ui'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { OrderRouting } from 'ui/src/components/icons/OrderRouting'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'

@@ -28,7 +28,7 @@ exports[`OrderContent > should render without error, filled order 1`] = `
               >
                 <div
                   class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[var(--c-h)] bg-[color:var(--c-bg)] rounded-[999999px] opacity-[0] absolute top-[var(--c-top)] left-[var(--c-left)] z-[var(--c-z)]"
-                  style="--c-w: 96%; --c-h: 96%; --c-bg: #FFFFFF; --c-top: 2%; --c-left: 2%; --c-z: 0;"
+                  style="--c-w: 96%; --c-h: 96%; --c-bg: #ffffff; --c-top: 2%; --c-left: 2%; --c-z: 0;"
                 />
                 <div
                   data-testid="img-token-image"
@@ -54,7 +54,7 @@ exports[`OrderContent > should render without error, filled order 1`] = `
               >
                 <div
                   class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[var(--c-h)] bg-[color:var(--c-bg)] rounded-[999999px] opacity-[0] absolute top-[var(--c-top)] left-[var(--c-left)] z-[var(--c-z)]"
-                  style="--c-w: 96%; --c-h: 96%; --c-bg: #FFFFFF; --c-top: 2%; --c-left: 2%; --c-z: 0;"
+                  style="--c-w: 96%; --c-h: 96%; --c-bg: #ffffff; --c-top: 2%; --c-left: 2%; --c-z: 0;"
                 />
                 <div
                   data-testid="img-token-image"
@@ -150,7 +150,7 @@ exports[`OrderContent > should render without error, filled order 1`] = `
         >
           <div
             class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[var(--c-h)] bg-[color:var(--c-bg)] rounded-[999999px] opacity-[0] absolute top-[var(--c-top)] left-[var(--c-left)] z-[var(--c-z)]"
-            style="--c-w: 96%; --c-h: 96%; --c-bg: #FFFFFF; --c-top: 2%; --c-left: 2%; --c-z: 0;"
+            style="--c-w: 96%; --c-h: 96%; --c-bg: #ffffff; --c-top: 2%; --c-left: 2%; --c-z: 0;"
           />
           <div
             data-testid="img-token-image"
@@ -194,7 +194,7 @@ exports[`OrderContent > should render without error, filled order 1`] = `
       <svg
         fill="none"
         stroke-width="8"
-        style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.35);"
+        style="width: 20px; height: 20px;"
         viewBox="0 0 24 24"
       >
         <path
@@ -243,7 +243,7 @@ exports[`OrderContent > should render without error, filled order 1`] = `
         >
           <div
             class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[var(--c-h)] bg-[color:var(--c-bg)] rounded-[999999px] opacity-[0] absolute top-[var(--c-top)] left-[var(--c-left)] z-[var(--c-z)]"
-            style="--c-w: 96%; --c-h: 96%; --c-bg: #FFFFFF; --c-top: 2%; --c-left: 2%; --c-z: 0;"
+            style="--c-w: 96%; --c-h: 96%; --c-bg: #ffffff; --c-top: 2%; --c-left: 2%; --c-z: 0;"
           />
           <div
             data-testid="img-token-image"
@@ -392,7 +392,7 @@ exports[`OrderContent > should render without error, limit order 1`] = `
               >
                 <div
                   class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[var(--c-h)] bg-[color:var(--c-bg)] rounded-[999999px] opacity-[0] absolute top-[var(--c-top)] left-[var(--c-left)] z-[var(--c-z)]"
-                  style="--c-w: 96%; --c-h: 96%; --c-bg: #FFFFFF; --c-top: 2%; --c-left: 2%; --c-z: 0;"
+                  style="--c-w: 96%; --c-h: 96%; --c-bg: #ffffff; --c-top: 2%; --c-left: 2%; --c-z: 0;"
                 />
                 <div
                   data-testid="img-token-image"
@@ -418,7 +418,7 @@ exports[`OrderContent > should render without error, limit order 1`] = `
               >
                 <div
                   class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[var(--c-h)] bg-[color:var(--c-bg)] rounded-[999999px] opacity-[0] absolute top-[var(--c-top)] left-[var(--c-left)] z-[var(--c-z)]"
-                  style="--c-w: 96%; --c-h: 96%; --c-bg: #FFFFFF; --c-top: 2%; --c-left: 2%; --c-z: 0;"
+                  style="--c-w: 96%; --c-h: 96%; --c-bg: #ffffff; --c-top: 2%; --c-left: 2%; --c-z: 0;"
                 />
                 <div
                   data-testid="img-token-image"
@@ -514,7 +514,7 @@ exports[`OrderContent > should render without error, limit order 1`] = `
         >
           <div
             class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[var(--c-h)] bg-[color:var(--c-bg)] rounded-[999999px] opacity-[0] absolute top-[var(--c-top)] left-[var(--c-left)] z-[var(--c-z)]"
-            style="--c-w: 96%; --c-h: 96%; --c-bg: #FFFFFF; --c-top: 2%; --c-left: 2%; --c-z: 0;"
+            style="--c-w: 96%; --c-h: 96%; --c-bg: #ffffff; --c-top: 2%; --c-left: 2%; --c-z: 0;"
           />
           <div
             data-testid="img-token-image"
@@ -558,7 +558,7 @@ exports[`OrderContent > should render without error, limit order 1`] = `
       <svg
         fill="none"
         stroke-width="8"
-        style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.35);"
+        style="width: 20px; height: 20px;"
         viewBox="0 0 24 24"
       >
         <path
@@ -607,7 +607,7 @@ exports[`OrderContent > should render without error, limit order 1`] = `
         >
           <div
             class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[var(--c-h)] bg-[color:var(--c-bg)] rounded-[999999px] opacity-[0] absolute top-[var(--c-top)] left-[var(--c-left)] z-[var(--c-z)]"
-            style="--c-w: 96%; --c-h: 96%; --c-bg: #FFFFFF; --c-top: 2%; --c-left: 2%; --c-z: 0;"
+            style="--c-w: 96%; --c-h: 96%; --c-bg: #ffffff; --c-top: 2%; --c-left: 2%; --c-z: 0;"
           />
           <div
             data-testid="img-token-image"
@@ -750,7 +750,7 @@ exports[`OrderContent > should render without error, limit order 1`] = `
         type="button"
       >
         <span
-          class="text-center font-medium whitespace-nowrap [font-family:var(--sbtn-font-button)] [transition:color_100ms_cubic-bezier(0.17,0.67,0.45,1)] text-[14px] leading-[16.1px] text-neutral1 group-hover/sbtn:text-neutral1-hovered"
+          class="text-center font-medium [font-family:var(--sbtn-font-button)] [transition:color_100ms_cubic-bezier(0.17,0.67,0.45,1)] text-[14px] [line-height:16.1px] text-neutral1 group-hover/sbtn:text-neutral1-hovered max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
         >
           Cancel limit
         </span>
@@ -816,7 +816,7 @@ exports[`OrderContent > should render without error, open order 1`] = `
               >
                 <div
                   class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[var(--c-h)] bg-[color:var(--c-bg)] rounded-[999999px] opacity-[0] absolute top-[var(--c-top)] left-[var(--c-left)] z-[var(--c-z)]"
-                  style="--c-w: 96%; --c-h: 96%; --c-bg: #FFFFFF; --c-top: 2%; --c-left: 2%; --c-z: 0;"
+                  style="--c-w: 96%; --c-h: 96%; --c-bg: #ffffff; --c-top: 2%; --c-left: 2%; --c-z: 0;"
                 />
                 <div
                   data-testid="img-token-image"
@@ -842,7 +842,7 @@ exports[`OrderContent > should render without error, open order 1`] = `
               >
                 <div
                   class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[var(--c-h)] bg-[color:var(--c-bg)] rounded-[999999px] opacity-[0] absolute top-[var(--c-top)] left-[var(--c-left)] z-[var(--c-z)]"
-                  style="--c-w: 96%; --c-h: 96%; --c-bg: #FFFFFF; --c-top: 2%; --c-left: 2%; --c-z: 0;"
+                  style="--c-w: 96%; --c-h: 96%; --c-bg: #ffffff; --c-top: 2%; --c-left: 2%; --c-z: 0;"
                 />
                 <div
                   data-testid="img-token-image"
@@ -938,7 +938,7 @@ exports[`OrderContent > should render without error, open order 1`] = `
         >
           <div
             class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[var(--c-h)] bg-[color:var(--c-bg)] rounded-[999999px] opacity-[0] absolute top-[var(--c-top)] left-[var(--c-left)] z-[var(--c-z)]"
-            style="--c-w: 96%; --c-h: 96%; --c-bg: #FFFFFF; --c-top: 2%; --c-left: 2%; --c-z: 0;"
+            style="--c-w: 96%; --c-h: 96%; --c-bg: #ffffff; --c-top: 2%; --c-left: 2%; --c-z: 0;"
           />
           <div
             data-testid="img-token-image"
@@ -982,7 +982,7 @@ exports[`OrderContent > should render without error, open order 1`] = `
       <svg
         fill="none"
         stroke-width="8"
-        style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.35);"
+        style="width: 20px; height: 20px;"
         viewBox="0 0 24 24"
       >
         <path
@@ -1031,7 +1031,7 @@ exports[`OrderContent > should render without error, open order 1`] = `
         >
           <div
             class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[var(--c-h)] bg-[color:var(--c-bg)] rounded-[999999px] opacity-[0] absolute top-[var(--c-top)] left-[var(--c-left)] z-[var(--c-z)]"
-            style="--c-w: 96%; --c-h: 96%; --c-bg: #FFFFFF; --c-top: 2%; --c-left: 2%; --c-z: 0;"
+            style="--c-w: 96%; --c-h: 96%; --c-bg: #ffffff; --c-top: 2%; --c-left: 2%; --c-z: 0;"
           />
           <div
             data-testid="img-token-image"
@@ -1174,7 +1174,7 @@ exports[`OrderContent > should render without error, open order 1`] = `
         type="button"
       >
         <span
-          class="text-center font-medium whitespace-nowrap [font-family:var(--sbtn-font-button)] [transition:color_100ms_cubic-bezier(0.17,0.67,0.45,1)] text-[14px] leading-[16.1px] text-neutral1 group-hover/sbtn:text-neutral1-hovered"
+          class="text-center font-medium [font-family:var(--sbtn-font-button)] [transition:color_100ms_cubic-bezier(0.17,0.67,0.45,1)] text-[14px] [line-height:16.1px] text-neutral1 group-hover/sbtn:text-neutral1-hovered max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
         >
           Cancel order
         </span>
@@ -1212,7 +1212,7 @@ exports[`OrderContent cancel-flow states (flag on) > renders the timed-out alert
               >
                 <div
                   class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[var(--c-h)] bg-[color:var(--c-bg)] rounded-[999999px] opacity-[0] absolute top-[var(--c-top)] left-[var(--c-left)] z-[var(--c-z)]"
-                  style="--c-w: 96%; --c-h: 96%; --c-bg: #FFFFFF; --c-top: 2%; --c-left: 2%; --c-z: 0;"
+                  style="--c-w: 96%; --c-h: 96%; --c-bg: #ffffff; --c-top: 2%; --c-left: 2%; --c-z: 0;"
                 />
                 <div
                   data-testid="img-token-image"
@@ -1238,7 +1238,7 @@ exports[`OrderContent cancel-flow states (flag on) > renders the timed-out alert
               >
                 <div
                   class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[var(--c-h)] bg-[color:var(--c-bg)] rounded-[999999px] opacity-[0] absolute top-[var(--c-top)] left-[var(--c-left)] z-[var(--c-z)]"
-                  style="--c-w: 96%; --c-h: 96%; --c-bg: #FFFFFF; --c-top: 2%; --c-left: 2%; --c-z: 0;"
+                  style="--c-w: 96%; --c-h: 96%; --c-bg: #ffffff; --c-top: 2%; --c-left: 2%; --c-z: 0;"
                 />
                 <div
                   data-testid="img-token-image"
@@ -1334,7 +1334,7 @@ exports[`OrderContent cancel-flow states (flag on) > renders the timed-out alert
         >
           <div
             class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[var(--c-h)] bg-[color:var(--c-bg)] rounded-[999999px] opacity-[0] absolute top-[var(--c-top)] left-[var(--c-left)] z-[var(--c-z)]"
-            style="--c-w: 96%; --c-h: 96%; --c-bg: #FFFFFF; --c-top: 2%; --c-left: 2%; --c-z: 0;"
+            style="--c-w: 96%; --c-h: 96%; --c-bg: #ffffff; --c-top: 2%; --c-left: 2%; --c-z: 0;"
           />
           <div
             data-testid="img-token-image"
@@ -1378,7 +1378,7 @@ exports[`OrderContent cancel-flow states (flag on) > renders the timed-out alert
       <svg
         fill="none"
         stroke-width="8"
-        style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.35);"
+        style="width: 20px; height: 20px;"
         viewBox="0 0 24 24"
       >
         <path
@@ -1427,7 +1427,7 @@ exports[`OrderContent cancel-flow states (flag on) > renders the timed-out alert
         >
           <div
             class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[var(--c-h)] bg-[color:var(--c-bg)] rounded-[999999px] opacity-[0] absolute top-[var(--c-top)] left-[var(--c-left)] z-[var(--c-z)]"
-            style="--c-w: 96%; --c-h: 96%; --c-bg: #FFFFFF; --c-top: 2%; --c-left: 2%; --c-z: 0;"
+            style="--c-w: 96%; --c-h: 96%; --c-bg: #ffffff; --c-top: 2%; --c-left: 2%; --c-z: 0;"
           />
           <div
             data-testid="img-token-image"
@@ -1553,7 +1553,7 @@ exports[`OrderContent cancel-flow states (flag on) > renders the timed-out alert
         <svg
           fill="currentColor"
           stroke-width="8"
-          style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.63);"
+          style="width: 20px; height: 20px;"
           viewBox="0 0 24 24"
         >
           <path
@@ -1584,7 +1584,7 @@ exports[`OrderContent cancel-flow states (flag on) > renders the timed-out alert
             type="button"
           >
             <span
-              class="text-center font-medium whitespace-nowrap [font-family:var(--sbtn-font-button)] [transition:color_100ms_cubic-bezier(0.17,0.67,0.45,1)] text-[14px] leading-[16.1px] text-white"
+              class="text-center font-medium [font-family:var(--sbtn-font-button)] [transition:color_100ms_cubic-bezier(0.17,0.67,0.45,1)] text-[14px] [line-height:16.1px] text-white max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
             >
               Revert cancellation
             </span>

@@ -1,7 +1,6 @@
-import { Flex, Text, UniversalImage } from '@universe/mycelium'
+import { Flex, Text, UniversalImage, iconSizes } from '@universe/mycelium'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { useTranslation } from 'react-i18next'
-import { iconSizes } from 'ui/src/theme'
 import { getRWAIssuerLabel } from 'uniswap/src/features/rwa/issuers'
 import type { RWAIssuerDisplay } from 'uniswap/src/features/rwa/types'
 import { useRWAIssuerLogo } from 'uniswap/src/features/rwa/useRWAIssuerLogoUrl'

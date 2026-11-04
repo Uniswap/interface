@@ -174,11 +174,11 @@ describe('ButtonTextCompat (web)', () => {
 
   it('drops the leading when line-height is disabled (both prop spellings)', () => {
     const modern = renderToStaticMarkup(<ButtonTextCompat lineHeightDisabled>X</ButtonTextCompat>)
-    expect(modern).not.toContain('leading-[20.7px]')
+    expect(modern).not.toContain('[line-height:20.7px]')
     const legacy = renderToStaticMarkup(<ButtonTextCompat line-height-disabled="true">X</ButtonTextCompat>)
-    expect(legacy).not.toContain('leading-[20.7px]')
+    expect(legacy).not.toContain('[line-height:20.7px]')
     const on = renderToStaticMarkup(<ButtonTextCompat>X</ButtonTextCompat>)
-    expect(on).toContain('leading-[20.7px]')
+    expect(on).toContain('[line-height:20.7px]')
   })
 })
 

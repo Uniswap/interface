@@ -1,6 +1,6 @@
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
+import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
 import { useExploreSectionTitleProps } from 'src/components/explore/ExploreSections/useExploreSectionTitleProps'
-import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 
 /**
  * Standardized Explore section header: subheading1 title with an optional trailing chevron when

@@ -99,6 +99,10 @@ describe(getFiatOnRampURL, () => {
   it('omits unset params from the query string', () => {
     expect(getFiatOnRampURL({ currencyCode: 'ETH' })).toEqual('/buy?currencyCode=ETH')
   })
+
+  it('serializes a fiat amount', () => {
+    expect(getFiatOnRampURL({ currencyId: '1-0xabc', fiatAmount: '50' })).toEqual('/buy?currencyId=1-0xabc&value=50')
+  })
 })
 
 describe(getEarnVaultUrl, () => {

@@ -1,5 +1,5 @@
-import { StorageDriver } from '@universe/api/src/storage/types'
 import * as SecureStore from 'expo-secure-store'
+import { StorageDriver } from './types'
 
 export function createNativeStorageDriver(): StorageDriver {
   return {

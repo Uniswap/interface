@@ -3,11 +3,11 @@ import { isSVMChain } from '@universe/chains'
 import { GatedFeature, useIsFeatureGated } from '@universe/compliance'
 import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { Button, Flex, Text, useMedia } from '@universe/mycelium'
+import { Plus } from '@universe/mycelium/icons/Plus'
 import { styled } from '@universe/mycelium/styled'
-import { memo, NamedExoticComponent, useEffect, useMemo, useRef, useState } from 'react'
+import { NamedExoticComponent, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useSearchParams } from 'react-router'
-import { Plus } from 'ui/src/components/icons/Plus'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { ElementName, InterfacePageName } from 'uniswap/src/features/telemetry/constants'
@@ -23,7 +23,7 @@ import { edgeFadeMaskStyle, useHorizontalScrollFades } from '~/hooks/useHorizont
 import { ADD_LIQUIDITY_PATH } from '~/pages/AddLiquidity/poolLinkParams'
 import { AuctionQuickFilters } from '~/pages/Explore/AuctionQuickFilters'
 import { AuctionStatusFilter as AuctionStatusFilterComponent } from '~/pages/Explore/AuctionStatusFilter'
-import { ExplorePoolCategoryChips } from '~/pages/Explore/categories/ExplorePoolCategoryChips'
+import { ExplorePoolsTab } from '~/pages/Explore/categories/ExplorePoolsTab'
 import {
   EXPLORE_STICKY_SCROLL_OFFSET_PX,
   EXPLORE_TOKEN_SECTION_ID,
@@ -43,7 +43,6 @@ import { useExploreParams } from '~/pages/Explore/redirects'
 import { SearchBar } from '~/pages/Explore/SearchBar'
 import { ToucanTable } from '~/pages/Explore/tables/Auctions/TopAuctionsTable'
 import { TopVerifiedAuctionsSection } from '~/pages/Explore/tables/Auctions/TopVerifiedAuctionsSection'
-import { ExploreTopPoolTable } from '~/pages/Explore/tables/Pools/PoolTable'
 import { RecentTransactionsTable } from '~/pages/Explore/tables/RecentTransactions/RecentTransactions'
 import { TopTokensTable } from '~/pages/Explore/tables/Tokens/TopTokensTable'
 import { useExploreNotFoundModal } from '~/pages/Explore/useExploreNotFoundModal'
@@ -59,17 +58,6 @@ interface Page {
 
 const SOLANA_TAB_NAV_MARGIN_TOP = 36
 const DEFAULT_TAB_NAV_MARGIN_TOP = 80
-
-// Stable identity so `<Page />` (a bare component reference) doesn't remount the pools tab on
-// every render — `surface` is required on `ExploreTopPoolTable`, so it can't be left off silently.
-const ExplorePoolsTabTable = memo(function ExplorePoolsTabTable() {
-  return (
-    <>
-      <ExplorePoolCategoryChips />
-      <ExploreTopPoolTable surface="explore" />
-    </>
-  )
-})
 
 function usePages(): Array<Page> {
   const { t } = useTranslation()
@@ -90,7 +78,7 @@ function usePages(): Array<Page> {
     {
       title: t('common.pools'),
       key: ExploreTab.Pools,
-      component: ExplorePoolsTabTable,
+      component: ExplorePoolsTab,
       loggingElementName: ElementName.ExplorePoolsTab,
     },
     {
@@ -235,7 +223,7 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
       logImpression
       page={InterfacePageName.ExplorePage}
       properties={{
-        chainName: chainInfo?.backendChain.chain,
+        chainName: chainInfo?.urlParam,
         tab: tabName,
       }}
     >

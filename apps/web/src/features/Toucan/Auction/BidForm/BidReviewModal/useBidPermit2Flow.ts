@@ -10,10 +10,10 @@ import { TransactionStep, TransactionStepType } from 'uniswap/src/features/trans
 import { validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { useEvent } from 'utilities/src/react/hooks'
 import { assume0xAddress, encodeFunctionData, erc20Abi } from '~/chains'
+import { useAccount } from '~/connection/hooks/useAccount'
 import { AuctionDetails } from '~/features/Toucan/Auction/store/types'
-import { useAccount } from '~/hooks/useAccount'
-import { usePermit2Allowance, Allowance, AllowanceState } from '~/hooks/usePermit2Allowance'
-import { usePermitAllowance } from '~/hooks/usePermitAllowance'
+import { usePermit2Allowance, Allowance, AllowanceState } from '~/hooks/permit2/usePermit2Allowance'
+import { usePermitAllowance } from '~/hooks/permit2/usePermitAllowance'
 import { useHasPendingPermit2Approval } from '~/state/transactions/hooks'
 
 interface UseBidPermit2FlowParams {

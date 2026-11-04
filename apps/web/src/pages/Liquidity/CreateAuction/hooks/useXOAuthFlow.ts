@@ -3,7 +3,7 @@ import { Platform } from '@universe/chains'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { XVerificationClient } from 'uniswap/src/data/apiClients/liquidityService/XVerificationClient'
-import { useActiveAddress } from '~/features/accounts/store/hooks'
+import { useActiveAddress } from '~/connection/accounts/hooks'
 import { useCreateAuctionStoreActions } from '~/pages/Liquidity/CreateAuction/CreateAuctionContext'
 
 type XOAuthMessage =

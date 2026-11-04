@@ -287,6 +287,23 @@ describe('LaunchesPage', () => {
     expect(screen.getAllByTestId('cell-loading-bubble').length).toBeGreaterThan(0)
   })
 
+  it('renders the token disclaimer above the infinite-scrolling table so it stays reachable', () => {
+    mockUseLaunches.mockReturnValue(
+      mockLaunchesResult({
+        launches: [createLaunch({ launchpadId: 'uniswap-cca', name: 'Moon Token', symbol: 'MOON' })],
+      }),
+    )
+
+    renderLaunchesPage()
+
+    // Literal on purpose: legal-reviewed copy.
+    const disclaimer = screen.getByText(
+      'Tokens are sorted by committed volume by default, and Uniswap Labs does not provide valuation, recommendations, or opinions on any token. You should independently evaluate whether to transact in any token.',
+    )
+    const firstRow = screen.getAllByTestId(TestID.LaunchTableRow)[0]!
+    expect(disclaimer.compareDocumentPosition(firstRow) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  })
+
   it('renders no rows when the feed is empty', () => {
     mockUseLaunches.mockReturnValue(mockLaunchesResult())
 

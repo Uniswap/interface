@@ -1,23 +1,22 @@
 import { useSporeColors } from '@universe/mycelium'
+import { lookupToken, SPACE_TOKEN_PX } from '@universe/mycelium/compat'
 import { type UseSporeColorsReturn } from '@universe/mycelium/theme-hooks-compat'
+import { borderRadii } from '@universe/mycelium/tokens'
 import { type ComponentType, forwardRef, useRef } from 'react'
 import {
   type DimensionValue,
   type FlexStyle,
   type GestureResponderEvent,
-  Image as RNImage,
-  type ImageProps as RNImageProps,
   type ImageSourcePropType,
   type ImageStyle,
+  Image as RNImage,
+  type ImageProps as RNImageProps,
   type StyleProp,
   StyleSheet,
 } from 'react-native'
 import { buildPressHandlers, type PressTracker } from 'ui/src/components/Image/buildPressHandlers'
 import { isWebRender } from 'ui/src/components/Image/isWebRender'
 import { useIsXsBreakpoint } from 'ui/src/components/Image/useIsXsBreakpoint'
-import { borderRadii, gap, padding, spacing } from 'ui/src/theme'
-
-const spacingTokens = { ...spacing, ...padding, ...gap }
 
 type RadiusTokenValue = `$${keyof typeof borderRadii}` | number
 type ColorTokenValue = `$${string & keyof UseSporeColorsReturn}`
@@ -37,10 +36,6 @@ function resolveRadius(value: RadiusTokenValue | undefined): number | undefined 
   return borderRadii[value.slice(1) as keyof typeof borderRadii]
 }
 
-// The `size` token category legacy resolved dimensions against — this repo's config
-// aliases it to the space map plus `true` (theme/tokens.ts: `const size = space`).
-const sizeTokens = { ...spacingTokens, true: spacing.spacing8 }
-
 /**
  * Token-valued width/height (WalletAlertBadge passes `width="$spacing48"`), per-renderer
  * as legacy behaved: the WEB pipeline silently DROPPED them (captured live from
@@ -54,8 +49,8 @@ function resolveSize(value: SizeValue | undefined): DimensionValue | undefined {
     if (isWebRender) {
       return undefined
     }
-    const token = value.slice(1)
-    return token in sizeTokens ? sizeTokens[token as keyof typeof sizeTokens] : undefined
+    // The legacy `size` token category was an alias of the space map.
+    return lookupToken(SPACE_TOKEN_PX, value)
   }
   return value as DimensionValue | undefined
 }
@@ -117,8 +112,9 @@ function resolveTamaguiTokenVars(style: StyleProp<ImageStyle> | undefined): Imag
       continue
     }
     const [, group, token] = match
-    if (group === 'space' && token !== undefined && token in spacingTokens) {
-      resolved[key] = spacingTokens[token as keyof typeof spacingTokens]
+    const spacePx = group === 'space' && token !== undefined ? lookupToken(SPACE_TOKEN_PX, `$${token}`) : undefined
+    if (spacePx !== undefined) {
+      resolved[key] = spacePx
     } else if (group === 'radius' && token !== undefined && token in borderRadii) {
       resolved[key] = borderRadii[token as keyof typeof borderRadii]
     }
@@ -458,9 +454,16 @@ const ImageComponent = forwardRef<RNImage, ImageProps>(function Image(props, ref
 
 ImageComponent.displayName = 'Image'
 
-// Legacy @tamagui/image re-exposed RN Image's statics on the wrapper; keep that surface
-// (react-native-web provides getSize/prefetch/queryCache; the rest exist on native only,
-// exactly as before).
+/**
+ * Legacy @tamagui/image re-exposed RN Image's statics on the wrapper; keep that surface
+ * (react-native-web provides getSize/prefetch/queryCache; the rest exist on native only,
+ * exactly as before).
+ *
+ * TODO(INFRA-4485): Move the remaining consumers to `UniversalImage`, then delete this.
+ *
+ * @deprecated Use `UniversalImage` from `@universe/mycelium` instead. Its API differs, and it also
+ * handles SVG URLs and `require()` assets.
+ */
 export const Image: typeof ImageComponent & ImageStatics = Object.assign(ImageComponent, {
   getSize: RNImage.getSize,
   getSizeWithHeaders: RNImage.getSizeWithHeaders,

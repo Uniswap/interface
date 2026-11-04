@@ -13,13 +13,13 @@
 // oxlint-disable react/forbid-elements -- the compat components ARE the raw DOM boundary (no Tamagui Flex here)
 import * as React from 'react'
 import { cn } from '../cn'
+import { CheckmarkCircle } from '../components/icons/CheckmarkCircle'
 import {
   OPTION_ROW_ACTIVE_CLASS_NAME,
   OPTION_ROW_PILE_ITEM_CLASS_NAME,
   optionRowFrameClassName,
   optionRowLabelClassName,
 } from './compile'
-import { CheckmarkCircleGlyph } from './icons'
 import type { OptionRowCompatProps } from './types'
 
 type RootDivProps = Omit<React.HTMLAttributes<HTMLDivElement>, keyof OptionRowCompatProps>
@@ -95,7 +95,7 @@ export const OptionRowCompat = React.forwardRef<HTMLDivElement, OptionRowCompatP
         >
           {trailingElement ??
             (isSelected === true && (
-              <CheckmarkCircleGlyph data-slot="option-row-check" size={20} className="text-neutral1" />
+              <CheckmarkCircle aria-hidden color="$neutral1" data-slot="option-row-check" size={20} />
             ))}
         </div>
       </div>

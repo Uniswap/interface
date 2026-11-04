@@ -37,6 +37,8 @@ interface PriceChartModelParams extends ChartModelParams<PriceChartData> {
   hideYAxis?: boolean
   hideXAxis?: boolean
   yAxisFormatter?: (price: number) => string
+  yAxisTickmarksFormatter?: (prices: number[]) => string[]
+  disableLowPriceRangeScaling?: boolean
   sparkline?: boolean
   hideMinMaxLines?: boolean
   v2HoverStyles?: boolean
@@ -146,6 +148,7 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
 
     const { adjustedData, lowPriceRangeScaleFactor, min, max, priceAxisDecimals } = PriceChartModel.getAdjustedPrices(
       params.data,
+      params.disableLowPriceRangeScaling,
     )
     this.data = adjustedData
     this.lowPriceRangeScaleFactor = lowPriceRangeScaleFactor
@@ -175,15 +178,14 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
     }
   }
 
-  private static getAdjustedPrices(data: PriceChartData[]) {
-    let lowPriceRangeScaleFactor = 1
+  private static getAdjustedPrices(data: PriceChartData[], disableLowPriceRangeScaling?: boolean) {
     let adjustedData = data
     let { min, max } = getCandlestickPriceBounds(data)
 
     // Derived from the original bounds — the axis formatter receives unscaled prices.
     const priceAxisDecimals = getLowVarianceAxisDecimals(min, max)
 
-    lowPriceRangeScaleFactor = getLowPriceRangeScaleFactor({ min, max })
+    const lowPriceRangeScaleFactor = disableLowPriceRangeScaling ? 1 : getLowPriceRangeScaleFactor({ min, max })
     if (lowPriceRangeScaleFactor !== 1) {
       adjustedData = data.map((point) => this.applyPriceScaleFactor(point, lowPriceRangeScaleFactor))
       min = min * lowPriceRangeScaleFactor
@@ -204,6 +206,8 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
       hideYAxis,
       hideXAxis,
       yAxisFormatter,
+      yAxisTickmarksFormatter,
+      disableLowPriceRangeScaling,
       sparkline,
       hideMinMaxLines,
       v2HoverStyles,
@@ -258,6 +262,10 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
             yAxisFormatter,
             tokenFormatType,
           }),
+        ...(yAxisTickmarksFormatter && {
+          tickmarksPriceFormatter: (prices: BarPrice[]) =>
+            yAxisTickmarksFormatter(prices.map((price) => Number(price) / this.lowPriceRangeScaleFactor)),
+        }),
       },
       rightPriceScale: {
         borderVisible: false,
@@ -282,8 +290,10 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
     if (this.originalData !== data) {
       this.originalData = data
       // oxlint-disable-next-line no-shadow
-      const { adjustedData, lowPriceRangeScaleFactor, min, max, priceAxisDecimals } =
-        PriceChartModel.getAdjustedPrices(data)
+      const { adjustedData, lowPriceRangeScaleFactor, min, max, priceAxisDecimals } = PriceChartModel.getAdjustedPrices(
+        data,
+        disableLowPriceRangeScaling,
+      )
       this.data = adjustedData
       this.lowPriceRangeScaleFactor = lowPriceRangeScaleFactor
       this.min = min

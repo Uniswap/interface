@@ -1,10 +1,10 @@
 import { Flex, TouchableArea, type TouchableAreaProps } from '@universe/mycelium'
+import { Expand } from '@universe/mycelium/icons/Expand'
+import { SearchMinus } from '@universe/mycelium/icons/SearchMinus'
+import { SearchPlus } from '@universe/mycelium/icons/SearchPlus'
 import { SPORE_ANIMATION_CURVE_CSS } from '@universe/tailwind/animations'
 import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
-import { Expand } from 'ui/src/components/icons/Expand'
-import { SearchMinus } from 'ui/src/components/icons/SearchMinus'
-import { SearchPlus } from 'ui/src/components/icons/SearchPlus'
 import { MAX_VERTICAL_ZOOM_STEP } from '~/pages/Swap/Margin/chart/verticalZoom'
 
 // House zoom-pill segment (D3LiquidityChartShared/ZoomButtons idiom), py $spacing4 so the pill

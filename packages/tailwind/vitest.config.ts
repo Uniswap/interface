@@ -29,7 +29,6 @@ const config = defineConfig({
   resolve: {
     extensions: ['.web.ts', '.web.tsx', '.ts', '.tsx', '.js', '.jsx', '.json'],
     alias: {
-      'ui/src': path.resolve(__dirname, '../ui/src'),
       'utilities/src': path.resolve(__dirname, '../utilities/src'),
       'uniswap/src': path.resolve(__dirname, '../uniswap/src'),
       'react-native': 'react-native-web',
@@ -40,4 +39,4 @@ const config = defineConfig({
   },
 })
 
-export default withRnPrimitives(config, 'web')
+export default withRnPrimitives(config)

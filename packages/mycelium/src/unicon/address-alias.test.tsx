@@ -3,9 +3,7 @@
  * surface — the legacy `ui/src` Unicon prop name, so converted call sites can
  * swap mechanically. This suite proves the alias EQUIVALENT (byte-identical
  * rendered output on both platform legs, resolved through the same shared
- * `derive.ts` the legacy-parity goldens pin) and ties the new prop to the
- * REAL legacy derivation by deriving through legacy's own hash function at
- * test time, not a same-PR fixture.
+ * `derive.ts` the legacy-parity goldens pin).
  *
  * It also pins the one deliberate divergence from legacy: for an address
  * legacy REJECTS, legacy renders null while mycelium renders the backup
@@ -16,11 +14,8 @@
 import { render } from '@testing-library/react'
 import type { ReactElement } from 'react'
 import { act, create, type ReactTestRenderer } from 'react-test-renderer'
-import { getUniconsDeterministicHash } from 'ui/src/components/Unicon/utils'
 import { describe, expect, it, vi } from 'vitest'
-import { COLOR_COUNT } from './colors'
 import { deriveUnicon, resolveUniconInput } from './derive'
-import { Icons } from './icons'
 import type { UniconProps } from './types'
 import * as web from './Unicon.web'
 
@@ -75,22 +70,6 @@ describe('web leg: address renders identically to input', () => {
     expect(container.querySelector('circle')?.getAttribute('fill')).toBe(`var(--unicon-${colorIndex})`)
     const drawn = Array.from(container.querySelectorAll('path')).map((path) => path.getAttribute('d'))
     expect(drawn).toEqual(paths)
-  })
-
-  it('address selects the color slot and glyph the REAL legacy derivation selects', () => {
-    // Derives through legacy's own function at test time (the legacy-drift
-    // mechanism), so this ties the new prop to legacy, not to a fixture.
-    for (const address of LEGACY_ACCEPTED_ADDRESSES) {
-      const legacyHash = Number(getUniconsDeterministicHash(address))
-      const iconKeys = Object.keys(Icons)
-      const legacyPaths = Icons[iconKeys[legacyHash % iconKeys.length] as keyof typeof Icons]
-      const { container } = render(<web.Unicon address={address} size={32} />)
-      expect(container.querySelector('circle')?.getAttribute('fill'), address).toBe(
-        `var(--unicon-${legacyHash % COLOR_COUNT})`,
-      )
-      const drawn = Array.from(container.querySelectorAll('path')).map((path) => path.getAttribute('d'))
-      expect(drawn, address).toEqual(legacyPaths)
-    }
   })
 
   it('DIVERGENCE PIN: an address legacy rejects renders the backup avatar, not null', () => {

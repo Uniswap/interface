@@ -37,6 +37,7 @@ export function logSwapFinalized({
   isSponsored,
   sponsorshipCampaignId,
   rwaAnalytics,
+  bridgeProvider,
 }: {
   id: string
   hash: string | undefined
@@ -56,6 +57,7 @@ export function logSwapFinalized({
     SwapTradeBaseProperties,
     'market_closed' | 'price_warning' | 'token_in_stocks' | 'token_out_stocks'
   >
+  bridgeProvider?: SwapTradeBaseProperties['bridge_provider']
 }) {
   const hasSetSwapSuccess = timestampTracker.hasTimestamp(SwapEventType.FirstSwapSuccess)
   const elapsedTime = timestampTracker.setElapsedTime(SwapEventType.FirstSwapSuccess)
@@ -77,6 +79,7 @@ export function logSwapFinalized({
     chain_id: chainInId,
     chain_id_in: chainInId,
     chain_id_out: chainOutId,
+    bridge_provider: bridgeProvider,
     transactionOriginType: TransactionOriginType.Internal,
     swap_start_timestamp: swapStartTimestamp,
     transactedUSDValue,

@@ -1,7 +1,7 @@
 import { PositionStatus } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Flex, Text } from '@universe/mycelium'
+import { StatusIndicatorCircle } from '@universe/mycelium/icons/StatusIndicatorCircle'
 import { useTranslation } from 'react-i18next'
-import { StatusIndicatorCircle } from 'ui/src/components/icons/StatusIndicatorCircle'
 import { lpStatusConfig } from 'uniswap/src/features/positions/lpStatusConfig'
 
 export function LiquidityPositionStatusIndicator({

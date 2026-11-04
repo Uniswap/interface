@@ -1,10 +1,10 @@
+import { getConfig } from '@universe/config'
+import { Environment, getCurrentEnv } from '@universe/environment'
 import {
   DEV_ENTRY_GATEWAY_API_BASE_URL,
   PROD_ENTRY_GATEWAY_API_BASE_URL,
   STAGING_ENTRY_GATEWAY_API_BASE_URL,
-} from '@universe/api/src/clients/base/urls'
-import { getConfig } from '@universe/config'
-import { Environment, getCurrentEnv } from '@universe/environment'
+} from './clients/base/urls'
 
 export const ENTRY_GATEWAY_PROXY_PATH = '/entry-gateway'
 

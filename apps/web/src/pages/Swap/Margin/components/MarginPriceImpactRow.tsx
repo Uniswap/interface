@@ -1,7 +1,7 @@
 import { Percent } from '@uniswap/sdk-core'
 import { Flex, Text } from '@universe/mycelium'
+import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFilled'
 import { useTranslation } from 'react-i18next'
-import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAlertColor'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { MarginDetailRow } from '~/pages/Swap/Margin/components/shared/MarginDetailRow'

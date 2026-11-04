@@ -113,11 +113,11 @@ vi.mock('~/hooks/useModalState', () => ({
   useModalState: (...args: unknown[]) => mockUseModalState(...args),
 }))
 
-vi.mock('~/components/AccountDrawer/MiniPortfolio/hooks', () => ({
+vi.mock('~/state/accountDrawer/hooks', () => ({
   useAccountDrawer: () => mockUseAccountDrawer(),
 }))
 
-vi.mock('~/hooks/useAccount', () => ({
+vi.mock('~/connection/hooks/useAccount', () => ({
   useAccount: () => mockUseAccount(),
 }))
 

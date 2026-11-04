@@ -16,8 +16,7 @@
  * The web-render pins below are the other half of the same contract: this
  * config renders through react-dom, so it cannot see the native dialect at all
  * — what it CAN prove is that the rotation left the CSS-string lane. The RN
- * transform-array assertion lives in the native parity harness
- * (`packages/tailwind/src/parity/icons/native-parity.test.tsx`).
+ * transform-array lane is pinned by `factories/createIcon.native.test.tsx`.
  */
 import { render } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
@@ -25,8 +24,7 @@ import { RotatableChevron } from '../RotatableChevron'
 import * as baseRotation from '../rotation-platform.ts'
 
 // The native leg imports react-native, whose real build needs the flow sources;
-// the real module is exercised on device and by the native parity harness, not
-// under this jsdom config.
+// the real module is exercised on device, not under this jsdom config.
 vi.mock('react-native', () => ({ I18nManager: { isRTL: true } }))
 
 describe('export parity across the rotation-platform legs', () => {

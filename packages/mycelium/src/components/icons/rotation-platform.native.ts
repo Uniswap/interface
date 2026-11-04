@@ -7,7 +7,7 @@
  */
 import { I18nManager } from 'react-native'
 
-/** RN's layout-direction flag — the same signal the legacy `ui/src` twin reads. */
+/** RN's layout-direction flag. */
 export function isRTL(): boolean {
   return I18nManager.isRTL
 }

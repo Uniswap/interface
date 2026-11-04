@@ -1,7 +1,7 @@
 import { Flex } from '@universe/mycelium'
+import { ShieldCheck } from '@universe/mycelium/icons/ShieldCheck'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ShieldCheck } from 'ui/src/components/icons/ShieldCheck'
 import { InfoLinkModal } from 'uniswap/src/components/modals/InfoLinkModal'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'

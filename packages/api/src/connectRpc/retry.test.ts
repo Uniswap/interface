@@ -1,4 +1,5 @@
 import { Code, ConnectError } from '@connectrpc/connect'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import {
   getConnectQueryRetryDelay,
   getConnectRetryAfterMs,
@@ -7,8 +8,7 @@ import {
   MAX_RETRIES_DEFAULT,
   MAX_RETRIES_UNAVAILABLE,
   shouldRetryConnectQuery,
-} from '@universe/api/src/connectRpc/retry'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+} from './retry'
 
 // Mirrors the backend's swrStampedeToConnectError: the lock-loser response for a cold cache key.
 const stampede = new ConnectError(

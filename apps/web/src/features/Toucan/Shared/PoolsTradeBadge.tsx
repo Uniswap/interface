@@ -1,5 +1,5 @@
+import { PoolsLogo } from '@universe/mycelium/icons/PoolsLogo'
 import { useTranslation } from 'react-i18next'
-import { PoolsLogo } from 'ui/src/components/icons/PoolsLogo'
 import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
 import { usePoolsBrandGreen } from '~/hooks/usePoolsBrandGreen'
 

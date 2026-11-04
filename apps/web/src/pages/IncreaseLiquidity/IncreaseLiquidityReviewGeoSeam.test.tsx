@@ -13,9 +13,11 @@ vi.mock('~/pages/IncreaseLiquidity/IncreaseLiquidityContext', async (importOrigi
   useIncreaseLiquidityContext: vi.fn(),
 }))
 vi.mock('~/pages/IncreaseLiquidity/IncreaseLiquidityTxContext', () => ({ useIncreaseLiquidityTxContext: vi.fn() }))
-vi.mock('~/hooks/Tokens', () => ({ useCurrencyInfo: () => undefined }))
-vi.mock('~/hooks/useAccount', () => ({ useAccount: () => ({ isConnected: true, chainId: 1, connector: { id: 'x' } }) }))
-vi.mock('~/hooks/useSelectChain', () => ({ useSelectChain: () => vi.fn() }))
+vi.mock('~/hooks/currency/useCurrencyInfo', () => ({ useCurrencyInfo: () => undefined }))
+vi.mock('~/connection/hooks/useAccount', () => ({
+  useAccount: () => ({ isConnected: true, chainId: 1, connector: { id: 'x' } }),
+}))
+vi.mock('~/connection/hooks/useSelectChain', () => ({ useSelectChain: () => vi.fn() }))
 vi.mock('@universe/embedded-wallet', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@universe/embedded-wallet')>()),
   useGetPasskeyAuthStatus: () => ({
@@ -33,8 +35,8 @@ vi.mock('~/features/Liquidity/hooks/useDependentAmountFallback', () => ({
   }),
 }))
 // Partial: the render wrapper's accounts store also reads `useOneClickSwapSetting` from this module.
-vi.mock('~/pages/Swap/Swap/settings/OneClickSwap', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('~/pages/Swap/Swap/settings/OneClickSwap')>()),
+vi.mock('~/state/oneClickSwap/hooks', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('~/state/oneClickSwap/hooks')>()),
   useSetOverrideOneClickSwapFlag: () => vi.fn(),
 }))
 // Presentation-only children: none carry any part of the geo decision.
@@ -50,7 +52,7 @@ const AAPLX = new Token(1, '0x0000000000000000000000000000000000000a11', 18, 'AA
 const USDC = new Token(1, '0x0000000000000000000000000000000000000b22', 6, 'USDC')
 
 const GEO_LABEL = 'AAPLX unavailable in your region'
-const BANNER_HEADING = 'AAPLX isn’t available for liquidity provision in your region'
+const BANNER_HEADING = 'AAPLX is unavailable in your region'
 const CONFIRM_LABEL = 'Confirm'
 
 function amount(currency: Currency): CurrencyAmount<Currency> {

@@ -1,5 +1,5 @@
 import { Flex, iconSizes, Text } from '@universe/mycelium'
-import { Shuffle } from 'ui/src/components/icons/Shuffle'
+import { Shuffle } from '@universe/mycelium/icons/Shuffle'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { NotificationToast } from 'uniswap/src/components/notifications/NotificationToast'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'

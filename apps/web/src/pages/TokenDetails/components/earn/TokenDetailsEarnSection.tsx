@@ -9,7 +9,7 @@ import { TokenDetailsEarnSection as SharedTokenDetailsEarnSection } from 'uniswa
 import { EarnEntryPoint } from 'uniswap/src/features/earn/analytics'
 import { useEarnLifetimeEarningsUsd } from 'uniswap/src/features/earn/hooks/useEarnLifetimeEarningsUsd'
 import { EARN_VAULT_MODAL_QUERY_PARAM, EARN_VAULT_MODAL_QUERY_VALUE } from 'uniswap/src/utils/linking'
-import { useActiveAddress } from '~/features/accounts/store/hooks'
+import { useActiveAddress } from '~/connection/accounts/hooks'
 import { EarnVaultModal } from '~/features/earn/EarnVaultModal'
 import { useEarnVaultConnectFlow } from '~/features/earn/hooks/useEarnVaultConnectFlow'
 import { useEarnVaultModalState } from '~/features/earn/hooks/useEarnVaultModalState'

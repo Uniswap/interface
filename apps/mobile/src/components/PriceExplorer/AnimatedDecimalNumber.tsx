@@ -1,4 +1,4 @@
-import { Flex, useSporeColors } from '@universe/mycelium'
+import { Flex, useSporeColors, fonts, type TextVariantKey } from '@universe/mycelium'
 import { useDeviceDimensions } from '@universe/mycelium/theme-hooks-compat'
 import { TestIDType } from '@universe/test'
 import React, { memo, useMemo } from 'react'
@@ -6,12 +6,11 @@ import { useWindowDimensions } from 'react-native'
 import { useAnimatedStyle, useDerivedValue } from 'react-native-reanimated'
 import { ValueAndFormatted } from 'src/components/PriceExplorer/usePrice'
 import { AnimatedText } from 'src/components/text/AnimatedText'
-import { fonts, TextVariantTokens } from 'ui/src/theme'
 
 type AnimatedDecimalNumberProps = {
   number: ValueAndFormatted
   separator: string
-  variant: TextVariantTokens
+  variant: TextVariantKey
   wholePartColor?: string
   decimalPartColor?: string
   decimalThreshold?: number // below this value (not including) decimal part would have wholePartColor too

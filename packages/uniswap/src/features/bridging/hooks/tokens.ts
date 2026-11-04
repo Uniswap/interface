@@ -10,7 +10,7 @@ import { useTradingApiSwappableTokensQuery } from 'uniswap/src/data/apiClients/t
 import { tradingApiSwappableTokenToCurrencyInfo } from 'uniswap/src/data/apiClients/tradingApi/utils/tradingApiSwappableTokenToCurrencyInfo'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { toGraphQLChain, toSupportedChainId } from 'uniswap/src/features/chains/utils'
+import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { useMultichainCurrencyInfos } from 'uniswap/src/features/tokens/useMultichainCurrencyInfos'
 import {
@@ -50,11 +50,10 @@ export function useBridgingTokenWithHighestBalance({
   const multichainQueryIds = useMemo(() => [currencyId], [currencyId])
   const { data: currencyOnAllChains, isLoading: currencyInfosLoading } = useMultichainCurrencyInfos(multichainQueryIds)
 
-  // useCrossChainBalances still speaks the GraphQL deployment shape (chain enum + nullable address).
   const crossChainTokens = useMemo(
     () =>
       currencyOnAllChains?.map(({ currency }) => ({
-        chain: toGraphQLChain(currency.chainId),
+        chainId: currency.chainId,
         address: currency.isNative ? undefined : currency.address,
       })),
     [currencyOnAllChains],

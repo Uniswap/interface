@@ -8,8 +8,7 @@
  * rebuilt CustomButtonText):
  *
  *  1. the CLOSED cell via `./compile`'s `buttonCompatTextClassName` —
- *     byte-identical to the parity-proven label whenever no styled prop is
- *     set (`web-class-pin.test.tsx` digests the whole DOM);
+ *     the whole label class whenever no styled prop is set;
  *  2. the OPEN scoped surface (`./text-props`) through the
  *     deterministic-emission engine with the shared Text style compiler,
  *     merged after the cell so a caller prop beats it — Tamagui precedence.
@@ -22,12 +21,14 @@
  */
 import { createContext, useContext, type CSSProperties, type HTMLAttributes, type JSX } from 'react'
 import { getMaybeHexOrRgbColor } from '../button-frame-compat/custom-color'
+import { cn } from '../cn'
 import { composeCompatEmission, mergeCompatStyle, type CompatEmission } from '../compat/compose'
 import type { CompatProps } from '../compat/props'
 import type { TextCompatStyleProps } from '../text-compat/props'
 import { styleClasses as textStyleClasses } from '../text-compat/style-classes'
+import { SINGLE_LINE_ELLIPSIS } from '../text-compat/typography-classes'
 import { buttonCompatTextClassName, type ButtonContentClassProps } from './compile'
-import type { ButtonTextStyleSurface } from './text-props'
+import { buttonTextCallerColor, type ButtonTextStyleSurface } from './text-props'
 
 /** The styled context the label/icon/spinner read off the parent Button. */
 export const ButtonContext = createContext<ButtonContentClassProps>({
@@ -78,6 +79,7 @@ export function ButtonText({
   children,
   variant,
   color,
+  fontSize,
   opacity,
   position,
   top,
@@ -95,6 +97,7 @@ export function ButtonText({
   // hover scope still wins on hover, matching the scoped-selector cascade).
   const emission = buttonTextStyledEmission({
     color: customColor === undefined ? color : undefined,
+    fontSize,
     opacity,
     position,
     top,
@@ -103,17 +106,16 @@ export function ButtonText({
     '$group-hover': groupHover,
     className,
   })
-  const customColorStyle =
-    customColor !== undefined && !ctx.isDisabled && ctx.customTextClass === undefined
-      ? { color: customColor }
-      : undefined
+  const { pin } = buttonTextCallerColor(color, ctx)
+  const customColorStyle = pin === undefined ? undefined : { color: pin }
   return (
     <span
       className={buttonCompatTextClassName({
         ...ctx,
         variant: variant ?? ctx.variant,
         lineHeightDisabled,
-        className: emission.className,
+        // Legacy numberOfLines={1} (the native leg's hardcoded prop) as its web classes; caller styles still win.
+        className: cn(SINGLE_LINE_ELLIPSIS, emission.className),
       })}
       style={layerTextStyle({ emissionStyle: emission.style, customColorStyle, callerStyle: style })}
       {...rest}

@@ -1,10 +1,8 @@
 /**
- * Web leg of the `ModalCloseIcon` compat (INFRA-3282) — the drop-in twin of
- * the legacy `ui/src` `ModalCloseIcon`
- * (`packages/ui/src/components/modal/AdaptiveWebModal.tsx` over
- * `CloseIconWithHover`): a TouchableArea frame around the X glyph, hidden on
- * the web app below the `sm` breakpoint where the adaptive modal becomes a
- * bottom sheet.
+ * Web leg of the `ModalCloseIcon` compat (INFRA-3282) — the drop-in
+ * replacement for the legacy `ui/src` `ModalCloseIcon`: a TouchableArea
+ * frame around the X glyph, hidden on the web app below the `sm` breakpoint
+ * where the adaptive modal becomes a bottom sheet.
  *
  * Structure is the legacy structure — the same TouchableArea frame (via its
  * parity-proven compat port) wrapping the same X icon. Hover color is React

@@ -26,7 +26,7 @@ import {
 } from '~/features/Toucan/Auction/utils/fixedPointFdv'
 import { getAuctionTokenDecimals } from '~/features/Toucan/Auction/utils/tokenMetadata'
 import { buildTokenMarketCurrencyId, buildTokenMarketPriceKey } from '~/features/Toucan/hooks/tokenMarketPriceKeys'
-import { useCurrencyKeyPriceMap } from '~/hooks/useCurrencyKeyPriceMap'
+import { useCurrencyKeyPriceMap } from '~/features/Toucan/hooks/useCurrencyKeyPriceMap'
 
 // When above-floor % exceeds this threshold and hourly data is available, switch to hourly change display
 const HOURLY_CHANGE_THRESHOLD = 1000

@@ -19,6 +19,9 @@ const mockStoreState = {
 vi.mock('~/features/Toucan/Auction/store/useAuctionStore', () => ({
   useAuctionStore: (selector: (state: typeof mockStoreState) => unknown) => selector(mockStoreState),
 }))
+vi.mock('uniswap/src/features/language/hooks', () => ({
+  useCurrentLocale: () => 'en-US',
+}))
 vi.mock('uniswap/src/features/language/LocalizationContext', () => ({
   useLocalizationContext: () => ({
     formatNumberOrString: ({ value }: { value: unknown }) => String(value),

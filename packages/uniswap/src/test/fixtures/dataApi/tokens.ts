@@ -10,8 +10,7 @@ import { faker } from 'uniswap/src/test/shared'
 import { createFixture, randomChoice } from 'uniswap/src/test/utils'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 
-// Chains a randomly generated fixture may land on. Restricted to chains that round-trip through
-// `toGraphQLChain`, so fixtures stay usable in tests that still cross the GraphQL boundary.
+// Chains a randomly generated fixture may land on.
 const V2_CHAIN_IDS = [
   UniverseChainId.Mainnet,
   UniverseChainId.ArbitrumOne,
@@ -27,9 +26,8 @@ type RestV2TokenOptions = {
 }
 
 /**
- * `data.v2.Token` in the shape GetToken/GetTokens return over the wire — the V2 replacement for the
- * removed GraphQL `token` fixture. Pass `sdkToken` to pin a fixture to a real token; every field it
- * does not supply is randomized.
+ * `data.v2.Token` in the shape GetToken/GetTokens return over the wire. Pass `sdkToken` to pin a
+ * fixture to a real token; every field it does not supply is randomized.
  */
 export const restV2Token = createFixture<PlainMessage<Token>, RestV2TokenOptions>({
   sdkToken: null,

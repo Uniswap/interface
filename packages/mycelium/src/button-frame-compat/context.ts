@@ -1,7 +1,6 @@
 /**
- * The React-context replacement for legacy `buttonStyledContext`
- * (`createStyledContext<ButtonVariantProps>` in
- * `ui/src/components/buttons/Button/constants.ts`): the frame broadcasts its
+ * The React-context replacement for the legacy ui `buttonStyledContext`
+ * (`createStyledContext<ButtonVariantProps>`): the frame broadcasts its
  * variant selection so `CustomButtonText` / `ThemedIcon` render the right
  * cell without re-receiving every prop — the ButtonCompat pattern
  * (`ButtonContextValue`), extended with the native legs' live interaction

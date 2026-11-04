@@ -68,20 +68,6 @@ const MOCK_TOKEN_ADDRESS_2 = '0x2222222222222222222222222222222222222222'
 const MOCK_TOKEN_ADDRESS_3 = '0x3333333333333333333333333333333333333333'
 const NATIVE_CURRENCY_ADDRESS = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
 
-const mockToken = {
-  id: TEST_TOKEN_ADDRESS,
-  name: 'Test Token',
-  symbol: 'TEST',
-  decimals: 18,
-  chain: 'ETHEREUM',
-  address: TEST_TOKEN_ADDRESS,
-  project: {
-    id: 'test-project',
-    __typename: 'TokenProject',
-  },
-  __typename: 'Token',
-}
-
 const mockCachedPortfolio = {
   balances: [
     {

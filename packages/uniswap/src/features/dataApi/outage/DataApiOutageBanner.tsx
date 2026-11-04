@@ -1,8 +1,8 @@
 import { isWebApp } from '@universe/environment'
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
 import type { SporeColorToken } from '@universe/mycelium/compat'
+import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFilled'
 import { useTranslation } from 'react-i18next'
-import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 
 type DataApiOutageBannerProps = {
   onPress?: () => void

@@ -1,4 +1,4 @@
-import { trimFractionalTrailingZeros } from 'utilities/src/format/parseForSubscriptNotation'
+import { parseForSubscriptNotation, trimFractionalTrailingZeros } from 'utilities/src/format/parseForSubscriptNotation'
 import { describe, expect, it } from 'vitest'
 
 describe('trimFractionalTrailingZeros', () => {
@@ -31,5 +31,25 @@ describe('trimFractionalTrailingZeros', () => {
   })
   it('leaves a comma-separated locale string untouched (caller must normalize first)', () => {
     expect(trimFractionalTrailingZeros('1,2300')).toBe('1,2300')
+  })
+})
+
+describe('parseForSubscriptNotation fullFormatted', () => {
+  const params = { minSigDigits: 2, maxSigDigits: 4, subscriptThreshold: 4 }
+
+  it('uses the dot separator for en-US subscript values', () => {
+    const parsed = parseForSubscriptNotation({ ...params, value: 0.00001024, locale: 'en-US' })
+    expect(parsed.useSubscript).toBe(true)
+    expect(parsed.fullFormatted).toBe('0.041024')
+  })
+
+  it('uses the comma separator for nl-NL and es-ES subscript values', () => {
+    expect(parseForSubscriptNotation({ ...params, value: 0.00001024, locale: 'nl-NL' }).fullFormatted).toBe('0,041024')
+    expect(parseForSubscriptNotation({ ...params, value: 0.000052, locale: 'es-ES' }).fullFormatted).toBe('0,0452')
+  })
+
+  it('keeps one separator style for non-subscript values in nl-NL', () => {
+    expect(parseForSubscriptNotation({ ...params, value: 0.0012, locale: 'nl-NL' }).fullFormatted).toBe('0,0012')
+    expect(parseForSubscriptNotation({ ...params, value: 0, locale: 'nl-NL' }).fullFormatted).toBe('0')
   })
 })

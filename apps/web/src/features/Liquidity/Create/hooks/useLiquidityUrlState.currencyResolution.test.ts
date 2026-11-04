@@ -13,7 +13,7 @@ import { mocked } from '~/test-utils/mocked'
 import { renderHook } from '~/test-utils/render'
 
 /**
- * Unlike the sibling `chainRollout` suite, this one deliberately does NOT mock `~/hooks/Tokens`. The
+ * Unlike the sibling `chainRollout` suite, this one deliberately does NOT mock the `~/hooks/currency/` hooks. The
  * behavior under test lives inside it: `useCurrencyPreprocessing` re-resolves the chain through
  * `useSupportedChainId` and builds the cache key from the result, so while a rollout chain reads as
  * not-enabled the lookup silently retargets the default chain. Mocking the loader would hide exactly that.

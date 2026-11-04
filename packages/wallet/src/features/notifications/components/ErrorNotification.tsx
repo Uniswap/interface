@@ -1,4 +1,4 @@
-import { AlertTriangleFilled } from 'ui/src/components/icons'
+import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFilled'
 import { NotificationToast } from 'uniswap/src/components/notifications/NotificationToast'
 import { AppErrorNotification } from 'uniswap/src/features/notifications/slice/types'
 

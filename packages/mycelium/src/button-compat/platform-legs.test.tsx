@@ -29,7 +29,7 @@ vi.mock('react-native-gesture-handler', () => import('./testing/gesture-handler-
 vi.mock('react-native-reanimated', () => import('./testing/reanimated-mock'))
 // Both of these resolve to untranspiled sources under the jsdom config (RN Flow
 // / uniwind TypeScript), and importing the native leg alone is enough to trip
-// them. The real modules are exercised by the native parity harness.
+// them. The real modules only run on device.
 vi.mock('react-native-svg', () => import('./testing/react-native-svg-mock'))
 vi.mock('uniwind', () => import('./testing/uniwind-mock'))
 
@@ -218,18 +218,30 @@ describe('native leg (the RN implementation Metro resolves)', () => {
     warn.mockRestore()
   })
 
-  // INFRA-3541: borderRadius/alignSelf are web-only too (the driving call site
-  // is the Auctions discovery see-all CTA, a link-form anchor this leg never
-  // mounts), so like height the leg accepts and dev-warns them rather
-  // than wiring the style — and must never drop them in silence.
-  it('dev-warns that borderRadius/alignSelf are dropped — never silent', async () => {
+  // INFRA-3541: alignSelf is web-only too (the driving call site is the Auctions
+  // discovery see-all CTA, a link-form anchor this leg never mounts), so like
+  // height the leg accepts and dev-warns it rather than wiring the style.
+  it('dev-warns that alignSelf is dropped — never silent', async () => {
     __resetNativeStyleWarnings()
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
-    await renderNative({ borderRadius: '$roundedFull', alignSelf: 'flex-start' })
-    const warned = warn.mock.calls.map((call) => String(call[0])).join('\n')
-    for (const prop of ['borderRadius', 'alignSelf']) {
-      expect(warned, prop).toContain(`"${prop}"`)
-    }
+    await renderNative({ alignSelf: 'flex-start' })
+    expect(warn.mock.calls.map((call) => String(call[0])).join('\n')).toContain('"alignSelf"')
+    warn.mockRestore()
+  })
+
+  // The SwapFormDecimalPad preset pills pass `borderRadius="$roundedFull"` on native.
+  it('paints borderRadius through the native lanes and never dev-warns it', async () => {
+    __resetNativeStyleWarnings()
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
+    const { ButtonCompat: NativeButtonCompat } = await import('./ButtonCompat.native')
+    let rendered: ReturnType<typeof create> | undefined
+    act(() => {
+      rendered = create(createElement(NativeButtonCompat, { borderRadius: '$roundedFull' } as never, 'Max'))
+    })
+    const frame = rendered?.toJSON() as { props?: { className?: string; style?: unknown } } | null
+    expect(frame?.props?.className?.split(' ')).toContain('rounded-[999999px]')
+    expect(JSON.stringify(frame?.props?.style ?? null)).toContain('"borderRadius":999999')
+    expect(warn).not.toHaveBeenCalled()
     warn.mockRestore()
   })
 
@@ -344,9 +356,21 @@ describe('native leg (the RN implementation Metro resolves)', () => {
     warn.mockRestore()
   })
 
-  // Review finding: the two cases above pass `p` alongside `padding`, so they
-  // pass whether the longhand resolves or is silently ignored. Alone, it must
-  // land on the style lane itself — and un-warned, because it is wired.
+  // RN can't parse a `$` string, so a raw token in `style` painted nothing
+  // (ErrorBoundary's `$neutral1` Restart, BridgeTokenButton's `$accent1`).
+  it('resolves a token backgroundColor through classes, never a raw $ string in style', async () => {
+    const { ButtonCompat: NativeButtonCompat } = await import('./ButtonCompat.native')
+    let rendered: ReturnType<typeof create> | undefined
+    act(() => {
+      rendered = create(createElement(NativeButtonCompat, { backgroundColor: '$accent1' } as never, 'Bridge'))
+    })
+    const frame = rendered?.toJSON() as { props?: { className?: string; style?: unknown } } | null
+    const classes = frame?.props?.className?.split(' ')
+    expect(classes).toContain('bg-accent1')
+    expect(classes).toContain('border-accent1')
+    expect(JSON.stringify(frame?.props?.style ?? null)).not.toContain('$accent1')
+  })
+
   // A pooled-only borderColor must NOT withhold the native custom-bg border:
   // the media pools are inert on this leg (dev-warned, never painted), so the
   // derived border is the only border colour that can paint here. The web leg
@@ -398,9 +422,9 @@ describe('native leg (the RN implementation Metro resolves)', () => {
   })
 
   // INFRA-3550: the styled Button.Text surface is web-rendered; the native leg
-  // wires `variant` (it only re-picks the cell), treats `animation` as inert
-  // like every leg, and dev-warns each web-rendered style prop it drops.
-  it('Button.Text dev-warns the dropped styled props, but never variant or animation', async () => {
+  // wires `variant` (it only re-picks the cell), `color` and `fontSize`, treats
+  // `animation` as inert like every leg, and dev-warns each style prop it drops.
+  it('Button.Text dev-warns the dropped styled props, but never the wired ones or animation', async () => {
     __resetNativeStyleWarnings()
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
     const { ButtonCompat: NativeButtonCompat } = await import('./ButtonCompat.native')
@@ -415,6 +439,7 @@ describe('native leg (the RN implementation Metro resolves)', () => {
               variant: 'critical',
               animation: 'fastHeavy',
               color: '$neutral2',
+              fontSize: 14,
               opacity: 0.5,
               position: 'relative',
               top: 0,
@@ -428,13 +453,40 @@ describe('native leg (the RN implementation Metro resolves)', () => {
       )
     })
     const warned = warn.mock.calls.map((call) => String(call[0])).join('\n')
-    for (const prop of ['color', 'opacity', 'position', 'top', 'whiteSpace', 'transition', '$group-hover']) {
+    for (const prop of ['opacity', 'position', 'top', 'whiteSpace', 'transition', '$group-hover']) {
       expect(warned, prop).toContain(`"${prop}"`)
     }
     expect(warned).toContain('ButtonCompat.Text')
-    expect(warned).not.toContain('"variant"')
-    expect(warned).not.toContain('"animation"')
+    for (const prop of ['variant', 'color', 'fontSize', 'animation']) {
+      expect(warned, prop).not.toContain(`"${prop}"`)
+    }
     warn.mockRestore()
+  })
+
+  // A hex/rgb `color` and `fontSize` paint through the label's style (the token
+  // half resolves through uniwind, which the jsdom mock can't — see
+  // text-props.test.ts for its split).
+  it('Button.Text paints a hex color and fontSize, and the hex yields to the disabled palette', async () => {
+    const { ButtonCompat: NativeButtonCompat } = await import('./ButtonCompat.native')
+    const renderLabelStyle = (disabled: boolean): string => {
+      let rendered: ReturnType<typeof create> | undefined
+      act(() => {
+        rendered = create(
+          createElement(
+            NativeButtonCompat,
+            { disabled } as never,
+            createElement(NativeButtonCompat.Text, { color: '#FF00AA', fontSize: 14 } as never, 'Verify'),
+          ),
+        )
+      })
+      const [label] =
+        rendered?.root.findAll((node) => node.props['children'] === 'Verify' && node.props['style'] !== undefined) ?? []
+      return JSON.stringify(label?.props['style'] ?? null)
+    }
+    expect(renderLabelStyle(false)).toContain('"color":"#FF00AA"')
+    expect(renderLabelStyle(false)).toContain('"fontSize":14')
+    expect(renderLabelStyle(true)).not.toContain('#FF00AA')
+    expect(renderLabelStyle(true)).toContain('"fontSize":14')
   })
 
   // INFRA-3661: the margin family is WIRED on this leg like gap/p — the

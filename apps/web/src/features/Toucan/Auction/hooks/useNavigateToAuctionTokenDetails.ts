@@ -10,7 +10,6 @@ import { useAuctionTradingToken } from '~/features/Toucan/Auction/hooks/useAucti
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
 import { buildProvenanceAnalyticsProperties } from '~/features/Toucan/Auction/utils/provenanceAnalytics'
 import { usePrefetchTokenDetailsAuction } from '~/pages/TokenDetails/hooks/usePrefetchTokenDetailsAuction'
-import { getChainUrlParam } from '~/utils/params/chainParams'
 
 /** One ADP → TDP hand-off for every trade surface: warm the auction lookup, report the click, then navigate. */
 export function useNavigateToAuctionTokenDetails({
@@ -66,7 +65,7 @@ export function useNavigateToAuctionTokenDetails({
     navigate(
       getTokenDetailsURL({
         address: tradingTokenAddress,
-        chainUrlParam: getChainUrlParam(auctionDetails.chainId),
+        chainId: auctionDetails.chainId,
       }),
     )
   })

@@ -13,7 +13,7 @@ import { usePagerDirection } from './usePagerDirection'
  * keyframe per combination. The exit class is `[data-exiting]`-gated and in
  * the `spore-exit-` family, which is what lets the `Presence` primitive hold
  * the outgoing page until the animation ends. The frame is a flex column like
- * the legacy Tamagui Flex wrapper: pages rely on it for `alignSelf` centering.
+ * the legacy Flex wrapper: pages rely on it for `alignSelf` centering.
  */
 const PAGER_ITEM_CLASSES = 'flex w-full grow flex-col animate-spore-enter-pager data-exiting:animate-spore-exit-pager'
 

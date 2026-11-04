@@ -1,9 +1,8 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { Flex } from '@universe/mycelium'
+import { Flex, zIndexes } from '@universe/mycelium'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { memo } from 'react'
 import { useLocation } from 'react-router'
-import { zIndexes } from 'ui/src/theme/zIndexes'
 import { GRID_AREAS } from '~/app/layout/gridAreas'
 import { Navbar } from '~/components/NavBar/index'
 import {

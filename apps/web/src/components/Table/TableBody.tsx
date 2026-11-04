@@ -4,10 +4,9 @@ import { Flex, Text } from '@universe/mycelium'
 import type { SpaceValue } from '@universe/mycelium/compat'
 import { HeightAnimator } from '@universe/mycelium/height-animator'
 import { WifiError } from '@universe/mycelium/icons/WifiError'
-import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
+import { useSporeColors, BREAKPOINT_PX } from '@universe/mycelium/theme-hooks-compat'
 import { forwardRef, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { breakpoints } from 'ui/src/theme'
 import { ROW_HEIGHT_DESKTOP, ROW_HEIGHT_MOBILE_WEB } from '~/components/Table/constants'
 import { ErrorModal } from '~/components/Table/ErrorBox'
 import { TableBodyRenderMode, useTableBodyRenderMode } from '~/components/Table/hooks/useTableBodyRenderMode'
@@ -63,7 +62,7 @@ function TableBodyInner<T extends RowData>(
 
   const skeletonRowHeight = useMemo(
     () =>
-      tableWidth <= breakpoints.lg
+      tableWidth <= BREAKPOINT_PX.lg
         ? (propCompactRowHeight ?? ROW_HEIGHT_MOBILE_WEB)
         : (propRowHeight ?? ROW_HEIGHT_DESKTOP),
     [tableWidth, propRowHeight, propCompactRowHeight],

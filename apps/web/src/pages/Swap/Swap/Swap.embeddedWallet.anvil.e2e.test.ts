@@ -8,8 +8,13 @@ import { ONE_MILLION_USDT } from '~/playwright/anvil/utils'
 import { expect, getTest } from '~/playwright/fixtures'
 import { EMBEDDED_WALLET_URL_PARAMS, rpcSequence, setupEmbeddedWallet } from '~/playwright/fixtures/embeddedWallet'
 import { submitSwapForm } from '~/playwright/fixtures/swapForm'
-import { stubTradingApiEndpoint, widenSwapRequestSlippage } from '~/playwright/fixtures/tradingApi'
+import {
+  mockTradingApiEndpoint,
+  stubTradingApiEndpoint,
+  widenSwapRequestSlippage,
+} from '~/playwright/fixtures/tradingApi'
 import { TEST_WALLET_ADDRESS } from '~/playwright/fixtures/wallets'
+import { Mocks } from '~/playwright/mocks/mocks'
 
 const test = getTest({ withAnvil: true })
 
@@ -34,6 +39,7 @@ test.describe(
         endpoint: V1_TRADING_API_PATHS.swap,
         modifyRequestData: widenSwapRequestSlippage,
       })
+      // A v4 pool newer than the pinned fork block reverts estimateGas with PoolNotInitialized()
       await stubTradingApiEndpoint({
         page,
         endpoint: V1_TRADING_API_PATHS.quote,
@@ -42,10 +48,17 @@ test.describe(
             ? data
             : {
                 ...data,
-                protocols: [TradingApi.ProtocolItems.V4, TradingApi.ProtocolItems.V3, TradingApi.ProtocolItems.V2],
+                protocols: [TradingApi.ProtocolItems.V3, TradingApi.ProtocolItems.V2],
               },
       })
+      // Live /check_approval 429s from CI's shared egress IP; the canned approve assumes the zero allowance asserted below
+      await mockTradingApiEndpoint({
+        page,
+        endpoint: V1_TRADING_API_PATHS.approval,
+        mockPath: Mocks.TradingApi.check_approval_usdt_permit2,
+      })
       await anvil.setErc20Balance({ address: usdtAddress, balance: ONE_MILLION_USDT })
+      expect(await anvil.getErc20Allowance({ address: usdtAddress, spender: PERMIT2_ADDRESS })).toBe(0n)
       const initialUsdtBalance = await anvil.getErc20Balance(usdtAddress)
 
       await page.goto(`/swap?inputCurrency=${USDT.address}&outputCurrency=ETH&${EMBEDDED_WALLET_URL_PARAMS}`)

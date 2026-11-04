@@ -1,12 +1,11 @@
-import { Flex, Text, TouchableArea, useSporeColors } from '@universe/mycelium'
+import { Button, Flex, Text, TouchableArea, useSporeColors } from '@universe/mycelium'
+import { LabeledCheckboxCompat as LabeledCheckbox } from '@universe/mycelium/checkbox-compat'
+import { EnvelopeHeart } from '@universe/mycelium/icons/EnvelopeHeart'
+import { Globe } from '@universe/mycelium/icons/Globe'
+import { InfoCircleFilled } from '@universe/mycelium/icons/InfoCircleFilled'
+import { X } from '@universe/mycelium/icons/X'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button } from 'ui/src'
-import { LabeledCheckbox } from 'ui/src/components/checkbox/LabeledCheckbox'
-import { EnvelopeHeart } from 'ui/src/components/icons/EnvelopeHeart'
-import { Globe } from 'ui/src/components/icons/Globe'
-import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
-import { X } from 'ui/src/components/icons/X'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
@@ -37,7 +36,7 @@ export function GeoRestrictionModal({ isOpen, onClose, mode, tokenSymbol }: GeoR
 
   const learnMore = (
     <TouchableArea onPress={() => openUri({ uri: UniswapHelpUrls.articles.geoRestriction })}>
-      <Text color="$accent3" mt="$spacing4" textAlign="center" variant="buttonLabel3">
+      <Text color="$neutral1" mt="$spacing4" textAlign="center" variant="buttonLabel3">
         {t('common.button.learn')}
       </Text>
     </TouchableArea>

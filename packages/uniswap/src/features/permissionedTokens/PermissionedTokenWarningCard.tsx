@@ -1,7 +1,7 @@
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
+import { InfoCircle } from '@universe/mycelium/icons/InfoCircle'
+import { Lock } from '@universe/mycelium/icons/Lock'
 import { useTranslation } from 'react-i18next'
-import { InfoCircle } from 'ui/src/components/icons/InfoCircle'
-import { Lock } from 'ui/src/components/icons/Lock'
 import { PermissionedTokenInfoBottomSheet } from 'uniswap/src/features/permissionedTokens/PermissionedTokenInfoBottomSheet'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 

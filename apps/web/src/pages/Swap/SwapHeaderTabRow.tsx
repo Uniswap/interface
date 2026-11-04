@@ -3,9 +3,9 @@ import { Flex } from '@universe/mycelium'
 import { SegmentedControl, type SegmentedControlOption } from '@universe/mycelium/segmented-control-compat'
 import { useTranslation } from 'react-i18next'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
+import { useTabBarOverflow } from '~/pages/Swap/hooks/useTabBarOverflow'
 import { SwapFormSettingsButton } from '~/pages/Swap/Swap/SwapForm'
 import { SwapTabsDropdown } from '~/pages/Swap/SwapTabsDropdown'
-import { useTabBarOverflow } from '~/pages/Swap/useTabBarOverflow'
 
 // Mirrors the `large` minHeight of the SegmentedControl compat primitive, which exports
 // no constant for it. Keep in sync.
@@ -26,6 +26,7 @@ export function SwapHeaderTabRow({
   chartToggle,
   trailingContent,
   onHeightChange,
+  animateIndicator,
 }: {
   options: readonly SegmentedControlOption<SwapTab>[]
   currentTab: SwapTab
@@ -34,6 +35,7 @@ export function SwapHeaderTabRow({
   chartToggle?: JSX.Element
   trailingContent?: JSX.Element
   onHeightChange: (height: number) => void
+  animateIndicator?: boolean
 }): JSX.Element {
   const { i18n } = useTranslation()
   const { collapsed, containerRef, tabsRef, rightContentRef } = useTabBarOverflow({ measureKey: i18n.language })
@@ -65,6 +67,7 @@ export function SwapHeaderTabRow({
             selectedOption={currentTab}
             onSelectOption={onTabClick}
             gap={isMobileWeb ? '$spacing8' : undefined}
+            animateIndicator={animateIndicator}
           />
         </Flex>
       )}

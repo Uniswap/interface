@@ -11,7 +11,7 @@ test.each(poolImageUrls)('poolImageUrl: %s', async (url) => {
 
 const invalidPoolImageUrls = [
   'http://localhost:3000/api/image/pools/ethereum/0x123',
-  'http://localhost:3000/api/image/pools/blast/invalid',
+  'http://localhost:3000/api/image/pools/base/invalid',
 ]
 
 test.each(invalidPoolImageUrls)('invalidPoolImageUrl: %s', async (url) => {

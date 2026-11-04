@@ -1,17 +1,15 @@
-import { type PlainMessage } from '@bufbuild/protobuf'
 import { useQuery } from '@tanstack/react-query'
-import type {
-  GetTokenHistoryOHLCResponse,
-  GetTokenHistoryPriceResponse,
-} from '@uniswap/client-data-api/dist/data/v2/api_pb'
-import { GraphQLApi } from '@universe/api'
+import { UniverseChainId } from '@universe/chains'
 import { UTCTimestamp } from 'lightweight-charts'
 import { useEffect, useMemo, useRef } from 'react'
 import { PollingInterval } from 'uniswap/src/constants/misc'
+import { dataApiServiceClientV2 } from 'uniswap/src/data/apiClients/dataApiService/clients/DataApiClientV2'
 import { getGetTokenHistoryOHLCQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/tokens/queries'
-import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
-import { toRestHistoryDuration } from 'uniswap/src/features/dataApi/tokenDetails/useTokenPriceHistoryRest'
+import {
+  type HistoryTarget,
+  toRestHistoryDuration,
+} from 'uniswap/src/features/dataApi/tokenDetails/useTokenPriceHistoryRest'
 import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -19,72 +17,24 @@ import { isQueryLoading } from 'utilities/src/reactQuery/isQueryLoading'
 import { PriceChartData } from '~/components/Charts/PriceChart'
 import { ChartType, checkDataQuality, DataQuality } from '~/components/Charts/utils'
 import { MarginMarket, MarginTokenInfo } from '~/constants/margin'
-import { TimePeriod } from '~/data/util'
+import { marginPairLegs } from '~/features/margin/utils/marginTokenDisplay'
 import { useRestHistoryTarget } from '~/hooks/useRestHistoryTarget'
 import {
   appendOrPatchSpotBar,
   CANDLESTICK_FALLBACK_THRESHOLD,
-  combineCandlesByHalving,
+  mergeCandlesToGrid,
+  selectOhlcChartData,
+  selectPriceChartData,
   type TokenPriceChartQueryVariables,
   toStrictlyAscendingByTime,
 } from '~/hooks/useTokenPriceChartData'
 import { usePageVisibility } from '~/lib/hooks/usePageVisibility'
-import { marginPairLegs } from '~/pages/Swap/Margin/marginTokenDisplay'
+import {
+  getMarginHistoryQueryOptions,
+  MARGIN_TIME_WINDOWS,
+  type MarginTimeWindow,
+} from '~/pages/Swap/Margin/chart/marginTimeWindows'
 import { getTdpTokenPriceHistoryQueryOptions } from '~/pages/TokenDetails/tdpTokenQueryOptions'
-
-export type MarginChartTimeframe = '1H' | '1D' | '1W' | '1M' | '1Y' | 'ALL'
-
-const TIMEFRAME_TO_PERIOD: Record<MarginChartTimeframe, TimePeriod> = {
-  '1H': TimePeriod.HOUR,
-  '1D': TimePeriod.DAY,
-  '1W': TimePeriod.WEEK,
-  '1M': TimePeriod.MONTH,
-  '1Y': TimePeriod.YEAR,
-  ALL: TimePeriod.MAX,
-}
-
-export function timeframeToTimePeriod({ timeframe }: { timeframe: MarginChartTimeframe }): TimePeriod {
-  return TIMEFRAME_TO_PERIOD[timeframe]
-}
-
-// REST (DataAPI) history duration per timeframe. Drives the OHLC/price/volume REST queries; main
-// migrated the token price chart off the GraphQL useTokenPriceQuery onto these REST endpoints.
-const TIMEFRAME_TO_DURATION: Record<MarginChartTimeframe, HistoryDuration> = {
-  '1H': HistoryDuration.Hour,
-  '1D': HistoryDuration.Day,
-  '1W': HistoryDuration.Week,
-  '1M': HistoryDuration.Month,
-  '1Y': HistoryDuration.Year,
-  ALL: HistoryDuration.Max,
-}
-
-export function timeframeToDuration({ timeframe }: { timeframe: MarginChartTimeframe }): HistoryDuration {
-  return TIMEFRAME_TO_DURATION[timeframe]
-}
-
-// DataAPI OHLC candle -> chart candle. Mirrors selectOhlcChartData in useTokenPriceChartData.
-function selectOhlcChartData(data: PlainMessage<GetTokenHistoryOHLCResponse> | undefined): PriceChartData[] {
-  return (data?.candles ?? []).map((candle) => ({
-    time: Number(candle.timestamp) as UTCTimestamp,
-    value: candle.closeUsd,
-    open: candle.openUsd,
-    high: candle.highUsd,
-    low: candle.lowUsd,
-    close: candle.closeUsd,
-  }))
-}
-
-// DataAPI price point -> flat (line-only) candle. Mirrors selectPriceChartData in useTokenPriceChartData.
-function selectPriceChartData(data: PlainMessage<GetTokenHistoryPriceResponse> | undefined): PriceChartData[] {
-  return (data?.points ?? []).map((point) => ({
-    time: Number(point.timestamp) as UTCTimestamp,
-    value: point.priceUsd,
-    open: point.priceUsd,
-    high: point.priceUsd,
-    low: point.priceUsd,
-    close: point.priceUsd,
-  }))
-}
 
 export interface TimestampedOhlcLike {
   timestamp: number
@@ -96,8 +46,8 @@ export interface TimestampedOhlcLike {
 
 export interface MarginChartData {
   candles: PriceChartData[]
-  // Computed on the raw (unhalved, pre-spot-patch) series: halving ages the trailing bar's time and
-  // the spot patch rewrites it to "now" — both would mask the staleness checkDataQuality detects.
+  // Computed on the raw (pre-spot-patch) series: the spot patch rewrites the trailing bar's time to
+  // "now", which would mask the staleness checkDataQuality detects.
   quality: DataQuality
   candlesUnavailable: boolean
   stats24h: { changePct?: number; high?: number; low?: number }
@@ -109,6 +59,11 @@ export interface MarginChartData {
 // The non-stable side, whose USD price the chart tracks.
 export function volatileLeg({ market }: { market: MarginMarket }): MarginTokenInfo {
   return marginPairLegs(market).base
+}
+
+// Sorted first: toStrictlyAscendingByTime drops an out-of-order bar rather than reordering it.
+function sortedAscendingCandles(candles: readonly PriceChartData[]): PriceChartData[] {
+  return toStrictlyAscendingByTime([...candles].sort((a, b) => (a.time as number) - (b.time as number)))
 }
 
 export function ohlcToCandles({ ohlc }: { ohlc: ReadonlyArray<TimestampedOhlcLike | null> }): PriceChartData[] {
@@ -125,8 +80,7 @@ export function ohlcToCandles({ ohlc }: { ohlc: ReadonlyArray<TimestampedOhlcLik
         value: close,
       }
     })
-  mapped.sort((a, b) => (a.time as number) - (b.time as number)) // toStrictlyAscendingByTime DROPS out-of-order — sort first
-  return toStrictlyAscendingByTime(mapped)
+  return sortedAscendingCandles(mapped)
 }
 
 export function deriveStats24h({ dayCandles }: { dayCandles: PriceChartData[] }): MarginChartData['stats24h'] {
@@ -165,24 +119,75 @@ export function priceHistoryToCandles({
       low: p.value,
       close: p.value,
     }))
-  mapped.sort((a, b) => (a.time as number) - (b.time as number)) // toStrictlyAscendingByTime DROPS out-of-order — sort first
-  return toStrictlyAscendingByTime(mapped)
+  return sortedAscendingCandles(mapped)
+}
+
+/**
+ * The pinned-DAY OHLC series behind the chart header's 24h stats, ascending.
+ */
+function useMarginDayCandles({
+  target,
+  enabled,
+  refetchInterval,
+}: {
+  target: HistoryTarget | undefined
+  enabled: boolean
+  refetchInterval: number | undefined
+}): { candles: PriceChartData[]; refetch: () => Promise<unknown> } {
+  const dayQuery = useQuery({
+    ...getGetTokenHistoryOHLCQueryOptions({
+      params: { target, duration: toRestHistoryDuration(HistoryDuration.Day) },
+      enabled: enabled && !!target,
+      keepPreviousData: true,
+      select: selectOhlcChartData,
+    }),
+    refetchInterval,
+  })
+  const candles = useMemo(() => sortedAscendingCandles(dayQuery.data ?? []), [dayQuery.data])
+  return { candles, refetch: dayQuery.refetch }
+}
+
+/**
+ * The chart header's 24h stats and mark without the chart's candle series: only the pinned-DAY OHLC
+ * series (useMarginDayCandles, as the chart's own 24h stats) and the spot price the chart patches onto
+ * its last bar. For surfaces that show the stats with no chart mounted.
+ */
+export function useMarginStats24h({ market }: { market: MarginMarket }): {
+  stats24h: MarginChartData['stats24h']
+  markPrice?: number
+} {
+  const isVisible = usePageVisibility()
+  const { address } = volatileLeg({ market })
+  const refetchInterval = isVisible ? PollingInterval.KindaFast : undefined
+  const restTarget = useRestHistoryTarget({
+    chainId: UniverseChainId.Mainnet,
+    address,
+    duration: HistoryDuration.Day,
+    multichain: false,
+  })
+  const { candles: dayCandles } = useMarginDayCandles({ target: restTarget, enabled: true, refetchInterval })
+  const currencyId = address ? buildCurrencyId(UniverseChainId.Mainnet, address) : undefined
+  const spotPrice = useTokenSpotPrice(currencyId, { skip: !currencyId, refetchInterval })
+  return useMemo(
+    () => ({ stats24h: deriveStats24h({ dayCandles }), markPrice: spotPrice ?? dayCandles.at(-1)?.close }),
+    [dayCandles, spotPrice],
+  )
 }
 
 export function useMarginChartData({
   market,
-  timeframe,
+  timeWindow,
 }: {
   market: MarginMarket
-  timeframe: MarginChartTimeframe
+  timeWindow: MarginTimeWindow
 }): MarginChartData {
+  const { duration, candleSeconds } = MARGIN_TIME_WINDOWS[timeWindow]
   const isVisible = usePageVisibility()
   const { address } = volatileLeg({ market })
-  const duration = TIMEFRAME_TO_DURATION[timeframe]
   const refetchInterval = isVisible ? PollingInterval.KindaFast : undefined
 
   const variables: TokenPriceChartQueryVariables = {
-    chain: GraphQLApi.Chain.Ethereum,
+    chainId: UniverseChainId.Mainnet,
     address,
     duration,
     multichain: false,
@@ -190,24 +195,26 @@ export function useMarginChartData({
   const restTarget = useRestHistoryTarget(variables)
   const commonEnabled = !!restTarget
 
-  // Hook A: OHLC for the current timeframe. ALWAYS attempted — never sticky, so switching
-  // timeframes always re-tries candles (unlike the Token-page hook's one-way fallback latch).
-  const mainQuery = useQuery({
-    ...getGetTokenHistoryOHLCQueryOptions({
-      params: { target: restTarget, duration: toRestHistoryDuration(duration) },
+  // Hook A: OHLC for the selected window. ALWAYS attempted — never sticky, so switching
+  // windows always re-tries candles (unlike the Token-page hook's one-way fallback latch).
+  const mainQuery = useQuery(
+    getMarginHistoryQueryOptions({
+      name: 'getTokenHistoryOHLC',
+      fetch: (params) => dataApiServiceClientV2.getTokenHistoryOHLC(params),
+      target: restTarget,
+      timeWindow,
+      nowSeconds: Date.now() / 1000,
       enabled: commonEnabled,
-      keepPreviousData: true,
       select: selectOhlcChartData,
     }),
-    refetchInterval,
-  })
+  )
   const mainOhlcMapped = useMemo(
     () =>
-      toStrictlyAscendingByTime([...(mainQuery.data ?? [])].sort((a, b) => (a.time as number) - (b.time as number))),
-    [mainQuery.data],
+      mergeCandlesToGrid({ candles: sortedAscendingCandles(mainQuery.data ?? []), resolutionSeconds: candleSeconds }),
+    [mainQuery.data, candleSeconds],
   )
 
-  // Fallback trigger, on the raw (pre-halving) series. Gated on Hook A having settled so an
+  // Fallback trigger, on the raw series. Gated on Hook A having settled so an
   // in-flight fetch (no data yet) is never misread as "bad candles".
   const mainLoading = isQueryLoading(mainQuery)
   const mainSettled = !mainLoading && mainQuery.data !== undefined
@@ -226,34 +233,18 @@ export function useMarginChartData({
     }),
   )
   const fallbackLoading = isQueryLoading(fallbackQuery)
-  const fallbackCandles = useMemo(
-    () =>
-      toStrictlyAscendingByTime(
-        [...(fallbackQuery.data ?? [])].sort((a, b) => (a.time as number) - (b.time as number)),
-      ),
-    [fallbackQuery.data],
-  )
+  const fallbackCandles = useMemo(() => sortedAscendingCandles(fallbackQuery.data ?? []), [fallbackQuery.data])
 
-  // Hook B: pinned-DAY OHLC for 24h stats. Skipped on 1D (Hook A already covers the day). Polls at
-  // Hook A's cadence so the 24h stats stay live on 1W/1M/1Y/ALL.
-  const dayQuery = useQuery({
-    ...getGetTokenHistoryOHLCQueryOptions({
-      params: { target: restTarget, duration: toRestHistoryDuration(HistoryDuration.Day) },
-      enabled: commonEnabled && timeframe !== '1D',
-      keepPreviousData: true,
-      select: selectOhlcChartData,
-    }),
+  // Hook B: pinned-DAY OHLC for 24h stats, whatever the window. Polls at Hook A's cadence so the 24h
+  // stats stay live.
+  const { candles: dayCandlesRaw, refetch: refetchDay } = useMarginDayCandles({
+    target: restTarget,
+    enabled: commonEnabled,
     refetchInterval,
   })
-  const dayCandlesRaw = useMemo(
-    () => toStrictlyAscendingByTime([...(dayQuery.data ?? [])].sort((a, b) => (a.time as number) - (b.time as number))),
-    [dayQuery.data],
-  )
 
-  // Spot price for the volatile leg (replaces the GraphQL market.price.value), patched onto the
-  // trailing bar to keep the chart ending at the live price.
-  const chainId = fromGraphQLChain(GraphQLApi.Chain.Ethereum)
-  const currencyId = chainId && address ? buildCurrencyId(chainId, address) : undefined
+  // Spot price for the volatile leg, patched onto the trailing bar to keep the chart ending at the live price.
+  const currencyId = address ? buildCurrencyId(UniverseChainId.Mainnet, address) : undefined
   const spotPrice = useTokenSpotPrice(currencyId, { skip: !currencyId, refetchInterval })
 
   const refetch = useEvent(() => {
@@ -261,9 +252,7 @@ export function useMarginChartData({
     if (needsFallback) {
       fallbackQuery.refetch().catch(() => {})
     }
-    if (timeframe !== '1D') {
-      dayQuery.refetch().catch(() => {})
-    }
+    refetchDay().catch(() => {})
   })
 
   const prevVisibleRef = useRef(isVisible)
@@ -278,23 +267,16 @@ export function useMarginChartData({
   const fallbackError = fallbackQuery.error ?? undefined
 
   return useMemo(() => {
-    // Quality runs on the raw (unhalved, unpatched) series; the halved+patched series only renders.
+    // Quality runs on the raw (unpatched) series; the patched series only renders.
     const rawCandles = needsFallback ? fallbackCandles : mainOhlcMapped
     const quality = checkDataQuality({ data: rawCandles, chartType: ChartType.PRICE, duration })
-
-    const candlesPrePatch = needsFallback ? rawCandles : combineCandlesByHalving({ candles: mainOhlcMapped })
-    const candles = appendOrPatchSpotBar({ candles: candlesPrePatch, spotPrice })
-
-    // Self-consistency with the on-screen chart beats matching a server-computed 24h change: reuse
-    // the same series already backing the chart on 1D; otherwise the dedicated DAY series.
-    const dayCandles = timeframe === '1D' ? candles : dayCandlesRaw
-    const stats24h = deriveStats24h({ dayCandles })
+    const candles = appendOrPatchSpotBar({ candles: rawCandles, spotPrice })
 
     return {
       candles,
       quality,
       candlesUnavailable: needsFallback,
-      stats24h,
+      stats24h: deriveStats24h({ dayCandles: dayCandlesRaw }),
       loading: mainLoading || (needsFallback && fallbackLoading),
       error: mainError ?? (needsFallback ? fallbackError : undefined),
       refetch,
@@ -306,7 +288,6 @@ export function useMarginChartData({
     dayCandlesRaw,
     spotPrice,
     duration,
-    timeframe,
     mainLoading,
     fallbackLoading,
     mainError,

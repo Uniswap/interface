@@ -2,4 +2,4 @@
 // worrying about which "category" we put it in.
 export { createWalletClient, http } from 'viem'
 export { privateKeyToAccount } from 'viem/accounts'
-export { mainnet } from 'viem/chains'
+export { bsc, mainnet } from 'viem/chains'

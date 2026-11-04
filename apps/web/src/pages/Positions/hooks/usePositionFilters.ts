@@ -31,6 +31,15 @@ function isRangeTabSelection(status: number[]): boolean {
   return RANGE_TAB_SELECTIONS.some((tab) => tab.length === status.length && tab.every((s) => status.includes(s)))
 }
 
+// The integer parser accepts any number from the URL, so drop values outside the enum before they reach
+// the request or the control-bar chips (e.g. `?versions=999`). The request sends `versions` as-is and the
+// liquidity service reads an empty list as every version, so an empty result (`?versions=`, or only
+// out-of-enum values) reads as every version too, keeping the Protocol label and checkboxes truthful.
+function toVersionFilter(versions: number[]): ProtocolVersion[] {
+  const valid = versions.filter((v): v is ProtocolVersion => (LP_POSITION_PROTOCOL_VERSIONS as number[]).includes(v))
+  return valid.length > 0 ? valid : [...DEFAULT_LP_POSITION_PROTOCOL_FILTER]
+}
+
 export interface UsePositionFiltersResult {
   chainFilter: UniverseChainId | null
   setChainFilter: (id: UniverseChainId | null) => void
@@ -49,13 +58,9 @@ export function usePositionFilters(): UsePositionFiltersResult {
     history: 'replace',
   })
 
-  // The integer parsers accept any number from the URL, so drop values outside the enums before they
-  // reach the request or the control-bar chips (e.g. `?versions=999`). Memoized so the derived arrays
-  // stay referentially stable while the raw params are unchanged.
-  const versionFilter = useMemo(
-    () => versions.filter((v): v is ProtocolVersion => (LP_POSITION_PROTOCOL_VERSIONS as number[]).includes(v)),
-    [versions],
-  )
+  // The integer parsers accept any number from the URL, so drop out-of-enum values (see toVersionFilter).
+  // Memoized so the derived arrays stay referentially stable while the raw params are unchanged.
+  const versionFilter = useMemo(() => toVersionFilter(versions), [versions])
   const statusFilter = useMemo(
     () => status.filter((s): s is PositionStatus => (LP_POSITION_STATUS_FILTER_OPTIONS as number[]).includes(s)),
     [status],
@@ -70,11 +75,16 @@ export function usePositionFilters(): UsePositionFiltersResult {
 
   const toggleVersion = useCallback(
     (version: ProtocolVersion) => {
-      void setFilters((prev) => ({
-        versions: prev.versions.includes(version)
-          ? prev.versions.filter((v) => v !== version)
-          : [...prev.versions, version],
-      }))
+      void setFilters((prev) => {
+        // Toggle against what the checkboxes show, not the raw param, so `?versions=` unchecks rather than adds.
+        const current = toVersionFilter(prev.versions)
+        if (!current.includes(version)) {
+          return { versions: [...current, version] }
+        }
+        const next = current.filter((v) => v !== version)
+        // Keep at least one version selected: an empty list is fetched as every version.
+        return next.length > 0 ? { versions: next } : {}
+      })
     },
     [setFilters],
   )

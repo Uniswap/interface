@@ -13,67 +13,31 @@
     "./cn": { "web": "real", "native": "real" },
     "./icons": {
       "web": "real",
-      "native": "real",
-      "namedExports": {
-        "BackArrow": {
-          "native": "missing",
-          "nativeNote": "Web-only holdout (INFRA-3285): the RTL check reads document.documentElement.dir."
-        },
-        "CloseIconWithHover": {
-          "native": "missing",
-          "nativeNote": "Web-only holdout (INFRA-3285): renders the div-based Flex with DOM mouse/keyboard hover handlers."
-        },
-        "OSDynamicCloudIcon": {
-          "native": "missing",
-          "nativeNote": "Web-only holdout (INFRA-3285): the web port is a GoogleDrive passthrough of the legacy per-OS icon (iOS branch unported)."
-        },
-        "Unitag": {
-          "native": "missing",
-          "nativeNote": "Web-only holdout (INFRA-3285): renders <img> and watches the root class via MutationObserver."
-        }
-      }
+      "native": "real"
     },
     "./icons/*": {
       "web": "real",
-      "native": "real",
-      "namedExports": {
-        "BackArrow": {
-          "native": "missing",
-          "nativeNote": "Web-only holdout (INFRA-3285): the RTL check reads document.documentElement.dir."
-        },
-        "CloseIconWithHover": {
-          "native": "missing",
-          "nativeNote": "Web-only holdout (INFRA-3285): renders the div-based Flex with DOM mouse/keyboard hover handlers."
-        },
-        "OSDynamicCloudIcon": {
-          "native": "missing",
-          "nativeNote": "Web-only holdout (INFRA-3285): the web port is a GoogleDrive passthrough of the legacy per-OS icon (iOS branch unported)."
-        },
-        "Unitag": {
-          "native": "missing",
-          "nativeNote": "Web-only holdout (INFRA-3285): renders <img> and watches the root class via MutationObserver."
-        }
-      }
+      "native": "real"
     },
     "./logos": {
       "web": "real",
       "native": "real",
-      "nativeNote": "Logos built on the createIcon factory (AcrossLogo) render through its react-native-svg leg. GoogleChromeLogo is the exception below.",
+      "nativeNote": "Generated logos render through the createIcon factory's react-native-svg leg. GoogleChromeLogo is the exception below.",
       "namedExports": {
         "GoogleChromeLogo": {
           "native": "missing",
-          "nativeNote": "GoogleChromeLogo renders raw lowercase SVG tags (<defs>, <linearGradient>, <stop>, <circle>, <path>) that react-native-svg cannot draw. Use the ui/src logo in native-reachable code."
+          "nativeNote": "GoogleChromeLogo renders raw lowercase SVG tags (<defs>, <linearGradient>, <stop>, <circle>, <path>) that react-native-svg cannot draw. Keep it out of native-reachable code."
         }
       }
     },
     "./logos/*": {
       "web": "real",
       "native": "real",
-      "nativeNote": "Logos built on the createIcon factory (AcrossLogo) render through its react-native-svg leg. GoogleChromeLogo is the exception below.",
+      "nativeNote": "Generated logos render through the createIcon factory's react-native-svg leg. GoogleChromeLogo is the exception below.",
       "namedExports": {
         "GoogleChromeLogo": {
           "native": "missing",
-          "nativeNote": "GoogleChromeLogo renders raw lowercase SVG tags (<defs>, <linearGradient>, <stop>, <circle>, <path>) that react-native-svg cannot draw. Use the ui/src logo in native-reachable code."
+          "nativeNote": "GoogleChromeLogo renders raw lowercase SVG tags (<defs>, <linearGradient>, <stop>, <circle>, <path>) that react-native-svg cannot draw. Keep it out of native-reachable code."
         }
       }
     },
@@ -181,6 +145,7 @@
     "./tooltip-compat": { "web": "real", "native": "real" },
     "./text-compat": { "web": "real", "native": "real" },
     "./theme-hooks-compat": { "web": "real", "native": "real" },
+    "./theme-palette": { "web": "real", "native": "real" },
     "./button-compat": { "web": "real", "native": "real" },
     "./button-frame-compat": { "web": "real", "native": "real" },
     "./checkbox-compat": { "web": "real", "native": "real" },

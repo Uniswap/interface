@@ -17,8 +17,7 @@ import * as baseElements from './svg-elements.ts'
 
 // The native legs import react-native / react-native-svg / reanimated, whose
 // real builds require react-native's flow sources; the real modules are
-// exercised on device and by the native parity harness, not under this jsdom
-// config.
+// exercised on device, not under this jsdom config.
 vi.mock('react-native-svg', () => import('../../modal-close-icon/testing/react-native-svg-mock'))
 vi.mock('react-native', () => ({
   Dimensions: {

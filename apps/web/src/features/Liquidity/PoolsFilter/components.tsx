@@ -1,5 +1,6 @@
 import { Flex, Input, Text, TouchableArea } from '@universe/mycelium'
 import type { ReactNode } from 'react'
+import { numericInputEnforcer } from 'uniswap/src/components/AmountInput/utils/numericInputEnforcer'
 
 /** A titled section in the pools filter modal. Titles sit above their content, or inline for toggles/rows. */
 export function PoolFilterSection({
@@ -69,7 +70,10 @@ export function PoolFilterChip({
   )
 }
 
-/** A bordered number field with an optional percent suffix, matching the Figma inputs. */
+/**
+ * A bordered number field with an optional percent suffix, matching the Figma inputs. Accepts only a
+ * non-negative decimal: edits that would leave a non-numeric value are dropped, and `,` is read as `.`.
+ */
 export function PoolFilterRangeInput({
   value,
   onChangeText,
@@ -83,6 +87,13 @@ export function PoolFilterRangeInput({
   suffix?: string
   testID?: string
 }): JSX.Element {
+  const handleChangeText = (text: string): void => {
+    const normalized = text.replace(/,/g, '.')
+    if (numericInputEnforcer(normalized)) {
+      onChangeText(normalized)
+    }
+  }
+
   return (
     <Flex
       row
@@ -109,7 +120,8 @@ export function PoolFilterRangeInput({
         placeholder={placeholder}
         placeholderTextColor="$neutral3"
         value={value}
-        onChangeText={onChangeText}
+        keyboardType="decimal-pad"
+        onChangeText={handleChangeText}
         testID={testID}
       />
       {suffix ? (

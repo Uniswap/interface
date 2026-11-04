@@ -4,12 +4,9 @@
  * delay/restMs), the full leaked Tamagui stack surface on the trigger, and
  * the full `Tooltip.Content` surface (Popover.Content minus zIndex, plus
  * `animationDirection` and the zIndex escape hatch) — reproduced without the
- * Tamagui runtime. The style legs reuse the Flex compat contract; the parity
- * suite in `packages/tailwind/src/parity/tooltip` asserts key coverage
- * against the real legacy component up to a documented exclusion list.
+ * Tamagui runtime. The style legs reuse the Flex compat contract.
  *
- * NOTE: this compat targets the LEGACY shared Tooltip
- * (`packages/ui/src/components/tooltip`). The existing Radix-based
+ * NOTE: this compat replaced the legacy `ui/src` Tooltip. The existing Radix-based
  * `components/tooltip.tsx` (consumed by mission-control through the mycelium
  * barrel) is untouched and coexists — same arrangement as the Radix
  * popover/dropdown-menu scaffolding next to popover-compat/menu-compat.

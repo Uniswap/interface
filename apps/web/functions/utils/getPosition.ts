@@ -2,7 +2,6 @@
 // proto reuses the v1 enum), so this v1 import is the matching request type — the same path the app
 // imports Protocols from elsewhere (e.g. `getProtocols`, Migrate/buildParams).
 import { Protocols } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/types_pb'
-import { GraphQLApi } from '@universe/api'
 import { Data, PositionStatus } from 'functions/utils/cache'
 import getPool from 'functions/utils/getPool'
 import {
@@ -104,7 +103,7 @@ export default async function getPosition({
       token0Symbol,
       token1Symbol,
       feeTier,
-      protocolVersion: version === 'v3' ? GraphQLApi.ProtocolVersion.V3 : GraphQLApi.ProtocolVersion.V4,
+      protocolVersion: version === 'v3' ? 'V3' : 'V4',
       token0Image: position.token0Metadata?.logoUrl,
       token1Image: position.token1Metadata?.logoUrl,
     },

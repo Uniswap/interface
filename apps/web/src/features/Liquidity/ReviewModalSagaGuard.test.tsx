@@ -11,8 +11,10 @@ import { act, render, screen } from '~/test-utils/render'
 
 vi.mock('~/features/Liquidity/useLPGeoRestriction', () => ({ useLPGeoRestriction: vi.fn() }))
 vi.mock('~/pages/CreatePosition/CreateLiquidityContextProvider', () => ({ useCreateLiquidityContext: vi.fn() }))
-vi.mock('~/hooks/Tokens', () => ({ useCurrencyInfo: () => undefined }))
-vi.mock('~/hooks/useAccount', () => ({ useAccount: () => ({ isConnected: true, connector: { id: 'injected' } }) }))
+vi.mock('~/hooks/currency/useCurrencyInfo', () => ({ useCurrencyInfo: () => undefined }))
+vi.mock('~/connection/hooks/useAccount', () => ({
+  useAccount: () => ({ isConnected: true, connector: { id: 'injected' } }),
+}))
 vi.mock('@universe/embedded-wallet', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@universe/embedded-wallet')>()),
   useGetPasskeyAuthStatus: () => ({

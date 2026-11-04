@@ -17,6 +17,11 @@ interface RequireSessionInterceptorOptions {
   getSession: () => Session | null
   source: string
   getLogger?: () => Logger
+  /**
+   * Marks an otherwise session-classified error (e.g. a 403) as final: it is
+   * thrown as-is, with no `recover()` and no retry.
+   */
+  isNonRecoverable?: (err: unknown) => boolean
 }
 
 /**
@@ -28,6 +33,7 @@ export function requireSessionInterceptor({
   getSession,
   source,
   getLogger,
+  isNonRecoverable,
 }: RequireSessionInterceptorOptions): Interceptor {
   return (next) => async (request) => {
     if (request.service.typeName === SESSION_SERVICE_TYPE_NAME) {
@@ -40,7 +46,7 @@ export function requireSessionInterceptor({
     return gated({
       session,
       call: () => next(request),
-      isUnauthError: isConnectUnauthorized,
+      isUnauthError: (err) => isConnectUnauthorized(err) && !isNonRecoverable?.(err),
       source,
       getLogger,
     })

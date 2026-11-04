@@ -55,6 +55,8 @@ export type Pool = {
   currentTick?: number
   sqrtPriceX96?: string
   protocolFee?: number
+  /** BE-ranked pool category ids; the first resolvable one is the row tag. Ranked sources only. */
+  categoryIds?: string[]
   // The tokens `rewardApr` is paid in, one entry per token, and the normalized replacement for
   // `PoolRankStats.tokenBoosts` (omitted below) — the wire shape carries a served `Token` this
   // flattens to what the badges actually render.

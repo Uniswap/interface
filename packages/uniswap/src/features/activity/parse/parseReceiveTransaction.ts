@@ -57,7 +57,7 @@ export function parseReceiveTransaction(transaction: OnChainTransaction): Receiv
       tokenAddress,
       sender,
       currencyAmountRaw: firstTransfer.amount?.raw,
-      transactedUSDValue: undefined,
+      transactedUSDValue: firstTransfer.transactedValueUsd,
       isSpam: isRestTokenSpam(tokenAsset.metadata?.spamCode),
       dappInfo: extractDappInfo(transaction),
     }

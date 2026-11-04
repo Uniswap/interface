@@ -8,7 +8,7 @@ import type {
   TransactionTypeInfo as TransactionInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TransactionOriginType, TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { useAccount } from '~/hooks/useAccount'
+import { useAccount } from '~/connection/hooks/useAccount'
 import { getRoutingForTransaction } from '~/state/activity/utils'
 import { useAppDispatch } from '~/state/hooks'
 

@@ -2,7 +2,7 @@ product_area: explore
 # Platforms: web + mobile only. Extension deliberately excluded — apps/extension has no
 # Explore page, no Token Detail Page, and does not mount the shared SearchModal for
 # discovery (its only search usage is the send-recipient panel, owned by the send area).
-platforms: [web, mobile]
+platforms: [web, mobile, extension]
 nxProjects: ["@universe/web", uniswap, "@uniswap/mobile"]
 owners: ["@uniswap/consumer-engagement-fe"]
 

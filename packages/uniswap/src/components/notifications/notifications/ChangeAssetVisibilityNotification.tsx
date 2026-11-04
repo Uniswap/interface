@@ -1,6 +1,6 @@
+import { Eye } from '@universe/mycelium/icons/Eye'
+import { EyeOff } from '@universe/mycelium/icons/EyeOff'
 import { useTranslation } from 'react-i18next'
-import { Eye } from 'ui/src/components/icons/Eye'
-import { EyeOff } from 'ui/src/components/icons/EyeOff'
 import { NotificationToast } from 'uniswap/src/components/notifications/NotificationToast'
 import { ChangeAssetVisibilityNotification as ChangeAssetVisibilityNotificationType } from 'uniswap/src/features/notifications/slice/types'
 

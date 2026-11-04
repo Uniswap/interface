@@ -1,9 +1,4 @@
-// `@universe/api/fetch`: the shared fetch client without the root barrel's Apollo graph.
-export { createFetchClient } from '@universe/api/src/clients/base/createFetchClient'
-export { FetchError } from '@universe/api/src/clients/base/errors'
-export type {
-  CustomOptions,
-  FetchClient,
-  FetchClientContext,
-  StandardFetchOptions,
-} from '@universe/api/src/clients/base/types'
+// `@universe/api/fetch`: the shared fetch client without the root barrel's dependency graph.
+export { createFetchClient } from '../clients/base/createFetchClient'
+export { FetchError } from '../clients/base/errors'
+export type { CustomOptions, FetchClient, FetchClientContext, StandardFetchOptions } from '../clients/base/types'

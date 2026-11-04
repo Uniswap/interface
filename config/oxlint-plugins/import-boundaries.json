@@ -16,6 +16,15 @@
       "message": "Toucan feature code may only be imported from pages/Explore/, features/explore/state, pages/Launches/, pages/Liquidity/CreateAuction/, pages/TokenDetails/, or from within features/Toucan/."
     },
     {
+      "id": "margin-feature",
+      "mode": "importerAllowlist",
+      "importerInternalPathMarkers": ["/features/margin/"],
+      "allowedImporterPathMarkers": ["/pages/Swap/", "/pages/Portfolio/", "/constants/margin.test.ts"],
+      "importPrefixes": ["~/features/margin/", "features/margin/"],
+      "bareModuleSources": ["~/features/margin", "features/margin"],
+      "message": "Margin feature code may only be imported from pages/Swap/, pages/Portfolio/, or from within features/margin/."
+    },
+    {
       "id": "liquidity-feature",
       "mode": "importerAllowlist",
       "importerInternalPathMarkers": ["/features/Liquidity/"],
@@ -23,6 +32,7 @@
         "/pages/AddLiquidity/",
         "/pages/CreatePosition/",
         "/pages/Explore/",
+        "/pages/HookDetails/",
         "/pages/IncreaseLiquidity/",
         "/pages/LegacyPool/",
         "/pages/Liquidity/",
@@ -35,7 +45,7 @@
       ],
       "importPrefixes": ["~/features/Liquidity/", "features/Liquidity/"],
       "bareModuleSources": ["~/features/Liquidity", "features/Liquidity"],
-      "message": "Liquidity feature code may only be imported from the allowlisted page routes, D3LiquidityChartShared, TopLevelModals, or from within features/Liquidity/"
+      "message": "Liquidity feature code may only be imported from the allowlisted page routes (including pages/HookDetails/), D3LiquidityChartShared, TopLevelModals, or from within features/Liquidity/"
     },
     {
       "id": "swap-feature",
@@ -59,6 +69,7 @@
       "allowedImporterPathMarkers": [
         "/pages/AddLiquidity/",
         "/pages/Explore/",
+        "/pages/HookDetails/",
         "/pages/Landing/",
         "/pages/Launches/",
         "/pages/PoolDetails/",
@@ -68,7 +79,16 @@
       ],
       "importPrefixes": ["~/features/Explore/", "features/Explore/"],
       "bareModuleSources": ["~/features/Explore", "features/Explore"],
-      "message": "The Explore feature may only be imported from pages/AddLiquidity/, pages/Explore/, pages/Landing/, pages/Launches/, pages/PoolDetails/, pages/Positions/, pages/TokenDetails/, features/Toucan/ or from within features/Explore/."
+      "message": "The Explore feature may only be imported from pages/AddLiquidity/, pages/Explore/, pages/HookDetails/, pages/Landing/, pages/Launches/, pages/PoolDetails/, pages/Positions/, pages/TokenDetails/, features/Toucan/ or from within features/Explore/."
+    },
+    {
+      "id": "hooks-feature",
+      "mode": "importerAllowlist",
+      "importerInternalPathMarkers": ["/features/Hooks/"],
+      "allowedImporterPathMarkers": ["/pages/Explore/", "/pages/HookDetails/"],
+      "importPrefixes": ["~/features/Hooks/", "features/Hooks/"],
+      "bareModuleSources": ["~/features/Hooks", "features/Hooks"],
+      "message": "The Hooks feature may only be imported from pages/Explore/, pages/HookDetails/, or from within features/Hooks/."
     },
     {
       "id": "swap-ui-views",
@@ -89,12 +109,12 @@
         "@tanstack/react-query"
       ],
       "bareModuleSources": ["@universe/gating", "@universe/compliance", "react-redux", "redux"],
-      "message": "Swap views (files under a views/ directory in the swap tree) are presentational: data in via props, actions out via callbacks. No store reads, analytics, feature flags, data fetching, or modal shells; keep those in the adapter and pass the result down as props. See scripts/swap-ui/POLICIES.md."
+      "message": "Swap views (files under a views/ directory in the swap tree) are presentational: data in via props, actions out via callbacks. No store reads, analytics, feature flags, data fetching, or modal shells; keep those in the adapter and pass the result down as props. See scripts/transactions-ui/POLICIES.md."
     },
     {
-      "id": "swap-ui-package",
+      "id": "transactions-ui-package",
       "mode": "importerDenylist",
-      "deniedImporterPathMarkers": ["/packages/swap-ui/src/"],
+      "deniedImporterPathMarkers": ["/packages/transactions-ui/src/"],
       "importPrefixes": [
         "uniswap/src",
         "ui/src",
@@ -115,15 +135,105 @@
         "@tanstack/react-query",
         "zustand"
       ],
-      "message": "@universe/swap-ui is presentational: nothing from uniswap/src, ui/src, wallet/src, gating, telemetry, redux, zustand, react-query or platform constants, including type imports. Data in via props, actions out via callbacks; the adapter in packages/uniswap does the rest. See packages/swap-ui/CLAUDE.md."
+      "message": "@universe/transactions-ui is presentational: nothing from uniswap/src, ui/src, wallet/src, gating, telemetry, redux, zustand, react-query or platform constants, including type imports. Data in via props, actions out via callbacks; the adapter in packages/uniswap does the rest. See packages/transactions-ui/CLAUDE.md."
+    },
+    {
+      "id": "transactions-ui-common",
+      "mode": "importerDenylist",
+      "deniedImporterPathMarkers": ["/packages/transactions-ui/src/common/"],
+      "importPrefixes": [
+        "@universe/transactions-ui/src/swap/",
+        "@universe/transactions-ui/src/lp/",
+        "@universe/transactions-ui/src/send/",
+        "@universe/transactions-ui/src/margin/"
+      ],
+      "bareModuleSources": [],
+      "message": "transactions-ui common/ is shared by several products, so it imports nothing from a product folder (swap/, lp/, send/, margin/). Move what both need into common/. See packages/transactions-ui/CLAUDE.md."
+    },
+    {
+      "id": "transactions-ui-swap",
+      "mode": "importerDenylist",
+      "deniedImporterPathMarkers": ["/packages/transactions-ui/src/swap/"],
+      "importPrefixes": [
+        "@universe/transactions-ui/src/lp/",
+        "@universe/transactions-ui/src/send/",
+        "@universe/transactions-ui/src/margin/"
+      ],
+      "bareModuleSources": [],
+      "message": "transactions-ui product folders never import each other. When a second product needs a view, move it into common/. See packages/transactions-ui/CLAUDE.md."
     },
     {
       "id": "web-state-import-denylist",
       "mode": "importerDenylist",
       "deniedImporterPathMarkers": ["/apps/web/src/state/"],
-      "importPrefixes": ["~/features/", "features/", "~/components/", "components/"],
-      "bareModuleSources": ["~/features", "features", "~/components", "components"],
-      "message": "apps/web `src/state` must not import from `~/features/` or `~/components/`"
+      "importPrefixes": [
+        "~/features/",
+        "features/",
+        "~/components/",
+        "components/",
+        "~/hooks/",
+        "hooks/",
+        "~/app/",
+        "app/",
+        "~/pages/",
+        "pages/"
+      ],
+      "bareModuleSources": [
+        "~/features",
+        "features",
+        "~/components",
+        "components",
+        "~/hooks",
+        "hooks",
+        "~/app",
+        "app",
+        "~/pages",
+        "pages"
+      ],
+      "message": "apps/web `src/state` must not import from `~/pages/`, `~/features/`, `~/components/`, `~/hooks/` or `~/app/`. React hooks that state code needs belong in `state/` or `connection/`."
+    },
+    {
+      "id": "wallet-no-feature-imports",
+      "mode": "importerDenylist",
+      "deniedImporterPathMarkers": ["/apps/web/src/features/wallet/"],
+      "importPrefixes": ["~/features/", "features/"],
+      "bareModuleSources": [],
+      "exemptImportPrefixes": ["~/features/wallet/", "features/wallet/"],
+      "message": "apps/web `features/wallet` may not import other features: every surface depends on the wallet, so its dependencies must point one way. Move the shared piece down to `state/`, `connection/`, `hooks/` or `utils/`, or pass it in from the caller."
+    },
+    {
+      "id": "web-connection-import-denylist",
+      "mode": "importerDenylist",
+      "deniedImporterPathMarkers": ["/apps/web/src/connection/"],
+      "importPrefixes": [
+        "~/pages/",
+        "pages/",
+        "~/features/",
+        "features/",
+        "~/components/",
+        "components/",
+        "~/hooks/",
+        "hooks/",
+        "~/state/",
+        "state/",
+        "~/app/",
+        "app/"
+      ],
+      "bareModuleSources": [
+        "~/pages",
+        "pages",
+        "~/features",
+        "features",
+        "~/components",
+        "components",
+        "~/hooks",
+        "hooks",
+        "~/state",
+        "state",
+        "~/app",
+        "app"
+      ],
+      "message": "apps/web `src/connection` is the wallet and chain plumbing layer: it may import `utils`, `constants`, `types` and packages, but not `~/pages/`, `~/features/`, `~/components/`, `~/hooks/`, `~/state/` or `~/app/`."
     }
   ]
 }

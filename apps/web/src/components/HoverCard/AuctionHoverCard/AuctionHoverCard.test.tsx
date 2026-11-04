@@ -5,11 +5,11 @@ import {
   type AuctionHoverCardAuction,
 } from '~/components/HoverCard/AuctionHoverCard/AuctionHoverCard'
 import { useHoverCardState } from '~/components/HoverCard/HoverCard'
-import { POPUP_MEDIUM_DISMISS_MS } from '~/components/Popups/constants'
-import { popupRegistry } from '~/state/popups/registry'
-import { PopupType } from '~/state/popups/types'
 import { mocked } from '~/test-utils/mocked'
 import { fireEvent, render, screen } from '~/test-utils/render'
+import { POPUP_MEDIUM_DISMISS_MS } from '~/utils/popups/constants'
+import { popupRegistry } from '~/utils/popups/registry'
+import { PopupType } from '~/utils/popups/types'
 
 const mockNavigate = vi.fn()
 

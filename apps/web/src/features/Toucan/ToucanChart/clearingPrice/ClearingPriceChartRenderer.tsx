@@ -5,6 +5,7 @@ import { styled } from '@universe/mycelium/styled'
 import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import { createChart, LineSeries, type IChartApi, type UTCTimestamp } from 'lightweight-charts'
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useEvent } from 'utilities/src/react/hooks'
 import { ChartWrapper } from '~/components/Charts/ChartWrapper'
 import { LiveDotRenderer } from '~/components/Charts/LiveDotRenderer'
@@ -120,6 +121,7 @@ export function ClearingPriceChartRenderer({
   extendLineToRightEdge,
 }: ClearingPriceChartRendererProps): JSX.Element {
   const colors = useSporeColors()
+  const locale = useCurrentLocale()
   const chartContainerRef = useRef<HTMLDivElement | null>(null)
   const xAxisChartContainerRef = useRef<HTMLDivElement | null>(null)
   const xAxisChartRef = useRef<IChartApi | null>(null)
@@ -318,6 +320,7 @@ export function ClearingPriceChartRenderer({
       tokenColor,
       bidTokenInfo,
       maxFractionDigits,
+      locale,
       callbacks: {
         onTooltipStateChange: handleTooltipStateChange,
         onHoverCoordinatesChange: handleHoverCoordinatesChange,
@@ -334,7 +337,7 @@ export function ClearingPriceChartRenderer({
       setIsControllerReady(false)
     }
     // oxlint-disable-next-line react/exhaustive-deps -- biome-parity: oxlint is stricter here
-  }, [handleTooltipStateChange, normalizedData.isAuctionInProgress])
+  }, [handleTooltipStateChange, normalizedData.isAuctionInProgress, locale])
 
   // Push updates into data chart controller
   useEffect(() => {
@@ -407,6 +410,7 @@ export function ClearingPriceChartRenderer({
     tokenColor,
     disableMouseWheelInteractions,
     extendLineToRightEdge,
+    locale,
   ])
 
   useEffect(() => {

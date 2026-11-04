@@ -29,7 +29,7 @@ export function TokenCloud(): JSX.Element {
         navigate(
           getTokenDetailsURL({
             address,
-            chain,
+            chainId: chain,
           }),
         ),
       ).catch(() => {})

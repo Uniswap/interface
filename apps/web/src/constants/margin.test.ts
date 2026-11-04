@@ -3,8 +3,8 @@ import { DEFAULT_MARGIN_FORM_STATE } from 'uniswap/src/features/transactions/mar
 import type { MarginVenue } from 'uniswap/src/features/transactions/margin/types'
 import { describe, expect, it } from 'vitest'
 import { DEFAULT_MARGIN_PAIR_KEY, MARGIN_QUOTE_TOKEN_ADDRESSES, marginMarketKey } from '~/constants/margin'
+import { marginMarketDirection } from '~/features/margin/utils/marginTokenDisplay'
 import { findMarginMarketByTokens } from '~/pages/Swap/Margin/__fixtures__/marginCatalog'
-import { marginMarketDirection } from '~/pages/Swap/Margin/marginTokenDisplay'
 
 const WETH = '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'
 const USDC = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'

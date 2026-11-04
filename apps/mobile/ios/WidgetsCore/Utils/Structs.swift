@@ -8,21 +8,21 @@
 import Foundation
 
 public struct TokenResponse: Hashable {
-  public init(chain: String, address: String? = nil, symbol: String, name: String) {
-    self.chain = chain
+  public init(chainId: Int, address: String? = nil, symbol: String, name: String) {
+    self.chainId = chainId
     self.address = address
     self.symbol = symbol
     self.name = name
   }
   
-  public let chain: String
+  public let chainId: Int
   public let address: String?
   public let symbol: String
   public let name: String
 }
 
 public struct TokenPriceResponse {
-  public let chain: String
+  public let chainId: Int
   public let address: String?
   public let symbol: String
   public let name: String

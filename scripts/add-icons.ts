@@ -7,13 +7,17 @@
  * removes that icon's generated components so `--skip-existing` regenerates them. Without it, files that pass are written into the target
  * directory of `--repo`, which defaults to the checkout this script lives in; the skill
  * points it at a fresh worktree of `origin/main`. The `/add-icons` skill drives the rest
- * (generators, commit, PR); this only guards the generator's input, so every rejection here
+ * (generator, commit, PR); this only guards the generator's input, so every rejection here
  * is something the generator would otherwise do silently: flatten a second color, overwrite
- * an existing icon in ui and mycelium, or ship invisible geometry.
+ * an existing icon, or ship invisible geometry.
  */
 import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs'
 import { basename, join } from 'node:path'
 import { load } from 'cheerio'
+import {
+  HANDWRITTEN_ICON_COMPONENTS,
+  HANDWRITTEN_LOGO_COMPONENTS,
+} from '../packages/mycelium/src/scripts/handwritten-icons'
 
 export type IconTarget = 'icons' | 'logos'
 
@@ -60,24 +64,20 @@ const IGNORED_COLOR_VALUES = new Set(['none', 'currentcolor', 'transparent', 'in
 const HREF_ATTRIBUTES = ['href', 'xlink:href'] as const
 
 export function targetDirs(repoRoot: string, target: IconTarget): TargetDirs {
-  const ui = join(repoRoot, 'packages', 'ui', 'src')
-  const assets = join(repoRoot, 'packages', 'mycelium', 'src', 'assets')
+  const mycelium = join(repoRoot, 'packages', 'mycelium', 'src')
   if (target === 'logos') {
     return {
-      svgDir: join(assets, 'logos', 'svg'),
-      componentDirs: [join(ui, 'components', 'logos')],
+      svgDir: join(mycelium, 'assets', 'logos', 'svg'),
+      componentDirs: [join(mycelium, 'components', 'logos')],
     }
   }
   return {
-    svgDir: join(assets, 'icons'),
-    componentDirs: [
-      join(ui, 'components', 'icons'),
-      join(repoRoot, 'packages', 'mycelium', 'src', 'components', 'icons'),
-    ],
+    svgDir: join(mycelium, 'assets', 'icons'),
+    componentDirs: [join(mycelium, 'components', 'icons')],
   }
 }
 
-/** Mirrors `uppercamelcase` as the generators apply it to the file stem. */
+/** Mirrors `uppercamelcase` as the generator applies it to the file stem. */
 export function toComponentName(name: string): string {
   return name
     .split('-')
@@ -113,6 +113,7 @@ export function findReplacements(
 
 export function validateBatch(files: readonly IconFile[], options: ValidateOptions): ValidationIssue[] {
   const exists = options.exists ?? existsSync
+  const handwritten = options.target === 'logos' ? HANDWRITTEN_LOGO_COMPONENTS : HANDWRITTEN_ICON_COMPONENTS
   const issues: ValidationIssue[] = []
 
   if (files.length === 0) {
@@ -139,6 +140,13 @@ export function validateBatch(files: readonly IconFile[], options: ValidateOptio
   for (const file of files) {
     if (!NAME_RE.test(file.name)) {
       issues.push({ name: file.name, message: 'name must be kebab-case (a-z, 0-9, -). Rename the file.' })
+    } else if (handwritten.has(toComponentName(file.name))) {
+      // Even with --replace: removeGeneratedComponents would delete the hand-written file and
+      // the generator never recreates it.
+      issues.push({
+        name: file.name,
+        message: `${toComponentName(file.name)} is a hand-written component the generator skips. Rename the file.`,
+      })
     } else if (!options.replace && existingPathsFor(file.name, options.dirs, exists).length > 0) {
       issues.push({
         name: file.name,
@@ -438,7 +446,7 @@ export function writeBatch(files: readonly IconFile[], dirs: TargetDirs): string
 }
 
 /**
- * The generators run with `--skip-existing`, so a replaced SVG would keep its stale
+ * The generator runs with `--skip-existing`, so a replaced SVG would keep its stale
  * components unless they are removed first. Returns the paths removed.
  */
 export function removeGeneratedComponents(names: readonly string[], dirs: TargetDirs): string[] {

@@ -10,7 +10,7 @@ exports[`ProviderConnectedView > should render the component and call callbacks 
   />
   <div
     class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 w-[100%] h-[100%] absolute top-[0px] left-[0px] z-[var(--c-z)] [background:var(--c-b)]"
-    style="--c-z: 1; --c-b: radial-gradient(70% 50% at center, transparent 0%, #FFFFFF 100%);"
+    style="--c-z: 1; --c-b: radial-gradient(70% 50% at center, transparent 0%, #ffffff 100%);"
   />
   <div
     class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row-reverse items-center justify-between z-[var(--c-z)]"
@@ -22,21 +22,17 @@ exports[`ProviderConnectedView > should render the component and call callbacks 
       role="button"
       tabindex="0"
     >
-      <div
-        style="display: flex; align-items: stretch; flex-direction: column; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0; min-width: 0; flex-shrink: 0;"
+      <svg
+        fill="none"
+        stroke-width="8"
+        style="color: rgba(19, 19, 19, 0.63); width: 24px; height: 24px;"
+        viewBox="0 0 16 16"
       >
-        <svg
-          fill="none"
-          stroke-width="8"
-          style="width: 24px; height: 24px; color: rgba(19, 19, 19, 0.63);"
-          viewBox="0 0 16 16"
-        >
-          <path
-            d="M12.5303 4.53033C12.8232 4.23744 12.8232 3.76256 12.5303 3.46967C12.2374 3.17678 11.7626 3.17678 11.4697 3.46967L12.5303 4.53033ZM3.46967 11.4697C3.17678 11.7626 3.17678 12.2374 3.46967 12.5303C3.76256 12.8232 4.23744 12.8232 4.53033 12.5303L3.46967 11.4697ZM4.53033 3.46967C4.23744 3.17678 3.76256 3.17678 3.46967 3.46967C3.17678 3.76256 3.17678 4.23744 3.46967 4.53033L4.53033 3.46967ZM11.4697 12.5303C11.7626 12.8232 12.2374 12.8232 12.5303 12.5303C12.8232 12.2374 12.8232 11.7626 12.5303 11.4697L11.4697 12.5303ZM11.4697 3.46967L3.46967 11.4697L4.53033 12.5303L12.5303 4.53033L11.4697 3.46967ZM3.46967 4.53033L11.4697 12.5303L12.5303 11.4697L4.53033 3.46967L3.46967 4.53033Z"
-            fill="currentColor"
-          />
-        </svg>
-      </div>
+        <path
+          d="M12.5303 4.53033C12.8232 4.23744 12.8232 3.76256 12.5303 3.46967C12.2374 3.17678 11.7626 3.17678 11.4697 3.46967L12.5303 4.53033ZM3.46967 11.4697C3.17678 11.7626 3.17678 12.2374 3.46967 12.5303C3.76256 12.8232 4.23744 12.8232 4.53033 12.5303L3.46967 11.4697ZM4.53033 3.46967C4.23744 3.17678 3.76256 3.17678 3.46967 3.46967C3.17678 3.76256 3.17678 4.23744 3.46967 4.53033L4.53033 3.46967ZM11.4697 12.5303C11.7626 12.8232 12.2374 12.8232 12.5303 12.5303C12.8232 12.2374 12.8232 11.7626 12.5303 11.4697L11.4697 12.5303ZM11.4697 3.46967L3.46967 11.4697L4.53033 12.5303L12.5303 4.53033L11.4697 3.46967ZM3.46967 4.53033L11.4697 12.5303L12.5303 11.4697L4.53033 3.46967L3.46967 4.53033Z"
+          fill="currentColor"
+        />
+      </svg>
     </div>
   </div>
   <div

@@ -1,15 +1,10 @@
-import { GraphQLApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
 import { DEFAULT_NATIVE_ADDRESS as NATIVE_ADDRESS } from '@universe/prices'
 import { USDT } from 'uniswap/src/constants/tokens'
-import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
-import { buildNativeCurrencyId, currencyId } from 'uniswap/src/utils/currencyId'
 import { describe, expect, it } from 'vitest'
 import {
   buildTokenPricesResponse,
-  buildTokenProjectsFallbackResponse,
   fallbackPriceForToken,
-  isGraphqlResponseHealthy,
   parseLiveTokenPrices,
   type TokenPriceRequest,
 } from '~/playwright/fixtures/tokenDataFallbacks'
@@ -20,73 +15,6 @@ const LIVE_ETH_USD = 2459.012137367723
 const LIVE_USDT_USD = 0.9997835334926242
 const LIVE_UPDATED_AT = '2026-09-10T21:43:05.699Z'
 const FALLBACK_UPDATED_AT = '2026-09-10T21:50:00.000Z'
-
-describe('buildTokenProjectsFallbackResponse', () => {
-  it('serves known contracts with production decimals', () => {
-    const response = buildTokenProjectsFallbackResponse([
-      currencyIdToContractInput(buildNativeCurrencyId(UniverseChainId.Mainnet)),
-      currencyIdToContractInput(currencyId(USDT)),
-    ])
-
-    const tokens = response.data.tokenProjects.flatMap((project) => project.tokens)
-
-    const eth = tokens.find((token) => token.standard === GraphQLApi.TokenStandard.Native)
-    expect(eth?.chain).toBe(GraphQLApi.Chain.Ethereum)
-    expect(eth?.decimals).toBe(18)
-
-    const usdt = tokens.find((token) => token.symbol === 'USDT')
-    // The exact bug class this map exists to prevent: a guessed decimals value (18) would make
-    // the app silently mis-scale USDT amounts
-    expect(usdt?.decimals).toBe(6)
-    expect(usdt?.address?.toLowerCase()).toBe(USDT.address.toLowerCase())
-  })
-
-  it('omits unknown contracts instead of guessing metadata', () => {
-    const response = buildTokenProjectsFallbackResponse([
-      currencyIdToContractInput(currencyId(USDT)),
-      { chain: 'ETHEREUM', address: '0x1111111111111111111111111111111111111111' },
-    ])
-
-    expect(response.data.tokenProjects).toHaveLength(1)
-    expect(response.data.tokenProjects[0]?.tokens[0]?.symbol).toBe('USDT')
-  })
-})
-
-describe('isGraphqlResponseHealthy', () => {
-  type HealthCheckResponse = Parameters<typeof isGraphqlResponseHealthy>[0]
-
-  function stubResponse({ ok, body }: { ok: boolean; body: string }): HealthCheckResponse {
-    return {
-      ok: () => ok,
-      json: async () => JSON.parse(body) as unknown,
-    } as unknown as HealthCheckResponse
-  }
-
-  it('accepts a 2xx with data and no errors', async () => {
-    const body = JSON.stringify({ data: { tokens: [] } })
-    await expect(isGraphqlResponseHealthy(stubResponse({ ok: true, body }))).resolves.toBe(true)
-  })
-
-  it('accepts a 2xx with an empty errors array', async () => {
-    const body = JSON.stringify({ data: { tokens: [] }, errors: [] })
-    await expect(isGraphqlResponseHealthy(stubResponse({ ok: true, body }))).resolves.toBe(true)
-  })
-
-  it('rejects a non-2xx response', async () => {
-    const body = JSON.stringify({ data: { tokens: [] } })
-    await expect(isGraphqlResponseHealthy(stubResponse({ ok: false, body }))).resolves.toBe(false)
-  })
-
-  // The throttle shape the retry targets besides a bare 429: the gateway answering 200 with errors
-  it('rejects a 2xx carrying GraphQL errors', async () => {
-    const body = JSON.stringify({ data: null, errors: [{ message: 'rate limited' }] })
-    await expect(isGraphqlResponseHealthy(stubResponse({ ok: true, body }))).resolves.toBe(false)
-  })
-
-  it('rejects a 2xx whose body does not parse', async () => {
-    await expect(isGraphqlResponseHealthy(stubResponse({ ok: true, body: 'not json' }))).resolves.toBe(false)
-  })
-})
 
 describe('parseLiveTokenPrices', () => {
   it('keeps entries carrying a finite, positive price', () => {

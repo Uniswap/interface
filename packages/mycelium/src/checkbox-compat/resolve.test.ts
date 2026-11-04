@@ -65,13 +65,8 @@ describe('size tokens each resolve to their own distinct size (INFRA-3233)', () 
 })
 
 /**
- * A change detector, NOT the parity gate. Every assertion here restates a
- * literal that lives in the same repo, so it can only catch an edit — never a
- * mis-transcription from legacy, which is true by construction against itself.
- * The gate that CAN catch one renders the live legacy `LabeledCheckbox` with
- * the props omitted and compares the row's resolved spacing:
- * `tailwind/src/parity/checkbox/checkbox-parity.test.tsx` Layer C (web) and
- * `native-parity.test.tsx` Layer 6 (native).
+ * A change detector: every assertion here restates a literal that lives in the
+ * same repo, so it can only catch an edit, never a mis-transcription from legacy.
  */
 describe('legacy defaults', () => {
   it('match the legacy component signatures verbatim', () => {
@@ -83,13 +78,13 @@ describe('legacy defaults', () => {
 })
 
 describe('glyph and dot sizing', () => {
-  it('grows the glyph to CheckSizePressed while pressed (Checkbox.tsx:115)', () => {
+  it('grows the glyph to CheckSizePressed while pressed', () => {
     const sizes = CHECKBOX_SIZES_BY_TOKEN['$icon.20']
     expect(checkGlyphPx(sizes, false)).toBe(16)
     expect(checkGlyphPx(sizes, true)).toBe(18)
   })
 
-  it('grows the hover dot while pressed (Checkbox.tsx:129-131)', () => {
+  it('grows the hover dot while pressed', () => {
     const sizes = CHECKBOX_SIZES_BY_TOKEN['$icon.20']
     expect(hoverDotPx(sizes, false)).toBe(4)
     expect(hoverDotPx(sizes, true)).toBe(6)
@@ -106,7 +101,7 @@ describe('glyph and dot sizing', () => {
   })
 })
 
-describe('indicator / hover-dot visibility (Checkbox.tsx:119-121)', () => {
+describe('indicator / hover-dot visibility', () => {
   it('shows the indicator only when checked', () => {
     expect(shouldShowIndicator(true)).toBe(true)
     expect(shouldShowIndicator(false)).toBe(false)

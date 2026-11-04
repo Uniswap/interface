@@ -14,7 +14,7 @@ exports[`disable nft on searchbar > should render searchbar on larger screen 1`]
       style="--ch-bg: var(--surface1-hovered);"
     >
       <div
-        class="flex items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] flex-row shrink gap-[12px]"
+        class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] flex-row shrink items-center gap-[12px]"
       >
         <div
           class="w-[20px] h-[20px]"

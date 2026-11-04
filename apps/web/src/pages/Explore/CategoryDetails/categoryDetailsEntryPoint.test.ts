@@ -12,7 +12,7 @@ describe('createCategoryDetailsNavState', () => {
   })
 
   it('points back at the current token details URL, search included, labeled with the ticker', () => {
-    expect(createCategoryDetailsNavState({ tokenSymbol: 'WBTC' })).toEqual({
+    expect(createCategoryDetailsNavState({ label: 'WBTC' })).toEqual({
       from: `${TDP_PATHNAME}${TDP_SEARCH}`,
       fromLabel: 'WBTC',
     })
@@ -22,25 +22,25 @@ describe('createCategoryDetailsNavState', () => {
     const switchedPathname = '/explore/tokens/base/0x0555e30da8f98308edb960aa94c0db47230d2b9c'
     window.history.replaceState(window.history.state, '', switchedPathname)
 
-    expect(createCategoryDetailsNavState({ tokenSymbol: 'WBTC' })).toEqual({
+    expect(createCategoryDetailsNavState({ label: 'WBTC' })).toEqual({
       from: switchedPathname,
       fromLabel: 'WBTC',
     })
   })
 
   it('returns nothing while the ticker is unknown', () => {
-    expect(createCategoryDetailsNavState({ tokenSymbol: undefined })).toBeUndefined()
+    expect(createCategoryDetailsNavState({ label: undefined })).toBeUndefined()
   })
 })
 
 describe('parseCategoryDetailsNavState', () => {
   it('accepts an in-app token details entry with a label', () => {
     const state = { from: `${TDP_PATHNAME}${TDP_SEARCH}`, fromLabel: 'WBTC' }
-    expect(parseCategoryDetailsNavState(state)).toEqual(state)
+    expect(parseCategoryDetailsNavState(state, 'token')).toEqual(state)
   })
 
   it('drops extra fields from the state', () => {
-    expect(parseCategoryDetailsNavState({ from: TDP_PATHNAME, fromLabel: 'WBTC', extra: true })).toEqual({
+    expect(parseCategoryDetailsNavState({ from: TDP_PATHNAME, fromLabel: 'WBTC', extra: true }, 'token')).toEqual({
       from: TDP_PATHNAME,
       fromLabel: 'WBTC',
     })
@@ -59,6 +59,13 @@ describe('parseCategoryDetailsNavState', () => {
     ['a path traversal', { from: '/explore/tokens/../../swap', fromLabel: 'WBTC' }],
     ['a bare token details prefix', { from: '/explore/tokens/', fromLabel: 'WBTC' }],
   ])('rejects %s', (_, state) => {
-    expect(parseCategoryDetailsNavState(state)).toBeUndefined()
+    expect(parseCategoryDetailsNavState(state, 'token')).toBeUndefined()
+  })
+
+  it('accepts a pool details entry for a pool category and rejects token details paths there', () => {
+    const pdp = { from: '/explore/pools/ethereum/0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640', fromLabel: 'USDC/ETH' }
+    expect(parseCategoryDetailsNavState(pdp, 'pool')).toEqual(pdp)
+    expect(parseCategoryDetailsNavState(pdp, 'token')).toBeUndefined()
+    expect(parseCategoryDetailsNavState({ from: TDP_PATHNAME, fromLabel: 'WBTC' }, 'pool')).toBeUndefined()
   })
 })

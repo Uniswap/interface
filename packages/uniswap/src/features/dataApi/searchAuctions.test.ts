@@ -240,7 +240,7 @@ describe('searchAuctions', () => {
       expect(option.auctionAddress).toBe('')
     })
 
-    it('applies auction metadata overrides before API and currency metadata', () => {
+    it('applies name/symbol overrides and prefers the API token image over the currency logo', () => {
       const option = searchAuctionToAuctionOption({
         auction: new SearchAuction({
           auctionId: '1_0x20eEBd78151EAe9Ed2380AC613204aaF5CA0cd24',
@@ -250,6 +250,7 @@ describe('searchAuctions', () => {
           tokenName: 'Wrapped OCT',
           tokenSymbol: 'WOCT',
           totalBidVolumeUsd: '123.45',
+          tokenImageUrl: 'ipfs://bafkreiacndnz2tlxmvv4jl7bkl2moqr62vzbfzibcmlm2vsmt7ojjxudp4',
         }),
         currencyInfo: createCurrencyInfo({
           name: 'Wrapped OCT',
@@ -263,7 +264,7 @@ describe('searchAuctions', () => {
         type: OnchainItemListOptionType.Auction,
         tokenName: 'Octra',
         tokenSymbol: 'OCT',
-        tokenLogoUrl: '/images/logos/octra-token-launch-logo.svg',
+        tokenLogoUrl: 'ipfs://bafkreiacndnz2tlxmvv4jl7bkl2moqr62vzbfzibcmlm2vsmt7ojjxudp4',
         committedVolumeUsd: 123.45,
         isVerified: true,
       })
@@ -399,6 +400,7 @@ describe('searchAuctions', () => {
             tokenName: 'Cap',
             tokenSymbol: 'CAP',
             totalBidVolumeUsd: '456.78',
+            tokenImageUrl: 'https://example.com/cap.png',
           }),
           uniqueBidderCount: 982,
         }),
@@ -415,7 +417,7 @@ describe('searchAuctions', () => {
         tokenAddress: '0x9999B7E3cc6979223Ff1aF980b7D8B90B75d9999',
         tokenName: 'Cap',
         tokenSymbol: 'CAP',
-        tokenLogoUrl: '/images/logos/cap-token-launch-logo.png',
+        tokenLogoUrl: 'https://example.com/cap.png',
         committedVolumeUsd: 456.78,
         uniqueBidderCount: 982,
         isVerified: true,

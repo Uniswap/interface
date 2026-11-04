@@ -1,7 +1,6 @@
 /**
  * Prop contracts of `ThemedIconCompat` / `ThemedSpinnerCompat` — the rebuilt
- * legacy `ThemedIcon` / `ThemedSpinningLoader` surfaces
- * (`ui/src/components/buttons/Button/components/`): the button variant
+ * legacy ui `ThemedIcon` / `ThemedSpinningLoader` surfaces: the button variant
  * selection as explicit props (legacy passes them per call, context is the
  * fallback), plus `typeOfButton`, which switches the icon box between the
  * label line-height sizes (`'button'`) and the `$icon.16/20/24` sizes

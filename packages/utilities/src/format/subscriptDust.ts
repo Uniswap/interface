@@ -1,4 +1,5 @@
 import { getSubscriptNotationParts } from 'utilities/src/format/getSubscriptNotationParts'
+import { getLocaleNumberSeparators } from 'utilities/src/format/localeNumberSeparators'
 import { toSubscript } from 'utilities/src/format/toSubscript'
 
 /** Subscript kicks in at 4 leading zeros, matching apps/web's Toucan charts. */
@@ -9,11 +10,11 @@ const MIN_SIG_DIGITS = 2
 /**
  * The subscript-dust rendering of a sub-1 amount or price ("0.0₅123"), or undefined when the
  * value has fewer than 4 leading zeros (or isn't a positive number under 1) and takes the caller's
- * regular treatment instead. Unsigned and locale-free ("." separator): callers compose any sign
- * or currency symbol around it — getSubscriptNotationParts reads the magnitude, so a negative
+ * regular treatment instead. Unsigned, with the locale's decimal separator ("." when no locale is
+ * given): callers compose any sign or currency symbol around it — getSubscriptNotationParts reads the magnitude, so a negative
  * input is refused here rather than rendered as unsigned dust.
  */
-export function subscriptDust(value: number): string | undefined {
+export function subscriptDust(value: number, locale?: string): string | undefined {
   if (!(value > 0) || value >= 1) {
     return undefined
   }
@@ -26,5 +27,6 @@ export function subscriptDust(value: number): string | undefined {
   if (parts?.usesSubscript !== true) {
     return undefined
   }
-  return `0.0${toSubscript(parts.leadingZeros)}${parts.significantPart}`
+  const decimal = locale ? getLocaleNumberSeparators(locale).decimal : '.'
+  return `0${decimal}0${toSubscript(parts.leadingZeros)}${parts.significantPart}`
 }

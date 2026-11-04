@@ -5,9 +5,9 @@
  * Only imported by server routes — never shipped to the browser.
  */
 
-import { ENTRY_GATEWAY_API_BASE_URLS } from '@universe/api/src/clients/base/urls'
-import { rpcPost } from '@universe/api/src/clients/configService/connectrpcClient'
 import { Environment } from '@universe/environment'
+import { ENTRY_GATEWAY_API_BASE_URLS } from '../base/urls'
+import { rpcPost } from './connectrpcClient'
 
 // =============================================================================
 // Constants

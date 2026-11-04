@@ -13,7 +13,7 @@ import { mocked } from '~/test-utils/mocked'
 const mockUseActiveAddress = vi.fn<() => string | undefined>()
 
 vi.mock('~/pages/TokenDetails/context/useTDPStore', () => ({ useTDPStore: vi.fn() }))
-vi.mock('~/features/accounts/store/hooks', () => ({ useActiveAddress: () => mockUseActiveAddress() }))
+vi.mock('~/connection/accounts/hooks', () => ({ useActiveAddress: () => mockUseActiveAddress() }))
 
 const WALLET = '0xAbCdEF0000000000000000000000000000000001'
 const CUSTOM_A = {

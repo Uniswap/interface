@@ -18,7 +18,7 @@ import type { PositionInfo } from 'uniswap/src/features/positions/types'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { APP_BODY_MOBILE_GUTTER_PX } from '~/app/layout/constants'
-import { useConnectionStatus } from '~/features/accounts/store/hooks'
+import { useConnectionStatus } from '~/connection/accounts/hooks'
 import { EmptyPositionsView } from '~/features/Liquidity/components/emptyStates/EmptyPositionsView'
 import { ErrorPositionsView } from '~/features/Liquidity/components/emptyStates/ErrorPositionsView'
 import { PoolsUnavailableOnSolanaView } from '~/features/Liquidity/components/emptyStates/PoolsUnavailableOnSolanaView'
@@ -72,20 +72,12 @@ export function PortfolioPools() {
   const outageBanner = usePoolsOutageBanner({ evmAddress, chainId, enabled: portfolioPoolsBalancesEnabled })
   const showBalanceHeader = portfolioPoolsBalancesEnabled
 
-  const {
-    search,
-    versionFilter,
-    statusFilter,
-    v2StatusFilter,
-    showHiddenPositions,
-    sort,
-    onSort,
-    positionsTableControlBarProps,
-  } = usePortfolioPoolsFilters({
-    chainId,
-    externalAddress: externalAddress?.address,
-    positionsOwnerAddress: evmAddress,
-  })
+  const { search, versionFilter, statusFilter, v2StatusFilter, sort, onSort, positionsTableControlBarProps } =
+    usePortfolioPoolsFilters({
+      chainId,
+      externalAddress: externalAddress?.address,
+      positionsOwnerAddress: evmAddress,
+    })
 
   // Status and search are filtered server-side by GetWalletPositions; only version stays client-side.
   const {
@@ -156,11 +148,11 @@ export function PortfolioPools() {
   )
   const walletHasAnyPositions = visiblePositions.length > 0 || hiddenPositions.length > 0
   const hasActiveV2Filter = hasActiveControlBarFilter(positionsTableControlBarProps)
-  // The Hidden toggle can empty the list (wallet has no hidden positions); like an active filter it
-  // must keep the table+control bar mounted, otherwise the switch unmounts with no way back. The
-  // route chain scope is the same trap: a chain with no positions must show the no-results table
-  // (whose Clear filters widens back to all networks), not the bare empty view.
-  const showEmptyState = hasLoadedPositions && !walletHasAnyPositions && !hasActiveV2Filter && !showHiddenPositions
+  // An active filter (the Hidden toggle included) must keep the table+control bar mounted, otherwise
+  // it unmounts with no way back. The route chain scope is the same trap: a chain with no positions
+  // must show the no-results table (whose Clear filters widens back to all networks), not the bare
+  // empty view.
+  const showEmptyState = hasLoadedPositions && !walletHasAnyPositions && !hasActiveV2Filter
 
   const portfolioPoolsUrl = buildPortfolioUrl({
     tab: PortfolioTab.Pools,

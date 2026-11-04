@@ -1,7 +1,7 @@
 import { Percent } from '@uniswap/sdk-core'
 import { TradingApi } from '@universe/api'
+import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFilled'
 import { TFunction } from 'i18next'
-import { AlertTriangleFilled } from 'ui/src/components/icons'
 import { Warning, WarningAction, WarningLabel, WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import {
   BRIDGE_PRICE_DIFFERENCE_CRITICAL_THRESHOLD,

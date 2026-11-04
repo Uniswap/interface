@@ -1,13 +1,13 @@
 import { useMemo } from 'react'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
+import { useBlockTimestamp } from '~/features/Toucan/Auction/hooks/useBlockTimestamp'
 import { useStatsBannerData } from '~/features/Toucan/Auction/hooks/useStatsBannerData'
 import { AuctionLiquidityLockInfo, AuctionLockMode } from '~/features/Toucan/Auction/store/types'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
 import { approximateNumberFromRaw, formatCompactFromRaw } from '~/features/Toucan/Auction/utils/fixedPointFdv'
 import { formatTimestampToDate } from '~/features/Toucan/Auction/utils/formatting'
 import { getAuctionTokenDecimals } from '~/features/Toucan/Auction/utils/tokenMetadata'
-import { useBlockTimestamp } from '~/hooks/useBlockTimestamp'
 
 export interface AuctionLiquidityLockData {
   /** True when the graduated LP position is held by a lock recipient contract (or burned) */

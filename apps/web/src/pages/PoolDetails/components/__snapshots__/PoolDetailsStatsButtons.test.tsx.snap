@@ -65,7 +65,7 @@ exports[`PoolDetailsStatsButton > renders both buttons correctly 1`] = `
             <svg
               fill="none"
               stroke-width="8"
-              style="width: 20.7px; height: 20.7px; color: currentColor;"
+              style="color: currentColor; width: 20.7px; height: 20.7px;"
               viewBox="0 0 24 24"
             >
               <path
@@ -75,7 +75,7 @@ exports[`PoolDetailsStatsButton > renders both buttons correctly 1`] = `
             </svg>
           </span>
           <span
-            class="text-center font-medium whitespace-nowrap [font-family:var(--sbtn-font-button)] [transition:color_100ms_cubic-bezier(0.17,0.67,0.45,1)] text-[16px] leading-[20.7px] text-accent1 group-hover/sbtn:text-accent1-hovered"
+            class="text-center font-medium [font-family:var(--sbtn-font-button)] [transition:color_100ms_cubic-bezier(0.17,0.67,0.45,1)] text-[16px] [line-height:20.7px] text-accent1 group-hover/sbtn:text-accent1-hovered max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
           >
             Swap
           </span>
@@ -92,7 +92,7 @@ exports[`PoolDetailsStatsButton > renders both buttons correctly 1`] = `
             <svg
               fill="none"
               stroke-width="8"
-              style="width: 20.7px; height: 20.7px; color: currentColor;"
+              style="color: currentColor; width: 20.7px; height: 20.7px;"
               viewBox="0 0 24 24"
             >
               <path
@@ -102,7 +102,7 @@ exports[`PoolDetailsStatsButton > renders both buttons correctly 1`] = `
             </svg>
           </span>
           <span
-            class="text-center font-medium whitespace-nowrap [font-family:var(--sbtn-font-button)] [transition:color_100ms_cubic-bezier(0.17,0.67,0.45,1)] text-[16px] leading-[20.7px] text-accent1 group-hover/sbtn:text-accent1-hovered"
+            class="text-center font-medium [font-family:var(--sbtn-font-button)] [transition:color_100ms_cubic-bezier(0.17,0.67,0.45,1)] text-[16px] [line-height:20.7px] text-accent1 group-hover/sbtn:text-accent1-hovered max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
           >
             Add liquidity
           </span>

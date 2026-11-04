@@ -1,8 +1,8 @@
 import { Currency, CurrencyAmount, Price } from '@uniswap/sdk-core'
 import { Flex, iconSizes, Text, TouchableArea } from '@universe/mycelium'
+import { ArrowDownArrowUp } from '@universe/mycelium/icons/ArrowDownArrowUp'
 import JSBI from 'jsbi'
 import { useCallback, useMemo, useState } from 'react'
-import { ArrowDownArrowUp } from 'ui/src/components/icons/ArrowDownArrowUp'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { LIMIT_SUPPORTED_CHAINS } from 'uniswap/src/features/chains/chainInfo'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -29,7 +29,7 @@ import { formatCurrencySymbol } from '~/features/Swap/CurrencyInputPanel/utils'
 import type { CurrencyState } from '~/features/Swap/state/types'
 import { useSwapAndLimitContext } from '~/features/Swap/state/useSwapContext'
 import { useLimitContext } from '~/pages/Swap/Limit/state/LimitContext'
-import { SwitchNetworkAction } from '~/state/popups/types'
+import { SwitchNetworkAction } from '~/utils/popups/types'
 
 const PRICE_ADJUSTMENT_PRESETS = [1, 5, 10]
 const INVERTED_PRICE_ADJUSTMENT_PRESETS = [-1, -5, -10]

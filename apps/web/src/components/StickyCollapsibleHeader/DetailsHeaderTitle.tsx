@@ -1,11 +1,10 @@
 import type { UniverseChainId } from '@universe/chains'
-import { Flex, Text } from '@universe/mycelium'
+import { Flex, Text, spacing } from '@universe/mycelium'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { TooltipCompat as Tooltip } from '@universe/mycelium/tooltip-compat'
 import type { TestIDType } from '@universe/test'
 import type { CSSProperties, ReactNode } from 'react'
 import { Link } from 'react-router'
-import { gap } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { HEADER_TRANSITION } from '~/components/StickyCollapsibleHeader/constants'
 import {
@@ -35,7 +34,7 @@ const TITLE_LINK_STYLE = {
   textDecoration: 'none',
   display: 'flex',
   alignItems: 'flex-end',
-  gap: gap.gap8,
+  gap: spacing.spacing8,
   minWidth: 0,
   flexShrink: 1,
 } as const

@@ -37,6 +37,13 @@ describe('subscriptDust', () => {
     expect(subscriptDust(1_000_000)).toBeUndefined()
   })
 
+  it('uses the locale decimal separator when a locale is given', () => {
+    expect(subscriptDust(0.00001024, 'en-US')).toBe('0.0₄1024')
+    expect(subscriptDust(0.00001024, 'nl-NL')).toBe('0,0₄1024')
+    expect(subscriptDust(0.0000092, 'es-ES')).toBe('0,0₅92')
+    expect(subscriptDust(0.00012345, 'nl-NL')).toBeUndefined()
+  })
+
   it('refuses zero, negatives and non-finite input', () => {
     expect(subscriptDust(0)).toBeUndefined()
     expect(subscriptDust(-0.0000092)).toBeUndefined()
@@ -93,6 +100,7 @@ describe('import graph', () => {
     expect([...external]).toEqual([])
     expect([...files].map((file) => file.slice(pkgRoot.length + 1)).sort()).toEqual([
       'src/format/getSubscriptNotationParts.ts',
+      'src/format/localeNumberSeparators.ts',
       'src/format/subscriptDust.ts',
       'src/format/toSubscript.ts',
     ])

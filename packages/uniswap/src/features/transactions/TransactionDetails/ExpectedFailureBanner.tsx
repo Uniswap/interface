@@ -1,7 +1,7 @@
 import { TradingApi } from '@universe/api'
 import { Flex, type FlexCompatProps, Text } from '@universe/mycelium'
+import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFilled'
 import { useTranslation } from 'react-i18next'
-import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { SlippageEdit } from 'uniswap/src/features/transactions/TransactionDetails/SlippageEdit'
 
 export function ExpectedFailureBanner({

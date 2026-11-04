@@ -23,9 +23,9 @@ import i18n from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
 import type { TransactionRequest } from '~/chains'
 import store from '~/state'
-import { popupRegistry } from '~/state/popups/registry'
-import { PopupType } from '~/state/popups/types'
 import { getSigner } from '~/state/sagas/transactions/utils'
+import { popupRegistry } from '~/utils/popups/registry'
+import { PopupType } from '~/utils/popups/types'
 import { didUserReject } from '~/utils/swapErrorToUserReadableMessage'
 
 interface CancelOrderPayload {

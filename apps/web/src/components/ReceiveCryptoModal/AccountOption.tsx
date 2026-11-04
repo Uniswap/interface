@@ -8,8 +8,8 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { SOLANA_CHAIN_INFO } from 'uniswap/src/features/chains/svm/info/solana'
 import { shortenAddress } from 'utilities/src/addresses'
 import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
-import { AddressDisplay } from '~/components/AccountDetails/AddressDisplay'
-import { StatusIcon } from '~/components/StatusIcon'
+import { AddressDisplay } from '~/features/wallet/components/AccountDetails/AddressDisplay'
+import { StatusIcon } from '~/features/wallet/components/StatusIcon'
 
 const Container = styled('div', {
   platform: 'web',

@@ -9,21 +9,19 @@
  * variants do not resolve on native.
  *
  * `onCheckPressed` receives the PRE-TOGGLE state, identically to the web leg
- * and to legacy (`LabeledCheckbox.tsx:44`).
+ * and to legacy.
  *
  * A11y: the container deliberately carries NO `accessibilityRole`, because
  * legacy carries none on native either. The role is asymmetric across legacy's
  * own platform legs: the web frame is `styled(YStack, { tag: 'div', role:
- * 'button' })` (`TouchableAreaFrame.web.tsx:17-20`), but the native frame is
+ * 'button' })`, but the native frame was
  * `styled(AnimatedPressable, …)` with no `role` and no `accessibilityRole`
- * anywhere in it (`TouchableAreaFrame.native.tsx:23-89`). Rendering legacy
- * `LabeledCheckbox` under react-test-renderer confirms it: the container host
+ * anywhere in it. Rendering legacy
+ * `LabeledCheckbox` under react-test-renderer confirmed it: the container host
  * is an `RNGHPressable` with `accessibilityRole === undefined`, and the only
  * announced role in the tree is the checkbox's. So adding
  * `accessibilityRole="button"` here to mirror the web leg would CREATE a
- * deviation from legacy on device, not remove one. Pinned against the live
- * legacy component in
- * `packages/tailwind/src/parity/checkbox/native-parity.test.tsx`.
+ * deviation from legacy on device, not remove one.
  *
  * The string-`text` label is an RN `Text` with the shared typography classes.
  * Legacy's `$short={{ variant: 'buttonLabel4' }}` height-media downgrade is not

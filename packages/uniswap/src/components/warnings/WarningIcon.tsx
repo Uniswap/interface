@@ -1,5 +1,5 @@
 import { Flex, type ColorTokens } from '@universe/mycelium'
-import { IconProps } from 'ui/src'
+import type { IconProps } from '@universe/mycelium/icons'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { getWarningIcon, getWarningIconColors } from 'uniswap/src/components/warnings/utils'
 

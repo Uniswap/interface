@@ -51,7 +51,6 @@ describe('the subpath barrel resolves every symbol', () => {
   it('exports the component plus the shared contract', async () => {
     const barrel = await import('./index')
     expect(barrel.ModalCloseIconCompat).toBe(web.ModalCloseIconCompat)
-    expect(barrel.X_GLYPH.viewBox).toBe('0 0 16 16')
     expect(barrel.closeIconSizePx('$icon.24')).toBe(24)
     expect(barrel.DEFAULT_CLOSE_ICON_HOVER_COLOR).toBe('$neutral2Hovered')
   })

@@ -1,9 +1,9 @@
 import { Flex as MyceliumFlex, Flex, Text } from '@universe/mycelium'
+import { Check } from '@universe/mycelium/icons/Check'
 import { styled, type StyledComponent } from '@universe/mycelium/styled'
 import { ReactNode } from 'react'
 import type { To } from 'react-router'
 import { Link } from 'react-router'
-import { Check } from 'ui/src/components/icons/Check'
 // Web-only base, so `platform: 'web'` legalizes the hover:/active: classes.
 // `py-[12px]` is load-bearing: the menu containers set no gap, so it is the only thing
 // separating consecutive rows.

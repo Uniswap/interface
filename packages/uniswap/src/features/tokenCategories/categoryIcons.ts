@@ -1,18 +1,21 @@
-import type { GeneratedIcon } from 'ui/src'
-import { Briefcase } from 'ui/src/components/icons/Briefcase'
-import { Diamond } from 'ui/src/components/icons/Diamond'
-import { DollarCircle } from 'ui/src/components/icons/DollarCircle'
-import { Etf } from 'ui/src/components/icons/Etf'
-import { FaceLaughRelaxed } from 'ui/src/components/icons/FaceLaughRelaxed'
-import { GameController } from 'ui/src/components/icons/GameController'
-import { Nut } from 'ui/src/components/icons/Nut'
-import { Robot } from 'ui/src/components/icons/Robot'
-import { RocketLaunch } from 'ui/src/components/icons/RocketLaunch'
-import { SwapCoin } from 'ui/src/components/icons/SwapCoin'
-import { Tag } from 'ui/src/components/icons/Tag'
-import { TrendDown } from 'ui/src/components/icons/TrendDown'
-import { TrendUp } from 'ui/src/components/icons/TrendUp'
-import { WavePulse } from 'ui/src/components/icons/WavePulse'
+import type { GeneratedIcon } from '@universe/mycelium/icons'
+import { Briefcase } from '@universe/mycelium/icons/Briefcase'
+import { Correlated } from '@universe/mycelium/icons/Correlated'
+import { Diamond } from '@universe/mycelium/icons/Diamond'
+import { DollarCircle } from '@universe/mycelium/icons/DollarCircle'
+import { Etf } from '@universe/mycelium/icons/Etf'
+import { FaceLaughRelaxed } from '@universe/mycelium/icons/FaceLaughRelaxed'
+import { GameController } from '@universe/mycelium/icons/GameController'
+import { Nut } from '@universe/mycelium/icons/Nut'
+import { Robot } from '@universe/mycelium/icons/Robot'
+import { RocketLaunch } from '@universe/mycelium/icons/RocketLaunch'
+import { Stable } from '@universe/mycelium/icons/Stable'
+import { Staking } from '@universe/mycelium/icons/Staking'
+import { SwapCoin } from '@universe/mycelium/icons/SwapCoin'
+import { Tag } from '@universe/mycelium/icons/Tag'
+import { TrendDown } from '@universe/mycelium/icons/TrendDown'
+import { TrendUp } from '@universe/mycelium/icons/TrendUp'
+import { WavePulse } from '@universe/mycelium/icons/WavePulse'
 import type { CategoryBase } from 'uniswap/src/features/tokenCategories/types'
 
 // Keyed on backend ids — the locale-independent ListCategories contract; names are display-only
@@ -32,9 +35,12 @@ const CATEGORY_ICONS_BY_ID: Record<string, GeneratedIcon> = {
   defi: SwapCoin,
   'ai-agents': Robot,
   gaming: GameController,
-  // Pool categories reuse their token twin's icon; accruing and correlated have no twin yet.
+  // Pool categories reuse their token twin's icon unless design drew a pool-specific one.
   'major-pools': Diamond,
-  'stable-pools': DollarCircle,
+  'stable-pools': Stable,
+  correlated: Correlated,
+  // Design calls this category Staking; the seed id is accruing.
+  accruing: Staking,
   'stock-pools': Briefcase,
   'etf-pools': Etf,
   'commodity-pools': Nut,

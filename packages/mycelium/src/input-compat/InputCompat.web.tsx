@@ -1,17 +1,14 @@
 /**
- * Web leg of the Input compat (INFRA-3600) — the drop-in twin of the
- * Tamagui-free `ui/src` Input rebuild (INFRA-3318): a raw <input>/<textarea>
- * with inline styles carrying the legacy Tamagui Input cascade and the RN prop
+ * Web leg of the Input compat (INFRA-3600): a raw <input>/<textarea> with
+ * inline styles carrying the legacy Input cascade and the RN prop
  * surface mapped by hand, the way the legacy engine rendered an <input> tag.
  * Focus/hover visual states drive the enumerated focusStyle/hoverStyle surface.
  *
- * One deliberate divergence from the ui/src rebuild: the RNW TextInputState
- * bridge (registering the focused node so `Keyboard.dismiss()` can blur it on
- * web) is NOT ported — it needs a deep import into react-native-web, which
- * mycelium must not depend on (the barrel is a production contract for
- * Tailwind-only apps), and `dismissNativeKeyboard` is a no-op on web so no
- * estate call site reaches that path. Ledgered in
- * packages/tailwind/src/parity/input/exclusions.ts.
+ * Unlike RNW's TextInput, the focused node is not registered with RNW's
+ * TextInputState, so `Keyboard.dismiss()` and RNW ScrollView keyboard
+ * dismissal don't blur it. That needs a deep import into react-native-web,
+ * which mycelium must not depend on, and no web call site relies on it:
+ * `dismissNativeKeyboard` is a no-op on web.
  */
 import {
   type ChangeEvent,

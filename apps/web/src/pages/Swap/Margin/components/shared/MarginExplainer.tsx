@@ -1,61 +1,34 @@
-import { Flex, Text } from '@universe/mycelium'
+import { Flex, Text, Tooltip } from '@universe/mycelium'
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Tooltip } from 'ui/src'
-import {
-  MARGIN_PNL_EXAMPLE_LINES,
-  type MarginExplainerLineId,
-  type MarginExplainerNoteId,
-  type MarginExplainerRow,
-  type MarginExplainerRowId,
-  type MarginPnlSuppression,
-  type MarginRealizedLineId,
+import type {
+  MarginExplainerLineId,
+  MarginExplainerRow,
+  MarginExplainerRowId,
+  MarginRealizedLineId,
 } from '~/pages/Swap/Margin/marginPnlExplainer'
 
 // Every key is a literal t() call: a dynamic t(variable) is silently pruned by the extractor, and both
 // safety gates in this repo are off, so the string would just disappear.
 function useMarginPnlCopy(): {
   line: Record<MarginExplainerLineId, string>
-  note: Record<MarginExplainerNoteId, string>
   row: Record<MarginExplainerRowId, string>
   realized: Record<MarginRealizedLineId, string>
-  suppression: Record<MarginPnlSuppression, string>
-  aboutPnl: string
   entryPrice: string
-  breakEvenRow: string
-  title: string
   glossaryHeading: string
 } {
   const { t } = useTranslation()
   return {
-    // These five are read by surfaces that mount later. They are resolved here anyway so every key
-    // keeps a literal call site — string extraction prunes any key it cannot see one for.
-    aboutPnl: t('margin.pnl.explain.aboutPnl'),
     entryPrice: t('margin.pnl.explain.entryPrice'),
-    breakEvenRow: t('margin.pnl.explain.breakEvenRow'),
-    title: t('margin.pnl.title'),
     glossaryHeading: t('margin.pnl.explain.glossaryHeading'),
     line: {
       lead: t('margin.pnl.explain.lead'),
       basis: t('margin.pnl.explain.basis'),
       frozen: t('margin.pnl.explain.frozen'),
-      withdrawals: t('margin.pnl.explain.withdrawals'),
-      moves: t('margin.pnl.explain.moves'),
-      excludes: t('margin.pnl.explain.excludes'),
-      leverage: t('margin.pnl.explain.leverage'),
       roe: t('margin.pnl.explain.roe'),
-      exampleLong: t('margin.pnl.explain.exampleLong'),
-      exampleShort: t('margin.pnl.explain.exampleShort'),
     },
-    note: { floored: t('margin.pnl.explain.floored') },
     row: {
       marginAtCost: t('margin.table.tooltip.marginAtCost'),
-      marginNow: t('margin.pnl.label.marginNow'),
-      unrealized: t('margin.table.tooltip.upnl'),
-      roe: t('margin.pnl.label.roe'),
-      realized: t('margin.pnl.label.realized'),
-      netDeposited: t('margin.pnl.label.netDeposited'),
-      breakEven: t('margin.pnl.label.breakEven'),
       proceeds: t('margin.pnl.label.proceeds'),
       estRealized: t('margin.manage.estPnl'),
     },
@@ -64,11 +37,6 @@ function useMarginPnlCopy(): {
       realizedBasis: t('margin.pnl.explain.realizedBasis'),
       liquidated: t('margin.pnl.explain.liquidated'),
       partialLiq: t('margin.pnl.explain.partialLiq'),
-    },
-    suppression: {
-      untradable: t('margin.pnl.explain.unavailableUntradable'),
-      unvalued: t('margin.pnl.explain.unavailableUnvalued'),
-      noPrice: t('margin.pnl.explain.unavailableNoPrice'),
     },
   }
 }
@@ -89,8 +57,8 @@ function MarginExplainerProse({ text, color }: { text: string; color: string }):
       {text.split(HIGHLIGHT_SPLIT).map((part, index) => {
         const inner = HIGHLIGHT_MATCH.exec(part)
         return inner ? (
-          // Brighter, not accented: the card leans on "Margin at cost" six times, so it reads as a
-          // defined term. Six accent runs in ten lines would read as six warnings.
+          // Brighter, not accented: the glossary leans on "Margin at cost" line after line, so it reads
+          // as a defined term. An accent run on every line would read as a warning on every line.
           <Text key={`${index}-${part}`} variant="body4" color="$neutral1">
             {inner[1]}
           </Text>
@@ -118,36 +86,22 @@ export function MarginExplainerRowView({ label, value, tone }: MarginExplainerRo
 // Tooltip.Content centres its children, so the wrapper takes the full width or one-line prose renders
 // centred under a left-aligned lead.
 export function MarginExplainerContent({
-  suppression,
-  lead,
   lines,
   rows,
-  notes,
   realized,
   estimate,
   slippagePercent,
 }: {
-  suppression?: MarginPnlSuppression
-  lead?: 'unrealizedLead' | 'basisLead'
   lines?: MarginExplainerLineId[]
   rows?: MarginExplainerRow[]
-  notes?: MarginExplainerNoteId[]
   realized?: MarginRealizedLineId[]
   estimate?: boolean
   slippagePercent?: number
 }): JSX.Element {
   const { t } = useTranslation()
   const copy = useMarginPnlCopy()
-  const leadCopy = lead === 'basisLead' ? t('margin.pnl.explain.basisLead') : t('margin.pnl.explain.unrealizedLead')
-  const definitionLines = lines?.filter((id) => !MARGIN_PNL_EXAMPLE_LINES.includes(id)) ?? []
-  const exampleLines = lines?.filter((id) => MARGIN_PNL_EXAMPLE_LINES.includes(id)) ?? []
   return (
     <Flex gap="$gap8" width="100%" minWidth={180} maxWidth={326}>
-      {suppression ? (
-        <Text variant="body4" color="$neutral1">
-          {copy.suppression[suppression]}
-        </Text>
-      ) : null}
       {estimate ? (
         <>
           <Text variant="body4" color="$neutral1">
@@ -164,11 +118,6 @@ export function MarginExplainerContent({
           </Text>
         </>
       ) : null}
-      {lead ? (
-        <Text variant="body4" color="$neutral1">
-          {leadCopy}
-        </Text>
-      ) : null}
       {realized?.map((id) => (
         <Text key={id} variant="body4" color={id === 'realizedLead' ? '$neutral1' : '$neutral2'}>
           {copy.realized[id]}
@@ -181,21 +130,8 @@ export function MarginExplainerContent({
           ))}
         </Flex>
       ) : null}
-      {definitionLines.map((id) => (
+      {lines?.map((id) => (
         <MarginExplainerProse key={id} text={copy.line[id]} color="$neutral2" />
-      ))}
-      {/* The worked examples sit under a rule: they illustrate the definition rather than continue it. */}
-      {exampleLines.length > 0 ? (
-        <Flex gap="$gap8" borderTopWidth={1} borderColor="$surface3" pt="$spacing8">
-          {exampleLines.map((id) => (
-            <MarginExplainerProse key={id} text={copy.line[id]} color="$neutral2" />
-          ))}
-        </Flex>
-      ) : null}
-      {notes?.map((id) => (
-        <Text key={id} variant="body4" color="$neutral2">
-          {copy.note[id]}
-        </Text>
       ))}
     </Flex>
   )

@@ -1,7 +1,7 @@
 import { Flex } from '@universe/mycelium'
+import { Power } from '@universe/mycelium/icons/Power'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { Power } from 'ui/src/components/icons'
 import { ContextMenu, MenuOptionItem } from 'uniswap/src/components/menus/ContextMenu'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'

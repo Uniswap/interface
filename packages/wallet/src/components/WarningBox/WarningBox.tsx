@@ -1,5 +1,5 @@
 import { Flex, iconSizes, Text } from '@universe/mycelium'
-import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
+import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFilled'
 
 type WarningBoxProps = {
   level: 'warning' | 'critical'

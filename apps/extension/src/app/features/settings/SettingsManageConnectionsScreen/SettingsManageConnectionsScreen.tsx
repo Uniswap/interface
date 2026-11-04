@@ -1,4 +1,6 @@
-import { UniversalImage, Flex, Text, TouchableArea } from '@universe/mycelium'
+import { UniversalImage, Flex, Text, TouchableArea, borderRadii, fonts, spacing, iconSizes } from '@universe/mycelium'
+import { MinusCircle } from '@universe/mycelium/icons/MinusCircle'
+import { BREAKPOINT_PX } from '@universe/mycelium/theme-hooks-compat'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -8,8 +10,6 @@ import { removeAllDappConnectionsForAccount, removeDappConnection } from 'src/ap
 import { useAllDappConnectionsForAccount } from 'src/app/features/dapp/hooks'
 import { dappStore } from 'src/app/features/dapp/store'
 import { NoDappConnections } from 'src/app/features/settings/SettingsManageConnectionsScreen/internal/NoDappConnections'
-import { MinusCircle } from 'ui/src/components/icons'
-import { borderRadii, breakpoints, fonts, gap, iconSizes } from 'ui/src/theme'
 import { DappIconPlaceholder } from 'uniswap/src/components/dapps/DappIconPlaceholder'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
@@ -23,14 +23,14 @@ import { extractUrlHost } from 'utilities/src/format/urls'
 import { DappEllipsisDropdown } from 'wallet/src/components/settings/DappEllipsisDropdown/DappEllipsisDropdown'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
-const MIN_SCREEN_WIDTH = breakpoints.xxs
+const MIN_SCREEN_WIDTH = BREAKPOINT_PX.xxs
 const HORIZONTAL_SPACING = 12
 // when sidebar is at the minimum width (360px), this will allow 2 cards to cleanly fit per row
 const TILE_WIDTH = (MIN_SCREEN_WIDTH - 3 * HORIZONTAL_SPACING) / 2
 
 const titleVariant: keyof typeof fonts = 'body3'
 const subtitleVariant: keyof typeof fonts = 'body4'
-const textGap: number = gap.gap4
+const textGap: number = spacing.spacing4
 const textAreaHeight = fonts[titleVariant].lineHeight + fonts[subtitleVariant].lineHeight + textGap
 
 export function SettingsManageConnectionsScreen(): JSX.Element {

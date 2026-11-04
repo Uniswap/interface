@@ -97,6 +97,15 @@ describe(rankedPoolToPoolSearchResult, () => {
     expect(rankedPoolToPoolSearchResult(new RankedPool({}))).toBeUndefined()
   })
 
+  it('returns undefined, not throws, for a native-token pool on a chain the app no longer supports', () => {
+    // Blast (81457) was removed from the app; hardcoded because it is no longer a UniverseChainId.
+    const pool = createRankedPool({
+      chainId: 81457,
+      token0: { address: '0x0000000000000000000000000000000000000000' },
+    })
+    expect(rankedPoolToPoolSearchResult(pool)).toBeUndefined()
+  })
+
   it('returns undefined for a non-dynamic V3/V4 pool with no fee tier', () => {
     expect(rankedPoolToPoolSearchResult(createRankedPool({ feeTier: undefined }))).toBeUndefined()
   })

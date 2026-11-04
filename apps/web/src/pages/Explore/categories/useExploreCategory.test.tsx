@@ -28,7 +28,6 @@ vi.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
 function mockTestnetMode(isTestnetModeEnabled: boolean): void {
   mocked(useEnabledChains).mockReturnValue({
     chains: [],
-    gqlChains: [],
     defaultChainId: UniverseChainId.Mainnet,
     isTestnetModeEnabled,
   })

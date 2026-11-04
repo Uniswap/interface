@@ -6,12 +6,14 @@
  */
 import { cleanup, render } from '@testing-library/react'
 import { SPORE_ANIMATION_CURVE_CSS } from '@universe/tailwind/animations'
+import { renderToStaticMarkup } from 'react-dom/server'
 import { afterEach, describe, expect, it } from 'vitest'
 import { CopySheets } from '../components/icons/CopySheets'
 import { FlexCompat } from '../flex-compat/FlexCompat'
 import type { FlexCompatProps } from '../flex-compat/props'
 import { AnimatableCopyIconCompat } from './AnimatableCopyIconCompat'
-import { COPY_SHEETS_GLYPH } from './resolve'
+
+const COPY_SHEETS_PATH = / d="([^"]+)"/.exec(renderToStaticMarkup(<CopySheets />))?.[1]
 
 afterEach(() => {
   cleanup()
@@ -55,7 +57,7 @@ describe('animated leg render shape', () => {
     expect(wrapperOf(container).className).toBe(expectedWrapper)
     const layers = layersOf(container)
     expect(layers).toHaveLength(2)
-    expect(layers[0]?.querySelector('svg path')?.getAttribute('d')).toBe(COPY_SHEETS_GLYPH.path)
+    expect(layers[0]?.querySelector('svg path')?.getAttribute('d')).toBe(COPY_SHEETS_PATH)
     expect(layers[1]?.querySelector('svg')).not.toBeNull()
   })
 
@@ -85,7 +87,7 @@ describe('animated leg render shape', () => {
     const { container } = render(<AnimatableCopyIconCompat isAnimated hideIcon isCopied size={16} />)
     const layers = layersOf(container)
     expect(layers).toHaveLength(1)
-    expect(layers[0]?.querySelector('svg path')?.getAttribute('d')).not.toBe(COPY_SHEETS_GLYPH.path)
+    expect(layers[0]?.querySelector('svg path')?.getAttribute('d')).not.toBe(COPY_SHEETS_PATH)
   })
 
   it('forwards dataTestId onto the CopySheets icon, like legacy', () => {
@@ -94,7 +96,7 @@ describe('animated leg render shape', () => {
     )
     const target = container.querySelector('[data-testid="copy-icon"]')
     expect(target?.tagName.toLowerCase()).toBe('svg')
-    expect(target?.querySelector('path')?.getAttribute('d')).toBe(COPY_SHEETS_GLYPH.path)
+    expect(target?.querySelector('path')?.getAttribute('d')).toBe(COPY_SHEETS_PATH)
   })
 })
 
@@ -105,21 +107,12 @@ describe('non-animated leg (legacy static branch)', () => {
     const { container } = render(<AnimatableCopyIconCompat isAnimated={false} isCopied size={16} />)
     expect(wrapperOf(container).className).toBe(expectedWrapper)
     const svg = wrapperOf(container).querySelector('svg')
-    expect(svg?.querySelector('path')?.getAttribute('d')).toBe(COPY_SHEETS_GLYPH.path)
+    expect(svg?.querySelector('path')?.getAttribute('d')).toBe(COPY_SHEETS_PATH)
     expect(container.querySelectorAll('svg')).toHaveLength(1)
   })
 
   it('hideIcon renders the empty sized box', () => {
     const { container } = render(<AnimatableCopyIconCompat isAnimated={false} hideIcon isCopied size={16} />)
     expect(wrapperOf(container).querySelector('svg')).toBeNull()
-  })
-})
-
-describe('glyph drift pin', () => {
-  it('COPY_SHEETS_GLYPH stays byte-identical to the rendered mycelium CopySheets (the native leg draws from it)', () => {
-    const { container } = render(<CopySheets size={16} />)
-    const svg = container.querySelector('svg')
-    expect(svg?.getAttribute('viewBox')).toBe(COPY_SHEETS_GLYPH.viewBox)
-    expect(svg?.querySelector('path')?.getAttribute('d')).toBe(COPY_SHEETS_GLYPH.path)
   })
 })

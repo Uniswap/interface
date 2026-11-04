@@ -13,8 +13,10 @@ export function createRejectableMockConnector(config: Parameters<typeof mock>[0]
 
     return {
       ...baseConnector,
-      async getProvider() {
-        const provider = await baseConnector.getProvider()
+      // Forward the chain: the mock serves each chain's own RPC, and without it every request falls
+      // back to the first configured chain (mainnet), whatever chain the transaction is for.
+      async getProvider(params?: Parameters<typeof baseConnector.getProvider>[0]) {
+        const provider = await baseConnector.getProvider(params)
         const originalRequest = provider.request.bind(provider)
 
         const interceptor: typeof provider.request = async (args) => {

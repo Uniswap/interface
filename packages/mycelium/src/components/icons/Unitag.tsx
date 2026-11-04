@@ -1,39 +1,12 @@
-import { memo, useSyncExternalStore } from 'react'
+import { memo } from 'react'
 import type { ReactElement } from 'react'
-import UNITAG_DARK_SMALL from '../../assets/graphics/unitag-dark-small.png'
-import UNITAG_LIGHT_SMALL from '../../assets/graphics/unitag-light-small.png'
+import { ICON_SIZE_TOKEN_PX, lookupToken } from '../../compat/tokens'
+import { UnitagImage } from './internal/unitag-image'
 
-// Theme source of truth on the web is the `dark` class on the root element
-// (see @universe/tailwind base.css `@custom-variant dark`).
-function subscribeToRootClass(onChange: () => void): () => void {
-  if (typeof document === 'undefined') {
-    return () => {}
-  }
-  const observer = new MutationObserver(onChange)
-  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
-  return () => observer.disconnect()
-}
-
-function getIsDarkMode(): boolean {
-  return typeof document !== 'undefined' && document.documentElement.classList.contains('dark')
-}
-
-function getIsDarkModeServer(): boolean {
-  return false
-}
-
+/** Accepts a px number or an `$icon.N` size token, like the generated icons. */
 function UnitagIcon({ size = 24 }: { size?: number | string }): ReactElement {
-  const isDarkMode = useSyncExternalStore(subscribeToRootClass, getIsDarkMode, getIsDarkModeServer)
-
-  return (
-    <img
-      src={isDarkMode ? UNITAG_DARK_SMALL : UNITAG_LIGHT_SMALL}
-      alt=""
-      width={size}
-      height={size}
-      style={{ verticalAlign: 'sub' }}
-    />
-  )
+  const resolvedSize = typeof size === 'string' ? (lookupToken(ICON_SIZE_TOKEN_PX, size) ?? size) : size
+  return <UnitagImage size={resolvedSize} />
 }
 
 export const Unitag = memo(UnitagIcon)

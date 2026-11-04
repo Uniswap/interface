@@ -3,12 +3,11 @@ import { FiatOnRampParams } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { TransactionTypeFilter } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import { UniverseChainId } from '@universe/chains'
 import { isWebPlatform } from '@universe/environment'
-import { Flex, Text } from '@universe/mycelium'
+import { Flex, Text, Loader } from '@universe/mycelium'
 import { NoTransactions } from '@universe/mycelium/icons/NoTransactions'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { StyleProp, ViewStyle } from 'react-native'
-import { Loader } from 'ui/src'
 import {
   ActivityItem,
   ActivityItemRenderer,

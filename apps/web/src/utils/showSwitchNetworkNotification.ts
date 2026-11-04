@@ -1,6 +1,6 @@
-import { POPUP_MEDIUM_DISMISS_MS } from '~/components/Popups/constants'
-import { popupRegistry } from '~/state/popups/registry'
-import { PopupType, SwitchNetworkAction } from '~/state/popups/types'
+import { POPUP_MEDIUM_DISMISS_MS } from '~/utils/popups/constants'
+import { popupRegistry } from '~/utils/popups/registry'
+import { PopupType, SwitchNetworkAction } from '~/utils/popups/types'
 
 type SwitchNetworkNotificationCallbackType = {
   chainId?: number // The chainId to show notif for, can be input or output chain

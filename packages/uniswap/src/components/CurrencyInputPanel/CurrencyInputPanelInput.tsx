@@ -1,11 +1,19 @@
 import { isWebAppDesktop, isWebPlatform } from '@universe/environment'
-import { AnimatedFlex, Flex, Text, TouchableArea, type FlexProps, useSporeColors } from '@universe/mycelium'
+import {
+  AnimatedFlex,
+  Flex,
+  Text,
+  TouchableArea,
+  type FlexProps,
+  useSporeColors,
+  fonts,
+  spacing,
+} from '@universe/mycelium'
 import { TestID } from '@universe/test'
 import { forwardRef, memo, useCallback, useImperativeHandle, useRef } from 'react'
 import type { NativeSyntheticEvent, TextInput, TextInputSelectionChangeEventData } from 'react-native'
 import type { ShakeAnimation } from 'ui/src/animations/hooks/useShakeAnimation'
 import { FontSizeOptions } from 'ui/src/hooks/useDynamicFontSizing'
-import { fonts, spacing } from 'ui/src/theme'
 import { AmountInput } from 'uniswap/src/components/AmountInput/AmountInput'
 import { DefaultTokenOptions } from 'uniswap/src/components/CurrencyInputPanel/DefaultTokenOptions/DefaultTokenOptions'
 import {

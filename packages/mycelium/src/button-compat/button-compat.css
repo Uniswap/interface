@@ -5,9 +5,8 @@
  *
  * Colors need no pins here: since #35388 the `@universe/tailwind` palette
  * (neutral1, *-hovered, critical-secondary, warning-secondary, ...) matches the
- * Tamagui theme value-for-value (verified 2026-07-28), except the
- * default/primary cell — neutral1 vs legacy $accent3; see the ledger in
- * labs/workbench/scripts/button-parity-exceptions.ts. The one remaining pin
+ * Tamagui theme value-for-value (verified 2026-07-28; the legacy accent3 alias
+ * was aligned to neutral1 later). The one remaining pin
  * is the legacy button font stack (theme/fonts.ts baselMedium): the font-basel
  * utility resolves to "Basel Grotesk" (different family name + fallbacks),
  * which changes intrinsic button widths when the webfont isn't loaded.
@@ -24,7 +23,7 @@
     sans-serif;
 }
 
-/* Matches ui/src/loading/SpinningLoader.web.tsx exactly (1s symmetric ease, not linear). */
+/* Matches SpinningLoaderCompat's `rotate360` exactly (1s symmetric ease, not linear). */
 @keyframes sbtn-rotate360 {
   from {
     transform: rotate(0deg);

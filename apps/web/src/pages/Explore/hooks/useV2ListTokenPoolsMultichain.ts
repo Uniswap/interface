@@ -4,9 +4,9 @@ import { useEffect, useMemo } from 'react'
 import type { MultichainTokenEntry } from 'uniswap/src/components/MultichainTokenDetails/useOrderedMultichainEntries'
 import { PoolTableSortState } from '~/data/pools/poolStats'
 import { OrderDirection } from '~/data/util'
+import { useInfiniteLoadMore } from '~/features/Explore/hooks/useInfiniteLoadMore'
 import { poolSortFieldToOrderBy } from '~/features/Liquidity/utils/convertPoolToPoolStat'
 import { getMultichainTokenListPoolsParams } from '~/features/Liquidity/utils/getTokenListPoolsParams'
-import { useInfiniteLoadMore } from '~/hooks/useInfiniteLoadMore'
 import { useListPoolsAsPoolStats } from '~/pages/Explore/hooks/useListPoolsAsPoolStats'
 import type { PoolStat } from '~/types/explore'
 
@@ -69,7 +69,7 @@ export function useV2ListTokenPoolsMultichain({
       return []
     }
     return (fetchedPools ?? []).filter((pool) => {
-      const allowed = allowedByChain.get(pool.chain)
+      const allowed = allowedByChain.get(pool.chainId)
       if (!allowed) {
         return false
       }

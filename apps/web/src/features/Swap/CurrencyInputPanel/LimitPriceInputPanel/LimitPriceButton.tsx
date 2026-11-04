@@ -1,7 +1,7 @@
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
+import { X } from '@universe/mycelium/icons/X'
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { X } from 'ui/src/components/icons/X'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 
 interface LimitPriceButtonProps {

@@ -24,6 +24,8 @@ interface PriceChartProps {
   hideYAxis?: boolean
   hidePercentDelta?: boolean
   yAxisFormatter?: (price: number) => string
+  yAxisTickmarksFormatter?: (prices: number[]) => string[]
+  disableLowPriceRangeScaling?: boolean
   isStablecoin?: boolean
   /** Additional content rendered next to the price delta in the chart header.
    *  Can be a ReactNode or a render function receiving { isHovering }. */
@@ -42,6 +44,8 @@ export function PriceChart({
   headerTotalValueOverride,
   hideYAxis,
   yAxisFormatter,
+  yAxisTickmarksFormatter,
+  disableLowPriceRangeScaling,
   additionalHeaderContent,
   hidePercentDelta,
   isStablecoin,
@@ -67,6 +71,8 @@ export function PriceChart({
       overrideColor={overrideColor}
       hideYAxis={hideYAxis}
       yAxisFormatter={yAxisFormatter}
+      yAxisTickmarksFormatter={yAxisTickmarksFormatter}
+      disableLowPriceRangeScaling={disableLowPriceRangeScaling}
       isStablecoin={isStablecoin}
     >
       {(crosshairData) => {

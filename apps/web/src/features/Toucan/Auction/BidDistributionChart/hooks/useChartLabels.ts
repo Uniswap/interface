@@ -1,6 +1,7 @@
 import { UseSporeColorsReturn } from '@universe/mycelium/theme-hooks-compat'
 import { IChartApi, UTCTimestamp } from 'lightweight-charts'
 import { useCallback } from 'react'
+import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { LABEL_CONFIG } from '~/features/Toucan/Auction/BidDistributionChart/constants'
 import { formatTokenPriceSubscript } from '~/features/Toucan/Auction/BidDistributionChart/utils/tokenFormatters'
 import { calculateDynamicLabelIncrement } from '~/features/Toucan/Auction/BidDistributionChart/utils/utils'
@@ -20,6 +21,7 @@ interface UseChartLabelsParams {
  */
 export function useChartLabels(params: UseChartLabelsParams) {
   const { tickSize, colors, targetMaxLabels } = params
+  const locale = useCurrentLocale()
 
   /**
    * Creates a single label DOM element with proper styling and positioning
@@ -45,6 +47,7 @@ export function useChartLabels(params: UseChartLabelsParams) {
       // Format as token price with subscript notation for small values
       // Use innerHTML with styled HTML to make subscript more readable
       const formatted = formatTokenPriceSubscript(tickValue, {
+        locale,
         minSigDigits: 3,
         maxSigDigits: 4,
       })
@@ -53,7 +56,7 @@ export function useChartLabels(params: UseChartLabelsParams) {
 
       return label
     },
-    [colors.neutral2.val],
+    [colors.neutral2.val, locale],
   )
 
   /**

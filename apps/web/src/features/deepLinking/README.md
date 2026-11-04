@@ -142,7 +142,7 @@ https://app.uniswap.org/explore/tokens/{chainName}/{tokenAddress}
 
 **Parameters:**
 
-- `chainName` - Network name: `ethereum`, `polygon`, `arbitrum`, `optimism`, `base`, `bnb`, `avalanche`, `celo`, `blast`, `zora`, `zksync`, `worldchain`, or `unichain`
+- `chainName` - Network name: `ethereum`, `polygon`, `arbitrum`, `optimism`, `base`, `bnb`, `avalanche`, `celo`, `zora`, `zksync`, `worldchain`, or `unichain`
 - `tokenAddress` - Token contract address, or `NATIVE` for the chain's native currency (ETH, MATIC, etc.)
 
 **Examples:**
@@ -214,7 +214,6 @@ https://app.uniswap.org/explore/pools/ethereum/0x88e6A0c2dDD26FEEb64F039a2c41296
 - `bnb` (BNB Chain)
 - `avalanche` (Avalanche C-Chain)
 - `celo` (Celo)
-- `blast` (Blast)
 - `zora` (Zora)
 - `zksync` (zkSync Era)
 - `worldchain` (World Chain)

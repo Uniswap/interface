@@ -223,7 +223,8 @@ export function OnchainItemList<T extends OnchainItemListOption>({
 
   return (
     // Web `fill` is `flex: 1 1 auto`, so without a 0 basis the content height squeezes the header.
-    <Flex ref={containerRef} fill flexBasis={0}>
+    // `isolate` keeps the list's sticky-header z-indexes (row index + 1000) from painting over popovers.
+    <Flex ref={containerRef} fill flexBasis={0} className="isolate">
       {/* Focus is a store, not `extraData`: rows subscribe to their own index, so moving focus re-renders two
           rows instead of every mounted cell. */}
       <FocusedRowStoreContext.Provider value={focusedRowStore}>

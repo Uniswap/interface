@@ -1,7 +1,7 @@
 import { clickableStyle, Flex, Text } from '@universe/mycelium'
+import { CheckCircleFilled } from '@universe/mycelium/icons/CheckCircleFilled'
 import { TooltipCompat as Tooltip } from '@universe/mycelium/tooltip-compat'
 import { useTranslation } from 'react-i18next'
-import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
 import { FeeDisplay } from 'uniswap/src/components/FeeDisplay/FeeDisplay'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -82,7 +82,7 @@ export function FeeTierSearchRow({
           </Text>
         </Flex>
       </Flex>
-      {isSelected && <CheckCircleFilled size="$icon.24" color="$accent3" />}
+      {isSelected && <CheckCircleFilled size="$icon.24" color="$neutral1" />}
     </Flex>
   )
 

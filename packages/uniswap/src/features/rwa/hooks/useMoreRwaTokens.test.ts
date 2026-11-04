@@ -79,11 +79,11 @@ describe(useMoreRwaTokens, () => {
     expect(result.current.otherIssuerTokens).toEqual([XSTOCKS_TOKEN, OTHER_ONDO_TOKEN])
     expect(result.current.getMarketData(XSTOCKS_TOKEN)).toEqual(GROUP_MARKET_DATA)
     expect(result.current.getMarketData(OTHER_ONDO_TOKEN)).toEqual({})
-    // The GraphQL market-data query is left with nothing to fetch.
+    // The per-token market-data query is left with nothing to fetch.
     expect(mockUseRWAIssuerMarketData).toHaveBeenCalledWith([])
   })
 
-  it('falls back to the whitelist siblings and GraphQL stats when token categories are off', () => {
+  it('falls back to the whitelist siblings and per-token market stats when token categories are off', () => {
     mockUseIsTokenCategoriesEnabled.mockReturnValue(false)
 
     const { result } = renderHook(() => useMoreRwaTokens({ rwaMatch: RWA_MATCH, subject: SUBJECT }))

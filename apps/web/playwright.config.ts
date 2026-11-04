@@ -11,6 +11,7 @@ loadTestRunnerEnv(__dirname)
 ;(globalThis as Record<string, unknown>).__DEV__ ??= false
 
 const IS_CI = process.env.CI === 'true'
+const MAX_FAILURES_ENV = process.env.PLAYWRIGHT_MAX_FAILURES
 
 // Handle asset files and platform-specific imports for Node.js
 // oxlint-disable-next-line typescript/no-var-requires
@@ -30,8 +31,18 @@ export default defineConfig({
   testMatch: '**/*.e2e.test.ts',
   globalTeardown: './src/playwright/anvil/global-teardown.ts',
   workers: 1, // this is manually configured in the github action depending on type of tests
-  fullyParallel: false,
-  maxFailures: IS_CI ? 10 : undefined,
+  // Concurrency is owned by `workers` (1 everywhere in CI), NOT by this flag. What
+  // `fullyParallel` actually controls here is SHARD GRANULARITY: with it false, Playwright
+  // puts every test of a file into one test group and `--shard` assigns a whole group to the
+  // shard whose index window contains the group's FIRST test, so a file bigger than one
+  // window swallows the next window whole and that shard is handed zero tests. Measured on
+  // the anvil suite (56 tests / 8 shards): CreatePosition (11 tests, starting at index 6)
+  // spanned window 2 and Swap (8 tests, starting at 34) spanned window 6, giving
+  // [17, 0, 6, 5, 14, 0, 10, 4] — two idle shards, and a 17-test shard that then trips
+  // maxFailures. Per-test groups shard evenly (8 x 7) at identical concurrency.
+  fullyParallel: IS_CI,
+  // Per shard; the scheduled full-suite workflows set PLAYWRIGHT_MAX_FAILURES=0 so the cap can't hide tests as skipped.
+  maxFailures: MAX_FAILURES_ENV === undefined ? (IS_CI ? 10 : undefined) : Number(MAX_FAILURES_ENV),
   retries: IS_CI ? 3 : 0,
   reporter: IS_CI && process.env.REPORT_TO_SLACK ? [['blob'], ['list']] : 'list',
   timeout: ms('120s'),

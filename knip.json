@@ -5,7 +5,6 @@
   "workspaces": {
     ".": {
       "ignoreDependencies": [
-        "@graphql-codegen/.+",
         "@commitlint/.+",
         "@nx/devkit",
         "@nx/js",
@@ -139,7 +138,6 @@
         "@chromatic-com/storybook",
         "@datadog/datadog-ci",
         "@ethersproject/.+",
-        "@graphql-codegen/.+",
         "@hono/node-server",
         "@metamask/connect-evm",
         "@rive-app/canvas",
@@ -275,23 +273,18 @@
       "ignoreDependencies": ["@react-email/preview-server", "@universe/mycelium", "@universe/tailwind"]
     },
     "packages/ui": {
-      "ignore": ["src/components/icons/**", "src/components/logos/**"],
       "ignoreDependencies": [
         "@react-native-masked-view/masked-view",
         "@shopify/react-native-skia",
-        "camelcase",
-        "cheerio",
         "esbuild-register",
         "expo-linear-gradient",
         "fs-extra",
         "moti",
-        "react-native-keyboard-controller",
-        "uppercamelcase"
+        "react-native-keyboard-controller"
       ]
     },
     "packages/uniswap": {
       "ignoreDependencies": [
-        "@graphql-codegen/.+",
         "@react-native-masked-view/masked-view",
         "@redux-devtools/extension",
         "@typechain/ethers-v5",

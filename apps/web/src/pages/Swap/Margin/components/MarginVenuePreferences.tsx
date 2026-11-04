@@ -1,9 +1,8 @@
-import { Flex, Text, TouchableArea } from '@universe/mycelium'
+import { Flex, Text, TouchableArea, Switch, Separator, ModalCloseIcon } from '@universe/mycelium'
+import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
 import { TestID } from '@universe/test'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ModalCloseIcon, Separator, Switch } from 'ui/src'
-import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -12,16 +11,16 @@ import { useMarginFormStore } from 'uniswap/src/features/transactions/margin/sto
 import { useResetMarginVenues } from 'uniswap/src/features/transactions/margin/stores/marginFormStore/useResetMarginVenues'
 import { useToggleMarginVenue } from 'uniswap/src/features/transactions/margin/stores/marginFormStore/useToggleMarginVenue'
 import { useEvent } from 'utilities/src/react/hooks'
-import type { MarginPairGroup } from '~/constants/margin'
-import { MarginVenueLogo } from '~/pages/Swap/Margin/components/MarginVenueLogo'
-import { useMarginMarkets } from '~/pages/Swap/Margin/hooks/useMarginMarkets'
+import { MARGIN_SELECTOR_MODAL_MAX_WIDTH, type MarginPairGroup } from '~/constants/margin'
+import { MarginVenueLogo } from '~/features/margin/components/MarginVenueLogo'
+import { useMarginMarkets } from '~/features/margin/hooks/useMarginMarkets'
 import {
   formatBorrowRate,
   formatMarginDebtUnits,
   formatMaxLeverage,
   marginVenueLabel,
-} from '~/pages/Swap/Margin/marginFormat'
-import { marginPairGroupLabel, marginUnwrapSymbol } from '~/pages/Swap/Margin/marginTokenDisplay'
+} from '~/features/margin/utils/marginFormat'
+import { marginPairGroupLabel, marginUnwrapSymbol } from '~/features/margin/utils/marginTokenDisplay'
 import { buildMarginVenueOptOutRows, type MarginVenueOptOutRow } from '~/pages/Swap/Margin/marginVenueOptOut'
 
 // The pair group the form currently trades. Falls back to the first group for the same reason the
@@ -135,7 +134,12 @@ export function MarginVenuePreferencesModal({
   const hasNoEnabledVenues = rows.every((row) => !row.isEnabled)
 
   return (
-    <Modal name={ModalName.MarginVenuePreferences} isModalOpen={isOpen} maxWidth={480} onClose={onClose}>
+    <Modal
+      name={ModalName.MarginVenuePreferences}
+      isModalOpen={isOpen}
+      maxWidth={MARGIN_SELECTOR_MODAL_MAX_WIDTH}
+      onClose={onClose}
+    >
       <Flex gap="$spacing12">
         <Flex row alignItems="center" justifyContent="space-between" gap="$spacing12">
           <Flex gap="$spacing2">

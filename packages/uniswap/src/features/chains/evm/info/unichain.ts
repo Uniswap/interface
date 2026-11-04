@@ -1,4 +1,4 @@
-import { GraphQLApi, TradingApi } from '@universe/api'
+import { TradingApi } from '@universe/api'
 import { UniverseChainId, Platform } from '@universe/chains'
 import { ETH_LOGO, UNICHAIN_LOGO, UNICHAIN_SEPOLIA_LOGO } from '@universe/mycelium/assets'
 import { ALL_APPS_CHAIN_SUPPORTED_APPS } from 'uniswap/src/features/chains/chainAppSupport'
@@ -10,7 +10,7 @@ import {
 } from 'uniswap/src/features/chains/evm/rpc'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
 import { GENERIC_L2_GAS_CONFIG } from 'uniswap/src/features/chains/gasDefaults'
-import { GqlChainId, NetworkLayer, RPCType, UniverseChainInfo } from 'uniswap/src/features/chains/types'
+import { NetworkLayer, RPCType, UniverseChainInfo } from 'uniswap/src/features/chains/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { buildUSDC } from 'uniswap/src/features/tokens/stablecoin'
 import { unichainSepolia } from 'wagmi/chains'
@@ -29,7 +29,6 @@ export const UNICHAIN_CHAIN_INFO = {
   supportedApps: ALL_APPS_CHAIN_SUPPORTED_APPS,
   assetRepoNetworkName: 'unichain',
   backendChain: {
-    chain: GraphQLApi.Chain.Unichain as GqlChainId,
     backendSupported: true,
     nativeTokenBackendAddress: undefined,
   },
@@ -96,7 +95,6 @@ export const UNICHAIN_SEPOLIA_CHAIN_INFO = {
   supportedApps: ALL_APPS_CHAIN_SUPPORTED_APPS,
   assetRepoNetworkName: undefined,
   backendChain: {
-    chain: GraphQLApi.Chain.AstrochainSepolia as GqlChainId,
     backendSupported: true,
     nativeTokenBackendAddress: undefined,
   },

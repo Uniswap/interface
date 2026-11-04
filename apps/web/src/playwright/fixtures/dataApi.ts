@@ -186,7 +186,7 @@ export const test = base.extend<DataApiFixture>({
     // oxlint-disable-next-line react-hooks/rules-of-hooks -- Playwright fixture `use()` is not a React hook
     await use({ intercept })
   },
-  // Default GetPortfolio mock for connected-wallet e2e (replaces legacy PortfolioBalances GraphQL intercept).
+  // Default GetPortfolio mock for connected-wallet e2e.
   interceptLongRunning: [
     async ({ dataApi }, use) => {
       await dataApi.intercept(getPortfolio, Mocks.DataApiService.get_portfolio)

@@ -83,4 +83,40 @@ describe('PriceChartModel.updateOptions', () => {
     model.updateOptions({ ...params, hideYAxis: false })
     expect(lastRightPriceScale().visible).toBe(true)
   })
+
+  describe('yAxisTickmarksFormatter', () => {
+    const narrowData = [10, 10.05].map((close, index) => ({
+      time: index as UTCTimestamp,
+      value: close,
+      open: close,
+      high: close,
+      low: close,
+      close,
+    }))
+    const lastTickmarksFormatter = (): ((prices: number[]) => string[]) =>
+      mockApplyOptions.mock.lastCall?.[0].localization.tickmarksPriceFormatter
+    const createModel = (overrides: Partial<typeof params>): PriceChartModel =>
+      new PriceChartModel(document.createElement('div'), { ...params, ...overrides })
+
+    it('receives tick prices with the low-price scale factor undone', () => {
+      const yAxisTickmarksFormatter = vi.fn((prices: number[]) => prices.map(String))
+      createModel({ data: narrowData, yAxisTickmarksFormatter })
+
+      lastTickmarksFormatter()([10.01 * SCALED])
+      expect(yAxisTickmarksFormatter.mock.lastCall?.[0][0]).toBeCloseTo(10.01)
+    })
+
+    it('receives the plotted prices as-is when low-price scaling is disabled', () => {
+      const yAxisTickmarksFormatter = vi.fn((prices: number[]) => prices.map(String))
+      createModel({ data: narrowData, yAxisTickmarksFormatter, disableLowPriceRangeScaling: true })
+
+      lastTickmarksFormatter()([10.01])
+      expect(yAxisTickmarksFormatter).toHaveBeenLastCalledWith([10.01])
+    })
+
+    it('leaves the tick formatter unset when none is passed', () => {
+      createModel({})
+      expect(lastTickmarksFormatter()).toBeUndefined()
+    })
+  })
 })

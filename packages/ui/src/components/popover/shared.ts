@@ -1,3 +1,5 @@
+import { SPACE_TOKEN_PX } from '@universe/mycelium/compat'
+import { spacing } from '@universe/mycelium/tokens'
 import type {
   PopoverHoverableProps,
   PopoverOffset,
@@ -5,7 +7,6 @@ import type {
   PopoverPlacementSide,
   PopoverProps,
 } from 'ui/src/components/popover/types'
-import { gap, padding, spacing } from 'ui/src/theme/spacing'
 
 /**
  * Platform-neutral constants and pure positioning/timing mappers for the rebuilt
@@ -140,12 +141,10 @@ export function mapHoverableToDelays(hoverable: PopoverHoverableProps | undefine
  * (ties keep insertion order — spacing, then padding, then gap, then `true`),
  * exactly like `stepTokenUpOrDown` in @tamagui/get-token.
  */
-const SPACE_SCALE: Array<[string, number]> = Object.entries({
-  ...spacing,
-  ...padding,
-  ...gap,
-  true: spacing.spacing8,
-}).sort((a, b) => a[1] - b[1])
+const { $true, ...NAMED_SPACE_TOKEN_PX } = SPACE_TOKEN_PX
+const SPACE_SCALE: Array<[string, number]> = Object.entries({ ...NAMED_SPACE_TOKEN_PX, $true })
+  .map(([token, px]): [string, number] => [token.slice(1), px])
+  .sort((a, b) => a[1] - b[1])
 
 /**
  * Legacy `PopperArrow` size algebra (`getSpace(sizeProp ?? context.size, { shift: -2,

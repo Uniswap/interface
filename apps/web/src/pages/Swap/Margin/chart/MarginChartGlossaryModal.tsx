@@ -1,7 +1,7 @@
 import { type ColorTokens, Flex, ScrollView, Text, TouchableArea } from '@universe/mycelium'
+import { X } from '@universe/mycelium/icons/X'
 import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
-import { X } from 'ui/src/components/icons/X'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { MarginExplainerContent, useMarginPnlCopy } from '~/pages/Swap/Margin/components/shared/MarginExplainer'

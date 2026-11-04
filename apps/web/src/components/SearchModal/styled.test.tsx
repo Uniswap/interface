@@ -1,5 +1,5 @@
 import { fireEvent } from '@testing-library/react'
-import { colorsLight } from 'ui/src/theme'
+import { colorsLight } from '@universe/mycelium/theme-palette'
 import { SearchInput } from '~/components/SearchModal/styled'
 import { render, screen } from '~/test-utils/render'
 

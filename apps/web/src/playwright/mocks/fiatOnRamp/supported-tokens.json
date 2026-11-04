@@ -169,14 +169,6 @@
       "chainId": "56",
       "symbol": "https://images-currency.meld.io/crypto/USDC_BSC/symbol.png",
       "address": "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d"
-    },
-    {
-      "cryptoCurrencyCode": "BLAST",
-      "displayName": "Blast",
-      "cryptoCurrencyChain": "Blast",
-      "chainId": "81457",
-      "symbol": "https://images-currency.meld.io/crypto/BLAST/symbol.png",
-      "address": "0xb1a5700fA2358173Fe465e6eA4Ff52E36e88E2ad"
     }
   ]
 }

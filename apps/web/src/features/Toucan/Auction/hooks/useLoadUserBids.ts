@@ -6,13 +6,13 @@ import { auctionQueries } from 'uniswap/src/data/apiClients/dataApiService/aucti
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { isFinalizedTxStatus } from 'uniswap/src/features/transactions/types/utils'
 import { logger } from 'utilities/src/logger/logger'
-import { useActiveAddress } from '~/features/accounts/store/hooks'
+import { useActiveAddress } from '~/connection/accounts/hooks'
 import { areUserBidsEqual, sortUserBidsById } from '~/features/Toucan/Auction/BidDistributionChart/utils/equality'
 import { AuctionBidStatus, AuctionProgressState } from '~/features/Toucan/Auction/store/types'
 import { useAuctionStore, useAuctionStoreActions } from '~/features/Toucan/Auction/store/useAuctionStore'
 import { mapApiBidsToUserBids } from '~/features/Toucan/Auction/utils/mapApiBidToUserBid'
 import { getUserBidsPollingEndBlock } from '~/features/Toucan/Auction/utils/userBidsPolling'
-import { useTransaction, useTransactions } from '~/state/transactions/hooks'
+import { useTransactionByHashOrBatchId, useTransactions } from '~/state/transactions/hooks'
 import { getPollingIntervalMs } from '~/utils/averageBlockTimeMs'
 
 const EVM_ADDRESS_PATTERN = /0x[0-9a-fA-F]{40}/g
@@ -62,8 +62,9 @@ export function useLoadUserBids({ auctionAddress, chainId, onWithdrawalConfirmed
   const isGraduated = useAuctionStore((state) => state.progress.isGraduated)
   const userBidsInitialized = useAuctionStore((state) => state.userBidsInitialized)
 
-  // Monitor transaction status for optimistic bid - clears if transaction fails on-chain
-  const optimisticBidTx = useTransaction(optimisticBid?.txHash)
+  // Monitor transaction status for optimistic bid - clears if transaction fails on-chain. A batched
+  // bid's txHash is its batch id, which its record is rekeyed away from once the batch lands.
+  const optimisticBidTx = useTransactionByHashOrBatchId(optimisticBid?.txHash)
 
   // Get unique txHashes from pending withdrawals for monitoring all concurrent transactions
   const uniqueTxHashes = useMemo(() => new Set(withdrawalTxHashes.values()), [withdrawalTxHashes])

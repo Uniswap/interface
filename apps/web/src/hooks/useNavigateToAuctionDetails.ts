@@ -3,10 +3,10 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
-import { POPUP_MEDIUM_DISMISS_MS } from '~/components/Popups/constants'
-import { popupRegistry } from '~/state/popups/registry'
-import { PopupType } from '~/state/popups/types'
 import { getAuctionDetailsURL } from '~/utils/auctionDetailsUrl'
+import { POPUP_MEDIUM_DISMISS_MS } from '~/utils/popups/constants'
+import { popupRegistry } from '~/utils/popups/registry'
+import { PopupType } from '~/utils/popups/types'
 
 type AuctionDetailsNavigationInput = Parameters<typeof getAuctionDetailsURL>[0]
 

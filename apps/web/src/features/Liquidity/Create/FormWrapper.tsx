@@ -69,7 +69,7 @@ export function FormStepsWrapper({
                 <Flex className="data-exiting:animate-spore-exit-fade-out opacity-[1]">
                   <Trace logImpression section={selectSectionName}>
                     <SelectTokensStep
-                      tokensLocked={isMigration}
+                      isMigration={isMigration}
                       currencyInputs={currencyInputs}
                       onContinue={onSelectTokensContinue}
                       setCurrencyInputs={setCurrencyInputs}

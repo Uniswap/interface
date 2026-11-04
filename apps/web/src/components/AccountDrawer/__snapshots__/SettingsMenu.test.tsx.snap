@@ -472,7 +472,7 @@ exports[`SettingsMenu > renders for embedded wallet user (Login Methods + Log ou
                   stroke="currentColor"
                   stroke-linecap="round"
                   stroke-width="8"
-                  style="width: 14px; height: 14px; color: rgb(255, 55, 199);"
+                  style="color: rgb(255, 55, 199); width: 14px; height: 14px;"
                   viewBox="0 0 48 48"
                 >
                   <line
@@ -591,7 +591,7 @@ exports[`SettingsMenu > renders for embedded wallet user (Login Methods + Log ou
                   stroke="currentColor"
                   stroke-linecap="round"
                   stroke-width="8"
-                  style="width: 14px; height: 14px; color: rgb(255, 55, 199);"
+                  style="color: rgb(255, 55, 199); width: 14px; height: 14px;"
                   viewBox="0 0 48 48"
                 >
                   <line
@@ -731,7 +731,7 @@ exports[`SettingsMenu > renders for embedded wallet user (Login Methods + Log ou
                   stroke="currentColor"
                   stroke-linecap="round"
                   stroke-width="8"
-                  style="width: 14px; height: 14px; color: rgb(255, 55, 199);"
+                  style="color: rgb(255, 55, 199); width: 14px; height: 14px;"
                   viewBox="0 0 48 48"
                 >
                   <line
@@ -787,7 +787,7 @@ exports[`SettingsMenu > renders for embedded wallet user (Login Methods + Log ou
             </svg>
           </span>
           <span
-            class="text-center font-medium whitespace-nowrap [font-family:var(--sbtn-font-button)] [transition:color_100ms_cubic-bezier(0.17,0.67,0.45,1)] text-[16px] leading-[20.7px] text-neutral1 group-hover/sbtn:text-neutral1-hovered"
+            class="text-center font-medium [font-family:var(--sbtn-font-button)] [transition:color_100ms_cubic-bezier(0.17,0.67,0.45,1)] text-[16px] [line-height:20.7px] text-neutral1 group-hover/sbtn:text-neutral1-hovered max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
           >
             Log out
           </span>
@@ -1166,7 +1166,7 @@ exports[`SettingsMenu > renders for standard wallet user 1`] = `
                   stroke="currentColor"
                   stroke-linecap="round"
                   stroke-width="8"
-                  style="width: 14px; height: 14px; color: rgb(255, 55, 199);"
+                  style="color: rgb(255, 55, 199); width: 14px; height: 14px;"
                   viewBox="0 0 48 48"
                 >
                   <line
@@ -1285,7 +1285,7 @@ exports[`SettingsMenu > renders for standard wallet user 1`] = `
                   stroke="currentColor"
                   stroke-linecap="round"
                   stroke-width="8"
-                  style="width: 14px; height: 14px; color: rgb(255, 55, 199);"
+                  style="color: rgb(255, 55, 199); width: 14px; height: 14px;"
                   viewBox="0 0 48 48"
                 >
                   <line
@@ -1425,7 +1425,7 @@ exports[`SettingsMenu > renders for standard wallet user 1`] = `
                   stroke="currentColor"
                   stroke-linecap="round"
                   stroke-width="8"
-                  style="width: 14px; height: 14px; color: rgb(255, 55, 199);"
+                  style="color: rgb(255, 55, 199); width: 14px; height: 14px;"
                   viewBox="0 0 48 48"
                 >
                   <line

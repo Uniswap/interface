@@ -1,8 +1,10 @@
+import { UniverseChainId } from '@universe/chains'
 import { setItem } from 'react-native-widgetkit'
 import { useSyncWidgetUserDefaults } from 'src/features/widgets/useSyncWidgetUserDefaults'
 import { act, renderHook } from 'src/test/test-utils'
 import { getBuildVariant } from 'src/utils/version'
 import { SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2 } from 'uniswap/src/test/fixtures/assets/constants'
+import { buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 import { initialWalletState, setAccountAsActive } from 'wallet/src/features/wallet/slice'
 import { ACCOUNT, ACCOUNT2 } from 'wallet/src/test/fixtures'
 
@@ -27,6 +29,7 @@ vi.mock('uniswap/src/features/fiatCurrency/hooks', () => ({
 }))
 
 const ACCOUNTS_KEY = getBuildVariant() + '.widgets.accounts'
+const FAVORITES_KEY = getBuildVariant() + '.widgets.favorites'
 const CHAINS_KEY = getBuildVariant() + '.widgets.chains'
 const I18N_KEY = getBuildVariant() + '.widgets.i18n'
 
@@ -81,7 +84,7 @@ describe('useSyncWidgetUserDefaults', () => {
     expect(writesTo(ACCOUNTS_KEY)).toEqual([{ accounts: [], activeAddress: null }])
   })
 
-  it('writes the chains payload as {chainId, name} pairs the widget decodes', () => {
+  it('writes the chains payload as {chainId, urlParam} entries the widget decodes', () => {
     renderHook(() => useSyncWidgetUserDefaults(), {
       preloadedState: walletStateWith({
         accounts: { [SAMPLE_SEED_ADDRESS_1]: ACCOUNT },
@@ -92,8 +95,27 @@ describe('useSyncWidgetUserDefaults', () => {
     expect(writesTo(CHAINS_KEY)).toEqual([
       {
         chains: [
-          { chainId: 1, name: 'ETHEREUM', nativeAddress: '0x0000000000000000000000000000000000000000' },
-          { chainId: 10, name: 'OPTIMISM', nativeAddress: '0x0000000000000000000000000000000000000000' },
+          { chainId: 1, urlParam: 'ethereum', nativeAddress: '0x0000000000000000000000000000000000000000' },
+          { chainId: 10, urlParam: 'optimism', nativeAddress: '0x0000000000000000000000000000000000000000' },
+        ],
+      },
+    ])
+  })
+
+  it('writes favorites as {chainId, address} with no address for natives', () => {
+    const usdcCurrencyId = '1-0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
+    renderHook(() => useSyncWidgetUserDefaults(), {
+      preloadedState: {
+        ...walletStateWith({ accounts: {}, activeAccountAddress: null }),
+        favorites: { tokens: [buildNativeCurrencyId(UniverseChainId.Base), usdcCurrencyId], watchedAddresses: [] },
+      },
+    })
+
+    expect(writesTo(FAVORITES_KEY)).toEqual([
+      {
+        favorites: [
+          { chainId: UniverseChainId.Base },
+          { chainId: UniverseChainId.Mainnet, address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48' },
         ],
       },
     ])

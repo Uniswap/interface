@@ -1,4 +1,10 @@
+import {
+  DEV_UNREALIZED_PNL_IN_DEBT_BY_ACCOUNT,
+  MARGIN_POSITIONS_WIRE_PNL_ACTIVE,
+  MARGIN_POSITIONS_WIRE_PNL_DECREASED,
+} from 'uniswap/src/data/apiClients/tradingApi/__fixtures__/marginPositionsWirePnl'
 import type { MarginActivePosition } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
+import { toMarginPositionsView } from 'uniswap/src/data/apiClients/tradingApi/marginPositionsView'
 import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { describe, expect, it } from 'vitest'
 import type { MarginMarket, MarginTokenInfo } from '~/constants/margin'
@@ -348,5 +354,49 @@ describe('marginUsdBreakEvenPrice', () => {
   it('is undefined rather than negative for a short already worth less than its basis', () => {
     const basis = basisOf({ position: makeShort({ collateral: 1500 }), market: SHORT_MARKET })
     expect(marginUsdBreakEvenPrice({ basis })).toBeUndefined()
+  })
+})
+
+// Served WETH/USDC longs, through the client adapter, against the dollar PnL the server
+// computes for the same rows. The UI's unrealized figure excludes what withdrawals already realized,
+// which the server's includes, so the two reconcile once realizedPnlUsd is added back.
+describe('marginUsdPnlNow on the served wire', () => {
+  const RAW_UNIT_TOLERANCE = 1.5e-6
+  const rows = [MARGIN_POSITIONS_WIRE_PNL_ACTIVE, MARGIN_POSITIONS_WIRE_PNL_DECREASED].flatMap((response) =>
+    toMarginPositionsView(response).positions.flatMap((position) => (position.status === 'ACTIVE' ? [position] : [])),
+  )
+  const serverPnlUsd = (position: MarginActivePosition): number => {
+    const account = position.legs[0]?.account ?? ''
+    return Number(DEV_UNREALIZED_PNL_IN_DEBT_BY_ACCOUNT[account]) / 10 ** USDC.decimals
+  }
+
+  it('reads the rows as WETH/USDC longs', () => {
+    expect(rows).toHaveLength(7)
+    for (const position of rows) {
+      expect(position.direction).toBe(MarginDirection.LONG)
+      expect(position.exposureToken.address).toBe(WETH.address)
+      expect(position.counterToken.address).toBe(USDC.address)
+    }
+  })
+
+  it.each(rows.map((position) => [position.legs[0]?.account, position] as const))(
+    'reconciles %s with the server’s dollar PnL',
+    (_account, position) => {
+      const pnl = marginUsdPnlNow({ position, market: LONG_MARKET })
+      const basis = marginUsdBasis({ position, market: LONG_MARKET })
+      expect(pnl).toBeDefined()
+      expect(basis?.costBasisUsd).toBe(Number(position.costBasisUsd) / 10 ** USDC.decimals)
+      const realizedUsd = basis?.realizedPnlUsd ?? 0
+      expect(Math.abs((pnl?.pnlUsd ?? NaN) + realizedUsd - serverPnlUsd(position))).toBeLessThan(RAW_UNIT_TOLERANCE)
+    },
+  )
+
+  it('reports nothing for a row the server could not price', () => {
+    const position = rows.at(0)
+    if (!position) {
+      throw new Error('fixture has no rows')
+    }
+    const { costBasisUsd: _costBasisUsd, ...unpriced } = position
+    expect(marginUsdPnlNow({ position: unpriced, market: LONG_MARKET })).toBeUndefined()
   })
 })

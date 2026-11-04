@@ -13,14 +13,14 @@ import { useIsModeMismatch } from 'uniswap/src/features/chains/hooks/useEnabledC
 import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useEvent } from 'utilities/src/react/hooks'
-import { useWithdrawBidAndClaimTokensReviewData } from '~/features/Toucan/Auction/Bids/WithdrawModal/useWithdrawBidAndClaimTokensReviewData'
-import { useWithdrawModalData } from '~/features/Toucan/Auction/Bids/WithdrawModal/useWithdrawModalData'
+import { useWithdrawBidAndClaimTokens } from '~/features/Toucan/Auction/Bids/WithdrawModal/hooks/useWithdrawBidAndClaimTokens'
+import { useWithdrawBidAndClaimTokensReviewData } from '~/features/Toucan/Auction/Bids/WithdrawModal/hooks/useWithdrawBidAndClaimTokensReviewData'
+import { useWithdrawModalData } from '~/features/Toucan/Auction/Bids/WithdrawModal/hooks/useWithdrawModalData'
 import { useWithdrawBidAndClaimTokensFormSubmit } from '~/features/Toucan/Auction/hooks/useWithdrawBidAndClaimTokensFormSubmit'
 import { AuctionProgressState } from '~/features/Toucan/Auction/store/types'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
 import { getRequiredTestnetMode } from '~/features/Toucan/Shared/getRequiredTestnetMode'
 import { ToucanActionButton } from '~/features/Toucan/Shared/ToucanActionButton'
-import { useWithdrawBidAndClaimTokens } from '~/hooks/useWithdrawBidAndClaimTokens'
 
 interface WithdrawModalProps {
   isOpen: boolean

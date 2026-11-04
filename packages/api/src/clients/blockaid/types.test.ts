@@ -1,5 +1,5 @@
-import { getBlockaidScanTransactionResponseSchema } from '@universe/api/src/clients/blockaid/types'
 import { describe, expect, it } from 'vitest'
+import { getBlockaidScanTransactionResponseSchema } from './types'
 
 describe('getBlockaidScanTransactionResponseSchema', () => {
   it('preserves NFT approval scope and exposure details', () => {

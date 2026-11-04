@@ -1,6 +1,8 @@
 # @universe/mycelium
 
-Mycelium is Uniswap's shared Tailwind CSS design system for Tailwind v4.
+Mycelium is Uniswap's design system and shared component library for web, mobile and extension, built on Tailwind v4.
+
+Add new shared components here. `packages/ui` is soft-deprecated: its components are moving into mycelium (the `*-compat` directories are the drop-in replacements, exported under the legacy names such as `Button`, `Flex` and `Text`), and the goal is to delete `ui`.
 
 ## Usage
 
@@ -42,7 +44,7 @@ import baseLogo from '@universe/mycelium/assets/logos/png/base-logo.png?inline'
 
 Check here before adding an image to an app. Put an image in an app's own directory only when no other app will ever use it.
 
-`src/assets/icons/` and `src/assets/logos/svg/` hold the SVG sources for the generated icon and logo components. Import those components (`@universe/mycelium/icons`) rather than the SVG files. To add icons, use the `/add-icons` Claude skill or see the icon workflow in `packages/ui/README.md`.
+`src/assets/icons/` and `src/assets/logos/svg/` hold the SVG sources for the generated icon and logo components. Import those components (`@universe/mycelium/icons`) rather than the SVG files. To add icons, use the `/add-icons` Claude skill or run `bun mycelium build:icons:missing` after adding the SVG.
 
 ## What's Included
 

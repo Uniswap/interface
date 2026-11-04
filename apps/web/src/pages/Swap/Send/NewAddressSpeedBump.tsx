@@ -7,8 +7,8 @@ import { Dialog } from 'uniswap/src/components/dialog/Dialog'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { SendModalProps } from '~/pages/Swap/Send/SendReviewModal'
-import type { RecipientData } from '~/pages/Swap/Send/state/hooks'
 import { useSendContext } from '~/pages/Swap/Send/state/SendContext'
+import type { RecipientData } from '~/pages/Swap/Send/state/types'
 
 const RecipientDisplay = ({ recipientData }: { recipientData?: RecipientData }) => {
   const ensOrUnitag = recipientData?.unitag ?? recipientData?.ensName

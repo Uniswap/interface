@@ -2,10 +2,9 @@ import type { PlainMessage } from '@bufbuild/protobuf'
 import { useQuery } from '@tanstack/react-query'
 import type { GetTokensMultiChainResponse } from '@uniswap/client-data-api/dist/data/v2/api_pb'
 import type { MultichainToken } from '@uniswap/client-data-api/dist/data/v2/types_pb'
-import { GraphQLApi } from '@universe/api'
-import type { UniverseChainId } from '@universe/chains'
+import { UniverseChainId } from '@universe/chains'
 import { DynamicConfigs, HomeScreenExploreTokensConfigKey, useDynamicConfigValue } from '@universe/gating'
-import { Flex, LinearGradient, Text, useIsDarkMode, AnimatedFlex } from '@universe/mycelium'
+import { Flex, LinearGradient, Text, useIsDarkMode, AnimatedFlex, spacing, zIndexes } from '@universe/mycelium'
 import { SwirlyArrowDown } from '@universe/mycelium/icons'
 import { withSporeCurve } from '@universe/tailwind/animations/reanimated'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
@@ -15,15 +14,13 @@ import type { EntryExitAnimationFunction } from 'react-native-reanimated'
 import { useSelector } from 'react-redux'
 import { TokenItem } from 'src/components/explore/TokenItem'
 import { TokenItemData } from 'src/components/explore/TokenItemData'
-import { spacing, zIndexes } from 'ui/src/theme'
 import { getGetTokensMultiChainQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/tokens/queries'
 import { normalizeBackendNativeAddress } from 'uniswap/src/data/apiClients/dataApiService/utils/dataApiMultichainToken'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { fromGraphQLChain, toSupportedChainId } from 'uniswap/src/features/chains/utils'
+import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { currencyIdToRestContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { useMultichainExploreMetricsAnalytics } from 'uniswap/src/features/explore/useMultichainExploreMetricsAnalytics'
 import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
-import { isContractInputArrayType } from 'uniswap/src/features/gating/typeGuards'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import {
   areCurrencyIdsEqual,
@@ -48,18 +45,18 @@ export const EmptyWalletTokensTab = memo(function EmptyWalletTokensTabInner(): J
   const ethChainId = useDynamicConfigValue({
     config: DynamicConfigs.HomeScreenExploreTokens,
     key: HomeScreenExploreTokensConfigKey.EthChainId,
-    defaultValue: GraphQLApi.Chain.Ethereum,
-    customTypeGuard: (x): x is GraphQLApi.Chain => Object.values(GraphQLApi.Chain).includes(x as GraphQLApi.Chain),
+    defaultValue: 'ETHEREUM',
+    customTypeGuard: isConfigChain,
   })
 
   const recommendedTokens = useDynamicConfigValue({
     config: DynamicConfigs.HomeScreenExploreTokens,
     key: HomeScreenExploreTokensConfigKey.Tokens,
     defaultValue: [],
-    customTypeGuard: isContractInputArrayType,
+    customTypeGuard: isConfigTokenArray,
   })
 
-  // The remote config still speaks GraphQL ContractInput; ETH leads the list as before.
+  // ETH leads the list as before.
   const currencyIds = useMemo(
     () =>
       [{ chain: ethChainId }, ...recommendedTokens]
@@ -212,11 +209,55 @@ function FooterElement(): JSX.Element {
   )
 }
 
-function contractInputToCurrencyId({ chain, address }: GraphQLApi.ContractInput): string | undefined {
-  const chainId = fromGraphQLChain(chain)
-  if (!chainId) {
+// The HomeScreenExploreTokens remote config identifies chains by legacy chain-name strings (e.g. `ETHEREUM`).
+const CONFIG_CHAIN_TO_CHAIN_ID = {
+  ARBITRUM: UniverseChainId.ArbitrumOne,
+  ARC: UniverseChainId.Arc,
+  ASTROCHAIN_SEPOLIA: UniverseChainId.UnichainSepolia,
+  AVALANCHE: UniverseChainId.Avalanche,
+  BASE: UniverseChainId.Base,
+  BNB: UniverseChainId.Bnb,
+  CELO: UniverseChainId.Celo,
+  ETHEREUM: UniverseChainId.Mainnet,
+  ETHEREUM_SEPOLIA: UniverseChainId.Sepolia,
+  INK: UniverseChainId.Ink,
+  LINEA: UniverseChainId.Linea,
+  MEGAETH: UniverseChainId.MegaETH,
+  MONAD: UniverseChainId.Monad,
+  OPTIMISM: UniverseChainId.Optimism,
+  POLYGON: UniverseChainId.Polygon,
+  ROBINHOOD: UniverseChainId.Robinhood,
+  SOLANA: UniverseChainId.Solana,
+  SONEIUM: UniverseChainId.Soneium,
+  TEMPO: UniverseChainId.Tempo,
+  UNICHAIN: UniverseChainId.Unichain,
+  WORLDCHAIN: UniverseChainId.WorldChain,
+  XLAYER: UniverseChainId.XLayer,
+  ZKSYNC: UniverseChainId.Zksync,
+  ZORA: UniverseChainId.Zora,
+} as const satisfies Record<string, UniverseChainId>
+
+type ConfigChain = keyof typeof CONFIG_CHAIN_TO_CHAIN_ID
+
+// `chain` stays a plain string so one unrecognized chain drops only its token, not the whole list.
+type ConfigToken = { chain: string; address?: string }
+
+function isConfigChain(x: unknown): x is ConfigChain {
+  return typeof x === 'string' && Object.hasOwn(CONFIG_CHAIN_TO_CHAIN_ID, x)
+}
+
+function isConfigTokenArray(x: unknown): x is ConfigToken[] {
+  return (
+    Array.isArray(x) &&
+    x.every((val) => typeof val.chain === 'string' && (!val.address || typeof val.address === 'string'))
+  )
+}
+
+function contractInputToCurrencyId({ chain, address }: ConfigToken): string | undefined {
+  if (!isConfigChain(chain)) {
     return undefined
   }
+  const chainId = CONFIG_CHAIN_TO_CHAIN_ID[chain]
   return address ? buildCurrencyId(chainId, address) : buildNativeCurrencyId(chainId)
 }
 

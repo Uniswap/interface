@@ -1,10 +1,7 @@
 /**
  * Native leg of the SpinningLoader compat (INFRA-3644) — the `ui/src`
  * SpinningLoader rebuild's native leg, re-homed: a reanimated rotation around
- * the circle-spinner glyph. mycelium's icon components emit a DOM `<svg>` and
- * have no native leg by design, so the glyphs are drawn with
- * `react-native-svg` from the shared geometry — the
- * `ModalCloseIconCompat.native.tsx` mechanism.
+ * mycelium's `CircleSpinner` icon.
  */
 import { type JSX, useEffect } from 'react'
 import Animated, {
@@ -15,52 +12,14 @@ import Animated, {
   withRepeat,
   withTiming,
 } from 'react-native-reanimated'
-import { Circle, Path, Svg } from 'react-native-svg'
 import { markMyceliumPrimitive } from '../compat/primitive-marker'
-import { useSporeColors } from '../theme-hooks-compat/useSporeColors'
-import { CIRCLE_SPINNER_GLYPH, EMPTY_SPINNER_GLYPH, resolveSpinnerColor, type SpinningLoaderCompatProps } from './props'
+import { CircleSpinner } from '../components/icons/CircleSpinner'
+import { EmptySpinner } from '../components/icons/EmptySpinner'
+import type { SpinningLoaderCompatProps } from './props'
 
 export type { SpinningLoaderCompatProps } from './props'
 
-/** The legacy CircleSpinner glyph at an explicit resolved color. */
-function CircleSpinnerGlyph({ color, size }: { color: string | undefined; size: number }): JSX.Element {
-  return (
-    <Svg fill="none" height={size} viewBox={CIRCLE_SPINNER_GLYPH.viewBox} width={size}>
-      <Path
-        d={CIRCLE_SPINNER_GLYPH.trackPath}
-        opacity={CIRCLE_SPINNER_GLYPH.trackOpacity}
-        stroke={color}
-        strokeLinecap="round"
-        strokeWidth={CIRCLE_SPINNER_GLYPH.strokeWidth}
-      />
-      <Path
-        d={CIRCLE_SPINNER_GLYPH.arcPath}
-        stroke={color}
-        strokeLinecap="round"
-        strokeWidth={CIRCLE_SPINNER_GLYPH.strokeWidth}
-      />
-    </Svg>
-  )
-}
-
-/** The legacy EmptySpinner glyph at an explicit resolved color. */
-function EmptySpinnerGlyph({ color, size }: { color: string | undefined; size: number }): JSX.Element {
-  return (
-    <Svg fill="none" height={size} viewBox={EMPTY_SPINNER_GLYPH.viewBox} width={size}>
-      <Circle
-        cx={EMPTY_SPINNER_GLYPH.circle.cx}
-        cy={EMPTY_SPINNER_GLYPH.circle.cy}
-        r={EMPTY_SPINNER_GLYPH.circle.r}
-        stroke={color}
-        strokeOpacity={EMPTY_SPINNER_GLYPH.strokeOpacity}
-        strokeWidth={EMPTY_SPINNER_GLYPH.strokeWidth}
-      />
-    </Svg>
-  )
-}
-
 export function SpinningLoaderCompat({ size = 20, disabled, color }: SpinningLoaderCompatProps): JSX.Element {
-  const colors = useSporeColors()
   const rotation = useSharedValue(0)
 
   const animatedStyles = useAnimatedStyle(() => {
@@ -88,7 +47,7 @@ export function SpinningLoaderCompat({ size = 20, disabled, color }: SpinningLoa
   }, [])
 
   if (disabled) {
-    return <EmptySpinnerGlyph color={resolveSpinnerColor(colors, '$neutral3')} size={size} />
+    return <EmptySpinner color="$neutral3" size={size} />
   }
 
   /*
@@ -101,7 +60,7 @@ export function SpinningLoaderCompat({ size = 20, disabled, color }: SpinningLoa
    */
   return (
     <Animated.View style={[animatedStyles, { height: size, width: size }]}>
-      <CircleSpinnerGlyph color={resolveSpinnerColor(colors, color ?? '$neutral2')} size={size} />
+      <CircleSpinner color={color ?? '$neutral2'} size={size} />
     </Animated.View>
   )
 }

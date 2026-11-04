@@ -154,6 +154,16 @@ describe('useV2ListPools', () => {
     )
   })
 
+  it('sends the selected pool category as the ListPools categoryIds filter', () => {
+    mockPools([buildPool()])
+    renderHook(() => useV2ListPools({ sortState: SORT_STATE, filterString: '', categoryId: 'stable-pools' }))
+    expect(listPoolsMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        params: expect.objectContaining({ filter: expectedFilter({ categoryIds: ['stable-pools'] }) }),
+      }),
+    )
+  })
+
   // A blank box must share the unsearched request (and its persisted entry) rather than send ''.
   it('omits searchQuery for a whitespace-only search string', () => {
     mockPools([buildPool()])

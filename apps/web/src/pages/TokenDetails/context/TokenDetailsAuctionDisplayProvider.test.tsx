@@ -4,7 +4,6 @@ import { act, renderHook } from '@testing-library/react'
 import { HistoryDuration } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { AuctionType, type Auction } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { Token } from '@uniswap/sdk-core'
-import { GraphQLApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
 import { useFeatureFlag } from '@universe/gating'
 import type { ReactNode } from 'react'
@@ -77,7 +76,6 @@ function createPageState({
   isPageReady?: boolean
 } = {}): TDPState {
   return {
-    currencyChain: token.chainId === UniverseChainId.Base ? GraphQLApi.Chain.Base : GraphQLApi.Chain.Ethereum,
     currencyChainId: token.chainId as UniverseChainId,
     address: token.address,
     currency: isPageReady ? token : undefined,

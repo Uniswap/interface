@@ -9,7 +9,6 @@ import {
   auctionQueryKeys,
   loadAuctionServiceClient,
 } from 'uniswap/src/data/apiClients/dataApiService/auctions/queryTypes'
-import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import { getPortfolioChartPercentChange } from 'uniswap/src/features/portfolio/portfolioChartPercentChange'
 import { parseFiniteNumber } from 'utilities/src/primitives/number'
@@ -71,7 +70,7 @@ export function useAuctionHoverCardData({
 
   const chartVariables = useMemo(
     () => ({
-      chain: toGraphQLChain(chainId),
+      chainId,
       address: tokenAddress,
       duration: HistoryDuration.Day,
       multichain: false,

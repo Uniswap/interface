@@ -23,6 +23,24 @@ exports[`Routes > router definition should match snapshot 1`] = `
     "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
+    "nestedPaths": [],
+    "path": "/pools/category/:categorySlug",
+  },
+  {
+    "enabled": [Function],
+    "getDescription": [Function],
+    "getElement": [Function],
+    "getTitle": [Function],
+    "nestedPaths": [
+      ":chainName",
+    ],
+    "path": "/explore/hooks",
+  },
+  {
+    "enabled": [Function],
+    "getDescription": [Function],
+    "getElement": [Function],
+    "getTitle": [Function],
     "nestedPaths": [
       ":tab",
       ":chainName",

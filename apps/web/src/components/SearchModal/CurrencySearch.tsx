@@ -11,9 +11,9 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { usePrevious } from 'utilities/src/react/hooks'
-import { useSelectChain } from '~/hooks/useSelectChain'
+import { useSelectChain } from '~/connection/hooks/useSelectChain'
 import { useMultichainContext } from '~/state/multichain/useMultichainContext'
-import { SwitchNetworkAction } from '~/state/popups/types'
+import { SwitchNetworkAction } from '~/utils/popups/types'
 import { showSwitchNetworkNotification } from '~/utils/showSwitchNetworkNotification'
 
 interface CurrencySearchProps {

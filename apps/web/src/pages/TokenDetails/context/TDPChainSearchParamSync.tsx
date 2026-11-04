@@ -1,7 +1,7 @@
 import { UniverseChainId } from '@universe/chains'
 import { useEffect, useMemo } from 'react'
 import { useLocation, useNavigate, useSearchParams } from 'react-router'
-import { getTokenDetailsURLForMultichainEntry } from '~/pages/TokenDetails/context/tdpUrlUtils'
+import { getCurrentTDPUrlState, getTokenDetailsURLForMultichainEntry } from '~/pages/TokenDetails/context/tdpUrlUtils'
 import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
 import { useMultichainTokenEntries } from '~/pages/TokenDetails/hooks/useMultichainTokenEntries'
 import { getChainIdFromChainUrlParam } from '~/utils/params/chainParams'
@@ -15,22 +15,6 @@ import {
 function getTDPPathChainId(pathname: string): UniverseChainId | undefined {
   const [, explore, tokens, chainName] = pathname.split('/')
   return explore === 'explore' && tokens === 'tokens' ? getChainIdFromChainUrlParam(chainName) : undefined
-}
-
-function getCurrentTDPUrlState({
-  routerPathname,
-  routerSearchParams,
-}: {
-  routerPathname: string
-  routerSearchParams: URLSearchParams
-}): { pathname: string; searchParams: URLSearchParams } {
-  if (window.location.pathname.startsWith('/explore/tokens/')) {
-    return {
-      pathname: window.location.pathname,
-      searchParams: new URLSearchParams(window.location.search),
-    }
-  }
-  return { pathname: routerPathname, searchParams: routerSearchParams }
 }
 
 /**

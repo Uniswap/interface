@@ -9,7 +9,7 @@ import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import type { CurrencyId } from 'uniswap/src/types/currency'
 import type { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
-import { useHoverCardCopyAndClose } from '~/components/HoverCard/useHoverCardCopyAndClose'
+import { useHoverCardCopyAndClose } from '~/components/HoverCard/hooks/useHoverCardCopyAndClose'
 
 interface UseTokenHoverCardMultichainCopyParams {
   isOpen: boolean

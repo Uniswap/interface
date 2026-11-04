@@ -1,19 +1,23 @@
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { GraphQLApi, TradingApi } from '@universe/api'
+import { TradingApi } from '@universe/api'
 import { UniverseChainId, Platform } from '@universe/chains'
+import { isE2eTestEnv } from '@universe/environment'
 import { BNB_LOGO } from '@universe/mycelium/assets'
 import { ALL_APPS_CHAIN_SUPPORTED_APPS } from 'uniswap/src/features/chains/chainAppSupport'
 import { CHAIN_ID_TO_URL_PARAM } from 'uniswap/src/features/chains/chainUrlParam'
 import {
   DEFAULT_NATIVE_ADDRESS_LEGACY,
+  getPlaywrightRpcUrls,
   getQuicknodeEndpointUrl,
   getUniRpcEndpointUrl,
 } from 'uniswap/src/features/chains/evm/rpc'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
 import { GENERIC_L2_GAS_CONFIG } from 'uniswap/src/features/chains/gasDefaults'
-import { GqlChainId, NetworkLayer, RPCType, UniverseChainInfo } from 'uniswap/src/features/chains/types'
+import { NetworkLayer, RPCType, UniverseChainInfo } from 'uniswap/src/features/chains/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { bsc } from 'wagmi/chains'
+
+const LOCAL_BNB_PLAYWRIGHT_RPC_URL = 'http://127.0.0.1:8547'
 
 const tokens = buildChainTokens({
   stables: {
@@ -31,7 +35,6 @@ export const BNB_CHAIN_INFO = {
   supportedApps: ALL_APPS_CHAIN_SUPPORTED_APPS,
   assetRepoNetworkName: 'smartchain',
   backendChain: {
-    chain: GraphQLApi.Chain.Bnb as GqlChainId,
     backendSupported: true,
     nativeTokenBackendAddress: undefined,
   },
@@ -59,11 +62,13 @@ export const BNB_CHAIN_INFO = {
   networkLayer: NetworkLayer.L1,
   blockTimeMs: 3000,
   pendingTransactionsRetryOptions: undefined,
-  rpcUrls: {
-    [RPCType.Public]: { http: [getUniRpcEndpointUrl(UniverseChainId.Bnb)] },
-    [RPCType.Default]: { http: ['https://bsc-dataseed1.bnbchain.org'] },
-    [RPCType.Interface]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Bnb)] },
-  },
+  rpcUrls: isE2eTestEnv()
+    ? getPlaywrightRpcUrls(LOCAL_BNB_PLAYWRIGHT_RPC_URL)
+    : {
+        [RPCType.Public]: { http: [getUniRpcEndpointUrl(UniverseChainId.Bnb)] },
+        [RPCType.Default]: { http: ['https://bsc-dataseed1.bnbchain.org'] },
+        [RPCType.Interface]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Bnb)] },
+      },
   spotPriceStablecoinAmountOverride: CurrencyAmount.fromRawAmount(tokens.USDC, 100e18),
   tokens,
   statusPage: undefined,

@@ -1,12 +1,10 @@
-import { Flex, useIsShortMobileDevice } from '@universe/mycelium'
+import { Button, Flex, useIsShortMobileDevice } from '@universe/mycelium'
 import { TestID } from '@universe/test'
 import { memo } from 'react'
-import { Button } from 'ui/src'
 import { useCexTransferProviders } from 'uniswap/src/features/fiatOnRamp/useCexTransferProviders'
 import {
-  useIsShowingWebFORNudge,
-  useIsWebFORNudgeEnabled,
   useSetIsShowingWebFORNudge,
+  useWebFORNudgeAddFundsPress,
 } from 'uniswap/src/features/providers/webForNudgeProvider'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { useGeoRestrictionModalStore } from 'uniswap/src/features/transactions/swap/components/GeoRestrictionCard/useGeoRestrictionModalStore'
@@ -16,6 +14,7 @@ import { useIsMissingPlatformWallet } from 'uniswap/src/features/transactions/sw
 import { useIsSwapButtonDisabled } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsSwapButtonDisabled'
 import { useIsTradeIndicative } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsTradeIndicative'
 import { useOnReviewPress } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useOnReviewPress'
+import { usePromptWebFORNudge } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/usePromptWebFORNudge'
 import { useSwapFormButtonColors } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useSwapFormButtonColors'
 import { useSwapFormButtonText } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useSwapFormButtonText'
 import { SwapFormButtonTrace } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/SwapFormButtonTrace'
@@ -23,8 +22,12 @@ import { useSwapFormWarningStoreActions } from 'uniswap/src/features/transaction
 import { useNeedsGeoAcknowledgment } from 'uniswap/src/features/transactions/swap/hooks/useGeoRestrictionAcknowledgment'
 import { useReviewGateContext } from 'uniswap/src/features/transactions/swap/services/hooks/usePrepareSwap'
 import { getReviewGateActionType } from 'uniswap/src/features/transactions/swap/services/prepareSwapService'
-import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
+import {
+  useSwapFormStore,
+  useSwapFormStoreDerivedSwapInfo,
+} from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { SwapFormButtonAction } from 'uniswap/src/features/transactions/swap/types/swapFormButtonAction'
+import { CurrencyField } from 'uniswap/src/types/currency'
 import { useEvent } from 'utilities/src/react/hooks'
 
 export const SWAP_BUTTON_TEXT_VARIANT = 'buttonLabel1'
@@ -48,12 +51,12 @@ export const SwapFormButton = memo(function SwapFormButton({ tokenColor }: { tok
     emphasis: buttonEmphasis,
     buttonTextColor,
   } = useSwapFormButtonColors(tokenColor)
-  const isShowingWebFORNudge = useIsShowingWebFORNudge()
   const setIsShowingWebFORNudge = useSetIsShowingWebFORNudge()
-  const promptWebFORNudge = useIsWebFORNudgeEnabled() && !swapRedirectCallback && !isShowingWebFORNudge
+  const onAddFundsPress = useWebFORNudgeAddFundsPress()
+  const promptWebFORNudge = usePromptWebFORNudge()
   // Only show loading state if the trade is `indicative` and we're not on the landing page.
   // This is so that the `Get Started` button is always enabled/clickable.
-  const shouldShowLoading = !!indicative && !swapRedirectCallback
+  const shouldShowLoading = !!indicative && !swapRedirectCallback && !promptWebFORNudge
 
   // preload cex transfer providers to avoid flickering when showing web for nudge
   useCexTransferProviders({ isDisabled: !promptWebFORNudge })
@@ -67,6 +70,11 @@ export const SwapFormButton = memo(function SwapFormButton({ tokenColor }: { tok
 
   const reviewGateContext = useReviewGateContext()
   const chainId = useSwapFormStoreDerivedSwapInfo((s) => s.chainId)
+  const inputCurrencyId = useSwapFormStoreDerivedSwapInfo((s) => s.currencies[CurrencyField.INPUT]?.currencyId)
+  // Kept in sync with token input by useSyncFiatAndTokenAmountUpdater, so this covers both input modes.
+  // Fiat, not a token amount: when the provider doesn't sell the input token, /buy selects a different token
+  // and would read a token amount in that token's units.
+  const fiatAmount = useSwapFormStore((s) => s.exactAmountFiat)
   const isMissingPlatformWallet = useIsMissingPlatformWallet(chainId)
   const action = getSwapFormButtonAction({
     shouldOpenVerifyIdentityModal,
@@ -85,7 +93,11 @@ export const SwapFormButton = memo(function SwapFormButton({ tokenColor }: { tok
         openGeoRestrictionModal()
         return
       case SwapFormButtonAction.AddFunds:
-        setIsShowingWebFORNudgeHandler()
+        if (onAddFundsPress) {
+          onAddFundsPress({ currencyId: inputCurrencyId, fiatAmount })
+        } else {
+          setIsShowingWebFORNudgeHandler()
+        }
         return
       default:
         handleOnReviewPress()
@@ -105,7 +117,6 @@ export const SwapFormButton = memo(function SwapFormButton({ tokenColor }: { tok
             backgroundColor={buttonBackgroundColor}
             size={isShortMobileDevice ? 'medium' : 'large'}
             testID={TestID.ReviewSwap}
-            animation="simple"
             onPress={onPress}
           >
             {buttonTextColor ? <Button.Text color={buttonTextColor}>{buttonText}</Button.Text> : buttonText}

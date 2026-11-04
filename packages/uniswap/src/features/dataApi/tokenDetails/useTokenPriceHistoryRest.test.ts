@@ -3,6 +3,7 @@ import { act, cleanup, renderHook, waitFor } from '@testing-library/react-native
 import { GetTokenHistoryPriceResponse } from '@uniswap/client-data-api/dist/data/v2/api_pb'
 import { HistoryDuration as RestHistoryDuration } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { UniverseChainId } from '@universe/chains'
+import { MAX_DISPLAYABLE_PRICE_AGE_MS } from '@universe/prices'
 import { createElement, type PropsWithChildren } from 'react'
 import { dataApiServiceClientV2 } from 'uniswap/src/data/apiClients/dataApiService/clients/DataApiClientV2'
 import {
@@ -12,6 +13,7 @@ import {
 } from 'uniswap/src/features/dataApi/tokenDetails/useTokenPriceHistoryRest'
 import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
+import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 
 vi.mock('uniswap/src/data/apiClients/dataApiService/clients/DataApiClientV2', () => ({
   dataApiServiceClientV2: { getTokenHistoryPrice: vi.fn() },
@@ -116,6 +118,31 @@ describe(useTokenPriceHistoryRest, () => {
     expect(result.current).toEqual({ entries: cachedEntries, isLoading: false, error: null })
     await waitFor(() => expect(result.current.entries).toEqual([{ timestamp: 300, value: 3.3 }]))
     expect(result.current.isLoading).toBe(false)
+  })
+
+  it('withholds a cached series older than MAX_DISPLAYABLE_PRICE_AGE_MS until the refetch lands', async () => {
+    const firstRender = renderHook(() => useTokenPriceHistoryRest(CURRENCY_ID, { duration: HistoryDuration.Day }), {
+      wrapper: Wrapper,
+    })
+    await waitFor(() => expect(firstRender.result.current.entries).toHaveLength(2))
+    firstRender.unmount()
+    queryClient
+      .getQueryCache()
+      .getAll()[0]
+      ?.setState({ dataUpdatedAt: Date.now() - MAX_DISPLAYABLE_PRICE_AGE_MS - ONE_MINUTE_MS })
+
+    mockGetTokenHistoryPrice.mockResolvedValueOnce(
+      new GetTokenHistoryPriceResponse({ points: [{ timestamp: BigInt(300), priceUsd: 3.3 }] }),
+    )
+    const { result } = renderHook(() => useTokenPriceHistoryRest(CURRENCY_ID, { duration: HistoryDuration.Day }), {
+      wrapper: Wrapper,
+    })
+
+    expect(mockGetTokenHistoryPrice).toHaveBeenCalledTimes(2)
+    expect(result.current).toEqual({ entries: [], isLoading: true, error: null })
+    await waitFor(() =>
+      expect(result.current).toEqual({ entries: [{ timestamp: 300, value: 3.3 }], isLoading: false, error: null }),
+    )
   })
 
   it('requests a singleChain target by default', () => {

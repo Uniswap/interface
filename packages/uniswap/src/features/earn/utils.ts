@@ -5,9 +5,8 @@ import type {
   EarnVault as DataApiEarnVault,
   EarnVaultExposure as DataApiEarnVaultExposure,
 } from '@uniswap/client-data-api/dist/data/v2/earn_pb'
-import { GraphQLApi } from '@universe/api'
 import { UniverseChainId, normalizeTokenAddressForCache } from '@universe/chains'
-import { fromGraphQLChain, toSupportedChainId } from 'uniswap/src/features/chains/utils'
+import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import type { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { EARN_EXPLORE_VAULT_CURRENCY_IDS } from 'uniswap/src/features/earn/launchAssets'
 import type {
@@ -252,26 +251,21 @@ export function getEarnPositionInfosByVaultId(
 }
 
 export type TokenProjectTokenForEarn = {
-  chain?: GraphQLApi.Chain | string | null
+  chainId: UniverseChainId
   address?: string | null
 }
 
 export function getTokenProjectCurrencyIds(tokens: readonly TokenProjectTokenForEarn[] | undefined): string[] {
   const currencyIds: string[] = []
 
-  tokens?.forEach((token) => {
-    const chainId = fromGraphQLChain(token.chain ?? undefined)
-    if (!chainId) {
+  tokens?.forEach(({ chainId, address }) => {
+    if (!address) {
       return
     }
 
-    if (!token.address) {
-      return
-    }
-
-    const currencyId = isNativeCurrencyAddress(chainId, token.address)
+    const currencyId = isNativeCurrencyAddress(chainId, address)
       ? buildNativeCurrencyId(chainId)
-      : buildCurrencyId(chainId, token.address)
+      : buildCurrencyId(chainId, address)
 
     currencyIds.push(currencyId)
   })

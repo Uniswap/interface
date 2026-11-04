@@ -11,8 +11,8 @@ export interface MultichainTokenDeployment {
 /**
  * Maps GetTokenMultiChain's `addresses` (chainId -> address) to the TDP's per-chain token list,
  * keeping only enabled chains. The endpoint serves natives under placeholder addresses (zero
- * address, 0xeee…, 'ETH'); those become `address: null` so consumers build the native currency id,
- * matching the GraphQL rows this data replaced. ERC-20 addresses stay as served (checksummed);
+ * address, 0xeee…, 'ETH'); those become `address: null` so consumers build the native currency id.
+ * ERC-20 addresses stay as served (checksummed);
  * `useBalances` retries lookups with a normalized id so they still hit the lowercase balance map.
  */
 export function multichainTokensFromAddresses({

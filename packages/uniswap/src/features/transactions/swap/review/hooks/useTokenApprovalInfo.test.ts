@@ -2,7 +2,7 @@ import { renderHook } from '@testing-library/react'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { FeeType, GasEstimate, TradingApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
-import { useFeatureFlag } from '@universe/gating'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { DAI, USDC } from 'uniswap/src/constants/tokens'
 import { useCheckApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckApprovalQuery'
 import { DEFAULT_GAS_STRATEGY } from 'uniswap/src/features/gas/consts'
@@ -239,6 +239,55 @@ describe('useTokenApprovalInfo', () => {
       const requestArgs = mockUseCheckApprovalQuery.mock.calls[0]?.[0]?.params as TradingApi.ApprovalRequest
       expect(requestArgs.gasStrategies).toBeUndefined()
       expect(requestArgs.urgency).toBe('urgent')
+    })
+  })
+
+  describe('bridge quote', () => {
+    const bridgeQuote: TradingApi.BridgeQuote = {
+      quoteId: 'bridge-quote-id',
+      provider: TradingApi.BridgeProvider.RELAY,
+      approvalSpender: '0x4cd00e387622c35bddb9b4c962c136462338bc31',
+    }
+
+    beforeEach(() => {
+      vi.mocked(useFeatureFlag).mockImplementation((flag) => flag === FeatureFlags.RelayBridgeAggregator)
+    })
+
+    it('sends the quote on a BRIDGE route, so the approval targets the vendor serving it', () => {
+      mockUseCheckApprovalQuery.mockReturnValue({ data: undefined, isLoading: false, error: null })
+
+      renderHook(() => useTokenApprovalInfo({ ...mockParams, routing: TradingApi.Routing.BRIDGE, bridgeQuote }))
+
+      const requestArgs = mockUseCheckApprovalQuery.mock.calls[0]?.[0]?.params as TradingApi.ApprovalRequest
+      expect(requestArgs.quote).toEqual(bridgeQuote)
+    })
+
+    it('omits the quote on a non-bridge route', () => {
+      mockUseCheckApprovalQuery.mockReturnValue({ data: undefined, isLoading: false, error: null })
+
+      renderHook(() => useTokenApprovalInfo({ ...mockParams, bridgeQuote }))
+
+      const requestArgs = mockUseCheckApprovalQuery.mock.calls[0]?.[0]?.params as TradingApi.ApprovalRequest
+      expect(requestArgs).not.toHaveProperty('quote')
+    })
+
+    it('omits the quote while the Relay gate is off', () => {
+      vi.mocked(useFeatureFlag).mockReturnValue(false)
+      mockUseCheckApprovalQuery.mockReturnValue({ data: undefined, isLoading: false, error: null })
+
+      renderHook(() => useTokenApprovalInfo({ ...mockParams, routing: TradingApi.Routing.BRIDGE, bridgeQuote }))
+
+      const requestArgs = mockUseCheckApprovalQuery.mock.calls[0]?.[0]?.params as TradingApi.ApprovalRequest
+      expect(requestArgs).not.toHaveProperty('quote')
+    })
+
+    it('omits the quote on a BRIDGE route without one', () => {
+      mockUseCheckApprovalQuery.mockReturnValue({ data: undefined, isLoading: false, error: null })
+
+      renderHook(() => useTokenApprovalInfo({ ...mockParams, routing: TradingApi.Routing.BRIDGE }))
+
+      const requestArgs = mockUseCheckApprovalQuery.mock.calls[0]?.[0]?.params as TradingApi.ApprovalRequest
+      expect(requestArgs).not.toHaveProperty('quote')
     })
   })
 })

@@ -15,7 +15,7 @@ const EMPTY_MARKET_DATA: RWAIssuerMarketData = {}
 
 /**
  * Siblings for the TDP "More X tokens" module: from the GetTokenGroup response with token categories
- * on, otherwise the v1 whitelist siblings with RWAIssuerTokens GraphQL stats.
+ * on, otherwise the v1 whitelist siblings with per-token market stats (useRWAIssuerMarketData).
  */
 export function useMoreRwaTokens({
   rwaMatch,

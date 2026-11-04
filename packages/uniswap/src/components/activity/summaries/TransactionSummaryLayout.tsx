@@ -9,12 +9,12 @@ import {
   TouchableArea,
   useRecyclingBooleanState,
 } from '@universe/mycelium'
+import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFilled'
+import { SlashCircle } from '@universe/mycelium/icons/SlashCircle'
+import { UniswapX } from '@universe/mycelium/icons/UniswapX'
 import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
-import { SlashCircle } from 'ui/src/components/icons/SlashCircle'
-import { UniswapX } from 'ui/src/components/icons/UniswapX'
 import { DisplayNameText } from 'uniswap/src/components/accounts/DisplayNameText'
 import { TransactionDetailsModal } from 'uniswap/src/components/activity/details/TransactionDetailsModal'
 import { TransactionSummaryTitle } from 'uniswap/src/components/activity/general/TransactionSummaryTitle'

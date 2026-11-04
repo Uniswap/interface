@@ -5,7 +5,6 @@ import { resolvePrimaryChain } from 'uniswap/src/data/apiClients/dataApiService/
 import type { ExploreStockShelfItem } from 'uniswap/src/data/apiClients/dataApiService/rwa/types'
 import { useStockTokenCardProps } from 'uniswap/src/data/apiClients/dataApiService/rwa/useStockTokenCardProps'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useEvent } from 'utilities/src/react/hooks'
 import { getTokenDetailsURL } from '~/data/util'
 import type { AssetCardClickHandler } from '~/pages/Explore/rwa/shelf/types'
@@ -29,7 +28,7 @@ export const ShelfTokenCard = memo(function ShelfTokenCard({
     resolved?.chainToken.address &&
     getTokenDetailsURL({
       address: resolved.chainToken.address,
-      chain: toGraphQLChain(resolved.chainId),
+      chainId: resolved.chainId,
       chainQueryParam: TDP_MULTICHAIN_CHAIN_QUERY_VALUE,
     })
 

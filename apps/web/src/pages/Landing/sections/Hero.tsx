@@ -1,4 +1,4 @@
-import { Flex, Text } from '@universe/mycelium'
+import { Flex, Text, heights } from '@universe/mycelium'
 import { ENTER_PRESET_CLASSES } from '@universe/mycelium/compat'
 import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
 import { useMedia, useSporeColors } from '@universe/mycelium/theme-hooks-compat'
@@ -6,10 +6,9 @@ import { Fragment, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { Trans } from 'ui/src'
-import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { SwapRedirectFn } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
-import { useCurrency } from '~/hooks/Tokens'
+import { useCurrency } from '~/hooks/currency/useCurrency'
 import { Hover, RiseIn, RiseInText } from '~/pages/Landing/components/animations'
 import { TokenCloud } from '~/pages/Landing/components/TokenCloud'
 import { useScrollParallax } from '~/pages/Landing/sections/useScrollParallax'
@@ -73,7 +72,7 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
       minWidth="100%"
       className="min-h-screen supports-[height:100svh]:min-h-svh"
       height="min-content"
-      pt={INTERFACE_NAV_HEIGHT}
+      pt={heights['interface-nav']}
       pointerEvents="none"
     >
       {!media.sm && <TokenCloud />}

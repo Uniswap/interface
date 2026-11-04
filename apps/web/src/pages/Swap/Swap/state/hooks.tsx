@@ -8,7 +8,7 @@ import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSuppor
 import { getChainGasToken } from 'uniswap/src/features/gas/hooks/useChainGasToken'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { currencyAddress } from 'uniswap/src/utils/currencyId'
-import { useCurrency } from '~/hooks/Tokens'
+import { useCurrency } from '~/hooks/currency/useCurrency'
 import { queryParametersToCurrencyState } from '~/pages/Swap/Swap/state/tradeQueryParams'
 import { useMultichainContext } from '~/state/multichain/useMultichainContext'
 

@@ -16,7 +16,7 @@ import { currencyId } from 'uniswap/src/utils/currencyId'
 import { ExplorerDataType, getExplorerLink, openUri } from 'uniswap/src/utils/linking'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
-import { useSwapTaxes } from '~/hooks/useSwapTaxes'
+import { useSwapTaxes } from '~/pages/TokenDetails/components/info/hooks/useSwapTaxes'
 import { useMultichainPopoverContentProps } from '~/pages/TokenDetails/components/info/MultichainPillDropdown'
 import {
   AddressPill,

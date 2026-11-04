@@ -3,7 +3,6 @@
  * Modifications are called out with comments.
  */
 
-import { GraphQLApi } from '@universe/api'
 import { CustomData, UTCTimestamp } from 'lightweight-charts'
 
 // Modification: custom implementations of lw-chart's histogram data types
@@ -18,7 +17,7 @@ export interface SingleHistogramData extends CustomData {
 }
 
 export interface StackedHistogramData extends CustomData {
-  values: Record<GraphQLApi.PriceSource, number | undefined>
+  values: Record<string, number | undefined>
   time: UTCTimestamp
 }
 

@@ -6,12 +6,12 @@ import { UniverseChainId, Platform } from '@universe/chains'
 import { AllowedV4WethHookAddressesConfigKey, DynamicConfigs, useDynamicConfigValue } from '@universe/gating'
 import type { FlexCompatProps as FlexProps } from '@universe/mycelium'
 import { Button, Flex, Text } from '@universe/mycelium'
+import { InfoCircleFilled } from '@universe/mycelium/icons/InfoCircleFilled'
+import { Search } from '@universe/mycelium/icons/Search'
 import type { Dispatch, SetStateAction } from 'react'
 import { useCallback, useMemo, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router'
-import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
-import { Search } from 'ui/src/components/icons/Search'
 import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
@@ -32,9 +32,8 @@ import { LPGeoRestrictionBanner } from '~/components/GeoRestriction/LPGeoRestric
 import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
 import { CurrencySearchModal } from '~/components/SearchModal/CurrencySearchModal'
 import { MouseoverTooltip } from '~/components/Tooltip'
+import { useActiveAddresses } from '~/connection/accounts/hooks'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
-import { useActiveAddresses } from '~/features/accounts/store/hooks'
-import { BlastShutdownBanner } from '~/features/Liquidity/BlastShutdownBanner'
 import { AddHook } from '~/features/Liquidity/Create/AddHook'
 import { AdvancedButton } from '~/features/Liquidity/Create/AdvancedButton'
 import { CreatingPoolInfo, PoolAlreadyCreatedInfo } from '~/features/Liquidity/Create/CreatingPoolInfo'
@@ -47,6 +46,7 @@ import { CurrencySelector } from '~/features/Liquidity/CurrencySelector'
 import { FeeTierSelector } from '~/features/Liquidity/FeeTierSelector'
 import { HookModal } from '~/features/Liquidity/HookModal'
 import { useAllFeeTierPoolData } from '~/features/Liquidity/hooks/useAllFeeTierPoolData'
+import { SUPPORTED_V2POOL_CHAIN_IDS } from '~/features/Liquidity/hooks/useNetworkSupportsV2'
 import { useHeadlineRewardSymbol } from '~/features/Liquidity/LPIncentives/hooks/useHeadlineRewardSymbol'
 import { RewardAprBadge } from '~/features/Liquidity/LPIncentives/RewardAprBadge'
 import { useLPGeoRestriction } from '~/features/Liquidity/useLPGeoRestriction'
@@ -57,15 +57,14 @@ import { needsHookReview } from '~/features/Liquidity/utils/hookReview'
 import { isUnsupportedLPChain } from '~/features/Liquidity/utils/isUnsupportedLPChain'
 import { getProtocolVersionLabel } from '~/features/Liquidity/utils/protocolVersion'
 import { PageType, useIsPage } from '~/hooks/useIsPage'
-import { SUPPORTED_V2POOL_CHAIN_IDS } from '~/hooks/useNetworkSupportsV2'
 import { buildPoolSearchParams, CREATE_POOL_PATH } from '~/pages/AddLiquidity/poolLinkParams'
 import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 import { serializeSwapStateToURLParameters } from '~/pages/Swap/Swap/state/tradeQueryParams'
 import { useMultichainContext } from '~/state/multichain/useMultichainContext'
-import { SwitchNetworkAction } from '~/state/popups/types'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
 import { isV4UnsupportedChain } from '~/utils/networkSupportsV4'
 import { getChainUrlParam } from '~/utils/params/chainParams'
+import { SwitchNetworkAction } from '~/utils/popups/types'
 
 interface WrappedNativeWarning {
   wrappedToken: Currency
@@ -80,10 +79,10 @@ export function SelectTokensStep({
   currencyInputs,
   setCurrencyInputs,
   onContinue,
-  tokensLocked,
+  isMigration,
   ...rest
 }: {
-  tokensLocked?: boolean
+  isMigration?: boolean
   onContinue: () => void
   currencyInputs: { tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }
   setCurrencyInputs: Dispatch<SetStateAction<{ tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }>>
@@ -384,8 +383,10 @@ export function SelectTokensStep({
 
   const selectedTierIsBoosted = selectedTierRewards.length > 0
 
+  // `migratingPosition` can't stand in for this: it's only set for v3 sources, so a v2 migration
+  // into an existing v3 pool would hop to the add-liquidity page.
   const poolAlreadyExists =
-    !migratingPosition && !creatingPoolOrPair && !!poolOrPair && !!poolId && !!token0 && !!token1 && !!fee
+    !isMigration && !creatingPoolOrPair && !!poolOrPair && !!poolId && !!token0 && !!token1 && !!fee
 
   // Only the v2/v3 options are built from the pool-backed defaults; the v4 grid reads feeTierData directly.
   const defaultFeeTiers = useMemo(
@@ -454,12 +455,12 @@ export function SelectTokensStep({
         <Flex gap="$spacing16">
           <Flex gap="$spacing12">
             <Flex>
-              <Text variant="subheading1">{tokensLocked ? t('pool.tokenPair') : t('pool.selectPair')}</Text>
+              <Text variant="subheading1">{isMigration ? t('pool.tokenPair') : t('pool.selectPair')}</Text>
               <Text variant="body3" color="$neutral2">
-                {tokensLocked ? t('position.migrate.liquidity') : t('position.provide.liquidity')}
+                {isMigration ? t('position.migrate.liquidity') : t('position.provide.liquidity')}
               </Text>
             </Flex>
-            {tokensLocked && token0 && token1 ? (
+            {isMigration && token0 && token1 ? (
               <Flex row gap="$gap16" py="$spacing4" alignItems="center">
                 <DoubleCurrencyLogo currencies={[token0, token1]} size={44} />
                 <Flex grow>
@@ -500,7 +501,6 @@ export function SelectTokensStep({
               />
             )}
             {!hasError && protocolVersion === ProtocolVersion.V4 && <AddHook />}
-            {(token0?.chainId ?? token1?.chainId) === UniverseChainId.Blast && <BlastShutdownBanner />}
           </Flex>
         </Flex>
         <Flex gap="$spacing24">

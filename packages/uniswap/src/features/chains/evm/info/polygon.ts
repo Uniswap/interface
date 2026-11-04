@@ -1,4 +1,4 @@
-import { GraphQLApi, TradingApi } from '@universe/api'
+import { TradingApi } from '@universe/api'
 import { UniverseChainId, Platform } from '@universe/chains'
 import { SwapConfigKey } from '@universe/gating'
 import { POLYGON_LOGO } from '@universe/mycelium/assets'
@@ -7,7 +7,7 @@ import { ALL_APPS_CHAIN_SUPPORTED_APPS } from 'uniswap/src/features/chains/chain
 import { CHAIN_ID_TO_URL_PARAM } from 'uniswap/src/features/chains/chainUrlParam'
 import { getUniRpcEndpointUrl } from 'uniswap/src/features/chains/evm/rpc'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
-import { GqlChainId, NetworkLayer, RPCType, UniverseChainInfo } from 'uniswap/src/features/chains/types'
+import { NetworkLayer, RPCType, UniverseChainInfo } from 'uniswap/src/features/chains/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { buildDAI, buildUSDC, buildUSDT } from 'uniswap/src/features/tokens/stablecoin'
 import { polygon } from 'wagmi/chains'
@@ -28,7 +28,6 @@ export const POLYGON_CHAIN_INFO = {
   assetRepoNetworkName: 'polygon',
   blockPerMainnetEpochForChainId: 5,
   backendChain: {
-    chain: GraphQLApi.Chain.Polygon as GqlChainId,
     backendSupported: true,
     nativeTokenBackendAddress: '0x0000000000000000000000000000000000001010',
   },

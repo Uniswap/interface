@@ -89,4 +89,42 @@ describe('requireSessionInterceptor', () => {
     expect(recoverSpy).toHaveBeenCalledOnce()
     expect(next).toHaveBeenCalledTimes(2)
   })
+
+  it('throws an error matched by isNonRecoverable as-is, without recover or retry', async () => {
+    const session = fakeSession()
+    const recoverSpy = vi.spyOn(session, 'recover')
+    const final = new ConnectError('final', Code.PermissionDenied)
+    const next = vi.fn(async () => {
+      throw final
+    })
+    const interceptor = requireSessionInterceptor({
+      getSession: () => session,
+      source: 'test',
+      isNonRecoverable: (err) => err === final,
+    })
+    await expect(interceptor(next as never)(req('some.other.Service') as never)).rejects.toBe(final)
+    expect(recoverSpy).not.toHaveBeenCalled()
+    expect(next).toHaveBeenCalledOnce()
+  })
+
+  it('still recovers a session failure that isNonRecoverable does not match', async () => {
+    const session = fakeSession()
+    const recoverSpy = vi.spyOn(session, 'recover')
+    let attempts = 0
+    const next = vi.fn(async () => {
+      attempts++
+      if (attempts === 1) {
+        throw new ConnectError('forbidden', Code.PermissionDenied)
+      }
+      return 'ok'
+    })
+    const interceptor = requireSessionInterceptor({
+      getSession: () => session,
+      source: 'test',
+      isNonRecoverable: () => false,
+    })
+    await expect(interceptor(next as never)(req('some.other.Service') as never)).resolves.toBe('ok')
+    expect(recoverSpy).toHaveBeenCalledOnce()
+    expect(next).toHaveBeenCalledTimes(2)
+  })
 })

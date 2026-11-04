@@ -7,9 +7,9 @@ import { ReportPortfolioDataModal } from 'uniswap/src/components/reporting/Repor
 import { useEvent } from 'utilities/src/react/hooks'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { Dropdown, InternalMenuItem } from '~/components/Dropdowns/Dropdown'
-import { POPUP_MEDIUM_DISMISS_MS } from '~/components/Popups/constants'
-import { popupRegistry } from '~/state/popups/registry'
-import { PopupType } from '~/state/popups/types'
+import { POPUP_MEDIUM_DISMISS_MS } from '~/utils/popups/constants'
+import { popupRegistry } from '~/utils/popups/registry'
+import { PopupType } from '~/utils/popups/types'
 
 const DROPDOWN_MIN_WIDTH = 200
 

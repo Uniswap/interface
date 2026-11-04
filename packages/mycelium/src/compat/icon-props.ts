@@ -6,9 +6,8 @@
  *  - BASE lane (no `$`-pool props — ~99% of censused call sites): every
  *    supported style prop resolves through the compat token maps into INLINE
  *    STYLE (`applyIconCssLane`), the ticket's sanctioned direct style merge —
- *    no Tailwind classes. Preserves the pinned channel invariant (the parity
- *    matrix in `packages/tailwind/src/parity/icons/token-props.parity.test.tsx`:
- *    props and defaults must beat container CSS like `[&_svg]:size-4`).
+ *    no Tailwind classes. Preserves the channel invariant: props and defaults
+ *    must beat container CSS like `[&_svg]:size-4`.
  *
  *  - POOL lane (`$group-hover` / `$group-item-hover` / `$xs` / `$sm`, plus
  *    untyped media/group keys): pools ride the shared orchestration

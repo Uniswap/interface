@@ -1,7 +1,7 @@
 import { SpinningLoader } from '@universe/mycelium'
+import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
 import { memo, useCallback, useEffect, useState } from 'react'
 import { useAppStackNavigation } from 'src/app/navigation/types'
-import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { TokenDetailsEarnBanner as SharedTokenDetailsEarnBanner } from 'uniswap/src/components/tokenDetails/TokenDetailsEarnBanner'
 import { EarnAnalyticsSurface, EarnEntryPoint } from 'uniswap/src/features/earn/analytics'
 import { useEarnDepositSources } from 'uniswap/src/features/earn/hooks/useEarnDepositSources'

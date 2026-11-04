@@ -1,5 +1,5 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
-import { GraphQLApi, TradingApi } from '@universe/api'
+import { TradingApi } from '@universe/api'
 import { UniverseChainId, Platform } from '@universe/chains'
 import { isWebApp, isE2eTestEnv } from '@universe/environment'
 import { SwapConfigKey } from '@universe/gating'
@@ -15,7 +15,7 @@ import {
   getUniRpcEndpointUrl,
 } from 'uniswap/src/features/chains/evm/rpc'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
-import { GqlChainId, NetworkLayer, RPCType, UniverseChainInfo } from 'uniswap/src/features/chains/types'
+import { NetworkLayer, RPCType, UniverseChainInfo } from 'uniswap/src/features/chains/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { buildDAI, buildUSDC, buildUSDG, buildUSDT } from 'uniswap/src/features/tokens/stablecoin'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
@@ -39,7 +39,6 @@ export const MAINNET_CHAIN_INFO = {
   supportedApps: ALL_APPS_CHAIN_SUPPORTED_APPS,
   assetRepoNetworkName: 'ethereum',
   backendChain: {
-    chain: GraphQLApi.Chain.Ethereum as GqlChainId,
     backendSupported: true,
     nativeTokenBackendAddress: undefined,
   },
@@ -134,7 +133,6 @@ export const SEPOLIA_CHAIN_INFO = {
   supportedApps: ALL_APPS_CHAIN_SUPPORTED_APPS,
   assetRepoNetworkName: undefined,
   backendChain: {
-    chain: GraphQLApi.Chain.EthereumSepolia as GqlChainId,
     backendSupported: true,
     nativeTokenBackendAddress: undefined,
   },

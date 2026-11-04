@@ -4,7 +4,7 @@ import { useMemo } from 'react'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { parseAsChainId, parseAsCurrencyAddress } from '~/features/Liquidity/parsers/urlParsers'
 import { parseAsPoolsFilter } from '~/features/Liquidity/PoolsFilter/urlParam'
-import { useCurrencyInfo } from '~/hooks/Tokens'
+import { useCurrencyInfo } from '~/hooks/currency/useCurrencyInfo'
 import { buildCreatePoolHrefFromCurrencies } from '~/pages/AddLiquidity/poolLinkParams'
 
 // The table filter uses dedicated `filter*` query keys so it stays independent of the

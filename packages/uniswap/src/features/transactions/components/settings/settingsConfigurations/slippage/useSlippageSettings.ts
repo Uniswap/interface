@@ -2,12 +2,12 @@ import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { StyleProp, ViewStyle } from 'react-native'
 import { useShakeAnimation } from 'ui/src/animations'
-import { PlusMinusButtonType } from 'ui/src/components/buttons/PlusMinusButton'
 import {
   MAX_AUTO_SLIPPAGE_TOLERANCE,
   MAX_CUSTOM_SLIPPAGE_TOLERANCE,
   SLIPPAGE_CRITICAL_TOLERANCE,
 } from 'uniswap/src/constants/transactions'
+import { PlusMinusButtonType } from 'uniswap/src/features/transactions/components/settings/PlusMinusButton'
 import { formatSlippage } from 'uniswap/src/features/transactions/components/settings/settingsConfigurations/slippage/utils'
 import {
   useTransactionSettingsActions,

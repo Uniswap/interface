@@ -6,8 +6,6 @@ import { useAuctionStatsData } from '~/features/Toucan/Auction/hooks/useAuctionS
 import { AuctionDetails, BidTokenInfo } from '~/features/Toucan/Auction/store/types'
 
 const mockUseStatsBannerData = vi.fn()
-const mockUseQuery = vi.fn()
-const mockLpPercentOverrides = vi.fn<() => Record<string, number>>()
 const mockStoreState = { auctionDetails: null as AuctionDetails | null, checkpointData: null }
 
 vi.mock('~/features/Toucan/Auction/hooks/useStatsBannerData', () => ({
@@ -18,45 +16,27 @@ vi.mock('~/features/Toucan/Auction/store/useAuctionStore', () => ({
   useAuctionStore: (selector: (state: typeof mockStoreState) => unknown) => selector(mockStoreState),
 }))
 
+vi.mock('uniswap/src/features/language/hooks', () => ({
+  useCurrentLocale: () => 'en-US',
+}))
 vi.mock('uniswap/src/features/language/LocalizationContext', () => ({
   useLocalizationContext: () => ({
     formatPercent: (value: number) => `${value}%`,
   }),
 }))
 
-vi.mock('@tanstack/react-query', () => ({
-  useQuery: () => mockUseQuery(),
-}))
-
-vi.mock('uniswap/src/data/apiClients/liquidityService/AuctionQueryClient', () => ({
-  AuctionQueryClient: {},
-}))
-
-vi.mock('~/hooks/useBlockTimestamp', () => ({
+vi.mock('~/features/Toucan/Auction/hooks/useBlockTimestamp', () => ({
   useBlockTimestamp: () => undefined,
-}))
-
-vi.mock('@universe/gating', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('@universe/gating')>()),
-  useDynamicConfigValue: () => mockLpPercentOverrides(),
 }))
 
 vi.mock('~/features/Toucan/Config/config', () => ({
   getAuctionMetadata: () => undefined,
-  DEFAULT_AUCTION_LP_PERCENT_OVERRIDES: {},
 }))
 
 const CHAIN_ID = 1
 const TOKEN_ADDRESS = '0x0000000000000000000000000000000000000001'
 // 1 billion tokens with 18 decimals
 const TOKEN_TOTAL_SUPPLY_RAW = (10n ** 27n).toString()
-
-// "% Committed to LP" scenario reproducing the reported 456% overflow (18-decimal raw values).
-// The LP allocation is drawn from the FULL token supply, so dividing it by the auctioned slice
-// (200k of a 1M supply) yields 456%, while dividing by the full supply yields the correct 91%.
-const FULL_SUPPLY_RAW = (1_000_000n * 10n ** 18n).toString()
-const AUCTION_SLICE_SUPPLY_RAW = (200_000n * 10n ** 18n).toString()
-const LP_ALLOCATION_RAW = (912_000n * 10n ** 18n).toString()
 
 const bidTokenInfo: BidTokenInfo = {
   symbol: 'ETH',
@@ -76,20 +56,19 @@ function buildToken({ decimals, symbol, name }: { decimals: number; symbol?: str
 
 function buildAuctionDetails({
   token,
-  totalSupply = TOKEN_TOTAL_SUPPLY_RAW,
-  tokenTotalSupply = TOKEN_TOTAL_SUPPLY_RAW,
+  percentCommittedToLp,
 }: {
   token: CurrencyInfo | undefined
-  totalSupply?: string
-  tokenTotalSupply?: string
+  percentCommittedToLp?: number
 }): AuctionDetails {
   return {
     auctionId: 'auction-1',
     chainId: CHAIN_ID,
     address: '0x0000000000000000000000000000000000000002',
     tokenAddress: TOKEN_ADDRESS,
-    totalSupply,
-    tokenTotalSupply,
+    totalSupply: TOKEN_TOTAL_SUPPLY_RAW,
+    tokenTotalSupply: TOKEN_TOTAL_SUPPLY_RAW,
+    percentCommittedToLp,
     startBlock: '100',
     token,
   } as unknown as AuctionDetails
@@ -117,8 +96,6 @@ describe('useAuctionStatsData', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     mockStatsBanner()
-    mockUseQuery.mockReturnValue({ data: undefined })
-    mockLpPercentOverrides.mockReturnValue({})
   })
 
   it('formats supplies and implied price with resolved decimals (18)', () => {
@@ -166,64 +143,35 @@ describe('useAuctionStatsData', () => {
     expect(result.current.totalSupply).toBe('1000000000000000T')
   })
 
-  it('divides the LP allocation by the full token supply, not the auctioned slice (no >100% overflow)', () => {
+  it('formats the LP percent served by the backend', () => {
     mockStoreState.auctionDetails = buildAuctionDetails({
       token: buildToken({ decimals: 18, symbol: 'TCAN', name: 'Toucan' }),
-      totalSupply: AUCTION_SLICE_SUPPLY_RAW,
-      tokenTotalSupply: FULL_SUPPLY_RAW,
+      percentCommittedToLp: 34.6,
     })
-    mockUseQuery.mockReturnValue({ data: { tokenCountAllocatedToLp: LP_ALLOCATION_RAW } })
 
     const { result } = renderHook(() => useAuctionStatsData())
 
-    const formatted = result.current.percentCommittedToLpFormatted
-    // Dividing by the auctioned slice used to yield '456%'; dividing by the full supply yields 91%.
-    expect(formatted).toBe('91%')
-    expect(formatted).not.toBe('456%')
-    expect(Number(formatted?.replace('%', ''))).toBeLessThanOrEqual(100)
+    expect(result.current.percentCommittedToLpFormatted).toBe('34.6%')
   })
 
-  it('renders a placeholder (null) when the full token supply is unavailable', () => {
-    const auctionDetails = buildAuctionDetails({
+  it('formats a served 0% rather than treating it as missing', () => {
+    mockStoreState.auctionDetails = buildAuctionDetails({
       token: buildToken({ decimals: 18, symbol: 'TCAN', name: 'Toucan' }),
-      totalSupply: AUCTION_SLICE_SUPPLY_RAW,
+      percentCommittedToLp: 0,
     })
-    // Simulate the RPC error case where tokenTotalSupply is absent; totalSupply stays set to
-    // prove the calc does not silently fall back to the auctioned slice.
-    ;(auctionDetails as { tokenTotalSupply?: string }).tokenTotalSupply = undefined
-    mockStoreState.auctionDetails = auctionDetails
-    mockUseQuery.mockReturnValue({ data: { tokenCountAllocatedToLp: LP_ALLOCATION_RAW } })
+
+    const { result } = renderHook(() => useAuctionStatsData())
+
+    expect(result.current.percentCommittedToLpFormatted).toBe('0%')
+  })
+
+  it('renders a placeholder (null) when the backend leaves the LP percent unset', () => {
+    mockStoreState.auctionDetails = buildAuctionDetails({
+      token: buildToken({ decimals: 18, symbol: 'TCAN', name: 'Toucan' }),
+    })
 
     const { result } = renderHook(() => useAuctionStatsData())
 
     expect(result.current.percentCommittedToLpFormatted).toBeNull()
-  })
-
-  it('pins the LP percent to the Statsig override keyed by auction id', () => {
-    mockStoreState.auctionDetails = buildAuctionDetails({
-      token: buildToken({ decimals: 18, symbol: 'TCAN', name: 'Toucan' }),
-      totalSupply: AUCTION_SLICE_SUPPLY_RAW,
-      tokenTotalSupply: FULL_SUPPLY_RAW,
-    })
-    mockUseQuery.mockReturnValue({ data: { tokenCountAllocatedToLp: LP_ALLOCATION_RAW } })
-    mockLpPercentOverrides.mockReturnValue({ 'auction-1': 100 })
-
-    const { result } = renderHook(() => useAuctionStatsData())
-
-    expect(result.current.percentCommittedToLpFormatted).toBe('100%')
-  })
-
-  it('computes the LP percent when the override config has no entry for the auction', () => {
-    mockStoreState.auctionDetails = buildAuctionDetails({
-      token: buildToken({ decimals: 18, symbol: 'TCAN', name: 'Toucan' }),
-      totalSupply: AUCTION_SLICE_SUPPLY_RAW,
-      tokenTotalSupply: FULL_SUPPLY_RAW,
-    })
-    mockUseQuery.mockReturnValue({ data: { tokenCountAllocatedToLp: LP_ALLOCATION_RAW } })
-    mockLpPercentOverrides.mockReturnValue({ 'some-other-auction': 25 })
-
-    const { result } = renderHook(() => useAuctionStatsData())
-
-    expect(result.current.percentCommittedToLpFormatted).toBe('91%')
   })
 })

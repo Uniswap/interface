@@ -20,6 +20,9 @@ export interface MarginFormState {
   slippageToleranceBps: number
   // Venues the user opted OUT of, across every pair. Empty = the default (see isDefaultMarginVenues).
   excludedVenues: MarginVenue[]
+  // A venue the user picked on the receipt's Market row, narrowing the allowlist to it. Scoped to the
+  // pair it was picked on, so changing pairs leaves it inert without a separate clear.
+  pinnedVenue?: { pairKey: MarginPairKey; venue: MarginVenue }
   // In-flight plan for resume / in-flight row.
   activePlanId?: string
 }

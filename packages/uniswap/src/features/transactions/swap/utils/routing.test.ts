@@ -6,10 +6,13 @@ import type {
 } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import type { ClassicTrade, UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import {
+  ACROSS_DAPP_INFO,
+  getBridgeDappInfo,
   isGasSponsoredExecution,
   isGasSponsoredTradeExecution,
   isSwapRouting,
   planStepTypeToTradingRoute,
+  RELAY_DAPP_INFO,
 } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { mockPermit } from 'uniswap/src/test/fixtures/permit'
 import {
@@ -195,5 +198,15 @@ describe(planStepTypeToTradingRoute, () => {
     expect(() => planStepTypeToTradingRoute('NOT_A_REAL_STEP_TYPE' as TradingApi.PlanStepType)).toThrow(
       /Unknown step type/,
     )
+  })
+})
+
+describe(getBridgeDappInfo, () => {
+  it.each([
+    { provider: TradingApi.BridgeProvider.ACROSS, expected: ACROSS_DAPP_INFO },
+    { provider: TradingApi.BridgeProvider.RELAY, expected: RELAY_DAPP_INFO },
+    { provider: undefined, expected: ACROSS_DAPP_INFO },
+  ])('names $expected.name for provider $provider', ({ provider, expected }) => {
+    expect(getBridgeDappInfo(provider)).toBe(expected)
   })
 })

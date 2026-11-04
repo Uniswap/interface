@@ -1,12 +1,12 @@
 /**
- * Web leg of `CheckboxCompat` — the drop-in Tailwind twin of the legacy Tamagui
- * `packages/ui/src/components/checkbox/Checkbox.tsx`.
+ * Web leg of `CheckboxCompat` — the drop-in Tailwind replacement for the legacy
+ * Tamagui `ui/src` `Checkbox`.
  *
  * Structure is the legacy structure: an outer focus-ring frame wrapping the
  * control, the control containing an Indicator square (when checked) and an
  * absolutely-positioned hover dot (when unchecked + hovered). Hover, focus and
- * press live in React state exactly as legacy does it (`Checkbox.tsx:55-57`,
- * driven by DOM mouse/focus handlers at `:96-101`) — not in `hover:` /
+ * press live in React state exactly as legacy did it (driven
+ * by DOM mouse/focus handlers) — not in `hover:` /
  * `focus-visible:` variants, which do not resolve on native and would make the
  * two legs behave differently.
  *

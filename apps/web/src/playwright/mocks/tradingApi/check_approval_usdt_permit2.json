@@ -1,0 +1,15 @@
+{
+  "requestId": "embedded-wallet-mock-request-id",
+  "approval": {
+    "to": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+    "from": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+    "data": "0x095ea7b3000000000000000000000000000000000022d473030f116ddee9f6b43ac78ba3ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "value": "0x00",
+    "maxFeePerGas": "3900000000",
+    "maxPriorityFeePerGas": "2000000000",
+    "gasLimit": "70000",
+    "chainId": 1
+  },
+  "cancel": null,
+  "gasFee": "273000000000000"
+}

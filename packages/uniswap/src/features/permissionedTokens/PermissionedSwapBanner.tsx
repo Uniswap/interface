@@ -1,7 +1,7 @@
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
+import { Lock } from '@universe/mycelium/icons/Lock'
 import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
-import { Lock } from 'ui/src/components/icons/Lock'
 import { PermissionedTokenInfoBottomSheet } from 'uniswap/src/features/permissionedTokens/PermissionedTokenInfoBottomSheet'
 import { useActiveSwapPermissionedState } from 'uniswap/src/features/permissionedTokens/useActiveSwapPermissionedState'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'

@@ -1,9 +1,8 @@
 import { SharedEventName } from '@uniswap/analytics-events'
-import { Flex, iconSizes, Text } from '@universe/mycelium'
+import { Flex, iconSizes, Text, Loader } from '@universe/mycelium'
 import { TestID } from '@universe/test'
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Loader } from 'ui/src'
 import {
   type CategoryFilterChip,
   MY_TOKENS_CHIP_ID,

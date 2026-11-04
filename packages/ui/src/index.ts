@@ -1,22 +1,11 @@
 export * from 'ui/src/animations'
 export { Trans } from 'ui/src/i18n/Trans'
 export * from './components/AnimatedCopyLabel/AnimatedCopyLabel'
-export { Button } from './components/buttons/Button/Button'
-export type { ButtonEmphasis, ButtonProps, ButtonVariant } from './components/buttons/Button/types'
-export { DropdownButton } from './components/buttons/DropdownButton/DropdownButton'
-export type { DropdownButtonProps } from './components/buttons/DropdownButton/types'
-export * from './components/buttons/PlusMinusButton'
-export * from './components/checkbox'
-export type { GeneratedIcon, IconProps } from './components/factories/createIcon'
 export { Image, type ImageProps } from './components/Image/Image'
-export { Input, type InputProps, type InputStyleProps } from './components/input/Input'
-export * from './components/input/utils'
-export { Separator } from './components/layout'
 export { HorizontalDottedLineSeparator } from './components/lines/HorizontalDottedLineSeparator'
 export { VerticalDottedLineSeparator } from './components/lines/VerticalDottedLineSeparator'
 export {
   EffectiveModalOrSheetZIndexContext,
-  ModalCloseIcon,
   stackingLayerAbove,
   useEffectiveModalOrSheetZIndex,
   WebBottomSheet,
@@ -29,22 +18,13 @@ export type { RemoveScrollProps } from './components/RemoveScroll/RemoveScroll'
 export * from './components/RemoveScroll/RemoveScroll'
 export { ClickableWithinGesture } from './components/swipeablecards/ClickableWithinGesture'
 export { SwipeableCardStack } from './components/swipeablecards/SwipeableCardStack'
-export { Switch } from './components/switch/Switch'
-export { type SwitchProps } from './components/switch/types'
 export { Slider } from './components/slider/Slider'
 export type { SliderProps } from './components/slider/Slider'
 export * from './components/text'
 export { Coachmark, type CoachmarkProps } from './components/coachmark/Coachmark'
-export { Tooltip } from './components/tooltip/Tooltip'
-export { Unicon } from './components/Unicon'
-export * from './components/Unicon/utils'
 export { type FontSizeOptions, useDynamicFontSizing } from './hooks/useDynamicFontSizing'
 // Loaders
-export * from './loading/Loader'
-export * from './loading/NftCardLoader'
 export { PulseRipple } from './loading/PulseRipple'
-export * from './loading/SpinningLoader'
-export * from './loading/TransactionLoader'
 export { WaveLoader, type WaveLoaderProps } from './loading/WaveLoader/WaveLoader'
 export type { ResolvedWaveLoader, WaveLoaderVariant } from './loading/WaveLoader/shared'
 // Theme

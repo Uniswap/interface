@@ -14,10 +14,10 @@ Currently, there are 2 types of functions developed
 
 - Meta Data Injectors - Middleware that injects [Open Graph](https://ogp.me/) standardized meta tags into the `header` of specific webpages.
   - Currently we support this functionality for Token Detail Pages, Pool Detail Pages, Position Pages, and Auction Detail Pages
-  - These functions query data from GraphQL/Data API and then formats them into HTML `meta` tags to be injected
+  - These functions query data from the Data API and Liquidity Service and then format it into HTML `meta` tags to be injected
 - Dynamically Generated Images - Utilizes Vercel's [Open Graph Image Generation Library](https://vercel.com/docs/concepts/functions/edge-functions/og-image-generation) to create custom thumbnails for specific webpages
   - Currently supports Token Detail Pages, Pool Detail Pages, Position Pages, and Auction Detail Pages
-  - These functions query data from GraphQL, and utilize `Satori` to convert HTML into a png image response which is then returned when the api is called.
+  - These functions query data from the Data API and Liquidity Service, and utilize `Satori` to convert HTML into a png image response which is then returned when the api is called.
   - Can be found in the `api/image` folder.
 
 ## Entry points
@@ -65,7 +65,7 @@ The app is deployed to AWS ECS as part of the web image (`apps/web/Dockerfile`, 
 
 ## Miscellaneous
 
-- Caching: In order to speed up webpage requests, repeated GraphQL queries are cached in a process-local map (`utils/cache.ts`).
+- Caching: In order to speed up webpage requests, repeated upstream lookups are cached in a process-local map (`utils/cache.ts`).
 
 ## Additional Documents
 

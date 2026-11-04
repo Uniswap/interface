@@ -32,6 +32,10 @@ export type RemoveLiquidityTxInfo = {
   currency0AmountToRemove?: CurrencyAmount<Currency>
   currency1AmountToRemove?: CurrencyAmount<Currency>
   error: boolean | string
+  /** The pool's remove-liquidity hook makes the decrease revert, so it cannot be sent as quoted. */
+  hookRejectsRemoval: boolean
+  /** The decrease could not be estimated for a pool whose hook acts on removals, but no revert was seen. */
+  decreaseMayFail: boolean
   refetch?: () => void
 }
 

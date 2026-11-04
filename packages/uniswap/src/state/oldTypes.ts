@@ -28,8 +28,8 @@ export enum PreV55SearchResultType {
 }
 
 /**
- * Snapshot of the GraphQL FeeData shape as persisted pre-v55 — inlined so migration types don't
- * depend on the generated (and soon-removed) GraphQL schema types.
+ * Frozen snapshot of the token FeeData shape as persisted pre-v55, so migration types don't depend
+ * on any live API types.
  */
 interface PreV55FeeData {
   buyFeeBps?: string | null

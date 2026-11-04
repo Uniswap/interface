@@ -1,9 +1,9 @@
 import { isExtensionApp } from '@universe/environment'
 import { Flex } from '@universe/mycelium'
+import { NoTransactions } from '@universe/mycelium/icons/NoTransactions'
 import { CSSProperties } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { StyleProp, ViewStyle } from 'react-native'
-import { NoTransactions } from 'ui/src/components/icons/NoTransactions'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 
 interface ActivityListEmptyStateProps {

@@ -1,9 +1,9 @@
 import { Flex, Text, TouchableArea, type SpaceTokens, type TextCompatProps } from '@universe/mycelium'
+import { EarnSparkle } from '@universe/mycelium/icons/EarnSparkle'
 import { useShadowPropsMedium } from '@universe/mycelium/theme-hooks-compat'
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Trans } from 'ui/src'
-import { EarnSparkle } from 'ui/src/components/icons/EarnSparkle'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 

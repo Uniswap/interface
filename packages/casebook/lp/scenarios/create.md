@@ -650,3 +650,46 @@ automationRefs: []
 **Given** the user has sufficient tokens but insufficient native token for gas
 **When** they attempt to create, increase, or remove liquidity
 **Then** the submit button is disabled with an appropriate "Insufficient ETH for gas" message
+
+---
+id: lp-create-bnb-usdc-18-decimals
+title: Create a new BNB/USDC pool moves the 18-decimal USDC amount onchain
+# importance
+priority: urgent
+severity: urgent
+# provenance
+source: uniswap
+sourceNote: 'INC-421 follow-up (LP-1831): BNB USDC pools were created at the wrong price after the data-api v2 migration'
+# scope
+protocol_version: v4
+chains:
+  - bnb
+platforms:
+  - web
+labels:
+  - regression
+  - create
+  - decimals
+# execution
+automatable: true
+testLevel: e2e
+runFrequency: scheduled
+# coverage
+code_paths:
+  - apps/web/src/pages/CreatePosition/
+  - apps/web/src/features/Liquidity/Create/
+  - apps/web/src/features/Liquidity/utils/generateLiquidityServiceCreateCalldata.ts
+  - apps/web/src/features/Liquidity/utils/priceRangeInfo.ts
+  - packages/uniswap/src/data/apiClients/dataApiService/utils/dataApiMultichainToken.ts
+  - packages/uniswap/src/components/TokenSelector/
+automationRefs:
+  - path: apps/web/src/pages/CreatePosition/CreatePosition.anvil.e2e.test.ts
+    testName: Create position > BNB USDC (18 decimals) > creates a new BNB/USDC pool that moves the typed USDC amount
+---
+
+> **urgent · v4 · e2e · scheduled · automated** · chains: bnb
+
+**Given** a funded test wallet on a BNB Chain fork, with USDC (18 decimals on BNB, 6 on Ethereum) found through the token selector's live search
+**When** the user picks BNB / USDC, a fee tier with no pool, keeps the suggested initial price, types 10 USDC and creates the position
+**Then** the create request carries 10e18 raw USDC and an initial sqrt price at the live BNB price, and the wallet's onchain USDC balance drops by 10 USDC
+**And** with the parent's 6 decimals the request carries 10e6 raw USDC while the screen still reports "Created position" — the INC-421 failure

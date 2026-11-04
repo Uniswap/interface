@@ -1,5 +1,5 @@
-import type { FontVariantToken, ResolvedFontStyle } from 'ui/src/theme'
-import { fonts, getFontStylesForVariant } from 'ui/src/theme'
+import { type ResolvedFontStyle, fonts, getFontStylesForVariant } from '@universe/mycelium'
+import type { FontVariantToken } from '@universe/tailwind/types'
 import { NUMBER_WIDTH_ARRAY } from 'uniswap/src/components/AnimatedNumber/utils/constants'
 
 export type AnimatedNumberVariantMetrics = {

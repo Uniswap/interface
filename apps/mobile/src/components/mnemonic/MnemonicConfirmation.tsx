@@ -1,11 +1,10 @@
 import { isAndroid } from '@universe/environment'
-import { type FlexProps, flexStyles } from '@universe/mycelium'
+import { type FlexProps, flexStyles, spacing } from '@universe/mycelium'
 import { useDeviceDimensions } from '@universe/mycelium/theme-hooks-compat'
 import { useTranslation } from 'react-i18next'
 import { requireNativeComponent, StyleProp, ViewProps } from 'react-native'
 import { useNativeComponentKey } from 'src/app/hooks'
 import { HiddenFromScreenReaders } from 'ui/src'
-import { spacing } from 'ui/src/theme'
 interface NativeMnemonicConfirmationProps {
   mnemonicId: Address
   shouldShowSmallText: boolean

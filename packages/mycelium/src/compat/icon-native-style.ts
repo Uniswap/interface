@@ -1,7 +1,6 @@
 /**
  * Native-dialect resolvers for the icon compat surface (INFRA-3508), imported
- * only by `createIcon.native.tsx`. Mirrors the rebuilt `ui/src` icon
- * factory's native behavior: every supported style prop resolves to a plain
+ * only by `createIcon.native.tsx`: every supported style prop resolves to a plain
  * React Native inline-style value — literal theme colors (no `var()`, CSS
  * variables do not exist on device), numeric px, RN transform arrays — with
  * the same token acceptance as the web lane: an unknown `$` COLOUR token logs
@@ -104,7 +103,7 @@ type IconCssLaneProp = Exclude<keyof IconCompatStyleProps, 'size' | 'color'>
  * spacing/sizing resolve to numbers, `marginEnd` uses RN's own `marginEnd`
  * (no `marginInlineEnd` on device), `rotate` becomes an RN transform array,
  * and a raw `transform` string clobbers it (declared after — the Tamagui
- * rule, matching the web lane and the rebuilt ui/src factory). `cursor` and
+ * rule, matching the web lane). `cursor` and
  * `verticalAlign` are web-only CSS with no RN style counterpart: dropped,
  * matching the legacy factory where they were inert on device.
  */

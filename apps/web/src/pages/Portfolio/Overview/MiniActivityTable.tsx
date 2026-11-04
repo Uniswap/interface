@@ -91,7 +91,7 @@ export const MiniActivityTable = memo(function MiniActivityTable({
         },
         cell: (info) => {
           return (
-            <Cell loading={showLoadingSkeleton} justifyContent="flex-start" p="$spacing8" $md={{ pl: '$none' }}>
+            <Cell loading={showLoadingSkeleton} justifyContent="flex-start" p="$spacing8" pl="$none">
               {hasRow<TransactionDetails>(info) && (
                 <ActivityAmountCell transaction={info.row.original} variant="compact" />
               )}
@@ -110,7 +110,7 @@ export const MiniActivityTable = memo(function MiniActivityTable({
         },
         cell: (info) => {
           return (
-            <Cell loading={showLoadingSkeleton} justifyContent="flex-end" p="$spacing8" $md={{ pr: '$none' }}>
+            <Cell loading={showLoadingSkeleton} justifyContent="flex-end" p="$spacing8" pr="$none">
               {hasRow<TransactionDetails>(info) && (
                 <TimeCell timestamp={info.row.original.addedTime} textAlign="right" />
               )}

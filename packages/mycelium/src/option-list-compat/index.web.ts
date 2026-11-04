@@ -29,7 +29,7 @@ export {
   SELECT_ALL_CLEAR_HEADER_CLASS_NAMES,
 } from './compile'
 export { normalizeOptionSearchQuery, optionMatchesSearchQuery, type SearchableOptionFields } from './filter'
-export { CheckmarkCircleGlyph, SearchGlyph } from './icons'
+export { SearchGlyph } from './icons'
 export { OptionRowCompat } from './OptionRow'
 export { SearchableOptionListCompat } from './SearchableOptionList'
 export { SelectAllClearHeaderCompat } from './SelectAllClearHeader'

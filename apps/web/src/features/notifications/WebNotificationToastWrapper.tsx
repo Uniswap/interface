@@ -4,7 +4,7 @@ import { CopiedNotification } from 'uniswap/src/components/notifications/notific
 import { SuccessNotification } from 'uniswap/src/components/notifications/notifications/SuccessNotification'
 import { useSelectAddressNotifications } from 'uniswap/src/features/notifications/slice/hooks'
 import { AppNotification, AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
-import { useActiveAddress } from '~/features/accounts/store/hooks'
+import { useActiveAddress } from '~/connection/accounts/hooks'
 
 export function WebNotificationToastWrapper(): JSX.Element | null {
   const evmAddress = useActiveAddress(Platform.EVM)

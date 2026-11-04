@@ -61,13 +61,14 @@ describe('Select size propagation (trigger → content → items)', () => {
   // The reserved trailing box and the glyph must move together or the documented
   // "labels don't shift when the checkmark appears" guarantee breaks.
   it.each([
-    ['default' as const, 'size-5'],
-    ['sm' as const, 'size-4'],
-  ])('keeps the reserved box and the glyph the same size (%s)', (size, expected) => {
+    ['default' as const, 'size-5', '20px'],
+    ['sm' as const, 'size-4', '16px'],
+  ])('keeps the reserved box and the glyph the same size (%s)', (size, boxClass, glyphPx) => {
     const { item } = renderOpenSelect(size)
     const reserved = item?.querySelector('span')
-    expect(classesOf(reserved ?? null)).toContain(expected)
+    expect(classesOf(reserved ?? null)).toContain(boxClass)
     const glyph = reserved?.querySelector('svg')
-    expect(classesOf(glyph ?? null)).toContain(expected)
+    expect(glyph?.style.width).toBe(glyphPx)
+    expect(glyph?.style.height).toBe(glyphPx)
   })
 })

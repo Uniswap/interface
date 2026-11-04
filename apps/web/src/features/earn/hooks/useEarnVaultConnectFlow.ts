@@ -1,7 +1,7 @@
 import { Platform } from '@universe/chains'
 import { useCallback, useEffect, useState } from 'react'
-import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
-import { useConnectionStatus } from '~/features/accounts/store/hooks'
+import { useConnectionStatus } from '~/connection/accounts/hooks'
+import { useAccountDrawer } from '~/state/accountDrawer/hooks'
 
 // Coordinates the "close earn modal → open wallet drawer → reopen modal after connect" flow.
 // Caller owns the selected vault state and passes both the current value and its setter; the

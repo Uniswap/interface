@@ -1,7 +1,6 @@
-import { Flex, Text } from '@universe/mycelium'
+import { Flex, Text, Loader } from '@universe/mycelium'
 import React, { memo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Loader } from 'ui/src'
 import type { ChartPoint } from 'uniswap/src/components/charts/computeChartPaths'
 import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'

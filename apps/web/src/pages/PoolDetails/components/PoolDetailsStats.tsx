@@ -9,7 +9,6 @@ import { Link } from 'react-router'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { type ParsedToken, isNativeParsedToken, v2UnwrapToken } from 'uniswap/src/features/dataApi/utils/parsedToken'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import type { PositionRewardApr } from 'uniswap/src/features/positions/types'
@@ -23,7 +22,7 @@ import type { PoolData } from '~/data/pools/poolData'
 import { get24hLpFeesUsd } from '~/data/pools/poolStats'
 import { getTokenDetailsURL } from '~/data/util'
 import { RewardAprBadge } from '~/features/Liquidity/LPIncentives/RewardAprBadge'
-import { useCurrency } from '~/hooks/Tokens'
+import { useCurrency } from '~/hooks/currency/useCurrency'
 import { DetailBubble } from '~/pages/PoolDetails/components/shared'
 
 const HeaderText = forwardRef<HTMLElement, TextCompatProps>(function HeaderText({ $xl: xl, ...props }, ref) {
@@ -164,7 +163,7 @@ const PoolBalanceTokenNames = ({ token, chainId }: { token: TokenFullData; chain
         <StyledLink
           to={getTokenDetailsURL({
             address: unwrappedToken.address,
-            chain: toGraphQLChain(chainId ?? defaultChainId),
+            chainId: chainId ?? defaultChainId,
           })}
         >
           <PoolBalanceText>{unwrappedToken.symbol}</PoolBalanceText>

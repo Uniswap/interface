@@ -1,5 +1,5 @@
 import { Token } from '@uniswap/sdk-core'
-import { GraphQLApi, TradingApi } from '@universe/api'
+import { TradingApi } from '@universe/api'
 import { UniverseChainId, Platform } from '@universe/chains'
 import { SwapConfigKey } from '@universe/gating'
 import { AVALANCHE_LOGO } from '@universe/mycelium/assets'
@@ -8,7 +8,7 @@ import { ALL_APPS_CHAIN_SUPPORTED_APPS } from 'uniswap/src/features/chains/chain
 import { CHAIN_ID_TO_URL_PARAM } from 'uniswap/src/features/chains/chainUrlParam'
 import { DEFAULT_NATIVE_ADDRESS_LEGACY, getUniRpcEndpointUrl } from 'uniswap/src/features/chains/evm/rpc'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
-import { GqlChainId, NetworkLayer, RPCType, UniverseChainInfo } from 'uniswap/src/features/chains/types'
+import { NetworkLayer, RPCType, UniverseChainInfo } from 'uniswap/src/features/chains/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { buildUSDC, buildUSDT } from 'uniswap/src/features/tokens/stablecoin'
 import { avalanche } from 'wagmi/chains'
@@ -29,7 +29,6 @@ export const AVALANCHE_CHAIN_INFO = {
   supportedApps: ALL_APPS_CHAIN_SUPPORTED_APPS,
   assetRepoNetworkName: 'avalanchec',
   backendChain: {
-    chain: GraphQLApi.Chain.Avalanche as GqlChainId,
     backendSupported: true,
     nativeTokenBackendAddress: undefined,
   },

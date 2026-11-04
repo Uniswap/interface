@@ -1,9 +1,9 @@
 import { type InAppNotification } from '@universe/api'
+import { InfoCircle } from '@universe/mycelium/icons/InfoCircle'
 import { type NotificationClickTarget } from '@universe/notifications'
 import { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { BANNER_HEIGHT, BottomBanner } from 'src/components/banners/BottomBanner'
-import { InfoCircle } from 'ui/src/components/icons/InfoCircle'
 
 const EXTRA_MARGIN = 5
 

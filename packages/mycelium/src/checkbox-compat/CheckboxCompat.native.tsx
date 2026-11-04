@@ -3,17 +3,10 @@
  * classNames, following the shipped `TouchableAreaCompat.native.tsx` and
  * `SegmentedControl.native.tsx` precedents.
  *
- * SUBSTRATE DECISION (INFRA-3233): plain `react-native`, ZERO new dependencies.
- * An earlier gap analysis recommended `@rn-primitives/checkbox`, but no
- * `@rn-primitives/*` package is installed anywhere in the monorepo (no hit in
- * any package.json, none in bun.lock), so adopting it means a net-new exact
- * version, an optional peer + pinned devDependency pair, and a `knip.json`
- * `ignoreDependencies` entry — while `mobile-build` enforces a 31.25 MB bundle
- * ceiling that a sibling PR already breached at 31.3185 MB. A checkbox's
- * behavior is a boolean, a press handler, and
+ * SUBSTRATE DECISION (INFRA-3233): plain `react-native`, no checkbox library.
+ * A checkbox's behavior is a boolean, a press handler, and
  * `accessibilityRole="checkbox"` + `accessibilityState={{ checked }}`, which
- * `Pressable` provides directly. If the primitives owner later standardises on
- * rn-primitives, the swap is confined to this one file.
+ * `Pressable` provides directly — not worth a dependency on the mobile bundle.
  *
  * CHECK GLYPH DECISION: a bordered, rotated `View`. Decided when mycelium's
  * icons were web-only; since INFRA-3508 mycelium icons have a real native leg
@@ -28,7 +21,7 @@
  * `hover:` nor `group-hover:` on native — the miss is silent), matching what
  * `SegmentedControl.native.tsx` already ships and what legacy does with its own
  * state. `pressed` is deliberately NOT tracked: legacy drives it from DOM
- * `onMouseDown`/`onMouseUp` (`Checkbox.tsx:98,101`), which never fire under
+ * `onMouseDown`/`onMouseUp`, which never fire under
  * React Native, so legacy's pressed glyph enlargement does not exist on device
  * today. Adding it would be a visual change on device, outside this issue.
  */
@@ -103,9 +96,9 @@ export const CheckboxCompat = React.forwardRef<View, CheckboxCompatProps>(functi
         disabled={disabled}
         // `id` is the one of the four Tamagui form/focus props legacy honours on
         // device; `name`/`value`/`required` are web-only there — see
-        // `CheckboxCompatProps` and the exclusions ledger.
+        // `CheckboxCompatProps`.
         id={id}
-        // Legacy always derives pointerEvents from `disabled` (Checkbox.tsx:94)
+        // Legacy always derives pointerEvents from `disabled`
         // and overrides any caller value; RN honours the prop form, and the
         // class form ships in the same className for web parity.
         pointerEvents={disabled ? 'none' : 'auto'}

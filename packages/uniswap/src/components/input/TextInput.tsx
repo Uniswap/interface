@@ -1,16 +1,15 @@
 import { isWebApp } from '@universe/environment'
-import { useSporeColors } from '@universe/mycelium'
-import { forwardRef, useEffect } from 'react'
-import { Input, InputProps, Input as TextInputBase } from 'ui/src'
+import { useSporeColors, Input, InputProps, Input as TextInputBase } from '@universe/mycelium'
+import { forwardRef, type ForwardRefExoticComponent, type RefAttributes, useEffect } from 'react'
 
 export type TextInputProps = InputProps
 
 // TODO(MOB-1537): move this to ui/src and see if we can just use styled() or move entirely to Input
 
-export const TextInput = forwardRef<TextInputBase, TextInputProps>(function TextInputInner(
-  { onChangeText, onBlur, ...rest },
-  ref,
-) {
+export const TextInput: ForwardRefExoticComponent<TextInputProps & RefAttributes<TextInputBase>> = forwardRef<
+  TextInputBase,
+  TextInputProps
+>(function TextInputInner({ onChangeText, onBlur, ...rest }, ref) {
   const colors = useSporeColors()
 
   useEffect(() => {

@@ -15,7 +15,7 @@ export function useCheckApprovalQuery({
   TradingApi.ApprovalRequest,
   TradingApi.ApprovalResponse
 >): UseQueryResult<TradingApi.ApprovalResponse> {
-  const queryKey = [ReactQueryCacheKey.TradingApi, V1_TRADING_API_PATHS.approval, params]
+  const queryKey = [ReactQueryCacheKey.TradingApi, V1_TRADING_API_PATHS.approval, getApprovalQueryKeyParams(params)]
 
   return useQueryWithImmediateGarbageCollection<TradingApi.ApprovalResponse>({
     queryKey,
@@ -25,4 +25,20 @@ export function useCheckApprovalQuery({
       : skipToken,
     ...rest,
   })
+}
+
+type ApprovalQueryKeyParams = Omit<TradingApi.ApprovalRequest, 'quote'> & {
+  quote?: Pick<TradingApi.BridgeQuote, 'provider' | 'approvalSpender'>
+}
+
+/**
+ * A bridge quote is new on every quote poll, but only its vendor and spender decide the approval. Keying on those
+ * keeps the cached approval across polls, while a fetch still sends the latest quote.
+ */
+function getApprovalQueryKeyParams(params: TradingApi.ApprovalRequest | undefined): ApprovalQueryKeyParams | undefined {
+  if (!params?.quote) {
+    return params
+  }
+  const { quote, ...rest } = params
+  return { ...rest, quote: { provider: quote.provider, approvalSpender: quote.approvalSpender } }
 }

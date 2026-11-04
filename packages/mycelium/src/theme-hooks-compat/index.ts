@@ -1,8 +1,6 @@
 /**
  * Tamagui-compatible theme hooks (INFRA-2952): the same shapes and values as
  * the `ui/src` versions under both themes, on web and native (INFRA-2353).
- * The parity suite in `packages/tailwind/src/parity/theme-hooks` is the
- * drift guard.
  */
 export { opacify, opacifyRaw } from './opacify'
 export {

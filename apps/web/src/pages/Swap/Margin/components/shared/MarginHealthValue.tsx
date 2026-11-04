@@ -1,7 +1,7 @@
 import { Flex, Text } from '@universe/mycelium'
 import { useTranslation } from 'react-i18next'
+import { resolveMarginHealthDisplay } from '~/features/margin/utils/marginFormat'
 import { useMarginHealthLabels } from '~/pages/Swap/Margin/hooks/useMarginHealthLabels'
-import { resolveMarginHealthDisplay } from '~/pages/Swap/Margin/marginFormat'
 
 // The margin health factor as a tier LABEL ("Healthy"/"Caution"/"At risk"), never a raw number. Renders
 // the VALUE only — the caller owns the row + visible label (DrawerDataCell in the drawer, MarginDetailRow

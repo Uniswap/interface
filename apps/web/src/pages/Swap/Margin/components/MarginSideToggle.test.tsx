@@ -1,12 +1,8 @@
 import { fireEvent } from '@testing-library/react'
 import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import type { MarginMarket, MarginPairGroup, MarginTokenInfo } from '~/constants/margin'
-import {
-  findMarginSideCounterpart,
-  MarginFormSideToggle,
-  MarginSideToggle,
-} from '~/pages/Swap/Margin/components/MarginSideToggle'
+import type { MarginPairGroup, MarginTokenInfo } from '~/constants/margin'
+import { MarginSideToggle } from '~/pages/Swap/Margin/components/MarginSideToggle'
 import { render } from '~/test-utils/render'
 
 const WETH: MarginTokenInfo = {
@@ -17,12 +13,6 @@ const WETH: MarginTokenInfo = {
 const USDC: MarginTokenInfo = {
   address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
   symbol: 'USDC',
-  decimals: 6,
-}
-
-const USDT: MarginTokenInfo = {
-  address: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
-  symbol: 'USDT',
   decimals: 6,
 }
 
@@ -48,7 +38,7 @@ const { mockGroups, mockSide, setMarginFormState } = vi.hoisted(() => ({
 }))
 mockSide.current = MarginDirection.LONG
 
-vi.mock('~/pages/Swap/Margin/hooks/useMarginMarkets', () => ({
+vi.mock('~/features/margin/hooks/useMarginMarkets', () => ({
   useMarginMarkets: () => ({ groups: mockGroups.current }),
 }))
 
@@ -107,81 +97,5 @@ describe('MarginSideToggle', () => {
     mockSide.current = MarginDirection.SHORT
     const { getByRole } = render(<MarginSideToggle />)
     expect(isDisabled(getByRole('button', { name: 'Short' }))).toBe(false)
-  })
-})
-
-const LONG_MARKET: MarginMarket = {
-  key: 'weth-usdc-MORPHO',
-  asset: 'WETH',
-  name: 'Ethereum',
-  displaySymbol: 'ETH',
-  collateral: WETH,
-  debt: USDC,
-  venue: 'MORPHO',
-  direction: MarginDirection.LONG,
-  lltvWad: '860000000000000000',
-  maxLeverage: 5,
-  shouldUseNativeEquity: true,
-}
-
-describe('findMarginSideCounterpart', () => {
-  it('prefers the same pair the other way round', () => {
-    const groups = [
-      groupFixture(MarginDirection.LONG),
-      groupFixture(MarginDirection.SHORT, USDT),
-      groupFixture(MarginDirection.SHORT),
-    ]
-    expect(findMarginSideCounterpart({ groups, market: LONG_MARKET, direction: MarginDirection.SHORT })?.pairKey).toBe(
-      'usdc-weth',
-    )
-  })
-
-  it('falls back to the same base token against another quote', () => {
-    const groups = [groupFixture(MarginDirection.LONG), groupFixture(MarginDirection.SHORT, USDT)]
-    expect(findMarginSideCounterpart({ groups, market: LONG_MARKET, direction: MarginDirection.SHORT })?.pairKey).toBe(
-      'usdt-weth',
-    )
-  })
-
-  it('finds nothing when the base token does not trade on that side', () => {
-    expect(
-      findMarginSideCounterpart({
-        groups: [groupFixture(MarginDirection.LONG)],
-        market: LONG_MARKET,
-        direction: MarginDirection.SHORT,
-      }),
-    ).toBe(undefined)
-  })
-})
-
-describe('MarginFormSideToggle', () => {
-  it('selects the displayed market’s side, not the stored one', () => {
-    mockSide.current = MarginDirection.SHORT
-    const { getByRole } = render(<MarginFormSideToggle market={LONG_MARKET} />)
-    expect(getByRole('button', { name: 'Long' })).toHaveAttribute('aria-selected', 'true')
-    expect(getByRole('button', { name: 'Short' })).toHaveAttribute('aria-selected', 'false')
-  })
-
-  // A pair's long and short are different pairs, so the side switch has to move the form's pair too.
-  it('switches the form to the counterpart pair and resets the payment token', () => {
-    const { getByRole } = render(<MarginFormSideToggle market={LONG_MARKET} />)
-    fireEvent.click(getByRole('button', { name: 'Short' }))
-    expect(setMarginFormState).toHaveBeenCalledWith({
-      pairKey: 'usdc-weth',
-      side: MarginDirection.SHORT,
-      paymentToken: undefined,
-    })
-  })
-
-  it('disables Short for a base token with no short market', () => {
-    mockGroups.current = [groupFixture(MarginDirection.LONG)]
-    const { getByRole } = render(<MarginFormSideToggle market={LONG_MARKET} />)
-    expect(isDisabled(getByRole('button', { name: 'Short' }))).toBe(true)
-  })
-
-  it('does nothing when the already-selected side is pressed', () => {
-    const { getByRole } = render(<MarginFormSideToggle market={LONG_MARKET} />)
-    fireEvent.click(getByRole('button', { name: 'Long' }))
-    expect(setMarginFormState).not.toHaveBeenCalled()
   })
 })

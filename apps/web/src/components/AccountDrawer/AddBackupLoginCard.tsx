@@ -10,7 +10,7 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useListAuthenticatorsQuery } from '~/components/AccountDrawer/PasskeyMenu/hooks/useListAuthenticatorsQuery'
 import { getPrivyAppId } from '~/config'
-import { useIsEmbeddedWallet } from '~/hooks/useIsEmbeddedWallet'
+import { useIsEmbeddedWallet } from '~/connection/hooks/useIsEmbeddedWallet'
 import { useIsPortfolioZero } from '~/pages/Portfolio/Overview/hooks/useIsPortfolioZero'
 import { setOpenModal } from '~/state/application/reducer'
 /**

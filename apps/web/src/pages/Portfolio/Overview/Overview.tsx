@@ -27,6 +27,7 @@ import { EmptyWalletCards } from '~/components/emptyWallet/EmptyWalletCards'
 import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
 import { usePortfolioAddresses } from '~/pages/Portfolio/hooks/usePortfolioAddresses'
 import { OverviewActionTiles } from '~/pages/Portfolio/Overview/ActionTiles'
+import { ExploreTokensModule } from '~/pages/Portfolio/Overview/ExploreTokensModule/ExploreTokensModule'
 import { useIsPortfolioZero } from '~/pages/Portfolio/Overview/hooks/useIsPortfolioZero'
 import {
   PortfolioChartCategory,
@@ -35,6 +36,7 @@ import {
 import { PortfolioOverviewTables } from '~/pages/Portfolio/Overview/OverviewTables'
 import { PortfolioChart } from '~/pages/Portfolio/Overview/PortfolioChart'
 import { PortfolioPerformance } from '~/pages/Portfolio/Overview/PortfolioPerformance'
+import { UnfundedBalanceCard } from '~/pages/Portfolio/Overview/UnfundedBalanceCard'
 import { filterDefinedWalletAddresses } from '~/utils/filterDefinedWalletAddresses'
 
 const ACTIONS_AND_STATS_VARIANTS = {
@@ -62,6 +64,8 @@ export const PortfolioOverview = memo(function PortfolioOverview() {
   const { chains: allChainIds } = useEnabledChains()
 
   const isPortfolioZero = useIsPortfolioZero()
+  const isNewUserUxEnabled = useFeatureFlag(FeatureFlags.NewUserUx)
+  const showUnfundedHome = isNewUserUxEnabled && isPortfolioZero
   const queryClient = useQueryClient()
 
   const [selectedPeriod, setSelectedPeriod] = useState<ChartPeriod>(ChartPeriod.DAY)
@@ -124,7 +128,7 @@ export const PortfolioOverview = memo(function PortfolioOverview() {
     error: chartError,
   } = useGetPortfolioHistoricalValueChartQuery({
     input: { ...chartInput, chartPeriod: selectedPeriod },
-    enabled: !!(portfolioAddresses.evmAddress || portfolioAddresses.svmAddress),
+    enabled: !showUnfundedHome && !!(portfolioAddresses.evmAddress || portfolioAddresses.svmAddress),
   })
 
   const {
@@ -153,6 +157,7 @@ export const PortfolioOverview = memo(function PortfolioOverview() {
     }
   }, [availableCategories, selectedCategory])
   const isChartLoading = isChartPending || (isChartPlaceholderData && !series.length)
+  const chartErrorWithoutData = portfolioChartData ? null : chartError
   const isChartEmpty = useMemo(() => {
     if (!series.length) {
       return true
@@ -213,6 +218,19 @@ export const PortfolioOverview = memo(function PortfolioOverview() {
     skip: isPortfolioZero,
   })
 
+  if (showUnfundedHome) {
+    return (
+      <Trace logImpression page={InterfacePageName.PortfolioOverviewPage} properties={{ isExternal: isExternalWallet }}>
+        <Trace section={SectionName.PortfolioOverviewTab}>
+          <Flex gap="$spacing16" mb="$spacing40">
+            <UnfundedBalanceCard />
+            <ExploreTokensModule />
+          </Flex>
+        </Trace>
+      </Trace>
+    )
+  }
+
   return (
     <Trace logImpression page={InterfacePageName.PortfolioOverviewPage} properties={{ isExternal: isExternalWallet }}>
       <Flex gap="$spacing40" mb="$spacing40">
@@ -237,7 +255,7 @@ export const PortfolioOverview = memo(function PortfolioOverview() {
               isLoading={isChartLoading}
               isBalanceLoading={isBalancePending}
               isChartEmpty={isChartEmpty}
-              error={chartError}
+              error={chartErrorWithoutData}
               selectedPeriod={selectedPeriod}
               setSelectedPeriod={setSelectedPeriod}
               onHoverPeriod={handleHoverPeriod}

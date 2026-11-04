@@ -23,7 +23,7 @@ interface MarginQuoteErrorData {
 
 // The code<->copy mapping is a switch (not a Record<string,string> + t(variable)) so i18next-parser's
 // static extraction can see every key as a literal call — a dynamic t(key) is invisible to it (see
-// i18next-parser.config.js; same reasoning as MarginPlanReviewModal's restartNote/stepTitle). Two
+// i18next-parser.config.js; same reasoning as MarginPlanReviewModal's restartNote). Two
 // pairs share a key: the two liquidity reasons read identically to the user, and both full-exit
 // variants point at the same Close-position remedy. Exported so the plan-create catch sites
 // (useExecuteMarginPlan.ts) can reuse the identical mapping while keeping their own non-mapped
@@ -55,7 +55,7 @@ export function getMappedMarginErrorMessage({
     case 'MARGIN_INVALID_LEVERAGE':
       return t('margin.error.adjust.invalidLeverage')
     case 'MARGIN_SWAP_INSUFFICIENT_LIQUIDITY':
-    case 'MARGIN_BORROW_INSUFFICIENT_LIQUIDITY':
+    case 'MARGIN_INSUFFICIENT_BORROW_LIQUIDITY':
       return t('margin.error.adjust.insufficientLiquidity')
     case 'MARGIN_WITHDRAW_OVER_MAX':
       return t('margin.error.adjust.withdrawOverMax')
@@ -70,9 +70,23 @@ export function getMappedMarginErrorMessage({
       return t('margin.error.adjust.noChange')
     case 'MARGIN_INVALID_REQUEST':
       return t('margin.error.adjust.invalidRequest')
+    case 'MARGIN_FUNDING_SWAP_UNSUPPORTED':
+      return t('margin.error.adjust.fundingSwapUnsupported')
     default:
       return undefined
   }
+}
+
+const MARGIN_DETAIL_CODE = /^(MARGIN_[A-Z_]+)(?::|$)/
+
+// The MARGIN_ code of a trading API refusal. Quote and plan refusals arrive as `{ errorCode: <coarse
+// ErrorType, e.g. UnprocessableEntity>, detail: '<MARGIN_ code>[: hint]' }` (trading's TradingAPIHttpError,
+// from the thrown HttpError's name and message); a MARGIN_-prefixed `errorCode` is taken as is.
+export function marginErrorCode({ errorCode, detail }: MarginQuoteErrorData): string | undefined {
+  if (errorCode?.startsWith('MARGIN_')) {
+    return errorCode
+  }
+  return detail ? MARGIN_DETAIL_CODE.exec(detail)?.[1] : undefined
 }
 
 // Pure, no side effects — called on every render while a quote error is live (e.g. mid-drag). Logging
@@ -83,15 +97,14 @@ export function getMarginQuoteErrorMessage({ error, t }: { error: unknown; t: TF
     return { message: generic }
   }
   const data = error.data as unknown as MarginQuoteErrorData | undefined
-  const errorCode = data?.errorCode
-  if (!errorCode) {
+  const errorCode = (data && marginErrorCode(data)) ?? data?.errorCode
+  if (!errorCode || !data) {
     return { message: generic }
   }
   const mapped = getMappedMarginErrorMessage({ errorCode, detail: data.detail, t })
   if (mapped !== undefined) {
     return { message: mapped }
   }
-  // `data` is narrowed non-nullish here (errorCode came from data?.errorCode and passed the guard above).
   const message = data.detail ?? generic
   return errorCode.startsWith('MARGIN_') ? { message, unrecognizedCode: errorCode } : { message }
 }

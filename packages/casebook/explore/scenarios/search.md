@@ -53,7 +53,7 @@ priority: medium
 severity: medium
 # provenance
 source: existing-unit
-sourceNote: "(a) unit packages/uniswap/src/features/search/searchHistorySlice.test.ts (addToSearchHistory, searchResultId de-dup); (b) Testlio Wallet 'Explore - Search - iOS/Android'"
+sourceNote: "(a) unit packages/uniswap/src/features/search/searchHistorySlice.test.ts (addToSearchHistory, searchResultId de-dup); (b) Testlio Wallet 'Explore - Search - iOS/Android'; (c) multichain history entries in the token selector's recents from #43462 (CONS-3520), unit-covered in packages/uniswap/src/components/TokenSelector/hooks/useRecentlySearchedTokens.test.ts"
 testlioRef: Explore - Search - iOS/Android
 # scope
 chains:
@@ -72,11 +72,16 @@ runFrequency: pr-check
 code_paths:
   - packages/uniswap/src/features/search/searchHistorySlice.ts
   - packages/uniswap/src/features/search/SearchModal/
+  - packages/uniswap/src/components/TokenSelector/hooks/useRecentlySearchedTokens.ts
 automationRefs:
   - path: packages/uniswap/src/features/search/searchHistorySlice.test.ts
     testName: searchHistorySlice > addToSearchHistory > adds valid token search result to history
   - path: packages/uniswap/src/features/search/searchHistorySlice.test.ts
     testName: searchHistorySlice > searchResultId > generates distinct ids for multichain token with and without TDP chain filter
+  - path: packages/uniswap/src/components/TokenSelector/hooks/useRecentlySearchedTokens.test.ts
+    testName: prefers the leg the user picked when the entry carries a tdpChainFilter
+  - path: packages/uniswap/src/components/TokenSelector/hooks/useRecentlySearchedTokens.test.ts
+    testName: dedupes a token recorded both as a token entry and inside a multichain entry
 ---
 
 > **medium · unit · pr-check · automated** · chains: ethereum
@@ -84,6 +89,7 @@ automationRefs:
 **Given** the user has previously searched for and selected tokens
 **When** they reopen the search modal with no query entered
 **Then** a "Recent" section lists up to the most recent searches (across token/wallet/NFT tabs), de-duplicated by a stable search-result id
+**And** in the token selector, a multichain history entry resolves to one leg (the chain-filter leg the user picked when it passes the active filter, otherwise the first allowed leg), entries with no leg on the active chain filter are dropped, and a token recorded both as a plain entry and inside a multichain entry shows once
 
 ---
 id: explore-search-wallet-ens-unitag

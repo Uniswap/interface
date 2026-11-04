@@ -113,12 +113,6 @@ vi.mock('src/components/TokenDetails/TokenDetailsActionButtons', () => ({
   },
 }))
 
-vi.mock('uniswap/src/data/graphql/fragments', () => ({
-  useTokenBasicInfoPartsFragment: vi
-    .fn()
-    .mockReturnValue({ data: { symbol: 'TPT2', name: 'Test Permissioned Token' } }),
-}))
-
 // The wrapper reads token metadata through a tanstack useQuery internally, which would
 // require a QueryClientProvider in the render tree. Mock at the hook boundary instead;
 // the wrapper only consumes `metadata.symbol` (for the RWA sell-toast copy).

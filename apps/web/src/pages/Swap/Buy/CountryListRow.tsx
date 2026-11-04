@@ -1,7 +1,6 @@
-import { Flex, type FlexCompatProps, Text } from '@universe/mycelium'
+import { Flex, type FlexCompatProps, Text, iconSizes } from '@universe/mycelium'
+import { Check } from '@universe/mycelium/icons/Check'
 import { CSSProperties, forwardRef, type ForwardRefExoticComponent, type RefAttributes, useState } from 'react'
-import { Check } from 'ui/src/components/icons/Check'
-import { iconSizes } from 'ui/src/theme'
 import { FORCountry } from 'uniswap/src/features/fiatOnRamp/types'
 import { getCountryFlagSvgUrl } from 'uniswap/src/features/fiatOnRamp/utils'
 

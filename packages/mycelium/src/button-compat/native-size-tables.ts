@@ -9,17 +9,16 @@
  * See native-font-environment.native.ts for why the gate resolves once at
  * module scope rather than per-render.
  *
- * The CJK column is byte-identical to compile.ts's WEB tables by construction
- * (web's `needsSmallFont` is constant true, so web IS the no-bump column),
+ * The CJK column matches compile.ts's WEB tables by construction (web's
+ * `needsSmallFont` is constant true, so web IS the no-bump column); only the
+ * line-height spelling differs (`leading-…` here, `[line-height:…]` on web),
  * restated here as its own literals so the native scale stays independently
  * pinned and uniwind's static scan of this source keeps seeing every class
  * the native leg can emit.
  *
  * Off-native resolutions read the constant-true web/base stubs and land on
  * the CJK (= web-ramp) column; nothing rendered off-native consumes these
- * tables. The native parity harness's shared `expo-localization` stub
- * (vitest.native.config.ts) pins device locale to en-US for every case, so
- * that suite deterministically measures the DEFAULT column.
+ * tables.
  */
 import { needsSmallFont } from '../text-compat/needs-small-font'
 import type { ButtonSize } from './compile'

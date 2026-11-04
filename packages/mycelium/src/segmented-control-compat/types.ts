@@ -38,4 +38,5 @@ export interface SegmentedControlProps<T extends string = string> {
   variableOptionWidths?: boolean
   outlined?: boolean
   gap?: SegmentedControlGapToken
+  animateIndicator?: boolean
 }

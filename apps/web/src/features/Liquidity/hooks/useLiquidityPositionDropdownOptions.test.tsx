@@ -5,10 +5,10 @@ import { DAI, USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { useActiveAddresses } from 'uniswap/src/features/accounts/store/hooks'
 import { usePoolPositionCacheUpdater } from 'uniswap/src/features/dataApi/balances/poolPositionCacheUpdater'
 import type { PositionInfo } from 'uniswap/src/features/positions/types'
+import { useAccount } from '~/connection/hooks/useAccount'
+import { useSelectChain } from '~/connection/hooks/useSelectChain'
 import { useLiquidityPositionDropdownOptions } from '~/features/Liquidity/hooks/useLiquidityPositionDropdownOptions'
 import { useReportPositionHandler } from '~/features/Liquidity/hooks/useReportPositionHandler'
-import { useAccount } from '~/hooks/useAccount'
-import { useSelectChain } from '~/hooks/useSelectChain'
 import { useAppDispatch } from '~/state/hooks'
 import { mocked } from '~/test-utils/mocked'
 import { renderHook } from '~/test-utils/render'
@@ -25,8 +25,8 @@ vi.mock('react-router', async (importOriginal) => ({
   useNavigate: () => mockNavigate,
 }))
 
-vi.mock('~/hooks/useAccount', () => ({ useAccount: vi.fn() }))
-vi.mock('~/hooks/useSelectChain', () => ({ useSelectChain: vi.fn() }))
+vi.mock('~/connection/hooks/useAccount', () => ({ useAccount: vi.fn() }))
+vi.mock('~/connection/hooks/useSelectChain', () => ({ useSelectChain: vi.fn() }))
 vi.mock('~/features/Liquidity/hooks/useReportPositionHandler', () => ({
   useReportPositionHandler: vi.fn(),
 }))

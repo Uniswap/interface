@@ -4,10 +4,10 @@ import {
   TouchableAreaProps,
   useIsShortMobileDevice,
   useSporeColors,
+  iconSizes,
 } from '@universe/mycelium'
 import { PRESS_SCALE } from '@universe/mycelium/button-compat'
 import { Arrow } from 'ui/src/components/arrow/Arrow'
-import { iconSizes } from 'ui/src/theme'
 
 type SwapArrowButtonProps = Pick<
   TouchableAreaProps,

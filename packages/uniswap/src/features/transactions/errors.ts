@@ -1,4 +1,4 @@
-import { FetchError, is401Error } from '@universe/api'
+import { FetchError, is401Error, isBlockedAccountFetchError } from '@universe/api'
 import { isWebApp } from '@universe/environment'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { reportFingerprintError } from 'uniswap/src/features/transactions/reportFingerprintError'
@@ -125,7 +125,7 @@ export class HandledTransactionInterrupt extends TransactionError {
   }
 }
 
-function isSessionError(error: Error): boolean {
+function unwrapToFetchError(error: Error): unknown {
   let e: unknown | undefined = error
 
   while (e && !(e instanceof FetchError)) {
@@ -138,7 +138,7 @@ function isSessionError(error: Error): boolean {
     }
   }
 
-  return is401Error(e)
+  return e
 }
 
 export function getErrorContent(
@@ -150,7 +150,17 @@ export function getErrorContent(
   message: string
   supportArticleURL?: string
 } {
-  if (isSessionError(error)) {
+  const backendError = unwrapToFetchError(error)
+
+  // Checked before the session case: trading answers a blocked wallet with a 401 too.
+  if (isBlockedAccountFetchError(backendError)) {
+    return {
+      title: t('common.blockedAddress'),
+      message: t('swap.error.accountBlocked'),
+    }
+  }
+
+  if (is401Error(backendError)) {
     return {
       title: t('common.session.fail.title'),
       message: isWebApp ? t('common.session.fail.browser') : t('common.session.fail'),

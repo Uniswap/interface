@@ -1,11 +1,11 @@
 import type { InAppNotification } from '@universe/api'
 import { clickableStyle, Flex, type FlexCompatProps, iconSizes, Text, zIndexes } from '@universe/mycelium'
 import type { GeneratedIcon } from '@universe/mycelium/icons'
+import { Globe } from '@universe/mycelium/icons/Globe'
 import { X } from '@universe/mycelium/icons/X'
 import { useShadowPropsShort, useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import { type NotificationClickTarget } from '@universe/notifications'
 import { memo, useEffect, useMemo } from 'react'
-import { Globe } from 'ui/src/components/icons/Globe'
 import { getCustomIconComponent } from 'uniswap/src/components/notifications/iconUtils'
 import { ExternalLink } from '~/theme/components/Links'
 

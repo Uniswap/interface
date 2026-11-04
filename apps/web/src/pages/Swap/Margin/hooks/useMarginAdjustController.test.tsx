@@ -27,7 +27,7 @@ const { SWAPPER, SUB_ID, mockUseMarginQuote, mockExecutePlan, mockUseIsPlanInFli
   mockUseIsPlanInFlight: vi.fn(() => false),
 }))
 
-vi.mock('~/hooks/useAccount', () => ({ useAccount: () => ({ address: SWAPPER }) }))
+vi.mock('~/connection/hooks/useAccount', () => ({ useAccount: () => ({ address: SWAPPER }) }))
 
 vi.mock('~/pages/Swap/Margin/hooks/useExecuteMarginPlan', () => ({
   useExecuteMarginPlan: () => ({ executePlan: mockExecutePlan }),
@@ -144,7 +144,7 @@ function renderController({
   funding = { kind: 'none' } as AdjustFunding,
   mode = { kind: 'drift' } as AdjustLeverageMode,
   position = positionFixture(),
-  action = 'adjust' as MarginManageAction,
+  action = 'leverage' as MarginManageAction,
   market = MARKET,
 }: {
   funding?: AdjustFunding
@@ -182,11 +182,6 @@ describe('useMarginAdjustController', () => {
       expect(lastQuoteArgs().funding).toEqual({ kind: 'deposit', paymentAmountRaw: '500000000000000000' })
     })
 
-    it('sends no target when locked with no funding — there is nothing to submit', () => {
-      renderController({ mode: { kind: 'locked' } })
-      expect(lastQuoteArgs().targetLeverageX18).toBeUndefined()
-    })
-
     it('sends no target for an explicit change inside ADJUST_MIN_LEVERAGE_DELTA', () => {
       renderController({ mode: { kind: 'explicit', value: 2.02 } })
       expect(lastQuoteArgs().targetLeverageX18).toBeUndefined()
@@ -195,82 +190,6 @@ describe('useMarginAdjustController', () => {
     it('sends the WAD target for an explicit change past the min delta', () => {
       renderController({ mode: { kind: 'explicit', value: 2.1 } })
       expect(lastQuoteArgs().targetLeverageX18).toBe('2100000000000000000')
-    })
-
-    // A long's leverage rises whenever its collateral falls, so drifting above the venue ceiling takes
-    // nothing more than an adverse move. Holding an over-cap leverage is what the venue is refusing in
-    // the first place, so the request holds DEBT instead, which walks leverage back toward the cap.
-    // (The slider does NOT clamp a `locked` readout — it shows the true figure; this pre-empt is what
-    // keeps the REQUEST from wiring a leverage the venue has stopped offering.)
-    it('sends no locked target when the position has drifted above the venue cap', () => {
-      renderController({
-        mode: { kind: 'locked' },
-        funding: { kind: 'deposit', paymentAmountRaw: '500000000000000000' },
-        position: positionFixture({ leverage: '6' }),
-        market: { ...MARKET, maxLeverage: 4 },
-      })
-      expect(lastQuoteArgs().targetLeverageX18).toBeUndefined()
-    })
-
-    it('still pins a locked target when the position sits at or below the cap', () => {
-      renderController({
-        mode: { kind: 'locked' },
-        funding: { kind: 'deposit', paymentAmountRaw: '500000000000000000' },
-        position: positionFixture({ leverage: '4' }),
-        market: { ...MARKET, maxLeverage: 4 },
-      })
-      expect(lastQuoteArgs().targetLeverageX18).toBe('4000000000000000000')
-    })
-
-    // The pre-empt must measure what the request WIRES, not the raw figure: cap + 0.005 floors to
-    // exactly the cap, which the at-cap case above pins as legal, so gating on the raw value would
-    // degrade lock to a debt-hold for anything inside (cap, cap + 0.01).
-    it('still pins a locked target when the position floors to exactly the cap', () => {
-      renderController({
-        mode: { kind: 'locked' },
-        funding: { kind: 'deposit', paymentAmountRaw: '500000000000000000' },
-        position: positionFixture({ leverage: '4.005' }),
-        market: { ...MARKET, maxLeverage: 4 },
-      })
-      expect(lastQuoteArgs().targetLeverageX18).toBe('4000000000000000000')
-    })
-
-    // The withdraw carve-out is for the OVER-CAP drop only. With no leverage to pin, `currentLeverage`
-    // falls back to 1 and pinning it wires a full deleverage the sheet never states — a blank wire
-    // `leverage` reaches this with positive equity and an armed CTA, so it is not a theoretical arm.
-    it('drops the locked target on a withdraw from a position with no finite leverage', () => {
-      renderController({
-        mode: { kind: 'locked' },
-        funding: { kind: 'withdraw', withdrawAmountRaw: '100000000000000000' },
-        position: positionFixture({ leverage: undefined }),
-      })
-      expect(lastQuoteArgs().targetLeverageX18).toBeUndefined()
-    })
-
-    // A market publishing NO ceiling floors `cap` to MIN_LEVERAGE. Treating that floor as an
-    // authoritative ceiling would degrade "lock leverage" to drift for every ordinary position —
-    // absence of a cap is not the same signal as a low one.
-    it('still pins a locked target on a market that publishes no cap', () => {
-      renderController({
-        mode: { kind: 'locked' },
-        funding: { kind: 'deposit', paymentAmountRaw: '500000000000000000' },
-        position: positionFixture({ leverage: '2' }),
-        market: { ...MARKET, maxLeverage: undefined },
-      })
-      expect(lastQuoteArgs().targetLeverageX18).toBe('2000000000000000000')
-    })
-
-    // The over-cap fallback INVERTS on a withdraw: holding debt while equity leaves raises leverage,
-    // so dropping the target would push an over-cap position further over. Keep the target and let
-    // the backend refuse it loudly rather than silently doing the opposite of what was asked.
-    it('keeps the locked target on an over-cap WITHDRAW, where dropping it would raise leverage', () => {
-      renderController({
-        mode: { kind: 'locked' },
-        funding: { kind: 'withdraw', withdrawAmountRaw: '100000000000000000' },
-        position: positionFixture({ leverage: '6' }),
-        market: { ...MARKET, maxLeverage: 4 },
-      })
-      expect(lastQuoteArgs().targetLeverageX18).toBe('6000000000000000000')
     })
   })
 

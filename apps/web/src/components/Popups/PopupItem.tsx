@@ -1,12 +1,11 @@
 import { UniverseChainId } from '@universe/chains'
-import { Flex, Text } from '@universe/mycelium'
+import { Flex, Text, spacing } from '@universe/mycelium'
+import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFilled'
+import { CheckCircleFilled } from '@universe/mycelium/icons/CheckCircleFilled'
+import { Eye } from '@universe/mycelium/icons/Eye'
+import { Shuffle } from '@universe/mycelium/icons/Shuffle'
 import { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
-import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
-import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
-import { Eye } from 'ui/src/components/icons/Eye'
-import { Shuffle } from 'ui/src/components/icons/Shuffle'
-import { spacing } from 'ui/src/theme/spacing'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { EarnSwapUpsellToast } from '~/components/Popups/EarnSwapUpsellToast'
@@ -19,7 +18,7 @@ import {
   UniswapXOrderPopupContent,
 } from '~/components/Popups/PopupContent'
 import { ToastRegularSimple } from '~/components/Popups/ToastRegularSimple'
-import { PopupContent, PopupType, SwitchNetworkAction } from '~/state/popups/types'
+import { PopupContent, PopupType, SwitchNetworkAction } from '~/utils/popups/types'
 
 // oxlint-disable-next-line typescript/consistent-return -- biome-parity: oxlint is stricter here
 export function PopupItem({ content, onClose }: { content: PopupContent; popKey: string; onClose: () => void }) {

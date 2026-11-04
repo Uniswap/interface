@@ -1,15 +1,15 @@
 #!/bin/bash
 # Starts a local anvil fork for e2e tests and manual testing.
 #
-# Usage: ./start-anvil.sh <mainnet|base> [extra anvil flags...]
+# Usage: ./start-anvil.sh <mainnet|base|bnb> [extra anvil flags...]
 #
 # The full argv comes from scripts/anvil-spawn-args.ts, which wraps
 # buildAnvilSpawnArgs() in src/playwright/anvil/anvil-args.ts — the single source
 # of truth shared with the Playwright anvil manager, so flags cannot drift
 # between the two flows. All the same env knobs apply:
 #
-#   ANVIL_FORK_URL / ANVIL_FORK_URL_BASE   override the PublicNode fork source
-#   ANVIL_FORK_BLOCK / ANVIL_FORK_BLOCK_BASE  override the pinned fork block
+#   ANVIL_FORK_URL / ANVIL_FORK_URL_BASE / ANVIL_FORK_URL_BNB   override the PublicNode fork source
+#   ANVIL_FORK_BLOCK / ANVIL_FORK_BLOCK_BASE / ANVIL_FORK_BLOCK_BNB  override the pinned fork block
 #   ANVIL_FORK_VIA_UNIRPC=1                fork through the uni RPC entry gateway
 #                                          (session bootstrapped/reused via
 #                                          ~/.uniswap/session.json; gateway override
@@ -30,8 +30,11 @@ case "$CHAIN" in
   base)
     CHAIN_ID=8453
     ;;
+  bnb)
+    CHAIN_ID=56
+    ;;
   *)
-    echo "Usage: $0 <mainnet|base> [extra anvil flags...]" >&2
+    echo "Usage: $0 <mainnet|base|bnb> [extra anvil flags...]" >&2
     exit 1
     ;;
 esac

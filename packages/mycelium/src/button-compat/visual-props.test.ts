@@ -28,6 +28,12 @@ describe('buttonCompatVisualClasses', () => {
     expect(buttonCompatVisualClasses({ flexShrink: 1 })).toEqual(['shrink-[1]'])
   })
 
+  it('flexGrow emits a lone grow utility and overflow the shared overflow utility', () => {
+    expect(buttonCompatVisualClasses({ flexGrow: 1 })).toEqual(['grow-[1]'])
+    expect(buttonCompatVisualClasses({ overflow: 'hidden' })).toEqual(['overflow-hidden'])
+    expect(buttonCompatVisualClasses({ overflow: 'unset' })).toEqual(['[overflow:unset]'])
+  })
+
   it('the shadow trio delegates to the shared universal-surface compiler', () => {
     expect(buttonCompatVisualClasses({ shadowColor: '#000000', shadowOpacity: 0.04, shadowRadius: 10 })).toEqual([
       '[box-shadow:0px_0px_10px_color-mix(in_srgb,_#000000_4%,_transparent)]',

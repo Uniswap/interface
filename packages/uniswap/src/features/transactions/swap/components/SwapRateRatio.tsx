@@ -1,4 +1,4 @@
-import { RateRatio } from '@universe/swap-ui'
+import { RateRatio } from '@universe/transactions-ui'
 import {
   type SwapRateInputs,
   useSwapRateDisplay,

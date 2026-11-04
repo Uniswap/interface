@@ -11,6 +11,7 @@ import {
   useHorizontalLiquidityChartSelector,
   useHorizontalLiquidityChartStoreActions,
 } from '~/features/Liquidity/charts/D3HorizontalLiquidityChart/useHorizontalLiquidityChartStore'
+import { getTooltipPosition } from '~/features/Liquidity/charts/D3HorizontalLiquidityChart/utils/getTooltipPosition'
 import {
   createEntryFromBucket,
   findBucketForTick,
@@ -317,27 +318,16 @@ function D3HorizontalLiquidityChartInner({
     drawAll()
   }, [zoomLevel, panX, drawAll])
 
-  // Tooltip positioning: follow cursor, clamp to chart bounds on all edges
-  const TOOLTIP_OFFSET = 12
-  const tooltipWidth = tooltipRef.current?.offsetWidth ?? 160
-  const tooltipHeight = tooltipRef.current?.offsetHeight ?? 80
   const showTooltip = hoveredTick !== undefined && hoveredX !== undefined
-
-  let tooltipX = (hoveredX ?? 0) + TOOLTIP_OFFSET
-  let tooltipY = (hoveredY ?? 0) - TOOLTIP_OFFSET
-
-  // Clamp right edge
-  if (tooltipX + tooltipWidth > chartWidth) {
-    tooltipX = (hoveredX ?? 0) - tooltipWidth - TOOLTIP_OFFSET
-  }
-  // Clamp left edge
-  tooltipX = Math.max(0, tooltipX)
-  // Clamp bottom edge
-  if (tooltipY + tooltipHeight > height) {
-    tooltipY = height - tooltipHeight
-  }
-  // Clamp top edge
-  tooltipY = Math.max(0, tooltipY)
+  const { x: tooltipX, y: tooltipY } = getTooltipPosition({
+    hoveredX: hoveredX ?? 0,
+    hoveredY: hoveredY ?? 0,
+    tooltipWidth: tooltipRef.current?.offsetWidth ?? 160,
+    tooltipHeight: tooltipRef.current?.offsetHeight ?? 80,
+    chartWidth,
+    chartHeight: height,
+    topInset,
+  })
 
   const dottedBackground = {
     backgroundImage: `radial-gradient(circle, ${colors.surface3Hovered.val} 1px, transparent 1px)`,

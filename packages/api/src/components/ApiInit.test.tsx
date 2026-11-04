@@ -1,6 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { render, waitFor } from '@testing-library/react'
-import { ApiInit } from '@universe/api/src/components/ApiInit'
 import {
   ChallengeType,
   createChallengeSolverService,
@@ -20,6 +19,7 @@ import {
 import React from 'react'
 import { sleep } from 'utilities/src/time/timing'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { ApiInit } from './ApiInit'
 
 // Mock platform detection - we're testing as extension by default
 vi.mock('@universe/environment', () => ({

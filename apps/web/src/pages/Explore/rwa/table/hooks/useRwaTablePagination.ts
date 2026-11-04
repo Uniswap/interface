@@ -1,6 +1,6 @@
 import { useDeviceDimensions } from '@universe/mycelium/theme-hooks-compat'
 import { useCallback, useMemo, useState } from 'react'
-import { useInfiniteLoadMore } from '~/hooks/useInfiniteLoadMore'
+import { useInfiniteLoadMore } from '~/features/Explore/hooks/useInfiniteLoadMore'
 import {
   EXPANDABLE_ASSET_TABLE_ROW_SLOT_HEIGHT,
   RWA_TABLE_INITIAL_OVERSCAN_ROWS,

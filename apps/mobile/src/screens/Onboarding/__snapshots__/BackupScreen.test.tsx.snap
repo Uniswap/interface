@@ -250,7 +250,7 @@ exports[`BackupScreen > renders backup options when none are completed 1`] = `
           <div
             fill="none"
             stroke-width="8"
-            style="width: 28px; height: 28px; color: rgba(19, 19, 19, 0.63);"
+            style="color: rgba(19, 19, 19, 0.63); width: 28px; height: 28px;"
             viewbox="0 0 24 24"
           >
             <div
@@ -521,7 +521,7 @@ exports[`BackupScreen > renders backup options when some are completed 1`] = `
           <div
             fill="none"
             stroke-width="8"
-            style="width: 28px; height: 28px; color: rgba(19, 19, 19, 0.63);"
+            style="color: rgba(19, 19, 19, 0.63); width: 28px; height: 28px;"
             viewbox="0 0 24 24"
           >
             <div

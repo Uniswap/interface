@@ -6,8 +6,7 @@
  * variants < props`):
  *
  *  1. the CLOSED variant surface via `../button-compat/compile`'s
- *     `buttonCompatFrameClassName` — byte-identical to the parity-proven
- *     ButtonCompat frame (2,912 computed-style cell-pairs, web-class-pin);
+ *     `buttonCompatFrameClassName` — byte-identical to the ButtonCompat frame;
  *  2. the OPEN legacy style-prop surface (`width`, `mt`, `$md`, `hoverStyle`,
  *     …) via the deterministic-emission engine (`./compile`
  *     `buttonFrameOpenEmission`), the same lane FlexCompat renders through —

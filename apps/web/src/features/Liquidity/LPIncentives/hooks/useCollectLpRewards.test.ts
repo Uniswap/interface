@@ -22,14 +22,14 @@ vi.mock('@tanstack/react-query', async (importOriginal) => ({
   useQueryClient: (): { fetchQuery: typeof fetchQuery } => ({ fetchQuery }),
 }))
 
-vi.mock('~/hooks/useAccount', () => ({
+vi.mock('~/connection/hooks/useAccount', () => ({
   useAccount: (): { address: string; chainId: UniverseChainId } => ({
     address: SAMPLE_SEED_ADDRESS_1,
     chainId: UniverseChainId.Mainnet,
   }),
 }))
 
-vi.mock('~/hooks/useSelectChain', () => ({
+vi.mock('~/connection/hooks/useSelectChain', () => ({
   useSelectChain: (): (() => Promise<boolean>) => async () => true,
 }))
 

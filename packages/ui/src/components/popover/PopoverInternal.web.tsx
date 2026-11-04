@@ -1,5 +1,6 @@
 import { Popover as PopoverPrimitive } from '@base-ui/react/popover'
 import { useSporeColors } from '@universe/mycelium'
+import type { MediaQueryKey } from '@universe/mycelium/theme-hooks-compat'
 import {
   cloneElement,
   type CSSProperties,
@@ -31,7 +32,6 @@ import type {
   PopoverCloseProps,
   PopoverTriggerProps,
 } from 'ui/src/components/popover/types'
-import type { media } from 'ui/src/theme/media'
 import { useComposedRefs } from 'utilities/src/react/composeRefs'
 
 /**
@@ -271,7 +271,7 @@ export function PopoverArrow(props: PopoverArrowProps): JSX.Element | null {
 
 function useAdaptWhenActive(when: PopoverAdaptWhen | undefined): boolean {
   const isMediaKey = typeof when === 'string'
-  const matches = useMediaQueryMatch(isMediaKey ? mediaQueryFor(when as keyof typeof media) : undefined)
+  const matches = useMediaQueryMatch(isMediaKey ? mediaQueryFor(when as MediaQueryKey) : undefined)
   if (typeof when === 'boolean') {
     return when
   }

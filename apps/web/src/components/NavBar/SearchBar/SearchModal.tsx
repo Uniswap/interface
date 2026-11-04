@@ -10,7 +10,8 @@ import { EXPANDABLE_ASSET_SEARCH_ISSUER_ROW_RIGHT_INSET_PX } from 'uniswap/src/f
 import { useFilterCallbacks } from 'uniswap/src/features/search/SearchModal/hooks/useFilterCallbacks'
 import { SearchModalNoQueryList } from 'uniswap/src/features/search/SearchModal/SearchModalNoQueryList'
 import { SearchModalResultsList } from 'uniswap/src/features/search/SearchModal/SearchModalResultsList'
-import { SearchTab, type SearchModalRowWrapper, WEB_SEARCH_TABS } from 'uniswap/src/features/search/SearchModal/types'
+import { SearchTab, type SearchModalRowWrapper } from 'uniswap/src/features/search/SearchModal/types'
+import { getWebSearchTabs } from 'uniswap/src/features/search/SearchModal/utils/getWebSearchTabs'
 import { SearchTextInput } from 'uniswap/src/features/search/SearchTextInput'
 import { ElementName, InterfaceEventName, ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -138,10 +139,13 @@ export const SearchModal = memo(function SearchModalInner({
     return undefined
   }, [isModalOpen])
 
+  const { onChangeChainFilter, onChangeText, searchFilter, chainFilter, parsedChainFilter, parsedSearchFilter } =
+    useFilterCallbacks(null, ModalName.Search)
+
   const [activeTab, setActiveTab] = useState<SearchTab>(SearchTab.All)
   const searchTabs = useMemo(
-    () => (isAuctionSearchEnabled ? WEB_SEARCH_TABS : WEB_SEARCH_TABS.filter((tab) => tab !== SearchTab.Auctions)),
-    [isAuctionSearchEnabled],
+    () => getWebSearchTabs({ isAuctionSearchEnabled, chainFilter }),
+    [isAuctionSearchEnabled, chainFilter],
   )
 
   useEffect(() => {
@@ -150,8 +154,6 @@ export const SearchModal = memo(function SearchModalInner({
     }
   }, [activeTab, searchTabs])
 
-  const { onChangeChainFilter, onChangeText, searchFilter, chainFilter, parsedChainFilter, parsedSearchFilter } =
-    useFilterCallbacks(null, ModalName.Search)
   const debouncedSearchFilter = useDebounce(searchFilter)
   const debouncedParsedSearchFilter = useDebounce(parsedSearchFilter)
 

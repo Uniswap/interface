@@ -57,7 +57,7 @@ vi.mock('~/pages/Swap/Margin/components/shared/MarginLeverageSlider', () => ({
   ),
 }))
 
-vi.mock('~/hooks/useAccount', () => ({ useAccount: () => ({ address: SWAPPER }) }))
+vi.mock('~/connection/hooks/useAccount', () => ({ useAccount: () => ({ address: SWAPPER }) }))
 
 vi.mock('~/pages/Swap/Margin/hooks/useExecuteMarginPlan', () => ({
   useExecuteMarginPlan: () => ({ executePlan: mockExecutePlan }),
@@ -65,8 +65,8 @@ vi.mock('~/pages/Swap/Margin/hooks/useExecuteMarginPlan', () => ({
 
 vi.mock('~/pages/Swap/Margin/hooks/useIsPlanInFlight', () => ({ useIsPlanInFlight: mockUseIsPlanInFlight }))
 
-vi.mock('~/pages/Swap/Margin/hooks/useMarginCurrencyInfos', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('~/pages/Swap/Margin/hooks/useMarginCurrencyInfos')>()),
+vi.mock('~/features/margin/hooks/useMarginCurrencyInfos', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('~/features/margin/hooks/useMarginCurrencyInfos')>()),
   useMarginCurrencyInfos: () => new Map(),
 }))
 
@@ -236,11 +236,6 @@ describe('MarginChangeLeverageModal', () => {
     fireEvent.click(screen.getByLabelText('drag-slider-to-4'))
     expect(screen.getByTestId('slider-value')).toHaveTextContent('4.00')
     expect(lastQuoteArgs().targetLeverageX18).toBe('4000000000000000000')
-  })
-
-  it('does not render the lock-leverage toggle', () => {
-    renderModal()
-    expect(screen.queryByTestId('margin-adjust-position-lock-leverage')).not.toBeInTheDocument()
   })
 
   // The wire omits leverage exactly when equity is at or below zero — the one case with no

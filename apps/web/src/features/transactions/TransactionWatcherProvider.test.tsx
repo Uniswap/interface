@@ -7,15 +7,15 @@ import {
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { vi } from 'vitest'
+import { useAccount } from '~/connection/hooks/useAccount'
 import { TransactionWatcherProvider } from '~/features/transactions/TransactionWatcherProvider'
-import { useAccount } from '~/hooks/useAccount'
 import { useWatchTransactionsCallback } from '~/state/sagas/transactions/watcherSaga'
 import { usePendingTransactions } from '~/state/transactions/hooks'
 import { PendingTransactionDetails } from '~/state/transactions/types'
 import { mocked } from '~/test-utils/mocked'
 import { screen } from '~/test-utils/render'
 
-vi.mock('~/hooks/useAccount')
+vi.mock('~/connection/hooks/useAccount')
 vi.mock('~/state/transactions/hooks', async (importOriginal) => {
   const actual = await importOriginal<typeof import('~/state/transactions/hooks')>()
   return {

@@ -2,6 +2,7 @@ import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Flex, Text, zIndexes } from '@universe/mycelium'
 import { forwardRef } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { formatUnits } from '~/chains'
 import { TOOLTIP_CONFIG } from '~/features/Toucan/Auction/BidDistributionChart/constants'
 import {
@@ -52,6 +53,7 @@ export const ChartBarTooltip = forwardRef<HTMLDivElement, ChartBarTooltipProps>(
   ref,
 ) {
   const { t } = useTranslation()
+  const locale = useCurrentLocale()
   const isTickDetailsTooltipEnabled = useFeatureFlag(FeatureFlags.ToucanTickDetailsTooltip)
   const tickDetails = useAuctionStore((state) => state.tickDetails)
 
@@ -75,7 +77,7 @@ export const ChartBarTooltip = forwardRef<HTMLDivElement, ChartBarTooltipProps>(
   const remainingFormatUnits = remainingRaw !== null ? formatUnits(remainingRaw, bidTokenInfo.decimals) : null
   const remainingDisplay =
     remainingFormatUnits !== null
-      ? formatTokenVolume(Number.parseFloat(remainingFormatUnits), { maxDecimals: 3 })
+      ? formatTokenVolume(Number.parseFloat(remainingFormatUnits), { locale, maxDecimals: 3 })
       : null
 
   const fillRatio =

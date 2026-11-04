@@ -1,7 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { PropsWithChildren, useEffect, useMemo } from 'react'
 import { usePrevious } from 'utilities/src/react/hooks'
-import { useAccount } from '~/hooks/useAccount'
+import { useAccount } from '~/connection/hooks/useAccount'
 import { useWatchTransactionsCallback } from '~/state/sagas/transactions/watcherSaga'
 import { usePendingTransactions } from '~/state/transactions/hooks'
 

@@ -6,6 +6,7 @@ import { useMedia, useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import type { IChartApi, ISeriesApi, UTCTimestamp } from 'lightweight-charts'
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -78,6 +79,7 @@ function BidDistributionChartRendererComponent({
 
   const targetMaxLabels = media.sm ? 4 : media.lg ? 6 : undefined
   const { convertFiatAmountFormatted } = useLocalizationContext()
+  const locale = useCurrentLocale()
   const { getPlotDimensions } = useChartDimensions()
   const { bidOutOfRangeLabel, fdvLabel } = useToucanBidDistributionChartLabels()
 
@@ -203,9 +205,9 @@ function BidDistributionChartRendererComponent({
       // Convert from USD back to token units for display
       // When priceFiat is 0 (unavailable), the amount is already in token units
       const tokenAmount = bidTokenInfo.priceFiat > 0 ? amount / bidTokenInfo.priceFiat : amount
-      return formatTokenVolume(tokenAmount, { maxDecimals: 3 })
+      return formatTokenVolume(tokenAmount, { locale, maxDecimals: 3 })
     },
-    [bidTokenInfo.priceFiat],
+    [bidTokenInfo.priceFiat, locale],
   )
 
   const formatFdvValue = useCallback(

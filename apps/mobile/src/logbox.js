@@ -13,8 +13,6 @@ if (process.env.IS_E2E_TEST === 'true') {
     'Warning: findNodeHandle',
     // https://github.com/d3/d3-interpolate/issues/99
     'Require cycle',
-    'logException:ApolloClient [GraphQL Error]:',
-    'logException:ApolloClient [Network Error]:',
     // https://docs.swmansion.com/react-native-reanimated/docs/guides/troubleshooting#reduced-motion-setting-is-enabled-on-this-device
     '[Reanimated] Reduced motion setting is enabled on this device.',
   ])

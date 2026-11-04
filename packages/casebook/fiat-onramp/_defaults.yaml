@@ -1,0 +1,21 @@
+product_area: fiat_onramp
+platforms: [web, extension, mobile]
+nxProjects: ["@universe/web", uniswap, wallet, "@uniswap/mobile", "@uniswap/extension"]
+owners: ["@uniswap/swap-fe"]
+
+# Casebook area-registry metadata (read by the engine in apps/cli/src/casebook).
+# These drive Testlio suite naming, the PR-comment label, and CI routing.
+label: Fiat Onramp
+suiteNamePrefix: FiatOnramp
+ghLabel: "casebook:fiat-onramp"
+# Reviewer GitHub team for the auto-opened catalog companion PR.
+# Resolved from .github/CODEOWNERS: fiatOnRamp/**, FiatOnRamp*, OffRamp*,
+# ExchangeTransfer*, FORQuote* -> @uniswap/swap-fe.
+reviewerTeam: swap-fe
+teamResolved: true
+
+# Symbolic test-wallet aliases used by scenarios (NO secrets — real mnemonics
+# live in the QA vault / Testlio TL handoff keyed by the same alias).
+wallets:
+  TW-FIATONRAMP-01: "funded wallet: ETH + USDC across mainnet/base/polygon/optimism/arbitrum"
+  TW-FIATONRAMP-02: empty / non-funded fresh wallet, 0 balance

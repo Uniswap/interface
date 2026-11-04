@@ -6,9 +6,9 @@ import { TokenWarningCard } from 'uniswap/src/features/tokens/warnings/TokenWarn
 import TokenWarningModal from 'uniswap/src/features/tokens/warnings/TokenWarningModal'
 import { useIsTokenGeoRestricted } from 'uniswap/src/features/transactions/swap/hooks/useGeoRestrictionMode'
 import { useEvent } from 'utilities/src/react/hooks'
-import { POPUP_MEDIUM_DISMISS_MS } from '~/components/Popups/constants'
-import { popupRegistry } from '~/state/popups/registry'
-import { PopupType } from '~/state/popups/types'
+import { POPUP_MEDIUM_DISMISS_MS } from '~/utils/popups/constants'
+import { popupRegistry } from '~/utils/popups/registry'
+import { PopupType } from '~/utils/popups/types'
 
 export function useTDPTokenWarningDisplay({
   currency,

@@ -2,15 +2,14 @@ import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { MarginActivePosition } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
 import type { MarginManageAction } from 'uniswap/src/features/transactions/margin/types'
+import type { MarginMarketResolver } from '~/features/margin/hooks/useResolveMarginMarket'
+import { marginPositionTokens, marginPositionVenue } from '~/features/margin/utils/marginPositionRow'
 import { MarginAddModal } from '~/pages/Swap/Margin/components/MarginAddModal'
-import { MarginAdjustPositionModal } from '~/pages/Swap/Margin/components/MarginAdjustPositionModal'
 import { MarginChangeLeverageModal } from '~/pages/Swap/Margin/components/MarginChangeLeverageModal'
 import { MarginCloseModal } from '~/pages/Swap/Margin/components/MarginCloseModal'
 import { MarginWithdrawModal } from '~/pages/Swap/Margin/components/MarginWithdrawModal'
-import type { MarginMarketResolver } from '~/pages/Swap/Margin/hooks/useResolveMarginMarket'
-import { marginPositionTokens, marginPositionVenue } from '~/pages/Swap/Margin/marginPositionRow'
-import { popupRegistry } from '~/state/popups/registry'
-import { PopupType } from '~/state/popups/types'
+import { popupRegistry } from '~/utils/popups/registry'
+import { PopupType } from '~/utils/popups/types'
 
 // Renders the expanded-row action modal for the current request. Re-resolves the LATEST position object
 // (and its market) from query data by positionId every render, so values stay fresh across polls; if the
@@ -60,8 +59,6 @@ export function MarginActionModals({
       return <MarginWithdrawModal {...modalProps} />
     case 'leverage':
       return <MarginChangeLeverageModal {...modalProps} />
-    case 'adjust':
-      return <MarginAdjustPositionModal {...modalProps} />
     case 'close':
       return <MarginCloseModal {...modalProps} />
     // Required by type-aware consistent-return, which only runs in the full `check` target.

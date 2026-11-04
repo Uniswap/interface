@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { buildTokenMarketCurrencyId } from '~/features/Toucan/hooks/tokenMarketPriceKeys'
+import { type PriceMap, useCurrencyKeyPriceMap } from '~/features/Toucan/hooks/useCurrencyKeyPriceMap'
 import type { EnrichedAuction } from '~/features/Toucan/hooks/useTopAuctions/useTopAuctions'
-import { type PriceMap, useCurrencyKeyPriceMap } from '~/hooks/useCurrencyKeyPriceMap'
 
 /**
  * Fetches USD prices for the auction tokens (the tokens being auctioned).

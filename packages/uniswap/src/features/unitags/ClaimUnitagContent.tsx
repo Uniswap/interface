@@ -1,6 +1,7 @@
 import { EventConsumer, EventMapBase } from '@react-navigation/core'
 import { isChrome, isMobileApp, isMobileWeb, isWebPlatform } from '@universe/environment'
 import {
+  Button,
   type FlexCompatProps as FlexProps,
   Flex,
   Input,
@@ -9,7 +10,10 @@ import {
   type TextCompatProps as TextProps,
   TouchableArea,
   AnimatedFlex,
+  imageSizes,
 } from '@universe/mycelium'
+import { CheckmarkCircle } from '@universe/mycelium/icons/CheckmarkCircle'
+import { InfoCircleFilled } from '@universe/mycelium/icons/InfoCircleFilled'
 import { Presence } from '@universe/mycelium/presence'
 import { fonts, spacing } from '@universe/mycelium/tokens'
 import { TestID } from '@universe/test'
@@ -17,11 +21,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { LayoutChangeEvent } from 'react-native'
 import { useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
-import { Button } from 'ui/src'
-import { CheckmarkCircle } from 'ui/src/components/icons/CheckmarkCircle'
-import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
-import { imageSizes } from 'ui/src/theme'
 import {
   slideFadePresenceChildProps,
   slideFadePresenceDescendantProps,
@@ -434,8 +434,6 @@ export function ClaimUnitagContent({
           <Button
             size="large"
             variant="branded"
-            animation="200ms"
-            animateOnly={['transform', 'background-color']}
             disabled={shouldBlockContinue || !isUnitagAvailable || !!unitagAvailableError}
             testID={TestID.Continue}
             loading={showVerificationLoading && isCheckingUnitag} // the validation happens really quickly so only show a loading spinner when the user explicitly tries to continue and we're still checking availability

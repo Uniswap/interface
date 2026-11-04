@@ -1,6 +1,16 @@
 import { ValidationType } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/types_pb'
 import type { UniverseChainId } from '@universe/chains'
-import { Button, Flex, fonts, Input, ModalCloseIcon, Text, TouchableArea } from '@universe/mycelium'
+import {
+  Button,
+  Flex,
+  fonts,
+  Input,
+  ModalCloseIcon,
+  Text,
+  TouchableArea,
+  SpinningLoader,
+  Separator,
+} from '@universe/mycelium'
 import { HeightAnimator } from '@universe/mycelium/height-animator'
 import { Code } from '@universe/mycelium/icons/Code'
 import { DocumentList } from '@universe/mycelium/icons/DocumentList'
@@ -10,7 +20,6 @@ import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
 import { UserCheck } from '@universe/mycelium/icons/UserCheck'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Separator, SpinningLoader } from 'ui/src'
 import { CopyHelper } from 'uniswap/src/components/CopyHelper/CopyHelper'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
@@ -289,7 +298,7 @@ export function KycHookSetupModal({
                 ) : null}
 
                 <ExternalLink href={UniswapHelpUrls.articles.toucanLaunchAuctionConfigureAuctionHelp}>
-                  <Text variant="buttonLabel3" color="$accent3" textAlign="center">
+                  <Text variant="buttonLabel3" color="$neutral1" textAlign="center">
                     {t('toucan.createAuction.step.configureAuction.kyc.modal.helpLink')}
                   </Text>
                 </ExternalLink>

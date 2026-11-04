@@ -241,4 +241,5 @@ function ContextMenuWebInner(
   )
 }
 
+// TODO(INFRA-4485): Duplicates mycelium. Use `ContextMenuCompat` from `@universe/mycelium/menu-compat` instead.
 export const ContextMenu = forwardRef(ContextMenuWebInner)

@@ -1,16 +1,24 @@
 import { isMobileApp, isWebPlatform } from '@universe/environment'
-import { Flex, type FlexProps, Text, TouchableArea, useSporeColors } from '@universe/mycelium'
-import { useShadowPropsShort } from '@universe/mycelium/theme-hooks-compat'
+import {
+  Button,
+  type ButtonEmphasis,
+  type ButtonProps,
+  type ButtonVariant,
+  Flex,
+  type FlexProps,
+  Text,
+  TouchableArea,
+  useSporeColors,
+  zIndexes,
+} from '@universe/mycelium'
+import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFilled'
+import { ShieldMagnifyingGlass } from '@universe/mycelium/icons/ShieldMagnifyingGlass'
+import { X } from '@universe/mycelium/icons/X'
+import { useShadowPropsShort, opacify } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
 import { type PropsWithChildren, type ReactNode, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ColorValue } from 'react-native'
-import { Button } from 'ui/src'
-import type { ButtonEmphasis, ButtonProps, ButtonVariant } from 'ui/src/components/buttons/Button/types'
-import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
-import { ShieldMagnifyingGlass } from 'ui/src/components/icons/ShieldMagnifyingGlass'
-import { X } from 'ui/src/components/icons/X'
-import { opacify, zIndexes } from 'ui/src/theme'
 import { ContextMenu, type MenuOptionItem } from 'uniswap/src/components/menus/ContextMenu'
 import { MenuContent } from 'uniswap/src/components/menus/ContextMenuContent'
 import { ContextMenuTriggerButton } from 'uniswap/src/components/menus/ContextMenuTriggerButton'

@@ -142,3 +142,18 @@ export const volumeGatedPercentile = (
   const rolledHits = `${gate.hits}.rollup(sum, ${rollup})`
   return `( ${rolledPercentile} * ${rolledHits} / cutoff_min(${rolledHits}, ${gate.floor}) )`
 }
+
+// The web client calls Privy's encrypted authorization keys endpoint (the passkey recovery blob)
+// directly, so web RUM resource events are the only record of those calls.
+export const webRumScope = (environment: string): string =>
+  environment === 'prod' ? 'service:web-prod env:(production OR prod)' : 'service:web-beta'
+
+export const PRIVY_RECOVERY_BLOB_RESOURCE =
+  '@type:resource @resource.url_host:*privy* @resource.url_path:*encrypted_authorization_keys*'
+
+// Status 0 is a request the browser blocked or could not complete (CORS, network).
+export const PRIVY_RECOVERY_BLOB_FAILURE = '(@resource.status_code:0 OR @resource.status_code:[400 TO 599])'
+
+// Longest event-monitor window: RUM is session-sampled and the endpoint sees about one call a day.
+export const PRIVY_RECOVERY_BLOB_WINDOW = '2d'
+export const PRIVY_RECOVERY_BLOB_WINDOW_LABEL = '2 days'

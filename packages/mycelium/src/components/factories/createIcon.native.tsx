@@ -3,8 +3,7 @@
  * and prop surface as the web leg, rendered through react-native-svg (an
  * optional peer with a pinned devDependency — the Shimmer mechanism).
  *
- * Styling story, mirroring the rebuilt `ui/src` factory's native behavior
- * (INFRA-3314 / #38686): every supported style prop resolves to a plain RN
+ * Styling story: every supported style prop resolves to a plain RN
  * inline-style value on the root `Svg` — theme-aware LITERAL colors via the
  * compat `useSporeColors` native leg (uniwind's runtime theme; CSS variables
  * do not exist on device), numeric px sizes, RN transform arrays. `$xs`/`$sm`
@@ -171,8 +170,8 @@ export function createIcon({
 
   /**
    * The `Animated<Name>` twin, legacy-shaped: reanimated's
-   * `createAnimatedComponent` over a class wrapper (the `ui/src`
-   * `withAnimated` mechanism — reanimated needs a class or forwardRef target),
+   * `createAnimatedComponent` over a class wrapper (reanimated needs a class
+   * or forwardRef target),
    * so `entering`/`exiting`/`layout` animate on device like the legacy twins.
    */
   class WithAnimated extends React.Component<GeneratedIconProps> {

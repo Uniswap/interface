@@ -7,11 +7,11 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 // the response/request adapters. The shared client's own PATCH-cancel wire contract is covered in
 // createTradingApiClient.test.ts.
 const mocks = vi.hoisted(() => ({
+  get: vi.fn(),
   post: vi.fn(),
   createNewPlan: vi.fn(),
   getExistingPlan: vi.fn(),
   updateExistingPlan: vi.fn(),
-  cancelExistingPlan: vi.fn(),
 }))
 
 vi.mock('@universe/api', async (importOriginal) => {
@@ -21,7 +21,7 @@ vi.mock('@universe/api', async (importOriginal) => {
     createTradingApiFetchClient: vi.fn(() => ({
       context: () => ({}),
       fetch: vi.fn(),
-      get: vi.fn(),
+      get: mocks.get,
       post: mocks.post,
       put: vi.fn(),
       delete: vi.fn(),
@@ -35,13 +35,19 @@ vi.mock('uniswap/src/data/apiClients/tradingApi/TradingApiSessionClient', () => 
     createNewPlan: mocks.createNewPlan,
     getExistingPlan: mocks.getExistingPlan,
     updateExistingPlan: mocks.updateExistingPlan,
-    cancelExistingPlan: mocks.cancelExistingPlan,
     fetchPlan: vi.fn(),
     refreshExistingPlan: vi.fn(),
   },
 }))
 
+import { MARGIN_POSITION_ACTIVITY_WIRE_CLOSED } from 'uniswap/src/data/apiClients/tradingApi/__fixtures__/marginPositionActivityWire'
 import {
+  MARGIN_POSITIONS_WIRE_ACTIVE,
+  MARGIN_POSITIONS_WIRE_TERMINAL,
+} from 'uniswap/src/data/apiClients/tradingApi/__fixtures__/marginPositionsWire'
+import {
+  MARGIN_ACTIVE_POSITION_STATUSES,
+  MARGIN_TERMINAL_POSITION_STATUSES,
   MarginApiClient,
   type MarginQuoteRequest,
   type MarginQuoteResponse,
@@ -71,6 +77,30 @@ function fakeSharedPlanResponse(overrides: Partial<TradingApi.PlanResponse> = {}
     },
     ...overrides,
   }
+}
+
+function executePlanWithIntent(intent: string): TradingApi.PlanResponse {
+  return fakeSharedPlanResponse({
+    status: TradingApi.PlanStatus.AWAITING_ACTION,
+    marginIntent: {
+      intent,
+      subId: '0',
+      marketKey: 'mk',
+      collateralToken: '0xcollateral',
+      debtToken: '0xdebt',
+      venue: 'MORPHO',
+    },
+    steps: [
+      {
+        stepIndex: 0,
+        method: TradingApi.PlanStepMethod.SEND_TX,
+        payloadType: TradingApi.PlanStepPayloadType.TX,
+        payload: { to: '0xto', data: '0x', chainId: 1 },
+        status: TradingApi.PlanStepStatus.AWAITING_ACTION,
+        stepType: TradingApi.PlanStepType.MARGIN_EXECUTE,
+      },
+    ],
+  })
 }
 
 function fakeQuoteResponse(overrides: Partial<MarginQuoteResponse> = {}): MarginQuoteResponse {
@@ -154,7 +184,6 @@ describe('MarginApiClient plan methods (shared /plan facade)', () => {
     mocks.createNewPlan.mockReset()
     mocks.getExistingPlan.mockReset()
     mocks.updateExistingPlan.mockReset()
-    mocks.cancelExistingPlan.mockReset()
   })
 
   it('createMarginPlan posts a CHAINED body with the proto-shaped marginQuote (requestId + execution only)', async () => {
@@ -281,46 +310,41 @@ describe('MarginApiClient plan methods (shared /plan facade)', () => {
   })
 
   // The deployed plan service emits ONE MARGIN_EXECUTE step for every margin action and names the action
-  // only on marginIntent.intent (the proto enum's full member name). Resolve it back to the action step
-  // type the executor and activity extractor branch on, and collapse the wire intent to the FE vocabulary.
+  // only on marginIntent.intent — the proto member with its MARGIN_INTENT_ prefix stripped, as the
+  // service's own toMarginPlanIntentView writes it. Resolve it back to the action step type the executor
+  // and activity extractor branch on, collapse it to the FE intent, and keep the action for the modal.
   it.each([
-    ['MARGIN_INTENT_OPEN', 'OPEN', 'MARGIN_OPEN'],
-    ['MARGIN_INTENT_CLOSE', 'CLOSE', 'MARGIN_CLOSE'],
-    ['MARGIN_INTENT_INCREASE_LEVERAGE', 'ADJUST', 'MARGIN_ADJUST'],
-    ['MARGIN_INTENT_ADD_EQUITY', 'ADJUST', 'MARGIN_ADJUST'],
+    ['OPEN', 'OPEN', 'open', 'MARGIN_OPEN'],
+    ['CLOSE', 'CLOSE', 'close', 'MARGIN_CLOSE'],
+    ['INCREASE_LEVERAGE', 'ADJUST', 'increaseLeverage', 'MARGIN_ADJUST'],
+    ['DECREASE_LEVERAGE', 'ADJUST', 'decreaseLeverage', 'MARGIN_ADJUST'],
+    ['ADD_EQUITY', 'ADJUST', 'addEquity', 'MARGIN_ADJUST'],
+    ['WITHDRAW_EQUITY', 'ADJUST', 'withdrawEquity', 'MARGIN_ADJUST'],
+    ['ADD_EQUITY_AND_INCREASE_LEVERAGE', 'ADJUST', 'addEquityAndIncreaseLeverage', 'MARGIN_ADJUST'],
+    ['ADD_EQUITY_AND_DECREASE_LEVERAGE', 'ADJUST', 'addEquityAndDecreaseLeverage', 'MARGIN_ADJUST'],
+    ['WITHDRAW_EQUITY_AND_INCREASE_LEVERAGE', 'ADJUST', 'withdrawEquityAndIncreaseLeverage', 'MARGIN_ADJUST'],
+    ['WITHDRAW_EQUITY_AND_DECREASE_LEVERAGE', 'ADJUST', 'withdrawEquityAndDecreaseLeverage', 'MARGIN_ADJUST'],
   ])(
-    'getMarginPlan resolves a MARGIN_EXECUTE step under %s to intent %s / step %s',
-    async (wireIntent, expectedIntent, expectedStepType) => {
-      mocks.getExistingPlan.mockResolvedValue(
-        fakeSharedPlanResponse({
-          status: TradingApi.PlanStatus.AWAITING_ACTION,
-          marginIntent: {
-            intent: wireIntent,
-            subId: '0',
-            marketKey: 'mk',
-            collateralToken: '0xcollateral',
-            debtToken: '0xdebt',
-            venue: 'MORPHO',
-          },
-          steps: [
-            {
-              stepIndex: 0,
-              method: TradingApi.PlanStepMethod.SEND_TX,
-              payloadType: TradingApi.PlanStepPayloadType.TX,
-              payload: { to: '0xto', data: '0x', chainId: 1 },
-              status: TradingApi.PlanStepStatus.AWAITING_ACTION,
-              stepType: TradingApi.PlanStepType.MARGIN_EXECUTE,
-            },
-          ],
-        }),
-      )
+    'getMarginPlan resolves a MARGIN_EXECUTE step under %s to intent %s / action %s / step %s',
+    async (wireIntent, expectedIntent, expectedAction, expectedStepType) => {
+      mocks.getExistingPlan.mockResolvedValue(executePlanWithIntent(wireIntent))
 
       const result = await MarginApiClient.getMarginPlan({ planId: 'plan-42' })
 
       expect(result.intent).toBe(expectedIntent)
+      expect(result.action).toBe(expectedAction)
       expect(result.steps[0]?.stepType).toBe(expectedStepType)
     },
   )
+
+  it('getMarginPlan passes an unknown wire intent through verbatim with no action', async () => {
+    mocks.getExistingPlan.mockResolvedValue(executePlanWithIntent('SOMETHING_NEW'))
+
+    const result = await MarginApiClient.getMarginPlan({ planId: 'plan-42' })
+
+    expect(result.intent).toBe('SOMETHING_NEW')
+    expect(result.action).toBeUndefined()
+  })
 
   it('getMarginPlan throws when the plan carries no marginIntent', async () => {
     mocks.getExistingPlan.mockResolvedValue(fakeSharedPlanResponse({ marginIntent: undefined }))
@@ -335,15 +359,6 @@ describe('MarginApiClient plan methods (shared /plan facade)', () => {
     await MarginApiClient.updateMarginPlan({ planId: 'plan-42', steps })
 
     expect(mocks.updateExistingPlan).toHaveBeenCalledWith({ planId: 'plan-42', steps })
-  })
-
-  it('cancelMarginPlan cancels via the shared client and adapts the response', async () => {
-    mocks.cancelExistingPlan.mockResolvedValue(fakeSharedPlanResponse({ status: TradingApi.PlanStatus.CANCELLED }))
-
-    const result = await MarginApiClient.cancelMarginPlan({ planId: 'plan-42' })
-
-    expect(mocks.cancelExistingPlan).toHaveBeenCalledWith({ planId: 'plan-42' })
-    expect(result.status).toBe('CANCELLED')
   })
 })
 
@@ -377,5 +392,131 @@ describe('MarginApiClient.fetchMarginQuote', () => {
     // POST /plan reads `marginQuote.execution` (and re-derives every bound from it), so the adapter
     // must carry the wire execution subtree through UNTOUCHED rather than only the flat display view.
     expect(result.execution).toEqual(fakeWireQuoteResponse().execution)
+  })
+})
+
+describe('MarginApiClient.fetchMarginPositions', () => {
+  const SWAPPER = '0x77FE1851F5ebAd6e5C3d696f120CA7ce01144Cca'
+
+  beforeEach(() => {
+    mocks.get.mockReset()
+  })
+
+  it('asks for ACTIVE alone for the Active tab', async () => {
+    mocks.get.mockResolvedValue(MARGIN_POSITIONS_WIRE_ACTIVE)
+    await MarginApiClient.fetchMarginPositions({
+      swapper: SWAPPER,
+      chainId: 1,
+      statuses: MARGIN_ACTIVE_POSITION_STATUSES,
+    })
+    expect(mocks.get).toHaveBeenCalledWith(
+      expect.stringMatching(/\/margin\/positions$/),
+      expect.objectContaining({ params: { swapper: SWAPPER, chainId: 1, statuses: 'ACTIVE' } }),
+    )
+  })
+
+  it('asks for the three finished statuses comma-separated for the Closed tab', async () => {
+    mocks.get.mockResolvedValue(MARGIN_POSITIONS_WIRE_TERMINAL)
+    await MarginApiClient.fetchMarginPositions({
+      swapper: SWAPPER,
+      chainId: 1,
+      statuses: MARGIN_TERMINAL_POSITION_STATUSES,
+    })
+    expect(mocks.get).toHaveBeenCalledWith(
+      expect.stringMatching(/\/margin\/positions$/),
+      expect.objectContaining({
+        params: { swapper: SWAPPER, chainId: 1, statuses: 'COMPLETED,LIQUIDATED,PARTIALLY_LIQUIDATED' },
+      }),
+    )
+  })
+
+  it('echoes a cursor alongside the statuses that issued it', async () => {
+    mocks.get.mockResolvedValue(MARGIN_POSITIONS_WIRE_TERMINAL)
+    await MarginApiClient.fetchMarginPositions({
+      swapper: SWAPPER,
+      chainId: 1,
+      statuses: MARGIN_TERMINAL_POSITION_STATUSES,
+      cursor: 'opaque',
+    })
+    expect(mocks.get).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.objectContaining({ params: expect.objectContaining({ cursor: 'opaque' }) }),
+    )
+  })
+
+  it('returns the view shape, not the flat wire rows', async () => {
+    mocks.get.mockResolvedValue(MARGIN_POSITIONS_WIRE_ACTIVE)
+    const response = await MarginApiClient.fetchMarginPositions({
+      swapper: SWAPPER,
+      chainId: 1,
+      statuses: MARGIN_ACTIVE_POSITION_STATUSES,
+    })
+    expect(response.positions.map((position) => [position.positionId, position.legs[0]?.venue])).toEqual([
+      ['1', 'AAVE_V3'],
+    ])
+  })
+
+  it('surfaces a refused status set instead of an empty tab', async () => {
+    mocks.get.mockRejectedValue(new Error('RequestValidationError'))
+    await expect(
+      MarginApiClient.fetchMarginPositions({ swapper: SWAPPER, chainId: 1, statuses: MARGIN_ACTIVE_POSITION_STATUSES }),
+    ).rejects.toThrow('RequestValidationError')
+  })
+})
+
+describe('MarginApiClient.fetchMarginPositionActivity', () => {
+  const ACTIVITY_ID = '0xf711ee1997f7c39f15f4eddb0707107faac91cb743706fdad926a0c544676a7e'
+
+  beforeEach(() => {
+    mocks.get.mockReset()
+  })
+
+  it('asks for the lifecycle by its activityId and serves its events in Unix seconds', async () => {
+    mocks.get.mockResolvedValue(MARGIN_POSITION_ACTIVITY_WIRE_CLOSED)
+    const activity = await MarginApiClient.fetchMarginPositionActivity({ activityId: ACTIVITY_ID })
+    expect(mocks.get).toHaveBeenCalledTimes(1)
+    expect(mocks.get).toHaveBeenCalledWith(
+      expect.stringMatching(/\/margin\/positions\/activity$/),
+      expect.objectContaining({ params: { activityId: ACTIVITY_ID } }),
+    )
+    expect(activity.map((event) => [event.kind, event.timestamp])).toEqual([
+      ['MARGIN_ACTIVITY_KIND_OPEN', '1791907955'],
+      ['MARGIN_ACTIVITY_KIND_INCREASE', '1792513367'],
+      ['MARGIN_ACTIVITY_KIND_ADD_EQUITY', '1792513511'],
+      ['MARGIN_ACTIVITY_KIND_CLOSE', '1792513559'],
+    ])
+  })
+
+  // Oldest first, so a lifecycle past one page has its newest events on the last page.
+  it('follows nextCursor to the last page, echoing it with the same activityId', async () => {
+    const { activity } = MARGIN_POSITION_ACTIVITY_WIRE_CLOSED
+    mocks.get
+      .mockResolvedValueOnce({
+        ...MARGIN_POSITION_ACTIVITY_WIRE_CLOSED,
+        activity: activity.slice(0, 3),
+        nextCursor: 'c1',
+      })
+      .mockResolvedValueOnce({ ...MARGIN_POSITION_ACTIVITY_WIRE_CLOSED, activity: activity.slice(3) })
+    const events = await MarginApiClient.fetchMarginPositionActivity({ activityId: ACTIVITY_ID })
+    expect(mocks.get.mock.calls.map(([, options]) => options.params)).toEqual([
+      { activityId: ACTIVITY_ID },
+      { activityId: ACTIVITY_ID, cursor: 'c1' },
+    ])
+    expect(events.at(-1)?.kind).toBe('MARGIN_ACTIVITY_KIND_CLOSE')
+  })
+
+  it('stops paging after a bounded number of pages when the cursor never ends', async () => {
+    mocks.get.mockResolvedValue({ ...MARGIN_POSITION_ACTIVITY_WIRE_CLOSED, nextCursor: 'again' })
+    await MarginApiClient.fetchMarginPositionActivity({ activityId: ACTIVITY_ID })
+    expect(mocks.get).toHaveBeenCalledTimes(10)
+  })
+
+  it('rejects when a page fails, rather than serving a partial lifecycle', async () => {
+    mocks.get
+      .mockResolvedValueOnce({ ...MARGIN_POSITION_ACTIVITY_WIRE_CLOSED, nextCursor: 'c1' })
+      .mockRejectedValueOnce(new Error('upstream 503'))
+    await expect(MarginApiClient.fetchMarginPositionActivity({ activityId: ACTIVITY_ID })).rejects.toThrow(
+      'upstream 503',
+    )
   })
 })

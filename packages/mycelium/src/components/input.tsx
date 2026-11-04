@@ -1,6 +1,16 @@
 import * as React from 'react'
 import { cn } from '../cn'
 
+/**
+ * Web-only Tailwind input: a plain <input> with DOM props (`onChange`, `type`,
+ * `className`). Use it for new web-only code.
+ *
+ * Cross-platform and legacy call sites use the compat `Input` from the
+ * `@universe/mycelium` root (`input-compat/`) instead: it takes React Native
+ * TextInput props (`onChangeText`, `keyboardType`, `secureTextEntry`) plus the
+ * legacy Tamagui style props (`fontSize="$medium"`, `$md`, `focusStyle`), and
+ * renders an RN TextInput on native.
+ */
 const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<'input'>>(
   ({ className, type, ...props }, ref) => {
     return (

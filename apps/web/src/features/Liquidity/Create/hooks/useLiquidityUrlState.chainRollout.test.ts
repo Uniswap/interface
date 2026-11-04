@@ -10,7 +10,7 @@ import {
   useLiquidityUrlState,
 } from '~/features/Liquidity/Create/hooks/useLiquidityUrlState'
 import { DEFAULT_FEE_DATA, PositionFlowStep } from '~/features/Liquidity/Create/types'
-import { useCurrencyWithLoading } from '~/hooks/Tokens'
+import { useCurrencyWithLoading } from '~/hooks/currency/useCurrencyWithLoading'
 import { mocked } from '~/test-utils/mocked'
 import { act, renderHook } from '~/test-utils/render'
 
@@ -23,14 +23,7 @@ vi.mock('nuqs', async () => {
   }
 })
 
-vi.mock('~/hooks/Tokens', async () => {
-  const actual = await vi.importActual('~/hooks/Tokens')
-  return {
-    ...actual,
-    useCurrencyWithLoading: vi.fn(),
-    checkIsNative: actual.checkIsNative,
-  }
-})
+vi.mock('~/hooks/currency/useCurrencyWithLoading', () => ({ useCurrencyWithLoading: vi.fn() }))
 
 // Drives testnet mode without touching `setIsTestnetModeEnabled`, whose usages are deliberately vetted.
 // `useEnabledChains` reads this selector, so mocking it moves both the enabled-chain set and the

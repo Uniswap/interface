@@ -1,4 +1,3 @@
-import { GraphQLApi } from '@universe/api'
 import { ColorTokens } from '@universe/mycelium'
 import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import { CustomStyleOptions, DeepPartial, ISeriesApi, Logical, UTCTimestamp, WhitespaceData } from 'lightweight-charts'
@@ -7,7 +6,6 @@ import { ChartHeader } from '~/components/Charts/ChartHeader'
 import { Chart, ChartModel, ChartModelParams } from '~/components/Charts/ChartModel'
 import { StackedAreaSeriesOptions } from '~/components/Charts/StackedLineChart/stacked-area-series/options'
 import { StackedAreaSeries } from '~/components/Charts/StackedLineChart/stacked-area-series/stacked-area-series'
-import { getProtocolColor } from '~/data/util'
 
 export interface StackedLineData extends WhitespaceData<UTCTimestamp> {
   values: number[]
@@ -82,20 +80,19 @@ class TVLChartModel extends ChartModel<StackedLineData> {
 
 interface LineChartProps {
   height: number
-  sources?: GraphQLApi.PriceSource[]
   data: StackedLineData[]
   stale: boolean
   overrideColor?: string
 }
 
-export function LineChart({ height, data, sources, stale, overrideColor }: LineChartProps) {
+export function LineChart({ height, data, stale, overrideColor }: LineChartProps) {
   const sporeColors = useSporeColors()
   // Theme handling is now done in the chart model via ThemeProvider
 
   const params = useMemo(() => {
-    const chartColors = sources?.map((source) => getProtocolColor(source)) ?? [sporeColors.accent1.val]
+    const chartColors = [sporeColors.accent1.val]
     return { data, chartColors, stale }
-  }, [data, sporeColors, sources, stale])
+  }, [data, sporeColors, stale])
 
   const lastEntry = data[data.length - 1]
   const isSingleLineChart = params.chartColors.length === 1
@@ -112,7 +109,6 @@ export function LineChart({ height, data, sources, stale, overrideColor }: LineC
         <ChartHeader
           value={(crosshairData ?? lastEntry).values.reduce((v, sum) => (sum += v), 0)}
           time={crosshairData?.time}
-          protocolData={sources?.map((source, index) => ({ protocol: source, value: crosshairData?.values[index] }))}
         />
       )}
     </Chart>

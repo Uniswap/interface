@@ -7,10 +7,10 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { TokenLaunchedBanner } from '~/features/Toucan/Auction/Banners/TokenLaunched/TokenLaunchedBanner'
 import { useTokenLaunchedBannerPriceData } from '~/features/Toucan/Auction/Banners/TokenLaunched/useTokenLaunchedBannerPriceData'
 import { useAuctionRedemption } from '~/features/Toucan/Auction/hooks/useAuctionRedemption'
+import { useTokenPoolState } from '~/features/Toucan/Auction/hooks/useTokenPoolState'
 import { AuctionStoreContext } from '~/features/Toucan/Auction/store/AuctionStoreContext'
 import { createAuctionStore } from '~/features/Toucan/Auction/store/createAuctionStore'
 import { AuctionCheckpointLoadState, AuctionDetails, AuctionOutcome } from '~/features/Toucan/Auction/store/types'
-import { useTokenPoolState } from '~/hooks/useTokenPoolState'
 import { render, screen } from '~/test-utils/render'
 import type { TokenPoolState } from '~/types/tokenPool'
 
@@ -24,7 +24,7 @@ vi.mock('~/features/Toucan/Auction/Banners/TokenLaunched/useTokenLaunchedBannerP
 vi.mock('~/features/Toucan/Auction/hooks/useAuctionRedemption', () => ({
   useAuctionRedemption: vi.fn(),
 }))
-vi.mock('~/hooks/useTokenPoolState', () => ({ useTokenPoolState: vi.fn() }))
+vi.mock('~/features/Toucan/Auction/hooks/useTokenPoolState', () => ({ useTokenPoolState: vi.fn() }))
 vi.mock('~/features/Toucan/Auction/Banners/TokenLaunched/useRealTokenMarketInfo', () => ({
   useRealTokenMarketInfo: () => ({ name: 'Cap', fdvUsd: 558_030_615, loading: false }),
 }))
@@ -238,7 +238,7 @@ describe('TokenLaunchedBanner redeemable token trading', () => {
       chainId: UniverseChainId.Mainnet,
       loading: false,
     })
-    // GraphQL reports zero for CAP's price and history despite existing underlying pools.
+    // The price service reports zero for CAP's price and history despite existing underlying pools.
     vi.mocked(useTokenLaunchedBannerPriceData).mockReturnValue({
       data: undefined,
       loading: false,
@@ -255,7 +255,7 @@ describe('TokenLaunchedBanner redeemable token trading', () => {
     })
   }
 
-  it('offers trading when CAP has an underlying pool despite its zero GraphQL price', () => {
+  it('offers trading when CAP has an underlying pool despite its zero reported price', () => {
     vi.mocked(useTokenPoolState).mockReturnValue({
       poolState: { status: 'success', poolCount: 7 },
       refetch: vi.fn(),

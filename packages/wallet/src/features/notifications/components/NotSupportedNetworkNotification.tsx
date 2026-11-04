@@ -1,5 +1,5 @@
+import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFilled'
 import { useTranslation } from 'react-i18next'
-import { AlertTriangleFilled } from 'ui/src/components/icons'
 import { NotificationToast } from 'uniswap/src/components/notifications/NotificationToast'
 import { NotSupportedNetworkNotification as NotSupportedNetworkNotificationType } from 'uniswap/src/features/notifications/slice/types'
 

@@ -17,8 +17,7 @@ import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { ToucanGeoRestrictionCard } from '~/components/GeoRestriction/ToucanGeoRestrictionCard'
 import { useToucanGeoRestriction } from '~/components/GeoRestriction/useToucanGeoRestriction'
 import { CurrencySearchModal } from '~/components/SearchModal/CurrencySearchModal'
-import { useActiveAddress } from '~/features/accounts/store/hooks'
-import { useTotalSupply } from '~/hooks/useTotalSupply'
+import { useActiveAddress } from '~/connection/accounts/hooks'
 import { getAuctionTokenInfoEnteredProperties } from '~/pages/Liquidity/CreateAuction/analytics'
 import { ExistingTokenInfoDisplay } from '~/pages/Liquidity/CreateAuction/components/ExistingTokenInfoDisplay'
 import { NoWalletSection } from '~/pages/Liquidity/CreateAuction/components/NoWalletSection'
@@ -26,8 +25,9 @@ import { useCreateAuctionStoreActions } from '~/pages/Liquidity/CreateAuction/Cr
 import { useCreateAuctionAllowedNetworks } from '~/pages/Liquidity/CreateAuction/hooks/useAllowedNetworks'
 import { useCreateAuctionTokenColor } from '~/pages/Liquidity/CreateAuction/hooks/useCreateAuctionTokenColor'
 import { useIsStepValid } from '~/pages/Liquidity/CreateAuction/hooks/useIsStepValid'
+import { useTotalSupply } from '~/pages/Liquidity/CreateAuction/hooks/useTotalSupply'
 import { CreateAuctionStep, type ExistingTokenFormState } from '~/pages/Liquidity/CreateAuction/types'
-import { SwitchNetworkAction } from '~/state/popups/types'
+import { SwitchNetworkAction } from '~/utils/popups/types'
 
 export function ExistingTokenForm({ existing }: { existing: ExistingTokenFormState }) {
   const { t } = useTranslation()

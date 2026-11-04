@@ -1,4 +1,5 @@
 import { getSubscriptNotationParts } from 'utilities/src/format/getSubscriptNotationParts'
+import { getLocaleNumberSeparators } from 'utilities/src/format/localeNumberSeparators'
 import { roundForDisplay } from 'utilities/src/format/roundForDisplay'
 import { toSubscript } from 'utilities/src/format/toSubscript'
 
@@ -23,9 +24,9 @@ interface FormatTokenPriceResult {
  */
 export function formatTokenPriceSubscript(
   price: number,
-  options?: { minSigDigits?: number; maxSigDigits?: number },
+  options: { locale: string; minSigDigits?: number; maxSigDigits?: number },
 ): FormatTokenPriceResult {
-  const { minSigDigits = 3, maxSigDigits = 4 } = options ?? {}
+  const { locale, minSigDigits = 3, maxSigDigits = 4 } = options
 
   if (price === 0) {
     return { text: '0', html: '0', usesSubscript: false }
@@ -37,7 +38,7 @@ export function formatTokenPriceSubscript(
 
   // For numbers >= 1, use standard formatting
   if (absValue >= 1) {
-    const formatted = new Intl.NumberFormat(undefined, {
+    const formatted = new Intl.NumberFormat(locale, {
       minimumSignificantDigits: Math.min(minSigDigits, 3),
       maximumSignificantDigits: maxSigDigits,
     }).format(roundedPrice)
@@ -51,14 +52,15 @@ export function formatTokenPriceSubscript(
   })
 
   if (subscriptParts?.usesSubscript) {
+    const prefix = `0${getLocaleNumberSeparators(locale).decimal}0`
     return {
-      text: `0.0${toSubscript(subscriptParts.leadingZeros)}${subscriptParts.significantPart}`,
-      html: `0.0<span style="font-size: 0.75em; vertical-align: baseline; position: relative; top: 0.1em;">${subscriptParts.leadingZeros}</span>${subscriptParts.significantPart}`,
+      text: `${prefix}${toSubscript(subscriptParts.leadingZeros)}${subscriptParts.significantPart}`,
+      html: `${prefix}<span style="font-size: 0.75em; vertical-align: baseline; position: relative; top: 0.1em;">${subscriptParts.leadingZeros}</span>${subscriptParts.significantPart}`,
       usesSubscript: true,
     }
   }
 
-  const formatted = new Intl.NumberFormat(undefined, {
+  const formatted = new Intl.NumberFormat(locale, {
     minimumSignificantDigits: minSigDigits,
     maximumSignificantDigits: maxSigDigits,
   }).format(roundedPrice)
@@ -71,8 +73,8 @@ export function formatTokenPriceSubscript(
  * Example: 1234.567 → "1,234.57"
  * Example: 0.00000001234 → "0.0₈1234"
  */
-export function formatTokenVolume(amount: number, options?: { maxDecimals?: number }): string {
-  const { maxDecimals = 3 } = options ?? {}
+export function formatTokenVolume(amount: number, options: { locale: string; maxDecimals?: number }): string {
+  const { locale, maxDecimals = 3 } = options
 
   if (amount === 0) {
     return '0'
@@ -82,7 +84,7 @@ export function formatTokenVolume(amount: number, options?: { maxDecimals?: numb
 
   // For values >= 0.001, use standard formatting
   if (absValue >= 0.001) {
-    return new Intl.NumberFormat(undefined, {
+    return new Intl.NumberFormat(locale, {
       minimumFractionDigits: 0,
       maximumFractionDigits: maxDecimals,
     }).format(amount)
@@ -96,11 +98,11 @@ export function formatTokenVolume(amount: number, options?: { maxDecimals?: numb
 
   if (subscriptParts?.usesSubscript) {
     const sign = amount < 0 ? '-' : ''
-    return `${sign}0.0${toSubscript(subscriptParts.leadingZeros)}${subscriptParts.significantPart}`
+    return `${sign}0${getLocaleNumberSeparators(locale).decimal}0${toSubscript(subscriptParts.leadingZeros)}${subscriptParts.significantPart}`
   }
 
   // For small but not tiny values, use scientific notation or more decimals
-  return new Intl.NumberFormat(undefined, {
+  return new Intl.NumberFormat(locale, {
     minimumSignificantDigits: 2,
     maximumSignificantDigits: 4,
   }).format(amount)

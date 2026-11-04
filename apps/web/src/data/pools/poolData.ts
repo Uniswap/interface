@@ -61,4 +61,7 @@ export interface PoolData {
    * never computes it, so an absent value renders as "unavailable" rather than 0.
    */
   protocolFeePips?: number
+
+  /** Pool category ids in display precedence order, from `PoolSummary.category_ids`; empty when uncategorized. */
+  categoryIds?: string[]
 }

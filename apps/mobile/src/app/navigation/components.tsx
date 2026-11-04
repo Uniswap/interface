@@ -1,8 +1,8 @@
 import { Text, TouchableArea } from '@universe/mycelium'
+import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
 import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
 import { BackButton } from 'src/components/buttons/BackButton'
-import { RotatableChevron } from 'ui/src/components/icons'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 

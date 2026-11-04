@@ -1,6 +1,6 @@
 import { UniverseChainId, Platform, getValidAddress } from '@universe/chains'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
-import { buildCurrencyId, currencyIdToGraphQLAddress } from 'uniswap/src/utils/currencyId'
+import { buildCurrencyId, currencyIdToContractAddress } from 'uniswap/src/utils/currencyId'
 
 export const BACKEND_NATIVE_CHAIN_ADDRESS_STRING = 'NATIVE'
 
@@ -26,5 +26,5 @@ export function tokenAddressOrNativeAddress(address: string, chainId: UniverseCh
     return address
   }
 
-  return currencyIdToGraphQLAddress(buildCurrencyId(chainId, nativeAddress))
+  return currencyIdToContractAddress(buildCurrencyId(chainId, nativeAddress))
 }

@@ -1,10 +1,8 @@
-import { Flex, Shine, Text, TouchableArea } from '@universe/mycelium'
+import { DropdownButton, Flex, Shine, Text, TouchableArea, iconSizes } from '@universe/mycelium'
+import { X } from '@universe/mycelium/icons/X'
 import { TestID } from '@universe/test'
 import type { ComponentProps } from 'react'
 import { useTranslation } from 'react-i18next'
-import { DropdownButton } from 'ui/src'
-import { X } from 'ui/src/components/icons/X'
-import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 

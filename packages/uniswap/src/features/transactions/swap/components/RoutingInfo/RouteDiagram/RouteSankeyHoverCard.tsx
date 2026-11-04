@@ -129,19 +129,15 @@ function LinkHoverCard({
             {link.protocol.toLowerCase()}
           </Text>
         </Flex>
-        <Flex row alignItems="center" gap="$spacing4">
+        <Text variant="body4" color="$neutral2" whiteSpace="nowrap">
+          {t('swap.routing.guidestar.share', { share: formatPercent(link.shareBps / BPS_PER_PERCENT, 1) })}
+        </Text>
+        {/* Own row: share + USD in→out together overflow the fixed card width. */}
+        {usd && (
           <Text variant="body4" color="$neutral2" whiteSpace="nowrap">
-            {t('swap.routing.guidestar.share', { share: formatPercent(link.shareBps / BPS_PER_PERCENT, 1) })}
+            {usd}
           </Text>
-          {usd && (
-            <>
-              <Dot />
-              <Text variant="body4" color="$neutral2" whiteSpace="nowrap">
-                {usd}
-              </Text>
-            </>
-          )}
-        </Flex>
+        )}
         {link.hooks && (
           <Text variant="body4" color="$neutral2" whiteSpace="nowrap">
             {t('liquidity.hooks.address.tooltip', { address: shortenAddress({ address: link.hooks }) })}

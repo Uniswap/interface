@@ -1,6 +1,5 @@
 import type { PlainMessage } from '@bufbuild/protobuf'
 import type { Auction } from '@uniswap/client-launches/dist/data/v1/auction_pb'
-import { GraphQLApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
 import { type ReactNode, useContext, useEffect } from 'react'
 import { useParams } from 'react-router'
@@ -27,7 +26,6 @@ function createDerivedState(overrides: {
 }) {
   return {
     state: {
-      currencyChain: GraphQLApi.Chain.Ethereum,
       currencyChainId: UniverseChainId.Mainnet,
       address: overrides.address,
       multiChainMap: {},

@@ -1,9 +1,8 @@
 /**
  * Minimal react-native stand-in for the separator-compat vitest suite (jsdom
  * env — no Metro): the passthrough `View` host plus the `Dimensions` surface
- * the native leg's `$md` breakpoint store reads. The full-fidelity native
- * rendering harness lives in `packages/tailwind/src/parity/core/native` —
- * this is only for the export-parity assertions that run inside mycelium.
+ * the native leg's `$md` breakpoint store reads — only for the export-parity
+ * assertions that run inside mycelium.
  */
 import { createElement, forwardRef, type ComponentType, type ReactNode } from 'react'
 

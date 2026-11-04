@@ -1,8 +1,7 @@
-import { Flex, Text, TouchableArea } from '@universe/mycelium'
+import { Flex, Text, TouchableArea, Separator } from '@universe/mycelium'
 import { ChevronsIn } from '@universe/mycelium/icons/ChevronsIn'
 import { ChevronsOut } from '@universe/mycelium/icons/ChevronsOut'
 import { useTranslation } from 'react-i18next'
-import { Separator } from 'ui/src'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 

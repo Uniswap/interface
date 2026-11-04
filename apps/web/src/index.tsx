@@ -44,19 +44,19 @@ import { useEvent } from 'utilities/src/react/hooks'
 // oxlint-disable-next-line no-restricted-imports -- custom useAccount hook requires statsig
 import { useAccount } from 'wagmi'
 import { App } from '~/App'
+import { AccountsStoreProvider } from '~/app/AccountsStoreProvider'
+import { useAmplitudeDeviceId } from '~/app/bootstrap/useAmplitudeDeviceId'
 import { WebUniswapProvider } from '~/app/WebUniswapContext'
 import { QueryClientPersistProvider } from '~/components/PersistQueryClient'
 import { createWeb3Provider, WalletCapabilitiesEffects } from '~/components/Web3Provider/createWeb3Provider'
 import { getConfig, getPrivyConfig } from '~/config'
+import { AccountsStoreDevTool } from '~/connection/accounts/devtools'
+import { ExternalWalletProvider } from '~/connection/ExternalWalletProvider'
+import { ConnectWalletMutationProvider } from '~/connection/hooks/useConnectWalletMutation'
 import { wagmiConfig } from '~/connection/wagmiConfig'
-import { AccountsStoreDevTool } from '~/features/accounts/store/devtools'
-import { WebAccountsStoreProvider } from '~/features/accounts/store/provider'
 import { TransactionWatcherProvider } from '~/features/transactions/TransactionWatcherProvider'
-import { ConnectWalletMutationProvider } from '~/features/wallet/connection/hooks/useConnectWalletMutation'
-import { ExternalWalletProvider } from '~/features/wallet/providers/ExternalWalletProvider'
-import { useAmplitudeDeviceId } from '~/hooks/useAmplitudeDeviceId'
+import { isPrivyConfigured } from '~/features/wallet/hooks/useMaybePrivy'
 import { useDeferredComponent } from '~/hooks/useDeferredComponent'
-import { isPrivyConfigured } from '~/hooks/useMaybePrivy'
 import { LanguageProvider } from '~/i18n/LanguageProvider'
 import { BlockNumberProvider } from '~/lib/hooks/useBlockNumber'
 import { WebNotificationServiceManager } from '~/notification-service/WebNotificationService'
@@ -84,7 +84,7 @@ const loadListsUpdater = () => import('~/state/lists/updater')
 const loadApplicationUpdater = () => import('~/state/application/updater')
 const loadActivityStateUpdater = () => import('~/state/activity/updater')
 const loadFiatOnRampTransactionsUpdater = () => import('~/state/fiatOnRampTransactions/updater')
-const loadWebAccountsStoreUpdater = () => import('~/features/accounts/store/updater')
+const loadWebAccountsStoreUpdater = () => import('~/connection/accounts/updater')
 
 const provideSessionInitService = () => {
   // Platform-specific: uses web's performance.now() API
@@ -264,7 +264,7 @@ const RootApp = (): JSX.Element => {
                               <WalletCapabilitiesEffects />
                               <ExternalWalletProvider>
                                 <ConnectWalletMutationProvider>
-                                  <WebAccountsStoreProvider>
+                                  <AccountsStoreProvider>
                                     <WebUniswapProvider>
                                       <TransactionWatcherProvider>
                                         <LivePricesProvider>
@@ -287,7 +287,7 @@ const RootApp = (): JSX.Element => {
                                         </LivePricesProvider>
                                       </TransactionWatcherProvider>
                                     </WebUniswapProvider>
-                                  </WebAccountsStoreProvider>
+                                  </AccountsStoreProvider>
                                 </ConnectWalletMutationProvider>
                               </ExternalWalletProvider>
                             </StatsigProvider>

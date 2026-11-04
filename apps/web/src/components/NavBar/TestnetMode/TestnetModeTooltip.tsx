@@ -2,8 +2,8 @@ import { Flex, Text } from '@universe/mycelium'
 import { Wrench } from '@universe/mycelium/icons/Wrench'
 import { TooltipCompat as Tooltip } from '@universe/mycelium/tooltip-compat'
 import { useTranslation } from 'react-i18next'
-import { MenuStateVariant, useSetMenu } from '~/components/AccountDrawer/menuState'
-import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
+import { useAccountDrawer } from '~/state/accountDrawer/hooks'
+import { MenuStateVariant, useSetMenu } from '~/state/accountDrawer/menuState'
 
 export function TestnetModeTooltip() {
   const { t } = useTranslation()

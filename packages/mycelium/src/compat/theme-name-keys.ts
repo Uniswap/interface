@@ -1,6 +1,6 @@
 // Cross-subpath type-only import of the generated theme-key mirror — the same
 // single source of truth `compat/color-tokens.ts` leans on (its sibling
-// `theme-colors.generated` layers the palette on top; the text-compat mirror
+// `theme-colors` layers the palette on top; the text-compat mirror
 // is exactly `Object.keys(themes.light)`, pinned by tokens.parity.test.ts).
 import type { ThemeColorToken } from '../text-compat/theme-tokens.generated'
 import type { CompatThemeName } from '../theme-hooks-compat/theme-state'

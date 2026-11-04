@@ -66,8 +66,8 @@ vi.mock('~/pages/RemoveLiquidity/RemoveLiquidityModalContext', async (importOrig
   useRemoveLiquidityModalContext: vi.fn(),
 }))
 // Partial: the render wrapper's accounts store also reads `useOneClickSwapSetting` from this module.
-vi.mock('~/pages/Swap/Swap/settings/OneClickSwap', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('~/pages/Swap/Swap/settings/OneClickSwap')>()),
+vi.mock('~/state/oneClickSwap/hooks', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('~/state/oneClickSwap/hooks')>()),
   useSetOverrideOneClickSwapFlag: () => vi.fn(),
 }))
 

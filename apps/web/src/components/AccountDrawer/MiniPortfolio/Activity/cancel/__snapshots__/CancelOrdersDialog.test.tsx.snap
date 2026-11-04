@@ -105,7 +105,7 @@ exports[`CancelOrdersDialog > should render limit order text 1`] = `
             <svg
               fill="none"
               stroke-width="8"
-              style="width: 24px; height: 24px; color: rgb(19, 19, 19);"
+              style="width: 24px; height: 24px;"
               viewBox="0 0 20 20"
             >
               <g
@@ -170,7 +170,7 @@ exports[`CancelOrdersDialog > should render limit order text 1`] = `
             type="button"
           >
             <span
-              class="text-center font-medium [font-family:var(--sbtn-font-button)] [transition:color_100ms_cubic-bezier(0.17,0.67,0.45,1)] text-[14px] leading-[16.1px] text-critical group-hover/sbtn:text-critical-hovered max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
+              class="text-center font-medium [font-family:var(--sbtn-font-button)] [transition:color_100ms_cubic-bezier(0.17,0.67,0.45,1)] text-[14px] [line-height:16.1px] text-critical group-hover/sbtn:text-critical-hovered max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
             >
               Proceed
             </span>
@@ -181,7 +181,7 @@ exports[`CancelOrdersDialog > should render limit order text 1`] = `
             type="button"
           >
             <span
-              class="text-center font-medium [font-family:var(--sbtn-font-button)] [transition:color_100ms_cubic-bezier(0.17,0.67,0.45,1)] text-[14px] leading-[16.1px] text-neutral1 group-hover/sbtn:text-neutral1-hovered max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
+              class="text-center font-medium [font-family:var(--sbtn-font-button)] [transition:color_100ms_cubic-bezier(0.17,0.67,0.45,1)] text-[14px] [line-height:16.1px] text-neutral1 group-hover/sbtn:text-neutral1-hovered max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
             >
               Never mind
             </span>
@@ -305,7 +305,7 @@ exports[`CancelOrdersDialog > should render order cancel correctly 1`] = `
             <svg
               fill="none"
               stroke-width="8"
-              style="width: 24px; height: 24px; color: rgb(19, 19, 19);"
+              style="width: 24px; height: 24px;"
               viewBox="0 0 20 20"
             >
               <g
@@ -370,7 +370,7 @@ exports[`CancelOrdersDialog > should render order cancel correctly 1`] = `
             type="button"
           >
             <span
-              class="text-center font-medium [font-family:var(--sbtn-font-button)] [transition:color_100ms_cubic-bezier(0.17,0.67,0.45,1)] text-[14px] leading-[16.1px] text-critical group-hover/sbtn:text-critical-hovered max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
+              class="text-center font-medium [font-family:var(--sbtn-font-button)] [transition:color_100ms_cubic-bezier(0.17,0.67,0.45,1)] text-[14px] [line-height:16.1px] text-critical group-hover/sbtn:text-critical-hovered max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
             >
               Proceed
             </span>
@@ -381,7 +381,7 @@ exports[`CancelOrdersDialog > should render order cancel correctly 1`] = `
             type="button"
           >
             <span
-              class="text-center font-medium [font-family:var(--sbtn-font-button)] [transition:color_100ms_cubic-bezier(0.17,0.67,0.45,1)] text-[14px] leading-[16.1px] text-neutral1 group-hover/sbtn:text-neutral1-hovered max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
+              class="text-center font-medium [font-family:var(--sbtn-font-button)] [transition:color_100ms_cubic-bezier(0.17,0.67,0.45,1)] text-[14px] [line-height:16.1px] text-neutral1 group-hover/sbtn:text-neutral1-hovered max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
             >
               Never mind
             </span>

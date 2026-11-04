@@ -1,9 +1,7 @@
-//! tamagui-ignore
-// tamagui-ignore
 import { Button, Flex, Text } from '@universe/mycelium'
+import { UserLock } from '@universe/mycelium/icons/UserLock'
 import { SPORE_ANIMATION_CURVE_CSS } from '@universe/tailwind/animations'
 import { useTranslation } from 'react-i18next'
-import { UserLock } from 'ui/src/components/icons/UserLock'
 import { noop } from 'utilities/src/react/noop'
 import { AuctionKycStatus } from '~/features/Toucan/Auction/hooks/useAuctionKycStatus'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'

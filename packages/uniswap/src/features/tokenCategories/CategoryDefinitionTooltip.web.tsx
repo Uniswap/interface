@@ -26,6 +26,7 @@ export function CategoryDefinitionTooltip({
       ...trace,
       ...(section ? { section } : {}),
       category_id: category.id,
+      category_kind: category.kind,
       trigger: 'hover',
     })
   })

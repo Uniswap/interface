@@ -6,7 +6,9 @@ import {
   LinearGradient,
   type LinearGradientProps,
   useSporeColors,
+  borderRadii,
 } from '@universe/mycelium'
+import { opacify } from '@universe/mycelium/theme-hooks-compat'
 import { useMemo, useState } from 'react'
 import { type StyleProp, TouchableWithoutFeedback, type ViewStyle } from 'react-native'
 import Animated, {
@@ -16,7 +18,6 @@ import Animated, {
   useDerivedValue,
   useSharedValue,
 } from 'react-native-reanimated'
-import { borderRadii, opacify } from 'ui/src/theme'
 import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import {

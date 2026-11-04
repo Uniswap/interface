@@ -8,7 +8,7 @@ import { vi } from 'vitest'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { useLiquidityUrlState } from '~/features/Liquidity/Create/hooks/useLiquidityUrlState'
 import { DEFAULT_FEE_DATA, PositionFlowStep } from '~/features/Liquidity/Create/types'
-import { useCurrencyWithLoading } from '~/hooks/Tokens'
+import { useCurrencyWithLoading } from '~/hooks/currency/useCurrencyWithLoading'
 import { mocked } from '~/test-utils/mocked'
 import { renderHook } from '~/test-utils/render'
 import { PositionField } from '~/types/position'
@@ -22,14 +22,7 @@ vi.mock('nuqs', async () => {
   }
 })
 
-vi.mock('~/hooks/Tokens', async () => {
-  const actual = await vi.importActual('~/hooks/Tokens')
-  return {
-    ...actual,
-    useCurrencyWithLoading: vi.fn(),
-    checkIsNative: actual.checkIsNative,
-  }
-})
+vi.mock('~/hooks/currency/useCurrencyWithLoading', () => ({ useCurrencyWithLoading: vi.fn() }))
 
 const useQueryStateMock = mocked(useQueryState) as any
 const useQueryStatesMock = mocked(useQueryStates)

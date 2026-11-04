@@ -14,4 +14,4 @@ export {
   type AnimatableCopyIconColor,
   type CopyIconProps,
 } from './props'
-export { COPY_SHEETS_GLYPH, resolveCopyIconColor } from './resolve'
+export { resolveCopyIconColor } from './resolve'

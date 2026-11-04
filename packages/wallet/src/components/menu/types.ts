@@ -1,6 +1,6 @@
 import type { TextProps, TouchableAreaProps } from '@universe/mycelium'
+import type { GeneratedIcon, IconProps } from '@universe/mycelium/icons'
 import { BaseSyntheticEvent } from 'react'
-import { GeneratedIcon, IconProps } from 'ui/src/components/factories/createIcon'
 
 export type MenuContentItem = {
   label: string

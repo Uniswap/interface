@@ -5,11 +5,11 @@ import { useLocation, useNavigate } from 'react-router'
 import { useConversionTracking } from 'uniswap/src/data/apiClients/conversionTracking/useConversionTracking'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { usePrivacySharingStore } from '~/components/PrivacyChoices/privacySharingStore'
-import { useAccount } from '~/hooks/useAccount'
+import { useAccount } from '~/connection/hooks/useAccount'
 import { usePrevious } from '~/hooks/usePrevious'
 import { Landing as LandingContent } from '~/pages/Landing/Landing'
+import { useAccountDrawer } from '~/state/accountDrawer/hooks'
 
 export function Landing() {
   const account = useAccount()

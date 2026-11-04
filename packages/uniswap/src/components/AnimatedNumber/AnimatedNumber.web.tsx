@@ -3,9 +3,14 @@ import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
 import { useEffect, useMemo, useState } from 'react'
 import type { AnimatedNumberProps } from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
-import { BALANCE_CHANGE_INDICATION_DURATION } from 'uniswap/src/components/AnimatedNumber/animationConfig'
+import {
+  BALANCE_CHANGE_INDICATION_DURATION,
+  SLOT_PREV_CLEAR_DELAY_MS,
+  STAGGER_MS,
+} from 'uniswap/src/components/AnimatedNumber/animationConfig'
 import { useAnimatedNumberAnimation } from 'uniswap/src/components/AnimatedNumber/hooks/useAnimatedNumberAnimation'
 import { useAnimatedNumberChars } from 'uniswap/src/components/AnimatedNumber/hooks/useAnimatedNumberChars'
+import { useIsRolling } from 'uniswap/src/components/AnimatedNumber/hooks/useIsRolling'
 import { useResolvedAnimatedNumberColors } from 'uniswap/src/components/AnimatedNumber/hooks/useResolvedAnimatedNumberColors'
 import { AnimatedNumberDirection } from 'uniswap/src/components/AnimatedNumber/types'
 import { getAnimatedNumberCharKey } from 'uniswap/src/components/AnimatedNumber/utils/getAnimatedNumberCharKey'
@@ -16,6 +21,7 @@ import {
   ANIMATED_NUMBER_CSS_RULE_ID,
   ANIMATED_NUMBER_KEYFRAMES_CSS,
 } from 'uniswap/src/components/AnimatedNumber/web/keyframes'
+import { StaticValue } from 'uniswap/src/components/AnimatedNumber/web/StaticValue'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import i18next from 'uniswap/src/i18n'
 import { useInjectSingleStylesheet } from 'utilities/src/react/useInjectSingleStylesheet'
@@ -158,6 +164,12 @@ export function AnimatedNumberCore({
 
   const { chars, charDelays, charShouldAnimate } = useAnimatedNumberChars({ value, commonPrefixLength, isRightToLeft })
 
+  const isRolling = useIsRolling({
+    value,
+    enabled: !reduceMotion && !disableAnimations,
+    settleMs: chars.length * STAGGER_MS + SLOT_PREV_CLEAR_DELAY_MS,
+  })
+
   useEffect(() => {
     if (typeof window === 'undefined') {
       return
@@ -222,33 +234,63 @@ export function AnimatedNumberCore({
     >
       <Shine disabled={!warmLoading}>
         <Flex row animation="fast" style={{ position: 'relative' }}>
-          {chars.map((_, index) => (
-            <CharCell
-              key={getAnimatedNumberCharKey({
-                index,
-                charsLength: chars.length,
-                signColor: baseColor,
-              })}
-              animateGen={animateGen}
-              baseColor={baseColor}
-              chars={chars}
-              commonPrefixLength={commonPrefixLength}
-              currency={currency}
-              decimalPartColor={decimalPartColor}
-              delay={charDelays[index] ?? 0}
-              digitHeight={digitHeight}
-              dir={dirRef.current}
-              index={index}
-              maxDigitWidthScaled={maxDigitWidthScaled}
-              nextColor={balanceChangeColor}
-              reduceMotion={reduceMotion}
-              shouldFadeDecimals={shouldFadeDecimals}
-              shouldForceAnimate={charShouldAnimate[index] ?? false}
-              showEdgeFade={!compact}
-              textVariantKey={textVariantKey}
-              variantFont={variantFont}
-            />
-          ))}
+          <StaticValue
+            baseColor={baseColor}
+            chars={chars}
+            commonPrefixLength={commonPrefixLength}
+            currency={currency}
+            decimalPartColor={decimalPartColor}
+            digitHeight={digitHeight}
+            isInvisible={isRolling}
+            maxDigitWidthScaled={maxDigitWidthScaled}
+            nextColor={balanceChangeColor}
+            reduceMotion={reduceMotion}
+            shouldFadeDecimals={shouldFadeDecimals}
+            textVariantKey={textVariantKey}
+            variantFont={variantFont}
+          />
+          {/* Kept mounted so each slot remembers the previous digit it rolls from; only visible while rolling. */}
+          <span
+            aria-hidden
+            style={{
+              display: 'flex',
+              position: 'absolute',
+              top: 0,
+              insetInlineStart: 0,
+              visibility: isRolling ? 'visible' : 'hidden',
+              pointerEvents: 'none',
+              userSelect: 'none',
+              WebkitUserSelect: 'none',
+            }}
+          >
+            {chars.map((_, index) => (
+              <CharCell
+                key={getAnimatedNumberCharKey({
+                  index,
+                  charsLength: chars.length,
+                  signColor: baseColor,
+                })}
+                animateGen={animateGen}
+                baseColor={baseColor}
+                chars={chars}
+                commonPrefixLength={commonPrefixLength}
+                currency={currency}
+                decimalPartColor={decimalPartColor}
+                delay={charDelays[index] ?? 0}
+                digitHeight={digitHeight}
+                dir={dirRef.current}
+                index={index}
+                maxDigitWidthScaled={maxDigitWidthScaled}
+                nextColor={balanceChangeColor}
+                reduceMotion={reduceMotion}
+                shouldFadeDecimals={shouldFadeDecimals}
+                shouldForceAnimate={charShouldAnimate[index] ?? false}
+                showEdgeFade={!compact}
+                textVariantKey={textVariantKey}
+                variantFont={variantFont}
+              />
+            ))}
+          </span>
         </Flex>
       </Shine>
       {EndElement && (

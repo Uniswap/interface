@@ -1,6 +1,7 @@
 import { useFocusEffect } from '@react-navigation/core'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { Flex, iconSizes, Text } from '@universe/mycelium'
+import { CheckmarkCircle } from '@universe/mycelium/icons/CheckmarkCircle'
 import React, { useCallback, useReducer } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, Alert } from 'react-native'
@@ -11,7 +12,6 @@ import {
   getCloudBackupErrorCode,
 } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { CloudBackupErrorCode } from 'src/features/CloudBackup/types'
-import { CheckmarkCircle } from 'ui/src/components/icons'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 import { AppTFunction } from 'utilities/src/i18n/types'

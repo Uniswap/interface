@@ -1,6 +1,6 @@
-import { provideSession } from '@universe/api/src/session/provideSession'
 import type { Session } from '@universe/sessions'
 import { useSyncExternalStore } from 'react'
+import { provideSession } from '../provideSession'
 
 export const useSession = (): Session => provideSession()
 

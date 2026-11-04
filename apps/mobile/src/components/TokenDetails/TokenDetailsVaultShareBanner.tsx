@@ -1,6 +1,6 @@
 import { Flex, iconSizes } from '@universe/mycelium'
+import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
 import { memo, useCallback } from 'react'
-import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { TokenDetailsVaultShareBanner as SharedTokenDetailsVaultShareBanner } from 'uniswap/src/components/tokenDetails/TokenDetailsVaultShareBanner'
 import { EarnEntryPoint } from 'uniswap/src/features/earn/analytics'
 import type { TokenDetailsVaultShareData } from 'uniswap/src/features/earn/hooks/useTokenDetailsVaultShareData'

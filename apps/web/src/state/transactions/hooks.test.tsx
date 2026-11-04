@@ -21,7 +21,7 @@ import {
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { vi } from 'vitest'
-import { useAccount } from '~/hooks/useAccount'
+import { useAccount } from '~/connection/hooks/useAccount'
 import { useTransactionAdderFromHash } from '~/state/transactions/adder'
 import {
   useHasPendingApproval,
@@ -39,7 +39,7 @@ import { act } from '~/test-utils/render'
 import { renderHookWithProviders } from '~/test-utils/renderHookWithProviders'
 
 // Mock useAccount hook
-vi.mock('~/hooks/useAccount')
+vi.mock('~/connection/hooks/useAccount')
 vi.mock('uniswap/src/features/wallet/hooks/useWallet')
 
 describe('Transactions hooks', () => {

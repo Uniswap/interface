@@ -41,7 +41,6 @@ const config = defineConfig({
           /packages\/utilities/,
           /packages\/uniswap/,
           /packages\/wallet/,
-          /tamagui/,
           /@react-navigation\/core/,
           /@react-navigation\/native/,
           /@react-navigation\/elements/,
@@ -93,4 +92,4 @@ const config = defineConfig({
   },
 })
 
-export default withRnPrimitives(config, 'web')
+export default withRnPrimitives(config)

@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router'
 import { useReportPositionAction } from 'uniswap/src/features/positions/hooks/useReportPositionAction'
 import type { PositionInfo } from 'uniswap/src/features/positions/types'
 import { useEvent } from 'utilities/src/react/hooks'
-import { POPUP_MEDIUM_DISMISS_MS } from '~/components/Popups/constants'
-import { popupRegistry } from '~/state/popups/registry'
-import { PopupType } from '~/state/popups/types'
+import { POPUP_MEDIUM_DISMISS_MS } from '~/utils/popups/constants'
+import { popupRegistry } from '~/utils/popups/registry'
+import { PopupType } from '~/utils/popups/types'
 
 export function useReportPositionHandler({
   position,

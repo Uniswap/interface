@@ -1,6 +1,6 @@
 /**
  * Native leg of the Separator compat (INFRA-3644): a React Native `View` —
- * the `ui/src` Separator rebuild's native leg, re-homed. The only place the
+ * the former `ui/src` Separator's native leg, re-homed. The only place the
  * compat imports react-native at runtime.
  */
 import { type JSX, useSyncExternalStore } from 'react'

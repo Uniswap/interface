@@ -7,9 +7,9 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { MARGIN_CHAIN_ID } from '~/constants/margin'
 import { getDefaultMarginMarket } from '~/pages/Swap/Margin/__fixtures__/marginCatalog'
 import { MarginActionModals } from '~/pages/Swap/Margin/components/MarginActionModals'
-import { popupRegistry } from '~/state/popups/registry'
-import { PopupType } from '~/state/popups/types'
 import { render } from '~/test-utils/render'
+import { popupRegistry } from '~/utils/popups/registry'
+import { PopupType } from '~/utils/popups/types'
 
 const MARKET = getDefaultMarginMarket()
 
@@ -35,7 +35,7 @@ vi.mock('~/pages/Swap/Margin/components/shared/MarginLeverageSlider', () => ({
   MarginLeverageSlider: () => null,
 }))
 
-vi.mock('~/hooks/useAccount', () => ({ useAccount: () => ({ address: SWAPPER }) }))
+vi.mock('~/connection/hooks/useAccount', () => ({ useAccount: () => ({ address: SWAPPER }) }))
 
 vi.mock('~/pages/Swap/Margin/hooks/useExecuteMarginPlan', () => ({
   useExecuteMarginPlan: () => ({ executePlan: vi.fn() }),
@@ -43,8 +43,8 @@ vi.mock('~/pages/Swap/Margin/hooks/useExecuteMarginPlan', () => ({
 
 vi.mock('~/pages/Swap/Margin/hooks/useIsPlanInFlight', () => ({ useIsPlanInFlight: () => false }))
 
-vi.mock('~/pages/Swap/Margin/hooks/useMarginCurrencyInfos', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('~/pages/Swap/Margin/hooks/useMarginCurrencyInfos')>()),
+vi.mock('~/features/margin/hooks/useMarginCurrencyInfos', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('~/features/margin/hooks/useMarginCurrencyInfos')>()),
   useMarginCurrencyInfos: () => new Map(),
 }))
 
@@ -111,7 +111,6 @@ describe('MarginActionModals', () => {
     ['add', 'Add margin'],
     ['withdraw', 'Withdraw margin'],
     ['leverage', 'Change leverage'],
-    ['adjust', 'Adjust position'],
     ['close', 'Close position'],
   ] as const)('routes %s to its own modal', (action, expectedTitle) => {
     render(

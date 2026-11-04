@@ -1,5 +1,5 @@
 import { Percent } from '@uniswap/sdk-core'
-import type { GeneratedIcon } from 'ui/src'
+import type { GeneratedIcon } from '@universe/mycelium/icons'
 import { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 
 export type RoutingHop =

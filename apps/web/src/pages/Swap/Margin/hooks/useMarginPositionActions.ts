@@ -1,17 +1,16 @@
+import { ArrowRightFromBracket } from '@universe/mycelium/icons/ArrowRightFromBracket'
+import { Minus } from '@universe/mycelium/icons/Minus'
+import { Plus } from '@universe/mycelium/icons/Plus'
+import { Sliders } from '@universe/mycelium/icons/Sliders'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ArrowRightFromBracket } from 'ui/src/components/icons/ArrowRightFromBracket'
-import { Edit } from 'ui/src/components/icons/Edit'
-import { Minus } from 'ui/src/components/icons/Minus'
-import { Plus } from 'ui/src/components/icons/Plus'
-import { Sliders } from 'ui/src/components/icons/Sliders'
 import type { MenuOptionItem } from 'uniswap/src/components/menus/ContextMenu'
 import type { MarginPosition } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import type { MarginManageAction } from 'uniswap/src/features/transactions/margin/types'
+import { marginPositionSubId } from '~/features/margin/utils/marginPositionRow'
 import { useIsPlanInFlight } from '~/pages/Swap/Margin/hooks/useIsPlanInFlight'
-import { marginPositionSubId } from '~/pages/Swap/Margin/marginPositionRow'
 
 export type MarginActionItem = Omit<MenuOptionItem, 'Icon'> & {
   action: MarginManageAction
@@ -22,23 +21,16 @@ export type MarginActionItem = Omit<MenuOptionItem, 'Icon'> & {
   // SHORT fragment (<=32 chars) for the menu column, which wraps rather than truncates inside
   // 200-250px. Swapped for the blocker reason while disabled.
   subheader: string
-  // The full sentence, drawer tooltip only. Two registers: rendering the long form as a menu
-  // subheader produces a ~450px-tall menu.
-  tooltipBody: string
 }
 
-// The five position-management actions, in display order, for both the row overflow menu and the
-// drawer icon row. One list so order, icons, copy, and disable rules cannot drift between surfaces.
+// The four position-management actions, in display order, for both the row overflow menu and the
+// mobile position sheet. One list so order, icons, copy, and disable rules cannot drift between surfaces.
 export function useMarginPositionActions({
   position,
   onSelect,
-  surface,
 }: {
   position: MarginPosition
   onSelect: (request: { action: MarginManageAction; positionId: string }) => void
-  // Distinguishes the row menu from the drawer and the touch-sheet fallback in analytics, so the
-  // fallback does not collide with the row menu's elementName.
-  surface: 'menu' | 'drawer'
 }): MarginActionItem[] {
   const { t } = useTranslation()
   const isPlanInFlight = useIsPlanInFlight()
@@ -54,7 +46,7 @@ export function useMarginPositionActions({
     const select = (action: MarginManageAction) => (): void => {
       // No margin modal tracks its own invocation, so a completed ADJUST plan cannot otherwise be
       // attributed to add / withdraw / leverage.
-      sendAnalyticsEvent(InterfaceEventName.MarginPositionActionSelected, { action, surface })
+      sendAnalyticsEvent(InterfaceEventName.MarginPositionActionSelected, { action, surface: 'menu' })
       onSelect({ action, positionId })
     }
     // Only in-flight gets an explanation; a missing subId keeps the action's own description.
@@ -66,7 +58,6 @@ export function useMarginPositionActions({
         Icon: Plus,
         label: t('margin.manage.add'),
         subheader: t('margin.manage.addDescription'),
-        tooltipBody: t('margin.manage.addTooltip'),
         onPress: select('add'),
       },
       {
@@ -74,7 +65,6 @@ export function useMarginPositionActions({
         Icon: Minus,
         label: t('margin.manage.withdraw'),
         subheader: t('margin.manage.withdrawDescription'),
-        tooltipBody: t('margin.manage.withdrawTooltip'),
         onPress: select('withdraw'),
       },
       {
@@ -82,23 +72,13 @@ export function useMarginPositionActions({
         Icon: Sliders,
         label: t('margin.manage.changeLeverage'),
         subheader: t('margin.manage.changeLeverageDescription'),
-        tooltipBody: t('margin.manage.changeLeverageTooltip'),
         onPress: select('leverage'),
-      },
-      {
-        action: 'adjust',
-        Icon: Edit,
-        label: t('margin.manage.adjustAdvanced'),
-        subheader: t('margin.manage.adjustAdvancedDescription'),
-        tooltipBody: t('margin.manage.adjustAdvancedTooltip'),
-        onPress: select('adjust'),
       },
       {
         action: 'close',
         Icon: ArrowRightFromBracket,
         label: t('margin.manage.closeConfirm'),
         subheader: t('margin.manage.closeDescription'),
-        tooltipBody: t('margin.manage.closeTooltip'),
         onPress: select('close'),
         destructive: true,
         showDivider: true,
@@ -111,13 +91,10 @@ export function useMarginPositionActions({
     return items.map((item) => ({
       ...item,
       disabled,
-      // Both registers get the blocker: the menu renders subheader, the drawer tooltip renders
-      // tooltipBody. Swapping only one leaves that surface silently explaining the normal action.
       subheader: blockedNote ?? item.subheader,
-      tooltipBody: blockedNote ?? item.tooltipBody,
       // getMenuItemColor tests `destructive` BEFORE `disabled`, so a disabled Close would otherwise
-      // stay full $statusCritical and read as live while the other four grey out.
+      // stay full $statusCritical and read as live while the other three grey out.
       ...(item.destructive && disabled ? { iconColor: '$neutral2' as const, textColor: '$neutral2' as const } : {}),
     }))
-  }, [t, positionId, canManage, isPlanInFlight, onSelect, surface])
+  }, [t, positionId, canManage, isPlanInFlight, onSelect])
 }

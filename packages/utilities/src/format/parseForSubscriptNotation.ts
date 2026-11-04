@@ -1,5 +1,9 @@
 import { getSubscriptNotationParts } from 'utilities/src/format/getSubscriptNotationParts'
-import { formatDotDecimalForLocale, normalizeIntlNumberToDotDecimal } from 'utilities/src/format/localeNumberSeparators'
+import {
+  formatDotDecimalForLocale,
+  getLocaleNumberSeparators,
+  normalizeIntlNumberToDotDecimal,
+} from 'utilities/src/format/localeNumberSeparators'
 import { roundForDisplay } from 'utilities/src/format/roundForDisplay'
 
 export interface ParsedSubscriptNumber {
@@ -109,7 +113,7 @@ export function parseForSubscriptNotation(params: ParseForSubscriptNotationParam
       useSubscript: true,
       leadingZeros: subscriptParts.leadingZeros,
       significantPart: subscriptParts.significantPart,
-      fullFormatted: `0.0${subscriptParts.leadingZeros}${subscriptParts.significantPart}`,
+      fullFormatted: `0${getLocaleNumberSeparators(locale).decimal}0${subscriptParts.leadingZeros}${subscriptParts.significantPart}`,
     }
   }
 

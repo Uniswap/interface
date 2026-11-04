@@ -4,12 +4,12 @@ import { useMemo } from 'react'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import type { PoolTableSortState } from '~/data/pools/poolStats'
 import { OrderDirection } from '~/data/util'
+import { useInfiniteLoadMore } from '~/features/Explore/hooks/useInfiniteLoadMore'
 import { EXPLORE_API_PAGE_SIZE } from '~/features/Explore/state/constants'
 import { toSearchQueryParam } from '~/features/Explore/utils/toSearchQueryParam'
 import { toPoolsFilterRequestParams } from '~/features/Liquidity/PoolsFilter/toRequest'
 import { poolSortFieldToOrderBy } from '~/features/Liquidity/utils/convertPoolToPoolStat'
 import { getPoolsListParams, resolvePoolsListChainId } from '~/features/Liquidity/utils/getPoolsListParams'
-import { useInfiniteLoadMore } from '~/hooks/useInfiniteLoadMore'
 import { useListPoolsAsPoolStats } from '~/pages/Explore/hooks/useListPoolsAsPoolStats'
 import type { PoolStat } from '~/types/explore'
 import type { PoolsFilterState } from '~/types/poolsFilter'
@@ -30,6 +30,7 @@ export function useV2ListPools({
   currency0,
   currency1,
   filterString,
+  categoryId,
 }: {
   sortState: PoolTableSortState
   chainId?: UniverseChainId
@@ -41,6 +42,8 @@ export function useV2ListPools({
   currency1?: Currency
   /** Search box value, sent as the ListPools `searchQuery`. */
   filterString: string
+  /** Pool category to restrict the list to; undefined is the unfiltered (All) list. */
+  categoryId?: string
 }): {
   pools: PoolStat[] | undefined
   isLoading: boolean
@@ -65,6 +68,7 @@ export function useV2ListPools({
   const orderBy = poolSortFieldToOrderBy[sortState.sortBy]
   const ascending = sortState.sortDirection === OrderDirection.Asc
   const searchQuery = toSearchQueryParam(filterString)
+  const categoryIds = useMemo(() => (categoryId ? [categoryId] : undefined), [categoryId])
 
   const params = useMemo(
     () =>
@@ -75,8 +79,19 @@ export function useV2ListPools({
         filterParams,
         currencies: [currency0, currency1],
         searchQuery,
+        categoryIds,
       }),
-    [effectiveChainId, enabledChains.chains, orderBy, ascending, filterParams, currency0, currency1, searchQuery],
+    [
+      effectiveChainId,
+      enabledChains.chains,
+      orderBy,
+      ascending,
+      filterParams,
+      currency0,
+      currency1,
+      searchQuery,
+      categoryIds,
+    ],
   )
 
   const hasTokenFilter = Boolean(currency0 || currency1)

@@ -55,8 +55,9 @@ exports[`SendRecipientForm > should render correctly with verified recipient 1`]
         tabindex="0"
       >
         <div
-          class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 w-[36px] h-[36px] border-transparent border-[0px] rounded-[999999px] relative"
+          class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 w-[36px] h-[36px] border-transparent border-[0px] rounded-[999999px] relative [color:var(--c-col)] group-hover:[color:var(--cgh-col)]"
           data-testid="account-icon"
+          style="--c-col: var(--neutral1); --cgh-col: var(--neutral1-hovered);"
         >
           <div
             class="flex flex-col basis-auto box-border relative min-h-[0px] min-w-[0px] grow shrink items-center justify-center opacity-[0] [transition:var(--c-t)]"

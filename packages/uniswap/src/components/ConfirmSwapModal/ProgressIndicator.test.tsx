@@ -1,5 +1,6 @@
 import { TradingApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
+import { Minus } from '@universe/mycelium/icons/Minus'
 import { computeStepStatus, ProgressIndicator } from 'uniswap/src/components/ConfirmSwapModal/ProgressIndicator'
 import { StepStatus } from 'uniswap/src/components/ConfirmSwapModal/types'
 import { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
@@ -10,6 +11,8 @@ import { describe, expect, it } from 'vitest'
 
 // NOTE: the vitest setup mocks i18n so t() returns the raw key — row titles are asserted as
 // i18n keys (e.g. 'swap.review.swap.idle'), which still uniquely identify row kind and status.
+// Minus.tsx's path, to tell the rendered icon apart from the row's default.
+const MINUS_PATH = 'M15.8333 10.8337H4.16659'
 const USDC_ARBITRUM = '0xaf88d065e77c8cC2239327C5EDb3A432268e5831'
 const WBTC_ARBITRUM = '0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f'
 const WETH_ARBITRUM = '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1'
@@ -239,6 +242,57 @@ describe('ProgressIndicator + collapsed chained-action retry rows', () => {
     expect(queryByText('common.confirmSwap')).toBeTruthy()
     expect(queryAllByText('common.failed')).toHaveLength(0)
     expect(statusesFor(steps, { step: swap, accepted: false })).toEqual([StepStatus.Complete, StepStatus.Active])
+  })
+})
+
+// Margin's position step rides the chained-action branch like Earn's vault steps: it carries its own
+// already-translated title, since only the margin surface knows which action the plan runs.
+describe('ProgressIndicator + margin execute step', () => {
+  it('renders the margin row with the title the step carries, after a regular swap plan row', () => {
+    const preSwap = createSwapPlanStep({ status: TradingApi.PlanStepStatus.COMPLETE })
+    const execute = createSwapPlanStep({
+      stepIndex: 1,
+      stepType: TradingApi.PlanStepType.MARGIN_EXECUTE,
+      marginStepTitle: 'Deposit margin',
+    } as Partial<TransactionAndPlanStep>)
+    const steps = [preSwap, execute]
+
+    const { queryByText } = renderWithProviders(
+      <ProgressIndicator isChainedAction steps={steps} currentStep={{ step: execute, accepted: false }} />,
+    )
+
+    expect(queryByText('Deposit margin')).toBeTruthy()
+    expect(queryByText('swap.review.swap.completed')).toBeTruthy()
+  })
+
+  it('renders the icon the margin step carries', () => {
+    const execute = createSwapPlanStep({
+      stepType: TradingApi.PlanStepType.MARGIN_EXECUTE,
+      marginStepTitle: 'Withdraw margin',
+      marginStepIcon: Minus,
+    } as Partial<TransactionAndPlanStep>)
+
+    const { queryByText, getByTestId } = renderWithProviders(
+      <ProgressIndicator isChainedAction steps={[execute]} currentStep={{ step: execute, accepted: false }} />,
+    )
+
+    expect(queryByText('Withdraw margin')).toBeTruthy()
+    // The web test renderer hands back a DOM node under react-native-testing-library's types.
+    const icon: unknown = getByTestId('step-icon')
+    if (!(icon instanceof HTMLElement)) {
+      throw new Error('expected a DOM node for the step icon')
+    }
+    expect(icon.innerHTML).toContain(MINUS_PATH)
+  })
+
+  it('leaves a MARGIN_EXECUTE step with no title to the swap plan row', () => {
+    const execute = createSwapPlanStep({ stepType: TradingApi.PlanStepType.MARGIN_EXECUTE })
+
+    const { queryByText } = renderWithProviders(
+      <ProgressIndicator isChainedAction steps={[execute]} currentStep={{ step: execute, accepted: false }} />,
+    )
+
+    expect(queryByText('swap.review.swap.idle')).toBeTruthy()
   })
 })
 

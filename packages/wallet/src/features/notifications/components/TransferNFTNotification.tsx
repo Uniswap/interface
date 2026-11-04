@@ -1,6 +1,6 @@
 import { isAndroid } from '@universe/environment'
 import { Flex } from '@universe/mycelium'
-import { Unitag } from 'ui/src/components/icons'
+import { Unitag } from '@universe/mycelium/icons/Unitag'
 import { LogoWithTxStatus } from 'uniswap/src/components/CurrencyLogo/LogoWithTxStatus'
 import { NotificationToast } from 'uniswap/src/components/notifications/NotificationToast'
 import { DisplayNameType } from 'uniswap/src/features/accounts/types'

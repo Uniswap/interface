@@ -50,7 +50,15 @@ describe('normalizePoolSummary', () => {
       currentTick: -12345,
       sqrtPriceX96: '79228162514264337593543950336',
       protocolFee: undefined,
+      categoryIds: [],
     })
+  })
+
+  it('carries the served category ids', () => {
+    expect(normalizePoolSummary(poolSummary({ categoryIds: ['majors', 'defi'] })).categoryIds).toEqual([
+      'majors',
+      'defi',
+    ])
   })
 
   it('prefers the served isDynamicFee over the fee-tier sentinel', () => {

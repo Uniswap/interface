@@ -1,8 +1,8 @@
 /**
  * Web leg of the Separator compat (INFRA-3644): a plain `div` carrying the
  * exact declaration set the legacy Tamagui `styled(Stack)` cascade emitted,
- * inline styles only — the Tamagui-free `ui/src` Separator rebuild
- * (INFRA-3318), re-homed onto mycelium internals. No react-native imports —
+ * inline styles only — the replacement for the Tamagui-free `ui/src`
+ * Separator (INFRA-3318), re-homed onto mycelium internals. No react-native imports —
  * not even in type position.
  */
 import type { CSSProperties, JSX } from 'react'
@@ -68,9 +68,7 @@ function resolveTamaguiSpaceVars(style: CSSProperties | undefined): CSSPropertie
 /**
  * Everything the legacy `styled(Stack)` Separator emitted onto its web element —
  * the Tamagui Stack frame defaults plus the Separator's own declarations, in
- * cascade-resolved form. Kept as an exact transcription: the parity suites
- * (packages/tailwind separator) pin this declaration set against the live
- * legacy rebuild. The legacy frame's `flexShrink: 0` vs `flex: 1` clash
+ * cascade-resolved form, kept as an exact transcription. The legacy frame's `flexShrink: 0` vs `flex: 1` clash
  * resolved on web to grow 1 / shrink 1 / basis auto (Tamagui's `flex: 1`
  * expansion clobbered the earlier flexShrink); the native leg mirrors Yoga's
  * different resolution.

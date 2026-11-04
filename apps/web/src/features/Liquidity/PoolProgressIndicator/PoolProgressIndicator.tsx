@@ -3,8 +3,8 @@ import { heights, zIndexes } from '@universe/mycelium/tokens'
 import { Fragment } from 'react'
 import { useTranslation } from 'react-i18next'
 import { assert } from 'utilities/src/errors'
+import { useStickyHeaderBorder } from '~/features/Liquidity/PoolProgressIndicator/useStickyHeaderBorder'
 import { useAppHeaderHeight } from '~/hooks/useAppHeaderHeight'
-import { useStickyHeaderBorder } from '~/hooks/useStickyHeaderBorder'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
 
 interface PoolProgressStep {

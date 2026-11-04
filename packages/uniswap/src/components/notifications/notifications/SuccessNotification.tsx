@@ -1,4 +1,4 @@
-import { CheckmarkCircle } from 'ui/src/components/icons/CheckmarkCircle'
+import { CheckmarkCircle } from '@universe/mycelium/icons/CheckmarkCircle'
 import { NotificationToast } from 'uniswap/src/components/notifications/NotificationToast'
 import { AppNotificationDefault } from 'uniswap/src/features/notifications/slice/types'
 

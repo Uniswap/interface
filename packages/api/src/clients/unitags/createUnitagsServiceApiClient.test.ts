@@ -1,8 +1,8 @@
 import 'utilities/src/logger/mocks'
 import { beforeEach, describe, expect, it, type Mock, vi } from 'vitest'
 
-vi.mock('@universe/api/src/clients/base/auth', async (importOriginal) => {
-  const mod = await importOriginal<typeof import('@universe/api/src/clients/base/auth')>()
+vi.mock('../base/auth', async (importOriginal) => {
+  const mod = await importOriginal<typeof import('../base/auth')>()
   return {
     ...mod,
     signUnitagServiceMessage: vi.fn(),
@@ -27,7 +27,7 @@ import {
   UpdateProfileMetadataRequest,
   UpdateProfileMetadataResponse,
 } from '@uniswap/client-unitag/dist/uniswap/unitag/v1/UnitagService_pb'
-import { signUnitagServiceMessage, NEW_UNITAGS_SIGNATURE_HEADER } from '@universe/api/src/clients/base/auth'
+import { signUnitagServiceMessage, NEW_UNITAGS_SIGNATURE_HEADER } from '../base/auth'
 import { createUnitagServiceApiClient } from './createUnitagsServiceApiClient'
 
 describe('UnitagsServiceApiClient', () => {

@@ -78,7 +78,7 @@ describe('TransitionItem', () => {
     const wrapper = pageWrapper('page-one')
     expect(wrapper.className).toContain('w-full')
     expect(wrapper.className).toContain('grow')
-    // Flex column like the legacy Tamagui Flex wrapper, so pages can alignSelf-center.
+    // Flex column like the legacy Flex wrapper, so pages can alignSelf-center.
     expect(wrapper.className).toContain('flex')
     expect(wrapper.className).toContain('flex-col')
     // Enter classes are stripped on the first render (initial={false}); the

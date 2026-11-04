@@ -5,21 +5,14 @@ import { nativeOnChain, USDC } from 'uniswap/src/constants/tokens'
 import { vi } from 'vitest'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { useLiquidityUrlState } from '~/features/Liquidity/Create/hooks/useLiquidityUrlState'
-import { useCurrencyWithLoading } from '~/hooks/Tokens'
+import { useCurrencyWithLoading } from '~/hooks/currency/useCurrencyWithLoading'
 import { mocked } from '~/test-utils/mocked'
 import { render } from '~/test-utils/render'
 
 // Unlike useLiquidityUrlState.test.ts, this suite leaves nuqs alone: the deprecated-param bug it guards
 // lives in the ordering between the real `useQueryStates` and the migration, which a mocked
 // `useQueryStates` cannot reproduce. Only the token lookup is stubbed.
-vi.mock('~/hooks/Tokens', async () => {
-  const actual = await vi.importActual('~/hooks/Tokens')
-  return {
-    ...actual,
-    useCurrencyWithLoading: vi.fn(),
-    checkIsNative: actual.checkIsNative,
-  }
-})
+vi.mock('~/hooks/currency/useCurrencyWithLoading', () => ({ useCurrencyWithLoading: vi.fn() }))
 
 const useCurrencyWithLoadingMock = mocked(useCurrencyWithLoading)
 

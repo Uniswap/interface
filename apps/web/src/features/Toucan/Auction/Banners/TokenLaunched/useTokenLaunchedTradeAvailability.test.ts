@@ -2,10 +2,10 @@ import { renderHook } from '@testing-library/react'
 import { UniverseChainId } from '@universe/chains'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { useTokenLaunchedTradeAvailability } from '~/features/Toucan/Auction/Banners/TokenLaunched/useTokenLaunchedTradeAvailability'
-import { useTokenPoolState } from '~/hooks/useTokenPoolState'
+import { useTokenPoolState } from '~/features/Toucan/Auction/hooks/useTokenPoolState'
 import type { TokenPoolState } from '~/types/tokenPool'
 
-vi.mock('~/hooks/useTokenPoolState', () => ({ useTokenPoolState: vi.fn() }))
+vi.mock('~/features/Toucan/Auction/hooks/useTokenPoolState', () => ({ useTokenPoolState: vi.fn() }))
 
 const REDEEMABLE = {
   chainId: UniverseChainId.Mainnet,

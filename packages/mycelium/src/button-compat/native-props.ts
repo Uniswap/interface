@@ -16,6 +16,7 @@ import type {
   BorderWidthValue,
   ColorValue,
   DisplayValue,
+  OverflowValue,
   PositionValue,
   RadiusValue,
   SizeValue,
@@ -160,6 +161,10 @@ export interface ButtonCompatProps extends ButtonCompatMediaProps, ButtonCompatP
   opacity?: number
   /** Flex shrink factor (INFRA-3750, legacy `flexShrink={1}` — the mobile LandingScreen.tsx create-account CTA). WIRED, independent of `flex`. */
   flexShrink?: number
+  /** Flex grow factor alone. WIRED through the shared layout style lane; a numeric `flex` set alongside wins. */
+  flexGrow?: number
+  /** WIRED through the shared layout style lane, which drops (and dev-warns) the web-only `auto`/`clip`/`unset` values. */
+  overflow?: OverflowValue
   /** Shadow color (INFRA-3750, legacy `shadowColor="$accent1"`). WIRED: resolves through the shared shadow-color map, dropping (not throwing) an unmapped token — see `nativeShadowColorExpression` in `./ButtonCompat.native`. */
   shadowColor?: ColorValue
   /** Shadow opacity (INFRA-3750). WIRED: folds into the composed shadow via the shared style lane. */

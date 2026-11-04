@@ -6,15 +6,15 @@ import { useNavigate } from 'react-router'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ElementName, InterfaceEventName, ModalName, type SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
+import type { Category } from 'uniswap/src/features/tokenCategories/types'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { CategoryDefinitionCard } from '~/components/CategoryDefinitionCard/CategoryDefinitionCard'
-import { useFireOncePerOpen } from '~/components/HoverCard/useFireOncePerOpen'
+import { useFireOncePerOpen } from '~/components/HoverCard/hooks/useFireOncePerOpen'
 import { getCategoryDetailsURL } from '~/pages/Explore/CategoryDetails/getCategoryDetailsURL'
 
 interface CategoryDefinitionSheetProps {
-  category: TokenCategory
+  category: Category
   isOpen: boolean
   section: SectionName
   onClose: () => void
@@ -38,6 +38,7 @@ export function CategoryDefinitionSheet({
         ...trace,
         section,
         category_id: category.id,
+        category_kind: category.kind,
         trigger: 'tap',
       }),
   })
@@ -47,9 +48,10 @@ export function CategoryDefinitionSheet({
       element: ElementName.CategoryDefinitionSheet,
       section,
       category_id: category.id,
+      category_kind: category.kind,
     })
     onClose()
-    navigate(getCategoryDetailsURL(category.id))
+    navigate(getCategoryDetailsURL(category.id, category.kind))
   })
 
   return (

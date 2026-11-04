@@ -24,6 +24,13 @@ export const HANDWRITTEN_ICON_COMPONENTS: ReadonlySet<string> = new Set([
   'Unitag',
 ])
 
+/**
+ * Hand-written logos in src/components/logos whose SVG source the generator
+ * must skip: their artwork needs more than the single-`currentColor` output
+ * the generator produces.
+ */
+export const HANDWRITTEN_LOGO_COMPONENTS: ReadonlySet<string> = new Set(['GoogleChromeLogo'])
+
 export function assertNotHandwritten(className: string, svgFileName: string): void {
   if (HANDWRITTEN_ICON_COMPONENTS.has(className)) {
     throw new Error(

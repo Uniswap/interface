@@ -65,7 +65,7 @@ function Harness({
   onSelect?: (request: { action: string; positionId: string }) => void
   onRowPress?: () => void
 }): JSX.Element {
-  const menu = <MarginPositionActionsMenu position={POSITION} mountKey="row" onSelect={onSelect} />
+  const menu = <MarginPositionActionsMenu position={POSITION} onSelect={onSelect} />
   return onRowPress ? <TouchableArea onPress={onRowPress}>{menu}</TouchableArea> : menu
 }
 
@@ -75,13 +75,12 @@ describe('MarginPositionActionsMenu', () => {
     mockUseIsPlanInFlight.mockReturnValue(false)
   })
 
-  it('renders all five actions with close last', () => {
+  it('renders all four actions with close last', () => {
     render(<Harness />)
     pressTrigger()
     expect(screen.getByText('Add margin')).toBeInTheDocument()
     expect(screen.getByText('Withdraw margin')).toBeInTheDocument()
     expect(screen.getByText('Change leverage')).toBeInTheDocument()
-    expect(screen.getByText('Adjust position (advanced)')).toBeInTheDocument()
     expect(screen.getByText('Close position')).toBeInTheDocument()
   })
 
@@ -123,7 +122,7 @@ describe('MarginPositionActionsMenu', () => {
     const onSelect = vi.fn()
     render(<Harness onSelect={onSelect} />)
     pressTrigger()
-    expect(screen.getAllByText('Another action is in progress')).toHaveLength(5)
+    expect(screen.getAllByText('Another action is in progress')).toHaveLength(4)
     fireEvent.click(screen.getByText('Add margin'))
     expect(onSelect).not.toHaveBeenCalled()
   })

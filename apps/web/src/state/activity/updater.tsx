@@ -24,20 +24,20 @@ import { currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/curren
 import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { DEFAULT_TXN_DISMISS_MS, L2_TXN_DISMISS_MS } from '~/constants/misc'
-import { useHandleUniswapXActivityUpdate } from '~/hooks/useHandleUniswapXActivityUpdate'
 import { usePollPendingBatchTransactions } from '~/state/activity/polling/batch'
 import { usePollPendingBridgeTransactions } from '~/state/activity/polling/bridge'
 import { usePollPendingOrders } from '~/state/activity/polling/orders'
 import { useActivePlanTransactions, usePollPendingPlanTransactions } from '~/state/activity/polling/plans'
 import { usePollPendingTransactions } from '~/state/activity/polling/transactions'
 import { type ActivityUpdate, ActivityUpdateTransactionType, type OnActivityUpdate } from '~/state/activity/types'
+import { useHandleUniswapXActivityUpdate } from '~/state/activity/useHandleUniswapXActivityUpdate'
 import { useAppDispatch } from '~/state/hooks'
 import store from '~/state/index'
 import { maybeAddEarnSwapUpsellPopup } from '~/state/popups/earnSwapUpsell'
-import { popupRegistry } from '~/state/popups/registry'
-import { PopupType } from '~/state/popups/types'
 import type { TransactionDetails } from '~/state/transactions/types'
 import { logSwapFinalized } from '~/tracing/swapFlowLoggers'
+import { popupRegistry } from '~/utils/popups/registry'
+import { PopupType } from '~/utils/popups/types'
 
 const selectPlanTransactionById = makeSelectPlanTransaction()
 const planIdsWithDeliveredNotifications = new Set<string>()
@@ -267,6 +267,7 @@ export function useOnActivityUpdate(): OnActivityUpdate {
               inputCurrencyId: original.typeInfo.inputCurrencyId,
               chainId: bridgeChainIn,
             }),
+            bridgeProvider: original.typeInfo.bridgeProvider,
           })
         } else if (original.typeInfo.type === TransactionType.AuctionLaunch && original.typeInfo.analytics) {
           // Emit the terminal launch event from the Submitted-time snapshot persisted on the tx, so it

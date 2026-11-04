@@ -1,7 +1,6 @@
 import { PoolsOrderBy } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { UniverseChainId } from '@universe/chains'
 import { DEFAULT_TICK_SPACING } from 'uniswap/src/constants/pools'
-import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { PoolSortFields } from '~/data/pools/poolStats'
 import type { Pool } from '~/features/Liquidity/utils/pool'
 import { getProtocolVersionLabel } from '~/features/Liquidity/utils/protocolVersion'
@@ -26,14 +25,14 @@ export function convertPoolToPoolStat(pool: Pool): PoolStat {
   // Integer pips (backend#11679): additive on top of the LP fee for v4, a carve-out of the fee tier
   // for v2/v3, unset when unavailable.
   const protocolFeePips = pool.protocolFee
-  const chainName = toGraphQLChain(pool.chainId as UniverseChainId)
+  const chainId = pool.chainId as UniverseChainId
 
   return {
     id: pool.poolId,
-    chain: chainName,
+    chainId,
     protocolVersion: getProtocolVersionLabel(pool.protocolVersion),
     token0: {
-      chain: chainName,
+      chainId,
       address: pool.token0Address || undefined,
       symbol: pool.token0Metadata?.symbol,
       name: pool.token0Metadata?.name,
@@ -41,7 +40,7 @@ export function convertPoolToPoolStat(pool: Pool): PoolStat {
       logo: pool.token0Metadata?.logoUrl,
     },
     token1: {
-      chain: chainName,
+      chainId,
       address: pool.token1Address || undefined,
       symbol: pool.token1Metadata?.symbol,
       name: pool.token1Metadata?.name,
@@ -67,5 +66,6 @@ export function convertPoolToPoolStat(pool: Pool): PoolStat {
     volOverTvl: pool.volume1dTvlRatio,
     hookAddress: pool.hookAddress,
     protocolFeePips,
+    categoryIds: pool.categoryIds,
   } as PoolStat
 }

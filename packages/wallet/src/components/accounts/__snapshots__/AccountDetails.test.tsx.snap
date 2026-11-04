@@ -176,22 +176,22 @@ exports[`AccountDetails > renders without error with chevron 1`] = `
         0x82D5...3Fa6
       </span>
       <div
-        class="flex flex-col basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 items-center justify-center rounded-[999999px] [transform:var(--c-tr)] [transition:var(--c-t)]"
-        style="--c-tr: rotate(180deg); --c-t: transform 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+        class="flex flex-col basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 items-center justify-center rounded-[999999px] static [transform:var(--c-tr)] transition-transform duration-150 ease-in-out"
+        style="--c-tr: rotate(180deg);"
       >
-        <div
+        <svg
           fill="none"
           stroke-width="8"
-          style="width: 24px; height: 24px; color: rgba(19, 19, 19, 0.63);"
-          viewbox="0 0 24 24"
+          style="width: 24px; height: 24px;"
+          viewBox="0 0 24 24"
         >
-          <div
+          <path
             clip-rule="evenodd"
             d="M15.7071 5.29289C16.0976 5.68342 16.0976 6.31658 15.7071 6.70711L10.4142 12L15.7071 17.2929C16.0976 17.6834 16.0976 18.3166 15.7071 18.7071C15.3166 19.0976 14.6834 19.0976 14.2929 18.7071L8.2929 12.7071C7.9024 12.3166 7.9024 11.6834 8.2929 11.2929L14.2929 5.29289C14.6834 4.90237 15.3166 4.90237 15.7071 5.29289Z"
             fill="currentColor"
             fill-rule="evenodd"
           />
-        </div>
+        </svg>
       </div>
     </div>
   </div>

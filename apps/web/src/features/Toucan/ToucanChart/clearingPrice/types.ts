@@ -77,6 +77,7 @@ export interface ClearingPriceChartControllerCreateParams {
   tokenColor?: string
   bidTokenInfo: BidTokenInfo
   maxFractionDigits: number
+  locale: string
   callbacks: ClearingPriceChartControllerCallbacks
 }
 

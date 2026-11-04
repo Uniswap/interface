@@ -1,10 +1,17 @@
 import { isExtensionApp, isMobileApp } from '@universe/environment'
-import { borderRadii, Flex, iconSizes, LinearGradient, spacing, Text } from '@universe/mycelium'
+import {
+  borderRadii,
+  Flex,
+  iconSizes,
+  LinearGradient,
+  spacing,
+  Text,
+  getUniconColor,
+  imageSizes,
+} from '@universe/mycelium'
 import { Pen } from '@universe/mycelium/icons/Pen'
 import { useIsDarkMode, useSporeColors, useExtractedColors } from '@universe/mycelium/theme-hooks-compat'
 import { memo, useMemo } from 'react'
-import { getUniconColors } from 'ui/src'
-import { imageSizes } from 'ui/src/theme'
 import { DisplayNameText } from 'uniswap/src/components/accounts/DisplayNameText'
 import { DisplayNameType } from 'uniswap/src/features/accounts/types'
 import { shortenAddress } from 'utilities/src/addresses'
@@ -43,7 +50,7 @@ export const UnitagProfileHeader = memo(function UnitagProfileHeader({
   })
 
   const { colors: avatarColors } = useExtractedColors(avatarImageUri)
-  const { color: uniconColor } = getUniconColors(address, false)
+  const uniconColor = getUniconColor(address, false)
 
   // Wait for avatar, then render avatar extracted colors or unicon colors if no avatar
   const gradientColors = useMemo(() => {

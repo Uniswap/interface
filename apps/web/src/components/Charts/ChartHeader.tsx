@@ -1,78 +1,11 @@
-import { GraphQLApi } from '@universe/api'
-import { Flex, type FlexCompatProps, Text } from '@universe/mycelium'
+import { Flex, Text } from '@universe/mycelium'
 import { UTCTimestamp } from 'lightweight-charts'
 import { PointerEvent, ReactElement, ReactNode, useState } from 'react'
 import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { FiatNumberType, NumberType } from 'utilities/src/format/types'
 import { useHeaderDateFormatter } from '~/components/Charts/hooks/useHeaderDateFormatter'
-import { PROTOCOL_LEGEND_ELEMENT_ID } from '~/components/Charts/types'
-import { getProtocolColor, getProtocolName } from '~/data/util'
 import { EllipsisTamaguiStyle } from '~/theme/components/styles'
-
-type ChartHeaderProtocolInfo = { protocol: GraphQLApi.PriceSource; value?: number }
-
-type ProtocolLegendWrapperProps = FlexCompatProps & {
-  hover?: boolean
-}
-
-// borderWidth must be paired with borderColor (mycelium/Tailwind convention) —
-// width alone with no color class renders a black ring, per checkbox-compat/compile.ts.
-const HOVER_STYLES: FlexCompatProps = {
-  right: 'unset',
-  gap: '$spacing6',
-  borderRadius: '$rounded12',
-  borderWidth: 1,
-  borderColor: '$surface3',
-  backgroundColor: '$surface1',
-  boxShadow: '0px 1px 2px 0px rgba(0, 0, 0, 0.02), 0px 1px 6px 2px rgba(0, 0, 0, 0.03)',
-  zIndex: '$tooltip',
-}
-
-function ProtocolLegendWrapper({ hover, ...rest }: ProtocolLegendWrapperProps): JSX.Element {
-  return (
-    <Flex
-      position="absolute"
-      right={0}
-      // One padding granularity on both branches: the compat cascade resolves
-      // longhands over shorthands, so a hover-side `p` could not beat base `px`/`py`.
-      py={hover ? '$spacing8' : '$spacing4'}
-      px={hover ? '$spacing8' : '$spacing12'}
-      gap="$gap12"
-      pointerEvents="none"
-      {...(hover ? HOVER_STYLES : undefined)}
-      {...rest}
-    />
-  )
-}
-
-function ProtocolLegend({ protocolData }: { protocolData?: ChartHeaderProtocolInfo[] }) {
-  const { convertFiatAmountFormatted } = useLocalizationContext()
-
-  return (
-    <ProtocolLegendWrapper id={PROTOCOL_LEGEND_ELEMENT_ID} hover={true}>
-      {protocolData
-        ?.map(({ value, protocol }) => {
-          const display = value ? convertFiatAmountFormatted(value, NumberType.FiatTokenStats) : null
-          return (
-            !!display && (
-              <Flex row gap={8} justifyContent="flex-end" key={protocol + '_blip'} width="max-content">
-                <Text variant="body4" textAlign="right" color="$neutral2" lineHeight={12}>
-                  {getProtocolName(protocol)}
-                </Text>
-
-                <Flex borderRadius="$rounded4" width={12} height={12} backgroundColor={getProtocolColor(protocol)} />
-                <Text variant="body4" textAlign="right" lineHeight={12} {...EllipsisTamaguiStyle}>
-                  {display}
-                </Text>
-              </Flex>
-            )
-          )
-        })
-        .reverse()}
-    </ProtocolLegendWrapper>
-  )
-}
 
 interface HeaderValueDisplayProps {
   /** The number to be formatted and displayed, or the ReactElement to be displayed */
@@ -120,7 +53,6 @@ function HeaderTimeDisplay({ time, timePlaceholder }: HeaderTimeDisplayProps) {
 }
 
 interface ChartHeaderProps extends HeaderValueDisplayProps, HeaderTimeDisplayProps {
-  protocolData?: ChartHeaderProtocolInfo[]
   additionalFields?: ReactNode
   /** Catches the pointer over the header, so content in it (e.g. a tooltip) can be hovered instead of scrubbing the chart. */
   blocksChartHover?: boolean
@@ -131,7 +63,6 @@ export function ChartHeader({
   valueFormatterType,
   time,
   timePlaceholder,
-  protocolData,
   additionalFields,
   blocksChartHover = false,
 }: ChartHeaderProps) {
@@ -168,7 +99,6 @@ export function ChartHeader({
           <HeaderTimeDisplay time={time} timePlaceholder={timePlaceholder} />
         </Flex>
       </Flex>
-      {isHovered && protocolData && <ProtocolLegend protocolData={protocolData} />}
     </Flex>
   )
 }

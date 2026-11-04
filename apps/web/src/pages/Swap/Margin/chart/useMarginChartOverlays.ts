@@ -1,30 +1,41 @@
 /* oxlint-disable max-lines */
+import { useQuery } from '@tanstack/react-query'
 import { useSporeColors } from '@universe/mycelium'
+import { opacify } from '@universe/mycelium/theme-hooks-compat'
 import type { TFunction } from 'i18next'
 import { LineStyle, type LineWidth, type UTCTimestamp } from 'lightweight-charts'
 import { useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { opacify } from 'ui/src/theme'
-import type {
-  MarginActivePosition,
-  MarginPosition,
-  MarginQuoteResponse,
+import {
+  MARGIN_ACTIVE_POSITION_STATUSES,
+  type MarginActivePosition,
+  type MarginPosition,
+  type MarginPositionActivity,
+  type MarginQuoteResponse,
 } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
-import { useMarginPositionsQuery } from 'uniswap/src/data/apiClients/tradingApi/useMarginPositionsQuery'
+import {
+  marginPositionActivityQueryOptions,
+  useMarginPositionsQuery,
+} from 'uniswap/src/data/apiClients/tradingApi/useMarginPositionsQuery'
+import { useMarginFormStore } from 'uniswap/src/features/transactions/margin/stores/marginFormStore/useMarginFormStore'
 import { MarginDirection, type MarginVenue } from 'uniswap/src/features/transactions/margin/types'
+import { useAccount } from '~/connection/hooks/useAccount'
 import {
   MARGIN_CHAIN_ID,
   MARGIN_MARKETS_REFETCH_MS,
   MARGIN_POSITIONS_REFETCH_MS,
   type MarginMarket,
 } from '~/constants/margin'
-import { useAccount } from '~/hooks/useAccount'
-import { positionEconomics, type PositionEconomics } from '~/pages/Swap/Margin/chart/marginChartMath'
-import { useMarginChartPrefs, type MarginChartPrefs } from '~/pages/Swap/Margin/chart/marginChartPrefsStore'
-import { useDerivedMarginInfo } from '~/pages/Swap/Margin/hooks/useDerivedMarginInfo'
-import { useIsPlanInFlight } from '~/pages/Swap/Margin/hooks/useIsPlanInFlight'
-import { useMarginMarkets, type MarginMarketLive } from '~/pages/Swap/Margin/hooks/useMarginMarkets'
-import { accruedUsd, isMarkStale, liqDistanceSignedPct, scaledE18ToNumber } from '~/pages/Swap/Margin/marginFormat'
+import { useMarginMarkets, type MarginMarketLive } from '~/features/margin/hooks/useMarginMarkets'
+import {
+  accruedUsd,
+  getMarginHealthStatus,
+  isMarkStale,
+  liqDistanceSignedPct,
+  marginHealthFromLeverage,
+  scaledE18ToNumber,
+  usablePriceX18,
+} from '~/features/margin/utils/marginFormat'
 import {
   hasMarginPositionBasis,
   isMarginActivePosition,
@@ -32,8 +43,12 @@ import {
   marginPositionSubId,
   marginPositionTokens,
   marginPositionVenue,
-} from '~/pages/Swap/Margin/marginPositionRow'
-import { marginMarketDirection, marginPairLabel } from '~/pages/Swap/Margin/marginTokenDisplay'
+} from '~/features/margin/utils/marginPositionRow'
+import { marginMarketDirection, marginPairLabel } from '~/features/margin/utils/marginTokenDisplay'
+import { positionEconomics, type PositionEconomics } from '~/pages/Swap/Margin/chart/marginChartMath'
+import { useMarginChartPrefs, type MarginChartPrefs } from '~/pages/Swap/Margin/chart/marginChartPrefsStore'
+import { useDerivedMarginInfo } from '~/pages/Swap/Margin/hooks/useDerivedMarginInfo'
+import { useIsPlanInFlight } from '~/pages/Swap/Margin/hooks/useIsPlanInFlight'
 import {
   marginPositionMark,
   marginUsdBasis,
@@ -91,6 +106,45 @@ export function positionsForMarket({
       hasMarginPositionBasis(p)
     )
   })
+}
+
+/**
+ * Whether the chart draws the form's open preview: only when the form's market is the charted market
+ * (same venue, not just the same pair) and no position is focused.
+ */
+export function showsMarginOpenPreview({
+  previewMarket,
+  market,
+  focusPositionId,
+}: {
+  previewMarket: MarginMarket
+  market: MarginMarket
+  focusPositionId: string | undefined
+}): boolean {
+  return previewMarket.key === market.key && focusPositionId === undefined
+}
+
+/**
+ * The overlay inputs for a chart opened from one position (`focusPositionId`): that position alone, so
+ * it ranks as the primary with labeled lines, and `showPosition` forced on, since a surface that exists
+ * to show the position must not draw nothing. Unfocused, both pass through unchanged.
+ */
+export function scopeMarginOverlaysToPosition<Prefs extends MarginChartPrefs>({
+  positions,
+  prefs,
+  focusPositionId,
+}: {
+  positions: MarginPosition[]
+  prefs: Prefs
+  focusPositionId?: string
+}): { positions: MarginPosition[]; prefs: Prefs } {
+  if (focusPositionId === undefined) {
+    return { positions, prefs }
+  }
+  return {
+    positions: positions.filter((p) => p.positionId === focusPositionId),
+    prefs: { ...prefs, showPosition: true },
+  }
 }
 
 export type OverlayRole = 'mark' | 'entry' | 'liq' | 'breakEven' | 'previewEntry' | 'previewLiq'
@@ -163,6 +217,7 @@ export interface MarginChartOverlays {
 
 export type MarginChartColors = Record<
   | 'statusSuccess'
+  | 'statusWarning'
   | 'statusCritical'
   | 'neutral1'
   | 'neutral2'
@@ -170,14 +225,23 @@ export type MarginChartColors = Record<
   | 'accent1'
   | 'surface1'
   | 'surface3Solid'
-  | 'white',
+  | 'white'
+  | 'black',
   string
 >
+
+export interface MarginDecreaseFill {
+  // Unix seconds, decimal string.
+  timestamp: string
+  price: string
+}
 
 export interface ComposeInput {
   market: MarginMarket
   live?: MarginMarketLive
   positions: MarginPosition[] // pre-filtered via positionsForMarket
+  // The primary position's partial decreases, oldest first, each at its fill price.
+  primaryDecreases?: MarginDecreaseFill[]
   quote?: MarginQuoteResponse
   prefs: MarginChartPrefs
   planInFlight: boolean
@@ -189,6 +253,16 @@ export interface ComposeInput {
   markStale?: boolean
   colors: MarginChartColors
   t: TFunction
+  // The form's leverage as shown in its readout.
+  formLeverage?: number
+  // A leverage the form shows but no quote prices yet: mid-drag, or while its debounced quote is pending
+  // or in flight (see unquotedLeverage).
+  previewLeverage?: number
+  // The form has a positive amount: with no quote to price it, previews fall back to a mark estimate.
+  hasEnteredAmount?: boolean
+  // Latest candle close — a fallback mark for the preview estimate when the live market mark is absent
+  // (e.g. a venue that can't quote). Keeps Entry/Liq on the chart instead of blanking them.
+  markFallback?: number
 }
 
 const PRIORITY: Record<OverlayRole, number> = {
@@ -384,6 +458,17 @@ function byPrimacy(a: MarginPosition, b: MarginPosition): number {
   return (Number(b.openedAt) || 0) - (Number(a.openedAt) || 0)
 }
 
+// prefs.showPosition=false drops ALL position-derived output (lines, zone, legend, markers).
+function rankPositions({
+  positions,
+  prefs,
+}: {
+  positions: MarginPosition[]
+  prefs: MarginChartPrefs
+}): MarginPosition[] {
+  return prefs.showPosition ? [...positions].sort(byPrimacy) : []
+}
+
 // "4x" / "2.5x" — one decimal, trailing .0 trimmed (JS number formatting drops it).
 const formatLegendLeverage = (leverage: number): string => `${Math.round(leverage * 10) / 10}x`
 
@@ -533,8 +618,209 @@ function buildPositionLines({
   return lines
 }
 
-// Previews gate on a quote with a liq price present + the pref. While a plan is in flight the wiring
-// hook pins the last pre-flight quote, so previews persist here and only dim.
+// Display leverage vs target: a quote's realized leverage can sit a hair off the requested one.
+const LEVERAGE_MATCH_TOLERANCE = 0.05
+
+/**
+ * The leverage the preview line should be estimated at, if the current quote doesn't price it: the
+ * form's leverage while its quote is stale, i.e. still debouncing (a drag in progress) or bridged from
+ * the previous leverage while the new one is in flight. Without it the line sits at the old quote's
+ * price for the whole drag, then jumps when the new quote lands.
+ */
+export function unquotedLeverage({
+  leverage,
+  quote,
+  isQuoteStale,
+}: {
+  leverage: number
+  quote: MarginQuoteResponse | undefined
+  isQuoteStale: boolean
+}): number | undefined {
+  const quotedLeverage = Number(quote?.display.leverage)
+  if (!isQuoteStale || !Number.isFinite(quotedLeverage)) {
+    return undefined
+  }
+  return Math.abs(leverage - quotedLeverage) > LEVERAGE_MATCH_TOLERANCE ? leverage : undefined
+}
+
+// liq/entry over λ (long) or under λ (short), per the balance sheets marginHealthFromLeverage reads: a
+// long carries LTV (L−1)/L, a short one turn higher, L/(L+1). Undefined where there is no debt.
+function liqPriceFactor({ leverage, direction }: { leverage: number; direction: MarginDirection }): number | undefined {
+  if (direction === MarginDirection.SHORT) {
+    return leverage > 0 ? (leverage + 1) / leverage : undefined
+  }
+  return leverage > 1 ? (leverage - 1) / leverage : undefined
+}
+
+/**
+ * Estimate of the liquidation price at `targetLeverage`, from the quote's at `quotedLeverage`.
+ * Long liq = entry·f/λ and short liq = entry·λ·f (see liqPriceFactor), so the ratio of factors moves the
+ * quoted price to a new leverage without knowing λ or entry. Undefined where either side carries no
+ * debt; the caller keeps the quoted price.
+ */
+export function scaleLiqPriceToLeverage({
+  liq,
+  quotedLeverage,
+  targetLeverage,
+  direction,
+}: {
+  liq: number
+  quotedLeverage: number
+  targetLeverage: number
+  direction: MarginDirection
+}): number | undefined {
+  const quotedFactor = liqPriceFactor({ leverage: quotedLeverage, direction })
+  const targetFactor = liqPriceFactor({ leverage: targetLeverage, direction })
+  if (quotedFactor === undefined || targetFactor === undefined) {
+    return undefined
+  }
+  return (liq * targetFactor) / quotedFactor
+}
+
+/**
+ * Liquidation price at `leverage` for a position opened at `entry`, with no quote to scale from — the
+ * same balance-sheet model as scaleLiqPriceToLeverage, anchored on the market's LLTV instead. Undefined
+ * when there is nothing to liquidate or an input is unusable.
+ */
+export function estimateLiqPrice({
+  entry,
+  leverage,
+  lltvWad,
+  direction,
+}: {
+  entry: number
+  leverage: number
+  lltvWad: string
+  direction: MarginDirection
+}): number | undefined {
+  const usableLltv = usablePriceX18(lltvWad)
+  const factor = liqPriceFactor({ leverage, direction })
+  if (!(entry > 0) || usableLltv === undefined || factor === undefined) {
+    return undefined
+  }
+  const lltv = scaledE18ToNumber(usableLltv)
+  return direction === MarginDirection.SHORT ? entry * lltv * factor : (entry * factor) / lltv
+}
+
+// The leverage readout's health tier (marginLeverageTrackColor), resolved for the canvas.
+export function leverageTierColor({
+  leverage,
+  lltvWad,
+  direction,
+  colors,
+}: {
+  leverage: number
+  lltvWad: string
+  direction: MarginDirection
+  colors: MarginChartColors
+}): string {
+  const healthFactor = marginHealthFromLeverage({ leverage, lltvWad, direction })
+  if (healthFactor === undefined) {
+    return colors.neutral2
+  }
+  const { key } = getMarginHealthStatus(healthFactor)
+  return key === 'healthy' ? colors.statusSuccess : key === 'caution' ? colors.statusWarning : colors.statusCritical
+}
+
+// WCAG 2 relative luminance: sRGB channel linearization, then the Rec. 709 channel weights.
+const SRGB_CHANNEL_MAX = 255
+const SRGB_LINEAR_THRESHOLD = 0.03928
+const SRGB_LINEAR_SLOPE = 12.92
+const SRGB_GAMMA_OFFSET = 0.055
+const SRGB_GAMMA = 2.4
+const LUMINANCE_WEIGHT_R = 0.2126
+const LUMINANCE_WEIGHT_G = 0.7152
+const LUMINANCE_WEIGHT_B = 0.0722
+// WCAG contrast ratio: (lighter + flare) / (darker + flare), with white at luminance 1 and black at 0.
+const CONTRAST_FLARE = 0.05
+const WHITE_LUMINANCE = 1
+const BLACK_LUMINANCE = 0
+
+// Relative luminance of an `rgb(r, g, b)` / `#rrggbb` color; undefined when unparseable. Local because the
+// shared helpers (ui's getContrastPassingTextColor, mycelium's getContrastTextClass) only return their own
+// white-unless-contrast-below-3 decision, not a luminance or ratio, and the former takes hex only.
+function relativeLuminance(color: string): number | undefined {
+  const channels = color.startsWith('#')
+    ? [1, 3, 5].map((i) => parseInt(color.slice(i, i + 2), 16))
+    : color
+        .slice(color.indexOf('(') + 1, color.indexOf(')'))
+        .split(',')
+        .slice(0, 3)
+        .map(Number.parseFloat)
+  if (channels.length < 3 || channels.some((c) => Number.isNaN(c))) {
+    return undefined
+  }
+  const [r = 0, g = 0, b = 0] = channels.map((c) => {
+    const v = c / SRGB_CHANNEL_MAX
+    return v <= SRGB_LINEAR_THRESHOLD
+      ? v / SRGB_LINEAR_SLOPE
+      : ((v + SRGB_GAMMA_OFFSET) / (1 + SRGB_GAMMA_OFFSET)) ** SRGB_GAMMA
+  })
+  return LUMINANCE_WEIGHT_R * r + LUMINANCE_WEIGHT_G * g + LUMINANCE_WEIGHT_B * b
+}
+
+function contrastRatio({ lighter, darker }: { lighter: number; darker: number }): number {
+  return (lighter + CONTRAST_FLARE) / (darker + CONTRAST_FLARE)
+}
+
+// Black or white, whichever contrasts more with `background`.
+export function readableTextColor({ background, colors }: { background: string; colors: MarginChartColors }): string {
+  const luminance = relativeLuminance(background)
+  if (luminance === undefined) {
+    return colors.white
+  }
+  const contrastWithBlack = contrastRatio({ lighter: luminance, darker: BLACK_LUMINANCE })
+  const contrastWithWhite = contrastRatio({ lighter: WHITE_LUMINANCE, darker: luminance })
+  return contrastWithBlack > contrastWithWhite ? colors.black : colors.white
+}
+
+// The quoted values when the quote prices a liquidation. Otherwise — no quote yet, a failed one, or
+// one without a liq price — an estimate at the form's leverage from the quote's entry or the live mark,
+// once the form has an amount: a missing quote must not hide a liq price the mark can still give.
+function previewPrices({
+  quote,
+  mark,
+  market,
+  direction,
+  formLeverage,
+  previewLeverage,
+  hasEnteredAmount,
+}: {
+  quote: MarginQuoteResponse | undefined
+  mark: number | undefined
+  market: MarginMarket
+  direction: MarginDirection
+  formLeverage?: number
+  previewLeverage?: number
+  hasEnteredAmount: boolean
+}): { entry?: number; liq?: number } {
+  const quoteEntry = quote?.display.effectivePrice ? scaledE18ToNumber(quote.display.effectivePrice) : undefined
+  const quotedLiqPrice = quote?.display.liquidationPrice ? scaledE18ToNumber(quote.display.liquidationPrice) : undefined
+  const quotedLeverage = Number(quote?.display.leverage)
+  if (quotedLiqPrice !== undefined && quotedLiqPrice > 0) {
+    // Until a quote prices the form's leverage, the line follows an estimate scaled from the quote's own
+    // (realized) leverage; the settled quote replaces it.
+    const liq =
+      (previewLeverage !== undefined && Number.isFinite(quotedLeverage)
+        ? scaleLiqPriceToLeverage({ liq: quotedLiqPrice, quotedLeverage, targetLeverage: previewLeverage, direction })
+        : undefined) ?? quotedLiqPrice
+    return { entry: quoteEntry, liq }
+  }
+  if (!quote && !hasEnteredAmount) {
+    return {}
+  }
+  const entry = [quoteEntry, mark].find((price) => price !== undefined && price > 0)
+  if (entry === undefined) {
+    return {}
+  }
+  const leverage = formLeverage ?? quotedLeverage
+  return { entry, liq: estimateLiqPrice({ entry, leverage, lltvWad: market.lltvWad, direction }) }
+}
+
+// Preview entry: dotted neutral1 stroke with a neutral1 "Entry" tag (white on the dark theme). Preview
+// liq: solid, in the leverage readout's tier color, with a "Liq. price" tag. Both tags show (the title
+// pill beside the axis needs axisLabelVisible). While a plan is in flight the wiring hook pins the
+// last pre-flight quote, so previews persist here and only dim.
 function buildPreviewLines({
   quote,
   mark,
@@ -542,6 +828,11 @@ function buildPreviewLines({
   prefs,
   colors,
   t,
+  market,
+  direction,
+  formLeverage,
+  previewLeverage,
+  hasEnteredAmount,
 }: {
   quote: MarginQuoteResponse | undefined
   mark: number | undefined
@@ -549,53 +840,69 @@ function buildPreviewLines({
   prefs: MarginChartPrefs
   colors: MarginChartColors
   t: TFunction
+  market: MarginMarket
+  direction: MarginDirection
+  formLeverage?: number
+  previewLeverage?: number
+  hasEnteredAmount: boolean
 }): MarginOverlayLine[] {
-  const previewLiqPrice = quote?.display.liquidationPrice
-    ? scaledE18ToNumber(quote.display.liquidationPrice)
-    : undefined
-  if (!prefs.previewLines || previewLiqPrice === undefined || previewLiqPrice <= 0) {
+  if (!prefs.previewLines) {
     return []
   }
+  const { entry, liq } = previewPrices({
+    quote,
+    mark,
+    market,
+    direction,
+    formLeverage,
+    previewLeverage,
+    hasEnteredAmount,
+  })
   const lines: MarginOverlayLine[] = []
   const dim = planInFlight ? { opacity: FROZEN_PREVIEW_OPACITY } : {}
-  const quoteEntry = quote?.display.effectivePrice ? scaledE18ToNumber(quote.display.effectivePrice) : undefined
-  if (quoteEntry !== undefined && quoteEntry > 0) {
+  if (entry !== undefined && entry > 0) {
     lines.push({
       id: 'previewEntry',
       role: 'previewEntry',
       priority: PRIORITY.previewEntry,
-      price: quoteEntry,
-      color: colors.accent1,
+      price: entry,
+      color: colors.neutral1,
       title: t('margin.chart.line.previewEntry'),
       lineStyle: LineStyle.Dotted,
-      axisLabelColor: colors.accent1,
-      axisLabelTextColor: colors.white,
-      axisLabelVisible: false,
+      lineWidth: 1,
+      axisLabelColor: colors.neutral1,
+      axisLabelTextColor: colors.surface1,
+      axisLabelVisible: true,
       ...dim,
     })
   }
-  // The quote's own mark first — its liq price was computed against that mark, so the distance stays
-  // self-consistent; then the live mark, then the quote entry as a proxy. display.oraclePrice is
-  // close-only, so a non-close preview falls straight to the live mark.
+  if (liq === undefined || !(liq > 0)) {
+    return lines
+  }
+  // The quote's own oracle mark first — its liq price was computed against that mark, so the distance
+  // stays self-consistent; then the live mark where the quote has none (no quote yet, or the '0'
+  // unpriced sentinel), then the entry as a proxy.
   const quoteMark = quote?.display.oraclePrice ? scaledE18ToNumber(quote.display.oraclePrice) : undefined
-  const previewMark = [quoteMark, mark, quoteEntry].find((price) => price !== undefined && price > 0)
+  const previewMark = [quoteMark, mark, entry].find((price) => price !== undefined && price > 0)
   const distanceSignedPct =
-    previewMark !== undefined ? liqDistanceSignedPct({ liqPrice: previewLiqPrice, mark: previewMark }) : undefined
-  const previewLiqColor = opacify(60, colors.statusCritical)
+    previewMark !== undefined ? liqDistanceSignedPct({ liqPrice: liq, mark: previewMark }) : undefined
+  // Same tier, and so the same color, as the form's leverage readout.
+  const tierLeverage = formLeverage ?? Number(quote?.display.leverage)
+  const previewLiqColor = Number.isFinite(tierLeverage)
+    ? leverageTierColor({ leverage: tierLeverage, lltvWad: market.lltvWad, direction, colors })
+    : colors.statusCritical
   lines.push({
     id: 'previewLiq',
     role: 'previewLiq',
     priority: PRIORITY.previewLiq,
-    price: previewLiqPrice,
+    price: liq,
     color: previewLiqColor,
-    title:
-      distanceSignedPct !== undefined && !Number.isNaN(distanceSignedPct)
-        ? t('margin.chart.line.previewLiq', { distance: formatSignedPct(distanceSignedPct) })
-        : '',
-    lineStyle: LineStyle.Dotted,
+    title: t('margin.chart.line.previewLiq'),
+    lineStyle: LineStyle.Solid,
+    lineWidth: 1,
     axisLabelColor: previewLiqColor,
-    axisLabelTextColor: colors.white,
-    axisLabelVisible: false,
+    axisLabelTextColor: readableTextColor({ background: previewLiqColor, colors }),
+    axisLabelVisible: true,
     ...(distanceSignedPct !== undefined ? { distanceSignedPct } : {}),
     ...dim,
   })
@@ -625,15 +932,17 @@ function buildZone({
 }
 
 // Position-event markers for the PRIMARY only (spec F10): ▲ at open (entry price, entry time),
-// ◆ at each partial decrease (exit price, decrease time). Times snap to the rendered candles; events
-// predating the series drop. Decreases without an exit price (collateralSold = 0) are skipped.
+// ◆ at each partial decrease (fill price, event time). Times snap to the rendered candles; events
+// predating the series drop.
 // Hover copy is formatted tooltip-side (T14b) from the marker's raw fields.
 function buildMarkers({
   primary,
+  primaryDecreases,
   candleTimes,
   markers,
 }: {
   primary: MarginPosition | undefined
+  primaryDecreases: MarginDecreaseFill[] | undefined
   candleTimes: UTCTimestamp[]
   markers: boolean
 }): MarginChartOverlays['markers'] {
@@ -646,18 +955,12 @@ function buildMarkers({
   if (openTime !== undefined && entryPrice > 0) {
     out.push({ time: openTime, price: entryPrice, kind: 'open' })
   }
-  // decreases is ACTIVE-only; a terminal position (never actually reaches here) just has none.
-  if (isMarginActivePosition(primary)) {
-    for (const decrease of primary.decreases ?? []) {
-      if (!decrease.exitPrice) {
-        continue
-      }
-      const time = snapToCandleTime({ time: Number(decrease.timestamp), candleTimes })
-      if (time === undefined) {
-        continue
-      }
-      out.push({ time, price: scaledE18ToNumber(decrease.exitPrice), kind: 'decrease' })
+  for (const decrease of primaryDecreases ?? []) {
+    const time = snapToCandleTime({ time: Number(decrease.timestamp), candleTimes })
+    if (time === undefined) {
+      continue
     }
+    out.push({ time, price: scaledE18ToNumber(decrease.price), kind: 'decrease' })
   }
   return out
 }
@@ -715,6 +1018,7 @@ export function composeMarginChartOverlays(input: ComposeInput): MarginChartOver
     market,
     live,
     positions,
+    primaryDecreases,
     quote,
     prefs,
     planInFlight,
@@ -723,6 +1027,8 @@ export function composeMarginChartOverlays(input: ComposeInput): MarginChartOver
     visiblePriceRange,
     colors,
     t,
+    formLeverage,
+    previewLeverage,
   } = input
   const direction: MarginDirection =
     market.direction ??
@@ -730,9 +1036,13 @@ export function composeMarginChartOverlays(input: ComposeInput): MarginChartOver
   // The market's own mark, from the markets poll: the "Current" line and the quote previews, both of
   // which are market-scoped. Everything position-scoped reads its position's own mark instead.
   const liveMark = live ? scaledE18ToNumber(live.markPriceX18) : undefined
+  // Previews anchor on the live mark, else the latest candle close, so a failed or absent quote still
+  // shows Entry/Liq rather than blanking them. A venue that can't quote reports a 0 live mark (present
+  // but unpriced), so fall back on any non-positive value, not just a nullish one. The mark line itself
+  // stays live-only (it IS the market mark, not a chart proxy).
+  const previewMark = [liveMark, input.markFallback].find((price) => price !== undefined && price > 0)
 
-  // prefs.showPosition=false drops ALL position-derived output (lines, zone, legend, markers).
-  const ranked = prefs.showPosition ? [...positions].sort(byPrimacy) : []
+  const ranked = rankPositions({ positions, prefs })
   const primary = ranked.at(0)
   // Sizes for the marker/legend copy; the USD basis for anything valued.
   const econ = primary ? positionEconomics({ position: primary, market }) : undefined
@@ -743,11 +1053,23 @@ export function composeMarginChartOverlays(input: ComposeInput): MarginChartOver
     ...buildMarkLine({ mark: liveMark, colors, t, markStale: input.markStale ?? false }),
     ...buildPositionLines({ ranked, colors, t }),
     ...buildBreakEvenLine({ usdBasis, breakEven: prefs.breakEven, colors, t }),
-    ...buildPreviewLines({ quote, mark: liveMark, planInFlight, prefs, colors, t }),
+    ...buildPreviewLines({
+      quote,
+      mark: previewMark,
+      planInFlight,
+      prefs,
+      colors,
+      t,
+      market,
+      direction,
+      formLeverage,
+      previewLeverage: planInFlight ? undefined : previewLeverage,
+      hasEnteredAmount: input.hasEnteredAmount ?? false,
+    }),
   ]
 
   const zone = buildZone({ primary, direction, liqZone: prefs.liqZone })
-  const markers = buildMarkers({ primary, candleTimes, markers: prefs.markers })
+  const markers = buildMarkers({ primary, primaryDecreases, candleTimes, markers: prefs.markers })
   const legend = buildLegend({
     primary,
     econ,
@@ -760,6 +1082,9 @@ export function composeMarginChartOverlays(input: ComposeInput): MarginChartOver
   // CONTRACT (T9): bounds span the PRE-merge line set — computed from `lines` BEFORE applyLabelCollision
   // can drop the merged BE line. Post-merge bounds would let a merge→shrink→rescale→unmerge loop form
   // through the visible-range feedback (bounds shrink → range shrinks → merge un-fires → bounds grow → …).
+  // Preview lines count too, including mid-drag: a leverage change can push the preview liq well past the
+  // candles' range, so the chart rescales to keep it in view as the thumb moves — the point of the live
+  // preview. On release the quote replaces the estimate and the chart re-fits once more.
   const boundPrices = lines.map((l) => l.price)
   if (zone) {
     boundPrices.push(zone.edgePrice)
@@ -790,17 +1115,31 @@ export function composeMarginChartOverlays(input: ComposeInput): MarginChartOver
   }
 }
 
+// A decrease without a fill price has nowhere to sit on the price axis, so it draws no marker.
+export function selectDecreaseFills(activity: MarginPositionActivity[]): MarginDecreaseFill[] {
+  return activity.flatMap(({ kind, timestamp, price }) =>
+    kind === 'MARGIN_ACTIVITY_KIND_DECREASE' && price ? [{ timestamp, price }] : [],
+  )
+}
+
 // Wiring hook: gathers live market data, the user's positions, the OPEN quote and plan state, and
 // feeds the pure composer. The pane owns the visible-range state + height and passes them in (T9).
 export function useMarginChartOverlays({
   market,
+  previewMarket = market,
+  focusPositionId,
   candleTimes,
+  markFallback,
   visiblePriceRange,
   paneHeightPx,
 }: {
   market: MarginMarket
+  previewMarket?: MarginMarket
+  focusPositionId?: string
   // Candle times of the rendered series (ascending); the pane memoizes candles.map(c => c.time).
   candleTimes: UTCTimestamp[]
+  // Latest candle close, the preview estimate's fallback mark when the live market mark is absent.
+  markFallback?: number
   visiblePriceRange?: { min: number; max: number }
   paneHeightPx: number
 }): MarginChartOverlays {
@@ -809,15 +1148,23 @@ export function useMarginChartOverlays({
   const { getLive, dataUpdatedAt: marketsUpdatedAt } = useMarginMarkets()
   const account = useAccount()
   const { data: positionsData, dataUpdatedAt: positionsDataUpdatedAt } = useMarginPositionsQuery({
-    params: account.address ? { swapper: account.address, chainId: MARGIN_CHAIN_ID } : undefined,
+    params: account.address
+      ? { swapper: account.address, chainId: MARGIN_CHAIN_ID, statuses: MARGIN_ACTIVE_POSITION_STATUSES }
+      : undefined,
     refetchInterval: MARGIN_POSITIONS_REFETCH_MS,
     // Keep the chip's PnL and interest live on a backgrounded tab (the table polls the same way).
     refetchIntervalInBackground: true,
   })
-  const { quote, isPlaceholderData } = useDerivedMarginInfo({ market })
+  const previewInfo = useDerivedMarginInfo({ market: previewMarket })
+  const showsPreview = showsMarginOpenPreview({ previewMarket, market, focusPositionId })
+  const quote = showsPreview ? previewInfo.quote : undefined
+  const isPlaceholderData = showsPreview && previewInfo.isPlaceholderData
+  const isDebouncing = showsPreview && previewInfo.isDebouncing
+  const hasEnteredAmount = showsPreview && previewInfo.hasEnteredAmount
   const routedVenue = isPlaceholderData ? undefined : quote?.legs[0]?.venue
   const planInFlight = useIsPlanInFlight()
-  const prefs = useMarginChartPrefs()
+  const storedPrefs = useMarginChartPrefs()
+  const leverage = useMarginFormStore((s) => s.leverage)
   // Pin the last pre-flight quote so previews persist (dimmed) while a plan executes instead of
   // vanishing when the form's quote refreshes or clears mid-execution.
   const frozenQuote = useRef<MarginQuoteResponse | undefined>(undefined)
@@ -827,6 +1174,7 @@ export function useMarginChartOverlays({
   const colorBag: MarginChartColors = useMemo(
     () => ({
       statusSuccess: colors.statusSuccess.val,
+      statusWarning: colors.statusWarning.val,
       statusCritical: colors.statusCritical.val,
       neutral1: colors.neutral1.val,
       neutral2: colors.neutral2.val,
@@ -835,14 +1183,26 @@ export function useMarginChartOverlays({
       surface1: colors.surface1.val,
       surface3Solid: colors.surface3Solid.val,
       white: colors.white.val,
+      black: colors.black.val,
     }),
     [colors],
   )
   const live = getLive(market.key)
-  const positions = useMemo(
-    () => positionsForMarket({ positions: positionsData?.positions ?? [], market }),
-    [positionsData, market],
+  const { positions, prefs } = useMemo(
+    () =>
+      scopeMarginOverlaysToPosition({
+        positions: positionsForMarket({ positions: positionsData?.positions ?? [], market }),
+        prefs: storedPrefs,
+        focusPositionId,
+      }),
+    [positionsData, market, storedPrefs, focusPositionId],
   )
+  // Only the primary's markers read events, so only its lifecycle is fetched, and only while they show.
+  const primaryActivityId = prefs.markers ? rankPositions({ positions, prefs }).at(0)?.activityId : undefined
+  const { data: primaryDecreases } = useQuery({
+    ...marginPositionActivityQueryOptions(primaryActivityId),
+    select: selectDecreaseFills,
+  })
   // Time-derived, computed each render (the booleans are stable memo deps). The overlays memo already
   // re-runs on every positions and markets poll, so a dim lands within ~one poll of its threshold — a
   // hard-boundary ticker is an optional enhancement, not required.
@@ -859,6 +1219,7 @@ export function useMarginChartOverlays({
         market,
         live,
         positions,
+        primaryDecreases,
         quote: planInFlight ? frozenQuote.current : quote,
         prefs,
         planInFlight,
@@ -868,6 +1229,10 @@ export function useMarginChartOverlays({
         colors: colorBag,
         t,
         markStale,
+        formLeverage: leverage,
+        previewLeverage: unquotedLeverage({ leverage, quote, isQuoteStale: isDebouncing || isPlaceholderData }),
+        hasEnteredAmount,
+        markFallback,
       }),
       // Anchor the chip's interest ticker to the actual positions fetch time (React Query).
       positionsDataUpdatedAt,
@@ -881,6 +1246,7 @@ export function useMarginChartOverlays({
       market,
       live,
       positions,
+      primaryDecreases,
       quote,
       routedVenue,
       prefs,
@@ -890,6 +1256,11 @@ export function useMarginChartOverlays({
       visiblePriceRange,
       colorBag,
       t,
+      leverage,
+      isDebouncing,
+      isPlaceholderData,
+      hasEnteredAmount,
+      markFallback,
       positionsDataUpdatedAt,
       markStale,
       figuresStale,

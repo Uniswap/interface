@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useAccountEffect } from 'wagmi'
-import { useAccount } from '~/hooks/useAccount'
+import { useAccount } from '~/connection/hooks/useAccount'
 import { useAppDispatch, useAppSelector } from '~/state/hooks'
 import { useWalletGetCapabilitiesMutation } from '~/state/walletCapabilities/hooks/useWalletGetCapabilitiesMutation'
 import { handleResetWalletCapabilitiesState, selectNeedsToCheckCapabilities } from '~/state/walletCapabilities/reducer'

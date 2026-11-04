@@ -7,7 +7,7 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useEvent } from 'utilities/src/react/hooks'
 import { WalletAlertBadge } from '~/components/Badge/WalletAlertBadge'
 import { Toast } from '~/components/Popups/Toast'
-import { useAccount } from '~/hooks/useAccount'
+import { useAccount } from '~/connection/hooks/useAccount'
 import { useModalState } from '~/hooks/useModalState'
 
 export const MismatchToastItem = React.memo((props: { onDismiss: () => void }): JSX.Element => {

@@ -1,12 +1,10 @@
 import { isMobileApp } from '@universe/environment'
-import { Flex, Text, TouchableArea } from '@universe/mycelium'
+import { Button, Flex, Text, TouchableArea, ModalCloseIcon, iconSizes } from '@universe/mycelium'
+import { BackArrow } from '@universe/mycelium/icons/BackArrow'
+import { Bank } from '@universe/mycelium/icons/Bank'
+import { MessageQuestion } from '@universe/mycelium/icons/MessageQuestion'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, ModalCloseIcon } from 'ui/src'
-import { BackArrow } from 'ui/src/components/icons/BackArrow'
-import { Bank } from 'ui/src/components/icons/Bank'
-import { MessageQuestion } from 'ui/src/components/icons/MessageQuestion'
-import { iconSizes } from 'ui/src/theme/iconSizes'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
@@ -110,7 +108,6 @@ export function YouNeedTokenView({
         <Button
           emphasis="tertiary"
           size="large"
-          borderWidth="$spacing1"
           borderColor="$surface3"
           fill={false}
           width="100%"

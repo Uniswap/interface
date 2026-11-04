@@ -73,7 +73,6 @@ export const BaseConfigValues = {
   apiBaseUrlV2Override: process.env.API_BASE_URL_V2_OVERRIDE,
   entryGatewayApiUrlOverride: process.env.ENTRY_GATEWAY_API_URL_OVERRIDE,
   forApiUrlOverride: process.env.FOR_API_URL_OVERRIDE,
-  graphqlUrlOverride: process.env.GRAPHQL_URL_OVERRIDE,
   liquidityServiceUrlOverride:
     process.env.LIQUIDITY_SERVICE_URL_OVERRIDE ?? process.env.REACT_APP_LIQUIDITY_SERVICE_URL_OVERRIDE,
   scantasticApiUrlOverride: process.env.SCANTASTIC_API_URL_OVERRIDE,
@@ -147,7 +146,6 @@ export const BaseConfigSchema = z.object({
   apiBaseUrlV2Override: optionalString.describe('Override URL for API base v2'),
   entryGatewayApiUrlOverride: optionalString.describe('Override URL for entry gateway API'),
   forApiUrlOverride: optionalString.describe('Override URL for FOR API'),
-  graphqlUrlOverride: optionalString.describe('Override URL for GraphQL'),
   liquidityServiceUrlOverride: optionalString.describe('Override URL for liquidity service'),
   scantasticApiUrlOverride: optionalString.describe('Override URL for Scantastic API'),
   statsigProxyUrlOverride: optionalString.describe('Override URL for Statsig proxy'),
@@ -172,7 +170,6 @@ export const BaseEnvFieldRules: EnvFieldRules<BaseConfig> = {
       'apiBaseUrlV2Override',
       'entryGatewayApiUrlOverride',
       'forApiUrlOverride',
-      'graphqlUrlOverride',
       'liquidityServiceUrlOverride',
       'scantasticApiUrlOverride',
       'statsigProxyUrlOverride',

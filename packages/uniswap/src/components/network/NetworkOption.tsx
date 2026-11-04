@@ -14,6 +14,7 @@ const NETWORK_OPTION_ICON_SIZE = iconSizes.icon24
 const OPTION_GAP = isWebPlatform ? '$spacing8' : '$spacing6'
 const BACKGROUND_COLOR = '$surface2'
 
+// TODO(INFRA-4485): Duplicates mycelium on web. Use `OptionRowCompat` / `CheckboxOptionItemCompat` from `@universe/mycelium/option-list-compat` instead (native keeps this until INFRA-3514).
 export function NetworkOption({
   chainId,
   chainIds,

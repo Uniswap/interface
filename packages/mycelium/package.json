@@ -54,6 +54,7 @@
     "./tooltip-compat": "./src/tooltip-compat/index.ts",
     "./text-compat": "./src/text-compat/index.ts",
     "./theme-hooks-compat": "./src/theme-hooks-compat/index.ts",
+    "./theme-palette": "./src/theme-hooks-compat/palette.ts",
     "./text-compat.css": "./src/text-compat/text-compat.css",
     "./text-compat-native.css": "./src/text-compat/spore-text-colors-native.generated.css",
     "./button-compat": "./src/button-compat/index.ts",
@@ -144,6 +145,7 @@
   "devDependencies": {
     "@tailwindcss/oxide": "4.3.2",
     "@testing-library/react": "16.3.0",
+    "@testing-library/user-event": "14.5.1",
     "@types/node": "22.19.17",
     "@types/react-dom": "19.0.6",
     "@types/react-test-renderer": "19.1.0",

@@ -120,7 +120,7 @@ exports[`AccountHeader > renders correctly 1`] = `
                 <div
                   fill="none"
                   stroke-width="8"
-                  style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.35);"
+                  style="color: rgba(19, 19, 19, 0.35); width: 16px; height: 16px;"
                   viewbox="0 0 16 16"
                 >
                   <div

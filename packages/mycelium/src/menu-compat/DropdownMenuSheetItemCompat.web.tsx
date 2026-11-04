@@ -11,13 +11,14 @@
 import * as React from 'react'
 import { cn } from '../cn'
 import { mergeCompatStyle } from '../compat/compose'
+import { CheckCircleFilled } from '../components/icons/CheckCircleFilled'
+import { ExternalLink } from '../components/icons/ExternalLink'
 import {
   dropdownMenuSheetItemFrameEmission,
   dropdownMenuSheetItemLabelEmission,
   dropdownMenuSheetItemSubheaderClassName,
   resolveMenuColor,
 } from './compile'
-import { CheckCircleFilledGlyph, ExternalLinkGlyph } from './icons'
 import type { DropdownMenuSheetItemCompatProps } from './types'
 
 type RootDivProps = Omit<React.HTMLAttributes<HTMLDivElement>, keyof DropdownMenuSheetItemCompatProps>
@@ -115,7 +116,8 @@ export const DropdownMenuSheetItemCompat = React.forwardRef<
       </div>
       <div className="flex flex-shrink-0 flex-col items-end">
         {actionType === 'external-link' && (
-          <ExternalLinkGlyph
+          <ExternalLink
+            aria-hidden
             data-slot="menu-item-external-link"
             size={externalLinkSize}
             color={resolveMenuColor('$neutral2')}
@@ -126,7 +128,7 @@ export const DropdownMenuSheetItemCompat = React.forwardRef<
       {isSelected !== undefined && (
         <div className="flex flex-shrink-0">
           {isSelected ? (
-            <CheckCircleFilledGlyph data-slot="menu-item-check" size={20} />
+            <CheckCircleFilled aria-hidden data-slot="menu-item-check" size={20} />
           ) : (
             <div data-slot="menu-item-check-spacer" className="h-[20px] w-[20px] flex-shrink-0" />
           )}

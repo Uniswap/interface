@@ -13,7 +13,7 @@ import {
   currencyId,
   currencyIdToAddress,
   currencyIdToChain,
-  currencyIdToGraphQLAddress,
+  currencyIdToContractAddress,
   getCurrencyAddressForAnalytics,
   isCurrencyIdValid,
   isDefaultNativeAddress,
@@ -143,8 +143,8 @@ describe('currencyId', () => {
     [`1-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee`, null],
     ['137-0x0000000000000000000000000000000000001010', '0x0000000000000000000000000000000000001010'],
     ['56-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', null],
-  ])('currencyIdToGraphQLAddress returns correct address for currencyId=%s = %s', (_currencyId, expectedAddress) => {
-    expect(currencyIdToGraphQLAddress(_currencyId)).toEqual(expectedAddress)
+  ])('currencyIdToContractAddress returns correct address for currencyId=%s = %s', (_currencyId, expectedAddress) => {
+    expect(currencyIdToContractAddress(_currencyId)).toEqual(expectedAddress)
   })
 
   it.each([

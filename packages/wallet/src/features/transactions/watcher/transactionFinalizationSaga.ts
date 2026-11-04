@@ -129,6 +129,7 @@ export function logTransactionEvent(actionData: ReturnType<typeof transactionAct
     const bridgeProperties = {
       chain_id_in: chainId,
       chain_id_out: (type === TransactionType.Bridge && currencyIdToChain(typeInfo.outputCurrencyId)) || chainId,
+      bridge_provider: typeInfo.type === TransactionType.Bridge ? typeInfo.bridgeProvider : undefined,
     }
 
     const baseProperties = {

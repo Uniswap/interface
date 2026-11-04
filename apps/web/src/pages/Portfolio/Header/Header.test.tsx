@@ -10,8 +10,8 @@ const { mockUseActiveAddresses } = vi.hoisted(() => ({
   mockUseActiveAddresses: vi.fn(),
 }))
 
-vi.mock('~/features/accounts/store/hooks', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('~/features/accounts/store/hooks')>()
+vi.mock('~/connection/accounts/hooks', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('~/connection/accounts/hooks')>()
   return {
     ...actual,
     useActiveAddresses: mockUseActiveAddresses,

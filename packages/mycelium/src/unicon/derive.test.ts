@@ -2,11 +2,10 @@
  * INFRA-3516: pins the shared input → avatar derivation both platform legs
  * render from, in both modes:
  *
- * - Address mode: inputs the legacy ui/src Unicon accepts derive EXACTLY like
- *   legacy (keccak256 of the normalized address, 40-bit slice, plain Number
- *   modulo) — the golden indices below were computed through the legacy
- *   component's own code path (ui/src/components/Unicon/utils.ts +
- *   index.web.tsx) and must equal what legacy renders for the same address.
+ * - Address mode: inputs the retired ui/src Unicon accepted derive EXACTLY like
+ *   it did (keccak256 of the normalized address, 40-bit slice, plain Number
+ *   modulo) — the golden indices below were computed through that component's
+ *   own code path, so every wallet keeps its avatar.
  * - Backup mode: every other input keeps the original mycelium cyrb53
  *   derivation, so non-address avatars (usernames, emails, API-key seeds) are
  *   unchanged by the convergence.
@@ -15,14 +14,13 @@
  * or the icon key set silently reassigns avatars on every platform at once.
  */
 import { describe, expect, it } from 'vitest'
-import { COLOR_COUNT } from './colors'
-import { deriveUnicon, GLYPH_VIEWBOX_SIZE, uniconGeometry } from './derive'
+import { COLOR_COUNT, UNICON_COLORS } from './colors'
+import { deriveUnicon, getUniconColor, GLYPH_VIEWBOX_SIZE, uniconGeometry } from './derive'
 import { hashString } from './hash'
 import { Icons } from './icons'
 
-// Golden fixtures for ADDRESS inputs: expected values computed via the legacy
-// derivation (getUniconsDeterministicHash + getUniconColors + the icon-index
-// math in index.web.tsx), verified by importing the legacy module directly.
+// Golden fixtures for ADDRESS inputs: expected values computed via the retired
+// ui/src Unicon's derivation.
 const LEGACY_PARITY_GOLDEN = [
   { input: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045', hash: 129186966422n, colorIndex: 2, iconKey: '40' },
   { input: '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984', hash: 102528831323n, colorIndex: 3, iconKey: '47' },
@@ -98,6 +96,19 @@ describe('deriveUnicon — backup mode (cyrb53, unchanged by convergence)', () =
 
   it('uses BigInt modulo (cyrb53 hashes exceed Number.MAX_SAFE_INTEGER; the 40-bit legacy hash does not)', () => {
     expect(hashString('user@example.com') > BigInt(Number.MAX_SAFE_INTEGER)).toBe(true)
+  })
+})
+
+describe('getUniconColor', () => {
+  it('returns the palette slot deriveUnicon picks, per theme', () => {
+    // colorIndex 2 in the address goldens above
+    expect(getUniconColor('0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045', false)).toBe('#FF8934')
+    expect(getUniconColor('0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045', true)).toBe('#FF4D00')
+  })
+
+  it('covers non-address inputs through the backup derivation', () => {
+    const { colorIndex } = deriveUnicon('someone')
+    expect(getUniconColor('someone', false)).toBe(UNICON_COLORS.light[colorIndex])
   })
 })
 

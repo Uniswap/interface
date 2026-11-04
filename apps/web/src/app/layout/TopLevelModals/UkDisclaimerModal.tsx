@@ -1,6 +1,5 @@
-import { Flex, Text, Spacer } from '@universe/mycelium'
+import { Button, Flex, Text, Spacer, ModalCloseIcon } from '@universe/mycelium'
 import { useTranslation } from 'react-i18next'
-import { Button, ModalCloseIcon } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useModalState } from '~/hooks/useModalState'

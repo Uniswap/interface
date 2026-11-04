@@ -4,7 +4,7 @@ import type { RWAIssuerDisplay } from 'uniswap/src/features/rwa/types'
 
 interface TokenCardShellProps {
   onPress?: () => void
-  width: number
+  width: number | '100%'
   testID?: string
 }
 

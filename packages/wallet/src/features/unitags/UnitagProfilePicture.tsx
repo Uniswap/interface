@@ -1,5 +1,4 @@
-import { Flex, UniversalImage } from '@universe/mycelium'
-import { Unicon } from 'ui/src'
+import { Flex, UniversalImage, Unicon } from '@universe/mycelium'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 
 export function UnitagProfilePicture({

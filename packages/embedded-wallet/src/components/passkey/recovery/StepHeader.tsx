@@ -1,7 +1,7 @@
 import { Flex, ModalCloseIcon, TouchableArea } from '@universe/mycelium'
+import { BackArrow } from '@universe/mycelium/icons/BackArrow'
 import { TestID } from '@universe/test'
 import type { ReactNode } from 'react'
-import { BackArrow } from 'ui/src/components/icons/BackArrow'
 
 export function StepHeader({
   onBack,

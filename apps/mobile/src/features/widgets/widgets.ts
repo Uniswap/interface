@@ -4,7 +4,7 @@ import { NativeModules } from 'react-native'
 import { getItem, reloadAllTimelines, setItem } from 'react-native-widgetkit'
 import { getBuildVariant } from 'src/utils/version'
 import { AccountType } from 'uniswap/src/features/accounts/types'
-import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { toUniswapWebAppLink } from 'uniswap/src/features/chains/utils'
 import {
   currencyIdToContractInput,
   nativeAddressForRest,
@@ -52,11 +52,7 @@ async function setUserDefaults(data: object, key: string): Promise<void> {
 }
 
 export const setFavoritesUserDefaults = (currencyIds: CurrencyId[]): void => {
-  const favorites: Array<{ address: Maybe<string>; chain: string }> = []
-  currencyIds.forEach((currencyId: CurrencyId) => {
-    const contractInput = currencyIdToContractInput(currencyId)
-    favorites.push({ address: contractInput.address, chain: contractInput.chain })
-  })
+  const favorites = currencyIds.map((currencyId: CurrencyId) => currencyIdToContractInput(currencyId))
   const data = {
     favorites,
   }
@@ -87,7 +83,8 @@ export const setI18NUserDefaults = (i18nSettings: WidgetI18nSettings): void => {
 export const setChainsUserDefaults = (chainIds: UniverseChainId[]): void => {
   const chains = chainIds.map((chainId) => ({
     chainId,
-    name: toGraphQLChain(chainId),
+    // Path segment the widget's tap-through deeplink uses for this chain.
+    urlParam: toUniswapWebAppLink(chainId),
     nativeAddress: nativeAddressForRest(chainId),
   }))
   setUserDefaults({ chains }, KEY_WIDGETS_CHAINS).catch(() => undefined)

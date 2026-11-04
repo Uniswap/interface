@@ -160,4 +160,33 @@ describe('createBuildQuoteRequest — wire shape', () => {
 
     expect(validateParsedInput(parsed)).toBeUndefined()
   })
+
+  describe('Relay bridge opt-in', () => {
+    const crossChainInput = { ...baseInput, tokenOutChainId: 42161 }
+    const enableOnly = (enabled: FeatureFlags) => (flag: FeatureFlags) => flag === enabled
+
+    it('lists Across and Relay on a cross-chain quote when the gate is on', () => {
+      vi.mocked(getFeatureFlag).mockImplementation(enableOnly(FeatureFlags.RelayBridgeAggregator))
+
+      const result = createBuildQuoteRequest(ctx)(crossChainInput)
+
+      expect(result.bridgeProviders).toEqual([TradingApi.BridgeProvider.ACROSS, TradingApi.BridgeProvider.RELAY])
+    })
+
+    it('omits the list when the gate is off, so the API serves Across only', () => {
+      vi.mocked(getFeatureFlag).mockReturnValue(false)
+
+      const result = createBuildQuoteRequest(ctx)(crossChainInput)
+
+      expect(result).not.toHaveProperty('bridgeProviders')
+    })
+
+    it('omits the list on a same-chain quote', () => {
+      vi.mocked(getFeatureFlag).mockImplementation(enableOnly(FeatureFlags.RelayBridgeAggregator))
+
+      const result = createBuildQuoteRequest(ctx)(baseInput)
+
+      expect(result).not.toHaveProperty('bridgeProviders')
+    })
+  })
 })

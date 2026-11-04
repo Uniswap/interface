@@ -4,8 +4,8 @@ import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useSendTransaction, useWaitForTransactionReceipt } from 'wagmi'
 import { assume0xAddress } from '~/chains'
+import { useSelectChain } from '~/connection/hooks/useSelectChain'
 import { useAuctionStore, useAuctionStoreActions } from '~/features/Toucan/Auction/store/useAuctionStore'
-import { useSelectChain } from '~/hooks/useSelectChain'
 
 export interface MigrateSubmitState {
   onSubmit: () => Promise<void>

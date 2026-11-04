@@ -5,7 +5,7 @@ import { ChangeEvent, ReactNode, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useENS } from 'uniswap/src/features/ens/useENS'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
-import { useAccount } from '~/hooks/useAccount'
+import { useAccount } from '~/connection/hooks/useAccount'
 import { ExternalLink } from '~/theme/components/Links'
 
 const InputPanel = styled('div', {

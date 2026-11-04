@@ -1,0 +1,57 @@
+import { useFeatureFlag } from '@universe/gating'
+import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
+import { useWalletWithId } from '~/connection/accounts/hooks'
+import { ExternalWallet } from '~/connection/accounts/types'
+import { UniswapWalletOptions } from '~/features/wallet/components/WalletModal/UniswapWalletOptions'
+import { mocked } from '~/test-utils/mocked'
+import { render, screen } from '~/test-utils/render'
+
+vi.mock('~/connection/accounts/hooks', async () => ({
+  ...(await vi.importActual('~/connection/accounts/hooks')),
+  useWalletWithId: vi.fn(),
+}))
+
+vi.mock('@universe/gating', async (importOriginal) => {
+  return {
+    ...(await importOriginal()),
+    useFeatureFlag: vi.fn(),
+    getFeatureFlag: vi.fn(),
+  }
+})
+
+const UniswapMobileWallet = {
+  id: CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID,
+} as ExternalWallet
+
+const UniswapExtensionWallet = {
+  id: CONNECTION_PROVIDER_IDS.UNISWAP_EXTENSION_RDNS,
+} as ExternalWallet
+
+describe('UniswapWalletOptions', () => {
+  it('Download wallet option should be visible if extension is not detected', () => {
+    mocked(useWalletWithId).mockImplementation(
+      (testId) =>
+        ({
+          [CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID]: UniswapMobileWallet,
+        })[testId],
+    )
+    mocked(useFeatureFlag).mockReturnValue(true)
+    const { asFragment } = render(<UniswapWalletOptions />)
+    expect(asFragment()).toMatchSnapshot()
+    const downloadOption = screen.getByTestId('download-uniswap-wallet')
+    expect(downloadOption).toBeInTheDocument()
+  })
+  it('Extension connecter should be shown if detected', () => {
+    mocked(useWalletWithId).mockImplementation(
+      (testId) =>
+        ({
+          [CONNECTION_PROVIDER_IDS.UNISWAP_EXTENSION_RDNS]: UniswapExtensionWallet,
+        })[testId],
+    )
+    mocked(useFeatureFlag).mockReturnValue(false)
+    const { asFragment } = render(<UniswapWalletOptions />)
+    expect(asFragment()).toMatchSnapshot()
+    const connectWallet = screen.getByTestId('connect-uniswap-extension')
+    expect(connectWallet).toBeInTheDocument()
+  })
+})

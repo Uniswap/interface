@@ -1,5 +1,4 @@
 import { act, renderHook } from '@testing-library/react'
-import { GraphQLApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
 import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
 import { useNetworkBalanceSheet } from 'src/screens/TokenDetailsScreen/useNetworkBalanceSheet'
@@ -126,7 +125,7 @@ describe(useNetworkBalanceSheet, () => {
       expect(mockUseCrossChainBalances).toHaveBeenCalledWith({
         evmAddress: '0xTestAddress',
         currencyId: defaultArgs.currencyId,
-        crossChainTokens: [{ address: BASE_TOKEN_ADDRESS, chain: GraphQLApi.Chain.Base }],
+        crossChainTokens: [{ address: BASE_TOKEN_ADDRESS, chainId: UniverseChainId.Base }],
       })
     })
   })

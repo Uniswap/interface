@@ -1,9 +1,8 @@
-import { Flex, type FlexCompatProps } from '@universe/mycelium'
+import { Flex, type FlexCompatProps, fonts, type TextVariantKey } from '@universe/mycelium'
 import { forwardRef, type ForwardRefExoticComponent, type RefAttributes } from 'react'
-import { fonts, TextVariantTokens } from 'ui/src/theme'
 
 const LOADER_PADDING = 2
-export function TextLoader({ variant, width }: { variant: TextVariantTokens; width: number }) {
+export function TextLoader({ variant, width }: { variant: TextVariantKey; width: number }) {
   const height = fonts[variant].lineHeight
 
   return (

@@ -20,7 +20,7 @@ import { PrivacyToggles } from '~/components/AccountDrawer/PrivacyToggles'
 import { SettingsButton } from '~/components/AccountDrawer/SettingsButton'
 import { SlideOutMenu } from '~/components/AccountDrawer/SlideOutMenu'
 import { TestnetsToggle } from '~/components/AccountDrawer/TestnetsToggle'
-import { useIsEmbeddedWallet } from '~/hooks/useIsEmbeddedWallet'
+import { useIsEmbeddedWallet } from '~/connection/hooks/useIsEmbeddedWallet'
 import { ThemeToggleWithLabel } from '~/theme/components/ThemeToggle'
 
 function SectionHeader({ title }: { title: string }) {

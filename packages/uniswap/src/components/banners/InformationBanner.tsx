@@ -1,5 +1,5 @@
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
-import { QuestionInCircleFilled } from 'ui/src/components/icons/QuestionInCircleFilled'
+import { QuestionInCircleFilled } from '@universe/mycelium/icons/QuestionInCircleFilled'
 
 type InformationBannerProps = {
   infoText: string

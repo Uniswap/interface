@@ -79,7 +79,6 @@ module.exports = {
       'redux-persist',
       'react-native-url-polyfill',
       'react-native-context-menu-view',
-      'react-native-wagmi-charts',
       'react-native-markdown-display',
       'react-native-redash',
       '@walletconnect/**',

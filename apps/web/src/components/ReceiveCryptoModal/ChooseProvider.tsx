@@ -11,7 +11,7 @@ import { useCexTransferProviders } from 'uniswap/src/features/fiatOnRamp/useCexT
 import { AccountOption } from '~/components/ReceiveCryptoModal/AccountOption'
 import { ProviderOption } from '~/components/ReceiveCryptoModal/ProviderOption'
 import { useOpenReceiveCryptoModal } from '~/components/ReceiveCryptoModal/useOpenReceiveCryptoModal'
-import { useActiveAddresses } from '~/features/accounts/store/hooks'
+import { useActiveAddresses } from '~/connection/accounts/hooks'
 import { ProviderConnectedView } from '~/pages/Swap/Buy/ProviderConnectedView'
 import { ProviderConnectionError } from '~/pages/Swap/Buy/ProviderConnectionError'
 import { ReceiveModalState } from '~/types/receiveCryptoModal'

@@ -8,33 +8,28 @@
 import Foundation
 import OSLog
 
-/// Resolves between the widget's chain-name strings (GraphQL-style, e.g. `ETHEREUM`, stored in favorites,
-/// intents and deeplinks) and the numeric chain ids + native-token addresses the v2 data API expects.
-/// Backed by the chains the app syncs (see `setChainsUserDefaults`); Ethereum is always present so a
-/// widget rendered before any sync (snapshots, placeholders) still resolves.
-struct WidgetChainRegistry {
+/// The chains the app syncs (see `setChainsUserDefaults`), with the native-token addresses the v2 data API
+/// expects. Ethereum is always present so a widget rendered before any sync (snapshots, placeholders) still
+/// resolves.
+public struct WidgetChainRegistry {
   private static let ethereum = WidgetChain(
-    chainId: 1, name: WidgetConstants.ethereumChain, nativeAddress: WidgetConstants.zeroAddress)
+    chainId: WidgetConstants.ethereumChainId, urlParam: "ethereum", nativeAddress: WidgetConstants.zeroAddress)
 
   let chains: [WidgetChain]
 
-  init(chains: [WidgetChain] = UniswapUserDefaults.readChains().chains) {
+  public init(chains: [WidgetChain] = UniswapUserDefaults.readChains().chains) {
     self.chains = chains.contains { $0.chainId == Self.ethereum.chainId } ? chains : chains + [Self.ethereum]
   }
 
   var chainIds: [Int] { chains.map { $0.chainId } }
-
-  func chain(named name: String) -> WidgetChain? {
-    return chains.first { $0.name == name }
-  }
 
   func chain(id chainId: Int) -> WidgetChain? {
     return chains.first { $0.chainId == chainId }
   }
 
   /// v2 `TokenIdentifier` for a widget token; a nil address means the chain's native token.
-  func tokenIdentifier(chain chainName: String, address: String?) -> [String: Any]? {
-    return chain(named: chainName).map { tokenIdentifier(chain: $0, address: address) }
+  func tokenIdentifier(chainId: Int, address: String?) -> [String: Any]? {
+    return chain(id: chainId).map { tokenIdentifier(chain: $0, address: address) }
   }
 
   func tokenIdentifier(chain: WidgetChain, address: String?) -> [String: Any] {
@@ -52,6 +47,12 @@ struct WidgetChainRegistry {
     return nativePlaceholders.contains { $0?.lowercased() == address.lowercased() } ? nil : address
   }
 
+  /// Chain path segment for the widget's tap-through deeplink. Chains synced by app versions before chain ids
+  /// carry no `urlParam`; for those, the lowercased legacy name is the segment those versions used.
+  public func deeplinkChainParam(chainId: Int) -> String? {
+    return chain(id: chainId)?.urlParam ?? LegacyChainNames.name(forChainId: chainId)?.lowercased()
+  }
+
   private func nativeAddress(for chain: WidgetChain) -> String {
     return chain.nativeAddress ?? WidgetConstants.zeroAddress
   }
@@ -67,7 +68,7 @@ public class DataQueries {
   public static func fetchTokensData(tokenInputs: [TokenInput]) async throws -> [TokenResponse] {
     let registry = WidgetChainRegistry()
     let requests = tokenInputs.compactMap { input -> (key: String, identifier: [String: Any])? in
-      guard let chain = registry.chain(named: input.chain) else {
+      guard let chainId = input.resolvedChainId, let chain = registry.chain(id: chainId) else {
         return nil
       }
       return (
@@ -114,22 +115,22 @@ public class DataQueries {
         return nil
       }
       return TokenResponse(
-        chain: chain.name,
+        chainId: chain.chainId,
         address: registry.displayAddress(chainId: deployment.chainId, address: deployment.address),
         symbol: token.symbol ?? "",
         name: token.name ?? "")
     }
   }
 
-  public static func fetchTokenPriceData(chain: String, address: String?) async throws -> TokenPriceResponse {
+  public static func fetchTokenPriceData(chainId: Int, address: String?) async throws -> TokenPriceResponse {
     let registry = WidgetChainRegistry()
-    guard let identifier = registry.tokenIdentifier(chain: chain, address: address) else {
+    guard let identifier = registry.tokenIdentifier(chainId: chainId, address: address) else {
       throw URLError(.badURL)
     }
     let response: GetTokenResponse = try await DataApi.post(method: "GetToken", body: identifier)
     let token = response.token
     return TokenPriceResponse(
-      chain: chain,
+      chainId: chainId,
       address: address,
       symbol: token?.symbol ?? "",
       name: token?.name ?? "",
@@ -138,9 +139,9 @@ public class DataQueries {
       pricePercentChange: token?.price?.percentChange1d)
   }
 
-  public static func fetchTokenPriceHistoryData(chain: String, address: String?) async throws -> TokenPriceHistoryResponse {
+  public static func fetchTokenPriceHistoryData(chainId: Int, address: String?) async throws -> TokenPriceHistoryResponse {
     let registry = WidgetChainRegistry()
-    guard let identifier = registry.tokenIdentifier(chain: chain, address: address) else {
+    guard let identifier = registry.tokenIdentifier(chainId: chainId, address: address) else {
       throw URLError(.badURL)
     }
     // `singleChain` is a oneof member, which proto3 JSON flattens onto the message rather than nesting under `target`.
@@ -196,11 +197,11 @@ public class DataQueries {
   }
 
   private static func tokenResponse(from token: DataApiToken, registry: WidgetChainRegistry) -> TokenResponse? {
-    guard let chainId = token.chainId, let chain = registry.chain(id: chainId) else {
+    guard let chainId = token.chainId, registry.chain(id: chainId) != nil else {
       return nil
     }
     return TokenResponse(
-      chain: chain.name,
+      chainId: chainId,
       address: registry.displayAddress(chainId: chainId, address: token.address),
       symbol: token.symbol ?? "",
       name: token.name ?? "")
@@ -242,11 +243,11 @@ public class DataQueries {
   }
 
   private static func tokenResponse(from balance: PortfolioBalance, registry: WidgetChainRegistry) -> TokenResponse? {
-    guard let token = balance.token, let chainId = token.chainId, let chain = registry.chain(id: chainId) else {
+    guard let token = balance.token, let chainId = token.chainId, registry.chain(id: chainId) != nil else {
       return nil
     }
     return TokenResponse(
-      chain: chain.name,
+      chainId: chainId,
       address: registry.displayAddress(chainId: chainId, address: token.address),
       symbol: token.symbol ?? "",
       name: token.name ?? "")

@@ -25,7 +25,6 @@ describe('getQuicknodeChainIdPathSuffix', () => {
     [UniverseChainId.Mainnet, '', 'Mainnet chain'],
     [UniverseChainId.ArbitrumOne, '', 'Arbitrum chain'],
     [UniverseChainId.Base, '', 'Base chain'],
-    [UniverseChainId.Blast, '', 'Blast chain'],
     [UniverseChainId.Bnb, '', 'BNB chain'],
     [UniverseChainId.Celo, '', 'Celo chain'],
     [UniverseChainId.Linea, '', 'Linea chain'],
@@ -99,7 +98,6 @@ describe('getQuicknodeEndpointUrl', () => {
       UniverseChainId.ArbitrumOne,
       UniverseChainId.Avalanche,
       UniverseChainId.Base,
-      UniverseChainId.Blast,
       UniverseChainId.Bnb,
       UniverseChainId.Celo,
       UniverseChainId.Linea,
@@ -141,7 +139,6 @@ describe('getQuicknodeChainId', () => {
     expect(getQuicknodeChainId(UniverseChainId.ArbitrumOne)).toBe('arbitrum-mainnet')
     expect(getQuicknodeChainId(UniverseChainId.Avalanche)).toBe('avalanche-mainnet')
     expect(getQuicknodeChainId(UniverseChainId.Base)).toBe('base-mainnet')
-    expect(getQuicknodeChainId(UniverseChainId.Blast)).toBe('blast-mainnet')
     expect(getQuicknodeChainId(UniverseChainId.Bnb)).toBe('bsc')
     expect(getQuicknodeChainId(UniverseChainId.Celo)).toBe('celo-mainnet')
     expect(getQuicknodeChainId(UniverseChainId.Linea)).toBe('linea-mainnet')

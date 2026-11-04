@@ -46,7 +46,7 @@ describe('getMappedMarginErrorMessage', () => {
     expect(getMappedMarginErrorMessage({ errorCode: 'MARGIN_SWAP_INSUFFICIENT_LIQUIDITY', t: mockT })).toBe(
       'margin.error.adjust.insufficientLiquidity',
     )
-    expect(getMappedMarginErrorMessage({ errorCode: 'MARGIN_BORROW_INSUFFICIENT_LIQUIDITY', t: mockT })).toBe(
+    expect(getMappedMarginErrorMessage({ errorCode: 'MARGIN_INSUFFICIENT_BORROW_LIQUIDITY', t: mockT })).toBe(
       'margin.error.adjust.insufficientLiquidity',
     )
   })
@@ -93,6 +93,32 @@ describe('getMarginQuoteErrorMessage', () => {
     expect(getMarginQuoteErrorMessage({ error, t: mockT })).toEqual({ message: 'margin.error.adjust.healthFloor' })
   })
 
+  // Spelled as the backend's trading lib/errors.ts names it; any other spelling leaves this refusal as
+  // unrecognized-code drift showing the raw detail.
+  it('maps the backend’s borrow-liquidity refusal to the liquidity copy, not drift', () => {
+    const error = fetchErrorWith({
+      status: 422,
+      errorCode: 'MARGIN_INSUFFICIENT_BORROW_LIQUIDITY',
+      detail: 'Insufficient borrow liquidity',
+    })
+    expect(getMarginQuoteErrorMessage({ error, t: mockT })).toEqual({
+      message: 'margin.error.adjust.insufficientLiquidity',
+    })
+  })
+
+  // The wire shape trading actually sends: TradingAPIHttpError puts the thrown HttpError's name in
+  // errorCode and its message, the MARGIN_ code, in detail.
+  it('maps a refusal whose MARGIN_ code arrives in detail under a coarse errorCode', () => {
+    const error = fetchErrorWith({
+      status: 422,
+      errorCode: 'UnprocessableEntity',
+      detail: 'MARGIN_INSUFFICIENT_BORROW_LIQUIDITY',
+    })
+    expect(getMarginQuoteErrorMessage({ error, t: mockT })).toEqual({
+      message: 'margin.error.adjust.insufficientLiquidity',
+    })
+  })
+
   it('never lets MARGIN_INVALID_LEVERAGE fall through to its leverageX18-leaking detail', () => {
     const error = fetchErrorWith({
       status: 422,
@@ -102,6 +128,29 @@ describe('getMarginQuoteErrorMessage', () => {
     const result = getMarginQuoteErrorMessage({ error, t: mockT })
     expect(result.message).toBe('margin.error.adjust.invalidLeverage')
     expect(result.message).not.toContain('leverageX18')
+  })
+
+  // The real producer: a BadRequest whose class name is the errorCode and whose message (the detail)
+  // leads with the margin code, as trading's marginFundingSwapUnsupportedError builds it.
+  it('reads a MARGIN_ code off the head of the detail when the errorCode is the class name', () => {
+    const error = fetchErrorWith({
+      status: 400,
+      errorCode: 'BadRequest',
+      detail: 'MARGIN_FUNDING_SWAP_UNSUPPORTED: pays out in 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+    })
+    expect(getMarginQuoteErrorMessage({ error, t: mockT })).toEqual({
+      message: 'margin.error.adjust.fundingSwapUnsupported',
+    })
+  })
+
+  it('flags a detail-borne MARGIN_ code this map does not know, without leaking a non-code detail as one', () => {
+    const unknown = fetchErrorWith({ status: 400, errorCode: 'BadRequest', detail: 'MARGIN_DUST_DEBT' })
+    expect(getMarginQuoteErrorMessage({ error: unknown, t: mockT })).toEqual({
+      message: 'MARGIN_DUST_DEBT',
+      unrecognizedCode: 'MARGIN_DUST_DEBT',
+    })
+    const prose = fetchErrorWith({ status: 400, errorCode: 'BadRequest', detail: 'MARGINAL request' })
+    expect(getMarginQuoteErrorMessage({ error: prose, t: mockT })).toEqual({ message: 'MARGINAL request' })
   })
 
   it('degrades to detail + flags drift for a MARGIN_-prefixed code this map does not recognize', () => {

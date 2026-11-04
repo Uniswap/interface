@@ -4,17 +4,9 @@ import type {
   MarginActivePosition,
   MarginPlanIntent,
   MarginPlanResponse,
-  MarginPosition,
 } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
-import type { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
+import { marginPositionSubId, marginPositionTokens } from '~/features/margin/utils/marginPositionRow'
 import { isTerminalPlanStatus } from '~/pages/Swap/Margin/hooks/marginExecutionGuards'
-import { accruedUsd, rawToNumber, scaledE18ToNumber } from '~/pages/Swap/Margin/marginFormat'
-import {
-  hasMarginOpenedAt,
-  isMarginActivePosition,
-  marginPositionSubId,
-  marginPositionTokens,
-} from '~/pages/Swap/Margin/marginPositionRow'
 
 export type MarginTableRow =
   | { kind: 'position'; position: MarginActivePosition }
@@ -22,8 +14,8 @@ export type MarginTableRow =
   | { kind: 'inFlight'; intent: MarginPlanIntent; planId: string; stepLabel: string }
 
 // Active-tab row assembly around the execution store's plan:
-// - OPEN plans never get an in-flight row — the steps modal (while open) and the pending-section
-//   card (once closed) own that surface.
+// - OPEN plans never get an in-flight row — the steps modal (while open) and the Open CTA's resume
+//   (once closed) own that surface.
 // - Non-OPEN plans get the in-flight row only while the modal is closed; open, the modal is the
 //   progress surface and the row would duplicate it.
 // - Server rows matching the OPEN plan are suppressed while the modal shows it or the executor
@@ -38,7 +30,7 @@ export function buildMarginActiveRows({
   isExecuting,
   t,
 }: {
-  positions?: MarginPosition[]
+  positions?: MarginActivePosition[]
   plan?: MarginPlanResponse
   isModalOpen: boolean
   isExecuting: boolean
@@ -71,53 +63,10 @@ export function buildMarginActiveRows({
       normalizeTokenAddressForCache(row.debtToken) === normalizeTokenAddressForCache(plan.debtToken),
     )
 
-  // positions[] now carries terminal rows too (status !== 'ACTIVE') — the active tab only ever shows
-  // the live ones.
   for (const position of positions ?? []) {
-    if (!isMarginActivePosition(position)) {
-      continue
-    }
     if (!suppressServerRow({ subId: marginPositionSubId(position), ...marginPositionTokens(position) })) {
       rows.push({ kind: 'position', position })
     }
   }
   return rows
-}
-
-const SECONDS_PER_DAY = 86_400
-
-/**
- * Interest accrued so far, and the daily rate it implies in USD — or undefined where the figure would
- * be a guess.
- *
- * The rate is accrued ÷ age, so it needs a real `openedAt` — `hasMarginOpenedAt`, deliberately NOT
- * `hasMarginPositionBasis`: that one additionally demands an entry price and gates figures priced at
- * the at-open MARK, which this rate is not, so coupling them would drop a sound accrual over a missing
- * entry price. `accruedInterest` is denominated in the DEBT token — the volatile leg for a short — so
- * it is valued before it can reach a fiat formatter. `nowMs` is injected rather than read here so the
- * derivation is pinnable.
- */
-export function marginAccruedInterestPerDay({
-  position,
-  debtDecimals,
-  direction,
-  nowMs,
-}: {
-  position: MarginActivePosition
-  debtDecimals: number
-  direction: MarginDirection | undefined
-  nowMs: number
-}): { accrued: number; perDayUsd: number } | undefined {
-  if (position.accruedInterest === undefined || !hasMarginOpenedAt(position)) {
-    return undefined
-  }
-  const accrued = rawToNumber({ raw: position.accruedInterest, decimals: debtDecimals })
-  const ageDays = Math.max(0, Math.floor(nowMs / 1000) - Number(position.openedAt)) / SECONDS_PER_DAY
-  // A position opened this instant has no age to divide by; report the whole accrual as the day's rate
-  // rather than dividing by zero.
-  const perDay = ageDays > 0 ? accrued / ageDays : accrued
-  return {
-    accrued,
-    perDayUsd: accruedUsd({ accrued: perDay, direction, mark: scaledE18ToNumber(position.oraclePrice) }),
-  }
 }

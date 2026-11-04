@@ -1,4 +1,5 @@
 import { SPORE_ANIMATION_CURVE_CSS } from '@universe/tailwind/animations'
+import { useLayoutEffect } from 'react'
 import { AnimatedTab } from 'src/app/features/home/AnimatedTab'
 import { render } from 'src/test/test-utils'
 
@@ -24,7 +25,7 @@ describe('AnimatedTab', () => {
     {
       name: 'active',
       props: { isActive: true },
-      display: 'flex',
+      display: '',
       opacity: 'opacity-[1]',
       translateX: 'translateX(0px)',
       pointerEvents: '[pointer-events:auto]',
@@ -32,7 +33,7 @@ describe('AnimatedTab', () => {
     {
       name: 'hidden toward the left',
       props: { isActive: false, hideLeft: true },
-      display: 'hidden',
+      display: 'none',
       opacity: 'opacity-[0]',
       translateX: 'translateX(-10px)',
       pointerEvents: '[pointer-events:none]',
@@ -40,7 +41,7 @@ describe('AnimatedTab', () => {
     {
       name: 'hidden toward the right',
       props: { isActive: false, hideRight: true },
-      display: 'hidden',
+      display: 'none',
       opacity: 'opacity-[0]',
       translateX: 'translateX(10px)',
       pointerEvents: '[pointer-events:none]',
@@ -51,10 +52,9 @@ describe('AnimatedTab', () => {
     '$name tab renders the expected styles',
     ({ props, display, opacity, translateX, pointerEvents }) => {
       const tab = renderTab(props)
-      const opposingDisplay = display === 'flex' ? 'hidden' : 'flex'
 
-      expect(tab.classList.contains(display)).toBe(true)
-      expect(tab.classList.contains(opposingDisplay)).toBe(false)
+      // A hidden Activity sets inline display:none on its host children.
+      expect(tab.style.display).toBe(display)
       expect(tab.classList.contains(opacity)).toBe(true)
       expect(tab.classList.contains(pointerEvents)).toBe(true)
       expect(tab.style.getPropertyValue('--c-tr')).toBe(translateX)
@@ -64,8 +64,7 @@ describe('AnimatedTab', () => {
   it('inactive tab is non-interactive even without a hide direction', () => {
     const tab = renderTab({ isActive: false })
 
-    expect(tab.classList.contains('hidden')).toBe(true)
-    expect(tab.classList.contains('flex')).toBe(false)
+    expect(tab.style.display).toBe('none')
     expect(tab.classList.contains('[pointer-events:none]')).toBe(true)
   })
 
@@ -101,8 +100,40 @@ describe('AnimatedTab', () => {
       </AnimatedTab>,
     )
 
-    // Switching back should be instant, so the subtree stays mounted behind display:none.
+    // Switching back should be instant, so the subtree stays mounted as a hidden Activity.
     expect(queryByText('tab content')).not.toBeNull()
+  })
+
+  it('does not run layout effects while the tab is inactive', () => {
+    const commits: string[] = []
+    function Probe({ label }: { label: string }): JSX.Element {
+      useLayoutEffect(() => {
+        commits.push(label)
+      })
+      return <span>{label}</span>
+    }
+
+    const { rerender } = render(
+      <AnimatedTab isActive>
+        <Probe label="a" />
+      </AnimatedTab>,
+    )
+    expect(commits).toEqual(['a'])
+
+    // Data changes while hidden must not re-measure: no layout effect may fire.
+    rerender(
+      <AnimatedTab isActive={false} hideRight>
+        <Probe label="b" />
+      </AnimatedTab>,
+    )
+    expect(commits).toEqual(['a'])
+
+    rerender(
+      <AnimatedTab isActive>
+        <Probe label="c" />
+      </AnimatedTab>,
+    )
+    expect(commits).toEqual(['a', 'c'])
   })
 
   it('scopes the transition to opacity and transform (color-flash rule)', () => {

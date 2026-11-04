@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { type ParsedToken } from 'uniswap/src/features/dataApi/utils/parsedToken'
 import { TokenHoverCard, type TokenHoverCardToken } from '~/components/HoverCard/TokenHoverCard/TokenHoverCard'
 import { EllipsisText } from '~/components/Table/shared/TableText'
@@ -50,7 +49,7 @@ export const TokenLinkCell = ({ token, hideLogo }: { token: ParsedToken; hideLog
   const unwrappedToken = unwrapToken(chainId, token)
 
   const hoverCardToken: TokenHoverCardToken = {
-    chain: toGraphQLChain(chainId),
+    chainId,
     address: unwrappedToken.address ?? NATIVE_CHAIN_ID,
   }
 
@@ -59,7 +58,7 @@ export const TokenLinkCell = ({ token, hideLogo }: { token: ParsedToken; hideLog
       <StyledInternalLink
         to={getTokenDetailsURL({
           address: unwrappedToken.address,
-          chain: toGraphQLChain(chainId),
+          chainId,
         })}
       >
         <Flex row gap="$gap8" maxWidth="100px" alignItems="center">

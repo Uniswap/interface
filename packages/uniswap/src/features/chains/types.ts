@@ -1,5 +1,5 @@
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import type { GraphQLApi, TradingApi } from '@universe/api'
+import type { TradingApi } from '@universe/api'
 import { UniverseChainId, Platform } from '@universe/chains'
 import type { AppId } from '@universe/config'
 import { SwapConfigKey } from '@universe/gating'
@@ -10,7 +10,6 @@ import { Chain as WagmiChain } from 'wagmi/chains'
 
 export interface EnabledChainsInfo {
   chains: UniverseChainId[]
-  gqlChains: GqlChainId[]
   defaultChainId: UniverseChainId
   isTestnetModeEnabled: boolean
 }
@@ -36,10 +35,7 @@ export interface RetryOptions {
   maxWait: number
 }
 
-export type GqlChainId = Exclude<GraphQLApi.Chain, GraphQLApi.Chain.UnknownChain | GraphQLApi.Chain.EthereumGoerli>
-
 export interface BackendChain {
-  chain: GqlChainId
   /**
    * Set to false if the chain is not available on Explore.
    */

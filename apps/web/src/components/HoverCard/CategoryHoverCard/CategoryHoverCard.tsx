@@ -5,17 +5,17 @@ import type { ReactNode } from 'react'
 import { useNavigate } from 'react-router'
 import { ElementName, InterfaceEventName, type SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
+import type { Category } from 'uniswap/src/features/tokenCategories/types'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { CategoryDefinitionCard } from '~/components/CategoryDefinitionCard/CategoryDefinitionCard'
+import { useFireOncePerOpen } from '~/components/HoverCard/hooks/useFireOncePerOpen'
 import { HoverCard, type HoverCardPlacement, useHoverCardState } from '~/components/HoverCard/HoverCard'
-import { useFireOncePerOpen } from '~/components/HoverCard/useFireOncePerOpen'
 import type { CategoryDetailsNavState } from '~/pages/Explore/CategoryDetails/categoryDetailsEntryPoint'
 import { getCategoryDetailsURL } from '~/pages/Explore/CategoryDetails/getCategoryDetailsURL'
 
 interface CategoryHoverCardProps {
-  category: TokenCategory | undefined
+  category: Category | undefined
   section: SectionName
   placement?: HoverCardPlacement
   getNavigationState?: () => CategoryDetailsNavState | undefined
@@ -40,7 +40,7 @@ function DefinedCategoryHoverCard({
   placement = 'bottom-start',
   getNavigationState,
   children,
-}: CategoryHoverCardProps & { category: TokenCategory }): JSX.Element {
+}: CategoryHoverCardProps & { category: Category }): JSX.Element {
   const navigate = useNavigate()
   const trace = useTrace()
   const { isOpen, close, onOpenChange } = useHoverCardState()
@@ -52,6 +52,7 @@ function DefinedCategoryHoverCard({
         ...trace,
         section,
         category_id: category.id,
+        category_kind: category.kind,
         trigger: 'hover',
       }),
   })
@@ -61,9 +62,10 @@ function DefinedCategoryHoverCard({
       element: ElementName.CategoryHoverCard,
       section,
       category_id: category.id,
+      category_kind: category.kind,
     })
     close()
-    navigate(getCategoryDetailsURL(category.id), { state: getNavigationState?.() })
+    navigate(getCategoryDetailsURL(category.id, category.kind), { state: getNavigationState?.() })
   })
 
   return (

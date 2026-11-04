@@ -106,7 +106,7 @@ export function SmartWalletStatusModal({
               infoButton={
                 <LearnMoreLink
                   textVariant="buttonLabel4"
-                  textColor={isWebPlatform ? '$accent1' : '$accent3'}
+                  textColor={isWebPlatform ? '$accent1' : '$neutral1'}
                   url={UniswapHelpUrls.articles.multichainDelegation}
                 />
               }

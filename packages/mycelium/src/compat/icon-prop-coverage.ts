@@ -27,13 +27,12 @@ import { lookupToken } from './tokens'
 
 /**
  * Tamagui animation-driver surface: timing/driver configs the CSS side has no
- * counterpart for. The dominant carrier is the ui/src RotatableChevron
- * wrapper, which stays on ui/src per the ratified INFRA-3227 producer ruling,
- * so these never reach a converted generated icon.
+ * counterpart for. The dominant carrier is the RotatableChevron wrapper, not a
+ * generated icon.
  */
 const ANIMATION_DRIVER = [
-  'Tamagui animation-driver prop with no compat counterpart; the live usages ride the ui/src RotatableChevron',
-  'wrapper, which stays on ui/src per the ratified INFRA-3227 producer ruling — not a generated-icon surface.',
+  'Tamagui animation-driver prop with no compat counterpart; the live usages ride the RotatableChevron wrapper',
+  '— not a generated-icon surface.',
 ].join(' ')
 
 /** One badge-shaped call site (apps/web UniswapWalletOptions.tsx) styling the icon's box. */
@@ -62,10 +61,7 @@ export const REJECTED_ICON_PROPS: Readonly<Record<string, string>> = {
     'Tamagui translateX shorthand shadowing the SVG `x` attribute — the intent is ambiguous on an svg element;',
     'write a CSS transform at the call site instead.',
   ].join(' '),
-  rotateZ: [
-    'Tamagui transform shorthand; its sole call site is ui/src-internal (packages/ui Arrow.tsx) — write',
-    '`transform`/`rotate` at the call site instead.',
-  ].join(' '),
+  rotateZ: ['Tamagui transform shorthand — write `transform`/`rotate` at the call site instead.'].join(' '),
 }
 
 // ── Runtime enforcement (the ledger's other half) ──────────────────────

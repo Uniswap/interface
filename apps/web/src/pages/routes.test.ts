@@ -1,9 +1,11 @@
 import fs from 'fs'
 import React from 'react'
+import { matchRoutes } from 'react-router'
 import { USDC_ARC } from 'uniswap/src/constants/tokens'
 import { parseStringPromise } from 'xml2js'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { EMBED_BASE_PATH, isEmbedPath } from '~/pages/embedPaths'
+import type { RouterConfig } from '~/pages/routeDefinition'
 import { EMBED_ENTRY_ROUTES, findRouteByPath, routes } from '~/pages/RouteDefinitions'
 
 vi.mock('~/pages/Swap', () => ({
@@ -42,6 +44,40 @@ describe('Routes', () => {
       props: { replace: true, to: `/explore/tokens/arc/${USDC_ARC.address}` },
     })
   })
+})
+
+describe('Hooks Explore routes', () => {
+  it.each(['/explore/hooks', '/explore/hooks/ethereum'])('resolves %s before the generic Explore route', (path) => {
+    expect(findRouteByPath(path)?.path).toBe('/explore/hooks')
+  })
+
+  it('preserves existing Explore metadata until the gated Hooks page mounts', () => {
+    const path = '/explore/hooks/ethereum'
+    const hooksRoute = findRouteByPath(path)
+    const exploreRoute = routes.find((route) => route.path === '/explore')
+
+    expect(hooksRoute?.getTitle(path)).toBe(exploreRoute?.getTitle(path))
+    expect(hooksRoute?.getDescription(path)).toBe(exploreRoute?.getDescription(path))
+  })
+
+  it.each([
+    [true, '/explore/hooks'],
+    [false, '/explore'],
+    [undefined, '/explore'],
+  ] satisfies [RouterConfig['isHooksExploreEnabled'], string][])(
+    'matches %s gate state to %s',
+    (isHooksExploreEnabled, expectedPath) => {
+      const enabledRoutes = routes.filter((route) => route.enabled({ isHooksExploreEnabled }))
+      const routeTree = enabledRoutes.map((route) => ({
+        path: route.path,
+        children: route.nestedPaths.map((path) => ({ path })),
+      }))
+
+      for (const path of ['/explore/hooks', '/explore/hooks/ethereum']) {
+        expect(matchRoutes(routeTree, path)?.[0]?.route.path).toBe(expectedPath)
+      }
+    },
+  )
 })
 
 describe('Embed routes', () => {

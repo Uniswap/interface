@@ -1,4 +1,5 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import { CandlestickChart } from '@universe/mycelium/icons/CandlestickChart'
 import { ChartBar } from '@universe/mycelium/icons/ChartBar'
 import { CoinConvert } from '@universe/mycelium/icons/CoinConvert'
 import { Compass } from '@universe/mycelium/icons/Compass'
@@ -43,6 +44,7 @@ export const useTabsContent = (): TabsSection[] => {
   const colors = useSporeColors()
   const isPortfolioDefiTabEnabled = useFeatureFlag(FeatureFlags.PortfolioDefiTab)
   const portfolioPoolsBalancesEnabled = useFeatureFlag(FeatureFlags.PortfolioPoolsBalances)
+  const isMarginEnabled = useFeatureFlag(FeatureFlags.Margin)
   const entryPoint = resolveEntryPoint({ search, state })
   const isPortfolioPoolsEntryPointActive = entryPoint.kind === EntryPointKind.PortfolioPools
 
@@ -50,7 +52,11 @@ export const useTabsContent = (): TabsSection[] => {
     {
       title: t('common.trade'),
       href: '/swap',
-      isActive: pathname.startsWith('/swap') || pathname.startsWith('/limit') || pathname.startsWith('/send'),
+      isActive:
+        pathname.startsWith('/swap') ||
+        pathname.startsWith('/limit') ||
+        pathname.startsWith('/send') ||
+        (isMarginEnabled && pathname.startsWith('/margin')),
       icon: <CoinConvert color="$accent1" size="$icon.24" />,
       elementName: ElementName.NavbarTradeTab,
       items: [
@@ -82,6 +88,17 @@ export const useTabsContent = (): TabsSection[] => {
           internal: true,
           elementName: ElementName.NavbarTradeDropdownSell,
         },
+        ...(isMarginEnabled
+          ? [
+              {
+                label: t('margin.tab.label'),
+                icon: <CandlestickChart size="$icon.24" color="$neutral2" />,
+                href: '/margin',
+                internal: true,
+                elementName: ElementName.NavbarTradeDropdownMargin,
+              },
+            ]
+          : []),
       ],
     },
     {

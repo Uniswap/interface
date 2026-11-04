@@ -1,7 +1,6 @@
-import { Flex, Text } from '@universe/mycelium'
+import { Button, Flex, Text, Switch } from '@universe/mycelium'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Switch } from 'ui/src'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { ErrorCallout } from '~/components/ErrorCallout'
 import {
@@ -31,7 +30,8 @@ export function RemoveLiquidityForm() {
 
   const { percent, positionInfo, setPercent, setStep, percentInvalid, unwrapNativeCurrency, setUnwrapNativeCurrency } =
     useRemoveLiquidityModalContext()
-  const { gasFeeEstimateUSD, txContext, error, refetch } = useRemoveLiquidityTxContext()
+  const { gasFeeEstimateUSD, txContext, error, hookRejectsRemoval, decreaseMayFail, refetch } =
+    useRemoveLiquidityTxContext()
   const { ref: hiddenObserverRef, fieldWidth: percentFieldWidth } = useMeasuredFieldWidth(percent)
 
   if (!positionInfo) {
@@ -133,10 +133,20 @@ export function RemoveLiquidityForm() {
         currency1Amount={currency1Amount}
         networkCost={gasFeeEstimateUSD}
       />
-      <ErrorCallout errorMessage={error} onPress={refetch} />
+      <ErrorCallout
+        errorMessage={error}
+        description={hookRejectsRemoval ? t('position.hook.rejectsRemoval') : undefined}
+        onPress={refetch}
+      />
+      <ErrorCallout
+        isWarning
+        errorMessage={decreaseMayFail}
+        title={t('common.warning')}
+        description={t('position.hook.removeMayFail')}
+      />
       <Flex row>
         <Button
-          disabled={percentInvalid || !txContext?.txRequest}
+          disabled={percentInvalid || hookRejectsRemoval || !txContext?.txRequest}
           onPress={() => setStep(DecreaseLiquidityStep.Review)}
           loading={!error && !percentInvalid && !txContext?.txRequest}
           variant="branded"

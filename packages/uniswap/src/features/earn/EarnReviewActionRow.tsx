@@ -1,8 +1,8 @@
 import type { DiscriminatedQuoteResponse } from '@universe/api'
 import { isMobileApp, isWebApp } from '@universe/environment'
 import { Button, Flex, IconButton } from '@universe/mycelium'
+import { BackArrow } from '@universe/mycelium/icons/BackArrow'
 import { TestID } from '@universe/test'
-import { BackArrow } from 'ui/src/components/icons/BackArrow'
 import {
   EarnPlanProgressIndicator,
   type EarnPlanProgressState,

@@ -1,5 +1,5 @@
 /**
- * Web leg of the `fonts` token table: ui/src/theme/fonts.ts variants over the
+ * Web leg of the `fonts` token table: the legacy font variants over the
  * `@universe/tailwind` ui-parity `fonts` tokens (`--typography-*`) — not the
  * re-cut `--text-*` web scale, whose reconciliation with ui stays a separate
  * effort (#35388).
@@ -43,7 +43,7 @@ const table = {
   monospace: tailwindFonts.monospace,
 } satisfies Record<string, ResolvedFontToken>
 
-/** ui/src/theme/fonts.ts variant names. */
+/** Legacy font variant names (`heading1`, `body2`, …). */
 export type FontVariantName = keyof typeof table
 
 export const fonts: Readonly<Record<FontVariantName, ResolvedFontToken>> = table

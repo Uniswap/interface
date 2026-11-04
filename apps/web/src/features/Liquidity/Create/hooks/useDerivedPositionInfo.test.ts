@@ -88,8 +88,8 @@ vi.mock('uniswap/src/features/permissionedTokens/usePermissionedSwapPair', async
   usePermissionedSwapPair: () => mockUsePermissionedSwapPair(),
 }))
 
-vi.mock('~/features/accounts/store/hooks', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('~/features/accounts/store/hooks')>()),
+vi.mock('~/connection/accounts/hooks', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('~/connection/accounts/hooks')>()),
   useActiveAddress: () => undefined,
 }))
 

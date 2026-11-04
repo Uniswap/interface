@@ -196,9 +196,6 @@ async function processAddChanges() {
   // Check for UI package imports that are longer than needed
   const validLongerImports = [
     `'ui/src'`,
-    `'ui/src/theme'`,
-    `'ui/src/theme/sizing'`,
-    `'ui/src/components/icons'`,
     `'ui/src/animations'`,
     `'ui/src/hooks/useDeviceInsets'`,
   ]
@@ -211,11 +208,6 @@ async function processAddChanges() {
         idx,
         Math.min(change.content.length, idx + longestImportLength + 6 + 1),
       )
-
-      // Skip warning on specific icon imports, needed for web to avoid pulling in all icons
-      if (change.content.includes('ui/src/components/icons/')) {
-        return
-      }
 
       if (!validLongerImports.some((validImport) => potentialSubstring.includes(validImport))) {
         const endOfImport = change.content.indexOf(`'`, idx + 6) // skipping the "from '"

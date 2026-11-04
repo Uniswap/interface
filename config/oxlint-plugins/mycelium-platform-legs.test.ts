@@ -95,15 +95,9 @@ describe('mycelium platform-leg manifest', () => {
     expect(Object.keys(manifest.entryPoints).sort()).toEqual(jsExportKeys)
   })
 
-  // The './icons' and './icons/*' entries carry the same four web-only-holdout
-  // namedExports, hand-duplicated because JSON can't factor out a shared object.
-  // Pin them identical so a future edit to one block (a 5th holdout, a reworded
-  // note) can't silently drift from the other.
-  test("'./icons' and './icons/*' namedExports stay identical", () => {
-    expect(manifest.entryPoints['./icons'].namedExports).toEqual(manifest.entryPoints['./icons/*'].namedExports)
-  })
-
-  // Same hand-duplication for the logos pair (the GoogleChromeLogo native holdout).
+  // The './logos' and './logos/*' entries carry the same GoogleChromeLogo native
+  // holdout, hand-duplicated because JSON can't factor out a shared object. Pin
+  // them identical so an edit to one block can't silently drift from the other.
   test("'./logos' and './logos/*' namedExports stay identical", () => {
     expect(manifest.entryPoints['./logos'].namedExports).toEqual(manifest.entryPoints['./logos/*'].namedExports)
   })

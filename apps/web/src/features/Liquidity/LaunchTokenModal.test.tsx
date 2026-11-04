@@ -25,7 +25,7 @@ describe('LaunchTokenModal', () => {
     render(<LaunchTokenModal isOpen onClose={vi.fn()} />)
     expect(screen.getByText('Launch a token')).toBeTruthy()
     expect(screen.getByText('Custom Launch')).toBeTruthy()
-    expect(screen.getAllByText('Pools.trade').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('Pools.xyz').length).toBeGreaterThan(0)
   })
 
   it('navigates to the auction flow via Continue with the default (Custom) selection', () => {

@@ -15,11 +15,14 @@ export function useListPools({
   sortState,
   chainId,
   poolsFilter,
+  categoryId,
 }: {
   sortState: PoolTableSortState
   chainId?: UniverseChainId
   /** Advanced pools filter. */
   poolsFilter?: PoolsFilterState
+  /** Selected pool category; composes (ANDs) with the advanced filter. */
+  categoryId?: string
 }): {
   pools: PoolStat[] | undefined
   isLoading: boolean
@@ -31,7 +34,7 @@ export function useListPools({
   chainId?: UniverseChainId
 } {
   const filterString = useExploreTablesFilterStore((s) => s.filterString)
-  const result = useV2ListPools({ sortState, chainId, poolsFilter, filterString })
+  const result = useV2ListPools({ sortState, chainId, poolsFilter, filterString, categoryId })
 
   useExploreQueryLatencyTracking({
     queryType: 'pools',

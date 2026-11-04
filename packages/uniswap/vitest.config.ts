@@ -29,7 +29,6 @@ const config = defineConfig({
         /packages\/ui/,
         /packages\/utilities/,
         /packages\/uniswap/,
-        /tamagui/,
         /@testing-library\/react-native/,
         /@react-navigation\/core/,
         /@react-navigation\/native/,
@@ -41,7 +40,6 @@ const config = defineConfig({
           /ui\/src\/theme/,
           /packages\/ui/,
           /packages\/utilities/,
-          /tamagui/,
           /@testing-library\/react-native/,
           /@react-navigation\/core/,
           /@react-navigation\/native/,
@@ -77,4 +75,4 @@ const config = defineConfig({
   },
 })
 
-export default withRnPrimitives(config, 'web')
+export default withRnPrimitives(config)

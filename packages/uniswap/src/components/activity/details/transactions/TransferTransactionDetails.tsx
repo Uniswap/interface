@@ -1,6 +1,5 @@
 import { isWebPlatform } from '@universe/environment'
-import { Flex, Loader, Text, useMedia } from '@universe/mycelium'
-import { fonts, iconSizes } from 'ui/src/theme'
+import { Flex, Loader, Text, useMedia, fonts, iconSizes } from '@universe/mycelium'
 import { NftTransactionDetails } from 'uniswap/src/components/activity/details/transactions/NftTransactionDetails'
 import { TransactionTokenContextMenu } from 'uniswap/src/components/activity/details/transactions/TransactionTokenContextMenu'
 import { useFormattedCurrencyAmountAndUSDValue } from 'uniswap/src/components/activity/hooks/useFormattedCurrencyAmountAndUSDValue'

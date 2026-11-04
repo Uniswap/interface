@@ -527,12 +527,9 @@ class RNCloudStorageBackupsManager: NSObject, RCTBridgeModule {
     }
     
     // Failed and timed-out uploads stay on disk, but must not appear as completed cloud backups.
+    // An empty list resolves (as on Android) so JS shows "no backups found" rather than a cloud error.
     do {
       let backups = try CloudBackupFileReader().backups(in: containerUrl)
-
-      if backups.isEmpty {
-        return reject(ICloudBackupError.iCloudError.rawValue, "No backup files found", ICloudBackupError.iCloudError)
-      }
 
       return resolve(backups.map { backup -> [String: Any] in
         ["mnemonicId": backup.mnemonicId, "createdAt": backup.createdAt]

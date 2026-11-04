@@ -7,9 +7,9 @@ import {
   type InterfaceTransactionDetails,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { popupRegistry } from '~/state/popups/registry'
-import { PopupType } from '~/state/popups/types'
 import { handleAtomicSendCalls, parseCaip345TransactionHash } from '~/state/sagas/transactions/5792'
+import { popupRegistry } from '~/utils/popups/registry'
+import { PopupType } from '~/utils/popups/types'
 
 const mockProviderSend = vi.fn()
 
@@ -19,7 +19,7 @@ vi.mock('@wagmi/core', () => ({
 
 vi.mock('~/connection/wagmiConfig', () => ({ wagmiConfig: {} }))
 vi.mock('~/state/activity/utils', () => ({ getRoutingForTransaction: () => 'CLASSIC' }))
-vi.mock('~/state/popups/registry', () => ({ popupRegistry: { addPopup: vi.fn() } }))
+vi.mock('~/utils/popups/registry', () => ({ popupRegistry: { addPopup: vi.fn() } }))
 vi.mock('~/state/sagas/transactions/utils', () => ({
   getSigner: () => ({ provider: { send: (...args: unknown[]) => mockProviderSend(...args) } }),
   *watchForInterruption(): Generator<undefined, { throwIfInterrupted: ReturnType<typeof vi.fn> }, unknown> {

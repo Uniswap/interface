@@ -1,9 +1,8 @@
-import { Flex, TouchableArea } from '@universe/mycelium'
+import { Flex, TouchableArea, iconSizes } from '@universe/mycelium'
 import { useIsTouchDevice } from '@universe/mycelium'
+import { MoreHorizontal } from '@universe/mycelium/icons/MoreHorizontal'
 import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { MoreHorizontal } from 'ui/src/components/icons/MoreHorizontal'
-import { iconSizes } from 'ui/src/theme'
 import { ContextMenu, type MenuOptionItem } from 'uniswap/src/components/menus/ContextMenu'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import type { MarginPosition } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
@@ -14,32 +13,26 @@ import { useMarginRowMenu } from '~/pages/Swap/Margin/hooks/marginRowMenuStore'
 import { useMarginPositionActions } from '~/pages/Swap/Margin/hooks/useMarginPositionActions'
 
 // RemoveScroll is active while the menu is open, so a menu taller than the viewport cannot be
-// scrolled to. Five single-line subheaders come to ~260px; this only binds on a very short viewport.
+// scrolled to. Four single-line subheaders come to ~210px; this only binds on a very short viewport.
 const MENU_MAX_HEIGHT = 420
 
 // The per-row `…` trigger. Open state lives in a module store, NOT in props from the table — see
 // marginRowMenuStore for why that distinction is load-bearing.
 export const MarginPositionActionsMenu = memo(function MarginPositionActionsMenu({
   position,
-  mountKey,
   onSelect,
 }: {
   position: MarginPosition
-  // Which MOUNT this is — deliberately not called `surface`, which one line down means the analytics
-  // surface the hook reports ('menu'). The table cell and the expanded drawer can both render a menu for
-  // the SAME position on a touch device, and the open-state store is keyed by this pair; without it they
-  // would share a key and one tap would open both popovers.
-  mountKey: 'row' | 'drawer'
   onSelect: (request: { action: MarginManageAction; positionId: string }) => void
 }): JSX.Element {
   const { t } = useTranslation()
   const isTouchDevice = useIsTouchDevice()
-  const actions = useMarginPositionActions({ position, onSelect, surface: 'menu' })
-  // MarginActionItem carries `action`/`tooltipBody` for the drawer surface; neither is a MenuOptionItem
-  // field, and ContextMenu spreads unknown item props onto the DOM row — a stray `action` trips React's
-  // "only <form> accepts the action prop" error. Pass only the menu fields through.
-  const menuItems = useMemo<MenuOptionItem[]>(() => actions.map(({ action, tooltipBody, ...item }) => item), [actions])
-  const { isOpen, setOpen } = useMarginRowMenu(`${mountKey}:${position.positionId}`)
+  const actions = useMarginPositionActions({ position, onSelect })
+  // MarginActionItem carries `action`, which is not a MenuOptionItem field, and ContextMenu spreads
+  // unknown item props onto the DOM row — a stray `action` trips React's "only <form> accepts the action
+  // prop" error. Pass only the menu fields through.
+  const menuItems = useMemo<MenuOptionItem[]>(() => actions.map(({ action, ...item }) => item), [actions])
+  const { isOpen, setOpen } = useMarginRowMenu(position.positionId)
 
   const openMenu = useEvent(() => setOpen(true))
   const closeMenu = useEvent(() => setOpen(false))

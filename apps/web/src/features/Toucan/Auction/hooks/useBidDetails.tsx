@@ -1,5 +1,6 @@
 import { type ReactNode, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 import { formatUnits } from '~/chains'
@@ -99,6 +100,7 @@ export function useBidDetails({
   auctionProgressState,
 }: UseBidDetailsParams): BidDetails {
   const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
+  const locale = useCurrentLocale()
   const { t } = useTranslation()
   const pendingWithdrawalBidIds = useAuctionStore((state) => state.pendingWithdrawalBidIds)
   const awaitingConfirmationBidIds = useAuctionStore((state) => state.awaitingConfirmationBidIds)
@@ -179,8 +181,9 @@ export function useBidDetails({
       raw: BigInt(bid.baseTokenInitial),
       decimals: bidTokenInfo.decimals,
       symbol: bidTokenInfo.symbol,
+      locale,
     })
-  }, [bid.baseTokenInitial, bidTokenInfo.decimals, bidTokenInfo.symbol])
+  }, [bid.baseTokenInitial, bidTokenInfo.decimals, bidTokenInfo.symbol, locale])
 
   const totalTokensReceivedDisplay = useMemo(
     () =>

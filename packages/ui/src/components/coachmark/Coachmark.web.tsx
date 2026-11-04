@@ -1,9 +1,8 @@
-import { Flex, Text, useSporeColors } from '@universe/mycelium'
+import { Flex, Text, Tooltip, useSporeColors } from '@universe/mycelium'
 import { useShadowPropsMedium } from '@universe/mycelium/theme-hooks-compat'
+import type { TooltipContentCompatProps } from '@universe/mycelium/tooltip-compat'
 import { useRef } from 'react'
 import { CoachmarkProps } from 'ui/src/components/coachmark/Coachmark'
-import { Tooltip } from 'ui/src/components/tooltip/Tooltip'
-import type { TooltipFrameStyleProps } from 'ui/src/components/tooltip/types'
 import { useOnClickOutside } from 'utilities/src/react/hooks'
 
 const DEFAULT_COACHMARK_WIDTH = 190
@@ -22,12 +21,12 @@ export function Coachmark({
 }: CoachmarkProps): JSX.Element {
   // useShadowPropsMedium branches on runtime `isWebApp`, not this file's .web suffix:
   // in the extension (also a .web consumer) it returns RN shadow keys with no
-  // `$platform-web` slice. Spread the whole result — the tooltip style resolver folds
+  // `$platform-web` slice. Spread the whole result — the tooltip Content compiles
   // either shape into boxShadow. The cast narrows the hook's Tamagui-typed declaration
   // (`somewhat-strict-web` token unions) to its actual runtime values: plain rgba
   // strings and numeric offsets.
   const shadowProps = useShadowPropsMedium() as Pick<
-    TooltipFrameStyleProps,
+    TooltipContentCompatProps,
     'shadowColor' | 'shadowOffset' | 'shadowRadius' | '$platform-web'
   >
 

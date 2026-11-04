@@ -1,5 +1,5 @@
+import type { TooltipCompatProps } from '@universe/mycelium/tooltip-compat'
 import { ReactNode } from 'react'
-import type { TooltipProps } from 'ui/src/components/tooltip/Tooltip'
 import { PlatformSplitStubError } from 'utilities/src/errors'
 
 /**
@@ -12,8 +12,8 @@ export interface CoachmarkProps {
   title?: string
   text: string
   width?: number
-  placement?: TooltipProps['placement']
-  offset?: TooltipProps['offset']
+  placement?: TooltipCompatProps['placement']
+  offset?: TooltipCompatProps['offset']
   zIndex?: number
   testID?: string
   children: ReactNode

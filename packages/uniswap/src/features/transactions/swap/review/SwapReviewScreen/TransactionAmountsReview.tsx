@@ -6,12 +6,12 @@ import {
   ModalCloseIcon,
   Text,
   validColor,
+  Loader,
 } from '@universe/mycelium'
 import { ArrowDown } from '@universe/mycelium/icons/ArrowDown'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Loader } from 'ui/src'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'

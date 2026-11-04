@@ -9,13 +9,12 @@ import { currencyId } from 'uniswap/src/utils/currencyId'
 
 /**
  * Converts a V2 REST `data.v2.Token` (from GetToken/GetTokens) into a CurrencyInfo. V2 is the
- * canonical metadata shape going forward — gqlTokenToCurrencyInfo (the GraphQL/legacy path) is
- * what will eventually need to adapt onto V2's model, not the reverse. In the meantime, safety
- * data is mapped into the still-GraphQL-shaped SafetyInfo type via getV2CurrencySafetyInfo (see
- * that function's comment) since SafetyInfo itself hasn't been migrated to a V2-native shape yet.
+ * canonical metadata shape going forward. Safety data is mapped into the SafetyInfo type via
+ * getV2CurrencySafetyInfo (see that function's comment) since SafetyInfo itself hasn't been
+ * migrated to a V2-native shape yet.
  *
- * Known fidelity gap vs gqlTokenToCurrencyInfo: no bridging info in the V2 schema
- * (isBridged/bridgedWithdrawalInfo always unset) and no `spamCode` equivalent.
+ * Known fidelity gap: no bridging info in the V2 schema (isBridged/bridgedWithdrawalInfo always
+ * unset) and no `spamCode` equivalent.
  *
  * `projectId` is sourced from `token.multichain?.id` rather than a V2 `project.id` field
  * (V2's TokenProject has no `id`). This matches how `projectId` is actually used downstream —

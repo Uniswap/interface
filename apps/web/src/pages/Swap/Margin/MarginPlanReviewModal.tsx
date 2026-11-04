@@ -1,36 +1,30 @@
 /* oxlint-disable max-lines -- the file is one screen plus the pure functions that decide what it says:
-   the step-row status map, the step and plan titles, the restart-note taxonomy and the two predicates
-   behind it. They are exported and unit-tested precisely so this component stays a wiring layer, and
-   they belong beside the modal that is their only consumer — moving them out to satisfy a line count
-   would put the copy decisions a file away from the surface that renders them. */
+   the plan titles, the restart-note taxonomy and the two predicates behind it. They are exported and
+   unit-tested precisely so this component stays a wiring layer, and they belong beside the modal that is
+   their only consumer — moving them out to satisfy a line count would put the copy decisions a file away
+   from the surface that renders them. */
 import { useQueryClient } from '@tanstack/react-query'
-import { normalizeTokenAddressForCache } from '@universe/chains'
-import { Flex, Text } from '@universe/mycelium'
+import { Button, Flex, Text, SpinningLoader } from '@universe/mycelium'
 import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
-import { Button, Separator } from 'ui/src'
-import { Approve } from 'ui/src/components/icons/Approve'
-import { SpinningLoader } from 'ui/src/loading/SpinningLoader'
-import { StepRowSkeleton } from 'uniswap/src/components/ConfirmSwapModal/steps/StepRowSkeleton'
-import { StepStatus } from 'uniswap/src/components/ConfirmSwapModal/types'
+import { ProgressIndicator } from 'uniswap/src/components/ConfirmSwapModal/ProgressIndicator'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import {
-  MARGIN_NATIVE_TOKEN_ADDRESS,
+  type MarginActionKey,
   type MarginPlanResponse,
   type MarginPlanStep,
   type MarginPlanStepType,
-  type MarginTxStepPayload,
 } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
 import { MARGIN_POSITIONS_QUERY_KEY } from 'uniswap/src/data/apiClients/tradingApi/useMarginPositionsQuery'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { useEvent } from 'utilities/src/react/hooks'
-import { MARGIN_CHAIN_ID, type MarginMarket } from '~/constants/margin'
-import { useAccount } from '~/hooks/useAccount'
+import { useAccount } from '~/connection/hooks/useAccount'
+import { type MarginMarket } from '~/constants/margin'
+import { useMarginMarkets } from '~/features/margin/hooks/useMarginMarkets'
+import { marginMarketDirection, marginPairLabel } from '~/features/margin/utils/marginTokenDisplay'
 import {
   erroredStep,
-  firstActionableStep,
   isPlanForAccount,
   isTerminalPlanStatus,
   isTerminalStepError,
@@ -39,96 +33,17 @@ import {
 import { useMarginPlanExecution } from '~/pages/Swap/Margin/hooks/marginPlanExecutionStore'
 import { planHasProofForSteps, readStepProof } from '~/pages/Swap/Margin/hooks/marginStepProofCache'
 import { useExecuteMarginPlan } from '~/pages/Swap/Margin/hooks/useExecuteMarginPlan'
-import { findMarginTokenInfoInMarkets, useMarginMarkets } from '~/pages/Swap/Margin/hooks/useMarginMarkets'
-import { marginStepTokenInCurrencyId } from '~/pages/Swap/Margin/marginCurrencies'
-import { marginChainName } from '~/pages/Swap/Margin/marginRouteText'
-import {
-  marginMarketDirection,
-  marginPairLabel,
-  marginUnwrapSymbol,
-  type MarginSymbolResolver,
-} from '~/pages/Swap/Margin/marginTokenDisplay'
-
-export function toStepStatus({
-  step,
-  plan,
-  failingStepIndex,
-  isWalletPromptOpen,
-}: {
-  step: MarginPlanStep
-  plan: MarginPlanResponse
-  // From `resolveRestartSubject`, not the raw `stepError.stepIndex`: the sentinel a plan that died with
-  // nothing stamped mints carries a placeholder 0 that names no step, and striking out row 0 for it
-  // would blame a step nothing failed on — a CANCELLED plan backed out of before signing is exactly
-  // that. One resolution, so the struck row and the restart note name the same step.
-  failingStepIndex: number | undefined
-  isWalletPromptOpen: boolean
-}): StepStatus {
-  // A client-minted failure is the same failure the red message and Restart below describe, and the
-  // server step it names keeps its own status: the wallet-funded open's pre-broadcast balance guard
-  // leaves it AWAITING_ACTION with no proof, which reads as Active — a live row under a dead plan.
-  //
-  // AWAITING_ACTION only, as an allowlist. Every other status is a server claim about work already
-  // under way, and the stall bails name `currentStepIndex` without checking it: a CLIENT_ERROR over an
-  // IN_PROGRESS MARGIN_BRIDGE would strike out a deposit that is broadcast and awaiting fill. A status
-  // this client does not know about stays un-struck for the same reason.
-  // `!step.proof` is half the premise above, not a detail: a step that already broadcast is one the
-  // server is verifying, and the BE can leave it AWAITING_ACTION while it does. The verification poll
-  // has a finite budget and throws when it runs out, and runLoop's catch mints CLIENT_ERROR on
-  // `firstActionableStep` — i.e. on that very step. Striking it out would badge a live on-chain
-  // transaction as failed, which is exactly the state that makes a user open a second position.
-  if (step.status === 'AWAITING_ACTION' && !step.proof && failingStepIndex === step.stepIndex) {
-    return StepStatus.Failed
-  }
-  switch (step.status) {
-    case 'COMPLETE':
-      return StepStatus.Complete
-    case 'STEP_ERROR':
-      return StepStatus.Failed
-    case 'IN_PROGRESS':
-      return StepStatus.InProgress
-    case 'AWAITING_ACTION': {
-      // Through the executor's own predicate: this row marks Active exactly the step the loop is about
-      // to prompt for, and a second copy of that rule is one the two can drift apart on.
-      const isFirstActionable = firstActionableStep(plan)?.stepIndex === step.stepIndex
-      if (!isFirstActionable) {
-        return StepStatus.Preview
-      }
-      // Proof submitted → server verifying reads as in-progress; wallet prompt open reads as active.
-      return isWalletPromptOpen || !step.proof ? StepStatus.Active : StepStatus.InProgress
-    }
-    default:
-      return StepStatus.Preview
-  }
-}
-
-// Wire tokens resolve through the injected resolver; the native address always maps to ETH.
-function findMarginTokenSymbol({
-  address,
-  resolveSymbol,
-}: {
-  address?: string
-  resolveSymbol: MarginSymbolResolver
-}): string | undefined {
-  if (!address) {
-    return undefined
-  }
-  const lower = normalizeTokenAddressForCache(address)
-  if (lower === MARGIN_NATIVE_TOKEN_ADDRESS) {
-    return 'ETH'
-  }
-  return resolveSymbol(address)
-}
+import { marginPlanProgress } from '~/pages/Swap/Margin/marginPlanProgress'
 
 // Static literal per intent — a template-interpolated key would get stripped by i18n:extract.
 /**
  * Which side this plan opens, for the sheet's own title.
  *
  * Falls back to the PLAN's own token addresses rather than reporting undefined: the markets registry
- * may not have resolved while this modal is up — a pointer-banner resume after a reload is exactly that
- * window — and `planTitle`'s undefined arm reads "Open long position", announcing the wrong side of a
- * SHORT on the screen that is about to sign it. The plan carries the addresses the classifier needs, so
- * there is no state in which the side is genuinely unknowable.
+ * may not have resolved while this modal is up, and `planTitle`'s undefined arm reads "Open long
+ * position", announcing the wrong side of a SHORT on the screen that is about to sign it. The plan
+ * carries the addresses the classifier needs, so there is no state in which the side is genuinely
+ * unknowable.
  */
 export function planReviewDirection({
   market,
@@ -148,10 +63,12 @@ export function planReviewDirection({
 
 export function planTitle({
   intent,
+  action,
   direction,
   t,
 }: {
   intent: MarginPlanResponse['intent']
+  action: MarginActionKey | undefined
   direction: MarginDirection | undefined
   t: TFunction
 }): string {
@@ -161,10 +78,26 @@ export function planTitle({
     case 'CLOSE':
       return t('margin.plan.title.close')
     case 'ADJUST':
-      return t('margin.plan.title.adjust')
+      return adjustPlanTitle({ action, t })
     default:
       // Unreachable for the closed union (lint needs it); raw value beats a crash on wire drift.
       return intent
+  }
+}
+
+// A plan whose action the wire did not name keeps the generic title.
+function adjustPlanTitle({ action, t }: { action: MarginActionKey | undefined; t: TFunction }): string {
+  switch (action) {
+    case 'addEquity':
+      return t('margin.plan.title.addMargin')
+    case 'withdrawEquity':
+      return t('margin.plan.title.withdrawMargin')
+    case 'increaseLeverage':
+      return t('margin.plan.title.increaseLeverage')
+    case 'decreaseLeverage':
+      return t('margin.plan.title.decreaseLeverage')
+    default:
+      return t('margin.plan.title.adjust')
   }
 }
 
@@ -428,109 +361,6 @@ export function restartNote({
   }
 }
 
-export function stepTitle({
-  step,
-  market,
-  t,
-  tokenInSymbol,
-  resolveSymbol,
-}: {
-  step: MarginPlanStep
-  market?: MarginMarket
-  t: TFunction
-  tokenInSymbol?: string
-  resolveSymbol: MarginSymbolResolver
-}): string {
-  switch (step.stepType) {
-    case 'APPROVAL_TXN': {
-      // Prefer the resolved source symbol so a cross-chain approval names its token too.
-      const symbol = tokenInSymbol ?? findMarginTokenSymbol({ address: step.tokenIn, resolveSymbol })
-      return t('margin.plan.step.approve', { symbol: symbol ?? '' }).trim()
-    }
-    // The approve-to-zero half of a zero-then-set allowance (USDT and friends). Named distinctly rather
-    // than reusing the approve copy: the two steps run back to back, and two identical "Approve USDT"
-    // rows read as a duplicate rather than as the two halves this token requires.
-    case 'RESET_APPROVAL_TXN': {
-      const symbol = tokenInSymbol ?? findMarginTokenSymbol({ address: step.tokenIn, resolveSymbol })
-      return t('margin.plan.step.resetApproval', { symbol: symbol ?? '' }).trim()
-    }
-    case 'APPROVAL_PERMIT':
-      return t('margin.plan.step.permit')
-    case 'MARGIN_PRE_SWAP': {
-      const payloadChainId = (step.payload as MarginTxStepPayload | undefined)?.chainId
-      const swapChainId = step.tokenInChainId ?? payloadChainId ?? MARGIN_CHAIN_ID
-      // Source-chain pre-swap: X → bridgeable USDC on the source chain, chain-named.
-      if (swapChainId !== MARGIN_CHAIN_ID) {
-        const fromSymbol = tokenInSymbol ?? findMarginTokenSymbol({ address: step.tokenIn, resolveSymbol })
-        // Named when resolved; from-less fallback otherwise so we never emit "Swap Swap …".
-        return fromSymbol
-          ? t('margin.plan.step.preSwapOnChain', { from: fromSymbol, to: 'USDC', chain: marginChainName(swapChainId) })
-          : t('margin.plan.step.swapToOnChain', { to: 'USDC', chain: marginChainName(swapChainId) })
-      }
-      const from = tokenInSymbol ?? findMarginTokenSymbol({ address: step.tokenIn, resolveSymbol })
-      const to = market ? marginUnwrapSymbol(market.collateral) : undefined
-      return from && to ? t('margin.plan.step.preSwap', { from, to }) : t('common.swap')
-    }
-    case 'MARGIN_OPEN':
-      return t('margin.plan.step.open')
-    case 'MARGIN_CLOSE':
-      return t('margin.plan.step.close')
-    case 'MARGIN_ADJUST':
-      return t('margin.plan.step.adjust')
-    // Reachable on the wire even though no client surface builds a recover plan: the server sweeps
-    // funds parked at the account back to the wallet.
-    case 'MARGIN_RECOVER':
-      return t('margin.plan.step.recover')
-    case 'MARGIN_BRIDGE': {
-      // findMarginTokenSymbol only resolves tokens the injected resolver knows about, so an
-      // L2-USDC tokenIn may not resolve — default to USDC and name the chains off the step's chain fields.
-      const symbol = findMarginTokenSymbol({ address: step.tokenIn, resolveSymbol }) ?? 'USDC'
-      if (step.status === 'IN_PROGRESS') {
-        return t('margin.plan.step.bridging', { symbol })
-      }
-      const from = marginChainName(step.tokenInChainId)
-      const to = marginChainName(step.tokenOutChainId ?? MARGIN_CHAIN_ID)
-      return t('margin.plan.step.bridge', { symbol, from, to })
-    }
-    // The raw wire enum, deliberately: a step type this client does not know cannot be named, and a
-    // guess would be worse than the identifier. Every type in the union above HAS an arm, so this is
-    // reachable only by wire drift.
-    default:
-      return step.stepType
-  }
-}
-
-// The source-symbol resolver is a hook, so it can't live in the pure stepTitle. This per-step row
-// owns the useCurrencyInfo lookup and threads the resolved symbol in. useCurrencyInfo(undefined)
-// no-ops for steps without a resolvable tokenIn (permit / intent steps).
-function MarginPlanStepRow({
-  step,
-  market,
-  status,
-  currentStepIndex,
-  totalStepsCount,
-  resolveSymbol,
-}: {
-  step: MarginPlanStep
-  market?: MarginMarket
-  status: StepStatus
-  currentStepIndex: number
-  totalStepsCount: number
-  resolveSymbol: MarginSymbolResolver
-}): JSX.Element {
-  const { t } = useTranslation()
-  const tokenInSymbol = useCurrencyInfo(marginStepTokenInCurrencyId(step))?.currency.symbol
-  return (
-    <StepRowSkeleton
-      title={stepTitle({ step, market, t, tokenInSymbol, resolveSymbol })}
-      status={status}
-      icon={<Approve color="$neutral2" size="$icon.24" />}
-      currentStepIndex={currentStepIndex}
-      totalStepsCount={totalStepsCount}
-    />
-  )
-}
-
 export function MarginPlanReviewModal(): JSX.Element | null {
   const { t } = useTranslation()
   const plan = useMarginPlanExecution((s) => s.plan)
@@ -542,17 +372,14 @@ export function MarginPlanReviewModal(): JSX.Element | null {
   const lastManageAction = useMarginPlanExecution((s) => s.lastManageAction)
   const setModalOpen = useMarginPlanExecution((s) => s.actions.setModalOpen)
   const { executePlan, retryCurrentStep, restartPlan } = useExecuteMarginPlan()
-  const { getMarketByTokens, markets } = useMarginMarkets()
+  const { getMarketByTokens } = useMarginMarkets()
   const account = useAccount()
   const queryClient = useQueryClient()
-  const resolveSymbol = useEvent(
-    (address: string): string | undefined => findMarginTokenInfoInMarkets({ markets, address })?.symbol,
-  )
 
   // Dismissal is blocked only while a wallet prompt is actually open. Closing backgrounds the run:
   // the loop finishes watching in-flight work, then parks before its next wallet prompt (runLoop's
-  // modal gate); the pending card / in-flight row takes over as the surface. The invalidation makes
-  // a just-created plan's card appear promptly — within ~20s of create, no poll has cached it yet.
+  // modal gate); the in-flight row (non-OPEN) or the Open CTA's resume (OPEN) takes over. The
+  // invalidation lets server rows catch up without waiting out the ~20s positions poll.
   const onClose = useEvent(() => {
     if (isWalletPromptOpen) {
       return
@@ -654,6 +481,12 @@ export function MarginPlanReviewModal(): JSX.Element | null {
           t,
         })
       : undefined
+  const progress = marginPlanProgress({
+    plan,
+    failingStepIndex: subject.failingStepIndex,
+    isWalletPromptOpen,
+    t,
+  })
 
   return (
     <Modal name={ModalName.MarginPlanReview} isModalOpen={isModalOpen} maxWidth={420} padding={0} onClose={onClose}>
@@ -661,6 +494,7 @@ export function MarginPlanReviewModal(): JSX.Element | null {
         <Text variant="subheading1" color="$neutral1">
           {planTitle({
             intent: plan.intent,
+            action: plan.action,
             direction: planReviewDirection({ market, plan }),
             t,
           })}
@@ -670,20 +504,7 @@ export function MarginPlanReviewModal(): JSX.Element | null {
             {marginPairLabel({ market })}
           </Text>
         ) : null}
-        <Separator />
-        <Flex>
-          {plan.steps.map((step, i) => (
-            <MarginPlanStepRow
-              key={step.stepIndex}
-              step={step}
-              market={market}
-              status={toStepStatus({ step, plan, failingStepIndex: subject.failingStepIndex, isWalletPromptOpen })}
-              currentStepIndex={i}
-              totalStepsCount={plan.steps.length}
-              resolveSymbol={resolveSymbol}
-            />
-          ))}
-        </Flex>
+        <ProgressIndicator isChainedAction steps={progress.steps} currentStep={progress.currentStep} />
         <Text variant="body4" color="$neutral3">
           {sigCount > 0
             ? t('margin.plan.confirmSummary', { transactions, signatures })

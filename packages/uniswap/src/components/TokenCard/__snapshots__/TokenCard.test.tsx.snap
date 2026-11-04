@@ -17,7 +17,7 @@ exports[`TokenCard > renders a spacer instead of a sparkline for fewer than 2 po
       >
         <div
           class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[var(--c-h)] bg-[color:var(--c-bg)] rounded-[999999px] opacity-[0] absolute top-[var(--c-top)] left-[var(--c-left)] z-[var(--c-z)]"
-          style="--c-w: 96%; --c-h: 96%; --c-bg: #FFFFFF; --c-top: 2%; --c-left: 2%; --c-z: 0;"
+          style="--c-w: 96%; --c-h: 96%; --c-bg: #ffffff; --c-top: 2%; --c-left: 2%; --c-z: 0;"
         />
         <div
           class="flex flex-col basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 items-center justify-center px-[8px] w-[32px] h-[32px] rounded-[999999px]"
@@ -61,17 +61,17 @@ exports[`TokenCard > renders a spacer instead of a sparkline for fewer than 2 po
           class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center justify-start gap-[2px]"
           data-testid="relative-change"
         >
-          <div
+          <svg
             fill="none"
             stroke-width="2"
-            style="width: 12px; height: 12px; color: rgb(33, 201, 94); transform: rotate(180deg);"
-            viewbox="0 0 24 24"
+            style="width: 12px; height: 12px; transform: rotate(180deg);"
+            viewBox="0 0 24 24"
           >
-            <div
+            <path
               d="M10.6979 16.2453L6.31787 9.75247C5.58184 8.66118 6.2058 7 7.35185 7L16.6482 7C17.7942 7 18.4182 8.66243 17.6821 9.75247L13.3021 16.2453C12.623 17.2516 11.377 17.2516 10.6979 16.2453Z"
               fill="currentColor"
             />
-          </div>
+          </svg>
           <div
             class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
           >
@@ -103,7 +103,7 @@ exports[`TokenCard > renders the horizontal layout without a price 1`] = `
     >
       <div
         class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[var(--c-h)] bg-[color:var(--c-bg)] rounded-[999999px] opacity-[0] absolute top-[var(--c-top)] left-[var(--c-left)] z-[var(--c-z)]"
-        style="--c-w: 96%; --c-h: 96%; --c-bg: #FFFFFF; --c-top: 2%; --c-left: 2%; --c-z: 0;"
+        style="--c-w: 96%; --c-h: 96%; --c-bg: #ffffff; --c-top: 2%; --c-left: 2%; --c-z: 0;"
       />
       <div
         class="flex flex-col basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 items-center justify-center px-[8px] w-[32px] h-[32px] rounded-[999999px]"
@@ -137,17 +137,17 @@ exports[`TokenCard > renders the horizontal layout without a price 1`] = `
           class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center justify-start gap-[2px]"
           data-testid="relative-change"
         >
-          <div
+          <svg
             fill="none"
             stroke-width="2"
-            style="width: 12px; height: 12px; color: rgb(33, 201, 94); transform: rotate(180deg);"
-            viewbox="0 0 24 24"
+            style="width: 12px; height: 12px; transform: rotate(180deg);"
+            viewBox="0 0 24 24"
           >
-            <div
+            <path
               d="M10.6979 16.2453L6.31787 9.75247C5.58184 8.66118 6.2058 7 7.35185 7L16.6482 7C17.7942 7 18.4182 8.66243 17.6821 9.75247L13.3021 16.2453C12.623 17.2516 11.377 17.2516 10.6979 16.2453Z"
               fill="currentColor"
             />
-          </div>
+          </svg>
           <div
             class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
           >
@@ -175,12 +175,12 @@ exports[`TokenCard > renders the horizontal layout without a price 1`] = `
         >
           <div
             offset="0"
-            stop-color="#21C95E"
+            stop-color="#21c95e"
             stop-opacity="0.16"
           />
           <div
             offset="1"
-            stop-color="#21C95E"
+            stop-color="#21c95e"
             stop-opacity="0"
           />
         </div>
@@ -192,7 +192,7 @@ exports[`TokenCard > renders the horizontal layout without a price 1`] = `
       <div
         d="M0,38C0,38,20.622,20.15,21.333,20C22.044,19.85,41.956,29.3,42.667,29C43.378,28.7,64,2,64,2"
         fill="none"
-        stroke="#21C95E"
+        stroke="#21c95e"
         stroke-linecap="round"
         stroke-linejoin="round"
         stroke-width="1.5"
@@ -219,7 +219,7 @@ exports[`TokenCard > renders the vertical layout with a negative delta and no is
       >
         <div
           class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[var(--c-h)] bg-[color:var(--c-bg)] rounded-[999999px] opacity-[0] absolute top-[var(--c-top)] left-[var(--c-left)] z-[var(--c-z)]"
-          style="--c-w: 96%; --c-h: 96%; --c-bg: #FFFFFF; --c-top: 2%; --c-left: 2%; --c-z: 0;"
+          style="--c-w: 96%; --c-h: 96%; --c-bg: #ffffff; --c-top: 2%; --c-left: 2%; --c-z: 0;"
         />
         <div
           class="flex flex-col basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 items-center justify-center px-[8px] w-[32px] h-[32px] rounded-[999999px]"
@@ -247,12 +247,12 @@ exports[`TokenCard > renders the vertical layout with a negative delta and no is
           >
             <div
               offset="0"
-              stop-color="#FF593C"
+              stop-color="#ff593c"
               stop-opacity="0.16"
             />
             <div
               offset="1"
-              stop-color="#FF593C"
+              stop-color="#ff593c"
               stop-opacity="0"
             />
           </div>
@@ -264,7 +264,7 @@ exports[`TokenCard > renders the vertical layout with a negative delta and no is
         <div
           d="M0,30C0,30,20.622,16.117,21.333,16C22.044,15.883,41.956,23.233,42.667,23C43.378,22.767,64,2,64,2"
           fill="none"
-          stroke="#FF593C"
+          stroke="#ff593c"
           stroke-linecap="round"
           stroke-linejoin="round"
           stroke-width="1.5"
@@ -295,17 +295,17 @@ exports[`TokenCard > renders the vertical layout with a negative delta and no is
           class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center justify-start gap-[2px]"
           data-testid="relative-change"
         >
-          <div
+          <svg
             fill="none"
             stroke-width="2"
-            style="width: 12px; height: 12px; color: rgb(255, 89, 60); transform: rotate(0deg);"
-            viewbox="0 0 24 24"
+            style="width: 12px; height: 12px; transform: rotate(0deg);"
+            viewBox="0 0 24 24"
           >
-            <div
+            <path
               d="M10.6979 16.2453L6.31787 9.75247C5.58184 8.66118 6.2058 7 7.35185 7L16.6482 7C17.7942 7 18.4182 8.66243 17.6821 9.75247L13.3021 16.2453C12.623 17.2516 11.377 17.2516 10.6979 16.2453Z"
               fill="currentColor"
             />
-          </div>
+          </svg>
           <div
             class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
           >
@@ -340,7 +340,7 @@ exports[`TokenCard > renders the vertical layout with price, issuer label and po
       >
         <div
           class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[var(--c-h)] bg-[color:var(--c-bg)] rounded-[999999px] opacity-[0] absolute top-[var(--c-top)] left-[var(--c-left)] z-[var(--c-z)]"
-          style="--c-w: 96%; --c-h: 96%; --c-bg: #FFFFFF; --c-top: 2%; --c-left: 2%; --c-z: 0;"
+          style="--c-w: 96%; --c-h: 96%; --c-bg: #ffffff; --c-top: 2%; --c-left: 2%; --c-z: 0;"
         />
         <div
           data-testid="img-token-image"
@@ -368,12 +368,12 @@ exports[`TokenCard > renders the vertical layout with price, issuer label and po
           >
             <div
               offset="0"
-              stop-color="#21C95E"
+              stop-color="#21c95e"
               stop-opacity="0.16"
             />
             <div
               offset="1"
-              stop-color="#21C95E"
+              stop-color="#21c95e"
               stop-opacity="0"
             />
           </div>
@@ -385,7 +385,7 @@ exports[`TokenCard > renders the vertical layout with price, issuer label and po
         <div
           d="M0,30C0,30,20.622,16.117,21.333,16C22.044,15.883,41.956,23.233,42.667,23C43.378,22.767,64,2,64,2"
           fill="none"
-          stroke="#21C95E"
+          stroke="#21c95e"
           stroke-linecap="round"
           stroke-linejoin="round"
           stroke-width="1.5"
@@ -421,17 +421,17 @@ exports[`TokenCard > renders the vertical layout with price, issuer label and po
           class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center justify-start gap-[2px]"
           data-testid="relative-change"
         >
-          <div
+          <svg
             fill="none"
             stroke-width="2"
-            style="width: 12px; height: 12px; color: rgb(33, 201, 94); transform: rotate(180deg);"
-            viewbox="0 0 24 24"
+            style="width: 12px; height: 12px; transform: rotate(180deg);"
+            viewBox="0 0 24 24"
           >
-            <div
+            <path
               d="M10.6979 16.2453L6.31787 9.75247C5.58184 8.66118 6.2058 7 7.35185 7L16.6482 7C17.7942 7 18.4182 8.66243 17.6821 9.75247L13.3021 16.2453C12.623 17.2516 11.377 17.2516 10.6979 16.2453Z"
               fill="currentColor"
             />
-          </div>
+          </svg>
           <div
             class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
           >

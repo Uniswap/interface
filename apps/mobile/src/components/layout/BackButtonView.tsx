@@ -1,8 +1,7 @@
-import { ColorTokens, Flex, Text } from '@universe/mycelium'
+import { ColorTokens, Flex, Text, type IconSizeTokens } from '@universe/mycelium'
+import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { RotatableChevron } from 'ui/src/components/icons'
-import { IconSizeTokens } from 'ui/src/theme/tokens'
 
 type Props = {
   size?: IconSizeTokens

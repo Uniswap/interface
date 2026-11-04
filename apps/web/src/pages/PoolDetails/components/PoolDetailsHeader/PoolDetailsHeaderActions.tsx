@@ -8,12 +8,12 @@ import type { ParsedToken } from 'uniswap/src/features/dataApi/utils/parsedToken
 import { v2TokenToCurrency } from 'uniswap/src/features/dataApi/utils/parsedToken'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
-import { POPUP_MEDIUM_DISMISS_MS } from '~/components/Popups/constants'
 import { DesktopHeaderActions } from '~/components/StickyCollapsibleHeader/HeaderActions/DesktopHeaderActions'
 import { MobileHeaderActions } from '~/components/StickyCollapsibleHeader/HeaderActions/MobileHeaderActions'
 import { usePoolDetailsHeaderActions } from '~/pages/PoolDetails/components/PoolDetailsHeader/usePoolDetailsHeaderActions'
-import { popupRegistry } from '~/state/popups/registry'
-import { PopupType } from '~/state/popups/types'
+import { POPUP_MEDIUM_DISMISS_MS } from '~/utils/popups/constants'
+import { popupRegistry } from '~/utils/popups/registry'
+import { PopupType } from '~/utils/popups/types'
 
 export function PoolDetailsHeaderActions({
   chainId,

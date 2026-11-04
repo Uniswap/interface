@@ -1,5 +1,5 @@
-import { Bank } from 'ui/src/components/icons/Bank'
-import { Buy } from 'ui/src/components/icons/Buy'
+import { Bank } from '@universe/mycelium/icons/Bank'
+import { Buy } from '@universe/mycelium/icons/Buy'
 import { PaymentMethodFilter as MobilePaymentMethodFilter } from 'uniswap/src/features/fiatOnRamp/PaymentMethodFilter/PaymentMethodFilter.native'
 import { PaymentMethodFilter as WebPaymentMethodFilter } from 'uniswap/src/features/fiatOnRamp/PaymentMethodFilter/PaymentMethodFilter.web'
 import { PaymentMethodItem } from 'uniswap/src/features/fiatOnRamp/PaymentMethodFilter/utils'

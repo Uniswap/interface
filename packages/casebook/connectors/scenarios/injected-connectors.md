@@ -21,7 +21,7 @@ sourceNote: >-
   (apps/web/src/app/WalletConnection.e2e.test.ts) drives the mock injected connector
   end-to-end. The connector-level unit test "Wagmi connectors > connectWagmiWallet >
   should connect to wagmi wallet successfully"
-  (apps/web/src/features/wallet/connection/connectors/wagmi.test.ts) backs the same path
+  (apps/web/src/connection/connectors/wagmi.test.ts) backs the same path
   at unit level (cited here rather than in automationRefs because it is below this case's
   testLevel). Testlio suite: "Connect Injected Wallets connection with Uniswap".
 testlioRef: Connect Injected Wallets connection with Uniswap
@@ -42,9 +42,9 @@ runFrequency: scheduled
 # coverage
 code_paths:
   - apps/web/src/components/Web3Provider/
-  - apps/web/src/features/wallet/connection/connectors/wagmi.ts
-  - apps/web/src/features/wallet/connection/hooks/useConnectWallet.ts
-  - apps/web/src/components/WalletModal/
+  - apps/web/src/connection/connectors/wagmi.ts
+  - apps/web/src/connection/hooks/useConnectWallet.ts
+  - apps/web/src/features/wallet/components/WalletModal/
 automationRefs:
   - path: apps/web/src/app/WalletConnection.e2e.test.ts
     testName: Wallet Connection > should connect wallet
@@ -84,7 +84,7 @@ runFrequency: scheduled
 code_paths:
   - apps/web/src/components/Web3Provider/
   - apps/web/src/components/AccountDrawer/
-  - apps/web/src/features/wallet/connection/
+  - apps/web/src/connection/
 automationRefs:
   - path: apps/web/src/app/WalletConnection.e2e.test.ts
     testName: Wallet Connection > disconnect wallet
@@ -124,13 +124,13 @@ testLevel: unit
 runFrequency: pr-check
 # coverage
 code_paths:
-  - apps/web/src/components/WalletModal/UniswapWalletOptions.tsx
-  - apps/web/src/components/WalletModal/StandardWalletModal.tsx
-  - apps/web/src/features/wallet/connection/hooks/useOrderedWalletConnectors.ts
+  - apps/web/src/features/wallet/components/WalletModal/UniswapWalletOptions.tsx
+  - apps/web/src/features/wallet/components/WalletModal/StandardWalletModal.tsx
+  - apps/web/src/connection/hooks/useOrderedWalletConnectors.ts
 automationRefs:
-  - path: apps/web/src/features/wallet/connection/hooks/useOrderedWalletConnectors.test.ts
+  - path: apps/web/src/connection/hooks/useOrderedWalletConnectors.test.ts
     testName: useOrderedWallets > should return ordered wallets
-  - path: apps/web/src/components/WalletModal/UniswapWalletOptions.test.tsx
+  - path: apps/web/src/features/wallet/components/WalletModal/UniswapWalletOptions.test.tsx
     testName: UniswapWalletOptions > Extension connecter should be shown if detected
 ---
 
@@ -167,10 +167,10 @@ testLevel: unit
 runFrequency: release
 # coverage
 code_paths:
-  - apps/web/src/features/wallet/connection/hooks/useOrderedWalletConnectors.ts
+  - apps/web/src/connection/hooks/useOrderedWalletConnectors.ts
   - apps/web/src/state/wallets/
 automationRefs:
-  - path: apps/web/src/features/wallet/connection/hooks/useOrderedWalletConnectors.test.ts
+  - path: apps/web/src/connection/hooks/useOrderedWalletConnectors.test.ts
     testName: useOrderedWallets > should place the most recent wallet at the top of the list
 ---
 
@@ -205,12 +205,12 @@ testLevel: unit
 runFrequency: release
 # coverage
 code_paths:
-  - apps/web/src/features/wallet/connection/hooks/useOrderedWalletConnectors.ts
-  - apps/web/src/features/wallet/connection/hooks/useIsMetaMaskExtensionDetected.ts
+  - apps/web/src/connection/hooks/useOrderedWalletConnectors.ts
+  - apps/web/src/connection/hooks/useIsMetaMaskExtensionDetected.ts
 automationRefs:
-  - path: apps/web/src/features/wallet/connection/hooks/useOrderedWalletConnectors.test.ts
+  - path: apps/web/src/connection/hooks/useOrderedWalletConnectors.test.ts
     testName: useOrderedWallets > shows MetaMask in the primary list when the extension is detected
-  - path: apps/web/src/features/wallet/connection/hooks/useOrderedWalletConnectors.test.ts
+  - path: apps/web/src/connection/hooks/useOrderedWalletConnectors.test.ts
     testName: useOrderedWallets > shows MetaMask after WalletConnect (not as an injected wallet) when the extension is not detected
 ---
 
@@ -245,10 +245,10 @@ testLevel: unit
 runFrequency: release
 # coverage
 code_paths:
-  - apps/web/src/features/wallet/connection/connectors/multiplatform.ts
-  - apps/web/src/features/wallet/connection/types/WalletConnectorMeta.ts
+  - apps/web/src/connection/connectors/multiplatform.ts
+  - apps/web/src/connection/types/WalletConnectorMeta.ts
 automationRefs:
-  - path: apps/web/src/features/wallet/connection/connectors/multiplatform.test.ts
+  - path: apps/web/src/connection/connectors/multiplatform.test.ts
     testName: multiplatform connectors > deduplicateWalletConnectorMeta > should merge the real MetaMask Connect EVM and Solana connectors into one dual-platform entry
 ---
 

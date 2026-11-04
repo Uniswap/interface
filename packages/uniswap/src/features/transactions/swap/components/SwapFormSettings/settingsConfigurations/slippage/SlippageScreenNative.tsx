@@ -1,16 +1,18 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { isWebPlatform } from '@universe/environment'
-import { Flex, Text, TouchableArea, AnimatedFlex, useSporeColors } from '@universe/mycelium'
+import { Flex, Text, TouchableArea, AnimatedFlex, useSporeColors, fonts, iconSizes, spacing } from '@universe/mycelium'
 import type { ColorTokens } from '@universe/mycelium'
+import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFilled'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { PlusMinusButton, PlusMinusButtonType } from 'ui/src'
-import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
-import { fonts, iconSizes, spacing } from 'ui/src/theme'
 import { BottomSheetTextInput } from 'uniswap/src/components/modals/Modal'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { MAX_CUSTOM_SLIPPAGE_TOLERANCE, SLIPPAGE_CRITICAL_TOLERANCE } from 'uniswap/src/constants/transactions'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
+import {
+  PlusMinusButton,
+  PlusMinusButtonType,
+} from 'uniswap/src/features/transactions/components/settings/PlusMinusButton'
 import { useSlippageSettings } from 'uniswap/src/features/transactions/components/settings/settingsConfigurations/slippage/useSlippageSettings'
 import { useFormatSlippageAmount } from 'uniswap/src/features/transactions/swap/components/MaxSlippageRow/SlippageInfo/useFormatSlippageAmount'
 import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'

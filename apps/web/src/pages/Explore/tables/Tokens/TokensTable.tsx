@@ -11,7 +11,6 @@ import { useTranslation } from 'react-i18next'
 import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber.web'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useFeatureFlaggedChainIds } from 'uniswap/src/features/chains/hooks/useFeatureFlaggedChainIds'
-import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { getRWAHeaderIdentity } from 'uniswap/src/features/rwa/getRWAHeaderIdentity'
 import { useRWAWhitelist } from 'uniswap/src/features/rwa/useRWAWhitelist'
@@ -207,8 +206,7 @@ export function TokenTable({
             ),
             link: getTokenDetailsURL({
               address: unwrappedToken.address,
-              chain: toGraphQLChain(chainId ?? defaultChainId),
-              chainUrlParam: chainFilter,
+              chainId: exploreChainId ?? chainId ?? defaultChainId,
               chainQueryParam: !chainFilter && chainCount > 1 ? TDP_MULTICHAIN_CHAIN_QUERY_VALUE : undefined,
             }),
             analytics: {

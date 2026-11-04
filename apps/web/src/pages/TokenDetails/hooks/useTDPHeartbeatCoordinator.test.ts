@@ -1,7 +1,7 @@
 import { renderHook, act } from '@testing-library/react'
 import { useDynamicConfigValue } from '@universe/gating'
 import { PollingInterval } from 'uniswap/src/constants/misc'
-import { useActiveAddresses } from '~/features/accounts/store/hooks'
+import { useActiveAddresses } from '~/connection/accounts/hooks'
 import { useInterval } from '~/lib/hooks/useInterval'
 import { useTDPHeartbeatCoordinator } from '~/pages/TokenDetails/hooks/useTDPHeartbeatCoordinator'
 
@@ -24,7 +24,7 @@ vi.mock('@universe/gating', async (importOriginal) => {
   }
 })
 
-vi.mock('~/features/accounts/store/hooks', () => ({
+vi.mock('~/connection/accounts/hooks', () => ({
   useActiveAddresses: vi.fn(),
 }))
 

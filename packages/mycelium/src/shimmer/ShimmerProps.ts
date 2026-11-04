@@ -42,7 +42,7 @@ export interface ShimmerProps {
    */
   testID?: string
   /**
-   * A narrow slice of the legacy Tamagui Stack layout surface real call
+   * A narrow slice of the legacy Stack layout surface real call
    * sites pass straight onto `Shine` (INFRA-3822) — not the full
    * `FlexCompatStyleProps` surface, just the values already CSS property
    * names on both platforms, so they merge directly into the wrapper's style

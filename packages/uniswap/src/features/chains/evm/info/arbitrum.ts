@@ -1,4 +1,4 @@
-import { GraphQLApi, TradingApi } from '@universe/api'
+import { TradingApi } from '@universe/api'
 import { UniverseChainId, Platform } from '@universe/chains'
 import { ARBITRUM_LOGO, ETH_LOGO } from '@universe/mycelium/assets'
 import { config } from 'uniswap/src/config'
@@ -13,7 +13,7 @@ import {
 } from 'uniswap/src/features/chains/evm/rpc'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
 import { GENERIC_L2_GAS_CONFIG } from 'uniswap/src/features/chains/gasDefaults'
-import { GqlChainId, NetworkLayer, RPCType, UniverseChainInfo } from 'uniswap/src/features/chains/types'
+import { NetworkLayer, RPCType, UniverseChainInfo } from 'uniswap/src/features/chains/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { buildDAI, buildUSDC, buildUSDT } from 'uniswap/src/features/tokens/stablecoin'
 import { arbitrum } from 'wagmi/chains'
@@ -33,7 +33,6 @@ export const ARBITRUM_CHAIN_INFO = {
   supportedApps: ALL_APPS_CHAIN_SUPPORTED_APPS,
   assetRepoNetworkName: 'arbitrum',
   backendChain: {
-    chain: GraphQLApi.Chain.Arbitrum as GqlChainId,
     backendSupported: true,
     nativeTokenBackendAddress: undefined,
   },

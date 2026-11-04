@@ -3,7 +3,6 @@ import { Flex, Text } from '@universe/mycelium'
 import { useTranslation } from 'react-i18next'
 import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { GraduatedCardFrame } from '~/features/Toucan/Auction/Bids/GraduatedCardFrame'
 import { getMigrateCtaState } from '~/features/Toucan/Auction/CreatorActions/getMigrateCtaState'
 import { useAuctionCreatorInfo } from '~/features/Toucan/Auction/hooks/useAuctionCreatorInfo'
@@ -12,6 +11,7 @@ import { useMigrateSubmit } from '~/features/Toucan/Auction/hooks/useMigrateSubm
 import { useAuctionOutcome, useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
 import { getLbpMigrationState } from '~/features/Toucan/Auction/utils/creatorActions'
 import { ToucanActionButton } from '~/features/Toucan/Shared/ToucanActionButton'
+import { useAccountDrawer } from '~/state/accountDrawer/hooks'
 
 /**
  * Post-auction migrate CTA for graduated auctions whose LBP migration hasn't run yet

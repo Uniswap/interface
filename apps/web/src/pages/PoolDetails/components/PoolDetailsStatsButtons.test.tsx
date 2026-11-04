@@ -1,7 +1,6 @@
 import '~/test-utils/tokens/mocks'
 import userEvent from '@testing-library/user-event'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
-import { GraphQLApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
 import { TestID } from '@universe/test'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
@@ -9,8 +8,8 @@ import { AccountsStore } from 'uniswap/src/features/accounts/store/types/Account
 import { dismissTokenWarning } from 'uniswap/src/features/tokens/warnings/slice/slice'
 import { TokenProtectionWarning } from 'uniswap/src/features/tokens/warnings/types'
 import * as useSwapFormStoreModule from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
+import { useAccount } from '~/connection/hooks/useAccount'
 import { useLPGeoRestriction } from '~/features/Liquidity/useLPGeoRestriction'
-import { useAccount } from '~/hooks/useAccount'
 import { PoolDetailsStatsButtons } from '~/pages/PoolDetails/components/PoolDetailsStatsButtons'
 import store from '~/state'
 import { USE_DISCONNECTED_ACCOUNT } from '~/test-utils/constants'
@@ -21,7 +20,7 @@ import { act, render, screen } from '~/test-utils/render'
 
 vi.mock('uniswap/src/features/positions/hooks/useWalletPositions')
 
-vi.mock('~/hooks/useAccount')
+vi.mock('~/connection/hooks/useAccount')
 
 vi.mock('uniswap/src/contexts/UniswapContext')
 
@@ -89,7 +88,7 @@ describe('PoolDetailsStatsButton', () => {
           currencies: {
             INPUT: {
               currencyId: '0x',
-              currency: {} as GraphQLApi.Currency,
+              currency: {},
             },
           },
           chainId: UniverseChainId.Mainnet,

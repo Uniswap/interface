@@ -76,6 +76,11 @@ export function getExploreTokensURL(): string {
   return '/explore/tokens'
 }
 
+/** Explore Pools tab with the default (All) category (all networks). */
+export function getExplorePoolsURL(): string {
+  return '/explore/pools'
+}
+
 /** Explore Tokens tab with the Stocks category chip selected (all networks). */
 export function getExploreStocksTableURL(): string {
   return `${getExploreTokensURL()}?${CATEGORY_PARAM}=${ExploreCategory.Stocks}`

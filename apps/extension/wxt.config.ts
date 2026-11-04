@@ -11,10 +11,6 @@ import { defineConfig } from 'wxt'
 import { getRenamedIifeName, rewriteIifeFooter } from './config/contentScriptIifeRename'
 import { getTsconfigAliases } from './config/getTsconfigAliases'
 
-// process.env.APP_ID is used by @universe/config. Set at the Node level so the
-// Tamagui static extractor can resolve it.
-process.env.APP_ID = 'extension'
-
 const NEW_ENV_PATH = path.resolve(import.meta.dirname, '.env')
 const NEW_ENV_DEV_PATH = path.resolve(import.meta.dirname, '.env.dev')
 const NEW_ENV_OVERRIDE_PATH = path.resolve(import.meta.dirname, '.env.override')
@@ -72,7 +68,11 @@ const publicAssetsVariant = getPublicAssetsVariant()
 
 const BASE_NAME = 'Uniswap Extension'
 const BASE_DESCRIPTION = "The Uniswap Extension is a self-custody crypto wallet that's built for swapping."
-const BASE_VERSION = '1.86.0'
+// src/manifest.json is the single source for the extension's marketing version: CI, release tooling and the
+// version-bump workflows read and write it there. The generated manifest below is built from this config.
+const BASE_VERSION: string = JSON.parse(
+  fs.readFileSync(path.resolve(import.meta.dirname, 'src/manifest.json'), 'utf8'),
+).version
 
 const BUILD_NUM = parseInt(process.env.BUILD_NUM || '0')
 const EXTENSION_VERSION = `${BASE_VERSION}.${BUILD_NUM}`
@@ -538,7 +538,6 @@ export default defineConfig({
         // noDiscovery: true,
         include: [
           'buffer',
-          'graphql',
           'expo-linear-gradient',
           'expo-blur',
           'expo-modules-core',
@@ -570,14 +569,7 @@ export default defineConfig({
         // @rn-primitives ships raw JSX in its `.mjs` dist. Rolldown's dep optimizer parses
         // `.mjs` with JSX disabled and doesn't run the `transform-react-native-jsx` plugin,
         // so prebundling them fails the whole optimize pass (blank UI pages in dev).
-        exclude: [
-          'expo-clipboard',
-          'vite-plugin-node-polyfills',
-          '@rn-primitives/portal',
-          '@rn-primitives/checkbox',
-          '@rn-primitives/slot',
-          '@rn-primitives/hooks',
-        ],
+        exclude: ['expo-clipboard', 'vite-plugin-node-polyfills', '@rn-primitives/portal'],
         esbuildOptions: {
           // Prefer .web.* extensions so react-native packages resolve to their web variants
           // (e.g. react-native-svg/ReactNativeSVG.web.js instead of ReactNativeSVG.js which
@@ -607,7 +599,7 @@ export default defineConfig({
         },
         chunkSizeWarningLimit: 800,
         commonjsOptions: {
-          include: [/buffer/, /jsbi/, /node_modules/, /cookie/, /void-elements/, /@apollo\/client/],
+          include: [/buffer/, /jsbi/, /node_modules/, /cookie/, /void-elements/],
           transformMixedEsModules: true,
         },
       },

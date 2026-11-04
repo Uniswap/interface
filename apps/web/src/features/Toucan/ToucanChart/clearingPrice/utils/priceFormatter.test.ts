@@ -23,4 +23,11 @@ describe('createYAxisPriceFormatter', () => {
     const scaled = createYAxisPriceFormatter({ scaleFactor: 1e6, maxFractionDigits: 8, locale: 'en-US' })
     expect(scaled(10.24)).toBe('0.0₄1024')
   })
+
+  it('uses the nl-NL decimal separator for subscript dust and standard values', () => {
+    const nl = createYAxisPriceFormatter({ scaleFactor: 1, maxFractionDigits: 8, locale: 'nl-NL' })
+    expect(nl(0.00001024)).toBe('0,0₄1024')
+    expect(nl(0.5)).toBe('0,50')
+    expect(nl(1234.5)).toBe('1.235')
+  })
 })

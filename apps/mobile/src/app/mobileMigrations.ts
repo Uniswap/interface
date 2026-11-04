@@ -1124,7 +1124,7 @@ export const removePersistedApolloCache = createSafeMigration({
   onError: (state: any) => state,
 })
 
-// The tweaks reducer was removed along with the GraphQL codepath; drop its persisted state.
+// The tweaks reducer was removed; drop its persisted state.
 export const removeTweaksSlice = createSafeMigration({
   name: 'removeTweaksSlice',
   migrate: (state: any) => {

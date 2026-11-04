@@ -2,8 +2,8 @@ import { Button, Flex, Text } from '@universe/mycelium'
 import { useTranslation } from 'react-i18next'
 import { ElementName, InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { AnimatedStyledBanner } from '~/pages/Portfolio/components/AnimatedStyledBanner/AnimatedStyledBanner'
+import { useAccountDrawer } from '~/state/accountDrawer/hooks'
 
 export function PortfolioConnectWalletBanner() {
   const { t } = useTranslation()

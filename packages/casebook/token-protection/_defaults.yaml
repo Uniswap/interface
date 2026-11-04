@@ -1,0 +1,23 @@
+product_area: token_protection
+platforms: [web, extension, mobile]
+nxProjects: ["@universe/web", "@uniswap/extension", "@uniswap/mobile", uniswap, wallet]
+owners: ["@uniswap/swap-fe"]
+
+# Casebook area-registry metadata (read by the engine in apps/cli/src/casebook).
+# These drive Testlio suite naming, the PR-comment label, and CI routing.
+label: Token Protection
+suiteNamePrefix: TokenProtection
+ghLabel: "casebook:token-protection"
+# Reviewer GitHub team for the auto-opened catalog companion PR.
+# NOTE: not resolvable from .github/CODEOWNERS (compliance is a separate concern);
+# swap-fe is a provisional convention per the seeding blueprint and MUST be confirmed
+# with the pod leads before assembly requests reviews (token warnings surface in swap
+# review, which is swap-fe owned; permissioned/compliance is dual-owned, AMBIGUOUS).
+reviewerTeam: swap-fe
+teamResolved: false
+
+# Test-wallet aliases referenced by this area's cases. Symbolic only: real mnemonics live in
+# the QA vault / Testlio TL handoff, keyed by the same alias. Never put a secret here.
+wallets:
+  TW-TOKENPROTECTION-01: "funded signer wallet with native gas on Ethereum + BNB Chain; completes warned (fee / malicious / honeypot) swaps"
+  TW-TOKENPROTECTION-02: "signer wallet holding a permissioned (RWA/KYC-gated) token, not KYC-allowlisted; permissioned swap/send block cases"

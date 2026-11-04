@@ -1,5 +1,4 @@
 import { Auction } from '@uniswap/client-launches/dist/data/v1/auction_pb'
-import { GraphQLApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
 import type { ReactNode } from 'react'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
@@ -48,7 +47,7 @@ vi.mock('~/pages/TokenDetails/components/chart/TDPChartStateContext', () => ({
 
 const mockStore = {
   currency: USDC_MAINNET,
-  currencyChain: GraphQLApi.Chain.Ethereum,
+  currencyChainId: UniverseChainId.Mainnet,
   pathTokenDbAddress: USDC_MAINNET.address,
 }
 vi.mock('~/pages/TokenDetails/context/useTDPStore', () => ({

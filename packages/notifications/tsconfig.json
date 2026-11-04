@@ -20,9 +20,6 @@
       "path": "../api"
     },
     {
-      "path": "../ui"
-    },
-    {
       "path": "../environment"
     },
     {

@@ -7,7 +7,7 @@ const { mockUseAccount, mockUsePermissionedSwapPair } = vi.hoisted(() => ({
   mockUsePermissionedSwapPair: vi.fn(),
 }))
 
-vi.mock('~/hooks/useAccount', () => ({
+vi.mock('~/connection/hooks/useAccount', () => ({
   useAccount: mockUseAccount,
 }))
 

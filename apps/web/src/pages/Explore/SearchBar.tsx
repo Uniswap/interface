@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ElementName, InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { useDebounce } from 'utilities/src/time/timing'
 import { ExpandableSearchInput } from '~/components/ExpandableSearchInput/ExpandableSearchInput'
 import {
   useExploreTablesFilterStore,
   useExploreTablesFilterStoreActions,
 } from '~/features/Explore/state/exploreTablesFilterStore'
-import { useDebounce } from '~/hooks/useDebounce'
 import { ExploreTab } from '~/types/explore'
 
 export function SearchBar({ tab }: { tab?: string }) {

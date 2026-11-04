@@ -1,21 +1,20 @@
 import { createColumnHelper, type Row } from '@tanstack/react-table'
-import { Flex as MyceliumFlex } from '@universe/mycelium'
+import { Button, Flex as MyceliumFlex, SpinningLoader, iconSizes } from '@universe/mycelium'
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
 import { HeightAnimator } from '@universe/mycelium/height-animator'
+import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFilled'
+import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
 import { TestID } from '@universe/test'
 import type { TFunction } from 'i18next'
 import { memo, type ReactNode, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button } from 'ui/src'
-import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
-import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
-import { SpinningLoader } from 'ui/src/loading/SpinningLoader'
-import { iconSizes } from 'ui/src/theme'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
-import type {
-  MarginActivePosition,
-  MarginPlanIntent,
-  MarginTerminalPosition,
+import {
+  MARGIN_ACTIVE_POSITION_STATUSES,
+  MARGIN_TERMINAL_POSITION_STATUSES,
+  type MarginActivePosition,
+  type MarginPlanIntent,
+  type MarginTerminalPosition,
 } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
 import { useMarginPositionsQuery } from 'uniswap/src/data/apiClients/tradingApi/useMarginPositionsQuery'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
@@ -29,31 +28,12 @@ import { Table } from '~/components/Table'
 import { Cell } from '~/components/Table/Cell'
 import { HeaderCell } from '~/components/Table/styled'
 import type { RenderUnifiedExpandableRow } from '~/components/Table/types'
+import { getColumnSizingStyles } from '~/components/Table/utils/getColumnSizingStyles'
 import { hasRow } from '~/components/Table/utils/hasRow'
+import { useAccount } from '~/connection/hooks/useAccount'
 import { MARGIN_CHAIN_ID, MARGIN_POSITIONS_REFETCH_MS, type MarginMarket } from '~/constants/margin'
-import { useAccount } from '~/hooks/useAccount'
-import { MarginActionModals } from '~/pages/Swap/Margin/components/MarginActionModals'
-import { MarginPendingSection } from '~/pages/Swap/Margin/components/MarginPendingSection'
-import { MarginPositionActionsMenu } from '~/pages/Swap/Margin/components/MarginPositionActionsMenu'
-import { MarginPositionDrawer } from '~/pages/Swap/Margin/components/MarginPositionDrawer'
-import {
-  MarginExplainerContent,
-  MarginExplainerTooltip,
-  useMarginPnlCopy,
-} from '~/pages/Swap/Margin/components/shared/MarginExplainer'
-import { MarginHealthPill } from '~/pages/Swap/Margin/components/shared/MarginHealthPill'
-import { MarginLiquidationPill } from '~/pages/Swap/Margin/components/shared/MarginLiquidationPill'
-import { shouldShowPointerBanner } from '~/pages/Swap/Margin/hooks/marginPendingPlans'
-import { useMarginPlanExecution } from '~/pages/Swap/Margin/hooks/marginPlanExecutionStore'
-import { getPersistedMarginPlanId } from '~/pages/Swap/Margin/hooks/marginPlanPointer'
-import { useExecuteMarginPlan } from '~/pages/Swap/Margin/hooks/useExecuteMarginPlan'
-import { getMarginPairLogoProps, useMarginCurrencyInfos } from '~/pages/Swap/Margin/hooks/useMarginCurrencyInfos'
-import { type MarginMarketResolver, useResolveMarginMarket } from '~/pages/Swap/Margin/hooks/useResolveMarginMarket'
-import {
-  buildMarginActiveRows,
-  marginAccruedInterestPerDay,
-  type MarginTableRow,
-} from '~/pages/Swap/Margin/marginActiveRows'
+import { getMarginPairLogoProps, useMarginCurrencyInfos } from '~/features/margin/hooks/useMarginCurrencyInfos'
+import { type MarginMarketResolver, useResolveMarginMarket } from '~/features/margin/hooks/useResolveMarginMarket'
 import {
   formatLeverage,
   formatLiqDistanceSuffix,
@@ -64,43 +44,58 @@ import {
   liqDistanceSignedPct,
   rawToNumber,
   scaledE18ToNumber,
-} from '~/pages/Swap/Margin/marginFormat'
+} from '~/features/margin/utils/marginFormat'
 import {
-  buildMarginBasisBreakdown,
-  buildMarginPnlBreakdown,
-  buildMarginRealizedLines,
-  MARGIN_PNL_DEFINITION_LINES,
-  marginPnlSuppression,
-} from '~/pages/Swap/Margin/marginPnlExplainer'
+  isShortCollateral,
+  type MarginAmountLeg,
+  marginAmountLabel,
+  resolveMarketForPosition,
+} from '~/features/margin/utils/marginPositionDisplay'
 import {
   hasMarginOpenedAt,
   hasMarginPositionBasis,
   isMarginActivePosition,
+  isMarginTerminalPosition,
+  marginCurrentLeverage,
   marginPositionDebt,
   marginPositionTokens,
-  marginPositionVenue,
-} from '~/pages/Swap/Margin/marginPositionRow'
+} from '~/features/margin/utils/marginPositionRow'
+import { marginFallbackPairLabel, marginPairLabel, marginPairLegs } from '~/features/margin/utils/marginTokenDisplay'
+import { MarginActionModals } from '~/pages/Swap/Margin/components/MarginActionModals'
+import { MarginPositionActionsMenu } from '~/pages/Swap/Margin/components/MarginPositionActionsMenu'
+import {
+  MarginPositionCard,
+  type MarginPositionCardMetric,
+  MarginPositionCardSkeletons,
+} from '~/pages/Swap/Margin/components/MarginPositionCard'
+import { type MarginDrawerColumn, MarginPositionDrawer } from '~/pages/Swap/Margin/components/MarginPositionDrawer'
+import type { MarginPositionSheetArgs } from '~/pages/Swap/Margin/components/MarginPositionSheet'
+import {
+  MarginExplainerContent,
+  MarginExplainerTooltip,
+  useMarginPnlCopy,
+} from '~/pages/Swap/Margin/components/shared/MarginExplainer'
+import { MarginLiquidationPill } from '~/pages/Swap/Margin/components/shared/MarginLiquidationPill'
+import { useMarginPlanExecution } from '~/pages/Swap/Margin/hooks/marginPlanExecutionStore'
+import { useExecuteMarginPlan } from '~/pages/Swap/Margin/hooks/useExecuteMarginPlan'
+import { buildMarginActiveRows, type MarginTableRow } from '~/pages/Swap/Margin/marginActiveRows'
+import { useMarginMorph } from '~/pages/Swap/Margin/MarginMorphContext'
+import { buildMarginRealizedLines } from '~/pages/Swap/Margin/marginPnlExplainer'
 import { formatAge } from '~/pages/Swap/Margin/marginPositionsMath'
-import {
-  marginExposureLeg,
-  marginFallbackPairLabel,
-  marginPairLabel,
-  marginPairLegs,
-  marginUnwrapSymbol,
-  resolveMarginFallbackSymbol,
-} from '~/pages/Swap/Margin/marginTokenDisplay'
-import {
-  marginPositionMark,
-  marginRawUsdToNumber,
-  marginUsdBasis,
-  marginUsdPnlNow,
-} from '~/pages/Swap/Margin/marginUsdPnl'
+import { MARGIN_ACTIVE_COLUMN, MARGIN_TABLE_ROW_HEIGHT } from '~/pages/Swap/Margin/marginTableConstants'
+import { marginPositionMark, marginRawUsdToNumber } from '~/pages/Swap/Margin/marginUsdPnl'
 
-const MARGIN_TABLE_ROW_HEIGHT = 72
 const LOADING_ROWS = 3
 
 type MarginTableTab = 'active' | 'completed'
-// Which management modal an expanded-row button requests; positionId keys the (freshest) position object.
+// `cards` re-flows each row into a card for phone widths, where the table's columns cannot fit; a tapped
+// card opens `renderPositionSheet` rather than an inline drawer. The sheet is a render prop because it
+// carries the chart, which this module (also in desktop's bundle) must not import.
+type MarginPositionsTableProps =
+  | { layout?: 'table' }
+  | { layout: 'cards'; renderPositionSheet: (args: MarginPositionSheetArgs) => JSX.Element }
+type CellAlign = 'flex-start' | 'flex-end'
+// Which management modal a row's menu requests; positionId keys the (freshest) position object.
 type MarginModalRequest = { action: MarginManageAction; positionId: string }
 
 // Position rows expand to a single synthetic 'drawer' sub-row; renderUnifiedExpandableRow renders the
@@ -120,24 +115,6 @@ function inFlightIntentLabel({ intent, t }: { intent: MarginPlanIntent; t: TFunc
     default:
       return intent
   }
-}
-
-// The wire dropped collateralToken/debtToken off the position row itself — every resolveMarket(row)
-// call site now goes through here instead of re-deriving venue terms at each one.
-function resolveMarketForPosition({
-  position,
-  resolveMarket,
-}: {
-  position: MarginActivePosition | MarginTerminalPosition
-  resolveMarket: MarginMarketResolver
-}): MarginMarket | undefined {
-  const { collateralToken, debtToken } = marginPositionTokens(position)
-  return resolveMarket({
-    collateralToken,
-    debtToken,
-    venue: marginPositionVenue(position),
-    direction: position.direction,
-  })
 }
 
 function PairIdentity({
@@ -161,6 +138,7 @@ function PairIdentity({
     <Flex row alignItems="center" gap="$gap8">
       {market ? (
         <SplitLogo
+          orientation="stacked"
           size={28}
           chainId={MARGIN_CHAIN_ID}
           inputCurrencyInfo={null}
@@ -216,15 +194,17 @@ const PairCell = memo(function PairCell({
   const directionLabel = direction === MarginDirection.SHORT ? t('margin.side.short') : t('margin.side.long')
   // A still-open position that was liquidated is only partially liquidated (collateral remains).
   const liquidationBadge = getMarginLiquidationBadge({ liquidated: position.liquidated, status: 'open' })
+  const leverage = marginCurrentLeverage(position)
   return (
     <PairIdentity
       market={market}
       fallbackTokens={marginPositionTokens(position)}
       currencyInfos={currencyInfos}
-      // Direction + CURRENT leverage, in the direction color. Leverage at open lives in the drawer.
+      // Direction + CURRENT leverage, so an adjusted position reads what it holds now; leverage at open
+      // lives in the drawer.
       subtitle={
         <Text variant="body4" color={directionStyle.color}>
-          {`${directionLabel} ${formatLeverage(position.leverage !== undefined ? Number(position.leverage) : Number.POSITIVE_INFINITY)}`}
+          {leverage === undefined ? directionLabel : `${directionLabel} ${formatLeverage(leverage)}`}
         </Text>
       }
       trailing={liquidationBadge ? <MarginLiquidationPill badge={liquidationBadge} /> : undefined}
@@ -232,87 +212,86 @@ const PairCell = memo(function PairCell({
   )
 })
 
-// The size cell's whole label, for either tab. With a resolved market it reads the exposure leg; with
-// none it falls back to the wire's own `exposureToken`, whose decimals are always present — rendering
-// the raw integer instead would misstate the size by orders of magnitude. The fallback symbol is
-// best-effort: a token outside the markets registry has none, and the
-// pair column beside this one already carries the fallback label.
-function marginSizeLabel({
+// The USD value of a raw wire amount. The volatile leg is priced at the position's own mark (the volatile
+// leg's USD price for either direction); a SHORT's collateral is the stable leg, so it is its own dollar
+// figure. undefined where there is no honest dollar figure: an untradable pair has no USD leg, and the
+// wire's '0' mark is no price at all.
+function marginAmountUsd({
+  raw,
+  leg = 'exposure',
   position,
-  market,
-  currencyInfos,
-  formatNumberOrString,
 }: {
-  position: MarginActivePosition | MarginTerminalPosition
-  market: MarginMarket | undefined
-  currencyInfos: Map<string, CurrencyInfo>
-  formatNumberOrString: ReturnType<typeof useLocalizationContext>['formatNumberOrString']
-}): string {
-  const leg = market ? marginExposureLeg({ market, direction: position.direction }) : undefined
-  if (leg) {
-    const amount = formatNumberOrString({
-      value: rawToNumber({ raw: position.size, decimals: leg.decimals }),
-      type: NumberType.TokenNonTx,
-    })
-    return `${amount} ${marginUnwrapSymbol(leg)}`
+  raw: string
+  leg?: MarginAmountLeg
+  position: MarginActivePosition
+}): number | undefined {
+  if (position.isTradable === false) {
+    return undefined
   }
-  const amount = formatNumberOrString({
-    value: rawToNumber({ raw: position.size, decimals: position.exposureToken.decimals }),
-    type: NumberType.TokenNonTx,
-  })
-  const symbol = resolveMarginFallbackSymbol({ address: position.exposureToken.address, currencyInfos })
-  return symbol ? `${amount} ${symbol}` : amount
+  if (isShortCollateral({ position, leg })) {
+    const value = rawToNumber({ raw, decimals: position.counterToken.decimals })
+    return Number.isFinite(value) ? value : undefined
+  }
+  const mark = marginPositionMark({ position })
+  if (mark === undefined) {
+    return undefined
+  }
+  const value = rawToNumber({ raw, decimals: position.exposureToken.decimals })
+  return Number.isFinite(value) ? value * mark : undefined
+}
+
+// A token figure over its dollar value, the shape the Size and Margin columns share. The dollar line drops
+// out on its own where marginAmountUsd has nothing honest to say.
+function AmountFigure({
+  label,
+  usd,
+  align,
+}: {
+  label: string
+  usd: number | undefined
+  align: CellAlign
+}): JSX.Element {
+  const { formatNumberOrString } = useLocalizationContext()
+  return (
+    <Flex alignItems={align}>
+      <Text variant="body3" color="$neutral1">
+        {label}
+      </Text>
+      {usd === undefined ? null : (
+        <Text variant="body4" color="$neutral2">
+          {formatNumberOrString({ value: usd, type: NumberType.FiatStandard })}
+        </Text>
+      )}
+    </Flex>
+  )
 }
 
 const SizeCell = memo(function SizeCell({
   position,
   resolveMarket,
   currencyInfos,
+  align = 'flex-end',
 }: {
   position: MarginActivePosition
   resolveMarket: MarginMarketResolver
   currencyInfos: Map<string, CurrencyInfo>
+  align?: CellAlign
 }): JSX.Element {
   const { formatNumberOrString } = useLocalizationContext()
   const market = resolveMarketForPosition({ position, resolveMarket })
   return (
-    <Text variant="body3" color="$neutral1">
-      {marginSizeLabel({ position, market, currencyInfos, formatNumberOrString })}
-    </Text>
+    <AmountFigure
+      label={marginAmountLabel({ raw: position.size, position, market, currencyInfos, formatNumberOrString })}
+      usd={marginAmountUsd({ raw: position.size, position })}
+      align={align}
+    />
   )
 })
 
-const EntryPriceCell = memo(function EntryPriceCell({ position }: { position: MarginActivePosition }): JSX.Element {
+// Mark over entry: where the price is NOW leads, what the position committed to trails as the muted
+// sub-line. The entry line keeps its explainer tooltip.
+const MarkEntryCell = memo(function MarkEntryCell({ position }: { position: MarginActivePosition }): JSX.Element {
   const copy = useMarginPnlCopy()
-  const { formatNumberOrString } = useLocalizationContext()
-  if (!hasMarginPositionBasis(position)) {
-    return (
-      <Text variant="body3" color="$neutral1">
-        —
-      </Text>
-    )
-  }
-  const entryPrice = scaledE18ToNumber(position.entryPrice)
-  return (
-    <MarginExplainerTooltip
-      content={
-        <Text variant="body4" color="$neutral2" maxWidth={326}>
-          {copy.entryPrice}
-        </Text>
-      }
-    >
-      <Text variant="body3" color="$neutral1" testID={TestID.MarginEntryPriceTrigger}>
-        {formatNumberOrString({ value: entryPrice, type: NumberType.FiatTokenPrice })}
-      </Text>
-    </MarginExplainerTooltip>
-  )
-})
-
-const CurrentLiqPriceCell = memo(function CurrentLiqPriceCell({
-  position,
-}: {
-  position: MarginActivePosition
-}): JSX.Element {
   const { formatNumberOrString } = useLocalizationContext()
   // An untradable pair has no single USD leg, so both prices are quoted against a leg that is not USD.
   if (position.isTradable === false) {
@@ -322,96 +301,126 @@ const CurrentLiqPriceCell = memo(function CurrentLiqPriceCell({
       </Text>
     )
   }
-  // Backend reports HF = 0 / liq price = 0 for a debt-free position; render mark only, no liq line.
-  const hasDebt = BigInt(marginPositionDebt(position)) !== 0n
-  // '0' on either price is the wire's "no figure", not a price of zero — the same sentinel PnlCell and
-  // MarginEquityCell suppress on (marginPnlSuppression's `noPrice`). Rendering $0.00 here would sit a
-  // zero mark beside their dashes and read as an asset worth nothing.
+  const price = (value: number): string => formatNumberOrString({ value, type: NumberType.FiatTokenPrice })
+  // '0' is the wire's "no figure", not a price of zero — the same sentinel the PnL and margin cells
+  // suppress on.
   const mark = marginPositionMark({ position })
-  const liqPriceRaw = scaledE18ToNumber(position.liquidationPrice)
-  const liqPrice = liqPriceRaw > 0 ? liqPriceRaw : undefined
-  const healthStatus = hasDebt ? getMarginHealthStatus(scaledE18ToNumber(position.healthFactor)) : undefined
-  // Signed distance from mark to liq (negative for a long: price must fall to liquidate).
-  const distancePct =
-    hasDebt && mark !== undefined && liqPrice !== undefined ? liqDistanceSignedPct({ liqPrice, mark }) : undefined
-  // Healthy liq prices read neutral (no color); caution/atRisk keep the tier color + get an inline pill.
-  const isElevatedRisk = healthStatus !== undefined && healthStatus.key !== 'healthy'
-  const liqColor = isElevatedRisk ? healthStatus.color : '$neutral2'
+  const entry = hasMarginPositionBasis(position) ? scaledE18ToNumber(position.entryPrice) : undefined
   return (
-    <Flex alignItems="flex-end">
+    <Flex alignItems="flex-start">
       <Text variant="body3" color="$neutral1">
-        {mark === undefined ? '—' : formatNumberOrString({ value: mark, type: NumberType.FiatTokenPrice })}
+        {mark === undefined ? '—' : price(mark)}
       </Text>
-      {hasDebt ? (
-        <Flex row alignItems="center" gap="$spacing6">
-          {isElevatedRisk ? <MarginHealthPill healthFactor={scaledE18ToNumber(position.healthFactor)} /> : null}
-          <Text variant="body4" color={liqColor}>
-            {liqPrice === undefined ? '—' : formatNumberOrString({ value: liqPrice, type: NumberType.FiatTokenPrice })}
-            {distancePct !== undefined ? ` ${formatLiqDistanceSuffix(distancePct)}` : ''}
-          </Text>
-        </Flex>
-      ) : (
+      {entry === undefined || entry <= 0 ? (
         <Text variant="body4" color="$neutral2">
           —
         </Text>
+      ) : (
+        <MarginExplainerTooltip
+          content={
+            <Text variant="body4" color="$neutral2" maxWidth={326}>
+              {copy.entryPrice}
+            </Text>
+          }
+        >
+          <Text variant="body4" color="$neutral2" testID={TestID.MarginEntryPriceTrigger}>
+            {price(entry)}
+          </Text>
+        </MarginExplainerTooltip>
       )}
     </Flex>
   )
 })
 
-const PnlCell = memo(function PnlCell({
+// Liquidation price over its signed distance from the mark. Healthy positions read neutral; caution and
+// at-risk color the whole cell in the tier color and add a warning icon beside the distance (an icon, not
+// the labeled health pill, which clips at this column width).
+const LiqPriceCell = memo(function LiqPriceCell({
   position,
-  resolveMarket,
+  align = 'flex-end',
 }: {
   position: MarginActivePosition
-  resolveMarket: MarginMarketResolver
+  align?: CellAlign
 }): JSX.Element {
   const { formatNumberOrString } = useLocalizationContext()
-  const market = resolveMarketForPosition({ position, resolveMarket })
-  const fiat = (value: number): string => formatNumberOrString({ value, type: NumberType.FiatStandard })
-  // No market means no decimals, no direction and no symbol — there is nothing honest to explain, so
-  // this is the one dash that stays bare.
-  if (!market) {
+  // Backend reports HF = 0 / liq price = 0 for a debt-free position — there is no liquidation to show.
+  const hasDebt = BigInt(marginPositionDebt(position)) !== 0n
+  const liqPriceRaw = scaledE18ToNumber(position.liquidationPrice)
+  const liqPrice = liqPriceRaw > 0 ? liqPriceRaw : undefined
+  if (position.isTradable === false || !hasDebt || liqPrice === undefined) {
     return (
-      <Text variant="body3" color="$neutral1">
+      <Text variant="body3" color="$neutral2">
         —
       </Text>
     )
   }
-  const basis = marginUsdBasis({ position, market })
-  const pnl = marginUsdPnlNow({ position, market })
-  if (!basis || !pnl) {
-    const suppression = marginPnlSuppression({ position, market })
-    // The reason plus ONE definition line. The full nine-line block on a cell showing a single dash —
-    // including a worked example for a position that has no numbers — is the wrong trade; the header
-    // info icon is one hover away for anyone who wants it.
+  const mark = marginPositionMark({ position })
+  const healthStatus = getMarginHealthStatus(scaledE18ToNumber(position.healthFactor))
+  // Signed distance from mark to liq (negative for a long: price must fall to liquidate).
+  const distancePct = mark === undefined ? undefined : liqDistanceSignedPct({ liqPrice, mark })
+  const isElevatedRisk = healthStatus.key !== 'healthy'
+  return (
+    <Flex alignItems={align}>
+      <Text variant="body3" color={isElevatedRisk ? healthStatus.color : '$neutral1'}>
+        {formatNumberOrString({ value: liqPrice, type: NumberType.FiatTokenPrice })}
+      </Text>
+      {distancePct === undefined ? null : (
+        <Flex row alignItems="center" gap="$spacing4">
+          {isElevatedRisk ? <AlertTriangleFilled size="$icon.12" color={healthStatus.color} /> : null}
+          <Text variant="body4" color={isElevatedRisk ? healthStatus.color : '$neutral2'}>
+            {formatLiqDistanceSuffix(distancePct)}
+          </Text>
+        </Flex>
+      )}
+    </Flex>
+  )
+})
+
+// Unrealized PnL in the collateral token over the return on the margin deposited — both straight off the
+// wire (equity − depositedEquity, and that over depositedEquity), so the arrow and the figure always agree.
+const PnlCell = memo(function PnlCell({
+  position,
+  resolveMarket,
+  currencyInfos,
+  align = 'flex-end',
+}: {
+  position: MarginActivePosition
+  resolveMarket: MarginMarketResolver
+  currencyInfos: Map<string, CurrencyInfo>
+  align?: CellAlign
+}): JSX.Element {
+  const { formatNumberOrString } = useLocalizationContext()
+  const market = resolveMarketForPosition({ position, resolveMarket })
+  const pnl = position.unrealizedPnl === undefined ? Number.NaN : Number(position.unrealizedPnl)
+  if (position.unrealizedPnl === undefined || position.unrealizedPnl === '' || !Number.isFinite(pnl)) {
     return (
-      <MarginExplainerTooltip content={<MarginExplainerContent suppression={suppression} lines={['lead']} />}>
-        <Text variant="body3" color="$neutral1" testID={TestID.MarginPnlSuppressed}>
-          —
-        </Text>
-      </MarginExplainerTooltip>
+      <Text variant="body3" color="$neutral1" testID={TestID.MarginPnlSuppressed}>
+        —
+      </Text>
     )
   }
-  const positive = pnl.pnlUsd >= 0
-  const color = positive ? '$statusSuccess' : '$statusCritical'
-  // The arrow carries the sign, so the percent shows its magnitude — and on the floor it reads "≥",
-  // because past the liquidation price the loss is at least all of the margin.
-  const rate = `${positive ? '▲' : '▼'} ${pnl.floored ? '≥' : ''}${Math.abs(pnl.pnlPct).toFixed(2)}%`
-  const breakdown = buildMarginPnlBreakdown({ basis, pnl, formatFiat: fiat })
+  const color = pnl >= 0 ? '$statusSuccess' : '$statusCritical'
+  const roe = position.roe === undefined ? undefined : scaledE18ToNumber(position.roe) * 100
   return (
-    <MarginExplainerTooltip
-      content={<MarginExplainerContent lead="unrealizedLead" rows={breakdown.rows} notes={breakdown.notes} />}
-    >
-      <Flex alignItems="flex-end" testID={TestID.MarginPnlTrigger}>
-        <Text variant="body3" color={color}>
-          {formatSignedFiat({ value: pnl.pnlUsd, format: fiat })}
-        </Text>
+    <Flex alignItems={align} testID={TestID.MarginPnlTrigger}>
+      <Text variant="body3" color={color}>
+        {marginAmountLabel({
+          raw: position.unrealizedPnl,
+          leg: 'collateral',
+          position,
+          market,
+          currencyInfos,
+          formatNumberOrString,
+          signed: true,
+        })}
+      </Text>
+      {/* The arrow carries the sign, so the percent shows its magnitude. */}
+      {roe === undefined || !Number.isFinite(roe) ? null : (
         <Text variant="body4" color={color}>
-          {rate}
+          {`${pnl >= 0 ? '▲' : '▼'} ${Math.abs(roe).toFixed(2)}%`}
         </Text>
-      </Flex>
-    </MarginExplainerTooltip>
+      )}
+    </Flex>
   )
 })
 
@@ -423,86 +432,40 @@ function HeaderText({ label }: { label: string }): JSX.Element {
   )
 }
 
-// The definition tier: identical on every render — a fixed trigger should not change its content with
-// the table underneath it. Both worked examples are in the card, each labelled with its direction, so
-// the reader picks rather than the code guessing.
-function PnlHeaderLabel(): JSX.Element {
-  const { t } = useTranslation()
-  const copy = useMarginPnlCopy()
-  return (
-    <MarginExplainerTooltip content={<MarginExplainerContent lines={MARGIN_PNL_DEFINITION_LINES} />}>
-      <Flex row alignItems="center" gap="$spacing4" testID={TestID.MarginPnlHeaderInfo}>
-        <Text variant="body3" color="$neutral2">
-          {t('margin.table.pnlRoe')}
-        </Text>
-        <InfoCircleFilled size="$icon.16" color="$neutral3" aria-label={copy.aboutPnl} />
-      </Flex>
-    </MarginExplainerTooltip>
-  )
-}
-
-// The margin still in the position, at cost: the USD the owner actually put in, net of anything they
-// have taken back out. costBasis.equityContributed (the pre-valuation token-count fallback) has no
-// wire replacement, so an unvalued position now renders a dash here instead.
+// The margin in the position NOW: live equity in the collateral token, over its dollar value.
 const MarginEquityCell = memo(function MarginEquityCell({
   position,
   resolveMarket,
+  currencyInfos,
+  align = 'flex-end',
 }: {
   position: MarginActivePosition
   resolveMarket: MarginMarketResolver
+  currencyInfos: Map<string, CurrencyInfo>
+  align?: CellAlign
 }): JSX.Element {
-  const { t } = useTranslation()
   const { formatNumberOrString } = useLocalizationContext()
   const market = resolveMarketForPosition({ position, resolveMarket })
-  if (!market) {
+  if (position.equity === '' || !Number.isFinite(Number(position.equity))) {
     return (
       <Text variant="body3" color="$neutral1">
         —
       </Text>
     )
   }
-  const fiat = (value: number): string => formatNumberOrString({ value, type: NumberType.FiatStandard })
-  const basis = marginUsdBasis({ position, market })
-  const pnl = marginUsdPnlNow({ position, market })
-  if (!basis || !pnl) {
-    return (
-      <Text variant="body3" color="$neutral1">
-        —
-      </Text>
-    )
-  }
-  const label = fiat(basis.costBasisUsd)
-  const accrual = marginAccruedInterestPerDay({
-    position,
-    debtDecimals: market.debt.decimals,
-    direction: basis.direction,
-    nowMs: Date.now(),
-  })
-  const breakdown = buildMarginBasisBreakdown({ basis, pnl, formatFiat: fiat })
-  const accruedLine =
-    accrual === undefined
-      ? undefined
-      : t('margin.position.accruedPerDay', {
-          accrued: `${formatNumberOrString({ value: accrual.accrued, type: NumberType.TokenNonTx })} ${marginUnwrapSymbol(market.debt)}`,
-          perDay: formatNumberOrString({ value: accrual.perDayUsd, type: NumberType.FiatTokenPrice }),
-        })
   return (
-    <MarginExplainerTooltip
-      content={
-        <Flex gap="$gap8" width="100%">
-          <MarginExplainerContent lead="basisLead" rows={breakdown.rows} />
-          {accruedLine ? (
-            <Text variant="body4" color="$neutral2">
-              {accruedLine}
-            </Text>
-          ) : null}
-        </Flex>
-      }
-    >
-      <Text variant="body3" color="$neutral1" testID={TestID.MarginEquityTrigger}>
-        {label}
-      </Text>
-    </MarginExplainerTooltip>
+    <AmountFigure
+      label={marginAmountLabel({
+        raw: position.equity,
+        leg: 'collateral',
+        position,
+        market,
+        currencyInfos,
+        formatNumberOrString,
+      })}
+      usd={marginAmountUsd({ raw: position.equity, leg: 'collateral', position })}
+      align={align}
+    />
   )
 })
 
@@ -575,30 +538,65 @@ const HistoryPnlCell = memo(function HistoryPnlCell({
   )
 })
 
+function marginClosedDateLabel({ row, locale }: { row: MarginTerminalPosition; locale: string }): string {
+  return new Date(Number(row.closedAt) * 1000).toLocaleDateString(locale)
+}
+
+// Entry → exit for a closed row. Same gate the realized-PnL and current-price cells use: an untradable
+// pair has no single USD leg, so both figures are quoted against something that is not dollars and must
+// not reach a fiat formatter.
+function marginEntryExitLabel({
+  row,
+  formatNumberOrString,
+}: {
+  row: MarginTerminalPosition
+  formatNumberOrString: ReturnType<typeof useLocalizationContext>['formatNumberOrString']
+}): string {
+  if (row.isTradable === false) {
+    return '—'
+  }
+  // 0 is the wire's absent sentinel (no stamped mark, or a zero-debt close that sold nothing).
+  const formatPrice = (x18: string | undefined): string => {
+    const price = x18 === undefined ? 0 : scaledE18ToNumber(x18)
+    return price > 0 ? formatNumberOrString({ value: price, type: NumberType.FiatTokenPrice }) : '—'
+  }
+  return `${formatPrice(row.entryPrice)} → ${formatPrice(row.exitPrice)}`
+}
+
 // Empty tab: a column-header echo row + a rounded-outline box with the centered empty message. The
 // Table renders nothing when empty, so this stands in for both the active and closed tabs.
 function EmptyPositions({
   headers,
   message,
 }: {
-  headers: { label: string; leftAlign?: boolean }[]
+  // Omitted in the card layout, which has no columns to echo.
+  headers?: { label: string; leftAlign?: boolean }[]
   message: string
 }): JSX.Element {
   return (
     <Flex gap="$spacing8" width="100%">
-      <Flex row px="$spacing16" py="$spacing12" gap="$spacing12" borderRadius="$rounded12" backgroundColor="$surface2">
-        {headers.map((headerColumn, index) => (
-          <Flex
-            key={headerColumn.label}
-            flex={index === 0 ? 2 : 1}
-            alignItems={headerColumn.leftAlign ? 'flex-start' : 'flex-end'}
-          >
-            <Text variant="body3" color="$neutral2">
-              {headerColumn.label}
-            </Text>
-          </Flex>
-        ))}
-      </Flex>
+      {headers ? (
+        <Flex
+          row
+          px="$spacing16"
+          py="$spacing12"
+          gap="$spacing12"
+          borderRadius="$rounded12"
+          backgroundColor="$surface2"
+        >
+          {headers.map((headerColumn, index) => (
+            <Flex
+              key={headerColumn.label}
+              flex={index === 0 ? 2 : 1}
+              alignItems={headerColumn.leftAlign ? 'flex-start' : 'flex-end'}
+            >
+              <Text variant="body3" color="$neutral2">
+                {headerColumn.label}
+              </Text>
+            </Flex>
+          ))}
+        </Flex>
+      ) : null}
       <Flex centered py="$spacing24" borderRadius="$rounded16" borderWidth={1} borderColor="$surface3">
         <Text variant="body3" color="$neutral2">
           {message}
@@ -608,53 +606,61 @@ function EmptyPositions({
   )
 }
 
-export function MarginPositionsTable(): JSX.Element {
+export function MarginPositionsTable(props: MarginPositionsTableProps = {}): JSX.Element {
   const { t } = useTranslation()
   const account = useAccount()
   const { formatNumberOrString } = useLocalizationContext()
   const locale = useCurrentLocale()
   const currencyInfos = useMarginCurrencyInfos()
   const [tab, setTab] = useState<MarginTableTab>('active')
+  const { tableMaxHeight } = useMarginMorph()
 
   const plan = useMarginPlanExecution((s) => s.plan)
   const isModalOpen = useMarginPlanExecution((s) => s.isModalOpen)
   const isExecuting = useMarginPlanExecution((s) => s.isExecuting)
   const { resumePlan } = useExecuteMarginPlan()
 
-  const { data, isLoading, isError, refetch } = useMarginPositionsQuery({
-    params: account.address ? { swapper: account.address, chainId: MARGIN_CHAIN_ID } : undefined,
+  const activeQuery = useMarginPositionsQuery({
+    params: account.address
+      ? { swapper: account.address, chainId: MARGIN_CHAIN_ID, statuses: MARGIN_ACTIVE_POSITION_STATUSES }
+      : undefined,
     refetchInterval: MARGIN_POSITIONS_REFETCH_MS,
     // A backgrounded tab is exactly when a position drifts toward liquidation unwatched: keep polling
     // so the row is current the moment it is looked at again, not one interval behind.
     refetchIntervalInBackground: true,
   })
-  // Terminal history is folded into positions[] now — one array covers every row's tokens.
-  const resolveMarket = useResolveMarginMarket({ positions: data?.positions })
+  // Read only while the Closed tab is open, and not polled: every close path invalidates the positions
+  // key, and reopening the tab refetches a stale entry.
+  const terminalQuery = useMarginPositionsQuery({
+    params:
+      account.address && tab === 'completed'
+        ? { swapper: account.address, chainId: MARGIN_CHAIN_ID, statuses: MARGIN_TERMINAL_POSITION_STATUSES }
+        : undefined,
+  })
+  const { data, isLoading, isError, refetch } = tab === 'active' ? activeQuery : terminalQuery
 
-  // Active-only and terminal-only views of positions[] — the wire folds both into one array now,
-  // where the old wire kept them in separate positions/history arrays.
-  const activePositions = useMemo(() => data?.positions.filter(isMarginActivePosition), [data])
-  const historyRows = useMemo<MarginTerminalPosition[]>(
-    () =>
-      (data?.positions ?? [])
-        .filter((position): position is MarginTerminalPosition => position.status !== 'ACTIVE')
-        .sort((a, b) => Number(b.closedAt) - Number(a.closedAt)),
-    [data],
+  // The server filters by status; the guards only narrow the row type. Terminal rows arrive newest first.
+  const activePositions = useMemo(() => activeQuery.data?.positions.filter(isMarginActivePosition), [activeQuery.data])
+  const historyRows = useMemo(
+    () => terminalQuery.data?.positions.filter(isMarginTerminalPosition) ?? [],
+    [terminalQuery.data],
   )
+  const resolverPositions = useMemo(() => [...(activePositions ?? []), ...historyRows], [activePositions, historyRows])
+  const resolveMarket = useResolveMarginMarket({ positions: resolverPositions })
 
   const activeRows = useMemo<MarginTableRow[]>(
     () =>
       buildMarginActiveRows({
-        positions: data?.positions,
+        positions: activePositions,
         plan,
         isModalOpen,
         isExecuting,
         t,
       }),
-    [data, plan, isModalOpen, isExecuting, t],
+    [activePositions, plan, isModalOpen, isExecuting, t],
   )
 
-  // An expanded-row button's modal request, keyed by positionId — the only per-position identifier that
+  // A row menu's modal request, keyed by positionId — the only per-position identifier that
   // is always present and never shared (two positions CAN share a leg's sub-account address). The modal
   // re-resolves the LATEST position object from query data each render so it stays fresh across polls; if
   // the position disappears (closed elsewhere) the modal closes itself.
@@ -671,6 +677,9 @@ export function MarginPositionsTable(): JSX.Element {
       }
       const { position } = row.original
       const onToggleRow = (): void => row.toggleExpanded()
+      const drawerColumns: MarginDrawerColumn[] = row
+        .getVisibleCells()
+        .map((cell) => ({ id: cell.column.id, style: getColumnSizingStyles(cell.column) }))
       return (
         // Row card + Tailwind `group` anchor: MarginPositionActionsMenu's `…` reveal binds its
         // `group-hover:` to this literal `.group` (mycelium Flex emits it from the `group` prop).
@@ -685,12 +694,12 @@ export function MarginPositionsTable(): JSX.Element {
         >
           <TouchableArea onPress={onToggleRow}>{renderTableRow()}</TouchableArea>
           <HeightAnimator open={isExpanded} unmountChildrenWhenCollapsed>
-            <MarginPositionDrawer position={position} onRequestModal={onRequestModal} />
+            <MarginPositionDrawer position={position} columns={drawerColumns} />
           </HeightAnimator>
         </MyceliumFlex>
       )
     },
-    [onRequestModal],
+    [],
   )
 
   const onRetry = useEvent(() => {
@@ -699,19 +708,6 @@ export function MarginPositionsTable(): JSX.Element {
   const showActiveTab = useEvent(() => setTab('active'))
   const showCompletedTab = useEvent(() => setTab('completed'))
 
-  // A plain localStorage read in the render body, so the banner's visibility rides on a value React
-  // does not track. It converges because every pointer write and clear is paired with a change this
-  // component already subscribes to — the execution store's `plan`/`isModalOpen`/`isExecuting`, or the
-  // positions invalidation the cancel mutation fires. A future write path that touches none of those
-  // would leave the banner stale, which is why the pairing is written down here rather than left to be
-  // rediscovered. The predicate below is not a substitute: it re-reads the same untracked value.
-  const persistedPlan = account.address ? getPersistedMarginPlanId(account.address) : undefined
-  const onResume = useEvent(() => {
-    if (persistedPlan) {
-      void resumePlan({ planId: persistedPlan.planId })
-    }
-  })
-
   // Skeleton only on initial load — background refetches stay silent.
   const showLoadingSkeleton = data === undefined && isLoading
 
@@ -719,11 +715,12 @@ export function MarginPositionsTable(): JSX.Element {
     const columnHelper = createColumnHelper<MarginTableRow>()
     return [
       columnHelper.display({
-        id: 'pair',
-        size: 240,
+        id: MARGIN_ACTIVE_COLUMN.pair,
+        // Room for the stacked pair logo beside a "cbBTC / USDC" label.
+        size: 187,
         header: () => (
           <HeaderCell justifyContent="flex-start">
-            <HeaderText label={t('margin.table.pair')} />
+            <HeaderText label={t('margin.table.position')} />
           </HeaderCell>
         ),
         cell: (info) => (
@@ -735,24 +732,61 @@ export function MarginPositionsTable(): JSX.Element {
         ),
       }),
       columnHelper.display({
-        id: 'margin',
-        size: 130,
+        id: MARGIN_ACTIVE_COLUMN.markEntry,
+        size: 155,
         header: () => (
-          <HeaderCell>
-            <HeaderText label={t('margin.table.margin')} />
+          <HeaderCell justifyContent="flex-start">
+            <HeaderText label={t('margin.table.markEntry')} />
           </HeaderCell>
         ),
         cell: (info) => (
-          <Cell loading={showLoadingSkeleton}>
+          <Cell loading={showLoadingSkeleton} justifyContent="flex-start">
             {hasRow<MarginTableRow>(info) && info.row.original.kind === 'position' && (
-              <MarginEquityCell position={info.row.original.position} resolveMarket={resolveMarket} />
+              <MarkEntryCell position={info.row.original.position} />
             )}
           </Cell>
         ),
       }),
       columnHelper.display({
-        id: 'size',
-        size: 130,
+        id: MARGIN_ACTIVE_COLUMN.pnl,
+        size: 105,
+        header: () => (
+          <HeaderCell justifyContent="flex-start">
+            <HeaderText label={t('margin.table.pnl')} />
+          </HeaderCell>
+        ),
+        cell: (info) => (
+          <Cell loading={showLoadingSkeleton} justifyContent="flex-start">
+            {hasRow<MarginTableRow>(info) && info.row.original.kind === 'position' && (
+              <PnlCell
+                position={info.row.original.position}
+                resolveMarket={resolveMarket}
+                currencyInfos={currencyInfos}
+                align="flex-start"
+              />
+            )}
+          </Cell>
+        ),
+      }),
+      columnHelper.display({
+        id: MARGIN_ACTIVE_COLUMN.liqPrice,
+        size: 120,
+        header: () => (
+          <HeaderCell>
+            <HeaderText label={t('margin.table.liqPrice')} />
+          </HeaderCell>
+        ),
+        cell: (info) => (
+          <Cell loading={showLoadingSkeleton}>
+            {hasRow<MarginTableRow>(info) && info.row.original.kind === 'position' && (
+              <LiqPriceCell position={info.row.original.position} />
+            )}
+          </Cell>
+        ),
+      }),
+      columnHelper.display({
+        id: MARGIN_ACTIVE_COLUMN.size,
+        size: 100,
         header: () => (
           <HeaderCell>
             <HeaderText label={t('margin.positions.size')} />
@@ -771,56 +805,30 @@ export function MarginPositionsTable(): JSX.Element {
         ),
       }),
       columnHelper.display({
-        id: 'entryPrice',
+        id: MARGIN_ACTIVE_COLUMN.margin,
+        // The drawer's one-line "Leverage at open" sits under this column and needs ~93px plus the cell's
+        // padding.
         size: 120,
         header: () => (
           <HeaderCell>
-            <HeaderText label={t('margin.risk.entryPrice')} />
+            <HeaderText label={t('margin.table.margin')} />
           </HeaderCell>
         ),
         cell: (info) => (
           <Cell loading={showLoadingSkeleton}>
             {hasRow<MarginTableRow>(info) && info.row.original.kind === 'position' && (
-              <EntryPriceCell position={info.row.original.position} />
+              <MarginEquityCell
+                position={info.row.original.position}
+                resolveMarket={resolveMarket}
+                currencyInfos={currencyInfos}
+              />
             )}
           </Cell>
         ),
       }),
       columnHelper.display({
-        id: 'currentLiqPrice',
-        size: 180,
-        header: () => (
-          <HeaderCell>
-            <HeaderText label={t('margin.table.currentLiqPrice')} />
-          </HeaderCell>
-        ),
-        cell: (info) => (
-          <Cell loading={showLoadingSkeleton}>
-            {hasRow<MarginTableRow>(info) && info.row.original.kind === 'position' && (
-              <CurrentLiqPriceCell position={info.row.original.position} />
-            )}
-          </Cell>
-        ),
-      }),
-      columnHelper.display({
-        id: 'pnlRoe',
-        size: 160,
-        header: () => (
-          <HeaderCell>
-            <PnlHeaderLabel />
-          </HeaderCell>
-        ),
-        cell: (info) => (
-          <Cell loading={showLoadingSkeleton}>
-            {hasRow<MarginTableRow>(info) && info.row.original.kind === 'position' && (
-              <PnlCell position={info.row.original.position} resolveMarket={resolveMarket} />
-            )}
-          </Cell>
-        ),
-      }),
-      columnHelper.display({
-        id: 'opened',
-        size: 90,
+        id: MARGIN_ACTIVE_COLUMN.opened,
+        size: 65,
         header: () => (
           <HeaderCell>
             <HeaderText label={t('margin.drawer.openedAt')} />
@@ -839,8 +847,8 @@ export function MarginPositionsTable(): JSX.Element {
         ),
       }),
       columnHelper.display({
-        id: 'utility',
-        size: 130,
+        id: MARGIN_ACTIVE_COLUMN.utility,
+        size: 90,
         meta: { overflowVisible: true },
         header: () => <HeaderCell />,
         cell: (info) => (
@@ -850,11 +858,7 @@ export function MarginPositionsTable(): JSX.Element {
                 {/* Hidden when the market can't be resolved: every item would render enabled and each
                     click would mount then unmount a modal in the same tick. */}
                 {resolveMarketForPosition({ position: info.row.original.position, resolveMarket }) ? (
-                  <MarginPositionActionsMenu
-                    position={info.row.original.position}
-                    mountKey="row"
-                    onSelect={onRequestModal}
-                  />
+                  <MarginPositionActionsMenu position={info.row.original.position} onSelect={onRequestModal} />
                 ) : null}
                 <RotatableChevron
                   direction={info.row.getIsExpanded() ? 'up' : 'down'}
@@ -871,11 +875,6 @@ export function MarginPositionsTable(): JSX.Element {
 
   const completedColumns = useMemo(() => {
     const columnHelper = createColumnHelper<MarginTerminalPosition>()
-    // 0 is the wire's absent sentinel (no stamped mark, or a zero-debt close that sold nothing).
-    const formatPrice = (x18: string | undefined): string => {
-      const price = x18 === undefined ? 0 : scaledE18ToNumber(x18)
-      return price > 0 ? formatNumberOrString({ value: price, type: NumberType.FiatTokenPrice }) : '—'
-    }
     return [
       columnHelper.display({
         id: 'pair',
@@ -910,7 +909,7 @@ export function MarginPositionsTable(): JSX.Element {
           return (
             <Cell loading={showLoadingSkeleton}>
               <Text variant="body3" color="$neutral1">
-                {marginSizeLabel({ position: row, market, currencyInfos, formatNumberOrString })}
+                {marginAmountLabel({ raw: row.size, position: row, market, currencyInfos, formatNumberOrString })}
               </Text>
             </Cell>
           )
@@ -928,12 +927,7 @@ export function MarginPositionsTable(): JSX.Element {
           <Cell loading={showLoadingSkeleton}>
             {hasRow<MarginTerminalPosition>(info) && (
               <Text variant="body3" color="$neutral1">
-                {/* Same gate the realized-PnL and current-price cells use: an untradable pair has no
-                    single USD leg, so both figures are quoted against something that is not dollars
-                    and must not reach a fiat formatter. */}
-                {info.row.original.isTradable === false
-                  ? '—'
-                  : `${formatPrice(info.row.original.entryPrice)} → ${formatPrice(info.row.original.exitPrice)}`}
+                {marginEntryExitLabel({ row: info.row.original, formatNumberOrString })}
               </Text>
             )}
           </Cell>
@@ -967,7 +961,7 @@ export function MarginPositionsTable(): JSX.Element {
           <Cell loading={showLoadingSkeleton}>
             {hasRow<MarginTerminalPosition>(info) && (
               <Text variant="body3" color="$neutral1">
-                {new Date(Number(info.row.original.closedAt) * 1000).toLocaleDateString(locale)}
+                {marginClosedDateLabel({ row: info.row.original, locale })}
               </Text>
             )}
           </Cell>
@@ -1011,6 +1005,16 @@ export function MarginPositionsTable(): JSX.Element {
   // stable, always-present key.
   const historyRowId = useCallback((row: MarginTerminalPosition): string => row.positionId, [])
 
+  // Card layout's sheet. The id outlives a close so the sheet can slide out with its content; the
+  // position is re-read from query data each render, and a position that is gone closes the sheet.
+  const [sheetPositionId, setSheetPositionId] = useState<string | undefined>(undefined)
+  const [isSheetOpen, setIsSheetOpen] = useState(false)
+  const openSheet = useEvent((positionId: string) => {
+    setSheetPositionId(positionId)
+    setIsSheetOpen(true)
+  })
+  const closeSheet = useEvent(() => setIsSheetOpen(false))
+
   // No wallet: render nothing in the positions section (no connect CTA here).
   if (!account.address) {
     return <></>
@@ -1019,31 +1023,175 @@ export function MarginPositionsTable(): JSX.Element {
   const showError = isError && data === undefined
   const isActiveEmpty = !showLoadingSkeleton && activeRows.length === 0
   const isCompletedEmpty = !showLoadingSkeleton && historyRows.length === 0
+  const isCards = props.layout === 'cards'
+
+  const renderPositionSheet = (): JSX.Element | null => {
+    const position = sheetPositionId ? activePositions?.find((p) => p.positionId === sheetPositionId) : undefined
+    if (props.layout !== 'cards' || !position) {
+      return null
+    }
+    return props.renderPositionSheet({
+      isOpen: isSheetOpen,
+      onClose: closeSheet,
+      position,
+      market: resolveMarketForPosition({ position, resolveMarket }),
+      figures: {
+        pnl: (
+          <PnlCell position={position} resolveMarket={resolveMarket} currencyInfos={currencyInfos} align="flex-start" />
+        ),
+        markEntry: <MarkEntryCell position={position} />,
+        liqPrice: <LiqPriceCell position={position} align="flex-start" />,
+        size: (
+          <SizeCell
+            position={position}
+            resolveMarket={resolveMarket}
+            currencyInfos={currencyInfos}
+            align="flex-start"
+          />
+        ),
+        margin: (
+          <MarginEquityCell
+            position={position}
+            resolveMarket={resolveMarket}
+            currencyInfos={currencyInfos}
+            align="flex-start"
+          />
+        ),
+      },
+      onRequestModal,
+    })
+  }
+
+  const renderActiveCards = (): JSX.Element => {
+    if (showLoadingSkeleton) {
+      return <MarginPositionCardSkeletons count={LOADING_ROWS} />
+    }
+    return (
+      <Flex gap="$spacing12" width="100%">
+        {activeRows.map((row) => {
+          const id = activeRowId(row)
+          const identity = <PairCell row={row} currencyInfos={currencyInfos} resolveMarket={resolveMarket} />
+          if (row.kind === 'inFlight') {
+            // Same as the table's in-flight row: a tap resumes the plan.
+            return (
+              <MarginPositionCard
+                key={id}
+                identity={identity}
+                onPress={() => void resumePlan({ planId: row.planId })}
+              />
+            )
+          }
+          const { position } = row
+          const metrics: MarginPositionCardMetric[] = [
+            {
+              key: 'pnl',
+              label: t('margin.table.pnl'),
+              value: (
+                <PnlCell
+                  position={position}
+                  resolveMarket={resolveMarket}
+                  currencyInfos={currencyInfos}
+                  align="flex-start"
+                />
+              ),
+            },
+            { key: 'markEntry', label: t('margin.table.markEntry'), value: <MarkEntryCell position={position} /> },
+            {
+              key: 'liqPrice',
+              label: t('margin.table.liqPrice'),
+              value: <LiqPriceCell position={position} align="flex-start" />,
+            },
+            {
+              key: 'size',
+              label: t('margin.positions.size'),
+              value: (
+                <SizeCell
+                  position={position}
+                  resolveMarket={resolveMarket}
+                  currencyInfos={currencyInfos}
+                  align="flex-start"
+                />
+              ),
+            },
+          ]
+          return (
+            <MarginPositionCard
+              key={id}
+              identity={identity}
+              trailing={
+                <>
+                  <Text variant="body3" color="$neutral2">
+                    {hasMarginOpenedAt(position) ? formatAge({ openedAtSeconds: Number(position.openedAt) }) : '—'}
+                  </Text>
+                  <RotatableChevron direction="right" color="$neutral2" size="$icon.20" />
+                </>
+              }
+              metrics={metrics}
+              onPress={() => openSheet(position.positionId)}
+            />
+          )
+        })}
+      </Flex>
+    )
+  }
+
+  const renderCompletedCards = (): JSX.Element => {
+    if (showLoadingSkeleton) {
+      return <MarginPositionCardSkeletons count={LOADING_ROWS} />
+    }
+    return (
+      <Flex gap="$spacing12" width="100%">
+        {historyRows.map((row) => {
+          const market = resolveMarketForPosition({ position: row, resolveMarket })
+          return (
+            <MarginPositionCard
+              key={historyRowId(row)}
+              identity={<HistoryPairCell row={row} currencyInfos={currencyInfos} resolveMarket={resolveMarket} />}
+              trailing={
+                <Text variant="body3" color="$neutral2">
+                  {marginClosedDateLabel({ row, locale })}
+                </Text>
+              }
+              metrics={[
+                {
+                  key: 'realizedPnl',
+                  label: t('margin.table.realizedPnl'),
+                  value: <HistoryPnlCell row={row} resolveMarket={resolveMarket} />,
+                },
+                {
+                  key: 'entryExit',
+                  label: t('margin.table.entryExit'),
+                  value: (
+                    <Text variant="body3" color="$neutral1">
+                      {marginEntryExitLabel({ row, formatNumberOrString })}
+                    </Text>
+                  ),
+                },
+                {
+                  key: 'closedSize',
+                  label: t('margin.table.closedSize'),
+                  value: (
+                    <Text variant="body3" color="$neutral1">
+                      {marginAmountLabel({
+                        raw: row.size,
+                        position: row,
+                        market,
+                        currencyInfos,
+                        formatNumberOrString,
+                      })}
+                    </Text>
+                  ),
+                },
+              ]}
+            />
+          )
+        })}
+      </Flex>
+    )
+  }
 
   return (
     <Flex gap="$spacing12" width="100%">
-      <MarginPendingSection />
-      {persistedPlan &&
-      shouldShowPointerBanner({ pointer: persistedPlan, storePlan: plan, isModalOpen, isExecuting }) ? (
-        <TouchableArea onPress={onResume}>
-          <Flex
-            row
-            alignItems="center"
-            justifyContent="space-between"
-            px="$spacing12"
-            py="$spacing8"
-            borderRadius="$rounded12"
-            backgroundColor="$surface2"
-          >
-            <Text variant="body3" color="$neutral1">
-              {t('margin.table.resume')}
-            </Text>
-            <Text variant="buttonLabel4" color="$accent1">
-              {t('common.button.continue')}
-            </Text>
-          </Flex>
-        </TouchableArea>
-      ) : null}
       <Flex row gap="$spacing16">
         <TouchableArea onPress={showActiveTab}>
           <Text variant="subheading2" color={tab === 'active' ? '$neutral1' : '$neutral2'}>
@@ -1070,17 +1218,23 @@ export function MarginPositionsTable(): JSX.Element {
       ) : tab === 'active' ? (
         isActiveEmpty ? (
           <EmptyPositions
-            headers={[
-              { label: t('margin.table.pair'), leftAlign: true },
-              { label: t('margin.table.margin') },
-              { label: t('margin.positions.size') },
-              { label: t('margin.risk.entryPrice') },
-              { label: t('margin.table.currentLiqPrice') },
-              { label: t('margin.table.pnlRoe') },
-              { label: t('margin.drawer.openedAt') },
-            ]}
+            headers={
+              isCards
+                ? undefined
+                : [
+                    { label: t('margin.table.position'), leftAlign: true },
+                    { label: t('margin.table.markEntry'), leftAlign: true },
+                    { label: t('margin.table.pnl'), leftAlign: true },
+                    { label: t('margin.table.liqPrice') },
+                    { label: t('margin.positions.size') },
+                    { label: t('margin.table.margin') },
+                    { label: t('margin.drawer.openedAt') },
+                  ]
+            }
             message={t('margin.table.emptyActive')}
           />
+        ) : isCards ? (
+          renderActiveCards()
         ) : (
           <Table
             columns={activeColumns}
@@ -1095,19 +1249,26 @@ export function MarginPositionsTable(): JSX.Element {
             loadingRowsCount={LOADING_ROWS}
             rowHeight={MARGIN_TABLE_ROW_HEIGHT}
             compactRowHeight={MARGIN_TABLE_ROW_HEIGHT}
+            maxHeight={tableMaxHeight}
           />
         )
       ) : isCompletedEmpty ? (
         <EmptyPositions
-          headers={[
-            { label: t('margin.table.pair'), leftAlign: true },
-            { label: t('margin.table.closedSize') },
-            { label: t('margin.table.entryExit') },
-            { label: t('margin.table.realizedPnl') },
-            { label: t('margin.table.closed') },
-          ]}
+          headers={
+            isCards
+              ? undefined
+              : [
+                  { label: t('margin.table.pair'), leftAlign: true },
+                  { label: t('margin.table.closedSize') },
+                  { label: t('margin.table.entryExit') },
+                  { label: t('margin.table.realizedPnl') },
+                  { label: t('margin.table.closed') },
+                ]
+          }
           message={t('margin.table.emptyCompleted')}
         />
+      ) : isCards ? (
+        renderCompletedCards()
       ) : (
         <Table
           columns={completedColumns}
@@ -1118,8 +1279,10 @@ export function MarginPositionsTable(): JSX.Element {
           loadingRowsCount={LOADING_ROWS}
           rowHeight={MARGIN_TABLE_ROW_HEIGHT}
           compactRowHeight={MARGIN_TABLE_ROW_HEIGHT}
+          maxHeight={tableMaxHeight}
         />
       )}
+      {renderPositionSheet()}
       <MarginActionModals
         request={activeModal}
         positions={activePositions}

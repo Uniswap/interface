@@ -1,0 +1,38 @@
+{
+  "name": "@universe/transactions-ui",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/transactions-ui/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "prepare": {
+      "executor": "nx:noop",
+      "dependsOn": ["generate:index"],
+      "cache": true
+    },
+    "generate:index": {
+      "command": "bun src/scripts/generateIndex.ts",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "cache": false
+    },
+    "typecheck": {},
+    "format": {},
+    "format:check": {},
+    "lint:oxlint": {},
+    "lint:oxlint:fix": {},
+    "lint:oxlint:fast": {},
+    "lint": {},
+    "lint:fix": {},
+    "check": {},
+    "check:fast": {},
+    "check:deps:usage": {},
+    "test": {
+      "command": "vitest run",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    }
+  }
+}

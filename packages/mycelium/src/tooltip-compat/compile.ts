@@ -1,7 +1,7 @@
 /**
  * The tooltip-compat class compilers and pure mappers. The content frame
- * defaults mirror the legacy `ContentInner` styled config verbatim
- * (`ui/src/components/tooltip/Tooltip.web.tsx`), layered under the call
+ * defaults mirror the legacy `ui/src` Tooltip's `ContentInner` styled config
+ * verbatim, layered under the call
  * site's own Tooltip.Content style props via the shared Flex compat compiler
  * (tailwind-merge semantics — caller wins). Enter/exit motion is expressed as
  * Base UI starting/ending-style transitions mirroring the legacy ±4px fade
@@ -125,6 +125,8 @@ function styleProps(props: Partial<TooltipContentCompatProps>): FlexCompatProps 
  * the caller's spacing to win — pinned by the parity matrix (BidMarker's
  * `p: 0` and DisconnectButton's `paddingVertical: 8` cases).
  */
+const SHADOW_KEYS = ['shadowColor', 'shadowOffset', 'shadowOpacity', 'shadowRadius'] as const
+
 const FRAME_SPACING_OVERRIDES: ReadonlyArray<{
   defaultKey: 'px' | 'py'
   callerKeys: ReadonlyArray<keyof FlexCompatProps>
@@ -139,6 +141,12 @@ function frameDefaultsFor(caller: FlexCompatProps): FlexCompatProps {
     if (callerKeys.some((key) => caller[key] !== undefined)) {
       delete defaults[defaultKey]
     }
+  }
+  // The default shadow compiles to a `light:` class, which Tailwind orders after
+  // the caller's plain shadow class at equal specificity — so it must go, or it
+  // replaces the caller's shadow in light mode (Coachmark).
+  if (callerSetsShadow(caller)) {
+    delete defaults['$theme-light']
   }
   return defaults
 }
@@ -286,4 +294,10 @@ export function mapTooltipDelay({ delay, restMs }: { delay: TooltipCompatDelay; 
     openDelayMs: openDelay > 0 ? openDelay : restMs,
     closeDelayMs: closeDelay,
   }
+}
+
+/** Either shadow shape `useShadowProps*` returns: RN `shadow*` keys, or a `$platform-web` boxShadow. */
+function callerSetsShadow(caller: FlexCompatProps): boolean {
+  const platformWeb = caller['$platform-web'] as { boxShadow?: unknown } | undefined
+  return SHADOW_KEYS.some((key) => caller[key] !== undefined) || platformWeb?.boxShadow !== undefined
 }

@@ -5,13 +5,13 @@ import { useNavigate, useParams } from 'react-router'
 import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useEvent } from 'utilities/src/react/hooks'
-import { MenuStateVariant, useSetMenu } from '~/components/AccountDrawer/menuState'
-import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
-import { useActiveAddress, useConnectionStatus } from '~/features/accounts/store/hooks'
-import { useDisconnect } from '~/hooks/useDisconnect'
+import { useActiveAddress, useConnectionStatus } from '~/connection/accounts/hooks'
+import { useDisconnect } from '~/connection/hooks/useDisconnect'
+import { useSignInWithPasskey } from '~/features/wallet/hooks/useSignInWithPasskey'
 import { useModalState } from '~/hooks/useModalState'
-import { useSignInWithPasskey } from '~/hooks/useSignInWithPasskey'
 import { SwapPage } from '~/pages/Swap'
+import { useAccountDrawer } from '~/state/accountDrawer/hooks'
+import { MenuStateVariant, useSetMenu } from '~/state/accountDrawer/menuState'
 
 type PasskeyManagementEffectDependencies = {
   account: {

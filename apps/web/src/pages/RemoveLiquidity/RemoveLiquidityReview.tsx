@@ -1,12 +1,10 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { useGetPasskeyAuthStatus } from '@universe/embedded-wallet'
-import { Flex, Text } from '@universe/mycelium'
+import { Button, Flex, Text, Separator, iconSizes } from '@universe/mycelium'
+import { Passkey } from '@universe/mycelium/icons/Passkey'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { Button, Separator } from 'ui/src'
-import { Passkey } from 'ui/src/components/icons/Passkey'
-import { iconSizes } from 'ui/src/theme/iconSizes'
 import { ProgressIndicator } from 'uniswap/src/components/ConfirmSwapModal/ProgressIndicator'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
@@ -14,6 +12,7 @@ import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { isValidLiquidityTxContext } from 'uniswap/src/features/transactions/liquidity/types'
+import { getErrorMessageToDisplay } from 'uniswap/src/features/transactions/liquidity/utils'
 import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { isSignerMnemonicAccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
@@ -21,14 +20,15 @@ import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { DetailLineItem } from '~/components/DetailLineItem'
+import { ErrorCallout } from '~/components/ErrorCallout'
+import { useAccount } from '~/connection/hooks/useAccount'
+import { useSelectChain } from '~/connection/hooks/useSelectChain'
 import { getLPBaseAnalyticsProperties } from '~/features/Liquidity/analytics'
 import { useGetPoolTokenPercentage } from '~/features/Liquidity/hooks/useGetPoolTokenPercentage'
 import { useIsLiquiditySagaRunning } from '~/features/Liquidity/hooks/useIsLiquiditySagaRunning'
 import { LiquiditySagaPendingMessage } from '~/features/Liquidity/LiquiditySagaPendingMessage'
 import { TokenInfo } from '~/features/Liquidity/TokenInfo'
-import { useCurrencyInfo } from '~/hooks/Tokens'
-import { useAccount } from '~/hooks/useAccount'
-import { useSelectChain } from '~/hooks/useSelectChain'
+import { useCurrencyInfo } from '~/hooks/currency/useCurrencyInfo'
 import { useRemoveLiquidityModalContext } from '~/pages/RemoveLiquidity/RemoveLiquidityModalContext'
 import { useRemoveLiquidityTxContext } from '~/pages/RemoveLiquidity/RemoveLiquidityTxContext'
 import { liquiditySaga } from '~/state/sagas/liquidity/liquiditySaga'
@@ -45,6 +45,7 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
     resetCommittedDecrease,
   } = useRemoveLiquidityModalContext()
   const [steps, setSteps] = useState<TransactionStep[]>([])
+  const [submitError, setSubmitError] = useState<string | boolean>(false)
   const removeLiquidityTxContext = useRemoveLiquidityTxContext()
   const { formatCurrencyAmount, formatPercent, convertFiatAmountFormatted } = useLocalizationContext()
   const selectChain = useSelectChain()
@@ -59,6 +60,8 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
   const {
     txContext,
     gasFeeEstimateUSD,
+    hookRejectsRemoval,
+    decreaseMayFail,
     currency0AmountToRemove: unwrappedCurrency0AmountToRemove,
     currency1AmountToRemove: unwrappedCurrency1AmountToRemove,
   } = removeLiquidityTxContext
@@ -69,7 +72,11 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
     onClose()
   }
 
-  const onFailure = () => {
+  // Without this a failure before the wallet prompts (e.g. a reverting decrease) just drops back to Confirm.
+  const onFailure = (e?: unknown) => {
+    if (e) {
+      setSubmitError(getErrorMessageToDisplay({ calldataError: e }))
+    }
     setCurrentTransactionStep(undefined)
     resetCommittedDecrease()
   }
@@ -129,6 +136,7 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
     if (!account || !isSignerMnemonicAccountDetails(account) || !isValidTx) {
       return
     }
+    setSubmitError(false)
     commitDecrease(txContext)
     dispatch(
       liquiditySaga.actions.trigger({
@@ -298,11 +306,21 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
             />
           </Flex>
           <LiquiditySagaPendingMessage />
+          <ErrorCallout
+            errorMessage={hookRejectsRemoval || submitError}
+            description={hookRejectsRemoval ? t('position.hook.rejectsRemoval') : undefined}
+          />
+          <ErrorCallout
+            isWarning
+            errorMessage={decreaseMayFail}
+            title={t('common.warning')}
+            description={t('position.hook.removeMayFail')}
+          />
           <Flex row>
             <Button
               size="large"
               onPress={onDecreaseLiquidity}
-              disabled={isLiquiditySagaRunning}
+              disabled={isLiquiditySagaRunning || hookRejectsRemoval}
               icon={needsPasskeySignin ? <Passkey size="$icon.24" color="$white" /> : undefined}
             >
               {needsPasskeySignin ? t('pool.removeLiquidity') : t('common.confirm')}

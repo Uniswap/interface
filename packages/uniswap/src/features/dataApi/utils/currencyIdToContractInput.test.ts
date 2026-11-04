@@ -14,11 +14,11 @@ describe(currencyIdToContractInput, () => {
   it('converts currencyId to ContractInput', () => {
     expect(currencyIdToContractInput(SAMPLE_CURRENCY_ID_1)).toEqual({
       address: SAMPLE_CURRENCY_ID_1.replace('1-', '').toLocaleLowerCase(),
-      chain: 'ETHEREUM',
+      chainId: UniverseChainId.Mainnet,
     })
     expect(currencyIdToContractInput(SAMPLE_CURRENCY_ID_2)).toEqual({
       address: SAMPLE_CURRENCY_ID_2.replace('1-', '').toLocaleLowerCase(),
-      chain: 'ETHEREUM',
+      chainId: UniverseChainId.Mainnet,
     })
   })
 })
@@ -59,7 +59,7 @@ describe(currencyIdToRestContractInput, () => {
   it('preserves native CELO real contract address instead of overriding it with the zero address', () => {
     expect(currencyIdToRestContractInput(buildNativeCurrencyId(UniverseChainId.Celo))).toEqual({
       chainId: UniverseChainId.Celo,
-      // currencyIdToGraphQLAddress lowercases for cache normalization, unlike nativeAddressForRest's raw casing.
+      // currencyIdToContractAddress lowercases for cache normalization, unlike nativeAddressForRest's raw casing.
       address: getNativeAddress(UniverseChainId.Celo).toLowerCase(),
     })
   })

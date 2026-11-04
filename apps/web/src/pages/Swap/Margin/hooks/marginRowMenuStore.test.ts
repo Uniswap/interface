@@ -50,7 +50,7 @@ describe('useMarginRowMenu', () => {
   // Every mounted ContextMenu registers a document-level outside-click listener whether or not that
   // instance is open, so a CLOSED sibling can call setOpen(false) while another row's menu is up. An
   // unconditional clear would dismiss the open popover before the clicked item's own click lands —
-  // invisible to a single-instance test, and the ordinary case once table + drawer are both mounted.
+  // invisible to a single-instance test, and the ordinary case once two rows are mounted.
   it('ignores a close from a row that does not own the open menu', () => {
     const a = renderHook(() => useMarginRowMenu(ROW_A))
     const b = renderHook(() => useMarginRowMenu(ROW_B))

@@ -3,7 +3,7 @@ import { Flex, Text } from '@universe/mycelium'
 import { memo, useMemo } from 'react'
 import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
-import { isUniverseChainId, toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { TokenHoverCard, type TokenHoverCardToken } from '~/components/HoverCard/TokenHoverCard/TokenHoverCard'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
@@ -24,7 +24,7 @@ function TokenAmountDisplayInner({ currencyInfo, formattedAmount, usdValue }: To
       return undefined
     }
     return {
-      chain: toGraphQLChain(currency.chainId),
+      chainId: currency.chainId,
       address: currency.isNative ? NATIVE_CHAIN_ID : (currency as SDKToken).address,
     }
   }, [currencyInfo])

@@ -16,17 +16,17 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ActivityUpdateTransactionType } from '~/state/activity/types'
 import { canFinalizeBaseTransactionUpdate, useOnActivityUpdate } from '~/state/activity/updater'
-import { popupRegistry } from '~/state/popups/registry'
 import type { PendingTransactionDetails } from '~/state/transactions/types'
 import { act } from '~/test-utils/render'
 import { renderHookWithProviders } from '~/test-utils/renderHookWithProviders'
+import { popupRegistry } from '~/utils/popups/registry'
 
 vi.mock('@universe/gating', async () => {
   const actual = await vi.importActual('@universe/gating')
   return { ...actual, useFeatureFlag: () => false }
 })
 
-vi.mock('~/hooks/useHandleUniswapXActivityUpdate', () => ({ useHandleUniswapXActivityUpdate: () => vi.fn() }))
+vi.mock('~/state/activity/useHandleUniswapXActivityUpdate', () => ({ useHandleUniswapXActivityUpdate: () => vi.fn() }))
 
 const CHAIN_ID = UniverseChainId.Mainnet
 const ADDRESS = '0x0000000000000000000000000000000000000001'

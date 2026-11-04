@@ -1,6 +1,7 @@
 import { createPromiseClient, type PromiseClient, type Transport } from '@connectrpc/connect'
 import { compliancev2Service } from '@uniswap/client-compliancev2/dist/uniswap/compliance/v1/api_connect'
 import { ChainId, type GatedFeature, TokenRef } from '@uniswap/client-compliancev2/dist/uniswap/compliance/v1/api_pb'
+import { isComplianceWalletBlockError } from '@universe/compliance/src/complianceBlock'
 
 export type ComplianceV2Client = PromiseClient<typeof compliancev2Service>
 
@@ -40,6 +41,13 @@ export function toScreenInput(address?: string, chainId?: number): ScreenAddress
  * it should be blocked (e.g. sanctioned / OFAC-listed). `chainId` is optional —
  * leaving it out sends `CHAIN_ID_UNSPECIFIED`, which routes to the default provider.
  *
+ * A blocked address comes back in one of two shapes, both mapped to `true`: the
+ * Entry Gateway's compliance gate refuses it with a 403 `permission_denied`
+ * carrying a `ComplianceBlock` detail with `walletBlocked`, and when that gate fails
+ * open (compliancev2 timeout or error) compliancev2 itself answers 200
+ * `{ block: true }`. Any other error is rethrown, including a token-only
+ * `ComplianceBlock`, which carries no verdict on the wallet.
+ *
  * Fails open like the rest of this client: an unauthenticated caller (no Entry
  * Gateway session) is screened as not-blocked, so callers must treat `false` as
  * fail-open rather than a verified-clean signal.
@@ -48,11 +56,18 @@ export async function screenAddress(
   client: ComplianceV2Client,
   { address, chainId }: ScreenAddressInput,
 ): Promise<boolean> {
-  const response = await client.screenAddress({
-    address,
-    chainId: chainId as ChainId | undefined,
-  })
-  return response.block
+  try {
+    const response = await client.screenAddress({
+      address,
+      chainId: chainId as ChainId | undefined,
+    })
+    return response.block
+  } catch (error) {
+    if (isComplianceWalletBlockError(error)) {
+      return true
+    }
+    throw error
+  }
 }
 
 /**

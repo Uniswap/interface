@@ -2,7 +2,7 @@ import type { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getRwaCategoryForTokenCategory } from 'uniswap/src/features/tokenCategories/rwaCategoryBridge'
 import { hasRwaDisclaimer, RwaDisclaimerText } from 'uniswap/src/features/tokenCategories/RwaDisclaimerText'
-import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
+import type { CategoryBase } from 'uniswap/src/features/tokenCategories/types'
 
 /**
  * Category description ending in the caller's platform "Learn more" link, with the Stocks/ETFs
@@ -12,7 +12,7 @@ export function CategoryDescriptionText({
   category,
   renderLink,
 }: {
-  category: TokenCategory
+  category: CategoryBase
   renderLink: (label: string) => ReactElement
 }): JSX.Element {
   const { t } = useTranslation()

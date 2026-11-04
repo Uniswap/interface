@@ -1,11 +1,10 @@
-import { Flex, Spacer, Text, TouchableArea } from '@universe/mycelium'
+import { Flex, Spacer, Text, TouchableArea, Tooltip } from '@universe/mycelium'
 import { Plus } from '@universe/mycelium/icons/Plus'
+import { QuestionInCircleFilled } from '@universe/mycelium/icons/QuestionInCircleFilled'
 import { X } from '@universe/mycelium/icons/X'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Tooltip } from 'ui/src'
-import { QuestionInCircleFilled } from 'ui/src/components/icons/QuestionInCircleFilled'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import {
   formatPresetLabel,

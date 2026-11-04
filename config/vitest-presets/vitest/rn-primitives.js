@@ -10,7 +10,7 @@ const path = require('path')
  *
  *   1. `rnPrimitivesJsxPlugin()` in `plugins` — esbuild-transforms the shipped JSX, the same way
  *      apps/web and apps/extension handle react-native-reanimated (`transform-react-native-jsx`).
- *   2. `rnPrimitivesAliases(nodeModules, leg)` merged into `resolve.alias` — points the bare
+ *   2. `rnPrimitivesAliases(nodeModules)` merged into `resolve.alias` — points the bare
  *      specifiers at the ESM (`.mjs`) legs, whose real `import` statements go through the alias
  *      table (so `react-native` resolves to react-native-web / the harness mock), and skips the
  *      package's extensionless internal imports that node's ESM resolver rejects when the dep is
@@ -36,20 +36,14 @@ function rnPrimitivesJsxPlugin() {
 }
 
 /**
+ * portal ships a single platform-agnostic build (no `.web.mjs` leg).
+ *
  * @param {string} nodeModules absolute path to the workspace root node_modules
- * @param {'web' | 'native'} leg which platform leg to serve, mirroring the app bundlers:
- *   'web' = the `.web.mjs` builds (what apps/web's `.web.js`-first resolution ships),
- *   'native' = the plain `.mjs` builds (what Metro ships).
  * @returns {Record<string, string>} resolve.alias entries
  */
-function rnPrimitivesAliases(nodeModules, leg) {
-  const checkboxLeg = leg === 'web' ? 'checkbox.web.mjs' : 'checkbox.mjs'
+function rnPrimitivesAliases(nodeModules) {
   return {
-    '@rn-primitives/checkbox': path.join(nodeModules, '@rn-primitives/checkbox/dist', checkboxLeg),
-    // portal ships a single platform-agnostic build (no `.web.mjs` leg)
     '@rn-primitives/portal': path.join(nodeModules, '@rn-primitives/portal/dist/index.mjs'),
-    '@rn-primitives/slot': path.join(nodeModules, '@rn-primitives/slot/dist/index.mjs'),
-    '@rn-primitives/hooks': path.join(nodeModules, '@rn-primitives/hooks/dist/index.mjs'),
   }
 }
 
@@ -63,10 +57,9 @@ const RN_PRIMITIVES_INLINE = /@rn-primitives\//
  *
  * @template {import('vite').UserConfig} T
  * @param {T} config the package's own config (the `defineConfig(...)` result)
- * @param {'web' | 'native'} leg which platform leg to serve — see {@link rnPrimitivesAliases}
  * @returns {T}
  */
-function withRnPrimitives(config, leg) {
+function withRnPrimitives(config) {
   const { mergeConfig } = require('vitest/config')
   const nodeModules = path.resolve(__dirname, '../../../node_modules')
   // `inline: true` (inline everything) already covers @rn-primitives; skip the array rule so
@@ -75,7 +68,7 @@ function withRnPrimitives(config, leg) {
   return mergeConfig(config, {
     plugins: [rnPrimitivesJsxPlugin()],
     resolve: {
-      alias: rnPrimitivesAliases(nodeModules, leg),
+      alias: rnPrimitivesAliases(nodeModules),
     },
     ...(inlineEverything
       ? {}

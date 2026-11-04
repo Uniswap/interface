@@ -1,12 +1,12 @@
 import { isWebPlatform } from '@universe/environment'
 import {
+  Button,
   type TextProps,
   type TouchableAreaProps,
   TouchableTextLink,
   type TouchableTextLinkProps,
 } from '@universe/mycelium'
 import { useTranslation } from 'react-i18next'
-import { Button } from 'ui/src'
 import { openUri } from 'uniswap/src/utils/linking'
 import { useEvent } from 'utilities/src/react/hooks'
 

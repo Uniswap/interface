@@ -40,7 +40,6 @@ export function resolveMarginActionKey({
     case 'add':
     case 'withdraw':
     case 'leverage':
-    case 'adjust':
       return resolveAxisActionKey({ equityChange, leverageIntent })
     default:
       return undefined

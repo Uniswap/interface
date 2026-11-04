@@ -6,7 +6,7 @@ import { InterfacePageName, SectionName } from 'uniswap/src/features/telemetry/c
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useIsMissingPlatformWallet } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsMissingPlatformWallet'
 import { APP_BODY_MOBILE_GUTTER_PX } from '~/app/layout/constants'
-import { BlastShutdownPositionsBanner } from '~/features/Liquidity/BlastShutdownBanner'
+import { useAccount } from '~/connection/hooks/useAccount'
 import { PoolsUnavailableOnSolanaView } from '~/features/Liquidity/components/emptyStates/PoolsUnavailableOnSolanaView'
 import { LiquidityLearnMoreTiles } from '~/features/Liquidity/components/LearnMoreTiles'
 import { usePositionSort } from '~/features/Liquidity/hooks/usePositionSort'
@@ -20,7 +20,6 @@ import {
   hasActiveControlBarFilter,
   type PositionsTableControlBarProps,
 } from '~/features/Liquidity/PositionsTableControlBar'
-import { useAccount } from '~/hooks/useAccount'
 import { EmptyPositionsDiscoveryView } from '~/pages/Positions/components/EmptyPositionsDiscoveryView'
 import { usePositionFilters } from '~/pages/Positions/hooks/usePositionFilters'
 
@@ -31,7 +30,6 @@ function getPositionsViewState({
   connectedWithoutEVM,
   hasPositions,
   hasActiveV2Filter,
-  showHiddenPositions,
 }: {
   isConnected: boolean
   isLoadingPositions: boolean
@@ -39,15 +37,13 @@ function getPositionsViewState({
   connectedWithoutEVM: boolean
   hasPositions: boolean
   hasActiveV2Filter: boolean
-  showHiddenPositions: boolean
 }): { showDiscoveryEmptyState: boolean } {
   const hasNoPositionsToShow = !isLoadingPositions && !connectedWithoutEVM && !hasPositions
   // With server-side filtering, an empty result under a non-default filter must NOT swap in the
   // discovery view (which hosts no control bar) — otherwise the filter deletes its own UI and the
-  // only recovery is a reload. The Hidden toggle is the same trap: flipping it on with no hidden
-  // positions empties the list, so keep the table (and its control bar) mounted in that case too.
-  const showDiscoveryEmptyState =
-    hasNoPositionsToShow && !hasActiveV2Filter && !showHiddenPositions && !(isConnected && hasErrorWithoutData)
+  // only recovery is a reload. The Hidden toggle counts as a filter for the same reason: flipping it
+  // on with no hidden positions empties the list.
+  const showDiscoveryEmptyState = hasNoPositionsToShow && !hasActiveV2Filter && !(isConnected && hasErrorWithoutData)
   return { showDiscoveryEmptyState }
 }
 
@@ -134,7 +130,6 @@ export function Pool() {
     connectedWithoutEVM,
     hasPositions,
     hasActiveV2Filter,
-    showHiddenPositions,
   })
   // Wallet-wide totals stand on their own regardless of what the table shows: an empty result —
   // filtered, or a wallet holding nothing — reads $0.00 instead of the chips disappearing, which is
@@ -160,7 +155,6 @@ export function Pool() {
             <PositionsSummaryChips walletAddress={account.address} bleedGutters={SUMMARY_CHIPS_BLEED_GUTTERS} />
           )}
           {!showDiscoveryEmptyState && <Text variant="heading3">{t('pool.positions.title')}</Text>}
-          <BlastShutdownPositionsBanner />
           {connectedWithoutEVM ? (
             <>
               <PoolsUnavailableOnSolanaView withBorder />

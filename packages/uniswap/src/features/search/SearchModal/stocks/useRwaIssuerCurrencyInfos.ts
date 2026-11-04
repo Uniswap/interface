@@ -125,12 +125,12 @@ function gatherRwaIssuerSearchMultichainParents({
 }
 
 /**
- * One CurrencyInfo per issuer primary-chain token across the rendered sections, via ONE batched `useTokensQuery`
+ * One CurrencyInfo per issuer primary-chain token across the rendered sections, via ONE batched `useCurrencyInfos`
  * (cache-first). Call ONCE per list at top level. Fires for ANY `RwaCollection` in the rendered sections — both the
  * no-query Stocks shelf AND live-search multi-issuer collections — and short-circuits to `[]` (zero query, zero cost)
  * when there are no collection options. Bounded (≤ a handful of issuer ids) and off the render path; the menu is
  * simply absent until it resolves (graceful, no crash). The returned Map re-creates when `useCurrencyInfos` resolves
- * (a gql-cache write); the consumer stabilizes it once (its memoized renderIssuerRow factory), not here.
+ * (a query-cache write); the consumer stabilizes it once (its memoized renderIssuerRow factory), not here.
  */
 export function useRwaIssuerCurrencyInfos({
   sections,

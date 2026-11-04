@@ -1,7 +1,7 @@
 import { Flex, iconSizes, validColor } from '@universe/mycelium'
 import { Heart } from '@universe/mycelium/icons/Heart'
 import { opacify } from '@universe/mycelium/theme-hooks-compat'
-import { DEP_accentColors } from 'ui/src/theme'
+import { DEP_accentColors } from '@universe/mycelium/theme-palette'
 export const HeartElement = (): JSX.Element => {
   return (
     <Flex

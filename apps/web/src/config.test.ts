@@ -6,7 +6,6 @@ const baseValues = {
   appId: 'web',
   environment: 'production',
   walletConnectProjectId: 'test-walletconnect-project-id',
-  awsApiEndpoint: 'https://api.uniswap.org/v1/graphql',
   uniswapGatewayDns: 'https://interface.gateway.uniswap.org/v2',
   statsigApiKey: 'test-statsig-api-key',
   tradingApiKey: 'test-trading-api-key',

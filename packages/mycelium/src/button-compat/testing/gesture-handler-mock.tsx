@@ -1,8 +1,7 @@
 /**
  * Minimal react-native-gesture-handler stand-in for the button-compat vitest
- * suites. `Pressable` renders as the distinctive `RNGHPressable` host — the
- * same name `packages/tailwind/src/parity/core/native/stubs/gesture-handler-stub.tsx`
- * uses — so tests can assert the native leg mounts RNGH's Pressable and not
+ * suites. `Pressable` renders as the distinctive `RNGHPressable` host so tests
+ * can assert the native leg mounts RNGH's Pressable and not
  * RN's own (legacy CustomButtonFrame.native.tsx explains why: RNGH press
  * hit-testing reads the native view frame, while Tamagui's measure-based press
  * on a plain View collapses the touch target to its content on Android Fabric,

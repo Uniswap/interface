@@ -1,6 +1,7 @@
 import * as DialogPrimitive from '@radix-ui/react-dialog'
-import { isTouchable, isWebApp } from '@universe/environment'
+import { isWebApp } from '@universe/environment'
 import { Flex, type FlexProps } from '@universe/mycelium'
+import { heights, zIndexes } from '@universe/mycelium/tokens'
 import { useCallback, useContext, useEffect, useState } from 'react'
 import {
   FIXED_FULL_SCREEN,
@@ -24,7 +25,6 @@ import {
   WEB_BOTTOM_SHEET_OVERLAY_TEST_ID,
 } from 'ui/src/components/modal/AdaptiveWebModalShared'
 import { RemoveScroll } from 'ui/src/components/RemoveScroll/RemoveScroll'
-import { INTERFACE_NAV_HEIGHT, zIndexes } from 'ui/src/theme'
 import { useInjectSingleStylesheet } from 'utilities/src/react/useInjectSingleStylesheet'
 import { useIsMounted } from 'utilities/src/react/useIsMounted'
 
@@ -41,14 +41,13 @@ export function WebBottomSheet({
   ...rest
 }: ModalProps): JSX.Element | null {
   useInjectSingleStylesheet(MODAL_STYLESHEET)
-  const isTouchDevice = isTouchable
   const parentContextZ = useContext(EffectiveModalOrSheetZIndexContext)
   const effectiveZIndex = rest.zIndex ?? stackingLayerAbove(parentContextZ, zIndexes.modal)
   // The frame node is state (callback ref below), NOT a RefObject: the WEB-6258 mounted gate
   // renders the frame a paint after the hooks first run, so node arrival must re-fire the
   // drag/freeze effects (a ref read inside them would silently never attach on first open).
   const [frameNode, setFrameNode] = useState<HTMLDivElement | null>(null)
-  useSheetDrag({ isOpen, isTouchDevice, onClose, frame: frameNode })
+  useSheetDrag({ isOpen, onClose, frame: frameNode })
   useSheetEscapeToClose({ isOpen, onClose })
   // Ratchet the tallest height. `content` shrinks; percent mode is snap-owned.
   useSheetFitHeightFreeze({
@@ -56,7 +55,7 @@ export function WebBottomSheet({
     enabled: snapPointsMode !== 'percent' && sheetFitHeight !== 'content',
     frame: frameNode,
     isWebApp,
-    interfaceNavHeight: INTERFACE_NAV_HEIGHT,
+    interfaceNavHeight: heights['interface-nav'],
   })
 
   // TODO(WEB-6258): Token selector not rendering bottom sheet on web without this workaround
@@ -163,7 +162,7 @@ export function WebBottomSheet({
     snapPointsMode,
     snapPoints,
     isWebApp,
-    interfaceNavHeight: INTERFACE_NAV_HEIGHT,
+    interfaceNavHeight: heights['interface-nav'],
     mdMaxHeight: rest.$md?.['$platform-web']?.maxHeight as string | number | undefined,
   }) as FlexProps
 

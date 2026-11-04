@@ -1,8 +1,3 @@
-import { isSessionServiceEnabled } from '@universe/api/src/isSessionServiceEnabled'
-import { provideDeviceIdService } from '@universe/api/src/provideDeviceIdService'
-import { provideSessionStorage } from '@universe/api/src/provideSessionStorage'
-import { provideUniswapIdentifierService } from '@universe/api/src/provideUniswapIdentifierService'
-import { getTransport } from '@universe/api/src/transport'
 import { REQUEST_SOURCE } from '@universe/environment'
 import {
   createNoopSessionService,
@@ -12,12 +7,17 @@ import {
   type SessionService,
 } from '@universe/sessions'
 import type { Logger } from 'utilities/src/logger/logger'
+import { isSessionServiceEnabled } from './isSessionServiceEnabled'
+import { provideDeviceIdService } from './provideDeviceIdService'
+import { provideSessionStorage } from './provideSessionStorage'
+import { provideUniswapIdentifierService } from './provideUniswapIdentifierService'
+import { getTransport } from './transport'
 
 function provideSessionService(ctx: {
   getBaseUrl: () => string
   getIsSessionServiceEnabled?: () => boolean
   getLogger?: () => Logger
-  interceptors?: import('@universe/api/src/transport').Interceptors
+  interceptors?: import('./transport').Interceptors
 }): SessionService {
   const isEnabled = isSessionServiceEnabled({
     getIsSessionServiceEnabled: ctx.getIsSessionServiceEnabled,

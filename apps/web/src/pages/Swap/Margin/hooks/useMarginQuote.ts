@@ -25,29 +25,29 @@ import {
 import { useDebounceWithStatus } from 'utilities/src/time/timing'
 import type { Address } from '~/chains'
 import { MARGIN_CHAIN_ID, MARGIN_DEBOUNCE_MS, MARGIN_QUOTE_REFETCH_MS, type MarginMarket } from '~/constants/margin'
-import { positionLeverage } from '~/pages/Swap/Margin/marginAdjustPositionMath'
-import { bpsToPercent, scaledE18ToNumber } from '~/pages/Swap/Margin/marginFormat'
-import { isMarginActivePosition } from '~/pages/Swap/Margin/marginPositionRow'
+import { positionLeverage } from '~/features/margin/utils/marginAdjustPositionMath'
+import { bpsToPercent, scaledE18ToNumber } from '~/features/margin/utils/marginFormat'
+import { isMarginActivePosition } from '~/features/margin/utils/marginPositionRow'
 
-// Derived funding direction for an adjust (F3 computes this from the single margin input's ΔE —
-// this hook never sees a user-picked Add/Withdraw mode).
+// The wallet-side leg of a manage quote, built by the caller from its own typed amount: Add margin
+// deposits, Withdraw margin withdraws, and Change leverage (and close, by default) moves no funds.
 export type AdjustFunding =
-  | { kind: 'none' } // ΔE = 0 (untouched input / dust)
-  | { kind: 'deposit'; paymentAmountRaw: string } // pay-token units, derived from ΔE
-  | { kind: 'withdraw'; withdrawAmountRaw: string } // collateral units (= −ΔE)
+  | { kind: 'none' } // no funding leg, or a blank / unparseable amount
+  | { kind: 'deposit'; paymentAmountRaw: string } // pay-token units, as typed in Add margin
+  | { kind: 'withdraw'; withdrawAmountRaw: string } // collateral units, as typed in Withdraw margin
 
 export interface UseMarginQuoteParams {
   position: MarginPosition
   market: MarginMarket
   swapper?: Address
-  // Which modal is asking. The four adjust actions all resolve their key off the two axes below, so
+  // Which modal is asking. The three adjust actions all resolve their key off the two axes below, so
   // this only decides whether the key comes from the axes at all (`close` names itself).
   action: MarginManageAction
   funding?: AdjustFunding
   // Consumed only when funding.kind === 'deposit' / 'withdraw'; absent on the close path, which
   // moves no wallet-side balance.
   paymentToken?: MarginPaymentToken
-  // Absent = debt-constant (Lock-leverage toggle off, untouched). Still a WAD string — shared with
+  // Absent = debt-constant (leverage control untouched). Still a WAD string — shared with
   // marginAdjustPositionGate's echo-round-trip convention; re-scaled to decimal at the wire boundary.
   targetLeverageX18?: string
   slippageToleranceBps: number
@@ -108,7 +108,7 @@ export function marginQuoteKey({
 
 const NO_FUNDING: AdjustFunding = { kind: 'none' }
 
-// The one manage-quote hook: close and all four adjust modals price through the same /margin/quote
+// The one manage-quote hook: close and the three adjust modals price through the same /margin/quote
 // dispatcher, and the resolved action key is the only thing that differs between them. Funding (kind
 // + amount) and target leverage share ONE debounce key so a deposit/withdraw and a leverage retarget
 // never price against different targets mid-edit.
@@ -170,20 +170,29 @@ export function useMarginQuote({
     // close pays OUT through a swap: it names the payout token (the position's collateral — the
     // volatile leg on a long, the stable on a short) and a swapConfig, but no amount (full close). The
     // equity keys instead denominate their amount by action key: an add in the named token, a withdraw
-    // in the COLLATERAL (its token is discarded server-side).
+    // in the COLLATERAL. A withdrawal also pays out IN the collateral, on the position's chain: the
+    // server prices no payout swap and refuses any other token with MARGIN_FUNDING_SWAP_UNSUPPORTED.
+    const collateralToken = direction === MarginDirection.SHORT ? counterToken : exposureToken
     const rail =
       actionKey === 'close'
         ? {
-            token: direction === MarginDirection.SHORT ? counterToken : exposureToken,
+            token: collateralToken,
             chainId: MARGIN_CHAIN_ID,
             slippageTolerance: bpsToPercent(slippageToleranceBps),
           }
-        : buildMarginSwapConfig({
-            token: debouncedPayToken,
-            chainId: debouncedPayChainId ? Number(debouncedPayChainId) : undefined,
-            amountRaw: debouncedAmount,
-            slippageToleranceBps,
-          })
+        : equityChange === 'withdraw'
+          ? buildMarginSwapConfig({
+              token: collateralToken,
+              chainId: MARGIN_CHAIN_ID,
+              amountRaw: debouncedAmount,
+              slippageToleranceBps,
+            })
+          : buildMarginSwapConfig({
+              token: debouncedPayToken,
+              chainId: debouncedPayChainId ? Number(debouncedPayChainId) : undefined,
+              amountRaw: debouncedAmount,
+              slippageToleranceBps,
+            })
 
     return buildMarginQuoteRequest({
       actionKey,
@@ -221,7 +230,7 @@ export function useMarginQuote({
     tokenDecimals,
     refetchInterval: MARGIN_QUOTE_REFETCH_MS,
     staleTime: MARGIN_QUOTE_REFETCH_MS,
-    // Keep the prior quote visible across a param change (leverage drag, ΔE edit) so the before/after
+    // Keep the prior quote visible across a param change (leverage drag, amount edit) so the before/after
     // rows don't blank mid-edit; callers gate submission on isPlaceholderData.
     //
     // Scoped to the same SUBJECT. Unscoped, this bridges across any key change, so switching wallets

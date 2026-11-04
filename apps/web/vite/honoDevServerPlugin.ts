@@ -6,7 +6,7 @@ import { enableDebugRoutes } from '../scripts/debug-routes'
 
 const DEV_ENTRY = '/functions/dev-entry.ts'
 // Deps whose published ESM Node can't load natively (CJS `main`, extensionless imports).
-const SSR_NO_EXTERNAL = ['@apollo/client', /^@uniswap\//]
+const SSR_NO_EXTERNAL = [/^@uniswap\//]
 
 type AppFetch = (request: Request) => Promise<Response>
 interface DevEntryModule {

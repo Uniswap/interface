@@ -1,14 +1,22 @@
 import { isWebAppDesktop } from '@universe/environment'
-import { Flex, Text, TouchableArea, useExtractedTokenColor, useSporeColors } from '@universe/mycelium'
+import {
+  Button,
+  Flex,
+  Text,
+  TouchableArea,
+  useExtractedTokenColor,
+  useSporeColors,
+  ModalCloseIcon,
+  iconSizes,
+} from '@universe/mycelium'
+import { EnvelopeHeart } from '@universe/mycelium/icons/EnvelopeHeart'
+import { ExternalLink } from '@universe/mycelium/icons/ExternalLink'
+import { Shuffle } from '@universe/mycelium/icons/Shuffle'
 import { useColorsFromTokenColor } from '@universe/mycelium/theme-hooks-compat'
 import { atom } from 'jotai'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, getContrastPassingTextColor, ModalCloseIcon } from 'ui/src'
-import { EnvelopeHeart } from 'ui/src/components/icons/EnvelopeHeart'
-import { ExternalLink } from 'ui/src/components/icons/ExternalLink'
-import { Shuffle } from 'ui/src/components/icons/Shuffle'
-import { iconSizes } from 'ui/src/theme'
+import { getContrastPassingTextColor } from 'ui/src'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import type { BaseModalProps } from 'uniswap/src/components/modals/ModalProps'

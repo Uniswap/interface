@@ -10,12 +10,12 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { getLogger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useAppDispatch, useAppSelector } from '~/state/hooks'
-import { popupRegistry } from '~/state/popups/registry'
-import { PopupType } from '~/state/popups/types'
 import { useIsAtomicBatchingSupportedByChainIdCallback } from '~/state/walletCapabilities/hooks/useIsAtomicBatchingSupportedByChain'
 import { useWalletGetCapabilitiesMutation } from '~/state/walletCapabilities/hooks/useWalletGetCapabilitiesMutation'
 import { isAtomicBatchingSupportedByChainId } from '~/state/walletCapabilities/lib/handleGetCapabilities'
 import { useDelegationService } from '~/state/wallets/useDelegationService'
+import { popupRegistry } from '~/utils/popups/registry'
+import { PopupType } from '~/utils/popups/types'
 
 /**
  * [public] useHasMismatchCallback -- gets the mismatch account status for the current account

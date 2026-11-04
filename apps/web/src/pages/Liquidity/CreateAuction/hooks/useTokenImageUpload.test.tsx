@@ -37,6 +37,10 @@ vi.mock('uniswap/src/data/apiClients/dataApiService/tokens/tokenFactoryImage', (
 const file = new File(['x'], 'logo.png', { type: 'image/png' })
 const approved = { status: VerifyTokenFactoryImageResponse_Status.APPROVED, blockedReason: '' }
 
+function invalidTokenImageError(body: Record<string, unknown>): ConnectError {
+  return new ConnectError(JSON.stringify(body), Code.InvalidArgument)
+}
+
 function TestProviders({ children, store }: { children: ReactNode; store: CreateAuctionStore }): JSX.Element {
   const client = new QueryClient({ defaultOptions: { mutations: { retry: false } } })
   return (
@@ -212,6 +216,128 @@ describe('useTokenImageUpload', () => {
     expect(mockVerify).toHaveBeenCalledTimes(VERIFY_MAX_ATTEMPTS)
     expect(result.current.status).toBe('success')
     expect(result.current.errorReason).toBeUndefined()
+    const tf = store.getState().tokenForm
+    expect(tf.mode).toBe(TokenMode.CREATE_NEW)
+    if (tf.mode === TokenMode.CREATE_NEW) {
+      expect(tf.imageUrl).toBe('ipfs://bafkreicid')
+    }
+  })
+
+  it('surfaces an INVALID_TOKEN_IMAGE 400 as an error, stores nothing, and does not retry', async () => {
+    const store = createCreateAuctionStore()
+    mockSelect.mockResolvedValue({ kind: 'selected', file })
+    mockPresign.mockResolvedValue('https://signed')
+    mockUpload.mockResolvedValue('bafkreicid')
+    mockVerify.mockRejectedValue(
+      invalidTokenImageError({
+        code: 'INVALID_TOKEN_IMAGE',
+        reason: 'image_too_large',
+        message:
+          'This image is too large to check. Use an image no larger than 4096 × 4096 pixels (for an animation, across all frames combined) and 2 MB.',
+      }),
+    )
+
+    const { result } = renderUploadHook(store)
+    act(() => result.current.start())
+
+    await waitFor(() => expect(result.current.status).toBe('error'))
+    expect(result.current.errorReason).toBe('too-large-to-check')
+    expect(mockVerify).toHaveBeenCalledTimes(1)
+    expect(result.current.previewUri).toBeUndefined()
+    const tf = store.getState().tokenForm
+    expect(tf.mode).toBe(TokenMode.CREATE_NEW)
+    if (tf.mode === TokenMode.CREATE_NEW) {
+      expect(tf.imageUrl).toBe('')
+    }
+  })
+
+  it.each([
+    ['image_too_large', 'too-large-to-check'],
+    ['transcode_too_large', 'too-large-to-check'],
+    ['too_many_frames', 'too-many-frames'],
+    ['unsupported_format_svg', 'invalid-type'],
+    ['transcode_failed', 'invalid-image'],
+    ['invalid_image', 'invalid-image'],
+    ['a_reason_this_client_predates', 'invalid-image'],
+    [undefined, 'invalid-image'],
+  ])('maps the server reason %s to the localized %s reason', async (reason, expected) => {
+    const store = createCreateAuctionStore()
+    mockSelect.mockResolvedValue({ kind: 'selected', file })
+    mockPresign.mockResolvedValue('https://signed')
+    mockUpload.mockResolvedValue('bafkreicid')
+    mockVerify.mockRejectedValue(invalidTokenImageError({ code: 'INVALID_TOKEN_IMAGE', reason, message: 'English' }))
+
+    const { result } = renderUploadHook(store)
+    act(() => result.current.start())
+
+    await waitFor(() => expect(result.current.errorReason).toBe(expected))
+  })
+
+  it('lets the user pick another image after a 400 and attaches it once approved', async () => {
+    const store = createCreateAuctionStore()
+    mockSelect.mockResolvedValue({ kind: 'selected', file })
+    mockPresign.mockResolvedValue('https://signed')
+    mockUpload.mockResolvedValueOnce('bafkreibad').mockResolvedValueOnce('bafkreigood')
+    mockVerify
+      .mockRejectedValueOnce(
+        invalidTokenImageError({
+          code: 'INVALID_TOKEN_IMAGE',
+          reason: 'unsupported_format_svg',
+          message: "SVG images aren't supported. Upload a PNG, JPEG, WebP or GIF instead.",
+        }),
+      )
+      .mockResolvedValueOnce(approved)
+
+    const { result } = renderUploadHook(store)
+    act(() => result.current.start())
+    await waitFor(() => expect(result.current.errorReason).toBe('invalid-type'))
+
+    act(() => result.current.start())
+    await waitFor(() => expect(result.current.status).toBe('success'))
+    expect(result.current.errorReason).toBeUndefined()
+    const tf = store.getState().tokenForm
+    expect(tf.mode).toBe(TokenMode.CREATE_NEW)
+    if (tf.mode === TokenMode.CREATE_NEW) {
+      expect(tf.imageUrl).toBe('ipfs://bafkreigood')
+    }
+  })
+
+  it.each([
+    ['a plain-text 400', 'BadRequest: Invalid or missing parameter: cid'],
+    ['a 400 with another coded JSON body', JSON.stringify({ code: 'SOMETHING_ELSE', message: 'nope' })],
+  ])('keeps the optimistic attach for %s, without retrying', async (_, rawMessage) => {
+    const store = createCreateAuctionStore()
+    mockSelect.mockResolvedValue({ kind: 'selected', file })
+    mockPresign.mockResolvedValue('https://signed')
+    mockUpload.mockResolvedValue('bafkreicid')
+    mockVerify.mockRejectedValue(new ConnectError(rawMessage, Code.InvalidArgument))
+
+    const { result } = renderUploadHook(store)
+    act(() => result.current.start())
+
+    await waitFor(() => expect(result.current.status).toBe('success'))
+    expect(result.current.errorReason).toBeUndefined()
+    expect(mockVerify).toHaveBeenCalledTimes(1)
+    const tf = store.getState().tokenForm
+    expect(tf.mode).toBe(TokenMode.CREATE_NEW)
+    if (tf.mode === TokenMode.CREATE_NEW) {
+      expect(tf.imageUrl).toBe('ipfs://bafkreicid')
+    }
+  })
+
+  it('still attaches the image on a NotFound (404) verify, without retrying', async () => {
+    const store = createCreateAuctionStore()
+    mockSelect.mockResolvedValue({ kind: 'selected', file })
+    mockPresign.mockResolvedValue('https://signed')
+    mockUpload.mockResolvedValue('bafkreicid')
+    mockVerify.mockRejectedValue(new ConnectError('cid not found', Code.NotFound))
+
+    const { result } = renderUploadHook(store)
+    act(() => result.current.start())
+
+    await waitFor(() => expect(result.current.status).toBe('success'))
+    expect(result.current.errorReason).toBeUndefined()
+    expect(mockVerify).toHaveBeenCalledTimes(1)
     const tf = store.getState().tokenForm
     expect(tf.mode).toBe(TokenMode.CREATE_NEW)
     if (tf.mode === TokenMode.CREATE_NEW) {

@@ -1,9 +1,11 @@
 import { UniverseChainId, Platform } from '@universe/chains'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Flex } from '@universe/mycelium'
 import { memo } from 'react'
 import { ActivityRenderData } from 'uniswap/src/features/activity/hooks/useActivityData'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { useConnectionStatus } from '~/features/accounts/store/hooks'
+import { useConnectionStatus } from '~/connection/accounts/hooks'
+import { MARGIN_CHAIN_ID } from '~/constants/margin'
 import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
 import {
   MAX_ACTIVITY_ROWS,
@@ -16,6 +18,7 @@ import { MiniPoolsTable } from '~/pages/Portfolio/Overview/MiniPoolsTable/MiniPo
 import { MiniTokensTable } from '~/pages/Portfolio/Overview/MiniTokensTable'
 import { OpenLimitsTable } from '~/pages/Portfolio/Overview/OpenLimitsTable'
 import { PortfolioEarnSection } from '~/pages/Portfolio/Overview/PortfolioEarnSection'
+import { PortfolioMarginSection } from '~/pages/Portfolio/Overview/PortfolioMarginSection'
 
 interface PortfolioOverviewTablesProps {
   activityData: ActivityRenderData
@@ -37,6 +40,9 @@ export const PortfolioOverviewTables = memo(function PortfolioOverviewTables({
   // External and disconnected demo portfolios are visible but never actionable.
   const isEarnSectionReadOnly = isExternalWallet || !isEvmConnected
   const showEarnSection = !isTestnetModeEnabled && showOpenLimitsTable
+  const isMarginEnabled = useFeatureFlag(FeatureFlags.Margin)
+  const showMarginSection =
+    isMarginEnabled && !!evmAddress && !isTestnetModeEnabled && (!chainId || chainId === MARGIN_CHAIN_ID)
 
   return (
     <Flex
@@ -55,6 +61,7 @@ export const PortfolioOverviewTables = memo(function PortfolioOverviewTables({
       </Flex>
       <Flex width={OVERVIEW_RIGHT_COLUMN_WIDTH} gap="$spacing48" $xl={{ width: '100%' }}>
         {showEarnSection && <PortfolioEarnSection account={evmAddress} isReadOnly={isEarnSectionReadOnly} />}
+        {showMarginSection && <PortfolioMarginSection account={evmAddress} isReadOnly={isEarnSectionReadOnly} />}
         {showOpenLimitsTable && <OpenLimitsTable account={evmAddress} />}
         <MiniActivityTable maxActivities={MAX_ACTIVITY_ROWS} activityData={activityData} />
       </Flex>

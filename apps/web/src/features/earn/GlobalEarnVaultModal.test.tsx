@@ -37,7 +37,6 @@ describe(GlobalEarnVaultModal, () => {
     mockUseEnabledChains.mockReturnValue({
       chains: [UniverseChainId.Mainnet],
       defaultChainId: UniverseChainId.Mainnet,
-      gqlChains: [],
       isTestnetModeEnabled: false,
     })
     useGlobalEarnVaultModalStore.setState({ selectedVaultState: null })
@@ -57,7 +56,6 @@ describe(GlobalEarnVaultModal, () => {
     mockUseEnabledChains.mockReturnValue({
       chains: [],
       defaultChainId: UniverseChainId.Sepolia,
-      gqlChains: [],
       isTestnetModeEnabled: true,
     })
     act(() => {

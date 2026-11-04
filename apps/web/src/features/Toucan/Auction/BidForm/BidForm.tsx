@@ -1,6 +1,4 @@
-import { UniverseChainId, AddressStringFormat, normalizeAddress } from '@universe/chains'
-//! tamagui-ignore
-// tamagui-ignore
+import { AddressStringFormat, normalizeAddress, UniverseChainId } from '@universe/chains'
 import { Flex } from '@universe/mycelium'
 import { styled } from '@universe/mycelium/styled'
 import { useColorsFromTokenColor } from '@universe/mycelium/theme-hooks-compat'
@@ -16,9 +14,8 @@ import TokenWarningModal from 'uniswap/src/features/tokens/warnings/TokenWarning
 import { useEvent } from 'utilities/src/react/hooks'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { zeroAddress } from '~/chains'
-import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { useToucanGeoRestriction } from '~/components/GeoRestriction/useToucanGeoRestriction'
-import { useActiveAddress } from '~/features/accounts/store/hooks'
+import { useActiveAddress } from '~/connection/accounts/hooks'
 import { getAuctionBidInputtedAnalyticsProperties } from '~/features/Toucan/Auction/analytics'
 import { AuctionAccessIndicators } from '~/features/Toucan/Auction/BidForm/AuctionAccessIndicators'
 import { BidBudgetInput } from '~/features/Toucan/Auction/BidForm/BidBudgetInput'
@@ -41,6 +38,7 @@ import { AuctionProgressState } from '~/features/Toucan/Auction/store/types'
 import { useAuctionStore, useAuctionStoreActions } from '~/features/Toucan/Auction/store/useAuctionStore'
 import { getRequiredTestnetMode } from '~/features/Toucan/Shared/getRequiredTestnetMode'
 import { shouldShowAuctionTokenWarning } from '~/features/Toucan/utils/auctionTokenProtection'
+import { useAccountDrawer } from '~/state/accountDrawer/hooks'
 
 const VerticalLineContainer = styled('div', {
   platform: 'web',

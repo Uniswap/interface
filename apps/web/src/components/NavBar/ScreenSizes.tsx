@@ -1,3 +1,4 @@
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { useSyncExternalStore } from 'react'
 import { useConnectionStatus } from 'uniswap/src/features/accounts/store/hooks'
@@ -32,7 +33,11 @@ export function useTabsVisible(): boolean {
   const media = useMedia()
   const { isConnected } = useConnectionStatus()
   const isDisconnectedNavCrowded = useIsDisconnectedNavCrowded()
+  const isNewUserUxEnabled = useFeatureFlag(FeatureFlags.NewUserUx)
 
+  if (isNewUserUxEnabled) {
+    return !media.lg
+  }
   if (media.md) {
     return false
   }

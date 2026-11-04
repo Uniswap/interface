@@ -5,6 +5,7 @@ import {
   type TokenCategoryTopGroup,
   type TokenCategoryTopToken,
 } from 'uniswap/src/features/tokenCategories/types'
+import { poolCategory, poolCategoryTopPool } from 'uniswap/src/test/fixtures/poolCategory'
 import { tokenCategory } from 'uniswap/src/test/fixtures/tokenCategory'
 import {
   CategoryDefinitionCard,
@@ -71,6 +72,31 @@ describe.each<CategoryDefinitionCardLayout>(['popover', 'sheet'])('CategoryDefin
     expect(screen.getByText('Gaming')).toBeInTheDocument()
     expect(screen.queryByTestId(TestID.PortfolioRelativeChange)).not.toBeInTheDocument()
     expect(screen.queryByTestId(TestID.TokenLogo)).not.toBeInTheDocument()
+  })
+
+  it('shows 1D volume and the top-pool pair pile for a pool category, with no price change', () => {
+    const correlated = poolCategory({
+      id: 'correlated',
+      name: 'Correlated',
+      description: 'Pairs that move together',
+      stats: {
+        poolCount: 180,
+        tvl: 0,
+        volume1d: 2_230_000_000,
+        volume1w: 0,
+        volume1m: 0,
+        fees1d: 0,
+        tvlChange24hPct: 0.5,
+      },
+      topPools: [
+        poolCategoryTopPool({ token0Symbol: 'wstETH', token1Symbol: 'ETH', token0LogoUrl: '', token1LogoUrl: '' }),
+      ],
+    })
+    render(<CategoryDefinitionCard category={correlated} layout={layout} onPress={noop} />)
+    expect(screen.getByText('Correlated')).toBeInTheDocument()
+    expect(screen.getByTestId(TestID.CategoryDefinitionVolume)).toHaveTextContent('$2.2B 1D vol')
+    expect(screen.queryByTestId(TestID.PortfolioRelativeChange)).not.toBeInTheDocument()
+    expect(screen.getByTestId('input-currency-logo-container')).toBeInTheDocument()
   })
 
   it('links "Learn more" to the category definitions article', () => {

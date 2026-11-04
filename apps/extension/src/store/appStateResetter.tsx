@@ -13,7 +13,6 @@ import { createWalletStateResetter } from 'wallet/src/state/createWalletStateRes
  * Creates the extension app's state resetter instance.
  * This wraps the base createAppStateResetter and adds extension-specific reset actions.
  *
- * @param apolloClient - Optional Apollo client for cache clearing. If not provided, cache clearing is skipped.
  * @param queryClient - Optional React Query client for cache clearing. If not provided, cache clearing is skipped.
  */
 export function createExtensionAppStateResetter({
@@ -58,8 +57,6 @@ export function useAppStateResetter(): AppStateResetter {
 
 /**
  * Creates a resetter for use in crash recovery scenarios (e.g., error boundaries).
- * This version does not require the Apollo context, which is not
- * available when rendering the error fallback UI.
  */
 export function useOnCrashAppStateResetter(): AppStateResetter {
   const dispatch = useDispatch()

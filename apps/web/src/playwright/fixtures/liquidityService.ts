@@ -205,7 +205,7 @@ export async function mockGetWalletPositions({ page, mockPath }: { page: Page; m
       await route.fulfill({ contentType: 'application/json', body: JSON.stringify({ positions: [] }) })
       return
     }
-    // Honor the chain filter like the service does, so a Blast-only exposure check doesn't see mainnet positions.
+    // Honor the chain filter like the service does, so a single-chain exposure check doesn't see other chains' positions.
     const requestedChainIds = body?.chainIds?.map((id) => (typeof id === 'number' ? id : ChainId[id]))
     const mock = JSON.parse(readFileSync(mockPath, 'utf8')) as { positions: { chainId: number }[] }
     const positions = requestedChainIds?.length

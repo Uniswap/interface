@@ -1,7 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { SynchronizedHeartbeatsConfigKey } from '@universe/gating'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
-import { useActiveAddresses } from '~/features/accounts/store/hooks'
+import { useActiveAddresses } from '~/connection/accounts/hooks'
 import { useHeartbeatCoordinator } from '~/lib/hooks/useHeartbeatCoordinator'
 
 /** V2 REST queries carrying the spot price and chart line, refetched on every price tick. */

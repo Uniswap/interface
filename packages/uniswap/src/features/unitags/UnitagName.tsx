@@ -1,9 +1,9 @@
 import { isWebPlatform } from '@universe/environment'
 import { Text, type TextCompatProps as TextProps, AnimatedFlex, type AnimatedFlexProps } from '@universe/mycelium'
+import { Unitag } from '@universe/mycelium/icons/Unitag'
 import { fonts, spacing } from '@universe/mycelium/tokens'
 import { withSporeCurve } from '@universe/tailwind/animations/reanimated'
 import type { EntryExitAnimationFunction } from 'react-native-reanimated'
-import { Unitag } from 'ui/src/components/icons/Unitag'
 import { UNITAG_SUFFIX } from 'uniswap/src/features/unitags/constants'
 
 export function UnitagName({

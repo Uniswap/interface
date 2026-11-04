@@ -1,5 +1,5 @@
 /**
- * Style resolution for the Input compat (INFRA-3600): the legacy Tamagui Input
+ * Style resolution for the Input compat (INFRA-3600): the legacy Input
  * cascade transcribed into token → concrete-value resolution shared by the web
  * and native legs, ported from the Tamagui-free `ui/src` Input rebuild
  * (INFRA-3318) with tokens re-sourced from `@universe/tailwind` mirrors.
@@ -92,7 +92,7 @@ function resolveFontWeight(
 }
 
 // ---------------------------------------------------------------------------
-// Legacy cascade transcription, captured from the legacy Tamagui Input rendered live
+// Legacy cascade transcription, captured from the legacy Input rendered live
 // (size '$true', unstyled=false): font body medium (16px / weight $medium / lineHeight
 // 22px on web), height 8px (the legacy frame height really was 8px), radius 0, padding-x
 // 8px, borderWidth 1 with border/outline theme keys that all resolve to transparent (as do

@@ -4,7 +4,7 @@ import { TOOLTIP_COMPAT_POPUP_DATA_SLOT } from '../compile'
 
 /**
  * Touch/tap affordance for TooltipCompat's trigger, adapted from the legacy
- * `ui/src/components/tooltip/useTooltipTouchSession` (INFRA-3506): Base UI's
+ * `ui/src` Tooltip's touch session (INFRA-3506): Base UI's
  * hover is hard-coded `mouseOnly`, so a tap never opens the tooltip on its
  * own.
  *

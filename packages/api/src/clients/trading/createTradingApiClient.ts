@@ -1,6 +1,6 @@
-/* oxlint-disable max-lines */
-import type { FetchClient } from '@universe/api/src/clients/base/types'
-import { createFetcher } from '@universe/api/src/clients/base/utils'
+import { logger } from 'utilities/src/logger/logger'
+import type { FetchClient } from '../base/types'
+import { createFetcher } from '../base/utils'
 import type {
   ApprovalRequest,
   ApprovalResponse,
@@ -29,13 +29,8 @@ import type {
   WalletCheckDelegationRequestBody,
   WalletCheckDelegationResponseBody,
   WalletEncode7702RequestBody,
-} from '@universe/api/src/clients/trading/__generated__'
-import {
-  CreatePlanRequest,
-  PlanResponse,
-  PlanStatus,
-  RoutingPreference,
-} from '@universe/api/src/clients/trading/__generated__'
+} from './__generated__'
+import { CreatePlanRequest, PlanResponse, RoutingPreference } from './__generated__'
 import type {
   CheckPermissionsRequest,
   CheckPermissionsResponse,
@@ -43,8 +38,7 @@ import type {
   ExistingPlanRequest,
   SwappableTokensParams,
   UpdatePlanRequestWithPlanId,
-} from '@universe/api/src/clients/trading/tradeTypes'
-import { logger } from 'utilities/src/logger/logger'
+} from './tradeTypes'
 
 export const TRADING_API_PATHS = {
   approval: 'check_approval',
@@ -169,7 +163,6 @@ export interface PlanEndpoints {
   updateExistingPlan: (params: UpdatePlanRequestWithPlanId) => Promise<PlanResponse>
   getExistingPlan: (params: ExistingPlanRequest) => Promise<PlanResponse>
   refreshExistingPlan: (params: ExistingPlanRequest) => Promise<PlanResponse>
-  cancelExistingPlan: (params: ExistingPlanRequest) => Promise<PlanResponse>
 }
 
 type IndicativeQuoteBase = Pick<
@@ -466,21 +459,6 @@ export function createTradingApiClient(ctx: TradingClientContext): TradingApiCli
     }),
   })
 
-  // Cancel is a status-only PATCH; there is no dedicated cancel route. Kept separate from
-  // updateExistingPlan because that method's transformRequest forwards only `steps`.
-  const cancelExistingPlan = createFetcher<ExistingPlanRequest, PlanResponse>({
-    client,
-    url: getApiPath(TRADING_API_PATHS.plan),
-    method: 'patch',
-    transformRequest: async ({ params, url }) => ({
-      headers: await getFeatureFlagHeaders(TRADING_API_PATHS.plan),
-      url: `${url}/${params.planId}`,
-      params: {
-        status: PlanStatus.CANCELLED,
-      },
-    }),
-  })
-
   return {
     fetchQuote,
     fetchIndicativeQuote,
@@ -504,6 +482,5 @@ export function createTradingApiClient(ctx: TradingClientContext): TradingApiCli
     updateExistingPlan,
     getExistingPlan,
     refreshExistingPlan,
-    cancelExistingPlan,
   }
 }

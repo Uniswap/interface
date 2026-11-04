@@ -191,6 +191,7 @@ export class ToucanClearingPriceChartController {
         priceFormatter: createYAxisPriceFormatter({
           scaleFactor,
           maxFractionDigits,
+          locale: this.createParams.locale,
         }),
       },
       ...interactionOptions,
@@ -251,6 +252,7 @@ export class ToucanClearingPriceChartController {
     const formatter = createYAxisPriceFormatter({
       scaleFactor: this.latestScaleFactor,
       maxFractionDigits: this.latestMaxFractionDigits,
+      locale: this.createParams.locale,
     })
 
     // Use the full Y range (includes distribution tick extension) for label generation

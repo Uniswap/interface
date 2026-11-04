@@ -1,12 +1,12 @@
 import { isWebPlatform } from '@universe/environment'
+import { BREAKPOINT_PX } from '@universe/mycelium/theme-hooks-compat'
 import { useSyncExternalStore } from 'react'
 import { Dimensions } from 'react-native'
-import { breakpoints } from 'ui/src/theme'
 
 // TODO(INFRA-3318): replace the matchMedia observer with a CSS-based media query once the
 // 5 packages/wallet `$xs` call sites migrate off the prop or `ui` gains a scanned stylesheet
 // to hold the rule (inline styles cannot express @media).
-const XS_QUERY = `(max-width: ${breakpoints.xs}px)`
+const XS_QUERY = `(max-width: ${BREAKPOINT_PX.xs}px)`
 
 function subscribeToXsQuery(onChange: () => void): () => void {
   const query = window.matchMedia(XS_QUERY)
@@ -30,8 +30,7 @@ function getFalse(): boolean {
  * Web: the exact media query Tamagui compiled `$xs` to, so the breakpoint boundary is
  * identical. Only 5 call sites (packages/wallet landing elements) pass `$xs` — every other
  * Image skips the matchMedia subscription entirely (no-op store) instead of paying a media
- * listener per instance. `getFalse` doubles as the server snapshot, matching the Separator
- * rebuild's observer.
+ * listener per instance. `getFalse` doubles as the server snapshot.
  */
 function useIsXsBreakpointWeb(enabled: boolean): boolean {
   return useSyncExternalStore(
@@ -47,7 +46,7 @@ function subscribeToDimensions(onChange: () => void): () => void {
 }
 
 function getWindowIsXs(): boolean {
-  return Dimensions.get('window').width <= breakpoints.xs
+  return Dimensions.get('window').width <= BREAKPOINT_PX.xs
 }
 
 /**

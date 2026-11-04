@@ -7,6 +7,7 @@ import {
 } from 'uniswap/src/components/AnimatedNumber/animationConfig'
 import { AnimatedNumberDirection } from 'uniswap/src/components/AnimatedNumber/types'
 import { scheduleSlotTransition, type SlotState } from 'uniswap/src/components/AnimatedNumber/utils/slotScheduler'
+import { getDigitTextStyle } from 'uniswap/src/components/AnimatedNumber/web/digitTextStyle'
 
 const ANIMATION_EASING = 'ease-in-out'
 
@@ -81,13 +82,7 @@ export function DigitSlot({
   const animValue = (name: string): string => `${name} ${ROLL_TRANSITION_MS}ms ${ANIMATION_EASING} both`
 
   const textStyle: React.CSSProperties = {
-    fontSize: variantFont.fontSize,
-    fontWeight: variantFont.fontWeight,
-    lineHeight: `${digitHeight}px`,
-    height: digitHeight,
-    fontFamily: variantFont.family,
-    letterSpacing: variantFont.letterSpacing,
-    fontVariantNumeric: 'tabular-nums',
+    ...getDigitTextStyle({ variantFont, digitHeight }),
     color,
     transition: reduceMotion ? undefined : 'color 250ms ease',
     display: 'flex',

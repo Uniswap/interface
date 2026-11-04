@@ -1,7 +1,6 @@
 import { UniverseChainId } from '@universe/chains'
-import { Flex, UniversalImage } from '@universe/mycelium'
+import { Flex, UniversalImage, Loader } from '@universe/mycelium'
 import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
-import { Loader } from 'ui/src'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { useCurrencyInfoWithLoading } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'

@@ -323,13 +323,7 @@ export function hasGasEstimationFailed(isTransactionRequest: boolean, gasFeeResu
   return isTransactionRequest && !!gasFeeResult && !gasFeeResult.isLoading && !!gasFeeResult.error
 }
 
-// 20% gas buffer to avoid out-of-gas failures
-const GAS_BUFFER_NUMERATOR = BigInt(12)
-const GAS_BUFFER_DENOMINATOR = BigInt(10)
-
-export function applyGasBuffer(gas: bigint): bigint {
-  return (gas * GAS_BUFFER_NUMERATOR) / GAS_BUFFER_DENOMINATOR
-}
+export { applyGasBuffer } from 'uniswap/src/features/gas/gasBuffer'
 
 /** True when the user has saved at least one per-tx gas override. */
 export function hasGasOverrides(gasOverrides: GasFeeOverrides | undefined): boolean {

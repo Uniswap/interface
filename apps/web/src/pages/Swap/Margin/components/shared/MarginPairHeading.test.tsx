@@ -9,13 +9,13 @@ import { render } from '~/test-utils/render'
 
 // Echo the venue prop so we assert the heading wires the market's venue into the ghost;
 // the venue→logo mapping itself is covered by MarginVenueLogo.test.tsx.
-vi.mock('~/pages/Swap/Margin/components/MarginVenueLogo', () => ({
+vi.mock('~/features/margin/components/MarginVenueLogo', () => ({
   MarginVenueLogo: ({ venue }: { venue: string }) => <div data-testid="venue-logo" data-venue={venue} />,
 }))
 
 // Currency-info resolution drags in the token/data-API web; the heading needs it only for logo art.
-vi.mock('~/pages/Swap/Margin/hooks/useMarginCurrencyInfos', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('~/pages/Swap/Margin/hooks/useMarginCurrencyInfos')>()),
+vi.mock('~/features/margin/hooks/useMarginCurrencyInfos', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('~/features/margin/hooks/useMarginCurrencyInfos')>()),
   useMarginCurrencyInfos: () => new Map(),
 }))
 

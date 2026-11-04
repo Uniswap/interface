@@ -1,5 +1,5 @@
-import { createSessionTransport } from '@universe/api/src/session/createSessionTransport'
 import { describe, expect, it } from 'vitest'
+import { createSessionTransport } from './createSessionTransport'
 
 describe('createSessionTransport', () => {
   it('creates transport with baseUrl', () => {

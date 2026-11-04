@@ -58,10 +58,6 @@ export function SelectAllClearHeaderCompat(): never {
   return throwNativeStub('SelectAllClearHeaderCompat')
 }
 
-export function CheckmarkCircleGlyph(): never {
-  return throwNativeStub('CheckmarkCircleGlyph')
-}
-
 export function SearchGlyph(): never {
   return throwNativeStub('SearchGlyph')
 }

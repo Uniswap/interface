@@ -1,5 +1,8 @@
 import { Flex, iconSizes } from '@universe/mycelium'
-import { Home, Search, SearchFilled, TimePast } from 'ui/src/components/icons'
+import { Home } from '@universe/mycelium/icons/Home'
+import { Search } from '@universe/mycelium/icons/Search'
+import { SearchFilled } from '@universe/mycelium/icons/SearchFilled'
+import { TimePast } from '@universe/mycelium/icons/TimePast'
 import { useSelectAddressHasNotifications } from 'uniswap/src/features/notifications/slice/hooks'
 import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 

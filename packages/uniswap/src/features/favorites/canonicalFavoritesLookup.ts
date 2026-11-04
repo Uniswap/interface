@@ -1,6 +1,9 @@
 import type { RankedMultichainToken } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { normalizeTokenAddressForCache, UniverseChainId } from '@universe/chains'
-import { normalizeBackendNativeAddress } from 'uniswap/src/data/apiClients/dataApiService/utils/dataApiMultichainToken'
+import {
+  listSupportedChainAddresses,
+  normalizeBackendNativeAddress,
+} from 'uniswap/src/data/apiClients/dataApiService/utils/dataApiMultichainToken'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/utils/currencyId'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
@@ -19,10 +22,10 @@ export function buildLookupKey({ chainId, address }: { chainId: number; address:
 }
 
 function getDeployments(addresses: Record<string, string>): Deployment[] {
-  return Object.entries(addresses).map(([chainIdKey, address]) => {
-    const chainId = Number(chainIdKey)
-    return { chainId, address: normalizeBackendNativeAddress({ chainId, address }) }
-  })
+  return listSupportedChainAddresses(addresses).map(({ chainId, address }) => ({
+    chainId,
+    address: normalizeBackendNativeAddress({ chainId, address }),
+  }))
 }
 
 /**

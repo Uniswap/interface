@@ -5,9 +5,9 @@ import { FORMAT_DATE_MEDIUM, useLocalizedDayjs } from 'uniswap/src/features/lang
 import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { NumberType } from 'utilities/src/format/types'
 import type { PriceChartData } from '~/components/Charts/PriceChart'
+import { formatSignedFiat } from '~/features/margin/utils/marginFormat'
 import type { PositionEconomics } from '~/pages/Swap/Margin/chart/marginChartMath'
 import type { NearOverlay } from '~/pages/Swap/Margin/chart/useMarginChartOverlays'
-import { formatSignedFiat } from '~/pages/Swap/Margin/marginFormat'
 import { marginUsdPnlAtPrice, type MarginUsdBasis } from '~/pages/Swap/Margin/marginUsdPnl'
 
 // Crosshair payload as augmented by MarginPriceChartModel.onSeriesHover: the RAW hovered candle plus
@@ -16,8 +16,8 @@ export type MarginTooltipData = PriceChartData & { nearOverlay?: NearOverlay }
 
 const APPENDED_ROW_MAX_WIDTH = 240
 
-// CandlestickTooltip + margin extras (spec F11/F24): a PnL-at-this-price row whenever a primary
-// position exists, and — after the model's 300ms dwell — a plain-language explainer for the overlay
+// Margin hover rows (spec F11/F24): a PnL-at-this-price row whenever a primary position exists, and
+// — after the model's 300ms dwell — a plain-language explainer for the overlay
 // under the cursor. Prices and dates come straight off the chart (they are chart
 // geometry already on screen).
 export function MarginChartTooltip({
@@ -34,18 +34,11 @@ export function MarginChartTooltip({
   direction: MarginDirection
   leverage?: string
   collateralSymbol: string
-}): JSX.Element {
+}): JSX.Element | null {
   const { t } = useTranslation()
   const { convertFiatAmountFormatted, formatNumberOrString, formatPercent } = useLocalizationContext()
   const localizedDayjs = useLocalizedDayjs()
   const fiat = (value: number): string => convertFiatAmountFormatted(value, NumberType.FiatTokenPrice)
-
-  const ohlcRows = [
-    { label: t('chart.price.label.open'), value: fiat(data.open) },
-    { label: t('chart.price.label.high'), value: fiat(data.high) },
-    { label: t('chart.price.label.low'), value: fiat(data.low) },
-    { label: t('chart.price.label.close'), value: fiat(data.close) },
-  ]
 
   // A candle whose close is 0 (a thin or bad print) yields no PnL rather than a fabricated total loss.
   const pnl = usdBasis ? marginUsdPnlAtPrice({ basis: usdBasis, price: data.close }) : undefined
@@ -114,36 +107,32 @@ export function MarginChartTooltip({
   }
   const explainer = near?.dwellElapsed ? explainerFor(near) : undefined
 
+  if (pnlRow === undefined && explainer === undefined) {
+    return null
+  }
+
+  // The pane hides the shared tooltip shell (hideTooltipBorder), so the chrome lives here and an
+  // OHLC-only hover renders nothing: the legend above the chart already reads that candle.
   return (
-    <Text variant="body3" color="$neutral1">
-      {/* Row shape matches CandlestickTooltip (fixed-shape component, not extensible) so the OHLC
-          block renders identically; the margin rows append below it. */}
-      {ohlcRows.map((row) => (
-        <Flex key={row.label} row justifyContent="space-between" gap="$spacing8">
-          <Text variant="body3" color="$neutral1">
-            {row.label}
-          </Text>
-          <Flex>
-            <Text variant="body3" color="$neutral1">
-              {row.value}
-            </Text>
-          </Flex>
-        </Flex>
-      ))}
+    <Flex
+      backgroundColor="$surface2"
+      borderRadius="$rounded8"
+      borderWidth={1}
+      borderColor="$surface3"
+      p="$spacing8"
+      gap="$spacing4"
+      maxWidth={APPENDED_ROW_MAX_WIDTH}
+    >
       {pnlRow !== undefined ? (
-        <Flex maxWidth={APPENDED_ROW_MAX_WIDTH} mt="$spacing4">
-          <Text variant="body4" color="$neutral2">
-            {pnlRow}
-          </Text>
-        </Flex>
+        <Text variant="body4" color="$neutral2">
+          {pnlRow}
+        </Text>
       ) : null}
       {explainer !== undefined ? (
-        <Flex maxWidth={APPENDED_ROW_MAX_WIDTH} mt="$spacing4">
-          <Text variant="body4" color="$neutral2">
-            {explainer}
-          </Text>
-        </Flex>
+        <Text variant="body4" color="$neutral2">
+          {explainer}
+        </Text>
       ) : null}
-    </Text>
+    </Flex>
   )
 }

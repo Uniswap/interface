@@ -1,22 +1,22 @@
 /**
- * Web leg of `LabeledCheckboxCompat` — the drop-in Tailwind twin of the legacy
- * Tamagui `packages/ui/src/components/checkbox/LabeledCheckbox.tsx`.
+ * Web leg of `LabeledCheckboxCompat` — the drop-in Tailwind replacement for the
+ * legacy Tamagui `ui/src` `LabeledCheckbox`.
  *
  * Structure mirrors legacy: a pressable container (legacy `TouchableArea`)
  * wrapping a centered row (legacy `<Flex row alignItems="center" gap px py>`)
  * holding the checkbox and, when `text` is present, a `grow shrink` label
  * wrapper. The same press handler is attached to BOTH the container and the
  * checkbox, and it calls `preventDefault()` + `stopPropagation()` first, exactly
- * like legacy (`LabeledCheckbox.tsx:41-45`), so a press on the checkbox does not
+ * like legacy, so a press on the checkbox does not
  * also fire the container.
  *
  * `onCheckPressed` receives the PRE-TOGGLE state — `checked` as it is at press
- * time, not the next value (`LabeledCheckbox.tsx:44`). Call sites invert it
+ * time, not the next value. Call sites invert it
  * themselves.
  *
  * A11y: the container reproduces legacy's outer interactive role rather than
  * flattening it. Legacy's `TouchableAreaFrame` is `styled(YStack, { tag: 'div',
- * role: 'button' })` (`TouchableAreaFrame.web.tsx:17-20`) and renders
+ * role: 'button' })` and rendered
  * `<div role="button" tabindex="0">` around the inner `role="checkbox"`, so
  * that nested pair — button-wrapping-checkbox, container in the tab order — is
  * what all 15 call sites announce today. A compat primitive's premise is that
@@ -25,10 +25,8 @@
  * and Space on the legacy container fire nothing; only the inner `<button
  * role="checkbox">` activates from the keyboard, natively), so none is bound
  * here either — adding one would be a behaviour change, not parity. Whether
- * the nesting should exist at all is a Spore question about
- * `packages/ui`, and changing it here would change it for every consumer
- * silently. Pinned against the LIVE legacy component in
- * `packages/tailwind/src/parity/checkbox/checkbox-parity.test.tsx`.
+ * the nesting should exist at all is a Spore question, and changing it here
+ * would change it for every consumer silently.
  */
 // oxlint-disable react/forbid-elements -- the compat components ARE the raw DOM
 // boundary. FlexCompat is deliberately not used here: it has no native leg yet

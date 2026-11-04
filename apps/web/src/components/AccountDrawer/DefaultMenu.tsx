@@ -6,8 +6,6 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { LanguageMenu } from '~/components/AccountDrawer/LanguageMenu'
 import { LocalCurrencyMenu } from '~/components/AccountDrawer/LocalCurrencyMenu'
 import { MainMenu } from '~/components/AccountDrawer/MainMenu/MainMenu'
-import { MenuStateVariant, useMenuState, useSetMenuCallback } from '~/components/AccountDrawer/menuState'
-import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { NetworkCostMenu } from '~/components/AccountDrawer/NetworkCostMenu'
 import { PasskeyMenu } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
 import { PortfolioBalanceMenu } from '~/components/AccountDrawer/PortfolioBalanceMenu'
@@ -15,9 +13,11 @@ import { RecoveryPhraseDownloadPrompt } from '~/components/AccountDrawer/Recover
 import { RecoveryPhraseMenu } from '~/components/AccountDrawer/RecoveryPhraseMenu/RecoveryPhraseMenu'
 import { SettingsMenu } from '~/components/AccountDrawer/SettingsMenu'
 import { StorageMenu } from '~/components/AccountDrawer/StorageMenu'
-import { OtherWalletsModal } from '~/components/WalletModal/OtherWalletsModal'
-import { SwitchWalletModal } from '~/components/WalletModal/SwitchWalletModal'
+import { OtherWalletsModal } from '~/features/wallet/components/WalletModal/OtherWalletsModal'
+import { SwitchWalletModal } from '~/features/wallet/components/WalletModal/SwitchWalletModal'
 import { usePrevious } from '~/hooks/usePrevious'
+import { useAccountDrawer } from '~/state/accountDrawer/hooks'
+import { MenuStateVariant, useMenuState, useSetMenuCallback } from '~/state/accountDrawer/menuState'
 
 export function DefaultMenu() {
   const { menuState } = useMenuState()

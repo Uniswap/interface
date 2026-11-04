@@ -21,11 +21,11 @@ import { TransactionDetailsModal } from 'uniswap/src/components/activity/details
 import { selectTransactions } from 'uniswap/src/features/transactions/selectors'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { useEvent } from 'utilities/src/react/hooks'
-import { POPUP_MEDIUM_DISMISS_MS } from '~/components/Popups/constants'
 import { useAppSelector } from '~/state/hooks'
-import { popupRegistry } from '~/state/popups/registry'
-import { PopupType } from '~/state/popups/types'
 import { SelectedTransactionInfo, useTransactionDetailsModalStore } from '~/state/transactionDetailsModalStore'
+import { POPUP_MEDIUM_DISMISS_MS } from '~/utils/popups/constants'
+import { popupRegistry } from '~/utils/popups/registry'
+import { PopupType } from '~/utils/popups/types'
 
 /**
  * Reads the live transaction from the Redux store so the modal stays in sync

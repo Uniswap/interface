@@ -1,15 +1,11 @@
-import { UniverseChainId } from '@universe/chains'
 import { TFunction } from 'i18next'
-import { StepStatus } from 'uniswap/src/components/ConfirmSwapModal/types'
 import {
-  MARGIN_NATIVE_TOKEN_ADDRESS,
   type MarginPlanResponse,
   type MarginPlanStep,
   type MarginPlanStepType,
 } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
 import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { beforeEach, describe, expect, it } from 'vitest'
-import type { MarginMarket } from '~/constants/margin'
 import { __resetMemoryProofsForTest, writeStepProof } from '~/pages/Swap/Margin/hooks/marginStepProofCache'
 import {
   FUNDS_MOVING_BY_STEP_TYPE,
@@ -20,29 +16,10 @@ import {
   planReviewDirection,
   planTitle,
   restartNote,
-  stepTitle,
-  toStepStatus,
 } from '~/pages/Swap/Margin/MarginPlanReviewModal'
 
 // Passthrough stub — asserts on the i18n key itself rather than translated copy.
 const mockT = ((key: string) => key) as TFunction
-
-// No test in this file relies on the injected resolver actually resolving an address — each either
-// supplies tokenInSymbol directly or asserts the unresolved-fallback branch. The dedicated
-// "resolveSymbol" describe block below exercises the resolver plumbing itself.
-const resolveSymbol = (_address: string): string | undefined => undefined
-
-const sameChainMarket: MarginMarket = {
-  key: 'weth-usdc-MORPHO',
-  asset: 'ETH',
-  name: 'Wrapped Ether',
-  displaySymbol: 'ETH',
-  collateral: { address: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', symbol: 'WETH', decimals: 18 },
-  debt: { address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', symbol: 'USDC', decimals: 6 },
-  venue: 'MORPHO',
-  lltvWad: '860000000000000000',
-  shouldUseNativeEquity: false,
-}
 
 function makeStep(
   stepType: MarginPlanStepType,
@@ -59,131 +36,44 @@ function makeStep(
   }
 }
 
-// Renders copy with i18next-style {{var}} substitution — asserts the user-visible string, not just the
-// key. Templates mirror en-US.json for the keys under test; this is what exposes the "Swap Swap" bug.
-const TEMPLATES: Record<string, string> = {
-  'margin.plan.step.preSwap': 'Swap {{from}} → {{to}}',
-  'margin.plan.step.preSwapOnChain': 'Swap {{from}} to {{to}} on {{chain}}',
-  'margin.plan.step.swapToOnChain': 'Swap to {{to}} on {{chain}}',
-  'margin.plan.step.approve': 'Approve {{symbol}}',
-  'margin.plan.step.resetApproval': 'Reset {{symbol}} approval',
-  'common.swap': 'Swap',
-}
-const renderT = ((key: string, vars?: Record<string, string>): string =>
-  (TEMPLATES[key] ?? key).replace(/\{\{(\w+)\}\}/g, (_m, k) => vars?.[k] ?? '')) as TFunction
-
 describe('planTitle', () => {
   it('returns the existing open title key for OPEN with no direction', () => {
-    expect(planTitle({ intent: 'OPEN', direction: undefined, t: mockT })).toBe('margin.plan.title.open')
+    expect(planTitle({ intent: 'OPEN', action: undefined, direction: undefined, t: mockT })).toBe(
+      'margin.plan.title.open',
+    )
   })
 
   it('returns the existing open title key for OPEN + LONG', () => {
-    expect(planTitle({ intent: 'OPEN', direction: MarginDirection.LONG, t: mockT })).toBe('margin.plan.title.open')
+    expect(planTitle({ intent: 'OPEN', action: undefined, direction: MarginDirection.LONG, t: mockT })).toBe(
+      'margin.plan.title.open',
+    )
   })
 
   it('returns the short title key for OPEN + SHORT', () => {
-    expect(planTitle({ intent: 'OPEN', direction: MarginDirection.SHORT, t: mockT })).toBe('margin.cta.openShort')
+    expect(planTitle({ intent: 'OPEN', action: undefined, direction: MarginDirection.SHORT, t: mockT })).toBe(
+      'margin.cta.openShort',
+    )
   })
 
   it('leaves non-OPEN intents unaffected by direction', () => {
-    expect(planTitle({ intent: 'CLOSE', direction: MarginDirection.SHORT, t: mockT })).toBe('margin.plan.title.close')
+    expect(planTitle({ intent: 'CLOSE', action: undefined, direction: MarginDirection.SHORT, t: mockT })).toBe(
+      'margin.plan.title.close',
+    )
   })
 
-  it('maps ADJUST to its own title key', () => {
-    expect(planTitle({ intent: 'ADJUST', direction: undefined, t: mockT })).toBe('margin.plan.title.adjust')
-  })
-})
-
-describe('stepTitle', () => {
-  it('reads a MARGIN_OPEN step as an open', () => {
-    expect(stepTitle({ step: makeStep('MARGIN_OPEN'), t: mockT, resolveSymbol })).toBe('margin.plan.step.open')
-  })
-
-  it('maps MARGIN_ADJUST to the adjust step key', () => {
-    expect(stepTitle({ step: makeStep('MARGIN_ADJUST'), t: mockT, resolveSymbol })).toBe('margin.plan.step.adjust')
-  })
-})
-
-describe('stepTitle — cross-chain pre-swap', () => {
-  it('renders "Swap to USDC on Unichain" — never "Swap Swap" — when the source token is unresolvable', () => {
-    const title = stepTitle({
-      step: makeStep('MARGIN_PRE_SWAP', { tokenIn: '0xAAA', tokenInChainId: UniverseChainId.Unichain }),
-      t: renderT,
-      resolveSymbol,
-    })
-    expect(title).toBe('Swap to USDC on Unichain')
-    expect(title).not.toContain('Swap Swap')
+  it.each([
+    ['addEquity', 'margin.plan.title.addMargin'],
+    ['withdrawEquity', 'margin.plan.title.withdrawMargin'],
+    ['increaseLeverage', 'margin.plan.title.increaseLeverage'],
+    ['decreaseLeverage', 'margin.plan.title.decreaseLeverage'],
+  ] as const)('names an ADJUST plan by its %s action', (action, expected) => {
+    expect(planTitle({ intent: 'ADJUST', action, direction: undefined, t: mockT })).toBe(expected)
   })
 
-  it('renders the resolved source symbol — "Swap UNI to USDC on Unichain"', () => {
-    expect(
-      stepTitle({
-        step: makeStep('MARGIN_PRE_SWAP', { tokenIn: '0xAAA', tokenInChainId: UniverseChainId.Unichain }),
-        t: renderT,
-        tokenInSymbol: 'UNI',
-        resolveSymbol,
-      }),
-    ).toBe('Swap UNI to USDC on Unichain')
-  })
-
-  it('prefers the resolved symbol over the resolver for a native source token', () => {
-    // native 0x0 would resolve to ETH via findMarginTokenSymbol's own native check; the
-    // wire-resolved symbol must still win.
-    expect(
-      stepTitle({
-        step: makeStep('MARGIN_PRE_SWAP', {
-          tokenIn: MARGIN_NATIVE_TOKEN_ADDRESS,
-          tokenInChainId: UniverseChainId.Unichain,
-        }),
-        t: renderT,
-        tokenInSymbol: 'WETH',
-        resolveSymbol,
-      }),
-    ).toBe('Swap WETH to USDC on Unichain')
-  })
-})
-
-describe('stepTitle — same-chain pre-swap', () => {
-  it('renders the mainnet preSwap when both from and to resolve', () => {
-    expect(
-      stepTitle({
-        step: makeStep('MARGIN_PRE_SWAP'),
-        market: sameChainMarket,
-        t: renderT,
-        tokenInSymbol: 'USDC',
-        resolveSymbol,
-      }),
-    ).toBe('Swap USDC → ETH')
-  })
-
-  it('falls back to a bare "Swap" when from/to are unresolved on the margin chain', () => {
-    expect(stepTitle({ step: makeStep('MARGIN_PRE_SWAP'), t: renderT, resolveSymbol })).toBe('Swap')
-  })
-})
-
-describe('stepTitle — cross-chain approval', () => {
-  it('names a cross-chain approval token via the resolved symbol', () => {
-    expect(
-      stepTitle({
-        step: makeStep('APPROVAL_TXN', { tokenIn: '0xAAA', tokenInChainId: UniverseChainId.Unichain }),
-        t: renderT,
-        tokenInSymbol: 'UNI',
-        resolveSymbol,
-      }),
-    ).toBe('Approve UNI')
-  })
-})
-
-describe('stepTitle — injected resolver', () => {
-  it('uses the injected resolver when no tokenInSymbol was already resolved via currency-info', () => {
-    const stubResolver = (address: string): string | undefined => (address === '0xTOKEN' ? 'FOO' : undefined)
-    expect(
-      stepTitle({
-        step: makeStep('APPROVAL_TXN', { tokenIn: '0xTOKEN' }),
-        t: renderT,
-        resolveSymbol: stubResolver,
-      }),
-    ).toBe('Approve FOO')
+  it('falls back to the generic adjust title when the plan names no action', () => {
+    expect(planTitle({ intent: 'ADJUST', action: undefined, direction: undefined, t: mockT })).toBe(
+      'margin.plan.title.adjust',
+    )
   })
 })
 
@@ -342,43 +232,6 @@ describe('restartNote', () => {
     ).toBe('margin.plan.error.restartPlanEndedFunded')
     expect(restartNote({ code: 'PLAN_TERMINAL', moved: NONE_MOVED, t: mockT })).toBeUndefined()
   })
-})
-
-// A zero-then-set allowance (USDT and friends) arrives as its own step type from the shared composer,
-// passed through by the margin cross-chain route. Unmodelled, it fell to stepTitle's default arm and
-// put the raw enum string on screen as the step label.
-describe('stepTitle — reset approval', () => {
-  const stubResolver = (address: string): string | undefined => (address === '0xTOKEN' ? 'USDT' : undefined)
-
-  it('names the reset distinctly from the approve that follows it', () => {
-    const reset = stepTitle({
-      step: makeStep('RESET_APPROVAL_TXN', { tokenIn: '0xTOKEN' }),
-      t: renderT,
-      resolveSymbol: stubResolver,
-    })
-    const approve = stepTitle({
-      step: makeStep('APPROVAL_TXN', { tokenIn: '0xTOKEN' }),
-      t: renderT,
-      resolveSymbol: stubResolver,
-    })
-    expect(reset).toBe('Reset USDT approval')
-    expect(reset).not.toBe(approve)
-  })
-})
-
-// Its own block, where someone adding a step type looks. Every type in the wire union needs an arm —
-// the `default` returns the raw enum, which is the right answer for drift and the wrong one for a type
-// this client knows about. The list is DERIVED from the exhaustive Record rather than hand-copied, so a
-// new union member is a compile error there and an automatic case here.
-describe('stepTitle — wire union coverage', () => {
-  it.each(Object.keys(FUNDS_MOVING_BY_STEP_TYPE) as MarginPlanStepType[])(
-    'never renders the raw wire enum as a label (%s)',
-    (stepType) => {
-      expect(stepTitle({ step: makeStep(stepType, {}), t: renderT, resolveSymbol: () => undefined })).not.toContain(
-        stepType,
-      )
-    },
-  )
 })
 
 // The registry can be unresolved while this sheet is up — a pointer-banner resume after a reload is
@@ -667,69 +520,5 @@ describe('resolveFailingStepProof', () => {
     proveStep(0)
     const stepType = 'MARGIN_SOMETHING_NEW' as unknown as MarginPlanStepType
     expect(resolveFailingStepProof({ plan, subject: { stepType, failingStepIndex: 0 } })).toBe(true)
-  })
-})
-
-// A client-minted failure writes only the store's `stepError` — the SERVER step keeps whatever status
-// it had. Without reading that error the row renders live under a plan the red message calls dead.
-describe('toStepStatus', () => {
-  const plan = {
-    planId: 'p1',
-    swapper: '0x2222222222222222222222222222222222222222',
-    status: 'IN_PROGRESS',
-    currentStepIndex: 0,
-    steps: [{ ...makeStep('MARGIN_OPEN'), stepIndex: 0 }],
-  } as MarginPlanResponse
-  const step = plan.steps[0] as MarginPlanStep
-
-  it('renders Failed for the step a client-minted error names', () => {
-    expect(toStepStatus({ step, plan, failingStepIndex: 0, isWalletPromptOpen: false })).toBe(StepStatus.Failed)
-  })
-
-  it('renders Active for that same step with no error', () => {
-    expect(toStepStatus({ step, plan, failingStepIndex: undefined, isWalletPromptOpen: false })).toBe(StepStatus.Active)
-  })
-
-  it('leaves a step the error does not name alone', () => {
-    expect(toStepStatus({ step, plan, failingStepIndex: 1, isWalletPromptOpen: false })).toBe(StepStatus.Active)
-  })
-
-  // Server truth wins for every status but AWAITING_ACTION. The stall bails and runLoop's catch name
-  // `currentStepIndex` with no status check, so a CLIENT_ERROR lands on whatever step is current — and
-  // striking out an IN_PROGRESS bridge would call a broadcast deposit awaiting fill dead.
-  it.each([
-    ['COMPLETE', StepStatus.Complete],
-    ['IN_PROGRESS', StepStatus.InProgress],
-  ] as const)('leaves a %s step on its server status', (status, expected) => {
-    const other = { ...step, status } as MarginPlanStep
-    const otherPlan = { ...plan, steps: [other] } as MarginPlanResponse
-    expect(toStepStatus({ step: other, plan: otherPlan, failingStepIndex: 0, isWalletPromptOpen: false })).toBe(
-      expected,
-    )
-  })
-
-  // Both consumers off ONE resolution. A plan that died with nothing stamped mints a placeholder
-  // `stepIndex: 0` that names no step — backing out of the sheet before signing is exactly that — and
-  // taking it literally strikes out row 0 for a step nothing failed on while the note below says
-  // nothing specific. `resolveRestartSubject` is what turns that placeholder into undefined.
-  // A step that already broadcast is one the SERVER is verifying, and the BE can leave it
-  // AWAITING_ACTION while it does. The verification poll has a finite budget and throws when it runs
-  // out; runLoop's catch then mints CLIENT_ERROR on `firstActionableStep` — that very step. Striking
-  // it out badges a live on-chain transaction as failed.
-  it('leaves a step that already broadcast in progress, even when the error names it', () => {
-    const broadcast = { ...step, proof: { txHash: '0xabc' } } as unknown as MarginPlanStep
-    const broadcastPlan = { ...plan, steps: [broadcast] } as MarginPlanResponse
-    expect(toStepStatus({ step: broadcast, plan: broadcastPlan, failingStepIndex: 0, isWalletPromptOpen: false })).toBe(
-      StepStatus.InProgress,
-    )
-  })
-
-  it('leaves row 0 alone for a plan that died with no step stamped', () => {
-    const cancelled = { ...plan, status: 'CANCELLED' } as MarginPlanResponse
-    const { failingStepIndex } = resolveRestartSubject({
-      steps: cancelled.steps,
-      stepError: { stepIndex: 0, code: 'PLAN_TERMINAL' },
-    })
-    expect(toStepStatus({ step, plan: cancelled, failingStepIndex, isWalletPromptOpen: false })).toBe(StepStatus.Active)
   })
 })

@@ -2,6 +2,27 @@ import { useNavigation } from '@react-navigation/core'
 import { isAndroid, isDevEnv } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Flex, Text, iconSizes } from '@universe/mycelium'
+import type { IconProps } from '@universe/mycelium/icons'
+import { Bell } from '@universe/mycelium/icons/Bell'
+import { Chart } from '@universe/mycelium/icons/Chart'
+import { Cloud } from '@universe/mycelium/icons/Cloud'
+import { Coins } from '@universe/mycelium/icons/Coins'
+import { Contrast } from '@universe/mycelium/icons/Contrast'
+import { Faceid } from '@universe/mycelium/icons/Faceid'
+import { FileListLock } from '@universe/mycelium/icons/FileListLock'
+import { Fingerprint } from '@universe/mycelium/icons/Fingerprint'
+import { InfoCircle } from '@universe/mycelium/icons/InfoCircle'
+import { Key } from '@universe/mycelium/icons/Key'
+import { Language } from '@universe/mycelium/icons/Language'
+import { LikeSquare } from '@universe/mycelium/icons/LikeSquare'
+import { LineChartDots } from '@universe/mycelium/icons/LineChartDots'
+import { MessageQuestion } from '@universe/mycelium/icons/MessageQuestion'
+import { ShieldCheck } from '@universe/mycelium/icons/ShieldCheck'
+import { Sliders } from '@universe/mycelium/icons/Sliders'
+import { TouchId } from '@universe/mycelium/icons/TouchId'
+import { UniswapLogo } from '@universe/mycelium/icons/UniswapLogo'
+import { WavePulse } from '@universe/mycelium/icons/WavePulse'
+import { Wrench } from '@universe/mycelium/icons/Wrench'
 import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
 import { default as React, useCallback, useMemo } from 'react'
@@ -35,29 +56,6 @@ import { useAboutModalState } from 'src/features/settings/hooks/useAboutModalSta
 import { useAdvancedSettingsMenuState } from 'src/features/settings/hooks/useAdvancedSettingsMenuState'
 import { useWalletRestore } from 'src/features/wallet/useWalletRestore'
 import { importFromCloudBackupOption, restoreFromCloudBackupOption } from 'src/screens/Import/constants'
-import type { IconProps } from 'ui/src'
-import {
-  Bell,
-  Chart,
-  Cloud,
-  Coins,
-  Contrast,
-  Faceid,
-  FileListLock,
-  Fingerprint,
-  InfoCircle,
-  Key,
-  Language,
-  LikeSquare,
-  LineChartDots,
-  MessageQuestion,
-  ShieldCheck,
-  Sliders,
-  TouchId,
-  UniswapLogo,
-  WavePulse,
-  Wrench,
-} from 'ui/src/components/icons'
 import { UniswapHelpUrls, UniswapStaticUrls } from 'uniswap/src/constants/urls'
 import { useCurrentAppearanceSetting } from 'uniswap/src/features/appearance/hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'

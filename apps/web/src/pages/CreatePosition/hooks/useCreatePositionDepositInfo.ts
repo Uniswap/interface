@@ -4,7 +4,9 @@ import { Pair } from '@uniswap/v2-sdk'
 import { Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useDepositInfo } from '~/features/Liquidity/Create/hooks/useDepositInfo'
+import { isBelowV2MinimumLiquidity } from '~/features/Liquidity/utils/isBelowV2MinimumLiquidity'
 import { isInvalidRange, isOutOfRange } from '~/features/Liquidity/utils/priceRangeInfo'
 import { usePreEstimatedCreatePositionGas } from '~/pages/CreatePosition/hooks/usePreEstimatedCreatePositionGas'
 import type { DepositInfo, DepositState } from '~/types/liquidity'
@@ -18,6 +20,7 @@ export type CreatePositionDepositInfoArgs = {
   poolOrPair: V3Pool | V4Pool | Pair | undefined
   poolId: string | undefined
   depositState: DepositState
+  creatingPoolOrPair: boolean
 }
 
 type CreatePositionDepositInfoResult = Pick<
@@ -37,6 +40,7 @@ export function useCreatePositionDepositInfo({
   poolOrPair,
   poolId,
   depositState,
+  creatingPoolOrPair,
 }: CreatePositionDepositInfoArgs): CreatePositionDepositInfoResult {
   const { TOKEN0, TOKEN1 } = currencies.display
   const { exactField } = depositState
@@ -89,11 +93,30 @@ export function useCreatePositionDepositInfo({
   const {
     currencyMaxAmounts,
     currencyAmounts,
-    error: inputError,
+    error: depositError,
     formattedAmounts,
     currencyAmountsUSDValue,
     currencyBalances,
   } = useDepositInfo(depositInfoProps)
+
+  const { t } = useTranslation()
+  const inputError = useMemo(() => {
+    if (depositError) {
+      return depositError
+    }
+    // Caught here because otherwise the first mint only fails at gas estimation, as an opaque revert.
+    if (
+      protocolVersion === ProtocolVersion.V2 &&
+      creatingPoolOrPair &&
+      isBelowV2MinimumLiquidity({
+        amount0: currencyAmounts?.[PositionField.TOKEN0],
+        amount1: currencyAmounts?.[PositionField.TOKEN1],
+      })
+    ) {
+      return t('position.create.v2.amountTooSmall')
+    }
+    return undefined
+  }, [depositError, protocolVersion, creatingPoolOrPair, currencyAmounts, t])
 
   return {
     currencyMaxAmounts,

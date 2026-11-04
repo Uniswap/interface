@@ -1,23 +1,20 @@
 /**
- * Native leg of the Switch compat (INFRA-3644) — the `ui/src` Switch rebuild's
+ * Native leg of the Switch compat (INFRA-3644) — the former `ui/src` Switch's
  * native leg, re-homed: RNGH Pressable + reanimated track/thumb/icon, colors
- * from the theme-hooks compat. mycelium's icon components emit a DOM `<svg>`
- * and have no native leg by design, so the check glyph is drawn with
- * `react-native-svg` from the shared `CHECK_GLYPH` geometry — the
- * `ModalCloseIconCompat.native.tsx` mechanism.
+ * from the theme-hooks compat; the check is mycelium's `Check` icon.
  */
 import { type JSX, memo, useEffect, useMemo } from 'react'
 import { type StyleProp, StyleSheet, type ViewStyle } from 'react-native'
 // RNGH Pressable (not RN's) so the switch's tap gesture coordinates with the RNGH-backed TouchableArea it nests inside.
 import { Pressable } from 'react-native-gesture-handler'
 import Animated, { Easing, interpolate, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
-import { Line, Svg } from 'react-native-svg'
 import { useEvent } from 'utilities/src/react/hooks'
 import { markMyceliumPrimitive } from '../compat/primitive-marker'
+import { Check } from '../components/icons/Check'
 import { useSporeColors } from '../theme-hooks-compat/useSporeColors'
 import {
-  CHECK_GLYPH,
   SWITCH_CHECK_ICON_SIZE,
+  SWITCH_CHECK_STROKE_WIDTH,
   SWITCH_THUMB_HEIGHT,
   SWITCH_THUMB_PADDING,
   SWITCH_TRACK_HEIGHT,
@@ -36,32 +33,6 @@ type CustomSwitchProps = Pick<
   SwitchCompatProps,
   'checked' | 'defaultChecked' | 'onCheckedChange' | 'disabled' | 'variant' | 'testID'
 > & { style?: StyleProp<ViewStyle>; pointerEvents?: Extract<SwitchCompatProps['pointerEvents'], 'none'> }
-
-/** The legacy Check icon at the legacy 14px size, drawn from the shared glyph geometry. */
-function CheckGlyph({ color }: { color: string }): JSX.Element {
-  return (
-    <Svg
-      fill="none"
-      height={SWITCH_CHECK_ICON_SIZE}
-      strokeLinecap="round"
-      viewBox={CHECK_GLYPH.viewBox}
-      width={SWITCH_CHECK_ICON_SIZE}
-    >
-      {CHECK_GLYPH.lines.map((line) => (
-        <Line
-          key={`${line.x1}-${line.y1}`}
-          stroke={color}
-          strokeLinecap="round"
-          strokeWidth={CHECK_GLYPH.strokeWidth}
-          x1={line.x1}
-          x2={line.x2}
-          y1={line.y1}
-          y2={line.y2}
-        />
-      ))}
-    </Svg>
-  )
-}
 
 export const SwitchCompat = memo(function SwitchCompat({
   checked,
@@ -136,7 +107,11 @@ export const SwitchCompat = memo(function SwitchCompat({
       <Animated.View style={[styles.track, style, trackStyle]}>
         <Animated.View style={[styles.thumb, thumbStyle]}>
           <Animated.View style={[styles.iconContainer, iconStyle]}>
-            <CheckGlyph color={getIconColor({ isOn: progress.value, disabled, isBranded, colors })} />
+            <Check
+              color={getIconColor({ isOn: progress.value, disabled, isBranded, colors })}
+              size={SWITCH_CHECK_ICON_SIZE}
+              strokeWidth={SWITCH_CHECK_STROKE_WIDTH}
+            />
           </Animated.View>
         </Animated.View>
       </Animated.View>
@@ -165,7 +140,7 @@ function getTrackColor({
   if (isBranded) {
     return isOn ? colors.accent1.val : colors.neutral3.val
   }
-  return isOn ? colors.accent3.val : colors.neutral3.val
+  return isOn ? colors.neutral1.val : colors.neutral3.val
 }
 
 function getThumbColor({

@@ -39,10 +39,10 @@ import type {
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { signalEarnModalClosed } from 'uniswap/src/utils/saga'
 import { noop } from 'utilities/src/react/noop'
-import { useActiveAccount } from '~/features/accounts/store/hooks'
+import { useActiveAccount } from '~/connection/accounts/hooks'
+import { useAccount } from '~/connection/hooks/useAccount'
 import { EarnVaultModalContent } from '~/features/earn/EarnVaultModalContent'
 import { useEarnVaultTransitionDirection } from '~/features/earn/hooks/useEarnVaultTransitionDirection'
-import { useAccount } from '~/hooks/useAccount'
 
 interface EarnVaultModalProps {
   analyticsEntryPoint?: EarnAnalyticsEntryPoint

@@ -1,7 +1,7 @@
-import { Flex, useIsDarkMode } from '@universe/mycelium'
+import { Flex, useIsDarkMode, imageSizes } from '@universe/mycelium'
 import { ENS_LOGO } from '@universe/mycelium/assets'
+import { opacify } from '@universe/mycelium/theme-hooks-compat'
 import { Image } from 'ui/src'
-import { imageSizes, opacify } from 'ui/src/theme'
 
 // As we're using this color only in this component, we define it here instead in colors.ts
 const BLUE_ENS_COLOR = '#33CAFF'

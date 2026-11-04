@@ -113,7 +113,7 @@ function mappedColorTokenCssValue(token: string): string | undefined {
  *
  * Unlike those props this lane resolves LENIENTLY. A Flex's `color` can arrive from
  * legacy prop injection rather than from the call site — `TouchableArea` clones its
- * non-primitive children with a `color: '$accent3'` default, which an app wrapper
+ * non-primitive children with a `color: '$neutral1'` default, which an app wrapper
  * forwarding its rest props hands straight to a Flex — so an unmapped token drops the
  * declaration, matching what this prop did before it had a compiler path, instead of
  * throwing mid-render on a colour nobody asked for.

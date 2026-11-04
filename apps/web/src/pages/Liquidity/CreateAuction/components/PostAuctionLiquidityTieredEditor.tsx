@@ -1,9 +1,8 @@
-import { Flex, Text, TouchableArea } from '@universe/mycelium'
+import { Flex, Text, TouchableArea, Input } from '@universe/mycelium'
 import { Plus } from '@universe/mycelium/icons/Plus'
 import { X } from '@universe/mycelium/icons/X'
 import { forwardRef, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Input } from 'ui/src'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import {

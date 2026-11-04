@@ -2,8 +2,7 @@
  * WEB-leg behavior + emission pins for the IconButton compat.
  *
  * The closed frame surface (variant/emphasis cells, disabled cell, focus
- * ring) is the parity-proven ButtonCompat surface and stays pinned by
- * `../button-compat/web-class-pin.test.tsx`; the `ICON_BUTTON_*` literal
+ * ring) is ButtonCompat's, tested in `../button-compat/`; the `ICON_BUTTON_*` literal
  * tables are CSS-coverage-gated by
  * `../button-frame-compat/web-css-coverage.test.ts`. This suite pins what is
  * NEW here: the IconButtonFrame size variant riding the open lane (and losing
@@ -210,7 +209,7 @@ describe('loading', () => {
   it('swaps the glyph for the spinner, sized by the $icon lane', () => {
     const markup = renderToStaticMarkup(<IconButtonCompat icon={GLYPH} loading size="medium" />)
     expect(markup).toContain('sbtn-spin')
-    expect(markup).toContain('width="24"')
+    expect(markup).toContain('width:24px;height:24px')
     expect(markup).not.toContain('data-testid="glyph"')
   })
 

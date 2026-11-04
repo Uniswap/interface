@@ -1,10 +1,9 @@
 /**
- * Web-only, drop-in replacement for the legacy `ui/src` Tooltip
- * (`packages/ui/src/components/tooltip/Tooltip.web.tsx`), rendering on Base
- * UI's tooltip — the same portal + positioner + popup engine as the popover
- * compat (INFRA-3021).
+ * Web-only, drop-in replacement for the legacy `ui/src` Tooltip, rendering on
+ * Base UI's tooltip — the same portal + positioner + popup engine as the
+ * popover compat (INFRA-3021).
  *
- * Contract highlights (pinned by `packages/tailwind/src/parity/tooltip`):
+ * Contract highlights (pinned by `TooltipCompat.web.test.tsx`):
  * - the full legacy prop surface on root/trigger/content/arrow (the popper
  *   vocabulary + the leaked Tamagui stack surfaces via the Flex compat
  *   contract);
@@ -27,9 +26,11 @@ import { cn } from '../cn'
 import { mergeCompatStyle } from '../compat/compose'
 import { domProps } from '../compat/dom'
 import { domTestId } from '../compat/dom-test-id'
+import { lookupToken, resolveColorOrWarn } from '../compat/tokens'
 import { flexCompatEmission, flexCompatOverridesEmission } from '../flex-compat/compile'
 import { mapOffsetToAnchorPosition, mapPlacementToAnchorPosition } from '../popover-compat/position'
 import { EffectiveOverlayZIndexContext, OVERLAY_Z_INDEXES, useStackingLayerAbove } from '../popover-compat/z-index'
+import { type UseSporeColorsReturn, useSporeColors } from '../theme-hooks-compat/useSporeColors'
 import {
   mapTooltipDelay,
   TOOLTIP_COMPAT_POPUP_DATA_SLOT,
@@ -283,8 +284,9 @@ const TooltipCompatContent = React.forwardRef<HTMLDivElement, TooltipContentComp
 )
 
 /**
- * The legacy 12px rotated-square arrow. Every repo call site renders it bare;
- * style overrides are accepted for drop-in typing but inert (ledgered).
+ * The legacy 12px rotated-square arrow. `backgroundColor`/`borderColor` are
+ * honored (Coachmark paints its contrast bubble's arrow with them); every other
+ * style override is accepted for drop-in typing but inert.
  *
  * Two elements, like the legacy Tamagui `PopperArrow`: the Base UI Arrow part
  * is an overflow-hidden clip window overlapping the popup border by 1px, and
@@ -293,19 +295,37 @@ const TooltipCompatContent = React.forwardRef<HTMLDivElement, TooltipContentComp
  * as one continuous shape (no seam, no floating outlined square). Geometry
  * rationale in `tooltipArrowCompatClassName` (compile.ts).
  */
-const TooltipCompatArrow = React.forwardRef<HTMLDivElement, TooltipArrowCompatProps>(
-  function TooltipCompatArrow(_props, ref) {
-    return (
-      <TooltipPrimitive.Arrow ref={ref} data-slot="tooltip-compat-arrow" className={tooltipArrowCompatClassName()}>
-        {/* oxlint-disable-next-line react/forbid-elements -- raw DOM inside the compat arrow (no Tamagui Flex here) */}
-        <div data-slot="tooltip-compat-arrow-inner" className={tooltipArrowInnerCompatClassName()} />
-      </TooltipPrimitive.Arrow>
-    )
-  },
-)
+const TooltipCompatArrow = React.forwardRef<HTMLDivElement, TooltipArrowCompatProps>(function TooltipCompatArrow(
+  { backgroundColor, borderColor },
+  ref,
+) {
+  const colors = useSporeColors()
+  const innerStyle: React.CSSProperties = {
+    backgroundColor: arrowColor(backgroundColor, colors),
+    borderColor: arrowColor(borderColor, colors),
+  }
+  return (
+    <TooltipPrimitive.Arrow ref={ref} data-slot="tooltip-compat-arrow" className={tooltipArrowCompatClassName()}>
+      {/* oxlint-disable-next-line react/forbid-elements -- raw DOM inside the compat arrow (no Tamagui Flex here) */}
+      <div data-slot="tooltip-compat-arrow-inner" className={tooltipArrowInnerCompatClassName()} style={innerStyle} />
+    </TooltipPrimitive.Arrow>
+  )
+})
 
 export const TooltipCompat = Object.assign(TooltipCompatRoot, {
   Trigger: TooltipCompatTrigger,
   Content: TooltipCompatContent,
   Arrow: TooltipCompatArrow,
 })
+
+/** A Spore token resolves through the active theme; a raw CSS color passes through. */
+function arrowColor(
+  value: TooltipArrowCompatProps['backgroundColor'],
+  colors: UseSporeColorsReturn,
+): string | undefined {
+  const resolved = value === undefined ? undefined : resolveColorOrWarn(value)
+  if (resolved === undefined) {
+    return undefined
+  }
+  return lookupToken(colors, resolved)?.val ?? resolved
+}

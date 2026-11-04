@@ -1,10 +1,10 @@
 import { type GetWalletTokensProfitLossResponse, Platform } from '@uniswap/client-data-api/dist/data/v1/api_pb'
-import type { DataApiServiceClient } from '@universe/api/src/clients/dataApi/createDataApiServiceClient'
-import { createMockDataApiServiceClient } from '@universe/api/src/clients/dataApi/createMockDataApiServiceClient'
-import { getGetWalletTokensProfitLossQueryOptions } from '@universe/api/src/clients/dataApi/getGetWalletTokensProfitLossQueryOptions'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { hashKey } from 'utilities/src/reactQuery/hashKey'
 import { type Mock, beforeEach, describe, expect, it, vi } from 'vitest'
+import type { DataApiServiceClient } from './createDataApiServiceClient'
+import { createMockDataApiServiceClient } from './createMockDataApiServiceClient'
+import { getGetWalletTokensProfitLossQueryOptions } from './getGetWalletTokensProfitLossQueryOptions'
 
 const EVM = '0xabc'
 const SVM = '59ZTUZS5DDmPx5n8kBUuJbR9awKoGxiA3J6wGbux76V8'

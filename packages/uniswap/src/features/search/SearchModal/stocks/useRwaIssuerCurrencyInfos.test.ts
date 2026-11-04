@@ -160,7 +160,7 @@ describe(useRwaIssuerCurrencyInfos, () => {
     const sections = [
       makeSection([{ type: OnchainItemListOptionType.RwaCollection, rwa } as unknown as SearchModalOption]),
     ]
-    // useCurrencyInfos returns an index-aligned array with NULLABLE holes (gql `tokens: [Token]`).
+    // useCurrencyInfos returns an index-aligned array with NULLABLE holes (one per unresolved token).
     // The middle hole (a chain whose token did not resolve) must be skipped.
     mockUseCurrencyInfos.mockReturnValue([ciA, undefined, ciC])
 

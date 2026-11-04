@@ -1,12 +1,11 @@
 import type { InAppNotification } from '@universe/api'
-import { Flex, useMedia } from '@universe/mycelium'
+import { Flex, useMedia, zIndexes } from '@universe/mycelium'
 import { curveToAnimationTiming } from '@universe/mycelium/compat'
 import { Portal } from '@universe/mycelium/portal'
 import { Presence, type PresenceExitProps } from '@universe/mycelium/presence'
 import { InlineBannerNotification, type NotificationClickTarget } from '@universe/notifications'
 import { SPORE_ANIMATION_CURVE_CSS } from '@universe/tailwind/animations'
 import { memo, useEffect, type CSSProperties } from 'react'
-import { zIndexes } from 'ui/src/theme'
 import { useEvent } from 'utilities/src/react/hooks'
 import { calculateStackingProps, MAX_STACKED_BANNERS } from '~/notification-service/notification-renderer/stackingUtils'
 

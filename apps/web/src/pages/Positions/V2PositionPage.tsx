@@ -1,12 +1,12 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { UniverseChainId, isEVMChain } from '@universe/chains'
 import { Button, Flex, Shine, Text, View } from '@universe/mycelium'
+import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { type ReactNode, useMemo } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { useTranslation } from 'react-i18next'
 import { Navigate, useLocation, useNavigate, useParams } from 'react-router'
-import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
@@ -18,14 +18,13 @@ import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from '~/components/BreadcrumbNav'
 import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
-import { BlastShutdownBanner } from '~/features/Liquidity/BlastShutdownBanner'
+import { useAccount } from '~/connection/hooks/useAccount'
 import { useEntryPointBreadcrumb } from '~/features/Liquidity/Create/hooks/useEntryPointBreadcrumb'
 import { useGetPoolTokenPercentage } from '~/features/Liquidity/hooks/useGetPoolTokenPercentage'
+import { usePositionOwnerV2 } from '~/features/Liquidity/hooks/usePositionOwnerV2'
 import { LiquidityPositionInfo, LiquidityPositionInfoLoader } from '~/features/Liquidity/LiquidityPositionInfo'
 import { TextLoader } from '~/features/Liquidity/Loader'
 import { PositionPageActionButtons } from '~/features/Liquidity/PositionPageActionButtons'
-import { useAccount } from '~/hooks/useAccount'
-import { usePositionOwnerV2 } from '~/hooks/usePositionOwnerV2'
 import { useDynamicMetatags } from '~/pages/metatags'
 import { NotFound } from '~/pages/NotFound'
 import { MultichainContextProvider } from '~/state/multichain/MultichainContext'
@@ -196,7 +195,6 @@ function V2PositionPage() {
               {positionInfo && <Text variant="subheading2">{shortenAddress({ address: positionInfo.poolId })}</Text>}
             </BreadcrumbNavContainer>
           </Flex>
-          {chainId === UniverseChainId.Blast && <BlastShutdownBanner />}
 
           {positionLoading || !positionInfo ? (
             <Shine>

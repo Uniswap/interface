@@ -106,4 +106,16 @@ function resolveConfiguredAnvilPort(): number {
   return parseInt(process.env.ANVIL_PORT ?? '8545')
 }
 
-export { killExistingProcess, removeAnvilPidFile, resolveConfiguredAnvilPort, terminateAnvilOnPort, writeAnvilPidFile }
+/** True when an e2e worker recorded an anvil PID for this port (it spawned one this run). */
+function hasAnvilPidFile(port: number): boolean {
+  return readAnvilPidFile(port) !== undefined
+}
+
+export {
+  hasAnvilPidFile,
+  killExistingProcess,
+  removeAnvilPidFile,
+  resolveConfiguredAnvilPort,
+  terminateAnvilOnPort,
+  writeAnvilPidFile,
+}

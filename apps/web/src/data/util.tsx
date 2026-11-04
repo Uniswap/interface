@@ -1,20 +1,15 @@
-import { DeepPartial } from '@apollo/client/utilities'
-import { DataTag, DefaultError, QueryKey, queryOptions, UndefinedInitialDataOptions } from '@tanstack/react-query'
 import { Currency } from '@uniswap/sdk-core'
-import { GraphQLApi } from '@universe/api'
 import { Platform, UniverseChainId, areAddressesEqual } from '@universe/chains'
-import { ColorTokens } from '@universe/mycelium'
 import { nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import { MELD_NATIVE_SOL_ADDRESS_SOLANA } from 'uniswap/src/features/chains/svm/defaults'
-import { GqlChainId } from 'uniswap/src/features/chains/types'
-import { getStablecoinsForChain, isBackendSupportedChain, isUniverseChainId } from 'uniswap/src/features/chains/utils'
+import { getStablecoinsForChain, isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import { buildCurrency } from 'uniswap/src/features/dataApi/utils/buildCurrency'
 import { FORSupportedToken } from 'uniswap/src/features/fiatOnRamp/types'
 import { isDefaultNativeAddress, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { ExploreTab, TokenStat } from '~/types/explore'
-import { getChainIdFromBackendChain, getChainIdFromChainUrlParam } from '~/utils/params/chainParams'
+import { getChainUrlParam } from '~/utils/params/chainParams'
 import { CHAIN_SEARCH_PARAM } from '~/utils/params/chainQueryParam'
 
 export enum TimePeriod {
@@ -46,18 +41,11 @@ export function toHistoryDuration(timePeriod: TimePeriod): HistoryDuration {
 
 export type PricePoint = { timestamp: number; value: number }
 
-export function gqlToCurrency(token: DeepPartial<GraphQLApi.Token | TokenStat>): Currency | undefined {
-  if (!token.chain) {
-    return undefined
-  }
-  const chainId =
-    getChainIdFromChainUrlParam(token.chain.toLowerCase()) ?? getChainIdFromBackendChain(token.chain as GqlChainId)
-  if (!chainId) {
-    return undefined
-  }
-  if (token.standard === GraphQLApi.TokenStandard.Native || token.address === NATIVE_CHAIN_ID || !token.address) {
+export function tokenStatToCurrency(token: Partial<TokenStat>): Currency | undefined {
+  const chainId = token.chainId
+  if (token.isNative || token.address === NATIVE_CHAIN_ID || !token.address) {
     // Tempo has no displayable native currency — the virtual "USD" is a placeholder.
-    // When the backend returns Native standard for Tempo with a real address (e.g. pathUSD),
+    // When a Tempo token is flagged native but has a real address (e.g. pathUSD),
     // fall through to buildCurrency so the token is constructed normally.
     // Only return undefined when there's truly no address to build from.
     if (chainId === UniverseChainId.Tempo) {
@@ -66,12 +54,11 @@ export function gqlToCurrency(token: DeepPartial<GraphQLApi.Token | TokenStat>):
       }
       // Fall through to buildCurrency below
     } else {
-      return nativeOnChain(chainId)
+      // No address → buildCurrency returns the chain's native currency, or undefined without a chain.
+      return buildCurrency({ chainId, decimals: token.decimals ?? 18 })
     }
   }
 
-  // Fee-on-transfer data only rides GraphQL tokens; REST TokenStat rows don't carry it.
-  const feeData = 'feeData' in token ? token.feeData : undefined
   return buildCurrency({
     ...token,
     decimals: token.decimals ?? 18,
@@ -79,8 +66,6 @@ export function gqlToCurrency(token: DeepPartial<GraphQLApi.Token | TokenStat>):
     name: token.name ?? token.project?.name ?? undefined,
     chainId,
     bypassChecksum: false,
-    buyFeeBps: feeData?.buyFeeBps,
-    sellFeeBps: feeData?.sellFeeBps,
   })
 }
 
@@ -122,22 +107,19 @@ export function getTokenExploreURL({ tab, chainUrlParam }: { tab: ExploreTab; ch
 
 export function getTokenDetailsURL({
   address,
-  chain,
-  chainUrlParam,
+  chainId,
   inputAddress,
   outputAddress,
   chainQueryParam,
 }: {
   address?: string | null
-  chain?: GraphQLApi.Chain
-  chainUrlParam?: string | undefined
+  chainId?: UniverseChainId
   inputAddress?: string | null
   outputAddress?: string | null
   chainQueryParam?: string
 }) {
-  const chainName = chainUrlParam || chain?.toLowerCase() || GraphQLApi.Chain.Ethereum.toLowerCase()
-  const tokenChainId = chain && isBackendSupportedChain(chain) ? getChainIdFromBackendChain(chain) : undefined
-  const selectedChainId = tokenChainId ?? getChainIdFromChainUrlParam(chainName)
+  const selectedChainId = chainId ?? UniverseChainId.Mainnet
+  const chainName = getChainUrlParam(selectedChainId)
 
   const toTokenPathSegment = (addr: string | null | undefined): string => {
     if (addr === null || addr === undefined) {
@@ -154,7 +136,7 @@ export function getTokenDetailsURL({
     if (isDefaultNativeAddress({ address: addr, platform: Platform.EVM })) {
       return NATIVE_CHAIN_ID
     }
-    if (selectedChainId !== undefined && isNativeCurrencyAddress(selectedChainId, addr)) {
+    if (isNativeCurrencyAddress(selectedChainId, addr)) {
       return NATIVE_CHAIN_ID
     }
     return addr
@@ -220,65 +202,7 @@ export function unwrapToken<
   }
 }
 
-type ProtocolMeta = { name: string; color: ColorTokens; gradient: { start: string; end: string } }
-const PROTOCOL_META: { [source in GraphQLApi.PriceSource]: ProtocolMeta } = {
-  [GraphQLApi.PriceSource.SubgraphV2]: {
-    name: 'v2',
-    color: '$DEP_blue400',
-    gradient: { start: 'rgba(96, 123, 238, 0.20)', end: 'rgba(55, 70, 136, 0.00)' },
-  },
-  [GraphQLApi.PriceSource.SubgraphV3]: {
-    name: 'v3',
-    color: '$accent1',
-    gradient: { start: 'rgba(252, 116, 254, 0.20)', end: 'rgba(252, 116, 254, 0.00)' },
-  },
-  [GraphQLApi.PriceSource.SubgraphV4]: {
-    name: 'v4',
-    color: '$chain_137',
-    gradient: { start: 'rgba(96, 123, 238, 0.20)', end: 'rgba(55, 70, 136, 0.00)' },
-  },
-  [GraphQLApi.PriceSource.External]: {
-    // TODO (LP-350): Remove this since this protocol chart does not exist anymore
-    name: 'external',
-    color: '$neutral1',
-    gradient: { start: 'rgba(252, 116, 254, 0.20)', end: 'rgba(252, 116, 254, 0.00)' },
-  },
-  /* [GraphQLApi.PriceSource.UniswapX]: { name: 'UniswapX', color: purple } */
-}
-
-export function getProtocolColor(priceSource: GraphQLApi.PriceSource): ColorTokens {
-  return PROTOCOL_META[priceSource].color
-}
-
-export function getProtocolName(priceSource: GraphQLApi.PriceSource): string {
-  return PROTOCOL_META[priceSource].name
-}
-
 export enum OrderDirection {
   Asc = 'asc',
   Desc = 'desc',
-}
-
-/**
- * A wrapper around react-query's queryOptions that disables its caching
- * behavior, so that we can use the Apollo client in the queryFn without
- * worrying about the caches conflicting.
- */
-export function apolloQueryOptions<
-  TQueryFnData = unknown,
-  TError = DefaultError,
-  TData = TQueryFnData,
-  TQueryKey extends QueryKey = QueryKey,
->(
-  options: Pick<UndefinedInitialDataOptions<TQueryFnData, TError, TData, TQueryKey>, 'queryKey' | 'queryFn'>,
-): Pick<
-  UndefinedInitialDataOptions<TQueryFnData, TError, TData, TQueryKey> & {
-    queryKey: DataTag<TQueryKey, TQueryFnData>
-  },
-  'queryKey' | 'queryFn'
-> {
-  return queryOptions({
-    ...options,
-    staleTime: 0,
-  })
 }

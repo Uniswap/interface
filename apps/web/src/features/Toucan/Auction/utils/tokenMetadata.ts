@@ -97,24 +97,17 @@ export function mergeAuctionTokenMetadata({
 
 /**
  * Resolves the auction token logo with the precedence:
- * config override logo -> creator-uploaded API image (`tokenImageUrl`) -> indexed token
- * logo -> `TokenLogo` placeholder.
+ * API image (`tokenImageUrl`: the creator upload, or the Mission Control
+ * `auction_token_logo_overrides` override) -> indexed token logo -> `TokenLogo` placeholder.
  *
- * The config override is authoritative (a deliberate, curated fix) and wins even over the
- * creator-submitted API image. (Temporary — the override layer is slated for removal.) When
- * neither the override nor the API image is present, the token info is returned unchanged so
- * the indexed logo on `tokenInfo.logoUrl` (or the placeholder for a logoless token) is
- * preserved. `tokenInfo.logoUrl` already carries the override when one exists (see
- * useAuctionTokenInfo), so threading `overrideLogoUrl` here only reorders it ahead of the API
- * image — it never drops a source.
+ * Without an API image the token info is returned unchanged, so the indexed logo on
+ * `tokenInfo.logoUrl` (or the placeholder for a logoless token) is preserved.
  */
 export function resolveAuctionTokenLogo({
   tokenInfo,
-  overrideLogoUrl,
   tokenImageUrl,
 }: {
   tokenInfo: CurrencyInfo | undefined
-  overrideLogoUrl: string | undefined
   tokenImageUrl: string | undefined
 }): CurrencyInfo | undefined {
   if (!tokenInfo) {
@@ -123,7 +116,7 @@ export function resolveAuctionTokenLogo({
 
   // `||` (not `??`) so an empty-string API image is treated as absent and falls through
   // to the indexed logo / placeholder, independent of the backend's unset-vs-"" behavior.
-  const logoUrl = overrideLogoUrl || tokenImageUrl || tokenInfo.logoUrl
+  const logoUrl = tokenImageUrl || tokenInfo.logoUrl
   if (logoUrl === tokenInfo.logoUrl) {
     return tokenInfo
   }

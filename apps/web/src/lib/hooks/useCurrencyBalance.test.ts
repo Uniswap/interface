@@ -5,7 +5,7 @@ import { useCurrencyBalances } from '~/lib/hooks/useCurrencyBalance'
 import { mocked } from '~/test-utils/mocked'
 import { currencyKey } from '~/utils/currencyKey'
 
-vi.mock('~/hooks/useAccount', () => ({
+vi.mock('~/connection/hooks/useAccount', () => ({
   useAccount: () => ({ chainId: 1 }),
 }))
 vi.mock('wagmi', () => ({

@@ -1,19 +1,22 @@
 import { TradingApi } from '@universe/api'
 import { isWebPlatform } from '@universe/environment'
-import { AnimatedFlex, Flex, getTokenValue, Separator, Text, useSporeColors } from '@universe/mycelium'
+import { AnimatedFlex, Flex, getTokenValue, Separator, Text, useSporeColors, zIndexes } from '@universe/mycelium'
 import { SPORE_ANIMATION_CURVE_CSS } from '@universe/tailwind/animations'
 import { withSporeCurve } from '@universe/tailwind/animations/reanimated'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { EntryExitAnimationFunction } from 'react-native-reanimated'
 import { VerticalDottedLineSeparator } from 'ui/src'
-import { zIndexes } from 'ui/src/theme'
 import {
   TokenApprovalTransactionStepRow,
   TokenRevocationTransactionStepRow,
 } from 'uniswap/src/components/ConfirmSwapModal/steps/Approve'
 import { EarnPlanStepRow, isEarnPlanStep } from 'uniswap/src/components/ConfirmSwapModal/steps/EarnPlanStepRow'
 import { LPTransactionStepRow } from 'uniswap/src/components/ConfirmSwapModal/steps/LP'
+import {
+  isMarginExecuteStep,
+  MarginExecuteStepRow,
+} from 'uniswap/src/components/ConfirmSwapModal/steps/MarginExecuteStepRow'
 import {
   Permit2SignatureStepRow,
   Permit2TransactionStepRow,
@@ -257,6 +260,9 @@ function Step({
       if (isPlanStep) {
         if (isEarnPlanStep(step)) {
           return <EarnPlanStepRow step={step} {...commonProps} />
+        }
+        if (isMarginExecuteStep(step)) {
+          return <MarginExecuteStepRow step={step} {...commonProps} />
         }
         return <SwapTransactionPlanStepRow step={step as SwapSteps} {...commonProps} />
       }

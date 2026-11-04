@@ -1,6 +1,6 @@
 /**
  * Native leg of the Input compat (INFRA-3600): a plain React Native TextInput
- * carrying the legacy Tamagui Input cascade resolved by useInputVisualState —
+ * carrying the legacy Input cascade resolved by useInputVisualState —
  * the ui/src INFRA-3318 rebuild's native leg, re-homed. Focus visual state
  * drives the enumerated focusStyle surface.
  */

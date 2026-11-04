@@ -1,8 +1,5 @@
-import { borderRadii, spacing } from '@universe/mycelium'
+import { borderRadii, spacing, fonts } from '@universe/mycelium'
 import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
-// fonts stays on ui/src/theme: mycelium's fonts.body3.family is the web-only literal ('book'),
-// while ui/src resolves it via platformFontFamily() to the registered native font name.
-import { fonts } from 'ui/src/theme'
 import { BottomSheetTextInput } from 'uniswap/src/components/modals/Modal'
 import type { ReportInputProps } from 'uniswap/src/components/reporting/input'
 

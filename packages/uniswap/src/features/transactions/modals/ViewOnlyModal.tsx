@@ -1,5 +1,5 @@
+import { Eye } from '@universe/mycelium/icons/Eye'
 import { useTranslation } from 'react-i18next'
-import { Eye } from 'ui/src/components/icons/Eye'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'

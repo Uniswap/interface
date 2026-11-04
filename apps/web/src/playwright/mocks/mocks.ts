@@ -16,10 +16,6 @@ export const Mocks = {
     cancelledOrders: path.resolve(__dirname, '../mocks/rest/uniswapX/cancelled_orders.json'),
     expiredOrders: path.resolve(__dirname, '../mocks/rest/uniswapX/expired_orders.json'),
   },
-  Token: {
-    search_token_tether: path.resolve(__dirname, '../mocks/graphql/Token/search_token_tether.json'),
-    uni_token_price: path.resolve(__dirname, '../mocks/graphql/Token/uni_token_price.json'),
-  },
   Search: {
     search_token_uni: path.resolve(__dirname, '../mocks/rest/search/search_token_uni.json'),
   },
@@ -56,9 +52,6 @@ export const Mocks = {
     list_transactions_empty: path.resolve(__dirname, '../mocks/dataApiService/list_transactions_empty.json'),
     list_transactions_uniswapx: path.resolve(__dirname, '../mocks/dataApiService/list_transactions_uniswapx.json'),
   },
-  PoolPriceHistory: {
-    eth_weeth: path.resolve(__dirname, '../mocks/graphql/PoolPriceHistory/eth_weeth.json'),
-  },
   LiquidityService: {
     pool_info_eth_weeth: path.resolve(__dirname, '../mocks/liquidityService/pool_info_eth_weeth.json'),
     create_position_eth_weeth_low_slippage: path.resolve(
@@ -91,6 +84,7 @@ export const Mocks = {
     quote_eth_usdt: path.resolve(__dirname, '../mocks/tradingApi/quote_eth_usdt.json'),
     swap_eth_usdt: path.resolve(__dirname, '../mocks/tradingApi/swap_eth_usdt.json'),
     check_approval_none: path.resolve(__dirname, '../mocks/tradingApi/check_approval_none.json'),
+    check_approval_usdt_permit2: path.resolve(__dirname, '../mocks/tradingApi/check_approval_usdt_permit2.json'),
   },
   EmbeddedWallet: {
     list_authenticators_multi: path.resolve(__dirname, '../mocks/embeddedWallet/list_authenticators_multi.json'),

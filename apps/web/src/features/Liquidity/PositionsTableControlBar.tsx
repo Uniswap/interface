@@ -53,15 +53,17 @@ export function hasActiveControlBarFilter({
   rangeFilter,
   versionFilter,
   chainFilter,
+  showHiddenPositions,
   search,
 }: Pick<
   PositionsTableControlBarProps,
-  'statusFilter' | 'rangeFilter' | 'versionFilter' | 'chainFilter' | 'search'
+  'statusFilter' | 'rangeFilter' | 'versionFilter' | 'chainFilter' | 'showHiddenPositions' | 'search'
 >): boolean {
   return (
     hasActiveV2StatusFilter(statusFilter, rangeFilter) ||
     hasActiveV2VersionFilter(versionFilter) ||
     chainFilter !== null ||
+    showHiddenPositions ||
     search.trim().length > 0
   )
 }
@@ -129,7 +131,8 @@ export function PositionsTableControlBar({
     return (
       <Flex gap="$spacing8" alignItems="stretch">
         <PositionsRangeFilterDropdown statusFilter={rangeFilter} setStatusFilter={setRangeFilter} />
-        <Flex row alignItems="center" gap="$spacing8">
+        {/* Wraps rather than overflowing when both filters are active on a narrow screen. */}
+        <Flex row flexWrap="wrap" alignItems="center" gap="$spacing8">
           {statusDropdown}
           {protocolDropdown}
           {networkFilter}

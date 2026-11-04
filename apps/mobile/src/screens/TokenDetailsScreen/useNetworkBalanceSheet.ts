@@ -1,10 +1,9 @@
-import { GraphQLApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
 import { useMemo, useState } from 'react'
 import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { useCrossChainBalances } from 'uniswap/src/data/apiClients/dataApiService/balances/hooks/useCrossChainBalances'
-import { toGraphQLChain, toSupportedChainId } from 'uniswap/src/features/chains/utils'
+import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -37,12 +36,9 @@ export function useNetworkBalanceSheet({
   const { multichainTokens } = useTokenDetailsContext()
 
   // Cross-chain balances
-  const crossChainTokens = useMemo<{ chain: GraphQLApi.Chain; address?: Maybe<string> }[]>(() => {
+  const crossChainTokens = useMemo<{ chainId: UniverseChainId; address?: Maybe<string> }[]>(() => {
     return multichainTokens
       .filter(({ chainId }) => toSupportedChainId(chainId) !== requestedChainId)
-      .map(({ chainId, address }) => {
-        return { address, chain: toGraphQLChain(chainId) }
-      })
       .filter((v): v is NonNullable<typeof v> => !!v)
   }, [multichainTokens, requestedChainId])
 

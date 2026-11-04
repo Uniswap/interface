@@ -312,7 +312,7 @@ describe('NowTradingCard', () => {
     )
   })
 
-  it('uses the route slug when the GraphQL chain name differs', async () => {
+  it('uses the chain URL slug for the trade route', async () => {
     mockChainId = UniverseChainId.UnichainSepolia
     renderCard()
 

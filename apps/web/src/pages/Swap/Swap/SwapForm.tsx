@@ -8,13 +8,13 @@ import { SwapDependenciesStoreContextProvider } from 'uniswap/src/features/trans
 import type { SwapFormState } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/types'
 import { SwapFlow } from 'uniswap/src/features/transactions/swap/SwapFlow/SwapFlow'
 import { noop } from 'utilities/src/react/noop'
+import { useAccount } from '~/connection/hooks/useAccount'
 import { useSwapHandlers } from '~/features/Swap/hooks/useSwapHandlers/useSwapHandlers'
 import type { CurrencyState } from '~/features/Swap/state/types'
 import { SwapBottomCard } from '~/features/Swap/SwapBottomCard'
-import { useAccount } from '~/hooks/useAccount'
 import { PageType, useIsPage } from '~/hooks/useIsPage'
-import { useResetOverrideOneClickSwapFlag } from '~/pages/Swap/Swap/settings/OneClickSwap'
 import { useWebSwapSettings } from '~/pages/Swap/Swap/settings/useWebSwapSettings'
+import { useResetOverrideOneClickSwapFlag } from '~/state/oneClickSwap/hooks'
 
 export interface SwapFormProps {
   hideHeader?: boolean
@@ -25,7 +25,6 @@ export interface SwapFormProps {
   tokenColor?: string
   onCurrencyPanelsLayout?: (height: number) => void
   tdpCurrency?: Currency
-  hideBlastShutdownModal?: boolean
 }
 
 export function SwapFormSettingsButton(): JSX.Element {
@@ -50,7 +49,6 @@ export function SwapForm({
   tokenColor,
   onCurrencyPanelsLayout,
   tdpCurrency,
-  hideBlastShutdownModal,
 }: SwapFormProps): JSX.Element {
   const swapHandlers = useSwapHandlers()
   const swapSettings = useWebSwapSettings()
@@ -78,7 +76,6 @@ export function SwapForm({
           onSubmitSwap={resetDisableOneClickSwap}
           passkeyAuthStatus={passkeyAuthStatus}
           onCurrencyPanelsLayout={onCurrencyPanelsLayout}
-          hideBlastShutdownModal={hideBlastShutdownModal}
         />
       </SwapDependenciesStoreContextProvider>
       {isSwapPage && <SwapOffHoursBanner />}

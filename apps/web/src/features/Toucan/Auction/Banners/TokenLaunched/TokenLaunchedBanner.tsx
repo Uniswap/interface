@@ -88,7 +88,7 @@ export function TokenLaunchedBanner({
     colors,
   })
 
-  // Fetch auction token price from GraphQL (primary data source)
+  // Fetch auction token price (primary data source)
   const {
     data: priceData,
     loading: priceLoading,
@@ -107,7 +107,7 @@ export function TokenLaunchedBanner({
     skip: !isGraduated || tradingRestrictedUntilTge || !bidTokenAddress || !chainId,
   })
 
-  // Fetch clearing price history for chart fallback (only when GraphQL price fails)
+  // Fetch clearing price history for chart fallback (only when the token price fails)
   const needsFallback = isGraduated && !tradingRestrictedUntilTge && !priceLoading && (!priceData || priceError)
   const { data: clearingPriceResponse, isLoading: clearingHistoryLoading } = useQuery(
     auctionQueries.getClearingPriceHistory({
@@ -120,7 +120,7 @@ export function TokenLaunchedBanner({
   )
   const clearingHistory = clearingPriceResponse?.changes
 
-  // Compute fallback price data from clearing price when GraphQL price is unavailable
+  // Compute fallback price data from clearing price when the token price is unavailable
   const fallbackPriceData = useMemo(() => {
     // Skip fallback if we have primary data, no clearing price, no bid token info, or no fiat price
     if (priceData || clearingPrice === '0' || !bidTokenInfo || bidTokenInfo.priceFiat === 0) {

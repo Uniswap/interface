@@ -1,8 +1,7 @@
-import { Flex } from '@universe/mycelium'
+import { Flex, Separator } from '@universe/mycelium'
 import { Text } from '@universe/mycelium'
 import { TouchableTextLink } from '@universe/mycelium'
 import { Fragment, PropsWithChildren } from 'react'
-import { Separator } from 'ui/src/components/layout/Separator'
 const SectionHeader = ({ title }: { title: string }): JSX.Element => (
   <>
     <Text variant="heading3">{title}</Text>

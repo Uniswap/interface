@@ -1,4 +1,4 @@
-import { opacify } from 'ui/src/theme'
+import { opacify } from '@universe/mycelium/theme-hooks-compat'
 import { describe, expect, it } from 'vitest'
 import { withOpacity } from '~/pages/Swap/Margin/chart/withOpacity'
 

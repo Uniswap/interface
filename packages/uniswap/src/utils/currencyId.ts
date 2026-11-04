@@ -173,8 +173,9 @@ function isCeloChain(chainId: number): chainId is UniverseChainId.Celo {
   return chainId === UniverseChainId.Celo
 }
 
-// Similar to `currencyIdToAddress`, except native addresses are `null`.
-export function currencyIdToGraphQLAddress(_currencyId?: string): Address | null {
+// Similar to `currencyIdToAddress`, except native addresses are `null` (other than Polygon & Celo, whose
+// natives are real ERC-20 contracts) and the address is normalized for cache keys.
+export function currencyIdToContractAddress(_currencyId?: string): Address | null {
   if (!_currencyId) {
     return null
   }

@@ -1,7 +1,7 @@
-import { cloneDeep } from '@apollo/client/utilities'
 import { UniverseChainId } from '@universe/chains'
 import EventEmitter from 'eventemitter3'
 import { getOrderedConnectedAddresses, isConnectedAccount } from 'src/app/features/dapp/utils'
+import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 
 const STATE_STORAGE_KEY = 'dappState'
@@ -41,8 +41,16 @@ async function init(): Promise<void> {
 }
 
 async function initInternal(): Promise<void> {
-  // oxlint-disable-next-line typescript/no-unnecessary-condition
-  state = (await chrome.storage.local.get([STATE_STORAGE_KEY]))?.[STATE_STORAGE_KEY] || initialDappState
+  const storedState: DappState =
+    // oxlint-disable-next-line typescript/no-unnecessary-condition
+    (await chrome.storage.local.get([STATE_STORAGE_KEY]))?.[STATE_STORAGE_KEY] || initialDappState
+  // A dapp last used on a since-removed chain (e.g. Blast) falls back to Mainnet.
+  state = Object.fromEntries(
+    Object.entries(storedState).map(([dappUrl, dappInfo]) => [
+      dappUrl,
+      { ...dappInfo, lastChainId: toSupportedChainId(dappInfo.lastChainId) ?? UniverseChainId.Mainnet },
+    ]),
+  )
 
   chrome.storage.local.onChanged.addListener((changes) => {
     if (changes['dappState']) {
@@ -250,7 +258,7 @@ function removeDappConnectionHelper({
   dappUrl: string
   account?: Account
 }): DappState {
-  const newState = cloneDeep(initialState)
+  const newState = structuredClone(initialState)
   const dappInfo = newState[dappUrl]
 
   if (!dappInfo) {

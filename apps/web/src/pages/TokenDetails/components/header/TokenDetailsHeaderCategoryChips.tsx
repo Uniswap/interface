@@ -69,7 +69,7 @@ function CategoryChipRow({ categories }: { categories: TokenCategory[] }): JSX.E
     currencyChainId: s.currencyChainId,
   }))
   const { scrollerRef, edgeFades } = useHorizontalScrollFades()
-  const getNavigationState = useEvent(() => createCategoryDetailsNavState({ tokenSymbol }))
+  const getNavigationState = useEvent(() => createCategoryDetailsNavState({ label: tokenSymbol }))
 
   const logCategoryPress = useEvent((category: TokenCategory, index: number): void => {
     sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {

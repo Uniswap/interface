@@ -1,7 +1,7 @@
 // TODO(chains-migration): move EVM address validation into @universe/chains so its addresses utils
 // (packages/chains/src/utilities/addresses.ts) no longer reach back into packages/utilities.
 import { getAddress } from '@ethersproject/address'
-import { HexString } from '@universe/encoding'
+import { type HexString } from '@universe/encoding'
 
 /**
  * Validates if the address is a valid EVM address format

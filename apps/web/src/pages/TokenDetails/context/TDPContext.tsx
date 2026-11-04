@@ -3,7 +3,6 @@ import type { MultichainToken, Token } from '@uniswap/client-data-api/dist/data/
 import type { Currency } from '@uniswap/sdk-core'
 import type { UniverseChainId } from '@universe/chains'
 import { createContext } from 'react'
-import type { GqlChainId } from 'uniswap/src/features/chains/types'
 import type { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import type { createTDPStore } from '~/pages/TokenDetails/context/createTDPStore'
 import type { TokenDetailsAuctionSource } from '~/pages/TokenDetails/hooks/useTokenDetailsAuction'
@@ -13,7 +12,6 @@ export type MultiChainMap = {
 }
 
 type BaseTDPContext = {
-  currencyChain: GqlChainId
   /** Equivalent to `currency.chainId`, typed as `ChainId` instead of `number` */
   currencyChainId: UniverseChainId
 

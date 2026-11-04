@@ -1,6 +1,6 @@
 import { Flex } from '@universe/mycelium'
+import { Swap } from '@universe/mycelium/icons/Swap' // TODO: update to LP icon
 import { useTranslation } from 'react-i18next'
-import { Swap } from 'ui/src/components/icons/Swap' // TODO: update to LP icon
 import { StepRowProps, StepRowSkeleton } from 'uniswap/src/components/ConfirmSwapModal/steps/StepRowSkeleton'
 import { StepStatus } from 'uniswap/src/components/ConfirmSwapModal/types'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'

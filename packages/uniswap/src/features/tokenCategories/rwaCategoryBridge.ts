@@ -9,25 +9,40 @@ export const RWA_CATEGORY_IDS: Partial<Record<RwaCategory, string>> = {
   [RwaCategory.COMMODITIES]: 'commodities',
 }
 
+/** Pool categories inherited from the RWA token categories (at least one leg in the token category). */
+const RWA_POOL_CATEGORY_IDS: Partial<Record<RwaCategory, string>> = {
+  [RwaCategory.STOCKS]: 'stock-pools',
+  [RwaCategory.ETFS]: 'etf-pools',
+  [RwaCategory.COMMODITIES]: 'commodity-pools',
+}
+
 /**
  * Asset-class ids that aren't RWA. BE files them under Asset for the menu, so they're exempt from the
  * Asset-class RWA geo-gate and lead the Asset bucket ahead of the RWA categories.
  */
-const NON_RWA_ASSET_CATEGORY_IDS: ReadonlySet<string> = new Set(['majors', 'stablecoins'])
+const NON_RWA_ASSET_CATEGORY_IDS: ReadonlySet<string> = new Set([
+  'majors',
+  'stablecoins',
+  'major-pools',
+  'stable-pools',
+])
 
 export function isNonRwaAssetCategory(category: CategoryBase): boolean {
   return NON_RWA_ASSET_CATEGORY_IDS.has(category.id)
 }
 
 const RWA_CATEGORY_BY_ID = new Map(
-  Object.entries(RWA_CATEGORY_IDS).map(([rwaCategory, id]) => [id, Number(rwaCategory) as RwaCategory]),
+  [...Object.entries(RWA_CATEGORY_IDS), ...Object.entries(RWA_POOL_CATEGORY_IDS)].map(([rwaCategory, id]) => [
+    id,
+    Number(rwaCategory) as RwaCategory,
+  ]),
 )
 
 export function getRwaCategoryForCategoryId(categoryId: string): RwaCategory {
   return RWA_CATEGORY_BY_ID.get(categoryId) ?? RwaCategory.UNSPECIFIED
 }
 
-export function getRwaCategoryForTokenCategory(category: TokenCategory): RwaCategory {
+export function getRwaCategoryForTokenCategory(category: CategoryBase): RwaCategory {
   return getRwaCategoryForCategoryId(category.id)
 }
 

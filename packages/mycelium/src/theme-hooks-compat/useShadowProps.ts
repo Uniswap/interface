@@ -2,7 +2,7 @@ import { isWebApp } from '@universe/environment'
 import { useMemo } from 'react'
 import type { FlexCompatProps } from '../flex-compat/props'
 import { opacify } from './opacify'
-import { DARK_THEME_COLORS } from './theme-colors.generated'
+import { DARK_THEME_COLORS } from './theme-colors'
 import { useIsDarkMode } from './useIsDarkMode'
 
 /** Compat equivalent of the legacy `Pick<FlexProps, …>` shadow surface. */

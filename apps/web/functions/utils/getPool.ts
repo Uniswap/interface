@@ -1,5 +1,4 @@
-import { GraphQLApi } from '@universe/api'
-import { Data } from 'functions/utils/cache'
+import { Data, type PoolProtocolVersion } from 'functions/utils/cache'
 import {
   formatLiquidityFeeTier,
   type LiquidityTokenMetadata,
@@ -7,18 +6,8 @@ import {
 } from 'functions/utils/liquidityService'
 import { URL_PARAM_TO_CHAIN_ID } from 'uniswap/src/features/chains/chainUrlParam'
 
-// Liquidity `Protocols` enum names (connect-JSON serializes enums by name) → the GraphQL
-// ProtocolVersion the OG `Data` shape carries. Only V2 drives a downstream badge. `Protocols.V2` is
-// the zero value, so if the backend ever omits it (protojson drops zero-valued enums) an absent
-// version means V2 — which is also the sensible default for the one badge that matters.
-const PROTOCOL_TO_GQL_VERSION: Record<string, GraphQLApi.ProtocolVersion> = {
-  V2: GraphQLApi.ProtocolVersion.V2,
-  V3: GraphQLApi.ProtocolVersion.V3,
-  V4: GraphQLApi.ProtocolVersion.V4,
-}
-
 interface LiquidityPoolSummary {
-  protocolVersion?: string
+  protocolVersion?: PoolProtocolVersion
   feeTier?: number
   isDynamicFee?: boolean
   token0Metadata?: LiquidityTokenMetadata
@@ -49,13 +38,13 @@ export default async function getPool({
     return undefined
   }
 
-  const protocolVersion = PROTOCOL_TO_GQL_VERSION[pool.protocolVersion || 'V2'] ?? GraphQLApi.ProtocolVersion.V2
+  const protocolVersion: PoolProtocolVersion = pool.protocolVersion ?? 'V2'
   const origin = new URL(url).origin
   const image = origin + '/api/image/pools/' + networkName + '/' + poolAddress
   const feeTier = formatLiquidityFeeTier({
     feeTier: pool.feeTier,
     isDynamicFee: pool.isDynamicFee,
-    isV2: protocolVersion === GraphQLApi.ProtocolVersion.V2,
+    isV2: protocolVersion === 'V2',
   })
   const name = `${pool.token0Metadata?.symbol ?? 'Unknown'}/${pool.token1Metadata?.symbol ?? 'Unknown'}`
   const title = `${name} on Uniswap`

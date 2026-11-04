@@ -22,6 +22,7 @@ export const DEFAULT_MARGIN_FORM_STATE: MarginFormState = {
   selectingPaymentToken: false,
   slippageToleranceBps: 50,
   excludedVenues: [],
+  pinnedVenue: undefined,
   activePlanId: undefined,
 }
 

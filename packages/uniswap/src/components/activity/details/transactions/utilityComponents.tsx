@@ -1,7 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
-import { Flex, Loader, Text } from '@universe/mycelium'
-import { fonts, iconSizes, validColor } from 'ui/src/theme'
+import { Flex, Loader, Text, fonts, iconSizes, validColor } from '@universe/mycelium'
 import { TransactionTokenContextMenu } from 'uniswap/src/components/activity/details/transactions/TransactionTokenContextMenu'
 import { useFormattedCurrencyAmountAndUSDValue } from 'uniswap/src/components/activity/hooks/useFormattedCurrencyAmountAndUSDValue'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'

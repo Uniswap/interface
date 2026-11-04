@@ -21,7 +21,7 @@ import {
 } from 'uniswap/src/components/network/NetworkFilter/resolveNetworkFilterOpenLayout'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { getChainLabel, toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ALL_NETWORKS_LABEL } from 'uniswap/src/features/telemetry/types'
@@ -85,6 +85,7 @@ function NetworkFilterPillTrigger({
   )
 }
 
+// TODO(INFRA-4485): Duplicates mycelium. Use `NetworkSelectorCompat` from `@universe/mycelium/network-selector-compat` instead (web only; native waits on INFRA-3514).
 export function NetworkFilter({
   chainIds,
   selectedChain,
@@ -146,10 +147,10 @@ export function NetworkFilter({
         ...parentTrace,
         ...selectionAnalytics,
         modal: ModalName.NetworkSelector,
-        chain: nextChainInfo ? toGraphQLChain(nextChainInfo.id) : allNetworksChainName,
+        chain: (nextChainInfo?.urlParam ?? allNetworksChainName).toUpperCase(),
         chain_id: nextChainInfo?.id ?? ALL_NETWORKS_LABEL,
         chain_name: nextChainInfo?.label ?? ALL_NETWORKS_LABEL,
-        previous_connected_chain: previousChainInfo ? toGraphQLChain(previousChainInfo.id) : allNetworksChainName,
+        previous_connected_chain: previousChainInfo?.urlParam ?? allNetworksChainName,
         previous_chain_id: previousChainInfo?.id ?? ALL_NETWORKS_LABEL,
         previous_chain_name: previousChainInfo?.label ?? ALL_NETWORKS_LABEL,
       })
@@ -260,6 +261,7 @@ export function NetworkFilter({
         adaptWhen={isMobileSheet}
         backgroundColor="$surface1"
         borderColor="$surface3"
+        // Concentric with NetworkSearchBar's $rounded16 corner, which sits 8px inside this edge (16 + 8 = 24).
         borderRadius="$rounded24"
         borderWidth={1}
         {...shadowProps}

@@ -54,7 +54,7 @@ priority: high
 severity: high
 # provenance
 source: uniswap
-sourceNote: "Consumer Engagement token-categories QA plan (Notion, 2026-10-08), verified against apps/web/src/pages/Explore/categories/ExploreCategoryChips.tsx and MoreCategoriesDropdown.tsx on disk. Chip selection analytics and the flex-slot memory are unit-covered (ExploreCategoryChips.test.tsx, useFlexSlotCategoryId.test.tsx, cited by explore-categories-unit-web-explore-logic); the rendered row has no e2e."
+sourceNote: "Consumer Engagement token-categories QA plan (Notion, 2026-10-08), verified against apps/web/src/pages/Explore/categories/ExploreCategoryChips.tsx and MoreCategoriesDropdown.tsx on disk. Chip selection analytics and the flex-slot memory are unit-covered (ExploreCategoryChips.test.tsx, useFlexSlotCategoryId.test.tsx, cited by explore-categories-unit-web-explore-logic); the rendered row has no e2e. Empty-category skipping, the network-switch reset and the loading hold come from #43405 (CONS-3759), unit-covered in useResetEmptyCategoryOnNetworkSwitch.test.tsx and useNetworkScopedCategoryStats.test.ts."
 # scope
 chains:
   - ethereum
@@ -72,7 +72,9 @@ runFrequency: release
 # coverage
 code_paths:
   - apps/web/src/pages/Explore/categories/
-  - packages/uniswap/src/features/tokenCategories/useTokenCategoryOrder.ts
+  - apps/web/src/pages/Explore/categories/useNetworkScopedCategoryStats.ts
+  - apps/web/src/pages/Explore/categories/useResetEmptyCategoryOnNetworkSwitch.ts
+  - packages/uniswap/src/features/tokenCategories/useCategoryOrder.ts
 automationRefs: []
 ---
 
@@ -83,7 +85,9 @@ automationRefs: []
 **Then** a skeleton shows while categories load, "All" is the default chip, and the chips follow the Statsig dynamic-config order (expected today: All, Trending, Stocks, Top Gainers, Memes)
 **And** the "More" dropdown lists every other category bucketed by Market / Assets / Sectors, each row showing its token count and 1D % change
 **And** picking a non-spotlit category from "More" replaces the last chip so the row stays at five chips, and that pick stays in the last slot after moving back to a default chip
-**And** the "More" counts update when the network filter changes, and zero-token categories stay listed but disabled
+**And** the "More" counts update when the network filter changes and zero-token categories stay listed there but disabled, while the chip row itself skips categories with no tokens on the selected network and backfills from the config order (fewer than four non-empty categories gives a shorter row)
+**And** a deep link to a category that is empty on the selected network still lands on it in the flex slot and drops out once another chip is selected; picking a network where the selected category is empty resets to All, and neither deep links nor back/forward trigger that reset
+**And** while an uncached network's stats load, the chip row shows its skeleton and the table holds its loading state, so the row changes once and no empty table flashes before the reset
 
 ---
 id: explore-categories-web-table-filter-and-url
@@ -610,10 +614,16 @@ automationRefs:
     testName: hydrates a dynamic id once it joins the valid set
   - path: apps/web/src/pages/Explore/categories/useFlexSlotCategoryId.test.tsx
     testName: remembers a non-spotlit selection and keeps it after moving back to All
-  - path: apps/web/src/pages/Explore/categories/MoreCategoriesDropdown.test.tsx
+  - path: apps/web/src/pages/Explore/categories/useNetworkScopedCategoryStats.test.ts
     testName: scopes stats to the selected EVM network
-  - path: apps/web/src/pages/Explore/categories/MoreCategoriesDropdown.test.tsx
+  - path: apps/web/src/pages/Explore/categories/useNetworkScopedCategoryStats.test.ts
     testName: reads Solana as All networks rather than requesting an unsupported scope
+  - path: apps/web/src/pages/Explore/categories/useNetworkScopedCategoryStats.test.ts
+    testName: is pending while an uncached network is on its first attempt
+  - path: apps/web/src/pages/Explore/categories/useResetEmptyCategoryOnNetworkSwitch.test.tsx
+    testName: waits for the picked network stats, then resets an empty selection to All
+  - path: apps/web/src/pages/Explore/categories/useResetEmptyCategoryOnNetworkSwitch.test.tsx
+    testName: keeps an empty category reached without a network pick, e.g. a deep link or history navigation
   - path: apps/web/src/pages/Explore/categories/ExploreCategoryChips.test.tsx
     testName: shows the info icon only on the selected chip, and only when it has a category
   - path: apps/web/src/pages/Explore/trending/useTrendingCarouselTokens.test.tsx
@@ -628,7 +638,7 @@ automationRefs:
 
 **Given** the Explore category hooks and components under test
 **When** the unit suites run
-**Then** an unknown `?category=` value falls back to All and a dynamic id hydrates once known, a non-spotlit pick is remembered in the flex slot, More-dropdown stats scope to the selected EVM network and read Solana as All networks, the info icon shows only on the selected chip, unsupported-chain trending tokens are dropped, the definition card links to the help article, and the Category Details breadcrumb returns to the entering TDP
+**Then** an unknown `?category=` value falls back to All and a dynamic id hydrates once known, a non-spotlit pick is remembered in the flex slot, network-scoped category stats scope to the selected EVM network, read Solana as All networks and report pending only on an uncached network's first attempt, an empty selection resets to All after a network pick but not after a deep link, the info icon shows only on the selected chip, unsupported-chain trending tokens are dropped, the definition card links to the help article, and the Category Details breadcrumb returns to the entering TDP
 
 ---
 id: explore-categories-unit-web-tdp-logic

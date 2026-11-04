@@ -1,8 +1,8 @@
+import { Briefcase } from '@universe/mycelium/icons/Briefcase'
+import { Ranking } from '@universe/mycelium/icons/Ranking'
+import { SwapCoin } from '@universe/mycelium/icons/SwapCoin'
+import { Tag } from '@universe/mycelium/icons/Tag'
 import type { TFunction } from 'i18next'
-import { Briefcase } from 'ui/src/components/icons/Briefcase'
-import { Ranking } from 'ui/src/components/icons/Ranking'
-import { SwapCoin } from 'ui/src/components/icons/SwapCoin'
-import { Tag } from 'ui/src/components/icons/Tag'
 import { type Category, TokenCategory, TokenCategoryClass } from 'uniswap/src/features/tokenCategories/types'
 import { describe, expect, it } from 'vitest'
 import {

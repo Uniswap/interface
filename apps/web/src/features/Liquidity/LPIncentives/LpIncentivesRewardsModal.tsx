@@ -11,6 +11,7 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
+import { useDocumentScrollLock } from '~/features/Liquidity/hooks/useDocumentScrollLock'
 import type {
   LpIncentiveRewardChainGroup,
   LpIncentiveRewardRow,
@@ -18,7 +19,6 @@ import type {
 import { lpRewardsCollectKey, useCollectLpRewards } from '~/features/Liquidity/LPIncentives/hooks/useCollectLpRewards'
 import { useLpIncentiveRewards } from '~/features/Liquidity/LPIncentives/hooks/useLpIncentiveRewards'
 import { rewardCurrencyId, rewardSymbol } from '~/features/Liquidity/LPIncentives/utils'
-import { useDocumentScrollLock } from '~/hooks/useDocumentScrollLock'
 
 interface LpIncentivesRewardsModalProps {
   isOpen: boolean

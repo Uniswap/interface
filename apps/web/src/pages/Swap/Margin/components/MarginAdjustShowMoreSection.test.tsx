@@ -23,19 +23,12 @@ describe('MarginAdjustShowMoreSection', () => {
     expect(screen.queryByTestId('margin-show-more-quote-rows')).not.toBeInTheDocument()
   })
 
-  // Slippage is a user setting, not a quote figure — it must never read as stale.
-  // The two-swap route compounds the per-leg tolerance to (1+s)²−1. This is the only test on that
-  // number, and the branches format differently — toFixed(2) vs the raw percent.
-  it('compounds max slippage when the route carries two swap legs', () => {
-    render(<MarginAdjustShowMoreSection {...BASE} isExpanded compoundsSlippage />)
-    expect(screen.getByText('1.00%')).toBeInTheDocument()
-  })
-
-  it('shows the single-leg tolerance when it does not', () => {
+  it('shows the slippage tolerance as a percent', () => {
     render(<MarginAdjustShowMoreSection {...BASE} isExpanded />)
     expect(screen.getByText('0.5%')).toBeInTheDocument()
   })
 
+  // Slippage is a user setting, not a quote figure — it must never read as stale.
   it('dims what came off the quote, never max slippage', () => {
     render(<MarginAdjustShowMoreSection {...BASE} isExpanded dim extraRows={<div>Borrowing row</div>} />)
     const dimmed = screen.getByTestId('margin-show-more-quote-rows')

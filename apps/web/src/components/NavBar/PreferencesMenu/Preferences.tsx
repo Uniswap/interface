@@ -1,7 +1,6 @@
-import { Flex, Text, TouchableArea } from '@universe/mycelium'
+import { Flex, Text, TouchableArea, Switch } from '@universe/mycelium'
 import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
 import { useTranslation } from 'react-i18next'
-import { Switch } from 'ui/src'
 import { ThemeToggle } from 'uniswap/src/components/appearance/ThemeToggle'
 import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useCurrentLanguage, useLanguageInfo } from 'uniswap/src/features/language/hooks'

@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 import { FILTER_CHIP_FADE_MS, FilterChip } from 'uniswap/src/components/FilterChip/FilterChip'
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
+import type { Category } from 'uniswap/src/features/tokenCategories/types'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { CategoryDefinitionSheet } from '~/components/CategoryDefinitionCard/CategoryDefinitionSheet'
@@ -35,7 +35,7 @@ interface CategoryChipProps {
   position: number
   value: string
   onChange: (category: string) => void
-  onOpenDefinition: (category: TokenCategory) => void
+  onOpenDefinition: (category: Category) => void
 }
 
 /** Collapses to nothing on inactive chips, cancelling the chip's gap, so a selection change slides rather than jumps. */
@@ -60,10 +60,8 @@ function CategoryChip({ option, position, value, onChange, onOpenDefinition }: C
   const Icon = option.icon
   const isTouchDevice = useIsTouchDevice()
   const trace = useTrace()
-  // Hover card and definition sheet are token-only until the pool tooltip lands.
-  const tokenCategory = option.category?.kind === 'token' ? option.category : undefined
   // Touch has no hover card, so the selected chip shows an info icon and its next tap opens the definition.
-  const definitionCategory = isTouchDevice ? tokenCategory : undefined
+  const definitionCategory = isTouchDevice ? option.category : undefined
 
   const onPress = useEvent((): void => {
     if (!active) {
@@ -86,12 +84,13 @@ function CategoryChip({ option, position, value, onChange, onOpenDefinition }: C
       element: ElementName.ExploreCategoryChipDefinition,
       section: SectionName.ExploreCategoryChips,
       category_id: definitionCategory.id,
+      category_kind: definitionCategory.kind,
     })
     onOpenDefinition(definitionCategory)
   })
 
   return (
-    <CategoryHoverCard category={tokenCategory} section={SectionName.ExploreCategoryChips}>
+    <CategoryHoverCard category={option.category} section={SectionName.ExploreCategoryChips}>
       <FilterChip
         active={active}
         label={option.label}
@@ -149,9 +148,9 @@ export function ExploreCategoryChips({
   onChange,
   fadeSwapLastOption = false,
 }: ExploreCategoryChipsProps): JSX.Element {
-  const [definitionCategory, setDefinitionCategory] = useState<TokenCategory>()
+  const [definitionCategory, setDefinitionCategory] = useState<Category>()
   const [isDefinitionOpen, setIsDefinitionOpen] = useState(false)
-  const openDefinition = useEvent((category: TokenCategory): void => {
+  const openDefinition = useEvent((category: Category): void => {
     setDefinitionCategory(category)
     setIsDefinitionOpen(true)
   })

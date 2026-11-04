@@ -1,23 +1,14 @@
-import { useQuery } from '@tanstack/react-query'
-import { TokenCountAllocatedToLpForAuctionRequest } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/auction_pb'
-import { AuctionOverridesConfigKey, DynamicConfigs, useDynamicConfigValue } from '@universe/gating'
 import { useMemo } from 'react'
-import { AuctionQueryClient } from 'uniswap/src/data/apiClients/liquidityService/AuctionQueryClient'
-import { isAuctionLpPercentOverridesMap } from 'uniswap/src/features/gating/typeGuards'
+import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { formatTokenPriceSubscript } from '~/features/Toucan/Auction/BidDistributionChart/utils/tokenFormatters'
+import { useBlockTimestamp } from '~/features/Toucan/Auction/hooks/useBlockTimestamp'
 import { useStatsBannerData } from '~/features/Toucan/Auction/hooks/useStatsBannerData'
 import { BidTokenInfo } from '~/features/Toucan/Auction/store/types'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
 import { formatCompactFromRaw } from '~/features/Toucan/Auction/utils/fixedPointFdv'
 import { getAuctionTokenDecimals, mergeAuctionTokenMetadata } from '~/features/Toucan/Auction/utils/tokenMetadata'
-import {
-  AuctionMetadataOverride,
-  DEFAULT_AUCTION_LP_PERCENT_OVERRIDES,
-  getAuctionMetadata,
-} from '~/features/Toucan/Config/config'
-import { useBlockTimestamp } from '~/hooks/useBlockTimestamp'
+import { AuctionMetadataOverride, getAuctionMetadata } from '~/features/Toucan/Config/config'
 
 interface AuctionStatsData {
   // Contract address (ERC20 token address)
@@ -60,8 +51,16 @@ interface AuctionStatsData {
  * Formats a decimal tick value as bid token amount with subscript notation for small values.
  * Uses formatTokenPriceSubscript for consistent subscript formatting.
  */
-function formatTickAsBidToken({ tickValue, bidTokenInfo }: { tickValue: number; bidTokenInfo: BidTokenInfo }): string {
-  const { text } = formatTokenPriceSubscript(tickValue, { minSigDigits: 2, maxSigDigits: 4 })
+function formatTickAsBidToken({
+  tickValue,
+  bidTokenInfo,
+  locale,
+}: {
+  tickValue: number
+  bidTokenInfo: BidTokenInfo
+  locale: string
+}): string {
+  const { text } = formatTokenPriceSubscript(tickValue, { locale, minSigDigits: 2, maxSigDigits: 4 })
   return `${text} ${bidTokenInfo.symbol}`
 }
 
@@ -79,6 +78,7 @@ function formatTickAsBidToken({ tickValue, bidTokenInfo }: { tickValue: number; 
  */
 export function useAuctionStatsData(): AuctionStatsData {
   const { formatPercent } = useLocalizationContext()
+  const locale = useCurrentLocale()
 
   // Reuse computed values from useStatsBannerData
   const {
@@ -103,62 +103,11 @@ export function useAuctionStatsData(): AuctionStatsData {
   const tokenAddress = auctionDetails?.tokenAddress
   const auctionTokenSymbol = auctionDetails?.token?.currency.symbol
 
-  const { data: lpAllocationResponse } = useQuery({
-    queryKey: [
-      ReactQueryCacheKey.LiquidityService,
-      'tokenCountAllocatedToLpForAuction',
-      auctionDetails?.address,
-      auctionDetails?.chainId,
-    ],
-    queryFn: async () =>
-      AuctionQueryClient.tokenCountAllocatedToLpForAuction(
-        new TokenCountAllocatedToLpForAuctionRequest({
-          // oxlint-disable-next-line universe-custom/no-tolowercase-address-currencyid -- EVM-only contract address; normalizeTokenAddressForCache pulls @universe/api into this module graph, breaking tests that fully mock @tanstack/react-query.
-          auctionContractAddress: auctionDetails!.address.toLowerCase(),
-          chainId: Number(auctionDetails!.chainId),
-        }),
-      ),
-    enabled: Boolean(auctionDetails?.address && auctionDetails.chainId),
-  })
-
-  const lpPercentOverrides = useDynamicConfigValue({
-    config: DynamicConfigs.AuctionOverrides,
-    key: AuctionOverridesConfigKey.LpPercentCommitted,
-    defaultValue: DEFAULT_AUCTION_LP_PERCENT_OVERRIDES,
-    customTypeGuard: isAuctionLpPercentOverridesMap,
-  })
-
-  const percentCommittedToLpFormatted = useMemo(() => {
-    // A curated override wins over the computed value when the indexed on-chain
-    // allocation doesn't reflect the intended split for a specific auction.
-    const lpPercentOverride = auctionDetails ? lpPercentOverrides[auctionDetails.auctionId] : undefined
-    if (lpPercentOverride !== undefined) {
-      return formatPercent(lpPercentOverride, 1)
-    }
-
-    // Denominator is the FULL token supply (tokenTotalSupply), not the auctioned slice
-    // (totalSupply) — the LP allocation is drawn from the full supply, so dividing by the
-    // slice overflows past 100%. tokenTotalSupply is optional (null on an RPC error).
-    const tokenTotalSupplyRaw = auctionDetails?.tokenTotalSupply
-    if (lpAllocationResponse?.tokenCountAllocatedToLp == null || tokenTotalSupplyRaw == null) {
-      return null
-    }
-
-    try {
-      const lpTokenCount = BigInt(lpAllocationResponse.tokenCountAllocatedToLp)
-      const tokenTotalSupply = BigInt(tokenTotalSupplyRaw)
-
-      if (tokenTotalSupply === 0n) {
-        return null
-      }
-
-      // Round to whole percent for display
-      const percentRounded = (lpTokenCount * 100n + tokenTotalSupply / 2n) / tokenTotalSupply
-      return formatPercent(Number(percentRounded), 1)
-    } catch {
-      return null
-    }
-  }, [auctionDetails, formatPercent, lpAllocationResponse?.tokenCountAllocatedToLp, lpPercentOverrides])
+  const percentCommittedToLp = auctionDetails?.percentCommittedToLp
+  const percentCommittedToLpFormatted = useMemo(
+    () => (percentCommittedToLp == null ? null : formatPercent(percentCommittedToLp, 1)),
+    [formatPercent, percentCommittedToLp],
+  )
 
   // Get auction start block timestamp
   const auctionStartBlockNumber = auctionDetails?.startBlock ? Number(auctionDetails.startBlock) : undefined
@@ -213,6 +162,7 @@ export function useAuctionStatsData(): AuctionStatsData {
     if (isAuctionEnded || concentrationStartDecimal === null || concentrationEndDecimal === null) {
       // Format clearingPriceDecimal with subscript notation - single price (no end)
       const { text } = formatTokenPriceSubscript(clearingPriceDecimal, {
+        locale,
         minSigDigits: 2,
         maxSigDigits: 4,
       })
@@ -222,10 +172,12 @@ export function useAuctionStatsData(): AuctionStatsData {
     const startFormatted = formatTickAsBidToken({
       tickValue: concentrationStartDecimal,
       bidTokenInfo,
+      locale,
     })
     const endFormatted = formatTickAsBidToken({
       tickValue: concentrationEndDecimal,
       bidTokenInfo,
+      locale,
     })
 
     return { start: startFormatted, end: endFormatted }
@@ -236,6 +188,7 @@ export function useAuctionStatsData(): AuctionStatsData {
     isAuctionEnded,
     clearingPriceDecimal,
     auctionTokenDecimals,
+    locale,
   ])
 
   // Get project metadata from config overrides, filled in with the launched-token

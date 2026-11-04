@@ -15,7 +15,10 @@ import * as tokensSource from './tokens'
 describe('token-only subpath via exports map (INFRA-3302)', () => {
   it('exposes exactly the token constant families', () => {
     expect(Object.keys(tokensSubpath).sort()).toEqual([
+      'NATIVE_LINE_HEIGHT_SCALE',
+      'WEB_BASEL_FONT_STACK',
       'borderRadii',
+      'defaultHitslop',
       'fonts',
       'heights',
       'iconSizes',

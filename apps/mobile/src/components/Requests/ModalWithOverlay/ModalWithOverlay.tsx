@@ -1,8 +1,9 @@
 import { BottomSheetFooter, BottomSheetScrollView, useBottomSheetInternal } from '@gorhom/bottom-sheet'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Button, ButtonProps, Flex, spacing } from '@universe/mycelium'
+import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
-import { PropsWithChildren, useCallback, useRef, useState } from 'react'
+import { PropsWithChildren, useCallback, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   LayoutChangeEvent,
@@ -11,10 +12,11 @@ import {
   NativeSyntheticEvent,
   ScrollView,
   StyleProp,
+  StyleSheet,
   View,
   ViewStyle,
 } from 'react-native'
-import { AnimatedStyle, useDerivedValue } from 'react-native-reanimated'
+import { useDerivedValue } from 'react-native-reanimated'
 import { ScrollDownOverlay } from 'src/components/Requests/ModalWithOverlay/ScrollDownOverlay'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalProps } from 'uniswap/src/components/modals/ModalProps'
@@ -31,7 +33,7 @@ export type ModalWithOverlayProps = PropsWithChildren<
     onConfirm?: () => void
     disableConfirm?: boolean
     confirmationLoading?: boolean
-    contentContainerStyle?: StyleProp<AnimatedStyle<StyleProp<ViewStyle>>>
+    contentContainerStyle?: StyleProp<ViewStyle>
     cancelButtonProps?: ButtonProps
     confirmationButtonProps?: ButtonProps
     /**
@@ -125,15 +127,23 @@ export function ModalWithOverlay({
 
   const eip5792MethodsEnabled = useFeatureFlag(FeatureFlags.Eip5792Methods)
 
+  const colors = useSporeColors()
+  // Opaque $surface1 on the full-width content container makes it an RNGH touch target on Android, so a tap on
+  // empty content (padding included) stops here instead of falling through to the dismiss backdrop.
+  const scrollContentStyle = useMemo(
+    () =>
+      StyleSheet.flatten([
+        contentContainerStyle ?? { paddingHorizontal: spacing.spacing24 },
+        { backgroundColor: colors.surface1.val },
+      ]),
+    [contentContainerStyle, colors.surface1.val],
+  )
+
   return (
     <Modal overrideInnerContainer {...bottomSheetModalProps}>
       <BottomSheetScrollView
         ref={scrollViewRef}
-        contentContainerStyle={
-          contentContainerStyle ?? {
-            paddingHorizontal: spacing.spacing24,
-          }
-        }
+        contentContainerStyle={scrollContentStyle}
         showsVerticalScrollIndicator={false}
         onLayout={handleScrollViewLayout}
         onScroll={handleScroll}

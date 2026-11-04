@@ -1,4 +1,4 @@
-import { type SlippageDisplay, SlippageRow, SlippageRowLabel } from '@universe/swap-ui'
+import { type SlippageDisplay, SlippageRow, SlippageRowLabel } from '@universe/transactions-ui'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { SlippageInfo } from 'uniswap/src/features/transactions/swap/components/MaxSlippageRow/SlippageInfo/SlippageInfo'

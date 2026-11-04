@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import { useNavigate } from 'react-router'
 import type { PositionInfo } from 'uniswap/src/features/positions/types'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
-import { usePositionOwnerV2 } from '~/hooks/usePositionOwnerV2'
+import { usePositionOwnerV2 } from '~/features/Liquidity/hooks/usePositionOwnerV2'
 
 /**
  * Sends anyone who is not the position's owner back to /positions. V3 ownership is the `owner` the

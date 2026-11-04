@@ -27,6 +27,11 @@ const textMatches = (text: string, expected: ExpectedText): boolean =>
  * Elements that have a child matching the same text are skipped, so the match lands on the node
  * that actually owns the text rather than on every ancestor that contains it.
  *
+ * Elements inside an `aria-hidden` subtree never match, for every caller: the web `AnimatedNumber`
+ * draws its value in aria-hidden digit cells and a copy overlay and exposes it as text once, to
+ * assistive tech, and this is what keeps a lookup from finding all three. An assertion about content
+ * that is deliberately `aria-hidden` needs a different query.
+ *
  * Use this for negative assertions too (`queryByText(withText(...))`). A bare `queryByText` would
  * pass against a split value for the wrong reason — reporting "absent" when the value is present
  * but merely split across nodes.
@@ -34,7 +39,7 @@ const textMatches = (text: string, expected: ExpectedText): boolean =>
 export const withText =
   (expected: ExpectedText) =>
   (_content: string, element: Element | null): boolean => {
-    if (!element || !textMatches(element.textContent, expected)) {
+    if (!element || !textMatches(element.textContent, expected) || element.closest('[aria-hidden="true"]')) {
       return false
     }
 
@@ -42,9 +47,10 @@ export const withText =
   }
 
 /**
- * `AnimatedNumber` renders the same text several times as siblings: the visible node, plus copies
- * it uses for measurement and keeps out of the accessibility tree (`opacity: 0; position: absolute`
- * or `importantforaccessibility="no-hide-descendants"`).
+ * The native `AnimatedNumber` renders the same text several times as siblings: the visible node, plus
+ * copies it uses for measurement and keeps out of the accessibility tree (`opacity: 0; position:
+ * absolute` or `importantforaccessibility="no-hide-descendants"`). The web one hides its extra copies
+ * with `aria-hidden`, which {@link withText} already skips.
  */
 const isHiddenFromUser = (element: Element): boolean =>
   element.getAttribute('importantforaccessibility') === 'no-hide-descendants' ||

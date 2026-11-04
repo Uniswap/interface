@@ -1,7 +1,7 @@
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
+import { InfoCircleFilled } from '@universe/mycelium/icons/InfoCircleFilled'
 import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
-import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { InfoTooltip } from 'uniswap/src/components/tooltip/InfoTooltip'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'

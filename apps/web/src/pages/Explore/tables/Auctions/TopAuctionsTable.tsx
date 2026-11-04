@@ -3,12 +3,12 @@ import { createColumnHelper } from '@tanstack/react-table'
 import { normalizeTokenAddressForCache, UniverseChainId } from '@universe/chains'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Flex, Text, useMedia } from '@universe/mycelium'
+import { InfoCircleFilled } from '@universe/mycelium/icons/InfoCircleFilled'
 import { styled } from '@universe/mycelium/styled'
 import { useAtom } from 'jotai'
 import { atomWithReset } from 'jotai/utils'
 import { memo, ReactElement, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
@@ -44,7 +44,7 @@ import {
   getAuctionCommittedVolumeDisplay,
   getAuctionLaunchThresholdTokenAmount,
   getAuctionLaunchThresholdUsd,
-  getAuctionThresholdPercentMet,
+  getAuctionThresholdMet,
   isLowEngagementHighFdvAuction,
   useAuctionFdvWarningThresholds,
 } from '~/features/Toucan/utils/auctionFdvWarning'
@@ -710,14 +710,16 @@ function ToucanTableComponent({
             cell: (row) => {
               const auction = row.getValue?.()?.auction.auction
               const thresholdDisplay = getAuctionCancelThresholdDisplay(auction, convertFiatAmountFormatted)
-              const percentMet = getAuctionThresholdPercentMet(auction)
+              const thresholdMet = getAuctionThresholdMet(auction)
               return (
                 <Cell justifyContent="flex-end" loading={showLoadingSkeleton}>
                   <Flex alignItems="flex-end" gap="$spacing2">
                     <TableText>{thresholdDisplay ?? '-'}</TableText>
-                    {percentMet !== undefined && (
+                    {thresholdMet !== undefined && (
                       <Text variant="body4" color="$neutral2">
-                        {t('toucan.auction.percentMet', { percent: formatPercent(percentMet) })}
+                        {thresholdMet === 'notMet'
+                          ? t('toucan.auction.thresholdNotMet')
+                          : t('toucan.auction.percentMet', { percent: formatPercent(thresholdMet) })}
                       </Text>
                     )}
                   </Flex>

@@ -1,17 +1,17 @@
 import { UniverseChainId } from '@universe/chains'
 import { useIsDarkMode } from '@universe/mycelium'
-import { GeneratedIcon } from 'ui/src/components/factories/createIcon'
-import { BlockExplorer } from 'ui/src/components/icons/BlockExplorer'
-import { ArbiscanLogoDark } from 'ui/src/components/logos/ArbiscanLogoDark'
-import { ArbiscanLogoLight } from 'ui/src/components/logos/ArbiscanLogoLight'
-import { EtherscanLogoDark } from 'ui/src/components/logos/EtherscanLogoDark'
-import { EtherscanLogoLight } from 'ui/src/components/logos/EtherscanLogoLight'
-import { OpEtherscanLogoDark } from 'ui/src/components/logos/OpEtherscanLogoDark'
-import { OpEtherscanLogoLight } from 'ui/src/components/logos/OpEtherscanLogoLight'
-import { PolygonscanLogoDark } from 'ui/src/components/logos/PolygonscanLogoDark'
-import { PolygonscanLogoLight } from 'ui/src/components/logos/PolygonscanLogoLight'
-import { SolscanLogoDark } from 'ui/src/components/logos/SolscanLogoDark'
-import { SolscanLogoLight } from 'ui/src/components/logos/SolscanLogoLight'
+import type { GeneratedIcon } from '@universe/mycelium/icons'
+import { BlockExplorer } from '@universe/mycelium/icons/BlockExplorer'
+import { ArbiscanLogoDark } from '@universe/mycelium/logos/ArbiscanLogoDark'
+import { ArbiscanLogoLight } from '@universe/mycelium/logos/ArbiscanLogoLight'
+import { EtherscanLogoDark } from '@universe/mycelium/logos/EtherscanLogoDark'
+import { EtherscanLogoLight } from '@universe/mycelium/logos/EtherscanLogoLight'
+import { OpEtherscanLogoDark } from '@universe/mycelium/logos/OpEtherscanLogoDark'
+import { OpEtherscanLogoLight } from '@universe/mycelium/logos/OpEtherscanLogoLight'
+import { PolygonscanLogoDark } from '@universe/mycelium/logos/PolygonscanLogoDark'
+import { PolygonscanLogoLight } from '@universe/mycelium/logos/PolygonscanLogoLight'
+import { SolscanLogoDark } from '@universe/mycelium/logos/SolscanLogoDark'
+import { SolscanLogoLight } from '@universe/mycelium/logos/SolscanLogoLight'
 
 // Keeping this separate from UNIVERSE_CHAIN_INFO to avoid import issues on extension content script
 export function useBlockExplorerLogo(chainId?: UniverseChainId): GeneratedIcon {
@@ -28,7 +28,6 @@ const BLOCK_EXPLORER_LOGOS_LIGHT: Record<UniverseChainId, GeneratedIcon> = {
   [UniverseChainId.Arc]: BlockExplorer,
   [UniverseChainId.Avalanche]: BlockExplorer,
   [UniverseChainId.Base]: EtherscanLogoLight,
-  [UniverseChainId.Blast]: BlockExplorer,
   [UniverseChainId.Bnb]: EtherscanLogoLight,
   [UniverseChainId.Celo]: BlockExplorer,
   [UniverseChainId.Ink]: BlockExplorer,

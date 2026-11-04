@@ -27,7 +27,9 @@ import {
 } from 'uniswap/src/features/dataApi/tokenDetails/tokenMetadataUtils'
 import { currencyIdToRestContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { formatColorOverrides } from 'uniswap/src/features/dataApi/utils/formatColorOverrides'
+import { isRefreshingAgedPrice } from 'uniswap/src/features/prices/isRefreshingAgedPrice'
 import type { CurrencyId } from 'uniswap/src/types/currency'
+import { isQueryLoading } from 'utilities/src/reactQuery/isQueryLoading'
 
 export type { TokenMarketStats } from 'uniswap/src/features/dataApi/tokenDetails/tokenMarketStatsUtils'
 export type { TokenMetadataData } from 'uniswap/src/features/dataApi/tokenDetails/tokenMetadataUtils'
@@ -71,17 +73,21 @@ function selectMultichainPercentChange1d(
   return data?.token?.price?.percentChange1d
 }
 
-export function useTokenSpotPrice(
+/**
+ * `useTokenSpotPrice` plus whether that price is still loading, including the refetch that replaces a
+ * withheld aged price (see `isRefreshingAgedPrice`).
+ */
+export function useTokenSpotPriceWithLoading(
   currencyId: CurrencyId | undefined,
   options?: UseTokenSpotPriceOptions,
-): number | undefined {
+): { price: number | undefined; isLoading: boolean } {
   const isMultichainAggregation = options?.isMultichainAggregateView ?? false
 
   const restTokenIdentifier = useMemo(
     () => (currencyId ? currencyIdToRestContractInput(currencyId) : undefined),
     [currencyId],
   )
-  const { data: singleChainRestSpotUsd } = useQuery({
+  const singleChainQuery = useQuery({
     ...getGetTokenQueryOptions({
       params: restTokenIdentifier,
       enabled: !options?.skip && !isMultichainAggregation && !!restTokenIdentifier,
@@ -89,7 +95,7 @@ export function useTokenSpotPrice(
     }),
     refetchInterval: options?.refetchInterval,
   })
-  const { data: multichainRestSpotUsd } = useQuery({
+  const multichainQuery = useQuery({
     ...getGetTokenMultiChainQueryOptions({
       params: restTokenIdentifier ? { identifier: { case: 'token', value: restTokenIdentifier } } : undefined,
       enabled: !options?.skip && isMultichainAggregation && !!restTokenIdentifier,
@@ -98,9 +104,16 @@ export function useTokenSpotPrice(
     refetchInterval: options?.refetchInterval,
   })
 
-  return useMemo(() => {
-    return isMultichainAggregation ? multichainRestSpotUsd : singleChainRestSpotUsd
-  }, [isMultichainAggregation, multichainRestSpotUsd, singleChainRestSpotUsd])
+  const query = isMultichainAggregation ? multichainQuery : singleChainQuery
+  const isAged = isRefreshingAgedPrice(query)
+  return { price: isAged ? undefined : query.data, isLoading: isAged || isQueryLoading(query) }
+}
+
+export function useTokenSpotPrice(
+  currencyId: CurrencyId | undefined,
+  options?: UseTokenSpotPriceOptions,
+): number | undefined {
+  return useTokenSpotPriceWithLoading(currencyId, options).price
 }
 
 export interface UseTokenPriceChangeOptions {
@@ -120,7 +133,7 @@ export function useTokenPriceChange(currencyId: CurrencyId, options?: UseTokenPr
   const enableQueries = !options?.skip
 
   const restTokenIdentifier = useMemo(() => currencyIdToRestContractInput(currencyId), [currencyId])
-  const { data: singleChainPercentChange1d } = useQuery({
+  const singleChainQuery = useQuery({
     ...getGetTokenQueryOptions({
       params: restTokenIdentifier,
       enabled: enableQueries && !isMultichainAggregation,
@@ -128,7 +141,7 @@ export function useTokenPriceChange(currencyId: CurrencyId, options?: UseTokenPr
     }),
     refetchInterval: options?.refetchInterval,
   })
-  const { data: multichainPercentChange1d } = useQuery({
+  const multichainQuery = useQuery({
     ...getGetTokenMultiChainQueryOptions({
       params: { identifier: { case: 'token', value: restTokenIdentifier } },
       enabled: enableQueries && isMultichainAggregation,
@@ -137,9 +150,8 @@ export function useTokenPriceChange(currencyId: CurrencyId, options?: UseTokenPr
     refetchInterval: options?.refetchInterval,
   })
 
-  return useMemo(() => {
-    return isMultichainAggregation ? multichainPercentChange1d : singleChainPercentChange1d
-  }, [isMultichainAggregation, multichainPercentChange1d, singleChainPercentChange1d])
+  const query = isMultichainAggregation ? multichainQuery : singleChainQuery
+  return isRefreshingAgedPrice(query) ? undefined : query.data
 }
 
 function selectConfidenceScore(data: PlainMessage<GetTokenResponse> | undefined): number | undefined {

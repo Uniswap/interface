@@ -9,7 +9,7 @@ import { fonts, heights, iconSizes, imageSizes, radii, spacing, typography, zInd
  * must equal the values parsed out of this package's own css/theme.css. This
  * pins the mirror to the CSS source of truth, so downstream derivations (e.g.
  * `@universe/mycelium` token constants) can never drift from the custom
- * properties — and ui literals can never be smuggled in as "tokens" without
+ * properties — and raw literals can never be smuggled in as "tokens" without
  * a matching CSS declaration.
  *
  * Documented exceptions: `fonts[*].family` and `fonts[*].maxFontSizeMultiplier`
@@ -82,7 +82,7 @@ function parseCssFonts(css: string): Record<string, CssFontToken> {
     } else if (modifier === 'line-height') {
       token.lineHeight = Number(value.replace(/px$/, ''))
     } else if (modifier === 'font-weight') {
-      // ui fonts carry CSS-string weights ('400'/'500'), so keep the raw string.
+      // The legacy fonts carry CSS-string weights ('400'/'500'), so keep the raw string.
       token.fontWeight = value
     } else if (modifier === 'letter-spacing') {
       token.letterSpacing = value

@@ -1,7 +1,7 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { Flex, iconSizes, Text, TouchableArea } from '@universe/mycelium'
+import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
 import { useTranslation } from 'react-i18next'
-import { RotatableChevron } from 'ui/src/components/icons'
 import { PresetAmountButton } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/PresetAmountButton'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { TokenSelectorModal } from 'uniswap/src/components/TokenSelector/TokenSelector'

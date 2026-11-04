@@ -1,4 +1,4 @@
-import { RateRow } from '@universe/swap-ui'
+import { RateRow } from '@universe/transactions-ui'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useSwapRateDisplay } from 'uniswap/src/features/transactions/swap/hooks/useSwapRateDisplay'
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'

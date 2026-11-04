@@ -1,7 +1,6 @@
-import { Flex, Text } from '@universe/mycelium'
-import { useEffect, useState } from 'react'
+import { Button, Flex, Text, Separator } from '@universe/mycelium'
+import { type ReactNode, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Separator } from 'ui/src'
 import { CurrencyInputPanel } from 'uniswap/src/components/CurrencyInputPanel/CurrencyInputPanel'
 import type { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -10,31 +9,31 @@ import {
   useMarginFormStore,
   useMarginFormStoreActions,
 } from 'uniswap/src/features/transactions/margin/stores/marginFormStore/useMarginFormStore'
-import type { MarginPaymentToken } from 'uniswap/src/features/transactions/margin/types'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
-import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { useAbbreviatedTimeString } from '~/components/Table/utils/useAbbreviatedTimeString'
+import { useAccount } from '~/connection/hooks/useAccount'
 import type { MarginMarket } from '~/constants/margin'
-import { useAccount } from '~/hooks/useAccount'
+import { useMarginMarkets } from '~/features/margin/hooks/useMarginMarkets'
+import { conversionCaptionEquity } from '~/features/margin/utils/marginFormat'
 import { MarginFormMarketsState } from '~/pages/Swap/Margin/components/MarginFormMarketsState'
+import { MarginLeverageSection } from '~/pages/Swap/Margin/components/MarginLeverageSection'
 import { MarginMarketSelector } from '~/pages/Swap/Margin/components/MarginMarketSelector'
 import { MarginOpenButton } from '~/pages/Swap/Margin/components/MarginOpenButton'
 import { MarginOpenReviewModal } from '~/pages/Swap/Margin/components/MarginOpenReviewModal'
 import { MarginPayWith } from '~/pages/Swap/Margin/components/MarginPayWith'
 import { MarginRateRows } from '~/pages/Swap/Margin/components/MarginRateRows'
-import { MarginFormSideToggle } from '~/pages/Swap/Margin/components/MarginSideToggle'
-import { MarginSizeBlock } from '~/pages/Swap/Margin/components/MarginSizeBlock'
 import { type DerivedMarginInfo, useDerivedMarginInfo } from '~/pages/Swap/Margin/hooks/useDerivedMarginInfo'
-import { useMarginMarkets } from '~/pages/Swap/Margin/hooks/useMarginMarkets'
-import { conversionCaptionEquity } from '~/pages/Swap/Margin/marginFormat'
+import { useMarginEquityInput } from '~/pages/Swap/Margin/hooks/useMarginEquityInput'
+import { useClearMarginVenuePinOnQuoteError } from '~/pages/Swap/Margin/hooks/useMarginVenueAllowlist'
 import { MarginPositionsTable } from '~/pages/Swap/Margin/MarginPositionsTable'
+import { useAccountDrawer } from '~/state/accountDrawer/hooks'
 
 // legs[0].bounds.increase.expectedEquityDelta (raw collateral units) → display units for the conversion line.
 /**
  * The open form's adapter onto `conversionCaptionEquity` — the shared rule for this caption, which the
- * add and adjust sheets read too. Only the formatting is local: this surface renders the figure into a
+ * add sheet reads too. Only the formatting is local: this surface renders the figure into a
  * translated sentence beside app-formatted numbers, so it takes the app locale rather than the
  * browser's.
  */
@@ -66,46 +65,48 @@ export function marginConversionEquity({
 // unconditional within this component — the gate itself lives one level up.
 function MarginFormBody({ market }: { market: MarginMarket }): JSX.Element {
   const { t } = useTranslation()
+  const { formatNumberOrString } = useLocalizationContext()
   // The reporting mount for venue-routed telemetry: this is where a venue is actually chosen. Other
   // surfaces mount the same hook to read a derived field and stay silent — see its `reportVenueRouted`.
-  const { formatNumberOrString } = useLocalizationContext()
   const derivedMarginInfo = useDerivedMarginInfo({ market, reportVenueRouted: true })
+  useClearMarginVenuePinOnQuoteError({
+    market,
+    quoteError: derivedMarginInfo.quoteError,
+    hasQuote: derivedMarginInfo.quote !== undefined,
+  })
   const marginAmount = useMarginFormStore((s) => s.marginAmount)
-  const { setMarginFormState } = useMarginFormStoreActions()
+  const equityInput = useMarginEquityInput({ derivedMarginInfo })
   const [isReviewOpen, setIsReviewOpen] = useState(false)
   const conversionEquity = marginConversionEquity({ info: derivedMarginInfo, formatNumberOrString })
   const openReview = useEvent(() => setIsReviewOpen(true))
   const closeReview = useEvent(() => setIsReviewOpen(false))
 
-  const onSetExactAmount = useEvent((amount: string) => {
-    setMarginFormState({ marginAmount: amount })
-  })
-  const onSetPresetValue = useEvent((amount: string) => {
-    setMarginFormState({ marginAmount: amount })
-  })
   // Fiat entry mode is not supported for the margin equity input.
   const onToggleIsFiatMode = useEvent(() => {})
-  const onShowTokenSelector = useEvent(() => setMarginFormState({ selectingPaymentToken: true }))
-  const onSelectPaymentToken = useEvent((paymentToken: MarginPaymentToken | undefined) => {
-    setMarginFormState({ paymentToken })
-  })
 
   return (
     <Flex gap="$spacing8">
-      <CurrencyInputPanel
-        currencyField={CurrencyField.INPUT}
-        currencyInfo={derivedMarginInfo.paymentCurrencyInfo}
-        currencyAmount={derivedMarginInfo.paymentCurrencyAmount}
-        currencyBalance={derivedMarginInfo.balance}
-        usdValue={derivedMarginInfo.paymentUsdValue}
-        value={marginAmount}
-        headerLabel={t('margin.payment.header')}
-        onSetExactAmount={onSetExactAmount}
-        onSetPresetValue={onSetPresetValue}
-        onToggleIsFiatMode={onToggleIsFiatMode}
-        onShowTokenSelector={onShowTokenSelector}
-      />
-      <MarginPayWith derivedMarginInfo={derivedMarginInfo} onSelectPaymentToken={onSelectPaymentToken} />
+      <Flex backgroundColor="$surface2" borderRadius="$rounded20" overflow="hidden">
+        <CurrencyInputPanel
+          currencyField={CurrencyField.INPUT}
+          currencyInfo={equityInput.equityCurrencyInfo}
+          currencyAmount={equityInput.currencyAmount}
+          currencyBalance={equityInput.balance}
+          // The balance is already spendable: gas is reserved from a native pay balance before it is
+          // restated, and a collateral figure restated from another token has none to reserve.
+          isGasCovered
+          // Same dollars either way: the pay amount is the margin restated in the pay token.
+          usdValue={derivedMarginInfo.paymentUsdValue}
+          value={equityInput.value}
+          headerLabel={t('margin.payment.header')}
+          onSetExactAmount={equityInput.onSetExactAmount}
+          onSetPresetValue={equityInput.onSetPresetValue}
+          onToggleIsFiatMode={onToggleIsFiatMode}
+        />
+        <Separator />
+        <MarginLeverageSection derivedMarginInfo={derivedMarginInfo} />
+      </Flex>
+      <MarginPayWith derivedMarginInfo={derivedMarginInfo} onSelectPaymentToken={equityInput.selectPaymentToken} />
       {conversionEquity !== undefined ? (
         <Text variant="body4" color="$neutral2" px="$spacing16">
           {t('margin.payment.conversion', {
@@ -116,9 +117,9 @@ function MarginFormBody({ market }: { market: MarginMarket }): JSX.Element {
           })}
         </Text>
       ) : null}
-      <MarginSizeBlock derivedMarginInfo={derivedMarginInfo} />
-      <MarginRateRows derivedMarginInfo={derivedMarginInfo} />
       <MarginOpenButton derivedMarginInfo={derivedMarginInfo} onRequestReview={openReview} />
+      {/* The receipt sits under the CTA: the figures the button commits to, read after deciding. */}
+      <MarginRateRows derivedMarginInfo={derivedMarginInfo} />
       <MarginOpenReviewModal derivedMarginInfo={derivedMarginInfo} isOpen={isReviewOpen} onClose={closeReview} />
       <Separator mt="$spacing8" />
       <Text variant="body4" color="$neutral3">
@@ -139,7 +140,17 @@ function MarketsStaleCaption({ dataUpdatedAt }: { dataUpdatedAt: number }): JSX.
   )
 }
 
-function MarginFormContent({ showInlinePositions }: { showInlinePositions: boolean }): JSX.Element {
+function MarginFormContent({
+  showInlinePositions,
+  showMarketSelector,
+  marketSelectorTrailing,
+  marketSelectorFooter,
+}: {
+  showInlinePositions: boolean
+  showMarketSelector: boolean
+  marketSelectorTrailing?: ReactNode
+  marketSelectorFooter?: ReactNode
+}): JSX.Element {
   const { t } = useTranslation()
   const account = useAccount()
   const accountDrawer = useAccountDrawer()
@@ -177,8 +188,8 @@ function MarginFormContent({ showInlinePositions }: { showInlinePositions: boole
 
   return (
     <Flex gap="$spacing8">
-      {displayMarket ? <MarginFormSideToggle market={displayMarket} /> : null}
-      <MarginMarketSelector />
+      {showMarketSelector ? <MarginMarketSelector trailing={marketSelectorTrailing} /> : null}
+      {showMarketSelector ? marketSelectorFooter : null}
       {displayMarket ? (
         <>
           {/* Keyed on pair identity, not market.key: the review sheet's open state and pinned quote
@@ -228,6 +239,27 @@ function MarginFormContent({ showInlinePositions }: { showInlinePositions: boole
 
 // Store provider is hoisted in Swap() (pages/Swap/index.tsx) so form state survives
 // the terminal morph and the 1024px breakpoint switch.
-export function MarginForm({ showInlinePositions = true }: { showInlinePositions?: boolean }): JSX.Element {
-  return <MarginFormContent showInlinePositions={showInlinePositions} />
+export function MarginForm({
+  showInlinePositions = true,
+  // Off in the terminal layout, where the chart header's pair title is the market picker. Below
+  // 1024px there is no chart pane, so the form's own card is the only way to pick a market.
+  showMarketSelector = true,
+  marketSelectorTrailing,
+  marketSelectorFooter,
+}: {
+  showInlinePositions?: boolean
+  showMarketSelector?: boolean
+  // Beside the market card, e.g. the mobile layout's "View chart" button.
+  marketSelectorTrailing?: ReactNode
+  // Under the market card, e.g. the mobile layout's market stats.
+  marketSelectorFooter?: ReactNode
+}): JSX.Element {
+  return (
+    <MarginFormContent
+      showInlinePositions={showInlinePositions}
+      showMarketSelector={showMarketSelector}
+      marketSelectorTrailing={marketSelectorTrailing}
+      marketSelectorFooter={marketSelectorFooter}
+    />
+  )
 }

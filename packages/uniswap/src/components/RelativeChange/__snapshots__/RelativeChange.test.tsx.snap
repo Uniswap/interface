@@ -6,17 +6,17 @@ exports[`renders a relative change 1`] = `
     class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center justify-start gap-[2px]"
     data-testid="relative-change"
   >
-    <div
+    <svg
       fill="none"
       stroke-width="2"
-      style="width: 16px; height: 16px; color: rgb(33, 201, 94); transform: rotate(180deg);"
-      viewbox="0 0 24 24"
+      style="width: 16px; height: 16px; transform: rotate(180deg);"
+      viewBox="0 0 24 24"
     >
-      <div
+      <path
         d="M10.6979 16.2453L6.31787 9.75247C5.58184 8.66118 6.2058 7 7.35185 7L16.6482 7C17.7942 7 18.4182 8.66243 17.6821 9.75247L13.3021 16.2453C12.623 17.2516 11.377 17.2516 10.6979 16.2453Z"
         fill="currentColor"
       />
-    </div>
+    </svg>
     <div
       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
     >
@@ -37,17 +37,17 @@ exports[`renders placeholders with absolute change 1`] = `
     class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center justify-start gap-[2px]"
     data-testid="relative-change"
   >
-    <div
+    <svg
       fill="none"
       stroke-width="2"
-      style="width: 16px; height: 16px; color: rgb(33, 201, 94); transform: rotate(180deg);"
-      viewbox="0 0 24 24"
+      style="width: 16px; height: 16px; transform: rotate(180deg);"
+      viewBox="0 0 24 24"
     >
-      <div
+      <path
         d="M10.6979 16.2453L6.31787 9.75247C5.58184 8.66118 6.2058 7 7.35185 7L16.6482 7C17.7942 7 18.4182 8.66243 17.6821 9.75247L13.3021 16.2453C12.623 17.2516 11.377 17.2516 10.6979 16.2453Z"
         fill="currentColor"
       />
-    </div>
+    </svg>
     <div
       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
     >

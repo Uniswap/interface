@@ -14,6 +14,15 @@ describe(getRwaCategoryForCategoryId, () => {
   })
 })
 
+describe('pool category ids', () => {
+  it('map the inherited RWA pool categories to the same RWA enum', () => {
+    expect(getRwaCategoryForCategoryId('stock-pools')).toBe(RwaCategory.STOCKS)
+    expect(getRwaCategoryForCategoryId('etf-pools')).toBe(RwaCategory.ETFS)
+    expect(getRwaCategoryForCategoryId('commodity-pools')).toBe(RwaCategory.COMMODITIES)
+    expect(getRwaCategoryForCategoryId('stable-pools')).toBe(RwaCategory.UNSPECIFIED)
+  })
+})
+
 describe(getRwaCategoryForTokenCategory, () => {
   it.each([
     ['stocks', RwaCategory.STOCKS],

@@ -43,7 +43,7 @@ exports[`OpenLimitOrdersButton > should render if there are open limit orders 1`
         <svg
           fill="none"
           stroke-width="2"
-          style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.63); transform: rotateZ(270deg);"
+          style="width: 20px; height: 20px; transform: rotate(270deg);"
           viewBox="0 0 24 24"
         >
           <path

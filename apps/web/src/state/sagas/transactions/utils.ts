@@ -47,7 +47,11 @@ import type {
   ClassicTrade,
   UniswapXTrade,
 } from 'uniswap/src/features/transactions/swap/types/trade'
-import { isGasSponsoredTradeExecution, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import {
+  getBridgeProvider,
+  isGasSponsoredTradeExecution,
+  isUniswapX,
+} from 'uniswap/src/features/transactions/swap/utils/routing'
 import type {
   ApproveTransactionInfo,
   BridgeTransactionInfo,
@@ -73,14 +77,14 @@ import { noop } from 'utilities/src/react/noop'
 import { hexlifyTransaction } from 'utilities/src/transactions/hexlifyTransaction'
 import { getConnectorClient, getTransaction } from 'wagmi/actions'
 import type { JsonRpcSigner, Transaction, Web3Provider } from '~/chains'
+import { clientToProvider } from '~/connection/hooks/useEthersProvider'
 import { wagmiConfig } from '~/connection/wagmiConfig'
 import { DEFAULT_TXN_DISMISS_MS } from '~/constants/misc'
-import { clientToProvider } from '~/hooks/useEthersProvider'
 import { getRoutingForTransaction } from '~/state/activity/utils'
-import { popupRegistry } from '~/state/popups/registry'
-import { PopupType } from '~/state/popups/types'
 import type { TransactionDetails, VitalTxFields } from '~/state/transactions/types'
 import { isPendingTx } from '~/state/transactions/utils'
+import { popupRegistry } from '~/utils/popups/registry'
+import { PopupType } from '~/utils/popups/types'
 import { signTypedData } from '~/utils/signing'
 import { didUserReject } from '~/utils/swapErrorToUserReadableMessage'
 
@@ -616,6 +620,7 @@ export function getSwapTransactionInfo({
       outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
       quoteId: trade.quote.requestId,
       depositConfirmed: false,
+      bridgeProvider: getBridgeProvider(trade.quote.quote.provider),
     }
   }
 

@@ -1,9 +1,8 @@
 /**
  * The `Separator` compat prop contract and prop-resolution helpers, shared by
  * the platform legs (SeparatorCompat.web.tsx / SeparatorCompat.native.tsx) —
- * the transcription of `ui/src/components/layout/separatorStyles.ts` plus the
- * shared prop type from `ui/src/components/layout/Separator.tsx`, re-sourced
- * onto mycelium internals. Platform-neutral: react-native appears in type
+ * transcribed from the Tamagui-free `ui/src` Separator it replaced and
+ * re-sourced onto mycelium internals. Platform-neutral: react-native appears in type
  * position only, so the web bundle stays RN-free.
  */
 import type { ReactNode } from 'react'

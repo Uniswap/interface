@@ -1,7 +1,7 @@
 import { UniverseChainId } from '@universe/chains'
 import { useMemo } from 'react'
-import { useAccount } from '~/hooks/useAccount'
-import { useEthersProvider, useEthersWeb3Provider } from '~/hooks/useEthersProvider'
+import { useAccount } from '~/connection/hooks/useAccount'
+import { useEthersProvider, useEthersWeb3Provider } from '~/connection/hooks/useEthersProvider'
 
 export function useWeb3React() {
   const account = useAccount()

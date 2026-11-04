@@ -1,5 +1,5 @@
+import { SpinningLoader } from '@universe/mycelium'
 import { useTranslation } from 'react-i18next'
-import { SpinningLoader } from 'ui/src'
 import { NotificationToast } from 'uniswap/src/components/notifications/NotificationToast'
 import { TRANSACTION_PENDING_NOTIFICATION_DELAY } from 'wallet/src/features/notifications/components/SwapPendingNotification'
 

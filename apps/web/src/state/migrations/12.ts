@@ -1,4 +1,3 @@
-import { GraphQLApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
 import { PersistState } from 'redux-persist'
 import type { TransactionTypeInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
@@ -26,8 +25,11 @@ export interface OldTransactionState {
   }
 }
 
+// Frozen copy of the persisted status strings this migration wrote; must never change.
+type PersistedTransactionStatus = 'CONFIRMED' | 'FAILED' | 'PENDING'
+
 interface BaseTransactionDetails {
-  status: GraphQLApi.TransactionStatus
+  status: PersistedTransactionStatus
   hash: string
   batchInfo?: { connectorId?: string; batchId: string; chainId: UniverseChainId }
   addedTime: number
@@ -38,13 +40,13 @@ interface BaseTransactionDetails {
 }
 
 interface PendingTransactionDetails extends BaseTransactionDetails {
-  status: GraphQLApi.TransactionStatus.Pending
+  status: 'PENDING'
   lastCheckedBlockNumber?: number
   deadline?: number
 }
 
 interface ConfirmedTransactionDetails extends BaseTransactionDetails {
-  status: GraphQLApi.TransactionStatus.Confirmed | GraphQLApi.TransactionStatus.Failed
+  status: 'CONFIRMED' | 'FAILED'
   confirmedTime: number
 }
 
@@ -78,13 +80,9 @@ export const migration12 = createSafeMigration({
       for (const txHash in transactionsForChain) {
         const { receipt, ...tx } = transactionsForChain[txHash]
 
-        const status = receipt
-          ? receipt.status === 1
-            ? GraphQLApi.TransactionStatus.Confirmed
-            : GraphQLApi.TransactionStatus.Failed
-          : GraphQLApi.TransactionStatus.Pending
+        const status: PersistedTransactionStatus = receipt ? (receipt.status === 1 ? 'CONFIRMED' : 'FAILED') : 'PENDING'
 
-        ;(tx as unknown as { status: GraphQLApi.TransactionStatus }).status = status
+        ;(tx as unknown as { status: PersistedTransactionStatus }).status = status
 
         transactionsForChain[txHash] = tx
       }

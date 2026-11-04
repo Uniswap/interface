@@ -6,20 +6,19 @@ import {
   Text,
   TouchableArea,
   type FlexCompatProps as FlexProps,
+  Loader,
 } from '@universe/mycelium'
 import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ViewProps } from 'react-native'
 import { RecoveryWalletInfo, useOnDeviceRecoveryData } from 'src/screens/Import/useOnDeviceRecoveryData'
-import { Loader } from 'ui/src'
 import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 
-// Plain object literal, not typed as FlexProps: it's spread onto both the mycelium Flex below
-// and the still-ui/src Loader.Box (kept on ui/src since packages/ui/src/loading/** is
-// Tamagui-free), so each spread site's own prop type validates its own shape.
+// Plain object literal, not typed as FlexProps: it's spread onto both the Flex below and
+// Loader.Box (FlexLoaderProps), so each spread site's own prop type validates its own shape.
 const cardProps = {
   borderRadius: '$rounded20',
   shadowColor: '$surface3',

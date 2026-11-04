@@ -4,10 +4,10 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FiatCurrency, ORDERED_CURRENCIES } from 'uniswap/src/features/fiatCurrency/constants'
 import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
+import { useLocalCurrencyLinkProps } from '~/components/AccountDrawer/hooks/useLocalCurrencyLinkProps'
 import { MenuColumn, MenuItem } from '~/components/AccountDrawer/shared'
 import { SlideOutMenu } from '~/components/AccountDrawer/SlideOutMenu'
 import { getLocalCurrencyIcon } from '~/constants/localCurrencies'
-import { useLocalCurrencyLinkProps } from '~/hooks/useLocalCurrencyLinkProps'
 
 function LocalCurrencyMenuItem({ localCurrency, isActive }: { localCurrency: FiatCurrency; isActive: boolean }) {
   const { to, onClick } = useLocalCurrencyLinkProps(localCurrency)

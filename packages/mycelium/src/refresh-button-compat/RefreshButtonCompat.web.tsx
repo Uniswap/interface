@@ -88,8 +88,7 @@ function RefreshButtonIconCompat({
       // tailwind-merge. Spelled with `animateOnly` because the migration gate bans the
       // `animation` prop outside exempt paths — byte-identical output at this call site.
       animateOnly={[]}
-      // The children style themselves; the injected legacy `$accent3` default
-      // is a rejected token on this side (ModalCloseIconCompat precedent).
+      // The children style themselves (ModalCloseIconCompat precedent).
       shouldAutomaticallyInjectColors={false}
       onPress={handlePress}
     >

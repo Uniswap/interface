@@ -1,5 +1,5 @@
-import { getStorageDriver } from '@universe/api/src/storage/getStorageDriver'
 import { createDeviceIdService, DeviceIdService } from '@universe/sessions'
+import { getStorageDriver } from './storage/getStorageDriver'
 
 const DEVICE_ID_KEY = 'UNISWAP_DEVICE_ID'
 

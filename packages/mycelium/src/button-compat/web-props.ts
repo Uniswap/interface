@@ -17,6 +17,7 @@ import type {
   BorderWidthValue,
   ColorValue,
   DisplayValue,
+  OverflowValue,
   PositionValue,
   RadiusValue,
   SizeValue,
@@ -155,6 +156,10 @@ export interface ButtonCompatProps
   opacity?: number
   /** Flex shrink factor (legacy `flexShrink={1}`, the mobile LandingScreen.tsx create-account CTA). WIRED on both legs, independent of `flex`. */
   flexShrink?: number
+  /** Flex grow factor alone (legacy `flexGrow={1}`, the wallet BackupReminderContent/SmartWalletModal action rows). WIRED on both legs; a numeric `flex` set alongside wins. */
+  flexGrow?: number
+  /** Overflow (legacy `overflow="hidden"`, the PendingSwapButtonContent progress fill). WIRED on both legs; native drops the web-only `auto`/`clip`/`unset` values with a dev warning. */
+  overflow?: OverflowValue
   /** Shadow color (legacy `shadowColor="$accent1"`): resolves through the shared shadow-color map (unknown token → throw on web); WIRED on both legs. */
   shadowColor?: ColorValue
   /** Shadow opacity (legacy `shadowOpacity={0.4}`): folds into the composed `box-shadow` color via `color-mix`; WIRED on both legs. */

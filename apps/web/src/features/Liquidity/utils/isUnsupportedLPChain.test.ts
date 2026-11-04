@@ -33,7 +33,6 @@ describe('isUnsupportedLPChain', () => {
     it('returns false for any EVM chain with V3 protocol', () => {
       expect(isUnsupportedLPChain(UniverseChainId.Mainnet, ProtocolVersion.V3)).toBe(false)
       expect(isUnsupportedLPChain(UniverseChainId.Optimism, ProtocolVersion.V3)).toBe(false)
-      expect(isUnsupportedLPChain(UniverseChainId.Blast, ProtocolVersion.V3)).toBe(false)
       expect(isUnsupportedLPChain(UniverseChainId.Zora, ProtocolVersion.V3)).toBe(false)
     })
 

@@ -9,12 +9,12 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { isNativeParsedToken, type ParsedToken } from 'uniswap/src/features/dataApi/utils/parsedToken'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { parseUniswapTransaction, type PoolTransaction } from '~/data/transactions/poolTransaction'
+import { useInfiniteLoadMore } from '~/features/Explore/hooks/useInfiniteLoadMore'
 import {
   getPoolTableTransactionTypeTranslation,
   PoolTableTransaction,
   PoolTableTransactionType,
 } from '~/features/Explore/state/transactions/poolTransactionTypes'
-import { useInfiniteLoadMore } from '~/hooks/useInfiniteLoadMore'
 
 export { getPoolTableTransactionTypeTranslation, PoolTableTransactionType }
 export type { PoolTableTransaction }

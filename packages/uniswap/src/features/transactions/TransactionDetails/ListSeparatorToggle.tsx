@@ -1,8 +1,7 @@
-import { Flex, Text, TouchableArea } from '@universe/mycelium'
+import { Flex, Text, TouchableArea, Separator } from '@universe/mycelium'
+import { AnglesMaximize } from '@universe/mycelium/icons/AnglesMaximize'
+import { AnglesMinimize } from '@universe/mycelium/icons/AnglesMinimize'
 import { TestID } from '@universe/test'
-import { Separator } from 'ui/src'
-import { AnglesMaximize } from 'ui/src/components/icons/AnglesMaximize'
-import { AnglesMinimize } from 'ui/src/components/icons/AnglesMinimize'
 
 export function ListSeparatorToggle({
   onPress,

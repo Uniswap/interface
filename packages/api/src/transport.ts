@@ -1,12 +1,12 @@
 import { type ConnectTransportOptions, createConnectTransport } from '@connectrpc/connect-web'
 
 export type Interceptors = NonNullable<ConnectTransportOptions['interceptors']>
-import { provideDeviceIdService } from '@universe/api/src/provideDeviceIdService'
-import { provideSessionStorage } from '@universe/api/src/provideSessionStorage'
 import { isWebApp } from '@universe/environment'
 import type { Session } from '@universe/sessions'
 import { requireSessionInterceptor } from '@universe/sessions'
 import { logger, type Logger } from 'utilities/src/logger/logger'
+import { provideDeviceIdService } from './provideDeviceIdService'
+import { provideSessionStorage } from './provideSessionStorage'
 
 interface SessionTransportOptions {
   getSessionId?: () => Promise<string | null>
@@ -29,6 +29,8 @@ interface SessionTransportOptions {
    */
   source?: string
   getLogger?: () => Logger
+  /** Passed to the session gate: errors it matches are thrown without session recovery. */
+  isNonRecoverable?: (err: unknown) => boolean
   options?: Partial<ConnectTransportOptions>
 }
 
@@ -49,6 +51,7 @@ function createTransport(ctx: SessionTransportOptions): ReturnType<typeof create
     getSession,
     source = 'connect-rpc',
     getLogger = (): Logger => logger,
+    isNonRecoverable,
     options,
   } = ctx
 
@@ -77,7 +80,7 @@ function createTransport(ctx: SessionTransportOptions): ReturnType<typeof create
 
         return next(request)
       },
-      ...(getSession ? [requireSessionInterceptor({ getSession, source, getLogger })] : []),
+      ...(getSession ? [requireSessionInterceptor({ getSession, source, getLogger, isNonRecoverable })] : []),
       ...(extraInterceptors ?? []),
     ],
     ...options,
@@ -96,6 +99,7 @@ function getTransport(ctx: {
   getSession?: () => Session | null
   source?: string
   getLogger?: () => Logger
+  isNonRecoverable?: (err: unknown) => boolean
   options?: Partial<ConnectTransportOptions>
 }): ReturnType<typeof createConnectTransport> {
   return createTransport({
@@ -119,6 +123,7 @@ function getTransport(ctx: {
     getSession: ctx.getSession,
     source: ctx.source,
     getLogger: ctx.getLogger,
+    isNonRecoverable: ctx.isNonRecoverable,
     options: ctx.options,
   })
 }

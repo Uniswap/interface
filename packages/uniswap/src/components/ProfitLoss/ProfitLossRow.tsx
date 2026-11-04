@@ -1,6 +1,6 @@
 import { ColorTokens, Flex, Text } from '@universe/mycelium'
+import { Caret } from '@universe/mycelium/icons/Caret'
 import { useTranslation } from 'react-i18next'
-import { Caret } from 'ui/src/components/icons/Caret'
 import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { getValueSignInfo } from 'uniswap/src/components/ProfitLoss/constants'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'

@@ -19,12 +19,11 @@ export const typographyClasses = [
 export type TypographyClass = (typeof typographyClasses)[number]
 
 /**
- * ui/src/theme fonts variants as `<Text variant />` tokens: $body2 → variant="body2".
+ * Font variants as `<Text variant />` tokens: $body2 → variant="body2".
  *
  * Tamagui-free home for `FontVariantToken` (INFRA-3290). Membership is pinned to `FontVariant`
  * (./tokens.ts, kebab-case names from the `--typography-*` custom properties) by the compile-time
- * check beside it, and mirrored by `ui/src/theme/fontVariants.ts` for the legacy `ui/src/theme`
- * export surface.
+ * check beside it.
  */
 export type FontVariantToken =
   | '$heading1'
@@ -99,7 +98,7 @@ export type Breakpoint = 'xxs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxx
 
 /**
  * Mycelium height breakpoints (max-height variants defined in css/base.css,
- * mirroring packages/ui/src/theme/breakpoints.ts heightBreakpoints).
+ * mirroring `HEIGHT_BREAKPOINT_PX` in `@universe/mycelium/theme-hooks-compat`).
  */
 export type HeightBreakpoint = 'h-short' | 'h-mid'
 

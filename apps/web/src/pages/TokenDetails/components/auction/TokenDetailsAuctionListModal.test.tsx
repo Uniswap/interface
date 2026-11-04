@@ -8,10 +8,10 @@ import { logger } from 'utilities/src/logger/logger'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import type { CurrencyRaisedState } from '~/features/Toucan/Auction/utils/resolveAuctionDisplayState'
 import { TokenDetailsAuctionListModal } from '~/pages/TokenDetails/components/auction/TokenDetailsAuctionListModal'
-import { popupRegistry } from '~/state/popups/registry'
-import { PopupType } from '~/state/popups/types'
 import { getOwnStyleProp } from '~/test-utils/getOwnStyleProp'
 import { fireEvent, render, screen, within } from '~/test-utils/render'
+import { popupRegistry } from '~/utils/popups/registry'
+import { PopupType } from '~/utils/popups/types'
 
 const mockNavigate = vi.fn()
 vi.mock('uniswap/src/features/telemetry/send', () => ({ sendAnalyticsEvent: vi.fn() }))

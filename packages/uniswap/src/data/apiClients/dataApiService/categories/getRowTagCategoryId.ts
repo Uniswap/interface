@@ -1,7 +1,7 @@
 import { SharedQueryClient } from '@universe/api'
 import { getGetTokenQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/tokens/queries'
 import { currencyIdToRestContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
-import { selectTokenRowCategoryTag } from 'uniswap/src/features/tokenCategories/selectTokenRowCategoryTag'
+import { selectRowCategoryTag } from 'uniswap/src/features/tokenCategories/selectRowCategoryTag'
 import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
 import type { CurrencyId } from 'uniswap/src/types/currency'
 
@@ -20,5 +20,5 @@ export function getRowTagCategoryId({
   categories: TokenCategory[]
 }): string | null {
   const ids = categoryIds?.length ? categoryIds : getCachedCategoryIds(currencyId)
-  return selectTokenRowCategoryTag({ categoryIds: ids, categories })?.id ?? null
+  return selectRowCategoryTag({ categoryIds: ids, categories })?.id ?? null
 }

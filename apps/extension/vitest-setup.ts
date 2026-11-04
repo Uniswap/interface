@@ -1,10 +1,10 @@
 // Shared vitest setup: base chrome global, AsyncStorage, redux-persist, expo, WalletConnect,
 // NetInfo, and other cross-package mocks.
 import '../../config/vitest-presets/vitest/setup.js'
-import '../../packages/utilities/vitest-package-mocks'
 import '../../packages/uniswap/vitest-package-mocks'
-// React Native component mocks (gesture-handler, reanimated, svg, safe-area, moti, matchMedia, ...)
+import '../../packages/utilities/vitest-package-mocks'
 import '../../packages/ui/vitest-setup'
+// React Native component mocks (gesture-handler, reanimated, svg, safe-area, moti, matchMedia, ...)
 import { AppearanceSettingType } from 'uniswap/src/features/appearance/slice'
 import { vi } from 'vitest'
 
@@ -222,52 +222,3 @@ vi.mock('uniswap/src/features/appearance/hooks', () => {
     useSelectedColorScheme: (): 'light' => 'light',
   }
 })
-
-// Mock IntersectionObserver for Tamagui's useElementLayout
-const IntersectionObserverMock = vi.fn().mockImplementation((callback: IntersectionObserverCallback) => ({
-  observe: vi.fn((element: Element) => {
-    // Immediately call the callback with a mock entry
-    if (callback && element) {
-      callback(
-        [
-          {
-            target: element,
-            isIntersecting: true,
-            intersectionRatio: 1,
-            boundingClientRect: {
-              x: 0,
-              y: 0,
-              width: 100,
-              height: 100,
-              top: 0,
-              right: 100,
-              bottom: 100,
-              left: 0,
-            },
-            intersectionRect: {
-              x: 0,
-              y: 0,
-              width: 100,
-              height: 100,
-              top: 0,
-              right: 100,
-              bottom: 100,
-              left: 0,
-            },
-            rootBounds: null,
-            time: 0,
-          } as unknown as IntersectionObserverEntry,
-        ],
-        undefined as unknown as IntersectionObserver,
-      )
-    }
-  }),
-  unobserve: vi.fn(),
-  disconnect: vi.fn(),
-  takeRecords: vi.fn().mockReturnValue([]),
-  root: null,
-  rootMargin: '',
-  thresholds: [],
-}))
-
-global.IntersectionObserver = IntersectionObserverMock as unknown as typeof IntersectionObserver

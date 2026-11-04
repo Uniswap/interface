@@ -1,10 +1,9 @@
 import { Platform } from '@universe/chains'
-import { Flex, Text, useMedia } from '@universe/mycelium'
+import { Flex, Text, useMedia, iconSizes } from '@universe/mycelium'
 import { TestID } from '@universe/test'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Coachmark } from 'ui/src'
-import { iconSizes } from 'ui/src/theme'
 import { EarnAnalyticsSurface, EarnEntryPoint } from 'uniswap/src/features/earn/analytics'
 import {
   EARN_VAULT_CHIP_FRAME_PROPS,
@@ -19,8 +18,8 @@ import { CAROUSEL_FADE_WIDTH_SMALL } from '~/components/TokenCardCarousel/consta
 import { TokenCardCarousel } from '~/components/TokenCardCarousel/TokenCardCarousel'
 import { useHorizontalSnapCarousel } from '~/components/TokenCardCarousel/useHorizontalSnapCarousel'
 import { LoadingBubble } from '~/components/Tokens/loading'
+import { useActiveAddress } from '~/connection/accounts/hooks'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '~/constants/breakpoints'
-import { useActiveAddress } from '~/features/accounts/store/hooks'
 import { EarnVaultModal } from '~/features/earn/EarnVaultModal'
 import { useEarnVaultConnectFlow } from '~/features/earn/hooks/useEarnVaultConnectFlow'
 import { useEarnVaultModalState } from '~/features/earn/hooks/useEarnVaultModalState'

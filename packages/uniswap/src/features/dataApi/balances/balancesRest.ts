@@ -11,6 +11,7 @@ import {
 import { calculateTotalBalancesUsdPerChainRest } from 'uniswap/src/data/apiClients/dataApiService/balances/utils'
 import { normalizeBackendNativeAddress } from 'uniswap/src/data/apiClients/dataApiService/utils/dataApiMultichainToken'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import { buildPortfolioBalance } from 'uniswap/src/features/dataApi/balances/buildPortfolioBalance'
 import { getPortfolioMultichainBalancesById } from 'uniswap/src/features/dataApi/balances/toPortfolioMultichainBalance'
 import {
@@ -154,7 +155,6 @@ function usePortfolioDataQueryWithSelect<T>(
     error: restError,
     isPending: restPending,
     isError: restIsError,
-    isPlaceholderData,
     dataUpdatedAt,
   } = useGetPortfolioQuery({
     input: {
@@ -179,7 +179,6 @@ function usePortfolioDataQueryWithSelect<T>(
     refetch: restRefetch,
     error: restError || undefined,
     dataUpdatedAt: dataUpdatedAt || undefined,
-    isPlaceholderData,
   }
 }
 
@@ -249,6 +248,9 @@ export function convertRestBalanceToPortfolioBalance(
   }
 
   const { chainId, address: unnormalizedTokenAddress, decimals, symbol, name, metadata } = token
+  if (!isUniverseChainId(chainId)) {
+    return undefined
+  }
   const tokenAddress = normalizeTokenAddressForCache(unnormalizedTokenAddress)
   const { logoUrl, protectionInfo } = metadata || {}
 

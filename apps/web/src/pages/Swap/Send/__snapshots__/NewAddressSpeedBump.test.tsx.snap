@@ -148,7 +148,7 @@ exports[`NewAddressSpeedBumpModal > should not render AccountIcon if account has
             type="button"
           >
             <span
-              class="text-center font-medium [font-family:var(--sbtn-font-button)] [transition:color_100ms_cubic-bezier(0.17,0.67,0.45,1)] text-[14px] leading-[16.1px] text-neutral1 group-hover/sbtn:text-neutral1-hovered max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
+              class="text-center font-medium [font-family:var(--sbtn-font-button)] [transition:color_100ms_cubic-bezier(0.17,0.67,0.45,1)] text-[14px] [line-height:16.1px] text-neutral1 group-hover/sbtn:text-neutral1-hovered max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
             >
               Close
             </span>
@@ -159,7 +159,7 @@ exports[`NewAddressSpeedBumpModal > should not render AccountIcon if account has
             type="button"
           >
             <span
-              class="text-center font-medium [font-family:var(--sbtn-font-button)] [transition:color_100ms_cubic-bezier(0.17,0.67,0.45,1)] text-[14px] leading-[16.1px] text-surface1 group-hover/sbtn:text-surface1-hovered max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
+              class="text-center font-medium [font-family:var(--sbtn-font-button)] [transition:color_100ms_cubic-bezier(0.17,0.67,0.45,1)] text-[14px] [line-height:16.1px] text-surface1 group-hover/sbtn:text-surface1-hovered max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
             >
               Continue
             </span>

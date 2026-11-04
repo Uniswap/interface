@@ -110,8 +110,7 @@ export const LinearGradientCompat = forwardRef<View, LinearGradientCompatProps>(
 
 // The frame delegates to ViewCompat (marked), but the legacy TouchableArea's
 // WithInjectedColors reads the marker off THIS element's type — an unmarked
-// wrapper gets `color: '$accent3'` injected, a rejected-side token that
-// throws in the compiler. Matches what `createCompatComponent` sets on
+// wrapper would get injected colour guidance over its own styling. Matches what `createCompatComponent` sets on
 // factory-built legs (compat/dom.tsx).
 LinearGradientCompat.displayName = 'LinearGradientCompat'
 markMyceliumPrimitive(LinearGradientCompat)

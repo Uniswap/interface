@@ -3,6 +3,7 @@
 
 export { createClientLogger, createClientLoggerFactory } from './clientLogger'
 export { consoleLoggerFactory, createConsoleLogger, createConsoleLoggerFactory, noopLogger } from './consoleLogger'
+export { describeError, logError, logInfo, logWarn, MAX_MESSAGE_CHARS, MAX_STACK_CHARS, truncate } from './logRecord'
 export type { RequestScopedContext } from './requestContext'
 export { requestContext } from './requestContext'
 export type { StackResolver, StackResolverCtx } from './sourceMapResolver'

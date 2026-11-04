@@ -1,10 +1,9 @@
 import { sanitizeAddressText } from '@universe/chains'
-import { ColorTokens, Flex, SpaceTokens, Text } from '@universe/mycelium'
+import { ColorTokens, Flex, SpaceTokens, Text, fonts } from '@universe/mycelium'
 import { TestID } from '@universe/test'
 import { useMemo } from 'react'
 import type { FlexAlignType } from 'react-native'
 // mycelium's `fonts` is the flat web table; ui's applies the native +1 ramp these prop reads depend on
-import { fonts } from 'ui/src/theme'
 import { DisplayNameText } from 'uniswap/src/components/accounts/DisplayNameText'
 import { CopyHelper } from 'uniswap/src/components/CopyHelper/CopyHelper'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'

@@ -3,9 +3,7 @@ import { useStore } from 'zustand'
 import { createStore } from 'zustand/vanilla'
 
 interface MarginRowMenuState {
-  // Menu key of the row whose `…` menu is open, or null. At most one at a time. A KEY, not a bare
-  // positionId: the same position can render a menu on two surfaces at once (the table's utility cell
-  // and the expanded drawer), and keying on the position alone would open both.
+  // Menu key (the positionId) of the row whose `…` menu is open, or null. At most one at a time.
   openMenuKey: string | null
   setOpenMenuKey: (menuKey: string | null) => void
   // Clears ONLY if the key still names this menu — see useMarginRowMenu's setOpen.
@@ -37,7 +35,7 @@ export function useMarginRowMenu(menuKey: string): { isOpen: boolean; setOpen: (
     // Identity-checked: every mounted ContextMenu registers a document-level outside-click listener
     // whether or not that instance is open, so a CLOSED sibling's handler would otherwise null the
     // shared key while this row's menu is up — dismissing the popover before the clicked item's own
-    // click lands. With two rows on screen (table + drawer is already two) that is the ordinary case.
+    // click lands. With two rows on screen that is the ordinary case.
     marginRowMenuStore.getState().closeMenuKey(menuKey)
   })
   return { isOpen, setOpen }

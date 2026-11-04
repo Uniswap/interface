@@ -1,5 +1,4 @@
 export type {
-  AuctionLpPercentOverridesMap,
   DatadogIgnoredErrorsValType,
   DatadogSessionSampleRateValType,
   DynamicConfigKeys,
@@ -14,7 +13,6 @@ export type {
 export {
   AllowedV4WethHookAddressesConfigKey,
   AuctionFdvWarningConfigKey,
-  AuctionOverridesConfigKey,
   BlockedAsyncSubmissionChainIdsConfigKey,
   CategoriesOrderConfigKey,
   ChainsConfigKey,
@@ -34,6 +32,7 @@ export {
   LiquidityGasPreEstimationConfigKey,
   LPConfigKey,
   LpIncentivesChainIdsConfigKey,
+  MarginConfigKey,
   NetworkRequestsConfigKey,
   OnDeviceRecoveryConfigKey,
   RWAIssuerLogosConfigKey,

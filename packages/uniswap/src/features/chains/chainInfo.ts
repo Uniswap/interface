@@ -3,7 +3,6 @@ import { ARBITRUM_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/arbitr
 import { ARC_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/arc'
 import { AVALANCHE_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/avalanche'
 import { BASE_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/base'
-import { BLAST_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/blast'
 import { BNB_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/bnb'
 import { CELO_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/celo'
 import { INK_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/ink'
@@ -39,7 +38,6 @@ export const ORDERED_CHAINS = [
   OPTIMISM_CHAIN_INFO,
   BASE_CHAIN_INFO,
   BNB_CHAIN_INFO,
-  BLAST_CHAIN_INFO,
   AVALANCHE_CHAIN_INFO,
   CELO_CHAIN_INFO,
   WORLD_CHAIN_INFO,
@@ -90,7 +88,6 @@ export const UNIVERSE_CHAIN_INFO = {
   [UniverseChainId.Optimism]: OPTIMISM_CHAIN_INFO,
   [UniverseChainId.Base]: BASE_CHAIN_INFO,
   [UniverseChainId.Bnb]: BNB_CHAIN_INFO,
-  [UniverseChainId.Blast]: BLAST_CHAIN_INFO,
   [UniverseChainId.Avalanche]: AVALANCHE_CHAIN_INFO,
   [UniverseChainId.Celo]: CELO_CHAIN_INFO,
   [UniverseChainId.WorldChain]: WORLD_CHAIN_INFO,
@@ -114,14 +111,6 @@ export const UNIVERSE_CHAIN_INFO = {
   [UniverseChainId.Solana]: SOLANA_CHAIN_INFO,
 } as const satisfies AllChainsMap
 
-export const GQL_MAINNET_CHAINS = ORDERED_EVM_CHAINS.filter((chain) => !chain.testnet).map(
-  (chain) => chain.backendChain.chain,
-)
-
-export const GQL_TESTNET_CHAINS = ORDERED_EVM_CHAINS.filter((chain) => chain.testnet).map(
-  (chain) => chain.backendChain.chain,
-)
-
 // If limit support expands beyond Mainnet, refactor to use a `supportsLimits`
-// property on chain info objects and filter chains, similar to the pattern used above
+// property on chain info objects and filter chains
 export const LIMIT_SUPPORTED_CHAINS = [UniverseChainId.Mainnet]

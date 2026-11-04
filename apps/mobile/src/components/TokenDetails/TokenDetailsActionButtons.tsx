@@ -1,5 +1,8 @@
-import { AnimatedFlex, type ColorTokens, Flex, IconButton } from '@universe/mycelium'
+import { AnimatedFlex, Button, type ColorTokens, Flex, IconButton, validColor, fonts } from '@universe/mycelium'
 import type { GeneratedIcon } from '@universe/mycelium/icons'
+import { GridView } from '@universe/mycelium/icons/GridView'
+import { X } from '@universe/mycelium/icons/X'
+import { opacify } from '@universe/mycelium/theme-hooks-compat'
 import { withSporeCurve } from '@universe/tailwind/animations/reanimated'
 import { TestID, TestIDType } from '@universe/test'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
@@ -7,9 +10,7 @@ import { useTranslation } from 'react-i18next'
 import type { LayoutChangeEvent } from 'react-native'
 import { useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
 import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
-import { Button, getContrastPassingTextColor, useDynamicFontSizing } from 'ui/src'
-import { GridView, X } from 'ui/src/components/icons'
-import { opacify, validColor, fonts } from 'ui/src/theme'
+import { getContrastPassingTextColor, useDynamicFontSizing } from 'ui/src'
 import { ContextMenu, MenuOptionItem } from 'uniswap/src/components/menus/ContextMenu'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { TokenList } from 'uniswap/src/features/dataApi/types'
@@ -118,7 +119,7 @@ function useActionButtonState(actionMenuOptions: MenuOptionItem[]): ActionButton
   const disabled = isBlocked || !isChainEnabled
 
   const validTokenColor = validColor(tokenColor)
-  const lightTokenColor = validTokenColor ? opacify(12, validTokenColor) : undefined
+  const lightTokenColor = validTokenColor ? (opacify(12, validTokenColor) as ColorTokens) : undefined
 
   const actionsWithIcons = useMemo(() => {
     return actionMenuOptions.map(

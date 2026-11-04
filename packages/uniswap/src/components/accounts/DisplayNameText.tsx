@@ -6,7 +6,7 @@ import {
   Text,
   type TextCompatProps as TextProps,
 } from '@universe/mycelium'
-import { Unitag } from 'ui/src/components/icons/Unitag'
+import { Unitag } from '@universe/mycelium/icons/Unitag'
 import { DisplayName, DisplayNameType } from 'uniswap/src/features/accounts/types'
 import { UNITAG_SUFFIX } from 'uniswap/src/features/unitags/constants'
 

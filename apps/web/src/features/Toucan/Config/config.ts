@@ -77,22 +77,3 @@ export function getAuctionRedemptionConfig({
 }): AuctionRedemptionConfig | undefined {
   return AUCTION_REDEMPTION_OVERRIDES[buildOverrideKey({ chainId, address: tokenAddress })]
 }
-
-/**
- * Fallback for the Statsig `auction_overrides` dynamic config (`lpPercentCommitted` key), used
- * only when that config can't be read. Statsig is the source of truth: add new auctions there.
- *
- * Curated "% committed to LP" values, rendered to one decimal place (34.6 => "34.6%"). The
- * displayed percentage is normally computed live as `tokenCountAllocatedToLpForAuction` /
- * `tokenTotalSupply` (see useAuctionStatsData); an entry pins it when the indexed on-chain
- * allocation doesn't reflect the intended split.
- *
- * Keyed by auction id, "{chainId}_{checksummed AUCTION CONTRACT address}" (`auctionDetails.auctionId`,
- * the same id the `verified_auctions` config uses) — NOT the auctioned token address, because one
- * token can run multiple CCAs with different LP splits.
- */
-export const DEFAULT_AUCTION_LP_PERCENT_OVERRIDES: Record<string, number> = {
-  '1_0xfA63c5B9220a7f0D21e156490eC0b296838e6605': 25, // Interfold (FOLD) — second CCA
-  '8453_0x2DDaFa49cdd62864ab2E2aad66CC294CC7ef4A9b': 34.6, // Umia
-  '1_0xA93807cD89A99bB564C7A887ab49Cc4EcC3c9226': 100, // Balances (BALANCE)
-}

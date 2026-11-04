@@ -30,13 +30,7 @@ vi.mock('@universe/mycelium/assets/logos/png/eth-logo.png', () => createAssetMod
 vi.mock('@universe/mycelium/assets/logos/png/ethereum-logo.png', () => createAssetModuleMock('png'))
 vi.mock('@universe/mycelium/assets/graphics/unitag-light-small.png', () => createAssetModuleMock('png'))
 vi.mock('@universe/mycelium/assets/logos/png/uniswap-logo-large.png', () => createAssetModuleMock('png'))
-vi.mock('ui/src/components/Unicon', () => ({
-  Unicon: ({ ..._props }: any) => {
-    return React.createElement('span', { 'data-testid': 'unicon' }, '🔵')
-  },
-}))
-// The mycelium Unicon gets the same placeholder: converted call sites otherwise render the real
-// SVG (address-derived paths), which is avatar noise in web snapshots exactly like the legacy one.
+// Placeholder Unicon: the real SVG (address-derived paths) is avatar noise in web snapshots.
 vi.mock('@universe/mycelium', async (importOriginal) => ({
   ...(await importOriginal<object>()),
   Unicon: ({ ..._props }: any) => {
@@ -53,7 +47,6 @@ vi.mock('@universe/mycelium/assets', () => ({
   BNB_LOGO: 'bnb-logo.png',
   MONAD_LOGO_FILLED: 'monad-logo-filled.png',
   POLYGON_LOGO: 'polygon-logo.png',
-  BLAST_LOGO: 'blast-logo.png',
   AVALANCHE_LOGO: 'avalanche-logo.png',
   CELO_LOGO: 'celo-logo.png',
   WORLD_CHAIN_LOGO: 'world-chain-logo.png',

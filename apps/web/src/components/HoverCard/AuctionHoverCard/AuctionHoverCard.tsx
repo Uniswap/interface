@@ -7,14 +7,14 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { AuctionHoverCardContent } from '~/components/HoverCard/AuctionHoverCard/AuctionHoverCardContent'
 import { useAuctionHoverCardData } from '~/components/HoverCard/AuctionHoverCard/useAuctionHoverCardData'
+import { useFireOncePerOpen } from '~/components/HoverCard/hooks/useFireOncePerOpen'
+import { useHoverCardCopyAndClose } from '~/components/HoverCard/hooks/useHoverCardCopyAndClose'
 import {
   HoverCard,
   type HoverCardPlacement,
   useHoverCardMaxContentWidth,
   useHoverCardState,
 } from '~/components/HoverCard/HoverCard'
-import { useFireOncePerOpen } from '~/components/HoverCard/useFireOncePerOpen'
-import { useHoverCardCopyAndClose } from '~/components/HoverCard/useHoverCardCopyAndClose'
 import { useNavigateToAuctionDetails } from '~/hooks/useNavigateToAuctionDetails'
 
 export type AuctionHoverCardAuction = Pick<

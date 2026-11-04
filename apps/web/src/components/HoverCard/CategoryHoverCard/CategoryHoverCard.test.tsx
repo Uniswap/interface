@@ -2,6 +2,7 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import { TestID } from '@universe/test'
 import { ElementName, InterfaceEventName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { poolCategory } from 'uniswap/src/test/fixtures/poolCategory'
 import { tokenCategory } from 'uniswap/src/test/fixtures/tokenCategory'
 import { CategoryHoverCard } from '~/components/HoverCard/CategoryHoverCard/CategoryHoverCard'
 import { useHoverCardState } from '~/components/HoverCard/HoverCard'
@@ -93,6 +94,7 @@ describe('CategoryHoverCard', () => {
     expect(openCalls[0]?.[1]).toEqual({
       section: SectionName.ExploreCategoryChips,
       category_id: category.id,
+      category_kind: 'token',
       trigger: 'hover',
     })
   })
@@ -116,6 +118,7 @@ describe('CategoryHoverCard', () => {
       element: ElementName.CategoryHoverCard,
       section: SectionName.ExploreCategoryChips,
       category_id: category.id,
+      category_kind: 'token',
     })
     expect(mockClose).toHaveBeenCalledTimes(1)
     expect(mockNavigate).toHaveBeenCalledWith(`/explore/category/${category.id}`, { state: undefined })
@@ -128,5 +131,17 @@ describe('CategoryHoverCard', () => {
     fireEvent.click(screen.getByTestId(TestID.CategoryDefinitionCard))
 
     expect(mockNavigate).toHaveBeenCalledWith(`/explore/category/${category.id}`, { state: navigationState })
+  })
+
+  it('navigates a pool category to the pools category page', () => {
+    mockHoverCardState(true)
+    render(
+      <CategoryHoverCard category={poolCategory({ id: 'stable-pools' })} section={SectionName.ExploreCategoryChips}>
+        <span>chip</span>
+      </CategoryHoverCard>,
+    )
+
+    fireEvent.click(screen.getByTestId(TestID.CategoryDefinitionCard))
+    expect(mockNavigate).toHaveBeenCalledWith('/pools/category/stable-pools', { state: undefined })
   })
 })

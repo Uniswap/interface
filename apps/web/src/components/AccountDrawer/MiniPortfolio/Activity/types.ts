@@ -1,5 +1,4 @@
 import type { Currency } from '@uniswap/sdk-core'
-import { GraphQLApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
 import type { ReactNode } from 'react'
 import {
@@ -7,10 +6,6 @@ import {
   TransactionStatus,
   UniswapXOrderDetails,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-
-/**
- * TODO: refactor parsing / Activity so that all Activity Types can have a detail sheet.
- */
 
 export type Activity = {
   id: string
@@ -24,7 +19,6 @@ export type Activity = {
   title: string
   descriptor?: string | JSX.Element
   portfolioLogoCustomIcon?: ReactNode
-  // TODO(WEB-3839): replace Currency with CurrencyInfo
   currencies?: Array<Currency | undefined>
   /** Raw logo URLs for tokens that can't be resolved to a Currency (e.g. a just-launched token). Ignored when `currencies` is set. */
   logos?: Array<string | undefined>
@@ -35,7 +29,6 @@ export type Activity = {
   options?: TransactionOptions
   isUniswapX?: boolean
   isSpam?: boolean
-  type?: GraphQLApi.TransactionType
 }
 
 export type ActivityMap = { [id: string]: Activity | undefined }

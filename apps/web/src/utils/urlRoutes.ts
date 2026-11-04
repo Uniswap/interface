@@ -27,6 +27,7 @@ export function getCurrentPageFromLocation(locationPathname: string): InterfaceP
     case locationPathname.startsWith('/explore/pools') && locationPathname.includes('0x'):
       return InterfacePageName.PoolDetailsPage
     case locationPathname.startsWith('/explore/category/'):
+    case locationPathname.startsWith('/pools/category/'):
       return InterfacePageName.CategoryDetailsPage
     case locationPathname.startsWith('/explore'):
       return InterfacePageName.ExplorePage

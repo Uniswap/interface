@@ -7,10 +7,12 @@
  * full rebuilt CustomButtonText surface is the styled-factory lane's
  * `../button-frame-compat/ButtonTextCompat`, not this.
  */
+import { getMaybeHexOrRgbColor, type HexOrRgbColor } from '../button-frame-compat/custom-color'
 import { droppedPropNames } from '../compat/native-diagnostics'
 import type { CompatAnimationProps } from '../compat/props'
 import type { TextCompatStyleProps } from '../text-compat/props'
-import type { ButtonVariant } from './compile'
+import { styleClasses as textStyleClasses } from '../text-compat/style-classes'
+import type { ButtonContentClassProps, ButtonVariant } from './compile'
 
 /**
  * The scoped style pool — also the shape of the `$group-hover` pool. Each
@@ -21,7 +23,7 @@ import type { ButtonVariant } from './compile'
  */
 export type ButtonTextStyleProps = Pick<
   TextCompatStyleProps,
-  'color' | 'opacity' | 'position' | 'top' | 'whiteSpace' | 'transition'
+  'color' | 'fontSize' | 'opacity' | 'position' | 'top' | 'whiteSpace' | 'transition'
 >
 
 /** The caller-visible legacy style surface of `Button.Text`. */
@@ -48,11 +50,27 @@ export interface ButtonTextStyleSurface extends ButtonTextStyleProps {
 
 /**
  * The styled props actually SET that the NATIVE leg drops — its
- * `warnUnsupportedNativeProps` list. `variant` is excluded because the native
- * leg wires it (it only re-picks the cell); `animation` because it is inert on
- * every leg, like the shared compat surface.
+ * `warnUnsupportedNativeProps` list. `variant`, `color` and `fontSize` are
+ * excluded because the native leg wires them; `animation` because it is inert
+ * on every leg, like the shared compat surface.
  */
 export function buttonTextDroppedStyleNames(props: ButtonTextStyleSurface): string[] {
-  const { variant: _variant, animation: _animation, ...dropped } = props
+  const { variant: _variant, color: _color, fontSize: _fontSize, animation: _animation, ...dropped } = props
   return droppedPropNames(dropped)
+}
+
+/**
+ * Both legs' caller `color`, split by precedence: a theme token always beats the cell (its class, to
+ * resolve); a hex/rgb `pin` yields to the disabled palette and to a custom background's contrast class.
+ */
+export function buttonTextCallerColor(
+  color: ButtonTextStyleProps['color'],
+  ctx: Pick<ButtonContentClassProps, 'isDisabled' | 'customTextClass'>,
+): { tokenClassName: string; pin: HexOrRgbColor | undefined } {
+  const customColor = getMaybeHexOrRgbColor(color)
+  if (customColor !== undefined) {
+    const yields = ctx.isDisabled || ctx.customTextClass !== undefined
+    return { tokenClassName: '', pin: yields ? undefined : customColor }
+  }
+  return { tokenClassName: color === undefined ? '' : textStyleClasses({ color }).join(' '), pin: undefined }
 }

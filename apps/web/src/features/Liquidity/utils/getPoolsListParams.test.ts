@@ -69,8 +69,18 @@ describe('getPoolsListParams', () => {
         statsFilter: undefined,
         rewardsOnly: undefined,
         searchQuery: undefined,
+        categoryIds: undefined,
       },
     })
+  })
+
+  it('sends the selected pool categories as the category filter', () => {
+    const params = getPoolsListParams({
+      fallbackChainIds: ENABLED_CHAINS,
+      sort: SORT,
+      categoryIds: ['stable-pools'],
+    })
+    expect(params.filter?.categoryIds).toEqual(['stable-pools'])
   })
 
   it('scopes chainIds to the single chain when one is resolved', () => {

@@ -79,7 +79,7 @@ function isUserRejectedError(error: unknown): boolean {
 /**
  * Submits a Permit2 nonce invalidation transaction to cancel a UniswapX order.
  * Used by both the local order cancel flow (via cancelOrder) and the remote order cancel flow
- * (via cancelRemoteUniswapXOrder action) for orders that only exist in the GraphQL activity feed.
+ * (via cancelRemoteUniswapXOrder action) for orders that only exist in the remote activity feed.
  *
  * Never throws into the transaction watcher root — a failed cancel must not kill the watcher.
  */

@@ -1,11 +1,10 @@
 import { isMobileWebAndroid } from '@universe/environment'
-import { Flex, fonts } from '@universe/mycelium'
+import { Flex, fonts, Input } from '@universe/mycelium'
 import { Search } from '@universe/mycelium/icons/Search'
 import { useEffect, useRef, useState } from 'react'
-import { Input } from 'ui/src'
 import { SearchInputProps } from 'uniswap/src/components/nfts/types'
 import { useDebouncedCallback } from 'utilities/src/react/useDebouncedCallback'
-import { useScrollInputIntoView } from '~/hooks/useScrollInputIntoView'
+import { useScrollInputIntoView } from '~/pages/Portfolio/components/hooks/useScrollInputIntoView'
 
 const DEFAULT_SEARCH_INPUT_WIDTH = 280
 const DEBOUNCE_DELAY_MS = 300

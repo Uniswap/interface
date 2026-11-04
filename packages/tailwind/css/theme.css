@@ -1,5 +1,5 @@
 /* Mycelium Theme Tokens for Tailwind v4 */
-/* Color values track the current Spore generation (packages/ui/src/theme/color/colors.ts). */
+/* Color values track the current Spore generation. */
 
 @theme {
   /* Font Families - these create font-* utilities */
@@ -87,8 +87,9 @@
   --color-black: #000000;
 
   /* Semantic Colors - Background */
+  /* = surface1, matching the legacy theme's background */
   --color-background: #ffffff;
-  --color-background-dark: #000000;
+  --color-background-dark: #131313;
 
   /* Semantic Colors - Neutrals */
   --color-neutral1-light: #131313;
@@ -195,8 +196,6 @@
   /* Network Colors (mode-dependent; auto-switching aliases in variables.css/native.css) */
   --color-network-arc-light: #2b5ce6;
   --color-network-arc-dark: #6e8ff7;
-  --color-network-blast-light: #222222;
-  --color-network-blast-dark: #fcfc03;
   --color-network-bnb-light: #b08603;
   --color-network-bnb-dark: #ffbf17;
   --color-network-celo-light: #222222;
@@ -456,13 +455,13 @@
   --shadow-large: var(--shadow-large);
 
   /*
-   * ui/src/theme token-constant parity families (INFRA-2951).
-   * Additive, value-identical imports of the ui token families; TS-mirrored in
+   * Token-constant families (INFRA-2951), value-identical to the legacy ui
+   * token families; TS-mirrored in
    * src/tokens.ts and pinned to this file by src/tokens.guard.test.ts.
    * Namespaces are chosen to leave every existing utility untouched.
    */
 
-  /* Icon Sizes (ui iconSizes parity; no Tailwind namespace — plain vars, no utilities) */
+  /* Icon Sizes (legacy ui iconSizes; no Tailwind namespace — plain vars, no utilities) */
   --icon-size-8: 8px;
   --icon-size-12: 12px;
   --icon-size-14: 14px;
@@ -481,7 +480,7 @@
   --icon-size-70: 70px;
   --icon-size-100: 100px;
 
-  /* Image Sizes (ui imageSizes parity; no Tailwind namespace — plain vars, no utilities) */
+  /* Image Sizes (legacy ui imageSizes; no Tailwind namespace — plain vars, no utilities) */
   --image-size-12: 12px;
   --image-size-16: 16px;
   --image-size-20: 20px;
@@ -493,7 +492,7 @@
   --image-size-64: 64px;
   --image-size-100: 100px;
 
-  /* Spacing Scale (ui spacing parity) — deliberately NOT --spacing-*: that
+  /* Spacing Scale (legacy ui spacing) — deliberately NOT --spacing-*: that
      namespace would rebind the Tailwind 4px-grid utilities (p-12 → 12px). */
   --ui-spacing-none: 0px;
   --ui-spacing-1: 1px;
@@ -513,10 +512,10 @@
   --ui-spacing-48: 48px;
   --ui-spacing-60: 60px;
 
-  /* Heights (ui/src/theme/heights.ts parity; no Tailwind namespace — plain vars, no utilities) */
+  /* Heights (no Tailwind namespace — plain vars, no utilities) */
   --height-interface-nav: 72px;
 
-  /* Z-Index Layers (ui zIndexes parity) — the Tailwind z-index namespace, so these
+  /* Z-Index Layers (legacy ui zIndexes) — the Tailwind z-index namespace, so these
      also create z-<name> utilities; all names are new, z-<number> is unaffected. */
   --z-index-negative: -1;
   --z-index-background: 0;
@@ -536,11 +535,11 @@
   --z-index-overlay: 100010;
   --z-index-toast: 100020;
 
-  /* Typography (ui fonts parity) — --text-* is the deliberately re-cut web type
-     scale and --font-* / --font-weight-* are live namespaces, so the ui-parity
+  /* Typography (legacy ui fonts) — --text-* is the deliberately re-cut web type
+     scale and --font-* / --font-weight-* are live namespaces, so the legacy
      variants live under --typography-* (plain vars, no utilities). Fractional
-     line-heights are the ui computed values (fontSize x ratio) at full float
-     precision; letter-spacing keeps the ui percent encoding. The ui family and
+     line-heights are the legacy computed values (fontSize x ratio) at full float
+     precision; letter-spacing keeps the legacy percent encoding. The legacy family and
      maxFontSizeMultiplier members have no CSS representation — see src/tokens.ts. */
   --typography-heading-1: 52px;
   --typography-heading-1--line-height: 50px;

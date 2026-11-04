@@ -1,13 +1,22 @@
 import { isMobileApp, isWebPlatform } from '@universe/environment'
-import { AnimatedFlex, Flex, type FlexProps, Separator, Text, TouchableArea, useSporeColors } from '@universe/mycelium'
+import {
+  AnimatedFlex,
+  Flex,
+  type FlexProps,
+  Separator,
+  Text,
+  TouchableArea,
+  useSporeColors,
+  iconSizes,
+  spacing,
+} from '@universe/mycelium'
 import { HeightAnimator } from '@universe/mycelium/height-animator'
+import { ExternalLink } from '@universe/mycelium/icons/ExternalLink'
 import { SPORE_ANIMATION_CURVE_CSS } from '@universe/tailwind/animations'
 import { withSporeCurve } from '@universe/tailwind/animations/reanimated'
 import { useCallback } from 'react'
 import { FlatList } from 'react-native-gesture-handler'
 import type { EntryExitAnimationFunction } from 'react-native-reanimated'
-import { ExternalLink } from 'ui/src/components/icons'
-import { iconSizes, padding, spacing } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { ExplorerDataType, getExplorerLink, openUri } from 'uniswap/src/utils/linking'
@@ -86,7 +95,7 @@ export function ActiveNetworkExpando({
               backgroundColor: colors.surface2.get(),
               borderRadius: spacing.spacing12,
               maxHeight,
-              paddingHorizontal: padding.padding12,
+              paddingHorizontal: spacing.spacing12,
             }}
             ItemSeparatorComponent={Separator}
           />

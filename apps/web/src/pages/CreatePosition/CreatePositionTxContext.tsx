@@ -191,6 +191,7 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
     poolOrPair,
     poolId,
     depositState,
+    creatingPoolOrPair: creatingPoolOrPair ?? false,
   })
 
   const { customDeadline, customSlippageTolerance, isSlippageDirty } = useTransactionSettingsStore((s) => ({
@@ -248,8 +249,7 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
     if (protocolVersion !== ProtocolVersion.V4) {
       return undefined
     }
-    // Only set native token balance if the token0 is the native token
-    // other tokens (CELO) are not treated as native tokens
+    // Only set native token balance if token0 is native; other tokens (CELO) are not treated as native
     if (currencyMaxAmounts?.TOKEN0?.currency.isNative) {
       return currencyMaxAmounts.TOKEN0.quotient.toString()
     }

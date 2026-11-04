@@ -1,18 +1,13 @@
 /**
  * The public prop contract of `IconButtonCompat` — the drop-in twin of the
- * legacy `ui/src` `IconButton`
- * (`packages/ui/src/components/buttons/IconButton/IconButton.tsx`).
+ * legacy `ui/src` `IconButton`.
  *
  * The legacy type is CONSTRUCTED, not hand-listed:
  * `{ icon; size? } & OmitIncludingToLowercase<ButtonProps, 'flex' | 'icon' |
  * 'size' | 'height' | 'width'>`. This contract applies the same operator to
  * the compat's Button-tier surface (the `ButtonFrameCompat` variant + open
  * style contract plus the Button orchestration props), so the key set tracks
- * the legacy surface structurally instead of by a copyable list — the
- * coverage is pinned against the live legacy type in
- * `packages/tailwind/src/parity/icon-button/type-parity.ts` (compiled through
- * the real tsc by the neighbouring `type-parity.test.ts`; the native suite
- * defers to it rather than duplicating the check).
+ * the legacy surface structurally instead of by a copyable list.
  *
  * `tsc` has no platform-extension resolution, so this module (via the base
  * leg) is what every consumer typechecks against; the press handlers keep the

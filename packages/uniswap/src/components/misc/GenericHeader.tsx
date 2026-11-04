@@ -1,7 +1,15 @@
-import { Flex, type FlexProps, type SpaceTokens, Text, getTokenValue } from '@universe/mycelium'
+import {
+  Flex,
+  type FlexProps,
+  type SpaceTokens,
+  Text,
+  getTokenValue,
+  fonts,
+  type IconSizeTokens,
+  type TextVariantKey,
+} from '@universe/mycelium'
 import type { GeneratedIcon } from '@universe/mycelium/icons'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
-import { fonts, IconSizeTokens, TextVariantTokens } from 'ui/src/theme'
 type GenericHeaderProps = {
   Icon?: GeneratedIcon
   /* Size of the icon itself.*/
@@ -9,9 +17,9 @@ type GenericHeaderProps = {
   /* The icon padding is relative to the icon size. If a value is provided, it will override the default padding. */
   iconPaddingOverride?: SpaceTokens
   title?: string
-  titleVariant?: TextVariantTokens
+  titleVariant?: TextVariantKey
   subtitle?: string
-  subtitleVariant?: TextVariantTokens
+  subtitleVariant?: TextVariantKey
   flexProps?: FlexProps
 }
 

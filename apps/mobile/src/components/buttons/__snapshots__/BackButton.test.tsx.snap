@@ -20,7 +20,7 @@ exports[`BackButton > renders without error 1`] = `
         <div
           fill="none"
           stroke-width="8"
-          style="width: 24px; height: 24px; color: rgba(19, 19, 19, 0.63);"
+          style="color: rgba(19, 19, 19, 0.63); width: 24px; height: 24px;"
           viewbox="0 0 24 24"
         >
           <div

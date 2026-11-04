@@ -12,9 +12,6 @@
  *   (`hover:`, `group-*`, `media-*`, `md:`/`max-md:`, `shadow-short|medium|large`,
  *   `accent3`);
  * - no border-width class ever ships without a border-color class beside it.
- *
- * The counterpart CSS-existence proofs (real Tailwind engine / real uniwind
- * store, both themes) live in `packages/tailwind/src/parity/checkbox/`.
  */
 import { readFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
@@ -201,7 +198,7 @@ describe('border-width classes never ship without a border-color class', () => {
 })
 
 describe('legacy color derivation', () => {
-  it('unchecked frames border $neutral2, disabled frames $neutral3 (Checkbox.tsx:81)', () => {
+  it('unchecked frames border $neutral2, disabled frames $neutral3', () => {
     expect(checkboxBoxClassName(frame())).toContain('border-neutral2')
     expect(checkboxBoxClassName(frame({ disabled: true }))).toContain('border-neutral3')
     expect(checkboxBoxClassName(frame({ disabled: true, checked: true }))).toContain('border-neutral3')
@@ -216,7 +213,7 @@ describe('legacy color derivation', () => {
     )
   })
 
-  it('the indicator fills with the accent, or $neutral3 when disabled (Checkbox.tsx:108)', () => {
+  it('the indicator fills with the accent, or $neutral3 when disabled', () => {
     expect(checkboxIndicatorClassName(frame({ checked: true }))).toContain('bg-neutral1')
     expect(checkboxIndicatorClassName(frame({ checked: true, variant: 'branded' }))).toContain('bg-accent1')
     expect(checkboxIndicatorClassName(frame({ checked: true, disabled: true }))).toContain('bg-neutral3')
@@ -233,7 +230,7 @@ describe('legacy color derivation', () => {
     expect(checkboxFocusRingClassName(frame({ focused: true, variant: 'branded' }))).toContain('border-neutral3')
   })
 
-  it('the check glyph is $surface1, white when branded, $neutral2 when disabled (Checkbox.tsx:114)', () => {
+  it('the check glyph is $surface1, white when branded, $neutral2 when disabled', () => {
     expect(checkGlyphColorToken({ disabled: false, variant: 'default' })).toBe('$surface1')
     expect(checkGlyphColorToken({ disabled: false, variant: 'branded' })).toBe('white')
     expect(checkGlyphColorToken({ disabled: true, variant: 'branded' })).toBe('$neutral2')
@@ -242,7 +239,7 @@ describe('legacy color derivation', () => {
     expect(checkGlyphClassName({ disabled: true, variant: 'default' })).toContain('border-neutral2')
   })
 
-  it('gates pointer events on disabled, emitting ONLY the disabled form (Checkbox.tsx:94)', () => {
+  it('gates pointer events on disabled, emitting ONLY the disabled form', () => {
     expect(checkboxBoxClassName(frame({ disabled: true }))).toContain('pointer-events-none')
     expect(checkboxBoxClassName(frame())).not.toMatch(/pointer-events-/)
   })
@@ -271,9 +268,8 @@ describe('the inline-style lane never carries an unresolved `$` token', () => {
    * `SPACE_TOKEN_PX` without adding the three classes now fails here instead of
    * shipping a silent no-op.
    *
-   * This matters because neither existing gate can see it: the native emission
-   * gate enumerates classNames and an inline style has none, and the web parity
-   * comparison is scoped to the focus-ring frame.
+   * This matters because the class-universe gate enumerates classNames, and an
+   * inline style has none.
    */
   const SPACE_TOKENS = Object.keys(SPACE_TOKEN_PX)
 

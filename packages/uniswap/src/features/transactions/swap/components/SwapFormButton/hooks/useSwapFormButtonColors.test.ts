@@ -75,7 +75,10 @@ vi.mock('uniswap/src/features/accounts/store/hooks', () => ({
 
 vi.mock('uniswap/src/features/providers/webForNudgeProvider', () => ({
   useIsShowingWebFORNudge: () => mockUseIsShowingWebFORNudge(),
-  useIsWebFORNudgeEnabled: () => mockUseIsWebFORNudgeEnabled(),
+}))
+
+vi.mock('uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsWebFORNudgeActive', () => ({
+  useIsWebFORNudgeActive: () => mockUseIsWebFORNudgeEnabled(),
 }))
 
 vi.mock('uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext', () => ({
@@ -142,6 +145,33 @@ describe('useSwapFormButtonColors — permissioned-pool branch', () => {
     const { result } = renderHook(() => useSwapFormButtonColors('#abcabc'))
 
     expect(result.current.variant).toBe('default')
+    expect(result.current.emphasis).toBe('secondary')
+  })
+})
+
+describe('useSwapFormButtonColors — web FOR nudge', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    setupDefaults()
+    mockUseIsWebFORNudgeEnabled.mockReturnValue(true)
+  })
+
+  it.each([true, false])('uses branded+secondary with accent2 and accent1 text (blocking: %s)', (isBlocking) => {
+    mockUseIsBlockingWithCustomMessage.mockReturnValue(isBlocking)
+
+    const { result } = renderHook(() => useSwapFormButtonColors('#abcabc'))
+
+    expect(result.current.variant).toBe('branded')
+    expect(result.current.emphasis).toBe('secondary')
+    expect(result.current.backgroundColor).toBe('$accent2')
+    expect(result.current.buttonTextColor).toBe('$accent1')
+  })
+
+  it('uses secondary emphasis while submitting', () => {
+    mockUseSwapFormStore.mockImplementation((selector: (s: unknown) => unknown) => selector({ isSubmitting: true }))
+
+    const { result } = renderHook(() => useSwapFormButtonColors('#abcabc'))
+
     expect(result.current.emphasis).toBe('secondary')
   })
 })

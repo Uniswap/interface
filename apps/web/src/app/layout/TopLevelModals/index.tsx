@@ -9,16 +9,15 @@ import { useActiveAddresses } from 'uniswap/src/features/accounts/store/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { AnalyticsDebugOverlayLazy } from 'uniswap/src/features/telemetry/debug/AnalyticsDebugOverlayLazy'
 import { useEvent } from 'utilities/src/react/hooks'
-import { BlastShutdownConnectModal } from '~/app/layout/TopLevelModals/BlastShutdownConnectModal'
 import { ModalRenderer } from '~/app/layout/TopLevelModals/modalRegistry'
-import { OAuthRedirectProvider } from '~/components/Passkey/OAuthRedirectContext'
-import { useOAuthRedirectRouter } from '~/components/Passkey/useOAuthRedirectRouter'
-import { POPUP_MEDIUM_DISMISS_MS } from '~/components/Popups/constants'
+import { useAccountRiskCheck } from '~/app/layout/TopLevelModals/useAccountRiskCheck'
 import { GlobalEarnVaultModal } from '~/features/earn/GlobalEarnVaultModal'
-import { useAccountRiskCheck } from '~/hooks/useAccountRiskCheck'
+import { OAuthRedirectProvider } from '~/features/wallet/components/Passkey/OAuthRedirectContext'
+import { useOAuthRedirectRouter } from '~/features/wallet/components/Passkey/useOAuthRedirectRouter'
 import { PageType, useIsPage } from '~/hooks/useIsPage'
-import { popupRegistry } from '~/state/popups/registry'
-import { PopupType } from '~/state/popups/types'
+import { POPUP_MEDIUM_DISMISS_MS } from '~/utils/popups/constants'
+import { popupRegistry } from '~/utils/popups/registry'
+import { PopupType } from '~/utils/popups/types'
 
 export function TopLevelModals() {
   useOAuthRedirectRouter()
@@ -117,8 +116,8 @@ export function TopLevelModals() {
       <ModalRenderer modalName={ModalName.DataApiOutage} />
       <ModalRenderer modalName={ModalName.UnitagRateLimitSpeedbump} />
       <ModalRenderer modalName={ModalName.UnsupportedBrowser} />
+      <ModalRenderer modalName={ModalName.AddFunds} />
       <GlobalEarnVaultModal />
-      <BlastShutdownConnectModal />
     </OAuthRedirectProvider>
   )
 }

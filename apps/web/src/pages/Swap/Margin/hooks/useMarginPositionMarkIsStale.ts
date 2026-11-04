@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
+import { MARGIN_ACTIVE_POSITION_STATUSES } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
 import { useMarginPositionsQuery } from 'uniswap/src/data/apiClients/tradingApi/useMarginPositionsQuery'
+import { useAccount } from '~/connection/hooks/useAccount'
 import { MARGIN_CHAIN_ID, MARGIN_POSITIONS_REFETCH_MS } from '~/constants/margin'
-import { useAccount } from '~/hooks/useAccount'
-import { isMarkStale } from '~/pages/Swap/Margin/marginFormat'
+import { isMarkStale } from '~/features/margin/utils/marginFormat'
 
 // Whether the mark a POSITION carries has aged out. `oraclePrice` is stamped by the positions poll, so
 // a surface measuring against it tracks THAT poll — the markets poll stamps market marks and says
@@ -10,7 +11,9 @@ import { isMarkStale } from '~/pages/Swap/Margin/marginFormat'
 export function useMarginPositionMarkIsStale(): boolean {
   const account = useAccount()
   const { dataUpdatedAt } = useMarginPositionsQuery({
-    params: account.address ? { swapper: account.address, chainId: MARGIN_CHAIN_ID } : undefined,
+    params: account.address
+      ? { swapper: account.address, chainId: MARGIN_CHAIN_ID, statuses: MARGIN_ACTIVE_POSITION_STATUSES }
+      : undefined,
     refetchInterval: MARGIN_POSITIONS_REFETCH_MS,
   })
   // The threshold is time-derived, so it needs something to re-evaluate it. A successful poll re-renders

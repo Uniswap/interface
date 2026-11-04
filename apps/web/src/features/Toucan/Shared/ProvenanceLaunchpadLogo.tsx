@@ -1,5 +1,5 @@
+import { PoolsLogo } from '@universe/mycelium/icons/PoolsLogo'
 import { UniswapLogo } from '@universe/mycelium/icons/UniswapLogo'
-import { PoolsLogo } from 'ui/src/components/icons/PoolsLogo'
 import type { LaunchProvenance } from 'uniswap/src/features/dataApi/launchProvenance'
 import { resolveIpfsGatewayUrl } from 'utilities/src/format/gatewayUrls'
 import { usePoolsBrandGreen } from '~/hooks/usePoolsBrandGreen'

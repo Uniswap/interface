@@ -1,6 +1,5 @@
 import { isAndroid } from '@universe/environment'
-import { Flex, Text, useIsDarkMode } from '@universe/mycelium'
-import { imageSizes } from 'ui/src/theme'
+import { Flex, Text, useIsDarkMode, imageSizes } from '@universe/mycelium'
 import { UNITAG_SUFFIX } from 'uniswap/src/features/unitags/constants'
 import { UnitagProfilePicture } from 'wallet/src/features/unitags/UnitagProfilePicture'
 

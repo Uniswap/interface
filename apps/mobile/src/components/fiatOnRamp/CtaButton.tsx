@@ -1,8 +1,7 @@
-import { Button, useIsShortMobileDevice } from '@universe/mycelium'
+import { Button, useIsShortMobileDevice, SpinningLoader } from '@universe/mycelium'
+import { InfoCircleFilled } from '@universe/mycelium/icons/InfoCircleFilled'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { SpinningLoader } from 'ui/src'
-import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 
 interface FiatOnRampCtaButtonProps {
   onPress: () => void

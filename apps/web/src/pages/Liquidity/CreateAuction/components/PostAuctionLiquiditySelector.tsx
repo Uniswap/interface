@@ -1,11 +1,9 @@
 import { SharedEventName } from '@uniswap/analytics-events'
-import { Flex, Text, TouchableArea } from '@universe/mycelium'
+import { Flex, Text, TouchableArea, Tooltip, fonts, Input } from '@universe/mycelium'
+import { QuestionInCircleFilled } from '@universe/mycelium/icons/QuestionInCircleFilled'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { useCallback, useRef, useState, type ComponentRef, type RefObject } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Input, Tooltip } from 'ui/src'
-import { QuestionInCircleFilled } from 'ui/src/components/icons/QuestionInCircleFilled'
-import { fonts } from 'ui/src/theme'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -306,7 +304,7 @@ export function PostAuctionLiquiditySelector({
 }: PostAuctionLiquiditySelectorProps) {
   const { t } = useTranslation()
   const media = useMedia()
-  // `md` → ui/src/theme/media.ts (maxWidth: breakpoints.md); same breakpoint as auction supply presets.
+  // `md` → `BREAKPOINT_PX.md` (max-width); same breakpoint as auction supply presets.
   const stackCompactLayout = Boolean(media.md)
   const inputRef = useRef<InputRef>(null)
   const [isFocused, setIsFocused] = useState(false)

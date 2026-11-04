@@ -1,6 +1,6 @@
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
+import { Eye } from '@universe/mycelium/icons/Eye'
 import { useTranslation } from 'react-i18next'
-import { Eye } from 'ui/src/components/icons/Eye'
 
 type ViewOnlyButtonProps = {
   onPress: () => void

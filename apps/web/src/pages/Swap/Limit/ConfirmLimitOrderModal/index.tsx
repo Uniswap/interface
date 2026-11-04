@@ -7,7 +7,7 @@ import { ADAPTIVE_MODAL_ANIMATION_DURATION } from 'ui/src/components/modal/Adapt
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { ZERO_PERCENT } from '~/constants/misc'
-import { Allowance, AllowanceState } from '~/hooks/usePermit2Allowance'
+import { Allowance, AllowanceState } from '~/hooks/permit2/usePermit2Allowance'
 import {
   Error as ConfirmLimitOrderErrorPanel,
   PendingModalError,
@@ -25,12 +25,12 @@ import { useConfirmModalState } from '~/pages/Swap/Limit/ConfirmLimitOrderModal/
 import { LimitOrderDetails } from '~/pages/Swap/Limit/LimitOrderDetails'
 import { LimitOrderPreview } from '~/pages/Swap/Limit/LimitOrderPreview'
 import { useSuppressPopups } from '~/state/application/hooks'
-import { PopupType } from '~/state/popups/types'
 import { InterfaceTrade } from '~/state/routing/types'
 import { isLimitTrade, isPreviewTrade, isUniswapXTradeType } from '~/state/routing/utils'
 import { useUniswapXOrderByOrderHash } from '~/state/transactions/hooks'
 import type { LimitOrderResult } from '~/types/trade'
 import { SignatureExpiredError, UniswapXv2HardQuoteError } from '~/utils/errors'
+import { PopupType } from '~/utils/popups/types'
 import { didUserReject } from '~/utils/swapErrorToUserReadableMessage'
 
 /** Must match `curve` on `AnimateTransition` below so held error UI clears after exit completes. */

@@ -7,8 +7,10 @@ import { MarginOpenButton } from '~/pages/Swap/Margin/components/MarginOpenButto
 import type { DerivedMarginInfo } from '~/pages/Swap/Margin/hooks/useDerivedMarginInfo'
 import { render } from '~/test-utils/render'
 
-vi.mock('~/hooks/useAccount', () => ({ useAccount: () => ({ address: '0x000000000000000000000000000000000000A1' }) }))
-vi.mock('~/components/AccountDrawer/MiniPortfolio/hooks', () => ({ useAccountDrawer: () => ({ open: vi.fn() }) }))
+vi.mock('~/connection/hooks/useAccount', () => ({
+  useAccount: () => ({ address: '0x000000000000000000000000000000000000A1' }),
+}))
+vi.mock('~/state/accountDrawer/hooks', () => ({ useAccountDrawer: () => ({ open: vi.fn() }) }))
 vi.mock('~/pages/Swap/Margin/hooks/useExecuteMarginPlan', () => ({
   useExecuteMarginPlan: () => ({ resumePlan: vi.fn() }),
 }))

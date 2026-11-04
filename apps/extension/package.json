@@ -3,7 +3,6 @@
   "version": "0.0.0",
   "browserslist": "last 2 chrome versions",
   "dependencies": {
-    "@apollo/client": "3.11.10",
     "@datadog/browser-rum": "6.10.1",
     "@ethersproject/bignumber": "5.7.0",
     "@ethersproject/providers": "5.7.2",

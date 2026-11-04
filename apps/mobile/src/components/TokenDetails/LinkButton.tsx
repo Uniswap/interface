@@ -3,7 +3,6 @@ import type { GeneratedIcon, IconProps } from '@universe/mycelium/icons'
 import { CopySheets } from '@universe/mycelium/icons/CopySheets'
 import { TestIDType } from '@universe/test'
 import React from 'react'
-import { SvgProps } from 'react-native-svg'
 import { useSelector } from 'react-redux'
 import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
 import { selectHasViewedContractAddressExplainer } from 'uniswap/src/features/behaviorHistory/selectors'
@@ -18,7 +17,7 @@ export enum LinkButtonType {
 
 export type LinkButtonProps = {
   label: string
-  Icon?: React.FC<SvgProps & { size?: IconProps['size'] }> | GeneratedIcon
+  Icon?: React.FC<Pick<IconProps, 'size' | 'color'>> | GeneratedIcon
   element: ElementName
   openExternalBrowser?: boolean
   isSafeUri?: boolean

@@ -1,10 +1,6 @@
 /**
- * The `Input` compat prop contract (INFRA-3600), transcribed from the
- * Tamagui-free `ui/src` Input rebuild (INFRA-3318) so a converted call site
- * typechecks against the SAME closed style surface it typechecked against on
- * `ui/src`. Structural identity with the legacy `InputStyleProps` /
- * `InputProps` is pinned by `packages/tailwind/src/parity/input/type-parity.ts`
- * — widen or narrow a prop here and that gate goes red naming the key.
+ * The `Input` compat prop contract (INFRA-3600): the closed style surface the
+ * legacy Input accepted, so converted call sites keep typechecking.
  *
  * Token-shaped props stay token-shaped (`"$spacing8"`, `"$rounded12"`,
  * `"$surface1"`) — narrowing a token prop to a scalar is the INFRA-3232
@@ -55,7 +51,7 @@ export type ColorTokenValue = `$${ThemeColorName}` | (string & {})
 export type FontFamilyTokenValue = `$${keyof typeof fontFamilyTokens}` | (string & {})
 
 /**
- * Style surface the legacy Tamagui Input accepted at our call sites, token-valued where the
+ * Style surface the legacy Input accepted at our call sites, token-valued where the
  * old styled() props were. Also the shape of focusStyle / hoverStyle / groupHoverStyle overrides.
  */
 export type InputCompatStyleProps = {
@@ -311,10 +307,8 @@ export function pickStyleProps(props: Record<string, unknown>): InputCompatStyle
 }
 
 /**
- * The legacy `inputStyles` helper (`ui/src/components/input/utils.ts`,
- * re-exported from the `ui/src` barrel) — verbatim, so
- * `focusStyle={inputStyles.inputFocus}` call sites convert by swapping the
- * import source.
+ * Shared focus/hover presets for `focusStyle={inputStyles.inputFocus}`-style
+ * call sites (formerly ui's `inputStyles`).
  */
 export const inputStyles = {
   noOutline: { outlineWidth: 0 },

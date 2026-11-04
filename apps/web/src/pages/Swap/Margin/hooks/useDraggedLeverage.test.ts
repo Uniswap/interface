@@ -69,20 +69,4 @@ describe('useDraggedLeverage', () => {
       expect(result.current.draggedLeverage).toBe(3)
     }
   })
-
-  it('reports an explicit change so a sheet can release its hold-leverage toggle', () => {
-    const onExplicitChange = vi.fn()
-    const { result } = renderHook(() => useDraggedLeverage({ market: MARKET, onExplicitChange }))
-    act(() => result.current.onSliderChange(3))
-    expect(onExplicitChange).toHaveBeenCalled()
-  })
-
-  it('clears both the stored target and the draft together', () => {
-    const { result } = renderHook(() => useDraggedLeverage({ market: MARKET }))
-    act(() => result.current.setExplicitLeverage(4))
-    act(() => result.current.setLeverageDraft('2'))
-    act(() => result.current.clearDraggedLeverage())
-    expect(result.current.draggedLeverage).toBeUndefined()
-    expect(result.current.leverageDraft).toBeUndefined()
-  })
 })

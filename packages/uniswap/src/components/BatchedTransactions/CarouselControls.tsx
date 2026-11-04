@@ -1,7 +1,7 @@
 import { isExtensionApp } from '@universe/environment'
 import { Flex, iconSizes, LinearGradient, spacing, TouchableArea, zIndexes } from '@universe/mycelium'
+import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
 import { opacify, useSporeColors } from '@universe/mycelium/theme-hooks-compat'
-import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 
 export const ScrollArrow = ({ onPress, side }: { onPress: () => void; side: 'left' | 'right' }): JSX.Element => {
   const iconSize = iconSizes.icon24

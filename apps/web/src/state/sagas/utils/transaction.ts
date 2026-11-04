@@ -94,7 +94,7 @@ export const createUniverseTransaction = ({
         outputCurrencyId: info.quoteCurrencyId,
       })
       break
-    // Native token spends already handled in the refetchGQLQueries saga, plus the four margin types —
+    // Native token spends already handled in the refetchQueries saga, plus the four margin types —
     // not native spends, but they need no special mapping either, so they share the base shape.
     case TransactionType.Approve:
     case TransactionType.ClaimUni:

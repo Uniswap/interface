@@ -1,4 +1,4 @@
-import { Input } from 'ui/src'
+import { Input } from '@universe/mycelium'
 import type { GasFieldTextInputProps } from 'uniswap/src/features/gas/components/NetworkCostEditor/GasFieldTextInput'
 
 export function GasFieldTextInput({

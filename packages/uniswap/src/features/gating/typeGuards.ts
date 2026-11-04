@@ -1,6 +1,5 @@
-import { GraphQLApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
-import { AuctionLpPercentOverridesMap, RWAIssuerLogosMap } from '@universe/gating'
+import { RWAIssuerLogosMap } from '@universe/gating'
 
 export const isRWAIssuerLogosMap = (x: unknown): x is RWAIssuerLogosMap => {
   if (x === null || typeof x !== 'object') {
@@ -15,15 +14,5 @@ export const isRWAIssuerLogosMap = (x: unknown): x is RWAIssuerLogosMap => {
   })
 }
 
-export const isAuctionLpPercentOverridesMap = (x: unknown): x is AuctionLpPercentOverridesMap =>
-  x !== null &&
-  typeof x === 'object' &&
-  !Array.isArray(x) &&
-  Object.values(x).every((percent) => typeof percent === 'number' && Number.isFinite(percent))
-
 export const isUniverseChainIdArrayType = (x: unknown): x is UniverseChainId[] =>
   Array.isArray(x) && x.every((c: unknown) => typeof c === 'number')
-
-export const isContractInputArrayType = (x: unknown): x is GraphQLApi.ContractInput[] =>
-  Array.isArray(x) &&
-  x.every((val) => typeof val.chain === 'string' && (!val.address || typeof val.address === 'string'))

@@ -24,9 +24,6 @@ const webConfigValues = {
 
   // #region Endpoint URLs
 
-  /** AWS_API_ENDPOINT — Apollo GraphQL API */
-  awsApiEndpoint: process.env.AWS_API_ENDPOINT ?? process.env.REACT_APP_AWS_API_ENDPOINT,
-
   /** UNISWAP_GATEWAY_DNS — gateway v2 (routing, order status, UniswapX) */
   uniswapGatewayDns: process.env.UNISWAP_GATEWAY_DNS ?? process.env.REACT_APP_UNISWAP_GATEWAY_DNS,
 
@@ -106,7 +103,6 @@ export const webConfigSchema = z.object({
   walletConnectProjectId: z.string().min(1).describe('Project ID for WalletConnect'),
 
   // Endpoint URLs
-  awsApiEndpoint: z.string().min(1).describe('URL for Apollo GraphQL API'),
   uniswapGatewayDns: z.string().min(1).describe('URL for Uniswap gateway v2'),
   entryGatewayApiUrl: z.string().optional().describe('URL for entry gateway BFF proxy'),
   websocketUrl: z.string().optional().describe('URL for WebSocket proxy'),

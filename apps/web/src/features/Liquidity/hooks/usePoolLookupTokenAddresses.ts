@@ -1,7 +1,7 @@
 import type { Currency } from '@uniswap/sdk-core'
 import { Platform } from '@universe/chains'
 import { usePermissionedSwapPair } from 'uniswap/src/features/permissionedTokens/usePermissionedSwapPair'
-import { useActiveAddress } from '~/features/accounts/store/hooks'
+import { useActiveAddress } from '~/connection/accounts/hooks'
 import { getTokenOrZeroAddress } from '~/features/Liquidity/utils/currency'
 
 export type PoolLookupTokenAddresses = {

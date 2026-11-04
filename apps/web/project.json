@@ -26,6 +26,13 @@
       },
       "continuous": true
     },
+    "anvil:bnb": {
+      "command": "dotenv -- ./scripts/start-anvil.sh bnb",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "continuous": true
+    },
     "anvil:mainnet": {
       "command": "dotenv -- ./scripts/start-anvil.sh mainnet",
       "options": {
@@ -162,12 +169,6 @@
     },
     "format": {},
     "format:check": {},
-    "graphql:generate": {
-      "command": "echo 'GraphQL generation handled by uniswap package'",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
     "lint": {},
     "lint:fix": {},
     "lint:oxlint": {},

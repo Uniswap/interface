@@ -1,4 +1,4 @@
-import type { SwapWarningDisplay, SwapWarningSeverity } from '@universe/swap-ui'
+import type { SwapWarningDisplay, SwapWarningSeverity } from '@universe/transactions-ui'
 import { type Warning, WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 
 const SEVERITY_TO_DISPLAY: Record<WarningSeverity, SwapWarningSeverity> = {

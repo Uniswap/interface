@@ -1,4 +1,4 @@
-import { GraphQLApi, TradingApi } from '@universe/api'
+import { TradingApi } from '@universe/api'
 import { UniverseChainId, Platform } from '@universe/chains'
 import { isWebApp, isE2eTestEnv } from '@universe/environment'
 import { BASE_LOGO, ETH_LOGO } from '@universe/mycelium/assets'
@@ -13,7 +13,7 @@ import {
 } from 'uniswap/src/features/chains/evm/rpc'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
 import { GENERIC_L2_GAS_CONFIG } from 'uniswap/src/features/chains/gasDefaults'
-import { GqlChainId, NetworkLayer, RPCType, UniverseChainInfo } from 'uniswap/src/features/chains/types'
+import { NetworkLayer, RPCType, UniverseChainInfo } from 'uniswap/src/features/chains/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { buildUSDC } from 'uniswap/src/features/tokens/stablecoin'
 import { base } from 'wagmi/chains'
@@ -32,7 +32,6 @@ export const BASE_CHAIN_INFO = {
   platform: Platform.EVM,
   supportedApps: ALL_APPS_CHAIN_SUPPORTED_APPS,
   backendChain: {
-    chain: GraphQLApi.Chain.Base as GqlChainId,
     backendSupported: true,
     nativeTokenBackendAddress: undefined,
   },

@@ -34,6 +34,7 @@ export enum ReactQueryCacheKey {
   GetWalletsBalances = 'GetWalletsBalances',
   GetWalletTokenProfitLoss = 'GetWalletTokenProfitLoss',
   GetWalletTokensProfitLoss = 'GetWalletTokensProfitLoss',
+  Hooks = 'Hooks',
   IsErc20ContractAddress = 'IsErc20ContractAddress',
   IsSmartContractAddress = 'IsSmartContractAddress',
   LimitOrdersByHash = 'LimitOrdersByHash',

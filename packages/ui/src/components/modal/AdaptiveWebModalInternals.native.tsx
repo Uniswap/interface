@@ -70,11 +70,6 @@ export function useSheetFitHeightFreeze(_options: {
   throw new PlatformSplitStubError('useSheetFitHeightFreeze')
 }
 
-export function useSheetDrag(_options: {
-  isOpen: boolean
-  isTouchDevice: boolean
-  onClose?: () => void
-  frame: HTMLDivElement | null
-}): void {
+export function useSheetDrag(_options: { isOpen: boolean; onClose?: () => void; frame: HTMLDivElement | null }): void {
   throw new PlatformSplitStubError('useSheetDrag')
 }

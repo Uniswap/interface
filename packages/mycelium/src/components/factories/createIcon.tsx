@@ -107,7 +107,7 @@ export type IconProps = Omit<
 export type GeneratedIconProps = IconProps
 /**
  * The ref target is platform-dependent and typed as the honest union
- * (INFRA-3508, copying ui/src's INFRA-3314 rebuild): the rendered DOM
+ * (INFRA-3508): the rendered DOM
  * `SVGSVGElement` on web, the react-native-svg `Svg` instance on device.
  */
 export type GeneratedIcon = ForwardRefExoticComponent<GeneratedIconProps & RefAttributes<Svg | SVGSVGElement>>
@@ -128,15 +128,13 @@ export type IconPressHandler = IconBivariantHandler<MouseEvent<SVGSVGElement> | 
 export type SvgPropsWithRef = Omit<SVGProps<SVGSVGElement>, 'ref'> & { ref: ForwardedRef<Svg | SVGSVGElement> }
 
 /**
- * Plain-React port of the legacy `ui/src/components/factories/createIcon`
- * (INFRA-2956; styling surface widened by INFRA-3320): same call shape, no
- * Tamagui, and no react-native-svg at runtime on this leg.
+ * Icon factory (styling surface per INFRA-3320): no react-native-svg at
+ * runtime on this leg.
  *
  * PLATFORM SPLIT (INFRA-3508): this base leg IS the web implementation — it
  * cannot be a throwing stub because the `./icons/*` exports map resolves deep
  * icon imports to exact base files, and the generated icons call the factory
- * at module scope. Metro and the native parity harness resolve
- * `createIcon.native.tsx` (react-native-svg dialect) through the generated
+ * at module scope. Metro resolves `createIcon.native.tsx` (react-native-svg dialect) through the generated
  * icons' extensionless import instead; the generated markup itself is
  * platform-agnostic via `svg-elements.ts` / `svg-elements.native.ts`. Export
  * parity across the legs is pinned by `platform-legs.test.ts`.
@@ -152,9 +150,7 @@ export type SvgPropsWithRef = Omit<SVGProps<SVGSVGElement>, 'ref'> & { ref: Forw
  * rides inline style, never a presentation attribute, matching legacy
  * specificity: container CSS like `[&_svg]:size-4` or `svg { color: … }`
  * must lose to props and defaults on both systems. The caller's own `style`
- * still wins. The channel matrix in
- * `packages/tailwind/src/parity/icons/token-props.parity.test.tsx` pins
- * every cell. The one scoped exception: a `$group-*`/media pool (or
+ * still wins. The one scoped exception: a `$group-*`/media pool (or
  * `hoverColor`, which rides the same engine as a `hover:` pool) moves the
  * exact base props it overrides onto the class channel for that render
  * (inline style would beat the variant classes) — see
@@ -255,9 +251,9 @@ export function createIcon({
   // compat/primitive-marker.ts): the legacy TouchableArea injects
   // boundary-mapped hover `color` guidance into icon-marked children
   // (INFRA-3537), while other legacy color-injecting wrappers still see the
-  // generic marker and skip the clone — their `color ?? '$accent3'` default
-  // is a rejected token here. It no longer throws: `resolveIconColor` logs one
-  // error and drops, so such a wrapper costs a colour, not the whole render.
+  // generic marker and skip the clone. An unmapped injected colour no longer
+  // throws: `resolveIconColor` logs one error and drops, so such a wrapper
+  // costs a colour, not the whole render.
   markMyceliumIcon(Icon)
 
   return [Icon, Icon] as const

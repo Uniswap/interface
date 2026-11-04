@@ -2,8 +2,8 @@ import type { MarginQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi
 import type { MarginVenue } from 'uniswap/src/features/transactions/margin/types'
 import { describe, expect, it } from 'vitest'
 import type { MarginMarket } from '~/constants/margin'
+import { usablePriceX18, usableWireAmount } from '~/features/margin/utils/marginFormat'
 import { getDefaultMarginMarket } from '~/pages/Swap/Margin/__fixtures__/marginCatalog'
-import { usablePriceX18, usableWireAmount } from '~/pages/Swap/Margin/marginFormat'
 import {
   resolvePinnedMarkPriceX18,
   resolveRoutedMarkPriceX18,

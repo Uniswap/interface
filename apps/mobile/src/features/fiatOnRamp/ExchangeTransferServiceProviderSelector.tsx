@@ -1,10 +1,17 @@
-import { Flex, Text, TouchableArea, UniversalImage, UniversalImageResizeMode, AnimatedFlex } from '@universe/mycelium'
+import {
+  Flex,
+  Text,
+  TouchableArea,
+  UniversalImage,
+  UniversalImageResizeMode,
+  AnimatedFlex,
+  iconSizes,
+} from '@universe/mycelium'
 import { useIsDarkMode } from '@universe/mycelium/theme-hooks-compat'
 import React, { useCallback } from 'react'
 import { FlatList, ListRenderItemInfo } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { navigate } from 'src/app/navigation/rootNavigation'
-import { iconSizes } from 'ui/src/theme'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { getOptionalServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'

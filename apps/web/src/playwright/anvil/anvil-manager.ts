@@ -3,6 +3,7 @@ import { type ChildProcess, spawn } from 'child_process'
 import * as fs from 'fs'
 import * as path from 'path'
 import {
+  bsc,
   createClient,
   createTestClient,
   http,
@@ -37,6 +38,8 @@ loadTestRunnerEnv(process.cwd())
 export const TEST_WALLET_PRIVATE_KEY = '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'
 
 interface AnvilConfig {
+  /** The forked chain: selects the fork-source defaults, port, pin and state fixture (see anvil-args.ts). */
+  chainId: number
   port: number
   host: string
   /** Async fork-source seam: resolved fresh on every (re)launch, so relaunches pick up refreshed credentials. */
@@ -80,6 +83,21 @@ interface AnvilManager {
 }
 
 const MAINNET_CHAIN_ID = 1
+const BNB_CHAIN_ID = 56
+
+const VIEM_CHAINS: Partial<Record<number, typeof mainnet | typeof bsc>> = {
+  [MAINNET_CHAIN_ID]: mainnet,
+  [BNB_CHAIN_ID]: bsc,
+}
+
+/** The viem chain for a forked chain id; signing a tx for the wrong chain id fails on the fork. */
+function viemChainFor(chainId: number): typeof mainnet | typeof bsc {
+  const chain = VIEM_CHAINS[chainId]
+  if (!chain) {
+    throw new Error(`No viem chain for anvil chainId ${chainId} (known: ${Object.keys(VIEM_CHAINS).join(', ')})`)
+  }
+  return chain
+}
 
 /**
  * Anvil forks the static per-chain default (PublicNode; override via ANVIL_FORK_URL,
@@ -88,28 +106,31 @@ const MAINNET_CHAIN_ID = 1
  * ~/playwright/anvil/unirpc-fork.ts; without a session uni RPC 401s fork requests).
  * Whatever the source, the fork block is pinned for deterministic chain state.
  */
-function buildAnvilConfig(overrides?: Partial<AnvilConfig>): AnvilConfig {
+function buildAnvilConfig(chainId: number, overrides?: Partial<AnvilConfig>): AnvilConfig {
+  const chainDefaults = resolveForkChainDefaults({ chainId })
+  const forkBlockNumber = overrides?.forkBlockNumber ?? resolvePinnedForkBlock({ chainId })
   return {
-    port: overrides?.port ?? parseInt(process.env.ANVIL_PORT ?? '8545'),
+    chainId,
+    // ANVIL_PORT has always meant the mainnet fork's port; other chains use their checked-in port.
+    port:
+      overrides?.port ??
+      (chainId === MAINNET_CHAIN_ID
+        ? parseInt(process.env.ANVIL_PORT ?? String(chainDefaults.defaultPort))
+        : chainDefaults.defaultPort),
     host: overrides?.host ?? '127.0.0.1',
-    forkSource:
-      overrides?.forkSource ??
-      resolveForkSourceProvider({
-        defaultForkUrl: resolveForkChainDefaults({ chainId: MAINNET_CHAIN_ID }).forkUrl,
-        chainId: MAINNET_CHAIN_ID,
-      }),
-    forkBlockNumber: overrides?.forkBlockNumber ?? resolvePinnedForkBlock({ chainId: MAINNET_CHAIN_ID }),
-    loadStatePath:
-      overrides?.loadStatePath ??
-      resolveLoadStatePath({
-        chainId: MAINNET_CHAIN_ID,
-        forkBlockNumber: overrides?.forkBlockNumber ?? resolvePinnedForkBlock({ chainId: MAINNET_CHAIN_ID }),
-      }),
+    forkSource: overrides?.forkSource ?? resolveForkSourceProvider({ defaultForkUrl: chainDefaults.forkUrl, chainId }),
+    forkBlockNumber,
+    loadStatePath: overrides?.loadStatePath ?? resolveLoadStatePath({ chainId, forkBlockNumber }),
     verbose: overrides?.verbose ?? isAnvilVerbose(),
     // Generous: a health check can queue behind a slow upstream fork fetch (cold RPC
     // cache, slow gateway) — a premature timeout here used to trigger disruptive restarts.
     timeout: overrides?.timeout ?? 30_000,
-    logFile: overrides?.logFile ?? path.join(process.cwd(), `anvil-test-${process.pid}.log`),
+    logFile:
+      overrides?.logFile ??
+      path.join(
+        process.cwd(),
+        chainId === MAINNET_CHAIN_ID ? `anvil-test-${process.pid}.log` : `anvil-test-${chainId}-${process.pid}.log`,
+      ),
   }
 }
 
@@ -121,10 +142,10 @@ export type AnvilClient = ReturnType<typeof createTestClient> &
  * Create an Anvil client for interacting with the local node.
  * Exported for standalone node scripts (see scripts/generate-anvil-state.ts).
  */
-export function createAnvilClient(ctx: { url: string; timeout?: number }): AnvilClient {
+export function createAnvilClient(ctx: { url: string; timeout?: number; chainId?: number }): AnvilClient {
   return createTestClient({
     account: privateKeyToAccount(TEST_WALLET_PRIVATE_KEY),
-    chain: mainnet,
+    chain: viemChainFor(ctx.chainId ?? MAINNET_CHAIN_ID),
     mode: 'anvil',
     transport: http(ctx.url, {
       timeout: ctx.timeout,
@@ -139,7 +160,7 @@ export function createAnvilClient(ctx: { url: string; timeout?: number }): Anvil
 /**
  * Create an Anvil manager instance with lazy configuration
  */
-function createAnvilManager(configOverrides?: Partial<AnvilConfig>): AnvilManager {
+function createAnvilManager(chainId: number, configOverrides?: Partial<AnvilConfig>): AnvilManager {
   // State managed in closure
   let childProcess: ChildProcess | null = null
   let config: AnvilConfig | null = null
@@ -159,7 +180,7 @@ function createAnvilManager(configOverrides?: Partial<AnvilConfig>): AnvilManage
   // Lazy config getter
   const getConfig = (): AnvilConfig => {
     if (!config) {
-      config = buildAnvilConfig(configOverrides)
+      config = buildAnvilConfig(chainId, configOverrides)
     }
     return config
   }
@@ -169,7 +190,7 @@ function createAnvilManager(configOverrides?: Partial<AnvilConfig>): AnvilManage
     const cfg = getConfig()
     const url = `http://${cfg.host}:${cfg.port}`
     const client = createClient({
-      chain: mainnet,
+      chain: viemChainFor(cfg.chainId),
       transport: http(url, {
         timeout: cfg.timeout,
         retryCount: 1,
@@ -432,6 +453,7 @@ function createAnvilManager(configOverrides?: Partial<AnvilConfig>): AnvilManage
       return createAnvilClient({
         url: `http://${cfg.host}:${cfg.port}`,
         timeout: cfg.timeout,
+        chainId: cfg.chainId,
       })
     },
 
@@ -444,26 +466,20 @@ function createAnvilManager(configOverrides?: Partial<AnvilConfig>): AnvilManage
   return manager
 }
 
-// Singleton instance managed in module scope
-let managerInstance: AnvilManager | null = null
+// One manager per forked chain, created lazily so a chain's anvil only starts when a test asks for it.
+const managerInstances = new Map<number, AnvilManager>()
 
-/**
- * Get the singleton Anvil manager instance
- * Creates it lazily on first access
- */
-export function getAnvilManager(): AnvilManager {
-  if (!managerInstance) {
-    managerInstance = createAnvilManager()
+/** Get the Anvil manager for a forked chain (mainnet by default), creating it on first access. */
+export function getAnvilManager(chainId: number = MAINNET_CHAIN_ID): AnvilManager {
+  let manager = managerInstances.get(chainId)
+  if (!manager) {
+    manager = createAnvilManager(chainId)
+    managerInstances.set(chainId, manager)
   }
-  return managerInstance
+  return manager
 }
 
-/**
- * Reset the singleton instance (useful for testing)
- */
-function _resetAnvilManager(): void {
-  if (managerInstance) {
-    managerInstance.stop().catch(console.error)
-  }
-  managerInstance = null
+/** Every manager this process created, so teardown can stop them all. */
+export function getAllAnvilManagers(): AnvilManager[] {
+  return [...managerInstances.values()]
 }

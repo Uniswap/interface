@@ -1,5 +1,5 @@
+import { Check } from '@universe/mycelium/icons/Check'
 import { ReactNode, useMemo } from 'react'
-import { Check } from 'ui/src/components/icons/Check'
 import { ContextMenu, type MenuOptionItem } from 'uniswap/src/components/menus/ContextMenu'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'

@@ -20,7 +20,7 @@ export function InfoRowActionButton({
       size="xxsmall"
       onPress={onPress}
     >
-      <Text color="$accent3" variant="body3">
+      <Text color="$neutral1" variant="body3">
         {children}
       </Text>
       {icon}

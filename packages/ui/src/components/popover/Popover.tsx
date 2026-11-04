@@ -26,6 +26,11 @@ const AdaptStub = Object.assign(
   },
 )
 
+/**
+ * TODO(INFRA-4485): Move the remaining consumers to `PopoverCompat`, then delete this.
+ *
+ * @deprecated Use `PopoverCompat` from `@universe/mycelium/popover-compat` instead.
+ */
 export const Popover = Object.assign(PopoverStub, {
   Trigger: (_props: PopoverTriggerProps): JSX.Element => {
     throw new PlatformSplitStubError('Popover.Trigger')

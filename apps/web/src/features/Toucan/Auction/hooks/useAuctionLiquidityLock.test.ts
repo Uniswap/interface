@@ -33,7 +33,7 @@ vi.mock('uniswap/src/features/language/LocalizationContext', () => ({
 
 const UNLOCK_TIMESTAMP = 1798761600n
 
-vi.mock('~/hooks/useBlockTimestamp', () => ({
+vi.mock('~/features/Toucan/Auction/hooks/useBlockTimestamp', () => ({
   useBlockTimestamp: ({ blockNumber }: { blockNumber: number | undefined }) =>
     blockNumber === undefined ? undefined : UNLOCK_TIMESTAMP,
 }))

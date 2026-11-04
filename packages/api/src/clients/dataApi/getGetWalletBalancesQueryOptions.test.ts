@@ -1,10 +1,10 @@
 import type { GetWalletBalancesResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
-import type { DataApiServiceClient } from '@universe/api/src/clients/dataApi/createDataApiServiceClient'
-import { createMockDataApiServiceClient } from '@universe/api/src/clients/dataApi/createMockDataApiServiceClient'
-import { getGetWalletBalancesQueryOptions } from '@universe/api/src/clients/dataApi/getGetWalletBalancesQueryOptions'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { hashKey } from 'utilities/src/reactQuery/hashKey'
 import { type Mock, beforeEach, describe, expect, it, vi } from 'vitest'
+import type { DataApiServiceClient } from './createDataApiServiceClient'
+import { createMockDataApiServiceClient } from './createMockDataApiServiceClient'
+import { getGetWalletBalancesQueryOptions } from './getGetWalletBalancesQueryOptions'
 
 describe('getGetWalletBalancesQueryOptions', () => {
   let mockClient: DataApiServiceClient

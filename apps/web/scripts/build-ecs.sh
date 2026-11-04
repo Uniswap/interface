@@ -2,16 +2,19 @@
 # Builds the web ECS bundle (apps/web/build/{client,server}) on the CI runner, so the
 # Docker image only has to COPY it. Run from the repo root.
 #
-# Required env: DEPLOYMENT_ENV (dev|staging|production), ASSET_BASE_URL, DD_VERSION.
-# Optional: VERSION — the release version the bundle must report (checked after the build).
+# Required env: DEPLOYMENT_ENV (dev|staging|production), ASSET_BASE_URL (empty = same-origin), DD_VERSION.
+# Optional: VERSION — the release version the bundle must report (checked after the build);
+#           ENV_OVERRIDE — extra .env.override lines for this build.
 set -euo pipefail
-: "${DEPLOYMENT_ENV:?}" "${ASSET_BASE_URL:?}" "${DD_VERSION:?}"
+: "${DEPLOYMENT_ENV:?}" "${ASSET_BASE_URL?}" "${DD_VERSION:?}"
 
 # ECS clients call the entry gateway directly instead of the same-origin BFF proxy, and
 # ENVIRONMENT pins the bundle's env identity to the deployment env. Both go through
 # .env.override because the pulled .env layer wins over process.env (resolveEnvConfigs).
 environment=$([ "$DEPLOYMENT_ENV" = dev ] && echo development || echo "$DEPLOYMENT_ENV")
-printf 'ENABLE_ENTRY_GATEWAY_PROXY="false"\nENVIRONMENT="%s"\n' "$environment" > apps/web/.env.override
+# Extra KEY=VALUE lines go first so the pinned lines after them win (PR previews set the Statsig URL here).
+printf '%s\n' "${ENV_OVERRIDE:-}" > apps/web/.env.override
+printf 'ENABLE_ENTRY_GATEWAY_PROXY="false"\nENVIRONMENT="%s"\n' "$environment" >> apps/web/.env.override
 
 export NODE_ENV=production
 export GIT_COMMIT_HASH="$DD_VERSION"

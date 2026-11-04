@@ -2,8 +2,8 @@
  * Behavior of the icon factory's NATIVE leg (INFRA-3508), imported by
  * explicit `.native` suffix (this vitest config resolves web-first — the
  * INFRA-3516 lesson). react-native / reanimated / uniwind are mocked: the
- * real native module graph is exercised on device and by the native parity
- * harness; these tests pin the leg's RESOLUTION behavior — theme-aware
+ * real native module graph is exercised on device; these tests pin the leg's
+ * RESOLUTION behavior — theme-aware
  * literal colors, numeric sizes, RN transform arrays, pool semantics, and
  * the fail-closed token posture shared with the web lane.
  */
@@ -12,7 +12,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { resetBoundedReportBudgets } from '../../compat/diagnostics'
 import type { IconCompatPoolProps } from '../../compat/icon-props'
 import { COLOR_TOKEN_CLASS, PALETTE_COLOR_LITERAL, THEMED_COLOR_TOKEN_CLASSES } from '../../compat/tokens'
-import { DARK_THEME_COLORS, LIGHT_THEME_COLORS } from '../../theme-hooks-compat/theme-colors.generated'
+import { DARK_THEME_COLORS, LIGHT_THEME_COLORS } from '../../theme-hooks-compat/theme-colors'
 
 const uniwindState = { theme: 'light' as 'light' | 'dark' }
 const dimensionsState = { width: 800, height: 600 }

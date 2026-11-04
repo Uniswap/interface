@@ -8,9 +8,8 @@ import {
   UniversalImageResizeMode,
   useSporeColors,
 } from '@universe/mycelium'
+import { Eye } from '@universe/mycelium/icons/Eye'
 import { SPORE_ANIMATION_CURVE_CSS } from '@universe/tailwind/animations'
-import { useState } from 'react'
-import { Eye } from 'ui/src/components/icons/Eye'
 import { useAvatar } from 'uniswap/src/features/address/avatar'
 
 // Determines view only icon size in relation to Account Icon size
@@ -50,15 +49,14 @@ export function AccountIcon({
   ...flexProps
 }: FlexProps & AccountIconProps): JSX.Element | null {
   const { avatar } = useAvatar(address)
-  const [originSize] = useState(() => size)
   const colors = useSporeColors()
 
   if (!address) {
     return null
   }
 
-  // Use initial size to prevent layout shifts before the outer container transitions
-  const uniconImage = <Unicon address={address} size={originSize} />
+  // Fills the box to track its size transition; without one it keeps its px size so a border can't shrink it.
+  const uniconImage = <Unicon address={address} size={size} className={transition ? 'size-full!' : undefined} />
 
   const avatarUri = avatarUriOverride || avatar
   const eyeIconSize = size * EYE_ICON_SCALING_FACTOR
@@ -106,7 +104,7 @@ export function AccountIcon({
           right={-4}
           testID="account-icon/view-only-badge"
         >
-          <Eye color="$neutral2" size={eyeIconSize} transition={transition} />
+          <Eye color="$neutral2" size={eyeIconSize} style={isWebPlatform && transition ? { transition } : undefined} />
         </Flex>
       )}
     </Flex>

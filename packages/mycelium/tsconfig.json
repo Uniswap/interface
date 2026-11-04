@@ -1,28 +1,6 @@
 {
   "extends": "../../config/tsconfig/app.json",
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.json", "src/global.d.ts"],
-  // These tests keep full type coverage in tsconfig.test.json (run by
-  // this package's `typecheck` target); they are only outside THIS composite
-  // program because their imports cannot become project references:
-  // - tokens.parity.test.ts and
-  //   scripts/text-compat-tokens.test.ts import `ui/src/theme`,
-  //   unicon/legacy-drift.test.ts imports the legacy Unicon glyph/palette
-  //   modules (the INFRA-3516 avatar-identity pin),
-  //   unicon/address-alias.test.tsx imports the legacy Unicon hash (the
-  //   INFRA-3476 address-alias-to-legacy pin), and
-  //   ui-icon-assignability.test.ts imports the ui barrel + icon factory (the
-  //   INFRA-3314 cross-system pin), so compiling them here makes tsconfig-sync
-  //   mint a mycelium -> ui reference, closing the ui <-> mycelium cycle that
-  //   blocks every ui -> mycelium import (INFRA-3295).
-  // Every path excluded here must also be in tsconfig.test.json's `files`,
-  // or the file silently loses all typechecking.
-  "exclude": [
-    "src/tokens.parity.test.ts",
-    "src/scripts/text-compat-tokens.test.ts",
-    "src/ui-icon-assignability.test.ts",
-    "src/unicon/address-alias.test.tsx",
-    "src/unicon/legacy-drift.test.ts"
-  ],
   "compilerOptions": {
     "noEmit": false,
     "emitDeclarationOnly": true,

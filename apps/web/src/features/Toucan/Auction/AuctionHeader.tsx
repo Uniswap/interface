@@ -426,10 +426,9 @@ export const AuctionHeader = ({ isCompact = false }: { isCompact?: boolean }) =>
     if (!auctionDetails) {
       return undefined
     }
-    const chainInfo = getChainInfo(auctionDetails.chainId)
     return getTokenDetailsURL({
       address: isRedeemable && realTokenAddress ? realTokenAddress : auctionDetails.tokenAddress,
-      chainUrlParam: chainInfo.urlParam,
+      chainId: auctionDetails.chainId,
     })
   }, [auctionDetails, isRedeemable, realTokenAddress])
   const prefetchTokenDetails = useCallback(() => {

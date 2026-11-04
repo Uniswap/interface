@@ -1,13 +1,8 @@
-import { FetchError } from '@universe/api/src/clients/base/errors'
-import { resolveFirstPartyFetch } from '@universe/api/src/clients/base/fetchImplProvider'
-import type {
-  CustomOptions,
-  FetchClient,
-  FetchClientContext,
-  StandardFetchOptions,
-} from '@universe/api/src/clients/base/types'
 import { requireSessionFetch } from '@universe/sessions'
 import { logger, type Logger } from 'utilities/src/logger/logger'
+import { FetchError } from './errors'
+import { resolveFirstPartyFetch } from './fetchImplProvider'
+import type { CustomOptions, FetchClient, FetchClientContext, StandardFetchOptions } from './types'
 
 export function createFetchClient({
   baseUrl,

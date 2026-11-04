@@ -448,11 +448,11 @@ describe('swap form button hooks', () => {
         expect(result.current).toBe('common.getStarted')
       })
 
-      it('prioritizes indicative over web FOR nudge', () => {
+      it('prioritizes web FOR nudge over indicative', () => {
         setWebForNudge({ enabled: true })
         mockUseIsTradeIndicative.mockReturnValue(true)
         const { result } = renderHook(() => useSwapFormButtonText())
-        expect(result.current).toBe('swap.finalizingQuote')
+        expect(result.current).toBe('empty.swap.button.text')
       })
 
       it('prioritizes disconnected over web FOR nudge', () => {
@@ -501,7 +501,7 @@ describe('swap form button hooks', () => {
       const { result } = renderHook(() => useSwapFormButtonColors())
       expect(result.current.backgroundColor).toBe('$accent2')
       expect(result.current.variant).toBe('branded')
-      expect(result.current.emphasis).toBe('primary')
+      expect(result.current.emphasis).toBe('secondary')
       expect(result.current.buttonTextColor).toBe('$accent1')
     })
 

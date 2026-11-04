@@ -1,6 +1,6 @@
 import { CONNECTION_PROVIDER_IDS, CONNECTION_PROVIDER_NAMES } from 'uniswap/src/constants/web3'
 import { CONNECTOR_ICON_OVERRIDE_MAP } from '~/connection/constants'
-import { WalletConnectorMeta } from '~/features/wallet/connection/types/WalletConnectorMeta'
+import { WalletConnectorMeta } from '~/connection/types/WalletConnectorMeta'
 
 export const METAMASK_CONNECTOR: WalletConnectorMeta = {
   wagmi: {

@@ -1,12 +1,11 @@
 import { isWebPlatform } from '@universe/environment'
-import { Flex, Text, useSporeColors } from '@universe/mycelium'
+import { Button, Flex, Text, useSporeColors, imageSizes } from '@universe/mycelium'
 import { UNISWAP_LOGO } from '@universe/mycelium/assets'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
 import Svg, { Circle } from 'react-native-svg'
-import { Button, Image } from 'ui/src'
-import { imageSizes } from 'ui/src/theme'
+import { Image } from 'ui/src'
 import { NewTag } from 'uniswap/src/components/pill/NewTag'
 
 interface ForceUpgradeModalContentProps {

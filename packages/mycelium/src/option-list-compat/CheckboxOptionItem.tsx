@@ -13,9 +13,9 @@
  */
 import { Menu as MenuPrimitive } from '@base-ui/react/menu'
 import * as React from 'react'
+import { CheckmarkCircle } from '../components/icons/CheckmarkCircle'
 import { textCompatClassName } from '../text-compat/compile'
 import { OPTION_CHECKED_MARKER_CLASS_NAME } from './compile'
-import { CheckmarkCircleGlyph } from './icons'
 import type { CheckboxOptionItemCompatProps } from './types'
 
 const LABEL_CLASS_NAME = textCompatClassName({ variant: 'body3', color: '$neutral1' })
@@ -43,7 +43,7 @@ export function CheckboxOptionItemCompat({
         <span className={LABEL_CLASS_NAME}>{label}</span>
       </span>
       <span className={OPTION_CHECKED_MARKER_CLASS_NAME} data-checked={checked ? '' : undefined} aria-hidden="true">
-        {checked && <CheckmarkCircleGlyph data-slot="checkbox-option-check" size={20} className="text-neutral1" />}
+        {checked && <CheckmarkCircle aria-hidden color="$neutral1" data-slot="checkbox-option-check" size={20} />}
       </span>
     </MenuPrimitive.CheckboxItem>
   )

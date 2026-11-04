@@ -1,4 +1,5 @@
-import type { FetchClient } from '@universe/api/src/clients/base/types'
+import { logger } from 'utilities/src/logger/logger'
+import type { FetchClient } from '../base/types'
 import {
   type BlockaidScanJsonRpcRequest,
   type BlockaidScanSiteRequest,
@@ -8,8 +9,7 @@ import {
   DappVerificationStatus,
   getBlockaidScanSiteResponseSchema,
   getBlockaidScanTransactionResponseSchema,
-} from '@universe/api/src/clients/blockaid/types'
-import { logger } from 'utilities/src/logger/logger'
+} from './types'
 
 export interface BlockaidApiClient {
   scanSite: (url: string) => Promise<DappVerificationStatus>

@@ -1,6 +1,6 @@
 import { Flex, type FlexCompatProps, Text } from '@universe/mycelium'
+import { ChevronLeft } from '@universe/mycelium/icons/ChevronLeft'
 import { forwardRef, type ForwardRefExoticComponent, ReactNode, type RefAttributes } from 'react'
-import { ChevronLeft } from 'ui/src/components/icons/ChevronLeft'
 
 type HeaderProps = FlexCompatProps & { clickable?: boolean }
 

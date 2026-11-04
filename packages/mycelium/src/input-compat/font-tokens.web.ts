@@ -6,19 +6,17 @@
  * `@universe/tailwind` ui-parity `fonts` tokens via `../tokens`).
  */
 import { isWebApp } from '@universe/environment'
-import { fonts } from '../tokens'
+import { fonts, WEB_BASEL_FONT_STACK } from '../tokens'
 
-// The exact web stacks the legacy cascade emitted as inline font-family values.
-const BASEL_STACK =
-  'Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
+// The exact web monospace stack the legacy cascade emitted as an inline font-family value.
 const MONOSPACE_STACK =
   'ui-monospace, SFMono-Regular, SF Mono, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono", "Roboto Mono", "Courier New", monospace'
 
 export const fontFamilyTokens = {
-  heading: BASEL_STACK,
-  subHeading: BASEL_STACK,
-  body: BASEL_STACK,
-  button: BASEL_STACK,
+  heading: WEB_BASEL_FONT_STACK,
+  subHeading: WEB_BASEL_FONT_STACK,
+  body: WEB_BASEL_FONT_STACK,
+  button: WEB_BASEL_FONT_STACK,
   monospace: MONOSPACE_STACK,
 }
 

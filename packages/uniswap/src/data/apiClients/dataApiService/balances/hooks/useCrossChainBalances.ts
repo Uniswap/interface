@@ -1,7 +1,6 @@
-import { GraphQLApi } from '@universe/api'
+import type { UniverseChainId } from '@universe/chains'
 import { useMemo } from 'react'
 import { useBalances } from 'uniswap/src/data/apiClients/dataApiService/balances/hooks/useBalances'
-import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import type { DataApiOutageState, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { usePortfolioBalances } from 'uniswap/src/features/portfolio/balances/hooks'
 import { buildCurrencyId, buildNativeCurrencyId, currencyIdToChain } from 'uniswap/src/utils/currencyId'
@@ -17,7 +16,7 @@ export function useCrossChainBalances({
   evmAddress?: Address
   svmAddress?: Address
   currencyId: string
-  crossChainTokens: Maybe<{ chain: GraphQLApi.Chain; address?: Maybe<string> }[]>
+  crossChainTokens: Maybe<{ chainId: UniverseChainId; address?: Maybe<string> }[]>
   fetchPolicy?: FetchPolicy
 }): {
   currentChainBalance: PortfolioBalance | null
@@ -43,9 +42,8 @@ export function useCrossChainBalances({
   const bridgedCurrencyIds = useMemo(
     () =>
       crossChainTokens
-        ?.map(({ chain, address: currencyAddress }) => {
-          const chainId = fromGraphQLChain(chain)
-          if (!chainId || chainId === currentChainId) {
+        ?.map(({ chainId, address: currencyAddress }) => {
+          if (chainId === currentChainId) {
             return null
           }
           if (!currencyAddress) {

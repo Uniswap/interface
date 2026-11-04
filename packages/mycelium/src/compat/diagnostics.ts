@@ -139,7 +139,7 @@ export function reportUnknownCompatKey({ what, key, known }: { what: string; key
  * (that last one is what #39919 added), so `undefined` here means the token is
  * outside every map and there is no literal left to fall back to. Both icon
  * legs used to throw on it, in production as well as dev, which turned one
- * legacy wrapper injecting its `color ?? '$accent3'` default into a blank page
+ * legacy wrapper injecting an unmapped `color` default into a blank page
  * rather than a wrong colour.
  *
  * `undefined` now means "emit no colour": the icon inherits `currentColor`,

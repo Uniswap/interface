@@ -8,12 +8,11 @@ import { load } from 'cheerio'
 // oxlint-disable-next-line typescript/ban-ts-comment
 // @ts-expect-error
 import uppercamelcase from 'uppercamelcase'
-import { assertNotHandwritten } from './handwritten-icons'
+import { assertNotHandwritten, HANDWRITTEN_LOGO_COMPONENTS } from './handwritten-icons'
 
-// Plain-React port of packages/ui/src/scripts/componentize-icons.ts (INFRA-2956).
-// Consumes the SAME SVG sources (src/assets/icons) and generates
-// .tsx components into src/components/icons under the SAME export names, but
-// emits platform-agnostic markup: capitalized host components imported from
+// Generates .tsx components into src/components/icons from the SVG sources in
+// src/assets/icons (and logos from src/assets/logos/svg). Emits
+// platform-agnostic markup: capitalized host components imported from
 // `../factories/svg-elements`, whose platform split (DOM tags on web,
 // react-native-svg on device — INFRA-3508) rides the generated file's
 // extensionless import instead of per-icon `.native.tsx` twins (the
@@ -27,6 +26,10 @@ import { assertNotHandwritten } from './handwritten-icons'
 interface DirectoryPair {
   input: string
   output: string
+  /** Skip SVGs whose distinct solid colors would be flattened into one `currentColor` (logos). */
+  skipMultiColor: boolean
+  /** Hand-written components that keep their SVG source but must not be regenerated. */
+  handwritten: ReadonlySet<string>
 }
 
 // Known SVG tags → `svg-elements` host component names (react-native-svg's
@@ -68,13 +71,20 @@ async function run(): Promise<void> {
   const skipExisting = args.includes('--skip-existing')
   const silent = args.includes('--silent')
   const srcDir = join(__dirname, '..')
-  // Same SVG sources as the legacy generator — the icon set has a single source of truth.
   const assetsDir = join(srcDir, 'assets')
 
   const svgDirPairs: DirectoryPair[] = [
     {
       input: join(assetsDir, 'icons'),
       output: join(srcDir, 'components', 'icons'),
+      skipMultiColor: false,
+      handwritten: new Set(),
+    },
+    {
+      input: join(assetsDir, 'logos', 'svg'),
+      output: join(srcDir, 'components', 'logos'),
+      skipMultiColor: true,
+      handwritten: HANDWRITTEN_LOGO_COMPONENTS,
     },
   ]
 
@@ -87,7 +97,26 @@ async function createSVGComponents(dirs: DirectoryPair, skipExisting: boolean, s
   // Ensure output directory exists
   await mkdir(dirs.output, { recursive: true })
 
-  const fileNames = (await readdir(dirs.input)).filter((name: string) => name.endsWith('.svg')).sort()
+  const svgFileNames = (await readdir(dirs.input)).filter((name: string) => name.endsWith('.svg')).sort()
+  const svgs = new Map(
+    await Promise.all(
+      svgFileNames.map(async (fileName) => [fileName, await readFile(join(dirs.input, fileName), 'utf-8')] as const),
+    ),
+  )
+  const fileNames = svgFileNames.filter((fileName) => {
+    if (dirs.handwritten.has(generateClassName(fileName))) {
+      return false
+    }
+    // oxlint-disable-next-line typescript/no-non-null-assertion -- every listed file was read above
+    const colors = flattenedColors(svgs.get(fileName)!)
+    if (dirs.skipMultiColor && colors.length > 1) {
+      if (!silent) {
+        console.log(`⏭️  ${fileName}: skipped, would flatten ${colors.join(', ')} into one color`)
+      }
+      return false
+    }
+    return true
+  })
 
   // Parse + write every SVG in parallel; libuv handles the disk fanout fine for a few hundred files.
   await Promise.all(
@@ -100,8 +129,8 @@ async function createSVGComponents(dirs: DirectoryPair, skipExisting: boolean, s
         return
       }
 
-      const inputPath = join(dirs.input, fileName)
-      const svg = await readFile(inputPath, 'utf-8')
+      // oxlint-disable-next-line typescript/no-non-null-assertion -- every listed file was read above
+      const svg = svgs.get(fileName)!
       const element = generateSVGComponentString(svg, fileName)
       if (element) {
         if (!silent) {
@@ -151,9 +180,7 @@ function generateSVGComponentString(svg: string, fileName: string): string {
 
   const className = generateClassName(fileName)
 
-  // Duplicate the styles applied to the SVG to its children — mirrors the
-  // legacy generator so the emitted markup (and the parity suite) stays
-  // byte-compatible with the ui components.
+  // Duplicate the styles applied to the SVG to its children.
   // oxlint-disable-next-line typescript/no-non-null-assertion -- SVG element is guaranteed to exist after cheerio parsing
   const svgAttribs = $('svg')[0]!.attribs
   delete svgAttribs['xmlns']
@@ -193,9 +220,6 @@ function generateSVGComponentString(svg: string, fileName: string): string {
   })
 
   const rawSerialized = $('svg').toString()
-  // Quirks below (first-hex defaultFill, global /px/g)
-  // are byte-parity-coupled with packages/ui/src/scripts/componentize-icons.ts —
-  // change both together or the icons path-data parity suite goes red.
   // Capture first explicit fill color before we rewrite all fills to currentColor.
   const defaultFill = rawSerialized.match(/fill="(#[a-z0-9]+)"/i)?.[1]
 
@@ -239,6 +263,30 @@ ${defaultFill ? `defaultFill: '${defaultFill}'` : ''}
 }
 
 // Helpers
+
+/**
+ * Distinct solid colors the generator rewrites to `currentColor`: every hex `fill` and every `stroke`.
+ * Gradient stops are left alone, so a logo whose color lives in gradients plus one solid fill still
+ * renders correctly.
+ */
+function flattenedColors(svg: string): string[] {
+  const colors = new Set<string>()
+  for (const [, attribute = '', value = ''] of svg.matchAll(/\b(fill|stroke)="([^"]+)"/gi)) {
+    const color = value.trim().toLowerCase()
+    const isHexFill = attribute.toLowerCase() === 'fill' && /^#[0-9a-f]+$/.test(color)
+    const isPaintedStroke =
+      attribute.toLowerCase() === 'stroke' && !['none', 'currentcolor', 'transparent'].includes(color)
+    if (isHexFill || isPaintedStroke) {
+      colors.add(expandHex(color))
+    }
+  }
+  return [...colors].sort()
+}
+
+/** `#abc` and `#aabbcc` are the same color. */
+function expandHex(color: string): string {
+  return /^#[0-9a-f]{3}$/.test(color) ? `#${[...color.slice(1)].map((c) => c + c).join('')}` : color
+}
 
 function generateClassName(fileName: string): string {
   return uppercamelcase(path.basename(fileName, '.svg')) as string

@@ -25,9 +25,9 @@ exports[`LimitOrderDetails.tsx > renders a preview trade while disabling submiss
           aria-hidden="true"
           class="sbtn-spin"
           fill="none"
-          height="20.7"
+          stroke-width="8"
+          style="color: currentColor; width: 20.7px; height: 20.7px;"
           viewBox="0 0 24 24"
-          width="20.7"
         >
           <path
             d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"
@@ -45,7 +45,7 @@ exports[`LimitOrderDetails.tsx > renders a preview trade while disabling submiss
         </svg>
       </span>
       <span
-        class="text-center font-medium whitespace-nowrap [font-family:var(--sbtn-font-button)] [transition:color_100ms_cubic-bezier(0.17,0.67,0.45,1)] text-[16px] leading-[20.7px] text-neutral2"
+        class="text-center font-medium [font-family:var(--sbtn-font-button)] [transition:color_100ms_cubic-bezier(0.17,0.67,0.45,1)] text-[16px] [line-height:20.7px] text-neutral2 max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
       >
         Finalizing quote...
       </span>

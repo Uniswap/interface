@@ -11,7 +11,7 @@ vi.mock('uniswap/src/features/permissionedTokens/usePermissionedSwapPair', () =>
   usePermissionedSwapPair: vi.fn(),
 }))
 
-vi.mock('~/features/accounts/store/hooks', () => ({
+vi.mock('~/connection/accounts/hooks', () => ({
   useActiveAddress: vi.fn(() => undefined),
 }))
 

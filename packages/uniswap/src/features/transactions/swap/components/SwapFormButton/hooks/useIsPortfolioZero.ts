@@ -4,7 +4,10 @@ import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/ba
 
 export function useIsPortfolioZero(): boolean {
   const { isTestnetModeEnabled } = useEnabledChains()
-  const { data } = usePortfolioTotalValue(useActiveAddresses())
+  const activeAddresses = useActiveAddresses()
+  const hasActiveAddress = !!(activeAddresses.evmAddress ?? activeAddresses.svmAddress)
+  const { data } = usePortfolioTotalValue(activeAddresses)
 
-  return !isTestnetModeEnabled && data?.balanceUSD === 0
+  // Without an address the balances query still returns the previous account's data as placeholder.
+  return !isTestnetModeEnabled && hasActiveAddress && data?.balanceUSD === 0
 }

@@ -2,7 +2,6 @@ import type { UniverseChainId } from '@universe/chains'
 import { Button, Flex, Text, type WebButtonPressEvent } from '@universe/mycelium'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
-import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -69,7 +68,7 @@ export function TimeRemainingCell({
     if (!tradingTokenAddress || !chainId) {
       return
     }
-    navigate(getTokenDetailsURL({ address: tradingTokenAddress, chain: toGraphQLChain(chainId) }))
+    navigate(getTokenDetailsURL({ address: tradingTokenAddress, chainId }))
   })
 
   if (!phase) {

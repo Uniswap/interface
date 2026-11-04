@@ -3,6 +3,7 @@ import { AnimatedNumberDirection } from 'uniswap/src/components/AnimatedNumber/t
 import { isDigitChar } from 'uniswap/src/components/AnimatedNumber/utils/computeCharsSizes'
 import { getCharDisplayColor } from 'uniswap/src/components/AnimatedNumber/utils/getCharDisplayColor'
 import { DigitSlot } from 'uniswap/src/components/AnimatedNumber/web/DigitSlot'
+import { getDigitCellWidth } from 'uniswap/src/components/AnimatedNumber/web/digitTextStyle'
 import type { FiatCurrencyInfo } from 'uniswap/src/features/fiatOnRamp/types'
 
 /** Matches TopAndBottomGradient fade stops; applied per digit rail so punctuation stays clear. */
@@ -63,7 +64,7 @@ export function CharCell({
   })
 
   if (digit && isDigitChar(digit)) {
-    const width = maxDigitWidthScaled + maxDigitWidthScaled / 10
+    const width = getDigitCellWidth(maxDigitWidthScaled)
     return (
       <span
         style={{

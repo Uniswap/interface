@@ -23,11 +23,11 @@ vi.mock('uniswap/src/features/fiatCurrency/hooks', async (importOriginal) => ({
   useAppFiatCurrency: () => FiatCurrency.UnitedStatesDollar,
 }))
 
-vi.mock('~/hooks/useLocationLinkProps', () => ({
+vi.mock('~/components/AccountDrawer/hooks/useLocationLinkProps', () => ({
   useLocationLinkProps: () => ({ to: '/' }),
 }))
 
-vi.mock('~/hooks/useLocalCurrencyLinkProps', () => ({
+vi.mock('~/components/AccountDrawer/hooks/useLocalCurrencyLinkProps', () => ({
   useLocalCurrencyLinkProps: () => ({ to: '/', onClick: () => undefined }),
 }))
 

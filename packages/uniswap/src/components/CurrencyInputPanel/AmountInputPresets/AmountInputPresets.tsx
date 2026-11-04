@@ -1,7 +1,6 @@
 import { isHoverable } from '@universe/environment'
-import { Flex, type FlexProps } from '@universe/mycelium'
+import { type ButtonProps, Flex, type FlexProps } from '@universe/mycelium'
 import { Key } from 'react'
-import type { ButtonProps } from 'ui/src'
 import { AmountInputPresetsProps } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types'
 import {
   getStaggeredGroupHoverStyle,

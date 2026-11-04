@@ -22,7 +22,6 @@ import { useBottomSheetContext } from 'uniswap/src/components/modals/BottomSheet
 import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
 import { PillMultiToggle } from 'uniswap/src/components/pill/PillMultiToggle'
 import { MAX_FIAT_INPUT_DECIMALS } from 'uniswap/src/constants/transactions'
-import { BlastShutdownSelectionModal } from 'uniswap/src/features/chains/blastShutdown/BlastShutdownSelectionModal'
 import { FiatOnRampCountryPicker } from 'uniswap/src/features/fiatOnRamp/FiatOnRampCountryPicker'
 import {
   useFiatOnRampQuotes,
@@ -677,7 +676,6 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
           }}
         />
       )}
-      <BlastShutdownSelectionModal currencies={[isOffRamp ? undefined : quoteCurrency.currencyInfo]} />
     </Screen>
   )
 }

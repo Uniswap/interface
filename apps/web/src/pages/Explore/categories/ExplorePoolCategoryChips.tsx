@@ -1,28 +1,34 @@
 import { Flex } from '@universe/mycelium'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import type { PoolCategory } from 'uniswap/src/features/tokenCategories/types'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '~/constants/breakpoints'
 import { CategoryChipRow } from '~/pages/Explore/categories/CategoryChipRow'
 import { deriveCategoryChipOptions, useFlexSlotCategoryId } from '~/pages/Explore/categories/exploreCategoryChipOptions'
-import { useExploreCategory } from '~/pages/Explore/categories/useExploreCategory'
-import { useExplorePoolCategories } from '~/pages/Explore/categories/useExplorePoolCategories'
 
 // Pool chips keep empty categories for now; the More dropdown still disables them.
 const KEEP_EMPTY_POOL_CATEGORIES = (): boolean => false
 
 /** Pool category chip row above the Explore pools table; renders nothing with the flag off. */
-export function ExplorePoolCategoryChips(): JSX.Element | null {
+export function ExplorePoolCategoryChips({
+  categories,
+  category,
+  chipsEnabled,
+  categoriesLoading,
+  onChange,
+}: {
+  /** Ordered pool categories (see useExplorePoolCategories). */
+  categories: PoolCategory[]
+  /** Selected category id, or All. */
+  category: string
+  chipsEnabled: boolean
+  categoriesLoading: boolean
+  onChange: (category: string) => void
+}): JSX.Element | null {
   const { t } = useTranslation()
-  const { orderedCategories, validCategoryIds, chipsEnabled, categoriesPending, categoriesLoading } =
-    useExplorePoolCategories()
-  const [category, setCategory] = useExploreCategory({
-    kind: 'pool',
-    validCategoryIds,
-    trustUnverifiedIds: categoriesPending,
-  })
   const flexSlotCategoryId = useFlexSlotCategoryId({
     kind: 'pool',
-    categories: orderedCategories,
+    categories,
     selectedCategoryId: category,
     isCategoryEmpty: KEEP_EMPTY_POOL_CATEGORIES,
   })
@@ -30,13 +36,13 @@ export function ExplorePoolCategoryChips(): JSX.Element | null {
     () =>
       deriveCategoryChipOptions({
         kind: 'pool',
-        categories: orderedCategories,
+        categories,
         selectedCategoryId: category,
         flexSlotCategoryId,
         isCategoryEmpty: KEEP_EMPTY_POOL_CATEGORIES,
         t,
       }),
-    [orderedCategories, category, flexSlotCategoryId, t],
+    [categories, category, flexSlotCategoryId, t],
   )
 
   if (!categoriesLoading && !chipsEnabled) {
@@ -49,9 +55,9 @@ export function ExplorePoolCategoryChips(): JSX.Element | null {
         kind="pool"
         options={options}
         value={category}
-        onChange={setCategory}
+        onChange={onChange}
         loading={categoriesLoading}
-        moreCategories={orderedCategories}
+        moreCategories={categories}
       />
     </Flex>
   )

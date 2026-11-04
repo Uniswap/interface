@@ -1,6 +1,6 @@
+import { opacify } from '@universe/mycelium/theme-hooks-compat'
 import type { CanvasRenderingTarget2D } from 'fancy-canvas'
 import type { Time } from 'lightweight-charts'
-import { opacify } from 'ui/src/theme'
 import { PluginBase } from '~/components/Charts/BandsIndicator/plugin-base'
 import type {
   ISeriesPrimitive,

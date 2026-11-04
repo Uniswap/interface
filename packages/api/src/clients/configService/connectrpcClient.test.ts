@@ -1,12 +1,7 @@
-import {
-  isRpcNotFound,
-  rpcConnectCode,
-  rpcHttpStatus,
-  rpcPost,
-} from '@universe/api/src/clients/configService/connectrpcClient'
-import { createConfigServerClient } from '@universe/api/src/clients/configService/createConfigServerClient'
 import { Environment } from '@universe/environment'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { isRpcNotFound, rpcConnectCode, rpcHttpStatus, rpcPost } from './connectrpcClient'
+import { createConfigServerClient } from './createConfigServerClient'
 
 function mockFetch(response: { status: number; body: string }): ReturnType<typeof vi.fn> {
   const fetchMock = vi.fn(async () => ({

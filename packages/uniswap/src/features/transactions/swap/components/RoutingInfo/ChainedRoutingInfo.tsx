@@ -1,5 +1,6 @@
 import { TradingApi } from '@universe/api'
 import { useSporeColors, zIndexes } from '@universe/mycelium'
+import { Shuffle } from '@universe/mycelium/icons/Shuffle'
 import {
   BestRouteLabel,
   PLAN_STEP_ICON_SIZE,
@@ -7,11 +8,10 @@ import {
   PlanStepLogo,
   PlanStepLogoKind,
   RoutingInfoRow,
-} from '@universe/swap-ui'
+} from '@universe/transactions-ui'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { HorizontalDottedLineSeparator } from 'ui/src'
-import { Shuffle } from 'ui/src/components/icons'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'

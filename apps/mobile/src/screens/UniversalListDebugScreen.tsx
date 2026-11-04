@@ -1,7 +1,7 @@
 import { Flex, Text, UniversalList } from '@universe/mycelium'
+import { Star } from '@universe/mycelium/icons/Star'
 import { memo } from 'react'
 import { ScreenWithHeader } from 'src/components/layout/screens/ScreenWithHeader'
-import { Star } from 'ui/src/components/icons/Star'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 
 interface DemoItem {

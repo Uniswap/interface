@@ -1,0 +1,21 @@
+import { Flex, type FlexCompatProps, Text } from '@universe/mycelium'
+import { PrivyLogo } from '@universe/mycelium/logos/PrivyLogo'
+import { useTranslation } from 'react-i18next'
+import { ExternalLink } from '~/theme/components/Links'
+
+export function PrivyWatermark(props: FlexCompatProps) {
+  const { t } = useTranslation()
+  return (
+    <Flex row alignItems="center" justifyContent="center" gap="$spacing8" {...props}>
+      {/* Inter Regular 13: scoped @font-face in apps/web/index.html */}
+      <Text color="$neutral3" style={{ fontFamily: 'Inter', fontSize: 13, fontWeight: '400', lineHeight: '16px' }}>
+        {t('onboarding.keyManagement.securedBy')}
+      </Text>
+      <ExternalLink href="https://www.privy.io/user-help-center" style={{ stroke: 'none' }}>
+        <Flex height={14} overflow="hidden" justifyContent="center" mt="$spacing4">
+          <PrivyLogo size={63} color="$neutral1" />
+        </Flex>
+      </ExternalLink>
+    </Flex>
+  )
+}

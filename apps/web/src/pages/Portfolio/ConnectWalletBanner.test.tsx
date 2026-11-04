@@ -1,9 +1,9 @@
-import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { PortfolioConnectWalletBanner } from '~/pages/Portfolio/ConnectWalletBanner'
+import { useAccountDrawer } from '~/state/accountDrawer/hooks'
 import { mocked } from '~/test-utils/mocked'
 import { render, screen } from '~/test-utils/render'
 
-vi.mock('~/components/AccountDrawer/MiniPortfolio/hooks', () => ({
+vi.mock('~/state/accountDrawer/hooks', () => ({
   useAccountDrawer: vi.fn(),
 }))
 

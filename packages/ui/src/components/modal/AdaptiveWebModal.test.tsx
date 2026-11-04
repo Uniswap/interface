@@ -10,11 +10,11 @@ vi.mock('expo-blur', () => ({
   BlurView: () => null,
 }))
 
+import { zIndexes } from '@universe/mycelium/tokens'
 import {
   ADAPTIVE_MODAL_ANIMATION_DURATION,
   AdaptiveWebModal,
   EffectiveModalOrSheetZIndexContext,
-  ModalCloseIcon,
   useEffectiveModalOrSheetZIndex,
   WEB_BOTTOM_SHEET_OVERLAY_TEST_ID,
   WebBottomSheet,
@@ -22,7 +22,6 @@ import {
 } from 'ui/src/components/modal/AdaptiveWebModal'
 import type { SheetFitHeight } from 'ui/src/components/modal/AdaptiveWebModalShared'
 import { SharedUIUniswapProvider } from 'ui/src/test/render'
-import { zIndexes } from 'ui/src/theme'
 
 /** The sheet scrim's own selector, off the id the sheet exposes — never its styling class. */
 const SHEET_OVERLAY = `[data-testid="${WEB_BOTTOM_SHEET_OVERLAY_TEST_ID}"]`
@@ -934,12 +933,5 @@ describe('review-round regressions: scroll lock, scrim hit-testing, exit presenc
       }
     })
     await waitFor(() => expect(screen.queryByText('exiting body')).toBeNull())
-  })
-})
-
-describe('ModalCloseIcon (web)', () => {
-  it('renders the close icon outside the small-viewport web app case', () => {
-    render(<ModalCloseIcon testId="close-icon" onClose={vi.fn()} />, { wrapper: SharedUIUniswapProvider })
-    expect(screen.getByTestId('close-icon')).toBeDefined()
   })
 })

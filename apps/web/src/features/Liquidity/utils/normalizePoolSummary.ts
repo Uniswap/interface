@@ -45,5 +45,6 @@ export function normalizePoolSummary(summary: PoolSummary | PlainMessage<PoolSum
     tvl: plain.tvlUsd,
     volume1d: plain.volumeUsd1d,
     apr: plain.apr,
+    categoryIds: plain.categoryIds,
   }
 }

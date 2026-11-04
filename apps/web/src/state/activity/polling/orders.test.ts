@@ -54,8 +54,8 @@ vi.mock('~/state/activity/polling/cancelTimeouts', () => ({
   evaluateCancelTimeouts: vi.fn(() => Promise.resolve()),
 }))
 
-vi.mock('~/hooks/useAccount', async () => {
-  const actual = await vi.importActual('~/hooks/useAccount')
+vi.mock('~/connection/hooks/useAccount', async () => {
+  const actual = await vi.importActual('~/connection/hooks/useAccount')
   return {
     ...actual,
     useAccount: () => {

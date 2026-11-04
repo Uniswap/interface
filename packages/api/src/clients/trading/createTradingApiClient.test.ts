@@ -1,12 +1,10 @@
-import type { FetchClient } from '@universe/api/src/clients/base/types'
-import { PlanStatus } from '@universe/api/src/clients/trading/__generated__'
+import { describe, expect, it } from 'vitest'
 import {
   TRADING_API_PATHS,
   V1_TRADING_API_PATHS,
   createTradingApiClient,
   getVersionedTradingApiPaths,
-} from '@universe/api/src/clients/trading/createTradingApiClient'
-import { describe, expect, it, vi } from 'vitest'
+} from './createTradingApiClient'
 
 describe('getVersionedTradingApiPaths', () => {
   it('prefixes top-level string paths with the given prefix', () => {
@@ -48,38 +46,5 @@ describe('getVersionedTradingApiPaths', () => {
 
   it('matches the exported V1_TRADING_API_PATHS', () => {
     expect(getVersionedTradingApiPaths('/v1')).toEqual(V1_TRADING_API_PATHS)
-  })
-})
-
-describe('createTradingApiClient plan endpoints', () => {
-  function setupClient(): { client: ReturnType<typeof createTradingApiClient>; patch: ReturnType<typeof vi.fn> } {
-    const patch = vi.fn().mockResolvedValue({})
-    const fetchClient = {
-      context: () => ({}),
-      fetch: vi.fn(),
-      get: vi.fn(),
-      post: vi.fn(),
-      put: vi.fn(),
-      delete: vi.fn(),
-      patch,
-    } as unknown as FetchClient
-    const client = createTradingApiClient({
-      fetchClient,
-      getFeatureFlagHeaders: async () => ({}),
-      getApiPathPrefix: () => '',
-    })
-    return { client, patch }
-  }
-
-  // Cancel has no dedicated route: it is a status-only PATCH to plan/{planId}.
-  it('cancelExistingPlan PATCHes plan/:planId with a CANCELLED status body', async () => {
-    const { client, patch } = setupClient()
-
-    await client.cancelExistingPlan({ planId: 'plan-42' })
-
-    expect(patch).toHaveBeenCalledWith(
-      '/plan/plan-42',
-      expect.objectContaining({ body: JSON.stringify({ status: PlanStatus.CANCELLED }) }),
-    )
   })
 })

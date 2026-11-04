@@ -29,7 +29,7 @@ vi.mock('~/pages/Swap/Margin/hooks/useMarginCompletionToast', () => {
 function renderLayout(): void {
   render(
     <MarginFormStoreContextProvider>
-      <MarginTerminalLayout isTerminal={false} hasInteracted={false}>
+      <MarginTerminalLayout isTerminal={false}>
         <div data-testid="swap-module" />
       </MarginTerminalLayout>
     </MarginFormStoreContextProvider>,

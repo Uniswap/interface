@@ -1,7 +1,7 @@
 import { Flex, iconSizes, validColor } from '@universe/mycelium'
 import { SendAction } from '@universe/mycelium/icons/SendAction'
 import { opacify, useIsDarkMode } from '@universe/mycelium/theme-hooks-compat'
-import { colors } from 'ui/src/theme'
+import { colors } from '@universe/mycelium/theme-palette'
 export const SendElement = (): JSX.Element => {
   const isDarkMode = useIsDarkMode()
 

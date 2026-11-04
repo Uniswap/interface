@@ -1,7 +1,6 @@
 import '~/test-utils/tokens/mocks'
 import userEvent from '@testing-library/user-event'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
-import { GraphQLApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
 import { useFeatureFlag } from '@universe/gating'
 import { TestID } from '@universe/test'

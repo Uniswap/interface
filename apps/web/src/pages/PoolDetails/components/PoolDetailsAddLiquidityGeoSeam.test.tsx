@@ -1,13 +1,12 @@
 import '~/test-utils/tokens/mocks'
 import { fireEvent } from '@testing-library/react'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
-import { GraphQLApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
 import { TestID } from '@universe/test'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import type { AccountsStore } from 'uniswap/src/features/accounts/store/types/AccountsState'
+import { useAccount } from '~/connection/hooks/useAccount'
 import { useLPGeoRestriction } from '~/features/Liquidity/useLPGeoRestriction'
-import { useAccount } from '~/hooks/useAccount'
 import { PoolDetailsStatsButtons } from '~/pages/PoolDetails/components/PoolDetailsStatsButtons'
 import { USE_DISCONNECTED_ACCOUNT } from '~/test-utils/constants'
 import { mocked } from '~/test-utils/mocked'
@@ -16,14 +15,14 @@ import { validParsedPoolToken0, validParsedPoolToken1 } from '~/test-utils/pools
 import { render, screen } from '~/test-utils/render'
 
 vi.mock('uniswap/src/features/positions/hooks/useWalletPositions')
-vi.mock('~/hooks/useAccount')
+vi.mock('~/connection/hooks/useAccount')
 vi.mock('uniswap/src/contexts/UniswapContext')
 vi.mock('uniswap/src/features/transactions/swap/stores/swapFormStore/SwapFormStoreContext')
 vi.mock('~/pages/Swap', () => ({ Swap: () => <div>Swap Component</div> }))
 vi.mock('~/features/Liquidity/useLPGeoRestriction', () => ({ useLPGeoRestriction: vi.fn() }))
 
-const BANNER_TOKEN_HEADING = 'USDC isn’t available for liquidity provision in your region'
-const BANNER_GENERIC_HEADING = 'This token isn’t available for liquidity provision in your region'
+const BANNER_TOKEN_HEADING = 'USDC is unavailable in your region'
+const BANNER_GENERIC_HEADING = 'This token is unavailable in your region'
 
 const PROPS = {
   chainId: UniverseChainId.Mainnet,

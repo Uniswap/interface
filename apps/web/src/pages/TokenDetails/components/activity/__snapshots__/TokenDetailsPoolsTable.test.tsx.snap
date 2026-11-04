@@ -231,7 +231,7 @@ exports[`TDPPoolTable > renders data filled state 1`] = `
                 >
                   <div
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 grow bg-[color:var(--c-bg)] overflow-hidden [border-bottom-left-radius:var(--c-bblr)] [border-top-left-radius:var(--c-btlr)] group-hover:bg-[color:var(--cgh-bg)] first-child-flex-grow-0 last-child-justify-end"
-                    style="--cgh-bg: var(--surface1-hovered); width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; --c-bg: #FFFFFF; --c-bblr: 12px; --c-btlr: 12px; min-width: 60px; flex-shrink: 0; max-width: 60px; flex-grow: 0;"
+                    style="--cgh-bg: var(--surface1-hovered); width: 60px; left: 0px; position: sticky; z-index: 1; padding-left: 8px; padding-right: 0px; height: 100%; display: flex; justify-content: center; --c-bg: #ffffff; --c-bblr: 12px; --c-btlr: 12px; min-width: 60px; flex-shrink: 0; max-width: 60px; flex-grow: 0;"
                   >
                     <div
                       class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center justify-start px-[12px] py-[16px] overflow-hidden"
@@ -246,7 +246,7 @@ exports[`TDPPoolTable > renders data filled state 1`] = `
                   </div>
                   <div
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 grow bg-[color:var(--c-bg)] overflow-hidden group-hover:bg-[color:var(--cgh-bg)] first-child-flex-grow-0 last-child-justify-end"
-                    style="--cgh-bg: var(--surface1-hovered); width: 240px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; --c-bg: #FFFFFF; min-width: 240px; flex-shrink: 0; max-width: 240px; flex-grow: 0;"
+                    style="--cgh-bg: var(--surface1-hovered); width: 240px; left: 60px; position: sticky; z-index: 1; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center; --c-bg: #ffffff; min-width: 240px; flex-shrink: 0; max-width: 240px; flex-grow: 0;"
                   >
                     <div
                       class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center justify-start px-[12px] py-[16px] overflow-hidden"
@@ -274,7 +274,7 @@ exports[`TDPPoolTable > renders data filled state 1`] = `
                               >
                                 <div
                                   class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[var(--c-h)] bg-[color:var(--c-bg)] rounded-[999999px] opacity-[0] absolute top-[var(--c-top)] left-[var(--c-left)] z-[var(--c-z)]"
-                                  style="--c-w: 96%; --c-h: 96%; --c-bg: #FFFFFF; --c-top: 2%; --c-left: 2%; --c-z: 0;"
+                                  style="--c-w: 96%; --c-h: 96%; --c-bg: #ffffff; --c-top: 2%; --c-left: 2%; --c-z: 0;"
                                 />
                                 <div
                                   data-testid="img-token-image"
@@ -300,7 +300,7 @@ exports[`TDPPoolTable > renders data filled state 1`] = `
                               >
                                 <div
                                   class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[var(--c-h)] bg-[color:var(--c-bg)] rounded-[999999px] opacity-[0] absolute top-[var(--c-top)] left-[var(--c-left)] z-[var(--c-z)]"
-                                  style="--c-w: 96%; --c-h: 96%; --c-bg: #FFFFFF; --c-top: 2%; --c-left: 2%; --c-z: 0;"
+                                  style="--c-w: 96%; --c-h: 96%; --c-bg: #ffffff; --c-top: 2%; --c-left: 2%; --c-z: 0;"
                                 />
                                 <div
                                   data-testid="img-token-image"

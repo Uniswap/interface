@@ -11,7 +11,7 @@ import { useEvent } from 'utilities/src/react/hooks'
 import { useNetworkFilterChainIds } from '~/components/NetworkFilter/useFilteredChains'
 import { HEADER_TRANSITION } from '~/components/StickyCollapsibleHeader/constants'
 import { HeaderDivider } from '~/components/StickyCollapsibleHeader/HeaderDivider'
-import { useActiveAddresses } from '~/features/accounts/store/hooks'
+import { useActiveAddresses } from '~/connection/accounts/hooks'
 
 interface TokenDetailsNetworkFilterProps {
   chainIds: UniverseChainId[]

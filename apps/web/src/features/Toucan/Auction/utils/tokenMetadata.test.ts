@@ -166,53 +166,36 @@ describe('resolveAuctionTokenLogo', () => {
   const tokenInfoWithoutLogo = { currencyId: '1-0xabc', logoUrl: null } as unknown as CurrencyInfo
   const tokenInfoWithLogo = { currencyId: '1-0xabc', logoUrl: 'https://indexed.example/logo.png' } as CurrencyInfo
   const API_IMAGE = 'https://api.example/image.png'
-  const OVERRIDE_LOGO = 'https://override.example/logo.png'
 
   it('returns undefined token info unchanged', () => {
-    expect(
-      resolveAuctionTokenLogo({ tokenInfo: undefined, overrideLogoUrl: OVERRIDE_LOGO, tokenImageUrl: API_IMAGE }),
-    ).toBeUndefined()
+    expect(resolveAuctionTokenLogo({ tokenInfo: undefined, tokenImageUrl: API_IMAGE })).toBeUndefined()
   })
 
-  it('prefers the config override over the API image and the indexed logo', () => {
-    expect(
-      resolveAuctionTokenLogo({
-        tokenInfo: tokenInfoWithLogo,
-        overrideLogoUrl: OVERRIDE_LOGO,
-        tokenImageUrl: API_IMAGE,
-      }),
-    ).toEqual({ ...tokenInfoWithLogo, logoUrl: OVERRIDE_LOGO })
+  it('prefers the API image over the indexed logo', () => {
+    expect(resolveAuctionTokenLogo({ tokenInfo: tokenInfoWithLogo, tokenImageUrl: API_IMAGE })).toEqual({
+      ...tokenInfoWithLogo,
+      logoUrl: API_IMAGE,
+    })
   })
 
-  it('prefers the API image over the indexed logo when there is no override', () => {
-    expect(
-      resolveAuctionTokenLogo({ tokenInfo: tokenInfoWithLogo, overrideLogoUrl: undefined, tokenImageUrl: API_IMAGE }),
-    ).toEqual({ ...tokenInfoWithLogo, logoUrl: API_IMAGE })
+  it('keeps the indexed logo when there is no API image', () => {
+    expect(resolveAuctionTokenLogo({ tokenInfo: tokenInfoWithLogo, tokenImageUrl: undefined })).toBe(tokenInfoWithLogo)
   })
 
-  it('keeps the indexed logo when neither override nor API image is present', () => {
-    expect(
-      resolveAuctionTokenLogo({ tokenInfo: tokenInfoWithLogo, overrideLogoUrl: undefined, tokenImageUrl: undefined }),
-    ).toBe(tokenInfoWithLogo)
+  it('treats an empty API image as absent', () => {
+    expect(resolveAuctionTokenLogo({ tokenInfo: tokenInfoWithLogo, tokenImageUrl: '' })).toBe(tokenInfoWithLogo)
   })
 
   it('leaves a logoless token unchanged so the TokenLogo placeholder renders', () => {
-    expect(
-      resolveAuctionTokenLogo({
-        tokenInfo: tokenInfoWithoutLogo,
-        overrideLogoUrl: undefined,
-        tokenImageUrl: undefined,
-      }),
-    ).toBe(tokenInfoWithoutLogo)
+    expect(resolveAuctionTokenLogo({ tokenInfo: tokenInfoWithoutLogo, tokenImageUrl: undefined })).toBe(
+      tokenInfoWithoutLogo,
+    )
   })
 
   it('fills the logo from the API image when the token has no logo', () => {
-    expect(
-      resolveAuctionTokenLogo({
-        tokenInfo: tokenInfoWithoutLogo,
-        overrideLogoUrl: undefined,
-        tokenImageUrl: API_IMAGE,
-      }),
-    ).toEqual({ ...tokenInfoWithoutLogo, logoUrl: API_IMAGE })
+    expect(resolveAuctionTokenLogo({ tokenInfo: tokenInfoWithoutLogo, tokenImageUrl: API_IMAGE })).toEqual({
+      ...tokenInfoWithoutLogo,
+      logoUrl: API_IMAGE,
+    })
   })
 })

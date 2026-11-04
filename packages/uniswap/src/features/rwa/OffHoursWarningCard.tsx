@@ -1,6 +1,6 @@
 import { type FlexProps } from '@universe/mycelium'
+import { Clock } from '@universe/mycelium/icons/Clock'
 import { useTranslation } from 'react-i18next'
-import { Clock } from 'ui/src/components/icons/Clock'
 import { InlineWarningCard } from 'uniswap/src/components/InlineWarningCard/InlineWarningCard'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'

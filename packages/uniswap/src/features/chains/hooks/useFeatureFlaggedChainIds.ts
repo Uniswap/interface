@@ -1,18 +1,15 @@
 import { UniverseChainId } from '@universe/chains'
 import { FeatureFlags, getFeatureFlag, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
-import { CHAIN_ROLLOUT_FLAGS, CHAIN_SUNSET_FLAGS } from 'uniswap/src/features/chains/chainFeatureFlags'
+import { CHAIN_ROLLOUT_FLAGS } from 'uniswap/src/features/chains/chainFeatureFlags'
 import { filterChainIdsByFeatureFlag } from 'uniswap/src/features/chains/utils'
 
-function buildChainFlagMap(getFlagStatus: (flag: FeatureFlags) => boolean): {
+function buildChainRolloutFlagMap(getFlagStatus: (flag: FeatureFlags) => boolean): {
   [key in UniverseChainId]?: boolean
 } {
   const result: { [key in UniverseChainId]?: boolean } = {}
   for (const [chainId, flag] of Object.entries(CHAIN_ROLLOUT_FLAGS)) {
     result[Number(chainId) as UniverseChainId] = getFlagStatus(flag)
-  }
-  for (const [chainId, flag] of Object.entries(CHAIN_SUNSET_FLAGS)) {
-    result[Number(chainId) as UniverseChainId] = !getFlagStatus(flag)
   }
   return result
 }
@@ -22,7 +19,6 @@ export const getFeatureFlaggedChainIds = createGetFeatureFlaggedChainIds((flag) 
 // Used to feature flag chains. If a chain is not included in the object, it is considered enabled by default.
 export function useFeatureFlaggedChainIds(): UniverseChainId[] {
   const arcStatus = useFeatureFlag(FeatureFlags.Arc)
-  const disableBlastStatus = useFeatureFlag(FeatureFlags.DisableBlast)
   const inkStatus = useFeatureFlag(FeatureFlags.Ink)
   const lineaStatus = useFeatureFlag(FeatureFlags.Linea)
   const megaETHStatus = useFeatureFlag(FeatureFlags.MegaETH)
@@ -36,8 +32,6 @@ export function useFeatureFlaggedChainIds(): UniverseChainId[] {
         switch (flag) {
           case FeatureFlags.Arc:
             return arcStatus
-          case FeatureFlags.DisableBlast:
-            return disableBlastStatus
           case FeatureFlags.Ink:
             return inkStatus
           case FeatureFlags.Linea:
@@ -54,12 +48,12 @@ export function useFeatureFlaggedChainIds(): UniverseChainId[] {
             return false
         }
       })(),
-    [arcStatus, disableBlastStatus, inkStatus, lineaStatus, megaETHStatus, robinhoodStatus, tempoStatus, xLayerStatus],
+    [arcStatus, inkStatus, lineaStatus, megaETHStatus, robinhoodStatus, tempoStatus, xLayerStatus],
   )
 }
 
 export function createGetFeatureFlaggedChainIds(
   getFlagStatus: (flag: FeatureFlags) => boolean,
 ): () => UniverseChainId[] {
-  return () => filterChainIdsByFeatureFlag(buildChainFlagMap(getFlagStatus))
+  return () => filterChainIdsByFeatureFlag(buildChainRolloutFlagMap(getFlagStatus))
 }

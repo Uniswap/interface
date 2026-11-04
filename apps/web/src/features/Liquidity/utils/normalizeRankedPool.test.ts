@@ -162,6 +162,12 @@ describe('normalizeRankedPool', () => {
     expect(normalizeRankedPool(rankedPool())?.rewards).toEqual([])
   })
 
+  it('passes categoryIds through in served order', () => {
+    expect(
+      normalizeRankedPool(rankedPool({ pool: { categoryIds: ['major-pools', 'defi-pools'] } }))?.categoryIds,
+    ).toEqual(['major-pools', 'defi-pools'])
+  })
+
   it('maps protocolFee', () => {
     const pool = normalizeRankedPool(rankedPool({ pool: { protocolFee: 50 } }))
     expect(pool?.protocolFee).toBe(50)

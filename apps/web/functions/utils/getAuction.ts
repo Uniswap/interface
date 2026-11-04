@@ -1,6 +1,7 @@
 import { PROD_ENTRY_GATEWAY_API_BASE_URL } from '@universe/api'
 import { Data } from 'functions/utils/cache'
 import { URL_PARAM_TO_CHAIN_ID } from 'uniswap/src/features/chains/chainUrlParam'
+import { resolveIpfsGatewayUrl } from 'utilities/src/format/gatewayUrls'
 import { getAuctionMetadata } from '~/features/Toucan/Config/config'
 import { formatAuctionMetatagTitleName } from '~/shared-cloud/metatags'
 
@@ -12,14 +13,8 @@ interface AuctionApiResponse {
     tokenName?: string
     tokenSymbol: string
     currencyTokenSymbol?: string
+    tokenImageUrl?: string
   }[]
-}
-
-function toAbsoluteImageUrl(logoUrl: string | undefined, origin: string): string | undefined {
-  if (!logoUrl) {
-    return undefined
-  }
-  return logoUrl.startsWith('/') ? origin + logoUrl : logoUrl
 }
 
 export default async function getAuction({
@@ -62,7 +57,10 @@ export default async function getAuction({
     const metadata = getAuctionMetadata({ chainId, tokenAddress: auction.tokenAddress })
     const tokenSymbol = metadata?.tokenSymbol ?? auction.tokenSymbol
     const tokenName = metadata?.tokenName ?? auction.tokenName ?? tokenSymbol
-    const tokenLogoUrl = toAbsoluteImageUrl(metadata?.logoUrl, origin)
+    // The share image renders a plain <img>, so an ipfs:// logo needs its gateway URL, and a
+    // creator-supplied value in any other scheme (data:, http:) is kept off the card.
+    const resolvedLogoUrl = resolveIpfsGatewayUrl(auction.tokenImageUrl || undefined)
+    const tokenLogoUrl = resolvedLogoUrl?.startsWith('https://') ? resolvedLogoUrl : undefined
     const title = formatAuctionMetatagTitleName(tokenSymbol, tokenName)
 
     return {

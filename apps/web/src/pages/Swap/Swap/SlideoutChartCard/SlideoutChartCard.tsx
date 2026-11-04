@@ -3,17 +3,16 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import type { Currency } from '@uniswap/sdk-core'
 import type { UniverseChainId } from '@universe/chains'
 import { useIsTokenCategoriesEnabled } from '@universe/gating'
-import { Flex, type FlexCompatProps, iconSizes, Text, TouchableArea } from '@universe/mycelium'
+import { Flex, type FlexCompatProps, iconSizes, Text, TouchableArea, Loader } from '@universe/mycelium'
 import { ArrowsExpand } from '@universe/mycelium/icons/ArrowsExpand'
 import { useShadowPropsShort, useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Loader } from 'ui/src'
 import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { getIsStablecoin } from 'uniswap/src/components/charts/utils'
 import { CopyHelper } from 'uniswap/src/components/CopyHelper/CopyHelper'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { getTokenCategoryIdsQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/categories/useTokenCategories'
-import { getChainLabel, toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { FORMAT_DATE_MONTH_DAY_TIME, useLocalizedDayjs } from 'uniswap/src/features/language/localizedDayjs'
 import { CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
@@ -157,9 +156,9 @@ function SlideoutChartCardBody({
   const tokenColor = useColor(selectedCurrency)
 
   const variables = useMemo((): TokenPriceChartQueryVariables => {
-    const chain = toGraphQLChain(selectedCurrency.chainId as UniverseChainId)
-    const address = selectedCurrency.isNative ? getNativeTokenDBAddress(chain) : selectedCurrency.address
-    return { chain, address, duration: toHistoryDuration(timePeriod), multichain: false }
+    const chainId = selectedCurrency.chainId as UniverseChainId
+    const address = selectedCurrency.isNative ? getNativeTokenDBAddress(chainId) : selectedCurrency.address
+    return { chainId, address, duration: toHistoryDuration(timePeriod), multichain: false }
   }, [selectedCurrency, timePeriod])
 
   const { priceQuery, pricePercentChange, showInvalidSkeleton, stale } = useTokenPriceChartPanel({

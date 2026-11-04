@@ -1,10 +1,9 @@
 import { TradingApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
-import { Anchor, Button, Flex, Text } from '@universe/mycelium'
+import { Anchor, Button, Flex, Text, iconSizes } from '@universe/mycelium'
 import { type ComponentRef, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
-import { iconSizes } from 'ui/src/theme/iconSizes'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter/NetworkFilter'
 import { useNetworkSelectorOptions } from 'uniswap/src/components/network/NetworkFilter/useNetworkSelectorOptions'
@@ -39,7 +38,7 @@ import {
   StyledNumericalInput,
   useMeasuredFieldWidth,
 } from '~/components/NumericalInput/LargeAmountInput'
-import { useActiveAddresses } from '~/features/accounts/store/hooks'
+import { useActiveAddresses } from '~/connection/accounts/hooks'
 import { EARN_SELECTOR_DROPDOWN_MAX_HEIGHT } from '~/features/earn/constants'
 import { EarnAmountViewHeader } from '~/features/earn/EarnAmountViewHeader'
 import { getWithdrawCtaLabel } from '~/features/earn/withdrawCtaLabel'

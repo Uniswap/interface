@@ -1,4 +1,4 @@
-import { ArrowDown } from 'ui/src/components/icons/ArrowDown'
+import { ArrowDown } from '@universe/mycelium/icons/ArrowDown'
 import {
   TwoTokenDetails,
   useTokenAmountInfo,

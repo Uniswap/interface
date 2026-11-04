@@ -15,7 +15,7 @@ import {
   buildNativeCurrencyId,
   buildWrappedNativeCurrencyIdWithThrow,
 } from 'uniswap/src/utils/currencyId'
-import { useActiveAddress } from '~/features/accounts/store/hooks'
+import { useActiveAddress } from '~/connection/accounts/hooks'
 import { useTokenDetailsEarnData } from '~/pages/TokenDetails/components/earn/useTokenDetailsEarnData'
 import type { TDPState } from '~/pages/TokenDetails/context/createTDPStore'
 import type { MultiChainMap } from '~/pages/TokenDetails/context/TDPContext'
@@ -29,7 +29,7 @@ vi.mock('@tanstack/react-query', async () => {
   }
 })
 
-vi.mock('~/features/accounts/store/hooks', () => ({
+vi.mock('~/connection/accounts/hooks', () => ({
   useActiveAddress: vi.fn(),
 }))
 

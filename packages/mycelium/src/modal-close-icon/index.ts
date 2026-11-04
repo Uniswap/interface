@@ -1,7 +1,6 @@
 /**
  * `@universe/mycelium/modal-close-icon` — the compat `ModalCloseIcon`
- * (INFRA-3282), replacing the legacy Tamagui `ModalCloseIcon` from
- * `packages/ui/src/components/modal/AdaptiveWebModal.tsx`.
+ * (INFRA-3282), which replaced the legacy `ui/src` `ModalCloseIcon`.
  *
  * The component is imported by its BASE specifier so Metro resolves the
  * `.native.tsx` leg and vite the `.web.tsx` leg; the platform-neutral modules
@@ -17,4 +16,4 @@ export {
   type ModalCloseIconColor,
   type ModalCloseIconProps,
 } from './props'
-export { closeIconSizePx, resolveCloseIconColor, X_GLYPH } from './resolve'
+export { closeIconSizePx, resolveCloseIconColor } from './resolve'

@@ -3,19 +3,8 @@
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.json", "src/global.d.ts"],
   // Carve-out, not a fix. The recipes tests reach mycelium by relative import,
   // whose TS6307 no project reference can fix without a tailwind → mycelium
-  // cycle. The animations curve tests import the legacy `ui/src/theme`
-  // sources, so compiling them here would make tsconfig-sync mint a
-  // tailwind -> ui reference — a cycle now that ui references tailwind
-  // (INFRA-3295). The animations curve tests ride the second program in this
-  // same target instead (`tsc -p tsconfig.cross-package.json`), which gives
-  // them the `paths` map they need without dragging their foreign import
-  // graph into this program.
-  "exclude": [
-    "src/recipes/**/*.test.ts",
-    "src/recipes/**/*.test.tsx",
-    "src/animations/curves.parity.test.ts",
-    "src/animations/curves.reanimated.test.ts"
-  ],
+  // cycle.
+  "exclude": ["src/recipes/**/*.test.ts", "src/recipes/**/*.test.tsx"],
   "compilerOptions": {
     "noEmit": false,
     "emitDeclarationOnly": true,

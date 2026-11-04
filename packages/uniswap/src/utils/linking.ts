@@ -4,12 +4,12 @@ import * as WebBrowser from 'expo-web-browser'
 import { NATIVE_TOKEN_PLACEHOLDER } from 'uniswap/src/constants/addresses'
 import { UniswapHelpUrls, UniswapStaticUrls } from 'uniswap/src/constants/urls'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { toGraphQLChain, toUniswapWebAppLink } from 'uniswap/src/features/chains/utils'
+import { toUniswapWebAppLink } from 'uniswap/src/features/chains/utils'
 import type { EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import { BACKEND_NATIVE_CHAIN_ADDRESS_STRING } from 'uniswap/src/features/search/utils'
 import type { EarnAnalyticsEntryPoint } from 'uniswap/src/features/telemetry/types'
 import { ServiceProviderInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { currencyIdToChain, currencyIdToGraphQLAddress, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
+import { currencyIdToChain, currencyIdToContractAddress, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { canOpenURL, openURL } from 'uniswap/src/utils/link'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -266,7 +266,7 @@ export function getTokenDetailsURL({
   tdpView,
 }: {
   address: string
-  chain?: number
+  chain?: UniverseChainId
   chainUrlParam?: string
   inputAddress?: string | null
   tdpView?: TDPView
@@ -274,13 +274,11 @@ export function getTokenDetailsURL({
   if (!chain) {
     return '/not-found'
   }
-  const chainInfo = toGraphQLChain(chain)
-
   const adjustedAddress = isNativeCurrencyAddress(chain, address) ? NATIVE_TOKEN_PLACEHOLDER : address
   const adjustedInputAddress =
     inputAddress && isNativeCurrencyAddress(chain, inputAddress) ? NATIVE_TOKEN_PLACEHOLDER : inputAddress
 
-  const chainName = chainUrlParam || String(chainInfo).toLowerCase() || 'ethereum'
+  const chainName = chainUrlParam || getChainInfo(chain).urlParam
   const params = new URLSearchParams()
   if (adjustedInputAddress) {
     params.set('inputCurrency', adjustedInputAddress)
@@ -296,6 +294,7 @@ type FiatOnRampURLParams = {
   chainId?: UniverseChainId
   currencyCode?: string
   currencyId?: string
+  fiatAmount?: string
 }
 
 export function getFiatOnRampURL(chainIdOrParams?: UniverseChainId | FiatOnRampURLParams): string {
@@ -310,6 +309,9 @@ export function getFiatOnRampURL(chainIdOrParams?: UniverseChainId | FiatOnRampU
   }
   if (params?.currencyId) {
     searchParams.set('currencyId', params.currencyId)
+  }
+  if (params?.fiatAmount) {
+    searchParams.set('value', params.fiatAmount)
   }
 
   const queryString = searchParams.toString()
@@ -365,7 +367,7 @@ export function getTokenUrl(
       : optionsOrAddMobileUTMTags
   const network = toUniswapWebAppLink(chainId)
   try {
-    let tokenAddress = currencyIdToGraphQLAddress(currencyId)
+    let tokenAddress = currencyIdToContractAddress(currencyId)
     // in case it's a native token
     if (tokenAddress === null) {
       // this is how web app handles native tokens

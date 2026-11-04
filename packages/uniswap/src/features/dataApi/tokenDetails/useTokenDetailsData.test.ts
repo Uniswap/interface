@@ -1,14 +1,19 @@
 import { waitFor } from '@testing-library/react-native'
+import { SharedQueryClient } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
+import { MAX_DISPLAYABLE_PRICE_AGE_MS } from '@universe/prices'
 import {
   useTokenMarketStats,
   useTokenMetadata,
+  useTokenPriceChange,
   useTokenSpotPrice,
+  useTokenSpotPriceWithLoading,
 } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { currencyIdToRestContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { renderHookWithProviders } from 'uniswap/src/test/render'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 
 const {
   mockGetGetTokenQueryOptions,
@@ -99,6 +104,76 @@ describe(useTokenSpotPrice, () => {
       )
 
       await waitFor(() => expect(result.current).toBe(4.56))
+    })
+  })
+
+  describe('cached price refetching on mount', () => {
+    async function renderWithCachedPrice({
+      ageMs,
+      key,
+      hasFailedLastFetch = false,
+    }: {
+      ageMs: number
+      key: string
+      hasFailedLastFetch?: boolean
+    }): Promise<{
+      result: { current: ReturnType<typeof useTokenSpotPriceWithLoading> & { priceChange: number | undefined } }
+      resolveRefetch: () => void
+    }> {
+      const queryKey = [ReactQueryCacheKey.DataApiService, 'getToken', key]
+      let resolveRefetch = (): void => {}
+      const queryFn = vi.fn(
+        () =>
+          new Promise((resolve) => {
+            resolveRefetch = (): void => resolve(GET_TOKEN_RAW_RESPONSE)
+          }),
+      )
+      mockGetGetTokenQueryOptions.mockImplementation(({ enabled, select }) => ({ queryKey, queryFn, enabled, select }))
+      SharedQueryClient.setQueryData(
+        queryKey,
+        { token: { price: { spotUsd: 0.5, percentChange1d: 42 } } },
+        { updatedAt: Date.now() - ageMs },
+      )
+      if (hasFailedLastFetch) {
+        SharedQueryClient.getQueryCache()
+          .find({ queryKey })
+          ?.setState({ status: 'error', error: new Error('outage') })
+      }
+
+      const { result } = renderHookWithProviders(() => ({
+        ...useTokenSpotPriceWithLoading(CURRENCY_ID),
+        priceChange: useTokenPriceChange(CURRENCY_ID),
+      }))
+      await waitFor(() => expect(queryFn).toHaveBeenCalled())
+      return { result, resolveRefetch: () => resolveRefetch() }
+    }
+
+    it('withholds a price and its 24h change older than MAX_DISPLAYABLE_PRICE_AGE_MS until the refetch lands', async () => {
+      const { result, resolveRefetch } = await renderWithCachedPrice({
+        ageMs: MAX_DISPLAYABLE_PRICE_AGE_MS + ONE_MINUTE_MS,
+        key: 'aged',
+      })
+
+      expect(result.current).toEqual({ price: undefined, isLoading: true, priceChange: undefined })
+
+      resolveRefetch()
+      await waitFor(() => expect(result.current).toEqual({ price: 1.23, isLoading: false, priceChange: 0.5 }))
+    })
+
+    it('keeps showing a recent price while it refetches', async () => {
+      const { result } = await renderWithCachedPrice({ ageMs: ONE_MINUTE_MS, key: 'recent' })
+
+      expect(result.current).toEqual({ price: 0.5, isLoading: false, priceChange: 42 })
+    })
+
+    it('keeps showing an aged price while it refetches after a failed fetch', async () => {
+      const { result } = await renderWithCachedPrice({
+        ageMs: MAX_DISPLAYABLE_PRICE_AGE_MS + ONE_MINUTE_MS,
+        key: 'aged-errored',
+        hasFailedLastFetch: true,
+      })
+
+      expect(result.current).toEqual({ price: 0.5, isLoading: false, priceChange: 42 })
     })
   })
 })

@@ -1,10 +1,10 @@
 import type { ColorTokens } from '@universe/mycelium'
 import { Flex, Text } from '@universe/mycelium'
+import type { IconProps } from '@universe/mycelium/icons'
+import { CheckCircleFilled } from '@universe/mycelium/icons/CheckCircleFilled'
+import { InfoCircleFilled } from '@universe/mycelium/icons/InfoCircleFilled'
 import type { ComponentType } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { IconProps } from 'ui/src'
-import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
-import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 

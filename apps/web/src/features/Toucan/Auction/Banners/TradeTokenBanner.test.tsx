@@ -217,7 +217,7 @@ describe('TradeTokenBanner', () => {
     expect(sendEvent).not.toHaveBeenCalledWith(AuctionEventName.AuctionBannerViewed, expect.anything())
   })
 
-  it('uses the route slug when the GraphQL chain name differs', () => {
+  it('uses the chain URL slug for the trade route', () => {
     mockStoreState.auctionDetails.chainId = UniverseChainId.UnichainSepolia
     vi.mocked(useAuctionDisplayState).mockReturnValue(LIVE_WITH_POOL)
 

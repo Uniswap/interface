@@ -30,7 +30,7 @@ exports[`LimitCustomMarketPriceButton > renders the custom amount correctly 1`] 
       <svg
         fill="none"
         stroke-width="8"
-        style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.63);"
+        style="width: 16px; height: 16px;"
         viewBox="0 0 16 16"
       >
         <path
@@ -72,7 +72,7 @@ exports[`LimitCustomMarketPriceButton > renders the custom amount correctly, neg
       <svg
         fill="none"
         stroke-width="8"
-        style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.63);"
+        style="width: 16px; height: 16px;"
         viewBox="0 0 16 16"
       >
         <path

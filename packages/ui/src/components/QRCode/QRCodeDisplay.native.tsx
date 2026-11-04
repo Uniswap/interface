@@ -1,10 +1,10 @@
 import { useSporeColors } from '@universe/mycelium'
+import { borderRadii } from '@universe/mycelium/tokens'
 import { memo, type PropsWithChildren } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { QRCode } from 'ui/src/components/QRCode/QRCode'
+import { resolveSporeColor } from 'ui/src/components/QRCode/resolveSporeColor'
 import type { QRCodeDisplayProps } from 'ui/src/components/QRCode/types'
-import { borderRadii } from 'ui/src/theme'
-import { resolveSporeColor } from 'ui/src/theme/color/resolveSporeColor'
 
 const styles = StyleSheet.create({
   container: {

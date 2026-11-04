@@ -42,13 +42,11 @@ const POSITION: MarginActivePosition = {
 function renderActions({
   position = POSITION,
   onSelect = vi.fn(),
-  surface = 'menu' as const,
 }: {
   position?: MarginActivePosition
   onSelect?: (request: { action: string; positionId: string }) => void
-  surface?: 'menu' | 'drawer'
 } = {}): ReturnType<typeof renderHook<ReturnType<typeof useMarginPositionActions>, unknown>> {
-  return renderHook(() => useMarginPositionActions({ position, onSelect, surface })) as ReturnType<
+  return renderHook(() => useMarginPositionActions({ position, onSelect })) as ReturnType<
     typeof renderHook<ReturnType<typeof useMarginPositionActions>, unknown>
   >
 }
@@ -59,20 +57,18 @@ describe('useMarginPositionActions', () => {
     mockUseIsPlanInFlight.mockReturnValue(false)
   })
 
-  it('returns the five actions in order', () => {
+  it('returns the four actions in order', () => {
     const { result } = renderActions()
-    expect(result.current.map((item) => item.action)).toEqual(['add', 'withdraw', 'leverage', 'adjust', 'close'])
+    expect(result.current.map((item) => item.action)).toEqual(['add', 'withdraw', 'leverage', 'close'])
   })
 
-  it('gives every action an icon and both copy registers', () => {
+  it('gives every action an icon, a label and a short subheader', () => {
     const { result } = renderActions()
     for (const item of result.current) {
       expect(item.Icon).toBeDefined()
       expect(item.label.length).toBeGreaterThan(0)
       // The menu column wraps rather than truncates; long subheaders make a ~450px-tall menu.
       expect(item.subheader.length).toBeLessThanOrEqual(32)
-      // The tooltip carries the full sentence — never the same string as the menu fragment.
-      expect(item.tooltipBody).not.toBe(item.subheader)
     }
   })
 
@@ -91,19 +87,16 @@ describe('useMarginPositionActions', () => {
   it('disables every action when the position has no on-chain leg subId', () => {
     const { result } = renderActions({ position: { ...POSITION, legs: [{ ...POSITION.legs[0]!, subId: '' }] } })
     // [].every() is true — without the length assertion this passes against a hook returning nothing.
-    expect(result.current).toHaveLength(5)
+    expect(result.current).toHaveLength(4)
     expect(result.current.every((item) => item.disabled)).toBe(true)
   })
 
   it('replaces the subheader with the in-flight reason while a plan is running', () => {
     mockUseIsPlanInFlight.mockReturnValue(true)
     const { result } = renderActions()
-    expect(result.current).toHaveLength(5)
+    expect(result.current).toHaveLength(4)
     expect(result.current.every((item) => item.disabled)).toBe(true)
     expect(result.current.every((item) => item.subheader === 'Another action is in progress')).toBe(true)
-    // The drawer tooltip reads tooltipBody, not subheader — swapping only one leaves that surface
-    // describing the normal action while the button is dead.
-    expect(result.current.every((item) => item.tooltipBody === 'Another action is in progress')).toBe(true)
     // The destructive item must grey out too — getMenuItemColor tests destructive BEFORE disabled.
     expect(result.current.find((item) => item.action === 'close')?.iconColor).toBe('$neutral2')
     expect(result.current.find((item) => item.action === 'close')?.textColor).toBe('$neutral2')
@@ -124,11 +117,11 @@ describe('useMarginPositionActions', () => {
   })
 
   it('reports the action and surface to analytics', () => {
-    const { result } = renderActions({ surface: 'drawer' })
-    result.current[4]?.onPress()
+    const { result } = renderActions()
+    result.current[3]?.onPress()
     expect(mockSendAnalyticsEvent).toHaveBeenCalledWith(InterfaceEventName.MarginPositionActionSelected, {
       action: 'close',
-      surface: 'drawer',
+      surface: 'menu',
     })
   })
 })

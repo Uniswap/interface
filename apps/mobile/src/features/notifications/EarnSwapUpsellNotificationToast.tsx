@@ -1,11 +1,11 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { Flex, iconSizes, Text, TouchableArea, zIndexes } from '@universe/mycelium'
+import { EarnSparkle } from '@universe/mycelium/icons/EarnSparkle'
+import { X } from '@universe/mycelium/icons/X'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { useAppStackNavigation } from 'src/app/navigation/types'
-import { EarnSparkle } from 'ui/src/components/icons/EarnSparkle'
-import { X } from 'ui/src/components/icons/X'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import {
   NotificationToast,

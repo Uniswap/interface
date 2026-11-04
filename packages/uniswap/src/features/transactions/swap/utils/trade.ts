@@ -5,7 +5,13 @@ import { Currency, CurrencyAmount, Fraction, Percent, TradeType } from '@uniswap
 import { GasEstimate, TradingApi } from '@universe/api'
 import type { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
 import type { IndicativeTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
-import { ACROSS_DAPP_INFO, isBridge, isClassic, isWrap } from 'uniswap/src/features/transactions/swap/utils/routing'
+import {
+  getBridgeDappInfo,
+  getBridgeProvider,
+  isBridge,
+  isClassic,
+  isWrap,
+} from 'uniswap/src/features/transactions/swap/utils/routing'
 import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import {
   BaseSwapTransactionInfo,
@@ -64,7 +70,8 @@ export function tradeToTransactionInfo({
       inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
       outputCurrencyId: currencyId(outputCurrency),
       outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
-      routingDappInfo: ACROSS_DAPP_INFO,
+      routingDappInfo: getBridgeDappInfo(trade.quote.quote.provider),
+      bridgeProvider: getBridgeProvider(trade.quote.quote.provider),
       quoteId,
       gasUseEstimate,
       transactedUSDValue,

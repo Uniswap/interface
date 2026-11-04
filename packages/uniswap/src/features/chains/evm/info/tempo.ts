@@ -1,5 +1,5 @@
 import { Token } from '@uniswap/sdk-core'
-import { GraphQLApi, TradingApi } from '@universe/api'
+import { TradingApi } from '@universe/api'
 import { UniverseChainId, Platform } from '@universe/chains'
 import { SwapConfigKey } from '@universe/gating'
 import { TEMPO_LOGO } from '@universe/mycelium/assets'
@@ -36,7 +36,6 @@ export const TEMPO_CHAIN_INFO = {
   testnet: false,
   assetRepoNetworkName: 'tempo',
   backendChain: {
-    chain: GraphQLApi.Chain.Tempo,
     backendSupported: true,
     // Virtual USD must never be indexed as a portfolio balance
     nativeTokenBackendAddress: undefined,

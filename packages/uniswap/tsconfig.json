@@ -57,7 +57,7 @@
       "path": "../test"
     },
     {
-      "path": "../swap-ui"
+      "path": "../transactions-ui"
     }
   ],
   "compilerOptions": {

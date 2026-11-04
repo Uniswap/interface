@@ -342,3 +342,42 @@ automationRefs: []
 **Given** the user has filled in increase liquidity inputs on an existing position
 **When** the TxContext processes the inputs
 **Then** it returns correct gas estimates, approval/permit data, and a valid increase calldata
+
+---
+id: lp-increase-bnb-usdc-18-decimals
+title: Increase a BNB USDC position uses its 18-decimal deployment
+# importance
+priority: urgent
+severity: urgent
+# provenance
+source: uniswap
+sourceNote: 'INC-421 follow-up (LP-1831): USDC is 6 decimals on Ethereum but 18 on BNB Chain'
+# scope
+protocol_version: v4
+chains:
+  - bnb
+platforms:
+  - web
+labels:
+  - regression
+  - increase
+  - decimals
+# execution
+automatable: true
+testLevel: integration
+runFrequency: pr-check
+# coverage
+code_paths:
+  - apps/web/src/pages/IncreaseLiquidity/hooks/useDerivedIncreaseLiquidityInfo.ts
+  - apps/web/src/features/Liquidity/Create/hooks/useDepositInfo.tsx
+  - packages/uniswap/src/features/positions/parseLiquidityServicePosition.ts
+automationRefs:
+  - path: apps/web/src/pages/IncreaseLiquidity/hooks/useDerivedIncreaseLiquidityInfo.bnbUsdcDecimals.test.ts
+    testName: LP increase with BNB USDC (18 decimals)
+---
+
+> **urgent · v4 · integration · pr-check · automated** · chains: bnb
+
+**Given** the user has a V4 BNB / USDC position on BNB Chain, served with 18-decimal USDC metadata
+**When** they open "Add liquidity" and type a USDC amount
+**Then** the position amounts and uncollected fees read at 18 decimals, and the increase amounts (USDC typed, BNB derived) are 18-decimal raw values

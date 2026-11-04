@@ -1,7 +1,7 @@
 import { Flex, iconSizes } from '@universe/mycelium'
 import { ConfirmedIcon, SubmittedIcon } from '~/components/AccountDrawer/MiniPortfolio/Activity/Logos'
 import { LogoLoadingSpinner } from '~/components/LogoLoadingSpinner'
-import { FadePresence } from '~/theme/components/FadePresence'
+import { FadePresence } from '~/theme/components/FadePresence/FadePresence'
 
 /** Oversized absolute overlay ring; color is the spinner's own neutral3 default. */
 const LoadingIndicator = (): JSX.Element => (

@@ -230,6 +230,39 @@ describe('useSwapFormButtonText', () => {
     expect(result.current).toBe('Insufficient funds')
   })
 
+  it.each([WarningLabel.InsufficientFunds, WarningLabel.InsufficientGasFunds])(
+    'shows Add funds instead of %s copy for an empty wallet',
+    (type) => {
+      mockUseIsWebFORNudgeEnabled.mockReturnValue(true)
+      mockUseParsedSwapWarnings.mockReturnValue({
+        insufficientBalanceWarning: { foo: 'bar' } as unknown as Warning,
+        blockingWarning: { ...INSUFFICIENT_FUNDS_BLOCKING, type, buttonText: 'Not enough ETH' },
+        insufficientGasFundsWarning: { foo: 'bar' } as unknown as Warning,
+      })
+
+      const { result } = renderHook(() => useSwapFormButtonText())
+
+      expect(result.current).toBe('empty.swap.button.text')
+    },
+  )
+
+  it('keeps blocked-token copy over Add funds for an empty wallet', () => {
+    mockUseIsWebFORNudgeEnabled.mockReturnValue(true)
+    mockUseParsedSwapWarnings.mockReturnValue({
+      insufficientBalanceWarning: undefined,
+      blockingWarning: {
+        ...INSUFFICIENT_FUNDS_BLOCKING,
+        type: WarningLabel.BlockedToken,
+        buttonText: 'FOO is blocked',
+      },
+      insufficientGasFundsWarning: undefined,
+    })
+
+    const { result } = renderHook(() => useSwapFormButtonText())
+
+    expect(result.current).toBe('FOO is blocked')
+  })
+
   it('returns the default "review" copy in the happy path', () => {
     const { result } = renderHook(() => useSwapFormButtonText())
 

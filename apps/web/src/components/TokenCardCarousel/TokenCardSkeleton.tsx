@@ -84,7 +84,7 @@ export function TokenCardSkeleton({
   layout,
 }: {
   index: number
-  cardWidth: number
+  cardWidth: TokenCardProps['width']
   layout: TokenCardSkeletonLayout
 }): JSX.Element {
   const delay = `${index * 0.1}s`
@@ -107,7 +107,7 @@ export function TokenCardSkeletonRow({
   count,
   layout,
 }: {
-  cardWidth: number
+  cardWidth: TokenCardProps['width']
   count: number
   layout: TokenCardSkeletonLayout
 }): JSX.Element {

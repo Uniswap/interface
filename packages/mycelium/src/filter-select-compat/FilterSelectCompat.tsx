@@ -22,9 +22,9 @@
 import * as React from 'react'
 import { cn } from '../cn'
 import { mergeCompatStyle } from '../compat/compose'
+import { CheckmarkCircle } from '../components/icons/CheckmarkCircle'
 import { resolveMenuColor } from '../menu-compat/compile'
 import type { MenuCompatIconComponent } from '../menu-compat/types'
-import { CheckmarkCircleGlyph } from '../option-list-compat/icons'
 import { EffectiveOverlayZIndexContext, OVERLAY_Z_INDEXES, useStackingLayerAbove } from '../popover-compat/z-index'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../shadcn/dropdown-menu'
 import { SINGLE_LINE_ELLIPSIS } from '../text-compat/typography-classes'
@@ -166,7 +166,7 @@ export function FilterSelectCompat({
                 // CheckmarkCircle marker — one checkmark grammar across
                 // single-select, multi-select, and the network selector.
                 <span data-slot="filter-select-check" className={FILTER_SELECT_CHECK_CLASS_NAME}>
-                  <CheckmarkCircleGlyph size={20} />
+                  <CheckmarkCircle aria-hidden color="currentColor" size={20} />
                 </span>
               )}
             </DropdownMenuItem>

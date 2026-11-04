@@ -1,4 +1,14 @@
-import { AnimatedFlex, Flex, UniversalImage, UniversalImageResizeMode } from '@universe/mycelium'
+import {
+  AnimatedFlex,
+  Flex,
+  UniversalImage,
+  UniversalImageResizeMode,
+  borderRadii,
+  iconSizes,
+  spacing,
+} from '@universe/mycelium'
+import { ArrowDownCircle } from '@universe/mycelium/icons/ArrowDownCircle'
+import { Buy } from '@universe/mycelium/icons/Buy'
 import { useShadowPropsShort } from '@universe/mycelium/theme-hooks-compat'
 import { fadeInQuick } from '@universe/tailwind/animations/reanimated'
 import React, { type PropsWithChildren, useCallback, useMemo } from 'react'
@@ -9,8 +19,6 @@ import { navigate } from 'src/app/navigation/rootNavigation'
 import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { useOpenReceiveModal } from 'src/features/modals/hooks/useOpenReceiveModal'
 import { openModal } from 'src/features/modals/modalSlice'
-import { ArrowDownCircle, Buy } from 'ui/src/components/icons'
-import { borderRadii, iconSizes, spacing } from 'ui/src/theme'
 import { ActionCard, type ActionCardItem } from 'uniswap/src/components/misc/ActionCard'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useCexTransferProviders } from 'uniswap/src/features/fiatOnRamp/useCexTransferProviders'

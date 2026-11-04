@@ -1,6 +1,6 @@
-import { createFetchClient } from '@universe/api/src/clients/base/createFetchClient'
 import type { Session, SessionService } from '@universe/sessions'
 import { afterEach, describe, expect, it, vi } from 'vitest'
+import { createFetchClient } from './createFetchClient'
 
 /**
  * `x-session-id` must be resolved per underlying request so the gate's

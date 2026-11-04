@@ -1,10 +1,17 @@
 import { Platform } from '@universe/chains'
 import { toScreenInput, useIsBlockedAddress } from '@universe/compliance'
-import { Flex, Text, TouchableArea, useMedia, AnimatedFlex, useIsShortMobileDevice } from '@universe/mycelium'
+import {
+  Flex,
+  Text,
+  TouchableArea,
+  useMedia,
+  AnimatedFlex,
+  useIsShortMobileDevice,
+  iconSizes,
+} from '@universe/mycelium'
 import { memo, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { iconSizes } from 'ui/src/theme'
 import { WarningLabel, type WarningWithStyle } from 'uniswap/src/components/modals/WarningModal/types'
 import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
 import { InsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'

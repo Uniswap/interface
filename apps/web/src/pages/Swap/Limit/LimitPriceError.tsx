@@ -5,7 +5,7 @@ import type { TFunction } from 'i18next'
 import { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LimitPriceErrorType } from '~/features/Swap/CurrencyInputPanel/LimitPriceInputPanel/useCurrentPriceAdjustment'
-import { FadePresence, FadePresenceAnimationType } from '~/theme/components/FadePresence'
+import { FadePresence, FadePresenceAnimationType } from '~/theme/components/FadePresence/FadePresence'
 import { transitions } from '~/theme/styles'
 
 const ErrorContainer = (props: FlexCompatProps): JSX.Element => (

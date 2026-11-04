@@ -1,11 +1,11 @@
 /* oxlint-disable max-lines */
 import { areEvmAddressesEqual } from '@universe/chains'
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
+import { Gas } from '@universe/mycelium/icons/Gas'
 import { TestID } from '@universe/test'
 import type { ReactNode } from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Gas } from 'ui/src/components/icons/Gas'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import type { MarginQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -13,22 +13,12 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { MarginDirection, type MarginVenue } from 'uniswap/src/features/transactions/margin/types'
 import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
+import { useAccount } from '~/connection/hooks/useAccount'
 import { MARGIN_CHAIN_ID, type MarginMarket } from '~/constants/margin'
-import { useAccount } from '~/hooks/useAccount'
-import { buildOpenPlanRequest } from '~/pages/Swap/Margin/components/MarginOpenButton'
-import { MarginPriceImpactRow } from '~/pages/Swap/Margin/components/MarginPriceImpactRow'
-import { MarginVenueLogo } from '~/pages/Swap/Margin/components/MarginVenueLogo'
-import { MarginActionModalShell } from '~/pages/Swap/Margin/components/shared/MarginActionModalShell'
-import { MarginDetailRow } from '~/pages/Swap/Margin/components/shared/MarginDetailRow'
-import { MarginPairHeading } from '~/pages/Swap/Margin/components/shared/MarginPairHeading'
-import { MarginShowMoreToggle } from '~/pages/Swap/Margin/components/shared/MarginShowMoreToggle'
-import type { DerivedMarginInfo } from '~/pages/Swap/Margin/hooks/useDerivedMarginInfo'
-import { useExecuteMarginPlan } from '~/pages/Swap/Margin/hooks/useExecuteMarginPlan'
-import { useIsPlanInFlight } from '~/pages/Swap/Margin/hooks/useIsPlanInFlight'
-import { getMarginCurrencyInfo, useMarginCurrencyInfos } from '~/pages/Swap/Margin/hooks/useMarginCurrencyInfos'
-import { useMarginMarkets } from '~/pages/Swap/Margin/hooks/useMarginMarkets'
-import { useMarginMarketsStaleTick } from '~/pages/Swap/Margin/hooks/useMarginMarketsStaleTick'
-import { marginAssetCurrencyId, marginTokenCurrencyId } from '~/pages/Swap/Margin/marginCurrencies'
+import { MarginVenueLogo } from '~/features/margin/components/MarginVenueLogo'
+import { getMarginCurrencyInfo, useMarginCurrencyInfos } from '~/features/margin/hooks/useMarginCurrencyInfos'
+import { useMarginMarkets } from '~/features/margin/hooks/useMarginMarkets'
+import { marginAssetCurrencyId, marginTokenCurrencyId } from '~/features/margin/utils/marginCurrencies'
 import {
   exposureUsdValue,
   formatLiqDistanceSuffix,
@@ -40,8 +30,19 @@ import {
   scaledE18ToNumber,
   usablePriceX18,
   usableWireAmount,
-} from '~/pages/Swap/Margin/marginFormat'
-import { marginPriceImpactBps } from '~/pages/Swap/Margin/marginPriceImpact'
+} from '~/features/margin/utils/marginFormat'
+import { marginUnwrapSymbol } from '~/features/margin/utils/marginTokenDisplay'
+import { buildOpenPlanRequest } from '~/pages/Swap/Margin/components/MarginOpenButton'
+import { MarginPriceImpactRow } from '~/pages/Swap/Margin/components/MarginPriceImpactRow'
+import { MarginActionModalShell } from '~/pages/Swap/Margin/components/shared/MarginActionModalShell'
+import { MarginDetailRow } from '~/pages/Swap/Margin/components/shared/MarginDetailRow'
+import { MarginPairHeading } from '~/pages/Swap/Margin/components/shared/MarginPairHeading'
+import { MarginShowMoreToggle } from '~/pages/Swap/Margin/components/shared/MarginShowMoreToggle'
+import type { DerivedMarginInfo } from '~/pages/Swap/Margin/hooks/useDerivedMarginInfo'
+import { useExecuteMarginPlan } from '~/pages/Swap/Margin/hooks/useExecuteMarginPlan'
+import { useIsPlanInFlight } from '~/pages/Swap/Margin/hooks/useIsPlanInFlight'
+import { useMarginMarketsStaleTick } from '~/pages/Swap/Margin/hooks/useMarginMarketsStaleTick'
+import { MarginSwapSide, marginPriceImpactBps } from '~/pages/Swap/Margin/marginPriceImpact'
 import { resolveReviewVenuePin } from '~/pages/Swap/Margin/marginReviewVenuePin'
 import {
   displayMarkPriceX18,
@@ -49,7 +50,6 @@ import {
   resolvePinnedMarkPriceX18,
   resolveVenueMarket,
 } from '~/pages/Swap/Margin/marginRoutedMarket'
-import { marginUnwrapSymbol } from '~/pages/Swap/Margin/marginTokenDisplay'
 
 function AmountSection({
   label,
@@ -150,7 +150,7 @@ function MarginReviewAmounts({
   // A short's exposure is the leg it borrows — its collateral total is margin plus sale proceeds, one
   // turn larger — so on a short the chip sits on Borrowing or it contradicts the number beside it.
   // Off the PINNED quote, like every other figure here. `derivedMarginInfo.leverage` is the live form
-  // store, which MarginSizeBlock's clamp effect can still lower behind the open sheet (a markets
+  // store, which MarginLeverageSection's clamp effect can still lower behind the open sheet (a markets
   // refetch dropping maxLeverage) — the chip would move while the quote Confirm sends does not.
   const pinnedLeverage = quote.display.leverage === undefined ? leverage : Number(quote.display.leverage)
   const leverageChip = (
@@ -220,7 +220,7 @@ function MarginReviewDetails({
   const priceImpactBps = marginPriceImpactBps({
     execPriceX18: quote.display.effectivePrice,
     markPriceX18: impactMark.priceX18,
-    swapSide: 'BUY_COLLATERAL',
+    swapSide: MarginSwapSide.BUY_COLLATERAL,
     direction: direction ?? MarginDirection.LONG,
   })
 

@@ -1,17 +1,13 @@
-import { Flex, Text } from '@universe/mycelium'
-import { TestID } from '@universe/test'
+import { Flex, Text, fonts } from '@universe/mycelium'
 import { useTranslation } from 'react-i18next'
-import { Switch } from 'ui/src'
-import { fonts } from 'ui/src/theme'
 import { AmountInput } from 'uniswap/src/components/AmountInput/AmountInput'
 import type { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
+import { marginLeverageTrackColor } from '~/features/margin/utils/marginFormat'
 import { MarginLeverageSlider } from '~/pages/Swap/Margin/components/shared/MarginLeverageSlider'
-import { marginLeverageTrackColor } from '~/pages/Swap/Margin/marginFormat'
 
-// Leverage card for the ADJUST modals: editable numeric leverage + slider (value already resolved by the
-// caller per the lock/drift/explicit mode), with the Lock toggle in the card's own header when the caller
-// supplies a handler — Change leverage has nothing to lock against. Carded, like the margin field, so the
-// two things the user controls read as a pair against the bare consequence rows below.
+// Leverage card for the Change-leverage modal: editable numeric leverage + slider (value already resolved
+// by the caller per the drift/explicit mode). Carded so the control reads apart from the bare consequence
+// rows below.
 // `toFixed` on a non-finite number writes the literal string "Infinity" into the field. +Infinity is a
 // real answer here — the projection lands at or past liquidation — so it is rendered, not swallowed:
 // the alternative (substituting the position's current leverage) shows the most dangerous state on this
@@ -27,11 +23,9 @@ export function MarginAdjustLeverageSection({
   cap,
   lltvWad,
   direction,
-  lockLeverage,
   onLeverageDraftChange,
   onCommitLeverageDraft,
   onSliderChange,
-  onToggleLockLeverage,
 }: {
   displayedLeverage: number
   leverageDraft?: string
@@ -40,35 +34,16 @@ export function MarginAdjustLeverageSection({
   // implied LTV differs by direction, so the tier does too.
   lltvWad: string
   direction: MarginDirection | undefined
-  lockLeverage?: boolean
   onLeverageDraftChange: (text: string) => void
   onCommitLeverageDraft: () => void
   onSliderChange: (next: number) => void
-  onToggleLockLeverage?: (next: boolean) => void
 }): JSX.Element {
   const { t } = useTranslation()
   return (
     <Flex gap="$spacing8" p="$spacing16" borderRadius="$rounded20" backgroundColor="$surface2">
-      <Flex row alignItems="center" justifyContent="space-between" gap="$spacing12">
-        <Text variant="body3" color="$neutral2">
-          {t('margin.manage.leverage')}
-        </Text>
-        {onToggleLockLeverage ? (
-          <Flex row alignItems="center" gap="$spacing8">
-            <Text variant="body3" color="$neutral2">
-              {t('margin.adjustPosition.lockShort')}
-            </Text>
-            {/* Visible chrome is "Lock"; the accessible name keeps the full phrase. */}
-            <Switch
-              variant="branded"
-              checked={lockLeverage ?? false}
-              aria-label={t('margin.adjustPosition.lockLeverage')}
-              onCheckedChange={onToggleLockLeverage}
-              testID={TestID.MarginAdjustLockLeverage}
-            />
-          </Flex>
-        ) : null}
-      </Flex>
+      <Text variant="body3" color="$neutral2">
+        {t('margin.manage.leverage')}
+      </Text>
       <Flex row alignItems="center" gap="$spacing4">
         <AmountInput
           value={leverageDraft ?? formatLeverageValue(displayedLeverage)}

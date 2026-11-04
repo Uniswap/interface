@@ -60,17 +60,6 @@ function beforeSend(event: RumEvent, context: RumEventDomainContext): boolean {
       configurable: true,
     })
   }
-  if (event.type === 'resource' && event.resource.url.includes('graphql')) {
-    const requestBody = (context as RumFetchResourceEventDomainContext).requestInit?.body
-    if (requestBody) {
-      const body = JSON.parse(requestBody as string)
-      event.context = {
-        ...event.context,
-        operationName: body.operationName,
-      }
-    }
-  }
-
   if (event.type === 'resource' && event.resource.url.includes('gateway.uniswap.org')) {
     const requestHeaders = (context as RumFetchResourceEventDomainContext).requestInit?.headers
     if (requestHeaders) {

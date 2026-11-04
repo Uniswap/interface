@@ -3,7 +3,7 @@
 // @generated from file conversionproxy/v1/api.proto (package conversionproxy.v1, syntax proto3)
 
 import { MethodKind } from '@bufbuild/protobuf'
-import { ProxyRequest, ProxyResponse } from '@universe/api/src/clients/conversionTracking/api_pb'
+import { ProxyRequest, ProxyResponse } from './api_pb'
 
 /**
  * @generated from service conversionproxy.v1.ConversionProxyService

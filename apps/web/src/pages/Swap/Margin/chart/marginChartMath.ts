@@ -5,8 +5,8 @@ import {
   hasMarginPositionBasis,
   isMarginActivePosition,
   marginPositionDebt,
-} from '~/pages/Swap/Margin/marginPositionRow'
-import { marginMarketDirection } from '~/pages/Swap/Margin/marginTokenDisplay'
+} from '~/features/margin/utils/marginPositionRow'
+import { marginMarketDirection } from '~/features/margin/utils/marginTokenDisplay'
 import { marginPositionMark } from '~/pages/Swap/Margin/marginUsdPnl'
 
 const SECONDS_PER_YEAR = 31_536_000

@@ -7,7 +7,7 @@ import { useNetworkSelectorOptions } from 'uniswap/src/components/network/Networ
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useNetworkFilterChainIds } from '~/components/NetworkFilter/useFilteredChains'
-import { useActiveAddresses } from '~/features/accounts/store/hooks'
+import { useActiveAddresses } from '~/connection/accounts/hooks'
 import { useExploreTablesFilterStoreActions } from '~/features/Explore/state/exploreTablesFilterStore'
 import { buildExploreUrl } from '~/features/Explore/utils/buildExploreUrl'
 import { isCategoryUnsupportedChain, withoutCategoryParam } from '~/pages/Explore/categories/useExploreCategory'

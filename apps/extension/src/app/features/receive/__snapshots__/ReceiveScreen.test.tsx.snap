@@ -83,7 +83,7 @@ exports[`ReceiveScreen > renders without error 1`] = `
             </div>
             <div
               class="flex flex-col basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 items-center justify-center bg-[color:var(--c-bg)] relative"
-              style="--c-bg: #FFFFFF;"
+              style="--c-bg: #ffffff;"
             >
               <div
                 height="240"
@@ -117,7 +117,7 @@ exports[`ReceiveScreen > renders without error 1`] = `
                 </div>
                 <div>
                   <div
-                    fill="#FFFFFF"
+                    fill="#ffffff"
                     height="256"
                     rx="24"
                     width="256"
@@ -5775,7 +5775,7 @@ exports[`ReceiveScreen > renders without error 1`] = `
                     >
                       <div
                         d="M0 0H40V40H0V0Z"
-                        fill="#FFFFFF"
+                        fill="#ffffff"
                       />
                     </div>
                   </div>
@@ -5826,7 +5826,7 @@ exports[`ReceiveScreen > renders without error 1`] = `
                     >
                       <div
                         d="M0 0H40V40H0V0Z"
-                        fill="#FFFFFF"
+                        fill="#ffffff"
                       />
                     </div>
                   </div>
@@ -5877,7 +5877,7 @@ exports[`ReceiveScreen > renders without error 1`] = `
                     >
                       <div
                         d="M0 0H40V40H0V0Z"
-                        fill="#FFFFFF"
+                        fill="#ffffff"
                       />
                     </div>
                   </div>
@@ -6002,17 +6002,17 @@ exports[`ReceiveScreen > renders without error 1`] = `
                     >
                       Wallet address
                     </span>
-                    <div
+                    <svg
                       fill="none"
                       stroke-width="8"
-                      style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.63);"
-                      viewbox="0 0 24 24"
+                      style="width: 16px; height: 16px;"
+                      viewBox="0 0 24 24"
                     >
-                      <div
+                      <path
                         d="M18.375 6.25H9.625C7.448 6.25 6.25 7.448 6.25 9.625V18.375C6.25 20.552 7.448 21.75 9.625 21.75H18.375C20.552 21.75 21.75 20.552 21.75 18.375V9.625C21.75 7.448 20.552 6.25 18.375 6.25ZM20.25 18.375C20.25 19.707 19.707 20.25 18.375 20.25H9.625C8.293 20.25 7.75 19.707 7.75 18.375V9.625C7.75 8.293 8.293 7.75 9.625 7.75H18.375C19.707 7.75 20.25 8.293 20.25 9.625V18.375ZM3.75 5.62V14.38C3.75 15.578 4.23309 15.873 4.39209 15.971C4.74609 16.187 4.85589 16.649 4.63989 17.002C4.49789 17.233 4.25202 17.36 3.99902 17.36C3.86602 17.36 3.72991 17.324 3.60791 17.25C2.70691 16.698 2.25 15.733 2.25 14.38V5.62C2.25 3.478 3.47912 2.25 5.62012 2.25H14.3799C16.0649 2.25 16.87 2.98897 17.25 3.60797C17.466 3.96097 17.355 4.42298 17.002 4.63898C16.648 4.85598 16.1879 4.74399 15.9709 4.39099C15.8739 4.23199 15.5779 3.74902 14.3799 3.74902H5.62012C4.29212 3.75002 3.75 4.292 3.75 5.62Z"
                         fill="currentColor"
                       />
-                    </div>
+                    </svg>
                   </div>
                 </div>
               </div>
@@ -6057,21 +6057,21 @@ exports[`ReceiveScreen > renders without error 1`] = `
                 <span
                   class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-medium)] text-[14px] [line-height:16.1px] [font-weight:535] [color:var(--stext-neutral1)]"
                 >
-                  15
+                  14
                    
                   networks
                 </span>
-                <div
+                <svg
                   fill="none"
                   stroke-width="8"
-                  style="width: 12px; height: 12px; color: rgba(19, 19, 19, 0.35);"
-                  viewbox="0 0 16 16"
+                  style="width: 12px; height: 12px;"
+                  viewBox="0 0 16 16"
                 >
-                  <div
+                  <path
                     d="M8.00001 1.33334C4.31801 1.33334 1.33334 4.318 1.33334 8C1.33334 11.682 4.31801 14.6667 8.00001 14.6667C11.682 14.6667 14.6667 11.682 14.6667 8C14.6667 4.318 11.682 1.33334 8.00001 1.33334ZM8.50001 11C8.50001 11.276 8.27601 11.5 8.00001 11.5C7.72401 11.5 7.50001 11.276 7.50001 11V7.95264C7.50001 7.67664 7.72401 7.45264 8.00001 7.45264C8.27601 7.45264 8.50001 7.67664 8.50001 7.95264V11ZM8.01336 6.33334C7.64536 6.33334 7.34327 6.03467 7.34327 5.66667C7.34327 5.29867 7.63868 5 8.00668 5H8.01336C8.38202 5 8.68002 5.29867 8.68002 5.66667C8.68002 6.03467 8.38136 6.33334 8.01336 6.33334Z"
                     fill="currentColor"
                   />
-                </div>
+                </svg>
               </div>
             </div>
           </div>
@@ -6158,7 +6158,7 @@ exports[`ReceiveScreen > renders without error 1`] = `
           </div>
           <div
             class="flex flex-col basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 items-center justify-center bg-[color:var(--c-bg)] relative"
-            style="--c-bg: #FFFFFF;"
+            style="--c-bg: #ffffff;"
           >
             <div
               height="240"
@@ -6192,7 +6192,7 @@ exports[`ReceiveScreen > renders without error 1`] = `
               </div>
               <div>
                 <div
-                  fill="#FFFFFF"
+                  fill="#ffffff"
                   height="256"
                   rx="24"
                   width="256"
@@ -11850,7 +11850,7 @@ exports[`ReceiveScreen > renders without error 1`] = `
                   >
                     <div
                       d="M0 0H40V40H0V0Z"
-                      fill="#FFFFFF"
+                      fill="#ffffff"
                     />
                   </div>
                 </div>
@@ -11901,7 +11901,7 @@ exports[`ReceiveScreen > renders without error 1`] = `
                   >
                     <div
                       d="M0 0H40V40H0V0Z"
-                      fill="#FFFFFF"
+                      fill="#ffffff"
                     />
                   </div>
                 </div>
@@ -11952,7 +11952,7 @@ exports[`ReceiveScreen > renders without error 1`] = `
                   >
                     <div
                       d="M0 0H40V40H0V0Z"
-                      fill="#FFFFFF"
+                      fill="#ffffff"
                     />
                   </div>
                 </div>
@@ -12077,17 +12077,17 @@ exports[`ReceiveScreen > renders without error 1`] = `
                   >
                     Wallet address
                   </span>
-                  <div
+                  <svg
                     fill="none"
                     stroke-width="8"
-                    style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.63);"
-                    viewbox="0 0 24 24"
+                    style="width: 16px; height: 16px;"
+                    viewBox="0 0 24 24"
                   >
-                    <div
+                    <path
                       d="M18.375 6.25H9.625C7.448 6.25 6.25 7.448 6.25 9.625V18.375C6.25 20.552 7.448 21.75 9.625 21.75H18.375C20.552 21.75 21.75 20.552 21.75 18.375V9.625C21.75 7.448 20.552 6.25 18.375 6.25ZM20.25 18.375C20.25 19.707 19.707 20.25 18.375 20.25H9.625C8.293 20.25 7.75 19.707 7.75 18.375V9.625C7.75 8.293 8.293 7.75 9.625 7.75H18.375C19.707 7.75 20.25 8.293 20.25 9.625V18.375ZM3.75 5.62V14.38C3.75 15.578 4.23309 15.873 4.39209 15.971C4.74609 16.187 4.85589 16.649 4.63989 17.002C4.49789 17.233 4.25202 17.36 3.99902 17.36C3.86602 17.36 3.72991 17.324 3.60791 17.25C2.70691 16.698 2.25 15.733 2.25 14.38V5.62C2.25 3.478 3.47912 2.25 5.62012 2.25H14.3799C16.0649 2.25 16.87 2.98897 17.25 3.60797C17.466 3.96097 17.355 4.42298 17.002 4.63898C16.648 4.85598 16.1879 4.74399 15.9709 4.39099C15.8739 4.23199 15.5779 3.74902 14.3799 3.74902H5.62012C4.29212 3.75002 3.75 4.292 3.75 5.62Z"
                       fill="currentColor"
                     />
-                  </div>
+                  </svg>
                 </div>
               </div>
             </div>
@@ -12132,21 +12132,21 @@ exports[`ReceiveScreen > renders without error 1`] = `
               <span
                 class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-medium)] text-[14px] [line-height:16.1px] [font-weight:535] [color:var(--stext-neutral1)]"
               >
-                15
+                14
                  
                 networks
               </span>
-              <div
+              <svg
                 fill="none"
                 stroke-width="8"
-                style="width: 12px; height: 12px; color: rgba(19, 19, 19, 0.35);"
-                viewbox="0 0 16 16"
+                style="width: 12px; height: 12px;"
+                viewBox="0 0 16 16"
               >
-                <div
+                <path
                   d="M8.00001 1.33334C4.31801 1.33334 1.33334 4.318 1.33334 8C1.33334 11.682 4.31801 14.6667 8.00001 14.6667C11.682 14.6667 14.6667 11.682 14.6667 8C14.6667 4.318 11.682 1.33334 8.00001 1.33334ZM8.50001 11C8.50001 11.276 8.27601 11.5 8.00001 11.5C7.72401 11.5 7.50001 11.276 7.50001 11V7.95264C7.50001 7.67664 7.72401 7.45264 8.00001 7.45264C8.27601 7.45264 8.50001 7.67664 8.50001 7.95264V11ZM8.01336 6.33334C7.64536 6.33334 7.34327 6.03467 7.34327 5.66667C7.34327 5.29867 7.63868 5 8.00668 5H8.01336C8.38202 5 8.68002 5.29867 8.68002 5.66667C8.68002 6.03467 8.38136 6.33334 8.01336 6.33334Z"
                   fill="currentColor"
                 />
-              </div>
+              </svg>
             </div>
           </div>
         </div>
@@ -12204,11 +12204,11 @@ exports[`ReceiveScreen > renders without error 1`] = `
   "queryByTitle": [Function],
   "rerender": [Function],
   "store": {
+    "@@observable": [Function],
     "dispatch": [Function],
     "getState": [Function],
     "replaceReducer": [Function],
     "subscribe": [Function],
-    Symbol(observable): [Function],
   },
   "unmount": [Function],
 }

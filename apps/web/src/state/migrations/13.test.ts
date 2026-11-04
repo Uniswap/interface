@@ -1,4 +1,3 @@
-import { GraphQLApi } from '@universe/api'
 import { createMigrate } from 'redux-persist'
 import { migration1 } from '~/state/migrations/1'
 import { migration2 } from '~/state/migrations/2'
@@ -17,7 +16,7 @@ import { migration13 } from '~/state/migrations/13'
 const transactionState: NewTransactionState = {
   1: {
     '0x0': {
-      status: GraphQLApi.TransactionStatus.Confirmed,
+      status: 'CONFIRMED',
       hash: '0x0',
       addedTime: 0,
       from: '0x0',
@@ -25,7 +24,7 @@ const transactionState: NewTransactionState = {
       confirmedTime: 5,
     },
     '0x1': {
-      status: GraphQLApi.TransactionStatus.Pending,
+      status: 'PENDING',
       hash: '0x01',
       addedTime: 0,
       from: '0x0',
@@ -34,7 +33,7 @@ const transactionState: NewTransactionState = {
       deadline: 10,
     },
     '0x2': {
-      status: GraphQLApi.TransactionStatus.Failed,
+      status: 'FAILED',
       hash: '0x02',
       addedTime: 0,
       from: '0x0',

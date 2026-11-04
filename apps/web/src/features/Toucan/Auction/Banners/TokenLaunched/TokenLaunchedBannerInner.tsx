@@ -1,7 +1,6 @@
 import { TouchableArea } from '@universe/mycelium'
 import { useCallback } from 'react'
 import { useNavigate } from 'react-router'
-import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { getTokenDetailsURL } from '~/data/util'
 import { TokenLaunchedBannerContent } from '~/features/Toucan/Auction/Banners/TokenLaunched/TokenLaunchedBannerContent'
 import { TokenLaunchedBannerWrapper } from '~/features/Toucan/Auction/Banners/TokenLaunched/TokenLaunchedBannerWrapper'
@@ -47,7 +46,7 @@ export function TokenLaunchedBannerInner({
     }
     const tokenDetailsURL = getTokenDetailsURL({
       address: tokenDetailsAddress ?? auctionDetails.tokenAddress,
-      chain: toGraphQLChain(auctionDetails.chainId),
+      chainId: auctionDetails.chainId,
     })
     navigate(tokenDetailsURL)
   }, [auctionDetails, navigate, tokenDetailsAddress])

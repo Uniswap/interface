@@ -10,9 +10,9 @@
  * styles, so assertions go through getComputedStyle (Coachmark precedent).
  */
 import { render, type RenderResult } from '@testing-library/react'
+import { colorsDark, colorsLight } from '@universe/mycelium/theme-palette'
 import type { ReactNode } from 'react'
 import { QRCodeDisplay } from 'ui/src/components/QRCode/QRCodeDisplay.native'
-import { colorsDark, colorsLight } from 'ui/src/theme'
 import { afterEach, describe, expect, it } from 'vitest'
 
 type ThemeName = 'light' | 'dark'

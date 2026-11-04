@@ -1,3 +1,4 @@
+import { UniverseChainId } from '@universe/chains'
 import { NftTransactionDetails } from 'uniswap/src/components/activity/details/transactions/NftTransactionDetails'
 import { NFTMintTransactionInfo, TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { SAMPLE_SEED_ADDRESS_1 } from 'uniswap/src/test/fixtures'
@@ -22,7 +23,7 @@ const nftTypeInfo = {
 } as NFTMintTransactionInfo
 const mockTransaction = {
   id: '9920dbad-ff24-47c8-814a-094566fc45ff',
-  chainId: 81457,
+  chainId: UniverseChainId.Base,
   routing: 'CLASSIC',
   from: '0xee814caea14f6cccfeae34fea11d9a2ca6aabb11',
   typeInfo: nftTypeInfo,

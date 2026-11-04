@@ -25,17 +25,18 @@ import { generateAnvilState } from './generate-anvil-state'
 
 interface PinnedChain {
   /** Key in fork-blocks.json. */
-  key: 'mainnet' | 'base'
+  key: 'mainnet' | 'base' | 'bnb'
   chainId: number
   /** Blocks subtracted from the tip before rounding down. */
   safetyMargin: number
 }
 
 // Margins target ~15 minutes behind tip: 75 blocks on mainnet (12s blocks),
-// 450 blocks on base (2s blocks).
+// 450 blocks on base (2s blocks), 2000 blocks on bnb (0.45s blocks).
 const PINNED_CHAINS: PinnedChain[] = [
   { key: 'mainnet', chainId: 1, safetyMargin: 75 },
   { key: 'base', chainId: 8453, safetyMargin: 450 },
+  { key: 'bnb', chainId: 56, safetyMargin: 2000 },
 ]
 
 /** Round down to a whole thousand: tidy pins in cache keys and fixture filenames. */

@@ -1,7 +1,6 @@
 import { isWebPlatform } from '@universe/environment'
-import { Flex, Text } from '@universe/mycelium'
+import { Button, Flex, Text } from '@universe/mycelium'
 import { useTranslation } from 'react-i18next'
-import { Button } from 'ui/src'
 import { getProjectedAnnualEarnings } from 'uniswap/src/features/earn/amount'
 import { LiveEarnRewardsAmount } from 'uniswap/src/features/earn/LiveEarnRewardsAmount'
 import { RewardsUnavailableIndicator } from 'uniswap/src/features/earn/RewardsUnavailableIndicator'

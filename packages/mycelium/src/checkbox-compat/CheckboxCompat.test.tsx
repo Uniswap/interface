@@ -53,8 +53,7 @@ describe('host element and a11y', () => {
  * The four props that reach legacy only through the
  * `Omit<TamaguiCheckboxProps, 'size'>` spread. Legacy honours `id` on both
  * platforms and `name`/`value`/`required` on web only, so the native leg's
- * absence of the three is parity, not a gap (`CheckboxCompatProps`;
- * `native-parity.test.tsx` Layer 5 holds the device half).
+ * absence of the three is parity, not a gap (see `CheckboxCompatProps`).
  *
  * Every assertion here pins PRESENCE before absence: `expect(attr).toBeNull()`
  * on a component that never emitted the attribute in the first place passes
@@ -81,7 +80,7 @@ describe('form/focus props from the Tamagui spread', () => {
     const withValue = render(<CheckboxCompat checked={false} value="yes" />)
     expect(box().getAttribute('value')).toBe('yes')
     withValue.unmount()
-    // Legacy DOES default `value` to the string "on" (useCheckbox.tsx:48) and so
+    // Legacy DOES default `value` to the string "on" and so
     // emits `value="on"` on every checkbox. The compat deliberately does not:
     // the attribute is inert on `<button type="button">` and no call site reads
     // it. A deliberate deviation, not a drift.
@@ -184,7 +183,7 @@ describe('indicator and hover dot', () => {
     expect(svg?.querySelectorAll('line').length).toBe(2)
   })
 
-  it('shows the $neutral2 hover dot only while unchecked and hovered (Checkbox.tsx:119-132)', () => {
+  it('shows the $neutral2 hover dot only while unchecked and hovered', () => {
     render(<CheckboxCompat checked={false} />)
     const dotSelector = '.bg-neutral2'
     expect(box().querySelector(dotSelector)).toBeNull()
@@ -312,7 +311,7 @@ describe('check glyph colour: the inline-style lane', () => {
     expect(document.querySelector('svg')).not.toBeNull()
   })
 
-  it('paints the branded glyph the literal colour legacy paints (Checkbox.tsx:114)', () => {
+  it('paints the branded glyph the literal colour legacy paints', () => {
     render(<CheckboxCompat checked variant="branded" />)
     const glyph = document.querySelector('svg')
     // `white` is a literal, not a token, so jsdom keeps it — this is the one

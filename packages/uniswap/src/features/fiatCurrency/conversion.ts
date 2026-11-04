@@ -19,7 +19,7 @@ export interface FiatConverter {
 /**
  * Hook used to return a converter with a set of all necessary conversion logic needed for
  * fiat currency. This is based off of the currently selected language and fiat currency
- * in settings, using a graphql endpoint to retrieve the conversion rate.
+ * in settings, using the data API's ConvertFiat endpoint to retrieve the conversion rate.
  * This ensures that the converted and formatted values are properly localized. If any additional
  * conversion logic is needed, please add them here.
  * @returns set of localized fiat currency conversion functions

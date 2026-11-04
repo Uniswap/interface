@@ -1,11 +1,11 @@
+import { AppId, type BaseConfig, BaseConfigSchema, getConfig } from '@universe/config'
+import { Environment, getCurrentEnv } from '@universe/environment'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import {
   DEV_ENTRY_GATEWAY_API_BASE_URL,
   PROD_ENTRY_GATEWAY_API_BASE_URL,
   STAGING_ENTRY_GATEWAY_API_BASE_URL,
-} from '@universe/api/src/clients/base/urls'
-import { AppId, type BaseConfig, BaseConfigSchema, getConfig } from '@universe/config'
-import { Environment, getCurrentEnv } from '@universe/environment'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+} from './clients/base/urls'
 import { ENTRY_GATEWAY_PROXY_PATH, getEntryGatewayUrl } from './getEntryGatewayUrl'
 
 vi.mock('@universe/config', async (importOriginal) => {

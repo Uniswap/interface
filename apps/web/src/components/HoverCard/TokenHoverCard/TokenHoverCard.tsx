@@ -10,6 +10,7 @@ import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { ElementName, InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
+import { useFireOncePerOpen } from '~/components/HoverCard/hooks/useFireOncePerOpen'
 import {
   HoverCard,
   HoverCardArmOnHover,
@@ -26,7 +27,6 @@ import {
 import type { TokenHoverCardToken } from '~/components/HoverCard/TokenHoverCard/types'
 import { useTokenHoverCardData } from '~/components/HoverCard/TokenHoverCard/useTokenHoverCardData'
 import { useTokenHoverCardMultichainCopy } from '~/components/HoverCard/TokenHoverCard/useTokenHoverCardMultichainCopy'
-import { useFireOncePerOpen } from '~/components/HoverCard/useFireOncePerOpen'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { getTokenDetailsURL } from '~/data/util'
 import { TDP_MULTICHAIN_CHAIN_QUERY_VALUE } from '~/utils/params/chainQueryParam'
@@ -73,7 +73,7 @@ function MountedTokenHoverCard({
   const navigate = useNavigate()
   const { defaultChainId } = useEnabledChains()
 
-  const { chainId, gqlChain, currencyIdFromToken, rawAddress } = deriveTokenIdentity({
+  const { chainId, currencyIdFromToken, rawAddress } = deriveTokenIdentity({
     token,
     currencyInfoProp,
     defaultChainId,
@@ -94,7 +94,7 @@ function MountedTokenHoverCard({
     volume24hUsd,
     tvlUsd,
     statsLoading,
-  } = useTokenHoverCardData({ currencyInfoProp, currencyIdFromToken, gqlChain, rawAddress, hasOpenIntent, isOpen })
+  } = useTokenHoverCardData({ currencyInfoProp, currencyIdFromToken, chainId, rawAddress, hasOpenIntent, isOpen })
 
   const contractAddress = rawAddress && rawAddress !== NATIVE_CHAIN_ID ? rawAddress : undefined
 
@@ -136,7 +136,7 @@ function MountedTokenHoverCard({
   const handleExpand = useCallback((): void => {
     const url = getTokenDetailsURL({
       address: rawAddress,
-      chain: gqlChain,
+      chainId,
       chainQueryParam: isMultichainAsset ? TDP_MULTICHAIN_CHAIN_QUERY_VALUE : undefined,
     })
     sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
@@ -149,7 +149,7 @@ function MountedTokenHoverCard({
     })
     onNavigate?.()
     navigate(url)
-  }, [rawAddress, gqlChain, navigate, onNavigate, trace, currencyInfo, chainId, contractAddress, isMultichainAsset])
+  }, [rawAddress, navigate, onNavigate, trace, currencyInfo, chainId, contractAddress, isMultichainAsset])
 
   const handleOpenChange = useCallback(
     (open: boolean): void => {

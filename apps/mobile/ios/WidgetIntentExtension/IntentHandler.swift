@@ -18,14 +18,15 @@ class IntentHandler: INExtension, TokenPriceConfigurationIntentHandling {
     case owned = ".owned"
   }
 
-  lazy var ETHTokenResponse = TokenResponse(chain: WidgetConstants.ethereumChain, symbol: WidgetConstants.ethereumSymbol, name: "Ethereum")
+  lazy var ETHTokenResponse = TokenResponse(chainId: WidgetConstants.ethereumChainId, symbol: WidgetConstants.ethereumSymbol, name: "Ethereum")
 
   func tokenResponseToIntentToken(_ result: TokenResponse, section: Section) -> IntentToken {
     let intentToken: IntentToken = IntentToken(identifier: result.name + section.rawValue, display: "\(result.name)", subtitle: "\(result.symbol)", image: nil)
     intentToken.name = result.name
     intentToken.symbol = result.symbol
     intentToken.address = result.address
-    intentToken.chain = result.chain
+    // Stored in the existing String `chain` property, which iOS round-trips through saved widget configurations.
+    intentToken.chain = String(result.chainId)
     return intentToken
   }
 
@@ -35,7 +36,7 @@ class IntentHandler: INExtension, TokenPriceConfigurationIntentHandling {
     var dedupedTokens: [IntentToken] = []
     for intentToken in intentTokens {
       if let index = dedupedTokens.firstIndex(where: {$0.name == intentToken.name && $0.symbol == intentToken.symbol}) {
-        if intentToken.chain == WidgetConstants.ethereumChain {
+        if intentToken.chain == String(WidgetConstants.ethereumChainId) {
           dedupedTokens[index] = intentToken
         }
       } else {
@@ -59,7 +60,7 @@ class IntentHandler: INExtension, TokenPriceConfigurationIntentHandling {
     let favoriteTokens = favoriteTokenReponses.map {tokenResponseToIntentToken($0, section: Section.favorite)}
     let topTokens = topTokensResponse.map { (result) -> IntentToken in
       // replace wETH with ETH in the configuration
-      if (result.address == WidgetConstants.WETHAddress && result.chain == WidgetConstants.ethereumChain) {
+      if (result.address == WidgetConstants.WETHAddress && result.chainId == WidgetConstants.ethereumChainId) {
         return tokenResponseToIntentToken(ETHTokenResponse, section: Section.top)
       }
       return tokenResponseToIntentToken(result, section: Section.top)

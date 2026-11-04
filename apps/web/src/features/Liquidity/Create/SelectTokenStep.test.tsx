@@ -135,7 +135,7 @@ describe('SelectTokensStep geo gate (select-tokens seam)', () => {
     renderStep()
 
     expect(screen.getByTestId(TestID.LPGeoRestrictionBanner)).toBeInTheDocument()
-    expect(screen.getByText('AAPLX isn’t available for liquidity provision in your region')).toBeInTheDocument()
+    expect(screen.getByText('AAPLX is unavailable in your region')).toBeInTheDocument()
   })
 
   it('folds the restriction into hasError so the fee-tier selector is disabled too', () => {
@@ -181,7 +181,7 @@ describe('SelectTokensStep geo gate (select-tokens seam)', () => {
     renderStep()
 
     expect(screen.getByText('Not available in your region')).toBeInTheDocument()
-    expect(screen.getByText('This token isn’t available for liquidity provision in your region')).toBeInTheDocument()
+    expect(screen.getByText('This token is unavailable in your region')).toBeInTheDocument()
   })
 })
 
@@ -217,5 +217,24 @@ describe('SelectTokensStep existing-pool CTA', () => {
     fireEvent.click(screen.getByText('Continue'))
 
     expect(mockNavigate.mock.calls[0][1]).toEqual({ state: { from: expect.any(String) } })
+  })
+
+  // A v2 migration has no `migratingPosition` (that's v3-only), so the existing-pool hop must key off
+  // the migration itself — otherwise the user lands on the add-liquidity deposit form.
+  it('advances the migration form instead of navigating when the target pool exists', () => {
+    const onContinue = vi.fn()
+    render(
+      <SelectTokensStep
+        isMigration
+        currencyInputs={CURRENCY_INPUTS}
+        setCurrencyInputs={vi.fn()}
+        onContinue={onContinue}
+      />,
+    )
+
+    fireEvent.click(screen.getByText('Continue'))
+
+    expect(mockNavigate).not.toHaveBeenCalled()
+    expect(onContinue).toHaveBeenCalledOnce()
   })
 })

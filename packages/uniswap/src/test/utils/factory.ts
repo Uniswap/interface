@@ -54,7 +54,7 @@ import { omit, pick } from 'es-toolkit'
  *   name: sdkToken.name,
  *   symbol: sdkToken.symbol,
  *   decimals: sdkToken.decimals,
- *   chain: toGraphQLChain(sdkToken.chainId) ?? Chain.Ethereum,
+ *   chainId: sdkToken.chainId,
  *   address: sdkToken.address,
  * }))
  * ```

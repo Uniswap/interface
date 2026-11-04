@@ -1,5 +1,5 @@
 import { Text } from '@universe/mycelium'
-import { ExternalLink } from 'ui/src/components/icons'
+import { ExternalLink } from '@universe/mycelium/icons/ExternalLink'
 import { shortenAddress } from 'utilities/src/addresses'
 import type { MaybeExplorerLinkedAddressProps } from 'wallet/src/components/dappRequests/SignTypedData/MaybeExplorerLinkedAddress'
 

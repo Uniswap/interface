@@ -1,12 +1,11 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
-import type { UniverseChainId } from '@universe/chains'
-import { AnimatedFlex, Text, TouchableArea } from '@universe/mycelium'
+import { areEvmAddressesEqual, type UniverseChainId } from '@universe/chains'
+import { AnimatedFlex, Button, Text, TouchableArea } from '@universe/mycelium'
+import { Search } from '@universe/mycelium/icons/Search'
+import { X } from '@universe/mycelium/icons/X'
 import { TestID } from '@universe/test'
 import { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button } from 'ui/src'
-import { Search } from 'ui/src/components/icons/Search'
-import { X } from 'ui/src/components/icons/X'
 import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import { getHookRegistryKey, useHookRegistryMap } from 'uniswap/src/features/poolHooks/hooks/useHookRegistryMap'
 import { useUniswapHookProvenance } from 'uniswap/src/features/poolHooks/hooks/useUniswapHookProvenance'
@@ -48,12 +47,14 @@ export function AddHook() {
   // Seeds position state from `?hook=` on mount and again if the version flips to v4. Note for callers
   // that clear the hook while this is unmounted: the next mount re-seeds it from the URL until the
   // provider's sync has caught up, so return to this step first and clear afterwards.
+  // The URL parser checksums `?hook=` while a registry pick is lowercase, so compare case-insensitively and keep
+  // the state object when it's the same hook: a casing-only write on remount (Edit back to this step)
+  // re-renders the still-exiting range step and drives it into a "Maximum update depth" loop.
   useEffect(() => {
     if (initialHook && protocolVersion === ProtocolVersion.V4) {
-      setPositionState((state) => ({
-        ...state,
-        hook: initialHook,
-      }))
+      setPositionState((state) =>
+        areEvmAddressesEqual(state.hook, initialHook) ? state : { ...state, hook: initialHook },
+      )
     }
   }, [initialHook, protocolVersion, setPositionState])
 

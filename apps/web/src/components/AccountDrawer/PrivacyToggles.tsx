@@ -2,7 +2,6 @@ import { Flex, Text } from '@universe/mycelium'
 import { Fingerprint } from '@universe/mycelium/icons/Fingerprint'
 import { LineChartDots } from '@universe/mycelium/icons/LineChartDots'
 import { useTranslation } from 'react-i18next'
-import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { SettingsToggle } from '~/components/AccountDrawer/SettingsToggle'
 import {
   AnalyticsInfoTooltip,
@@ -10,6 +9,7 @@ import {
   useAllowAnalyticsSetting,
   useShareDeviceIdentifiersSetting,
 } from '~/components/PrivacyChoices/PrivacySettings'
+import { useAccountDrawer } from '~/state/accountDrawer/hooks'
 
 // 8px around the 32px switch keeps these rows at the 48px of the drawer's button rows.
 const SWITCH_ROW_PY = '$padding8'

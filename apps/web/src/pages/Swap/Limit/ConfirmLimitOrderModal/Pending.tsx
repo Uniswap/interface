@@ -10,7 +10,7 @@ import { TransactionStatus } from 'uniswap/src/features/transactions/types/trans
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { LogoContainer } from '~/components/AccountDrawer/MiniPortfolio/Activity/Logos'
 import { OrderContent } from '~/components/modals/OffchainActivityModal'
-import { useAccount } from '~/hooks/useAccount'
+import { useAccount } from '~/connection/hooks/useAccount'
 import {
   AnimatedEntranceConfirmationIcon,
   AnimatedEntranceSubmittedIcon,

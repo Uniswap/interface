@@ -11,13 +11,13 @@ import type { ValidatedTransactionRequest } from 'uniswap/src/features/transacti
 import { parseERC20ApproveCalldata } from 'uniswap/src/utils/approvals'
 import { createSaga } from 'uniswap/src/utils/saga'
 import { logger } from 'utilities/src/logger/logger'
-import { popupRegistry } from '~/state/popups/registry'
-import { PopupType } from '~/state/popups/types'
 import type { SubmitAuctionLaunchParams } from '~/state/sagas/createAuction/types'
 import { handleAtomicSendCalls } from '~/state/sagas/transactions/5792'
 import { getDisplayableError, handleApprovalTransactionStep, handleOnChainStep } from '~/state/sagas/transactions/utils'
 import { selectIsAtomicBatchingSupportedByChainId } from '~/state/walletCapabilities/reducer'
 import { coerceUnknownToError } from '~/utils/coerceUnknownToError'
+import { popupRegistry } from '~/utils/popups/registry'
+import { PopupType } from '~/utils/popups/types'
 
 // approve(address,uint256) calldata: '0x' + 4-byte selector + 32-byte spender + 32-byte amount.
 const ERC20_APPROVE_CALLDATA_LENGTH = 2 + 8 + 64 + 64

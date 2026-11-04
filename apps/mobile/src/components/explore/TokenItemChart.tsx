@@ -7,8 +7,8 @@ import { useTokenPriceHistory } from 'src/components/PriceExplorer/usePriceHisto
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 
-// Used to divide the number of data points for a smoother charts
-// Necessary because graphql query does not support a time resolution parameter
+// Used to divide the number of data points for a smoother chart; the price history query has no
+// time-resolution parameter.
 const DATA_REDUCTION_FACTOR = 10
 
 const Y_GUTTER = 2

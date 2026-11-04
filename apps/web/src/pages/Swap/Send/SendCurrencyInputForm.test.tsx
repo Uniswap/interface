@@ -1,4 +1,6 @@
-vi.mock('~/hooks/Tokens')
+vi.mock('~/hooks/currency/useCurrency')
+vi.mock('~/hooks/currency/useCurrencyInfo')
+vi.mock('~/hooks/currency/useCurrencyWithLoading')
 
 // Mock only what's needed for tests to pass
 vi.mock('uniswap/src/features/accounts/store/hooks', () => {
@@ -15,7 +17,7 @@ import { useDynamicConfigValue } from '@universe/gating'
 import { DAI } from 'uniswap/src/constants/tokens'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { SwapAndLimitContext } from '~/features/Swap/state/types'
-import { useCurrencyInfo } from '~/hooks/Tokens'
+import { useCurrencyInfo } from '~/hooks/currency/useCurrencyInfo'
 import { SendCurrencyInputForm } from '~/pages/Swap/Send/SendCurrencyInputForm'
 import { SendContext, SendContextType } from '~/pages/Swap/Send/state/SendContext'
 import { MultichainContext } from '~/state/multichain/types'

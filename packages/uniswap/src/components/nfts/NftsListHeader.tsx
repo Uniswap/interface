@@ -1,8 +1,8 @@
 import { Flex, Input, Text } from '@universe/mycelium'
+import { Search } from '@universe/mycelium/icons/Search'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Search } from 'ui/src/components/icons/Search'
 import { SearchInputProps } from 'uniswap/src/components/nfts/types'
 import { useDebouncedCallback } from 'utilities/src/react/useDebouncedCallback'
 

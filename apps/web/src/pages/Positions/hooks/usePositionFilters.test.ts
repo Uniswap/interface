@@ -62,6 +62,33 @@ describe('usePositionFilters', () => {
     expect(result.current.versionFilter).toEqual([ProtocolVersion.V4, ProtocolVersion.V3])
   })
 
+  it('toggleVersion keeps the last selected version', () => {
+    const { result } = renderUsePositionFilters()
+
+    act(() => result.current.toggleVersion(ProtocolVersion.V2))
+    act(() => result.current.toggleVersion(ProtocolVersion.V3))
+    act(() => result.current.toggleVersion(ProtocolVersion.V4))
+
+    expect(result.current.versionFilter).toEqual([ProtocolVersion.V4])
+  })
+
+  it('reads an empty or all-invalid versions param as every version, which is what it fetches', () => {
+    expect(renderUsePositionFilters('?versions=').result.current.versionFilter).toEqual(
+      DEFAULT_LP_POSITION_PROTOCOL_FILTER,
+    )
+    expect(renderUsePositionFilters('?versions=999').result.current.versionFilter).toEqual(
+      DEFAULT_LP_POSITION_PROTOCOL_FILTER,
+    )
+  })
+
+  it('toggleVersion from an empty versions param unchecks the version, as the checkboxes show it checked', () => {
+    const { result } = renderUsePositionFilters('?versions=')
+
+    act(() => result.current.toggleVersion(ProtocolVersion.V4))
+
+    expect(result.current.versionFilter).toEqual([ProtocolVersion.V3, ProtocolVersion.V2])
+  })
+
   it('toggleVersion re-adds a version after removing it', () => {
     const { result } = renderUsePositionFilters()
 

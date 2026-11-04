@@ -1,6 +1,6 @@
 import { Flex } from '@universe/mycelium'
+import { Lock } from '@universe/mycelium/icons/Lock'
 import { useShadowPropsShort } from '@universe/mycelium/theme-hooks-compat'
-import { Lock } from 'ui/src/components/icons'
 
 const BOX_ROW_COUNT = 4
 const BOX_COL_COUNT = 2

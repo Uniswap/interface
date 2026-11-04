@@ -134,7 +134,7 @@ function InsufficientNativeTokenWarningContent({
 
           <Flex row py="$spacing12">
             <LearnMoreLink
-              textColor="$accent3"
+              textColor="$neutral1"
               textVariant="buttonLabel3"
               url={UniswapHelpUrls.articles.networkFeeInfo}
             />

@@ -19,12 +19,12 @@ import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constan
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { getNftExplorerLink, getOpenseaLink, openUri } from 'uniswap/src/utils/linking'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
-import { POPUP_MEDIUM_DISMISS_MS } from '~/components/Popups/constants'
 import { usePortfolioAddresses } from '~/pages/Portfolio/hooks/usePortfolioAddresses'
 import { generateRotationStyle } from '~/pages/Portfolio/NFTs/generateRotationStyle'
-import { popupRegistry } from '~/state/popups/registry'
-import { PopupType } from '~/state/popups/types'
 import { filterDefinedWalletAddresses } from '~/utils/filterDefinedWalletAddresses'
+import { POPUP_MEDIUM_DISMISS_MS } from '~/utils/popups/constants'
+import { popupRegistry } from '~/utils/popups/registry'
+import { PopupType } from '~/utils/popups/types'
 
 const FLOAT_UP_ON_HOVER_OFFSET = -4
 const SUBTITLE_HEIGHT = 24

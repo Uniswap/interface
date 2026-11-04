@@ -1,4 +1,3 @@
-import { GraphQLApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
 import { useMemo } from 'react'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -9,7 +8,6 @@ import type {
 } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { usePortfolioData, usePortfolioDataMultichain } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { PortfolioBalance, PortfolioMultichainBalance } from 'uniswap/src/features/dataApi/types'
-import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { getChainGasToken } from 'uniswap/src/features/gas/hooks/useChainGasToken'
 import {
   shouldHideMultichainPortfolioRow,
@@ -26,7 +24,6 @@ import type {
   SortedPortfolioBalancesResultMultichain,
   UseSortedPortfolioBalancesOptions,
 } from 'uniswap/src/features/portfolio/balances/types'
-import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
 import { useCurrencyIdToVisibility } from 'uniswap/src/features/transactions/selectors'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { areCurrencyIdsEqual, currencyId } from 'uniswap/src/utils/currencyId'
@@ -79,56 +76,6 @@ export function usePortfolioBalancesMultichain({
     ...queryOptions,
     skip: !(evmAddress ?? svmAddress) || Boolean(queryOptions.skip),
   })
-}
-
-interface TokenOverrides {
-  tokenIncludeOverrides: GraphQLApi.ContractInput[]
-  tokenExcludeOverrides: GraphQLApi.ContractInput[]
-}
-
-/**
- * Portfolio value modifiers for GraphQL (visibility, small balances, spam).
- */
-export function usePortfolioValueModifiers(
-  addresses?: Address | Address[],
-): GraphQLApi.PortfolioValueModifier[] | undefined {
-  const addressArray = useMemo(
-    () => (!addresses ? [] : Array.isArray(addresses) ? addresses : [addresses]),
-    [addresses],
-  )
-  const currencyIdToTokenVisibility = useCurrencyIdToVisibility(addressArray)
-  const { isTestnetModeEnabled } = useEnabledChains()
-
-  const hideSpamTokens = useHideSpamTokensSetting()
-  const hideSmallBalances = useHideSmallBalancesSetting()
-
-  const modifiers = useMemo<GraphQLApi.PortfolioValueModifier[]>(() => {
-    const { tokenIncludeOverrides, tokenExcludeOverrides } = Object.entries(currencyIdToTokenVisibility).reduce(
-      (acc: TokenOverrides, [key, tokenVisibility]) => {
-        const contractInput = currencyIdToContractInput(key)
-        if (tokenVisibility.isVisible) {
-          acc.tokenIncludeOverrides.push(contractInput)
-        } else {
-          acc.tokenExcludeOverrides.push(contractInput)
-        }
-        return acc
-      },
-      {
-        tokenIncludeOverrides: [],
-        tokenExcludeOverrides: [],
-      },
-    )
-
-    return addressArray.map((addr) => ({
-      ownerAddress: addr,
-      tokenIncludeOverrides,
-      tokenExcludeOverrides,
-      includeSmallBalances: !hideSmallBalances,
-      includeSpamTokens: isTestnetModeEnabled || !hideSpamTokens,
-    }))
-  }, [addressArray, currencyIdToTokenVisibility, hideSmallBalances, hideSpamTokens, isTestnetModeEnabled])
-
-  return modifiers.length > 0 ? modifiers : undefined
 }
 
 /**

@@ -1,4 +1,4 @@
-import { GraphQLApi } from '@universe/api'
+import { UniverseChainId } from '@universe/chains'
 import { UTCTimestamp } from 'lightweight-charts'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
@@ -56,7 +56,7 @@ const basePriceQuery: PriceChartQueryMock = {
 }
 
 const variables = {
-  chain: GraphQLApi.Chain.Ethereum,
+  chainId: UniverseChainId.Mainnet,
   address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
   duration: HistoryDuration.Day,
   multichain: false,

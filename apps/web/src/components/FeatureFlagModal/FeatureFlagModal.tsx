@@ -26,9 +26,9 @@ import {
   TouchableArea,
   type TouchableAreaCompatProps,
 } from '@universe/mycelium'
+import { Pin } from '@universe/mycelium/icons/Pin'
 import type { PropsWithChildren, ReactNode } from 'react'
 import { forwardRef, Fragment, memo, useMemo, useState } from 'react'
-import { Pin } from 'ui/src/components/icons/Pin'
 import { ComplianceOverrides } from 'uniswap/src/components/gating/ComplianceOverrides'
 import { useLayerValue } from 'uniswap/src/components/gating/Rows'
 import { Modal } from 'uniswap/src/components/modals/Modal'

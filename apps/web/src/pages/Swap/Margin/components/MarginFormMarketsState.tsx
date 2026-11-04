@@ -1,7 +1,6 @@
-import { Flex, Skeleton, Text } from '@universe/mycelium'
+import { Button, Flex, Skeleton, Text } from '@universe/mycelium'
 import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
-import { Button } from 'ui/src'
 
 const SKELETON_ROW_COUNT = 3
 

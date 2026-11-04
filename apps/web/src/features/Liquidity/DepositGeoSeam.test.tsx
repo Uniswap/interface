@@ -19,7 +19,7 @@ vi.mock('~/features/Liquidity/Create/hooks/useDefaultInitialPrice', () => ({
   useDefaultInitialPrice: () => ({ price: undefined }),
 }))
 vi.mock('uniswap/src/contexts/UniswapContext', () => ({ useUniswapContext: () => ({ onConnectWallet: vi.fn() }) }))
-vi.mock('~/hooks/useAccount', () => ({ useAccount: () => ({ isConnected: true, address: '0xuser' }) }))
+vi.mock('~/connection/hooks/useAccount', () => ({ useAccount: () => ({ isConnected: true, address: '0xuser' }) }))
 vi.mock('~/hooks/useModalState', () => ({
   useModalState: () => ({ openModal: vi.fn(), closeModal: vi.fn(), isOpen: false }),
 }))
@@ -63,7 +63,7 @@ const AAPLX = { symbol: 'AAPLX', chainId: 1, address: '0xaaplx', isNative: false
 const USDC = { symbol: 'USDC', chainId: 1, address: '0xusdc', isNative: false } as Currency
 
 const GEO_LABEL = 'AAPLX unavailable in your region'
-const BANNER_HEADING = 'AAPLX isn’t available for liquidity provision in your region'
+const BANNER_HEADING = 'AAPLX is unavailable in your region'
 const REVIEW_LABEL = 'Review'
 
 function mockGeoRestriction(overrides: Partial<ReturnType<typeof useLPGeoRestriction>>): void {

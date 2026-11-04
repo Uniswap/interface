@@ -1,9 +1,15 @@
 import { UniverseChainId } from '@universe/chains'
-import { Flex, ScrollView, Text, TouchableArea } from '@universe/mycelium'
+import {
+  Flex,
+  ScrollView,
+  Text,
+  TouchableArea,
+  SpinningLoader,
+  Separator,
+  ModalCloseIcon,
+  iconSizes,
+} from '@universe/mycelium'
 import { useTranslation } from 'react-i18next'
-import { ModalCloseIcon, Separator } from 'ui/src'
-import { SpinningLoader } from 'ui/src/loading/SpinningLoader'
-import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
@@ -17,14 +23,14 @@ import {
 import type { MarginPaymentToken } from 'uniswap/src/features/transactions/margin/types'
 import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
+import { useAccount } from '~/connection/hooks/useAccount'
 import type { MarginMarket } from '~/constants/margin'
-import { useAccount } from '~/hooks/useAccount'
-import { useMarginMarkets } from '~/pages/Swap/Margin/hooks/useMarginMarkets'
-import { type MarginPaymentTokenRow, useMarginPaymentTokens } from '~/pages/Swap/Margin/hooks/useMarginPaymentTokens'
+import { useMarginMarkets } from '~/features/margin/hooks/useMarginMarkets'
 import {
   isMarketDefaultPaymentToken,
   isPaymentTokenDifferentFromCollateral,
-} from '~/pages/Swap/Margin/marginCurrencies'
+} from '~/features/margin/utils/marginCurrencies'
+import { type MarginPaymentTokenRow, useMarginPaymentTokens } from '~/pages/Swap/Margin/hooks/useMarginPaymentTokens'
 
 function PaymentTokenRow({
   row,

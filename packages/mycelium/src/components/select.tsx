@@ -2,29 +2,19 @@ import * as SelectPrimitive from '@radix-ui/react-select'
 import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react'
 import * as React from 'react'
 import { cn } from '../cn'
-
-/** ui/src CheckmarkCircle (the legacy selected-row marker), path verbatim, currentColor-driven.
- * Copied from the option-list compat's icons (INFRA-3021 dropdown set) so the Select checkmark
- * matches the network selector — consolidate with option-list-compat once that lands. */
-function CheckmarkCircleGlyph({
-  size = 20,
-  ...rest
-}: Omit<React.SVGProps<SVGSVGElement>, 'width' | 'height'> & { size?: number }): React.JSX.Element {
-  return (
-    <svg width={size} height={size} viewBox="0 0 17 18" fill="none" aria-hidden="true" focusable="false" {...rest}>
-      <path
-        d="M8.62508 0.666664C4.02508 0.666664 0.291748 4.4 0.291748 9C0.291748 13.6 4.02508 17.3333 8.62508 17.3333C13.2251 17.3333 16.9584 13.6 16.9584 9C16.9584 4.4 13.2251 0.666664 8.62508 0.666664ZM11.9834 7.50001L8.09173 11.3833C7.97507 11.5083 7.81674 11.5667 7.65007 11.5667C7.49174 11.5667 7.3334 11.5083 7.2084 11.3833L5.26675 9.44169C5.02508 9.20002 5.02508 8.79997 5.26675 8.55831C5.50841 8.31664 5.90841 8.31664 6.15008 8.55831L7.65007 10.0583L11.1001 6.61668C11.3417 6.36668 11.7417 6.36668 11.9834 6.61668C12.2251 6.85834 12.2251 7.25001 11.9834 7.50001Z"
-        fill="currentColor"
-      />
-    </svg>
-  )
-}
+import { CheckmarkCircle } from './icons/CheckmarkCircle'
 
 type SelectProps = {
   [K in keyof React.ComponentProps<typeof SelectPrimitive.Root>]: React.ComponentProps<typeof SelectPrimitive.Root>[K]
 }
 
 type SelectSize = 'sm' | 'default'
+
+/** The reserved checkmark box and the glyph inside it, kept in step per size. */
+const CHECKMARK_SIZE: Record<SelectSize, { boxClassName: string; px: number }> = {
+  sm: { boxClassName: 'size-4', px: 16 },
+  default: { boxClassName: 'size-5', px: 20 },
+}
 
 /**
  * `size` is a SelectTrigger prop, but the option list renders in a portal as a
@@ -155,9 +145,9 @@ function SelectItem({
     >
       {/* Always-reserved trailing box so labels don't shift when the checkmark appears —
           the reserved box and the glyph must stay the same size for that to hold */}
-      <span className={cn('absolute right-2 flex items-center justify-center', size === 'sm' ? 'size-4' : 'size-5')}>
+      <span className={cn('absolute right-2 flex items-center justify-center', CHECKMARK_SIZE[size].boxClassName)}>
         <SelectPrimitive.ItemIndicator>
-          <CheckmarkCircleGlyph className={cn('text-neutral1', size === 'sm' ? 'size-4' : 'size-5')} />
+          <CheckmarkCircle aria-hidden="true" focusable="false" color="$neutral1" size={CHECKMARK_SIZE[size].px} />
         </SelectPrimitive.ItemIndicator>
       </span>
       <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>

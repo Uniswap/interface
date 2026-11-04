@@ -2,19 +2,17 @@ import type { Currency } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
 import { useEmbeddedWalletState } from '@universe/embedded-wallet'
 import { isMobileWeb } from '@universe/environment'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import { FeatureFlags, useFeatureFlag, useFeatureFlagWithLoading } from '@universe/gating'
 /* oxlint-disable max-lines */
-import { Flex, Text } from '@universe/mycelium'
+import { Flex, Text, Tooltip, zIndexes } from '@universe/mycelium'
 import { FlexCompat, type FlexCompatProps } from '@universe/mycelium/flex-compat'
 import type { SegmentedControlOption } from '@universe/mycelium/segmented-control-compat'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { WidthAnimator } from '@universe/mycelium/width-animator'
-import { SPORE_ANIMATION_CURVE_CSS } from '@universe/tailwind/animations'
-import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { forwardRef, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router'
-import { stackingLayerAbove, Tooltip } from 'ui/src'
-import { zIndexes } from 'ui/src/theme'
+import { stackingLayerAbove } from 'ui/src'
 import { TokenSelectorHoverConfigProvider } from 'uniswap/src/components/TokenSelector/TokenSelectorHoverConfig'
 import { ShowGetStartedProvider } from 'uniswap/src/contexts/ShowGetStartedContext'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
@@ -23,6 +21,7 @@ import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { RampDirection } from 'uniswap/src/features/fiatOnRamp/types'
 import { WebFORNudgeProvider } from 'uniswap/src/features/providers/webForNudgeProvider'
+import type { AddFundsPressParams } from 'uniswap/src/features/providers/webForNudgeTypes'
 import { InterfaceEventName, InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -41,23 +40,26 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 import type { AppTFunction } from 'utilities/src/i18n/types'
 import { AccountDrawer } from '~/components/AccountDrawer'
-import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { TokenHoverCard } from '~/components/HoverCard/TokenHoverCard/TokenHoverCard'
 import { Portal } from '~/components/Popups/Portal'
+import { useAccount } from '~/connection/hooks/useAccount'
+import { useHasInjectedWallets } from '~/connection/hooks/useOrderedWalletConnectors'
+import { useMarginMarkets } from '~/features/margin/hooks/useMarginMarkets'
 import { SwapAndLimitContextProvider } from '~/features/Swap/state/SwapContext'
 import type { CurrencyState } from '~/features/Swap/state/types'
 import { useSwapAndLimitContext } from '~/features/Swap/state/useSwapContext'
 import { PAGE_WRAPPER_MAX_WIDTH, PageWrapper, SwapModuleWrapper } from '~/features/Swap/styled'
-import { useHasInjectedWallets } from '~/features/wallet/connection/hooks/useOrderedWalletConnectors'
-import { useAccount } from '~/hooks/useAccount'
 import { useDeferredComponent } from '~/hooks/useDeferredComponent'
 import { PageType, useIsPage } from '~/hooks/useIsPage'
 import { useModalState } from '~/hooks/useModalState'
-import { usePrefersReducedMotion } from '~/hooks/usePrefersReducedMotion'
 import { useEmbedView } from '~/pages/Swap/embedContext'
+import { usePermissionedSwap } from '~/pages/Swap/hooks/usePermissionedSwap'
+import { useMarginViewTransition } from '~/pages/Swap/Margin/marginMorph'
 import {
   MARGIN_FORM_RAIL_WIDTH,
+  MARGIN_TERMINAL_TOP_PADDING,
   MarginTerminalLayout,
+  isMarginTerminalReady,
   useIsMarginTerminal,
   useMarginMorphAnimation,
 } from '~/pages/Swap/Margin/MarginTerminalLayout'
@@ -71,7 +73,9 @@ import { SwapChartToggleButton } from '~/pages/Swap/Swap/SwapChartToggleButton'
 import { SwapForm } from '~/pages/Swap/Swap/SwapForm'
 import { getSwapCapabilities } from '~/pages/Swap/swapCapabilities'
 import { SwapHeaderTabRow } from '~/pages/Swap/SwapHeaderTabRow'
-import { usePermissionedSwap } from '~/pages/Swap/usePermissionedSwap'
+import { useAccountDrawer } from '~/state/accountDrawer/hooks'
+import { setOpenModal } from '~/state/application/reducer'
+import { useAppDispatch } from '~/state/hooks'
 import { MultichainContextProvider } from '~/state/multichain/MultichainContext'
 import { isIFramed } from '~/utils/isIFramed'
 
@@ -90,12 +94,15 @@ export function SwapPage() {
   useFeatureFlag(FeatureFlags.AATestWeb)
 
   const accountDrawer = useAccountDrawer()
-  const media = useMedia()
-  const prefersReducedMotion = usePrefersReducedMotion()
-  const isMarginEnabled = useFeatureFlag(FeatureFlags.Margin)
-  // pathname drives the collapse — it flips in the same commit as `currentTab`
-  // via `navigate`, and SwapPage sits above the tab context.
-  const isTerminalRoute = isMarginEnabled && location.pathname === '/margin' && !media.xl
+  // Reported by the rendered view rather than derived from the route, so the padding switches with the
+  // margin cross-fade, under the same gate.
+  const [isTerminalView, setIsTerminalView] = useState(false)
+  const isNewUserUxEnabled = useFeatureFlag(FeatureFlags.NewUserUx)
+  const dispatch = useAppDispatch()
+  const openAddFundsModal = useCallback(
+    (initialState: AddFundsPressParams) => dispatch(setOpenModal({ name: ModalName.AddFunds, initialState })),
+    [dispatch],
+  )
 
   // Same shared SwapPage for every surface. The embed `view` (from context) picks the
   // capabilities so the swap-only surface (`/embed?view=swap`) can strip itself instead of
@@ -122,21 +129,13 @@ export function SwapPage() {
   return (
     <Trace logImpression page={InterfacePageName.SwapPage}>
       <PageWrapper
-        // Flag-scoped, not route-scoped: the transition has to stay mounted through the EXIT morph, so
-        // gating it on isTerminalRoute would clear it in the same commit the padding reverts and snap
-        // the way out. The cost is that a flag-on user on swap/limit/buy/sell also eases PageWrapper's
-        // responsive padding across a breakpoint change — visual only, nothing measures off it.
-        style={{
-          transition:
-            isMarginEnabled && !prefersReducedMotion ? `padding ${SPORE_ANIMATION_CURVE_CSS.quickLong}` : undefined,
-        }}
         // Only override padding in the full-screen terminal; otherwise inherit
         // PageWrapper's responsive defaults ($spacing60/$lg/$md). Passing an
         // explicit `undefined` would clobber those defaults and flatten the
         // header→module gap on every non-terminal tab (swap/limit/buy/sell).
-        {...(isTerminalRoute ? { pt: 10, px: '$none', pb: '$none' } : {})}
+        {...(isTerminalView ? { pt: MARGIN_TERMINAL_TOP_PADDING, px: '$none', pb: '$none' } : {})}
       >
-        <WebFORNudgeProvider>
+        <WebFORNudgeProvider onAddFundsPress={isNewUserUxEnabled ? openAddFundsModal : undefined}>
           <Swap
             initialInputChainId={initialInputChainId}
             initialInputCurrency={initialInputCurrency}
@@ -147,6 +146,7 @@ export function SwapPage() {
             hideHeader={!capabilities.header}
             hideChart={!capabilities.chart}
             syncTabToUrl={capabilities.syncTabToUrl}
+            onTerminalViewChange={setIsTerminalView}
           />
         </WebFORNudgeProvider>
       </PageWrapper>
@@ -185,7 +185,7 @@ export function Swap({
   swapRedirectCallback,
   tokenColor,
   tdpCurrency,
-  hideBlastShutdownModal,
+  onTerminalViewChange,
 }: {
   initialInputChainId?: UniverseChainId
   onCurrencyChange?: (selected: CurrencyState, selectedCurrency?: Currency) => void
@@ -203,7 +203,7 @@ export function Swap({
   passkeyAuthStatus?: PasskeyAuthStatus
   /** When Swap is embedded in Token Details Page, pass the TDP token currency for Buy/Sell prefill */
   tdpCurrency?: Currency
-  hideBlastShutdownModal?: boolean
+  onTerminalViewChange?: (isTerminalView: boolean) => void
 }) {
   const { isSwapTokenSelectorOpen, swapOutputChainId } = useUniswapContext()
   const media = useMedia()
@@ -261,7 +261,7 @@ export function Swap({
                       prefilledState={prefilledState}
                       tokenColor={tokenColor}
                       tdpCurrency={tdpCurrency}
-                      hideBlastShutdownModal={hideBlastShutdownModal}
+                      onTerminalViewChange={onTerminalViewChange}
                     />
                   </Flex>
                 </MarginFormStoreContextProvider>
@@ -314,7 +314,7 @@ function UniversalSwapFlow({
   swapRedirectCallback,
   tokenColor,
   tdpCurrency,
-  hideBlastShutdownModal,
+  onTerminalViewChange,
 }: {
   hideHeader?: boolean
   hideFooter?: boolean
@@ -327,12 +327,12 @@ function UniversalSwapFlow({
   tokenColor?: string
   /** When Swap is embedded in TDP, the TDP token currency for Buy/Sell prefill */
   tdpCurrency?: Currency
-  hideBlastShutdownModal?: boolean
+  onTerminalViewChange?: (isTerminalView: boolean) => void
 }) {
   const { currentTab, setCurrentTab, currencyState } = useSwapAndLimitContext()
   const tdpCurrencyAsset = currencyToAsset(tdpCurrency)
   const { inputCurrency, outputCurrency } = useSlideoutChartCardCurrencies()
-  const isMarginEnabled = useFeatureFlag(FeatureFlags.Margin)
+  const { value: isMarginEnabled, isLoading: marginFlagLoading } = useFeatureFlagWithLoading(FeatureFlags.Margin)
   const [showChart, setShowChart] = useState(false)
   const [tabsRowHeight, setTabsRowHeight] = useState(0)
   const [swapFlowPanelsHeight, setSwapFlowPanelsHeight] = useState(0)
@@ -346,6 +346,16 @@ function UniversalSwapFlow({
   // setCurrentTab immediately after. It flips at most once per mount, so the extra render is free.
   const [hasInteracted, setHasInteracted] = useState(false)
   const animateMorph = useMarginMorphAnimation(hasInteracted)
+  // The rendered view lags the live tab/terminal state through the margin cross-fade: the swap view
+  // holds while it fades out, then the margin view mounts and fades in. Non-margin tabs commit at once.
+  const { viewRef, formRef, chartRef, displayTab, displayIsTerminal } = useMarginViewTransition({
+    currentTab,
+    isTerminal,
+    animateMorph,
+  })
+  useLayoutEffect(() => {
+    onTerminalViewChange?.(displayIsTerminal)
+  }, [displayIsTerminal, onTerminalViewChange])
   const marginFormStore = useMarginFormStoreBase()
 
   // Keyed on the TAB, not on `isTerminal`. isTerminal folds in `!media.xl`, so a resize across the
@@ -439,6 +449,28 @@ function UniversalSwapFlow({
     enabled: isMarginEnabled,
     importFn: () =>
       import('~/pages/Swap/Margin/MarginPositionsTable').then((m) => ({ default: m.MarginPositionsTable })),
+  })
+  // Phone widths only: the tabbed layout (form / position cards, chart in a sheet) replaces the form
+  // with its inline table, whose columns do not fit.
+  const isMarginMobile = isMarginEnabled && media.lg
+  const MarginMobileLayout = useDeferredComponent({
+    enabled: isMarginMobile,
+    importFn: () => import('~/pages/Swap/Margin/MarginMobileLayout').then((m) => ({ default: m.MarginMobileLayout })),
+  })
+
+  // Preloads markets so the Margin tab opens without the blank below. Only where that tab exists (embeds
+  // like the landing hero, TDP and pool details have none), and without polling: the margin panes poll.
+  const { isLoading: marginMarketsLoading } = useMarginMarkets({
+    enabled: isMarginEnabled && syncTabToUrl,
+    poll: false,
+  })
+  // Keyed on the route so the blank also covers the window before the flag resolves.
+  const headingToMarginTerminal = pathname === '/margin' && !media.xl && (marginFlagLoading || isMarginEnabled)
+  const marginTerminalReady = isMarginTerminalReady({
+    flagLoading: marginFlagLoading,
+    isMarginEnabled,
+    chunksLoaded: Boolean(MarginChartPane && MarginForm),
+    marketsLoading: marginMarketsLoading,
   })
 
   const { openModal: openSendFormModal } = useModalState(ModalName.Send)
@@ -540,14 +572,21 @@ function UniversalSwapFlow({
 
   // On wide screens, lift the margin positions panel into a right-side column (form on the left).
   // Gated on a connected wallet so we never reserve an empty column; narrow screens keep it inline.
-  const showMarginSidePanel = isMarginEnabled && currentTab === SwapTab.Margin && !media.lg && Boolean(account.address)
+  const showMarginSidePanel = isMarginEnabled && displayTab === SwapTab.Margin && !media.lg && Boolean(account.address)
+
+  if (headingToMarginTerminal && !marginTerminalReady) {
+    return <Flex width="100%" minHeight="calc(100dvh - 120px)" />
+  }
 
   return (
     <MarginTerminalLayout
-      isTerminal={isTerminal}
-      hasInteracted={hasInteracted}
+      isTerminal={displayIsTerminal}
+      rootRef={viewRef}
+      chartRef={chartRef}
       chartPane={MarginChartPane ? <MarginChartPane /> : null}
-      positionsTable={MarginPositionsTable ? <MarginPositionsTable /> : null}
+      // No wallet, no positions pane: the table renders nothing then, and an empty pane would still take
+      // its share of the column from the chart.
+      positionsTable={MarginPositionsTable && account.address ? <MarginPositionsTable /> : null}
       nonTerminalChartAnimator={
         // Chart card animates in from the left.
         // Not mounted on pages that hide the header (e.g. landing page) since the chart
@@ -586,16 +625,17 @@ function UniversalSwapFlow({
       }
     >
       <SwapModuleWrapper
-        width={isTerminal ? MARGIN_FORM_RAIL_WIDTH : PAGE_WRAPPER_MAX_WIDTH}
-        style={{
-          // The SAME hook MarginTerminalLayout's animateMorph uses: these gate two halves of one morph
-          // (this rail's width, the wrapper's geometry), and spelling the predicate twice is what let a
-          // term be added to one and not the other, snapping one side while the other glides.
-          transition: animateMorph ? `width ${SPORE_ANIMATION_CURVE_CSS.quickLong}` : undefined,
-        }}
+        ref={formRef}
+        width={displayIsTerminal ? MARGIN_FORM_RAIL_WIDTH : PAGE_WRAPPER_MAX_WIDTH}
         // Terminal: pinned rail so only the chart flexes. Non-terminal: still
         // shrinks to make room for the slideout chart card in the narrow band.
-        $platform-web={{ flexShrink: isTerminal ? 0 : 1, minWidth: 0 }}
+        $platform-web={{
+          flexShrink: displayIsTerminal ? 0 : 1,
+          minWidth: 0,
+          // The terminal pins the page to the viewport, so the rail spans the full column height and a
+          // form taller than it scrolls inside the rail instead of growing the page.
+          ...(displayIsTerminal ? { minHeight: 0, overflowY: 'auto' as const, scrollbarWidth: 'thin' as const } : {}),
+        }}
       >
         {!hideHeader && (
           <SwapHeaderTabRow
@@ -608,9 +648,11 @@ function UniversalSwapFlow({
               currentTab === SwapTab.Margin && MarginSettingsPopover ? <MarginSettingsPopover /> : undefined
             }
             onHeightChange={setTabsRowHeight}
+            // Snap only across the margin morph, which would otherwise show the pill sliding under the fade.
+            animateIndicator={currentTab !== SwapTab.Margin && displayTab !== SwapTab.Margin}
           />
         )}
-        {currentTab === SwapTab.Swap && (
+        {displayTab === SwapTab.Swap && (
           <SwapForm
             hideHeader={hideHeader}
             hideFooter={hideFooter}
@@ -620,15 +662,14 @@ function UniversalSwapFlow({
             tokenColor={tokenColor}
             tdpCurrency={tdpCurrency}
             onCurrencyPanelsLayout={onCurrencyPanelsLayout}
-            hideBlastShutdownModal={hideBlastShutdownModal}
           />
         )}
-        {currentTab === SwapTab.Limit && LimitFormWrapper && (
+        {displayTab === SwapTab.Limit && LimitFormWrapper && (
           <PermissionedTabWrapper isBlocked={limitTabBlocked} tokenSymbol={permissionedTokenSymbol}>
             <LimitFormWrapper onCurrencyChange={onCurrencyChange} />
           </PermissionedTabWrapper>
         )}
-        {currentTab === SwapTab.Buy && BuyForm && (
+        {displayTab === SwapTab.Buy && BuyForm && (
           <PermissionedTabWrapper isBlocked={buySellTabBlocked} tokenSymbol={buySellPermissionedTokenSymbol}>
             <BuyForm
               rampDirection={RampDirection.ON_RAMP}
@@ -637,7 +678,7 @@ function UniversalSwapFlow({
             />
           </PermissionedTabWrapper>
         )}
-        {currentTab === SwapTab.Sell && BuyForm && (
+        {displayTab === SwapTab.Sell && BuyForm && (
           <PermissionedTabWrapper isBlocked={buySellTabBlocked} tokenSymbol={buySellPermissionedTokenSymbol}>
             <BuyForm
               rampDirection={RampDirection.OFF_RAMP}
@@ -650,8 +691,12 @@ function UniversalSwapFlow({
             (shared `VerifyIdentityBottomSheet` renders as Dialog on web). */}
         {/* Inline table only when neither the terminal slot nor the side panel already shows it —
             it renders a Connect CTA when disconnected. */}
-        {currentTab === SwapTab.Margin && MarginForm && (
-          <MarginForm showInlinePositions={!showMarginSidePanel && !isTerminal} />
+        {displayTab === SwapTab.Margin && isMarginMobile && MarginMobileLayout && <MarginMobileLayout />}
+        {displayTab === SwapTab.Margin && !isMarginMobile && MarginForm && (
+          <MarginForm
+            showInlinePositions={!showMarginSidePanel && !displayIsTerminal}
+            showMarketSelector={!displayIsTerminal}
+          />
         )}
       </SwapModuleWrapper>
     </MarginTerminalLayout>

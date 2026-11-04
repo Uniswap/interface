@@ -1,14 +1,17 @@
 import { GetTokenHistoryOHLCResponse, GetTokenHistoryPriceResponse } from '@uniswap/client-data-api/dist/data/v2/api_pb'
-import { GraphQLApi } from '@universe/api'
+import { UniverseChainId } from '@universe/chains'
+import { MAX_DISPLAYABLE_PRICE_AGE_MS } from '@universe/prices'
 import { dataApiServiceClientV2 } from 'uniswap/src/data/apiClients/dataApiService/clients/DataApiClientV2'
 import { useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
+import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import type { PriceChartData } from '~/components/Charts/PriceChart'
 import { ChartType, DataQuality, PriceChartType } from '~/components/Charts/utils'
 import { TimePeriod } from '~/data/util'
 import {
   getCalculatedPricePercentChange,
   getDisplayedPricePercentChange,
+  mergeCandlesToGrid,
   toStrictlyAscendingByTime,
   useTokenPriceChartData,
 } from '~/hooks/useTokenPriceChartData'
@@ -27,7 +30,7 @@ const mockClient = vi.mocked(dataApiServiceClientV2)
 const mockUseTokenSpotPrice = vi.mocked(useTokenSpotPrice)
 
 const BASE_VARIABLES = {
-  chain: GraphQLApi.Chain.Ethereum,
+  chainId: UniverseChainId.Mainnet,
   address: '0x68749665FF8D2d112Fa859AA293F07A622782F38',
   duration: HistoryDuration.Year,
   multichain: false,
@@ -212,6 +215,40 @@ describe('useTokenPriceChartData', () => {
     expect(mockUseTokenSpotPrice).toHaveBeenCalledWith(expect.any(String), expect.objectContaining({ skip: true }))
   })
 
+  it.each([PriceChartType.LINE, PriceChartType.CANDLESTICK])(
+    'shows a skeleton instead of an aged cached %s series while it refetches',
+    async (priceChartType) => {
+      const renderChart = () => renderHook(() => useTokenPriceChartData({ variables, skip: false, priceChartType }))
+      const firstVisit = renderChart()
+      await waitFor(() => expect(firstVisit.result.current.loading).toBe(false))
+      firstVisit.unmount()
+
+      const now = Date.now()
+      const dateNowSpy = vi.spyOn(Date, 'now').mockReturnValue(now + MAX_DISPLAYABLE_PRICE_AGE_MS + ONE_MINUTE_MS)
+      onTestFinished(() => dateNowSpy.mockRestore())
+      let resolveRefetch = (): void => {}
+      const refetch = new Promise<void>((resolve) => {
+        resolveRefetch = resolve
+      })
+      mockClient.getTokenHistoryPrice.mockReturnValue(
+        refetch.then(() => new GetTokenHistoryPriceResponse({ points: PRICE_POINTS })),
+      )
+      mockClient.getTokenHistoryOHLC.mockReturnValue(
+        refetch.then(() => new GetTokenHistoryOHLCResponse({ candles: OHLC_CANDLES })),
+      )
+      const endpoint =
+        priceChartType === PriceChartType.LINE ? mockClient.getTokenHistoryPrice : mockClient.getTokenHistoryOHLC
+
+      const { result } = renderChart()
+      await waitFor(() => expect(endpoint).toHaveBeenCalledTimes(2))
+      expect(result.current).toMatchObject({ entries: [], loading: true, dataQuality: DataQuality.INVALID })
+
+      resolveRefetch()
+      await waitFor(() => expect(result.current.loading).toBe(false))
+      expect(result.current.entries.length).toBeGreaterThan(0)
+    },
+  )
+
   it('produces strictly ascending timestamps when REST returns a duplicate trailing timestamp', async () => {
     // Upstream price history can end with two points at the same second. lightweight-charts
     // requires strictly-ascending times; a zero delta breaks curved-line interpolation and paints
@@ -335,5 +372,28 @@ describe('toStrictlyAscendingByTime', () => {
   it('leaves already-ascending data untouched', () => {
     const entries = [point(1000, 10), point(2000, 11), point(3000, 12)]
     expect(toStrictlyAscendingByTime(entries)).toEqual(entries)
+  })
+})
+
+describe('mergeCandlesToGrid', () => {
+  const candle = (time: number, open: number): PriceChartData =>
+    ({ time, open, high: open + 2, low: open - 2, close: open + 1, value: open + 1 }) as PriceChartData
+
+  it('merges each bucket into first open, max high, min low and last close', () => {
+    expect(mergeCandlesToGrid({ candles: [candle(1200, 10), candle(1500, 20)], resolutionSeconds: 600 })).toEqual([
+      { time: 1200, open: 10, high: 22, low: 8, close: 21, value: 21 },
+    ])
+  })
+
+  // Pairing by index would merge the candles either side of the gap into one bar spanning 15 minutes.
+  it('leaves a bucket with a missing candle short rather than borrowing a neighbour', () => {
+    const merged = mergeCandlesToGrid({
+      candles: [candle(1200, 10), candle(1800, 20), candle(2100, 30)],
+      resolutionSeconds: 600,
+    })
+    expect(merged.map(({ time, open, close }) => ({ time, open, close }))).toEqual([
+      { time: 1200, open: 10, close: 11 },
+      { time: 1800, open: 20, close: 31 },
+    ])
   })
 })

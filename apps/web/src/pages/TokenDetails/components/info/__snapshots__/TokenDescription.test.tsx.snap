@@ -33,7 +33,7 @@ exports[`TokenDescription > no description or social buttons shown when not avai
         <svg
           fill="none"
           stroke-width="8"
-          style="width: 16px; height: 16px; color: rgb(19, 19, 19);"
+          style="width: 16px; height: 16px;"
           viewBox="0 0 16 16"
         >
           <g
@@ -63,7 +63,7 @@ exports[`TokenDescription > no description or social buttons shown when not avai
         <svg
           fill="none"
           stroke-width="8"
-          style="width: 16px; height: 16px; color: rgb(19, 19, 19);"
+          style="width: 16px; height: 16px;"
           viewBox="0 0 123 123"
         >
           <path
@@ -135,7 +135,7 @@ exports[`TokenDescription > renders token information correctly with defaults 1`
         <svg
           fill="none"
           stroke-width="8"
-          style="width: 16px; height: 16px; color: rgb(19, 19, 19);"
+          style="width: 16px; height: 16px;"
           viewBox="0 0 16 16"
         >
           <g
@@ -165,7 +165,7 @@ exports[`TokenDescription > renders token information correctly with defaults 1`
         <svg
           fill="none"
           stroke-width="8"
-          style="width: 16px; height: 16px; color: rgb(19, 19, 19);"
+          style="width: 16px; height: 16px;"
           viewBox="0 0 123 123"
         >
           <path
@@ -194,7 +194,7 @@ exports[`TokenDescription > renders token information correctly with defaults 1`
         <svg
           fill="none"
           stroke-width="8"
-          style="width: 16px; height: 16px; color: rgb(19, 19, 19);"
+          style="width: 16px; height: 16px;"
           viewBox="0 0 16 16"
         >
           <path
@@ -219,7 +219,7 @@ exports[`TokenDescription > renders token information correctly with defaults 1`
         <svg
           fill="currentColor"
           stroke-width="8"
-          style="width: 16px; height: 16px; color: rgb(19, 19, 19);"
+          style="width: 16px; height: 16px;"
           viewBox="0 0 512 512"
         >
           <path
@@ -286,7 +286,7 @@ exports[`TokenDescription > truncates description and shows more 1`] = `
         <svg
           fill="none"
           stroke-width="8"
-          style="width: 16px; height: 16px; color: rgb(19, 19, 19);"
+          style="width: 16px; height: 16px;"
           viewBox="0 0 16 16"
         >
           <g
@@ -316,7 +316,7 @@ exports[`TokenDescription > truncates description and shows more 1`] = `
         <svg
           fill="none"
           stroke-width="8"
-          style="width: 16px; height: 16px; color: rgb(19, 19, 19);"
+          style="width: 16px; height: 16px;"
           viewBox="0 0 123 123"
         >
           <path
@@ -345,7 +345,7 @@ exports[`TokenDescription > truncates description and shows more 1`] = `
         <svg
           fill="none"
           stroke-width="8"
-          style="width: 16px; height: 16px; color: rgb(19, 19, 19);"
+          style="width: 16px; height: 16px;"
           viewBox="0 0 16 16"
         >
           <path
@@ -370,7 +370,7 @@ exports[`TokenDescription > truncates description and shows more 1`] = `
         <svg
           fill="currentColor"
           stroke-width="8"
-          style="width: 16px; height: 16px; color: rgb(19, 19, 19);"
+          style="width: 16px; height: 16px;"
           viewBox="0 0 512 512"
         >
           <path

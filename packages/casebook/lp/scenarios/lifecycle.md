@@ -168,7 +168,6 @@ chains:
   - bnb
   - avalanche
   - celo
-  - blast
   - zora
   - zksync
   - soneium
@@ -272,3 +271,49 @@ automationRefs: []
 **Given** the user is connected via an embedded (passkey) wallet
 **When** they perform add or remove liquidity flows
 **Then** the passkey signing flow completes, the transaction is submitted, and the position updates correctly
+
+---
+id: lp-lifecycle-bnb-usdc-decimals
+title: 'BNB USDC new-pool lifecycle sends 18-decimal amounts: create → increase → remove'
+# importance
+priority: high
+severity: urgent
+# provenance
+source: uniswap
+sourceNote: 'INC-421 follow-up (LP-1831): BNB USDC pools were created at the wrong price after the data-api v2 migration (~$3.5K lost)'
+# scope
+protocol_version: v4
+chains:
+  - bnb
+platforms:
+  - web
+labels:
+  - regression
+  - lifecycle
+  - decimals
+# execution
+automatable: true
+testLevel: e2e
+runFrequency: release
+# coverage
+code_paths:
+  - apps/web/src/pages/CreatePosition/
+  - apps/web/src/pages/IncreaseLiquidity/
+  - apps/web/src/pages/RemoveLiquidity/
+  - apps/web/src/features/Liquidity/Create/
+  - packages/uniswap/src/data/apiClients/dataApiService/utils/dataApiMultichainToken.ts
+automationRefs: []
+---
+
+> **high · v4 · e2e · release · gap** · chains: bnb
+
+**Given** a test wallet on BNB Chain holding BNB and USDC (`0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d`, 18 decimals)
+**And** USDC is picked from token-selector search, not typed as an address
+**When** the user creates a BNB / USDC V4 position in a **new pool** (a fee tier marked "Not created"), keeping the suggested initial price and entering e.g. 1 USDC
+**Then** the USDC balance shown matches the wallet's real balance, and the review modal's amounts and price match what was entered
+**And** the wallet's transaction prompt moves the same USDC amount shown in review (not 10^12 less)
+**And** once created, the new pool's price on its pool page matches the initial price entered and the position shows the deposited USDC
+**When** the user then increases the position by 1 USDC and removes 100%
+**Then** each step shows and moves the same USDC amounts, and removal returns roughly the USDC deposited, less fees
+
+> The screen alone can't catch this bug: a wrong-decimals initial price is parsed with the same wrong decimals, so the deposit step stays self-consistent. Check the wallet prompt and the created pool's price.

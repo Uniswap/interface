@@ -31,6 +31,11 @@ describe('resolvePinnedForkBlock', () => {
     expect(resolvePinnedForkBlock({ chainId: 8453, env: { ANVIL_FORK_BLOCK_BASE: '87654321' } })).toBe(87654321)
   })
 
+  it('returns the checked-in bnb pin, and honors ANVIL_FORK_BLOCK_BNB', () => {
+    expect(resolvePinnedForkBlock({ chainId: 56, env: {} })).toBe(forkBlockDefaults.bnb)
+    expect(resolvePinnedForkBlock({ chainId: 56, env: { ANVIL_FORK_BLOCK_BNB: '130000000' } })).toBe(130000000)
+  })
+
   it('ignores the base override when resolving mainnet', () => {
     expect(resolvePinnedForkBlock({ chainId: 1, env: { ANVIL_FORK_BLOCK_BASE: '87654321' } })).toBe(
       forkBlockDefaults.mainnet,
@@ -177,6 +182,12 @@ describe('resolveLoadStatePath', () => {
     ).toBe('/tmp/custom.json')
   })
 
+  it('ignores the ANVIL_LOAD_STATE override for non-mainnet forks', () => {
+    expect(
+      resolveLoadStatePath({ chainId: 56, forkBlockNumber: 129208000, env: { ANVIL_LOAD_STATE: '/tmp/custom.json' } }),
+    ).toBeUndefined()
+  })
+
   it.each(['0', 'none', 'NONE'])('disables state loading for ANVIL_LOAD_STATE=%s', (value) => {
     expect(
       resolveLoadStatePath({ chainId: 1, forkBlockNumber: 25510000, env: { ANVIL_LOAD_STATE: value }, stateDir }),
@@ -197,6 +208,13 @@ describe('resolveForkChainDefaults', () => {
       forkUrl: 'https://base-rpc.publicnode.com',
       defaultPort: 8546,
     })
+  })
+
+  it('returns the bnb port, and honors ANVIL_FORK_URL_BNB', () => {
+    expect(resolveForkChainDefaults({ chainId: 56, env: {} }).defaultPort).toBe(8547)
+    expect(resolveForkChainDefaults({ chainId: 56, env: { ANVIL_FORK_URL_BNB: 'https://bnb.example' } }).forkUrl).toBe(
+      'https://bnb.example',
+    )
   })
 
   it('honors the per-chain fork URL override env vars', () => {

@@ -27,6 +27,14 @@ export interface SubmitToucanBidParams {
    * If this returns false, the bid submission is aborted and onFailure is called.
    */
   onPreBidStepsComplete?: () => Promise<boolean>
+  /**
+   * The wallet can send the pre-bid approvals and the bid as one atomic EIP-5792 batch. Callers
+   * must check the bid before submitting: a batch has no point between the approvals and the bid
+   * at which `onPreBidStepsComplete` could run, so the saga does not batch when that is set.
+   */
+  canBatchTransactions?: boolean
+  /** Turns batching off when the user declines the wallet's account upgrade, so the retry prompts for each step. */
+  disableOneClickSwap?: () => void
 }
 
 export interface WithdrawBidAndClaimTokensToucanBidParams {

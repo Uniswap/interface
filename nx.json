@@ -131,27 +131,6 @@
     "snapshots": {
       "dependsOn": ["^prepare", "prepare"],
       "cache": true
-    },
-    "graphql:schema": {
-      "inputs": ["{workspaceRoot}/.env.production", "{projectRoot}/graphql.*.ts"],
-      "outputs": ["{projectRoot}/schema.graphql"],
-      "cache": true
-    },
-    "graphql:generate": {
-      "inputs": [
-        "{projectRoot}/codegen.ts",
-        "{projectRoot}/src/**/schema.graphql",
-        "{projectRoot}/src/**/fragments.ts",
-        "{projectRoot}/src/**/queries.ts",
-        "{projectRoot}/src/graphql/**",
-        "{projectRoot}/src/data/**/*.graphql"
-      ],
-      "outputs": [
-        "{projectRoot}/src/data/graphql/**/__generated__/**",
-        "{projectRoot}/data/__generated__/**",
-        "{projectRoot}/graphql/__generated__/**"
-      ],
-      "cache": true
     }
   },
   "namedInputs": {

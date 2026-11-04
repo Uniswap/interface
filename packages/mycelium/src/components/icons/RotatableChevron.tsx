@@ -9,7 +9,7 @@ import { isRTL, ROTATE_TRANSITION_CLASS } from './rotation-platform'
 
 // `direction` here is the chevron's heading, not the compat surface's CSS
 // `direction` long-tail prop; `rotate` is derived from it, so neither is
-// forwarded (the same two collisions the `ui/src` twin omits).
+// forwarded.
 type Props = {
   size?: IconProps['size']
   direction?: 'up' | 'right' | 'down' | 'left' | 'start' | 'end'

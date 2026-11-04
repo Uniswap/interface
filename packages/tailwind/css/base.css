@@ -6,7 +6,7 @@
    legacy `not-dark:` cascade slot — see the comment there for the full
    web-vs-native semantics. */
 
-/* Height breakpoints (packages/ui/src/theme/breakpoints.ts heightBreakpoints) */
+/* Height breakpoints (mirrors `HEIGHT_BREAKPOINT_PX` in `@universe/mycelium/theme-hooks-compat`) */
 @custom-variant h-short (@media (max-height: 736px));
 @custom-variant h-mid (@media (max-height: 800px));
 

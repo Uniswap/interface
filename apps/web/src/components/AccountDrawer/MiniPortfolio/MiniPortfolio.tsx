@@ -5,9 +5,9 @@ import type { ActivityItem } from 'uniswap/src/components/activity/generateActiv
 import { useActivityData } from 'uniswap/src/features/activity/hooks/useActivityData'
 import type { DataApiOutageState } from 'uniswap/src/features/dataApi/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { filterTransactionDetailsFromActivityItems } from '~/pages/Portfolio/Activity/Filters/utils'
 import { ViewAllButton } from '~/pages/Portfolio/Overview/ViewAllButton'
+import { useAccountDrawer } from '~/state/accountDrawer/hooks'
 import { filterDefinedWalletAddresses } from '~/utils/filterDefinedWalletAddresses'
 
 const MAX_RECENT_ACTIVITY_ITEMS = 3

@@ -2,7 +2,8 @@ import { normalizeTokenAddressForCache } from '@universe/chains'
 import type { MarginPlanIntent } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
 import { logger } from 'utilities/src/logger/logger'
 
-// Per-wallet localStorage pointer to the wallet's single active plan — the resume-banner source.
+// Per-wallet localStorage pointer to the wallet's single active plan. Nothing in the UI reads it to
+// resume yet: a plan stranded by a reload isn't resumable from the UI until pending rows ship.
 // All reads/writes are best-effort: a lost pointer must never brick a live plan (durable
 // server-side), and this write runs while the execution lock is held, so an uncaught throw here
 // (Safari private mode / quota-exceeded) would strand the lock.
@@ -33,7 +34,7 @@ export function persistPlanId({
     // One slot per wallet, so a new plan displaces whatever the slot named. That is usually right (the
     // displaced plan is terminal), but after a reload `useIsPlanInFlight` reads only the in-memory
     // store and reports false, so an open on another market can displace a plan that is still live —
-    // and the banner this pointer feeds is the only resume surface. Not silently: which plan's
+    // and this pointer is the only local record of it. Not silently: which plan's
     // recovery should win is a product call, and this is the record that the choice was made.
     const displaced = getPersistedMarginPlanId(swapper)
     if (displaced !== undefined && displaced.planId !== planId) {

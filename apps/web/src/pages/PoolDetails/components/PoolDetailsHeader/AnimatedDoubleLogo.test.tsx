@@ -1,9 +1,9 @@
-import { GraphQLApi } from '@universe/api'
 import { areAddressesEqual, UniverseChainId } from '@universe/chains'
 import { TestID } from '@universe/test'
 import { getStackedLogoWidth } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
+import { SafetyLevel } from 'uniswap/src/features/dataApi/safety'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils/getCurrencySafetyInfo'
+import { getRestCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils/getCurrencySafetyInfo'
 import type { ParsedToken } from 'uniswap/src/features/dataApi/utils/parsedToken'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { HEADER_LOGO_SIZE } from '~/components/StickyCollapsibleHeader/constants'
@@ -25,7 +25,7 @@ vi.mock('@universe/mycelium/theme-hooks-compat', async (importOriginal) => {
 
 const HOST = 'animated-double-logo-host'
 const STACKED_WIDTH = getStackedLogoWidth(HEADER_LOGO_SIZE.expanded)
-// The GraphQL fixtures type `address` as optional, so pin it down once for the logoUrl lookups below.
+// The fixtures type `address` as optional, so pin it down once for the logoUrl lookups below.
 const TOKEN0 = validParsedPoolToken0.address ?? ''
 const TOKEN1 = validParsedPoolToken1.address ?? ''
 const BOTH = [TOKEN0, TOKEN1]
@@ -47,7 +47,7 @@ function mockLogos(withLogos: string[]): void {
       currency: { chainId: UniverseChainId.Mainnet, address, isToken: true },
       logoUrl: hasLogo ? 'https://example.test/logo.png' : undefined,
       currencyId,
-      safetyInfo: getCurrencySafetyInfo(GraphQLApi.SafetyLevel.Verified, undefined),
+      safetyInfo: getRestCurrencySafetyInfo(SafetyLevel.Verified),
     } as unknown as CurrencyInfo
   })
 }

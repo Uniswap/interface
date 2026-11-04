@@ -1,10 +1,10 @@
 import type { UniverseChainId } from '@universe/chains'
 import { isHoverable } from '@universe/environment'
 import { Flex, iconSizes, Text } from '@universe/mycelium'
+import { ChevronsIn } from '@universe/mycelium/icons/ChevronsIn'
+import { ChevronsOut } from '@universe/mycelium/icons/ChevronsOut'
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ChevronsIn } from 'ui/src/components/icons/ChevronsIn'
-import { ChevronsOut } from 'ui/src/components/icons/ChevronsOut'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { pickFilteredChainToken } from 'uniswap/src/data/apiClients/dataApiService/rwa/pickPrimaryChainToken'
 import { getIssuerCount, getRwaNetworkCount } from 'uniswap/src/data/apiClients/dataApiService/rwa/rwaMetrics'
@@ -62,7 +62,7 @@ export function ExpandableParentAssetIdentity({
       color="$neutral2"
       opacity={isHoverable ? 0 : 1}
       size="$icon.16"
-      transition={isHoverable ? 'opacity 120ms ease-in-out' : undefined}
+      style={isHoverable ? { transition: 'opacity 120ms ease-in-out' } : undefined}
       $group-hover={isHoverable ? { opacity: 1 } : undefined}
     />
   ) : (

@@ -44,8 +44,6 @@ export function getQuicknodeChainId(chainId: UniverseChainId): string {
       return 'avalanche-mainnet'
     case UniverseChainId.Base:
       return 'base-mainnet'
-    case UniverseChainId.Blast:
-      return 'blast-mainnet'
     case UniverseChainId.Bnb:
       return 'bsc'
     case UniverseChainId.Celo:

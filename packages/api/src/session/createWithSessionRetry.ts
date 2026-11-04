@@ -1,4 +1,4 @@
-import { is401Error } from '@universe/api/src/clients/base/errors'
+import { is401Error, isBlockedAccountFetchError } from '../clients/base/errors'
 
 /**
  * Creates a function that will attempt to reinitialize the app session and retry the input function once, if the first invocation of the function fails.
@@ -20,8 +20,8 @@ export function createWithSessionRetry(ctx: {
     try {
       return await fn()
     } catch (error) {
-      // After first 401, reinitialize session and do not throw
-      if (is401Error(error)) {
+      // After first 401, reinitialize session and do not throw. A blocked wallet's 401 is not a session problem.
+      if (is401Error(error) && !isBlockedAccountFetchError(error)) {
         await ctx.reinitializeSession()
       } else {
         throw error

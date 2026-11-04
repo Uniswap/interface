@@ -16,8 +16,8 @@ import { currencyId } from 'uniswap/src/utils/currencyId'
 import type { Mock } from 'vitest'
 import { getOrderTitle, showCancelPreCheckRefusalPopup } from '~/components/modals/OffchainActivityCancelFlow'
 import { OrderContent } from '~/components/modals/OffchainActivityModal'
-import { popupRegistry } from '~/state/popups/registry'
 import { render } from '~/test-utils/render'
+import { popupRegistry } from '~/utils/popups/registry'
 
 vi.mock('@universe/gating', async (importOriginal) => {
   return {

@@ -1,4 +1,4 @@
-import type { DataApiServiceClient } from '@universe/api/src/clients/dataApi/createDataApiServiceClient'
+import type { DataApiServiceClient } from './createDataApiServiceClient'
 
 const notMocked = (method: string) => (): Promise<never> =>
   Promise.reject(new Error(`DataApiServiceClient.${method} was called but not mocked`))

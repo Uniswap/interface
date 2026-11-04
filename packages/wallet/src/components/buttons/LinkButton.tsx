@@ -1,8 +1,15 @@
-import { Flex, FlexCompatProps, iconSizes, Text, TouchableArea, TouchableAreaCompatProps } from '@universe/mycelium'
+import {
+  Flex,
+  FlexCompatProps,
+  iconSizes,
+  Text,
+  TouchableArea,
+  TouchableAreaCompatProps,
+  type TextVariantKey,
+} from '@universe/mycelium'
 import { ExternalLink } from '@universe/mycelium/icons/ExternalLink'
 import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import { useMemo } from 'react'
-import { TextVariantTokens } from 'ui/src/theme'
 import { openUri } from 'uniswap/src/utils/linking'
 
 interface LinkButtonProps extends Omit<TouchableAreaCompatProps, 'onPress' | 'children' | 'variant'> {
@@ -14,7 +21,7 @@ interface LinkButtonProps extends Omit<TouchableAreaCompatProps, 'onPress' | 'ch
   iconColor?: string
   showIcon?: boolean
   size?: number
-  textVariant?: TextVariantTokens
+  textVariant?: TextVariantKey
 }
 
 export function LinkButton({

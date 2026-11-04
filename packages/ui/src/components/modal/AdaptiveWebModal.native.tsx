@@ -1,15 +1,13 @@
+import { zIndexes } from '@universe/mycelium/tokens'
 import { useContext, useMemo } from 'react'
 import type { ReactNode } from 'react'
-import { type CloseIconProps, CloseIconWithHover } from 'ui/src/components/icons/CloseIconWithHover'
 import type { ModalProps } from 'ui/src/components/modal/AdaptiveWebModalShared'
 import { EffectiveModalOrSheetZIndexContext, stackingLayerAbove } from 'ui/src/components/modal/AdaptiveWebModalShared'
-import { zIndexes } from 'ui/src/theme'
 
 /**
  * The non-web leg of the AdaptiveWebModal cluster. Native modals are gorhom-based via
  * `uniswap/src/components/modals/Modal.native.tsx` and never render the web branches, so the
- * components here are inert pass-throughs; `ModalCloseIcon` and the z-index hook are the only
- * living exports. The base `AdaptiveWebModal.tsx` re-exports this file, so
+ * components here are inert pass-throughs; the z-index hook is the only living export. The base `AdaptiveWebModal.tsx` re-exports this file, so
  * non-platform resolvers get the identical implementation without a hand-kept copy.
  */
 
@@ -40,11 +38,6 @@ export function useEffectiveModalOrSheetZIndex({
     (): number | undefined => zIndex ?? stackingLayerAbove(parentContextZ, zIndexes.modal),
     [zIndex, parentContextZ],
   )
-}
-
-export function ModalCloseIcon(props: CloseIconProps): JSX.Element {
-  // The small-viewport hide only applies on the web app (see the .web leg); native always renders.
-  return <CloseIconWithHover {...props} />
 }
 
 /**

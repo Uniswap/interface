@@ -7,13 +7,14 @@ import {
   Text,
   UniversalImage,
   useIsDarkMode,
+  borderRadii,
+  iconSizes,
 } from '@universe/mycelium'
+import { TimePast } from '@universe/mycelium/icons/TimePast'
 import { SPORE_ANIMATION_CURVE_CSS } from '@universe/tailwind/animations'
 import { withSporeCurve } from '@universe/tailwind/animations/reanimated'
 import { useTranslation } from 'react-i18next'
 import { useAnimatedStyle } from 'react-native-reanimated'
-import { TimePast } from 'ui/src/components/icons/TimePast'
-import { borderRadii, iconSizes } from 'ui/src/theme'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { getOptionalServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
 

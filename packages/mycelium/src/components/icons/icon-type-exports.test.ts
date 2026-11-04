@@ -6,12 +6,7 @@
  * that blocked every `icon-value-reference` receiver repo-wide.
  *
  * Types are erased at runtime, so the exit test spawns `tsc` on a probe file
- * that imports through the package name (exports-map resolution, same harness
- * shape as scripts/tamagui-migration/codemod/icon-contract.test.ts). The
- * probe types receivers with MYCELIUM's `GeneratedIcon`; since INFRA-3508 its
- * ref is the honest per-platform union (`Ref<Svg | SVGSVGElement>`), so a ui
- * icon value also satisfies these slots — the primary assignability
- * direction pinned in `ui-icon-assignability.test.ts`.
+ * that imports through the package name (exports-map resolution).
  */
 import { spawnSync } from 'node:child_process'
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
@@ -21,7 +16,7 @@ import { afterAll, describe, expect, it } from 'vitest'
 const REPO_ROOT = join(__dirname, '..', '..', '..', '..', '..')
 
 // Temp files live under the repo so module/type resolution sees the real
-// node_modules (icon-contract.test.ts pattern).
+// node_modules.
 const CACHE_ROOT = join(REPO_ROOT, 'node_modules', '.cache')
 mkdirSync(CACHE_ROOT, { recursive: true })
 const TEMP_ROOT = mkdtempSync(join(CACHE_ROOT, 'icon-type-exports-'))
@@ -39,7 +34,7 @@ function typecheck(source: string): { ok: boolean; output: string } {
     configPath,
     JSON.stringify({
       extends: join(REPO_ROOT, 'config', 'tsconfig', 'app.json'),
-      // Mirrors icon-contract.test.ts: the harness follows imports into
+      // The harness follows imports into
       // source (no project references), so the barrel closure reaches
       // packages CI checks under their own configs.
       compilerOptions: {

@@ -7,6 +7,21 @@ import { Mocks } from '~/playwright/mocks/mocks'
 
 const DEFAULT_TEST_GAS_LIMIT = '20000000'
 
+// CI shards share one egress IP, so the live Trading API intermittently answers 429.
+const RATE_LIMIT_RETRY_DELAYS_MS = [1_000, 2_000, 4_000, 8_000]
+
+export async function fetchRetryingRateLimit(route: Route, options: Parameters<Route['fetch']>[0]) {
+  let response = await route.fetch(options)
+  for (const delayMs of RATE_LIMIT_RETRY_DELAYS_MS) {
+    if (response.status() !== 429) {
+      break
+    }
+    await new Promise((resolve) => setTimeout(resolve, delayMs))
+    response = await route.fetch(options)
+  }
+  return response
+}
+
 /**
  * Anvil executes against the pinned block in fork-blocks.json while /swap prices execution
  * bounds from the live chain tip: the server rebuilds min-out/max-in from a fresh internal
@@ -64,7 +79,7 @@ export async function stubTradingApiEndpoint({
       }
 
       // Create a new request with modified data
-      const response = await route.fetch({
+      const response = await fetchRetryingRateLimit(route, {
         postData: JSON.stringify(modifiedData),
       })
 

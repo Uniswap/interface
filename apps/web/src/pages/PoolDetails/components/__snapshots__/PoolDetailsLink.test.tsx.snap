@@ -23,7 +23,7 @@ exports[`PoolDetailsHeader > renders link for pool address 1`] = `
           >
             <div
               class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[var(--c-h)] bg-[color:var(--c-bg)] rounded-[999999px] opacity-[0] absolute top-[var(--c-top)] left-[var(--c-left)] z-[var(--c-z)]"
-              style="--c-w: 96%; --c-h: 96%; --c-bg: #FFFFFF; --c-top: 2%; --c-left: 2%; --c-z: 0;"
+              style="--c-w: 96%; --c-h: 96%; --c-bg: #ffffff; --c-top: 2%; --c-left: 2%; --c-z: 0;"
             />
             <div
               data-testid="img-token-image"
@@ -49,7 +49,7 @@ exports[`PoolDetailsHeader > renders link for pool address 1`] = `
           >
             <div
               class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[var(--c-h)] bg-[color:var(--c-bg)] rounded-[999999px] opacity-[0] absolute top-[var(--c-top)] left-[var(--c-left)] z-[var(--c-z)]"
-              style="--c-w: 96%; --c-h: 96%; --c-bg: #FFFFFF; --c-top: 2%; --c-left: 2%; --c-z: 0;"
+              style="--c-w: 96%; --c-h: 96%; --c-bg: #ffffff; --c-top: 2%; --c-left: 2%; --c-z: 0;"
             />
             <div
               data-testid="img-token-image"
@@ -125,7 +125,7 @@ exports[`PoolDetailsHeader > renders link for pool address 1`] = `
         <svg
           fill="none"
           stroke-width="8"
-          style="width: 16px; height: 16px; flex-shrink: 0; color: rgba(19, 19, 19, 0.63);"
+          style="width: 16px; height: 16px; flex-shrink: 0;"
           viewBox="0 0 24 24"
         >
           <path
@@ -150,7 +150,7 @@ exports[`PoolDetailsHeader > renders link for pool address 1`] = `
           <svg
             fill="none"
             stroke-width="8"
-            style="width: 16px; height: 16px; color: rgb(19, 19, 19);"
+            style="color: rgb(19, 19, 19); width: 16px; height: 16px;"
             viewBox="0 0 123 123"
           >
             <path
@@ -185,7 +185,7 @@ exports[`PoolDetailsHeader > renders link for token address 1`] = `
       >
         <div
           class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[var(--c-h)] bg-[color:var(--c-bg)] rounded-[999999px] opacity-[0] absolute top-[var(--c-top)] left-[var(--c-left)] z-[var(--c-z)]"
-          style="--c-w: 96%; --c-h: 96%; --c-bg: #FFFFFF; --c-top: 2%; --c-left: 2%; --c-z: 0;"
+          style="--c-w: 96%; --c-h: 96%; --c-bg: #ffffff; --c-top: 2%; --c-left: 2%; --c-z: 0;"
         />
         <div
           data-testid="img-token-image"
@@ -243,13 +243,13 @@ exports[`PoolDetailsHeader > renders link for token address 1`] = `
           >
             USDC 
             <div
-              class="flex flex-col basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 items-center justify-center rounded-[999999px] [transform:var(--c-tr)] [transition:var(--c-t)]"
-              style="--c-tr: rotate(180deg); --c-t: transform 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+              class="flex flex-col basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 items-center justify-center rounded-[999999px] static [transform:var(--c-tr)] transition-transform duration-150 ease-in-out"
+              style="--c-tr: rotate(180deg);"
             >
               <svg
                 fill="none"
                 stroke-width="8"
-                style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.63);"
+                style="width: 16px; height: 16px;"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -281,7 +281,7 @@ exports[`PoolDetailsHeader > renders link for token address 1`] = `
         <svg
           fill="none"
           stroke-width="8"
-          style="width: 16px; height: 16px; flex-shrink: 0; color: rgba(19, 19, 19, 0.63);"
+          style="width: 16px; height: 16px; flex-shrink: 0;"
           viewBox="0 0 24 24"
         >
           <path
@@ -306,7 +306,7 @@ exports[`PoolDetailsHeader > renders link for token address 1`] = `
           <svg
             fill="none"
             stroke-width="8"
-            style="width: 16px; height: 16px; color: rgb(19, 19, 19);"
+            style="color: rgb(19, 19, 19); width: 16px; height: 16px;"
             viewBox="0 0 123 123"
           >
             <path

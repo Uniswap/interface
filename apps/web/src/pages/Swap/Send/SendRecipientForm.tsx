@@ -1,5 +1,14 @@
 import { Platform, areAddressesEqual } from '@universe/chains'
-import { Flex, type FlexCompatProps, Text, TouchableArea, type TouchableAreaCompatProps } from '@universe/mycelium'
+import {
+  Flex,
+  type FlexCompatProps,
+  Text,
+  TouchableArea,
+  type TouchableAreaCompatProps,
+  Tooltip,
+  Input,
+  type InputProps,
+} from '@universe/mycelium'
 import { Unitag } from '@universe/mycelium/icons/Unitag'
 import { X } from '@universe/mycelium/icons/X'
 import { useShadowPropsMedium } from '@universe/mycelium/theme-hooks-compat'
@@ -7,16 +16,16 @@ import { type TouchableAreaCompatEvent } from '@universe/mycelium/touchable-area
 import { type ElementRef, forwardRef, useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { capitalize } from 'tsafe'
-import { AdaptiveWebPopoverContent, Input, type InputProps, Popover, Tooltip } from 'ui/src'
+import { AdaptiveWebPopoverContent, Popover } from 'ui/src'
 import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { useENSName } from 'uniswap/src/features/ens/api'
 import { useRecentTransfersByAddress, TransferCount } from 'uniswap/src/features/send/useRecentTransfersByAddress'
 import { shortenAddress } from 'utilities/src/addresses'
-import { useAccount } from '~/hooks/useAccount'
+import { useAccount } from '~/connection/hooks/useAccount'
 import { useOnClickOutside } from '~/hooks/useOnClickOutside'
-import { RecipientData } from '~/pages/Swap/Send/state/hooks'
 import { useSendContext } from '~/pages/Swap/Send/state/SendContext'
+import { RecipientData } from '~/pages/Swap/Send/state/types'
 
 const SEND_RECIPIENT_INPUT_PADDING = 16
 

@@ -1,9 +1,9 @@
 import { Flex, Text, TouchableArea, Spacer, IconButton } from '@universe/mycelium'
 import { CheckCircleFilled } from '@universe/mycelium/icons/CheckCircleFilled'
+import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
 import { useTranslation } from 'react-i18next'
 // Stays on ui/src until compat Popover gains .Close (INFRA-3644)
 import { Popover } from 'ui/src'
-import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { PriceRangeStrategy } from '~/pages/Liquidity/CreateAuction/types'
 
 const BAR_ICON_SIZE = 16

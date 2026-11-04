@@ -1,5 +1,5 @@
-import { createNativeStorageDriver } from '@universe/api/src/storage/createNativeStorageDriver'
-import { type StorageDriver } from '@universe/api/src/storage/types'
+import { createNativeStorageDriver } from './createNativeStorageDriver'
+import { type StorageDriver } from './types'
 
 export function getStorageDriver(): StorageDriver {
   return createNativeStorageDriver()

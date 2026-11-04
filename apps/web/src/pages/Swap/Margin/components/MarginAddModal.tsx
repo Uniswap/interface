@@ -12,6 +12,17 @@ import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
 import { formatUnits, parseUnits } from '~/chains'
 import { type MarginMarket } from '~/constants/margin'
+import { getMarginCurrencyInfo, useMarginCurrencyInfos } from '~/features/margin/hooks/useMarginCurrencyInfos'
+import {
+  getMarketDefaultPaymentToken,
+  getPaymentCurrency,
+  isPaymentTokenDifferentFromCollateral,
+  marginAssetCurrencyId,
+  marginTokenCurrencyId,
+} from '~/features/margin/utils/marginCurrencies'
+import { conversionCaptionEquity } from '~/features/margin/utils/marginFormat'
+import { marginPositionTokens } from '~/features/margin/utils/marginPositionRow'
+import { marginRowDirection, marginUnwrapSymbol } from '~/features/margin/utils/marginTokenDisplay'
 import { MarginAdjustBeforeAfterSection } from '~/pages/Swap/Margin/components/MarginAdjustBeforeAfterRows'
 import { MarginAdjustQuoteRows } from '~/pages/Swap/Margin/components/MarginAdjustQuoteRows'
 import { MarginAdjustShowMoreSection } from '~/pages/Swap/Margin/components/MarginAdjustShowMoreSection'
@@ -22,19 +33,8 @@ import { MarginAmountField } from '~/pages/Swap/Margin/components/shared/MarginA
 import { MarginExcludedVenueNotice } from '~/pages/Swap/Margin/components/shared/MarginExcludedVenueNotice'
 import { MarginPairHeading } from '~/pages/Swap/Margin/components/shared/MarginPairHeading'
 import { useMarginAdjustController } from '~/pages/Swap/Margin/hooks/useMarginAdjustController'
-import { getMarginCurrencyInfo, useMarginCurrencyInfos } from '~/pages/Swap/Margin/hooks/useMarginCurrencyInfos'
 import { useMarginPositionMarkIsStale } from '~/pages/Swap/Margin/hooks/useMarginPositionMarkIsStale'
 import type { AdjustFunding } from '~/pages/Swap/Margin/hooks/useMarginQuote'
-import {
-  getMarketDefaultPaymentToken,
-  getPaymentCurrency,
-  isPaymentTokenDifferentFromCollateral,
-  marginAssetCurrencyId,
-  marginTokenCurrencyId,
-} from '~/pages/Swap/Margin/marginCurrencies'
-import { conversionCaptionEquity } from '~/pages/Swap/Margin/marginFormat'
-import { marginPositionTokens } from '~/pages/Swap/Margin/marginPositionRow'
-import { marginRowDirection, marginUnwrapSymbol } from '~/pages/Swap/Margin/marginTokenDisplay'
 
 // Add margin: a deposit with no leverage target. The amount is typed in PAYMENT-TOKEN units, which is
 // the wire field, so paymentAmountRaw passes straight through with no USD conversion. mode is
@@ -122,7 +122,7 @@ export function MarginAddModal({
   const toggleExpanded = useEvent(() => setExpandedOverride(!isExpanded))
 
   const isPaymentTokenCollateral = !isPaymentTokenDifferentFromCollateral({ token: paymentToken, market })
-  // The same rule the open form and the adjust sheet use. Locally this tested `!== undefined`, which
+  // The same rule the open form uses. Locally this tested `!== undefined`, which
   // the truthy STRING '0' walks through into "≈ 0"; it consulted no freshness, so mid-debounce the
   // sentence paired the live input with the equity quoted for the previous one (and a cleared field
   // with a blank payment half); and it decoded through a bare BigInt, which throws mid-render.

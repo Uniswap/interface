@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
-import { PlusMinusButtonType } from 'ui/src'
 import { DEFAULT_CUSTOM_DEADLINE, MAX_CUSTOM_DEADLINE, MIN_CUSTOM_DEADLINE } from 'uniswap/src/constants/transactions'
+import { PlusMinusButtonType } from 'uniswap/src/features/transactions/components/settings/PlusMinusButton'
 import {
   useTransactionSettingsActions,
   useTransactionSettingsStore,

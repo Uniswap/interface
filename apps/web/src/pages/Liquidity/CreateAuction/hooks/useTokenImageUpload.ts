@@ -22,7 +22,14 @@ import { uploadImageToPinata } from '~/pages/Liquidity/CreateAuction/utils/uploa
 export type TokenImageUploadStatus = 'idle' | 'uploading' | 'verifying' | 'success' | 'error'
 
 /** Stable, presentation-agnostic failure reasons. The component maps these to localized copy. */
-export type TokenImageUploadErrorReason = 'invalid-type' | 'too-large' | 'rejected' | 'upload-failed'
+export type TokenImageUploadErrorReason =
+  | 'invalid-type'
+  | 'too-large'
+  | 'too-large-to-check'
+  | 'too-many-frames'
+  | 'rejected'
+  | 'invalid-image'
+  | 'upload-failed'
 
 export interface UseTokenImageUploadResult {
   status: TokenImageUploadStatus
@@ -41,7 +48,7 @@ export const VERIFY_RETRY_DELAY_MS = 1500
  * The backend returns HTTP 500 "Image scan temporarily unavailable" while a freshly-uploaded CID is
  * still propagating to the IPFS gateway — the normal path right after upload, not a hard failure.
  * Verified live: that 500 surfaces as ConnectError code Unknown (2); we also accept Internal /
- * Unavailable defensively. A bad CID is InvalidArgument and must not retry.
+ * Unavailable defensively. InvalidArgument is never transient (see `parseInvalidTokenImageError`).
  */
 function isTransientScanError(error: unknown): boolean {
   return (
@@ -49,6 +56,54 @@ function isTransientScanError(error: unknown): boolean {
     (error.code === Code.Unavailable || error.code === Code.Internal || error.code === Code.Unknown)
   )
 }
+
+const INVALID_TOKEN_IMAGE_CODE = 'INVALID_TOKEN_IMAGE'
+
+// The server's English `message` is not shown: the app is localized, so its `reason` picks the copy.
+// A reason not listed here (or none) falls back to the generic `invalid-image`.
+const INVALID_TOKEN_IMAGE_REASONS = new Map<string, TokenImageUploadErrorReason>([
+  ['image_too_large', 'too-large-to-check'],
+  ['too_many_frames', 'too-many-frames'],
+  ['transcode_too_large', 'too-large-to-check'],
+  ['unsupported_format_svg', 'invalid-type'],
+])
+
+/**
+ * A client-fixable image reject (too large, unsupported format, undecodable): Connect InvalidArgument
+ * whose raw message is coded JSON `{"code":"INVALID_TOKEN_IMAGE","reason":...,"message":...}`. The user
+ * can fix it by picking another file, so it is surfaced rather than attached unverified. Other
+ * InvalidArgument errors (plain-text, e.g. a malformed cid param) aren't about the image and return
+ * undefined.
+ */
+function parseInvalidTokenImageError(error: unknown): TokenImageUploadErrorReason | undefined {
+  if (!(error instanceof ConnectError) || error.code !== Code.InvalidArgument) {
+    return undefined
+  }
+  const jsonStart = error.rawMessage.indexOf('{')
+  if (jsonStart === -1) {
+    return undefined
+  }
+  try {
+    const parsed: unknown = JSON.parse(error.rawMessage.slice(jsonStart))
+    if (
+      typeof parsed !== 'object' ||
+      parsed === null ||
+      !('code' in parsed) ||
+      parsed.code !== INVALID_TOKEN_IMAGE_CODE
+    ) {
+      return undefined
+    }
+    const reason = 'reason' in parsed && typeof parsed.reason === 'string' ? parsed.reason : ''
+    return INVALID_TOKEN_IMAGE_REASONS.get(reason) ?? 'invalid-image'
+  } catch {
+    return undefined
+  }
+}
+
+type VerifyOutcome =
+  | { kind: 'verified'; response: VerifyTokenFactoryImageResponse }
+  | { kind: 'invalid'; reason: TokenImageUploadErrorReason }
+  | { kind: 'unverified' }
 
 async function verifyWithRetry(cid: string): Promise<VerifyTokenFactoryImageResponse> {
   for (let attempt = 1; ; attempt++) {
@@ -124,8 +179,8 @@ function scheduleClearLocalWhenGatewayImageReady(options: {
  * Drives the token-logo upload: pick -> validate -> presign -> upload to Pinata -> verify (with retry
  * on the transient scan error). Writes `ipfs://<cid>` to the store's `imageUrl` when the image is
  * approved — or when moderation can't complete after retries, in which case we attach optimistically
- * and let the backend re-verify later. A moderation block or an upload failure surfaces an error; a
- * verification that simply couldn't run does not. The image is optional and never blocks the step.
+ * and let the backend re-verify later. A moderation block, an image the backend can't use (coded 400), or an
+ * upload failure surfaces an error; a verification that simply couldn't run does not. The image is optional and never blocks the step.
  *
  * The picked file is shown immediately via `localImagePreviewUri` (a blob URL) on the token form so it
  * survives leaving step 1. After `ipfs://` is saved, a background preload swaps the blob away only
@@ -150,19 +205,23 @@ export function useTokenImageUpload(): UseTokenImageUploadResult {
     }: {
       file: File
       attempt: number
-    }): Promise<{ cid: string; response?: VerifyTokenFactoryImageResponse }> => {
+    }): Promise<{ cid: string; outcome: VerifyOutcome }> => {
       const signedUrl = await createTokenFactoryPresignedUrl(file.name)
       const cid = await uploadImageToPinata(signedUrl, file)
       if (attempt === latestAttemptRef.current) {
         setStatus('verifying')
       }
       try {
-        return { cid, response: await verifyWithRetry(cid) }
-      } catch {
+        return { cid, outcome: { kind: 'verified', response: await verifyWithRetry(cid) } }
+      } catch (error) {
+        const invalidImageReason = parseInvalidTokenImageError(error)
+        if (invalidImageReason) {
+          return { cid, outcome: { kind: 'invalid', reason: invalidImageReason } }
+        }
         // The upload succeeded but moderation couldn't complete (scan service unavailable / retries
         // exhausted). Keep the image optimistically and let the backend re-verify later rather than
         // blocking the user on a transient failure — only a hard upload failure rejects from here.
-        return { cid }
+        return { cid, outcome: { kind: 'unverified' } }
       }
     },
   })
@@ -188,11 +247,18 @@ export function useTokenImageUpload(): UseTokenImageUploadResult {
     setLocalImagePreview(store, objectUrl)
 
     try {
-      const { cid, response } = await mutateAsync({ file: selection.file, attempt })
+      const { cid, outcome } = await mutateAsync({ file: selection.file, attempt })
       if (attempt !== latestAttemptRef.current) {
         return
       }
-      if (!response || response.status === VerifyTokenFactoryImageResponse_Status.APPROVED) {
+      if (outcome.kind === 'invalid') {
+        setStatus('error')
+        setErrorReason(outcome.reason)
+        clearLocalImagePreview(store)
+      } else if (
+        outcome.kind === 'unverified' ||
+        outcome.response.status === VerifyTokenFactoryImageResponse_Status.APPROVED
+      ) {
         updateCreateNewTokenField('imageUrl', `ipfs://${cid}`)
         setStatus('success')
         scheduleClearLocalWhenGatewayImageReady({ store, cid, objectUrl, attempt, latestAttemptRef })

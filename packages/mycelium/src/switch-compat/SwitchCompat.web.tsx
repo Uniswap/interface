@@ -1,6 +1,6 @@
 /**
- * Web leg of the Switch compat (INFRA-3644) — the drop-in twin of the
- * Tamagui-free `ui/src` Switch rebuild (INFRA-3318): a native `button` with
+ * Web leg of the Switch compat (INFRA-3644) — the drop-in replacement for the
+ * Tamagui-free `ui/src` Switch (INFRA-3318): a native `button` with
  * inline styles carrying the legacy Tamagui cascade, re-homed onto mycelium
  * internals (theme-hooks-compat colors, mycelium tokens, the mycelium `Check`
  * glyph).
@@ -63,6 +63,7 @@ export function SwitchCompat({
   id,
   testID,
   pointerEvents,
+  'aria-label': ariaLabel,
 }: SwitchCompatProps): JSX.Element {
   const [checked, setChecked] = useState<boolean>(checkedProp ?? defaultChecked ?? false)
   const [hovered, setHovered] = useState(false)
@@ -117,7 +118,7 @@ export function SwitchCompat({
       if (isBranded) {
         return checked ? colors.accent1Hovered.val : colors.neutral3Hovered.val
       }
-      return checked ? colors.accent3Hovered.val : colors.neutral3Hovered.val
+      return checked ? colors.neutral1Hovered.val : colors.neutral3Hovered.val
     }
     if (backgroundColor) {
       return resolveColorOverride(backgroundColor, colors)
@@ -128,7 +129,7 @@ export function SwitchCompat({
     if (isBranded) {
       return checked ? colors.accent1.val : colors.neutral3.val
     }
-    return checked ? colors.accent3.val : colors.neutral3.val
+    return checked ? colors.neutral1.val : colors.neutral3.val
   })()
 
   const thumbColor = ((): string => {
@@ -164,6 +165,9 @@ export function SwitchCompat({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
+    // A definite cross-size, not just a floor: with only min-height the track has no
+    // resolved height, so a flex row's default align-items: stretch grows it to the
+    // row's text height (a two-line label made the toggle enormous).
     height: SWITCH_TRACK_HEIGHT,
     width: SWITCH_TRACK_WIDTH,
     minHeight: SWITCH_TRACK_HEIGHT,
@@ -253,6 +257,7 @@ export function SwitchCompat({
     <button
       aria-checked={checked}
       aria-disabled={disabled}
+      aria-label={ariaLabel}
       // Transcribed from the legacy implementation, which set aria-selected alongside aria-checked.
       aria-selected={checked}
       data-testid={testID}

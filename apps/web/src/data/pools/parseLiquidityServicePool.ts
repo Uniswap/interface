@@ -18,9 +18,8 @@ import { protocolsToProtocolVersion } from '~/data/pools/protocolVersion'
 
 type PoolTokenMetadata = NonNullable<PoolSummary['token0Metadata']>
 
-// token_supply is a uint256 raw base-unit amount (unlike the GraphQL token0Supply, which was
-// already decimal-adjusted). Convert via CurrencyAmount so the raw uint256 scales down exactly —
-// Number(rawUint256) would lose precision past 2^53.
+// token_supply is a uint256 raw base-unit amount, not decimal-adjusted. Convert via CurrencyAmount so
+// the raw uint256 scales down exactly — Number(rawUint256) would lose precision past 2^53.
 function scaleTokenSupply({
   chainId,
   address,
@@ -136,8 +135,8 @@ export function parseLiquidityServicePool(pool: PoolSummary, chainId: UniverseCh
   return {
     idOrAddress: pool.poolIdentifier,
     protocolVersion: protocolVersion === ProtocolVersion.UNSPECIFIED ? undefined : protocolVersion,
-    // GetPool returns the zero address for a hookless V4 pool; GraphQL returned undefined. Normalize
-    // so the PDP doesn't surface a spurious hook.
+    // GetPool returns the zero address for a hookless V4 pool. Normalize to undefined so the PDP
+    // doesn't surface a spurious hook.
     hookAddress: pool.hookAddress && pool.hookAddress !== ZERO_ADDRESS ? pool.hookAddress : undefined,
     token0: buildPoolToken({ chainId, address: pool.token0Address, metadata: pool.token0Metadata }),
     tvlToken0: scaleTokenSupply({
@@ -173,5 +172,6 @@ export function parseLiquidityServicePool(pool: PoolSummary, chainId: UniverseCh
     apr: pool.apr,
     totalApr: pool.totalApr,
     protocolFeePips: pool.protocolFee,
+    categoryIds: pool.categoryIds,
   }
 }

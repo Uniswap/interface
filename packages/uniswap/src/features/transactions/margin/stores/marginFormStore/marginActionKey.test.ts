@@ -7,8 +7,8 @@ import {
 } from 'uniswap/src/features/transactions/margin/stores/marginFormStore/marginActionKey'
 import { describe, expect, it } from 'vitest'
 
-// The full contract, one row per reachable (action, equity, leverage) combination. `adjust` stands in
-// for the four manage actions — the four-action equivalence is asserted separately below.
+// The full contract, one row per reachable (action, equity, leverage) combination. `leverage` stands in
+// for the three manage actions — the three-action equivalence is asserted separately below.
 const TRUTH_TABLE: Array<{
   formAction: MarginFormAction
   equityChange: MarginEquityChange
@@ -18,31 +18,31 @@ const TRUTH_TABLE: Array<{
   { formAction: 'open', equityChange: 'add', leverageIntent: 'increase', expected: 'open' },
   { formAction: 'close', equityChange: 'none', leverageIntent: 'unchanged', expected: 'close' },
 
-  { formAction: 'adjust', equityChange: 'none', leverageIntent: 'unchanged', expected: undefined },
-  { formAction: 'adjust', equityChange: 'none', leverageIntent: 'hold', expected: undefined },
-  { formAction: 'adjust', equityChange: 'none', leverageIntent: 'increase', expected: 'increaseLeverage' },
-  { formAction: 'adjust', equityChange: 'none', leverageIntent: 'decrease', expected: 'decreaseLeverage' },
+  { formAction: 'leverage', equityChange: 'none', leverageIntent: 'unchanged', expected: undefined },
+  { formAction: 'leverage', equityChange: 'none', leverageIntent: 'hold', expected: undefined },
+  { formAction: 'leverage', equityChange: 'none', leverageIntent: 'increase', expected: 'increaseLeverage' },
+  { formAction: 'leverage', equityChange: 'none', leverageIntent: 'decrease', expected: 'decreaseLeverage' },
 
-  { formAction: 'adjust', equityChange: 'add', leverageIntent: 'unchanged', expected: 'addEquity' },
-  { formAction: 'adjust', equityChange: 'add', leverageIntent: 'hold', expected: 'addEquityAndIncreaseLeverage' },
-  { formAction: 'adjust', equityChange: 'add', leverageIntent: 'increase', expected: 'addEquityAndIncreaseLeverage' },
-  { formAction: 'adjust', equityChange: 'add', leverageIntent: 'decrease', expected: 'addEquityAndDecreaseLeverage' },
+  { formAction: 'leverage', equityChange: 'add', leverageIntent: 'unchanged', expected: 'addEquity' },
+  { formAction: 'leverage', equityChange: 'add', leverageIntent: 'hold', expected: 'addEquityAndIncreaseLeverage' },
+  { formAction: 'leverage', equityChange: 'add', leverageIntent: 'increase', expected: 'addEquityAndIncreaseLeverage' },
+  { formAction: 'leverage', equityChange: 'add', leverageIntent: 'decrease', expected: 'addEquityAndDecreaseLeverage' },
 
-  { formAction: 'adjust', equityChange: 'withdraw', leverageIntent: 'unchanged', expected: 'withdrawEquity' },
+  { formAction: 'leverage', equityChange: 'withdraw', leverageIntent: 'unchanged', expected: 'withdrawEquity' },
   {
-    formAction: 'adjust',
+    formAction: 'leverage',
     equityChange: 'withdraw',
     leverageIntent: 'hold',
     expected: 'withdrawEquityAndDecreaseLeverage',
   },
   {
-    formAction: 'adjust',
+    formAction: 'leverage',
     equityChange: 'withdraw',
     leverageIntent: 'increase',
     expected: 'withdrawEquityAndIncreaseLeverage',
   },
   {
-    formAction: 'adjust',
+    formAction: 'leverage',
     equityChange: 'withdraw',
     leverageIntent: 'decrease',
     expected: 'withdrawEquityAndDecreaseLeverage',
@@ -66,7 +66,7 @@ describe('resolveMarginActionKey', () => {
   })
 
   it('is total: no combination throws, and only the two no-op ones are unsubmittable', () => {
-    const formActions: MarginFormAction[] = ['open', 'close', 'add', 'withdraw', 'leverage', 'adjust']
+    const formActions: MarginFormAction[] = ['open', 'close', 'add', 'withdraw', 'leverage']
     const equityChanges: MarginEquityChange[] = ['none', 'add', 'withdraw']
     const leverageIntents: MarginLeverageIntent[] = ['unchanged', 'hold', 'increase', 'decrease']
     const unresolved: string[] = []
@@ -87,15 +87,13 @@ describe('resolveMarginActionKey', () => {
       'withdraw/none/hold',
       'leverage/none/unchanged',
       'leverage/none/hold',
-      'adjust/none/unchanged',
-      'adjust/none/hold',
     ])
   })
 
   it('resolves the same key for every manage action given the same axes', () => {
     for (const equityChange of ['none', 'add', 'withdraw'] as const) {
       for (const leverageIntent of ['unchanged', 'hold', 'increase', 'decrease'] as const) {
-        const keys = (['add', 'withdraw', 'leverage', 'adjust'] as const).map((formAction) =>
+        const keys = (['add', 'withdraw', 'leverage'] as const).map((formAction) =>
           resolveMarginActionKey({ formAction, equityChange, leverageIntent }),
         )
         expect(new Set(keys).size).toBe(1)
@@ -112,7 +110,7 @@ describe('resolveMarginActionKey', () => {
     )
     const axisKeys = (['none', 'add', 'withdraw'] as const).flatMap((equityChange) =>
       (['unchanged', 'hold', 'increase', 'decrease'] as const).map((leverageIntent) =>
-        resolveMarginActionKey({ formAction: 'adjust', equityChange, leverageIntent }),
+        resolveMarginActionKey({ formAction: 'leverage', equityChange, leverageIntent }),
       ),
     )
     expect(axisKeys).not.toContain('open')

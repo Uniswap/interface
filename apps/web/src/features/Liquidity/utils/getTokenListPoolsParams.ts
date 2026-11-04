@@ -7,7 +7,7 @@ import { Platform, getValidAddress, normalizeTokenAddressForCache } from '@unive
 import type { MultichainTokenEntry } from 'uniswap/src/components/MultichainTokenDetails/useOrderedMultichainEntries'
 import { getWrappedNativeAddress } from 'uniswap/src/constants/addresses'
 import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/evm/rpc'
-import { toGraphQLChain, toSupportedChainId } from 'uniswap/src/features/chains/utils'
+import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { nativeAddressForRest } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 
 /**
@@ -96,13 +96,12 @@ export interface MultichainTokenListPoolsRequest {
   params: Omit<PartialMessage<ListPoolsRequest>, 'page'>
   /**
    * Pool-token addresses (normalized via `normalizeTokenAddressForCache`) that are real
-   * deployments of this token, keyed by the chain name `convertPoolToPoolStat` stamps on each
-   * PoolStat. Built in the same pass as `params` so the request's token list and the caller's
+   * deployments of this token, keyed by chain ID (`PoolStat.chainId`). Built in the same pass as `params` so the request's token list and the caller's
    * post-filter can't drift. Native entries allow their chain's native leg (both the chain-specific
    * native address and the zero address V4 keys native currency on) on their chain only — tighter
    * than the request, which ORs every native leg address across every chainId.
    */
-  allowedAddressesByChain: Map<string, Set<string>>
+  allowedAddressesByChain: Map<UniverseChainId, Set<string>>
 }
 
 /**
@@ -126,7 +125,7 @@ export function getMultichainTokenListPoolsParams({
   const chainIds: number[] = []
   const tokens: string[] = []
   const nativeTokens: string[] = []
-  const allowedAddressesByChain = new Map<string, Set<string>>()
+  const allowedAddressesByChain = new Map<UniverseChainId, Set<string>>()
   for (const entry of entries) {
     const tokenAddress = resolveEntryPoolTokenAddress(entry)
     // An entry that resolves to no address at all (empty address, or no wrapped-native deployment
@@ -141,8 +140,7 @@ export function getMultichainTokenListPoolsParams({
     if (!tokens.includes(tokenAddress)) {
       tokens.push(tokenAddress)
     }
-    const chain = toGraphQLChain(entry.chainId)
-    const allowed = allowedAddressesByChain.get(chain) ?? new Set<string>()
+    const allowed = allowedAddressesByChain.get(entry.chainId) ?? new Set<string>()
     allowed.add(normalizeTokenAddressForCache(tokenAddress))
     if (entry.isNative) {
       const nativeAddress = getNativePoolTokenAddress(entry.chainId)
@@ -155,7 +153,7 @@ export function getMultichainTokenListPoolsParams({
       // zero-address leg is a legitimate row, and the allowlist must stay a superset.
       allowed.add(normalizeTokenAddressForCache(DEFAULT_NATIVE_ADDRESS))
     }
-    allowedAddressesByChain.set(chain, allowed)
+    allowedAddressesByChain.set(entry.chainId, allowed)
   }
   if (chainIds.length === 0) {
     return undefined

@@ -3,7 +3,6 @@ import { ArrowRight } from '@universe/mycelium/icons/ArrowRight'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
-import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -80,7 +79,7 @@ export function TokenLaunchedBannerContent({
     }
     const tokenDetailsURL = getTokenDetailsURL({
       address: tokenDetailsAddress ?? auctionDetails.tokenAddress,
-      chain: toGraphQLChain(auctionDetails.chainId),
+      chainId: auctionDetails.chainId,
     })
     navigate(tokenDetailsURL)
   }, [auctionDetails, navigate, tokenDetailsAddress])

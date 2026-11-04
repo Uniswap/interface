@@ -109,7 +109,6 @@ export function createActivityMapByHash(activities: (Activity | undefined)[]): A
       // This should not happen as all activity parsers set a hash or orderHash value
       logger.warn('utils', 'createActivityMapByHash', 'Activity without hash skipped', {
         activityId: activity.id,
-        activityType: activity.type,
       })
       return acc
     }

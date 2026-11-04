@@ -1,10 +1,14 @@
 import { Flex, TouchableArea } from '@universe/mycelium'
-import React, { forwardRef, useState } from 'react'
+import { Eye } from '@universe/mycelium/icons/Eye'
+import { EyeOff } from '@universe/mycelium/icons/EyeOff'
+import React, { forwardRef, type ForwardRefExoticComponent, type RefAttributes, useState } from 'react'
 import { TextInput as NativeTextInput } from 'react-native'
-import { Eye, EyeOff } from 'ui/src/components/icons'
 import { TextInput, TextInputProps } from 'uniswap/src/components/input/TextInput'
 
-export const PasswordInput = forwardRef<NativeTextInput, TextInputProps>(function PasswordInputInner(props, ref) {
+export const PasswordInput: ForwardRefExoticComponent<TextInputProps & RefAttributes<NativeTextInput>> = forwardRef<
+  NativeTextInput,
+  TextInputProps
+>(function PasswordInputInner(props, ref) {
   const [showPassword, setShowPassword] = useState(false)
 
   const { value, placeholder, onChangeText, returnKeyType, onSubmitEditing, ...rest } = props

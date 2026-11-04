@@ -8,7 +8,6 @@ import {
   RenderOptions,
   RenderResult,
 } from '@testing-library/react'
-import { GraphQLApi } from '@universe/api'
 import React, { PropsWithChildren } from 'react'
 import { ExtensionState, extensionReducer } from 'src/store/extensionReducer'
 import { AppStore } from 'src/store/store'

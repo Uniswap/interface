@@ -43,7 +43,7 @@ exports[`SwapSkeleton.tsx > renders a skeleton 1`] = `
           <svg
             fill="none"
             stroke-width="8"
-            style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.35);"
+            style="width: 16px; height: 16px;"
             viewBox="0 0 24 24"
           >
             <path

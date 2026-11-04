@@ -17,11 +17,6 @@ import { honoDevServerPlugin } from './vite/honoDevServerPlugin'
 import { resolveEnvConfigs } from './vite/resolveEnvConfigs'
 import { cspMetaTagPlugin } from './vite/vite.plugins.js'
 
-// process.env.APP_ID is injected into the browser bundle via envDefines below and set
-// here on the Node side too — resolveEnvConfigs() returns an env object and only
-// mutates process.env for the keys it resolves, not APP_ID.
-process.env.APP_ID = 'web'
-
 // Get current file directory (ESM equivalent of __dirname)
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -166,7 +161,9 @@ export default defineConfig(({ mode, command, isPreview }) => {
   })
 
   // Log environment loading for CI verification
-  console.log(`ENV_LOADED: mode=${mode} AWS_API_ENDPOINT=${env.AWS_API_ENDPOINT ?? env.REACT_APP_AWS_API_ENDPOINT}`)
+  console.log(
+    `ENV_LOADED: mode=${mode} UNISWAP_GATEWAY_DNS=${env.UNISWAP_GATEWAY_DNS ?? env.REACT_APP_UNISWAP_GATEWAY_DNS}`,
+  )
 
   const isProduction = mode === 'production'
   const isVercelDeploy = DEPLOY_TARGET === 'vercel'
@@ -238,8 +235,6 @@ export default defineConfig(({ mode, command, isPreview }) => {
     'process.env.ENVIRONMENT': JSON.stringify(mode),
     'process.env.EXPO_OS': JSON.stringify('web'),
     'process.env.GIT_COMMIT_HASH': JSON.stringify(commitHash),
-    // Enable Tamagui's global z-index stacking to fix modal stacking issues
-    'process.env.TAMAGUI_STACK_Z_INDEX_GLOBAL': JSON.stringify('true'),
     // So getConfig().isVercelEnvironment is true in the client on Vercel; enables direct staging WS URL to match EGW
     ...(isVercelDeploy ? { 'process.env.VERCEL': JSON.stringify(process.env.VERCEL ?? '0') } : {}),
     ...envDefines,
@@ -484,7 +479,6 @@ export default defineConfig(({ mode, command, isPreview }) => {
       force: forceOptimize,
       entries: ['index.html'],
       include: [
-        'graphql',
         'expo-linear-gradient',
         'invariant',
         'react-native-web',

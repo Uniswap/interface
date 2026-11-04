@@ -1,12 +1,13 @@
-import { GraphQLApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
-import { getMultichainTokenEntry } from 'uniswap/src/components/MultichainTokenDetails/getMultichainTokenEntry'
+import { getRestMultichainTokenEntry } from 'uniswap/src/components/MultichainTokenDetails/getMultichainTokenEntry'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { describe, expect, it } from 'vitest'
 
-describe(getMultichainTokenEntry, () => {
-  it('normalizes a null native address to the canonical native entry', () => {
-    expect(getMultichainTokenEntry({ chain: GraphQLApi.Chain.Bnb, address: null }, [UniverseChainId.Bnb])).toEqual({
+describe(getRestMultichainTokenEntry, () => {
+  it('normalizes an empty native address to the canonical native entry', () => {
+    expect(
+      getRestMultichainTokenEntry({ chainIdKey: String(UniverseChainId.Bnb), address: '' }, [UniverseChainId.Bnb]),
+    ).toEqual({
       chainId: UniverseChainId.Bnb,
       address: getNativeAddress(UniverseChainId.Bnb),
       isNative: true,
@@ -15,11 +16,8 @@ describe(getMultichainTokenEntry, () => {
 
   it('normalizes an explicit native address to the canonical native entry', () => {
     expect(
-      getMultichainTokenEntry(
-        {
-          chain: GraphQLApi.Chain.Bnb,
-          address: getNativeAddress(UniverseChainId.Bnb),
-        },
+      getRestMultichainTokenEntry(
+        { chainIdKey: String(UniverseChainId.Bnb), address: getNativeAddress(UniverseChainId.Bnb) },
         [UniverseChainId.Bnb],
       ),
     ).toEqual({
@@ -32,7 +30,9 @@ describe(getMultichainTokenEntry, () => {
   it('preserves a contract token address', () => {
     const address = '0xb8c77482e45f1f44de1745f52c74426c631bdd52'
 
-    expect(getMultichainTokenEntry({ chain: GraphQLApi.Chain.Ethereum, address }, [UniverseChainId.Mainnet])).toEqual({
+    expect(
+      getRestMultichainTokenEntry({ chainIdKey: String(UniverseChainId.Mainnet), address }, [UniverseChainId.Mainnet]),
+    ).toEqual({
       chainId: UniverseChainId.Mainnet,
       address,
       isNative: false,
@@ -40,13 +40,13 @@ describe(getMultichainTokenEntry, () => {
   })
 
   it('excludes a feature-gated chain', () => {
-    expect(getMultichainTokenEntry({ chain: GraphQLApi.Chain.Bnb, address: null }, [UniverseChainId.Mainnet])).toBe(
-      undefined,
-    )
+    expect(
+      getRestMultichainTokenEntry({ chainIdKey: String(UniverseChainId.Bnb), address: '' }, [UniverseChainId.Mainnet]),
+    ).toBe(undefined)
   })
 
-  it('excludes an unsupported GraphQL chain', () => {
-    expect(getMultichainTokenEntry({ chain: 'UNKNOWN_CHAIN', address: null }, [UniverseChainId.Mainnet])).toBe(
+  it('excludes an unknown chain id', () => {
+    expect(getRestMultichainTokenEntry({ chainIdKey: '999999', address: '' }, [UniverseChainId.Mainnet])).toBe(
       undefined,
     )
   })

@@ -192,8 +192,8 @@ export type ButtonCompatPlatformWebStyleProps = ButtonCompatDimensionProps & {
    * leg splits the top-level prop on `getMaybeHexOrRgbColor`, so only its token half lands here; a
    * hex inside the `$platform-web` pool stays a plain background, which is also what legacy does
    * (the custom lane is a top-level-prop behaviour). WEB-ONLY, hence not in
-   * `ButtonCompatDimensionProps`: the native leg paints the prop through its own inline lane
-   * (token resolution there is the open INFRA-3230 escalation).
+   * `ButtonCompatDimensionProps`: the native leg handles the top-level prop itself (hex/rgb via
+   * `style`, tokens via the frame's state classes).
    */
   backgroundColor?: ColorValue
 }
@@ -273,6 +273,8 @@ export const DIMENSION_PROP_KEYS = Object.keys({
   // The `./visual-props` slice, intersected into the type above.
   opacity: true,
   flexShrink: true,
+  flexGrow: true,
+  overflow: true,
   shadowColor: true,
   shadowOpacity: true,
   shadowRadius: true,

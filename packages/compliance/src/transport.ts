@@ -1,5 +1,6 @@
 import { type Transport } from '@connectrpc/connect'
 import { getEntryGatewayUrl, getTransport, tryProvideSession } from '@universe/api'
+import { isComplianceBlockError } from '@universe/compliance/src/complianceBlock'
 import { isWebApp, REQUEST_SOURCE } from '@universe/environment'
 
 /**
@@ -20,6 +21,8 @@ export function createComplianceV2Transport(): Transport {
     // clients, so the request carries a live credential. The gateway resolves it to a
     // non-empty wrappedId, which is what enables per-session acknowledgement reasons.
     getSession: tryProvideSession,
+    // A compliance block is a 403 a new session can't clear: surface it instead of recovering.
+    isNonRecoverable: isComplianceBlockError,
     source: 'connect-rpc-compliance',
     options: {
       jsonOptions: { enumAsInteger: true },

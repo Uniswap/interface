@@ -1,7 +1,6 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { PoolsOrderBy, PoolTokenLogicalOperator } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { UniverseChainId } from '@universe/chains'
-import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import {
   getMultichainTokenListPoolsParams,
   getTokenListPoolsParams,
@@ -178,13 +177,13 @@ describe('getMultichainTokenListPoolsParams', () => {
     // Wrapped addresses first, then the native legs; CELO is already present as Celo's wrapped
     // address, so it isn't repeated, and no zero address is requested for these chains.
     expect(request?.params.filter?.tokenFilter?.tokens).toEqual([WPOL_ADDRESS, CELO_ADDRESS, ADDRESS_A, POL_ADDRESS])
-    expect(request?.allowedAddressesByChain.get(toGraphQLChain(UniverseChainId.Polygon))).toEqual(
+    expect(request?.allowedAddressesByChain.get(UniverseChainId.Polygon)).toEqual(
       new Set([WPOL_ADDRESS.toLowerCase(), POL_ADDRESS, ZERO_ADDRESS]),
     )
-    expect(request?.allowedAddressesByChain.get(toGraphQLChain(UniverseChainId.Celo))).toEqual(
+    expect(request?.allowedAddressesByChain.get(UniverseChainId.Celo)).toEqual(
       new Set([CELO_ADDRESS.toLowerCase(), ZERO_ADDRESS]),
     )
-    expect(request?.allowedAddressesByChain.get(toGraphQLChain(UniverseChainId.Mainnet))).toEqual(new Set([ADDRESS_A]))
+    expect(request?.allowedAddressesByChain.get(UniverseChainId.Mainnet)).toEqual(new Set([ADDRESS_A]))
   })
 
   it('builds the post-filter allowlist in the same pass, scoping the zero address to native chains only', () => {
@@ -199,11 +198,8 @@ describe('getMultichainTokenListPoolsParams', () => {
     expect(request?.allowedAddressesByChain).toEqual(
       new Map([
         // Allowlist entries are cache-normalized (lowercased), unlike the checksummed request tokens.
-        [
-          toGraphQLChain(UniverseChainId.Mainnet),
-          new Set(['0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2', ZERO_ADDRESS]),
-        ],
-        [toGraphQLChain(UniverseChainId.Base), new Set([ADDRESS_B])],
+        [UniverseChainId.Mainnet, new Set(['0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2', ZERO_ADDRESS])],
+        [UniverseChainId.Base, new Set([ADDRESS_B])],
       ]),
     )
   })

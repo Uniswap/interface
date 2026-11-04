@@ -9,7 +9,9 @@ import {
   type UniversalListRef,
   type UniversalListScrollEvent,
   type UniversalListStyle,
+  spacing,
 } from '@universe/mycelium'
+import { NoTokens } from '@universe/mycelium/icons/NoTokens'
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, StyleSheet, useWindowDimensions } from 'react-native'
@@ -42,8 +44,6 @@ import { useExploreTokenItems } from 'src/components/explore/ExploreSections/use
 import { FavoritesSortingStoreProvider, useIsSortingFavorites } from 'src/components/explore/favoritesSortingStore'
 import { SortButton } from 'src/components/explore/SortButton'
 import { TokenItem } from 'src/components/explore/TokenItem'
-import { NoTokens } from 'ui/src/components/icons'
-import { spacing } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { useMultichainExploreMetricsAnalytics } from 'uniswap/src/features/explore/useMultichainExploreMetricsAnalytics'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'

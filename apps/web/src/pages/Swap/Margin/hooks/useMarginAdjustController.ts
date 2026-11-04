@@ -7,8 +7,11 @@ import { useMarginFormStore } from 'uniswap/src/features/transactions/margin/sto
 import type { MarginPaymentToken, MarginManageAction } from 'uniswap/src/features/transactions/margin/types'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
+import { useAccount } from '~/connection/hooks/useAccount'
 import { type MarginMarket } from '~/constants/margin'
-import { useAccount } from '~/hooks/useAccount'
+import { positionLeverage } from '~/features/margin/utils/marginAdjustPositionMath'
+import { getMarketDefaultPaymentToken } from '~/features/margin/utils/marginCurrencies'
+import { isMarginActivePosition, marginPositionSubId } from '~/features/margin/utils/marginPositionRow'
 import { useExecuteMarginPlan } from '~/pages/Swap/Margin/hooks/useExecuteMarginPlan'
 import { useIsPlanInFlight } from '~/pages/Swap/Margin/hooks/useIsPlanInFlight'
 import { useMarginPaymentTokenBalance } from '~/pages/Swap/Margin/hooks/useMarginPaymentTokenBalance'
@@ -16,12 +19,10 @@ import { type AdjustFunding, marginQuoteKey, useMarginQuote } from '~/pages/Swap
 import {
   type AdjustLeverageMode,
   getAdjustConfirmDisabled,
-  floorTo2,
   getAdjustTargetLeverageX18,
   hasAdjustChange,
   visibleMatchesSubmitted,
 } from '~/pages/Swap/Margin/marginAdjustPositionGate'
-import { positionLeverage } from '~/pages/Swap/Margin/marginAdjustPositionMath'
 import {
   buildAdjustCreateRequest,
   computeFundingRisk,
@@ -30,9 +31,7 @@ import {
   computeIsEditStale,
   computeShowInitialSkeleton,
 } from '~/pages/Swap/Margin/marginAdjustPositionModalHelpers'
-import { getMarketDefaultPaymentToken } from '~/pages/Swap/Margin/marginCurrencies'
 import { getMarginLeverageCap, MIN_LEVERAGE } from '~/pages/Swap/Margin/marginOpenButtonGate'
-import { isMarginActivePosition, marginPositionSubId } from '~/pages/Swap/Margin/marginPositionRow'
 import { getMarginQuoteErrorMessage, type MarginQuoteErrorResult } from '~/pages/Swap/Margin/marginQuoteError'
 
 // keepPreviousData bridges a debounced edit but is DROPPED on error (RQ v5) — quote reverts to undefined
@@ -109,8 +108,8 @@ export function marginLeverageCaps({ market }: { market: MarginMarket }): {
   return { venueCap, cap: Math.max(venueCap ?? MIN_LEVERAGE, MIN_LEVERAGE) }
 }
 
-// Quote → gate → submit for every ADJUST-intent modal (add margin, withdraw, change leverage, and the
-// unified advanced modal). Callers own only their own input: the funding delta and the leverage mode.
+// Quote → gate → submit for every ADJUST-intent modal (add margin, withdraw, change leverage). Callers
+// own only their own input: the funding delta and the leverage mode.
 //
 // Takes `mode`, NOT a pre-computed targetLeverageX18. The two are equivalent only because the target
 // is gated on hasAdjustChange — without that gate a fresh modal fires a no-op quote the server rejects
@@ -163,41 +162,11 @@ export function useMarginAdjustController({
   // "before" figure comes off the position directly, which reports the real one.
   const knownLeverage = isMarginActivePosition(position) ? positionLeverage(position) : undefined
   const currentLeverage = knownLeverage ?? 1
-  // Sending no target holds DEBT constant, which is what "add margin, leave my leverage" means when
-  // no leverage can be stated. Two positions cannot state one:
-  //  - equity at or below zero has no finite leverage, and a `locked` target of 1 becomes a full
-  //    deleverage the backend refuses outright, leaving add-margin no way to succeed;
-  //  - leverage drifted above the venue's published ceiling (an adverse move, or a lowered cap): the
-  //    venue can no longer honour "hold my leverage", so holding DEBT instead is both the closest
-  //    honest reading of the request and the direction that walks leverage back toward the cap.
-  //    (The slider does NOT clamp a `locked` readout — it shows the true figure, which is why this
-  //    pre-empt is what keeps the request from wiring a leverage the venue has stopped offering.)
-  // Read off `venueCap`, never the floored `cap` — a market publishing NO ceiling floors to
-  // MIN_LEVERAGE, and treating that as authoritative would degrade every ordinary position to drift.
-  // WITHDRAWALS are excluded because the fallback inverts there: holding debt while equity leaves
-  // RAISES leverage, so dropping the target would push an over-cap position further over rather than
-  // back. A locked withdraw keeps its target and lets the backend refuse it loudly.
-  // Compared on the FLOORED value, because that is what the request wires: a position at cap + 0.005
-  // floors to exactly the cap, which the venue accepts, so measuring the raw figure would degrade lock
-  // to a debt-hold for anything inside (cap, cap + 0.01).
-  const isOverVenueCap =
-    venueCap !== undefined && knownLeverage !== undefined && Number(floorTo2(knownLeverage)) > venueCap
-  // The withdraw carve-out covers the OVER-CAP reason only. Dropping an over-cap target holds debt
-  // instead, which on a withdraw RAISES leverage — the opposite of what the drop is for — so a locked
-  // withdraw keeps its target and lets the backend refuse it loudly. It cannot cover the no-leverage
-  // reason: `currentLeverage` falls back to 1 there, and pinning that wires a full deleverage nothing
-  // on the sheet states. A blank wire `leverage` reaches this with positive equity and an armed CTA.
-  const isWithdraw = funding.kind === 'withdraw'
-  // Named for the one mode it gates: `explicit` carries the user's own target and `drift` sends none,
-  // so both pass through unconditionally — only a LOCKED adjust has to pin the current leverage, and
-  // only that pin needs a leverage worth stating.
-  const canPinLockedTarget = mode.kind !== 'locked' || (knownLeverage !== undefined && (isWithdraw || !isOverVenueCap))
   // One binding, two readers (the target below and the confirm gate further down). Called twice, an
   // argument change at one site would silently desync the leverage the request wires from the gate that
   // decides whether anything changed at all.
   const hasChange = hasAdjustChange({ funding, mode, currentLeverage })
-  const targetLeverageX18 =
-    hasChange && canPinLockedTarget ? getAdjustTargetLeverageX18({ mode, currentLeverage }) : undefined
+  const targetLeverageX18 = hasChange ? getAdjustTargetLeverageX18({ mode }) : undefined
 
   const { quote, quoteError, isQuoteLoading, isDebouncing, isPlaceholderData, debouncedKey } = useMarginQuote({
     position,

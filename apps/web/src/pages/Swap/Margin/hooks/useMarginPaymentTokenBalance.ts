@@ -5,7 +5,7 @@ import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCur
 import type { MarginPaymentToken } from 'uniswap/src/features/transactions/margin/types'
 import { currencyId, normalizeCurrencyIdForMapLookup } from 'uniswap/src/utils/currencyId'
 import { MARGIN_PAYMENT_SOURCE_CHAIN_IDS } from '~/constants/margin'
-import { getPaymentCurrency, getSpendablePaymentBalance } from '~/pages/Swap/Margin/marginCurrencies'
+import { getPaymentCurrency, getSpendablePaymentBalance } from '~/features/margin/utils/marginCurrencies'
 
 // Spendable base-unit balance of a margin payment token across every supported source chain. Mirrors
 // useDerivedMarginInfo's balance read (prefers quantityRaw for base-unit precision; any native payment

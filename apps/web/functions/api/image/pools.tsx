@@ -1,6 +1,5 @@
 /* oxlint-disable react/forbid-elements -- ignoring for the whole file */
 
-import { ProtocolVersion } from '@universe/api/src/clients/graphql/__generated__/schema-types'
 import { ImageResponse } from '@vercel/og'
 import { IMAGE_DATA_FETCH_TIMEOUT_MS, WATERMARK_URL } from 'functions/constants'
 import { Data, PositionStatus } from 'functions/utils/cache'
@@ -295,7 +294,7 @@ export async function poolImageHandler(c: Context) {
       data,
       networkName,
       c,
-      versionBadge: data.poolData?.protocolVersion === ProtocolVersion.V2 ? data.poolData.protocolVersion : undefined,
+      versionBadge: data.poolData?.protocolVersion === 'V2' ? data.poolData.protocolVersion : undefined,
     })
   } catch (error: any) {
     return new Response(error.message || error.toString(), { status: 500 })

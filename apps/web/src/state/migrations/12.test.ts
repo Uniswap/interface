@@ -1,4 +1,3 @@
-import { GraphQLApi } from '@universe/api'
 import { createMigrate } from 'redux-persist'
 import { createThrowingProxy } from 'utilities/src/test/utils'
 import { vi } from 'vitest'
@@ -73,7 +72,7 @@ const oldTransactionState: OldTransactionState = {
 const newTransactionState: NewTransactionState = {
   1: {
     '0x0': {
-      status: GraphQLApi.TransactionStatus.Confirmed,
+      status: 'CONFIRMED',
       hash: '0x0',
       addedTime: 0,
       from: '0x0',
@@ -81,7 +80,7 @@ const newTransactionState: NewTransactionState = {
       confirmedTime: 5,
     },
     '0x1': {
-      status: GraphQLApi.TransactionStatus.Pending,
+      status: 'PENDING',
       hash: '0x01',
       addedTime: 0,
       from: '0x0',
@@ -90,7 +89,7 @@ const newTransactionState: NewTransactionState = {
       deadline: 10,
     },
     '0x2': {
-      status: GraphQLApi.TransactionStatus.Failed,
+      status: 'FAILED',
       hash: '0x02',
       addedTime: 0,
       from: '0x0',

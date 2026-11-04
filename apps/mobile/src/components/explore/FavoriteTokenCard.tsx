@@ -1,6 +1,6 @@
 import { useIsFocused } from '@react-navigation/core'
 import { isIOS } from '@universe/environment'
-import { AnimatedTouchableArea, borderRadii, Flex, imageSizes, Text } from '@universe/mycelium'
+import { AnimatedTouchableArea, borderRadii, Flex, imageSizes, Text, fonts } from '@universe/mycelium'
 import { useIsDarkMode, useShadowPropsShort } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
 import React, { memo, useMemo } from 'react'
@@ -11,9 +11,6 @@ import { useExploreTokenContextMenu } from 'src/components/explore/hooks'
 import RemoveButton from 'src/components/explore/RemoveButton'
 import { Loader } from 'src/components/loading/loaders'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
-// fonts stays on ui/src: its values are device-adaptive (adjustedSize) while mycelium's are
-// static, and the loaders below must size to the exact rendered $heading3/$subheading2 text.
-import { fonts } from 'ui/src/theme'
 import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { useContextMenuPressGate } from 'uniswap/src/components/menus/hooks/useContextMenuPressGate'

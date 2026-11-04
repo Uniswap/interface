@@ -139,5 +139,7 @@ skills-lock.json
 
 # Casebook Testlio exports are generated on demand, never committed
 packages/casebook/*/exports/testlio_*_manual_import.csv
+# Catalog-update review checklists: committed only on companion branches (the companion job force-adds them)
+packages/casebook/*/updates/
 # Casebook's local git-churn cache (--precompute-fragility); rebuilt on demand
 .casebook-fragility-cache.json

@@ -3,11 +3,6 @@ import react from '@vitejs/plugin-react'
 import { withRnPrimitives } from 'vitest-presets/vitest/rn-primitives.js'
 import { defineConfig } from 'vitest/config'
 
-// tokens.parity.test.ts compares Mycelium token constants against ui/src/theme.
-// The ui theme modules are resolved exactly as the web app sees them (web
-// platform splits + APP_ID=web); aliases mirror packages/tailwind/vitest.config.ts
-// (the Tamagui↔Tailwind parity harness), reduced to what the theme token
-// modules pull in.
 const config = defineConfig({
   plugins: [react()],
   define: {
@@ -36,7 +31,6 @@ const config = defineConfig({
     // extensionless .mjs/.mts imports keep resolving.
     extensions: ['.web.ts', '.web.tsx', '.mts', '.ts', '.tsx', '.mjs', '.js', '.jsx', '.json'],
     alias: {
-      'ui/src': path.resolve(__dirname, '../ui/src'),
       'utilities/src': path.resolve(__dirname, '../utilities/src'),
     },
   },
@@ -48,4 +42,4 @@ const config = defineConfig({
 // transform + ESM-leg alias + `server.deps.inline`). 'native' leg: this wiring
 // exists for a `.native.tsx` suite, and portal publishes one
 // platform-agnostic build either way.
-export default withRnPrimitives(config, 'native')
+export default withRnPrimitives(config)

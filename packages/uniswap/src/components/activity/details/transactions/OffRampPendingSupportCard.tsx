@@ -1,7 +1,7 @@
 import { InlineCard, Text, TouchableArea } from '@universe/mycelium'
+import { ArrowUpRight } from '@universe/mycelium/icons/ArrowUpRight'
+import { MessageQuestion } from '@universe/mycelium/icons/MessageQuestion'
 import { useTranslation } from 'react-i18next'
-import { ArrowUpRight } from 'ui/src/components/icons/ArrowUpRight'
-import { MessageQuestion } from 'ui/src/components/icons/MessageQuestion'
 import { openOfframpPendingSupportLink } from 'uniswap/src/utils/linking'
 
 export function OffRampPendingSupportCard(): JSX.Element {

@@ -17,10 +17,9 @@ export async function tokenImageHandler(c: Context) {
     const origin = new URL(c.req.url).origin
 
     const cacheUrl = origin + '/tokens/' + networkName + '/' + tokenAddress
-    // Cap the upstream Apollo query (see metaTagInjector for full context):
-    // a hung observable on a stateless worker isolate deadlocks the request
-    // and CF kills it as Error 1101 → 500 to the user. Falling through to
-    // 404 means the page (or upstream caller's fallback path) renders.
+    // Cap the upstream lookup (see IMAGE_DATA_FETCH_TIMEOUT_MS): falling
+    // through to 404 means the page (or upstream caller's fallback path)
+    // renders instead of the request hanging.
     const data = await withTimeout(
       getRequest({
         url: cacheUrl,

@@ -1,7 +1,7 @@
-import { Flex } from '@universe/mycelium'
+import { isWebPlatform } from '@universe/environment'
+import { Button, Flex, validColor } from '@universe/mycelium'
+import type { CSSProperties } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button } from 'ui/src'
-import { validColor } from 'ui/src/theme'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
@@ -22,6 +22,8 @@ export function BridgeTokenButton({
   const { t } = useTranslation()
   const { foreground } = useNetworkColors(outputToken.currency.chainId)
   const primaryColor = validColor(foreground)
+  // The hover border is the runtime network color, so it rides a custom property (web only: RN has no CSS vars or hover).
+  const hoverBorderStyle = isWebPlatform ? ({ '--bridge-hover-border': primaryColor } as CSSProperties) : undefined
 
   const { navigateToSwapFlow } = useUniswapContext()
 
@@ -45,9 +47,8 @@ export function BridgeTokenButton({
         <Button
           backgroundColor="$accent1"
           borderColor="$transparent"
-          hoverStyle={{
-            borderColor: primaryColor,
-          }}
+          className="hover:border-(color:--bridge-hover-border)"
+          style={hoverBorderStyle}
           size="medium"
           emphasis="text-only"
           primary-color={primaryColor}

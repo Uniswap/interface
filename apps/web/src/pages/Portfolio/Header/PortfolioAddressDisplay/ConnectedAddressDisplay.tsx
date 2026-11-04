@@ -1,9 +1,9 @@
 import { Platform } from '@universe/chains'
 import { Flex, iconSizes } from '@universe/mycelium'
 import { useMemo } from 'react'
-import { MultiBlockchainAddressDisplay } from '~/components/AccountDetails/MultiBlockchainAddressDisplay'
-import { StatusIcon } from '~/components/StatusIcon'
 import { HEADER_TRANSITION } from '~/components/StickyCollapsibleHeader/constants'
+import { MultiBlockchainAddressDisplay } from '~/features/wallet/components/AccountDetails/MultiBlockchainAddressDisplay'
+import { StatusIcon } from '~/features/wallet/components/StatusIcon'
 import { useResolvedAddresses } from '~/pages/Portfolio/hooks/useResolvedAddresses'
 
 interface ConnectedAddressDisplayProps {

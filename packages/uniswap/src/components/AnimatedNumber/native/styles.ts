@@ -1,6 +1,6 @@
+import { fonts } from '@universe/mycelium'
 import { Platform } from 'react-native'
 import type { TextStyle } from 'react-native'
-import { fonts } from 'ui/src/theme'
 
 export const AnimatedFontStyles = {
   fontStyle: {

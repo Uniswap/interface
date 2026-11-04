@@ -8,14 +8,13 @@
  * the result to a build-time class map that the native runtime SILENTLY skips
  * on a miss, so a computed class string is invisible to the scanner and
  * disappears without an error (INFRA-3217). `CHECKBOX_COMPAT_CLASS_UNIVERSE`
- * below enumerates the complete emittable set; the parity suites compile it
- * through the real Tailwind engine (web) and the real uniwind store (native,
- * both themes) so a miss fails a test instead of shipping.
+ * below enumerates the complete emittable set, so `compile.test.ts` can check
+ * that every emitted class is a static literal.
  *
  * Native hazards this file is written against (all measured on uniwind 1.7.0):
  * - No `hover:` / `group-hover:` — they do not resolve on native. Hover is
- *   React state on both legs, which is also what legacy does
- *   (`Checkbox.tsx:99-100` are DOM mouse handlers) and what the shipped
+ *   React state on both legs, which is also what legacy did
+ *   (DOM mouse handlers) and what the shipped
  *   `SegmentedControl.native.tsx` does.
  * - No `md:` / `max-md:` / `media-*` — this component has no responsive
  *   behavior, so no breakpoint variant is emitted at all.
@@ -25,7 +24,7 @@
  *   `#000000` (the INFRA-2966 black-ring QA bug).
  *
  * Color mapping notes:
- * - Legacy's `default` variant accent is `$accent3` (`Checkbox.tsx:145`).
+ * - Legacy's `default` variant accent is `$accent3`.
  *   `@universe/tailwind` makes `accent3` a deprecated ALIAS of `neutral1`
  *   (`css/variables.css:72` `--accent3: var(--neutral1)`) and — critically —
  *   the `accent3` utilities are **web-only, absent from `native.css`** by
@@ -33,11 +32,6 @@
  *   `neutral1` / `neutral1-hovered` directly: value-identical on web, and the
  *   only form that resolves on native. `bg-accent3` would be a silent native
  *   miss.
- * - That alias carries a KNOWN palette drift versus legacy Tamagui, already
- *   pinned by ButtonCompat (`ButtonCompat.tsx:19-22`): legacy `$accent3`
- *   paints `#222222` in light mode while `neutral1` resolves `#131313`. Dark
- *   mode matches (`#ffffff` both sides). Not fixed here — it is a token-owner
- *   question, and pinned as an expected diff by the parity suites.
  */
 import { cn } from '../cn'
 import { lookupToken } from '../compat/tokens'
@@ -64,7 +58,7 @@ export const BOX_SIZE_CLASS_BY_TOKEN: Readonly<Record<CheckboxCompatSizeToken, s
   '$icon.20': 'h-[20px] w-[20px]',
 }
 
-/** `n - 2` — 14 / 16 / 18px, the legacy Indicator square (`Checkbox.tsx:109-111`). */
+/** `n - 2` — 14 / 16 / 18px, the legacy Indicator square. */
 export const INDICATOR_SIZE_CLASS_BY_TOKEN: Readonly<Record<CheckboxCompatSizeToken, string>> = {
   '$icon.16': 'h-[14px] w-[14px]',
   '$icon.18': 'h-[16px] w-[16px]',
@@ -74,7 +68,7 @@ export const INDICATOR_SIZE_CLASS_BY_TOKEN: Readonly<Record<CheckboxCompatSizeTo
 /* ------------------------------ color helpers ------------------------------ */
 
 /**
- * Legacy `getAccentColor` (`Checkbox.tsx:141-146`) as border-color classes:
+ * Legacy `getAccentColor` as border-color classes:
  * `branded` → `$accent1`/`$accent1Hovered`, `default` → `$accent3`/
  * `$accent3Hovered` expressed through their `neutral1` aliases (see the file
  * header for why the alias, not `accent3`, is the correct form).
@@ -244,9 +238,9 @@ export interface CheckboxFrameState {
 }
 
 /**
- * Legacy outer focus ring (`Checkbox.tsx:65-74`): `$rounded6`, `$spacing1`
+ * Legacy outer focus ring: `$rounded6`, `$spacing1`
  * border, `round(n*1.3)` square, centered, and a border color from
- * `getFocusedRingColor` (`:148-166`) — transparent unless focused; `branded` +
+ * `getFocusedRingColor` — transparent unless focused; `branded` +
  * selected → the accent, otherwise `$neutral3`.
  *
  * The transparent-unless-focused ring is exactly the shape
@@ -276,11 +270,11 @@ function focusRingBorderClass({ variant, focused, checked, hovered }: CheckboxFr
 }
 
 /**
- * Legacy checkbox button (`Checkbox.tsx:75-102`): unstyled frame,
+ * Legacy checkbox button: unstyled frame,
  * `backgroundColor: transparent`, `$rounded4`, `$spacing2` (2px) border,
  * `cursor: pointer`, centered, `pointerEvents` gated on `disabled`, and a
  * border color of `disabled ? $neutral3 : checked ? accent : $neutral2`. The
- * legacy `hoverStyle` (`:90-92`) resolves to the SAME values as the base
+ * legacy `hoverStyle` resolved to the SAME values as the base
  * border color, so hover only changes the accent through `getAccentColor` —
  * which is why hover is a state input here rather than a `hover:` variant.
  */
@@ -293,8 +287,7 @@ export const BOX_BASE_CLASSES =
  * inject `#000000` on native.
  *
  * A caller-supplied `borderColor` deliberately does NOT reach this function.
- * Legacy spreads `{...rest}` FIRST and then re-declares `borderColor`
- * (`Checkbox.tsx:76` then `:81`), so the derived value wins and the caller's
+ * Legacy spreads `{...rest}` FIRST and then re-declares `borderColor`, so the derived value wins and the caller's
  * value is dead — see `CheckboxCompatProps.borderColor`.
  */
 export function checkboxBoxClassName(state: CheckboxFrameState): string {
@@ -318,7 +311,7 @@ function boxBorderClass({ disabled, checked, variant, hovered }: CheckboxFrameSt
 }
 
 /**
- * Legacy `Checkbox.Indicator` (`Checkbox.tsx:104-112`): a centered
+ * Legacy `Checkbox.Indicator`: a centered
  * `CheckSizePressed` square filled with `disabled ? $neutral3 : accent`.
  */
 export const INDICATOR_BASE_CLASSES = 'flex flex-col items-center justify-center'
@@ -332,7 +325,7 @@ export function checkboxIndicatorClassName(state: CheckboxFrameState): string {
 }
 
 /**
- * Legacy checkmark color (`Checkbox.tsx:114`): `disabled ? $neutral2 :
+ * Legacy checkmark color: `disabled ? $neutral2 :
  * variant === 'branded' ? 'white' : $surface1`. The web leg feeds this to the
  * mycelium `Check` icon's `color` prop (the icon factory's inline-style
  * channel); the native leg paints the bordered-View glyph with the class form.
@@ -364,7 +357,7 @@ export function checkGlyphClassName(state: Pick<CheckboxFrameState, 'disabled' |
 }
 
 /**
- * Legacy unselected hover dot (`Checkbox.tsx:122-132`): an absolutely
+ * Legacy unselected hover dot: an absolutely
  * positioned `$neutral2` circle. Its diameter is a proportional derivation of
  * the glyph box (`round(n*0.2)` / `round(n*0.3)`), so it rides the inline lane.
  */
@@ -372,10 +365,10 @@ export const HOVER_DOT_CLASSES = 'absolute rounded-full bg-neutral2'
 
 /* --------------------------- labeled-checkbox row -------------------------- */
 
-/** Legacy `TouchableArea` wrapper (`LabeledCheckbox.tsx:60`) — unstyled, pressable. */
+/** Legacy `TouchableArea` wrapper — unstyled, pressable. */
 export const LABELED_CONTAINER_CLASSES = 'cursor-pointer'
 
-/** Legacy `<Flex row alignItems="center" gap px py>` (`LabeledCheckbox.tsx:61`). */
+/** Legacy `<Flex row alignItems="center" gap px py>`. */
 export const LABELED_ROW_BASE_CLASSES = 'flex flex-row items-center'
 
 export interface LabeledRowOptions {
@@ -410,11 +403,11 @@ export function labeledRowStyle({ gap, px, py }: LabeledRowOptions): Record<stri
   return style
 }
 
-/** Legacy `<Flex grow shrink>` label wrapper (`LabeledCheckbox.tsx:64`). */
+/** Legacy `<Flex grow shrink>` label wrapper. */
 export const LABELED_TEXT_WRAPPER_CLASSES = 'flex flex-col grow shrink'
 
 /**
- * Legacy string-`text` wrapping (`LabeledCheckbox.tsx:50-52`):
+ * Legacy string-`text` wrapping:
  * `<Text variant="subheading2">`, whose default color is `$neutral1`.
  *
  * The legacy `$short={{ variant: 'buttonLabel4' }}` height-media downgrade is

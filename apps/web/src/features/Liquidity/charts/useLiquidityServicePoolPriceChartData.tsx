@@ -54,8 +54,6 @@ export function useLiquidityServicePoolPriceChartData({
   )
 
   return useMemo(() => {
-    // GraphQL's token0Price/token1Price are the inverse of the like-named LS fields: the default
-    // (non-inverted) chart uses GraphQL token1Price, which equals LS priceToken0InToken1.
     const entries =
       data?.points.map((point) =>
         buildFlatEntry(
@@ -66,7 +64,7 @@ export function useLiquidityServicePoolPriceChartData({
 
     // Append the live spot price so every timeframe ends at the current price, not a stale trailing candle.
     // `keepLatest` exempts that trailing entry from the outlier filter (it is the one we overwrite with the
-    // live price), matching the GraphQL path so both data sources behave identically.
+    // live price).
     const filteredEntries = appendLiveSpotPriceEntry({
       entries: removeOutliers(entries, { keepLatest: Boolean(currentPrice) }),
       currentPrice,

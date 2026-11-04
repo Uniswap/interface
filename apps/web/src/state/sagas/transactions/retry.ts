@@ -1,7 +1,7 @@
 import { TransactionStepFailedError } from 'uniswap/src/features/transactions/errors'
 import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { useEvent } from 'utilities/src/react/hooks'
-import { useSetOverrideOneClickSwapFlag } from '~/pages/Swap/Swap/settings/OneClickSwap'
+import { useSetOverrideOneClickSwapFlag } from '~/state/oneClickSwap/hooks'
 
 type OnPressRetryFn = () => void
 

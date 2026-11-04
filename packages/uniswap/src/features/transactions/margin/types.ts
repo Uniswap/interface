@@ -11,10 +11,10 @@ export type MarginPairKey = string
 // package declares the type only.
 export type MarginMarketKey = string
 
-// The five position-management actions the row overflow menu and the drawer icon row both expose.
+// The four position-management actions the row overflow menu and the drawer icon row both expose.
 // The user's action, not the wire shape: each one resolves to an action key through
 // resolveMarginActionKey, and the execution store carries it through to the completion toast.
-export type MarginManageAction = 'add' | 'withdraw' | 'leverage' | 'adjust' | 'close'
+export type MarginManageAction = 'add' | 'withdraw' | 'leverage' | 'close'
 
 // Lending venue backing a margin market. Rides the wire and the FE market key so a pair's several
 // venue rows never collide. Closed to the venues this build knows: a wire venue outside the union

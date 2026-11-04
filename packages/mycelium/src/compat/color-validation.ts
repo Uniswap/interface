@@ -13,7 +13,7 @@
  * independent literals.
  */
 import { isProdEnv } from '@universe/environment'
-import { THEME_COLOR_NAMES } from '../theme-hooks-compat/theme-colors.generated'
+import { THEME_COLOR_NAMES } from '../theme-hooks-compat/theme-colors'
 import type { ColorValue } from './props'
 import type { SporeColorToken } from './tokens'
 

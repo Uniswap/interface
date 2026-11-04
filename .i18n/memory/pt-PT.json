@@ -14,8 +14,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Apple",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -31,8 +31,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Google",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -48,8 +48,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Token 1",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -65,8 +65,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Token 2",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -82,8 +82,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "{{amount}} UNI",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -99,8 +99,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "~{{minutes}}min {{seconds}}s",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -116,8 +116,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "~{{minutes}}min",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -133,8 +133,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "~{{seconds}}s",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -149,21 +149,9 @@
         "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Bridge",
-        "status": "finalized",
-        "judgeIssues": [
-          {
-            "category": "accuracy",
-            "severity": "major",
-            "detail": "The translation leaks internal annotation text \"[uncertain: bridge]\" into the UI string — content not present in the source would be shown to users.",
-            "evidence": {
-              "sourceSpan": "Bridge",
-              "targetSpan": "Bridge [uncertain: bridge]"
-            },
-            "alternative": "Bridge"
-          }
-        ],
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-24T23-31-37Z",
+        "approvedAt": "2026-10-24T23:31:37.655Z",
         "approvedBy": "agent"
       }
     ],
@@ -366,8 +354,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Beta",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -383,8 +371,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "OK",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -400,8 +388,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "ETFs",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -417,8 +405,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Explorer",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -434,8 +422,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Permit",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -451,8 +439,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Pool",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -468,8 +456,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Pools",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -536,8 +524,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Uniswap v2",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -553,8 +541,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Uniswap v3",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -570,8 +558,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Uniswap v4",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -587,8 +575,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Tokens",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -604,8 +592,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Token A",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -621,8 +609,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Token B",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -638,8 +626,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Total",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -655,8 +643,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Volume",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -672,8 +660,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Euro",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -1032,6 +1020,23 @@
       }
     ],
     [
+      "pt-PT:i18next-json:explore.collections.volume1d",
+      {
+        "unitId": "explore.collections.volume1d",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "eb34a9fef3662ca5eae07f6d83baf6128d3823051b6ffed5591e27b8dcd52448",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "{{volume}} vol. 1 dia",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-26T18-34-46Z",
+        "approvedAt": "2026-10-26T18:34:46.176Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "pt-PT:i18next-json:explore.earn.apy",
       {
         "unitId": "explore.earn.apy",
@@ -1043,8 +1048,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "{{apy}} APY",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -1060,8 +1065,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Earn",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -1077,8 +1082,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "{{apy}} APY",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -1094,8 +1099,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Volume",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -1111,8 +1116,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Venmo",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -1128,8 +1133,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Tokens",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -1145,8 +1150,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "API",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -1222,8 +1227,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Launchpad",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -1239,8 +1244,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "APR",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -1256,8 +1261,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Pool",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -1885,8 +1890,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "PnL {{value}} ({{pct}})",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -1970,8 +1975,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Liq.",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -1987,8 +1992,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Liq. {{distance}}",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -1999,13 +2004,25 @@
         "providerId": "i18next-json",
         "locale": "pt-PT",
         "domain": "product-ui",
-        "sourceHash": "a62a7c03d828b67d0cfafe4ec99e0d1999f4e8961c6ff07ae1960e76ec2a0acf",
+        "sourceHash": "2649e082d9a2ba377ac918877028c3f1885e2e9ab926b216943aaf06064b92a1",
         "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
-        "translation": "Nova entrada",
-        "status": "clean",
-        "agentRunId": "pt-PT-2026-10-13T21-30-15Z",
-        "approvedAt": "2026-10-13T21:30:15.652Z",
+        "translation": "Entrada",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "accuracy",
+            "severity": "minor",
+            "detail": "Addition: 'Nova' (new) is not in the source. The chart label is just 'Entry'; the shipped sibling 'Entry ({{leverage}})' → 'Entrada ({{leverage}})' confirms the plain rendering.",
+            "evidence": {
+              "sourceSpan": "Entry",
+              "targetSpan": "Nova entrada"
+            },
+            "alternative": "Entrada"
+          }
+        ],
+        "agentRunId": "pt-PT-2026-10-24T23-31-37Z",
+        "approvedAt": "2026-10-24T23:31:37.655Z",
         "approvedBy": "agent"
       }
     ],
@@ -2057,6 +2074,74 @@
         "status": "clean",
         "agentRunId": "pt-PT-2026-10-13T21-30-15Z",
         "approvedAt": "2026-10-13T21:30:15.652Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "pt-PT:i18next-json:margin.chart.ohlc.close",
+      {
+        "unitId": "margin.chart.ohlc.close",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "6b23c0d5f35d1b11f9b683f0b0a617355deb11277d91ae091d399c655b87940d",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "C",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "pt-PT:i18next-json:margin.chart.ohlc.high",
+      {
+        "unitId": "margin.chart.ohlc.high",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "44bd7ae60f478fae1061e11a7739f4b94d1daf917982d33b6fc8a01a63f89c21",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "H",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "pt-PT:i18next-json:margin.chart.ohlc.low",
+      {
+        "unitId": "margin.chart.ohlc.low",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "72dfcfb0c470ac255cde83fb8fe38de8a128188e03ea5ba5b2a93adbea1062fa",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "L",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "pt-PT:i18next-json:margin.chart.ohlc.open",
+      {
+        "unitId": "margin.chart.ohlc.open",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "c4694f2e93d5c4e7d51f9c5deb75e6cc8be5e1114178c6a45b6fc2c566a0aa8c",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "O",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -2310,8 +2395,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Volume",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -2758,6 +2843,23 @@
       }
     ],
     [
+      "pt-PT:i18next-json:margin.error.adjust.fundingSwapUnsupported",
+      {
+        "unitId": "margin.error.adjust.fundingSwapUnsupported",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "4b2841f9abbf331c34f5f1c9b11dc5ab21b367596bf3cb3b58d3223f1ddc8e33",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "Esta ação só funciona com o token de colateral da posição, na rede da posição.",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "pt-PT:i18next-json:margin.error.adjust.healthFloor",
       {
         "unitId": "margin.error.adjust.healthFloor",
@@ -3128,6 +3230,40 @@
         "status": "clean",
         "agentRunId": "pt-PT-2026-10-13T21-30-15Z",
         "approvedAt": "2026-10-13T21:30:15.652Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "pt-PT:i18next-json:margin.leverage.decrease",
+      {
+        "unitId": "margin.leverage.decrease",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "a1a4f24aad89fe7c7c419c46458dc108c59dd2f804d5887e24c604000e048378",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "Diminuir alavancagem",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-24T23-31-37Z",
+        "approvedAt": "2026-10-24T23:31:37.655Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "pt-PT:i18next-json:margin.leverage.increase",
+      {
+        "unitId": "margin.leverage.increase",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "a9d8c8a3b24b084830d7162805a1e5d8f5a418bb1101b7628ae3f49b2fa9d0db",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "Aumentar alavancagem",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-24T23-31-37Z",
+        "approvedAt": "2026-10-24T23:31:37.655Z",
         "approvedBy": "agent"
       }
     ],
@@ -3551,8 +3687,59 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "{{venue}} · {{lltv}}% LLTV",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "pt-PT:i18next-json:margin.mobile.connectToViewPositions",
+      {
+        "unitId": "margin.mobile.connectToViewPositions",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "d472c68a3ca2ced681cd14221ccb4571894f98390163e0533e29e004a1e1e8b9",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "Ligue uma carteira para ver as suas posições",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "pt-PT:i18next-json:margin.mobile.modify",
+      {
+        "unitId": "margin.mobile.modify",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "d94eaf69438863a8d5ef755e74e6840048386eefbf0e34f39004d2e9c9157778",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "Modificar",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "pt-PT:i18next-json:margin.mobile.viewChart",
+      {
+        "unitId": "margin.mobile.viewChart",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "3486e01bb8ba84ffca94bd81040b53654a09e138ba6c2d61106242bf90951ec4",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "Ver gráfico",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -3580,13 +3767,13 @@
         "providerId": "i18next-json",
         "locale": "pt-PT",
         "domain": "product-ui",
-        "sourceHash": "422bda9e9fd6f308e8c3be5c7d26cc3bff32ebc70f67438879fdcef6034d91f2",
+        "sourceHash": "2bf63d817630601b992694bc0b0559715001b9a24e7fe0d741eea02dce9181af",
         "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
-        "translation": "A pagar",
+        "translation": "Margem",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-13T21-30-15Z",
-        "approvedAt": "2026-10-13T21:30:15.652Z",
+        "agentRunId": "pt-PT-2026-10-24T23-31-37Z",
+        "approvedAt": "2026-10-24T23:31:37.655Z",
         "approvedBy": "agent"
       }
     ],
@@ -4131,6 +4318,23 @@
       }
     ],
     [
+      "pt-PT:i18next-json:margin.plan.step.addMargin",
+      {
+        "unitId": "margin.plan.step.addMargin",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "4c063442e7c458cbf337ecb992c6d384ffaf179f1fe6cffe066c455f78418238",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "Depositar margem",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "pt-PT:i18next-json:margin.plan.step.adjust",
       {
         "unitId": "margin.plan.step.adjust",
@@ -4212,6 +4416,40 @@
         "status": "clean",
         "agentRunId": "pt-PT-2026-10-13T21-30-15Z",
         "approvedAt": "2026-10-13T21:30:15.652Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "pt-PT:i18next-json:margin.plan.step.decreasePosition",
+      {
+        "unitId": "margin.plan.step.decreasePosition",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "38d398cccf9a73a5b8f7b42922bc5e4084a94ef8e142504cb6f48e64fd48165d",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "Reduzir posição",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "pt-PT:i18next-json:margin.plan.step.increasePosition",
+      {
+        "unitId": "margin.plan.step.increasePosition",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "b75aeacb0c6e8fd29444209d44ccdf5f7725da2e53c7e2b60ffe8eeed8d18a3d",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "Aumentar posição",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -4335,6 +4573,40 @@
       }
     ],
     [
+      "pt-PT:i18next-json:margin.plan.step.withdrawMargin",
+      {
+        "unitId": "margin.plan.step.withdrawMargin",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "60d12f6076b55cc73143950576072e9cc906901d931e5a9e16ca64d9a43f69ed",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "Levantar margem",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "pt-PT:i18next-json:margin.plan.title.addMargin",
+      {
+        "unitId": "margin.plan.title.addMargin",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "ad88b36d369b30e7de96515696df8f83d2f815e575f43b944d9d48a40f4f75a8",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "Adicionar margem",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "pt-PT:i18next-json:margin.plan.title.adjust",
       {
         "unitId": "margin.plan.title.adjust",
@@ -4369,6 +4641,40 @@
       }
     ],
     [
+      "pt-PT:i18next-json:margin.plan.title.decreaseLeverage",
+      {
+        "unitId": "margin.plan.title.decreaseLeverage",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "a1a4f24aad89fe7c7c419c46458dc108c59dd2f804d5887e24c604000e048378",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "Diminuir alavancagem",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "pt-PT:i18next-json:margin.plan.title.increaseLeverage",
+      {
+        "unitId": "margin.plan.title.increaseLeverage",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "a9d8c8a3b24b084830d7162805a1e5d8f5a418bb1101b7628ae3f49b2fa9d0db",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "Aumentar alavancagem",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "pt-PT:i18next-json:margin.plan.title.open",
       {
         "unitId": "margin.plan.title.open",
@@ -4382,6 +4688,23 @@
         "status": "clean",
         "agentRunId": "pt-PT-2026-10-13T21-30-15Z",
         "approvedAt": "2026-10-13T21:30:15.652Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "pt-PT:i18next-json:margin.plan.title.withdrawMargin",
+      {
+        "unitId": "margin.plan.title.withdrawMargin",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "60d12f6076b55cc73143950576072e9cc906901d931e5a9e16ca64d9a43f69ed",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "Levantar margem",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -4958,8 +5281,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "RoE",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-26T18-34-46Z",
+        "approvedAt": "2026-10-26T18:34:46.176Z",
         "approvedBy": "agent"
       }
     ],
@@ -4975,8 +5298,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "PnL",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-26T18-34-46Z",
+        "approvedAt": "2026-10-26T18:34:46.176Z",
         "approvedBy": "agent"
       }
     ],
@@ -5028,6 +5351,176 @@
         "status": "clean",
         "agentRunId": "pt-PT-2026-10-13T21-30-15Z",
         "approvedAt": "2026-10-13T21:30:15.652Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "pt-PT:i18next-json:margin.receipt.borrowRateTooltip",
+      {
+        "unitId": "margin.receipt.borrowRateTooltip",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "e2ea8d8789d17d5b0adeaa6db92e04ad3f27dee46b7f40daec481cf83548230a",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "Taxa de empréstimo de {{venue}}: {{rate}}",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-24T23-31-37Z",
+        "approvedAt": "2026-10-24T23:31:37.655Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "pt-PT:i18next-json:margin.receipt.breakEven",
+      {
+        "unitId": "margin.receipt.breakEven",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "b46ea9b709326282887aec506be8fe0872fa58c3b16c0ff7de283c2aa3fec11a",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "Ponto de equilíbrio",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-24T23-31-37Z",
+        "approvedAt": "2026-10-24T23:31:37.655Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "pt-PT:i18next-json:margin.receipt.breakEvenTooltip",
+      {
+        "unitId": "margin.receipt.breakEvenTooltip",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "e053a4d04ddc48237602d3cea3891126baee981f9aa8f25eb019aee604d7be30",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "Preço estimado a que o fecho devolve a sua margem, assumindo que o spread de entrada é pago novamente na saída.",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-24T23-31-37Z",
+        "approvedAt": "2026-10-24T23:31:37.655Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "pt-PT:i18next-json:margin.receipt.liquidationPrice",
+      {
+        "unitId": "margin.receipt.liquidationPrice",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "1da7d9f5dd676995729dfc20cfe80f58494b85f8ecb39106186c7a70ab075ebd",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "Preço de liquidação",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-24T23-31-37Z",
+        "approvedAt": "2026-10-24T23:31:37.655Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "pt-PT:i18next-json:margin.receipt.liquidationPriceTooltip",
+      {
+        "unitId": "margin.receipt.liquidationPriceTooltip",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "5aaba78459d8a02e1f8d85b3a8e529a14e185e9c123f0b80f32b95ad7139c1ea",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "Se o preço do oráculo atingir este nível, a posição pode ser liquidada.",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-24T23-31-37Z",
+        "approvedAt": "2026-10-24T23:31:37.655Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "pt-PT:i18next-json:margin.receipt.market",
+      {
+        "unitId": "margin.receipt.market",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "5238d9bd03d543e62fff76cbea6a2392a95f42110e36c282e4c919991f607daf",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "Mercado",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-24T23-31-37Z",
+        "approvedAt": "2026-10-24T23:31:37.655Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "pt-PT:i18next-json:margin.receipt.marketTooltip",
+      {
+        "unitId": "margin.receipt.marketTooltip",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "f00d203d2ad28e22060b8880ebcb94d1b08bb4aa871f851168cb607a375e8bd7",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "O mercado de empréstimos de onde esta posição pede emprestado, a sua taxa atual e o custo diário estimado.",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-24T23-31-37Z",
+        "approvedAt": "2026-10-24T23:31:37.655Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "pt-PT:i18next-json:margin.receipt.oraclePrice",
+      {
+        "unitId": "margin.receipt.oraclePrice",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "7015815cf171bee33d8be86956702f6cdf9491a15c8dc7cc09375cb7fe970e66",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "Preço do oráculo: {{price}}",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-24T23-31-37Z",
+        "approvedAt": "2026-10-24T23:31:37.655Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "pt-PT:i18next-json:margin.receipt.perDay",
+      {
+        "unitId": "margin.receipt.perDay",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "26f9fa3e71eef433159d9f7e76d35addc578dfe20bae57ed4b9ac71df74bcbb9",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "{{amount}}/dia",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-24T23-31-37Z",
+        "approvedAt": "2026-10-24T23:31:37.655Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "pt-PT:i18next-json:margin.receipt.swapping",
+      {
+        "unitId": "margin.receipt.swapping",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "7664ffeafd9108e9c4f233646e56938060d94d486de7fa15c77b9584d78e301b",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "A trocar",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-24T23-31-37Z",
+        "approvedAt": "2026-10-24T23:31:37.655Z",
         "approvedBy": "agent"
       }
     ],
@@ -5253,6 +5746,74 @@
       }
     ],
     [
+      "pt-PT:i18next-json:margin.selector.assetFilter.anyLong",
+      {
+        "unitId": "margin.selector.assetFilter.anyLong",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "89b8b9d906a30137e197d081227f018a1c4bb270cf8bca9293169d1bf55cc13c",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "Qualquer ativo longo",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "pt-PT:i18next-json:margin.selector.assetFilter.anyShort",
+      {
+        "unitId": "margin.selector.assetFilter.anyShort",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "cf5c388c57503069f57c62aa2e2cb6cda6dd132ba9e489ad1ad15a0fa569de79",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "Qualquer ativo curto",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "pt-PT:i18next-json:margin.selector.assetFilter.long",
+      {
+        "unitId": "margin.selector.assetFilter.long",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "d3afc4cdb09f70dd2c8feaa677555c1446eb8a5694460b585c57f2575b2ff22d",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "Ativo longo",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "pt-PT:i18next-json:margin.selector.assetFilter.short",
+      {
+        "unitId": "margin.selector.assetFilter.short",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "3cd07d18af528e7726c0a79ce6edd5f39107af3f1dde0f468b7351530957c7ca",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "Ativo curto",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "pt-PT:i18next-json:margin.selector.borrowRateValue",
       {
         "unitId": "margin.selector.borrowRateValue",
@@ -5287,6 +5848,40 @@
       }
     ],
     [
+      "pt-PT:i18next-json:margin.selector.columnChange24h",
+      {
+        "unitId": "margin.selector.columnChange24h",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "0b509e6d4c97d169f054897e72a9d70905e12c89ef711215e5f1f66f529a719d",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "24 h",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "pt-PT:i18next-json:margin.selector.columnMarkPrice",
+      {
+        "unitId": "margin.selector.columnMarkPrice",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "18f80225d5a4ab19d1f0c922d3fc7f56f8f2fa956c4325e637fcd41177c2055b",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "Preço de marcação",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "pt-PT:i18next-json:margin.selector.columnMarket",
       {
         "unitId": "margin.selector.columnMarket",
@@ -5310,13 +5905,30 @@
         "providerId": "i18next-json",
         "locale": "pt-PT",
         "domain": "product-ui",
-        "sourceHash": "01675ccf3f3fc19d24ca2c338d90277b48d5511d3c10e507bf9ce4d118d1003b",
+        "sourceHash": "36200a12fc166f013e1d0af0cf1b88a4224c4e804213b2f3b7276142c75848d1",
         "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Alav. máx.",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-13T21-30-15Z",
-        "approvedAt": "2026-10-13T21:30:15.652Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "pt-PT:i18next-json:margin.selector.columnPair",
+      {
+        "unitId": "margin.selector.columnPair",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "989da04b0aaaa57f9d4e0178cf5178cce8e1c8d44f4efe9af946599ce2a84f27",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "Par",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -5334,6 +5946,40 @@
         "status": "clean",
         "agentRunId": "pt-PT-2026-10-13T21-30-15Z",
         "approvedAt": "2026-10-13T21:30:15.652Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "pt-PT:i18next-json:margin.selector.debtFilter.any",
+      {
+        "unitId": "margin.selector.debtFilter.any",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "2a5d47d466ea761711f6875c10e46a2f6c95355e49c0466810dcb4b014ffa054",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "Qualquer ativo de dívida",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "pt-PT:i18next-json:margin.selector.debtFilter.label",
+      {
+        "unitId": "margin.selector.debtFilter.label",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "dba87937151e21417c2523672c394be7fd3cfd2fabb4350d7dc5a58734012cad",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "Ativo de dívida",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -5406,19 +6052,49 @@
       }
     ],
     [
+      "pt-PT:i18next-json:margin.selector.searchPlaceholder",
+      {
+        "unitId": "margin.selector.searchPlaceholder",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "7d59556565c19b9023ebafc7e6335999a4c8f97765628601b966e9cbd48fd0bd",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "Pesquisar tokens ou pares",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "pt-PT:i18next-json:margin.selector.title",
       {
         "unitId": "margin.selector.title",
         "providerId": "i18next-json",
         "locale": "pt-PT",
         "domain": "product-ui",
-        "sourceHash": "67f63ac3a864ef1ce8314508913935437260b824515eea52fbee46306f5fb335",
+        "sourceHash": "17eaf85e89a6b92a8b1111ae760444403973a7d6ad219eea4f8be4f7ae1ed958",
         "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
-        "translation": "Selecione um mercado",
-        "status": "clean",
-        "agentRunId": "pt-PT-2026-10-13T21-30-15Z",
-        "approvedAt": "2026-10-13T21:30:15.652Z",
+        "translation": "Selecione um par",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "accuracy",
+            "severity": "major",
+            "detail": "Mistranslation: 'Select a pair' rendered as 'Selecione um mercado' (select a market). It also breaks run-level terminology consistency — i=1696 renders 'Pair' as 'Par'.",
+            "reviewDimension": "term-type-agreement",
+            "evidence": {
+              "sourceSpan": "a pair",
+              "targetSpan": "um mercado"
+            },
+            "alternative": "Selecione um par"
+          }
+        ],
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -5589,6 +6265,74 @@
         "status": "clean",
         "agentRunId": "pt-PT-2026-10-13T21-30-15Z",
         "approvedAt": "2026-10-13T21:30:15.652Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "pt-PT:i18next-json:margin.stats.label.high24h",
+      {
+        "unitId": "margin.stats.label.high24h",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "30c6a2350ec786d18b63af6b687c855867f04cfde8eed94841dceb1a16c4690f",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "Máximo 24H",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-24T23-31-37Z",
+        "approvedAt": "2026-10-24T23:31:37.655Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "pt-PT:i18next-json:margin.stats.label.liquidity",
+      {
+        "unitId": "margin.stats.label.liquidity",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "04864c05049e9d2e7a2ed9d58db8c07dbbfde8eb2f2b20406554fbff867bd17b",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "Liquidez",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-24T23-31-37Z",
+        "approvedAt": "2026-10-24T23:31:37.655Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "pt-PT:i18next-json:margin.stats.label.low24h",
+      {
+        "unitId": "margin.stats.label.low24h",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "2f0807750c5f593ad34c3c0f452f4f260eb11982d22c5a0668314905cdcdc42e",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "Mínimo 24H",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-24T23-31-37Z",
+        "approvedAt": "2026-10-24T23:31:37.655Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "pt-PT:i18next-json:margin.stats.label.mark",
+      {
+        "unitId": "margin.stats.label.mark",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "d7cda0ca2c8586e512c425368fcb2bba62e81475bfceb4284f4906de8ec242bc",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "Marcação",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-24T23-31-37Z",
+        "approvedAt": "2026-10-24T23:31:37.655Z",
         "approvedBy": "agent"
       }
     ],
@@ -5933,6 +6677,23 @@
       }
     ],
     [
+      "pt-PT:i18next-json:margin.table.markEntry",
+      {
+        "unitId": "margin.table.markEntry",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "c5bf8ffb56c7e547c417d206a62c4a1127edd04e5fde7d0915334bfa3ea2f7e9",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "Marcação / Preço de entrada",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-24T23-31-37Z",
+        "approvedAt": "2026-10-24T23:31:37.655Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "pt-PT:i18next-json:margin.table.opening",
       {
         "unitId": "margin.table.opening",
@@ -5984,6 +6745,23 @@
       }
     ],
     [
+      "pt-PT:i18next-json:margin.table.pnl",
+      {
+        "unitId": "margin.table.pnl",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "348563db65d20fad0d307cfc180be9dee3a66c79dd2529de8413d64affe991a7",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "PnL",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "pt-PT:i18next-json:margin.table.pnlRoe",
       {
         "unitId": "margin.table.pnlRoe",
@@ -5995,8 +6773,25 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "PnL/RoE",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-26T18-34-46Z",
+        "approvedAt": "2026-10-26T18:34:46.176Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "pt-PT:i18next-json:margin.table.position",
+      {
+        "unitId": "margin.table.position",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "6d031af10da7a25e554bb21247f28f0e6cef77f1471175199e7fcc571964dc3d",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "Posição",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-24T23-31-37Z",
+        "approvedAt": "2026-10-24T23:31:37.655Z",
         "approvedBy": "agent"
       }
     ],
@@ -6670,8 +7465,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "APR",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -6752,8 +7547,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "liq.",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -6769,8 +7564,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "{{tokenPair}} via {{dex}}",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -6786,8 +7581,110 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "DeFi",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "pt-PT:i18next-json:portfolio.margin.openPositions_one",
+      {
+        "unitId": "portfolio.margin.openPositions_one",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "3567af724aa11e694537ad7d9188dac527968d2becccc1b3600799766cf47cbe",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "{{count}} posição de margem aberta",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "pt-PT:i18next-json:portfolio.margin.openPositions_other",
+      {
+        "unitId": "portfolio.margin.openPositions_other",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "fee33176e5e816c04274ad7bf029f3bba073cdb24e3df4f18bdd73a080ab8ba1",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "{{count}} posições de margem abertas",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "pt-PT:i18next-json:portfolio.margin.title",
+      {
+        "unitId": "portfolio.margin.title",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "2bf63d817630601b992694bc0b0559715001b9a24e7fe0d741eea02dce9181af",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "Margem",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "pt-PT:i18next-json:position.create.v2.amountTooSmall",
+      {
+        "unitId": "position.create.v2.amountTooSmall",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "5f7144b32a93c97cde7ea14e54d6be791cb14e15bcb126a48c6d28ec35a84e74",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "Montantes demasiado pequenos para criar uma pool v2",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-22T21-15-25Z",
+        "approvedAt": "2026-10-22T21:15:25.325Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "pt-PT:i18next-json:position.hook.rejectsRemoval",
+      {
+        "unitId": "position.hook.rejectsRemoval",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "b8866456aee593b3cfd2bb7eb599ebd1892aa8b793cd354af883d6bd6e4ca034",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "O hook desta pool está neste momento a rejeitar levantamentos, pelo que esta transação falharia.",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-23T18-16-15Z",
+        "approvedAt": "2026-10-23T18:16:15.707Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "pt-PT:i18next-json:position.hook.removeMayFail",
+      {
+        "unitId": "position.hook.removeMayFail",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "f1a7a71cf59a4e068aa8f6d4e2253be3f3b70be46d400f0a45920ef1973de077",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "O hook desta pool pode bloquear levantamentos e este não pôde ser simulado. Pode falhar.",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-23T18-16-15Z",
+        "approvedAt": "2026-10-23T18:16:15.707Z",
         "approvedBy": "agent"
       }
     ],
@@ -6837,8 +7734,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Volume",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -6871,8 +7768,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Tokens",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -6888,8 +7785,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "The Badger",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -6905,8 +7802,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Frontrunner",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -6922,8 +7819,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "First Splash",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -6939,8 +7836,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Volume",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -6973,8 +7870,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "$TICKER",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -7194,8 +8091,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Crowd Launch",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -7211,8 +8108,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Instant Launch",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -7258,8 +8155,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Crowd",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -7275,8 +8172,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Instant",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -7292,8 +8189,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Tokens",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -7338,8 +8235,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Trader",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -7389,8 +8286,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "{{apr}} APR",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -7406,8 +8303,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "{{apy}} APY",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -7423,8 +8320,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "OK",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -7440,8 +8337,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "ENS",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -7491,8 +8388,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "30 min",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -7508,8 +8405,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "5 min",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -7593,8 +8490,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Smart Wallets",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -7729,8 +8626,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Via {{provider}}",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -7837,6 +8734,23 @@
       }
     ],
     [
+      "pt-PT:i18next-json:tdp.auction.startsIn",
+      {
+        "unitId": "tdp.auction.startsIn",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "5fefbb92603fab9c2557b72cf99eb3b98916bea79056b6fcbb517645a9049eea",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "Começa em",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-26T16-33-11Z",
+        "approvedAt": "2026-10-26T16:33:11.164Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "pt-PT:i18next-json:tdp.auction.statusUnavailable",
       {
         "unitId": "tdp.auction.statusUnavailable",
@@ -7867,6 +8781,23 @@
         "status": "clean",
         "agentRunId": "pt-PT-2026-09-16T16-27-12Z",
         "approvedAt": "2026-09-16T16:27:12.589Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "pt-PT:i18next-json:tdp.auction.upcoming",
+      {
+        "unitId": "tdp.auction.upcoming",
+        "providerId": "i18next-json",
+        "locale": "pt-PT",
+        "domain": "product-ui",
+        "sourceHash": "8445cc4d09cdb97d759ec772a31f8acd64b071c54282c509bf21b897f7126568",
+        "glossaryHash": "07fc505011fa3a144fe547203cd580170500b246a1d4e043c530291ae7cf9e57",
+        "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
+        "translation": "Próximo leilão",
+        "status": "clean",
+        "agentRunId": "pt-PT-2026-10-26T16-33-11Z",
+        "approvedAt": "2026-10-26T16:33:11.164Z",
         "approvedBy": "agent"
       }
     ],
@@ -8239,8 +9170,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Launchpad",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -8916,8 +9847,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "$TICKER",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -8963,8 +9894,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Crowd Launch",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -9009,8 +9940,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Crowd Launches",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -9108,8 +10039,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Instant Launch",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -9154,8 +10085,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Instant Launches",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -9171,8 +10102,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Pools.trade",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -9580,8 +10511,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "<icon /> <gradient>UniswapX</gradient> <info />",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ],
@@ -9597,8 +10528,8 @@
         "styleHash": "d517c454f50e05aee66142467d238a7e16b1ce396a6ec953a517e8632cc10f2d",
         "translation": "Tokens",
         "status": "clean",
-        "agentRunId": "pt-PT-2026-10-21T17-36-39Z",
-        "approvedAt": "2026-10-21T17:36:39.783Z",
+        "agentRunId": "pt-PT-2026-10-27T20-04-05Z",
+        "approvedAt": "2026-10-27T20:04:05.240Z",
         "approvedBy": "agent"
       }
     ]

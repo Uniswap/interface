@@ -15,6 +15,8 @@ export interface PriceChartBodyProps {
   hideYAxis?: boolean
   hideXAxis?: boolean
   yAxisFormatter?: (price: number) => string
+  yAxisTickmarksFormatter?: (prices: number[]) => string[]
+  disableLowPriceRangeScaling?: boolean
   sparkline?: boolean
   hideMinMaxLines?: boolean
   isStablecoin?: boolean
@@ -33,6 +35,8 @@ export function PriceChartBody({
   hideYAxis,
   hideXAxis,
   yAxisFormatter,
+  yAxisTickmarksFormatter,
+  disableLowPriceRangeScaling,
   sparkline,
   hideMinMaxLines,
   isStablecoin,
@@ -53,6 +57,8 @@ export function PriceChartBody({
           hideYAxis,
           hideXAxis,
           yAxisFormatter,
+          yAxisTickmarksFormatter,
+          disableLowPriceRangeScaling,
           sparkline,
           hideMinMaxLines,
           v2HoverStyles,
@@ -66,6 +72,8 @@ export function PriceChartBody({
           hideYAxis,
           hideXAxis,
           yAxisFormatter,
+          yAxisTickmarksFormatter,
+          disableLowPriceRangeScaling,
           sparkline,
           hideMinMaxLines,
           v2HoverStyles,

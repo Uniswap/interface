@@ -3,7 +3,7 @@ import type { VerifyWalletRequest } from '@uniswap/client-liquidity/dist/uniswap
 import { UniverseChainId } from '@universe/chains'
 import { useMemo } from 'react'
 import { buildVerifyWalletParams } from 'uniswap/src/data/apiClients/dataApiService/auctions/useVerifyWallet'
-import { useActiveAddress } from '~/features/accounts/store/hooks'
+import { useActiveAddress } from '~/connection/accounts/hooks'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
 
 /**

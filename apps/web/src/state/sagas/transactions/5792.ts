@@ -17,11 +17,11 @@ import { SendCallsResultSchema } from 'wallet/src/features/dappRequests/types'
 import type { JsonRpcSigner } from '~/chains'
 import { wagmiConfig } from '~/connection/wagmiConfig'
 import { getRoutingForTransaction } from '~/state/activity/utils'
-import { popupRegistry } from '~/state/popups/registry'
-import { PopupType } from '~/state/popups/types'
 import { getSigner, watchForInterruption } from '~/state/sagas/transactions/utils'
 import { handleGetCapabilities } from '~/state/walletCapabilities/lib/handleGetCapabilities'
 import { setCapabilitiesByChain } from '~/state/walletCapabilities/reducer'
+import { popupRegistry } from '~/utils/popups/registry'
+import { PopupType } from '~/utils/popups/types'
 import { didUserReject } from '~/utils/swapErrorToUserReadableMessage'
 
 const TRANSACTION_HASH_REGEX = /^0x[0-9a-fA-F]{64}$/

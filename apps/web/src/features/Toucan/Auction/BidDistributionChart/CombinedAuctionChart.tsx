@@ -6,6 +6,7 @@ import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
+import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 import { BidDistributionChartPlaceholder } from '~/features/Toucan/Auction/BidDistributionChart/BidDistributionChartPlaceholder'
@@ -76,6 +77,7 @@ export function CombinedAuctionChart({
   const { t } = useTranslation()
   const colors = useSporeColors()
   const { convertFiatAmountFormatted } = useLocalizationContext()
+  const locale = useCurrentLocale()
   const { setSelectedTickPrice } = useAuctionStoreActions()
   const connectedWalletAddress = useActiveAddress(auctionDetails.chainId as UniverseChainId)
 
@@ -220,9 +222,9 @@ export function CombinedAuctionChart({
   const formatVolumeLabel = useCallback(
     (amount: number): string => {
       const tokenAmount = bidTokenInfo.priceFiat > 0 ? amount / bidTokenInfo.priceFiat : amount
-      return formatTokenVolume(tokenAmount, { maxDecimals: 3 })
+      return formatTokenVolume(tokenAmount, { locale, maxDecimals: 3 })
     },
-    [bidTokenInfo.priceFiat],
+    [bidTokenInfo.priceFiat, locale],
   )
 
   // ── Clearing price in decimal for bar coloring ──

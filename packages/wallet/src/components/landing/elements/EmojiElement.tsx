@@ -1,6 +1,6 @@
 import { Flex, Text } from '@universe/mycelium'
-import { colors } from 'ui/src/theme/color/colors'
-import { opacify } from 'ui/src/theme/color/utils'
+import { opacify } from '@universe/mycelium/theme-hooks-compat'
+import { colors } from '@universe/mycelium/theme-palette'
 
 export const EmojiElement = ({ emoji }: { emoji: string }): JSX.Element => {
   return (

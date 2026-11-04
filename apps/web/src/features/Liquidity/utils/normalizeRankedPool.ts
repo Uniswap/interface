@@ -64,5 +64,6 @@ export function normalizeRankedPool(rankedPool: RankedPool | PlainMessage<Ranked
     // Populated by the backend on a best-effort basis (backend#11679): unset when per-pool fee
     // enrichment fails, in which case consumers treat the protocol fee as unavailable.
     protocolFee: pool.protocolFee,
+    categoryIds: pool.categoryIds,
   }
 }

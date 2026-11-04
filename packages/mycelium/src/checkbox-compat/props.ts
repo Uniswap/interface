@@ -1,10 +1,10 @@
 /**
  * The prop contract for the checkbox compat pair (INFRA-3233), transcribed
- * from the two legacy Tamagui surfaces it replaces:
+ * from the two legacy Tamagui surfaces it replaced in `ui/src`:
  *
- * - `CheckboxCompatProps`        ← `packages/ui/src/components/checkbox/Checkbox.tsx:36-42`
+ * - `CheckboxCompatProps`        ← legacy `Checkbox`
  *   (`{ variant, checked, size } & Omit<TamaguiCheckboxProps, 'size'>`)
- * - `LabeledCheckboxCompatProps` ← `packages/ui/src/components/checkbox/LabeledCheckbox.tsx:13-26`
+ * - `LabeledCheckboxCompatProps` ← legacy `LabeledCheckbox`
  *
  * The legacy bare `Checkbox` reaches most of its real call-site surface through
  * the `Omit<TamaguiCheckboxProps, 'size'>` spread rather than its declared
@@ -27,7 +27,7 @@ import type * as React from 'react'
 import type { StyleProp, ViewStyle } from 'react-native'
 import type { ColorValue, SpaceValue } from '../compat/props'
 
-/** Legacy `CheckboxSizeTokens` (Checkbox.tsx:36) — verbatim, all three tokens. */
+/** Legacy `CheckboxSizeTokens` — verbatim, all three tokens. */
 export type CheckboxCompatSizeToken = '$icon.16' | '$icon.18' | '$icon.20'
 
 /**
@@ -43,7 +43,7 @@ export type CheckboxPosition = 'start' | 'end'
 /**
  * The structural intersection of a DOM `MouseEvent` and an RN
  * `GestureResponderEvent`: both carry `preventDefault` and `stopPropagation`,
- * which is all the legacy handler bodies use (LabeledCheckbox.tsx:42-43).
+ * which is all the legacy handler bodies use.
  */
 export interface CheckboxCompatPressEvent {
   preventDefault: () => void
@@ -65,13 +65,13 @@ export type CheckboxCompatPointerEvents = 'auto' | 'none' | 'box-none' | 'box-on
 
 /**
  * Legacy `containerStyle?: StyleProp<ViewStyle | React.CSSProperties>`
- * (LabeledCheckbox.tsx:24) — reproduced verbatim so every existing call site
+ * — reproduced verbatim so every existing call site
  * (`containerStyle={{ flex: 1 }}`) keeps typechecking on both platforms.
  */
 export type CheckboxCompatStyleProp = StyleProp<ViewStyle | React.CSSProperties>
 
 /**
- * Legacy `hoverStyle?: FlexProps` (LabeledCheckbox.tsx:23). The two real call
+ * Legacy `hoverStyle?: FlexProps`. The two real call
  * sites pass plain style objects (`{ opacity: 0.8, backgroundColor: 'unset' }`
  * — `apps/web/src/features/Liquidity/PositionsHeader.tsx:124`,
  * `positionsFilters.tsx:51`), so the value domain here is scalar CSS/RN style
@@ -85,7 +85,7 @@ export type CheckboxCompatHoverStyle = Readonly<Record<string, string | number |
 
 /**
  * The bare-checkbox contract. `checked` is required exactly like legacy
- * (Checkbox.tsx:40) — not optional, and never Radix's `'indeterminate'`.
+ * — not optional, and never Radix's `'indeterminate'`.
  */
 export interface CheckboxCompatProps {
   /** Required, like legacy. */
@@ -97,8 +97,8 @@ export interface CheckboxCompatProps {
   /**
    * ACCEPTED AND IGNORED, exactly like legacy. It reaches legacy only through
    * the `Omit<TamaguiCheckboxProps, 'size'>` spread, and legacy spreads
-   * `{...rest}` FIRST (`Checkbox.tsx:76`) and then re-declares `borderColor`
-   * itself (`:81`) — later JSX props win, so the caller's value never paints.
+   * `{...rest}` FIRST and then re-declares `borderColor`
+   * itself — later JSX props win, so the caller's value never paints.
    * Two call sites pass `borderColor="$neutral2"`
    * (`LowNativeBalanceModal.tsx:51`, `BridgingModal.tsx:75`); in the unchecked
    * state the derived value is already `$neutral2` (identical), and in the
@@ -108,8 +108,8 @@ export interface CheckboxCompatProps {
    */
   borderColor?: ColorValue
   /**
-   * ACCEPTED AND IGNORED, for the same `{...rest}`-then-redeclare reason
-   * (`Checkbox.tsx:76` then `:94`): legacy always derives
+   * ACCEPTED AND IGNORED, for the same `{...rest}`-then-redeclare reason:
+   * legacy always derives
    * `pointerEvents = disabled ? 'none' : 'auto'`. `AccountSelectPopover.tsx:106`
    * passes `pointerEvents="none"` alongside `disabled`, which the derived value
    * already produces.
@@ -120,30 +120,26 @@ export interface CheckboxCompatProps {
   /**
    * Honoured on BOTH legs, because legacy honours it on both. Tamagui's
    * `useCheckbox` never destructures `id`, so it survives into `checkboxProps`
-   * and is spread onto the frame on every platform
-   * (`@tamagui/checkbox-headless/src/useCheckbox.tsx:99-113`): legacy web emits
+   * and is spread onto the frame on every platform: legacy web emits
    * `id="…"` on the `<button>`, and legacy native puts it on its single RN host.
    * The residue the compat cannot reproduce is legacy's extra native
-   * `registerFocusable(props.id, …)` call
-   * (`@tamagui/checkbox/src/createCheckbox.tsx:135-146`) — Tamagui-internal focus
-   * plumbing that mycelium may not import. Ledgered in
-   * `tailwind/src/parity/checkbox/exclusions.ts`.
+   * `registerFocusable(props.id, …)` call — Tamagui-internal focus
+   * plumbing that mycelium may not import.
    */
   id?: string
   /**
    * WEB-ONLY, exactly like legacy — NOT an oversight on the native leg.
    * `useCheckbox` destructures `name`/`value`/`required` out of the props it
    * forwards and re-emits them only behind `isWeb`: `value` onto the button
-   * (`useCheckbox.tsx:110`) and `name`/`required` onto a hidden `BubbleInput`
-   * that is itself gated on `isFormControl`, which is hard-coded `false` off web
-   * (`:53`, `:88-100`). Rendering the legacy `Checkbox` under
-   * `TAMAGUI_TARGET=native` confirms it: the RN host carries `id` and nothing
+   * and `name`/`required` onto a hidden `BubbleInput`
+   * that is itself gated on `isFormControl`, which is hard-coded `false` off web. Rendering the legacy `Checkbox` under
+   * `TAMAGUI_TARGET=native` confirmed it: the RN host carries `id` and nothing
    * else of the three.
    *
    * So giving `required` a native `aria-required` would be an accessibility
    * IMPROVEMENT over legacy on device, not parity — the same trap as putting
    * `accessibilityRole="button"` on the native container, which legacy's own
-   * native leg also omits (`native-parity.test.tsx` Layer 4). Out of scope for a
+   * native leg also omitted. Out of scope for a
    * migration shim. The web/native asymmetry is ledgered and pinned on both legs
    * instead; no call site passes any of the three (27 legacy JSX elements across
    * 25 files, zero hits).
@@ -179,8 +175,8 @@ export interface LabeledCheckboxCompatProps {
    */
   text?: string | React.JSX.Element
   /**
-   * ACCEPTED AND IGNORED, exactly like legacy: `LabeledCheckbox.tsx:18`
-   * declares `checkedColor` but never destructures it, so it has no effect
+   * ACCEPTED AND IGNORED, exactly like legacy: it
+   * declared `checkedColor` but never destructured it, so it had no effect
    * there either. Three call sites pass it (`CompatibleAddressModal.tsx:66`,
    * `TokenWarningModal.tsx`, `BackupSpeedBumpModal.tsx`). Reproducing the
    * no-op is deliberate — making it work would be a visual behavior change
@@ -199,7 +195,7 @@ export interface LabeledCheckboxCompatProps {
   containerStyle?: CheckboxCompatStyleProp
   /**
    * Receives the PRE-TOGGLE state — the value of `checked` at press time, not
-   * the next value (legacy `LabeledCheckbox.tsx:44` passes `checked`
+   * the next value (legacy passed `checked`
    * straight through). Call sites invert it themselves. Pinned by a test:
    * it is a silent inversion otherwise.
    */

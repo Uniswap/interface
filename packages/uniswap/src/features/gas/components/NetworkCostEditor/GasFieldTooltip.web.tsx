@@ -1,6 +1,6 @@
 import { Flex, Text } from '@universe/mycelium'
+import { InfoCircle } from '@universe/mycelium/icons/InfoCircle'
 import { TooltipCompat as Tooltip } from '@universe/mycelium/tooltip-compat'
-import { InfoCircle } from 'ui/src/components/icons/InfoCircle'
 import type { GasFieldTooltipProps } from 'uniswap/src/features/gas/components/NetworkCostEditor/GasFieldTooltip'
 import { useTooltipCopy } from 'uniswap/src/features/gas/components/NetworkCostEditor/useGasFieldTooltipCopy'
 

@@ -25,8 +25,8 @@ vi.mock('uniswap/src/components/network/NetworkFilter/useNetworkSelectorOptions'
   useNetworkSelectorOptions: () => undefined,
 }))
 
-vi.mock('~/features/accounts/store/hooks', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('~/features/accounts/store/hooks')>()),
+vi.mock('~/connection/accounts/hooks', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('~/connection/accounts/hooks')>()),
   useActiveAddresses: () => ({ evmAddress: undefined, svmAddress: undefined }),
 }))
 

@@ -1,4 +1,4 @@
-import { getWarningTextColor } from '@universe/swap-ui'
+import { getWarningTextColor } from '@universe/transactions-ui'
 import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAlertColor'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { toSwapWarningSeverity } from 'uniswap/src/components/modals/WarningModal/utils'

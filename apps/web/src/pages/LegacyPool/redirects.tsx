@@ -1,13 +1,12 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Navigate, useParams, useSearchParams } from 'react-router'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
+import { useAccount } from '~/connection/hooks/useAccount'
 import { getCurrencyWithWrap } from '~/features/Liquidity/utils/currency'
-import { useCurrency } from '~/hooks/Tokens'
-import { useAccount } from '~/hooks/useAccount'
-import { useV2Pair } from '~/hooks/useV2Pairs'
-import { searchParamToBackendName } from '~/utils/params/chainParams'
+import { useCurrency } from '~/hooks/currency/useCurrency'
+import { useV2Pair } from '~/pages/LegacyPool/useV2Pairs'
+import { getChainUrlParam, searchParamToBackendName } from '~/utils/params/chainParams'
 
 // /pool
 export function LegacyPoolRedirects() {
@@ -39,9 +38,7 @@ export function RemoveLiquidityV2WithTokenRedirects() {
   )
 
   if (pair) {
-    return (
-      <Navigate to={`/positions/v2/${toGraphQLChain(chainId).toLowerCase()}/${pair.liquidityToken.address}`} replace />
-    )
+    return <Navigate to={`/positions/v2/${getChainUrlParam(chainId)}/${pair.liquidityToken.address}`} replace />
   }
 
   return <Navigate to="/positions" replace />
@@ -55,7 +52,6 @@ export function LegacyPositionPageRedirects() {
   const { defaultChainId } = useEnabledChains()
 
   const chainName =
-    searchParamToBackendName(searchParams.get('chain'))?.toLowerCase() ??
-    toGraphQLChain(connectedChainId ?? defaultChainId).toLowerCase()
+    searchParamToBackendName(searchParams.get('chain')) ?? getChainUrlParam(connectedChainId ?? defaultChainId)
   return <Navigate to={`/positions/v3/${chainName}/${tokenId}`} replace />
 }

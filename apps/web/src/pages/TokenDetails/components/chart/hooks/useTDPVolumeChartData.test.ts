@@ -1,6 +1,6 @@
 import { onlineManager } from '@tanstack/react-query'
 import { GetTokenHistoryVolumeResponse } from '@uniswap/client-data-api/dist/data/v2/api_pb'
-import { GraphQLApi } from '@universe/api'
+import { UniverseChainId } from '@universe/chains'
 import { dataApiServiceClientV2 } from 'uniswap/src/data/apiClients/dataApiService/clients/DataApiClientV2'
 import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import { DataQuality } from '~/components/Charts/utils'
@@ -19,7 +19,7 @@ let tokenIndex = 0
 function nextVariables(duration: HistoryDuration) {
   tokenIndex += 1
   return {
-    chain: GraphQLApi.Chain.Ethereum,
+    chainId: UniverseChainId.Mainnet,
     address: `0x${String(tokenIndex).padStart(40, '0')}`,
     duration,
     multichain: false,

@@ -1,12 +1,19 @@
 import type { BottomTabBarProps } from '@react-navigation/bottom-tabs'
-import { Flex, TouchableArea, AnimatedFlex, useIsDarkMode, useSporeColors } from '@universe/mycelium'
+import {
+  Flex,
+  TouchableArea,
+  AnimatedFlex,
+  useIsDarkMode,
+  useSporeColors,
+  iconSizes,
+  spacing,
+} from '@universe/mycelium'
 import { useState } from 'react'
 import type { LayoutChangeEvent } from 'react-native'
 import { useAnimatedStyle, useDerivedValue, withTiming } from 'react-native-reanimated'
 import { TAB_BAR_ANIMATION_DURATION, TAB_ITEMS } from 'src/app/navigation/tabs/CustomTabBar/constants'
 import { SwapButton } from 'src/app/navigation/tabs/SwapButton'
 import { SwapLongPressOverlay } from 'src/app/navigation/tabs/SwapLongPressOverlay'
-import { iconSizes, spacing } from 'ui/src/theme'
 import { useHapticFeedback } from 'uniswap/src/features/settings/useHapticFeedback/useHapticFeedback'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { useEvent } from 'utilities/src/react/hooks'

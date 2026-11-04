@@ -41,11 +41,11 @@ import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 import { getAccount, getClient, getConnectorClient } from 'wagmi/actions'
 import { createContract, erc20Abi, getAddress, parseUnits } from '~/chains'
+import { useAccount } from '~/connection/hooks/useAccount'
+import { clientToProvider, useEthersProvider, useEthersWeb3Provider } from '~/connection/hooks/useEthersProvider'
+import { useSelectChain } from '~/connection/hooks/useSelectChain'
 import { wagmiConfig } from '~/connection/wagmiConfig'
 import { MARGIN_CHAIN_ID } from '~/constants/margin'
-import { useAccount } from '~/hooks/useAccount'
-import { clientToProvider, useEthersProvider, useEthersWeb3Provider } from '~/hooks/useEthersProvider'
-import { useSelectChain } from '~/hooks/useSelectChain'
 import {
   decideProofReplay,
   decideReplayStall,
@@ -77,9 +77,9 @@ import {
 import { getMappedMarginErrorMessage } from '~/pages/Swap/Margin/marginQuoteError'
 import { useAppDispatch } from '~/state/hooks'
 import reduxStore from '~/state/index'
-import { popupRegistry } from '~/state/popups/registry'
-import { PopupType } from '~/state/popups/types'
 import { useTransactionAdderFromHash } from '~/state/transactions/adder'
+import { popupRegistry } from '~/utils/popups/registry'
+import { PopupType } from '~/utils/popups/types'
 import { signTypedData } from '~/utils/signing'
 import { didUserReject } from '~/utils/swapErrorToUserReadableMessage'
 
@@ -339,8 +339,7 @@ export function useExecuteMarginPlan(): {
   const store = marginPlanExecutionStore
 
   // Confirmed account switch: drop a plan minted under the previous wallet (and abort its loop via
-  // the epoch bump). Clears the stale in-flight row and un-suppresses the persisted resume banner
-  // (gated on `!plan` in MarginPositionsTable). resetForAccount ignores a transient undefined blip,
+  // the epoch bump). Clears the stale in-flight row. resetForAccount ignores a transient undefined blip,
   // so a wallet-lock / provider-reconnect doesn't abort an in-flight plan.
   useEffect(() => {
     store.getState().actions.resetForAccount({ address: account.address })
@@ -789,11 +788,8 @@ export function useExecuteMarginPlan(): {
     if (mayClearProofsOnAbandon({ code: failedStep?.errorCode, failingStepHasProof: abandonHasProof })) {
       clearPlanProofs({ swapper: plan.swapper, planId: plan.planId })
     }
-    // The pointer goes for the same reason finalize clears one: its only job is the resume banner
-    // (shouldShowPointerBanner is true for ANY pointer), so leaving it offers a resume for a plan that
-    // can never advance — resumePlan GETs it fine, re-enters, and exits on the same terminal status.
-    // Nothing is lost: the pending section's Cancel reads the SERVER's pendingPlans, not this pointer,
-    // so a FAILED plan still holding a subId stays reachable.
+    // The pointer goes for the same reason finalize clears one: it names the wallet's live plan, and
+    // this one can never advance.
     clearPointerIfOwned({ swapper: plan.swapper, planId: plan.planId })
     surfaceTerminalStepError({ plan, epoch })
     upsertMarginPlanTransaction({ plan })
@@ -834,7 +830,7 @@ export function useExecuteMarginPlan(): {
           // Same invariant as the create-time supersession exit: this throws BEFORE `setPlan`, so a
           // create that already succeeded lands in the catch with no plan in the store — and a stashed
           // request arms `canRetryCreate`, whose Retry would re-POST and mint a second plan and subId
-          // while the first still holds its reservation. Recovery belongs to the persisted pointer.
+          // while the first still holds its reservation. Not Retry's to recover (not UI-resumable yet).
           clearCreateStashIfOwned({ epoch, owns: providedEpoch !== undefined })
           throw new Error('Wallet not connected')
         }
@@ -863,8 +859,7 @@ export function useExecuteMarginPlan(): {
         // work (mining/bridge polls, PATCH replays) still completes — a plan whose last step is
         // mining still auto-finalizes — but a prompt must never pop with no modal context. Park
         // exactly like a rejection: step stays AWAITING_ACTION, the finally releases the lock, and
-        // the pending card / in-flight row owns the resume affordance. The invalidation surfaces
-        // the card even when the plan was created after the last positions fetch.
+        // the in-flight row (non-OPEN) or the Open CTA (OPEN) owns the resume affordance.
         const parkIfModalClosed = (): boolean => {
           if (store.getState().isModalOpen) {
             return false
@@ -1100,9 +1095,9 @@ export function useExecuteMarginPlan(): {
           excludedCount: venuePreference?.excludedCount,
         })
         // Keyed on the PLAN's swapper, so it is written under whoever the plan belongs to and is safe
-        // — and necessary — even if the wallet has since changed: it is the only thing giving that
-        // wallet a resume affordance for a plan already holding a subId reservation. Hoisted above the
-        // supersession check for exactly that reason.
+        // — and necessary — even if the wallet has since changed: it is that wallet's only local record
+        // of a plan already holding a subId reservation. Hoisted above the supersession check for
+        // exactly that reason.
         persistPlanId({ swapper: plan.swapper, planId: plan.planId, intent: plan.intent })
         // The create POST is the one long await with no supersession check on its far side. A wallet
         // switch mid-POST bumps the epoch, and the two writes below are not epoch-guarded:
@@ -1113,13 +1108,12 @@ export function useExecuteMarginPlan(): {
           // spinner. Give it the create-failure surface (message + Close) or the spinner runs forever:
           // on the transient-blip leg resetForAccount deliberately does not reset, so nothing else
           // would ever take it down. The copy is the same one the loop's own swapper guard uses — the
-          // plan exists and belongs to the previous wallet, and its pointer was persisted above, so
-          // reconnecting that wallet offers the resume.
+          // plan exists and belongs to the previous wallet, and its pointer was persisted above.
           // The stash MUST go with it. It exists so a create that FAILED can be re-POSTed, and this
           // create SUCCEEDED — the plan is minted, persisted and holding its subId. Leaving it stashed
           // arms `canRetryCreate`, and on the transient-blip leg (where resetForAccount deliberately
           // does not reset) the same wallet reconnecting would re-POST the identical request and mint a
-          // SECOND plan and subId. Recovery here belongs to the persisted pointer, not to Retry.
+          // SECOND plan and subId. Recovery here is not Retry's (and not UI-resumable yet).
           clearCreateStashIfCurrent({ epoch })
           actions.setStepError({
             error: wrongAccountStepError(t),
@@ -1181,12 +1175,12 @@ export function useExecuteMarginPlan(): {
     if (mayWrite()) {
       // The quoted action key describes the run that MINTED it. A retry resumes the plan already in the
       // store and must keep it — that is the whole point of the field outliving the create stash — but a
-      // pointer-banner resume can pick up an entirely different plan, one this session never quoted, and
-      // the key must not follow it there or that plan's step analytics report the previous run's action.
+      // resume by planId can name an entirely different plan, one this session never quoted, and the key
+      // must not follow it there or that plan's step analytics report the previous run's action.
       //
       // Inside mayWrite for the same reason every other write here is: a resume the lock rejects must
-      // not touch the LIVE run's state. Mid-create the banner is eligible while `plan` is still
-      // undefined, so an unguarded clear would wipe the key executePlan had just stamped.
+      // not touch the LIVE run's state. Mid-create `plan` is still undefined, so an unguarded clear
+      // would wipe the key executePlan had just stamped.
       if (store.getState().plan?.planId !== planId) {
         store.getState().actions.clearLastQuotedAction()
       }
@@ -1198,7 +1192,7 @@ export function useExecuteMarginPlan(): {
     } catch (error) {
       if (is404Error(error)) {
         // Plan expired (record TTL) or the stores were reset — clear the stale pointer
-        // or the resume banner persists forever, pointing at nothing.
+        // or it persists forever, pointing at nothing.
         if (account.address) {
           // Keyed on the connected account, which is the address this resume looked the pointer up
           // under — the 404'd plan is gone, so its swapper is unavailable.
@@ -1302,11 +1296,8 @@ export function useExecuteMarginPlan(): {
     const { plan, stepError } = store.getState()
     if (plan) {
       clearPointerIfOwned({ swapper: plan.swapper, planId: plan.planId })
-      // Only where the failing step broadcast nothing. Dropping the pointer alone would otherwise
-      // leave the plan with no affordance — the orphaned proof keeps `hasUnlandedLocalProof` set,
-      // which withholds the pending card's Cancel — but for a code whose tx may have LANDED that
-      // suppression is the point: cancelling a plan with a live deposit, or resuming one whose only
-      // local proof is gone, is worse than waiting out the cache TTL.
+      // Only where the failing step broadcast nothing: for a code whose tx may have LANDED, resuming a
+      // plan whose only local proof is gone is worse than waiting out the cache TTL.
       // The proof is checked as well as the code: a re-materialized step that already broadcast keeps
       // its evidence regardless of what the terminal code promises.
       const failingStepHasProof =
@@ -1314,17 +1305,6 @@ export function useExecuteMarginPlan(): {
         readStepProof({ swapper: plan.swapper, planId: plan.planId, stepIndex: stepError.stepIndex }) !== undefined
       if (mayClearProofsOnAbandon({ code: stepError?.code, failingStepHasProof })) {
         clearPlanProofs({ swapper: plan.swapper, planId: plan.planId })
-        // Same predicate, same reason — and the reservation has to go with the proofs. The one path
-        // that mints a terminal error while the SERVER plan is still live is the client-side balance
-        // guard (INSUFFICIENT_SOURCE_FUNDS on MARGIN_OPEN): the server never learns the step failed, so
-        // the subId stays reserved and the follow-up create this button sends the user to 409s until
-        // the TTL expires — with the pointer already gone. Best-effort: a failed cancel must not block
-        // the restart, and the codes that keep their proofs keep their suppression here too.
-        if (!isTerminalPlanStatus(plan.status)) {
-          void MarginApiClient.cancelMarginPlan({ planId: plan.planId }).catch((error: unknown) => {
-            logger.warn('useExecuteMarginPlan', 'restartPlan', 'Failed to cancel the restarted plan', error)
-          })
-        }
       }
     }
     store.getState().actions.reset()

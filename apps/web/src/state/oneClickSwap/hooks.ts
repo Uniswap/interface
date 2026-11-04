@@ -1,0 +1,38 @@
+import { atom } from 'jotai'
+import { useAtomValue, useUpdateAtom } from 'jotai/utils'
+import { useEvent } from 'utilities/src/react/hooks'
+
+const oneClickSwapAtom = atom(true)
+
+/** Used to disable one-click swaps after a failed submission, intended for the duration of the transaction. */
+const overrideOneClickSwapFlagAtom = atom(false)
+
+export function useResetOverrideOneClickSwapFlag(): () => void {
+  const setOverrideOneClickSwapFlag = useUpdateAtom(overrideOneClickSwapFlagAtom)
+  return useEvent(() => setOverrideOneClickSwapFlag(false))
+}
+
+export function useSetOverrideOneClickSwapFlag(): () => void {
+  const setOverrideOneClickSwapFlag = useUpdateAtom(overrideOneClickSwapFlagAtom)
+  return useEvent(() => setOverrideOneClickSwapFlag(true))
+}
+
+export function useOneClickSwapSetting() {
+  const isOneClickSwapEnabled = useAtomValue(oneClickSwapAtom)
+  const overrideOneClickSwap = useAtomValue(overrideOneClickSwapFlagAtom)
+  const updateOneClickSwapEnabled = useUpdateAtom(oneClickSwapAtom)
+  const resetOverrideOneClickSwapFlag = useResetOverrideOneClickSwapFlag()
+
+  const enabled = isOneClickSwapEnabled && !overrideOneClickSwap
+
+  const toggle = useEvent((value: boolean) => {
+    updateOneClickSwapEnabled(value)
+
+    // If the user manually enables one-click, any override flag is cleared
+    if (value) {
+      resetOverrideOneClickSwapFlag()
+    }
+  })
+
+  return { enabled, toggle }
+}

@@ -1,0 +1,19 @@
+product_area: swap.chains
+platforms: [web, extension, mobile]
+nxProjects: [uniswap, "@universe/chains", "@universe/web", "@uniswap/extension", "@uniswap/mobile"]
+owners: ["@uniswap/security"]
+
+# Casebook area-registry metadata (read by the engine in apps/cli/src/casebook).
+# These drive Testlio suite naming, the PR-comment label, and CI routing.
+label: Swap Chains
+suiteNamePrefix: SwapChains
+ghLabel: "casebook:swap-chains"
+# Functional reviewer is @uniswap/swap-fe (the per-chain swap flow), but code_paths hit
+# security-owned chain config (packages/chains, apps/web/src/chains) -> dual review.
+# CODEOWNERS is silent on the functional owner; treat this slug as provisional.
+reviewerTeam: swap-fe
+
+# Test-wallet aliases referenced by this area's cases. Symbolic only: real mnemonics live in
+# the QA vault / Testlio TL handoff, keyed by the same alias. Never put a secret here.
+wallets:
+  TW-SWAPCHAINS-01: "funded EVM wallet: native gas token + a stablecoin on the chain under test (per-chain swap smokes, network selection)"

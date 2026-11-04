@@ -7,7 +7,6 @@
 
 #import "Uniswap-Swift.h"
 #import <React/RCTViewManager.h>
-#import "RNSwiftUI-Bridging-Header.h"
 
 @interface MnemonicDisplayManager : RCTViewManager
 @end
@@ -15,18 +14,15 @@
 @implementation MnemonicDisplayManager
 RCT_EXPORT_MODULE(MnemonicDisplay)
 
-RCT_EXPORT_SWIFTUI_PROPERTY(mnemonicId, NSString, MnemonicDisplayView);
-RCT_EXPORT_SWIFTUI_PROPERTY(copyText, NSString, MnemonicDisplayView);
-RCT_EXPORT_SWIFTUI_PROPERTY(copiedText, NSString, MnemonicDisplayView);
-RCT_EXPORT_SWIFTUI_CALLBACK(onHeightMeasured,  RCTDirectEventBlock, MnemonicDisplayView)
-RCT_EXPORT_SWIFTUI_CALLBACK(onEmptyMnemonic,  RCTDirectEventBlock, MnemonicDisplayView)
+RCT_EXPORT_VIEW_PROPERTY(mnemonicId, NSString);
+RCT_EXPORT_VIEW_PROPERTY(copyText, NSString);
+RCT_EXPORT_VIEW_PROPERTY(copiedText, NSString);
+RCT_EXPORT_VIEW_PROPERTY(onHeightMeasured, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onEmptyMnemonic, RCTDirectEventBlock);
 
-- (UIView *)view {
-  MnemonicDisplayView *proxy = [[MnemonicDisplayView alloc] init];
-  UIView *view = [proxy view];
-  NSMutableDictionary *storage = [MnemonicDisplayView storage];
-  storage[[NSValue valueWithNonretainedObject:view]] = proxy;
-  return view;
+- (UIView *)view
+{
+  return [[MnemonicDisplayView alloc] initWithFrame:CGRectZero];
 }
 
 @end

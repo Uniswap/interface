@@ -1,7 +1,9 @@
 // Import this file (test-utils/tokens/mock) at the top of a test file to use
 // these predefined token lookup mocks.
 
-vi.mock('~/hooks/Tokens')
+vi.mock('~/hooks/currency/useCurrency')
+vi.mock('~/hooks/currency/useCurrencyInfo')
+vi.mock('~/hooks/currency/useCurrencyWithLoading')
 vi.mock('uniswap/src/features/tokens/fetchCurrencyInfo')
 
 import { Currency, WETH9 } from '@uniswap/sdk-core'
@@ -10,7 +12,8 @@ import { COMMON_BASES } from 'uniswap/src/constants/routing'
 import { DAI, DAI_ARBITRUM_ONE, USDC_ARBITRUM, USDC_MAINNET, USDT, WBTC } from 'uniswap/src/constants/tokens'
 import { fetchCurrency } from 'uniswap/src/features/tokens/fetchCurrencyInfo'
 import { currencyIdToAddress, currencyIdToChain, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
-import { useCurrency, useCurrencyInfo } from '~/hooks/Tokens'
+import { useCurrency } from '~/hooks/currency/useCurrency'
+import { useCurrencyInfo } from '~/hooks/currency/useCurrencyInfo'
 import {
   DAI_ARBITRUM_INFO,
   DAI_INFO,

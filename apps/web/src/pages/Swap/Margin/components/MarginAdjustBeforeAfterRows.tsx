@@ -4,9 +4,6 @@ import { useTranslation } from 'react-i18next'
 import type { MarginActivePosition, MarginQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
-import { MarginBeforeAfterRow } from '~/pages/Swap/Margin/components/shared/MarginBeforeAfterRow'
-import { MarginDetailRow } from '~/pages/Swap/Margin/components/shared/MarginDetailRow'
-import { MarginHealthValue } from '~/pages/Swap/Margin/components/shared/MarginHealthValue'
 import {
   formatLeverageX,
   formatLiqDistanceSuffix,
@@ -15,8 +12,11 @@ import {
   rawToNumber,
   scaledE18ToNumber,
   usablePriceX18,
-} from '~/pages/Swap/Margin/marginFormat'
-import { marginPositionDebt } from '~/pages/Swap/Margin/marginPositionRow'
+} from '~/features/margin/utils/marginFormat'
+import { marginPositionDebt } from '~/features/margin/utils/marginPositionRow'
+import { MarginBeforeAfterRow } from '~/pages/Swap/Margin/components/shared/MarginBeforeAfterRow'
+import { MarginDetailRow } from '~/pages/Swap/Margin/components/shared/MarginDetailRow'
+import { MarginHealthValue } from '~/pages/Swap/Margin/components/shared/MarginHealthValue'
 
 // Leverage and Liquidates-at are the pair that carries the meaning of a funding-only change; Size
 // moves too, but as a consequence. 'liquidationSecond' sits them adjacent for Add/Withdraw margin.

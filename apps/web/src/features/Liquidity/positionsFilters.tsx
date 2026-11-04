@@ -1,11 +1,10 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { UniverseChainId, Platform } from '@universe/chains'
-import { Flex, Text } from '@universe/mycelium'
+import { Flex, Text, Switch, Separator } from '@universe/mycelium'
 import { LabeledCheckboxCompat as LabeledCheckbox } from '@universe/mycelium/checkbox-compat'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Separator, Switch } from 'ui/src'
 import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter/NetworkFilter'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
@@ -13,6 +12,8 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { Dropdown } from '~/components/Dropdowns/Dropdown'
 import {
+  hasActiveV2LifecycleFilter,
+  hasActiveV2VersionFilter,
   LP_POSITION_PROTOCOL_VERSIONS,
   V2_POSITION_STATUS_OPTIONS,
   type V2PositionStatusFilter,
@@ -45,6 +46,16 @@ export const POSITION_FILTER_BUTTON_STYLE = {
   },
 } as const
 
+// A trigger shows its selection in place of the filter name once the filter leaves its default, so an
+// active filter reads without opening the menu.
+function FilterTriggerLabel({ filter, selection }: { filter: string; selection?: string }): JSX.Element {
+  return (
+    <Text variant="buttonLabel3" numberOfLines={1}>
+      {selection ?? filter}
+    </Text>
+  )
+}
+
 export function ProtocolFilterDropdown({
   selectedVersions,
   onToggleVersion,
@@ -61,11 +72,19 @@ export function ProtocolFilterDropdown({
   const { t } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
 
+  // Menu order, not click order, so the label doesn't reshuffle as versions are toggled.
+  const selectedLabels = LP_POSITION_PROTOCOL_VERSIONS.filter((version) => selectedVersions.includes(version)).map(
+    getProtocolVersionLabel,
+  )
+  const selection = hasActiveV2VersionFilter(selectedVersions)
+    ? selectedLabels.join(', ') || t('common.none')
+    : undefined
+
   return (
     <Dropdown
       isOpen={isOpen}
       toggleOpen={setIsOpen}
-      menuLabel={<Text variant="buttonLabel3">{t('common.protocol')}</Text>}
+      menuLabel={<FilterTriggerLabel filter={t('common.protocol')} selection={selection} />}
       dropdownStyle={{ width: 160 }}
       containerStyle={filterContainerStyle({ fullWidth, fitContent })}
       alignRight={alignRight}
@@ -117,11 +136,27 @@ export function StatusFilterDropdown({
     setShowHiddenPositions(checked)
   }
 
+  // Literal t() calls (not a dynamic key lookup) so i18n:extract registers these strings.
+  const getStatusLabel = (status: V2PositionStatusFilter): string =>
+    status === 'open' ? t('common.open') : t('common.closed')
+  // An empty list (a hand-edited `?lifecycle=`) is requested as every lifecycle, so it's labelled that way.
+  const shownStatuses = selectedStatuses.length > 0 ? selectedStatuses : V2_POSITION_STATUS_OPTIONS
+  const lifecycleSelection = V2_POSITION_STATUS_OPTIONS.filter((status) => shownStatuses.includes(status))
+    .map(getStatusLabel)
+    .join(', ')
+  // Hidden swaps the table to the hidden-only set rather than adding rows, so it's set apart with a
+  // dot instead of joining the lifecycle list.
+  const selection = showHiddenPositions
+    ? `${lifecycleSelection} · ${t('common.hidden')}`
+    : hasActiveV2LifecycleFilter(selectedStatuses)
+      ? lifecycleSelection
+      : undefined
+
   return (
     <Dropdown
       isOpen={isOpen}
       toggleOpen={setIsOpen}
-      menuLabel={<Text variant="buttonLabel3">{t('common.status')}</Text>}
+      menuLabel={<FilterTriggerLabel filter={t('common.status')} selection={selection} />}
       dropdownStyle={{ width: 160 }}
       containerStyle={filterContainerStyle({ fullWidth, fitContent })}
       alignRight={alignRight}
@@ -136,8 +171,7 @@ export function StatusFilterDropdown({
             hoverStyle={{ opacity: 0.8, backgroundColor: 'unset' }}
             checkboxPosition="end"
             checked={selectedStatuses.includes(status)}
-            // Literal t() calls (not a dynamic key lookup) so i18n:extract registers these strings.
-            text={status === 'open' ? t('common.open') : t('common.closed')}
+            text={getStatusLabel(status)}
             onCheckPressed={() => onToggleStatus(status)}
           />
         ))}

@@ -2,7 +2,7 @@ import { fireEvent } from '@testing-library/react'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { UniverseChainId } from '@universe/chains'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { useActiveAddresses } from '~/features/accounts/store/hooks'
+import { useActiveAddresses } from '~/connection/accounts/hooks'
 import { SelectStepError } from '~/features/Liquidity/Create/SelectTokenStep'
 import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 import { mocked } from '~/test-utils/mocked'
@@ -14,8 +14,8 @@ vi.mock('react-router', async (importOriginal) => ({
   useNavigate: () => mockNavigate,
 }))
 
-vi.mock('~/features/accounts/store/hooks', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('~/features/accounts/store/hooks')>()),
+vi.mock('~/connection/accounts/hooks', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('~/connection/accounts/hooks')>()),
   useActiveAddresses: vi.fn(),
 }))
 

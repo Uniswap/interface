@@ -115,4 +115,49 @@ describe(buildFavoritesCanonicalLookup, () => {
     expect(networkCountByKey.get(buildLookupKey({ chainId: 1, address: '0xBBB' }))).toBe(1)
     expect(canonicalByKey.size).toBe(1)
   })
+
+  describe('deployments on chains the app no longer supports', () => {
+    // Blast (81457) was removed from the app, but ListTokens still serves ETH's Blast deployment
+    // under the zero-address native placeholder. Hardcoded because it is no longer a UniverseChainId.
+    const REMOVED_CHAIN_ID = 81457
+    const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
+
+    it('does not throw on a native placeholder deployment on a removed chain', () => {
+      expect(() =>
+        buildFavoritesCanonicalLookup([
+          makeRankedToken({ '1': ZERO_ADDRESS, '8453': ZERO_ADDRESS, [REMOVED_CHAIN_ID]: ZERO_ADDRESS }),
+        ]),
+      ).not.toThrow()
+    })
+
+    it('drops the removed-chain deployment from both maps and from the network count', () => {
+      const { canonicalByKey, networkCountByKey } = buildFavoritesCanonicalLookup([
+        makeRankedToken({ '1': '0xAAA', '8453': '0xAAA', [REMOVED_CHAIN_ID]: '0xAAA' }),
+      ])
+
+      expect(canonicalByKey.has(buildLookupKey({ chainId: REMOVED_CHAIN_ID, address: '0xAAA' }))).toBe(false)
+      expect(canonicalByKey.get(buildLookupKey({ chainId: 8453, address: '0xAAA' }))).toBe('1-0xAAA')
+      expect(networkCountByKey.get(buildLookupKey({ chainId: 1, address: '0xAAA' }))).toBe(2)
+      expect(canonicalByKey.size).toBe(2)
+    })
+
+    it('never picks a removed chain as the canonical deployment', () => {
+      // Without mainnet the canonical is the lowest chainId; 81457 < 7777777 (Zora) must not win.
+      const { canonicalByKey } = buildFavoritesCanonicalLookup([
+        makeRankedToken({ [REMOVED_CHAIN_ID]: '0xAAA', '7777777': '0xAAA' }),
+      ])
+
+      expect(canonicalByKey.get(buildLookupKey({ chainId: 7777777, address: '0xAAA' }))).toBe('7777777-0xAAA')
+      expect(canonicalByKey.size).toBe(1)
+    })
+
+    it('skips a token whose only deployment is on a removed chain', () => {
+      const { canonicalByKey, networkCountByKey } = buildFavoritesCanonicalLookup([
+        makeRankedToken({ [REMOVED_CHAIN_ID]: ZERO_ADDRESS }),
+      ])
+
+      expect(canonicalByKey.size).toBe(0)
+      expect(networkCountByKey.size).toBe(0)
+    })
+  })
 })

@@ -69,6 +69,14 @@ html {
   transition: all 0.3s ease-in-out;
 }
 
+/* The rule above gives every element `transition: all` while a layout animation runs (e.g. a positions
+   ExpandoRow), which would ease the margin chart block's height as the pane settles — reading as a
+   "resize". Scope its subtree back to opacity-only so its size snaps; the cross-fade still eases. */
+.layout-animation-ease-in-ease-out .margin-chart-size-static,
+.layout-animation-ease-in-ease-out .margin-chart-size-static * {
+  transition-property: opacity;
+}
+
 .layout-animation-linear * {
   transition: all 0.5s linear;
 }

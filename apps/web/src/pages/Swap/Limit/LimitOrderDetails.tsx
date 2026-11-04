@@ -8,7 +8,7 @@ import { ElementName, SwapEventName } from 'uniswap/src/features/telemetry/const
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { LimitDisclaimer } from '~/components/LimitDisclaimer'
-import { Allowance, AllowanceState } from '~/hooks/usePermit2Allowance'
+import { Allowance, AllowanceState } from '~/hooks/permit2/usePermit2Allowance'
 import { LimitOrderCallbackError } from '~/pages/Swap/Limit/LimitOrderCallbackError'
 import { LimitOrderLineItem, LimitOrderLineItemType } from '~/pages/Swap/Limit/LimitOrderLineItem'
 import { InterfaceTrade, LimitOrderTrade, RouterPreference } from '~/state/routing/types'

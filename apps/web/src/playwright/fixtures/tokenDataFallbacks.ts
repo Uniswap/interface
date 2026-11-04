@@ -1,28 +1,16 @@
 // oxlint-disable-next-line no-restricted-imports -- fallback helpers need direct Playwright types
 import type { APIResponse, Route } from '@playwright/test'
-import { Currency } from '@uniswap/sdk-core'
 import { WETH_ADDRESS } from '@uniswap/universal-router-sdk'
-import { GraphQLApi } from '@universe/api'
 import { normalizeTokenAddressForCache, UniverseChainId } from '@universe/chains'
 import { DEFAULT_NATIVE_ADDRESS as NATIVE_TOKEN_ADDRESS } from '@universe/prices'
-import { DAI, nativeOnChain, USDC, USDT, WBTC, WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
-import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
-import { currencyId } from 'uniswap/src/utils/currencyId'
+import { DAI, USDC, USDT } from 'uniswap/src/constants/tokens'
 import { WEETH_ADDRESS } from '~/playwright/anvil/utils'
 
 /**
- * Deterministic responses served ONLY when the live gateway fails (non-2xx / network error) on
- * the token-metadata reads the unsearched token selector cannot render without. A live 2xx
- * always passes through untouched. Without these, gateway throttling of CI traffic collapses
- * the selector into its error state (TokenSelectorSwapList ORs the query errors together and
- * SelectorBaseList unmounts every row and section header on any of them), failing every spec
- * that picks from the unsearched list.
- *
- * Currencies come from the real constants so decimals can never drift from production values —
- * buildCurrency silently mis-scales amounts on a wrong decimals value (USDT is 6, not 18).
+ * Deterministic responses served ONLY when the live gateway fails (non-2xx / network error /
+ * timeout) on token data reads that specs cannot run without. A healthy live response always
+ * passes through untouched.
  */
-
-type ContractInputLike = { chain: string; address?: string | null }
 
 // Validation hook: the gateway-throttling condition can't be reproduced on demand, so this
 // forces the fallback path to make it testable end-to-end. Read once at fixture setup (module
@@ -55,161 +43,6 @@ export async function fetchLiveResponseWithDeadline({
     livePromise,
     new Promise<undefined>((resolve) => setTimeout(() => resolve(undefined), timeoutMs)),
   ])
-}
-
-/**
- * A GraphQL response is healthy only when it is 2xx AND its body parses as JSON without a
- * non-empty top-level `errors` array — gateway throttling can surface as HTTP 200 + errors.
- * A 2xx whose body doesn't parse is treated as unhealthy too (nothing servable in it).
- */
-export async function isGraphqlResponseHealthy(response: APIResponse): Promise<boolean> {
-  if (!response.ok()) {
-    return false
-  }
-  try {
-    const body = (await response.json()) as { errors?: unknown }
-    return !(Array.isArray(body.errors) && body.errors.length > 0)
-  } catch {
-    return false
-  }
-}
-
-/**
- * Fulfills the route with the live response when it is healthy, otherwise with the
- * deterministic fallback body. The fallback body is built OUTSIDE the fulfill try/catch on
- * purpose: a throw in a fallback builder must fail the spec loudly instead of leaving the
- * route unanswered, which only surfaces as an unrelated 15s expect timeout with no log.
- */
-export async function fulfillWithFallback({
-  route,
-  buildFallback,
-  isHealthy = async (response) => response.ok(),
-  timeoutMs = LIVE_RESPONSE_TIMEOUT_MS,
-}: {
-  route: Route
-  buildFallback: () => unknown
-  isHealthy?: (response: APIResponse) => Promise<boolean>
-  timeoutMs?: number
-}): Promise<void> {
-  const liveResponse = await fetchLiveResponseWithDeadline({
-    route,
-    timeoutMs,
-    forceFallback: FORCE_TOKEN_DATA_FALLBACK,
-  })
-
-  if (liveResponse && (await isHealthy(liveResponse))) {
-    try {
-      await route.fulfill({ response: liveResponse })
-    } catch (error) {
-      // Page/test torn down mid-flight; nothing left to serve
-      console.warn('Token data fallback fulfill error:', error)
-    }
-    return
-  }
-
-  const fallbackBody = buildFallback()
-  try {
-    await route.fulfill({ json: fallbackBody })
-  } catch (error) {
-    // Page/test torn down mid-flight; nothing left to serve
-    console.warn('Token data fallback fulfill error:', error)
-  }
-}
-
-type TokenProjectsFallbackToken = {
-  __typename: 'Token'
-  id: string
-  address: string | null
-  chain: string
-  decimals: number
-  name: string | null
-  standard: GraphQLApi.TokenStandard
-  symbol: string | null
-  isBridged: boolean
-  bridgedWithdrawalInfo: null
-  feeData: null
-  protectionInfo: null
-}
-
-type TokenProjectsFallbackResponse = {
-  data: {
-    tokenProjects: {
-      __typename: 'TokenProject'
-      id: string
-      logoUrl: null
-      safetyLevel: GraphQLApi.SafetyLevel
-      tokens: TokenProjectsFallbackToken[]
-    }[]
-  }
-}
-
-const NATIVE_ADDRESS_KEY = 'native'
-
-function contractKey(contract: ContractInputLike): string {
-  return `${contract.chain}:${normalizeTokenAddressForCache(contract.address ?? null) ?? NATIVE_ADDRESS_KEY}`
-}
-
-// The common-bases set the selector always requests (useAllCommonBaseCurrencies) plus DAI.
-// Kept deliberately tiny: unknown addresses get no fallback entry at all.
-const KNOWN_FALLBACK_CURRENCIES: Currency[] = [
-  nativeOnChain(UniverseChainId.Mainnet),
-  nativeOnChain(UniverseChainId.Polygon),
-  nativeOnChain(UniverseChainId.Bnb),
-  nativeOnChain(UniverseChainId.Celo),
-  nativeOnChain(UniverseChainId.Avalanche),
-  nativeOnChain(UniverseChainId.Solana),
-  nativeOnChain(UniverseChainId.Monad),
-  USDC,
-  USDT,
-  WBTC,
-  DAI,
-  WRAPPED_NATIVE_CURRENCY[UniverseChainId.Mainnet],
-].filter((currency): currency is Currency => Boolean(currency))
-
-const KNOWN_BY_CONTRACT_KEY = new Map<string, Currency>(
-  KNOWN_FALLBACK_CURRENCIES.map((currency) => [contractKey(currencyIdToContractInput(currencyId(currency))), currency]),
-)
-
-/**
- * Builds a TokenProjects GraphQL response covering the requested contracts that are in the
- * known-token map. Unknown contracts are omitted — with the live gateway down there is nothing
- * deterministic to serve for them, and a partial live response drops rows the same way.
- */
-export function buildTokenProjectsFallbackResponse(contracts: ContractInputLike[]): TokenProjectsFallbackResponse {
-  const tokenProjects = contracts.flatMap((contract) => {
-    const currency = KNOWN_BY_CONTRACT_KEY.get(contractKey(contract))
-    if (!currency) {
-      return []
-    }
-
-    const idSuffix = `${contract.chain}-${currency.symbol}`
-    return [
-      {
-        __typename: 'TokenProject' as const,
-        id: `e2e-fallback-project-${idSuffix}`,
-        logoUrl: null,
-        safetyLevel: GraphQLApi.SafetyLevel.Verified,
-        tokens: [
-          {
-            __typename: 'Token' as const,
-            id: `e2e-fallback-token-${idSuffix}`,
-            address: contract.address ?? null,
-            chain: contract.chain,
-            decimals: currency.decimals,
-            name: currency.name ?? currency.symbol ?? null,
-            standard: currency.isNative ? GraphQLApi.TokenStandard.Native : GraphQLApi.TokenStandard.Erc20,
-            symbol: currency.symbol ?? null,
-            isBridged: false,
-            bridgedWithdrawalInfo: null,
-            feeData: null,
-            protectionInfo: null,
-          },
-        ],
-      },
-    ]
-  })
-
-  return { data: { tokenProjects } }
 }
 
 /**

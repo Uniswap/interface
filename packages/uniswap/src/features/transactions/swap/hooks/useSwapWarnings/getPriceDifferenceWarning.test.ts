@@ -1,7 +1,7 @@
 import { Percent } from '@uniswap/sdk-core'
 import { TradingApi } from '@universe/api'
+import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFilled'
 import i18next from 'i18next'
-import { AlertTriangleFilled } from 'ui/src/components/icons'
 import { WarningAction, WarningLabel, WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { getPriceDifferenceWarning } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/getPriceDifferenceWarning'
 import { PercentNumberDecimals } from 'utilities/src/format/types'

@@ -1,4 +1,4 @@
-import { Text, type TextCompatProps, View, type ViewCompatProps } from '@universe/mycelium'
+import { Text, type TextCompatProps, View, type ViewCompatProps, defaultWeights } from '@universe/mycelium'
 import {
   type ComponentPropsWithoutRef,
   type ComponentRef,
@@ -6,7 +6,6 @@ import {
   type ForwardRefExoticComponent,
   type RefAttributes,
 } from 'react'
-import { defaultWeights } from 'ui/src/theme'
 import useResizeObserver from 'use-resize-observer'
 import { Input, type InputProps } from '~/components/NumericalInput/NumericalInput'
 

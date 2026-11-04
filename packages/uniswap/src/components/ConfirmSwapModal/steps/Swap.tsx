@@ -1,6 +1,6 @@
 import { Flex } from '@universe/mycelium'
+import { Swap } from '@universe/mycelium/icons/Swap'
 import { useTranslation } from 'react-i18next'
-import { Swap } from 'ui/src/components/icons/Swap'
 import { StepRowProps, StepRowSkeleton } from 'uniswap/src/components/ConfirmSwapModal/steps/StepRowSkeleton'
 import { StepStatus } from 'uniswap/src/components/ConfirmSwapModal/types'
 import { useSecondsUntilDeadline } from 'uniswap/src/components/ConfirmSwapModal/useSecondsUntilDeadline'

@@ -117,7 +117,7 @@ export {
   SwitchChainError,
   UserRejectedRequestError,
 } from './types'
-export { createWalletClient, http, mainnet, privateKeyToAccount } from './other'
+export { bsc, createWalletClient, http, mainnet, privateKeyToAccount } from './other'
 export {
   concat,
   createTestClient,

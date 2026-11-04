@@ -1,13 +1,12 @@
 import * as DialogPrimitive from '@radix-ui/react-dialog'
-import { isWebApp } from '@universe/environment'
 import { Flex, type FlexProps } from '@universe/mycelium'
 import { OVERLAY_PORTAL_CONTAINER_ATTRIBUTE } from '@universe/mycelium/popover-compat'
-// The compat useMedia evaluates the same `ui/src/theme/media.ts` breakpoints (max-width,
+// The compat useMedia evaluates the same `BREAKPOINT_PX` breakpoints (max-width,
 // desktop-first) through an SSR-safe matchMedia store, so the sheet-adapt/close-icon
 // thresholds keep their exact legacy values.
 import { useMedia, useScrollbarStyles, useShadowPropsShort } from '@universe/mycelium/theme-hooks-compat'
+import { zIndexes } from '@universe/mycelium/tokens'
 import { type ReactNode, useCallback, useContext, useMemo } from 'react'
-import { type CloseIconProps, CloseIconWithHover } from 'ui/src/components/icons/CloseIconWithHover'
 import {
   FIXED_FULL_SCREEN,
   getOutsideEventTarget,
@@ -25,7 +24,6 @@ import {
 } from 'ui/src/components/modal/AdaptiveWebModalShared'
 import { WebBottomSheet } from 'ui/src/components/modal/WebBottomSheet.web'
 import { RemoveScroll } from 'ui/src/components/RemoveScroll/RemoveScroll'
-import { zIndexes } from 'ui/src/theme'
 import { useInjectSingleStylesheet } from 'utilities/src/react/useInjectSingleStylesheet'
 
 export {
@@ -61,13 +59,6 @@ export function useEffectiveModalOrSheetZIndex({
     }
     return zIndex ?? stackingLayerAbove(parentContextZ, zIndexes.modal)
   }, [adaptToSheet, isTopAligned, isSheetBreakpoint, zIndex, parentContextZ])
-}
-
-export function ModalCloseIcon(props: CloseIconProps): JSX.Element {
-  // hide close icon on bottom sheet on interface
-  const sm = useMedia().sm
-  const hideCloseIcon = isWebApp && sm
-  return hideCloseIcon ? <></> : <CloseIconWithHover {...props} />
 }
 
 /**

@@ -17,7 +17,7 @@ vi.mock('@universe/mycelium', () => ({
   iconSizes: { icon40: 40 },
 }))
 
-vi.mock('ui/src/components/icons', () => ({ CheckmarkCircle: (): null => null }))
+vi.mock('@universe/mycelium/icons/CheckmarkCircle', () => ({ CheckmarkCircle: (): null => null }))
 vi.mock('react-redux', () => ({ useDispatch: (): ReturnType<typeof vi.fn> => vi.fn() }))
 vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string): string => key }) }))
 vi.mock('utilities/src/logger/logger', () => ({ logger: { error: vi.fn() } }))

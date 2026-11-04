@@ -45,6 +45,7 @@ export function getPoolsListParams({
   filterParams,
   currencies,
   searchQuery,
+  categoryIds,
 }: {
   /** The single chain to scope to; when undefined the list spans `fallbackChainIds`. */
   chainId?: UniverseChainId
@@ -57,6 +58,8 @@ export function getPoolsListParams({
   currencies?: readonly [Maybe<Currency>, Maybe<Currency>]
   /** Normalized search box value; undefined leaves the list unsearched. */
   searchQuery?: string
+  /** Pool category ids (OR within the list); the backend rejects token category ids. */
+  categoryIds?: string[]
 }): Omit<PartialMessage<ListPoolsRequest>, 'page'> {
   const [currency0, currency1] = currencies ?? []
   const tokens = [currency0, currency1]
@@ -86,6 +89,7 @@ export function getPoolsListParams({
       statsFilter: filterParams?.statsFilter,
       rewardsOnly: filterParams?.rewardsOnly,
       searchQuery,
+      categoryIds,
     },
   }
 }

@@ -24,6 +24,7 @@ export function NetworkSearchBar({
         placeholder={searchNetworksLabel}
         py="$spacing8"
         px="$spacing12"
+        minHeight={40}
         backgroundColor="$surface2"
         borderWidth="$spacing1"
         value={value}

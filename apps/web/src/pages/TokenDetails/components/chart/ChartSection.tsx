@@ -19,18 +19,18 @@ import { TDPPriceChartPanel } from '~/pages/TokenDetails/components/chart/TDPPri
 import { TDPTvlChartPanel } from '~/pages/TokenDetails/components/chart/TDPTvlChartPanel'
 import { TDPVolumeChartPanel } from '~/pages/TokenDetails/components/chart/TDPVolumeChartPanel'
 import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
-import { getTDPChartGraphqlTarget } from '~/pages/TokenDetails/hooks/getTDPChartGraphqlTarget'
+import { getTDPChartTarget } from '~/pages/TokenDetails/hooks/getTDPChartTarget'
 import { useTDPMultichainAggregate } from '~/pages/TokenDetails/hooks/useTDPMultichainAggregate'
 import { useTokenDetailsAuctionDisplay } from '~/pages/TokenDetails/hooks/useTokenDetailsAuctionDisplay'
 import { getTokenDetailsProvenanceProperties } from '~/pages/TokenDetails/utils/tokenDetailsProvenanceAnalytics'
 
 function ChartSectionBody(): JSX.Element {
-  const { tokenColor, currency, multichainToken, pathGraphqlChain, pathTokenDbAddress, selectedMultichainChainId } =
+  const { tokenColor, currency, multichainToken, pathChainId, pathTokenDbAddress, selectedMultichainChainId } =
     useTDPStore((s) => ({
       tokenColor: s.tokenColor,
       currency: s.currency!,
       multichainToken: s.multichainToken,
-      pathGraphqlChain: s.currencyChain,
+      pathChainId: s.currencyChainId,
       pathTokenDbAddress: s.pathTokenDbAddress,
       selectedMultichainChainId: s.selectedMultichainChainId,
     }))
@@ -45,15 +45,15 @@ function ChartSectionBody(): JSX.Element {
     isAuctionOnly &&
     (auctionDisplay.phase === AuctionDisplayPhase.Upcoming || auctionDisplay.phase === AuctionDisplayPhase.Live)
 
-  const { chain: tokenChain, address: tokenDBAddress } = useMemo(
+  const { chainId: tokenChainId, address: tokenDBAddress } = useMemo(
     () =>
-      getTDPChartGraphqlTarget({
+      getTDPChartTarget({
         selectedMultichainChainId,
         multichainToken,
-        pathGraphqlChain,
+        pathChainId,
         pathTokenDbAddress,
       }),
-    [pathGraphqlChain, pathTokenDbAddress, selectedMultichainChainId, multichainToken],
+    [pathChainId, pathTokenDbAddress, selectedMultichainChainId, multichainToken],
   )
 
   const { chartType, timePeriod, priceChartType, disableCandlestickUI, setDisableCandlestickUI } =
@@ -62,18 +62,18 @@ function ChartSectionBody(): JSX.Element {
   const variables = useMemo(
     () => ({
       address: tokenDBAddress,
-      chain: tokenChain,
+      chainId: tokenChainId,
       duration: toHistoryDuration(timePeriod),
       multichain: isMultichainAggregateView,
     }),
-    [isMultichainAggregateView, timePeriod, tokenChain, tokenDBAddress],
+    [isMultichainAggregateView, timePeriod, tokenChainId, tokenDBAddress],
   )
 
   const displayPriceChartType = getDisplayPriceChartType(priceChartType, disableCandlestickUI)
   // The type toggle is hidden during price discovery, so a Volume or TVL selection made while the
   // auction lookup was still out would otherwise strand the user on an empty panel with no way back.
   const displayedChartType = isPriceDiscovery ? ChartType.PRICE : chartType
-  const visitKey = `${tokenChain}:${normalizeTokenAddressForCache(tokenDBAddress ?? null)}:${normalizeTokenAddressForCache(auctionDisplay.auction?.address ?? null)}`
+  const visitKey = `${tokenChainId}:${normalizeTokenAddressForCache(tokenDBAddress ?? null)}:${normalizeTokenAddressForCache(auctionDisplay.auction?.address ?? null)}`
   const emptyStateImpression = useRef({ visitKey, sent: false })
 
   useEffect(() => {

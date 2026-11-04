@@ -1,9 +1,11 @@
-import { Flex, Text, TouchableArea, UniversalList } from '@universe/mycelium'
+import { Flex, Text, TouchableArea, UniversalList, iconSizes } from '@universe/mycelium'
+import { BookOpen } from '@universe/mycelium/icons/BookOpen'
+import { Clock } from '@universe/mycelium/icons/Clock'
+import { TrendUp } from '@universe/mycelium/icons/TrendUp'
+import { Wrench } from '@universe/mycelium/icons/Wrench'
 import React, { memo, useCallback, useMemo } from 'react'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import { ScreenWithHeader } from 'src/components/layout/screens/ScreenWithHeader'
-import { BookOpen, Clock, TrendUp, Wrench } from 'ui/src/components/icons'
-import { iconSizes } from 'ui/src/theme/iconSizes'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 
 interface DebugScreenItem {

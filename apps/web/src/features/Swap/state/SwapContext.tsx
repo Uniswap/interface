@@ -46,7 +46,7 @@ export function SwapAndLimitContextProvider({
       !areCurrenciesEqual(previousInitialOutputCurrency, initialOutputCurrency) ||
       previousIsTestnetModeEnabled !== isTestnetModeEnabled
     ) {
-      // prefilled state may load in -- i.e. `outputCurrency` URL param pulling from gql
+      // prefilled state may load in -- i.e. `outputCurrency` URL param resolving from the backend
       setCurrencyState(prefilledState)
     }
   }, [

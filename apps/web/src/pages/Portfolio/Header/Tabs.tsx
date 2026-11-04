@@ -1,7 +1,6 @@
-import { Flex, Text } from '@universe/mycelium'
+import { Flex, Text, Separator } from '@universe/mycelium'
 import { TestID } from '@universe/test'
 import { Link } from 'react-router'
-import { Separator } from 'ui/src'
 import { ElementName, InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'

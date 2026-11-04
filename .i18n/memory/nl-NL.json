@@ -14,8 +14,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Apple",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -31,8 +31,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Google",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -48,8 +48,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Token 1",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -65,8 +65,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Token 2",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -82,8 +82,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{amount}} UNI",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -99,8 +99,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "~{{minutes}}min {{seconds}}s",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -116,8 +116,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "~{{minutes}}min",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -133,8 +133,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "~{{seconds}}s",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -150,8 +150,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{count}} tokens",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -167,8 +167,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Bridge",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-24T23-29-59Z",
+        "approvedAt": "2026-10-24T23:29:59.872Z",
         "approvedBy": "agent"
       }
     ],
@@ -371,8 +371,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Open",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -388,8 +388,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "App",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -405,8 +405,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Route",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -422,8 +422,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Route via {{provider}}",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -439,8 +439,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Blog",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -456,8 +456,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "OK",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -473,8 +473,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Chain",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -490,8 +490,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Details",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -507,8 +507,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Explorer",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -524,8 +524,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Governance",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -541,8 +541,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Help",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -558,8 +558,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Links",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -575,8 +575,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Max",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -592,8 +592,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Min",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -609,8 +609,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "1 week",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -626,8 +626,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Open",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -643,8 +643,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Pool",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -660,8 +660,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Pools",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -677,8 +677,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Portfolio",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -728,8 +728,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Protocol",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -745,8 +745,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Uniswap v2",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -762,8 +762,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Uniswap v3",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -779,8 +779,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Uniswap v4",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -796,8 +796,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Recent",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -813,8 +813,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Socials",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -830,8 +830,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Status",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -847,8 +847,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Contract",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -864,8 +864,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Tokens",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -881,8 +881,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Token A",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -898,8 +898,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Token B",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -915,8 +915,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Trending",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -932,8 +932,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Type",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -949,8 +949,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Volume",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -966,8 +966,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Website",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -983,8 +983,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Euro",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -1017,8 +1017,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{frameUrl}} via {{parentUrl}}",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -1350,8 +1350,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "(Code {{code}})",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -1390,6 +1390,23 @@
       }
     ],
     [
+      "nl-NL:i18next-json:explore.collections.volume1d",
+      {
+        "unitId": "explore.collections.volume1d",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "eb34a9fef3662ca5eae07f6d83baf6128d3823051b6ffed5591e27b8dcd52448",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "{{volume}} 1D vol.",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-26T18-33-23Z",
+        "approvedAt": "2026-10-26T18:33:23.892Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "nl-NL:i18next-json:explore.earn.apy",
       {
         "unitId": "explore.earn.apy",
@@ -1401,8 +1418,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{apy}} APY",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -1418,8 +1435,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Earn",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -1435,8 +1452,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Curator",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -1452,8 +1469,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Details",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -1469,8 +1486,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{apy}} APY",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -1486,8 +1503,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{count}} tokens",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -1503,8 +1520,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Wallets",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -1520,8 +1537,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Trending",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -1537,8 +1554,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{number}} MCap",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -1554,8 +1571,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Volume",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -1571,8 +1588,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Swap tokens",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -1588,8 +1605,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Bank",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -1605,8 +1622,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Venmo",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -1622,8 +1639,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Tokens",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -1639,8 +1656,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "API",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -1690,8 +1707,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Trending",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -1707,8 +1724,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Launchpad",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -1724,8 +1741,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "APR",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -1741,8 +1758,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Pool",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -2478,8 +2495,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "PnL {{value}} ({{pct}})",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -2495,8 +2512,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Break-even",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -2563,8 +2580,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Liq.",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -2580,8 +2597,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Liq. {{distance}}",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -2592,13 +2609,25 @@
         "providerId": "i18next-json",
         "locale": "nl-NL",
         "domain": "product-ui",
-        "sourceHash": "a62a7c03d828b67d0cfafe4ec99e0d1999f4e8961c6ff07ae1960e76ec2a0acf",
+        "sourceHash": "2649e082d9a2ba377ac918877028c3f1885e2e9ab926b216943aaf06064b92a1",
         "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
-        "translation": "Nieuwe instap",
-        "status": "clean",
-        "agentRunId": "nl-NL-2026-10-13T21-26-03Z",
-        "approvedAt": "2026-10-13T21:26:03.796Z",
+        "translation": "Instap",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "accuracy",
+            "severity": "major",
+            "detail": "Source is the bare chart label 'Entry' but the translation 'Nieuwe instap' adds 'Nieuwe' (new), which belongs to the order-preview strings (i=1523/1524), not this marker label. The label also pairs with 'Entry ({{leverage}})' (i=1532) and 'Mark-/instapprijs' (i=1781), so the bare noun is expected.",
+            "evidence": {
+              "sourceSpan": "Entry",
+              "targetSpan": "Nieuwe instap"
+            },
+            "alternative": "Instap"
+          }
+        ],
+        "agentRunId": "nl-NL-2026-10-24T23-29-59Z",
+        "approvedAt": "2026-10-24T23:29:59.872Z",
         "approvedBy": "agent"
       }
     ],
@@ -2650,6 +2679,74 @@
         "status": "clean",
         "agentRunId": "nl-NL-2026-10-13T21-26-03Z",
         "approvedAt": "2026-10-13T21:26:03.796Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:margin.chart.ohlc.close",
+      {
+        "unitId": "margin.chart.ohlc.close",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "6b23c0d5f35d1b11f9b683f0b0a617355deb11277d91ae091d399c655b87940d",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "C",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:margin.chart.ohlc.high",
+      {
+        "unitId": "margin.chart.ohlc.high",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "44bd7ae60f478fae1061e11a7739f4b94d1daf917982d33b6fc8a01a63f89c21",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "H",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:margin.chart.ohlc.low",
+      {
+        "unitId": "margin.chart.ohlc.low",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "72dfcfb0c470ac255cde83fb8fe38de8a128188e03ea5ba5b2a93adbea1062fa",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "L",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:margin.chart.ohlc.open",
+      {
+        "unitId": "margin.chart.ohlc.open",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "c4694f2e93d5c4e7d51f9c5deb75e6cc8be5e1114178c6a45b6fc2c566a0aa8c",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "O",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -2835,8 +2932,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Privacy",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -2903,8 +3000,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Volume",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -3363,6 +3460,23 @@
       }
     ],
     [
+      "nl-NL:i18next-json:margin.error.adjust.fundingSwapUnsupported",
+      {
+        "unitId": "margin.error.adjust.fundingSwapUnsupported",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "4b2841f9abbf331c34f5f1c9b11dc5ab21b367596bf3cb3b58d3223f1ddc8e33",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Deze actie werkt alleen met de token die als onderpand van de positie dient, op het netwerk van de positie.",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "nl-NL:i18next-json:margin.error.adjust.healthFloor",
       {
         "unitId": "margin.error.adjust.healthFloor",
@@ -3681,8 +3795,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Route",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -3751,6 +3865,40 @@
         "status": "clean",
         "agentRunId": "nl-NL-2026-10-13T21-26-03Z",
         "approvedAt": "2026-10-13T21:26:03.796Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:margin.leverage.decrease",
+      {
+        "unitId": "margin.leverage.decrease",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "a1a4f24aad89fe7c7c419c46458dc108c59dd2f804d5887e24c604000e048378",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Hefboom verlagen",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-24T23-29-59Z",
+        "approvedAt": "2026-10-24T23:29:59.872Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:margin.leverage.increase",
+      {
+        "unitId": "margin.leverage.increase",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "a9d8c8a3b24b084830d7162805a1e5d8f5a418bb1101b7628ae3f49b2fa9d0db",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Hefboom verhogen",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-24T23-29-59Z",
+        "approvedAt": "2026-10-24T23:29:59.872Z",
         "approvedBy": "agent"
       }
     ],
@@ -4197,8 +4345,59 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{venue}} · {{lltv}}% LLTV",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:margin.mobile.connectToViewPositions",
+      {
+        "unitId": "margin.mobile.connectToViewPositions",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "d472c68a3ca2ced681cd14221ccb4571894f98390163e0533e29e004a1e1e8b9",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Verbind een wallet om je posities te bekijken",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:margin.mobile.modify",
+      {
+        "unitId": "margin.mobile.modify",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "d94eaf69438863a8d5ef755e74e6840048386eefbf0e34f39004d2e9c9157778",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Aanpassen",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:margin.mobile.viewChart",
+      {
+        "unitId": "margin.mobile.viewChart",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "3486e01bb8ba84ffca94bd81040b53654a09e138ba6c2d61106242bf90951ec4",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Grafiek bekijken",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -4226,13 +4425,24 @@
         "providerId": "i18next-json",
         "locale": "nl-NL",
         "domain": "product-ui",
-        "sourceHash": "422bda9e9fd6f308e8c3be5c7d26cc3bff32ebc70f67438879fdcef6034d91f2",
+        "sourceHash": "2bf63d817630601b992694bc0b0559715001b9a24e7fe0d741eea02dce9181af",
         "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
-        "translation": "Je betaalt",
+        "translation": "Marge",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-13T21-26-03Z",
-        "approvedAt": "2026-10-13T21:26:03.796Z",
+        "judgeIssues": [
+          {
+            "category": "terminology",
+            "severity": "major",
+            "detail": "Intra-slice term collision: 'margin' is rendered 'Marge' here but kept as English 'margin' in i=1722 ('je margin teruggeeft'). 'Marge' is the natural Dutch financial term and the more defensible rendering; the collision should be resolved in i=1722, so this string itself stands.",
+            "evidence": {
+              "sourceSpan": "Margin",
+              "targetSpan": "Marge"
+            }
+          }
+        ],
+        "agentRunId": "nl-NL-2026-10-24T23-29-59Z",
+        "approvedAt": "2026-10-24T23:29:59.872Z",
         "approvedBy": "agent"
       }
     ],
@@ -4777,6 +4987,34 @@
       }
     ],
     [
+      "nl-NL:i18next-json:margin.plan.step.addMargin",
+      {
+        "unitId": "margin.plan.step.addMargin",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "4c063442e7c458cbf337ecb992c6d384ffaf179f1fe6cffe066c455f78418238",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Margin storten",
+        "status": "clean",
+        "judgeIssues": [
+          {
+            "category": "terminology",
+            "severity": "minor",
+            "detail": "This slice consistently keeps 'margin' in English ('Margin storten/opnemen/toevoegen'), matching the shipped rendering ('wat je margin nu waard is'), but run translation i=2254 renders 'Margin' as 'Marge'. Run-level terminology collision — the kept-English 'margin' used here is correct; i=2254 should be aligned to 'Margin'.",
+            "evidence": {
+              "sourceSpan": "margin",
+              "targetSpan": "Margin"
+            }
+          }
+        ],
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "nl-NL:i18next-json:margin.plan.step.adjust",
       {
         "unitId": "margin.plan.step.adjust",
@@ -4858,6 +5096,40 @@
         "status": "clean",
         "agentRunId": "nl-NL-2026-10-13T21-26-03Z",
         "approvedAt": "2026-10-13T21:26:03.796Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:margin.plan.step.decreasePosition",
+      {
+        "unitId": "margin.plan.step.decreasePosition",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "38d398cccf9a73a5b8f7b42922bc5e4084a94ef8e142504cb6f48e64fd48165d",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Positie verkleinen",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:margin.plan.step.increasePosition",
+      {
+        "unitId": "margin.plan.step.increasePosition",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "b75aeacb0c6e8fd29444209d44ccdf5f7725da2e53c7e2b60ffe8eeed8d18a3d",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Positie vergroten",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -4964,6 +5236,40 @@
       }
     ],
     [
+      "nl-NL:i18next-json:margin.plan.step.withdrawMargin",
+      {
+        "unitId": "margin.plan.step.withdrawMargin",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "60d12f6076b55cc73143950576072e9cc906901d931e5a9e16ca64d9a43f69ed",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Margin opnemen",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:margin.plan.title.addMargin",
+      {
+        "unitId": "margin.plan.title.addMargin",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "ad88b36d369b30e7de96515696df8f83d2f815e575f43b944d9d48a40f4f75a8",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Margin toevoegen",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "nl-NL:i18next-json:margin.plan.title.adjust",
       {
         "unitId": "margin.plan.title.adjust",
@@ -4998,6 +5304,40 @@
       }
     ],
     [
+      "nl-NL:i18next-json:margin.plan.title.decreaseLeverage",
+      {
+        "unitId": "margin.plan.title.decreaseLeverage",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "a1a4f24aad89fe7c7c419c46458dc108c59dd2f804d5887e24c604000e048378",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Hefboom verlagen",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:margin.plan.title.increaseLeverage",
+      {
+        "unitId": "margin.plan.title.increaseLeverage",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "a9d8c8a3b24b084830d7162805a1e5d8f5a418bb1101b7628ae3f49b2fa9d0db",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Hefboom verhogen",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "nl-NL:i18next-json:margin.plan.title.open",
       {
         "unitId": "margin.plan.title.open",
@@ -5011,6 +5351,23 @@
         "status": "clean",
         "agentRunId": "nl-NL-2026-10-13T21-26-03Z",
         "approvedAt": "2026-10-13T21:26:03.796Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:margin.plan.title.withdrawMargin",
+      {
+        "unitId": "margin.plan.title.withdrawMargin",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "60d12f6076b55cc73143950576072e9cc906901d931e5a9e16ca64d9a43f69ed",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Margin opnemen",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -5656,8 +6013,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Break-even",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-26T18-33-23Z",
+        "approvedAt": "2026-10-26T18:33:23.892Z",
         "approvedBy": "agent"
       }
     ],
@@ -5753,8 +6110,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "RoE",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-26T18-33-23Z",
+        "approvedAt": "2026-10-26T18:33:23.892Z",
         "approvedBy": "agent"
       }
     ],
@@ -5770,8 +6127,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "PnL",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-26T18-33-23Z",
+        "approvedAt": "2026-10-26T18:33:23.892Z",
         "approvedBy": "agent"
       }
     ],
@@ -5835,6 +6192,188 @@
         "status": "clean",
         "agentRunId": "nl-NL-2026-10-13T21-26-03Z",
         "approvedAt": "2026-10-13T21:26:03.796Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:margin.receipt.borrowRateTooltip",
+      {
+        "unitId": "margin.receipt.borrowRateTooltip",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "e2ea8d8789d17d5b0adeaa6db92e04ad3f27dee46b7f40daec481cf83548230a",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Leenrente {{venue}}: {{rate}}",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-24T23-29-59Z",
+        "approvedAt": "2026-10-24T23:29:59.872Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:margin.receipt.breakEven",
+      {
+        "unitId": "margin.receipt.breakEven",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "b46ea9b709326282887aec506be8fe0872fa58c3b16c0ff7de283c2aa3fec11a",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Break-even",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:margin.receipt.breakEvenTooltip",
+      {
+        "unitId": "margin.receipt.breakEvenTooltip",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "e053a4d04ddc48237602d3cea3891126baee981f9aa8f25eb019aee604d7be30",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Geschatte prijs waarbij sluiten je marge teruggeeft, ervan uitgaande dat de spread van het openen bij het sluiten opnieuw wordt betaald.",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "terminology",
+            "severity": "major",
+            "detail": "Intra-slice term collision: 'margin' is left as the English 'margin' here while i=1635 renders it 'Marge'. One rendering must be used; 'marge' is standard Dutch financial vocabulary and matches i=1635.",
+            "evidence": {
+              "sourceSpan": "closing returns your margin",
+              "targetSpan": "sluiten je margin teruggeeft"
+            },
+            "alternative": "je marge"
+          }
+        ],
+        "agentRunId": "nl-NL-2026-10-24T23-29-59Z",
+        "approvedAt": "2026-10-24T23:29:59.872Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:margin.receipt.liquidationPrice",
+      {
+        "unitId": "margin.receipt.liquidationPrice",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "1da7d9f5dd676995729dfc20cfe80f58494b85f8ecb39106186c7a70ab075ebd",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Liquidatieprijs",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-24T23-29-59Z",
+        "approvedAt": "2026-10-24T23:29:59.872Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:margin.receipt.liquidationPriceTooltip",
+      {
+        "unitId": "margin.receipt.liquidationPriceTooltip",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "5aaba78459d8a02e1f8d85b3a8e529a14e185e9c123f0b80f32b95ad7139c1ea",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Als de oracle-prijs dit niveau bereikt, kan de positie worden geliquideerd.",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-24T23-29-59Z",
+        "approvedAt": "2026-10-24T23:29:59.872Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:margin.receipt.market",
+      {
+        "unitId": "margin.receipt.market",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "5238d9bd03d543e62fff76cbea6a2392a95f42110e36c282e4c919991f607daf",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Markt",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-24T23-29-59Z",
+        "approvedAt": "2026-10-24T23:29:59.872Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:margin.receipt.marketTooltip",
+      {
+        "unitId": "margin.receipt.marketTooltip",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "f00d203d2ad28e22060b8880ebcb94d1b08bb4aa871f851168cb607a375e8bd7",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "De leenmarkt waaruit deze positie leent, met de huidige rente en geschatte kosten per dag.",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-24T23-29-59Z",
+        "approvedAt": "2026-10-24T23:29:59.872Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:margin.receipt.oraclePrice",
+      {
+        "unitId": "margin.receipt.oraclePrice",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "7015815cf171bee33d8be86956702f6cdf9491a15c8dc7cc09375cb7fe970e66",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Oracle-prijs: {{price}}",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-24T23-29-59Z",
+        "approvedAt": "2026-10-24T23:29:59.872Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:margin.receipt.perDay",
+      {
+        "unitId": "margin.receipt.perDay",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "26f9fa3e71eef433159d9f7e76d35addc578dfe20bae57ed4b9ac71df74bcbb9",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "{{amount}}/dag",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-24T23-29-59Z",
+        "approvedAt": "2026-10-24T23:29:59.872Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:margin.receipt.swapping",
+      {
+        "unitId": "margin.receipt.swapping",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "7664ffeafd9108e9c4f233646e56938060d94d486de7fa15c77b9584d78e301b",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Swap wordt uitgevoerd",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-24T23-29-59Z",
+        "approvedAt": "2026-10-24T23:29:59.872Z",
         "approvedBy": "agent"
       }
     ],
@@ -6032,8 +6571,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Route via {{provider}}",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -6083,6 +6622,74 @@
       }
     ],
     [
+      "nl-NL:i18next-json:margin.selector.assetFilter.anyLong",
+      {
+        "unitId": "margin.selector.assetFilter.anyLong",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "89b8b9d906a30137e197d081227f018a1c4bb270cf8bca9293169d1bf55cc13c",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Elke long-asset",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:margin.selector.assetFilter.anyShort",
+      {
+        "unitId": "margin.selector.assetFilter.anyShort",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "cf5c388c57503069f57c62aa2e2cb6cda6dd132ba9e489ad1ad15a0fa569de79",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Elke short-asset",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:margin.selector.assetFilter.long",
+      {
+        "unitId": "margin.selector.assetFilter.long",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "d3afc4cdb09f70dd2c8feaa677555c1446eb8a5694460b585c57f2575b2ff22d",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Long-asset",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:margin.selector.assetFilter.short",
+      {
+        "unitId": "margin.selector.assetFilter.short",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "3cd07d18af528e7726c0a79ce6edd5f39107af3f1dde0f468b7351530957c7ca",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Short-asset",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "nl-NL:i18next-json:margin.selector.borrowRateValue",
       {
         "unitId": "margin.selector.borrowRateValue",
@@ -6117,6 +6724,40 @@
       }
     ],
     [
+      "nl-NL:i18next-json:margin.selector.columnChange24h",
+      {
+        "unitId": "margin.selector.columnChange24h",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "0b509e6d4c97d169f054897e72a9d70905e12c89ef711215e5f1f66f529a719d",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "24 u",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:margin.selector.columnMarkPrice",
+      {
+        "unitId": "margin.selector.columnMarkPrice",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "18f80225d5a4ab19d1f0c922d3fc7f56f8f2fa956c4325e637fcd41177c2055b",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Mark-prijs",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "nl-NL:i18next-json:margin.selector.columnMarket",
       {
         "unitId": "margin.selector.columnMarket",
@@ -6140,13 +6781,30 @@
         "providerId": "i18next-json",
         "locale": "nl-NL",
         "domain": "product-ui",
-        "sourceHash": "01675ccf3f3fc19d24ca2c338d90277b48d5511d3c10e507bf9ce4d118d1003b",
+        "sourceHash": "36200a12fc166f013e1d0af0cf1b88a4224c4e804213b2f3b7276142c75848d1",
         "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Max. hefboom",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-13T21-26-03Z",
-        "approvedAt": "2026-10-13T21:26:03.796Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:margin.selector.columnPair",
+      {
+        "unitId": "margin.selector.columnPair",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "989da04b0aaaa57f9d4e0178cf5178cce8e1c8d44f4efe9af946599ce2a84f27",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Paar",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -6164,6 +6822,40 @@
         "status": "clean",
         "agentRunId": "nl-NL-2026-10-13T21-26-03Z",
         "approvedAt": "2026-10-13T21:26:03.796Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:margin.selector.debtFilter.any",
+      {
+        "unitId": "margin.selector.debtFilter.any",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "2a5d47d466ea761711f6875c10e46a2f6c95355e49c0466810dcb4b014ffa054",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Elke schuldasset",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:margin.selector.debtFilter.label",
+      {
+        "unitId": "margin.selector.debtFilter.label",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "dba87937151e21417c2523672c394be7fd3cfd2fabb4350d7dc5a58734012cad",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Schuldasset",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -6236,19 +6928,49 @@
       }
     ],
     [
+      "nl-NL:i18next-json:margin.selector.searchPlaceholder",
+      {
+        "unitId": "margin.selector.searchPlaceholder",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "7d59556565c19b9023ebafc7e6335999a4c8f97765628601b966e9cbd48fd0bd",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Zoek tokens of paren",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "nl-NL:i18next-json:margin.selector.title",
       {
         "unitId": "margin.selector.title",
         "providerId": "i18next-json",
         "locale": "nl-NL",
         "domain": "product-ui",
-        "sourceHash": "67f63ac3a864ef1ce8314508913935437260b824515eea52fbee46306f5fb335",
+        "sourceHash": "17eaf85e89a6b92a8b1111ae760444403973a7d6ad219eea4f8be4f7ae1ed958",
         "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
-        "translation": "Selecteer een markt",
-        "status": "clean",
-        "agentRunId": "nl-NL-2026-10-13T21-26-03Z",
-        "approvedAt": "2026-10-13T21:26:03.796Z",
+        "translation": "Selecteer een paar",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "terminology",
+            "severity": "major",
+            "detail": "'Select a pair' rendered as 'Selecteer een markt' ('market'), which both deviates from the glossary term pair → 'paar' and collides with sibling strings in this slice ('Paar' at i=1696, 'paren' at i=1702) referring to the same concept with a different word.",
+            "evidence": {
+              "rule": "glossary: \"pair\" → \"paar\"",
+              "sourceSpan": "pair",
+              "targetSpan": "markt"
+            },
+            "alternative": "Selecteer een paar"
+          }
+        ],
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -6298,8 +7020,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Long",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -6315,8 +7037,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Short",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -6435,6 +7157,74 @@
       }
     ],
     [
+      "nl-NL:i18next-json:margin.stats.label.high24h",
+      {
+        "unitId": "margin.stats.label.high24h",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "30c6a2350ec786d18b63af6b687c855867f04cfde8eed94841dceb1a16c4690f",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "24u hoog",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-24T23-29-59Z",
+        "approvedAt": "2026-10-24T23:29:59.872Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:margin.stats.label.liquidity",
+      {
+        "unitId": "margin.stats.label.liquidity",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "04864c05049e9d2e7a2ed9d58db8c07dbbfde8eb2f2b20406554fbff867bd17b",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Liquiditeit",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-24T23-29-59Z",
+        "approvedAt": "2026-10-24T23:29:59.872Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:margin.stats.label.low24h",
+      {
+        "unitId": "margin.stats.label.low24h",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "2f0807750c5f593ad34c3c0f452f4f260eb11982d22c5a0668314905cdcdc42e",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "24u laag",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-24T23-29-59Z",
+        "approvedAt": "2026-10-24T23:29:59.872Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:margin.stats.label.mark",
+      {
+        "unitId": "margin.stats.label.mark",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "d7cda0ca2c8586e512c425368fcb2bba62e81475bfceb4284f4906de8ec242bc",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Mark",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "nl-NL:i18next-json:margin.stats.liquidity",
       {
         "unitId": "margin.stats.liquidity",
@@ -6463,8 +7253,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "LLTV {{lltv}}% · Max {{max}}",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -6497,8 +7287,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Max {{max}}",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -6799,6 +7589,23 @@
       }
     ],
     [
+      "nl-NL:i18next-json:margin.table.markEntry",
+      {
+        "unitId": "margin.table.markEntry",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "c5bf8ffb56c7e547c417d206a62c4a1127edd04e5fde7d0915334bfa3ea2f7e9",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Mark-/instapprijs",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-24T23-29-59Z",
+        "approvedAt": "2026-10-24T23:29:59.872Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "nl-NL:i18next-json:margin.table.opening",
       {
         "unitId": "margin.table.opening",
@@ -6850,6 +7657,23 @@
       }
     ],
     [
+      "nl-NL:i18next-json:margin.table.pnl",
+      {
+        "unitId": "margin.table.pnl",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "348563db65d20fad0d307cfc180be9dee3a66c79dd2529de8413d64affe991a7",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "PnL",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "nl-NL:i18next-json:margin.table.pnlRoe",
       {
         "unitId": "margin.table.pnlRoe",
@@ -6861,8 +7685,25 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "PnL/RoE",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-26T18-33-23Z",
+        "approvedAt": "2026-10-26T18:33:23.892Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:margin.table.position",
+      {
+        "unitId": "margin.table.position",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "6d031af10da7a25e554bb21247f28f0e6cef77f1471175199e7fcc571964dc3d",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Positie",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-24T23-29-59Z",
+        "approvedAt": "2026-10-24T23:29:59.872Z",
         "approvedBy": "agent"
       }
     ],
@@ -7584,8 +8425,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "APR",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -7601,8 +8442,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Explorers",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -7669,8 +8510,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Filters",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -7686,8 +8527,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "$100k – $1M",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -7703,8 +8544,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "$10M+",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -7720,8 +8561,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "<$100k",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -7801,8 +8642,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "liq.",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -7818,8 +8659,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{tokenPair}} via {{dex}}",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -7835,8 +8676,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Mints",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -7852,8 +8693,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Swaps",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -7869,8 +8710,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Wraps",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -7886,8 +8727,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Type",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -7903,8 +8744,73 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "DeFi",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:portfolio.margin.openPositions_one",
+      {
+        "unitId": "portfolio.margin.openPositions_one",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "3567af724aa11e694537ad7d9188dac527968d2becccc1b3600799766cf47cbe",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "{{count}} open margin-positie",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:portfolio.margin.openPositions_other",
+      {
+        "unitId": "portfolio.margin.openPositions_other",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "fee33176e5e816c04274ad7bf029f3bba073cdb24e3df4f18bdd73a080ab8ba1",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "{{count}} open margin-posities",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:portfolio.margin.title",
+      {
+        "unitId": "portfolio.margin.title",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "2bf63d817630601b992694bc0b0559715001b9a24e7fe0d741eea02dce9181af",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Margin",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "terminology",
+            "severity": "major",
+            "detail": "Inconsistent rendering of 'margin': this label uses 'Marge' while the rest of the run and shipped strings keep the English loanword 'Margin' ('Margin toevoegen' i=1644/shipped, 'Margin storten' i=1635, '{{count}} open margin-positie' i=2252). Same source term, two target renderings within the run.",
+            "evidence": {
+              "sourceSpan": "Margin",
+              "targetSpan": "Marge",
+              "rule": "Intra-run term collision; shipped 'Add margin' → 'Margin toevoegen'"
+            },
+            "alternative": "Margin",
+            "reviewDimension": "term-type-agreement"
+          }
+        ],
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -7920,8 +8826,71 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{count}} tokens",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:position.create.v2.amountTooSmall",
+      {
+        "unitId": "position.create.v2.amountTooSmall",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "5f7144b32a93c97cde7ea14e54d6be791cb14e15bcb126a48c6d28ec35a84e74",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Bedragen te klein om een v2-pool aan te maken",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-22T21-14-20Z",
+        "approvedAt": "2026-10-22T21:14:20.887Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:position.hook.rejectsRemoval",
+      {
+        "unitId": "position.hook.rejectsRemoval",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "b8866456aee593b3cfd2bb7eb599ebd1892aa8b793cd354af883d6bd6e4ca034",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "De hook van deze pool weigert op dit moment opnames, dus deze transactie zou mislukken.",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-23T18-15-12Z",
+        "approvedAt": "2026-10-23T18:15:12.740Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:position.hook.removeMayFail",
+      {
+        "unitId": "position.hook.removeMayFail",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "f1a7a71cf59a4e068aa8f6d4e2253be3f3b70be46d400f0a45920ef1973de077",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "De hook van deze pool kan opnames blokkeren en deze transactie kon niet worden gesimuleerd. Deze kan mislukken.",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "fluency",
+            "severity": "minor",
+            "detail": "'Ze' as a subject pronoun for an inanimate singular ('deze transactie') is regional/awkward in standard nl-NL; 'Deze' is the idiomatic demonstrative here.",
+            "evidence": {
+              "sourceSpan": "It may fail.",
+              "targetSpan": "Ze kan mislukken."
+            },
+            "alternative": "Deze kan mislukken."
+          }
+        ],
+        "agentRunId": "nl-NL-2026-10-23T18-15-12Z",
+        "approvedAt": "2026-10-23T18:15:12.740Z",
         "approvedBy": "agent"
       }
     ],
@@ -7971,8 +8940,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Volume",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -7990,38 +8959,19 @@
         "status": "finalized",
         "judgeIssues": [
           {
-            "category": "terminology",
-            "severity": "major",
-            "detail": "Intra-run term collision: 'order' is kept as 'order' everywhere else in this run (i=2520 '{{amount}} order', 2521, 2604 'Order {{n}}', 3120/3121, shipped 'order uitgevoerd' glossary phrase), but rendered 'inleg' here. Same source term must get one rendering.",
-            "evidence": {
-              "rule": "order filled → order uitgevoerd (glossary); run-level consistency",
-              "sourceSpan": "Order",
-              "targetSpan": "inleg"
-            },
-            "alternative": "Order"
-          },
-          {
             "category": "accuracy",
             "severity": "major",
-            "detail": "Source 'Order' (orders-table column header) is rendered as 'inleg' (deposit/stake), which conveys a different concept — an order is a placed trade request, not the money put in. This misleads users reading the orders table.",
+            "detail": "'inleg' (stake/deposit) mistranslates 'Order' and breaks consistency: every other order string in the run uses 'order' ('{{amount}} order' i=2488, 'Order {{n}}' i=2572, 'Orders' i=3153). A column header reading 'inleg' misdescribes the data as a deposit amount.",
             "evidence": {
               "sourceSpan": "Order",
               "targetSpan": "inleg"
             },
-            "alternative": "Order"
-          },
-          {
-            "category": "style",
-            "severity": "minor",
-            "reviewDimension": "cta-affordance",
-            "detail": "Lowercase 'inleg' breaks label casing for a column header/label; sibling labels in the slice are capitalized.",
-            "evidence": {
-              "targetSpan": "inleg"
-            }
+            "alternative": "Order",
+            "reviewDimension": "cta-affordance"
           }
         ],
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -8037,8 +8987,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{amount}} order",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -8054,8 +9004,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{amount}} orders",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -8071,8 +9021,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Tokens",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -8088,8 +9038,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "The Badger",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -8105,8 +9055,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Frontrunner",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -8122,8 +9072,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "First Splash",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -8139,8 +9089,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Order {{n}}",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -8156,8 +9106,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Max",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -8173,8 +9123,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{amount}} volume",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -8190,8 +9140,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Top",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -8207,8 +9157,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Trending",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -8224,8 +9174,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Volume",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -8258,8 +9208,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "$TICKER",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -8309,8 +9259,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{name}} is live",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -8354,8 +9304,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "demo",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -8507,8 +9457,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Crowd Launch",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -8524,8 +9474,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Instant Launch",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -8541,8 +9491,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Burn",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -8575,8 +9525,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Crowd",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -8592,8 +9542,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Instant",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -8609,8 +9559,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Portfolio",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -8626,8 +9576,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{count}} order",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -8643,8 +9593,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{count}} orders",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -8660,8 +9610,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Account {{address}}",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -8677,8 +9627,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Account {{address}}, {{value}}",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -8694,8 +9644,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Claims",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -8711,8 +9661,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Orders",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -8728,8 +9678,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Tokens",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -8773,8 +9723,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Trending",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -8790,8 +9740,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Orders",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -8807,8 +9757,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Live",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -8824,8 +9774,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Home",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -8841,8 +9791,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Home",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -8858,8 +9808,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Type",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -8875,8 +9825,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Browser",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -8926,8 +9876,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{apr}} APR",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -8943,8 +9893,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{apy}} APY",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -8960,8 +9910,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Chain",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -8977,8 +9927,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Recent",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -8994,8 +9944,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "OK",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -9011,8 +9961,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "ENS",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -9062,8 +10012,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "30 min",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -9079,8 +10029,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "5 min",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -9177,8 +10127,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Max",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -9262,8 +10212,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{count}} hop",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -9279,8 +10229,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{count}} hops",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -9313,8 +10263,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Via {{provider}}",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -9447,6 +10397,23 @@
       }
     ],
     [
+      "nl-NL:i18next-json:tdp.auction.startsIn",
+      {
+        "unitId": "tdp.auction.startsIn",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "5fefbb92603fab9c2557b72cf99eb3b98916bea79056b6fcbb517645a9049eea",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Begint over",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-26T16-31-49Z",
+        "approvedAt": "2026-10-26T16:31:49.474Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "nl-NL:i18next-json:tdp.auction.statusUnavailable",
       {
         "unitId": "tdp.auction.statusUnavailable",
@@ -9477,6 +10444,23 @@
         "status": "clean",
         "agentRunId": "nl-NL-2026-09-16T16-25-30Z",
         "approvedAt": "2026-09-16T16:25:30.967Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "nl-NL:i18next-json:tdp.auction.upcoming",
+      {
+        "unitId": "tdp.auction.upcoming",
+        "providerId": "i18next-json",
+        "locale": "nl-NL",
+        "domain": "product-ui",
+        "sourceHash": "8445cc4d09cdb97d759ec772a31f8acd64b071c54282c509bf21b897f7126568",
+        "glossaryHash": "c7e06d6b767a18e17fd4b6429ed73af9ae976eab56d8ec4830cf965a3c3313bc",
+        "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
+        "translation": "Aankomende veiling",
+        "status": "clean",
+        "agentRunId": "nl-NL-2026-10-26T16-31-49Z",
+        "approvedAt": "2026-10-26T16:31:49.474Z",
         "approvedBy": "agent"
       }
     ],
@@ -9862,8 +10846,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Launchpad",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -9943,8 +10927,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Links",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -9960,8 +10944,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Website",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -10099,8 +11083,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Recent",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -10116,8 +11100,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Trending",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -10286,8 +11270,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "<value>{{fdv}}</value> FDV",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -10371,8 +11355,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Website",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -10453,8 +11437,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "{{amount}} per token",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -10470,8 +11454,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "per token",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -10521,8 +11505,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "ETH / native",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -10538,8 +11522,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Start",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -10834,8 +11818,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Permanent",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -10851,8 +11835,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "$TICKER",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -10885,8 +11869,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Details",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -10902,8 +11886,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Whitelist",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -10919,8 +11903,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Status",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -10936,8 +11920,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Crowd Launch",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -10970,8 +11954,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Crowd Launches",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -10987,8 +11971,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Custom Auction",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -11055,8 +12039,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Instant Launch",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -11089,8 +12073,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Instant Launches",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -11106,8 +12090,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Custom Launch",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -11123,8 +12107,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Pools.trade",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -11191,8 +12175,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "App",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -11480,8 +12464,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "<icon /> <gradient>UniswapX</gradient> <info />",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -11497,8 +12481,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Bio",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ],
@@ -11514,8 +12498,8 @@
         "styleHash": "f6411e6db40bd3f7b87472e8ef99f9225a689d5df5d2c7018b92a074076d437f",
         "translation": "Tokens",
         "status": "clean",
-        "agentRunId": "nl-NL-2026-10-21T17-35-25Z",
-        "approvedAt": "2026-10-21T17:35:25.212Z",
+        "agentRunId": "nl-NL-2026-10-27T20-02-23Z",
+        "approvedAt": "2026-10-27T20:02:23.228Z",
         "approvedBy": "agent"
       }
     ]

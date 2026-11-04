@@ -1,7 +1,7 @@
 import { Flex, Text } from '@universe/mycelium'
+import { LabeledCheckboxCompat as LabeledCheckbox } from '@universe/mycelium/checkbox-compat'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { LabeledCheckbox } from 'ui/src'
 import { DialogButtons } from 'uniswap/src/components/dialog/DialogButtons'
 import { DialogContent } from 'uniswap/src/components/dialog/DialogContent'
 import type { DialogProps } from 'uniswap/src/components/dialog/DialogProps'

@@ -119,7 +119,7 @@
       "path": "packages/test"
     },
     {
-      "path": "packages/swap-ui"
+      "path": "packages/transactions-ui"
     },
     {
       "path": "packages/cca"

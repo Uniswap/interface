@@ -7,8 +7,8 @@
  * take an exports target literally. So the split rides `rotation-platform`'s
  * EXTENSIONLESS internal import instead, the same mechanism the generated
  * icons' `factories/svg-elements` host shim uses: web resolvers load this leg
- * (directly, or through the base leg's re-export), Metro and the native parity
- * harness load `rotation-platform.native.ts`. Keeping `react-native` out of
+ * (directly, or through the base leg's re-export), Metro loads
+ * `rotation-platform.native.ts`. Keeping `react-native` out of
  * this leg is what lets it stay an optional peer.
  *
  * Export set pinned against the native leg by `__tests__/platform-legs.test.tsx`.

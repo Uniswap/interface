@@ -22,17 +22,22 @@ vi.mock('~/pages/Swap/Margin/hooks/useDerivedMarginInfo', () => ({
       isPaymentDifferentFromCollateral: false,
     }) as unknown as DerivedMarginInfo,
 }))
+vi.mock('~/pages/Swap/Margin/hooks/useMarginEquityInput', () => ({ useMarginEquityInput: () => ({}) }))
 vi.mock('uniswap/src/components/CurrencyInputPanel/CurrencyInputPanel', () => ({ CurrencyInputPanel: () => null }))
 vi.mock('~/pages/Swap/Margin/components/MarginPayWith', () => ({ MarginPayWith: () => null }))
-vi.mock('~/pages/Swap/Margin/components/MarginSizeBlock', () => ({ MarginSizeBlock: () => null }))
-vi.mock('~/pages/Swap/Margin/components/MarginRateRows', () => ({ MarginRateRows: () => null }))
+vi.mock('~/pages/Swap/Margin/components/MarginLeverageSection', () => ({ MarginLeverageSection: () => null }))
+vi.mock('~/pages/Swap/Margin/components/MarginRateRows', () => ({
+  MarginRateRows: () => null,
+}))
 vi.mock('~/pages/Swap/Margin/components/MarginOpenButton', () => ({ MarginOpenButton: () => null }))
 vi.mock('~/pages/Swap/Margin/components/MarginOpenReviewModal', () => ({ MarginOpenReviewModal: () => null }))
 vi.mock('~/pages/Swap/Margin/components/MarginMarketSelector', () => ({ MarginMarketSelector: () => null }))
 vi.mock('~/pages/Swap/Margin/MarginPositionsTable', () => ({ MarginPositionsTable: () => null }))
 
-vi.mock('~/hooks/useAccount', () => ({ useAccount: () => ({ address: '0x000000000000000000000000000000000000A1' }) }))
-vi.mock('~/components/AccountDrawer/MiniPortfolio/hooks', () => ({ useAccountDrawer: () => ({ open: vi.fn() }) }))
+vi.mock('~/connection/hooks/useAccount', () => ({
+  useAccount: () => ({ address: '0x000000000000000000000000000000000000A1' }),
+}))
+vi.mock('~/state/accountDrawer/hooks', () => ({ useAccountDrawer: () => ({ open: vi.fn() }) }))
 
 const { mockMarkets, mockGetPairMarket, mockIsLoading, setMarginFormState } = vi.hoisted(() => ({
   mockMarkets: { current: [] as MarginMarket[] },
@@ -42,8 +47,8 @@ const { mockMarkets, mockGetPairMarket, mockIsLoading, setMarginFormState } = vi
   setMarginFormState: vi.fn(),
 }))
 
-vi.mock('~/pages/Swap/Margin/hooks/useMarginMarkets', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('~/pages/Swap/Margin/hooks/useMarginMarkets')>()
+vi.mock('~/features/margin/hooks/useMarginMarkets', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('~/features/margin/hooks/useMarginMarkets')>()
   return {
     ...actual,
     useMarginMarkets: () => ({

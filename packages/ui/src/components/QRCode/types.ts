@@ -1,5 +1,5 @@
+import type { SporeColorToken } from '@universe/mycelium/compat'
 import type { QRCodeErrorCorrectionLevel } from 'qrcode'
-import type { SporeColorToken } from 'ui/src/theme/color/types'
 
 export type BaseQRProps = {
   ecl?: QRCodeErrorCorrectionLevel

@@ -21,6 +21,8 @@ export const MARGIN_POSITIONS_REFETCH_MS = 20_000
 // importing a module that surfaces routinely mock.
 export const MARGIN_MARKETS_REFETCH_MS = 60_000
 export const MARGIN_DEBOUNCE_MS = 300
+// Max width of the margin picker modals.
+export const MARGIN_SELECTOR_MODAL_MAX_WIDTH = 480
 
 // Temporary non-canonical mainnet MarginRouter — this deployment is not the final one, and the
 // address changes when the canonical router ships. Resolved by the client rather than read off a

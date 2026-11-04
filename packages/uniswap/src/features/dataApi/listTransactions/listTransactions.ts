@@ -7,6 +7,7 @@ import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { useListTransactionsQuery } from 'uniswap/src/data/apiClients/dataApiService/activity/listTransactions'
 import { parseToTransactionDetails } from 'uniswap/src/features/activity/parseToTransactionDetails'
+import { isDustReceive } from 'uniswap/src/features/activity/utils/isDustReceive'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import type { BaseResult, PaginationControls } from 'uniswap/src/features/dataApi/types'
 import { useHideReportedActivitySetting } from 'uniswap/src/features/settings/hooks'
@@ -187,7 +188,9 @@ function useFilteredTransactionsByVisibility(
     return transactions
   }
 
-  return transactions?.filter((transaction) => activityIdToVisibility[transaction.id]?.isVisible ?? true)
+  return transactions?.filter(
+    (transaction) => (activityIdToVisibility[transaction.id]?.isVisible ?? true) && !isDustReceive(transaction),
+  )
 }
 
 function getUniqueTransactionId(transaction: ListTransactionsResponse['transactions'][0]): string | undefined {

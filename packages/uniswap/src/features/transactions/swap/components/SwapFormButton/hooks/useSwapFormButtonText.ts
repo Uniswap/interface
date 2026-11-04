@@ -5,12 +5,12 @@ import { WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useShowGetStarted } from 'uniswap/src/contexts/ShowGetStartedContext'
 import { useConnectionStatus } from 'uniswap/src/features/accounts/store/hooks'
-import { useIsWebFORNudgeEnabled } from 'uniswap/src/features/providers/webForNudgeProvider'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { useIsAmountSelectionInvalid } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsAmountSelectionInvalid'
 import { useIsMissingPlatformWallet } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsMissingPlatformWallet'
 import { useIsTokenSelectionInvalid } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsTokenSelectionInvalid'
 import { useIsTradeIndicative } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsTradeIndicative'
+import { useIsWebFORNudgeActive } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsWebFORNudgeActive'
 import { useNeedsGeoAcknowledgment } from 'uniswap/src/features/transactions/swap/hooks/useGeoRestrictionAcknowledgment'
 import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/useSwapWarnings'
 import { getActionText } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen/SwapReviewFooter/SubmitSwapButton'
@@ -41,7 +41,7 @@ export const useSwapFormButtonText = (): string => {
   const nativeCurrency = nativeOnChain(chainId)
 
   const isIndicative = useIsTradeIndicative()
-  const isWebFORNudgeEnabled = useIsWebFORNudgeEnabled()
+  const isWebFORNudgeActive = useIsWebFORNudgeActive()
   const isWrap = wrapType !== WrapType.NotApplicable
 
   // Permissioned-pool gating runs before the generic swapRedirectCallback path so the
@@ -60,8 +60,13 @@ export const useSwapFormButtonText = (): string => {
     return t('swap.button.review')
   }
 
-  if (blockingWarning?.buttonText) {
+  // An empty wallet fails every balance check, so Add funds replaces the "Not enough X" copy.
+  if (blockingWarning?.buttonText && !isWebFORNudgeActive) {
     return blockingWarning.buttonText
+  }
+
+  if (isWebFORNudgeActive && !isDisconnected) {
+    return t('empty.swap.button.text')
   }
 
   if (isIndicative) {
@@ -73,10 +78,6 @@ export const useSwapFormButtonText = (): string => {
       return t('common.getStarted')
     }
     return isEmbeddedWalletEnabled ? t('common.connect.button') : t('common.connectWallet.button')
-  }
-
-  if (isWebFORNudgeEnabled) {
-    return t('empty.swap.button.text')
   }
 
   if (isMissingPlatformWallet) {

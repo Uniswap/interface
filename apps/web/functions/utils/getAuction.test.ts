@@ -54,21 +54,59 @@ describe('getAuction', () => {
     })
   })
 
-  test('uses auction metadata overrides when configured', async () => {
+  test('serves the API token image, resolving ipfs:// through the IPFS gateway', async () => {
     mockAuctionResponse({
-      tokenAddress: '0xa53887f7e7c1bf5010b8627f1c1ba94fe7a5d6e0',
-      tokenName: 'Rainbow Token',
-      tokenSymbol: 'RNBW',
+      tokenAddress: '0x170f6e39ea851108f0713090467871f28a62a5d4',
+      tokenName: 'Boardwalk',
+      tokenSymbol: 'BWLK',
+      tokenImageUrl: 'ipfs://bafkreiacndnz2tlxmvv4jl7bkl2moqr62vzbfzibcmlm2vsmt7ojjxudp4',
+    })
+
+    const result = await getAuction({
+      chainName: 'arbitrum',
+      auctionAddress: '0x54114F746B55b2f8A56bbd17dfD9e81a0a71d366',
+      url: 'https://app.uniswap.org/explore/auctions/arbitrum/0x54114F746B55b2f8A56bbd17dfD9e81a0a71d366',
+    })
+
+    expect(result?.auctionData?.tokenLogoUrl).toBe(
+      'https://ipfs.pools.xyz/ipfs/bafkreiacndnz2tlxmvv4jl7bkl2moqr62vzbfzibcmlm2vsmt7ojjxudp4',
+    )
+  })
+
+  test('passes an https API token image through unchanged', async () => {
+    mockAuctionResponse({
+      tokenAddress: '0x1234567890123456789012345678901234567890',
+      tokenSymbol: 'EXM',
+      tokenImageUrl: 'https://coin-images.coingecko.com/coins/images/1/large/exm.png',
     })
 
     const result = await getAuction({
       chainName: 'base',
-      auctionAddress: '0x7e867b47a94df05188c08575e8b9a52f3f69c469',
-      url: 'https://app.uniswap.org/explore/auctions/base/0x7e867b47a94df05188c08575e8b9a52f3f69c469',
+      auctionAddress: '0xABCDEFabcdefABCDEFabcdefABCDEFabcdefABCD',
+      url: 'https://app.uniswap.org/explore/auctions/base/0xABCDEFabcdefABCDEFabcdefABCDEFabcdefABCD',
     })
 
-    expect(result?.auctionData?.tokenLogoUrl).toBe('https://app.uniswap.org/images/logos/rainbow-token-launch-logo.png')
+    expect(result?.auctionData?.tokenLogoUrl).toBe('https://coin-images.coingecko.com/coins/images/1/large/exm.png')
   })
+
+  test.each(['data:image/svg+xml;base64,PHN2Zz48L3N2Zz4=', 'http://example.com/exm.png', 'javascript:alert(1)'])(
+    'drops an API token image that is not https or ipfs: %s',
+    async (tokenImageUrl) => {
+      mockAuctionResponse({
+        tokenAddress: '0x1234567890123456789012345678901234567890',
+        tokenSymbol: 'EXM',
+        tokenImageUrl,
+      })
+
+      const result = await getAuction({
+        chainName: 'base',
+        auctionAddress: '0xABCDEFabcdefABCDEFabcdefABCDEFabcdefABCD',
+        url: 'https://app.uniswap.org/explore/auctions/base/0xABCDEFabcdefABCDEFabcdefABCDEFabcdefABCD',
+      })
+
+      expect(result?.auctionData?.tokenLogoUrl).toBeUndefined()
+    },
+  )
 
   test('returns undefined for invalid chain URL params', async () => {
     vi.stubGlobal('fetch', vi.fn())

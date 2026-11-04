@@ -9,9 +9,8 @@
  * alongside react-native / gesture-handler / reanimated for the same reason.
  *
  * This is a stand-in for a NATIVE-ONLY dependency in a jsdom suite, not a
- * substitute for proving the resolution: the real hook, hydrated by uniwind's
- * own bundler pipeline, is what the native parity harness exercises
- * (`packages/tailwind/src/parity/button/native-parity.test.tsx`).
+ * substitute for proving the resolution: the real hook only runs under
+ * uniwind's own bundler pipeline, i.e. on device.
  */
 export const useResolveClassNames = (_className: string): Record<string, unknown> => ({})
 

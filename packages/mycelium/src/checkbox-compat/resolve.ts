@@ -22,11 +22,6 @@ import type {
 
 /**
  * Legacy defaults, transcribed from the two component signatures.
- *
- * The labeled row's two spacing defaults are pinned against the LIVE legacy
- * `LabeledCheckbox` by `checkbox-parity.test.tsx` Layer C (web) and
- * `native-parity.test.tsx` Layer 6 (native) — not by `resolve.test.ts`, which
- * restates the literals and so cannot catch a mis-transcription.
  */
 export const DEFAULT_CHECKBOX_SIZE: CheckboxCompatSizeToken = '$icon.20'
 export const DEFAULT_CHECKBOX_VARIANT: CheckboxCompatVariant = 'default'
@@ -34,7 +29,7 @@ export const DEFAULT_CHECKBOX_POSITION = 'start' as const
 export const DEFAULT_LABELED_GAP = '$spacing12' as const
 export const DEFAULT_LABELED_PX = '$spacing4' as const
 
-/** The six sizes legacy `getSizes` derives (Checkbox.tsx:24-34). */
+/** The six sizes legacy `getSizes` derives. */
 export interface CheckboxSizes {
   /** `round(n * 1.3)` — the outer focus ring. */
   focusRing: number
@@ -106,14 +101,14 @@ export interface CheckboxInteractionState {
 export const CHECKBOX_AT_REST: CheckboxInteractionState = { hovered: false, focused: false, pressed: false }
 
 /**
- * Legacy glyph sizing (Checkbox.tsx:115): the checkmark grows to
+ * Legacy glyph sizing: the checkmark grows to
  * `CheckSizePressed` while pressed, otherwise `CheckSizeDefault`.
  */
 export function checkGlyphPx(sizes: CheckboxSizes, pressed: boolean): number {
   return pressed ? sizes.glyphPressed : sizes.glyphDefault
 }
 
-/** Legacy dot sizing (Checkbox.tsx:129-131). */
+/** Legacy dot sizing. */
 export function hoverDotPx(sizes: CheckboxSizes, pressed: boolean): number {
   return pressed ? sizes.pressedDot : sizes.hoverDot
 }
@@ -147,7 +142,7 @@ export function shouldShowIndicator(checked: boolean): boolean {
 
 /**
  * Legacy shows the unselected hover dot only when NOT checked, hovered, and not
- * disabled (Checkbox.tsx:119-121).
+ * disabled.
  */
 export function shouldShowHoverDot({
   checked,
@@ -161,11 +156,11 @@ export function shouldShowHoverDot({
   return !checked && hovered && !disabled
 }
 
-/** How `text` is rendered: legacy wraps a string, passes an element through (LabeledCheckbox.tsx:49-56). */
+/** How `text` is rendered: legacy wraps a string, passes an element through. */
 export type LabeledTextShape = 'absent' | 'string' | 'element'
 
 export function labeledTextShape(text: LabeledCheckboxCompatProps['text']): LabeledTextShape {
-  // One falsiness test, exactly like legacy's `{text && …}` gate (LabeledCheckbox.tsx:63):
+  // One falsiness test, exactly like legacy's `{text && …}` gate:
   // covers undefined and the empty string, and still reads a runtime `null` from an
   // untyped call site as absent rather than as an element (`typeof null === 'object'`).
   if (!text) {
@@ -185,8 +180,7 @@ export function labeledTextShape(text: LabeledCheckboxCompatProps['text']): Labe
  * the two props typed `CheckboxCompatStyleProp` — so the legs cannot drift.
  *
  * The walk itself is the core `flattenCompatStyle` — one shared
- * implementation, pinned against real `StyleSheet.flatten` by this pair's
- * native-parity suite. The copy into a fresh object keeps this pair's
+ * implementation. The copy into a fresh object keeps this pair's
  * contract: always an object (never `undefined` — the call sites spread or
  * pass it unconditionally), never the caller's own reference.
  *

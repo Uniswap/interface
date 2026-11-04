@@ -9,6 +9,7 @@ import {
   AnimatedFlex,
   useIsShortMobileDevice,
 } from '@universe/mycelium'
+import { ArrowDownArrowUp } from '@universe/mycelium/icons/ArrowDownArrowUp'
 import { useDeviceDimensions, useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
 import React, { forwardRef, RefObject, useCallback, useEffect, useImperativeHandle, useRef } from 'react'
@@ -17,7 +18,6 @@ import { NativeSyntheticEvent, TextInput as RNTextInput, TextInputSelectionChang
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { useFiatOnRampContext } from 'src/features/fiatOnRamp/FiatOnRampContext'
 import { useShakeAnimation } from 'ui/src'
-import { ArrowDownArrowUp } from 'ui/src/components/icons'
 import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
 import { AmountInput } from 'uniswap/src/components/AmountInput/AmountInput'
 import { useDeferredCaret } from 'uniswap/src/components/CurrencyInputPanel/hooks/useDeferredCaret'

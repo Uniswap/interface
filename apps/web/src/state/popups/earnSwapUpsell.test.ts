@@ -21,10 +21,10 @@ import {
   maybeAddEarnSwapUpsellPopup,
   resetEarnSwapUpsellPopupTrackingForTests,
 } from '~/state/popups/earnSwapUpsell'
-import { popupRegistry } from '~/state/popups/registry'
-import { PopupType } from '~/state/popups/types'
+import { popupRegistry } from '~/utils/popups/registry'
+import { PopupType } from '~/utils/popups/types'
 
-vi.mock('~/state/popups/registry', () => ({
+vi.mock('~/utils/popups/registry', () => ({
   popupRegistry: {
     addPopup: vi.fn(),
     hasPopup: vi.fn(() => false),

@@ -9,7 +9,7 @@ const EMPTY_CATEGORIES: TokenCategory[] = []
 /**
  * Hydrates a token's category ids into TokenCategory objects (via the cached ListCategories response)
  * in canonical order: ListCategories order + Statsig pins, as everywhere else categories are listed.
- * Read `categoryIds` directly when the BE's per-token ranking matters (see selectTokenRowCategoryTag).
+ * Read `categoryIds` directly when the BE's per-token ranking matters (see selectRowCategoryTag).
  * The lookup only counts as loading for a token that has ids to resolve.
  */
 export function useResolveTokenCategories({

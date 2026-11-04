@@ -1,6 +1,6 @@
 import type { TextCompatProps } from '@universe/mycelium/text-compat'
+import { colors } from '@universe/mycelium/theme-palette'
 import { GradientText } from 'ui/src/components/text/GradientText'
-import { colors } from 'ui/src/theme/color/colors'
 
 export function UniswapXText({ children, ...props }: TextCompatProps): JSX.Element {
   return (

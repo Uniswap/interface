@@ -40,7 +40,7 @@ exports[`SendReviewModal > should render input in fiat correctly 1`] = `
             >
               <div
                 class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[var(--c-h)] bg-[color:var(--c-bg)] rounded-[999999px] opacity-[0] absolute top-[var(--c-top)] left-[var(--c-left)] z-[var(--c-z)]"
-                style="--c-w: 96%; --c-h: 96%; --c-bg: #FFFFFF; --c-top: 2%; --c-left: 2%; --c-z: 0;"
+                style="--c-w: 96%; --c-h: 96%; --c-bg: #ffffff; --c-top: 2%; --c-left: 2%; --c-z: 0;"
               />
               <div
                 data-testid="img-token-image"
@@ -192,7 +192,7 @@ exports[`SendReviewModal > should render input in fiat correctly 1`] = `
         type="button"
       >
         <span
-          class="text-center font-medium [font-family:var(--sbtn-font-button)] [transition:color_100ms_cubic-bezier(0.17,0.67,0.45,1)] text-[18px] leading-[20.7px] text-white max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
+          class="text-center font-medium [font-family:var(--sbtn-font-button)] [transition:color_100ms_cubic-bezier(0.17,0.67,0.45,1)] text-[18px] [line-height:20.7px] text-white max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
         >
           Confirm send
         </span>
@@ -242,7 +242,7 @@ exports[`SendReviewModal > should render input in token amount correctly 1`] = `
             >
               <div
                 class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[var(--c-h)] bg-[color:var(--c-bg)] rounded-[999999px] opacity-[0] absolute top-[var(--c-top)] left-[var(--c-left)] z-[var(--c-z)]"
-                style="--c-w: 96%; --c-h: 96%; --c-bg: #FFFFFF; --c-top: 2%; --c-left: 2%; --c-z: 0;"
+                style="--c-w: 96%; --c-h: 96%; --c-bg: #ffffff; --c-top: 2%; --c-left: 2%; --c-z: 0;"
               />
               <div
                 data-testid="img-token-image"
@@ -394,7 +394,7 @@ exports[`SendReviewModal > should render input in token amount correctly 1`] = `
         type="button"
       >
         <span
-          class="text-center font-medium [font-family:var(--sbtn-font-button)] [transition:color_100ms_cubic-bezier(0.17,0.67,0.45,1)] text-[18px] leading-[20.7px] text-white max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
+          class="text-center font-medium [font-family:var(--sbtn-font-button)] [transition:color_100ms_cubic-bezier(0.17,0.67,0.45,1)] text-[18px] [line-height:20.7px] text-white max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
         >
           Confirm send
         </span>

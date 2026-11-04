@@ -1,10 +1,9 @@
 import { Cell, flexRender, Row, RowData } from '@tanstack/react-table'
 import { Flex } from '@universe/mycelium'
 import { styled } from '@universe/mycelium/styled'
-import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
+import { useSporeColors, BREAKPOINT_PX } from '@universe/mycelium/theme-hooks-compat'
 import { memo, useMemo } from 'react'
 import { Link, LinkProps, useLocation } from 'react-router'
-import { breakpoints } from 'ui/src/theme'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
@@ -163,7 +162,7 @@ function TableRowComponent<T extends RowData>({
     if (row.depth > 0 && propSubRowHeight !== undefined) {
       return propSubRowHeight
     }
-    return tableWidth <= breakpoints.lg
+    return tableWidth <= BREAKPOINT_PX.lg
       ? (propCompactRowHeight ?? ROW_HEIGHT_MOBILE_WEB)
       : (propRowHeight ?? ROW_HEIGHT_DESKTOP)
   }, [row.depth, propSubRowHeight, tableWidth, propCompactRowHeight, propRowHeight])

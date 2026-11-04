@@ -8,6 +8,7 @@ import {
   type TextCompatProps,
   type TextProps,
   useMedia,
+  iconSizes,
 } from '@universe/mycelium'
 import { flexCompatClassName } from '@universe/mycelium/flex-compat'
 import { SPORE_ANIMATION_CURVE_CSS } from '@universe/tailwind/animations'
@@ -21,7 +22,6 @@ import {
 } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
-import { iconSizes } from 'ui/src/theme'
 import { CopyHelper } from 'uniswap/src/components/CopyHelper/CopyHelper'
 import { shortenAddress } from 'utilities/src/addresses'
 

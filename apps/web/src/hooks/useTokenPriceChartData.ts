@@ -4,15 +4,15 @@ import type {
   GetTokenHistoryOHLCResponse,
   GetTokenHistoryPriceResponse,
 } from '@uniswap/client-data-api/dist/data/v2/api_pb'
-import { GraphQLApi } from '@universe/api'
+import { UniverseChainId } from '@universe/chains'
 import { UTCTimestamp } from 'lightweight-charts'
 import { useEffect, useMemo, useReducer, useRef } from 'react'
 import { appendLiveSpotPriceEntry } from 'uniswap/src/components/charts/utils'
 import { getGetTokenHistoryOHLCQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/tokens/queries'
-import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { toRestHistoryDuration } from 'uniswap/src/features/dataApi/tokenDetails/useTokenPriceHistoryRest'
 import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
+import { isRefreshingAgedPrice } from 'uniswap/src/features/prices/isRefreshingAgedPrice'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { isQueryLoading } from 'utilities/src/reactQuery/isQueryLoading'
 import { PriceChartData } from '~/components/Charts/PriceChart'
@@ -31,13 +31,13 @@ import { usePageVisibility } from '~/lib/hooks/usePageVisibility'
 import { getTdpTokenPriceHistoryQueryOptions } from '~/pages/TokenDetails/tdpTokenQueryOptions'
 
 export type TokenPriceChartQueryVariables = {
-  chain: GraphQLApi.Chain
+  chainId: UniverseChainId
   address?: string
   duration: HistoryDuration
   multichain: boolean
 }
 
-function selectOhlcChartData(data: PlainMessage<GetTokenHistoryOHLCResponse> | undefined): PriceChartData[] {
+export function selectOhlcChartData(data: PlainMessage<GetTokenHistoryOHLCResponse> | undefined): PriceChartData[] {
   return (data?.candles ?? []).map((candle) => ({
     time: Number(candle.timestamp) as UTCTimestamp,
     value: candle.closeUsd,
@@ -48,7 +48,7 @@ function selectOhlcChartData(data: PlainMessage<GetTokenHistoryOHLCResponse> | u
   }))
 }
 
-function selectPriceChartData(data: PlainMessage<GetTokenHistoryPriceResponse> | undefined): PriceChartData[] {
+export function selectPriceChartData(data: PlainMessage<GetTokenHistoryPriceResponse> | undefined): PriceChartData[] {
   return (data?.points ?? []).map((point) => ({
     time: Number(point.timestamp) as UTCTimestamp,
     value: point.priceUsd,
@@ -83,28 +83,34 @@ export function toStrictlyAscendingByTime(entries: PriceChartData[]): PriceChart
 export const CANDLESTICK_FALLBACK_THRESHOLD = 0.1
 
 /**
- * Merges adjacent candles pairwise, halving the series when OHLC data is too granular.
- * An odd-length series drops its leading candle to keep the pairs aligned — at length 1 that is the
- * whole series, so a single-candle input returns empty.
+ * Merges an ascending series into `resolutionSeconds` candles on the absolute time grid: first open, max
+ * high, min low, last close per bucket. Keyed on time rather than index, so a missing source candle
+ * leaves its bucket short instead of pulling a neighbour across the boundary.
  */
-export function combineCandlesByHalving({ candles }: { candles: PriceChartData[] }): PriceChartData[] {
-  const combinedEntries: PriceChartData[] = []
-
-  const startIndex = candles.length % 2 // If the length is odd, start at the second entry
-  for (let i = startIndex; i < candles.length; i += 2) {
-    const first = candles[i]
-    const second = candles[i + 1]
-    const combined = {
-      time: first.time,
-      open: first.open,
-      high: Math.max(first.high, second.high),
-      low: Math.min(first.low, second.low),
-      close: second.close,
-      value: second.close,
+export function mergeCandlesToGrid({
+  candles,
+  resolutionSeconds,
+}: {
+  candles: PriceChartData[]
+  resolutionSeconds: number
+}): PriceChartData[] {
+  const merged: PriceChartData[] = []
+  for (const candle of candles) {
+    const time = (Math.floor(candle.time / resolutionSeconds) * resolutionSeconds) as UTCTimestamp
+    const last = merged.at(-1)
+    if (last?.time === time) {
+      merged[merged.length - 1] = {
+        ...last,
+        high: Math.max(last.high, candle.high),
+        low: Math.min(last.low, candle.low),
+        close: candle.close,
+        value: candle.close,
+      }
+    } else {
+      merged.push({ ...candle, time })
     }
-    combinedEntries.push(combined)
   }
-  return combinedEntries
+  return merged
 }
 
 /**
@@ -166,9 +172,8 @@ export function useTokenPriceChartData({
     if (!variables.address) {
       return undefined
     }
-    const chainId = fromGraphQLChain(variables.chain)
-    return chainId ? buildCurrencyId(chainId, variables.address) : undefined
-  }, [variables.chain, variables.address])
+    return buildCurrencyId(variables.chainId, variables.address)
+  }, [variables.chainId, variables.address])
 
   // The V2 branch skips the subgraph/CoinGecko queries, so unlike legacy it has no market price to
   // fall back to when the caller supplies no override (e.g. TokenHoverCard) — without one the live
@@ -205,10 +210,12 @@ export function useTokenPriceChartData({
       select: selectPriceChartData,
     }),
   )
-  const restOhlcEntries = restOhlcQuery.data
-  const restPriceEntries = restPriceQuery.data
-  const restOhlcLoading = isQueryLoading(restOhlcQuery)
-  const restPriceLoading = isQueryLoading(restPriceQuery)
+  const isRestOhlcAged = isRefreshingAgedPrice(restOhlcQuery)
+  const isRestPriceAged = isRefreshingAgedPrice(restPriceQuery)
+  const restOhlcEntries = isRestOhlcAged ? undefined : restOhlcQuery.data
+  const restPriceEntries = isRestPriceAged ? undefined : restPriceQuery.data
+  const restOhlcLoading = isRestOhlcAged || isQueryLoading(restOhlcQuery)
+  const restPriceLoading = isRestPriceAged || isQueryLoading(restPriceQuery)
   const restOhlcError = restOhlcQuery.isError
   const restPriceError = restPriceQuery.isError
 

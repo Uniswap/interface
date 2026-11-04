@@ -1,4 +1,5 @@
-import { AlertTriangleFilled, CheckmarkCircle } from 'ui/src/components/icons'
+import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFilled'
+import { CheckmarkCircle } from '@universe/mycelium/icons/CheckmarkCircle'
 import { LogoWithTxStatus } from 'uniswap/src/components/CurrencyLogo/LogoWithTxStatus'
 import { NotificationToast } from 'uniswap/src/components/notifications/NotificationToast'
 import { AssetType } from 'uniswap/src/entities/assets'

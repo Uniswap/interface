@@ -2,17 +2,12 @@
  * Spore animation preset curves — the shared curve library (INFRA-2967).
  *
  * The timing/spring numbers are ported byte-exact from the legacy Tamagui
- * animation driver config (`packages/ui/src/theme/animations/index.native.ts`
- * plus the generated `delay200ms.ts` family), and the CSS strings from its web
- * driver (`index.web.ts`). This module is pure data — platform-agnostic and
+ * animation driver config (native, plus its generated `delay200ms` family),
+ * and the CSS strings from its web driver. This module is pure data — platform-agnostic and
  * safe to import from web bundles. Native consumers materialize the curves
  * into Reanimated configs via `./reanimated` (subpath
  * `@universe/tailwind/animations/reanimated`); the mycelium compat props
  * reference the curve names for their `animation` prop surface.
- *
- * Exactness against the legacy source files is pinned by
- * `curves.parity.test.ts` — edit the legacy config and that test fails until
- * this file is re-synced (and vice versa).
  */
 
 /**
@@ -73,8 +68,8 @@ const IN_OUT_QUAD: SporeEasing = { fn: 'inOutQuad' }
 
 /**
  * The Spore animation preset curves, keyed by the legacy Tamagui `animation`
- * prop names. Values mirror `packages/ui/src/theme/animations/index.native.ts`
- * field-for-field (see `SporeSpringCurve` for the one documented exception in
+ * prop names. Values mirror the legacy native driver config field-for-field
+ * (see `SporeSpringCurve` for the one documented exception in
  * the `200msDelayed*` family).
  */
 export const SPORE_ANIMATION_CURVES = {

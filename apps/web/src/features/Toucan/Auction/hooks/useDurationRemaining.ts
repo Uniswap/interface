@@ -2,8 +2,8 @@ import { EVMUniverseChainId } from '@universe/chains'
 import { useMemo, useRef } from 'react'
 import { getDurationRemainingString } from 'utilities/src/time/duration'
 import { ONE_MINUTE_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
+import { useBlockTimestamp } from '~/features/Toucan/Auction/hooks/useBlockTimestamp'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
-import { useBlockTimestamp } from '~/hooks/useBlockTimestamp'
 import { useMachineTimeMs } from '~/hooks/useMachineTime'
 
 const SYNC_THRESHOLD_MS = 20 * ONE_MINUTE_MS // 20 minutes

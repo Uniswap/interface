@@ -12,7 +12,7 @@ export interface TokenMarketStats {
   tvl: number | undefined
 }
 
-/** Canonical market-stats shape, adapted from either V2 REST or legacy GraphQL data (see legacyMarketDataAdapters.ts). */
+/** Canonical market-stats shape, modeled on data.v2 `TokenMarketStats`. */
 export interface MarketStatsData {
   priceUsd?: number
   volumeUsd?: number

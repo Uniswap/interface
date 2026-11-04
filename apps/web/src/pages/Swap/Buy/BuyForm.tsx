@@ -6,7 +6,6 @@ import { useNavigate, useSearchParams } from 'react-router'
 import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
 import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
-import { BlastShutdownSelectionModal } from 'uniswap/src/features/chains/blastShutdown/BlastShutdownSelectionModal'
 import { useAppFiatCurrency, useFiatCurrencyComponents } from 'uniswap/src/features/fiatCurrency/hooks'
 import { FiatOnRampCountryPicker } from 'uniswap/src/features/fiatOnRamp/FiatOnRampCountryPicker'
 import { useFiatOnRampAggregatorGetCountryQuery } from 'uniswap/src/features/fiatOnRamp/hooks/useFiatOnRampQueries'
@@ -29,10 +28,10 @@ import {
   StyledNumericalInput,
   useMeasuredFieldWidth,
 } from '~/components/NumericalInput/LargeAmountInput'
+import { useActiveAddresses } from '~/connection/accounts/hooks'
+import { useAccount } from '~/connection/hooks/useAccount'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
-import { useActiveAddresses } from '~/features/accounts/store/hooks'
 import { PAGE_WRAPPER_MAX_WIDTH } from '~/features/Swap/styled'
-import { useAccount } from '~/hooks/useAccount'
 import { BuyFormButton } from '~/pages/Swap/Buy/BuyFormButton'
 import { BuyFormContextProvider, useBuyFormContext } from '~/pages/Swap/Buy/BuyFormContext'
 import { ChooseProviderModal } from '~/pages/Swap/Buy/ChooseProviderModal'
@@ -44,9 +43,9 @@ import { PredefinedAmount } from '~/pages/Swap/Buy/PredefinedAmount'
 import { resolveInitialBuyFormToken } from '~/pages/Swap/Buy/resolveInitialBuyFormToken'
 import { SelectTokenPanel } from '~/pages/Swap/Buy/SelectTokenPanel'
 import { formatFiatOnRampFiatAmount, getCountryFromLocale } from '~/pages/Swap/Buy/shared'
-import { popupRegistry } from '~/state/popups/registry'
-import { SwitchNetworkAction } from '~/state/popups/types'
 import { getChainUrlParam } from '~/utils/params/chainParams'
+import { popupRegistry } from '~/utils/popups/registry'
+import { SwitchNetworkAction } from '~/utils/popups/types'
 import { showSwitchNetworkNotification } from '~/utils/showSwitchNetworkNotification'
 
 const InputWrapper = (props: FlexCompatProps): JSX.Element => (
@@ -193,8 +192,14 @@ function BuyFormInner({ disabled, initialCurrency }: BuyFormProps) {
 
     if (supportedToken) {
       const providerState: Partial<{ inputAmount: string; providers: string[] }> = {}
-      if (hasProviders) {
+      // Provider links have always reset the amount to `value`, even when absent; other links only apply it when set.
+      if (
+        (hasProviders || currencyAmount !== undefined) &&
+        (currencyAmount === undefined || isSafeNumber(currencyAmount))
+      ) {
         providerState.inputAmount = currencyAmount
+      }
+      if (hasProviders) {
         providerState.providers = providers.map((provider) => provider.toLowerCase())
       }
       setBuyFormState((state) => ({
@@ -473,9 +478,6 @@ function BuyFormInner({ disabled, initialCurrency }: BuyFormProps) {
           }
         />
       )}
-      <BlastShutdownSelectionModal
-        currencies={[rampDirection === RampDirection.ON_RAMP ? quoteCurrency?.currencyInfo : undefined]}
-      />
       {offRampRequest && (
         <OffRampConfirmTransferModal
           isOpen

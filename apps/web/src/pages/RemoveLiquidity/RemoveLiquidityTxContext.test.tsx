@@ -76,6 +76,8 @@ function mockTxAndGasInfo(decreaseCalldata: DecreasePositionResponse | undefined
     decreaseCalldataLoading: false,
     approvalLoading: false,
     error: false,
+    hookRejectsRemoval: false,
+    decreaseMayFail: false,
     refetch: vi.fn(),
   })
 }

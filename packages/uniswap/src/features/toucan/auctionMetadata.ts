@@ -7,7 +7,6 @@ export interface AuctionMetadataOverride {
   description?: string
   website?: string
   twitter?: string
-  logoUrl?: string
   tokenName?: string
   tokenSymbol?: string
   tradingRestrictedUntilTge?: boolean
@@ -23,45 +22,27 @@ interface AuctionMetadataOverrideKey {
 /**
  * Metadata overrides for specific auction tokens.
  * Key format: "{chainId}-{tokenAddress}".
+ *
+ * Don't add an override here for a value the backend overrides: set it in Mission Control
+ * instead, and the auction API serves it already applied. A key's value replaces the
+ * backend's in-code defaults wholesale, so an edit must list every override still wanted.
+ * - "% committed to LP" (`percentCommittedToLp`): `auction_lp_percent_overrides`
+ * - Token logo (`tokenImageUrl`): `auction_token_logo_overrides`, as an `ipfs://` URL
  */
 const AUCTION_METADATA_OVERRIDES: Record<string, AuctionMetadataOverride> = {
-  '8453-0xa53887f7e7c1bf5010b8627f1c1ba94fe7a5d6e0': {
-    logoUrl: '/images/logos/rainbow-token-launch-logo.png',
-  },
-  '1-0x9999b7e3cc6979223ff1af980b7d8b90b75d9999': {
-    logoUrl: '/images/logos/cap-token-launch-logo.png',
-  },
-  '42161-0xb628b89067e8f7dfc2cb528a72bcff7d5cedce29': {
-    logoUrl: '/images/logos/idos-token-launch-logo.svg',
-  },
+  // Octra (OCT): the indexed token reads "Wrapped OCT" / "wOCT"
   '1-0x4647e1fe715c9e23959022c2416c71867f5a6e80': {
-    logoUrl: '/images/logos/octra-token-launch-logo.svg',
     tokenName: 'Octra',
     tokenSymbol: 'OCT',
   },
+  // Strato
   '1-0x4c93b9fbf7fd1777ccbcbc538b1d0a8b58fb1ad6': {
-    logoUrl: '/images/logos/strato-token-launch-logo.jpeg',
     tradingRestrictedUntilTge: true,
   },
+  // Interfold (FOLD)
   '1-0xe172e9b6cfbeeb5593bdce3f077356fdb33af904': {
-    logoUrl: '/images/logos/fold-token-launch-logo.jpeg',
     tradingRestrictedUntilTge: true,
     tgeTimestamp: 1787149535, // 2026-08-19T14:25:35Z
-  },
-  '42161-0x170f6e39ea851108f0713090467871f28a62a5d4': {
-    logoUrl: '/images/logos/boardwalk-token-launch-logo.png',
-  },
-  // Boardwalk (BWLK) — Ethereum mainnet auction token
-  '1-0xf9a352b7c7b62a852e5c8a64a455246dd9596461': {
-    logoUrl: '/images/logos/bwlk-token-launch-logo.png',
-  },
-  // Umia — Base auction token
-  '8453-0x56ab53b77f07da3af732150e8aec4783eb5bba7d': {
-    logoUrl: '/images/logos/umia-token-launch-logo.jpeg',
-  },
-  // Balances (BALANCE) — Ethereum mainnet auction token
-  '1-0x3620540c994433d7b4a628c46d2ed5f92572ea07': {
-    logoUrl: '/images/logos/balance-token-launch-logo.jpeg',
   },
 }
 

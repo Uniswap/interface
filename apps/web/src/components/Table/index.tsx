@@ -359,6 +359,8 @@ export function Table<T extends RowData>({
       maxHeight={maxHeight}
       position="relative"
       ref={tableContainerRef}
+      // `clip`, not `hidden`: `hidden` makes a scroll container, which would unstick the header.
+      $platform-web={isSticky ? { overflowY: 'clip', overflowX: 'visible' } : {}}
       {...(bleedsRight && { mr: -APP_BODY_MOBILE_GUTTER_PX, style: BLEED_STYLE })}
     >
       {showPinnedColumnDivider ? (

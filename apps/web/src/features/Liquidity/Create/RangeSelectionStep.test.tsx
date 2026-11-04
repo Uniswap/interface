@@ -74,10 +74,10 @@ describe('SelectPriceRangeStep geo gate (migration seam)', () => {
     expect(onContinue).not.toHaveBeenCalled()
   })
 
-  it('shows the liquidity-provision banner naming the restricted token', () => {
+  it('shows the region banner naming the restricted token', () => {
     render(<SelectPriceRangeStep onContinue={vi.fn()} disableContinue={false} geoRestriction={GEO_RESTRICTION} />)
 
-    expect(screen.getByText('AAPLX isn’t available for liquidity provision in your region')).toBeInTheDocument()
+    expect(screen.getByText('AAPLX is unavailable in your region')).toBeInTheDocument()
   })
 
   // `disableContinue` is not a geo signal. The gate fails open like swap, so an unresolved check
@@ -94,13 +94,12 @@ describe('SelectPriceRangeStep geo gate (migration seam)', () => {
     fireEvent.click(screen.getByText('Continue'))
     expect(onContinue).not.toHaveBeenCalled()
     expect(screen.queryByText('AAPLX unavailable in your region')).toBeNull()
-    expect(screen.queryByText(/liquidity provision in your region/)).toBeNull()
+    expect(screen.queryByText(/is unavailable in your region/)).toBeNull()
   })
 
   it('renders no banner and no blocked CTA for a clean pair', () => {
     render(<SelectPriceRangeStep onContinue={vi.fn()} disableContinue={false} />)
 
     expect(screen.queryByText(/unavailable in your region/)).toBeNull()
-    expect(screen.queryByText(/liquidity provision in your region/)).toBeNull()
   })
 })

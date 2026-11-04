@@ -4,10 +4,10 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { ToucanWithdrawBidAndClaimTokensTransactionStep } from 'uniswap/src/features/transactions/toucan/steps/withdrawBidAndClaimTokens'
 import { createSaga } from 'uniswap/src/utils/saga'
-import { popupRegistry } from '~/state/popups/registry'
-import { PopupType } from '~/state/popups/types'
 import { WithdrawBidAndClaimTokensToucanBidParams } from '~/state/sagas/toucan/types'
 import { handleOnChainStep } from '~/state/sagas/transactions/utils'
+import { popupRegistry } from '~/utils/popups/registry'
+import { PopupType } from '~/utils/popups/types'
 
 function* withdrawBidAndClaimTokensToucanBid(params: WithdrawBidAndClaimTokensToucanBidParams) {
   const { account, txRequest, setCurrentStep, selectChain, onSuccess, onFailure, info, analytics } = params

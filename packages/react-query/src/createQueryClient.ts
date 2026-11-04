@@ -45,7 +45,8 @@ export function createQueryClient(config?: QueryClientConfig): QueryClient {
           if (error instanceof Error && 'status' in error) {
             const status = (error as { status: number }).status
             if (status >= 500) {
-              logger?.warn('retrying request', { attempt: failureCount + 1, status })
+              // Not `status`: log ingest drops Datadog's reserved attribute names.
+              logger?.warn('retrying request', { attempt: failureCount + 1, http_status: status })
               return true
             }
           }

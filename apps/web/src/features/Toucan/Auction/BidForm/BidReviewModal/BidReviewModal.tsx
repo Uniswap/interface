@@ -1,6 +1,7 @@
 /* oxlint-disable max-lines */
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Flex, Text } from '@universe/mycelium'
 import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFilled'
 import { useEffect, useMemo, useState } from 'react'
@@ -8,12 +9,14 @@ import { useTranslation } from 'react-i18next'
 import { Trans } from 'ui/src'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { useUniswapContextSelector } from 'uniswap/src/contexts/UniswapContext'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
 import { SubscriptZeroPrice } from '~/components/SubscriptZeroPrice'
+import { useAccount } from '~/connection/hooks/useAccount'
 import {
   BidProgressIndicator,
   ProgressIndicatorStep,
@@ -35,10 +38,10 @@ import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore
 import { getClearingPrice } from '~/features/Toucan/Auction/utils/clearingPrice'
 import { getAuctionTokenDecimals } from '~/features/Toucan/Auction/utils/tokenMetadata'
 import { ToucanActionButton } from '~/features/Toucan/Shared/ToucanActionButton'
-import { useAccount } from '~/hooks/useAccount'
-import { AllowanceState } from '~/hooks/usePermit2Allowance'
+import { AllowanceState } from '~/hooks/permit2/usePermit2Allowance'
 import { PendingModalError } from '~/pages/Swap/Limit/ConfirmLimitOrderModal/Error'
 import { ConfirmModalState } from '~/pages/Swap/Limit/ConfirmLimitOrderModal/state'
+import { getBatchablePreBidTxRequests } from '~/state/sagas/toucan/submitBidSaga'
 import { swapErrorToUserReadableMessage } from '~/utils/swapErrorToUserReadableMessage'
 
 interface BidReviewModalProps {
@@ -135,6 +138,12 @@ export function BidReviewModal({
     bidCurrency,
     auctionDetails,
   })
+
+  // A kill switch, not a rollout gate: unset in Statsig reads false, so batched bids stay on.
+  const isBatchedBidsDisabled = useFeatureFlag(FeatureFlags.DisableToucanBatchedBids)
+  const canWalletBatch =
+    useUniswapContextSelector((ctx) => ctx.getCanBatchTransactions?.(auctionDetails?.chainId)) ?? false
+  const canBatchTransactions = canWalletBatch && !isBatchedBidsDisabled
 
   const reviewData = useBidReviewData({
     isOpen,
@@ -245,8 +254,16 @@ export function BidReviewModal({
     beginSimulationAttempt()
 
     try {
-      // Run pre-permit2 simulation if eligible (native token or already approved)
-      if (canSimulatePrePermit2) {
+      const preBidSteps = await buildPreBidSteps()
+      // Same test the saga applies, so a fallback to one prompt per step keeps the post-permit2 re-check.
+      const isBatched =
+        canBatchTransactions && preBidSteps.length > 0 && getBatchablePreBidTxRequests(preBidSteps) !== undefined
+
+      // Simulate up front when eligible (native token or already approved), or when batching: the
+      // simulation is an API price check that reads no allowances, and a batch sends the approvals
+      // and the bid together, leaving no point after the permit2 steps to check from.
+      const simulatesUpFront = canSimulatePrePermit2 || isBatched
+      if (simulatesUpFront) {
         const simulationSuccess = await simulate()
         if (!simulationSuccess) {
           // Simulation failed - error state will be set by the hook
@@ -254,10 +271,8 @@ export function BidReviewModal({
         }
       }
 
-      const preBidSteps = await buildPreBidSteps()
-
       // Create post-permit2 simulation callback for non-native tokens with permit steps
-      const onPreBidStepsComplete = !canSimulatePrePermit2
+      const onPreBidStepsComplete = !simulatesUpFront
         ? async (): Promise<boolean> => {
             const success = await simulate()
             return success
@@ -266,10 +281,12 @@ export function BidReviewModal({
 
       startBidFlow({
         preBidSteps,
-        showProgressModal: preBidSteps.length > 0,
+        // A batch is a single wallet prompt, so it stays on the review screen like a plain bid.
+        showProgressModal: preBidSteps.length > 0 && !isBatched,
         setSteps: setTransactionSteps,
         setCurrentStep,
         onPreBidStepsComplete,
+        canBatchTransactions: isBatched,
       })
     } catch (error) {
       // buildPreBidSteps() (and, defensively, anything else in this chain) can reject outside

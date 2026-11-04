@@ -54,6 +54,7 @@ type MenuContentProps = {
   containerStyles?: FlexProps
 }
 
+// TODO(INFRA-4485): Duplicates mycelium on web. Use `MenuContentCompat` from `@universe/mycelium/menu-compat` instead (its native leg isn't built yet).
 export function MenuContent({
   items,
   handleCloseMenu,

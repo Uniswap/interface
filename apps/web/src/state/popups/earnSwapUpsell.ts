@@ -1,8 +1,8 @@
 import { getEarnSwapUpsellOutputCurrencyId } from 'uniswap/src/features/earn/swapUpsell'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import type { TransactionTypeInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { popupRegistry } from '~/state/popups/registry'
-import { PopupType } from '~/state/popups/types'
+import { popupRegistry } from '~/utils/popups/registry'
+import { PopupType } from '~/utils/popups/types'
 
 export const EARN_SWAP_UPSELL_POPUP_NO_AUTO_DISMISS_MS = Number.POSITIVE_INFINITY
 export const EARN_SWAP_UPSELL_POPUP_DELAY_MS = 500

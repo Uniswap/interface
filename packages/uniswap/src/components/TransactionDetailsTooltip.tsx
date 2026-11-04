@@ -1,7 +1,8 @@
-import { Anchor, Flex, Text, type FlexCompatProps as FlexProps } from '@universe/mycelium'
+import { Anchor, Flex, Text, type FlexCompatProps as FlexProps, Separator as BaseSeparator } from '@universe/mycelium'
+import type { GeneratedIcon, IconProps } from '@universe/mycelium/icons'
 import { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { GeneratedIcon, IconProps, Separator as BaseSeparator, UniswapXText } from 'ui/src'
+import { UniswapXText } from 'ui/src'
 
 type OuterProps = {
   children: ReactNode

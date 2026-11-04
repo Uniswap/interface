@@ -1,26 +1,26 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { Platform } from '@universe/chains'
-import { Flex, Text, IconButton } from '@universe/mycelium'
+import { Button, Flex, Text, IconButton, Tooltip } from '@universe/mycelium'
+import { PlusCircle } from '@universe/mycelium/icons/PlusCircle'
+import { Power } from '@universe/mycelium/icons/Power'
+import { SwitchArrows } from '@universe/mycelium/icons/SwitchArrows'
 import { TestID } from '@universe/test'
 import { type PropsWithChildren, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { Button, Image, Tooltip } from 'ui/src'
-import { PlusCircle } from 'ui/src/components/icons/PlusCircle'
-import { Power } from 'ui/src/components/icons/Power'
-import { SwitchArrows } from 'ui/src/components/icons/SwitchArrows'
+import { Image } from 'ui/src'
 import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { type AppTFunction } from 'utilities/src/i18n/types'
 import { useEvent } from 'utilities/src/react/hooks'
-import { MenuStateVariant, useSetMenu } from '~/components/AccountDrawer/menuState'
-import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
-import { useAccountsStore, useActiveConnector, useActiveWallet } from '~/features/accounts/store/hooks'
-import { type ExternalWallet } from '~/features/accounts/store/types'
-import { useDisconnect } from '~/hooks/useDisconnect'
-import { useIsEmbeddedWallet } from '~/hooks/useIsEmbeddedWallet'
-import { useSignOutWithPasskey } from '~/hooks/useSignOutWithPasskey'
+import { useSignOutWithPasskey } from '~/components/AccountDrawer/hooks/useSignOutWithPasskey'
+import { useAccountsStore, useActiveConnector, useActiveWallet } from '~/connection/accounts/hooks'
+import { type ExternalWallet } from '~/connection/accounts/types'
+import { useDisconnect } from '~/connection/hooks/useDisconnect'
+import { useIsEmbeddedWallet } from '~/connection/hooks/useIsEmbeddedWallet'
+import { useAccountDrawer } from '~/state/accountDrawer/hooks'
+import { MenuStateVariant, useSetMenu } from '~/state/accountDrawer/menuState'
 
 export function useOnDisconnect() {
   const disconnect = useDisconnect()
@@ -89,13 +89,10 @@ function DisconnectMenuButtonRow({
       alignItems="center"
       onPress={onPress}
       justifyContent="flex-start"
-      hoverStyle={{
-        backgroundColor: '$surface2',
-      }}
+      className="hover:bg-surface2"
       px="$spacing8"
       py="$padding8"
       borderRadius="$rounded8"
-      cursor="pointer"
       minHeight="$spacing36"
       data-testid={testId}
     >

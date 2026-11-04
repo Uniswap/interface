@@ -3,7 +3,7 @@ import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeCh
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { CategoryDescriptionText } from 'uniswap/src/features/tokenCategories/CategoryDescriptionText'
 import { getCategoryIcon } from 'uniswap/src/features/tokenCategories/categoryIcons'
-import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
+import type { Category } from 'uniswap/src/features/tokenCategories/types'
 import { LoadingBubble } from '~/components/Tokens/loading'
 import { InlineLearnMoreLink } from '~/pages/Explore/categories/InlineLearnMoreLink'
 
@@ -14,8 +14,10 @@ function renderLearnMoreLink(label: string): JSX.Element {
   return <InlineLearnMoreLink href={UniswapHelpUrls.articles.tokenCategoryDefinitions} label={label} />
 }
 
-export function CategoryDetailsHeader({ category }: { category: TokenCategory }): JSX.Element {
+export function CategoryDetailsHeader({ category }: { category: Category }): JSX.Element {
   const Icon = getCategoryIcon(category)
+  // Both read as the category's 24h move: token categories by price, pool categories by TVL.
+  const change24hPct = category.kind === 'pool' ? category.stats?.tvlChange24hPct : category.stats?.priceChange24hPct
 
   return (
     <Flex row gap="$spacing16" alignItems="flex-start" width="100%">
@@ -34,12 +36,7 @@ export function CategoryDetailsHeader({ category }: { category: TokenCategory })
           <Text tag="h1" variant="heading3" color="$neutral1" m={0}>
             {category.name}
           </Text>
-          <RelativeChange
-            change={category.stats?.priceChange24hPct}
-            variant="body2"
-            arrowSize="$icon.16"
-            semanticColor
-          />
+          <RelativeChange change={change24hPct} variant="body2" arrowSize="$icon.16" semanticColor />
         </Flex>
         <Text variant="body2" color="$neutral2" maxWidth={DESCRIPTION_MAX_WIDTH}>
           <CategoryDescriptionText category={category} renderLink={renderLearnMoreLink} />

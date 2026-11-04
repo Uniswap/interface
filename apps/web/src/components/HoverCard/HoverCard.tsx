@@ -6,7 +6,7 @@ import { flushSync } from 'react-dom'
 import { AdaptiveWebPopoverContent, Popover } from 'ui/src'
 import { rowPressExemptClassName } from 'uniswap/src/components/lists/items/OptionItemPressableArea'
 import { getScrollContainerScrollbarWidth } from '~/components/HoverCard/getScrollContainerScrollbarWidth'
-import { useCloseOnOutsideScroll } from '~/hooks/useCloseOnOutsideScroll'
+import { useCloseOnOutsideScroll } from '~/components/HoverCard/hooks/useCloseOnOutsideScroll'
 
 const POPOVER_HORIZONTAL_PADDING = 16
 

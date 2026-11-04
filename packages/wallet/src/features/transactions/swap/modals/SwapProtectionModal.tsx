@@ -1,7 +1,7 @@
 import { zIndexes } from '@universe/mycelium'
+import { ShieldCheck } from '@universe/mycelium/icons/ShieldCheck'
 import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import { useTranslation } from 'react-i18next'
-import { ShieldCheck } from 'ui/src/components/icons'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'

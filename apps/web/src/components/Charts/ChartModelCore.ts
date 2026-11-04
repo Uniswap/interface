@@ -14,7 +14,7 @@ import {
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 import { uuid } from 'utilities/src/primitives/uuid'
-import { PROTOCOL_LEGEND_ELEMENT_ID, SeriesDataItemType } from '~/components/Charts/types'
+import { SeriesDataItemType } from '~/components/Charts/types'
 import { formatTickMarks } from '~/components/Charts/utils'
 
 export const DEFAULT_TOP_PRICE_SCALE_MARGIN = 0.32
@@ -118,6 +118,10 @@ export abstract class ChartModel<TDataType extends SeriesDataItemType> {
 
     // Disable mouse wheel to allow page scrolling; pinch handled via custom wheel listener below
     this.api = createChart(chartDiv, {
+      // Must be set at creation: without it the chart pins its overflow-hidden root to the mount-time
+      // pixel size, and enabling autoSize later via applyOptions never un-pins it, so a chart that
+      // grows past that width is clipped.
+      autoSize: true,
       // v5 defaults the TradingView attribution logo ON and lifts a hovered
       // series above its pane siblings; keep v4's rendered behavior (later
       // layout applyOptions deep-merge and don't reset these).
@@ -191,35 +195,12 @@ export abstract class ChartModel<TDataType extends SeriesDataItemType> {
     const transformY = `calc(${yPx}px${yPct})`
 
     const tooltip = document.getElementById(this.tooltipId)
-    const legend = document.getElementById(PROTOCOL_LEGEND_ELEMENT_ID)
 
     if (tooltip) {
       tooltip.style.transform = `translate(${transformX}, ${transformY})`
 
       const tooltipMeasurement = tooltip.getBoundingClientRect()
       this._lastTooltipWidth = tooltipMeasurement.width || null
-    }
-    if (legend) {
-      // keep legend centered on mouse cursor if hovered
-      legend.style.left = `${x}px`
-      const heroWidth = 230
-      // adjust height of tooltip if hovering below the hero text
-      if (x < heroWidth) {
-        legend.style.top = '80px'
-      } else {
-        legend.style.top = 'unset'
-      }
-      const transformOffset = 60
-      const maxXOffset = this.api.paneSize().width - 40
-      // keeps the legend centered on mouse x axis without getting cut off by chart edges
-      if (x < transformOffset) {
-        // Additional 4px of padding is added to prevent box-shadow from being cutoff
-        legend.style.transform = `translateX(-${x - 4}%)`
-      } else if (x > maxXOffset) {
-        legend.style.transform = `translateX(-${transformOffset + (x - maxXOffset)}%)`
-      } else {
-        legend.style.transform = `translateX(-${transformOffset}%)`
-      }
     }
   }
 

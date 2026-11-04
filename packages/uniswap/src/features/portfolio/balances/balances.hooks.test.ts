@@ -10,13 +10,11 @@ import type {
   PortfolioChainBalance,
   PortfolioMultichainBalance,
 } from 'uniswap/src/features/dataApi/types'
-import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { getChainGasToken } from 'uniswap/src/features/gas/hooks/useChainGasToken'
 import {
   useHighestBalanceNativeCurrencyId,
   usePortfolioBalances,
   usePortfolioBalancesMultichain,
-  usePortfolioValueModifiers,
   useSortedPortfolioBalances,
   useSortedPortfolioBalancesMultichain,
   useTokenBalancesGroupedByVisibility,
@@ -671,63 +669,12 @@ describe(useTokenBalancesGroupedByVisibility, () => {
   })
 })
 
-describe(usePortfolioValueModifiers, () => {
-  beforeEach(() => {
-    vi.mocked(useHideSmallBalancesSetting).mockReturnValue(false)
-    vi.mocked(useHideSpamTokensSetting).mockReturnValue(false)
-    vi.mocked(useCurrencyIdToVisibility).mockReturnValue({})
-    vi.mocked(useEnabledChains).mockReturnValue({ isTestnetModeEnabled: false } as ReturnType<typeof useEnabledChains>)
-  })
-
-  it('returns undefined when no addresses are provided', () => {
-    const { result } = renderHook(() => usePortfolioValueModifiers(undefined))
-    expect(result.current).toBeUndefined()
-  })
-
-  it('maps visibility into include/exclude overrides and flips small/spam flags from settings', () => {
-    const visibleCid = '1-0x0000000000000000000000000000000000000001'
-    const hiddenCid = '1-0x0000000000000000000000000000000000000002'
-    vi.mocked(useCurrencyIdToVisibility).mockReturnValue({
-      [visibleCid]: { isVisible: true },
-      [hiddenCid]: { isVisible: false },
-    })
-    vi.mocked(useHideSmallBalancesSetting).mockReturnValue(true)
-    vi.mocked(useHideSpamTokensSetting).mockReturnValue(true)
-
-    const { result } = renderHook(() => usePortfolioValueModifiers('0xOwner'))
-
-    expect(result.current).toHaveLength(1)
-    expect(result.current?.[0]).toMatchObject({
-      ownerAddress: '0xOwner',
-      includeSmallBalances: false,
-      includeSpamTokens: false,
-    })
-    expect(result.current?.[0]?.tokenIncludeOverrides).toContainEqual(currencyIdToContractInput(visibleCid))
-    expect(result.current?.[0]?.tokenExcludeOverrides).toContainEqual(currencyIdToContractInput(hiddenCid))
-  })
-
-  it('forces includeSpamTokens when testnet mode is enabled', () => {
-    vi.mocked(useEnabledChains).mockReturnValue({ isTestnetModeEnabled: true } as ReturnType<typeof useEnabledChains>)
-    vi.mocked(useCurrencyIdToVisibility).mockReturnValue({})
-    vi.mocked(useHideSmallBalancesSetting).mockReturnValue(true)
-    vi.mocked(useHideSpamTokensSetting).mockReturnValue(true)
-
-    const { result } = renderHook(() => usePortfolioValueModifiers('0xOwner'))
-
-    expect(result.current?.[0]).toMatchObject({
-      ownerAddress: '0xOwner',
-      includeSpamTokens: true,
-    })
-  })
-})
-
 describe(useHighestBalanceNativeCurrencyId, () => {
   beforeEach(() => {
     vi.mocked(useEnabledChains).mockReturnValue({
       isTestnetModeEnabled: false,
       defaultChainId: UniverseChainId.Mainnet,
       chains: [],
-      gqlChains: [],
     } as ReturnType<typeof useEnabledChains>)
     vi.mocked(useCurrencyIdToVisibility).mockReturnValue({})
   })

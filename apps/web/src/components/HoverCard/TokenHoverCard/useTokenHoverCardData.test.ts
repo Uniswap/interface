@@ -1,4 +1,4 @@
-import { GraphQLApi } from '@universe/api'
+import { UniverseChainId } from '@universe/chains'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import {
   useTokenMarketStats,
@@ -31,7 +31,7 @@ function renderData({ isOpen = true }: { isOpen?: boolean } = {}) {
   return renderHook(() =>
     useTokenHoverCardData({
       currencyInfoProp: currencyInfo,
-      gqlChain: GraphQLApi.Chain.Ethereum,
+      chainId: UniverseChainId.Mainnet,
       rawAddress: USDC_MAINNET.address,
       hasOpenIntent: isOpen,
       isOpen,

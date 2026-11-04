@@ -18,7 +18,6 @@ import { get24hLpFeesUsd } from '~/data/pools/poolStats'
 import { getTokenDetailsURL } from '~/data/util'
 import { RewardAprBadge } from '~/features/Liquidity/LPIncentives/RewardAprBadge'
 import { StatCell } from '~/features/Liquidity/PoolInfoCard/PoolInfoCard'
-import { getChainUrlParam } from '~/utils/params/chainParams'
 
 const COLUMNS = 3
 const COMPACT_COLUMNS = 2
@@ -153,7 +152,7 @@ function TokenCell({ token, chainId }: { token: ParsedToken; chainId: UniverseCh
 
   return (
     <TokenLink
-      to={getTokenDetailsURL({ address: token.address, chainUrlParam: getChainUrlParam(chainId) })}
+      to={getTokenDetailsURL({ address: token.address, chainId })}
       data-testid={`pdp-token-logo-${token.symbol}`}
     >
       <CurrencyLogo currencyInfo={currencyInfo} size={40} />

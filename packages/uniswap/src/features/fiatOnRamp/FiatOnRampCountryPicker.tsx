@@ -1,7 +1,7 @@
 import { isWebPlatform } from '@universe/environment'
 import { Flex, TouchableArea, iconSizes, UniversalImage } from '@universe/mycelium'
+import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
 import { TestID } from '@universe/test'
-import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { getCountryFlagSvgUrl } from 'uniswap/src/features/fiatOnRamp/utils'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'

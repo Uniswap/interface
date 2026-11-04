@@ -7,8 +7,6 @@ import { FlexLoaderCompat } from '../flex-loader-compat/FlexLoaderCompat'
 import type { FlexLoaderProps } from '../flex-loader-compat/props'
 import { SeparatorCompat } from '../separator-compat/SeparatorCompat'
 import { Shimmer } from '../shimmer'
-import { useDeviceDimensions } from '../theme-hooks-compat/useDeviceDimensions'
-import { fonts } from '../tokens'
 import {
   InsufficientFundsNetworkRowLoader,
   NftCardLoader,
@@ -39,30 +37,6 @@ const SearchResult = memo(function _SearchResult({ repeat = 1 }: { repeat?: numb
   return <Transaction repeat={repeat} />
 })
 
-const TransferInstitution = memo(function TransferInstitutionIcon({
-  itemsCount,
-  iconSize,
-}: {
-  itemsCount: number
-  iconSize: number
-}): JSX.Element {
-  const { fullWidth } = useDeviceDimensions()
-  const LINKED_TEXT_WIDTH = 40
-  return (
-    <FlexCompat>
-      {new Array(itemsCount).fill(null).map((_, i) => (
-        <FlexCompat key={i} row alignItems="center" gap="$spacing12" mb="$spacing12" mx="$spacing8" p="$spacing16">
-          <FlexCompat grow row alignItems="center" gap="$spacing12">
-            <Box borderRadius="$rounded12" height={iconSize} width={iconSize} />
-            <Box borderRadius="$rounded4" height={fonts.body3.lineHeight} width={fullWidth / 3} />
-          </FlexCompat>
-          <Box borderRadius="$rounded4" height={fonts.body3.lineHeight} width={LINKED_TEXT_WIDTH} />
-        </FlexCompat>
-      ))}
-    </FlexCompat>
-  )
-})
-
 function Box({ disableShimmer, ...props }: FlexLoaderProps & { disableShimmer?: boolean }): JSX.Element {
   return (
     <Shimmer disabled={disableShimmer}>
@@ -73,13 +47,10 @@ function Box({ disableShimmer, ...props }: FlexLoaderProps & { disableShimmer?: 
 
 function Token({
   repeat = 1,
-  contrast: _contrast,
   withPrice,
   gap = '$spacing4',
 }: {
   repeat?: number
-  /** Accepted and ignored, like the legacy Skeleton's `contrast` (Shimmer has no equivalent). */
-  contrast?: boolean
   withPrice?: boolean
   // Typed off the Flex prop the value lands on, so it tracks the layout
   // primitive's own contract instead of pinning a token union here.
@@ -99,14 +70,7 @@ function Token({
   )
 }
 
-function InsufficientFundsNetworkRow({
-  repeat = 1,
-  contrast: _contrast,
-}: {
-  repeat?: number
-  /** Accepted and ignored, like the legacy Skeleton's `contrast` (Shimmer has no equivalent). */
-  contrast?: boolean
-}): JSX.Element {
+function InsufficientFundsNetworkRow({ repeat = 1 }: { repeat?: number }): JSX.Element {
   return (
     <Shimmer>
       <FlexCompat grow>
@@ -178,7 +142,6 @@ export const LoaderCompat = {
   Image,
   SearchResult,
   Token,
-  TransferInstitution,
   Transaction,
   Wallets,
 }

@@ -1,6 +1,6 @@
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
+import { Sparkle } from '@universe/mycelium/icons/Sparkle'
 import { Trans } from 'ui/src'
-import { Sparkle } from 'ui/src/components/icons'
 
 type EnableSmartWalletBannerProps = {
   onPress: () => void

@@ -207,6 +207,7 @@ import {
   testMarkPoolsBalanceCoachmarkEligible,
   testMigrateDismissedTokenWarnings,
   testMigrateSearchHistory,
+  testRemoveBlastChainData,
   testRemoveTHBFromCurrency,
   testRemoveUniswapWrapped2025BehaviorHistory,
 } from 'uniswap/src/state/uniswapMigrationTests'
@@ -797,5 +798,9 @@ describe('Redux state migrations', () => {
     const persistState = { version: 102, rehydrated: true }
     const result = migrations[103]({ ...v102Schema, _persist: persistState })
     expect(result).toEqual({ ...v103Schema, _persist: persistState })
+  })
+
+  it('migrates from v103 to v104', () => {
+    testRemoveBlastChainData(migrations[104], v103Schema)
   })
 })

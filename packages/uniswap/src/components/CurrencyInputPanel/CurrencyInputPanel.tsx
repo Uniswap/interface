@@ -256,7 +256,7 @@ export const CurrencyInputPanel = memo(
                       currencyField={currencyField}
                       transactionType={transactionType}
                       buttonProps={{
-                        borderWidth: 0,
+                        className: 'border-0',
                       }}
                       actualGasFee={actualGasFee}
                       isGasCovered={isGasCovered}

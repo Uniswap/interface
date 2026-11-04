@@ -1,7 +1,8 @@
-import type { GasFeeResult } from '@universe/api'
+import { type GasFeeResult, TradingApi } from '@universe/api'
 import type { UniverseChainId } from '@universe/chains'
 import { AcrossRoutingInfo } from 'uniswap/src/features/transactions/swap/components/RoutingInfo/AcrossRoutingInfo'
 import { PlanRoutingInfo } from 'uniswap/src/features/transactions/swap/components/RoutingInfo/ChainedRoutingInfo'
+import { RelayRoutingInfo } from 'uniswap/src/features/transactions/swap/components/RoutingInfo/RelayRoutingInfo'
 import { RouteDiagramInfo } from 'uniswap/src/features/transactions/swap/components/RoutingInfo/RouteDiagram/RouteDiagramInfo'
 import { useRouteDiagram } from 'uniswap/src/features/transactions/swap/components/RoutingInfo/RouteDiagram/useRouteDiagram'
 import { RoutingHopInfo } from 'uniswap/src/features/transactions/swap/components/RoutingInfo/RoutingHopInfo'
@@ -27,7 +28,7 @@ export function RoutingInfo({
     return <PlanRoutingInfo trade={trade} />
   }
   if (isBridge(trade)) {
-    return <AcrossRoutingInfo />
+    return trade.quote.quote.provider === TradingApi.BridgeProvider.RELAY ? <RelayRoutingInfo /> : <AcrossRoutingInfo />
   }
   if (routeDiagram) {
     return <RouteDiagramInfo trade={trade} gasFee={gasFee} {...routeDiagram} />

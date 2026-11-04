@@ -171,7 +171,7 @@ exports[`StorageSettingsContent > renders correctly 1`] = `
           </svg>
         </span>
         <span
-          class="text-center font-medium whitespace-nowrap [font-family:var(--sbtn-font-button)] [transition:color_100ms_cubic-bezier(0.17,0.67,0.45,1)] text-[18px] leading-[20.7px] text-neutral1 group-hover/sbtn:text-neutral1-hovered"
+          class="text-center font-medium [font-family:var(--sbtn-font-button)] [transition:color_100ms_cubic-bezier(0.17,0.67,0.45,1)] text-[18px] [line-height:20.7px] text-neutral1 group-hover/sbtn:text-neutral1-hovered max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
         >
           Clear all data
         </span>

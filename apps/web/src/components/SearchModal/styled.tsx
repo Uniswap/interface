@@ -1,6 +1,5 @@
-import { Flex, type FlexCompatProps } from '@universe/mycelium'
+import { Flex, type FlexCompatProps, Input, type InputProps } from '@universe/mycelium'
 import { type ElementRef, forwardRef, type ForwardRefExoticComponent, type RefAttributes } from 'react'
-import { Input, type InputProps } from 'ui/src'
 
 export type MenuItemProps = FlexCompatProps & {
   disabled?: boolean

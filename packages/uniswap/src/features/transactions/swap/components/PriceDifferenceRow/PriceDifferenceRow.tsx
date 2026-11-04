@@ -1,4 +1,4 @@
-import { PriceDifferenceLabel, PriceDifferenceRow as PriceDifferenceRowView } from '@universe/swap-ui'
+import { PriceDifferenceLabel, PriceDifferenceRow as PriceDifferenceRowView } from '@universe/transactions-ui'
 import { toSwapWarningDisplay } from 'uniswap/src/components/modals/WarningModal/utils'
 import { MarketPriceDifferenceWarningModal } from 'uniswap/src/features/transactions/swap/components/PriceDifferenceRow/MarketPriceDifferenceWarning'
 import { usePriceDifference } from 'uniswap/src/features/transactions/swap/components/PriceDifferenceRow/usePriceDifference'

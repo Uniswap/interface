@@ -1,7 +1,7 @@
 import { isWebPlatform } from '@universe/environment'
 import { TouchableArea } from '@universe/mycelium'
+import { MoreHorizontal } from '@universe/mycelium/icons/MoreHorizontal'
 import { iconSizes } from '@universe/mycelium/tokens'
-import { MoreHorizontal } from 'ui/src/components/icons/MoreHorizontal'
 
 // Press feedback here is instant: the migrated TouchableArea exposes no animation knob and
 // emits no transition, so the pressed-opacity change it still applies cannot be eased.

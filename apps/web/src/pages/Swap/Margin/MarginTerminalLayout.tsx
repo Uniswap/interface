@@ -1,16 +1,19 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { Flex } from '@universe/mycelium'
-import { ENTER_PRESET_CLASSES } from '@universe/mycelium/compat'
+import { Flex, spacing } from '@universe/mycelium'
+import { ArrowDownArrowUp } from '@universe/mycelium/icons/ArrowDownArrowUp'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
-import { SPORE_ANIMATION_CURVE_CSS } from '@universe/tailwind/animations'
-import { Suspense, useEffect, useState, type ReactNode } from 'react'
+import { TestID } from '@universe/test'
+import { useParentSize } from '@visx/responsive'
+import { Suspense, useEffect, useRef, useState, type CSSProperties, type ReactNode, type RefObject } from 'react'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
+import { useEvent } from 'utilities/src/react/hooks'
 import { APP_BODY_MOBILE_GUTTER_PX } from '~/app/layout/constants'
-import { MAX_WIDTH_MEDIA_BREAKPOINT } from '~/constants/breakpoints'
 import { useSwapAndLimitContext } from '~/features/Swap/state/useSwapContext'
 import { useAppHeaderHeight } from '~/hooks/useAppHeaderHeight'
 import { usePrefersReducedMotion } from '~/hooks/usePrefersReducedMotion'
 import { MarginMorphProvider } from '~/pages/Swap/Margin/MarginMorphContext'
+import { MARGIN_TABLE_PANE_CHROME, MARGIN_TABLE_ROW_HEIGHT } from '~/pages/Swap/Margin/marginTableConstants'
+import { useMarginTerminalResizeStore } from '~/pages/Swap/Margin/marginTerminalResizeStore'
 import { createLazyNoReload } from '~/utils/lazyWithRetry'
 
 // This layout wraps every swap tab, so a static import would pull the review modal (and the
@@ -43,37 +46,126 @@ const MarginCompletionToastListener = createLazyNoReload(() =>
   })),
 )
 
-export const MARGIN_FORM_RAIL_WIDTH = 420
-// ≈ $spacing36 gutters.
-const TERMINAL_GUTTER = '$spacing36'
-// Cap the chart+form row and positions table at the same width as /explore; the outer
-// wrapper stays full-bleed (the morph rides its 100vw min-width), so only the inner
-// content is capped + centered.
-const TERMINAL_CONTENT_MAX_WIDTH = MAX_WIDTH_MEDIA_BREAKPOINT
+export const MARGIN_FORM_RAIL_WIDTH = 400
+// PageWrapper's top padding on the terminal route (Swap/index.tsx), subtracted from the pinned height
+// so shell + padding is exactly the viewport under the app header. 10px sits between spacing8 and
+// spacing12, so there is no token for it.
+export const MARGIN_TERMINAL_TOP_PADDING = 10
+// Space between the chart block and the positions pane, doubling as the resize handle's hit strip.
+export const MARGIN_CHART_TABLE_GAP = spacing.spacing12
 
-// Comfortably past the 300ms quickLong geometry morph (+~60ms paint margin) so the chart
-// pane mounts lightweight-charts the instant the container stops resizing — never mid-reflow.
-const MORPH_SETTLE_MS = 360
+// The positions pane's at-rest share, budgeted in table rows so the at-rest layout never shows a sliced
+// row: 22% of the column, floored at three rows and capped at four, so on a taller monitor it is the
+// chart that grows. Under the share the pane is only as tall as its content; past it, the column
+// scrolls.
+const TABLE_ROWS_SHARE = 0.22
+const TABLE_MIN_ROWS = 3
+const TABLE_MAX_ROWS = 4
+// The $spacing2 gap `Table` puts between rows.
+const TABLE_ROW_GAP = spacing.spacing2
+// The chart block (stats strip, OHLC legend, chart, controls) never shrinks past this, so on a short
+// viewport the positions pane gives rows back instead of crushing the chart.
+export const MARGIN_CHART_BLOCK_MIN_HEIGHT = 350
 
-// Gates the chart mount on the morph completing. Keyed on isTerminal (not timeframe) so
-// re-entering the tab re-bridges with the skeleton, but switching timeframes never re-flashes.
-function useMorphSettled({ isTerminal, animateMorph }: { isTerminal: boolean; animateMorph: boolean }): boolean {
-  const [settled, setSettled] = useState(false)
-  useEffect(() => {
-    if (!isTerminal) {
-      setSettled(false)
-      return undefined
-    }
-    if (!animateMorph) {
-      // Cold deep-link / reduced-motion: final layout paints at once — settle immediately, no artificial delay.
-      setSettled(true)
-      return undefined
-    }
-    const id = setTimeout(() => setSettled(true), MORPH_SETTLE_MS)
-    return () => clearTimeout(id)
-  }, [isTerminal, animateMorph])
-  return settled
+function tableRowsHeight(rows: number): number {
+  return rows * MARGIN_TABLE_ROW_HEIGHT + Math.max(0, rows - 1) * TABLE_ROW_GAP
 }
+
+/**
+ * Default height of the chart block in a terminal column `columnHeight` tall. The positions pane takes
+ * what its content needs (`paneContentHeight`: tabs, header and rows, or the empty state), up to its
+ * row budget, and the chart takes the rest, never dropping below its floor. So one position leaves
+ * the chart nearly the whole column. Before the content is measured the pane is given its full budget.
+ * Exported for the resize handle, which starts every drag from it.
+ */
+export function defaultMarginChartBlockHeight({
+  columnHeight,
+  paneContentHeight,
+}: {
+  columnHeight: number
+  paneContentHeight?: number
+}): number {
+  const share = columnHeight * TABLE_ROWS_SHARE - MARGIN_TABLE_PANE_CHROME
+  const rows = Math.min(
+    TABLE_MAX_ROWS,
+    Math.max(TABLE_MIN_ROWS, Math.floor((share + TABLE_ROW_GAP) / (MARGIN_TABLE_ROW_HEIGHT + TABLE_ROW_GAP))),
+  )
+  const paneBudget = MARGIN_TABLE_PANE_CHROME + tableRowsHeight(rows)
+  const pane = paneContentHeight ? Math.min(paneContentHeight, paneBudget) : paneBudget
+  return Math.max(MARGIN_CHART_BLOCK_MIN_HEIGHT, columnHeight - MARGIN_CHART_TABLE_GAP - pane)
+}
+
+/**
+ * Bounds a dragged chart block height: the chart keeps its floor, and the positions pane keeps its
+ * chrome plus one row. On a column too short for both, the chart's floor wins.
+ */
+export function clampMarginChartBlockHeight({
+  columnHeight,
+  wanted,
+}: {
+  columnHeight: number
+  wanted: number
+}): number {
+  const ceiling = columnHeight - MARGIN_CHART_TABLE_GAP - MARGIN_TABLE_PANE_CHROME - tableRowsHeight(1)
+  return Math.max(MARGIN_CHART_BLOCK_MIN_HEIGHT, Math.min(wanted, ceiling))
+}
+
+/**
+ * The chart block's heights in a terminal row `rowHeight` tall. `split` is what the resize handle drags
+ * from: the default budget or a saved drag, once the positions pane is measured. `height` is what the
+ * block renders at: the split once it exists, so the chart keeps its floor and the pane its row budget
+ * (more positions scroll the column); before that, a saved drag (it needs only the row, so the chart
+ * mounts at final size); otherwise undefined → flex:1 until the pane measures.
+ */
+export function resolveMarginChartBlockHeights({
+  hasPositionsPane,
+  rowHeight,
+  chartBlockOverride,
+  paneContentHeight,
+}: {
+  hasPositionsPane: boolean
+  rowHeight: number
+  chartBlockOverride: number | undefined
+  paneContentHeight: number | undefined
+}): { height: number | undefined; split: number | undefined } {
+  if (!hasPositionsPane || rowHeight <= 0) {
+    return { height: undefined, split: undefined }
+  }
+  const split =
+    paneContentHeight === undefined
+      ? undefined
+      : clampMarginChartBlockHeight({
+          columnHeight: rowHeight,
+          wanted: chartBlockOverride ?? defaultMarginChartBlockHeight({ columnHeight: rowHeight, paneContentHeight }),
+        })
+  const saved =
+    chartBlockOverride === undefined
+      ? undefined
+      : clampMarginChartBlockHeight({ columnHeight: rowHeight, wanted: chartBlockOverride })
+  return { height: split ?? saved, split }
+}
+
+/**
+ * The positions table's `maxHeight` in the terminal. The chart block's height is fixed, so more
+ * positions scroll the whole column (the rail stays put); the table body may grow to a full column of
+ * rows and only scrolls itself past that. `Table`'s maxHeight subtracts the app header height (its
+ * sticky offset), so that is added back. Undefined until the column is measured.
+ */
+export function marginTableMaxHeight({
+  columnHeight,
+  appHeaderHeight,
+}: {
+  columnHeight: number
+  appHeaderHeight: number
+}): number | undefined {
+  return columnHeight > 0 ? Math.round(appHeaderHeight + columnHeight - MARGIN_TABLE_PANE_CHROME) : undefined
+}
+
+// The view cross-fades as one unit (useMarginViewTransition on the view root); there are no per-element
+// entrance animations here. The chart just needs a stable block to mount into so it doesn't resize as it
+// appears (see chartBlockReady / morphSettled below).
+
+const CHART_COLUMN_SCROLL_STYLE: CSSProperties = { scrollbarGutter: 'stable', scrollbarWidth: 'thin' }
 
 export function useIsMarginTerminal(): boolean {
   const isMarginEnabled = useFeatureFlag(FeatureFlags.Margin)
@@ -98,9 +190,27 @@ export function useMarginMorphAnimation(hasInteracted: boolean): boolean {
   return isMarginEnabled && hasInteracted && !reducedMotion
 }
 
+// The flag, deferred chunks and markets query resolve at different times on a direct /margin load, so the
+// terminal holds a blank until all have settled rather than show a half-built shell. Settled, not
+// populated: a markets error or an empty list is the chart pane's to show.
+export function isMarginTerminalReady({
+  flagLoading,
+  isMarginEnabled,
+  chunksLoaded,
+  marketsLoading,
+}: {
+  flagLoading: boolean
+  isMarginEnabled: boolean
+  chunksLoaded: boolean
+  marketsLoading: boolean
+}): boolean {
+  return !flagLoading && isMarginEnabled && chunksLoaded && !marketsLoading
+}
+
 export function MarginTerminalLayout({
   isTerminal,
-  hasInteracted,
+  rootRef,
+  chartRef,
   chartPane,
   positionsTable,
   nonTerminalChartAnimator,
@@ -108,7 +218,9 @@ export function MarginTerminalLayout({
   children,
 }: {
   isTerminal: boolean
-  hasInteracted: boolean
+  // The view root the cross-fade fades, and the chart column it slides in over that fade (marginMorph).
+  rootRef?: RefObject<HTMLDivElement | null>
+  chartRef?: RefObject<HTMLDivElement | null>
   chartPane?: JSX.Element | null
   positionsTable?: JSX.Element | null
   nonTerminalChartAnimator?: JSX.Element | null
@@ -117,76 +229,111 @@ export function MarginTerminalLayout({
 }): JSX.Element {
   const isMarginEnabled = useFeatureFlag(FeatureFlags.Margin)
   const headerHeight = useAppHeaderHeight()
-  // Motion only on user tab clicks — never on first paint / deep link. Shared with the rail's width
-  // transition, so the two halves of the morph cannot disagree.
-  const animateMorph = useMarginMorphAnimation(hasInteracted)
-  // Geometry morph as a CSS transition scoped to the exact properties that change (never color —
-  // an unscoped transition flashes on a theme switch); the quickLong curve matches legacy timing.
-  const morphTransition = animateMorph
-    ? ['min-width', 'max-width', 'min-height', 'padding-left', 'padding-right', 'padding-bottom']
-        .map((prop) => `${prop} ${SPORE_ANIMATION_CURVE_CSS.quickLong}`)
-        .join(', ')
+
+  // The column's height is set by the pinned shell (never by its own content), so budgeting the chart
+  // block off it can't loop. Measured on the ROW: the chart column mounts late (chartPane is a
+  // deferred import) and useParentSize attaches its observer once, on mount. No debounce: the entrance
+  // holds the view hidden only briefly, so the chart block must take its fixed height on the first
+  // measure (not ~50ms later) or the chart visibly resizes as it fades in.
+  const { parentRef: rowRef, height: rowHeight } = useParentSize({ debounceTime: 0 })
+  const hasPositionsPane = isTerminal && Boolean(positionsTable)
+  const [paneContentHeight, setPaneContentHeight] = useState<number | undefined>(undefined)
+  const chartBlockOverride = useMarginTerminalResizeStore((state) => state.chartBlockHeight)
+  const setChartBlockHeight = useMarginTerminalResizeStore((state) => state.setChartBlockHeight)
+  const { height: chartBlockHeight, split: chartBlockSplit } = resolveMarginChartBlockHeights({
+    hasPositionsPane,
+    rowHeight,
+    chartBlockOverride,
+    paneContentHeight,
+  })
+  // Mount the chart only once the block is at its final height, so it fits its content once: a saved drag
+  // is final when the row measures; the default split when the pane measures.
+  const chartBlockReady = !hasPositionsPane || chartBlockHeight !== undefined
+  const morphSettled = isTerminal && chartBlockReady
+  const tableMaxHeight = hasPositionsPane
+    ? marginTableMaxHeight({ columnHeight: rowHeight, appHeaderHeight: headerHeight })
     : undefined
-  const morphSettled = useMorphSettled({ isTerminal, animateMorph })
+  const onResizeChartBlock = useEvent((wanted: number): void => {
+    // Clamped on write as well as read: storing raw travel would bank phantom pixels past a bound
+    // that the user would then have to drag back through before anything moved.
+    setChartBlockHeight(clampMarginChartBlockHeight({ columnHeight: rowHeight, wanted }))
+  })
+  // The terminal owns the viewport: the shell is pinned to what is left under the app header, so
+  // nothing scrolls the page — the chart column and the form rail each scroll on their own.
+  const terminalHeight = `calc(100dvh - ${headerHeight}px - ${MARGIN_TERMINAL_TOP_PADDING}px)`
 
   return (
     <Flex
-      style={{ transition: morphTransition }}
-      // Every animated property must have a LENGTH at both endpoints: a CSS transition cannot
-      // interpolate from an unset/auto value, so `undefined` endpoints would snap instead of
-      // glide — the whole morph rides this wrapper's min-width.
+      ref={rootRef}
+      // No easing: the cross-fade commits this layout only after the old view has faded out.
       maxWidth={isTerminal ? '100vw' : `calc(100vw - ${2 * APP_BODY_MOBILE_GUTTER_PX}px)`}
       minWidth={isTerminal ? '100vw' : 0}
-      minHeight={isTerminal ? `calc(100dvh - ${headerHeight}px)` : 0}
-      px={isTerminal ? TERMINAL_GUTTER : '$none'}
+      minHeight={isTerminal ? terminalHeight : 0}
+      // Not in the transition: the morph's vertical growth rides min-height, and this only clamps the
+      // ceiling to the value it lands on.
+      maxHeight={isTerminal ? terminalHeight : undefined}
+      // Full-bleed: the page gutter is the only horizontal inset, with no content max-width.
+      px={isTerminal ? '$spacing32' : '$none'}
       pb={isTerminal ? '$spacing24' : '$none'}
     >
       <Flex
         row
+        ref={rowRef}
+        // Terminal: stretch so the chart column and the form rail both span the pinned height.
         alignItems={isTerminal ? 'stretch' : 'flex-start'}
-        gap={isTerminal ? TERMINAL_GUTTER : undefined}
-        minHeight={isTerminal ? 420 : undefined}
+        gap={isTerminal ? '$spacing24' : undefined}
+        flex={isTerminal ? 1 : undefined}
+        minHeight={isTerminal ? 0 : undefined}
         width={isTerminal ? '100%' : undefined}
-        maxWidth={isTerminal ? TERMINAL_CONTENT_MAX_WIDTH : undefined}
-        alignSelf={isTerminal ? 'center' : undefined}
       >
         {/* Conditional siblings keep positional slots ({cond && ...} renders a hole, not a
             reorder), so the SwapModuleWrapper child below never changes tree position. */}
         {!isTerminal && nonTerminalChartAnimator}
-        <MarginMorphProvider morphSettled={morphSettled}>
+        <MarginMorphProvider morphSettled={morphSettled} tableMaxHeight={tableMaxHeight}>
           {isTerminal && chartPane ? (
-            <Flex flex={1} minWidth={0} className={animateMorph ? ENTER_PRESET_CLASSES.fadeIn : undefined}>
-              {chartPane}
+            // Left column: chart block over the positions pane, one width; the form rail sits to the
+            // right and the table never extends under it.
+            <Flex
+              ref={chartRef}
+              flex={1}
+              minWidth={0}
+              minHeight={0}
+              // The column is its own scroll box. Stable gutter: a scrollbar appearing never narrows
+              // the column and shifts the chart's price axis.
+              $platform-web={{ overflowX: 'hidden', overflowY: 'auto' }}
+              style={CHART_COLUMN_SCROLL_STYLE}
+            >
+              {/* Block the chart pane fills. The class exempts it from the global layout-animation
+                  height-ease (global.css) so it doesn't ease as the pane settles. */}
+              <Flex
+                className="margin-chart-size-static"
+                flex={chartBlockHeight === undefined ? 1 : undefined}
+                flexShrink={0}
+                height={chartBlockHeight}
+                minHeight={0}
+              >
+                {chartPane}
+              </Flex>
+              {/* Keyed on the split, not the pinned height, so the handle is present whether or not the
+                  user has dragged — a drag doesn't toggle it in and reflow the chart. */}
+              {hasPositionsPane && chartBlockSplit !== undefined ? (
+                <MarginChartResizeHandle chartBlockHeight={chartBlockSplit} onResize={onResizeChartBlock} />
+              ) : null}
+              {hasPositionsPane ? (
+                <Flex
+                  flexShrink={0}
+                  // Before the pane is measured there is no handle yet; hold its gap until it appears.
+                  mt={chartBlockSplit === undefined ? MARGIN_CHART_TABLE_GAP : undefined}
+                >
+                  <MeasuredPaneContent onHeightChange={setPaneContentHeight}>{positionsTable}</MeasuredPaneContent>
+                </Flex>
+              ) : null}
             </Flex>
           ) : null}
         </MarginMorphProvider>
         {children}
         {!isTerminal && nonTerminalSidePanel}
       </Flex>
-      {isTerminal && positionsTable ? (
-        <Flex
-          mt="$spacing36"
-          width="100%"
-          maxWidth={TERMINAL_CONTENT_MAX_WIDTH}
-          alignSelf="center"
-          // Stagger reveal: rise + fade from below, delayed 150ms to match the legacy
-          // '300msDelayed' curve. `both` fill holds the hidden `from` frame through the delay
-          // (the -below keyframe has no fill of its own) — otherwise it flashes visible for
-          // 150ms before starting (FormWrapper precedent).
-          //
-          // On `animateMorph`, not just reduced motion: this staggers BEHIND the chart's fade above,
-          // which is gated on it. On a cold deep-link to /margin (`hasInteracted` false) the chart
-          // paints instantly while `both` fill would hold the table hidden for 150ms — a stagger
-          // behind an entrance that never happened.
-          className={
-            animateMorph
-              ? `${ENTER_PRESET_CLASSES.fadeInBelow} [animation-delay:150ms] [animation-fill-mode:both]`
-              : undefined
-          }
-        >
-          {positionsTable}
-        </Flex>
-      ) : null}
       {/* Mounted at layout level for the whole flag-on session (renders null until a plan
           exists); execution state is global via marginPlanExecutionStore, so CTA callers
           need no prop drilling. */}
@@ -198,6 +345,122 @@ export function MarginTerminalLayout({
           <MarginPlanReviewModal />
         </Suspense>
       )}
+    </Flex>
+  )
+}
+
+/**
+ * The positions pane's content at its natural height, reported up so the layout can size the pane to
+ * it. Its own component because useParentSize attaches its observer once, on mount: the pane mounts
+ * after the layout (the table is a deferred import), so a ref owned by the layout would never measure.
+ */
+function MeasuredPaneContent({
+  onHeightChange,
+  children,
+}: {
+  onHeightChange: (height: number | undefined) => void
+  children: ReactNode
+}): JSX.Element {
+  // No debounce so the chart block takes its final height on the first measure — see rowRef above.
+  const { parentRef, height } = useParentSize({ debounceTime: 0 })
+  useEffect(() => {
+    onHeightChange(height > 0 ? height : undefined)
+  }, [height, onHeightChange])
+  useEffect(() => () => onHeightChange(undefined), [onHeightChange])
+  return (
+    <Flex ref={parentRef} flexShrink={0} width="100%">
+      {children}
+    </Flex>
+  )
+}
+
+/**
+ * The chart ↔ positions gap as a drag handle: hovering reveals a divider with a centered ↓↑ grip, and
+ * dragging trades positions-pane height for chart height. Native pointer listeners on the element, with
+ * pointer capture so the drag survives the handle moving out from under the cursor as the layout
+ * follows it.
+ */
+function MarginChartResizeHandle({
+  chartBlockHeight,
+  onResize,
+}: {
+  chartBlockHeight: number
+  onResize: (wanted: number) => void
+}): JSX.Element {
+  const [handle, setHandle] = useState<HTMLElement | null>(null)
+  const [isDragging, setIsDragging] = useState(false)
+  const dragRef = useRef<{ pointerId: number; startY: number; startHeight: number } | undefined>(undefined)
+
+  const onPointerDown = useEvent((event: PointerEvent): void => {
+    if (!handle) {
+      return
+    }
+    event.preventDefault()
+    handle.setPointerCapture(event.pointerId)
+    dragRef.current = { pointerId: event.pointerId, startY: event.clientY, startHeight: chartBlockHeight }
+    setIsDragging(true)
+  })
+  const onPointerMove = useEvent((event: PointerEvent): void => {
+    const drag = dragRef.current
+    if (!drag || event.pointerId !== drag.pointerId) {
+      return
+    }
+    // The handle sits under the chart: dragging down grows the chart, up grows the positions pane.
+    onResize(drag.startHeight + (event.clientY - drag.startY))
+  })
+  const onPointerEnd = useEvent((): void => {
+    dragRef.current = undefined
+    setIsDragging(false)
+  })
+
+  useEffect(() => {
+    if (!handle) {
+      return undefined
+    }
+    handle.addEventListener('pointerdown', onPointerDown)
+    handle.addEventListener('pointermove', onPointerMove)
+    handle.addEventListener('pointerup', onPointerEnd)
+    handle.addEventListener('pointercancel', onPointerEnd)
+    return () => {
+      handle.removeEventListener('pointerdown', onPointerDown)
+      handle.removeEventListener('pointermove', onPointerMove)
+      handle.removeEventListener('pointerup', onPointerEnd)
+      handle.removeEventListener('pointercancel', onPointerEnd)
+    }
+  }, [handle, onPointerDown, onPointerMove, onPointerEnd])
+
+  return (
+    <Flex
+      group
+      ref={setHandle}
+      height={MARGIN_CHART_TABLE_GAP}
+      flexShrink={0}
+      alignItems="center"
+      justifyContent="center"
+      position="relative"
+      style={{ cursor: 'ns-resize', touchAction: 'none' }}
+      testID={TestID.MarginChartResizeHandle}
+    >
+      {/* Kept visible for the whole drag, which can leave the hit strip. Opacity only: a color-token
+          transition would flash on a theme switch. */}
+      <Flex
+        width="100%"
+        alignItems="center"
+        justifyContent="center"
+        className={`${isDragging ? 'opacity-100' : 'opacity-0'} transition-opacity duration-150 group-hover:opacity-100`}
+      >
+        <Flex position="absolute" left={0} right={0} height={1} backgroundColor="$surface3" />
+        <Flex
+          px="$spacing6"
+          py="$spacing2"
+          borderRadius="$roundedFull"
+          backgroundColor="$surface2"
+          borderWidth={1}
+          borderColor="$surface3"
+        >
+          <ArrowDownArrowUp size="$icon.12" color="$neutral2" />
+        </Flex>
+      </Flex>
     </Flex>
   )
 }

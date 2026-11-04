@@ -18,8 +18,13 @@ import {
   toTradingApiSupportedChainId,
 } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 
+// The Trading API serves Relay only to callers that list it, because Relay-won bridges need the
+// quote-first approval from `useTokenApprovalInfo`.
+const RELAY_OPT_IN_BRIDGE_PROVIDERS = [TradingApi.BridgeProvider.ACROSS, TradingApi.BridgeProvider.RELAY]
+
 export interface QuoteRequestResult {
   amount: string
+  bridgeProviders?: TradingApi.BridgeProvider[]
   generatePermitAsTransaction?: boolean
   earnIntent?: TradingApi.EarnIntent
   // Flag-off path: legacy `gasStrategies` array. Omitted on the flag-on path.
@@ -78,6 +83,8 @@ export function createBuildQuoteRequest(
 
     // TODO(GasFeeOverrides): remove flag gate once the new urgency-based payload ships fully.
     const shouldUseUrgency = getFeatureFlag(FeatureFlags.GasFeeOverrides)
+    const isCrossChain = validatedInput.tokenInChainId !== validatedInput.tokenOutChainId
+    const shouldOptIntoRelay = isCrossChain && getFeatureFlag(FeatureFlags.RelayBridgeAggregator)
 
     const base = {
       amount: validatedInput.amount.quotient.toString(),
@@ -93,6 +100,7 @@ export function createBuildQuoteRequest(
       walletExecutionContext: validatedInput.walletExecutionContext,
       routingParams,
       slippageParams,
+      ...(shouldOptIntoRelay ? { bridgeProviders: RELAY_OPT_IN_BRIDGE_PROVIDERS } : {}),
     }
 
     if (shouldUseUrgency) {

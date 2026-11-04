@@ -35,9 +35,7 @@ type InlineCardProps = {
 /**
  * Drop-in for the legacy `InlineCard`: a Flex/Text/Icon composition on the
  * compat primitives — cross-platform without its own leg split (the
- * ProgressCompat precedent). ui/src icons remain valid `Icon` values: the
- * cross-system assignability pin (`ui-icon-assignability.test.ts`) keeps
- * legacy `GeneratedIcon` producers assignable to mycelium's receiver slot.
+ * ProgressCompat precedent).
  */
 export function InlineCardCompat({
   Icon,

@@ -1,7 +1,7 @@
 import { isMobileWeb, isWebPlatform } from '@universe/environment'
 import { Flex, TouchableArea } from '@universe/mycelium'
+import { InfoCircle } from '@universe/mycelium/icons/InfoCircle'
 import { PropsWithChildren, ReactNode, useCallback, useRef, useState } from 'react'
-import { InfoCircle } from 'ui/src/components/icons/InfoCircle'
 import { WarningModal, WarningModalProps } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { InfoTooltip } from 'uniswap/src/components/tooltip/InfoTooltip'
 import { InfoTooltipProps } from 'uniswap/src/components/tooltip/InfoTooltipProps'

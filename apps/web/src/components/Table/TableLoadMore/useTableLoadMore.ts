@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { useDebounce } from '~/hooks/useDebounce'
+import { useDebounce } from 'utilities/src/time/timing'
 
 const LOAD_MORE_BOTTOM_OFFSET = 50
 // A client-side filter can discard entire fetched pages, so completions that grow nothing get a

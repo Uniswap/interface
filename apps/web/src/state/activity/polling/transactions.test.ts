@@ -22,11 +22,11 @@ vi.mock('wagmi', () => ({
   usePublicClient: () => ({ getTransactionReceipt: mockGetTransactionReceipt }),
 }))
 
-vi.mock('~/hooks/useAccount', () => ({
+vi.mock('~/connection/hooks/useAccount', () => ({
   useAccount: () => ({ address: ADDRESS, chainId: CHAIN_ID, isConnected: true }),
 }))
 
-vi.mock('~/hooks/useCurrentBlockTimestamp', () => ({
+vi.mock('~/connection/hooks/useCurrentBlockTimestamp', () => ({
   useCurrentBlockTimestamp: () => ({ blockTimestamp: undefined, blockTimestampUpdatedAt: Date.now() }),
 }))
 

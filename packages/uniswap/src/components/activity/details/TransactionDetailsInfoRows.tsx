@@ -6,16 +6,18 @@ import {
   UniversalImage,
   UniversalImageResizeMode,
   useIsDarkMode,
+  borderRadii,
+  fonts,
+  iconSizes,
 } from '@universe/mycelium'
+import { CopyAlt } from '@universe/mycelium/icons/CopyAlt'
+import { ExternalLink } from '@universe/mycelium/icons/ExternalLink'
+import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
+import { UniswapX } from '@universe/mycelium/icons/UniswapX'
 import dayjs from 'dayjs'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { UniswapXText } from 'ui/src'
-import { RotatableChevron } from 'ui/src/components/icons'
-import { CopyAlt } from 'ui/src/components/icons/CopyAlt'
-import { ExternalLink } from 'ui/src/components/icons/ExternalLink'
-import { UniswapX } from 'ui/src/components/icons/UniswapX'
-import { borderRadii, fonts, iconSizes } from 'ui/src/theme'
 import { InfoRow } from 'uniswap/src/components/activity/details/InfoRow'
 import { InfoRowActionButton } from 'uniswap/src/components/activity/details/InfoRowActionButton'
 import { getVisiblePlanSteps } from 'uniswap/src/components/activity/details/plan/getVisiblePlanSteps'

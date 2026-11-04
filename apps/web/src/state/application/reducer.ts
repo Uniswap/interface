@@ -1,9 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import type { PositionInfo } from 'uniswap/src/features/positions/types'
+import type { AddFundsPressParams } from 'uniswap/src/features/providers/webForNudgeTypes'
 import { ModalName, ModalNameType } from 'uniswap/src/features/telemetry/constants'
-import { PopupType } from '~/state/popups/types'
 import type { AuthenticatorProvider } from '~/types/authenticatorProvider'
 import { ReceiveCryptoModalInitialState } from '~/types/receiveCryptoModal'
+import { PopupType } from '~/utils/popups/types'
 
 export type LiquidityModalInitialState = PositionInfo
 
@@ -97,8 +98,14 @@ export type UnitagRateLimitSpeedbumpModalParams = {
   initialState: UnitagRateLimitSpeedbumpModalInitialState
 }
 
+type AddFundsModalParams = {
+  name: typeof ModalName.AddFunds
+  initialState: AddFundsPressParams
+}
+
 export type OpenModalParams =
   | { name: ModalNameType; initialState?: undefined }
+  | AddFundsModalParams
   | AddLiquidityModalParams
   | RemoveLiquidityModalParams
   | ClaimFeeModalParams

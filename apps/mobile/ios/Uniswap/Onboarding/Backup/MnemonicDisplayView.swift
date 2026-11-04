@@ -11,26 +11,38 @@ import React
 // Standard HD wallet mnemonic length (BIP-39 12 words). Embedded wallets use 24.
 fileprivate let mnemonicLengthHD = 12
 
-@objcMembers class MnemonicDisplayView: NSObject {
+@objcMembers class MnemonicDisplayView: UIView {
   private var vc = UIHostingController(rootView: MnemonicDisplay())
-  
-  static let storage = NSMutableDictionary()
-  
+
+  override init(frame: CGRect) {
+    super.init(frame: frame)
+
+    let hostedView = vc.view!
+    hostedView.backgroundColor = .clear
+    hostedView.frame = bounds
+    hostedView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+    addSubview(hostedView)
+  }
+
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+
   var mnemonicId: String {
     set { vc.rootView.setMnemonicId(mnemonicId: newValue) }
     get { return vc.rootView.props.mnemonicId }
   }
-  
+
   var copyText: String {
     set { vc.rootView.props.copyText = newValue }
     get { return vc.rootView.props.copyText }
   }
-  
+
   var copiedText: String {
     set { vc.rootView.props.copiedText = newValue }
     get { return vc.rootView.props.copiedText }
   }
-  
+
   var onHeightMeasured: RCTDirectEventBlock? {
     didSet {
       vc.rootView.props.onHeightMeasured = { [weak self] height in
@@ -45,11 +57,6 @@ fileprivate let mnemonicLengthHD = 12
         self?.onEmptyMnemonic?(["mnemonicId": mnemonicId])
       }
     }
-  }
-  
-  var view: UIView {
-    vc.view.backgroundColor = .clear
-    return vc.view
   }
 }
 

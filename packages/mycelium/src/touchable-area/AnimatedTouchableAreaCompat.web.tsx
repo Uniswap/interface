@@ -11,8 +11,7 @@ import { TouchableAreaCompat } from './TouchableAreaCompat'
 /**
  * Web leg of the `AnimatedTouchableArea` compat: renders the compat
  * TouchableArea and drops the Reanimated-only props — the legacy
- * `withAnimated(TouchableArea)` web leg
- * (`ui/src/components/factories/animated.web.tsx`) accepted and ignored them
+ * `withAnimated(TouchableArea)` web leg accepted and ignored them
  * the same way. The `style` widening (animated worklet results) collapses back
  * to the compat style type here: on web a worklet style is a plain object of
  * resolved values.

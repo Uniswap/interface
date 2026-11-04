@@ -1,5 +1,5 @@
 import { TouchableArea, zIndexes } from '@universe/mycelium'
-import { BackArrow } from 'ui/src/components/icons'
+import { BackArrow } from '@universe/mycelium/icons/BackArrow'
 
 export function ModalBackButton({ onBack }: { onBack: () => void }): JSX.Element {
   return (

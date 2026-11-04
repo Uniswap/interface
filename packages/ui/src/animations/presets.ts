@@ -6,6 +6,9 @@ type EnterExitStyle = { opacity?: number; x?: number; y?: number }
 
 type EnterExitStyles = Record<string, { enterStyle?: EnterExitStyle; exitStyle?: EnterExitStyle }>
 
+// TODO(INFRA-4485): Move the remaining consumers to mycelium's enter/exit preset classes, then delete this file.
+
+/** @deprecated Use `ENTER_PRESET_CLASSES` from `@universe/mycelium/compat`, with `Presence` from `@universe/mycelium/presence`, instead. */
 export const animationsEnter = {
   fadeIn: {
     enterStyle: {
@@ -41,6 +44,7 @@ export const animationsEnter = {
   },
 } satisfies EnterExitStyles
 
+/** @deprecated Use `EXIT_PRESET_CLASSES` from `@universe/mycelium/compat`, with `Presence` from `@universe/mycelium/presence`, instead. */
 export const animationsExit = {
   fadeOut: {
     exitStyle: {
@@ -61,6 +65,7 @@ export const animationsExit = {
   },
 } satisfies EnterExitStyles
 
+/** @deprecated Use `ENTER_EXIT_PRESET_CLASSES` from `@universe/mycelium/compat`, with `Presence` from `@universe/mycelium/presence`, instead. */
 export const animationsEnterExit = {
   fadeInDownOutUp: {
     ...animationsEnter.fadeInDown,
@@ -76,6 +81,7 @@ export const animationsEnterExit = {
   },
 } satisfies EnterExitStyles
 
+/** @deprecated Use `ENTER_PRESET_CLASSES` / `EXIT_PRESET_CLASSES` / `ENTER_EXIT_PRESET_CLASSES` from `@universe/mycelium/compat`, with `Presence` from `@universe/mycelium/presence`, instead. */
 export const animationPresets = {
   ...animationsEnter,
   ...animationsExit,

@@ -112,7 +112,6 @@ describe('useTokenSectionsForSwapV2', () => {
     mockUseTrendingTokensOptions.mockReturnValue(queryResult([tokenOption]))
     mockUseEnabledChains.mockReturnValue({
       chains: [UniverseChainId.Mainnet],
-      gqlChains: [],
       defaultChainId: UniverseChainId.Mainnet,
       isTestnetModeEnabled: false,
     })
@@ -190,7 +189,6 @@ describe('useTokenSectionsForSwapV2', () => {
   it('returns only Suggested and Your tokens in testnet mode', () => {
     mockUseEnabledChains.mockReturnValue({
       chains: [UniverseChainId.Sepolia],
-      gqlChains: [],
       defaultChainId: UniverseChainId.Sepolia,
       isTestnetModeEnabled: true,
     })

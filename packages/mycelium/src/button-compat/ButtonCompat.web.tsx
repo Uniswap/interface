@@ -1,13 +1,11 @@
 /*
- * Drop-in Tailwind twin of the legacy Tamagui Button
- * (packages/ui/src/components/buttons/Button/) — same public API, same visuals.
+ * Drop-in Tailwind twin of the legacy ui (Tamagui) Button — same public API,
+ * same visuals; it replaced that Button everywhere.
  * Grafted from the parity-verified workbench port (PR #36187, 2,912
  * computed-style cell-pairs / 0 mismatches). A Button is a bounded component,
  * so instead of the style-prop compiler pipeline (`../compat/compose`) it uses
  * cva + the shared `../cn`, with the [variant][emphasis] lookup tables
- * transcribed 1:1 from the legacy variantEmphasisHash files. The workbench
- * harness (`labs/workbench/scripts/verify-button-parity.mts`) re-proves the
- * equivalence against the real legacy Button across the full matrix.
+ * transcribed 1:1 from the legacy variantEmphasisHash files.
  *
  * This is the WEB leg of the standard three-file platform split (INFRA-3230):
  * a platformless base stub (`ButtonCompat.tsx`) that throws, this `.web.tsx`
@@ -16,16 +14,13 @@
  * entry, so web resolves exactly this module; Metro prefers `.native.tsx`.
  *
  * The class surface itself lives in `./compile` — pure, platform-neutral, and
- * shared with the native leg and the native parity harness (which needs a
- * `(props) => string`). `web-class-pin.test.tsx` freezes this leg's rendered
- * output byte-for-byte, because the emitted class string is what the workbench's
- * 2,912 cell-pairs proved.
+ * shared with the native leg. `web-class-pin.test.tsx` checks this leg renders
+ * exactly the compiler's frame string.
  *
  * Colors are the `@universe/tailwind` semantic utilities: since #35388 that
  * palette matches the Tamagui theme value-for-value, so the workbench port's
- * `--btnv-*` palette is dropped. Sanctioned divergences and the one remaining
- * font-stack pin (`--sbtn-font-button`) live in the ledger,
- * labs/workbench/scripts/button-parity-exceptions.ts.
+ * `--btnv-*` palette is dropped. The one remaining font-stack pin
+ * (`--sbtn-font-button`) is documented in `button-compat.css`.
  *
  * The frame transition stays scoped to transform + filter (non-color): legacy
  * CustomButtonFrame animates with `animateOnly: ['transform']`, and an unscoped
@@ -96,10 +91,9 @@ function activateOnEnter(event: KeyboardEvent<HTMLAnchorElement>): void {
 
 /**
  * The frame element and its element-kind props (INFRA-3478). Split into the
- * `lead`/`kind` chunks so the button path's attribute ORDER stays byte-identical
- * to the pinned markup (`web-class-pin.test.tsx` digests the whole DOM): `type`
- * sits ahead of `className`, `disabled` right after it, exactly where the
- * pinned `<button>` carries them. The anchor form gets neither attribute —
+ * `lead`/`kind` chunks so the button path's attribute ORDER stays stable for
+ * the app snapshots: `type` sits ahead of `className`, `disabled` right after
+ * it. The anchor form gets neither attribute —
  * `type` is meaningless and `disabled` invalid on `<a>`; disabled semantics
  * stay on `aria-disabled` + `tabIndex` + the detached click handler, matching
  * the compat DOM primitives' forwarding (`../compat/dom.tsx`).
@@ -249,8 +243,7 @@ const ButtonComponent = forwardRef<HTMLButtonElement | HTMLAnchorElement, Button
   // carrying element-kind props.
   const frameElement: string = frame.element
 
-  // Key order below reproduces the pre-INFRA-3478 JSX attribute order exactly
-  // (the pin digests whole-DOM markup, attribute order included).
+  // Key order below reproduces the pre-INFRA-3478 JSX attribute order, which the app snapshots record.
   return (
     <ButtonContext.Provider value={ctx}>
       {createElement(

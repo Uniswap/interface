@@ -7,14 +7,14 @@ import { useNavigate } from 'react-router'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { UniswapContext, useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
-import { isUniverseChainId, toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import { getChainGasToken } from 'uniswap/src/features/gas/hooks/useChainGasToken'
 import { areCurrenciesEqual, currencyAddress } from 'uniswap/src/utils/currencyId'
 import { VerifyIdentityModal } from '~/components/PermissionedPool/VerifyIdentityModal'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { getTokenDetailsURL } from '~/data/util'
 import type { CurrencyState } from '~/features/Swap/state/types'
-import { useCurrency } from '~/hooks/Tokens'
+import { useCurrency } from '~/hooks/currency/useCurrency'
 import { Swap } from '~/pages/Swap'
 import { useTDPSelectedMultichainChain } from '~/pages/TokenDetails/context/useTDPSelectedMultichainChain'
 import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
@@ -145,7 +145,7 @@ export function TDPSwapComponent({ warningCard }: { warningCard?: ReactNode }) {
       })
       const url = getTokenDetailsURL({
         address: selectedCurrency.isNative ? null : selectedCurrency.address,
-        chain: toGraphQLChain(selectedCurrency.chainId),
+        chainId: selectedCurrency.chainId,
         inputAddress: getCurrencyURLAddress(tokens.inputCurrency),
         outputAddress: getCurrencyURLAddress(tokens.outputCurrency),
       })
@@ -169,7 +169,6 @@ export function TDPSwapComponent({ warningCard }: { warningCard?: ReactNode }) {
             onCurrencyChange={handleCurrencyChange}
             tokenColor={tokenColor}
             tdpCurrency={swapCurrency}
-            hideBlastShutdownModal={media.xl}
           />
         </UniswapContext.Provider>
       </div>

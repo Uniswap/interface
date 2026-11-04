@@ -14,6 +14,7 @@ import { getPoolDetailsURL } from 'uniswap/src/utils/linking'
 import { useEvent } from 'utilities/src/react/hooks'
 import { Table } from '~/components/Table'
 import { Cell } from '~/components/Table/Cell'
+import { useScrollClampGuard } from '~/features/Liquidity/hooks/useScrollClampGuard'
 import { type ColumnId, type PositionSort, type PositionSortField } from '~/features/Liquidity/PositionsTableColumns'
 import {
   hasActiveControlBarFilter,
@@ -32,7 +33,6 @@ import {
   RangeCellContent,
 } from '~/features/Liquidity/PositionsTableRow'
 import { useAppHeaderHeight } from '~/hooks/useAppHeaderHeight'
-import { useScrollClampGuard } from '~/hooks/useScrollClampGuard'
 
 const ROW_HEIGHT = 64
 const POOL_COLUMN_SIZE_PX = 204

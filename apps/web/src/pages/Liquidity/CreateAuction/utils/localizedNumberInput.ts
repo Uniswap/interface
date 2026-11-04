@@ -1,5 +1,5 @@
+import { Input } from '@universe/mycelium'
 import { useCallback, useLayoutEffect, useMemo, useRef, type ComponentRef } from 'react'
-import { Input } from 'ui/src'
 import { getLocaleNumberSeparators } from 'utilities/src/format/localeNumberSeparators'
 
 type InputRef = ComponentRef<typeof Input>

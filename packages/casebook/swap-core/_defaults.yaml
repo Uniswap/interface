@@ -1,6 +1,6 @@
 product_area: swap.core
-platforms: [web]
-nxProjects: ["@universe/web", uniswap]
+platforms: [web, extension, mobile]
+nxProjects: ["@universe/web", "@uniswap/extension", "@uniswap/mobile", uniswap, wallet]
 owners: ["@uniswap/swap-fe"]
 
 # Casebook area-registry metadata (read by the engine in apps/cli/src/casebook).
@@ -11,3 +11,15 @@ ghLabel: casebook:swap
 # Reviewer GitHub team for the auto-opened catalog companion PR.
 # Sourced from .github/CODEOWNERS "Swap Pod" (@uniswap/swap-fe).
 reviewerTeam: swap-fe
+teamResolved: true
+
+# Test-wallet aliases referenced by this area's cases. Symbolic only: real mnemonics live in
+# the QA vault / Testlio TL handoff, keyed by the same alias. Never put a secret here.
+wallets:
+  TW-SWAPCORE-01: "funded mainnet wallet holding native ETH + USDC (exact-input swaps, fees, swap protection); also funded on Base/Unichain for the mobile smoke"
+  TW-SWAPCORE-02: "wallet holding DAI with zero ERC20 -> Permit2 approve allowance"
+  TW-SWAPCORE-03: "wallet holding USDC/USDT with an ERC20 approval to Permit2 but zero or stale permit allowance"
+  TW-SWAPCORE-04: "wallet holding native ETH and WETH for wrap/unwrap round-trips and WETH-input UniswapX / limit orders"
+  TW-SWAPCORE-05: "wallet funded to trade a fee-on-transfer token (Unibot/Bullet) at default and 1% slippage"
+  TW-SWAPCORE-06: "wallet on a testnet (Sepolia / Unichain Sepolia) with testnet mode enabled"
+  TW-SWAPCORE-07: "pre-delegated, sponsorship-eligible wallet on Base/Unichain (sponsored swaps, Flashblocks)"

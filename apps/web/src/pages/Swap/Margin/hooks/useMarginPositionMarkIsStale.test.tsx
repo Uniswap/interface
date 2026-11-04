@@ -10,7 +10,7 @@ vi.mock('uniswap/src/data/apiClients/tradingApi/useMarginPositionsQuery', () => 
   useMarginPositionsQuery: () => ({ dataUpdatedAt: mockDataUpdatedAt.current }),
 }))
 
-vi.mock('~/hooks/useAccount', () => ({
+vi.mock('~/connection/hooks/useAccount', () => ({
   useAccount: () => ({ address: '0x00000000000000000000000000000000000000A1' }),
 }))
 

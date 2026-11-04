@@ -1,9 +1,9 @@
 /**
- * ButtonCompat's visual + positioning widening: opacity, flexShrink, the
- * shadow trio, position/top, alignItems. Split from `./dimensions` only for
+ * ButtonCompat's visual + positioning widening: opacity, flexShrink, flexGrow,
+ * overflow, the shadow trio, position/top, alignItems. Split from `./dimensions` only for
  * the oxlint `max-lines` cap.
  */
-import type { BorderWidthValue, ColorValue, PositionValue, SpaceValue } from '../compat/props'
+import type { BorderWidthValue, ColorValue, OverflowValue, PositionValue, SpaceValue } from '../compat/props'
 import {
   ALIGN_ITEMS_CLASS,
   commonStyleClasses,
@@ -21,6 +21,10 @@ export type ButtonCompatVisualProps = {
   opacity?: number
   /** Flex shrink factor, independent of `./dimensions`' numeric `flex`. Wired on both legs. */
   flexShrink?: number
+  /** Flex grow factor alone (`grow-[n]`); a numeric `flex` set alongside wins. Wired on both legs. */
+  flexGrow?: number
+  /** Clips the frame's children, e.g. an absolutely positioned progress fill inside the rounded frame. Wired on both legs. */
+  overflow?: OverflowValue
   /** Same `ColorValue` contract as `CompatStyleProps.shadowColor`. Wired on both legs. */
   shadowColor?: ColorValue
   /** Folds into the composed `box-shadow` via `color-mix`. Wired on both legs. */
@@ -59,6 +63,12 @@ export function buttonCompatVisualClasses(
   }
   if (props.flexShrink !== undefined) {
     cls.push(`shrink-[${props.flexShrink}]`)
+  }
+  if (props.flexGrow !== undefined) {
+    cls.push(`grow-[${props.flexGrow}]`)
+  }
+  if (props.overflow !== undefined) {
+    cls.push(props.overflow === 'unset' ? '[overflow:unset]' : `overflow-${props.overflow}`)
   }
   if (props.shadowColor !== undefined || props.shadowOpacity !== undefined || props.shadowRadius !== undefined) {
     for (const entry of commonStyleClasses(

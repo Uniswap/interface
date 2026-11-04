@@ -10,12 +10,12 @@ import {
   View,
   type ViewCompatProps,
 } from '@universe/mycelium'
+import { CopySheets } from '@universe/mycelium/icons/CopySheets'
+import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
 import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import { forwardRef, useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
-import { CopySheets } from 'ui/src/components/icons/CopySheets'
-import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useBlockExplorerLogo } from 'uniswap/src/features/chains/logos'
@@ -35,7 +35,6 @@ import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { getTokenDetailsURL } from '~/data/util'
 import { ClickableTamaguiStyle, EllipsisTamaguiStyle } from '~/theme/components/styles'
 import { anonymizeLink } from '~/utils/anonymizeLink'
-import { getChainUrlParam } from '~/utils/params/chainParams'
 
 // `transition-opacity`, not `all`: `all` animates theme tokens and flashes on a light/dark toggle.
 const CLICKABLE_STYLE = { ...ClickableTamaguiStyle, style: { transition: 'opacity 100ms' } }
@@ -200,12 +199,11 @@ export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetai
 
   const navigate = useNavigate()
   const { defaultChainId } = useEnabledChains()
-  const chainUrlParam = getChainUrlParam(chainId ?? defaultChainId)
   const handleTokenTextClick = useCallback(() => {
     if (!isPool) {
-      navigate(getTokenDetailsURL({ address: tokens[0]?.address, chainUrlParam }))
+      navigate(getTokenDetailsURL({ address: tokens[0]?.address, chainId: chainId ?? defaultChainId }))
     }
-  }, [navigate, tokens, isPool, chainUrlParam])
+  }, [navigate, tokens, isPool, chainId, defaultChainId])
 
   const [truncateAddress, setTruncateAddress] = useState<false | 'start' | 'both'>(false)
   const onTextRender = useCallback(

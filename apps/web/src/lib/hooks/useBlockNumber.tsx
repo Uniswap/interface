@@ -5,9 +5,9 @@ import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
 import { createContext, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { useIsWindowVisible } from 'utilities/src/react/useIsWindowVisible'
+import { useAccount } from '~/connection/hooks/useAccount'
+import { useEthersProvider } from '~/connection/hooks/useEthersProvider'
 import { getRpcProvider } from '~/constants/providers'
-import { useAccount } from '~/hooks/useAccount'
-import { useEthersProvider } from '~/hooks/useEthersProvider'
 
 // MulticallUpdater is outside of the SwapAndLimitContext but we still want to use the swap context chainId for swap-related multicalls
 export const multicallUpdaterSwapChainIdAtom = atom<UniverseChainId | undefined>(undefined)

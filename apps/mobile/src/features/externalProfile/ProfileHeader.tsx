@@ -8,9 +8,14 @@ import {
   TouchableArea,
   validColor,
   AnimatedFlex,
+  getUniconColor,
+  imageSizes,
 } from '@universe/mycelium'
 import { ENS_LOGO } from '@universe/mycelium/assets'
+import { SendAction } from '@universe/mycelium/icons/SendAction'
+import { XTwitter } from '@universe/mycelium/icons/XTwitter'
 import { useIsDarkMode, useSporeColors, useExtractedColors } from '@universe/mycelium/theme-hooks-compat'
+import { DEP_accentColors } from '@universe/mycelium/theme-palette'
 import { TestID } from '@universe/test'
 import React, { memo, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -22,9 +27,7 @@ import { Favorite } from 'src/components/icons/Favorite'
 import { LongText } from 'src/components/text/LongText'
 import { ProfileContextMenu } from 'src/features/externalProfile/ProfileContextMenu'
 import { openModal } from 'src/features/modals/modalSlice'
-import { getUniconColors, Image } from 'ui/src'
-import { SendAction, XTwitter } from 'ui/src/components/icons'
-import { DEP_accentColors, imageSizes } from 'ui/src/theme'
+import { Image } from 'ui/src'
 import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
 import { DisplayNameType } from 'uniswap/src/features/accounts/types'
 import { useAvatar } from 'uniswap/src/features/address/avatar'
@@ -75,7 +78,7 @@ export const ProfileHeader = memo(function ProfileHeader({ address }: ProfileHea
   const hasAvatar = !!avatar && !avatarLoading
 
   // Unicon colors
-  const { color } = getUniconColors(address, false)
+  const color = getUniconColor(address, false)
 
   // Wait for avatar, then render avatar extracted colors or unicon colors if no avatar
   const fixedGradientColors: [string, string] = useMemo(() => {

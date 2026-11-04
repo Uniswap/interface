@@ -29,7 +29,7 @@ vi.mock('uniswap/src/features/language/LocalizationContext', () => ({
 }))
 
 // SplitLogo fetches a token-list query via useCurrencyInfos. We don't care about the icons here —
-// stubbing the hook keeps the test focused on row content and avoids Apollo mock plumbing.
+// stubbing the hook keeps the test focused on row content and avoids query mock plumbing.
 vi.mock('uniswap/src/features/tokens/useCurrencyInfo', () => ({
   useCurrencyInfos: (): Array<undefined> => [undefined, undefined],
 }))

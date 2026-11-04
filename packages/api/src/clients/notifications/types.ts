@@ -11,7 +11,7 @@ import {
   GetNotificationsRequest as ProtoGetNotificationsRequest,
   GetNotificationsResponse as ProtoGetNotificationsResponse,
 } from '@uniswap/client-notification-service/dist/uniswap/notificationservice/v1/api_pb'
-import { FetchClient } from '@universe/api/src/clients/base/types'
+import { FetchClient } from '../base/types'
 
 export interface NotificationsClientContext {
   fetchClient: FetchClient

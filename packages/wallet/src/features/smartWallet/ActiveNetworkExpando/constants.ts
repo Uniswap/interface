@@ -1,6 +1,6 @@
-import { fonts, padding } from 'ui/src/theme'
+import { fonts, spacing } from '@universe/mycelium'
 
-export const ITEM_PADDING = padding.padding12
+export const ITEM_PADDING = spacing.spacing12
 export const TEXT_VARIANT: keyof typeof fonts = 'body4'
 export const SEPARATOR_HEIGHT = 1
 

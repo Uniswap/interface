@@ -1,7 +1,6 @@
 import { Currency, CurrencyAmount, Price } from '@uniswap/sdk-core'
-import { Flex, Text, useExtractedTokenColor, useSporeColors } from '@universe/mycelium'
+import { Flex, Text, useExtractedTokenColor, useSporeColors, iconSizes } from '@universe/mycelium'
 import { useMemo } from 'react'
-import { iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'

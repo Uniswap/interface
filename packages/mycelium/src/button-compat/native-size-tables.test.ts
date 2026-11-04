@@ -108,12 +108,19 @@ describe('NATIVE size tables per device locale (INFRA-3297)', () => {
     const tables = await importTablesForLocale('zh')
     const compile = await import('./compile')
     // The web icon table is compile.ts's `ICON_SIZE_PX` export; the web TEXT
-    // tables are module-private (byte-pinned by web-class-pin.test.tsx), so
+    // tables are module-private, so
     // this reads them via compile.ts's test-only re-exports instead of a
     // second hand-pinned literal, so a future change to the web ramp can't
     // leave this column silently stale.
     expect(tables.NATIVE_ICON_SIZE_PX).toEqual(compile.ICON_SIZE_PX)
-    expect(tables.NATIVE_TEXT_SIZE).toEqual(compile.__testOnlyTextSize)
+    // Web spells the leading `[line-height:…]` (tailwind-merge keeps it past a caller fontSize).
+    const webSpelling = Object.fromEntries(
+      Object.entries(tables.NATIVE_TEXT_SIZE).map(([size, classes]) => [
+        size,
+        classes.replace(/leading-\[(.+)\]/, '[line-height:$1]'),
+      ]),
+    )
+    expect(webSpelling).toEqual(compile.__testOnlyTextSize)
     expect(tables.NATIVE_TEXT_SIZE_NO_LEADING).toEqual(compile.__testOnlyTextSizeNoLeading)
   })
 })

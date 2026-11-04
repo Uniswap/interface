@@ -2,6 +2,7 @@ import type { GasFeeResult } from '@universe/api'
 import type { UniverseChainId } from '@universe/chains'
 import { isMobileApp } from '@universe/environment'
 import { zIndexes } from '@universe/mycelium'
+import { OrderRouting } from '@universe/mycelium/icons/OrderRouting'
 import {
   BestRouteLabel,
   infoBodyTextVariant,
@@ -10,12 +11,11 @@ import {
   type RoutingCaptionDisplay,
   RoutingCaptionKind,
   RoutingInfoRow,
-} from '@universe/swap-ui'
+} from '@universe/transactions-ui'
 import type { PropsWithChildren } from 'react'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Trans, UniswapXText } from 'ui/src'
-import { OrderRouting } from 'ui/src/components/icons/OrderRouting'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
 import { RoutingDiagram } from 'uniswap/src/components/RoutingDiagram/RoutingDiagram'

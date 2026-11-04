@@ -56,6 +56,7 @@ exports[`DisplayNameText > renders unitag without error 1`] = `
       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-[0] pl-[2px]"
     >
       <img
+        alt=""
         height="24"
         src="mock-asset-UNITAG_DARK_SMALL.png"
         style="vertical-align: sub;"

@@ -72,7 +72,7 @@ describe('createMobileAppStateResetter', () => {
   })
 
   describe('resetQueryCaches', () => {
-    it('clears Apollo, React Query, and Expo Image caches', async () => {
+    it('clears React Query and Expo Image caches', async () => {
       await resetter.resetQueryCaches()
 
       // Verify cache clearing methods were called

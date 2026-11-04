@@ -1,6 +1,6 @@
+import { UniverseChainId } from '@universe/chains'
 import { useCallback } from 'react'
 import { shuffleArray } from 'uniswap/src/components/IconCloud/utils'
-import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { type RestTokens, useRestTokensQuery } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
@@ -8,16 +8,12 @@ import { approvedERC20, InteractiveToken } from '~/pages/Landing/assets/approved
 
 const tokenList = shuffleArray(approvedERC20) as InteractiveToken[]
 
-function promoTokenLookupKey(chain: string, address: string): string {
+function promoTokenLookupKey(chain: UniverseChainId, address: string): string {
   return `${chain}-${address}`
 }
 
 function promoTokenToCurrencyId({ chain, address }: InteractiveToken): string | undefined {
-  const chainId = fromGraphQLChain(chain)
-  if (!chainId) {
-    return undefined
-  }
-  return address === NATIVE_CHAIN_ID ? buildNativeCurrencyId(chainId) : buildCurrencyId(chainId, address)
+  return address === NATIVE_CHAIN_ID ? buildNativeCurrencyId(chain) : buildCurrencyId(chain, address)
 }
 
 // Resolved once at module scope so the request and the positional response indexing share one
@@ -47,20 +43,21 @@ function selectPromoTokenPricesByKey(tokens: RestTokens): Record<string, PromoTo
 
 export function usePromoTokensData(): {
   tokenList: InteractiveToken[]
-  getTokenPrice: (chain: string, address: string) => number
-  getTokenPricePercentChange: (chain: string, address: string) => number
+  getTokenPrice: (chain: UniverseChainId, address: string) => number
+  getTokenPricePercentChange: (chain: UniverseChainId, address: string) => number
 } {
   const { data: promoTokenPricesByKey } = useRestTokensQuery(promoCurrencyIds, {
     select: selectPromoTokenPricesByKey,
   })
 
   const getTokenPrice = useCallback(
-    (chain: string, address: string) => promoTokenPricesByKey?.[promoTokenLookupKey(chain, address)]?.price ?? 0,
+    (chain: UniverseChainId, address: string) =>
+      promoTokenPricesByKey?.[promoTokenLookupKey(chain, address)]?.price ?? 0,
     [promoTokenPricesByKey],
   )
 
   const getTokenPricePercentChange = useCallback(
-    (chain: string, address: string) =>
+    (chain: UniverseChainId, address: string) =>
       promoTokenPricesByKey?.[promoTokenLookupKey(chain, address)]?.pricePercentChange ?? 0,
     [promoTokenPricesByKey],
   )

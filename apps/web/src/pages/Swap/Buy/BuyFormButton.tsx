@@ -8,10 +8,10 @@ import { CexTransferInfoModal } from 'uniswap/src/features/fiatOnRamp/CexTransfe
 import { RampDirection } from 'uniswap/src/features/fiatOnRamp/types'
 import { useIsForRegionBlocked } from 'uniswap/src/features/fiatOnRamp/useIsForRegionBlocked'
 import { useIsMissingPlatformWallet } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsMissingPlatformWallet'
-import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { useOpenReceiveCryptoModal } from '~/components/ReceiveCryptoModal/useOpenReceiveCryptoModal'
-import { useConnectionStatus } from '~/features/accounts/store/hooks'
+import { useConnectionStatus } from '~/connection/accounts/hooks'
 import { useBuyFormContext } from '~/pages/Swap/Buy/BuyFormContext'
+import { useAccountDrawer } from '~/state/accountDrawer/hooks'
 import { ReceiveModalState } from '~/types/receiveCryptoModal'
 
 interface BuyFormButtonProps {

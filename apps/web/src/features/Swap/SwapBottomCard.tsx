@@ -8,12 +8,12 @@ import {
   useIsDarkMode,
   useSporeColors,
 } from '@universe/mycelium'
+import { ArrowUpRight } from '@universe/mycelium/icons/ArrowUpRight'
+import { X } from '@universe/mycelium/icons/X'
 import { Presence } from '@universe/mycelium/presence'
+import { opacify } from '@universe/mycelium/theme-hooks-compat'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ArrowUpRight } from 'ui/src/components/icons/ArrowUpRight'
-import { X } from 'ui/src/components/icons/X'
-import { opacify } from 'ui/src/theme'
 import { CardImage } from 'uniswap/src/components/cards/image'
 import { NewTag } from 'uniswap/src/components/pill/NewTag'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
@@ -23,7 +23,7 @@ import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupp
 import { useIsShowingWebFORNudge } from 'uniswap/src/features/providers/webForNudgeProvider'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { EmptyWalletCards } from '~/components/emptyWallet/EmptyWalletCards'
-import { useIsEmbeddedWallet } from '~/hooks/useIsEmbeddedWallet'
+import { useIsEmbeddedWallet } from '~/connection/hooks/useIsEmbeddedWallet'
 import { PageType, useIsPage } from '~/hooks/useIsPage'
 import { useMultichainContext } from '~/state/multichain/useMultichainContext'
 import { ExternalLink } from '~/theme/components/Links'
@@ -66,8 +66,7 @@ export function SwapBottomCard() {
       )
     }
 
-    // Blast is shutting down; don't promote deposits into it.
-    if (!isBridgingSupportedChain && !isEmbeddedWallet && chainId !== UniverseChainId.Blast) {
+    if (!isBridgingSupportedChain && !isEmbeddedWallet) {
       return <MaybeExternalBridgeCard chainId={chainId} />
     } else {
       return null
@@ -122,7 +121,6 @@ const CHAIN_THEME_LIGHT: Record<UniverseChainId, ChainTheme> = {
   [UniverseChainId.Arc]: { bgColor: 'rgba(43, 92, 230, 0.12)', textColor: '#2B5CE6' },
   [UniverseChainId.Avalanche]: { bgColor: '#E8414233', textColor: '#E84142' },
   [UniverseChainId.Base]: { bgColor: '#0052FF33', textColor: '#0052FF' },
-  [UniverseChainId.Blast]: { bgColor: 'rgba(252, 252, 3, 0.16)', textColor: 'rgba(17, 20, 12, 1)' },
   [UniverseChainId.Bnb]: { bgColor: '#EAB20033', textColor: '#EAB200' },
   [UniverseChainId.Celo]: { bgColor: '#FCFF5233', textColor: '#222222' },
   [UniverseChainId.Ink]: { bgColor: 'rgba(119, 87, 226, 0.12)', textColor: '#7757E2' },
@@ -146,7 +144,6 @@ const CHAIN_THEME_LIGHT: Record<UniverseChainId, ChainTheme> = {
 
 const CHAIN_THEME_DARK: Record<UniverseChainId, ChainTheme> = {
   ...CHAIN_THEME_LIGHT,
-  [UniverseChainId.Blast]: { bgColor: 'rgba(252, 252, 3, 0.12)', textColor: 'rgba(252, 252, 3, 1) ' },
   [UniverseChainId.Celo]: { bgColor: '#FCFF5299', textColor: '#655947' },
   [UniverseChainId.Monad]: { bgColor: 'rgba(131, 110, 249, 0.14)', textColor: '#836EF9' },
   [UniverseChainId.Linea]: { bgColor: 'rgba(97, 223, 255, 0.12)', textColor: '#61DFFF' },

@@ -1,12 +1,14 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { Flex, useMedia } from '@universe/mycelium'
-import { useMemo } from 'react'
+import { Flex, Text, useMedia } from '@universe/mycelium'
+import { CheckmarkCircle } from '@universe/mycelium/icons/CheckmarkCircle'
+import { Lightning } from '@universe/mycelium/icons/Lightning'
+import { Ranking } from '@universe/mycelium/icons/Ranking'
+import { Rocket } from '@universe/mycelium/icons/Rocket'
+import { Sparkle } from '@universe/mycelium/icons/Sparkle'
+import { type ReactNode, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { CheckmarkCircle } from 'ui/src/components/icons/CheckmarkCircle'
-import { Lightning } from 'ui/src/components/icons/Lightning'
-import { Ranking } from 'ui/src/components/icons/Ranking'
-import { Rocket } from 'ui/src/components/icons/Rocket'
-import { Sparkle } from 'ui/src/components/icons/Sparkle'
+import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
+import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
@@ -24,7 +26,7 @@ type QuickFilterOption = {
   label: string
   renderIcon: (color: '$neutral1' | '$neutral2') => JSX.Element
   /** Hover/tap definition shown on the chip, so the label is a trust mark rather than decoration. */
-  tooltip?: string
+  tooltip?: ReactNode
 }
 
 /**
@@ -53,6 +55,18 @@ export function AuctionQuickFilters() {
         value: AuctionQuickFilter.Verified,
         label: t('toucan.filter.verified'),
         renderIcon: (color) => <CheckmarkCircle size="$icon.16" color={color} />,
+        tooltip: (
+          <Flex gap="$spacing4">
+            <Text variant="body4" color="$neutral1">
+              {t('toucan.filter.verified.tooltip')}
+            </Text>
+            <LearnMoreLink
+              textVariant="buttonLabel4"
+              textColor="$neutral2"
+              url={UniswapHelpUrls.articles.toucanVerifiedAuctionsHelp}
+            />
+          </Flex>
+        ),
       },
       {
         value: AuctionQuickFilter.New,

@@ -1,0 +1,21 @@
+product_area: bridging
+platforms: [web, extension, mobile]
+nxProjects: ["@universe/web", "@uniswap/extension", "@uniswap/mobile", uniswap]
+owners: ["@uniswap/swap-fe"]
+
+# Casebook area-registry metadata (read by the engine in apps/cli/src/casebook).
+# These drive Testlio suite naming, the PR-comment label, and CI routing.
+label: Bridging
+suiteNamePrefix: Bridging
+ghLabel: casebook:bridging
+# Reviewer GitHub team for the auto-opened catalog companion PR.
+# Sourced from .github/CODEOWNERS ("swap plan/" => @uniswap/swap-fe).
+reviewerTeam: swap-fe
+teamResolved: true
+
+# Test-wallet aliases referenced by this area's cases. Symbolic only: real mnemonics live in
+# the QA vault / Testlio TL handoff, keyed by the same alias. Never put a secret here.
+wallets:
+  TW-BRIDGING-01: "native ETH on mainnet plus gas on L2s (Arbitrum, Optimism, Base, Zora, zkSync, Unichain, Soneium); same-token ETH -> ETH bridge cases, including the L2 -> L2 hop chain"
+  TW-BRIDGING-02: "funded USDC / DAI / WETH on Ethereum mainnet, gas on destination chains; different-token cross-chain (chained-action) swap cases"
+  TW-BRIDGING-03: "smart-wallet (EIP-7702) delegation enabled, funded on Ethereum mainnet; delegation + batched cross-network swap case"

@@ -8,6 +8,10 @@ import { PlatformSplitStubError } from 'utilities/src/errors'
  * The native-reachable `WebBottomSheet` consumers see through the barrel is the render-nothing
  * export in `AdaptiveWebModal.native.tsx` (native bottom sheets are gorhom-based via
  * `uniswap/src/components/modals/Modal.native.tsx`).
+ *
+ * TODO(INFRA-4485): Move the remaining consumers to mycelium's `WebBottomSheet`, then delete this.
+ *
+ * @deprecated Use `WebBottomSheet` from `@universe/mycelium` instead.
  */
 export function WebBottomSheet(_props: ModalProps): JSX.Element | null {
   throw new PlatformSplitStubError('WebBottomSheet')

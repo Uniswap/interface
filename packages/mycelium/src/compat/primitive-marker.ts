@@ -5,18 +5,14 @@ import { cloneElement, type ReactElement } from 'react'
  * wrappers.
  *
  * The legacy `ui/src` `TouchableArea` (and its compat twin here) clones its
- * direct children with injected Spore color guidance, defaulting `color` to
- * `$accent3` — a token on the REJECTED side of the compat colour boundary
- * (`color-token-coverage.ts`), so a mycelium child cloned that way throws at
- * render. Mycelium primitives style themselves against `@universe/tailwind`
- * and take no legacy token guidance, so both injectors skip any child whose
- * component carries this marker.
+ * direct children with injected Spore color guidance (`color` defaults to
+ * `$neutral1`). Mycelium primitives style themselves against
+ * `@universe/tailwind` and take no legacy token guidance, so both injectors
+ * skip any child whose component carries this marker.
  *
  * The marker is a registered symbol, but `packages/ui` is not blocked from
  * importing this module — `packages/ui` already depends on
- * `@universe/mycelium` (see `ui/src/components/factories/createIcon.tsx`
- * for a working deep import, and the `ui`→`mycelium` edge in the Nx project
- * graph). `WithInjectedColors` (the legacy `TouchableArea` injector) imports
+ * `@universe/mycelium` (the `ui`→`mycelium` edge in the Nx project graph). `WithInjectedColors` (the legacy `TouchableArea` injector) imports
  * `isMyceliumPrimitive`/`isMyceliumIcon` directly from
  * `@universe/mycelium/compat` rather than recomputing them from the registry
  * key. The KEY string stays pinned by `primitive-marker.test.tsx` here as a

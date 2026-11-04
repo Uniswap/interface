@@ -1,29 +1,13 @@
 import { describe, expect, it } from 'vitest'
 import type { PriceChartData } from '~/components/Charts/PriceChart'
 import type { MarginMarket } from '~/constants/margin'
-import { TimePeriod } from '~/data/util'
 import {
   deriveStats24h,
   ohlcToCandles,
   priceHistoryToCandles,
-  timeframeToTimePeriod,
   volatileLeg,
-  type MarginChartTimeframe,
   type TimestampedOhlcLike,
 } from '~/pages/Swap/Margin/chart/useMarginChartData'
-
-describe('timeframeToTimePeriod', () => {
-  it.each([
-    ['1H', TimePeriod.HOUR],
-    ['1D', TimePeriod.DAY],
-    ['1W', TimePeriod.WEEK],
-    ['1M', TimePeriod.MONTH],
-    ['1Y', TimePeriod.YEAR],
-    ['ALL', TimePeriod.MAX],
-  ] as Array<[MarginChartTimeframe, TimePeriod]>)('%s → %s', (tf, expected) => {
-    expect(timeframeToTimePeriod({ timeframe: tf })).toBe(expected)
-  })
-})
 
 describe('volatileLeg', () => {
   const base = {

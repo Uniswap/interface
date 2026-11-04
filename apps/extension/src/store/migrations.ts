@@ -13,6 +13,7 @@ import {
   markPoolsBalanceCoachmarkEligible,
   migrateDismissedTokenWarnings,
   migrateSearchHistory,
+  removeBlastChainData,
   removeThaiBahtFromFiatCurrency,
   removeUniswapWrapped2025BehaviorHistory,
   unchecksumDismissedTokenWarningKeys,
@@ -80,6 +81,7 @@ export const migrations = {
   34: markPoolsBalanceCoachmarkEligible,
   35: removePersistedApolloCache,
   36: clearPendingDappRequests,
+  37: removeBlastChainData,
 }
 
-export const EXTENSION_STATE_VERSION = 36
+export const EXTENSION_STATE_VERSION = 37

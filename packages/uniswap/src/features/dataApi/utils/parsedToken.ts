@@ -31,9 +31,8 @@ export function isNativeParsedToken(token: ParsedToken): boolean {
 }
 
 /**
- * The v2-native counterpart of web's `gqlToCurrency`: native currency resolves from the chain,
- * everything else builds an ERC-20. Replaces gqlToCurrency as consumers move onto v2 token shapes;
- * gqlToCurrency is deleted with the GraphQL data paths.
+ * Builds a Currency from a v2 token: native currency resolves from the chain, everything else
+ * builds an ERC-20.
  */
 export function v2TokenToCurrency(token: ParsedToken): Currency | undefined {
   const { chainId, address } = token

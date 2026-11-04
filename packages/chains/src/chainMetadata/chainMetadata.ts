@@ -63,13 +63,6 @@ export const CHAIN_METADATA: Record<UniverseChainId, ChainMetadata> = {
     testnet: false,
     explorer: { name: 'BaseScan', url: 'https://basescan.org' },
   },
-  [UniverseChainId.Blast]: {
-    id: UniverseChainId.Blast,
-    label: 'Blast',
-    urlParam: 'blast',
-    testnet: false,
-    explorer: { name: 'Blastscan', url: 'https://blastscan.io' },
-  },
   [UniverseChainId.Bnb]: {
     id: UniverseChainId.Bnb,
     label: 'BNB Chain',

@@ -1,6 +1,6 @@
 import { Flex, Text, TouchableArea, iconSizes } from '@universe/mycelium'
+import { ExchangeHorizontal } from '@universe/mycelium/icons/ExchangeHorizontal'
 import { useTranslation } from 'react-i18next'
-import { ExchangeHorizontal } from 'ui/src/components/icons/ExchangeHorizontal'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'

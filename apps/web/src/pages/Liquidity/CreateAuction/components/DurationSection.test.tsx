@@ -180,13 +180,25 @@ describe('DurationSection pre-bid module', () => {
   // end IS the emission start, so picking a pre-bid start after it would wipe the Duration start
   // date via a date click. Clearing is the Remove button's job.
   it('does not wipe the emission start when a pre-bid start is picked past it', async () => {
-    const { seen } = renderSection({ preBidStartTime: new Date(START.getTime() - 15 * 60_000) })
+    const preBidStartTime = new Date(START.getTime() - 15 * 60_000)
+    const { seen } = renderSection({ preBidStartTime })
 
     // Open the pre-bid module's own calendar and pick a day well after the emission start.
     await userEvent.click(screen.getByLabelText(PRE_BID_START))
     const dayAfterStart = new Date(START.getTime() + 3 * MS_PER_DAY)
-    const cells = screen.getAllByText(dayAfterStart.getDate().toString())
-    await userEvent.click(cells[cells.length - 1])
+    // The calendar opens on the pre-bid start's month; near a month end the target day is in the
+    // next one, and the visible grid has no enabled cell for it.
+    const monthsAhead =
+      (dayAfterStart.getFullYear() - preBidStartTime.getFullYear()) * 12 +
+      dayAfterStart.getMonth() -
+      preBidStartTime.getMonth()
+    for (let i = 0; i < monthsAhead; i++) {
+      await userEvent.click(screen.getByLabelText('Go to next month'))
+    }
+    const cell = screen
+      .getAllByRole('gridcell', { name: dayAfterStart.getDate().toString() })
+      .find((c) => !c.hasAttribute('disabled') && !c.classList.contains('rdp-day_outside'))
+    await userEvent.click(cell!)
 
     // Pins the value, not just its existence: `toBeDefined()` would also pass if a regression
     // moved the emission start to the clicked day instead of clearing it.

@@ -1,17 +1,16 @@
-import { Flex, Text, useSporeColors } from '@universe/mycelium'
+import { Button, Flex, Text, Tooltip } from '@universe/mycelium'
 /* oxlint-disable max-lines */
-import { ENTER_PRESET_CLASSES, EXIT_PRESET_CLASSES } from '@universe/mycelium/compat'
+import { EXIT_PRESET_CLASSES } from '@universe/mycelium/compat'
+import { CandlestickChart } from '@universe/mycelium/icons/CandlestickChart'
+import { LineChartDots } from '@universe/mycelium/icons/LineChartDots'
+import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
 import { Presence } from '@universe/mycelium/presence'
 import { SegmentedControl } from '@universe/mycelium/segmented-control-compat'
+import { SPORE_ANIMATION_CURVE_CSS } from '@universe/tailwind/animations'
 import { TestID } from '@universe/test'
 import { useParentSize } from '@visx/responsive'
-import { lighten } from 'polished'
-import { useEffect, useMemo, useState } from 'react'
+import { type ReactNode, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Tooltip } from 'ui/src'
-import { CandlestickChart } from 'ui/src/components/icons/CandlestickChart'
-import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
-import { LineChartDots } from 'ui/src/components/icons/LineChartDots'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -25,24 +24,8 @@ import type { PriceChartData } from '~/components/Charts/PriceChart'
 import { DataQuality, PriceChartType } from '~/components/Charts/utils'
 import { MouseoverTooltip } from '~/components/Tooltip'
 import { MARGIN_CHAIN_ID, type MarginMarket } from '~/constants/margin'
-import { extrapolateAccrued } from '~/pages/Swap/Margin/chart/marginChartMath'
-import { type MarginChartPrefs, useMarginChartPrefs } from '~/pages/Swap/Margin/chart/marginChartPrefsStore'
-import { MarginChartSettings } from '~/pages/Swap/Margin/chart/MarginChartSettings'
-import { MarginChartTooltip, type MarginTooltipData } from '~/pages/Swap/Margin/chart/MarginChartTooltip'
-import { MarginChartZoomButtons } from '~/pages/Swap/Margin/chart/MarginChartZoomButtons'
-import {
-  useMarginChartData,
-  volatileLeg,
-  type MarginChartData,
-  type MarginChartTimeframe,
-} from '~/pages/Swap/Margin/chart/useMarginChartData'
-import { useMarginChartOverlays, type MarginChartOverlays } from '~/pages/Swap/Margin/chart/useMarginChartOverlays'
-import { useMarginVolume } from '~/pages/Swap/Margin/chart/useMarginVolume'
-import { MAX_VERTICAL_ZOOM_STEP } from '~/pages/Swap/Margin/chart/verticalZoom'
-import { MarginFormMarketsState } from '~/pages/Swap/Margin/components/MarginFormMarketsState'
-import { getMarginPairLogoProps, useMarginCurrencyInfos } from '~/pages/Swap/Margin/hooks/useMarginCurrencyInfos'
-import { useMarginMarkets } from '~/pages/Swap/Margin/hooks/useMarginMarkets'
-import { useMarginVenueAllowlist } from '~/pages/Swap/Margin/hooks/useMarginVenueAllowlist'
+import { getMarginPairLogoProps, useMarginCurrencyInfos } from '~/features/margin/hooks/useMarginCurrencyInfos'
+import { useMarginMarkets } from '~/features/margin/hooks/useMarginMarkets'
 import {
   accruedUsd,
   bpsToPercent,
@@ -52,67 +35,130 @@ import {
   lltvToPercent,
   marginVenueLabel,
   scaledE18ToNumber,
-} from '~/pages/Swap/Margin/marginFormat'
-import { useMarginMorph } from '~/pages/Swap/Margin/MarginMorphContext'
-import { getMarginLeverageCap } from '~/pages/Swap/Margin/marginOpenButtonGate'
-import { MarginPriceChartModel } from '~/pages/Swap/Margin/MarginPriceChartModel'
+} from '~/features/margin/utils/marginFormat'
 import {
   marginMarketDirection,
   marginPairLabel,
   marginPairLegs,
   marginUnwrapSymbol,
-} from '~/pages/Swap/Margin/marginTokenDisplay'
+} from '~/features/margin/utils/marginTokenDisplay'
+import { extrapolateAccrued } from '~/pages/Swap/Margin/chart/marginChartMath'
+import { MarginChartOhlcLegend } from '~/pages/Swap/Margin/chart/MarginChartOhlcLegend'
+import { type MarginChartPrefs, useMarginChartPrefs } from '~/pages/Swap/Margin/chart/marginChartPrefsStore'
+import { MarginChartSettings } from '~/pages/Swap/Margin/chart/MarginChartSettings'
+import { MarginChartTooltip, type MarginTooltipData } from '~/pages/Swap/Margin/chart/MarginChartTooltip'
+import { MarginChartZoomButtons } from '~/pages/Swap/Margin/chart/MarginChartZoomButtons'
+import { MARGIN_TIME_WINDOW_OPTIONS, type MarginTimeWindow } from '~/pages/Swap/Margin/chart/marginTimeWindows'
+import { useMarginChartData, volatileLeg, type MarginChartData } from '~/pages/Swap/Margin/chart/useMarginChartData'
+import { useMarginChartOverlays, type MarginChartOverlays } from '~/pages/Swap/Margin/chart/useMarginChartOverlays'
+import { useMarginVolume } from '~/pages/Swap/Margin/chart/useMarginVolume'
+import { MAX_VERTICAL_ZOOM_STEP } from '~/pages/Swap/Margin/chart/verticalZoom'
+import { MarginFormMarketsState } from '~/pages/Swap/Margin/components/MarginFormMarketsState'
+import { MarginMarketSelectorAnchor } from '~/pages/Swap/Margin/components/MarginMarketSelector'
+import { setMarginChartHoveredCandle } from '~/pages/Swap/Margin/hooks/useMarginChartHoveredCandle'
+import { useMarginVenueAllowlist } from '~/pages/Swap/Margin/hooks/useMarginVenueAllowlist'
+import { MARGIN_TIME_AXIS_HEIGHT, marginVolumePaneHeight } from '~/pages/Swap/Margin/marginChartLayout'
+import { MarginChartSkeleton } from '~/pages/Swap/Margin/MarginChartSkeleton'
+import { useMarginMorph } from '~/pages/Swap/Margin/MarginMorphContext'
+import { getMarginLeverageCap } from '~/pages/Swap/Margin/marginOpenButtonGate'
+import { MarginPriceChartModel } from '~/pages/Swap/Margin/MarginPriceChartModel'
 
-const TIMEFRAMES: MarginChartTimeframe[] = ['1H', '1D', '1W', '1M', '1Y', 'ALL']
-const TF_OPTIONS = TIMEFRAMES.map((tf) => ({ value: tf, displayText: tf === 'ALL' ? 'All' : tf }))
-// One fixed height shared by the container, the skeleton and the real chart so the swap→chart
-// handoff has zero dimensional jump.
-const MARGIN_CHART_HEIGHT = 480
+const TIME_WINDOW_OPTIONS = MARGIN_TIME_WINDOW_OPTIONS.map((timeWindow) => ({
+  value: timeWindow,
+  displayText: timeWindow,
+}))
+// The chart box fills whatever height the terminal layout gives the chart block, minus the stats strip,
+// legend and controls row; the volume pane, when shown, takes its share from inside it. Stand-in for
+// overlay label spacing until that box is first measured.
+const MARGIN_CHART_FALLBACK_HEIGHT = 480
 
-export function MarginChartPane(): JSX.Element {
+// Hold the chart behind the skeleton this long after mount, then cross-fade in — enough to clear the
+// model's first-frame setup (the height-ease and volume-pane shifts are fixed at the source).
+const CHART_REVEAL_DELAY_MS = 220
+// Chart overlays (volume title, legend chip) mount with the chart but fade in with it on reveal.
+const OVERLAY_REVEAL_STYLE = { transition: `opacity ${SPORE_ANIMATION_CURVE_CSS.fast}` }
+
+/**
+ * `compact` fits the pane to a phone-width box (the mobile chart sheets): the stats wrap instead of
+ * running past the edge, and the vertical-zoom buttons give way to pinch, so the controls fit one row.
+ *
+ * `pinnedMarket` charts that market instead of the form's, for a surface about one position (the mobile
+ * position sheet). The pair header and OHLC legend are dropped there: the header is the form's market
+ * picker, and the surface carries its own identity.
+ */
+export function MarginChartPane({
+  compact = false,
+  pinnedMarket,
+  focusPositionId,
+}: {
+  compact?: boolean
+  pinnedMarket?: MarginMarket
+  // Draws only this position's overlays, always shown (see useMarginChartOverlays).
+  focusPositionId?: string
+} = {}): JSX.Element {
   const pairKey = useMarginFormStore((s) => s.pairKey)
   const { getPairMarket, markets, isLoading, isFetching, error, refetch } = useMarginMarkets()
   // A populated registry with a momentarily-stale stored key still shows the first available
   // market instead of the unavailable state — matches PairHeaderButton/MarginStatsStrip's own
   // resolution, so all three surfaces agree on "unavailable" only when the registry is truly empty.
-  const market = getPairMarket(pairKey) ?? markets.at(0)
+  const formMarket = getPairMarket(pairKey) ?? markets.at(0)
+  const market = pinnedMarket ?? formMarket
 
   if (!market) {
     return (
-      <Flex fill gap="$spacing8">
-        <MarginStatsStrip pairKey={pairKey} stats24h={{}} />
-        <Flex height={MARGIN_CHART_HEIGHT} alignItems="center" justifyContent="center">
+      <Flex fill minHeight={0} gap="$spacing8">
+        <MarginStatsStrip pairKey={pairKey} stats24h={{}} compact={compact} />
+        <Flex height={1} flexShrink={0} backgroundColor="$surface3" />
+        <Flex flex={1} minHeight={0} alignItems="center" justifyContent="center">
           <MarginFormMarketsState isLoading={isLoading || isFetching} error={error} onRetry={refetch} />
         </Flex>
       </Flex>
     )
   }
 
-  return <MarginChartPaneBody market={market} pairKey={pairKey} />
+  return (
+    <MarginChartPaneBody
+      market={market}
+      previewMarket={formMarket ?? market}
+      pairKey={pairKey}
+      compact={compact}
+      showHeader={!pinnedMarket}
+      focusPositionId={focusPositionId}
+    />
+  )
 }
 
 // Mounts only once the pane's gate resolves a market: the chart data, volume and overlay hooks all
 // require one.
 function MarginChartPaneBody({
   market,
+  previewMarket,
   pairKey,
+  compact,
+  showHeader,
+  focusPositionId,
 }: {
   market: MarginMarket
+  previewMarket: MarginMarket
   pairKey: MarginPairKey | undefined
+  compact: boolean
+  showHeader: boolean
+  focusPositionId: string | undefined
 }): JSX.Element {
   const { t } = useTranslation()
-  const [timeframe, setTimeframe] = useState<MarginChartTimeframe>('1D')
+  const [timeWindow, setTimeWindow] = useState<MarginTimeWindow>('1D')
   // Chart-settings popover open state, lifted so the chart suppresses its crosshair/tooltip while the
   // panel is open (spec F16) — on short viewports the panel overlays the chart.
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
-  const { parentRef, width } = useParentSize({ debounceTime: 50 })
-  // Mount lightweight-charts only after the layout morph settles (avoids resize thrash); the
-  // candlestick skeleton bridges the whole expand until then.
+  // No debounce: the block is already at its final size (gated in MarginTerminalLayout), so the chart
+  // measures it once and fits its content once.
+  const { parentRef, width, height } = useParentSize({ debounceTime: 0 })
+  // Mount lightweight-charts only once the layout morph settles; the skeleton bridges until then.
   const { morphSettled } = useMarginMorph()
 
   const { candles, quality, loading, error, refetch, stats24h, candlesUnavailable } = useMarginChartData({
     market,
-    timeframe,
+    timeWindow,
   })
 
   // Chart style (spec F14): the persisted pref drives the toggle, but line-only fallback markets have
@@ -122,7 +168,12 @@ function MarginChartPaneBody({
   // Optional volume histogram (spec F15), default OFF. The data hook stays prefs-agnostic — the pane
   // gates it via `enabled` so the query is skipped while the overlay is off.
   const volumeEnabled = useMarginChartPrefs((s) => s.volume)
-  const { volumeBars } = useMarginVolume({ market, timeframe, enabled: volumeEnabled })
+  const { volumeBars } = useMarginVolume({
+    market,
+    timeWindow,
+    enabled: volumeEnabled,
+  })
+  const showVolumePane = volumeEnabled && volumeBars.length > 0
   const effectiveStyle: MarginChartPrefs['chartStyle'] = candlesUnavailable ? 'line' : chartStyle
   const effectiveChartType = effectiveStyle === 'line' ? PriceChartType.LINE : PriceChartType.CANDLESTICK
   const onSelectStyle = useEvent((style: MarginChartPrefs['chartStyle']): void => {
@@ -139,13 +190,22 @@ function MarginChartPaneBody({
   const onVisibleRangeChange = useEvent((range?: { min: number; max: number }): void => {
     setVisibleRange((prev) => (prev?.min === range?.min && prev?.max === range?.max ? prev : range))
   })
+  const onCrosshairChange = useEvent((candle?: PriceChartData): void => setMarginChartHoveredCandle(candle))
+  // The legend must not keep reading a candle from a chart that is gone.
+  useEffect(() => () => setMarginChartHoveredCandle(undefined), [])
   // Ascending candle times (the data hook sorts) fed to the composer for event-marker snapping.
   const candleTimes = useMemo(() => candles.map((c) => c.time), [candles])
   const overlays = useMarginChartOverlays({
     market,
+    previewMarket,
+    focusPositionId,
     candleTimes,
+    // Fallback mark for the preview estimate when the live market mark is absent (e.g. a venue that
+    // can't quote) — keeps Entry/Liq on the chart instead of blanking them.
+    markFallback: candles.at(-1)?.close,
     visiblePriceRange: visibleRange,
-    paneHeightPx: MARGIN_CHART_HEIGHT,
+    // The price pane only: the volume pane, when shown, is carved out of the same box.
+    paneHeightPx: (height || MARGIN_CHART_FALLBACK_HEIGHT) - (showVolumePane ? marginVolumePaneHeight(height) : 0),
   })
 
   // Vertical zoom (0 = fit candles ∪ overlays, MAX = fit candles). Reset per market so a fresh
@@ -162,9 +222,13 @@ function MarginChartPaneBody({
       type: effectiveChartType,
       stale: quality === DataQuality.STALE,
       hideMinMaxLines: true,
+      // The tooltip carries its own chrome and renders nothing for an OHLC-only hover (the legend
+      // above the chart reads that), so the shared shell would paint an empty pill.
+      hideTooltipBorder: true,
       overlays,
       onVisibleRangeChange,
-      volumeBars,
+      volumeBars: showVolumePane ? volumeBars : undefined,
+      boxHeight: height,
       suppressCrosshair: isSettingsOpen,
       verticalZoomStep,
     }),
@@ -174,7 +238,9 @@ function MarginChartPaneBody({
       quality,
       overlays,
       onVisibleRangeChange,
+      showVolumePane,
       volumeBars,
+      height,
       isSettingsOpen,
       verticalZoomStep,
     ],
@@ -204,7 +270,18 @@ function MarginChartPaneBody({
     }
   }, [econ, usdBasis, primaryLeverage, direction, collateralSymbol])
 
-  const showChart = morphSettled && candles.length > 0 && width > 0
+  // Mount once it has a box + data, but keep it hidden behind the skeleton for a beat then cross-fade in,
+  // so the model's first-frame setup never shows as a "resize".
+  const chartMounted = morphSettled && candles.length > 0 && width > 0 && height > 0
+  const [chartRevealed, setChartRevealed] = useState(false)
+  useEffect(() => {
+    if (!chartMounted) {
+      setChartRevealed(false)
+      return undefined
+    }
+    const id = setTimeout(() => setChartRevealed(true), CHART_REVEAL_DELAY_MS)
+    return () => clearTimeout(id)
+  }, [chartMounted])
   // Terminal states, gated before the chart mounts. Error only when there's nothing to fall back
   // to — an error alongside existing candles keeps the (stale) chart. Empty gates on !loading so
   // the skeleton bridges both the initial fetch and the line-only fallback's own loading window,
@@ -213,9 +290,21 @@ function MarginChartPaneBody({
   const showEmpty = !loading && (candles.length === 0 || quality === DataQuality.INVALID)
 
   return (
-    <Flex fill gap="$spacing8">
-      <MarginStatsStrip pairKey={pairKey} routedVenue={overlays.routedVenue} stats24h={stats24h} />
-      <Flex height={MARGIN_CHART_HEIGHT} ref={parentRef} position="relative">
+    <Flex fill minHeight={0} gap="$spacing8">
+      {showHeader ? (
+        <>
+          <MarginStatsStrip
+            compact={compact}
+            pairKey={pairKey}
+            routedVenue={overlays.routedVenue}
+            stats24h={stats24h}
+            markPrice={candles.at(-1)?.close}
+          />
+          <Flex height={1} flexShrink={0} backgroundColor="$surface3" />
+          <MarginChartOhlcLegend latest={candles.at(-1)} />
+        </>
+      ) : null}
+      <Flex flex={1} minHeight={0} ref={parentRef} position="relative">
         {showError ? (
           <ChartErrorView>
             <Flex row>
@@ -231,11 +320,10 @@ function MarginChartPaneBody({
             </Text>
           </Flex>
         ) : (
-          /* Skeleton ⇄ chart crossfade. Both absolutely fill the fixed-height box so they overlap
-             during the fade handoff — the skeleton is painted underneath while the real chart fades in,
-             then exits. It is never left under the transparent chart (would bleed shimmer). */
+          /* Skeleton ⇄ chart crossfade: both fill the box and overlap during the handoff. The chart mounts
+             hidden behind the skeleton and fades up when chartRevealed flips, as the skeleton exits. */
           <Presence>
-            {showChart ? (
+            {chartMounted ? (
               // Own stacking context so lightweight-charts' internal canvases (z-index 1/2) can't
               // outrank the settings popover overlaying the chart — otherwise clicks fall through to
               // the canvas and the crosshair paints over the panel.
@@ -246,17 +334,25 @@ function MarginChartPaneBody({
                 right={0}
                 bottom={0}
                 left={0}
-                style={{ isolation: 'isolate' }}
-                className={ENTER_PRESET_CLASSES.fadeIn}
+                style={{
+                  isolation: 'isolate',
+                  opacity: chartRevealed ? 1 : 0,
+                  transition: `opacity ${SPORE_ANIMATION_CURVE_CSS.fast}`,
+                }}
               >
+                {/* 100%, not the measured px, so it tracks the box instead of lagging a beat behind it. */}
                 <Chart
                   Model={MarginPriceChartModel}
                   params={params}
-                  height={MARGIN_CHART_HEIGHT}
+                  height="100%"
+                  // The cross-fade owns the entry; a height ease here would read as a resize.
+                  animateHeight={false}
                   TooltipBody={TooltipBody}
+                  onCrosshairChange={onCrosshairChange}
                 />
               </Flex>
-            ) : (
+            ) : null}
+            {!chartRevealed ? (
               <Flex
                 key="skeleton"
                 position="absolute"
@@ -266,35 +362,59 @@ function MarginChartPaneBody({
                 left={0}
                 className={EXIT_PRESET_CLASSES.fadeOut}
               >
-                <MarginChartSkeleton height={MARGIN_CHART_HEIGHT} />
+                <MarginChartSkeleton height={height} testID={TestID.MarginChartSkeleton} />
               </Flex>
-            )}
+            ) : null}
           </Presence>
         )}
-        {showChart && overlays.legend ? (
-          <MarginChartLegendChip
-            legend={overlays.legend}
-            positionsDataUpdatedAt={overlays.positionsDataUpdatedAt}
-            figuresStale={figuresStale ?? false}
-          />
+        {/* Overlays render with the mounted chart but fade in on reveal, so they never sit over the skeleton. */}
+        {chartMounted && showVolumePane ? (
+          // Spans the volume pane (above the time axis) so the title sits in the pane's top-left corner.
+          <Flex
+            position="absolute"
+            left={0}
+            bottom={MARGIN_TIME_AXIS_HEIGHT}
+            height={marginVolumePaneHeight(height)}
+            pointerEvents="none"
+            zIndex={1}
+            opacity={chartRevealed ? 1 : 0}
+            style={OVERLAY_REVEAL_STYLE}
+          >
+            <Flex position="absolute" top="$spacing4" left={0}>
+              <Text variant="body4" color="$neutral2">
+                {t('margin.chart.settings.volume')}
+              </Text>
+            </Flex>
+          </Flex>
+        ) : null}
+        {chartMounted && overlays.legend ? (
+          <Flex opacity={chartRevealed ? 1 : 0} style={OVERLAY_REVEAL_STYLE}>
+            <MarginChartLegendChip
+              legend={overlays.legend}
+              positionsDataUpdatedAt={overlays.positionsDataUpdatedAt}
+              figuresStale={figuresStale ?? false}
+            />
+          </Flex>
         ) : null}
       </Flex>
       <Flex row alignItems="center" gap="$spacing8">
-        <SegmentedControl<MarginChartTimeframe>
+        <SegmentedControl<MarginTimeWindow>
           size="small"
           outlined
-          options={TF_OPTIONS}
-          selectedOption={timeframe}
-          onSelectOption={setTimeframe}
+          options={TIME_WINDOW_OPTIONS}
+          selectedOption={timeWindow}
+          onSelectOption={setTimeWindow}
         />
         <Flex row alignItems="center" gap="$spacing8" marginLeft="auto">
-          <MarginChartZoomButtons
-            step={verticalZoomStep}
-            zoomAvailable={overlays.autoscaleBounds !== undefined}
-            onZoomIn={onZoomIn}
-            onZoomOut={onZoomOut}
-            onReset={onZoomReset}
-          />
+          {compact ? null : (
+            <MarginChartZoomButtons
+              step={verticalZoomStep}
+              zoomAvailable={overlays.autoscaleBounds !== undefined}
+              onZoomIn={onZoomIn}
+              onZoomOut={onZoomOut}
+              onReset={onZoomReset}
+            />
+          )}
           <MarginChartStyleToggle
             selectedStyle={effectiveStyle}
             candlesUnavailable={candlesUnavailable}
@@ -522,107 +642,61 @@ function MarginChartLegendChip({
   )
 }
 
-const SKELETON_CANDLE_COUNT = 32
-const SKELETON_VIEWBOX_WIDTH = 726
-
-interface SkeletonCandle {
-  bodyX: number
-  bodyY: number
-  bodyWidth: number
-  bodyHeight: number
-  wickX: number
-  wickY: number
-  wickWidth: number
-  wickHeight: number
-}
-
-// Deterministic candle geometry in viewBox units (0 = top). Combined sines give an organic-looking
-// price walk; body/wick spans vary per candle so the shimmer reads as candlesticks, not bars.
-function buildSkeletonCandles({ height }: { height: number }): SkeletonCandle[] {
-  const slot = SKELETON_VIEWBOX_WIDTH / SKELETON_CANDLE_COUNT
-  const bodyWidth = slot * 0.5
-  const wickWidth = Math.max(1.5, slot * 0.08)
-  const clamp = (n: number): number => Math.min(0.96, Math.max(0.04, n))
-  return Array.from({ length: SKELETON_CANDLE_COUNT }, (_, i) => {
-    const slotX = i * slot
-    const center = 0.5 + 0.26 * Math.sin(i * 0.5) + 0.09 * Math.sin(i * 1.7 + 1) + 0.05 * Math.sin(i * 3.1)
-    const halfBody = 0.02 + 0.05 * (0.5 + 0.5 * Math.sin(i * 2.3 + 0.5))
-    const wickExt = 0.02 + 0.035 * (0.5 + 0.5 * Math.sin(i * 1.13 + 2))
-    const bodyTopN = clamp(center - halfBody)
-    const bodyBotN = clamp(center + halfBody)
-    const wickTopN = clamp(bodyTopN - wickExt)
-    const wickBotN = clamp(bodyBotN + wickExt)
-    return {
-      bodyX: slotX + (slot - bodyWidth) / 2,
-      bodyY: bodyTopN * height,
-      bodyWidth,
-      bodyHeight: Math.max(2, (bodyBotN - bodyTopN) * height),
-      wickX: slotX + (slot - wickWidth) / 2,
-      wickY: wickTopN * height,
-      wickWidth,
-      wickHeight: Math.max(2, (wickBotN - wickTopN) * height),
-    }
-  })
-}
-
-// Loading bridge shaped like the real candlestick chart (not the generic line/sine ChartSkeleton) so
-// the swap→chart handoff has no shape jump. Reuses LoadingState's shimmer gradient, masking a row of
-// vertical candle rects + wicks. Width-independent (viewBox scaling), so ResizeObserver never touches it.
-function MarginChartSkeleton({ height }: { height: number }): JSX.Element {
-  const colors = useSporeColors()
-  const candles = useMemo(() => buildSkeletonCandles({ height }), [height])
-  const gradientId = 'margin-chart-skeleton-gradient'
-  const maskId = 'margin-chart-skeleton-mask'
+// One header stat column: a small muted label over its value (design: Mark · Liquidity · 24H high/low).
+// An optional explainer hangs off the label.
+function MarginHeaderStat({
+  label,
+  tooltip,
+  children,
+}: {
+  label: string
+  tooltip?: string
+  children: ReactNode
+}): JSX.Element {
+  const labelText = (
+    <Text variant="body4" color="$neutral2" $platform-web={{ whiteSpace: 'nowrap' }}>
+      {label}
+    </Text>
+  )
   return (
-    <Flex row width="100%" alignItems="center" position="relative" testID={TestID.MarginChartSkeleton}>
-      <svg
-        width="100%"
-        height={height}
-        viewBox={`0 0 ${SKELETON_VIEWBOX_WIDTH} ${height}`}
-        preserveAspectRatio="none"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-      >
-        <defs>
-          <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0" stopColor={colors.neutral3.val}>
-              <animate attributeName="offset" values="-1;3" dur="1.3s" repeatCount="indefinite" />
-            </stop>
-            <stop offset="0.5" stopColor={lighten(0.24, colors.neutral3.val)}>
-              <animate attributeName="offset" values="-0.5;3.5" dur="1.3s" repeatCount="indefinite" />
-            </stop>
-            <stop offset="1" stopColor={colors.neutral3.val}>
-              <animate attributeName="offset" values="0;4" dur="1.3s" repeatCount="indefinite" />
-            </stop>
-          </linearGradient>
-        </defs>
-        <mask id={maskId} style={{ maskType: 'alpha' }}>
-          {candles.map((c) => (
-            <g key={c.bodyX}>
-              <rect x={c.wickX} y={c.wickY} width={c.wickWidth} height={c.wickHeight} fill="white" />
-              <rect x={c.bodyX} y={c.bodyY} width={c.bodyWidth} height={c.bodyHeight} rx="2" fill="white" />
-            </g>
-          ))}
-        </mask>
-        <g mask={`url(#${maskId})`}>
-          <rect width="100%" height={height} fill={`url(#${gradientId})`} />
-        </g>
-      </svg>
+    <Flex gap="$spacing2" flexShrink={0}>
+      {tooltip ? (
+        <Tooltip placement="top" delay={{ open: 200, close: 0 }}>
+          <Tooltip.Trigger>{labelText}</Tooltip.Trigger>
+          <Tooltip.Content>
+            <Tooltip.Arrow />
+            <Text variant="body4">{tooltip}</Text>
+          </Tooltip.Content>
+        </Tooltip>
+      ) : (
+        labelText
+      )}
+      <Flex row alignItems="center" gap="$spacing4">
+        {children}
+      </Flex>
     </Flex>
   )
 }
 
+// Chart header: the pair identity on the left (logo, pair, and the venue terms under it), the labeled
+// market stats on the right, as in the design.
 function MarginStatsStrip({
   pairKey,
   routedVenue,
   stats24h,
+  markPrice,
+  compact = false,
 }: {
   pairKey: MarginPairKey | undefined
-  // Once the open quote names a venue, the strip's venue-level numbers (borrow APY, liquidity, LLTV)
+  // Lets the stat columns shrink to the strip's width, so they wrap rather than overflow it.
+  compact?: boolean
+  // Once the open quote names a venue, the header's venue-level numbers (borrow APY, liquidity, LLTV)
   // must be that venue's, not the pair's first — those are what the position would actually get.
   // Before then it stays on the pair group, which is all that is known.
   routedVenue?: MarginVenue
   stats24h: MarginChartData['stats24h']
+  // The chart's last close (live spot patched in), so the header's Mark and the chart agree.
+  markPrice?: number
 }): JSX.Element {
   const { t } = useTranslation()
   const locale = useCurrentLocale()
@@ -648,7 +722,10 @@ function MarginStatsStrip({
   }
 
   const live = getLive(market.key)
-  const mark = live ? scaledE18ToNumber(live.markPriceX18) : undefined
+  // The chart's close first: the markets feed's oracle mark is '0' for a market it has no oracle
+  // price for, which read as "$0".
+  const liveMark = live ? scaledE18ToNumber(live.markPriceX18) : undefined
+  const mark = markPrice !== undefined && markPrice > 0 ? markPrice : liveMark && liveMark > 0 ? liveMark : undefined
   const lltvWad = live ? live.lltvWad : market.lltvWad
   const lltv = lltvToPercent(lltvWad)
   const maxLev = getMarginLeverageCap({ markets: allowedMarkets })
@@ -661,36 +738,29 @@ function MarginStatsStrip({
       })
     : undefined
 
-  // Signed, colored 24h change. formatPercent emits the locale minus for negatives, so only
-  // positives need an explicit "+". Omitted entirely when the day series can't yield a change.
+  // Signed, colored 24h change beside the mark. formatPercent emits the locale minus for negatives, so
+  // only positives need an explicit "+". Omitted entirely when the day series can't yield a change.
   const changePct = stats24h.changePct
   const change24h =
     changePct !== undefined
       ? { text: `${changePct >= 0 ? '+' : ''}${formatPercent(changePct, 1)}`, positive: changePct >= 0 }
       : undefined
 
-  // Secondary metrics as one "·"-joined cluster, subordinate to the primary identity above. Some
-  // carry a hover explainer (spec F24 channel 2).
+  // The venue terms the design's header has no column for (borrow APY, LLTV, max leverage) sit under
+  // the pair, "·"-joined, each with its hover explainer (spec F24 channel 2).
   const venueLabel = marginVenueLabel(market.venue)
-  const secondaryStats: Array<{ key: string; text: string; tooltip?: string }> = []
+  const venueTerms: Array<{ key: string; text: string; tooltip?: string }> = []
   if (live && live.borrowApyBps !== undefined) {
-    secondaryStats.push({
+    venueTerms.push({
       key: 'apy',
       text: t('margin.stats.borrowApy', { apy: bpsToPercent(live.borrowApyBps).toFixed(2) }),
       tooltip: t('margin.stats.tooltip.apy', { venue: venueLabel }),
     })
   }
-  if (liquidity) {
-    secondaryStats.push({
-      key: 'liquidity',
-      text: t('margin.stats.liquidity', { amount: liquidity }),
-      tooltip: t('margin.stats.tooltip.liquidity', { venue: venueLabel }),
-    })
-  }
   // Both variants quote a max, so neither can render before one is known — no cap is derivable from
   // lltv any more.
   if (maxLev !== undefined) {
-    secondaryStats.push(
+    venueTerms.push(
       lltvWad !== '0'
         ? {
             key: 'lltvMax',
@@ -700,106 +770,114 @@ function MarginStatsStrip({
         : { key: 'maxLev', text: t('margin.stats.maxLeverage', { max: formatMaxLeverage(maxLev) }) },
     )
   }
-  if (stats24h.high !== undefined) {
-    secondaryStats.push({
-      key: 'high',
-      text: t('margin.stats.high24h', { value: convertFiatAmountFormatted(stats24h.high, NumberType.FiatTokenPrice) }),
-    })
-  }
-  if (stats24h.low !== undefined) {
-    secondaryStats.push({
-      key: 'low',
-      text: t('margin.stats.low24h', { value: convertFiatAmountFormatted(stats24h.low, NumberType.FiatTokenPrice) }),
-    })
-  }
+  const volatileSymbol = marginUnwrapSymbol(volatileLeg({ market }))
+  const dash = '—'
 
   return (
-    <Flex row alignItems="center" gap="$spacing12" flexWrap="wrap">
-      {/* Primary identity: split logo + pair + hero mark price + data-source tooltip + real 24h change.
-          Two wrap clusters (identity, price+meta) so a narrow column drops the price to line 2, identity intact. */}
-      <Flex row alignItems="center" gap="$spacing8" flexWrap="wrap" flexShrink={1} minWidth={0}>
-        <Flex row alignItems="center" gap="$spacing12">
-          <SplitLogo
-            size={28}
-            chainId={MARGIN_CHAIN_ID}
-            inputCurrencyInfo={null}
-            outputCurrencyInfo={null}
-            {...getMarginPairLogoProps({ ...marginPairLegs(market), currencyInfos })}
-          />
-          <Text variant="heading3" color="$neutral1">
-            {marginPairLabel({ market })}
+    <Flex row alignItems="center" justifyContent="space-between" gap="$spacing16" flexWrap="wrap">
+      {/* Identity: split logo, the pair, and the venue terms under it; opens the market picker, which
+          drops down from here (a sheet in the compact layout). Shrinks before the stats do. */}
+      <MarginMarketSelectorAnchor compact={compact}>
+        {(isSelectorOpen) => (
+          <>
+            <SplitLogo
+              orientation="stacked"
+              size={compact ? 32 : 40}
+              chainId={MARGIN_CHAIN_ID}
+              inputCurrencyInfo={null}
+              outputCurrencyInfo={null}
+              {...getMarginPairLogoProps({ ...marginPairLegs(market), currencyInfos })}
+            />
+            <Flex gap="$spacing2" minWidth={0}>
+              <Flex row alignItems="center" gap="$spacing4">
+                <Text variant="subheading1" color="$neutral1">
+                  {marginPairLabel({ market })}
+                </Text>
+                <RotatableChevron direction={isSelectorOpen ? 'up' : 'down'} size="$icon.16" color="$neutral2" />
+              </Flex>
+              <Flex row alignItems="center" gap="$spacing6" flexWrap="wrap">
+                {venueTerms.map((term, i) => (
+                  <Flex key={term.key} row alignItems="center" gap="$spacing6">
+                    {term.tooltip ? (
+                      <Tooltip placement="top" delay={{ open: 200, close: 0 }}>
+                        <Tooltip.Trigger>
+                          <Text variant="body4" color="$neutral2">
+                            {term.text}
+                          </Text>
+                        </Tooltip.Trigger>
+                        <Tooltip.Content>
+                          <Tooltip.Arrow />
+                          <Text variant="body4">{term.tooltip}</Text>
+                        </Tooltip.Content>
+                      </Tooltip>
+                    ) : (
+                      <Text variant="body4" color="$neutral2">
+                        {term.text}
+                      </Text>
+                    )}
+                    {/* Trailing separator: on wrap it dangles at a line end, never orphaned at a start. */}
+                    {i < venueTerms.length - 1 ? (
+                      <Text variant="body4" color="$neutral3">
+                        ·
+                      </Text>
+                    ) : null}
+                  </Flex>
+                ))}
+              </Flex>
+            </Flex>
+          </>
+        )}
+      </MarginMarketSelectorAnchor>
+      {/* Labeled stat columns, flush right. */}
+      <Flex
+        row
+        alignItems="center"
+        gap="$spacing24"
+        rowGap={compact ? '$spacing12' : undefined}
+        flexWrap="wrap"
+        flexShrink={compact ? 1 : undefined}
+        minWidth={compact ? 0 : undefined}
+      >
+        {/* Charted-series tooltips name the volatile leg — the debt token on shorts. */}
+        <MarginHeaderStat
+          label={t('margin.stats.label.mark')}
+          tooltip={t('margin.chart.source.tooltip', { symbol: volatileSymbol })}
+        >
+          <Text variant="body3" color="$neutral1" $platform-web={{ whiteSpace: 'nowrap' }}>
+            {mark !== undefined ? convertFiatAmountFormatted(mark, NumberType.FiatTokenPrice) : dash}
           </Text>
-        </Flex>
-        <Flex row alignItems="center" gap="$spacing8">
-          {mark !== undefined ? (
-            <>
-              <Text variant="heading3" color="$neutral3">
-                ·
-              </Text>
-              <Text variant="heading3" color="$neutral1">
-                {convertFiatAmountFormatted(mark, NumberType.FiatTokenPrice)}
-              </Text>
-            </>
-          ) : null}
-          <Tooltip placement="bottom" delay={{ open: 200, close: 0 }}>
-            <Tooltip.Trigger>
-              <InfoCircleFilled size="$icon.16" color="$neutral3" />
-            </Tooltip.Trigger>
-            <Tooltip.Content>
-              <Tooltip.Arrow />
-              {/* Charted-series tooltips name the volatile leg — the debt token on shorts. */}
-              <Text variant="body4">
-                {t('margin.chart.source.tooltip', { symbol: marginUnwrapSymbol(volatileLeg({ market })) })}
-              </Text>
-            </Tooltip.Content>
-          </Tooltip>
           {change24h ? (
             <Tooltip placement="top" delay={{ open: 200, close: 0 }}>
               <Tooltip.Trigger>
-                <Text variant="body2" color={change24h.positive ? '$statusSuccess' : '$statusCritical'}>
-                  {t('margin.stats.change24h', { change: change24h.text })}
+                <Text variant="body4" color={change24h.positive ? '$statusSuccess' : '$statusCritical'}>
+                  {change24h.text}
                 </Text>
               </Tooltip.Trigger>
               <Tooltip.Content>
                 <Tooltip.Arrow />
-                <Text variant="body4">
-                  {t('margin.stats.tooltip.change24h', { symbol: marginUnwrapSymbol(volatileLeg({ market })) })}
-                </Text>
+                <Text variant="body4">{t('margin.stats.tooltip.change24h', { symbol: volatileSymbol })}</Text>
               </Tooltip.Content>
             </Tooltip>
           ) : null}
-        </Flex>
-      </Flex>
-      {/* Secondary metrics. flexShrink lets the cluster shrink to the column so flexWrap
-          can drop stats to a second line instead of overflowing on a narrow chart. */}
-      <Flex row alignItems="center" gap="$spacing8" flexWrap="wrap" flexShrink={1} minWidth={0}>
-        {secondaryStats.map((stat, i) => (
-          <Flex key={stat.key} row alignItems="center" gap="$spacing8">
-            {stat.tooltip ? (
-              <Tooltip placement="top" delay={{ open: 200, close: 0 }}>
-                <Tooltip.Trigger>
-                  <Text variant="body3" color="$neutral2">
-                    {stat.text}
-                  </Text>
-                </Tooltip.Trigger>
-                <Tooltip.Content>
-                  <Tooltip.Arrow />
-                  <Text variant="body4">{stat.tooltip}</Text>
-                </Tooltip.Content>
-              </Tooltip>
-            ) : (
-              <Text variant="body3" color="$neutral2">
-                {stat.text}
-              </Text>
-            )}
-            {/* Trailing separator: on wrap it dangles at a line end, never orphaned at a line start. */}
-            {i < secondaryStats.length - 1 ? (
-              <Text variant="body3" color="$neutral3">
-                ·
-              </Text>
-            ) : null}
-          </Flex>
-        ))}
+        </MarginHeaderStat>
+        <MarginHeaderStat
+          label={t('margin.stats.label.liquidity')}
+          tooltip={t('margin.stats.tooltip.liquidity', { venue: venueLabel })}
+        >
+          <Text variant="body3" color="$neutral1" $platform-web={{ whiteSpace: 'nowrap' }}>
+            {liquidity ?? dash}
+          </Text>
+        </MarginHeaderStat>
+        <MarginHeaderStat label={t('margin.stats.label.high24h')}>
+          <Text variant="body3" color="$neutral1" $platform-web={{ whiteSpace: 'nowrap' }}>
+            {stats24h.high !== undefined ? convertFiatAmountFormatted(stats24h.high, NumberType.FiatTokenPrice) : dash}
+          </Text>
+        </MarginHeaderStat>
+        <MarginHeaderStat label={t('margin.stats.label.low24h')}>
+          <Text variant="body3" color="$neutral1" $platform-web={{ whiteSpace: 'nowrap' }}>
+            {stats24h.low !== undefined ? convertFiatAmountFormatted(stats24h.low, NumberType.FiatTokenPrice) : dash}
+          </Text>
+        </MarginHeaderStat>
       </Flex>
     </Flex>
   )

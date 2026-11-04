@@ -9,8 +9,10 @@ import { render, screen } from '~/test-utils/render'
 
 vi.mock('~/features/Liquidity/useLPGeoRestriction', () => ({ useLPGeoRestriction: vi.fn() }))
 vi.mock('~/pages/CreatePosition/CreateLiquidityContextProvider', () => ({ useCreateLiquidityContext: vi.fn() }))
-vi.mock('~/hooks/Tokens', () => ({ useCurrencyInfo: () => undefined }))
-vi.mock('~/hooks/useAccount', () => ({ useAccount: () => ({ isConnected: true, connector: { id: 'injected' } }) }))
+vi.mock('~/hooks/currency/useCurrencyInfo', () => ({ useCurrencyInfo: () => undefined }))
+vi.mock('~/connection/hooks/useAccount', () => ({
+  useAccount: () => ({ isConnected: true, connector: { id: 'injected' } }),
+}))
 vi.mock('@universe/embedded-wallet', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@universe/embedded-wallet')>()),
   useGetPasskeyAuthStatus: () => ({
@@ -41,7 +43,7 @@ const AAPLX = new Token(1, '0x0000000000000000000000000000000000000a11', 18, 'AA
 const USDC = new Token(1, '0x0000000000000000000000000000000000000b22', 6, 'USDC')
 
 const GEO_LABEL = 'AAPLX unavailable in your region'
-const BANNER_HEADING = 'AAPLX isn’t available for liquidity provision in your region'
+const BANNER_HEADING = 'AAPLX is unavailable in your region'
 const CONFIRM_LABEL = 'Create'
 
 function amount(currency: Currency): CurrencyAmount<Currency> {

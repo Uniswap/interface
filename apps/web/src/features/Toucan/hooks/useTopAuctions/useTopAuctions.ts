@@ -18,9 +18,12 @@ import { useVerifiedAuctionIds } from 'uniswap/src/features/toucan/useVerifiedAu
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { computePreBidEndBlock } from '~/features/Toucan/Auction/utils/emissionStartBlock'
 import { approximateNumberFromRaw } from '~/features/Toucan/Auction/utils/fixedPointFdv'
-import { getAuctionMetadata } from '~/features/Toucan/Config/config'
 import { isAuctionCompleted } from '~/features/Toucan/hooks/useTopAuctions/isAuctionCompleted'
-import { BlockTimestampRequest, useGetBlockTimestamps, useMultiChainBlockInfo } from '~/hooks/useMultiChainBlockInfo'
+import {
+  BlockTimestampRequest,
+  useGetBlockTimestamps,
+  useMultiChainBlockInfo,
+} from '~/features/Toucan/hooks/useTopAuctions/useMultiChainBlockInfo'
 import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
 
 export const AUCTION_LIST_API_PAGE_SIZE = 200
@@ -76,12 +79,6 @@ type BlocksByChain = ReturnType<typeof useMultiChainBlockInfo>
 
 function getAuctionCurrencyId(auction: Auction | undefined): string | undefined {
   return auction ? buildCurrencyId(auction.chainId, auction.tokenAddress) : undefined
-}
-
-function getAuctionOverrideLogo(auction: Auction | undefined): string | undefined {
-  return auction?.chainId && auction.tokenAddress
-    ? getAuctionMetadata({ chainId: auction.chainId, tokenAddress: auction.tokenAddress })?.logoUrl
-    : undefined
 }
 
 function getAuctionTimeRemaining({
@@ -322,10 +319,9 @@ export function useTopAuctions({
         const currencyId = getAuctionCurrencyId(coreAuction)
         const currencyInfo = currencyId ? currencyInfoByCurrencyId.get(currencyId) : undefined
 
-        // Image precedence (mirrors the auction detail page): curated config override logo
-        // (authoritative) -> creator-uploaded API image -> indexed currency logo -> TokenLogo
-        // placeholder. Centralized here so the table cell and chip stay consistent.
-        const overrideLogo = getAuctionOverrideLogo(coreAuction)
+        // Image precedence (mirrors the auction detail page): API image (creator upload or
+        // backend override) -> indexed currency logo -> TokenLogo placeholder. Centralized here
+        // so the table cell and chip stay consistent.
         const timeRemaining = getAuctionTimeRemaining({ auction: coreAuction, blocksByChain, getBlockTimestamp })
         const auctionWithCurrency = getAuctionWithCurrencyInfo({ auction: coreAuction, currencyInfo })
 
@@ -333,8 +329,8 @@ export function useTopAuctions({
           ...auction,
           verified: coreAuction ? verifiedSet.has(coreAuction.auctionId) : false,
           // `||` (not `??`) so an empty-string API image is treated as absent and doesn't
-          // suppress the override / indexed logo, independent of the backend's unset-vs-"".
-          logoUrl: overrideLogo || coreAuction?.tokenImageUrl || currencyInfo?.logoUrl,
+          // suppress the indexed logo, independent of the backend's unset-vs-"".
+          logoUrl: coreAuction?.tokenImageUrl || currencyInfo?.logoUrl,
           timeRemaining,
           auction: auctionWithCurrency,
         }

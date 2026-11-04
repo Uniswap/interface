@@ -3,8 +3,8 @@ import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
 import { useMarginFormStore } from 'uniswap/src/features/transactions/margin/stores/marginFormStore/useMarginFormStore'
 import type { MarginVenue } from 'uniswap/src/features/transactions/margin/types'
-import { MarginVenueLogo } from '~/pages/Swap/Margin/components/MarginVenueLogo'
-import { marginVenueLabel } from '~/pages/Swap/Margin/marginFormat'
+import { MarginVenueLogo } from '~/features/margin/components/MarginVenueLogo'
+import { marginVenueLabel } from '~/features/margin/utils/marginFormat'
 
 // A position's venue is fixed at open; the opt-out preference only governs where a NEW open routes.
 // So a user who switches a venue off can still be holding a position on it — this says so rather than

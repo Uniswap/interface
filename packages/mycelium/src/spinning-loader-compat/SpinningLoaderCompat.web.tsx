@@ -1,5 +1,5 @@
 /**
- * Web leg of the SpinningLoader compat (INFRA-3644) — the drop-in twin of the
+ * Web leg of the SpinningLoader compat (INFRA-3644), which replaced the
  * Tamagui-free `ui/src` SpinningLoader rebuild (INFRA-3286): plain div hosts
  * carrying the replaced Tamagui Flex frames as inline styles, re-homed onto
  * mycelium internals (mycelium CircleSpinner/EmptySpinner icons; the shared
@@ -14,9 +14,7 @@ import type { SpinningLoaderCompatProps } from './props'
 
 export type { SpinningLoaderCompatProps } from './props'
 
-// Same id and rule text as the legacy leg: whichever side renders first
-// injects, the other dedupes — the two implementations coexist during the
-// migration, so the shared id must never carry diverging rules.
+// Dedupes the injection: every spinner instance shares this one stylesheet.
 const CSS_RULE_ID = '__spinning_loader_styles__'
 const SPINNING_LOADER_CSS = `
   @keyframes rotate360 {

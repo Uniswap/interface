@@ -16,7 +16,7 @@ import { buildNetworkFilterSelectedChainFields } from 'uniswap/src/features/tele
 import { useEvent } from 'utilities/src/react/hooks'
 import { APP_BODY_MOBILE_GUTTER_PX } from '~/app/layout/constants'
 import { HEADER_TRANSITION } from '~/components/StickyCollapsibleHeader/constants'
-import { useActiveAddresses } from '~/features/accounts/store/hooks'
+import { useActiveAddresses } from '~/connection/accounts/hooks'
 import { useAppHeaderHeight } from '~/hooks/useAppHeaderHeight'
 import { useDataApiOutageModal } from '~/hooks/useDataApiOutageModal'
 import { useScrollCompact } from '~/hooks/useScrollCompact'

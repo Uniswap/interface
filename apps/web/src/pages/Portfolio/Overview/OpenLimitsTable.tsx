@@ -200,7 +200,7 @@ export const OpenLimitsTable = memo(function OpenLimitsTable({
         ),
         cell: (info) => {
           return (
-            <Cell loading={showLoadingSkeleton} justifyContent="flex-start" $md={{ pl: '$none' }}>
+            <Cell loading={showLoadingSkeleton} justifyContent="flex-start" pl="$none">
               {hasRow<UniswapXOrderDetails>(info) && <LimitInfoCell order={info.row.original} />}
             </Cell>
           )
@@ -219,7 +219,7 @@ export const OpenLimitsTable = memo(function OpenLimitsTable({
         ),
         cell: (info) => {
           return (
-            <Cell loading={showLoadingSkeleton} justifyContent="flex-end" $md={{ pr: '$none' }}>
+            <Cell loading={showLoadingSkeleton} justifyContent="flex-end" pr="$none">
               {hasRow<UniswapXOrderDetails>(info) && <LimitActionCell order={info.row.original} />}
             </Cell>
           )

@@ -10,7 +10,7 @@ export function CacheConfig(): JSX.Element {
   return (
     <Flex>
       <Accordion.Item value="cache-config">
-        <AccordionHeader title="🚀 Apollo & React Query Cache" />
+        <AccordionHeader title="🚀 React Query Cache" />
 
         <Accordion.Content>
           <Flex gap="$spacing12">

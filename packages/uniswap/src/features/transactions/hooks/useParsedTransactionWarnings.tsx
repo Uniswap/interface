@@ -1,5 +1,5 @@
+import { Wifi } from '@universe/mycelium/icons/Wifi'
 import { useMemo } from 'react'
-import { Wifi } from 'ui/src/components/icons/Wifi'
 import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAlertColor'
 import {
   ParsedWarnings,

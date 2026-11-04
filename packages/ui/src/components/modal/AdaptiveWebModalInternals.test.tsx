@@ -18,17 +18,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 const FRAME_HEIGHT = 600 // dismissThreshold = min(600 * 0.4, 160) = 160
 
-function Harness({
-  isOpen,
-  isTouchDevice,
-  onClose,
-}: {
-  isOpen: boolean
-  isTouchDevice: boolean
-  onClose?: () => void
-}): JSX.Element {
+function Harness({ isOpen, onClose }: { isOpen: boolean; onClose?: () => void }): JSX.Element {
   const [frame, setFrame] = useState<HTMLDivElement | null>(null)
-  useSheetDrag({ isOpen, isTouchDevice, onClose, frame })
+  useSheetDrag({ isOpen, onClose, frame })
   return (
     <div ref={setFrame} data-testid="frame">
       <div data-sheet-handle data-testid="handle" />
@@ -41,11 +33,15 @@ function Harness({
 
 /** MouseEvent-based pointer dispatch: jsdom's PointerEvent support is spotty, and the hook only
  * reads clientY/button/pointerType/target, all of which MouseEvent carries. */
-function dispatchPointer(target: EventTarget, type: string, init: { clientY: number; button?: number }): void {
+function dispatchPointer(
+  target: EventTarget,
+  type: string,
+  init: { clientX?: number; clientY: number; button?: number },
+): void {
   target.dispatchEvent(new MouseEvent(type, { bubbles: true, cancelable: true, button: 0, ...init }))
 }
 
-function setupDrag({ isTouchDevice = false, onClose = vi.fn() }: { isTouchDevice?: boolean; onClose?: () => void }): {
+function setupDrag({ onClose = vi.fn() }: { onClose?: () => void }): {
   frame: HTMLElement
   handle: HTMLElement
   content: HTMLElement
@@ -54,7 +50,7 @@ function setupDrag({ isTouchDevice = false, onClose = vi.fn() }: { isTouchDevice
 } {
   let now = 1_000
   vi.spyOn(performance, 'now').mockImplementation(() => now)
-  render(<Harness isOpen isTouchDevice={isTouchDevice} onClose={onClose} />)
+  render(<Harness isOpen onClose={onClose} />)
   const frame = screen.getByTestId('frame')
   Object.defineProperty(frame, 'offsetHeight', { value: FRAME_HEIGHT, configurable: true })
   return {
@@ -66,6 +62,12 @@ function setupDrag({ isTouchDevice = false, onClose = vi.fn() }: { isTouchDevice
       now = value
     },
   }
+}
+
+function makeScrollable(element: HTMLElement): void {
+  element.style.overflowY = 'auto'
+  Object.defineProperty(element, 'scrollHeight', { value: 1_000, configurable: true })
+  Object.defineProperty(element, 'clientHeight', { value: 300, configurable: true })
 }
 
 describe('useSheetDrag', () => {
@@ -137,9 +139,10 @@ describe('useSheetDrag', () => {
     expect(frame.style.transform).toBe('')
   })
 
-  it('ignores drags starting on scrollable content on touch devices (content scroll wins)', () => {
-    const { frame, content, onClose, setNow } = setupDrag({ isTouchDevice: true })
-    dispatchPointer(content, 'pointerdown', { clientY: 100 })
+  it('ignores a touch starting on scrollable content (content scroll wins)', () => {
+    const { frame, content, onClose, setNow } = setupDrag({})
+    makeScrollable(content)
+    dispatchTouchPointer(content, 'pointerdown', { clientY: 100 })
     setNow(1_100)
     dispatchPointer(window, 'pointermove', { clientY: 300 })
     dispatchPointer(window, 'pointerup', { clientY: 300 })
@@ -147,11 +150,87 @@ describe('useSheetDrag', () => {
     expect(onClose).not.toHaveBeenCalled()
   })
 
-  it('still drags from the handlebar on touch devices', () => {
-    const { frame, handle, setNow } = setupDrag({ isTouchDevice: true })
-    dispatchPointer(handle, 'pointerdown', { clientY: 100 })
+  it('treats a touch on an svg icon inside scrollable content as a scroll', () => {
+    const { frame, content, setNow } = setupDrag({})
+    makeScrollable(content)
+    const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+    content.appendChild(icon)
+    dispatchTouchPointer(icon, 'pointerdown', { clientY: 100 })
+    setNow(1_100)
+    dispatchPointer(window, 'pointermove', { clientY: 300 })
+    expect(frame.style.transform).toBe('')
+  })
+
+  it('drags from non-scrolling content once a touch moves down past the slop', () => {
+    const { frame, content, setNow } = setupDrag({})
+    dispatchTouchPointer(content, 'pointerdown', { clientY: 100 })
+    dispatchPointer(window, 'pointermove', { clientY: 104 })
+    expect(frame.style.transform).toBe('')
     setNow(1_100)
     dispatchPointer(window, 'pointermove', { clientY: 160 })
+    expect(frame.style.transform).toBe('translateY(60px)')
+  })
+
+  it('leaves the frame styles alone when a touch on content is only a tap', () => {
+    const { frame, content, onClose } = setupDrag({})
+    dispatchTouchPointer(content, 'pointerdown', { clientY: 100 })
+    dispatchPointer(window, 'pointerup', { clientY: 100 })
+    expect(frame.style.transition).toBe('')
+    expect(onClose).not.toHaveBeenCalled()
+  })
+
+  it('drops a touch on content that moves sideways before it moves down', () => {
+    const { frame, content, setNow } = setupDrag({})
+    dispatchTouchPointer(content, 'pointerdown', { clientX: 100, clientY: 100 })
+    dispatchPointer(window, 'pointermove', { clientX: 140, clientY: 110 })
+    setNow(1_100)
+    dispatchPointer(window, 'pointermove', { clientX: 140, clientY: 300 })
+    expect(frame.style.transform).toBe('')
+  })
+
+  it('never drags from content with a mouse, so text selection works on touch-capable hardware too', () => {
+    const { frame, content, onClose, setNow } = setupDrag({})
+    dispatchPointer(content, 'pointerdown', { clientY: 100 })
+    setNow(1_100)
+    dispatchPointer(window, 'pointermove', { clientY: 300 })
+    expect(frame.style.transform).toBe('')
+    dispatchPointer(window, 'pointerup', { clientY: 300 })
+    expect(onClose).not.toHaveBeenCalled()
+  })
+
+  it('still drags from the handlebar with a touch', () => {
+    const { frame, handle, setNow } = setupDrag({})
+    dispatchTouchPointer(handle, 'pointerdown', { clientY: 100 })
+    setNow(1_100)
+    dispatchPointer(window, 'pointermove', { clientY: 160 })
+    expect(frame.style.transform).toBe('translateY(60px)')
+  })
+
+  it('ignores a second finger while a touch drag is in flight', () => {
+    const { frame, handle, content, onClose, setNow } = setupDrag({})
+    dispatchTouchPointer(handle, 'pointerdown', { clientY: 100, pointerId: 1 })
+    dispatchTouchPointer(content, 'pointerdown', { clientY: 100, pointerId: 2 })
+    setNow(1_500)
+    dispatchTouchPointer(window, 'pointermove', { clientY: 400, pointerId: 2 })
+    dispatchTouchPointer(window, 'pointerup', { clientY: 400, pointerId: 2 })
+    expect(frame.style.transform).toBe('')
+    expect(onClose).not.toHaveBeenCalled()
+
+    dispatchTouchPointer(window, 'pointermove', { clientY: 160, pointerId: 1 })
+    expect(frame.style.transform).toBe('translateY(60px)')
+    dispatchTouchPointer(window, 'pointerup', { clientY: 160, pointerId: 1 })
+    dispatchTouchPointer(window, 'pointermove', { clientY: 400, pointerId: 1 })
+    expect(frame.style.transform).toBe('')
+  })
+
+  it('ends a drag whose pointerup a control in the sheet stops from bubbling', () => {
+    const { frame, handle, content } = setupDrag({})
+    content.addEventListener('pointerup', (event) => event.stopPropagation())
+    dispatchTouchPointer(handle, 'pointerdown', { clientY: 100, pointerId: 1 })
+    dispatchTouchPointer(content, 'pointerup', { clientY: 100, pointerId: 1 })
+
+    dispatchTouchPointer(handle, 'pointerdown', { clientY: 100, pointerId: 2 })
+    dispatchTouchPointer(window, 'pointermove', { clientY: 160, pointerId: 2 })
     expect(frame.style.transform).toBe('translateY(60px)')
   })
 })
@@ -164,7 +243,7 @@ describe('useSheetDrag mid-drag re-render hardening (review finding 5)', () => {
   it('a consumer re-render with a new inline onClose mid-drag does not reset the drag', () => {
     let now = 1_000
     vi.spyOn(performance, 'now').mockImplementation(() => now)
-    const { getByTestId, rerender } = render(<Harness isOpen isTouchDevice={false} onClose={() => {}} />)
+    const { getByTestId, rerender } = render(<Harness isOpen onClose={() => {}} />)
     const frame = getByTestId('frame')
     Object.defineProperty(frame, 'offsetHeight', { value: FRAME_HEIGHT, configurable: true })
     dispatchPointer(getByTestId('handle'), 'pointerdown', { clientY: 100 })
@@ -173,7 +252,7 @@ describe('useSheetDrag mid-drag re-render hardening (review finding 5)', () => {
     expect(frame.style.transform).toBe('translateY(50px)')
 
     // New inline onClose identity — previously re-ran the effect, wiping the transform mid-drag
-    rerender(<Harness isOpen isTouchDevice={false} onClose={() => {}} />)
+    rerender(<Harness isOpen onClose={() => {}} />)
     now = 1_200
     dispatchPointer(window, 'pointermove', { clientY: 180 })
     expect(frame.style.transform).toBe('translateY(80px)')
@@ -184,11 +263,11 @@ describe('useSheetDrag mid-drag re-render hardening (review finding 5)', () => {
     vi.spyOn(performance, 'now').mockImplementation(() => now)
     const staleOnClose = vi.fn()
     const freshOnClose = vi.fn()
-    const { getByTestId, rerender } = render(<Harness isOpen isTouchDevice={false} onClose={staleOnClose} />)
+    const { getByTestId, rerender } = render(<Harness isOpen onClose={staleOnClose} />)
     const frame = getByTestId('frame')
     Object.defineProperty(frame, 'offsetHeight', { value: FRAME_HEIGHT, configurable: true })
     dispatchPointer(getByTestId('handle'), 'pointerdown', { clientY: 100 })
-    rerender(<Harness isOpen isTouchDevice={false} onClose={freshOnClose} />)
+    rerender(<Harness isOpen onClose={freshOnClose} />)
     now = 2_000
     dispatchPointer(window, 'pointermove', { clientY: 300 }) // offset 200 > threshold 160
     dispatchPointer(window, 'pointerup', { clientY: 300 })
@@ -200,7 +279,7 @@ describe('useSheetDrag mid-drag re-render hardening (review finding 5)', () => {
     let now = 1_000
     vi.spyOn(performance, 'now').mockImplementation(() => now)
     const onClose = vi.fn()
-    const { getByTestId, unmount } = render(<Harness isOpen isTouchDevice={false} onClose={onClose} />)
+    const { getByTestId, unmount } = render(<Harness isOpen onClose={onClose} />)
     const frame = getByTestId('frame')
     Object.defineProperty(frame, 'offsetHeight', { value: 0, configurable: true }) // threshold 0: any release dismisses
     dispatchPointer(getByTestId('handle'), 'pointerdown', { clientY: 100 })
@@ -215,9 +294,14 @@ describe('useSheetDrag mid-drag re-render hardening (review finding 5)', () => {
 })
 
 /** Stamps `pointerType` onto a MouseEvent-based pointer dispatch (jsdom's MouseEvent lacks it). */
-function dispatchTouchPointer(target: EventTarget, type: string, init: { clientY: number }): void {
+function dispatchTouchPointer(
+  target: EventTarget,
+  type: string,
+  { pointerId, ...init }: { clientX?: number; clientY: number; pointerId?: number },
+): void {
   const event = new MouseEvent(type, { bubbles: true, cancelable: true, button: 0, ...init })
   Object.defineProperty(event, 'pointerType', { value: 'touch' })
+  Object.defineProperty(event, 'pointerId', { value: pointerId })
   target.dispatchEvent(event)
 }
 
@@ -235,14 +319,14 @@ describe('useSheetDrag touch fling suppression', () => {
   })
 
   it('consumes touchmoves while a touch drag from the handlebar is in flight', () => {
-    const { handle, setNow } = setupDrag({ isTouchDevice: true })
+    const { handle, setNow } = setupDrag({})
     dispatchTouchPointer(handle, 'pointerdown', { clientY: 100 })
     setNow(1_016)
     expect(dispatchTouchMove(handle)).toBe(true)
   })
 
   it('stops consuming touchmoves once the drag ends, so the next gesture is untouched', () => {
-    const { handle, onClose, setNow } = setupDrag({ isTouchDevice: true })
+    const { handle, onClose, setNow } = setupDrag({})
     dispatchTouchPointer(handle, 'pointerdown', { clientY: 100 })
     setNow(1_100)
     dispatchPointer(window, 'pointermove', { clientY: 400 })
@@ -252,16 +336,26 @@ describe('useSheetDrag touch fling suppression', () => {
   })
 
   it('stops consuming touchmoves after a pointercancel', () => {
-    const { handle } = setupDrag({ isTouchDevice: true })
+    const { handle } = setupDrag({})
     dispatchTouchPointer(handle, 'pointerdown', { clientY: 100 })
     dispatchPointer(window, 'pointercancel', { clientY: 100 })
     expect(dispatchTouchMove(handle)).toBe(false)
   })
 
   it('leaves content touchmoves alone so the sheet body still scrolls', () => {
-    const { content } = setupDrag({ isTouchDevice: true })
+    const { content } = setupDrag({})
+    makeScrollable(content)
     dispatchTouchPointer(content, 'pointerdown', { clientY: 100 })
     expect(dispatchTouchMove(content)).toBe(false)
+  })
+
+  it('consumes touchmoves from non-scrolling content only once its touch commits to a drag', () => {
+    const { content, setNow } = setupDrag({})
+    dispatchTouchPointer(content, 'pointerdown', { clientY: 100 })
+    expect(dispatchTouchMove(content)).toBe(false)
+    setNow(1_016)
+    dispatchTouchPointer(window, 'pointermove', { clientY: 120 })
+    expect(dispatchTouchMove(content)).toBe(true)
   })
 
   it('does not consume touchmoves for a mouse drag', () => {
@@ -271,16 +365,16 @@ describe('useSheetDrag touch fling suppression', () => {
   })
 
   it('ignores touchmoves the browser has already made uncancelable', () => {
-    const { handle } = setupDrag({ isTouchDevice: true })
+    const { handle } = setupDrag({})
     dispatchTouchPointer(handle, 'pointerdown', { clientY: 100 })
     expect(dispatchTouchMove(handle, { cancelable: false })).toBe(false)
   })
 
   it('unbinds the touchmove handler when the sheet closes mid-drag', () => {
     vi.spyOn(performance, 'now').mockImplementation(() => 1_000)
-    const { getByTestId, rerender } = render(<Harness isOpen isTouchDevice onClose={() => {}} />)
+    const { getByTestId, rerender } = render(<Harness isOpen onClose={() => {}} />)
     dispatchTouchPointer(getByTestId('handle'), 'pointerdown', { clientY: 100 })
-    rerender(<Harness isOpen={false} isTouchDevice onClose={() => {}} />)
+    rerender(<Harness isOpen={false} onClose={() => {}} />)
     expect(dispatchTouchMove(getByTestId('handle'))).toBe(false)
   })
 })

@@ -1,12 +1,12 @@
-import { Flex, Text, type TextProps, TouchableArea } from '@universe/mycelium'
+import { Flex, Text, type TextProps, TouchableArea, Separator } from '@universe/mycelium'
 import type { ColorTokens } from '@universe/mycelium'
+import type { IconProps } from '@universe/mycelium/icons'
+import { ChevronsIn } from '@universe/mycelium/icons/ChevronsIn'
+import { ChevronsOut } from '@universe/mycelium/icons/ChevronsOut'
 import { TestID } from '@universe/test'
 import type { ComponentProps } from 'react'
 import type { Animated } from 'react-native'
-import { Separator, useLayoutAnimationOnChange } from 'ui/src'
-import type { IconProps } from 'ui/src/components/factories/createIcon'
-import { ChevronsIn } from 'ui/src/components/icons/ChevronsIn'
-import { ChevronsOut } from 'ui/src/components/icons/ChevronsOut'
+import { useLayoutAnimationOnChange } from 'ui/src'
 
 /**
  * Legacy `GetThemeValueForKey<'marginHorizontal' | 'paddingVertical'>` retyped as a plain

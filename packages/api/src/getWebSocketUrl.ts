@@ -1,7 +1,7 @@
-import { ENTRY_GATEWAY_API_BASE_URLS } from '@universe/api/src/clients/base/urls'
-import { getEntryGatewayUrl } from '@universe/api/src/getEntryGatewayUrl'
 import { getConfig } from '@universe/config'
 import { getCurrentEnv } from '@universe/environment'
+import { ENTRY_GATEWAY_API_BASE_URLS } from './clients/base/urls'
+import { getEntryGatewayUrl } from './getEntryGatewayUrl'
 
 function toWebSocketUrl(httpBaseUrl: string): string {
   return `${httpBaseUrl.replace('https:', 'wss:')}/ws`

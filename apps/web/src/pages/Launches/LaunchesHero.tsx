@@ -1,5 +1,5 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { Anchor, Flex, IconButton, iconSizes, Text } from '@universe/mycelium'
+import { Anchor, Flex, IconButton, iconSizes, Text, spacing } from '@universe/mycelium'
 import { ArrowRight } from '@universe/mycelium/icons/ArrowRight'
 import { PoolsLogo } from '@universe/mycelium/icons/PoolsLogo'
 import { useIsDarkMode, useSporeColors } from '@universe/mycelium/theme-hooks-compat'
@@ -7,16 +7,15 @@ import { TestID } from '@universe/test'
 import { type FocusEvent, type ReactNode, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Trans } from 'ui/src'
-import { gap } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { DeltaArrow, getDeltaTextColor } from '~/components/DeltaArrow/DeltaArrow'
-import { usePoolsWordmarkGreen } from '~/hooks/usePoolsBrandGreen'
 import { POOLS_URL } from '~/pages/Launches/constants'
 import { LaunchesHeroNetworkLockup } from '~/pages/Launches/LaunchesHeroNetworkLockup'
 import { LaunchItem } from '~/pages/Launches/launchesModel'
+import { usePoolsWordmarkGreen } from '~/pages/Launches/usePoolsWordmarkGreen'
 
 const HERO_PADDING = 24
 const HERO_PADDING_MD = 16
@@ -233,7 +232,7 @@ function PoolsWordmark({ children }: { children?: ReactNode }): JSX.Element {
       {/* Tailwind preflight sets `display: block` on every svg, which would drop the logo out of
           the text run — the inline-block wrapper restores inline flow and carries the baseline nudge. */}
       <span
-        style={{ display: 'inline-block', verticalAlign: POOLS_LOGO_BASELINE_NUDGE, marginRight: gap.gap4 }}
+        style={{ display: 'inline-block', verticalAlign: POOLS_LOGO_BASELINE_NUDGE, marginRight: spacing.spacing4 }}
         aria-hidden
       >
         <PoolsLogo size="$icon.16" color={poolsBrandGreen} />

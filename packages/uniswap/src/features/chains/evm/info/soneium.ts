@@ -1,5 +1,5 @@
 import { Token } from '@uniswap/sdk-core'
-import { GraphQLApi, TradingApi } from '@universe/api'
+import { TradingApi } from '@universe/api'
 import { UniverseChainId, Platform } from '@universe/chains'
 import { isWebApp } from '@universe/environment'
 import { ETH_LOGO, SONEIUM_LOGO } from '@universe/mycelium/assets'
@@ -13,7 +13,7 @@ import {
 } from 'uniswap/src/features/chains/evm/rpc'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
 import { GENERIC_L2_GAS_CONFIG } from 'uniswap/src/features/chains/gasDefaults'
-import { GqlChainId, NetworkLayer, RPCType, UniverseChainInfo } from 'uniswap/src/features/chains/types'
+import { NetworkLayer, RPCType, UniverseChainInfo } from 'uniswap/src/features/chains/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { soneium } from 'wagmi/chains'
 
@@ -37,7 +37,6 @@ export const SONEIUM_CHAIN_INFO = {
   supportedApps: ALL_APPS_CHAIN_SUPPORTED_APPS,
   assetRepoNetworkName: 'soneium',
   backendChain: {
-    chain: GraphQLApi.Chain.Soneium as GqlChainId,
     backendSupported: true,
     nativeTokenBackendAddress: undefined,
   },

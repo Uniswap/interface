@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
+import { useAccount } from '~/connection/hooks/useAccount'
 import { getInterfaceProvider } from '~/constants/providers'
-import { useAccount } from '~/hooks/useAccount'
 import { useBlockNumber } from '~/lib/hooks/useBlockNumber'
 
 export function useBlockConfirmationTime() {

@@ -2,27 +2,12 @@ import { Currency, CurrencyAmount, Price } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { Bound, useIsTickAtLimit } from 'uniswap/src/features/positions/hooks/useIsTickAtLimit'
+import { priceToQuoteAmount } from 'uniswap/src/features/positions/priceToQuoteAmount'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { NumberType } from 'utilities/src/format/types'
 
 const FULL_RANGE_MIN_PRICE = '0'
 const FULL_RANGE_MAX_PRICE = '∞'
-
-/**
- * Express a price as an amount of its quote currency (price magnitude == quote per 1 base) so it
- * can be run through the USDC pricing hook. Mirrors web's BaseQuoteFiatAmount conversion.
- */
-function priceToQuoteAmount(price?: Price<Currency, Currency>): CurrencyAmount<Currency> | undefined {
-  if (!price) {
-    return undefined
-  }
-  try {
-    const oneBase = CurrencyAmount.fromRawAmount(price.baseCurrency, `1${'0'.repeat(price.baseCurrency.decimals)}`)
-    return price.quote(oneBase)
-  } catch {
-    return undefined
-  }
-}
 
 interface UsePriceRangeUsdParams {
   priceLower?: Price<Currency, Currency>
@@ -70,8 +55,9 @@ export function usePriceRangeUsd({
   const upperUsd = useUSDCValue(upperAmount)
   const marketUsd = useUSDCValue(marketAmount)
 
+  // toExact() floors to the stablecoin's 6 decimals, which would render a sub-$0.000001 token price as $0
   const formatUsd = (value: CurrencyAmount<Currency> | null): string =>
-    value ? convertFiatAmountFormatted(value.toExact(), NumberType.FiatTokenPrice) : '-'
+    value ? convertFiatAmountFormatted(value.toSignificant(18), NumberType.FiatTokenPrice) : '-'
 
   return {
     minPrice: isTickAtLimit[Bound.LOWER] ? FULL_RANGE_MIN_PRICE : formatUsd(lowerUsd),

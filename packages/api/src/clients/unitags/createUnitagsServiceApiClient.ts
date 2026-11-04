@@ -20,12 +20,8 @@ import {
   UpdateProfileMetadataRequest,
   UpdateProfileMetadataResponse,
 } from '@uniswap/client-unitag/dist/uniswap/unitag/v1/UnitagService_pb'
-import {
-  signUnitagServiceMessage,
-  SignedRequestParams,
-  NEW_UNITAGS_SIGNATURE_HEADER,
-} from '@universe/api/src/clients/base/auth'
 import { sanitizeUrl } from 'utilities/src/format/urls'
+import { signUnitagServiceMessage, SignedRequestParams, NEW_UNITAGS_SIGNATURE_HEADER } from '../base/auth'
 
 export interface UnitagsServiceApiClientContext {
   rpcClient: PromiseClient<typeof UnitagService>

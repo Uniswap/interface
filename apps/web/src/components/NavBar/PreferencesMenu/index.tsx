@@ -1,7 +1,7 @@
 import { AnimateTransition } from '@universe/mycelium/animate-presence-pager'
+import { MoreHorizontal } from '@universe/mycelium/icons/MoreHorizontal'
 import { useCallback, useState } from 'react'
 import { Popover } from 'ui/src'
-import { MoreHorizontal } from 'ui/src/components/icons/MoreHorizontal'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { NavDropdown, NavDropdownDefaultWrapper } from '~/components/NavBar/NavDropdown/index'

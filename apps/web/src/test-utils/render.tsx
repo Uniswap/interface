@@ -11,13 +11,13 @@ import { Provider } from 'react-redux'
 import { BrowserRouter } from 'react-router'
 import { ReactRouterUrlProvider } from 'uniswap/src/contexts/UrlContext'
 import { MismatchContextProvider } from 'uniswap/src/features/smartWallet/mismatch/MismatchContext'
+import { AccountsStoreProvider } from '~/app/AccountsStoreProvider'
 import { WebUniswapProvider } from '~/app/WebUniswapContext'
 import { TestWeb3Provider } from '~/components/Web3Provider/TestWeb3Provider'
-import { WebAccountsStoreProvider } from '~/features/accounts/store/provider'
-import { WebAccountsStoreUpdater } from '~/features/accounts/store/updater'
+import { WebAccountsStoreUpdater } from '~/connection/accounts/updater'
+import { ExternalWalletProvider } from '~/connection/ExternalWalletProvider'
+import { ConnectWalletMutationProvider } from '~/connection/hooks/useConnectWalletMutation'
 import { TransactionWatcherProvider } from '~/features/transactions/TransactionWatcherProvider'
-import { ConnectWalletMutationProvider } from '~/features/wallet/connection/hooks/useConnectWalletMutation'
-import { ExternalWalletProvider } from '~/features/wallet/providers/ExternalWalletProvider'
 import { BlockNumberContext } from '~/lib/hooks/useBlockNumber'
 import store from '~/state'
 import { ColorSchemeProvider } from '~/theme/colorSchemeProvider'
@@ -85,7 +85,7 @@ function BaseWrapper({
             <NuqsTestingAdapter>
               <TestWeb3Provider>
                 <ConnectWalletMutationProvider>
-                  <WebAccountsStoreProvider>
+                  <AccountsStoreProvider>
                     <ExternalWalletProvider>
                       {/* TODO: figure out how to properly mock `WebUniswapProvider` so that we can include it in all tests */}
                       {includeUniswapContext ? (
@@ -96,7 +96,7 @@ function BaseWrapper({
                         <CommonTestProviders>{children}</CommonTestProviders>
                       )}
                     </ExternalWalletProvider>
-                  </WebAccountsStoreProvider>
+                  </AccountsStoreProvider>
                 </ConnectWalletMutationProvider>
               </TestWeb3Provider>
             </NuqsTestingAdapter>

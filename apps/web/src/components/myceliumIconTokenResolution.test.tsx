@@ -1,5 +1,5 @@
 import { fireEvent } from '@testing-library/react'
-import { TouchableArea } from '@universe/mycelium'
+import { Button, TouchableArea } from '@universe/mycelium'
 import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFilled'
 import { ArrowChange } from '@universe/mycelium/icons/ArrowChange'
 import { ArrowLeft } from '@universe/mycelium/icons/ArrowLeft'
@@ -22,7 +22,6 @@ import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
 import type { ReactElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { Provider } from 'react-redux'
-import { Button } from 'ui/src'
 /**
  * Icon token-resolution contract for converted mycelium icons (INFRA-2971).
  *
@@ -240,7 +239,7 @@ const REPRESENTATIVE_CASES: IconCase[] = [
     alsoContains: ['padding:1px'],
   },
   {
-    // NavBar/DownloadApp/Modal/PasskeyGeneration.tsx — $white is a
+    // features/wallet/components/GetTheAppModal/PasskeyGeneration.tsx — $white is a
     // theme-INVARIANT token: resolveIconColor emits the literal (#FFFFFF, the
     // legacy resolved value in both themes), not a var(), because the raw
     // --color-* palette vars are tree-shaken from compiled app CSS
@@ -252,12 +251,7 @@ const REPRESENTATIVE_CASES: IconCase[] = [
   },
   // Batch 5 (packages/uniswap/src/components) below.
   {
-    // Batch 5 converted the 3 empty states (Tokens/Nfts/Activity) on the
-    // reading that they were web-only-reachable. They are back on ui/src
-    // icons: packages/uniswap is dual-bundled, and mycelium icons have no
-    // native leg (INFRA-3508), so no-throwing-stub-imports rejects them from
-    // a non-suffixed file there. The case stays as the only pin of the large
-    // $icon.100 size token.
+    // The only pin of the large $icon.100 size token.
     name: 'NoTokens color="$neutral3" size="$icon.100" ($icon.100 size token)',
     element: <NoTokens color="$neutral3" size="$icon.100" />,
     expectedPx: 100,
@@ -354,7 +348,7 @@ describe('mycelium icons inside TouchableArea (the real color-injection path, #3
   })
 })
 
-describe('mycelium icons inside the legacy Button icon prop (the ThemedIcon injection path)', () => {
+describe('mycelium icons inside the Button icon prop (the icon-slot injection path)', () => {
   it('takes the Button-injected themed color, resolved (the Passkey precedent, batch 2)', () => {
     // Exactly IncreaseLiquidityCta's Verify Identity shape. Asserted through
     // renderToStaticMarkup (with the theme providers the resolution needs) because jsdom's

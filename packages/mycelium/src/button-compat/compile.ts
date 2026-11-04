@@ -1,12 +1,9 @@
 /**
  * ButtonCompat's pure className compiler (INFRA-3230).
  *
- * Extracted out of the render for two reasons:
- *
- *  - the native parity harness types `NativeParitySuiteConfig.className` as
- *    `(props: P) => string`, and ButtonCompat had no such function — its class
- *    logic lived inline in `ButtonCompat.tsx`'s render;
- *  - `ButtonCompat.tsx` sat at the 500-line oxlint `max-lines` cap.
+ * Extracted out of the render so both legs share one pure `(props) => string`
+ * class compiler, and because `ButtonCompat.tsx` sat at the 500-line oxlint
+ * `max-lines` cap.
  *
  * Everything here is pure and platform-neutral (no `react`, no
  * `react-native`, no DOM), so both legs and the harness share one source of
@@ -20,17 +17,12 @@
  * silence (the resolver's class-map miss is a bare `continue`). So the native
  * selectors take the interaction state as a boolean and inline the chosen
  * scope's classes unprefixed — see `./variantEmphasisHash`.
- *
- * The web output is byte-frozen by `web-class-pin.test.tsx`: ButtonCompat's
- * parity proof is 2,912 computed-style cell-pairs from
- * `labs/workbench/scripts/verify-button-parity.mts`, and any change to the
- * emitted string invalidates it.
  */
 import { cva } from 'class-variance-authority'
 import { getMaybeHexOrRgbColor } from '../button-frame-compat/custom-color'
 import { cn } from '../cn'
 import { groupMarkerClasses } from '../compat/group'
-import type { CommonStyleClassOptions } from '../compat/style-classes'
+import { colorClasses, type CommonStyleClassOptions } from '../compat/style-classes'
 import type { ButtonCompatDimensionProps } from './dimensions'
 import { buttonCompatNativeDimensions } from './native-dimensions'
 import { NATIVE_TEXT_SIZE, NATIVE_TEXT_SIZE_NO_LEADING } from './native-size-tables'
@@ -136,8 +128,7 @@ export const BUTTON_EMPHASES: string[] = Object.keys(FRAME_VARIANT_EMPHASIS.defa
 const frame = cva(
   [
     // display:flex (not inline-flex), position:relative, min-w/h 0: the legacy
-    // frame is a react-native-web view — these are its computed defaults, verified
-    // head-to-head by labs/workbench/scripts/verify-button-parity.mts.
+    // frame was a react-native-web view, and these were its computed defaults.
     'group/sbtn relative box-border flex min-h-0 min-w-0 cursor-pointer items-center justify-center',
     'border border-solid border-transparent bg-transparent select-none',
     '[transition:transform_100ms_cubic-bezier(0.17,0.67,0.45,1),filter_100ms_cubic-bezier(0.17,0.67,0.45,1)]',
@@ -209,7 +200,7 @@ function frameCell(props: ButtonCompatStyleProps): ScopedCell {
 
 /**
  * The WEB frame class string — exactly what `ButtonCompat.tsx` puts on its
- * `<button>`. Pinned byte-for-byte by `web-class-pin.test.tsx`.
+ * `<button>` (checked by `web-class-pin.test.tsx`).
  *
  * The dimension props (INFRA-3283) are deliberately NOT compiled here: on web
  * they must go through `./dimensions`' emission lane, whose closed-set check
@@ -238,13 +229,15 @@ const DISABLED_TEXT = 'text-neutral2'
 //   xxsmall 12/13.8 · xsmall 12/16.1 · small 14/16.1 · medium 16/20.7 · large 18/20.7
 // The @universe/tailwind text-button-* tokens drift from these (e.g. button-1 is
 // 18/24), so the values stay pinned as arbitrary utilities. Font weight 535 =
-// --font-weight-medium. WEB ONLY: byte-pinned via `web-class-pin.test.tsx`.
+// --font-weight-medium. WEB ONLY.
+// `[line-height:…]` rather than `leading-…` so a caller fontSize keeps it (see
+// text-compat's lineHeightClass).
 const TEXT_SIZE: Record<ButtonSize, string> = {
-  xxsmall: 'text-[12px] leading-[13.8px]',
-  xsmall: 'text-[12px] leading-[16.1px]',
-  small: 'text-[14px] leading-[16.1px]',
-  medium: 'text-[16px] leading-[20.7px]',
-  large: 'text-[18px] leading-[20.7px]',
+  xxsmall: 'text-[12px] [line-height:13.8px]',
+  xsmall: 'text-[12px] [line-height:16.1px]',
+  small: 'text-[14px] [line-height:16.1px]',
+  medium: 'text-[16px] [line-height:20.7px]',
+  large: 'text-[18px] [line-height:20.7px]',
 }
 
 const TEXT_SIZE_NO_LEADING: Record<ButtonSize, string> = {
@@ -256,8 +249,7 @@ const TEXT_SIZE_NO_LEADING: Record<ButtonSize, string> = {
 }
 
 /**
- * Test-only re-exports of the web text ramp above. Otherwise module-private
- * (byte-pinned via rendered DOM by `web-class-pin.test.tsx`), so without
+ * Test-only re-exports of the web text ramp above. Otherwise module-private, so without
  * these `native-size-tables.test.ts` could only compare the CJK column
  * against a second hand-pinned literal instead of the real values — see
  * that file's "CJK column equals the web ramp by construction" test.
@@ -266,7 +258,7 @@ export const __testOnlyTextSize: Record<ButtonSize, string> = TEXT_SIZE
 export const __testOnlyTextSizeNoLeading: Record<ButtonSize, string> = TEXT_SIZE_NO_LEADING
 
 // Icon/spinner box = button font line-height for the size (useIconSizes).
-// WEB ONLY, like TEXT_SIZE: byte-pinned via `web-class-pin.test.tsx`.
+// WEB ONLY, like TEXT_SIZE.
 const ICON_SIZE: Record<ButtonSize, string> = {
   xxsmall: '[&_svg]:size-[13.8px]',
   xsmall: '[&_svg]:size-[16.1px]',
@@ -298,30 +290,11 @@ export const SPINNER_SIZE: Record<ButtonSize, number> = ICON_SIZE_PX
  * In ./native-size-tables (INFRA-3297): legacy's `adjustedSize` skips its +1px
  * bump under zh/ja device locales, so the native scale is two value columns
  * gated on mycelium's drift-guarded `needsSmallFont` copy at module init —
- * the web tables above stay a single, byte-pinned column (web's check is
+ * the web tables above stay a single column (web's check is
  * constant). Re-exported so this module remains the single import surface the
  * legs and the parity suites read.
  */
 export { NATIVE_ICON_SIZE_PX, NATIVE_SPINNER_SIZE } from './native-size-tables'
-
-/**
- * The circle-spinner glyph, transcribed from the web leg's inline `<svg>`
- * (`./ButtonCompat.web.tsx` ButtonSpinner): a full-circle track at 10% opacity
- * plus a quarter-arc, both 3-wide with round caps, in a 24x24 viewBox scaled to
- * `SPINNER_SIZE`. Lives here beside that size table because the native leg has
- * to rebuild the glyph as `react-native-svg` elements — `currentColor` and CSS
- * inheritance do not cross to native. The web leg keeps its literals so its
- * byte-pinned DOM is untouched — `web-class-pin.test.tsx` reads every value
- * back out of the rendered web markup so the two cannot drift.
- */
-export const SPINNER_GLYPH = {
-  viewBox: '0 0 24 24',
-  strokeWidth: '3',
-  trackOpacity: '0.1',
-  trackPath:
-    'M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z',
-  arcPath: 'M21 12C21 7.02944 16.9706 3 12 3',
-} as const
 
 const TEXT_BASE =
   // font-family via arbitrary property: tailwind-merge 3.x misclassifies
@@ -380,8 +353,7 @@ export { getContrastTextClass } from './contrast'
 /**
  * The NATIVE frame class string.
  *
- * Differences from the web string, all forced by the platform (each is pinned
- * in `packages/tailwind/src/parity/button/native-expectations.ts`):
+ * Differences from the web string, all forced by the platform:
  *
  *  - interaction scopes are inlined from `hovered`/`pressed` instead of
  *    emitted as `hover:` / `active:` prefixes, because uniwind drops `hover:`
@@ -425,8 +397,7 @@ export function buttonCompatNativeFrameClassName(
   // a contested surface (borderColor vs a bordered cell) — the same
   // props-beat-variants precedence the web leg gets from its className-last
   // composition. The native pick is applied HERE (idempotent over the leg's
-  // own picked props) so every caller — the leg, the parity harness — gets the
-  // same value-level drops: a CSS-only borderColor keyword must never ride the
+  // own picked props) so every caller gets the same value-level drops: a CSS-only borderColor keyword must never ride the
   // className, or it knocks the frame's border-transparent out of the merge
   // while resolving to nothing.
   return cn(
@@ -444,13 +415,13 @@ function nativeFrameStateClasses(props: ButtonCompatStyleProps & ButtonInteracti
     // is the Pressable's `disabled` prop.
     return DISABLED_FRAME
   }
-  // Bare truthiness on purpose: the native leg paints every backgroundColor
-  // through `style`, tokens included — the open INFRA-3230 escalation, pinned
-  // in packages/tailwind/src/parity/button/native-expectations.ts.
   if (props.backgroundColor) {
-    // The custom-bg brightness filter has no RN equivalent; the leg paints the
-    // backgroundColor through `style` instead.
-    return ''
+    // Hex/rgb paints through the leg's `style` (the custom-bg brightness filter has no RN
+    // equivalent). A theme token can't — RN can't parse `$accent1` — so it resolves through
+    // uniwind's classes; the border follows it, like legacy native.
+    return getMaybeHexOrRgbColor(props.backgroundColor)
+      ? ''
+      : cn(colorClasses('bg', props.backgroundColor), colorClasses('border', props.backgroundColor))
   }
   const cell = frameCell(props)
   // press wins over hover, matching the joined web string's order (`active:`

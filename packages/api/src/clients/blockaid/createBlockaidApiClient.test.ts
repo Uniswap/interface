@@ -1,8 +1,8 @@
-import { FetchError } from '@universe/api/src/clients/base/errors'
-import type { FetchClient } from '@universe/api/src/clients/base/types'
-import { createBlockaidApiClient } from '@universe/api/src/clients/blockaid/createBlockaidApiClient'
 import { logger } from 'utilities/src/logger/logger'
 import { afterEach, describe, expect, it, vi } from 'vitest'
+import { FetchError } from '../base/errors'
+import type { FetchClient } from '../base/types'
+import { createBlockaidApiClient } from './createBlockaidApiClient'
 
 const ACCOUNT = '0x1111111111111111111111111111111111111111'
 type Scan = (client: ReturnType<typeof createBlockaidApiClient>) => Promise<unknown>

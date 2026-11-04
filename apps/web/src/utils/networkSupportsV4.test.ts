@@ -11,7 +11,6 @@ describe('isV4UnsupportedChain', () => {
     UniverseChainId.Avalanche,
     UniverseChainId.ArbitrumOne,
     UniverseChainId.Base,
-    UniverseChainId.Blast,
     UniverseChainId.Bnb,
     UniverseChainId.Celo,
     UniverseChainId.Optimism,

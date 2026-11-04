@@ -1,3 +1,4 @@
+import { zIndexes } from '@universe/mycelium'
 import {
   type CSSProperties,
   type RefObject,
@@ -9,7 +10,6 @@ import {
   useState,
 } from 'react'
 import { EffectiveModalOrSheetZIndexContext, stackingLayerAbove } from 'ui/src'
-import { zIndexes } from 'ui/src/theme'
 import { getDropdownAvailableSpace, getDropdownVerticalLayout } from '~/components/Dropdowns/dropdownLayoutUtils'
 
 const SCROLL_SETTLE_MS = 150

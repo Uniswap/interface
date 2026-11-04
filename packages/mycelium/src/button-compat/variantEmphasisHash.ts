@@ -15,9 +15,7 @@ import type { ButtonEmphasis, ButtonVariant } from './compile'
  * that scope's classes unprefixed.
  *
  * Values are IDENTICAL to the pre-decomposition strings; `web-class-pin.test.tsx`
- * pins all 32 re-joined cells verbatim plus a whole-DOM digest over the full
- * matrix, because the emitted string is what the workbench's 2,912
- * computed-style cell-pairs proved.
+ * pins all 32 re-joined cells verbatim.
  */
 export interface ScopedCell {
   /** At-rest, unprefixed on web. */
@@ -87,7 +85,7 @@ function prefixScope(classes: string, prefix: string): string {
  * resolves to an actual CSS rule.
  *
  * Nothing imports these into the render path — `joinScopes` stays the single
- * runtime producer, so the emitted string is untouched (`web-class-pin.test.tsx`).
+ * runtime producer; `web-class-pin.test.tsx` checks it re-joins to these.
  */
 export const FRAME_JOINED_CELLS: Record<ButtonVariant, Record<ButtonEmphasis, string>> = {
   default: {

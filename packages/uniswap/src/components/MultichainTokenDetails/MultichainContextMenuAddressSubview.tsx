@@ -1,7 +1,7 @@
 import type { UniverseChainId } from '@universe/chains'
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
+import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
-import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { MultichainAddressList } from 'uniswap/src/components/MultichainTokenDetails/MultichainAddressList'
 import {
   MULTICHAIN_CONTEXT_MENU_ADDRESSES_PANEL_MAX_HEIGHT,

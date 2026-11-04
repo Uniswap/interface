@@ -1,6 +1,7 @@
 import { normalizeTokenAddressForCache } from '@universe/chains'
 import type { TFunction } from 'i18next'
 import type {
+  MarginActionKey,
   MarginActivePosition,
   MarginPlanResponse,
   MarginPosition,
@@ -10,10 +11,14 @@ import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import type { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { MarginDirection, type MarginManageAction } from 'uniswap/src/features/transactions/margin/types'
 import { NumberType } from 'utilities/src/format/types'
-import type { MarginMarketResolver } from '~/pages/Swap/Margin/hooks/useResolveMarginMarket'
-import { formatLeverage, formatSignedFiat, rawToNumber } from '~/pages/Swap/Margin/marginFormat'
-import { marginOpenedLeverage, marginPositionSubId, marginPositionTokens } from '~/pages/Swap/Margin/marginPositionRow'
-import { marginFallbackPairLabel, marginMarketDirection } from '~/pages/Swap/Margin/marginTokenDisplay'
+import type { MarginMarketResolver } from '~/features/margin/hooks/useResolveMarginMarket'
+import { formatLeverage, formatSignedFiat, rawToNumber } from '~/features/margin/utils/marginFormat'
+import {
+  marginOpenedLeverage,
+  marginPositionSubId,
+  marginPositionTokens,
+} from '~/features/margin/utils/marginPositionRow'
+import { marginFallbackPairLabel, marginMarketDirection } from '~/features/margin/utils/marginTokenDisplay'
 import { marginRawUsdToNumber } from '~/pages/Swap/Margin/marginUsdPnl'
 
 type FormatNumberOrString = ReturnType<typeof useLocalizationContext>['formatNumberOrString']
@@ -60,11 +65,26 @@ export function findOpenedLeverageForPlan({
   return opened === undefined ? undefined : marginOpenedLeverage(opened)
 }
 
-// Add margin / Withdraw margin / Change leverage all ride the ADJUST intent, so the plan alone cannot
-// name what the user did — the originating action comes off the execution store. Absent (plan resumed
-// after a reload) falls back to the generic sentence.
-function adjustCompletionMessage({ action, t }: { action?: MarginManageAction; t: TFunction }): string {
-  switch (action) {
+// The single-verb adjust actions, in the manage-menu vocabulary the toast copy is keyed by.
+const MANAGE_ACTION_BY_PLAN_ACTION: Partial<Record<MarginActionKey, MarginManageAction>> = {
+  addEquity: 'add',
+  withdrawEquity: 'withdraw',
+  increaseLeverage: 'leverage',
+  decreaseLeverage: 'leverage',
+}
+
+// Add margin / Withdraw margin / Change leverage all ride the ADJUST intent. The plan's own action names
+// what the user did; the execution store's action covers a plan whose action the wire did not name.
+function adjustCompletionMessage({
+  planAction,
+  action,
+  t,
+}: {
+  planAction?: MarginActionKey
+  action?: MarginManageAction
+  t: TFunction
+}): string {
+  switch ((planAction && MANAGE_ACTION_BY_PLAN_ACTION[planAction]) ?? action) {
     case 'add':
       return t('margin.toast.marginAdded')
     case 'withdraw':
@@ -140,7 +160,7 @@ export function buildCompletionToastMessage({
       return t('margin.toast.closed', { pnl })
     }
     case 'ADJUST':
-      return adjustCompletionMessage({ action, t })
+      return adjustCompletionMessage({ planAction: plan.action, action, t })
     default:
       return t('margin.toast.reduced')
   }

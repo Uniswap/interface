@@ -1,15 +1,14 @@
 /**
  * Behavior contract for the `ModalCloseIcon` compat web leg (INFRA-3282),
  * asserted on the rendered DOM. The legacy reference is
- * `ui/src/components/modal/AdaptiveWebModal.tsx` (`ModalCloseIcon`) over
- * `ui/src/components/icons/CloseIconWithHover.tsx`.
+ * `ui/src/components/modal/AdaptiveWebModal.tsx` (`ModalCloseIcon`).
  */
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { X } from '../components/icons/X'
 import { LIGHT_THEME_COLORS } from '../theme-hooks-compat/tokens'
 import { ModalCloseIconCompat } from './ModalCloseIconCompat'
-import { resolveCloseIconColor, X_GLYPH } from './resolve'
+import { resolveCloseIconColor } from './resolve'
 
 const harness = vi.hoisted(() => ({ isWebApp: false, sm: false }))
 
@@ -73,16 +72,11 @@ describe('legacy prop surface', () => {
 })
 
 describe('the X glyph', () => {
-  it('renders the shared glyph path (drift pin against the mycelium X icon)', () => {
-    const frame = renderCloseIcon()
-    const rendered = svgOf(frame).querySelector('path')?.getAttribute('d')
-    expect(rendered).toBe(X_GLYPH.path)
-
-    // The constant exists because the native leg cannot import the X
-    // component; this pins it to the real icon so the two cannot drift.
+  it('renders the mycelium X icon', () => {
+    const rendered = svgOf(renderCloseIcon())
     const { container } = render(<X size={24} color="#000000" />)
-    expect(container.querySelector('path')?.getAttribute('d')).toBe(X_GLYPH.path)
-    expect(container.querySelector('svg')?.getAttribute('viewBox')).toBe(X_GLYPH.viewBox)
+    expect(rendered.querySelector('path')?.getAttribute('d')).toBe(container.querySelector('path')?.getAttribute('d'))
+    expect(rendered.getAttribute('viewBox')).toBe(container.querySelector('svg')?.getAttribute('viewBox'))
   })
 
   it('sizes to the legacy $icon.24 default', () => {

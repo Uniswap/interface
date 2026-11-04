@@ -1,4 +1,3 @@
-import { GraphQLApi } from '@universe/api'
 import { UniverseChainId, Platform } from '@universe/chains'
 import { SOLANA_LOGO } from '@universe/mycelium/assets'
 import { WEB_ONLY_CHAIN_SUPPORTED_APPS } from 'uniswap/src/features/chains/chainAppSupport'
@@ -72,7 +71,6 @@ export const SOLANA_CHAIN_INFO = {
     },
   },
   backendChain: {
-    chain: GraphQLApi.Chain.Solana,
     backendSupported: true,
     nativeTokenBackendAddress: undefined,
   },

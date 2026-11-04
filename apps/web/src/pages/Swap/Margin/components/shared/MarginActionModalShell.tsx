@@ -1,7 +1,6 @@
-import { Flex, ScrollView, type SpaceTokens } from '@universe/mycelium'
+import { Button, Flex, ScrollView, type SpaceTokens } from '@universe/mycelium'
 import type { TestIDType } from '@universe/test'
 import type { ReactNode } from 'react'
-import { Button } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import type { ModalNameType } from 'uniswap/src/features/telemetry/constants'
 import { MarginModalHeader } from '~/pages/Swap/Margin/components/shared/MarginModalHeader'

@@ -1,5 +1,5 @@
 import { ClaimUsernameRequest } from '@uniswap/client-unitag/dist/uniswap/unitag/v1/UnitagService_pb'
-import { objectToQueryString } from '@universe/api/src/clients/base/utils'
+import { objectToQueryString } from './utils'
 
 export const NEW_UNITAGS_SIGNATURE_HEADER = 'x-uni-sig'
 

@@ -24,7 +24,14 @@ import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/typ
 import type { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { getTradeInputTax, getTradeOutputTax } from 'uniswap/src/features/transactions/swap/types/trade'
 import { getSwapFeeUsd } from 'uniswap/src/features/transactions/swap/utils/getSwapFeeUsd'
-import { isChained, isClassic, isJupiter, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import {
+  getBridgeProvider,
+  isBridge,
+  isChained,
+  isClassic,
+  isJupiter,
+  isUniswapX,
+} from 'uniswap/src/features/transactions/swap/utils/routing'
 import { getProtocolVersionFromTrade } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { TransactionOriginType } from 'uniswap/src/features/transactions/types/transactionDetails'
@@ -493,6 +500,7 @@ export function getBaseTradeAnalyticsProperties({
         : undefined,
     chain_id_in: trade.inputAmount.currency.chainId,
     chain_id_out: trade.outputAmount.currency.chainId,
+    bridge_provider: isBridge(trade) ? getBridgeProvider(trade.quote.quote.provider) : undefined,
     token_in_amount: trade.inputAmount.toExact(),
     token_out_amount: formatter.formatCurrencyAmount({
       value: finalOutputAmount,

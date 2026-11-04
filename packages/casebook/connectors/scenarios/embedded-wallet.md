@@ -13,10 +13,10 @@ severity: high
 source: existing-e2e
 sourceNote: >-
   Web Playwright e2e "Embedded Wallet — connections panel > Connect button opens
-  EmbeddedWalletConnectionsModal" (apps/web/src/components/WalletModal/
+  EmbeddedWalletConnectionsModal" (apps/web/src/features/wallet/components/WalletModal/
   EmbeddedWalletModal.e2e.test.ts). Unit render coverage:
   "EmbeddedWalletConnectionsModal > renders correctly"
-  (apps/web/src/components/WalletModal/WalletModals.test.tsx) — cited here rather than in
+  (apps/web/src/features/wallet/components/WalletModal/WalletModals.test.tsx) — cited here rather than in
   automationRefs because it is below this case's testLevel. Testlio suite: "Embedded
   Wallet".
 testlioRef: Embedded Wallet
@@ -34,11 +34,11 @@ testLevel: e2e
 runFrequency: scheduled
 # coverage
 code_paths:
-  - apps/web/src/components/WalletModal/EmbeddedWalletModal.tsx
+  - apps/web/src/features/wallet/components/WalletModal/EmbeddedWalletModal.tsx
   - apps/web/src/connection/
   - apps/web/src/components/AccountDrawer/PasskeyMenu/
 automationRefs:
-  - path: apps/web/src/components/WalletModal/EmbeddedWalletModal.e2e.test.ts
+  - path: apps/web/src/features/wallet/components/WalletModal/EmbeddedWalletModal.e2e.test.ts
     testName: Embedded Wallet — connections panel > Connect button opens EmbeddedWalletConnectionsModal
 ---
 
@@ -59,7 +59,7 @@ source: existing-e2e
 sourceNote: >-
   Web Playwright e2e "Embedded Wallet — connections panel > Create Account button closes
   connections panel and opens GetTheApp modal"
-  (apps/web/src/components/WalletModal/EmbeddedWalletModal.e2e.test.ts). Testlio suite:
+  (apps/web/src/features/wallet/components/WalletModal/EmbeddedWalletModal.e2e.test.ts). Testlio suite:
   "Embedded Wallet".
 testlioRef: Embedded Wallet
 # scope
@@ -76,10 +76,10 @@ testLevel: e2e
 runFrequency: scheduled
 # coverage
 code_paths:
-  - apps/web/src/components/WalletModal/EmbeddedWalletModal.tsx
-  - apps/web/src/components/NavBar/DownloadApp/Modal/
+  - apps/web/src/features/wallet/components/WalletModal/EmbeddedWalletModal.tsx
+  - apps/web/src/features/wallet/components/GetTheAppModal/
 automationRefs:
-  - path: apps/web/src/components/WalletModal/EmbeddedWalletModal.e2e.test.ts
+  - path: apps/web/src/features/wallet/components/WalletModal/EmbeddedWalletModal.e2e.test.ts
     testName: Embedded Wallet — connections panel > Create Account button closes connections panel and opens GetTheApp modal
 ---
 
@@ -117,12 +117,12 @@ testLevel: e2e
 runFrequency: release
 # coverage
 code_paths:
-  - apps/web/src/components/NavBar/DownloadApp/Modal/EmbeddedWalletOnboarding/
+  - apps/web/src/features/wallet/components/GetTheAppModal/EmbeddedWalletOnboarding/
   - apps/web/src/components/AccountDrawer/PasskeyMenu/
 automationRefs:
-  - path: apps/web/src/components/NavBar/DownloadApp/Modal/EWRegistration.e2e.test.ts
+  - path: apps/web/src/features/wallet/components/GetTheAppModal/EWRegistration.e2e.test.ts
     testName: EW Registration > Modal opens to ChooseUnitag step when EW enabled
-  - path: apps/web/src/components/NavBar/DownloadApp/Modal/EWRegistration.e2e.test.ts
+  - path: apps/web/src/features/wallet/components/GetTheAppModal/EWRegistration.e2e.test.ts
     testName: EW Registration > PasskeyGeneration page appears after KeyManagement continue
 ---
 
@@ -159,13 +159,13 @@ testLevel: unit
 runFrequency: release
 # coverage
 code_paths:
-  - apps/web/src/components/WalletModal/WalletModalLayout.tsx
+  - apps/web/src/features/wallet/components/WalletModal/WalletModalLayout.tsx
   - apps/web/src/connection/
   - apps/web/src/components/AccountDrawer/PasskeyMenu/
 automationRefs:
-  - path: apps/web/src/components/WalletModal/WalletModals.test.tsx
+  - path: apps/web/src/features/wallet/components/WalletModal/WalletModals.test.tsx
     testName: EmbeddedWalletConnectionsModal > OAuth initiation > Google button calls initOAuth and sets sessionStorage
-  - path: apps/web/src/components/WalletModal/WalletModals.test.tsx
+  - path: apps/web/src/features/wallet/components/WalletModal/WalletModals.test.tsx
     testName: EmbeddedWalletConnectionsModal > OAuth initiation > Email button opens recovery modal without calling initOAuth
 ---
 
@@ -294,7 +294,7 @@ testLevel: e2e
 runFrequency: release
 # coverage
 code_paths:
-  - apps/web/src/components/WalletModal/
+  - apps/web/src/features/wallet/components/WalletModal/
   - apps/web/src/connection/
   - apps/web/src/components/AccountDrawer/PasskeyMenu/
 automationRefs: []

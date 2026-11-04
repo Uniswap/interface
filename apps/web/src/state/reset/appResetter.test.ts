@@ -80,7 +80,7 @@ describe('createWebAppStateResetter', () => {
   })
 
   describe('resetQueryCaches', () => {
-    it('clears Apollo and React Query caches', async () => {
+    it('clears React Query caches', async () => {
       await resetter.resetQueryCaches()
 
       // Verify cache clearing methods were called

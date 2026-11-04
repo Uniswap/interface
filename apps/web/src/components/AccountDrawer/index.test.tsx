@@ -1,23 +1,23 @@
 import { TestID } from '@universe/test'
 import { AccountDrawer, MODAL_WIDTH } from '~/components/AccountDrawer'
-import { useIsUniswapExtensionConnected } from '~/hooks/useIsUniswapExtensionConnected'
+import { useIsUniswapExtensionConnected } from '~/components/AccountDrawer/hooks/useIsUniswapExtensionConnected'
 import { getOwnStyleProp } from '~/test-utils/getOwnStyleProp'
 import { mocked } from '~/test-utils/mocked'
 import { mockMediaSize } from '~/test-utils/mockMediaSize'
 import { render, screen } from '~/test-utils/render'
 
-vi.mock('~/hooks/useIsUniswapExtensionConnected', () => ({
+vi.mock('~/components/AccountDrawer/hooks/useIsUniswapExtensionConnected', () => ({
   useIsUniswapExtensionConnected: vi.fn(),
 }))
 
-vi.mock('~/features/wallet/connection/hooks/useIsMetaMaskExtensionDetected', () => ({
+vi.mock('~/connection/hooks/useIsMetaMaskExtensionDetected', () => ({
   useIsMetaMaskExtensionDetected: vi.fn(() => true),
 }))
 
 let isDrawerOpen = true
 
-vi.mock('~/components/AccountDrawer/MiniPortfolio/hooks', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('~/components/AccountDrawer/MiniPortfolio/hooks')>()
+vi.mock('~/state/accountDrawer/hooks', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('~/state/accountDrawer/hooks')>()
   return {
     ...actual,
     useAccountDrawer: vi.fn(() => ({

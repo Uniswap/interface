@@ -10,13 +10,13 @@ import { TransactionType, WrapTransactionInfo } from 'uniswap/src/features/trans
 import { createSaga } from 'uniswap/src/utils/saga'
 import { logger } from 'utilities/src/logger/logger'
 import { noop } from 'utilities/src/react/noop'
+import { useAccount } from '~/connection/hooks/useAccount'
+import { useSelectChain } from '~/connection/hooks/useSelectChain'
 import { INTERNAL_JSON_RPC_ERROR_CODE } from '~/constants/misc'
-import { useAccount } from '~/hooks/useAccount'
-import { useSelectChain } from '~/hooks/useSelectChain'
-import { popupRegistry } from '~/state/popups/registry'
-import { PopupType } from '~/state/popups/types'
 import { handleAtomicSendCalls } from '~/state/sagas/transactions/5792'
 import { handleOnChainStep } from '~/state/sagas/transactions/utils'
+import { popupRegistry } from '~/utils/popups/registry'
+import { PopupType } from '~/utils/popups/types'
 import { didUserReject } from '~/utils/swapErrorToUserReadableMessage'
 
 // oxlint-disable-next-line typescript/no-empty-interface -- biome-parity: oxlint is stricter here

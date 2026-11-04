@@ -33,9 +33,9 @@ import {
 import { isInputGreaterThanDecimals } from '~/components/NumericalInput/NumericalInput'
 import { CurrencySearchModal } from '~/components/SearchModal/CurrencySearchModal'
 import type { CurrencyState } from '~/features/Swap/state/types'
-import { SendInputError } from '~/pages/Swap/Send/state/hooks'
 import { useSendContext } from '~/pages/Swap/Send/state/SendContext'
-import { SwitchNetworkAction } from '~/state/popups/types'
+import { SendInputError } from '~/pages/Swap/Send/state/types'
+import { SwitchNetworkAction } from '~/utils/popups/types'
 
 const Wrapper = ({ disabled, ...props }: FlexCompatProps & { disabled?: boolean }): JSX.Element => (
   <Flex opacity={disabled ? 0.4 : 1} pointerEvents={disabled ? 'none' : undefined} {...props} />

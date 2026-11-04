@@ -1,7 +1,7 @@
 import { Percent, TradeType } from '@uniswap/sdk-core'
 import { TradingApi } from '@universe/api'
 import type { UniverseChainId } from '@universe/chains'
-import { UniswapLogo } from 'ui/src/components/icons/UniswapLogo'
+import { UniswapLogo } from '@universe/mycelium/icons/UniswapLogo'
 import { DYNAMIC_FEE_AMOUNT, V2_DEFAULT_FEE_TIER } from 'uniswap/src/constants/pools'
 import { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isChained, isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'

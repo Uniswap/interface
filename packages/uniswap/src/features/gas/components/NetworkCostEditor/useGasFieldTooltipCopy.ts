@@ -1,8 +1,8 @@
+import type { GeneratedIcon } from '@universe/mycelium/icons'
+import { FastForward } from '@universe/mycelium/icons/FastForward'
+import { Gas } from '@universe/mycelium/icons/Gas'
+import { WavePulse } from '@universe/mycelium/icons/WavePulse'
 import { useTranslation } from 'react-i18next'
-import type { GeneratedIcon } from 'ui/src'
-import { FastForward } from 'ui/src/components/icons/FastForward'
-import { Gas } from 'ui/src/components/icons/Gas'
-import { WavePulse } from 'ui/src/components/icons/WavePulse'
 import type { GasTooltipKey } from 'uniswap/src/features/gas/components/NetworkCostEditor/GasFieldTooltip'
 
 type TooltipContent = {

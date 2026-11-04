@@ -23,7 +23,7 @@ export function mapPlacementToAnchorPosition(placement?: PopoverCompatPlacement)
   return { side, align: align ?? 'center' }
 }
 
-/** The floating-ui offset shape the legacy Tamagui Popover accepts. */
+/** The floating-ui offset shape the legacy Popover accepts. */
 export type PopoverCompatOffset = number | { mainAxis?: number; crossAxis?: number }
 
 /**

@@ -15,7 +15,6 @@ export {
 } from './compile'
 export { ContextMenuCompat } from './ContextMenuCompat'
 export { DropdownMenuSheetItemCompat } from './DropdownMenuSheetItemCompat'
-export { CheckCircleFilledGlyph, ExternalLinkGlyph } from './icons'
 export { MenuCompatHostContext, MenuContentCompat } from './MenuContentCompat'
 export {
   type ContextMenuCompatHandle,

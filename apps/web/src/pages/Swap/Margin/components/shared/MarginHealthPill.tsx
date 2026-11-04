@@ -1,6 +1,6 @@
 import { Flex, Text } from '@universe/mycelium'
+import { getMarginHealthStatus } from '~/features/margin/utils/marginFormat'
 import { useMarginHealthLabels } from '~/pages/Swap/Margin/hooks/useMarginHealthLabels'
-import { getMarginHealthStatus } from '~/pages/Swap/Margin/marginFormat'
 
 // The health tier as a labeled chip — tinted background + tier color, matching the leverage-selector
 // chip. Renders for whatever tier the health factor lands in; the caller decides whether to show it.

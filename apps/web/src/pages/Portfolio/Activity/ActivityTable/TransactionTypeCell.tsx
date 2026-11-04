@@ -1,18 +1,17 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { Flex, Text } from '@universe/mycelium'
-import { memo } from 'react'
-import { useTranslation } from 'react-i18next'
-// Base gaps, awaiting a primitives-owner fix: mycelium exports no SpinningLoader (its only
-// spinner is ButtonCompat's private, Button-context-coupled ButtonSpinner), and GeneratedIcon /
-// IconProps are absent from the root barrel — the @universe/mycelium/components pair is
-// structurally incompatible with ui's (Ref<SVGSVGElement> vs Ref<Svg>).
-import { type GeneratedIcon, type IconProps, SpinningLoader } from 'ui/src'
+import { Flex, Text, SpinningLoader } from '@universe/mycelium'
+// Base gap, awaiting a primitives-owner fix: GeneratedIcon / IconProps are absent from the root
+// barrel — the @universe/mycelium/components pair is structurally incompatible with ui's
+// (Ref<SVGSVGElement> vs Ref<Svg>).
+import type { GeneratedIcon, IconProps } from '@universe/mycelium/icons'
 // These icons stay on ui/src: they are stored as values on a ui GeneratedIcon-typed field
 // (`IconComponent`), so they convert only once that type does.
-import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
-import { ArrowDownToLine } from 'ui/src/components/icons/ArrowDownToLine'
-import { ArrowUpToLine } from 'ui/src/components/icons/ArrowUpToLine'
-import { Receipt } from 'ui/src/components/icons/Receipt'
+import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFilled'
+import { ArrowDownToLine } from '@universe/mycelium/icons/ArrowDownToLine'
+import { ArrowUpToLine } from '@universe/mycelium/icons/ArrowUpToLine'
+import { Receipt } from '@universe/mycelium/icons/Receipt'
+import { memo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { getTransactionSummaryTitle } from 'uniswap/src/features/activity/utils/getTransactionSummaryTitle'
 import { getEarnPlanTransactionType } from 'uniswap/src/features/earn/planActivityTitles'
 import { isCancelTimedOut } from 'uniswap/src/features/transactions/cancel/cancelTimeoutStateMachine'

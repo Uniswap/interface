@@ -36,7 +36,7 @@ export function usePortfolioChartData({
   earnData: ChartData
   loading: boolean
   error: Error | null
-  /** The request failed, or a requested category's series is missing so the total would be understated. */
+  /** The request failed with no data, or a requested category's series is missing so the total would be understated. */
   isUnavailable: boolean
   chartColor: string
 } {
@@ -82,7 +82,7 @@ export function usePortfolioChartData({
 
   const isUnavailable = useMemo(
     () =>
-      !!error ||
+      (!!error && !chartResponse) ||
       getUnavailableChartCategories({ chartData: chartResponse, requestedCategories: includeCategories }).length > 0,
     [error, chartResponse, includeCategories],
   )

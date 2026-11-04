@@ -38,8 +38,6 @@ import { createMonitoredSaga } from 'uniswap/src/utils/saga'
 import { logger } from 'utilities/src/logger/logger'
 import { DEFAULT_TXN_DISMISS_MS, L2_TXN_DISMISS_MS, ZERO_PERCENT } from '~/constants/misc'
 import { formatSwapSignedAnalyticsEventProperties } from '~/lib/utils/analytics'
-import { popupRegistry } from '~/state/popups/registry'
-import { PopupType } from '~/state/popups/types'
 import { handleAtomicSendCalls } from '~/state/sagas/transactions/5792'
 import { jupiterSwap } from '~/state/sagas/transactions/solana'
 import { sendSwapSignedEvent } from '~/state/sagas/transactions/swapSignedAnalytics'
@@ -56,6 +54,8 @@ import {
   waitForBatchInterruptible,
 } from '~/state/sagas/transactions/utils'
 import { type VitalTxFields } from '~/state/transactions/types'
+import { popupRegistry } from '~/utils/popups/registry'
+import { PopupType } from '~/utils/popups/types'
 
 export function* handleSwapTransactionStep(params: HandleSwapStepParams): SagaGenerator<string> {
   const { trade, step, signature, analytics, onTransactionHash, planId } = params

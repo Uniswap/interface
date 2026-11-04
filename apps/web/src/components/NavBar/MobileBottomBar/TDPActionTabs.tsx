@@ -8,12 +8,13 @@ import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { useActiveAccount } from '~/connection/accounts/hooks'
+import { useSelectChain } from '~/connection/hooks/useSelectChain'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
-import { useActiveAccount } from '~/features/accounts/store/hooks'
 import { useModalState } from '~/hooks/useModalState'
-import { useSelectChain } from '~/hooks/useSelectChain'
 import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
 import { useTDPPermissionedState } from '~/pages/TokenDetails/hooks/useTDPPermissionedState'
+import { getChainUrlParam } from '~/utils/params/chainParams'
 
 const TDP_ACTION_TABS_MAX_WIDTH = 780
 
@@ -25,8 +26,7 @@ type TabItem = {
 
 export function TDPActionTabs() {
   const { t } = useTranslation()
-  const { currencyChain, currencyChainId, address, tokenColor, multiChainMap, currency } = useTDPStore((s) => ({
-    currencyChain: s.currencyChain,
+  const { currencyChainId, address, tokenColor, multiChainMap, currency } = useTDPStore((s) => ({
     currencyChainId: s.currencyChainId,
     address: s.address,
     tokenColor: s.tokenColor,
@@ -49,8 +49,7 @@ export function TDPActionTabs() {
 
   const hasBalance = Boolean(multiChainMap[currencyChainId]?.balance)
 
-  // oxlint-disable-next-line universe-custom/no-tolowercase-address-currencyid -- chain name URL slug, not an address
-  const chainUrlParam = currencyChain.toLowerCase()
+  const chainUrlParam = getChainUrlParam(currencyChainId)
   const addressUrlParam = address === NATIVE_CHAIN_ID ? 'ETH' : address
   const media = useMedia()
   const showIcons = !media.xs

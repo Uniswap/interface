@@ -1,0 +1,24 @@
+product_area: smart_wallet
+platforms: [web, extension, mobile]
+nxProjects: ["@universe/web", "@uniswap/extension", "@uniswap/mobile", uniswap, wallet]
+owners: ["@uniswap/swap-fe"]
+
+# Casebook area-registry metadata (read by the engine in apps/cli/src/casebook).
+# These drive Testlio suite naming, the PR-comment label, and CI routing.
+label: Smart Wallet
+suiteNamePrefix: SmartWallet
+ghLabel: "casebook:smart-wallet"
+# Reviewer GitHub team for the auto-opened catalog companion PR.
+# PROVISIONAL: no .github/CODEOWNERS entry for smartWallet/batchedTransactions dirs.
+# swap-fe is the functional best-guess (batched-swap execution surface) — confirm with pod leads.
+reviewerTeam: swap-fe
+
+# Test-wallet aliases referenced by this area's cases. Symbolic only: real mnemonics live in
+# the QA vault / Testlio TL handoff, keyed by the same alias. Never put a secret here.
+wallets:
+  TW-SMARTWALLET-01: "fresh EOA funded with native ETH + USDC on Ethereum mainnet, not yet delegated (first-time delegation via swap, mobile and extension)"
+  TW-SMARTWALLET-02: "EOA already delegated to the Uniswap delegatee on mainnet, funded with USDC (subsequent swap without re-delegation, disable-with-delegations flows)"
+  TW-SMARTWALLET-03: "pre-delegated wallet funded with native ETH on Base and Unichain (Flashblocks fast-confirmation swaps)"
+  TW-SMARTWALLET-04: "EOA carrying an active non-Uniswap delegation (Smart wallet features unavailable state)"
+  TW-SMARTWALLET-05: "EOA funded across Unichain, Base, Arbitrum, Optimism, BNB, Polygon and Zora for the per-chain delegation smoke; doubles as the delegated baseline on non-Flashblocks chains"
+  TW-SMARTWALLET-06: "EOA funded with native ETH on Base and Unichain, not delegated (Flashblocks non-delegated comparison baseline)"

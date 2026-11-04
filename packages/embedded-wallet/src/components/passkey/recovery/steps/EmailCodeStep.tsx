@@ -4,9 +4,9 @@ import { IconBox } from '@universe/embedded-wallet/src/components/passkey/recove
 import { StepHeader } from '@universe/embedded-wallet/src/components/passkey/recovery/StepHeader'
 import type { DigitInputState } from '@universe/embedded-wallet/src/components/passkey/recovery/useDigitInput'
 import { Flex, SpinningLoader, Text, TouchableArea } from '@universe/mycelium'
+import { Envelope } from '@universe/mycelium/icons/Envelope'
 import type { TFunction } from 'i18next'
 import type { ReactNode } from 'react'
-import { Envelope } from 'ui/src/components/icons/Envelope'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 

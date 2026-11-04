@@ -25,11 +25,11 @@ interface BaseParseConfigParams<S extends ConfigSchema> {
  *
  * @example
  * const config = parseConfig({
- *   values: { awsApiEndpoint: process.env.AWS_API_ENDPOINT },
- *   schema: z.object({ awsApiEndpoint: z.string().min(1) }),
- *   envFieldRules: { [Environment.Production]: { required: ['awsApiEndpoint'] } },
+ *   values: { myServiceUrl: process.env.MY_SERVICE_URL },
+ *   schema: z.object({ myServiceUrl: z.string().min(1) }),
+ *   envFieldRules: { [Environment.Production]: { required: ['myServiceUrl'] } },
  * })
- * // config includes all BaseConfig fields + awsApiEndpoint
+ * // config includes all BaseConfig fields + myServiceUrl
  */
 export function parseConfig<S extends ConfigSchema>(
   params: BaseParseConfigParams<S> & {

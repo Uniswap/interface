@@ -1,9 +1,9 @@
 import type { ColorTokens } from '@universe/mycelium'
-import { GeneratedIcon } from 'ui/src'
-import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
-import { Blocked } from 'ui/src/components/icons/Blocked'
-import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
-import { OctagonExclamation } from 'ui/src/components/icons/OctagonExclamation'
+import type { GeneratedIcon } from '@universe/mycelium/icons'
+import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFilled'
+import { Blocked } from '@universe/mycelium/icons/Blocked'
+import { InfoCircleFilled } from '@universe/mycelium/icons/InfoCircleFilled'
+import { OctagonExclamation } from '@universe/mycelium/icons/OctagonExclamation'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 
 export function getWarningIcon(severity: WarningSeverity): GeneratedIcon | null {

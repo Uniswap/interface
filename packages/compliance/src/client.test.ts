@@ -1,4 +1,5 @@
-import { GatedFeature } from '@uniswap/client-compliancev2/dist/uniswap/compliance/v1/api_pb'
+import { Code, ConnectError } from '@connectrpc/connect'
+import { ComplianceBlock, GatedFeature } from '@uniswap/client-compliancev2/dist/uniswap/compliance/v1/api_pb'
 import {
   type ComplianceV2Client,
   fetchFeatureGatedToken,
@@ -136,5 +137,48 @@ describe(screenAddress, () => {
     screenAddressMethod.mockResolvedValue({ block: false })
 
     expect(await screenAddress(client, { address: '0xabc' })).toBe(false)
+  })
+
+  it('returns true for the 200 block shape the gateway passes through when its compliance gate fails open', async () => {
+    screenAddressMethod.mockResolvedValue({ block: true })
+
+    expect(await screenAddress(client, { address: '0xabc' })).toBe(true)
+  })
+
+  it('returns true when the gateway compliance gate refuses the address (403 with a ComplianceBlock detail)', async () => {
+    // Shaped like a detail parsed off the wire: type name plus encoded bytes.
+    const error = new ConnectError('Account is blocked', Code.PermissionDenied)
+    error.details.push({
+      type: ComplianceBlock.typeName,
+      value: new ComplianceBlock({ walletBlocked: true }).toBinary(),
+    })
+    screenAddressMethod.mockRejectedValue(error)
+
+    expect(await screenAddress(client, { address: '0xabc' })).toBe(true)
+  })
+
+  it('rethrows a token-only compliance block — it carries no verdict on the wallet', async () => {
+    const error = new ConnectError('Token is blocked', Code.PermissionDenied)
+    error.details.push({
+      type: ComplianceBlock.typeName,
+      value: new ComplianceBlock({ walletBlocked: false }).toBinary(),
+    })
+    screenAddressMethod.mockRejectedValue(error)
+
+    await expect(screenAddress(client, { address: '0xabc' })).rejects.toBe(error)
+  })
+
+  it('rethrows a PermissionDenied that is not a compliance block', async () => {
+    const error = new ConnectError('forbidden', Code.PermissionDenied)
+    screenAddressMethod.mockRejectedValue(error)
+
+    await expect(screenAddress(client, { address: '0xabc' })).rejects.toBe(error)
+  })
+
+  it('rethrows other errors so the query fails open', async () => {
+    const error = new ConnectError('upstream unavailable', Code.Unavailable)
+    screenAddressMethod.mockRejectedValue(error)
+
+    await expect(screenAddress(client, { address: '0xabc' })).rejects.toBe(error)
   })
 })

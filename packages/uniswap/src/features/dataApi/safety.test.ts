@@ -2,12 +2,10 @@ import {
   ProtectionResult as RestProtectionResult,
   SafetyLevel as RestSafetyLevel,
 } from '@uniswap/client-data-api/dist/data/v1/types_pb'
-import { GraphQLApi, TradingApi } from '@universe/api'
+import { TradingApi } from '@universe/api'
 import {
-  fromGraphQLProtectionResult,
-  fromGraphQLSafetyLevel,
-  fromRestProtectionResult,
-  fromRestSafetyLevel,
+  fromDataApiProtectionResult,
+  fromDataApiSafetyLevel,
   fromTradingApiSafetyLevel,
   fromV2Verdict,
   ProtectionResult,
@@ -15,61 +13,23 @@ import {
 } from 'uniswap/src/features/dataApi/safety'
 import { logger } from 'utilities/src/logger/logger'
 
-describe('domain safety enum values match the GraphQL wire values', () => {
-  it.each(Object.values(SafetyLevel))('SafetyLevel %s exists on the GraphQL enum', (value) => {
-    expect(Object.values(GraphQLApi.SafetyLevel)).toContain(value)
-  })
-
-  it.each(Object.values(ProtectionResult))('ProtectionResult %s exists on the GraphQL enum', (value) => {
-    expect(Object.values(GraphQLApi.ProtectionResult)).toContain(value)
-  })
-})
-
-describe('fromGraphQLSafetyLevel', () => {
-  it.each([
-    [GraphQLApi.SafetyLevel.Blocked, SafetyLevel.Blocked],
-    [GraphQLApi.SafetyLevel.MediumWarning, SafetyLevel.MediumWarning],
-    [GraphQLApi.SafetyLevel.StrongWarning, SafetyLevel.StrongWarning],
-    [GraphQLApi.SafetyLevel.Verified, SafetyLevel.Verified],
-  ])('maps %s to %s', (input, expected) => {
-    expect(fromGraphQLSafetyLevel(input)).toBe(expected)
-  })
-
-  it('maps undefined to undefined', () => {
-    expect(fromGraphQLSafetyLevel(undefined)).toBeUndefined()
-  })
-})
-
-describe('fromGraphQLProtectionResult', () => {
-  it.each([
-    [GraphQLApi.ProtectionResult.Benign, ProtectionResult.Benign],
-    [GraphQLApi.ProtectionResult.Malicious, ProtectionResult.Malicious],
-    [GraphQLApi.ProtectionResult.Spam, ProtectionResult.Spam],
-    [GraphQLApi.ProtectionResult.Warning, ProtectionResult.Warning],
-    [GraphQLApi.ProtectionResult.Unknown, ProtectionResult.Unknown],
-    [undefined, ProtectionResult.Unknown],
-  ])('maps %s to %s', (input, expected) => {
-    expect(fromGraphQLProtectionResult(input)).toBe(expected)
-  })
-})
-
-describe('fromRestSafetyLevel', () => {
+describe('fromDataApiSafetyLevel', () => {
   it.each([
     [RestSafetyLevel.BLOCKED, SafetyLevel.Blocked],
     [RestSafetyLevel.MEDIUM_WARNING, SafetyLevel.MediumWarning],
     [RestSafetyLevel.STRONG_WARNING, SafetyLevel.StrongWarning],
     [RestSafetyLevel.VERIFIED, SafetyLevel.Verified],
   ])('maps %s to %s', (input, expected) => {
-    expect(fromRestSafetyLevel(input)).toBe(expected)
+    expect(fromDataApiSafetyLevel(input)).toBe(expected)
   })
 
   it('maps UNKNOWN and undefined to undefined', () => {
-    expect(fromRestSafetyLevel(RestSafetyLevel.UNKNOWN)).toBeUndefined()
-    expect(fromRestSafetyLevel(undefined)).toBeUndefined()
+    expect(fromDataApiSafetyLevel(RestSafetyLevel.UNKNOWN)).toBeUndefined()
+    expect(fromDataApiSafetyLevel(undefined)).toBeUndefined()
   })
 })
 
-describe('fromRestProtectionResult', () => {
+describe('fromDataApiProtectionResult', () => {
   it.each([
     [RestProtectionResult.BENIGN, ProtectionResult.Benign],
     [RestProtectionResult.MALICIOUS, ProtectionResult.Malicious],
@@ -78,7 +38,7 @@ describe('fromRestProtectionResult', () => {
     [RestProtectionResult.UNKNOWN, ProtectionResult.Unknown],
     [undefined, ProtectionResult.Unknown],
   ])('maps %s to %s', (input, expected) => {
-    expect(fromRestProtectionResult(input)).toBe(expected)
+    expect(fromDataApiProtectionResult(input)).toBe(expected)
   })
 })
 

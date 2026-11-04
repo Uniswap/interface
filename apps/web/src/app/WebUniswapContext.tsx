@@ -11,7 +11,6 @@ import {
 import { useOnchainDisplayName } from 'uniswap/src/features/accounts/useOnchainDisplayName'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
 import { useNavigateToNftExplorerLink } from 'uniswap/src/features/nfts/hooks/useNavigateToNftExplorerLink'
 import { useSetActiveChainId } from 'uniswap/src/features/smartWallet/delegation/hooks/useSetActiveChainId'
@@ -34,32 +33,32 @@ import {
 } from 'uniswap/src/utils/linking'
 import { useEvent, usePrevious } from 'utilities/src/react/hooks'
 import { noop } from 'utilities/src/react/noop'
-import { MenuStateVariant, useMenuState } from '~/components/AccountDrawer/menuState'
-import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { useOpenReceiveCryptoModal } from '~/components/ReceiveCryptoModal/useOpenReceiveCryptoModal'
+import { useConnectionStatus } from '~/connection/accounts/hooks'
+import { useAccountsStoreContext } from '~/connection/accounts/provider'
+import { useAccount } from '~/connection/hooks/useAccount'
+import { useEthersProvider } from '~/connection/hooks/useEthersProvider'
+import { useEthersSigner } from '~/connection/hooks/useEthersSigner'
 import { getTokenDetailsURL } from '~/data/util'
-import { useConnectionStatus } from '~/features/accounts/store/hooks'
-import { useAccountsStoreContext } from '~/features/accounts/store/provider'
-import { useAccount } from '~/hooks/useAccount'
-import { useEthersProvider } from '~/hooks/useEthersProvider'
-import { useEthersSigner } from '~/hooks/useEthersSigner'
-import { useGetSwapDelegationInfo } from '~/hooks/useGetSwapDelegationInfo'
+import { useGetSwapDelegationInfo } from '~/features/Swap/hooks/useGetSwapDelegationInfo'
 import { PageType } from '~/hooks/useIsPage'
 import { useModalState } from '~/hooks/useModalState'
 import { useNavigateToAuctionDetails } from '~/hooks/useNavigateToAuctionDetails'
 import { getCategoryDetailsURL } from '~/pages/Explore/CategoryDetails/getCategoryDetailsURL'
 import { buildPortfolioUrl } from '~/pages/Portfolio/utils/portfolioUrls'
-import { useOneClickSwapSetting } from '~/pages/Swap/Swap/settings/OneClickSwap'
 import { serializeSwapAddressesToURLParameters } from '~/pages/Swap/Swap/state/tradeQueryParams'
 import { EARN_ENTRY_POINT_QUERY_PARAM } from '~/pages/TokenDetails/components/earn/earnEntryPointQuery'
+import { useAccountDrawer } from '~/state/accountDrawer/hooks'
+import { MenuStateVariant, useMenuState } from '~/state/accountDrawer/menuState'
 import { useMultichainContext } from '~/state/multichain/useMultichainContext'
-import { SwitchNetworkAction } from '~/state/popups/types'
+import { useOneClickSwapSetting } from '~/state/oneClickSwap/hooks'
 import { useHasAlternateGasFeesByChainIdCallback } from '~/state/walletCapabilities/hooks/useHasAlternateGasFees'
 import { useIsAtomicBatchingSupportedByChainIdCallback } from '~/state/walletCapabilities/hooks/useIsAtomicBatchingSupportedByChain'
 import { useHasMismatchCallback, useShowMismatchToast } from '~/state/walletCapabilities/hooks/useMismatchAccount'
 import { ReceiveModalState } from '~/types/receiveCryptoModal'
 import { isIFramed } from '~/utils/isIFramed'
 import { getTdpChainQueryParam } from '~/utils/params/chainQueryParam'
+import { SwitchNetworkAction } from '~/utils/popups/types'
 import { showSwitchNetworkNotification } from '~/utils/showSwitchNetworkNotification'
 
 // Adapts useEthersProvider to fit uniswap context hook shape
@@ -137,15 +136,15 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
   )
 
   const navigateToCategoryDetails = useCallback(
-    ({ categoryId }: NavigateToCategoryDetailsArgs) => {
-      navigate(getCategoryDetailsURL(categoryId))
+    ({ categoryId, kind }: NavigateToCategoryDetailsArgs) => {
+      navigate(getCategoryDetailsURL(categoryId, kind))
       closeSearchModal()
     },
     [navigate, closeSearchModal],
   )
 
-  const getCategoryDetailsUrl = useEvent(({ categoryId }: NavigateToCategoryDetailsArgs): string =>
-    getCategoryDetailsURL(categoryId),
+  const getCategoryDetailsUrl = useEvent(({ categoryId, kind }: NavigateToCategoryDetailsArgs): string =>
+    getCategoryDetailsURL(categoryId, kind),
   )
 
   const navigateToFiatOnRamp = useCallback(
@@ -223,7 +222,7 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
       const tokenChainId = currencyIdToChain(currencyId)
       const url = getTokenDetailsURL({
         address: currencyIdToAddress(currencyId),
-        chain: tokenChainId ? toGraphQLChain(tokenChainId) : undefined,
+        chainId: tokenChainId ?? undefined,
         chainQueryParam: getTdpChainQueryParam({ selection: chainSelection, tokenChainId }),
       })
       navigate(url)
@@ -240,7 +239,7 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
       const tokenChainId = currencyIdToChain(vault.displayCurrencyId)
       const url = getTokenDetailsURL({
         address: currencyIdToAddress(vault.displayCurrencyId),
-        chain: tokenChainId ? toGraphQLChain(tokenChainId) : undefined,
+        chainId: tokenChainId ?? undefined,
       })
       const params = new URLSearchParams({ [EARN_VAULT_MODAL_QUERY_PARAM]: EARN_VAULT_MODAL_QUERY_VALUE })
       if (analyticsEntryPoint) {
@@ -336,7 +335,7 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
     const tokenChainId = currencyIdToChain(currencyId)
     return getTokenDetailsURL({
       address: currencyIdToAddress(currencyId),
-      chain: tokenChainId ? toGraphQLChain(tokenChainId) : undefined,
+      chainId: tokenChainId ?? undefined,
       chainQueryParam: getTdpChainQueryParam({ selection: chainSelection, tokenChainId }),
     })
   })

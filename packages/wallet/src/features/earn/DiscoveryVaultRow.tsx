@@ -1,10 +1,8 @@
 import { Flex, iconSizes, Text, TouchableArea } from '@universe/mycelium'
+import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
 import { TestID } from '@universe/test'
 import { memo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-// RotatableChevron is still web-only on mycelium (WEB_ONLY_MYCELIUM_ICONS); packages/wallet
-// is native-reachable, so it stays on ui/src until it gets a native leg.
-import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import type { EarnPositionInfo, EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'

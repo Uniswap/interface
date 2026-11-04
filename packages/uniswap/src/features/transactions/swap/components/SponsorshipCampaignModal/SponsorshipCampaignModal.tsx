@@ -11,12 +11,12 @@ import {
   UniversalImageResizeMode,
   zIndexes,
 } from '@universe/mycelium'
+import { InfoCircle } from '@universe/mycelium/icons/InfoCircle'
 import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import { TooltipCompat as Tooltip } from '@universe/mycelium/tooltip-compat'
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Trans } from 'ui/src'
-import { InfoCircle } from 'ui/src/components/icons/InfoCircle'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'

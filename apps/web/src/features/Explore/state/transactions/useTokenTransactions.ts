@@ -13,7 +13,7 @@ import type { ParsedToken } from 'uniswap/src/features/dataApi/utils/parsedToken
 import { isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 import { parseUniswapTransaction, type PoolTransaction } from '~/data/transactions/poolTransaction'
-import { useInfiniteLoadMore } from '~/hooks/useInfiniteLoadMore'
+import { useInfiniteLoadMore } from '~/features/Explore/hooks/useInfiniteLoadMore'
 
 const TRANSACTIONS_PAGE_SIZE = 25
 

@@ -80,8 +80,8 @@ const SPACING_SPELLINGS = [...MARGIN_SPELLINGS, ...PADDING_SPELLINGS] as const
  * The dimension classes, via the shared compat resolvers. Raw composition:
  * token px values land in the generated compat safelists
  * (`cross(SIZE_PREFIXES, spacePx)` in `../compat/closed-set.ts`, both the web
- * and native artifacts), so this is what the NATIVE frame emits for uniwind
- * and what the parity harness resolves; the WEB leg renders through
+ * and native artifacts), so this is what the NATIVE frame emits for uniwind;
+ * the WEB leg renders through
  * `buttonCompatWebDimensionLane` below so an out-of-set value (e.g.
  * `minHeight={37}`) can never ship a class Tailwind never generated.
  */

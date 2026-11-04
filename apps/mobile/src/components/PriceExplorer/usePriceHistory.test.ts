@@ -2,14 +2,17 @@ import { waitFor } from '@testing-library/react-native'
 import { act } from 'react-test-renderer'
 import { useTokenPriceHistory } from 'src/components/PriceExplorer/usePriceHistory'
 import { renderHookWithProviders } from 'src/test/render'
-import { useTokenPriceChange, useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
+import {
+  useTokenPriceChange,
+  useTokenSpotPriceWithLoading,
+} from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { useTokenPriceHistoryRest } from 'uniswap/src/features/dataApi/tokenDetails/useTokenPriceHistoryRest'
 import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import { SAMPLE_CURRENCY_ID_1 } from 'uniswap/src/test/fixtures'
 
 vi.mock('uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData', async (importOriginal) => ({
   ...(await importOriginal<typeof import('uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData')>()),
-  useTokenSpotPrice: vi.fn(),
+  useTokenSpotPriceWithLoading: vi.fn(),
   useTokenPriceChange: vi.fn(),
 }))
 
@@ -18,13 +21,17 @@ vi.mock('uniswap/src/features/dataApi/tokenDetails/useTokenPriceHistoryRest', as
   useTokenPriceHistoryRest: vi.fn(),
 }))
 
-const mockUseTokenSpotPrice = vi.mocked(useTokenSpotPrice)
+const mockUseTokenSpotPriceWithLoading = vi.mocked(useTokenSpotPriceWithLoading)
 const mockUseTokenPriceChange = vi.mocked(useTokenPriceChange)
 const mockUseTokenPriceHistoryRest = vi.mocked(useTokenPriceHistoryRest)
 
 type PricePoint = { timestamp: number; value: number }
 
 type RestPriceHistoryResult = ReturnType<typeof useTokenPriceHistoryRest>
+
+const mockSpotPrice = ({ price, isLoading = false }: { price: number | undefined; isLoading?: boolean }): void => {
+  mockUseTokenSpotPriceWithLoading.mockReturnValue({ price, isLoading })
+}
 
 const mockRestPriceHistory = ({ entries, isLoading }: { entries: PricePoint[]; isLoading: boolean }): void => {
   const result: RestPriceHistoryResult = { entries, isLoading, error: null }
@@ -74,7 +81,7 @@ const expectHistoryWithLiveSpotEntry = ({
 describe(useTokenPriceHistory, () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    mockUseTokenSpotPrice.mockReturnValue(undefined)
+    mockSpotPrice({ price: undefined })
     mockUseTokenPriceChange.mockReturnValue(undefined)
     mockUseTokenPriceHistoryRest.mockReturnValue({ entries: [], isLoading: false, error: null })
   })
@@ -91,7 +98,7 @@ describe(useTokenPriceHistory, () => {
   })
 
   it('stops loading once the REST price history resolves', async () => {
-    mockUseTokenSpotPrice.mockReturnValue(1)
+    mockSpotPrice({ price: 1 })
     mockUseTokenPriceHistoryRest.mockReturnValue({ entries: restEntries([1, 2]), isLoading: false, error: null })
 
     const { result } = renderHookWithProviders(() => useTokenPriceHistory({ currencyId: SAMPLE_CURRENCY_ID_1 }))
@@ -101,8 +108,18 @@ describe(useTokenPriceHistory, () => {
     })
   })
 
+  it('stays loading while the spot price loads, even with the price history already cached', () => {
+    mockSpotPrice({ price: undefined, isLoading: true })
+    mockUseTokenPriceHistoryRest.mockReturnValue({ entries: restEntries([1, 2]), isLoading: false, error: null })
+
+    const { result } = renderHookWithProviders(() => useTokenPriceHistory({ currencyId: SAMPLE_CURRENCY_ID_1 }))
+
+    expect(result.current.isLoading).toBe(true)
+    expect(result.current.data?.spot).toBeUndefined()
+  })
+
   it('reports loading while skipped, even with data already available', () => {
-    mockUseTokenSpotPrice.mockReturnValue(1)
+    mockSpotPrice({ price: 1 })
     mockUseTokenPriceHistoryRest.mockReturnValue({ entries: restEntries([1, 2]), isLoading: false, error: null })
 
     const { result } = renderHookWithProviders(() =>
@@ -113,7 +130,7 @@ describe(useTokenPriceHistory, () => {
   })
 
   it('returns to loading while a newly selected duration loads', async () => {
-    mockUseTokenSpotPrice.mockReturnValue(1)
+    mockSpotPrice({ price: 1 })
     mockUseTokenPriceHistoryRest.mockReturnValue({ entries: restEntries([1, 2]), isLoading: false, error: null })
 
     const { result } = renderHookWithProviders(() => useTokenPriceHistory({ currencyId: SAMPLE_CURRENCY_ID_1 }))
@@ -134,7 +151,7 @@ describe(useTokenPriceHistory, () => {
   })
 
   it('uses the REST spot price and 24h change for Day duration', async () => {
-    mockUseTokenSpotPrice.mockReturnValue(99.9)
+    mockSpotPrice({ price: 99.9 })
     mockUseTokenPriceChange.mockReturnValue(12.3)
 
     const { result } = renderHookWithProviders(() => useTokenPriceHistory({ currencyId: SAMPLE_CURRENCY_ID_1 }))
@@ -149,7 +166,7 @@ describe(useTokenPriceHistory, () => {
   })
 
   it('falls back to a zero 24h change when REST has none yet', async () => {
-    mockUseTokenSpotPrice.mockReturnValue(99.9)
+    mockSpotPrice({ price: 99.9 })
     mockUseTokenPriceChange.mockReturnValue(undefined)
 
     const { result } = renderHookWithProviders(() => useTokenPriceHistory({ currencyId: SAMPLE_CURRENCY_ID_1 }))
@@ -171,7 +188,7 @@ describe(useTokenPriceHistory, () => {
 
   it('uses the REST price history entries for the chart line', async () => {
     const entries = restEntries([10, 20])
-    mockUseTokenSpotPrice.mockReturnValue(99.9)
+    mockSpotPrice({ price: 99.9 })
     mockUseTokenPriceChange.mockReturnValue(12.3)
     mockUseTokenPriceHistoryRest.mockReturnValue({ entries, isLoading: false, error: null })
 
@@ -194,7 +211,7 @@ describe(useTokenPriceHistory, () => {
       { timestamp: 2000, value: 21 },
     ]
     const originalEntries = structuredClone(entries)
-    mockUseTokenSpotPrice.mockReturnValue(40)
+    mockSpotPrice({ price: 40 })
     mockUseTokenPriceHistoryRest.mockReturnValue({ entries, isLoading: false, error: null })
 
     const { result } = renderHookWithProviders(() =>
@@ -216,7 +233,7 @@ describe(useTokenPriceHistory, () => {
       { timestamp: 2000, value: 20 },
       { timestamp: 1200, value: 12 },
     ]
-    mockUseTokenSpotPrice.mockReturnValue(40)
+    mockSpotPrice({ price: 40 })
     mockUseTokenPriceHistoryRest.mockReturnValue({ entries, isLoading: false, error: null })
 
     try {
@@ -229,7 +246,7 @@ describe(useTokenPriceHistory, () => {
   })
 
   it('calculates non-Day-duration change from the REST price history entries', async () => {
-    mockUseTokenSpotPrice.mockReturnValue(99.9)
+    mockSpotPrice({ price: 99.9 })
     mockUseTokenPriceChange.mockReturnValue(12.3)
     mockUseTokenPriceHistoryRest.mockReturnValue({ entries: restEntries([10, 15]), isLoading: false, error: null })
 
@@ -250,7 +267,7 @@ describe(useTokenPriceHistory, () => {
   })
 
   it('leaves the non-Day-duration change undefined when there are no entries to derive it from', async () => {
-    mockUseTokenSpotPrice.mockReturnValue(99.9)
+    mockSpotPrice({ price: 99.9 })
     mockUseTokenPriceChange.mockReturnValue(12.3)
 
     const { result } = renderHookWithProviders(() =>
@@ -273,7 +290,7 @@ describe(useTokenPriceHistory, () => {
       }),
     )
 
-    expect(mockUseTokenSpotPrice).toHaveBeenCalledWith(SAMPLE_CURRENCY_ID_1, {
+    expect(mockUseTokenSpotPriceWithLoading).toHaveBeenCalledWith(SAMPLE_CURRENCY_ID_1, {
       isMultichainAggregateView: false,
     })
     expect(mockUseTokenPriceChange).toHaveBeenCalledWith(SAMPLE_CURRENCY_ID_1, {
@@ -290,7 +307,7 @@ describe(useTokenPriceHistory, () => {
       useTokenPriceHistory({ currencyId: SAMPLE_CURRENCY_ID_1, isMultichainAggregateView: true }),
     )
 
-    expect(mockUseTokenSpotPrice).toHaveBeenCalledWith(SAMPLE_CURRENCY_ID_1, {
+    expect(mockUseTokenSpotPriceWithLoading).toHaveBeenCalledWith(SAMPLE_CURRENCY_ID_1, {
       isMultichainAggregateView: true,
     })
     expect(mockUseTokenPriceChange).toHaveBeenCalledWith(SAMPLE_CURRENCY_ID_1, {
@@ -303,7 +320,7 @@ describe(useTokenPriceHistory, () => {
   })
 
   it('refetches the REST price history at the new duration when the duration changes', async () => {
-    mockUseTokenSpotPrice.mockReturnValue(99.9)
+    mockSpotPrice({ price: 99.9 })
     mockUseTokenPriceChange.mockReturnValue(12.3)
     mockUseTokenPriceHistoryRest.mockReturnValue({ entries: restEntries([10, 15]), isLoading: false, error: null })
 

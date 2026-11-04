@@ -1,6 +1,6 @@
 import { Flex, type FlexCompatProps, Text } from '@universe/mycelium'
+import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFilled'
 import { ReactNode } from 'react'
-import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 function LimitOrderCallbackErrorInner(props: FlexCompatProps): JSX.Element {
   return (
     <Flex

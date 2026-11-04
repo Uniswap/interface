@@ -8,20 +8,16 @@ import { clampManageLeverage } from '~/pages/Swap/Margin/marginAdjustPositionMod
  * The leverage a manage sheet's slider is holding, plus the in-flight text draft behind its numeric
  * field.
  *
- * One home for the clamp rule. The Adjust-position and Change-leverage sheets ran near-identical copies
- * of this block, and the copies drifted: only one of them re-clamped a dragged target when a markets
- * poll lowered the venue ceiling, so the other kept quoting a leverage the venue no longer offered and
- * the backend refused it. A rule that must hold on both sheets should not be written on both sheets.
+ * The clamp is applied on read: a markets poll can lower the venue ceiling under an open sheet, and a
+ * stored target that is not re-clamped keeps quoting a leverage the venue no longer offers, which the
+ * backend refuses.
  */
 export function useDraggedLeverage({
   market,
-  onExplicitChange,
 }: {
   // The ceiling is derived HERE, from the market, rather than taken from the controller: the
   // controller's mode is computed from this hook's value, so a sheet cannot ask it first.
   market: MarginMarket
-  // Ran whenever an explicit target is set — the Adjust sheet clears its "hold leverage" toggle here.
-  onExplicitChange?: () => void
 }): {
   draggedLeverage: number | undefined
   leverageDraft: string | undefined
@@ -29,7 +25,6 @@ export function useDraggedLeverage({
   setExplicitLeverage: (next: number) => void
   onSliderChange: (next: number) => void
   commitLeverageDraft: () => void
-  clearDraggedLeverage: () => void
 } {
   const { venueCap } = marginLeverageCaps({ market })
   const [rawLeverage, setRawLeverage] = useState<number | undefined>(undefined)
@@ -44,7 +39,6 @@ export function useDraggedLeverage({
 
   const setExplicitLeverage = useEvent((next: number) => {
     setRawLeverage(next)
-    onExplicitChange?.()
   })
 
   const onSliderChange = useEvent((next: number) => {
@@ -64,11 +58,6 @@ export function useDraggedLeverage({
     setLeverageDraft(undefined)
   })
 
-  const clearDraggedLeverage = useEvent(() => {
-    setRawLeverage(undefined)
-    setLeverageDraft(undefined)
-  })
-
   return {
     draggedLeverage,
     leverageDraft,
@@ -76,6 +65,5 @@ export function useDraggedLeverage({
     setExplicitLeverage,
     onSliderChange,
     commitLeverageDraft,
-    clearDraggedLeverage,
   }
 }

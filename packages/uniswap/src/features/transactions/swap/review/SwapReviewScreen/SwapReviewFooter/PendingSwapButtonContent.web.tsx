@@ -1,7 +1,6 @@
-import { Flex, useIsShortMobileDevice, useSporeColors } from '@universe/mycelium'
+import { Button, Flex, useIsShortMobileDevice, useSporeColors } from '@universe/mycelium'
 import { ThemedSpinnerCompat } from '@universe/mycelium/button-frame-compat'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Button } from 'ui/src'
 import {
   getPlanProgressEstimates,
   NO_ANIMATION_INDEX,

@@ -1,7 +1,7 @@
 import { Flex, validColor } from '@universe/mycelium'
 import { OnboardingUnicon } from '@universe/mycelium/icons/OnboardingUnicon'
 import { opacify, useIsDarkMode } from '@universe/mycelium/theme-hooks-compat'
-import { colors, DEP_accentColors } from 'ui/src/theme'
+import { colors, DEP_accentColors } from '@universe/mycelium/theme-palette'
 export const UniconElement = (): JSX.Element => {
   const isDarkMode = useIsDarkMode()
 

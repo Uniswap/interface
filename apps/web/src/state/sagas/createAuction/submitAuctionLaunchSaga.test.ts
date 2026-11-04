@@ -6,16 +6,16 @@ import {
 import type { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
 import type { SignerMnemonicAccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
 import { describe, expect, it, vi } from 'vitest'
-import { popupRegistry } from '~/state/popups/registry'
-import { PopupType } from '~/state/popups/types'
 import { submitAuctionLaunch } from '~/state/sagas/createAuction/submitAuctionLaunchSaga'
 import type { SubmitAuctionLaunchParams } from '~/state/sagas/createAuction/types'
 import { getDisplayableError } from '~/state/sagas/transactions/utils'
+import { popupRegistry } from '~/utils/popups/registry'
+import { PopupType } from '~/utils/popups/types'
 
 // Mock the `~/state/*` deps so importing the saga doesn't pull in the store graph (root.ts),
 // which has an eager import cycle. `call`/`select` only reference these, so driving the
 // generator with fed values never invokes them.
-vi.mock('~/state/popups/registry', () => ({ popupRegistry: { addPopup: vi.fn() } }))
+vi.mock('~/utils/popups/registry', () => ({ popupRegistry: { addPopup: vi.fn() } }))
 vi.mock('~/state/sagas/transactions/5792', () => ({ handleAtomicSendCalls: vi.fn() }))
 vi.mock('~/state/sagas/transactions/utils', () => ({
   handleOnChainStep: vi.fn(),

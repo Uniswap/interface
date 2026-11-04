@@ -5,9 +5,9 @@ import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { getLocale, navigatorLocale, parseLocale } from 'uniswap/src/features/language/navigatorLocale'
 import { setCurrentLanguage } from 'uniswap/src/features/settings/slice'
 import { changeLanguage } from 'uniswap/src/i18n'
-import { useStateRehydrated } from '~/hooks/useStateRehydrated'
 import store from '~/state'
 import { useAppDispatch } from '~/state/hooks'
+import { useStateRehydrated } from '~/state/useStateRehydrated'
 
 function getStoreLocale(): Locale | undefined {
   const storeLanguage = store.getState().userSettings.currentLanguage

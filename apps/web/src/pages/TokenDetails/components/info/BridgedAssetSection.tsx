@@ -7,6 +7,7 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useModalState } from '~/hooks/useModalState'
 import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
+import { getChainUrlParam } from '~/utils/params/chainParams'
 
 export function BridgedAssetSection({
   currencyInfo,
@@ -18,7 +19,7 @@ export function BridgedAssetSection({
   const navigate = useNavigate()
   const { toggleModal, closeModal } = useModalState(ModalName.BridgedAsset)
   const [, setBridgedAssetModal] = useAtom(BridgedAssetModalAtom)
-  const { currencyChain, address } = useTDPStore((s) => ({ currencyChain: s.currencyChain, address: s.address }))
+  const { currencyChainId, address } = useTDPStore((s) => ({ currencyChainId: s.currencyChainId, address: s.address }))
 
   const handlePress = useEvent(() => {
     if (isBridgedAsset && currencyInfo) {
@@ -26,8 +27,7 @@ export function BridgedAssetSection({
         currencyInfo0: currencyInfo,
         onContinue: () => {
           // bridged assets are never native, so `address` is always a real token address here
-          // oxlint-disable-next-line universe-custom/no-tolowercase-address-currencyid -- chain name URL slug, not an address
-          navigate(`/swap/?chain=${currencyChain.toLowerCase()}&outputCurrency=${address}`)
+          navigate(`/swap/?chain=${getChainUrlParam(currencyChainId)}&outputCurrency=${address}`)
           closeModal()
         },
       })

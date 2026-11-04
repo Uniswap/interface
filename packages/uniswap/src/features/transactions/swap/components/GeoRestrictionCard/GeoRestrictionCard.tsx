@@ -1,7 +1,7 @@
 import { InlineCard, Text, TouchableArea } from '@universe/mycelium'
+import { ExternalLink } from '@universe/mycelium/icons/ExternalLink'
+import { GlobeFilled } from '@universe/mycelium/icons/GlobeFilled'
 import { useTranslation } from 'react-i18next'
-import { ExternalLink } from 'ui/src/components/icons/ExternalLink'
-import { GlobeFilled } from 'ui/src/components/icons/GlobeFilled'
 import { GeoRestrictionModal } from 'uniswap/src/features/transactions/swap/components/GeoRestrictionCard/GeoRestrictionModal'
 import { useGeoRestrictionModalStore } from 'uniswap/src/features/transactions/swap/components/GeoRestrictionCard/useGeoRestrictionModalStore'
 import {

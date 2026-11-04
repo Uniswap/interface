@@ -1,4 +1,17 @@
-import { Anchor, Button, Flex, Text, TouchableArea, UniversalImage, UniversalImageResizeMode } from '@universe/mycelium'
+import {
+  Anchor,
+  Button,
+  Flex,
+  Text,
+  TouchableArea,
+  UniversalImage,
+  UniversalImageResizeMode,
+  borderRadii,
+  iconSizes,
+} from '@universe/mycelium'
+import { Power } from '@universe/mycelium/icons/Power'
+import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
+import { X } from '@universe/mycelium/icons/X'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -10,8 +23,6 @@ import { closePopup, PopupName } from 'src/app/features/popups/slice'
 import { AppRoutes, SettingsRoutes } from 'src/app/navigation/constants'
 import { useExtensionNavigation } from 'src/app/navigation/utils'
 import { Popover } from 'ui/src'
-import { Power, RotatableChevron, X } from 'ui/src/components/icons'
-import { borderRadii, iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { DappIconPlaceholder } from 'uniswap/src/components/dapps/DappIconPlaceholder'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'

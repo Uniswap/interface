@@ -72,6 +72,7 @@ export function SegmentedControl<T extends string = string>({
   variableOptionWidths,
   outlined = true,
   gap,
+  animateIndicator = true,
 }: SegmentedControlProps<T>): React.JSX.Element {
   assert(options.length >= 2 && options.length <= 6, 'Segmented control must have between 2 and 6 options, inclusive.')
 
@@ -149,10 +150,10 @@ export function SegmentedControl<T extends string = string>({
     } else {
       // Subsequent selections/relayouts: spring position and size, like the
       // legacy `animation: 'fast'` on x/y/width/height.
-      indicatorX.value = withSpring(translateX, FAST_SPRING)
-      indicatorY.value = withSpring(translateY, FAST_SPRING)
-      indicatorWidth.value = withSpring(activeAt.width, FAST_SPRING)
-      indicatorHeight.value = withSpring(activeAt.height, FAST_SPRING)
+      indicatorX.value = animateIndicator ? withSpring(translateX, FAST_SPRING) : translateX
+      indicatorY.value = animateIndicator ? withSpring(translateY, FAST_SPRING) : translateY
+      indicatorWidth.value = animateIndicator ? withSpring(activeAt.width, FAST_SPRING) : activeAt.width
+      indicatorHeight.value = animateIndicator ? withSpring(activeAt.height, FAST_SPRING) : activeAt.height
       if (indicatorPhase === 'exiting') {
         // A layout reappeared mid-exit: AnimatePresence re-enters the same
         // element, so cancel the fade-out by springing opacity back to 1.
@@ -160,7 +161,17 @@ export function SegmentedControl<T extends string = string>({
         setIndicatorPhase('mounted')
       }
     }
-  }, [activeAt, indicatorHeight, indicatorOpacity, indicatorPhase, indicatorWidth, indicatorX, indicatorY, isLargeSize])
+  }, [
+    activeAt,
+    animateIndicator,
+    indicatorHeight,
+    indicatorOpacity,
+    indicatorPhase,
+    indicatorWidth,
+    indicatorX,
+    indicatorY,
+    isLargeSize,
+  ])
 
   const indicatorAnimatedStyle = useAnimatedStyle(() => ({
     width: indicatorWidth.value,

@@ -1,10 +1,11 @@
 import { fireEvent, render } from '@testing-library/react'
 import { MyceliumThemeTestWrapper } from '@universe/mycelium/testing'
+import { colorsDark, colorsLight } from '@universe/mycelium/theme-palette'
+import { borderRadii } from '@universe/mycelium/tokens'
 import { createRef, type ReactNode } from 'react'
 import type { Image as RNImageType } from 'react-native'
 import { Image as RNWImage } from 'react-native'
 import { Image, type ImageProps } from 'ui/src/components/Image/Image'
-import { borderRadii, colorsDark, colorsLight } from 'ui/src/theme'
 import { describe, expect, it, vi } from 'vitest'
 
 type ThemeName = 'light' | 'dark'

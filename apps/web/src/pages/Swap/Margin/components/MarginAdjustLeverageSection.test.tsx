@@ -34,30 +34,6 @@ const BASE = {
 }
 
 describe('MarginAdjustLeverageSection', () => {
-  it('renders the lock beside the section label when the caller supplies a handler', () => {
-    render(<MarginAdjustLeverageSection {...BASE} lockLeverage onToggleLockLeverage={vi.fn()} />)
-    expect(screen.getByText('Lock')).toBeInTheDocument()
-    expect(screen.getByTestId('margin-adjust-position-lock-leverage')).toBeInTheDocument()
-  })
-
-  // Change leverage has nothing to lock against, so it passes no handler.
-  it('omits the lock entirely when no handler is given', () => {
-    render(<MarginAdjustLeverageSection {...BASE} />)
-    expect(screen.queryByText('Lock')).not.toBeInTheDocument()
-    expect(screen.queryByTestId('margin-adjust-position-lock-leverage')).not.toBeInTheDocument()
-  })
-
-  // The visible chrome shortens to "Lock"; the accessible name stays the full phrase. WCAG 2.5.3 wants
-  // the accessible name to CONTAIN the visible label, so this direction is the compliant one. Today's
-  // switch carries no accessible name at all, so this is a fix, not a new constraint.
-  it('keeps the full wording as the switch accessible name', () => {
-    render(<MarginAdjustLeverageSection {...BASE} lockLeverage onToggleLockLeverage={vi.fn()} />)
-    const named = screen.getByLabelText('Lock leverage')
-    expect(named).toBeInTheDocument()
-    // Both sides read from the DOM: comparing two literals here would pass whatever the component renders.
-    expect(named.getAttribute('aria-label')).toContain(screen.getByText('Lock').textContent)
-  })
-
   describe('track tint', () => {
     it('is green while the implied health factor is comfortable', () => {
       render(<MarginAdjustLeverageSection {...BASE} displayedLeverage={2} />)

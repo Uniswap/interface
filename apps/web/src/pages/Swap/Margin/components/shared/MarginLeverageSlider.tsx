@@ -1,11 +1,12 @@
-import { Flex, Text } from '@universe/mycelium'
+import { Flex, Text, TouchableArea } from '@universe/mycelium'
 import { useTranslation } from 'react-i18next'
 import { Slider } from 'ui/src'
 
 // Visual leverage slider extracted from the size popover: a mycelium-backed `Slider` (continuous pointer
 // drag + arrow keys) with dot ticks on the inactive track ahead of the thumb and integer labels below.
 // The 2-decimal floor clamp stays at the call site: onChange receives the raw leverage float. Colors are
-// prop-controllable because this renders on the fixed-dark $scrim popover AND on theme-aware modal surfaces.
+// prop-controllable because this renders on the open form AND on theme-aware modal surfaces. The tick
+// labels are buttons that snap the value to their mark through the same onChange.
 export function MarginLeverageSlider({
   value,
   cap,
@@ -14,6 +15,7 @@ export function MarginLeverageSlider({
   inactiveTrackColor = '$surface3',
   thumbColor = '$neutral1',
   tickColor = '$neutral2',
+  trackHeight = 4,
 }: {
   value: number
   // Must be > 1: it is the divisor of every track fraction, so a cap of exactly 1 renders no ticks and
@@ -24,24 +26,26 @@ export function MarginLeverageSlider({
   inactiveTrackColor?: string
   thumbColor?: string
   tickColor?: string
+  trackHeight?: number
 }): JSX.Element {
   const { t } = useTranslation()
-
   // Integer marks 1x..⌊cap⌋x at their true track fraction, plus Max at 100%. Drop any integer that would
-  // collide with the Max label near the right edge.
+  // collide with the Max label near the right edge. Each tick carries its exact value for the label press:
+  // recovering it from the fraction drifts on a fractional cap (5.7 cap, 4x → 3.9999999999999996).
   const sliderTicks = [
     ...Array.from({ length: Math.floor(cap) }, (_, index) => ({
       label: `${index + 1}x`,
+      value: index + 1,
       fraction: index / (cap - 1),
     })).filter((tick) => tick.fraction <= 0.9),
-    { label: t('common.max'), fraction: 1 },
+    { label: t('common.max'), value: cap, fraction: 1 },
   ]
   // Dots sit only on the inactive track segment (ahead of the thumb), matching the design.
   const thumbFraction = (Math.min(value, cap) - 1) / (cap - 1)
 
   return (
     <Flex gap="$spacing8" width="100%">
-      <Flex width="100%" height={24} justifyContent="center" position="relative">
+      <Flex width="100%" height="$spacing24" justifyContent="center" position="relative">
         <Slider
           value={Math.min(value, cap)}
           min={1}
@@ -51,7 +55,7 @@ export function MarginLeverageSlider({
           trackColor={inactiveTrackColor}
           activeColor={trackColor}
           thumbColor={thumbColor}
-          trackHeight={4}
+          trackHeight={trackHeight}
           thumbSize={16}
           ariaLabel={t('margin.leverage.sliderLabel')}
           ariaValueText={`${Math.min(value, cap).toFixed(2)}x`}
@@ -73,23 +77,28 @@ export function MarginLeverageSlider({
           ))}
       </Flex>
       <Flex height={16} width="100%" position="relative">
-        {sliderTicks.map((tick) => (
-          <Flex
-            key={tick.label}
-            position="absolute"
-            style={
-              tick.fraction === 0
-                ? { left: 0 }
-                : tick.fraction === 1
-                  ? { right: 0 }
-                  : { left: `${tick.fraction * 100}%`, transform: 'translateX(-50%)' }
-            }
-          >
+        {sliderTicks.map((tick) => {
+          const label = (
             <Text variant="body4" color={tickColor} opacity={0.8}>
               {tick.label}
             </Text>
-          </Flex>
-        ))}
+          )
+          return (
+            <Flex
+              key={tick.label}
+              position="absolute"
+              style={
+                tick.fraction === 0
+                  ? { left: 0 }
+                  : tick.fraction === 1
+                    ? { right: 0 }
+                    : { left: `${tick.fraction * 100}%`, transform: 'translateX(-50%)' }
+              }
+            >
+              <TouchableArea onPress={() => onChange(tick.value)}>{label}</TouchableArea>
+            </Flex>
+          )
+        })}
       </Flex>
     </Flex>
   )

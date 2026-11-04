@@ -1,6 +1,6 @@
 // Confirm-gate decision for the close modal, extracted so the fund-safety guards are unit-testable.
 import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
-import { collateralHeld, rawToNumber } from '~/pages/Swap/Margin/marginFormat'
+import { collateralHeld, rawToNumber } from '~/features/margin/utils/marginFormat'
 
 // The exit swap sells collateral to buy back the debt; if the slippage-padded collateral it may spend
 // (`maxCollateralIn`) exceeds the collateral the position holds, it reverts, so the modal blocks the

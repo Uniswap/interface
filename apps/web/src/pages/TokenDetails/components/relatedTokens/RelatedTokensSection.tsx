@@ -8,7 +8,6 @@ import { FilterChip, type FilterChipColor } from 'uniswap/src/components/FilterC
 import { TokenCard } from 'uniswap/src/components/TokenCard/TokenCard'
 import { useRelatedTokensQuery } from 'uniswap/src/data/apiClients/dataApiService/relatedTokens/useRelatedTokensQuery'
 import type { RankedTokenCardItem } from 'uniswap/src/data/apiClients/dataApiService/utils/rankedTokenCardItem'
-import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { currencyIdToRestContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -209,7 +208,7 @@ const RelatedTokenCard = memo(function RelatedTokenCard({
     navigate(
       getTokenDetailsURL({
         address: token.address,
-        chain: toGraphQLChain(token.chainId),
+        chainId: token.chainId,
         chainQueryParam: TDP_MULTICHAIN_CHAIN_QUERY_VALUE,
       }),
     )

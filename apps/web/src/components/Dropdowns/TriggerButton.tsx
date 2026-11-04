@@ -32,6 +32,7 @@ function uncoveredBasePadding(rest: TextCompatProps): TextCompatProps {
   return out as TextCompatProps
 }
 
+// TODO(INFRA-4485): Duplicates mycelium. Use `TriggerButtonCompat` from `@universe/mycelium/trigger-button-compat` instead.
 export function TriggerButton({ active, outlined = true, ...rest }: TriggerButtonProps): JSX.Element {
   return (
     <Text

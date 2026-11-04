@@ -75,4 +75,27 @@ describe(useMultichainFavoritesRankings, () => {
     expect(result.current.canonicalByKey.get(buildLookupKey({ chainId: 42161, address: '0xAAA' }))).toBe('1-0xAAA')
     expect(result.current.networkCountByKey.get(buildLookupKey({ chainId: 42161, address: '0xAAA' }))).toBe(2)
   })
+
+  it('resolves ETH when ListTokens also serves its native deployment on a chain the app removed', () => {
+    // ListTokens returns every deployment regardless of the requested chainIds, including Blast
+    // (81457, hardcoded since it is no longer a UniverseChainId) under the zero-address placeholder.
+    const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
+    setListTokens({
+      multichainTokens: [
+        new RankedMultichainToken({
+          multichainToken: { addresses: { '1': ZERO_ADDRESS, '42161': ZERO_ADDRESS, '81457': ZERO_ADDRESS } },
+        }),
+      ],
+      hasData: true,
+    })
+
+    const { result } = renderHook(() => useMultichainFavoritesRankings())
+
+    // Literal on purpose: the placeholder must normalize to the chains' canonical native address.
+    const NATIVE_ADDRESS = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+    const arbitrumEthKey = buildLookupKey({ chainId: UniverseChainId.ArbitrumOne, address: NATIVE_ADDRESS })
+    expect(result.current.canonicalByKey.get(arbitrumEthKey)).toBe(`1-${NATIVE_ADDRESS}`)
+    expect(result.current.networkCountByKey.get(arbitrumEthKey)).toBe(2)
+    expect(result.current.canonicalByKey.size).toBe(2)
+  })
 })

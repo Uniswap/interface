@@ -1,6 +1,7 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { TestID } from '@universe/test'
 import { SearchBar } from '~/components/NavBar/SearchBar'
+import { NavSearchVariant } from '~/components/NavBar/SearchBar/useNavSearchVariant'
 import { mocked } from '~/test-utils/mocked'
 import { mockMediaSize } from '~/test-utils/mockMediaSize'
 import { render, screen } from '~/test-utils/render'
@@ -46,7 +47,7 @@ describe('disable nft on searchbar', () => {
   })
 
   it('should render searchbar on larger screen', () => {
-    const { container } = render(<SearchBar />)
+    const { container } = render(<SearchBar variant={NavSearchVariant.LegacyInput} />)
     expect(container).toMatchSnapshot()
     const input = screen.getByTestId(TestID.NavSearchInput)
     expect(input).toBeInTheDocument()
@@ -55,7 +56,7 @@ describe('disable nft on searchbar', () => {
   it.each([true, false])('uses the Uniswap placeholder when auction search enabled is %s', (isEnabled) => {
     mocked(useFeatureFlag).mockImplementation((flag) => flag === FeatureFlags.AuctionSearch && isEnabled)
 
-    render(<SearchBar />)
+    render(<SearchBar variant={NavSearchVariant.LegacyInput} />)
 
     expect(screen.getByText('Search Uniswap')).toBeInTheDocument()
   })

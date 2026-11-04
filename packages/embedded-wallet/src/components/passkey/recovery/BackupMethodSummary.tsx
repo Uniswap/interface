@@ -1,8 +1,8 @@
 import { Flex, Text } from '@universe/mycelium'
+import { AppleLogo } from '@universe/mycelium/icons/AppleLogo'
+import { Envelope } from '@universe/mycelium/icons/Envelope'
+import { GoogleLogoGradient } from '@universe/mycelium/icons/GoogleLogoGradient'
 import { useTranslation } from 'react-i18next'
-import { AppleLogo } from 'ui/src/components/icons/AppleLogo'
-import { Envelope } from 'ui/src/components/icons/Envelope'
-import { GoogleLogoGradient } from 'ui/src/components/icons/GoogleLogoGradient'
 
 function ProviderIcon({ provider, size }: { provider: 'google' | 'apple' | null; size: number }): JSX.Element {
   if (provider === 'google') {

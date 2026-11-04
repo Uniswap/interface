@@ -12,7 +12,7 @@
   --shadow-medium: 0px 6px 12px -3px rgba(19, 19, 19, 0.04), 0px 2px 5px -2px rgba(19, 19, 19, 0.03);
   --shadow-large: 0px 10px 20px -5px rgba(19, 19, 19, 0.05), 0px 4px 12px -3px rgba(19, 19, 19, 0.04);
   /* Theme-reactive shadow colours ($shadowColor/$shadowColorHover) — literals
-     byte-equal to ui/src/theme/themes.ts, lockstep-pinned with native.css */
+     lockstep-pinned with native.css */
   --shadow-color: rgba(0,0,0,0.15);
   --shadow-color-hover: rgba(0,0,0,0.2);
 
@@ -96,7 +96,6 @@
 
   /* Mode-dependent network colors - auto-switching */
   --network-arc: var(--color-network-arc-light);
-  --network-blast: var(--color-network-blast-light);
   --network-bnb: var(--color-network-bnb-light);
   --network-celo: var(--color-network-celo-light);
   --network-linea: var(--color-network-linea-light);
@@ -210,7 +209,6 @@
 
   /* Mode-dependent network colors - dark mode */
   --network-arc: var(--color-network-arc-dark);
-  --network-blast: var(--color-network-blast-dark);
   --network-bnb: var(--color-network-bnb-dark);
   --network-celo: var(--color-network-celo-dark);
   --network-linea: var(--color-network-linea-dark);
@@ -315,7 +313,6 @@
   --color-critical-secondary-hovered: var(--critical-secondary-hovered);
   /* Mode-dependent network colors - auto-switching Tailwind utilities */
   --color-network-arc: var(--network-arc);
-  --color-network-blast: var(--network-blast);
   --color-network-bnb: var(--network-bnb);
   --color-network-celo: var(--network-celo);
   --color-network-linea: var(--network-linea);

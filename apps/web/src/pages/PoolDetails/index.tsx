@@ -8,15 +8,14 @@ import {
   type TextCompatProps,
   useIsDarkMode,
   useSporeColors,
+  Separator,
 } from '@universe/mycelium'
 import { useQueryState } from 'nuqs'
 import { forwardRef, useEffect, useMemo, useState } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router'
-import { Separator } from 'ui/src'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { type ParsedToken, v2TokenToCurrency, v2UnwrapToken } from 'uniswap/src/features/dataApi/utils/parsedToken'
 import { InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -321,6 +320,7 @@ export function PoolDetailsPage() {
             protocolFeePips={protocolFeePips}
             hookAddress={poolData?.hookAddress}
             protocolVersion={poolData?.protocolVersion}
+            categoryIds={poolData?.categoryIds}
             toggleReversed={toggleReversed}
             loading={loading}
             isCompact={isCompact}
@@ -379,7 +379,7 @@ export function PoolDetailsPage() {
                     tokenB={orderBookCurrencyB}
                     feeTier={Number(feeTier.feeAmount)}
                     isReversed={isReversed}
-                    chainId={fromGraphQLChain(chainInfo.backendChain.chain) ?? chainInfo.id}
+                    chainId={chainInfo.id}
                     version={poolData.protocolVersion ?? RestProtocolVersion.V3}
                     hooks={poolData.hookAddress}
                     poolId={poolData.idOrAddress}

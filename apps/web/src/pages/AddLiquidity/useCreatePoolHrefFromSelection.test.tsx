@@ -4,7 +4,7 @@ import { UniverseChainId } from '@universe/chains'
 import { useQueryStates } from 'nuqs'
 import { describe, expect, it, vi } from 'vitest'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
-import { useCurrencyInfo } from '~/hooks/Tokens'
+import { useCurrencyInfo } from '~/hooks/currency/useCurrencyInfo'
 import {
   useCreatePoolHrefFromSelection,
   useResolvedBrowserSelection,
@@ -15,7 +15,9 @@ vi.mock('nuqs', async (importOriginal) => {
   return { ...actual, useQueryStates: vi.fn() }
 })
 
-vi.mock('~/hooks/Tokens', () => ({ useCurrencyInfo: vi.fn(), useCurrencyWithLoading: vi.fn(), checkIsNative: vi.fn() }))
+vi.mock('~/hooks/currency/useCurrencyInfo', () => ({ useCurrencyInfo: vi.fn() }))
+vi.mock('~/hooks/currency/useCurrencyWithLoading', () => ({ useCurrencyWithLoading: vi.fn() }))
+vi.mock('~/utils/checkIsNative', () => ({ checkIsNative: vi.fn() }))
 
 const useQueryStatesMock = vi.mocked(useQueryStates)
 const useCurrencyInfoMock = vi.mocked(useCurrencyInfo)
@@ -47,7 +49,7 @@ function mockUrlState(state: {
 
 /**
  * Stands in for `useCurrencyInfo`, modelling the three behaviours that decide what the href can
- * emit (`apps/web/src/hooks/Tokens.ts`):
+ * emit (`apps/web/src/hooks/currency/`):
  *
  * 1. An ERC20 address resolves only on the chain it actually exists on.
  * 2. An **absent** `chainId` does not fail to resolve. `useCurrencyPreprocessing` substitutes the

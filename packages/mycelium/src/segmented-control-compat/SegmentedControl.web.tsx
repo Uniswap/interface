@@ -109,6 +109,7 @@ export function SegmentedControl<T extends string = string>({
   variableOptionWidths,
   outlined = true,
   gap,
+  animateIndicator = true,
 }: SegmentedControlProps<T>): React.JSX.Element {
   assert(options.length >= 2 && options.length <= 6, 'Segmented control must have between 2 and 6 options, inclusive.')
 
@@ -257,7 +258,7 @@ export function SegmentedControl<T extends string = string>({
           width: indicatorRect.width,
           height: indicatorRect.height,
           transform: `translate(${indicatorRect.left}px, ${indicatorRect.top}px)`,
-          transition: INDICATOR_TRANSITION,
+          transition: animateIndicator ? INDICATOR_TRANSITION : undefined,
         }
 
   return (

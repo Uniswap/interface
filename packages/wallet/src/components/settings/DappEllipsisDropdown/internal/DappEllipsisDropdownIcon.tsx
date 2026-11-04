@@ -1,5 +1,5 @@
 import { TouchableArea } from '@universe/mycelium'
-import { Ellipsis } from 'ui/src/components/icons'
+import { Ellipsis } from '@universe/mycelium/icons/Ellipsis'
 
 export function DappEllipsisDropdownIcon(): JSX.Element {
   return (

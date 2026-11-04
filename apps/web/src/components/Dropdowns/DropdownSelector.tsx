@@ -1,6 +1,6 @@
 import { Flex, type FlexCompatProps, Text, type TextCompatProps } from '@universe/mycelium'
-import { GeneratedIcon } from 'ui/src/components/factories/createIcon'
-import { Check } from 'ui/src/components/icons/Check'
+import type { GeneratedIcon } from '@universe/mycelium/icons'
+import { Check } from '@universe/mycelium/icons/Check'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import { Dropdown, DropdownProps, InternalMenuItem } from '~/components/Dropdowns/Dropdown'
@@ -32,6 +32,7 @@ type DropdownSelectorProps = Omit<DropdownProps, 'children' | 'menuLabel'> & {
   optionTestIdPrefix?: string
 }
 
+// TODO(INFRA-4485): Duplicates mycelium. Use `FilterSelectCompat` / `FilterSelectMultiCompat` from `@universe/mycelium/filter-select-compat` instead.
 export function DropdownSelector({
   options,
   selectedValue,

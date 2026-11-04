@@ -162,9 +162,8 @@ export function clearPlanProofs({ swapper, planId }: { swapper: string; planId: 
     memoryAuthoritative.delete(key)
   } catch (error) {
     // Symmetric with writeMap: storage that rejects this but still serves reads would let readMap
-    // resurrect every proof for the plan. Bounded — this only runs for dead plans, where a resurrected
-    // proof keeps hasUnlandedLocalProof set and withholds the pending card's Cancel — but the rule is
-    // the same one, so it belongs on both clear paths rather than only the per-step one.
+    // resurrect every proof for the plan. Bounded — this only runs for dead plans — but the rule is the
+    // same one, so it belongs on both clear paths rather than only the per-step one.
     memoryAuthoritative.add(key)
     logger.warn('marginStepProofCache', 'clearPlanProofs', 'Failed to clear step proofs from localStorage', error)
   }

@@ -208,7 +208,6 @@ export interface UniswapUrlOverrides {
   apiBaseUrlOverride?: string
   apiBaseUrlV2Override?: string
   forApiUrlOverride?: string
-  graphqlUrlOverride?: string
   liquidityServiceUrlOverride?: string
   scantasticApiUrlOverride?: string
   statsigProxyUrlOverride?: string
@@ -226,7 +225,6 @@ export interface UniswapServiceUrls {
   embeddedWalletHostname: string
   embeddedWalletUrl: string
   forApiUrl: string
-  graphQLUrl: string
   liquidityServiceUrl: string
   passkeysManagementUrl: string
   privyEmbeddedWalletUrl: string
@@ -263,9 +261,6 @@ export function getUniswapServiceUrls(overrides: UniswapUrlOverrides): UniswapSe
 
     // FOR traffic goes through the Entry Gateway host, same as Plan / Chained Actions.
     forApiUrl: overrides.forApiUrlOverride || getForApiUrl(),
-
-    graphQLUrl:
-      overrides.graphqlUrlOverride || getCloudflareApiBaseUrl({ flow: TrafficFlows.GraphQL, postfix: 'v1/graphql' }),
 
     liquidityServiceUrl:
       overrides.liquidityServiceUrlOverride ||

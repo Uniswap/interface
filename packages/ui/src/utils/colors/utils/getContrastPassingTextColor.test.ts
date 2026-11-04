@@ -1,12 +1,5 @@
 import { getContrastPassingTextColor } from 'ui/src/utils/colors/utils/getContrastPassingTextColor'
-import { describe, expect, it, vi } from 'vitest'
-
-// Mocking the colorsLight object
-vi.mock('ui/src/theme', () => ({
-  colorsLight: {
-    white: '#FFFFFF',
-  },
-}))
+import { describe, expect, it } from 'vitest'
 
 describe('getContrastPassingTextColor', () => {
   it('should return $white for a dark background color', () => {

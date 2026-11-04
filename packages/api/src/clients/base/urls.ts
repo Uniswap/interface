@@ -1,11 +1,3 @@
-import {
-  DEV_ENTRY_GATEWAY_API_BASE_URL,
-  DEV_ENTRY_GATEWAY_HOST,
-  PROD_ENTRY_GATEWAY_API_BASE_URL,
-  PROD_ENTRY_GATEWAY_HOST,
-  STAGING_ENTRY_GATEWAY_API_BASE_URL,
-  STAGING_ENTRY_GATEWAY_HOST,
-} from '@universe/api/src/clients/base/entryGatewayUrls'
 import { Environment } from '@universe/config'
 import {
   isAndroid,
@@ -17,9 +9,16 @@ import {
   isE2eTestEnv,
   isTestEnv,
 } from '@universe/environment'
+import {
+  DEV_ENTRY_GATEWAY_API_BASE_URL,
+  DEV_ENTRY_GATEWAY_HOST,
+  PROD_ENTRY_GATEWAY_API_BASE_URL,
+  PROD_ENTRY_GATEWAY_HOST,
+  STAGING_ENTRY_GATEWAY_API_BASE_URL,
+  STAGING_ENTRY_GATEWAY_HOST,
+} from './entryGatewayUrls'
 
 export enum TrafficFlows {
-  GraphQL = 'graphql',
   Metrics = 'metrics',
   Gating = 'gating',
   Unitags = 'unitags',
@@ -103,7 +102,7 @@ export {
   PROD_ENTRY_GATEWAY_HOST,
   STAGING_ENTRY_GATEWAY_API_BASE_URL,
   STAGING_ENTRY_GATEWAY_HOST,
-} from '@universe/api/src/clients/base/entryGatewayUrls'
+} from './entryGatewayUrls'
 
 /** Entry Gateway base URL (with scheme) per backend environment. */
 export const ENTRY_GATEWAY_API_BASE_URLS: Record<Environment, string> = {

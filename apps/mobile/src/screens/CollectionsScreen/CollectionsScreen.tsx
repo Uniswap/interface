@@ -8,6 +8,9 @@ import {
   UniversalList,
   type UniversalListRenderItemInfo,
   type UniversalListStyle,
+  fonts,
+  iconSizes,
+  spacing,
 } from '@universe/mycelium'
 import React, { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -15,7 +18,6 @@ import { useWindowDimensions } from 'react-native'
 import { useExploreStackNavigation } from 'src/app/navigation/types'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
-import { fonts, iconSizes, spacing } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
 import { useListCategoriesQuery } from 'uniswap/src/data/apiClients/dataApiService/categories/useListCategoriesQuery'

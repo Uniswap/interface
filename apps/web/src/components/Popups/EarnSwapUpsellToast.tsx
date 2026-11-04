@@ -1,11 +1,11 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { Platform } from '@universe/chains'
 import { Flex, iconSizes, Text, TouchableArea, zIndexes } from '@universe/mycelium'
+import { EarnSparkle } from '@universe/mycelium/icons/EarnSparkle'
+import { X } from '@universe/mycelium/icons/X'
 import { useShadowPropsMedium } from '@universe/mycelium/theme-hooks-compat'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { EarnSparkle } from 'ui/src/components/icons/EarnSparkle'
-import { X } from 'ui/src/components/icons/X'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import {
   EarnAnalyticsSurface,
@@ -20,9 +20,9 @@ import {
 import { useEarnSwapUpsellState } from 'uniswap/src/features/earn/hooks/useEarnSwapUpsellState'
 import { invalidateEarnPortfolioQuery } from 'uniswap/src/features/earn/portfolioInvalidation'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { POPUP_MAX_WIDTH } from '~/components/Popups/constants'
-import { useActiveAccount } from '~/features/accounts/store/hooks'
+import { useActiveAccount } from '~/connection/accounts/hooks'
 import { useGlobalEarnVaultModalStore } from '~/features/earn/globalEarnVaultModalStore'
+import { POPUP_MAX_WIDTH } from '~/utils/popups/constants'
 
 const EARN_TOAST_ICON_SIZE = iconSizes.icon36
 

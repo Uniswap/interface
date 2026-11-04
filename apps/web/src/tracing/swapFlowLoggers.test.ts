@@ -70,6 +70,24 @@ describe('swapFlowLoggers', () => {
     })
   })
 
+  it('logSwapFinalized reports the vendor that served a bridge', () => {
+    logSwapFinalized({
+      id: 'bridgeHash',
+      hash: 'bridgeHash',
+      chainInId: 8453,
+      chainOutId: 1,
+      analyticsContext: { page: 'mockContext' },
+      status: TransactionStatus.Success,
+      type: TransactionType.Bridge,
+      bridgeProvider: TradingApi.BridgeProvider.RELAY,
+    })
+
+    expect(sendAnalyticsEvent).toHaveBeenCalledWith(
+      SwapEventName.SwapTransactionCompleted,
+      expect.objectContaining({ routing: 'bridge', bridge_provider: TradingApi.BridgeProvider.RELAY }),
+    )
+  })
+
   it('logUniswapXSwapSuccess calls sendAnalyticsEvent with correct parameters', () => {
     const mockHash = 'mockHash'
     const mockOrderHash = 'mockOrderHash'

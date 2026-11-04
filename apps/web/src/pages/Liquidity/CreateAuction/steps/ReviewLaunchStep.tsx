@@ -15,8 +15,8 @@ import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { isAddress } from '~/chains'
+import { useActiveAddress } from '~/connection/accounts/hooks'
 import { BIPS_BASE } from '~/constants/misc'
-import { useActiveAddress } from '~/features/accounts/store/hooks'
 import {
   getAuctionCreateAnalyticsProperties,
   getAuctionCreateFailedDiagnostics,

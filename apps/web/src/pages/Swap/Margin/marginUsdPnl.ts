@@ -7,8 +7,8 @@ import {
   scaledE18ToNumber,
   usablePriceX18,
   usableWireBalance,
-} from '~/pages/Swap/Margin/marginFormat'
-import { marginPositionLegDebt } from '~/pages/Swap/Margin/marginPositionRow'
+} from '~/features/margin/utils/marginFormat'
+import { marginPositionLegDebt } from '~/features/margin/utils/marginPositionRow'
 
 /**
  * The one PnL definition for a margin position, in USD.

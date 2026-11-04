@@ -7,6 +7,7 @@ import { ReceiveButton } from 'src/components/TokenDetails/ReceiveButton'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
+import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { useBridgingTokenWithHighestBalance } from 'uniswap/src/features/bridging/hooks/tokens'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
@@ -14,7 +15,6 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useCurrencyInfo, useNativeCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { BridgeTokenButton } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/BridgeTokenButton'
 import { BuyNativeTokenButton } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/BuyNativeTokenButton'
-import { currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 
 export function BuyNativeTokenModal({
@@ -29,7 +29,7 @@ export function BuyNativeTokenModal({
 
   const { data: bridgingTokenWithHighestBalance } = useBridgingTokenWithHighestBalance({
     evmAddress: activeAddress ?? '',
-    currencyAddress: currencyIdToAddress(nativeCurrencyInfo?.currencyId ?? ''),
+    currencyAddress: getNativeAddress(chainId),
     currencyChainId: chainId,
   })
 
@@ -68,7 +68,7 @@ export function BuyNativeTokenModal({
             </Text>
           </Flex>
           <LearnMoreLink
-            textColor="$accent3"
+            textColor="$neutral1"
             textVariant="buttonLabel3"
             url={UniswapHelpUrls.articles.networkFeeInfo}
           />

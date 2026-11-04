@@ -19,8 +19,8 @@ import {
 } from 'uniswap/src/features/transactions/swap/plan/types'
 import { activePlanStore } from 'uniswap/src/features/transactions/swap/review/stores/activePlan/activePlanStore'
 import { signalEarnModalClosed } from 'uniswap/src/utils/saga'
-import { useAccountsStore, useActiveAccount } from '~/features/accounts/store/hooks'
-import { useSelectChain } from '~/hooks/useSelectChain'
+import { useAccountsStore, useActiveAccount } from '~/connection/accounts/hooks'
+import { useSelectChain } from '~/connection/hooks/useSelectChain'
 import { handleEarnPlanTransactionStep, handleEarnPlanWalletCallStep } from '~/state/sagas/transactions/earnSaga'
 import { handleUniswapXPlanSignatureStep } from '~/state/sagas/transactions/uniswapx'
 import {

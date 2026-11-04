@@ -17,6 +17,7 @@ exports[`renders UnitagName with a name 1`] = `
       style="--c-top: -4px; --c-right: -24px;"
     >
       <img
+        alt=""
         height="24"
         src="mock-asset-UNITAG_DARK_SMALL.png"
         style="vertical-align: sub;"
@@ -42,6 +43,7 @@ exports[`renders UnitagName without a name 1`] = `
       style="--c-top: -4px; --c-right: -24px;"
     >
       <img
+        alt=""
         height="24"
         src="mock-asset-UNITAG_DARK_SMALL.png"
         style="vertical-align: sub;"

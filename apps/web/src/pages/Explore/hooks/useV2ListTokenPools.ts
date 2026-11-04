@@ -3,12 +3,11 @@ import { UniverseChainId } from '@universe/chains'
 import { useMemo } from 'react'
 import { PoolTableSortState } from '~/data/pools/poolStats'
 import { OrderDirection } from '~/data/util'
+import { useInfiniteLoadMore } from '~/features/Explore/hooks/useInfiniteLoadMore'
 import { poolSortFieldToOrderBy } from '~/features/Liquidity/utils/convertPoolToPoolStat'
 import { getTokenListPoolsParams } from '~/features/Liquidity/utils/getTokenListPoolsParams'
-import { useInfiniteLoadMore } from '~/hooks/useInfiniteLoadMore'
 import { type ListPoolsAsPoolStatsResult, useListPoolsAsPoolStats } from '~/pages/Explore/hooks/useListPoolsAsPoolStats'
 
-// Matches the legacy per-protocol GraphQL queries' page size in usePoolsFromTokenAddress.
 const TOKEN_LIST_POOLS_PAGE_SIZE = 20
 
 type V2ListTokenPoolsResult = Omit<ListPoolsAsPoolStatsResult, 'error' | 'fetchNextPage'> & {
@@ -16,8 +15,7 @@ type V2ListTokenPoolsResult = Omit<ListPoolsAsPoolStatsResult, 'error' | 'fetchN
 }
 
 /**
- * data.v2 ListPools counterpart of the legacy per-protocol GraphQL queries in
- * `usePoolsFromTokenAddress`. Single-chain only — multichain TDP views use
+ * data.v2 ListPools scoped to one token, behind `usePoolsFromTokenAddress`. Single-chain only — multichain TDP views use
  * `useV2ListTokenPoolsMultichain`.
  */
 export function useV2ListTokenPools({

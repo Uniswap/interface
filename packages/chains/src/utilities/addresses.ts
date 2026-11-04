@@ -242,7 +242,7 @@ export function normalizeTokenAddressForCache(address: string): string
 export function normalizeTokenAddressForCache(address: null): null
 export function normalizeTokenAddressForCache(address: string | null): string | null
 export function normalizeTokenAddressForCache(address: string | null): string | null {
-  // Our graphql backend would sometimes return checksummed addresses and sometimes lowercase addresses.
+  // Backends may return checksummed or lowercase addresses for the same token.
   // In order to improve local cache hits, avoid unnecessary network requests, and avoid having duplicate `Token` items stored in the cache,
   // we use lowercase addresses when accessing the `Token` object from our local cache.
   // Solana addresses are case sensitive though, so this only applies to EVM addresses.

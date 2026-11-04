@@ -2,7 +2,7 @@
  * NATIVE legs of `ThemedIconCompat` / `ThemedSpinnerCompat`, transcribed from
  * `../button-compat/ButtonCompat.native.tsx`'s `ButtonIcon` / `ButtonSpinner`:
  * react-native-svg inherits nothing from a uniwind class, so the glyph and
- * spinner stroke take a CONCRETE color resolved from the SAME class string
+ * the `CircleSpinner` icon take a CONCRETE color resolved from the SAME class string
  * the label renders (`useResolveClassNames`), and sizes are cloned as
  * numbers. Frame hover state arrives through the frame context.
  */
@@ -16,14 +16,9 @@ import Animated, {
   withRepeat,
   withTiming,
 } from 'react-native-reanimated'
-import { Path, Svg } from 'react-native-svg'
 import { useResolveClassNames } from 'uniwind'
-import {
-  buttonCompatNativeColorClassName,
-  getContrastTextClass,
-  NATIVE_ICON_SIZE_PX,
-  SPINNER_GLYPH,
-} from '../button-compat/compile'
+import { buttonCompatNativeColorClassName, getContrastTextClass, NATIVE_ICON_SIZE_PX } from '../button-compat/compile'
+import { CircleSpinner } from '../components/icons/CircleSpinner'
 import { useButtonFrameContext } from './context'
 import { getMaybeHexOrRgbColor } from './custom-color'
 import type { ThemedIconCompatProps, ThemedSpinnerCompatProps } from './themed-icon-props'
@@ -111,16 +106,7 @@ export function ThemedSpinnerCompat(props: ThemedSpinnerCompatProps): JSX.Elemen
       testID="button-frame-compat-spinner"
       {...{ className: colorClassName }}
     >
-      <Svg fill="none" height={size} viewBox={SPINNER_GLYPH.viewBox} width={size}>
-        <Path
-          d={SPINNER_GLYPH.trackPath}
-          opacity={SPINNER_GLYPH.trackOpacity}
-          stroke={stroke}
-          strokeLinecap="round"
-          strokeWidth={SPINNER_GLYPH.strokeWidth}
-        />
-        <Path d={SPINNER_GLYPH.arcPath} stroke={stroke} strokeLinecap="round" strokeWidth={SPINNER_GLYPH.strokeWidth} />
-      </Svg>
+      <CircleSpinner color={typeof stroke === 'string' ? stroke : undefined} size={size} />
     </Animated.View>
   )
 }

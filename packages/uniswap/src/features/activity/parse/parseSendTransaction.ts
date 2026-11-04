@@ -31,7 +31,7 @@ export function parseSendTransaction(transaction: OnChainTransaction): SendToken
     tokenAddress: asset?.address ?? '',
     currencyAmountRaw: firstTransfer.amount?.raw ?? '',
     recipient: firstTransfer.to,
-    transactedUSDValue: undefined,
+    transactedUSDValue: firstTransfer.transactedValueUsd,
     isSpam,
     dappInfo: extractDappInfo(transaction),
   }

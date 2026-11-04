@@ -249,30 +249,34 @@ function BridgeStepDescriptor({ info }: { info: BridgeTransactionInfo }): JSX.El
 
 function WrapStepDescriptor({ info, chainId }: { info: WrapTransactionInfo; chainId: UniverseChainId }): JSX.Element {
   const { t } = useTranslation()
-  const nativeCurrencyInfo = useCurrencyInfo(buildNativeCurrencyId(chainId))
-  const wrappedCurrencyInfo = useCurrencyInfo(buildWrappedNativeCurrencyId(chainId))
+  // currencyAmountRaw is the step's input: the native token for a wrap, the wrapped one for an unwrap.
+  const inputCurrencyInfo = useCurrencyInfo(
+    info.unwrapped ? buildWrappedNativeCurrencyId(chainId) : buildNativeCurrencyId(chainId),
+  )
   const { formatCurrencyAmount } = useLocalizationContext()
 
   const currencyAmount = useMemo(() => {
-    const currencyInfo = info.unwrapped ? nativeCurrencyInfo : wrappedCurrencyInfo
-
-    if (!currencyInfo) {
+    if (!inputCurrencyInfo) {
       return null
     }
 
     return getCurrencyAmount({
       value: info.currencyAmountRaw,
       valueType: ValueType.Raw,
-      currency: currencyInfo.currency,
+      currency: inputCurrencyInfo.currency,
     })
-  }, [info.currencyAmountRaw, info.unwrapped, nativeCurrencyInfo, wrappedCurrencyInfo])
+  }, [info.currencyAmountRaw, inputCurrencyInfo])
+
+  const params = {
+    amount: formatCurrencyAmount({ value: currencyAmount }),
+    symbol: currencyAmount?.currency.symbol ?? '',
+  }
 
   return (
     <Text variant="body3" flexShrink={1} numberOfLines={1}>
-      {t('transaction.status.plan.step.wrap', {
-        amount: formatCurrencyAmount({ value: currencyAmount }),
-        symbol: currencyAmount?.currency.symbol ?? '',
-      })}
+      {info.unwrapped
+        ? t('transaction.status.plan.step.unwrap', params)
+        : t('transaction.status.plan.step.wrap', params)}
     </Text>
   )
 }

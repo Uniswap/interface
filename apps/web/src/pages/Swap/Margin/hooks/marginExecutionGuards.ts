@@ -338,10 +338,8 @@ export function isTerminalStepError(code: string): code is MarginTerminalStepErr
 // exhausts the server's budget before a send (see the note above).
 //
 // The other two are deliberately absent. PROOF_UNRECOVERABLE and SOURCE_STEP_UNRECOVERABLE both
-// describe a tx that WAS broadcast and may still land, and the cached proof is doing two jobs for
-// them: it withholds the pending card's Cancel (`shouldOfferPendingCancel`) so a plan with a possibly
-// live deposit cannot be cancelled out from under it, and it is the only local record that a resume
-// must replay rather than re-broadcast — dropping it risks a second leveraged position.
+// describe a tx that WAS broadcast and may still land, and the cached proof is the only local record
+// that a resume must replay rather than re-broadcast — dropping it risks a second leveraged position.
 const PROOF_CLEARABLE_STEP_ERROR_CODES = new Set(['INSUFFICIENT_SOURCE_FUNDS', 'MAX_REMATERIALIZE_EXCEEDED'])
 
 export function mayClearProofsOnAbandon({
@@ -352,8 +350,7 @@ export function mayClearProofsOnAbandon({
   // Whether the FAILING step still holds a cached proof. Direct evidence beats the code's promise:
   // MAX_REMATERIALIZE_EXCEEDED says nothing was broadcast for the failing ATTEMPT, but a step that
   // broadcast, took PROOF_REVERIFY_FAILED, was reset and re-materialized until the budget ran out
-  // arrives here holding one — a live deposit whose only local record this would delete, and whose
-  // Cancel-suppression (`shouldOfferPendingCancel`) would be lifted with it.
+  // arrives here holding one — a live deposit whose only local record this would delete.
   failingStepHasProof: boolean
 }): boolean {
   // No code at all is not evidence that nothing was sent — fail closed and keep the proofs.
@@ -365,8 +362,8 @@ export type OpenCtaAction = { kind: 'resume'; planId: string } | { kind: 'block'
 // Open CTA decision — "form is truth": the CTA always opens what the form shows. Re-focus an OPEN
 // that the in-memory executor still holds (resume its live run). Block a fresh OPEN while ANY other
 // in-memory plan (any intent) is still in flight — it reserves a subId and the Open CTA can't resume
-// it under a foreign intent; the positions-table banner owns that path. Otherwise create. A stranded
-// plan from a prior session surfaces as a pending-plan card, not auto-resumed here.
+// it under a foreign intent; its in-flight row owns that path. Otherwise create. A plan stranded by a
+// reload is not in memory, so it never reaches here, and it isn't resumable from the UI yet.
 export function decideOpenAction({
   existing,
 }: {

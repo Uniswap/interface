@@ -6,9 +6,9 @@ import { useCurrentLanguage, useLanguageInfo } from 'uniswap/src/features/langua
 import { setCurrentLanguage } from 'uniswap/src/features/settings/slice'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useLocationLinkProps } from '~/components/AccountDrawer/hooks/useLocationLinkProps'
 import { MenuColumn, MenuItem } from '~/components/AccountDrawer/shared'
 import { SlideOutMenu } from '~/components/AccountDrawer/SlideOutMenu'
-import { useLocationLinkProps } from '~/hooks/useLocationLinkProps'
 
 function LanguageMenuItem({ language }: { language: Language }) {
   const currentLanguage = useCurrentLanguage()

@@ -20,7 +20,7 @@ const FETCH_TIMEOUT_MS = 5_000
  * Defensive scheme + host validator for the token logo URL we proxy through
  * `fetch()`.
  *
- * The URL flows in from the backend GraphQL response (`project.logoUrl`), so
+ * The URL flows in from the backend data API response (`project.logoUrl`), so
  * it isn't directly user-controlled — but the same Bun-fetch / SSRF class
  * documented by Cantina #715 / #747 applies if the upstream ever returns a
  * `file://` / `data:` URL or an IP-literal hostname, so we enforce

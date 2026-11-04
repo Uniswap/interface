@@ -33,8 +33,8 @@ testLevel: e2e
 runFrequency: release
 # coverage
 code_paths:
-  - apps/web/src/features/wallet/connection/connectors/wagmi.ts
-  - apps/web/src/components/WalletModal/
+  - apps/web/src/connection/connectors/wagmi.ts
+  - apps/web/src/features/wallet/components/WalletModal/
   - apps/web/src/connection/wagmiConfig.ts
 automationRefs: []
 ---
@@ -72,12 +72,12 @@ testLevel: unit
 runFrequency: release
 # coverage
 code_paths:
-  - apps/web/src/features/wallet/connection/connectors/custom.ts
-  - apps/web/src/features/wallet/connection/types/CustomConnectorId.ts
+  - apps/web/src/connection/connectors/custom.ts
+  - apps/web/src/connection/types/CustomConnectorId.ts
 automationRefs:
-  - path: apps/web/src/features/wallet/connection/connectors/custom.test.ts
+  - path: apps/web/src/connection/connectors/custom.test.ts
     testName: custom connectors > applyCustomConnectorMeta > should override coinbase sdk icon with icon override map
-  - path: apps/web/src/features/wallet/connection/connectors/custom.test.ts
+  - path: apps/web/src/connection/connectors/custom.test.ts
     testName: custom connectors > applyCustomConnectorMeta > should apply embedded wallet connector meta to existing embedded wallet
 ---
 

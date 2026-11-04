@@ -1,9 +1,7 @@
 /**
- * Local port of legacy `getMaybeHexOrRGBColor`
- * (`ui/src/components/buttons/Button/utils/getMaybeHexOrRGBColor.ts`) — the
- * gate deciding whether a `backgroundColor` takes the custom-background lane
- * (concrete hex/rgb) or stays an ordinary themed style prop. Reimplemented
- * here because mycelium must never import `packages/ui`.
+ * Port of the legacy ui `getMaybeHexOrRGBColor` — the gate deciding whether a
+ * `backgroundColor` takes the custom-background lane (concrete hex/rgb) or
+ * stays an ordinary themed style prop.
  */
 
 export type HexOrRgbColor = `#${string}` | `rgb(${string})` | `rgba(${string})`

@@ -1,4 +1,4 @@
-import { V1_TRADING_API_PATHS } from '@universe/api'
+import { TradingApi, V1_TRADING_API_PATHS } from '@universe/api'
 import { areEvmAddressesEqual } from '@universe/chains'
 import { TestID } from '@universe/test'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
@@ -48,13 +48,18 @@ test.describe(
         modifyRequestData: (data) => ({
           ...data,
           integratorFees: [{ bips: TEST_FEE_BIPS, recipient: TEST_FEE_RECIPIENT }],
+          // Route via long-lived V2/V3 pools: v4 pools/routes may postdate the fork pin. Leave the
+          // indicative (FASTEST) quote alone: the API answers it 404 when protocols are forced onto it
+          ...(data.routingPreference === TradingApi.RoutingPreference.FASTEST
+            ? {}
+            : { protocols: [TradingApi.ProtocolItems.V2, TradingApi.ProtocolItems.V3] }),
         }),
       })
 
       await page.goto(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`)
 
       // Set up swap
-      await page.getByTestId(TestID.AmountInputOut).fill('1')
+      await page.getByTestId(TestID.AmountInputIn).fill('0.1')
 
       // Multiple /quote requests race (primary + indicative FASTEST); wait for one that
       // actually carries the injected fee output instead of whichever lands first

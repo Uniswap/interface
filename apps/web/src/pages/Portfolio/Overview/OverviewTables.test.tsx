@@ -3,15 +3,15 @@ import { TestID } from '@universe/test'
 import type { ActivityRenderData } from 'uniswap/src/features/activity/hooks/useActivityData'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { SAMPLE_SEED_ADDRESS_1 } from 'uniswap/src/test/fixtures/assets/constants'
-import { useConnectionStatus } from '~/features/accounts/store/hooks'
+import { useConnectionStatus } from '~/connection/accounts/hooks'
 import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
 import { PortfolioOverviewTables } from '~/pages/Portfolio/Overview/OverviewTables'
 import { PortfolioTab } from '~/pages/Portfolio/types'
 import { mocked } from '~/test-utils/mocked'
 import { render, screen } from '~/test-utils/render'
 
-vi.mock('~/features/accounts/store/hooks', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('~/features/accounts/store/hooks')>()),
+vi.mock('~/connection/accounts/hooks', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('~/connection/accounts/hooks')>()),
   useConnectionStatus: vi.fn(),
 }))
 
@@ -66,7 +66,6 @@ function mockPortfolioRoutes({ isExternalWallet }: { isExternalWallet: boolean }
 function mockEnabledChains(): void {
   mocked(useEnabledChains).mockReturnValue({
     chains: [UniverseChainId.Mainnet],
-    gqlChains: [],
     defaultChainId: UniverseChainId.Mainnet,
     isTestnetModeEnabled: false,
   } as unknown as ReturnType<typeof useEnabledChains>)

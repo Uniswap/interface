@@ -17,7 +17,7 @@ vi.mock('uniswap/src/components/modals/Modal', () => ({
   Modal: ({ children }: PropsWithChildren) => children,
 }))
 
-vi.mock('~/hooks/useAccount', () => ({
+vi.mock('~/connection/hooks/useAccount', () => ({
   useAccount: () => ({ address: '0x000000000000000000000000000000000000000A' }),
 }))
 
@@ -39,7 +39,7 @@ const { mockMarketResolved, setMarginFormState } = vi.hoisted(() => ({
   setMarginFormState: vi.fn(),
 }))
 
-vi.mock('~/pages/Swap/Margin/hooks/useMarginMarkets', () => ({
+vi.mock('~/features/margin/hooks/useMarginMarkets', () => ({
   useMarginMarkets: () => ({
     groups: [],
     markets: [],

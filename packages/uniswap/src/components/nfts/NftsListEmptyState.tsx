@@ -1,9 +1,9 @@
 import { isExtensionApp } from '@universe/environment'
 import { Flex } from '@universe/mycelium'
+import { NoNfts } from '@universe/mycelium/icons/NoNfts'
 import { CSSProperties } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { StyleProp, ViewStyle } from 'react-native'
-import { NoNfts } from 'ui/src/components/icons/NoNfts'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 
 interface NftsListEmptyStateProps {

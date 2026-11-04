@@ -1,7 +1,7 @@
 import { Flex, Text } from '@universe/mycelium'
+import { Clear } from '@universe/mycelium/icons/Clear'
 import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
-import { Clear } from 'ui/src/components/icons'
 import { TransactionErrorType } from 'wallet/src/features/dappRequests/types'
 
 const ERROR_MESSAGE_BY_TYPE: Partial<Record<TransactionErrorType, (t: TFunction) => string>> = {

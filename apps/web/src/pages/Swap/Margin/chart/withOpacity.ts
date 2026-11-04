@@ -1,4 +1,4 @@
-import { opacify } from 'ui/src/theme'
+import { opacify } from '@universe/mycelium/theme-hooks-compat'
 
 // opacify() (ui/src) intentionally leaves rgba() colors unchanged (logs a warn); spore neutral
 // tokens ARE rgba, so set their alpha channel locally. Matches opacify's absolute-set semantic

@@ -22,22 +22,17 @@
 
 /**
  * Design re-pointed `accent3` at `neutral1` (decision recorded in
- * `@universe/tailwind/css/theme.css`), but legacy still resolves `#222222` in
- * light mode — mapping it would ship a silent value change on every converted
- * call site. Convert call sites to `$neutral1` / `$neutral1Hovered` instead;
- * that lands the ratified value by an explicit edit, not a compat side effect.
+ * `@universe/tailwind/css/theme.css`), and the legacy palette now matches. The
+ * alias stays rejected so new code names the real token.
  */
-const DEPRECATED_REPOINTED = [
-  'deprecated alias whose mycelium value was deliberately re-pointed at neutral1; the legacy value differs, so',
-  'mapping it would ship a silent colour change — convert the call site to $neutral1 / $neutral1Hovered instead.',
-].join(' ')
+const DEPRECATED_REPOINTED = 'deprecated alias of neutral1 — use $neutral1 / $neutral1Hovered instead.'
 
 /** Legacy-only deprecated palette (9 tokens, 8 frontier occurrences total). */
 const DEPRECATED_PALETTE =
   'deprecated legacy palette entry; convert the call site to a design-approved token or a literal.'
 
 /**
- * Per-network colours (27 tokens, 1 frontier occurrence total): network
+ * Per-network colours (26 tokens, 1 frontier occurrence total): network
  * badges resolve chain colours through hooks, not compat style props, so the
  * family is cold by measurement — the one `$chain_137` call site converts to
  * a literal or a `network-*` utility.
@@ -95,7 +90,6 @@ export const REJECTED_COLOR_TOKENS: Readonly<Record<string, string>> = {
   $chain_59144: PER_NETWORK,
   $chain_7777777: PER_NETWORK,
   $chain_80001: PER_NETWORK,
-  $chain_81457: PER_NETWORK,
   $chain_8453: PER_NETWORK,
   $backgroundFocus: COLD_TAMAGUI_ALIAS,
   $backgroundHover: COLD_TAMAGUI_ALIAS,

@@ -74,8 +74,11 @@ export function getAuctionLaunchThresholdUsd(auction: EnrichedAuction['auction']
   return tokenAmount * currencyPriceUsd
 }
 
-// Percent of the launch threshold met by committed volume, capped at 100. Undefined when no threshold.
-export function getAuctionThresholdPercentMet(auction: EnrichedAuction['auction']): number | undefined {
+// Percent of the launch threshold met, capped at 100, or 'notMet' for a failed auction. Undefined when no threshold.
+// The served graduation verdict wins when set, the same rule as `isAuctionFailed` (no phase check needed here: the
+// verdict is only served once the auction has ended). The contract compares FILLED volume, which committed volume can
+// overstate (or the indexer can under-count), so committed volume only stands in until the verdict exists.
+export function getAuctionThresholdMet(auction: EnrichedAuction['auction']): number | 'notMet' | undefined {
   const requiredRaw = auction?.requiredCurrencyRaised
   const totalRaw = auction?.totalBidVolume
   if (!requiredRaw) {
@@ -84,6 +87,9 @@ export function getAuctionThresholdPercentMet(auction: EnrichedAuction['auction'
   const required = Number(requiredRaw)
   if (!Number.isFinite(required) || required <= 0) {
     return undefined
+  }
+  if (auction.isGraduated !== undefined) {
+    return auction.isGraduated ? 100 : 'notMet'
   }
   const total = totalRaw ? Number(totalRaw) : 0
   if (!Number.isFinite(total)) {

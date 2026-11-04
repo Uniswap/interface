@@ -1,7 +1,7 @@
 import { ElementAfterText } from '@universe/mycelium'
+import { Unitag } from '@universe/mycelium/icons/Unitag'
 import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Unitag } from 'ui/src/components/icons/Unitag'
 import { TransactionSummaryLayout } from 'uniswap/src/components/activity/summaries/TransactionSummaryLayout'
 import { SummaryItemProps } from 'uniswap/src/components/activity/types'
 import { TXN_HISTORY_ICON_SIZE } from 'uniswap/src/components/activity/utils'

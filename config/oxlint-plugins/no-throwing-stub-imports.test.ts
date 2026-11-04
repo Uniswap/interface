@@ -200,7 +200,7 @@ export { MenuContentCompat, PopoverCompat }
     expect(lintFixture({ source, platform: 'both' })).toHaveLength(0)
   })
 
-  test('stays silent on generated icons but still fires on web-only holdouts in native-reachable code (real manifest)', () => {
+  test('stays silent on generated and hand-written icons in native-reachable code (real manifest)', () => {
     // INFRA-3508 shipped a real native leg for the generated icon factory
     // (createIcon.native.tsx + svg-elements.native.ts), so generated icons —
     // barrel or per-icon wildcard subpath — resolve a real native
@@ -212,17 +212,14 @@ export { AlertCircle, AlertTriangle }
 `
     expect(lintFixture({ source: generated, platform: 'native' })).toHaveLength(0)
 
-    // The four hand-written web-only holdout icons (INFRA-3285) still have no
-    // native leg — scoped per-export via the manifest's namedExports — so they
-    // must still fire, whether imported from the barrel or a per-icon subpath.
-    const webOnly = `
+    // The hand-written icons that were web-only holdouts (INFRA-3285) now have
+    // native legs too, whether imported from the barrel or a per-icon subpath.
+    const handWritten = `
 import { Unitag } from '@universe/mycelium/icons'
 import { BackArrow } from '@universe/mycelium/icons/BackArrow'
 export { Unitag, BackArrow }
 `
-    const diagnostics = lintFixture({ source: webOnly, platform: 'native' })
-    expect(diagnostics).toHaveLength(2)
-    expect(diagnostics[0]?.message).toContain('no native implementation')
+    expect(lintFixture({ source: handWritten, platform: 'native' })).toHaveLength(0)
   })
 
   test('stays silent on the root-barrel Unicon named import in native-reachable code (real manifest — the INFRA-3516 react-native-svg leg landed)', () => {
@@ -367,16 +364,16 @@ export type { FloatingOverlayRootProps }
   // zero diagnostics even though Unicon's native leg throws).
   test('fires on a namespace import that reaches a throwing named export (real manifest)', () => {
     // Unicon (the incident example above) gained a real native leg with
-    // INFRA-3516; the icons entry's web-only holdouts are the remaining
-    // real-manifest named exports with a missing native leg.
+    // INFRA-3516; popover-compat's native-deferred exports are the remaining
+    // real-manifest named exports whose native leg throws.
     const diagnostics = lintFixture({
-      source: `import * as Icons from '@universe/mycelium/icons'\nexport const C = Icons.BackArrow`,
+      source: `import * as Popover from '@universe/mycelium/popover-compat'\nexport const C = Popover.PopoverCompat`,
       platform: 'native',
     })
     // Namespace imports are checked conservatively against every namedExport
-    // of the entry, so all four web-only holdouts fire.
-    expect(diagnostics).toHaveLength(4)
-    expect(diagnostics.some((diagnostic) => diagnostic.message.includes("'BackArrow'"))).toBe(true)
+    // of the entry, so all five native-deferred exports fire.
+    expect(diagnostics).toHaveLength(5)
+    expect(diagnostics.some((diagnostic) => diagnostic.message.includes("'PopoverCompat'"))).toBe(true)
   })
 
   test('stays silent on a namespace import when no named export on that entry throws (real manifest)', () => {

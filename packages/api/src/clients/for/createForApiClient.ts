@@ -18,10 +18,10 @@ import {
   WidgetUrlRequest,
   WidgetUrlResponse,
 } from '@uniswap/client-for/dist/for/v1/api_pb'
-import { FetchClient } from '@universe/api/src/clients/base/types'
-import { createFetcher } from '@universe/api/src/clients/base/utils'
-import { FORQuoteResponse } from '@universe/api/src/clients/for/types'
-import { transformPaymentMethods } from '@universe/api/src/clients/for/utils'
+import { FetchClient } from '../base/types'
+import { createFetcher } from '../base/utils'
+import { FORQuoteResponse } from './types'
+import { transformPaymentMethods } from './utils'
 
 type ForApiClientContext = {
   fetchClient: FetchClient

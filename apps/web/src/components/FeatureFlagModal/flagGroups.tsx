@@ -56,15 +56,16 @@ export function buildFlagGroups(extras: {
 }): FlagGroupDef[] {
   const groups: FlagGroupDef[] = [
     {
-      name: 'Sessions',
+      name: 'New Chains',
       flags: [
-        { flag: FeatureFlags.HashcashSolverEnabled, label: 'Enable Hashcash Solver' },
-        { flag: FeatureFlags.TurnstileSolverEnabled, label: 'Enable Turnstile Solver' },
+        { flag: FeatureFlags.Arc, label: 'Enable Arc' },
+        { flag: FeatureFlags.Ink, label: 'Enable Ink' },
+        { flag: FeatureFlags.Linea, label: 'Enable Linea' },
+        { flag: FeatureFlags.MegaETH, label: 'Enable MegaETH' },
+        { flag: FeatureFlags.Robinhood, label: 'Enable Robinhood' },
+        { flag: FeatureFlags.Tempo, label: 'Enable Tempo' },
+        { flag: FeatureFlags.XLayer, label: 'Enable XLayer UX' },
       ],
-    },
-    {
-      name: 'XLayer',
-      flags: [{ flag: FeatureFlags.XLayer, label: 'Enable XLayer UX' }],
     },
     {
       name: 'Swap Features',
@@ -72,6 +73,7 @@ export function buildFlagGroups(extras: {
         { flag: FeatureFlags.Margin, label: 'Enable Margin trading tab' },
         { flag: FeatureFlags.NoUniswapInterfaceFees, label: 'Turn off Uniswap interface fees' },
         { flag: FeatureFlags.ChainedActions, label: 'Enable Chained Actions' },
+        { flag: FeatureFlags.RelayBridgeAggregator, label: 'Let Relay compete for bridges' },
         { flag: FeatureFlags.BatchedSwaps, label: 'Enable Batched Swaps' },
         { flag: FeatureFlags.GasFeeOverrides, label: 'Enable Custom Gas Fee Overrides' },
         { flag: FeatureFlags.UniquoteEnabled, label: 'Enable Uniquote' },
@@ -95,27 +97,36 @@ export function buildFlagGroups(extras: {
           flag: FeatureFlags.AllowUniswapXOnlyRoutesInSwapSettings,
           label: 'Allow UniswapX-Only Routes in Swap Settings (for local testing only)',
         },
+        { flag: FeatureFlags.UniswapX, label: 'Enable UniswapX' },
       ],
     },
     {
-      name: 'UniswapX',
-      flags: [{ flag: FeatureFlags.UniswapX, label: 'Enable UniswapX' }],
+      name: 'Consumer Engagement',
+      flags: [
+        { flag: FeatureFlags.PortfolioPoolsBalances, label: 'Enable Portfolio Pools Balances' },
+        { flag: FeatureFlags.TokenCategories, label: 'Enable Token Categories' },
+        { flag: FeatureFlags.PoolCategories, label: 'Enable Pool Categories' },
+        { flag: FeatureFlags.HooksExplore, label: 'Enable Hooks Explore UX' },
+        { flag: FeatureFlags.NewUserUx, label: 'Enable New User UX' },
+        { flag: FeatureFlags.TokenProvenance, label: 'Enable Token Provenance' },
+        { flag: FeatureFlags.AuctionSearch, label: 'Enable Auction Search' },
+        { flag: FeatureFlags.SelfReportSpamNFTs, label: 'Report spam NFTs' },
+        { flag: FeatureFlags.PortfolioDefiTab, label: 'Enable Portfolio DeFi Tab' },
+      ],
     },
     {
       name: 'LP',
       flags: [
         { flag: FeatureFlags.PdpRevamp, label: 'Enable PDP revamp' },
         { flag: FeatureFlags.LiquidityBatchedTransactions, label: 'Enable Batched Transactions for LP flow' },
-      ],
-    },
-    {
-      name: 'Toucan',
-      flags: [
         {
           flag: FeatureFlags.ToucanTickDetailsTooltip,
           label: 'Show Remaining (currency required) on chart-bar tooltip',
         },
-        { flag: FeatureFlags.AuctionSearch, label: 'Enable Auction Search' },
+        {
+          flag: FeatureFlags.DisableToucanBatchedBids,
+          label: 'Disable batched bids (approvals and bid in one wallet prompt)',
+        },
       ],
     },
     {
@@ -154,16 +165,15 @@ export function buildFlagGroups(extras: {
       ],
     },
     {
-      name: 'Chains',
+      name: 'Sessions',
       flags: [
-        { flag: FeatureFlags.Arc, label: 'Enable Arc' },
-        { flag: FeatureFlags.DisableBlast, label: 'Disable Blast' },
-        { flag: FeatureFlags.Ink, label: 'Enable Ink' },
-        { flag: FeatureFlags.Linea, label: 'Enable Linea' },
-        { flag: FeatureFlags.MegaETH, label: 'Enable MegaETH' },
-        { flag: FeatureFlags.Robinhood, label: 'Enable Robinhood' },
-        { flag: FeatureFlags.Tempo, label: 'Enable Tempo' },
+        { flag: FeatureFlags.HashcashSolverEnabled, label: 'Enable Hashcash Solver' },
+        { flag: FeatureFlags.TurnstileSolverEnabled, label: 'Enable Turnstile Solver' },
       ],
+    },
+    {
+      name: 'Misc',
+      flags: [{ flag: FeatureFlags.UnificationCopy, label: 'Enable Unification Copy' }],
     },
     {
       name: 'Network Requests',
@@ -189,29 +199,11 @@ export function buildFlagGroups(extras: {
       ],
     },
     {
-      name: 'Portfolio',
-      flags: [
-        { flag: FeatureFlags.PortfolioDefiTab, label: 'Enable Portfolio DeFi Tab' },
-        { flag: FeatureFlags.PortfolioPoolsBalances, label: 'Enable Portfolio Pools Balances' },
-        { flag: FeatureFlags.SelfReportSpamNFTs, label: 'Report spam NFTs' },
-      ],
-    },
-    {
-      name: 'Categories',
-      flags: [
-        { flag: FeatureFlags.TokenCategories, label: 'Enable Token Categories' },
-        { flag: FeatureFlags.PoolCategories, label: 'Enable Pool Categories' },
-      ],
-    },
-    {
-      name: 'Misc',
-      flags: [{ flag: FeatureFlags.UnificationCopy, label: 'Enable Unification Copy' }],
-    },
-    {
-      name: 'RWA',
+      name: 'Compliance / Geo',
       flags: [
         { flag: FeatureFlags.PermissionedPositions, label: 'Enable permissioned positions in the positions list' },
       ],
+      extraItems: [{ name: 'Compliance / Geo', node: extras.complianceOverrides }],
     },
     {
       name: 'Experiments',
@@ -234,11 +226,6 @@ export function buildFlagGroups(extras: {
         searchText: LayerProperties[layerName].join(' '),
         node: extras.layerOption(layerName),
       })),
-    },
-    {
-      name: 'Compliance / Geo',
-      flags: [],
-      extraItems: [{ name: 'Compliance / Geo', node: extras.complianceOverrides }],
     },
   ]
 

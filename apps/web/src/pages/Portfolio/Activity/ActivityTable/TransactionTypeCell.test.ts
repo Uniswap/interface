@@ -1,9 +1,9 @@
 // These must stay the same modules TransactionTypeCell imports — the assertions below compare
 // icon component identity, so swapping only one side would fail.
-import { ArrowDownToLine } from 'ui/src/components/icons/ArrowDownToLine'
-import { ArrowUpToLine } from 'ui/src/components/icons/ArrowUpToLine'
-import { Receipt } from 'ui/src/components/icons/Receipt'
-import { SendAction } from 'ui/src/components/icons/SendAction'
+import { ArrowDownToLine } from '@universe/mycelium/icons/ArrowDownToLine'
+import { ArrowUpToLine } from '@universe/mycelium/icons/ArrowUpToLine'
+import { Receipt } from '@universe/mycelium/icons/Receipt'
+import { SendAction } from '@universe/mycelium/icons/SendAction'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import {
   getTransactionTypeCellIconProps,

@@ -6,7 +6,7 @@ import type { TouchableAreaCompatProps } from './props'
 /**
  * The `AnimatedTouchableArea` compat prop contract: the compat TouchableArea
  * surface with the Reanimated channels the legacy `withAnimated(TouchableArea)`
- * wrapper carried (`ui/src/components/factories/animated.tsx` `AnimateProps`,
+ * wrapper carried (its `AnimateProps`,
  * plus the legacy export's own `style` widening —
  * `components/touchable/TouchableArea/TouchableArea.tsx:427`). On web the
  * Reanimated props are accepted for cross-platform call sites and ignored.

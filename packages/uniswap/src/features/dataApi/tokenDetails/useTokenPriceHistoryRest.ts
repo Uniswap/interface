@@ -9,6 +9,7 @@ import { useMemo } from 'react'
 import { getGetTokenHistoryPriceQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/tokens/queries'
 import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import { currencyIdToRestContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
+import { isRefreshingAgedPrice } from 'uniswap/src/features/prices/isRefreshingAgedPrice'
 import type { CurrencyId } from 'uniswap/src/types/currency'
 import { isQueryLoading } from 'utilities/src/reactQuery/isQueryLoading'
 
@@ -87,5 +88,6 @@ export function useTokenPriceHistoryRest(
     }),
   )
 
-  return { entries: query.data ?? [], isLoading: isQueryLoading(query), error: query.error }
+  const isAged = isRefreshingAgedPrice(query)
+  return { entries: isAged ? [] : (query.data ?? []), isLoading: isAged || isQueryLoading(query), error: query.error }
 }

@@ -1,5 +1,5 @@
 import { SharedEventName } from '@uniswap/analytics-events'
-import { AcceptNewQuoteRow as AcceptNewQuoteRowView } from '@universe/swap-ui'
+import { AcceptNewQuoteRow as AcceptNewQuoteRowView } from '@universe/transactions-ui'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'

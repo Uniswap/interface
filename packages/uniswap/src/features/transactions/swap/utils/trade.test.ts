@@ -11,6 +11,7 @@ import {
   type ClassicTrade,
   type Trade,
 } from 'uniswap/src/features/transactions/swap/types/trade'
+import { ACROSS_DAPP_INFO, RELAY_DAPP_INFO } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
   getProtocolVersionFromTrade,
   getRateToDisplay,
@@ -68,7 +69,11 @@ const createClassicTrade = ({
   return trade
 }
 
-function createBridgeTestTrade(inputAmount: string, outputAmount: string): BridgeTrade {
+function createBridgeTestTrade(
+  inputAmount: string,
+  outputAmount: string,
+  provider?: TradingApi.BridgeProvider,
+): BridgeTrade {
   const trade = createBridgeTrade({
     quote: {
       quote: {
@@ -80,6 +85,7 @@ function createBridgeTestTrade(inputAmount: string, outputAmount: string): Bridg
           amount: outputAmount,
           minimumAmount: outputAmount,
         },
+        provider,
       },
       requestId: '123',
       routing: TradingApi.Routing.BRIDGE,
@@ -296,6 +302,24 @@ describe(tradeToTransactionInfo, () => {
 
     expect(typeInfo.isSponsored).toBe(false)
     expect(typeInfo.sponsorshipCampaignId).toBeUndefined()
+  })
+
+  it.each([
+    {
+      provider: TradingApi.BridgeProvider.RELAY,
+      routingDappInfo: RELAY_DAPP_INFO,
+      bridgeProvider: TradingApi.BridgeProvider.RELAY,
+    },
+    {
+      provider: TradingApi.BridgeProvider.ACROSS,
+      routingDappInfo: ACROSS_DAPP_INFO,
+      bridgeProvider: TradingApi.BridgeProvider.ACROSS,
+    },
+    { provider: undefined, routingDappInfo: ACROSS_DAPP_INFO, bridgeProvider: TradingApi.BridgeProvider.ACROSS },
+  ])('names the bridge vendor from the quote (provider $provider)', ({ provider, routingDappInfo, bridgeProvider }) => {
+    const typeInfo = tradeToTransactionInfo({ trade: createBridgeTestTrade('1000', '990', provider) })
+
+    expect(typeInfo).toMatchObject({ type: TransactionType.Bridge, routingDappInfo, bridgeProvider })
   })
 
   it('leaves sponsorship undefined when execution sponsorship is unknown', () => {

@@ -7,6 +7,8 @@ export const paths = [
   '/explore',
   '/explore',
   '/explore/category/:categorySlug',
+  '/pools/category/:categorySlug',
+  '/explore/hooks',
   '/explore/tokens/:chainName/:tokenAddress',
   '/tokens',
   '/tokens/:chainName',

@@ -8,9 +8,8 @@
  *
  * Test files alias the real modules via
  * `vi.mock('react-native', () => import('./testing/native-mocks'))` etc.
- * The full-fidelity native rendering harness lives in
- * `packages/tailwind/src/parity/core/native` — this is only for the
- * export-parity and structural assertions that run inside mycelium.
+ * It only supports export-parity and structural assertions, not native
+ * rendering fidelity.
  */
 import { createElement, forwardRef, type ComponentType, type ReactNode } from 'react'
 

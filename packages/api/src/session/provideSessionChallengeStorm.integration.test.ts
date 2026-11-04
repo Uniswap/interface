@@ -17,9 +17,6 @@
  * RPCs) are CONSTANT in the number of gated quote polls — O(1), not O(M).
  */
 import { QueryObserver } from '@tanstack/react-query'
-import { SharedQueryClient } from '@universe/api/src/clients/base/SharedQueryClient'
-import { createTradingApiFetchClient } from '@universe/api/src/clients/trading/createTradingApiFetchClient'
-import { __resetSessionForTests, bootstrapSession, tryProvideSession } from '@universe/api/src/session/provideSession'
 import type { ChallengeSolver, SessionInitializationService, SessionService } from '@universe/sessions'
 import {
   ChallengeType,
@@ -36,6 +33,9 @@ import {
   sessionInitQuery,
 } from '@universe/sessions'
 import { afterEach, describe, expect, it, vi } from 'vitest'
+import { SharedQueryClient } from '../clients/base/SharedQueryClient'
+import { createTradingApiFetchClient } from '../clients/trading/createTradingApiFetchClient'
+import { __resetSessionForTests, bootstrapSession, tryProvideSession } from './provideSession'
 
 /** A session whose every establishment fails; counts real init cycles + challenges. */
 function buildStuckSessionServices(): {

@@ -4,7 +4,7 @@ import {
   useTokenDetailsVaultShareData as useSharedTokenDetailsVaultShareData,
 } from 'uniswap/src/features/earn/hooks/useTokenDetailsVaultShareData'
 import { currencyId } from 'uniswap/src/utils/currencyId'
-import { useActiveAddress } from '~/features/accounts/store/hooks'
+import { useActiveAddress } from '~/connection/accounts/hooks'
 import { useTDPMultichainTokensForEarn } from '~/pages/TokenDetails/components/earn/useTDPMultichainTokensForEarn'
 import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
 

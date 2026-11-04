@@ -183,7 +183,7 @@ describe('ButtonCompat — disabled cursor', () => {
 })
 
 // INFRA-3283: the dimension slice (minWidth / minHeight / maxWidth / maxHeight).
-// Legacy Tamagui Button accepts these as style props — DialogButtons.tsx keys
+// Legacy Button accepts these as style props — DialogButtons.tsx keys
 // every Dialog's action row on `minHeight="$spacing36"`. Token values resolve
 // through the shared SPACE_TOKEN_PX map (never a near-neighbour) and land in
 // the generated compat safelist; values OUTSIDE the closed set ride the
@@ -496,7 +496,7 @@ describe('ButtonCompat — link form tag="a" + href (INFRA-3478)', () => {
   })
 })
 
-// INFRA-3472: `gap` / `p` / `padding`. Legacy Tamagui Button accepts them as
+// INFRA-3472: `gap` / `p` / `padding`. Legacy Button accepts them as
 // style props — InfoRowActionButton.tsx keys its text-only action on
 // `gap="$spacing6"` / `p={0}` (the INFRA-3112 hold). They ride the same
 // deterministic-emission lane as the dimension props; the caller's class lands
@@ -607,7 +607,7 @@ describe('ButtonCompat — gap/p/padding (INFRA-3472)', () => {
   })
 })
 
-// INFRA-3240: the responsive media props. Legacy Tamagui Button accepts
+// INFRA-3240: the responsive media props. Legacy Button accepts
 // `$sm`/`$md`/… like any styled component — TokenDetailsEarnBanner.tsx keys its
 // CTA on `$sm={{ width: '100%' }}` (full-width on mobile). The pools ride the
 // dimension lane's emission, where the shared engine (../compat/compose) walks
@@ -724,7 +724,34 @@ describe('ButtonCompat — responsive media props (INFRA-3240)', () => {
   })
 })
 
-// INFRA-3603: `flex` / `flexBasis`. Legacy Tamagui Button accepts them as style
+describe('ButtonCompat — single-line label', () => {
+  const ELLIPSIS = ['max-w-full', 'overflow-hidden', 'text-ellipsis', 'whitespace-nowrap']
+
+  it('ellipsizes a string label and an explicit Button.Text, like legacy numberOfLines={1}', () => {
+    for (const element of [
+      <ButtonCompat key="string">Swap</ButtonCompat>,
+      <ButtonCompat key="text">
+        <ButtonCompat.Text>Swap</ButtonCompat.Text>
+      </ButtonCompat>,
+    ]) {
+      const { container } = render(element)
+      const label = container.querySelector('span')
+      expect(Array.from(label?.classList ?? [])).toEqual(expect.arrayContaining(ELLIPSIS))
+      cleanup()
+    }
+  })
+
+  it('lets a caller whiteSpace beat the nowrap default', () => {
+    const { container } = render(
+      <ButtonCompat>
+        <ButtonCompat.Text whiteSpace="normal">Swap</ButtonCompat.Text>
+      </ButtonCompat>,
+    )
+    expect(container.querySelector('span')?.classList.contains('whitespace-nowrap')).toBe(false)
+  })
+})
+
+// INFRA-3603: `flex` / `flexBasis`. Legacy Button accepts them as style
 // props — DappRequestContent.tsx keys its footer buttons on `flexBasis={1}` and
 // QueuedOrderModal spreads `{ flex: 1, flexBasis: 1 }` (web only). They ride the
 // same INFRA-3283 dimension-emission lane; `flex` mirrors the shared flexbox
@@ -778,6 +805,20 @@ describe('ButtonCompat — flex/flexBasis (INFRA-3603)', () => {
     expect(classes).not.toContain('basis-0')
   })
 
+  it('compiles a lone flexGrow and overflow to in-set utilities (the wallet action row / pending-swap fill shapes)', () => {
+    const markup = renderToStaticMarkup(
+      <ButtonCompat flexGrow={1} overflow="hidden">
+        Swap
+      </ButtonCompat>,
+    )
+    const classes = frameClassesOf(markup)
+    expect(classes).toContain('grow-[1]')
+    expect(classes).toContain('overflow-hidden')
+    expect(classes).not.toContain('shrink')
+    expect(markup).not.toContain('flexgrow')
+    expect(markup).not.toContain('overflow="')
+  })
+
   it('does not leak the props onto the DOM element', () => {
     const markup = renderToStaticMarkup(
       <ButtonCompat flex={1} flexBasis={1}>
@@ -798,7 +839,7 @@ describe('ButtonCompat — flex/flexBasis (INFRA-3603)', () => {
 })
 
 // INFRA-3541 gap 2: `borderRadius` / `alignSelf` / top-level `$platform-web`.
-// Legacy Tamagui Button accepts them like any styled component —
+// Legacy Button accepts them like any styled component —
 // TopVerifiedAuctionsDiscoverySection.tsx keys its see-all link CTA on
 // `borderRadius="$roundedFull"` / `alignSelf="flex-start"` /
 // `$platform-web={{ textDecoration: 'none' }}` on top of the INFRA-3478
@@ -1079,6 +1120,19 @@ describe('ButtonCompat.Text — styled legacy surface (INFRA-3550)', () => {
     expect(classes).toContain('whitespace-nowrap')
   })
 
+  it('a caller fontSize keeps the size line-height, like legacy CustomButtonText', () => {
+    const markup = renderToStaticMarkup(
+      <ButtonCompat size="small">
+        <ButtonCompat.Text fontSize={20}>Label</ButtonCompat.Text>
+      </ButtonCompat>,
+    )
+    const classes = textClassesOf(markup)
+    expect(classes).toContain('text-[length:var(--c-text)]')
+    expect(markup).toContain('--c-text:20px')
+    expect(classes).not.toContain('text-[14px]')
+    expect(classes).toContain('[line-height:16.1px]')
+  })
+
   it('animation is accepted and inert, like the shared compat surface', () => {
     const withAnimation = renderToStaticMarkup(
       <ButtonCompat>
@@ -1107,8 +1161,7 @@ describe('ButtonCompat.Text — styled legacy surface (INFRA-3550)', () => {
   })
 
   it('an unstyled Button.Text renders the exact span the pinned string-children path renders', () => {
-    // The digest in web-class-pin.test.tsx covers the string-children path;
-    // this pins the explicit-subcomponent span to the same bytes. Only the
+    // Pins the explicit-subcomponent span to the string-children path's bytes. Only the
     // span: the frame legitimately differs (string children default the
     // Datadog action name, an element child cannot).
     const spanOf = (markup: string): string => /<span[^>]*>.*<\/span>/.exec(markup)?.[0] ?? ''
@@ -1124,7 +1177,7 @@ describe('ButtonCompat.Text — styled legacy surface (INFRA-3550)', () => {
 })
 
 // INFRA-3661: the margin family (m/mx/my/mt/mb/ml/mr + the margin* longhand
-// spellings). Legacy Tamagui Button accepts them as style props — PR #40010's
+// spellings). Legacy Button accepts them as style props — PR #40010's
 // ConfirmLimitOrderModal/Error.tsx retry button needed `mt="$spacing8"` and had
 // to work around the gap with a wrapper Flex. They ride the same INFRA-3283
 // dimension-emission lane on the shared SpaceValue contract; the frame styles
@@ -1379,9 +1432,7 @@ describe('ButtonCompat — borderColor', () => {
 // CSS) and must not force the contrast fallback `text-white` onto the label.
 describe('ButtonCompat — backgroundColor theme token', () => {
   // Composed at runtime so the twin never sits LITERALLY in the scanned
-  // mycelium tree: the native parity harness models scanner visibility off
-  // these sources (leg-parity.ts isScannerVisible), and a literal here would
-  // overstate real Metro coverage — production scans exclude test files.
+  // mycelium tree, where it would compile into the native stylesheet.
   const stextTwin = (token: string): string => `[color:var(--stext-${token})]`
 
   const labelClassesOf = (markup: string): string[] => {

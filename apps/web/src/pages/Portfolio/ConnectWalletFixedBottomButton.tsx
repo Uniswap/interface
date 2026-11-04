@@ -1,14 +1,14 @@
 import { Button, Flex, Text, useIsDarkMode, useSporeColors } from '@universe/mycelium'
 import { styled } from '@universe/mycelium/styled'
+import { opacify } from '@universe/mycelium/theme-hooks-compat'
 import { SPORE_ANIMATION_CURVE_CSS } from '@universe/tailwind/animations'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { opacify } from 'ui/src/theme'
 import { ElementName, InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { useScrollCompact } from '~/hooks/useScrollCompact'
 import { CONNECT_WALLET_FIXED_BOTTOM_SECTION_HEIGHT } from '~/pages/Portfolio/constants'
+import { useAccountDrawer } from '~/state/accountDrawer/hooks'
 import { MWEB_BOTTOM_INSET } from '~/utils/mwebBottomInset'
 
 function useBackgroundGradient() {

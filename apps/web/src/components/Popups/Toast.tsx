@@ -1,8 +1,8 @@
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
+import { X } from '@universe/mycelium/icons/X'
 import { useShadowPropsMedium } from '@universe/mycelium/theme-hooks-compat'
 import * as React from 'react'
-import { X } from 'ui/src/components/icons/X'
-import { POPUP_MAX_WIDTH } from '~/components/Popups/constants'
+import { POPUP_MAX_WIDTH } from '~/utils/popups/constants'
 
 type ToastProps = {
   children: React.ReactNode

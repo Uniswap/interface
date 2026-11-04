@@ -13,7 +13,7 @@
 import type { JSX } from 'react'
 import { act, create, type ReactTestRenderer } from 'react-test-renderer'
 import { describe, expect, it, vi } from 'vitest'
-import { LIGHT_THEME_COLORS } from '../theme-hooks-compat/theme-colors.generated'
+import { LIGHT_THEME_COLORS } from '../theme-hooks-compat/theme-colors'
 import { NATIVE_ICON_SIZE_PX } from './compile'
 
 /** What `useContentColor` resolves for the button's colour class under this mock. */

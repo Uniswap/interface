@@ -1,6 +1,6 @@
 import { Platform } from '@universe/chains'
 import { useMemo } from 'react'
-import { useActiveAddresses } from '~/features/accounts/store/hooks'
+import { useActiveAddresses } from '~/connection/accounts/hooks'
 import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
 
 /**

@@ -1,4 +1,4 @@
-import { colorsLight } from 'ui/src/theme'
+import { colorsLight } from '@universe/mycelium/theme-palette'
 import { MIN_COLOR_CONTRAST_THRESHOLD } from 'ui/src/utils/colors/constants'
 import { hex } from 'wcag-contrast'
 

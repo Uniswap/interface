@@ -1,3 +1,4 @@
+import type { UniverseChainId } from '@universe/chains'
 import type { FeeData as CreatePositionFeeData, PositionRewardApr } from 'uniswap/src/features/positions/types'
 
 /** Explore URL tab segments — shared routing / URL surface (not feature-local). */
@@ -12,7 +13,7 @@ type PricePoint = { timestamp: number; value: number }
 
 // The shapes below were once derived from the v1 ExploreStats protobuf messages. That client is
 // gone, so they are kept as plain data types with the same field names, which is all the Explore
-// tables and `gqlToCurrency` ever read from them.
+// tables and `tokenStatToCurrency` ever read from them.
 
 export type Amount = {
   currency?: string
@@ -48,7 +49,7 @@ export type LegacyExploreStatChainToken = {
 
 /** Data-only shape for token stats (display/API). Plain type so plain objects satisfy it without cast. */
 export type TokenStat = {
-  chain: string
+  chainId: UniverseChainId
   address: string
   name?: string
   symbol?: string
@@ -62,7 +63,7 @@ export type TokenStat = {
   pricePercentChange1Year?: Amount
   decimals?: number
   project?: TokenStatProject
-  standard?: string
+  isNative?: boolean
   priceHistoryHour?: PriceHistory
   priceHistoryDay?: PriceHistory
   priceHistoryWeek?: PriceHistory
@@ -77,7 +78,7 @@ export type TokenStat = {
 
 type PoolStatBase = {
   id: string
-  chain: string
+  chainId: UniverseChainId
   totalLiquidity?: Amount
   txCount?: number
   volume1Day?: Amount
@@ -106,4 +107,6 @@ export interface PoolStat extends PoolStatBase {
   feeTier?: CreatePositionFeeData
   /** Backend-served per-pool protocol fee (integer pips); shared with the fee-display column. */
   protocolFeePips?: number
+  /** BE-ranked pool category ids; the first resolvable one is the row tag. */
+  categoryIds?: string[]
 }

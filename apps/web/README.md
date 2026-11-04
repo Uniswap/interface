@@ -9,7 +9,7 @@ or visit [app.uniswap.org](https://app.uniswap.org).
 ## Tech Stack
 
 - **Build**: Vite with experimental Rolldown support
-- **Deployment**: AWS ECS (Node, `functions/ecs-entry.ts`) behind CloudFront
+- **Deployment**: AWS ECS (Bun, `functions/ecs-entry.ts`) behind CloudFront
 - **Server**: Hono.js for SSR meta tags, OG image generation and BFF proxies (also runs under `bun web dev`)
 
 ## Prerequisites

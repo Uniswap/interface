@@ -1,16 +1,14 @@
 import { UniverseChainId } from '@universe/chains'
-import { Flex, Text, TouchableArea } from '@universe/mycelium'
+import { Flex, Text, TouchableArea, iconSizes } from '@universe/mycelium'
+import { ArrowDownArrowUp } from '@universe/mycelium/icons/ArrowDownArrowUp'
 import { styled } from '@universe/mycelium/styled'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
-import { ArrowDownArrowUp } from 'ui/src/components/icons/ArrowDownArrowUp'
-import { iconSizes } from 'ui/src/theme/iconSizes'
 import { CopyHelper } from 'uniswap/src/components/CopyHelper/CopyHelper'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import type { ParsedToken } from 'uniswap/src/features/dataApi/utils/parsedToken'
 import { HEADER_TRANSITION } from '~/components/StickyCollapsibleHeader/constants'
 import { getHeaderTitleVariant } from '~/components/StickyCollapsibleHeader/getHeaderLogoSize'
@@ -41,7 +39,6 @@ export function PoolDetailsTitle({
   const { t } = useTranslation()
   const media = useMedia()
   const { defaultChainId } = useEnabledChains()
-  const graphQLChain = toGraphQLChain(chainId ?? defaultChainId)
   const titleVariant = getHeaderTitleVariant({ isCompact, media })
   return (
     <Flex row gap="$spacing12" alignItems="center" minWidth={0} shrink>
@@ -49,7 +46,7 @@ export function PoolDetailsTitle({
         <StyledLink
           to={getTokenDetailsURL({
             address: token0?.address,
-            chain: graphQLChain,
+            chainId: chainId ?? defaultChainId,
           })}
         >
           <Text
@@ -65,7 +62,7 @@ export function PoolDetailsTitle({
         <StyledLink
           to={getTokenDetailsURL({
             address: token1?.address,
-            chain: graphQLChain,
+            chainId: chainId ?? defaultChainId,
           })}
         >
           <Text

@@ -23,7 +23,6 @@ import { shortenAddress } from 'utilities/src/addresses'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
-import { POPUP_MEDIUM_DISMISS_MS } from '~/components/Popups/constants'
 import { DetailsHeaderSubtitleMobile } from '~/components/StickyCollapsibleHeader/DetailsHeaderSubtitleMobile'
 import { DetailsHeaderTitle, useMetadataRowHidden } from '~/components/StickyCollapsibleHeader/DetailsHeaderTitle'
 import { DesktopHeaderActions } from '~/components/StickyCollapsibleHeader/HeaderActions/DesktopHeaderActions'
@@ -46,8 +45,9 @@ import { useTDPEffectiveCurrency } from '~/pages/TokenDetails/hooks/useTDPEffect
 import { useTDPLowLiquidityChainIds } from '~/pages/TokenDetails/hooks/useTDPLowLiquidityChainIds'
 import { useTDPPermissionedState } from '~/pages/TokenDetails/hooks/useTDPPermissionedState'
 import { useIsTDPRWAMatchLoading, useTDPRWAMatch } from '~/pages/TokenDetails/hooks/useTDPRWAMatch'
-import { popupRegistry } from '~/state/popups/registry'
-import { PopupType } from '~/state/popups/types'
+import { POPUP_MEDIUM_DISMISS_MS } from '~/utils/popups/constants'
+import { popupRegistry } from '~/utils/popups/registry'
+import { PopupType } from '~/utils/popups/types'
 
 interface TokenDetailsHeaderProps {
   isCompact: boolean

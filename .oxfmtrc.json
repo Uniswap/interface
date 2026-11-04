@@ -58,7 +58,6 @@
     "**/.react-router/**",
     "**/.source/**",
     "**/.storybook/storybook.requires.ts",
-    "packages/api/src/clients/graphql/generated.ts",
     "packages/api/src/clients/trading/api.json",
     "apps/dev-portal/app/lib/deployments/*.json",
     "tools/**/files/**",
@@ -70,7 +69,6 @@
     "**/*.html",
     "**/*.yaml",
     "**/*.yml",
-    "**/*.graphql",
     "**/*.toml",
   ]
 }

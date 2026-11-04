@@ -5,9 +5,9 @@
  * Tamagui Flex pair produced — now emitted as FlexCompat Tailwind classes.
  */
 import { render, type RenderResult } from '@testing-library/react'
+import { colorsDark, colorsLight } from '@universe/mycelium/theme-palette'
 import type { ReactNode } from 'react'
 import { QRCodeDisplay } from 'ui/src/components/QRCode/QRCodeDisplay'
-import { colorsDark, colorsLight } from 'ui/src/theme'
 import { afterEach, describe, expect, it } from 'vitest'
 
 type ThemeName = 'light' | 'dark'
@@ -62,7 +62,7 @@ describe('QRCodeDisplay (web)', () => {
     expect(containerClasses).toContain('flex')
     expect(containerClasses).toContain('items-center')
     expect(containerClasses).toContain('justify-center')
-    // Legacy Tamagui Flex default: without it a height-constrained flex-column
+    // Legacy Flex default: without it a height-constrained flex-column
     // parent shrinks the container below the fixed-size SVG and the overlay
     // drifts off-center.
     expect(containerClasses).toContain('shrink-0')

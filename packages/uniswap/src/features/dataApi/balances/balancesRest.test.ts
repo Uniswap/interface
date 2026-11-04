@@ -188,6 +188,47 @@ describe(formatPortfolioResponseToMap, () => {
 })
 
 describe(convertRestBalanceToPortfolioBalance, () => {
+  it('should return undefined, not throw, for a native balance on a chain the app no longer supports', () => {
+    // Blast (81457) was removed from the app; hardcoded because it is no longer a UniverseChainId.
+    const balance = {
+      token: {
+        chainId: 81457,
+        address: '0x0000000000000000000000000000000000000000',
+        decimals: 18,
+        symbol: 'ETH',
+        name: 'Ether',
+        metadata: {},
+      },
+      amount: { amount: 1, raw: '1000000000000000000' },
+      valueUsd: 3000,
+      pricePercentChange1d: 0,
+      isHidden: false,
+    }
+
+    expect(convertRestBalanceToPortfolioBalance(balance as never, '0xuser')).toBeUndefined()
+  })
+
+  it('should still convert a native balance on a supported chain', () => {
+    const balance = {
+      token: {
+        chainId: 1,
+        address: '0x0000000000000000000000000000000000000000',
+        decimals: 18,
+        symbol: 'ETH',
+        name: 'Ether',
+        metadata: {},
+      },
+      amount: { amount: 1, raw: '1000000000000000000' },
+      valueUsd: 3000,
+      pricePercentChange1d: 0,
+      isHidden: false,
+    }
+
+    const result = convertRestBalanceToPortfolioBalance(balance as never, '0xuser')
+    expect(result?.currencyInfo.currency.isNative).toBe(true)
+    expect(result?.currencyInfo.currency.chainId).toBe(1)
+  })
+
   it('should return undefined when amount.amount is zero', () => {
     const balance = {
       token: { chainId: 1, address: '0x1', decimals: 18, symbol: 'TEST', name: 'Test Token', metadata: {} },

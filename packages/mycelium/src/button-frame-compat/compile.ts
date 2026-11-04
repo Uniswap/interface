@@ -12,8 +12,7 @@
  * This module adds exactly that open lane and nothing else:
  *
  *  - the CLOSED variant surface renders through `../button-compat/compile`'s
- *    class tables verbatim, so the 2,912-cell workbench parity proof (and the
- *    byte-frozen `web-class-pin` surface) carries over unchanged;
+ *    class tables verbatim, so it matches ButtonCompat's frame exactly;
  *  - the OPEN prop surface compiles through the shared deterministic-emission
  *    engine (`../compat/compose` with the Flex style compiler), the same
  *    lane `FlexCompat` renders through — in-set classes verbatim, out-of-set
@@ -101,8 +100,7 @@ export function buttonFrameOpenClassName(props: ButtonFrameOpenProps): string {
 /* ----------------------------- IconButtonFrame ----------------------------- */
 
 /**
- * The `styled(CustomButtonFrame, …)` size delta from
- * `ui/src/components/buttons/IconButton/IconButton.tsx`: an icon button is
+ * The legacy ui IconButton's `styled(CustomButtonFrame, …)` size delta: an icon button is
  * square, so each size collapses the frame's directional padding to one
  * uniform value ($spacing6/8/8/12/16) while keeping the size's radius.
  * Compiled AFTER the frame classes so the padding override wins the merge —

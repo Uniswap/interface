@@ -2,9 +2,10 @@ import { toScreenInput, useIsBlockedAddress } from '@universe/compliance'
 import { WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
 import { useActiveAddress, useActiveWallet } from 'uniswap/src/features/accounts/store/hooks'
 import { SigningCapability } from 'uniswap/src/features/accounts/store/types/Wallet'
-import { useIsShowingWebFORNudge, useIsWebFORNudgeEnabled } from 'uniswap/src/features/providers/webForNudgeProvider'
+import { useIsShowingWebFORNudge } from 'uniswap/src/features/providers/webForNudgeProvider'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { useIsMissingPlatformWallet } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsMissingPlatformWallet'
+import { useIsWebFORNudgeActive } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsWebFORNudgeActive'
 import { useNeedsGeoAcknowledgment } from 'uniswap/src/features/transactions/swap/hooks/useGeoRestrictionAcknowledgment'
 import { useGeoRestrictionMode } from 'uniswap/src/features/transactions/swap/hooks/useGeoRestrictionMode'
 import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/useSwapWarnings'
@@ -58,7 +59,7 @@ export const useIsSwapButtonDisabled = (): boolean => {
   const activeWallet = useActiveWallet(chainId)
   const walletCannotSign = activeWallet?.signingCapability === SigningCapability.None
 
-  const isWebFORNudgeEnabled = useIsWebFORNudgeEnabled()
+  const isWebFORNudgeActive = useIsWebFORNudgeActive()
   const isShowingWebFORNudge = useIsShowingWebFORNudge()
   const needsGeoAcknowledgment = useNeedsGeoAcknowledgment()
   const geoRestrictionMode = useGeoRestrictionMode()
@@ -74,9 +75,9 @@ export const useIsSwapButtonDisabled = (): boolean => {
     return true
   }
 
-  if (isWebFORNudgeEnabled && isShowingWebFORNudge) {
+  if (isWebFORNudgeActive && isShowingWebFORNudge) {
     return true
-  } else if (isWebFORNudgeEnabled && !isShowingWebFORNudge) {
+  } else if (isWebFORNudgeActive && !isShowingWebFORNudge) {
     return false
   }
   return (

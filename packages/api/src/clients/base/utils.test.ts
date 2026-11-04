@@ -1,6 +1,6 @@
-import type { FetchClient } from '@universe/api/src/clients/base/types'
-import { createFetcher } from '@universe/api/src/clients/base/utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import type { FetchClient } from './types'
+import { createFetcher } from './utils'
 
 describe('createFetcher', () => {
   const mockClient: FetchClient = {

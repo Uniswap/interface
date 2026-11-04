@@ -1,6 +1,5 @@
-import { Flex, Text, TouchableArea } from '@universe/mycelium'
-import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
-import { fonts } from 'ui/src/theme'
+import { Flex, Text, TouchableArea, fonts } from '@universe/mycelium'
+import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
 import { AmountInput } from 'uniswap/src/components/AmountInput/AmountInput'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { MARGIN_CHAIN_ID } from '~/constants/margin'

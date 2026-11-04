@@ -8,6 +8,9 @@ import { UniverseChainId } from '@universe/chains'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import {
   dataApiMultichainTokenToSearchResult,
+  getMultichainDeployment,
+  listMultichainDeployments,
+  listSupportedChainAddresses,
   normalizeBackendNativeAddress,
   pickPrimaryDeployment,
 } from 'uniswap/src/data/apiClients/dataApiService/utils/dataApiMultichainToken'
@@ -309,6 +312,76 @@ describe('pickPrimaryDeployment', () => {
       chainId: 1,
       address: '0xEth',
     })
+  })
+})
+
+// Blast was removed from the app but the backend still serves its deployments. Hardcoded because it is
+// no longer a UniverseChainId.
+const REMOVED_CHAIN_ID = 81457
+const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
+
+describe('deployments on chains the app no longer supports', () => {
+  it('listSupportedChainAddresses keeps supported entries and drops the rest', () => {
+    expect(
+      listSupportedChainAddresses({ '1': ZERO_ADDRESS, [REMOVED_CHAIN_ID]: ZERO_ADDRESS, '0': '0xBad', foo: '0xBad' }),
+    ).toEqual([{ chainId: 1, address: ZERO_ADDRESS }])
+  })
+
+  it('listSupportedChainAddresses returns an empty list for an empty map', () => {
+    expect(listSupportedChainAddresses({})).toEqual([])
+  })
+
+  it('pickPrimaryDeployment never returns a removed chain, even when it has the most volume', () => {
+    const addresses = { '1': '0xEth', [REMOVED_CHAIN_ID]: '0xBlast' }
+    const chainStats = [
+      new ChainTokenRankStats({ chainId: 1, stats: new TokenRankStats({ volume1d: 1 }) }),
+      new ChainTokenRankStats({ chainId: REMOVED_CHAIN_ID, stats: new TokenRankStats({ volume1d: 999 }) }),
+    ]
+    expect(pickPrimaryDeployment({ addresses, chainId: undefined, chainStats })).toEqual({
+      chainId: 1,
+      address: '0xEth',
+    })
+  })
+
+  it('pickPrimaryDeployment returns undefined when the only deployment is on a removed chain', () => {
+    expect(pickPrimaryDeployment({ addresses: { [REMOVED_CHAIN_ID]: ZERO_ADDRESS }, chainId: undefined })).toBe(
+      undefined,
+    )
+    expect(
+      pickPrimaryDeployment({ addresses: { [REMOVED_CHAIN_ID]: ZERO_ADDRESS }, chainId: REMOVED_CHAIN_ID }),
+    ).toBeUndefined()
+  })
+
+  it('listMultichainDeployments drops a native placeholder deployment on a removed chain instead of throwing', () => {
+    const { multichainToken } = createRankedMultichainToken({
+      symbol: 'ETH',
+      decimals: 18,
+      addresses: { '1': ZERO_ADDRESS, [REMOVED_CHAIN_ID]: ZERO_ADDRESS },
+    })
+    if (!multichainToken) {
+      throw new Error('fixture has no multichainToken')
+    }
+
+    const deployments = listMultichainDeployments(multichainToken)
+
+    expect(deployments.map((deployment) => deployment.chainId)).toEqual([1])
+    expect(getMultichainDeployment({ multichainToken, chainId: REMOVED_CHAIN_ID })).toBeUndefined()
+    expect(getMultichainDeployment({ multichainToken, chainId: 1 })?.address).toBe(
+      getNativeAddress(UniverseChainId.Mainnet),
+    )
+  })
+
+  it('dataApiMultichainTokenToSearchResult keeps the supported deployments of a token also served on a removed chain', () => {
+    const token = createRankedMultichainToken({
+      symbol: 'ETH',
+      name: 'Ethereum',
+      decimals: 18,
+      addresses: { '1': ZERO_ADDRESS, [REMOVED_CHAIN_ID]: ZERO_ADDRESS },
+    })
+
+    const result = dataApiMultichainTokenToSearchResult(token)
+
+    expect(result?.tokens.map((t) => t.currency.chainId)).toEqual([1])
   })
 })
 

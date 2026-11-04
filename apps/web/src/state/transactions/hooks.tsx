@@ -30,7 +30,7 @@ import { usePrevious } from 'utilities/src/react/hooks'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 /* oxlint-disable typescript/no-unnecessary-condition */
 import type { TransactionResponse } from '~/chains'
-import { useAccount } from '~/hooks/useAccount'
+import { useAccount } from '~/connection/hooks/useAccount'
 import { useAppDispatch, useAppSelector } from '~/state/hooks'
 import { useAddTransaction } from '~/state/transactions/adder'
 import { PendingTransactionDetails } from '~/state/transactions/types'

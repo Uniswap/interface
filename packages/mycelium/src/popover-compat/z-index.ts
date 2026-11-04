@@ -22,7 +22,7 @@
 import { createContext, useContext } from 'react'
 
 /**
- * Mirror of the overlay-relevant subset of `ui/src/theme/zIndexes.ts`.
+ * Mirror of the overlay-relevant subset of `zIndexes` in `../token-constants.ts`.
  * Values must stay in sync until the zIndex scale moves into
  * `@universe/tailwind` tokens; the popover parity suite pins them.
  */

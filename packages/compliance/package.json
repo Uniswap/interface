@@ -5,7 +5,7 @@
     "@bufbuild/protobuf": "1.10.0",
     "@connectrpc/connect": "1.5.0",
     "@tanstack/react-query": "5.90.20",
-    "@uniswap/client-compliancev2": "1.2.4",
+    "@uniswap/client-compliancev2": "1.2.5",
     "@universe/api": "workspace:^",
     "@universe/environment": "workspace:^",
     "react": "19.2.3",
@@ -32,6 +32,20 @@
     "includedScripts": []
   },
   "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./complianceBlock": "./src/complianceBlock.ts",
+    "./src": "./src/index.ts",
+    "./src/*": {
+      "types": [
+        "./src/*.ts",
+        "./src/*.tsx",
+        "./src/*/index.ts",
+        "./src/*"
+      ],
+      "default": "./src/*"
+    }
+  },
   "private": true,
   "sideEffects": false
 }

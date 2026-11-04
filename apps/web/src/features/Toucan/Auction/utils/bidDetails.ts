@@ -1,3 +1,4 @@
+import { formatDotDecimalForLocale, getLocaleNumberSeparators } from 'utilities/src/format/localeNumberSeparators'
 import { toSubscript } from 'utilities/src/format/toSubscript'
 import { formatUnits } from '~/chains'
 import { AuctionBidStatus, AuctionOutcome, UserBid } from '~/features/Toucan/Auction/store/types'
@@ -265,20 +266,23 @@ export function formatTokenAmountWithSubscript({
   raw,
   decimals,
   symbol,
+  locale,
 }: {
   raw: bigint
   decimals: number
   symbol: string
+  locale: string
 }): string {
   const rawString = formatUnits(raw, decimals)
   const trimmed = rawString.includes('.') ? rawString.replace(/\.?0+$/, '') : rawString
+  const plain = `${formatDotDecimalForLocale(trimmed, locale) || '0'} ${symbol}`
   if (!trimmed.includes('.')) {
-    return `${trimmed || '0'} ${symbol}`
+    return plain
   }
 
   const [integerPart, decimalPart] = trimmed.split('.')
   if (integerPart !== '0' || !decimalPart) {
-    return `${trimmed || '0'} ${symbol}`
+    return plain
   }
 
   let leadingZeros = 0
@@ -289,8 +293,8 @@ export function formatTokenAmountWithSubscript({
   if (leadingZeros >= 4 && leadingZeros < decimalPart.length) {
     const significantPart = decimalPart.slice(leadingZeros)
     const clippedSignificantPart = significantPart.slice(0, 3)
-    return `0.0${toSubscript(leadingZeros)}${clippedSignificantPart} ${symbol}`
+    return `0${getLocaleNumberSeparators(locale).decimal}0${toSubscript(leadingZeros)}${clippedSignificantPart} ${symbol}`
   }
 
-  return `${trimmed || '0'} ${symbol}`
+  return plain
 }

@@ -29,12 +29,6 @@ export function createConnectTransportWithDefaults({
   })
 }
 
-/**
- * Connectrpc transports for Uniswap REST BE service
- */
-export const uniswapGetTransport = createConnectTransportWithDefaults({ options: { useHttpGet: true } })
-export const uniswapPostTransport = createConnectTransportWithDefaults({})
-
 // The string arg to pass to the BE for chainId to get data for all networks
 export const ALL_NETWORKS_ARG = 'ALL_NETWORKS'
 

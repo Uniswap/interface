@@ -20,6 +20,7 @@ export enum SectionName {
   PortfolioNftsTab = 'portfolio-nfts-tab',
   PortfolioOverviewTab = 'portfolio-overview-tab',
   PortfolioTokensTab = 'portfolio-tokens-tab',
+  PoolDetails = 'pool-details',
   PortfolioPoolsTab = 'portfolio-pools-tab',
   PortfolioPoolsFeesCard = 'portfolio-pools-fees-card',
   PositionsList = 'positions-list',

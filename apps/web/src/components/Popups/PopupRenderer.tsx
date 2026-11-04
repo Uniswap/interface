@@ -1,10 +1,10 @@
+import { spacing } from '@universe/mycelium'
 import { useEffect } from 'react'
 import { Toaster, toast } from 'sonner'
-import { spacing } from 'ui/src/theme'
 import { PopupItem } from '~/components/Popups/PopupItem'
 import { DEFAULT_TXN_DISMISS_MS } from '~/constants/misc'
-import { popupRegistry } from '~/state/popups/registry'
-import { PopupContent } from '~/state/popups/types'
+import { popupRegistry } from '~/utils/popups/registry'
+import { PopupContent } from '~/utils/popups/types'
 
 export function PopupRenderer() {
   useEffect(() => {

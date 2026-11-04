@@ -1,8 +1,3 @@
-import { isSessionServiceEnabled } from '@universe/api/src/isSessionServiceEnabled'
-import { provideDeviceIdService } from '@universe/api/src/provideDeviceIdService'
-import { provideSessionStorage } from '@universe/api/src/provideSessionStorage'
-import { provideUniswapIdentifierService } from '@universe/api/src/provideUniswapIdentifierService'
-import { getTransport, type Interceptors } from '@universe/api/src/transport'
 import { isE2eTestEnv, isWebApp, REQUEST_SOURCE } from '@universe/environment'
 import {
   createNoopSessionService,
@@ -13,6 +8,11 @@ import {
   type UniswapIdentifierService,
 } from '@universe/sessions'
 import type { Logger } from 'utilities/src/logger/logger'
+import { isSessionServiceEnabled } from './isSessionServiceEnabled'
+import { provideDeviceIdService } from './provideDeviceIdService'
+import { provideSessionStorage } from './provideSessionStorage'
+import { provideUniswapIdentifierService } from './provideUniswapIdentifierService'
+import { getTransport, type Interceptors } from './transport'
 
 function provideSessionService(ctx: {
   getBaseUrl: () => string

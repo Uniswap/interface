@@ -1,29 +1,38 @@
 import type { TFunction } from 'i18next'
 import { LineStyle, type UTCTimestamp } from 'lightweight-charts'
-import { opacify } from 'ui/src/theme'
+import { MARGIN_POSITION_ACTIVITY_WIRE_DECREASED } from 'uniswap/src/data/apiClients/tradingApi/__fixtures__/marginPositionActivityWire'
 import type {
   MarginActivePosition,
   MarginPositionLeg,
   MarginQuoteResponse,
 } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
+import { toMarginPositionActivityView } from 'uniswap/src/data/apiClients/tradingApi/marginPositionsView'
 import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { describe, expect, it } from 'vitest'
 import { MARGIN_CHAIN_ID } from '~/constants/margin'
 import type { MarginMarket } from '~/constants/margin'
+import type { MarginMarketLive } from '~/features/margin/hooks/useMarginMarkets'
+import { isMarkStale } from '~/features/margin/utils/marginFormat'
 import { DEFAULT_MARGIN_CHART_PREFS } from '~/pages/Swap/Margin/chart/marginChartPrefsStore'
 import {
   applyLabelCollision,
   composeMarginChartOverlays,
+  leverageTierColor,
   nearestOverlay,
   positionsForMarket,
+  estimateLiqPrice,
+  readableTextColor,
+  scaleLiqPriceToLeverage,
+  scopeMarginOverlaysToPosition,
+  selectDecreaseFills,
+  showsMarginOpenPreview,
   shouldForceOverlayRebuild,
+  unquotedLeverage,
   snapToCandleTime,
   type ComposeInput,
   type MarginChartColors,
   type MarginOverlayLine,
 } from '~/pages/Swap/Margin/chart/useMarginChartOverlays'
-import type { MarginMarketLive } from '~/pages/Swap/Margin/hooks/useMarginMarkets'
-import { isMarkStale } from '~/pages/Swap/Margin/marginFormat'
 
 const mockT = ((key: string) => key) as TFunction
 const ts = (n: number): UTCTimestamp => n as UTCTimestamp
@@ -35,6 +44,7 @@ const raw = (whole: number, decimals: number): string => (BigInt(whole) * 10n **
 
 const COLORS: MarginChartColors = {
   statusSuccess: '#00ff00',
+  statusWarning: '#ffaa00',
   statusCritical: '#ff0000',
   neutral1: '#111111',
   neutral2: '#222222',
@@ -43,6 +53,7 @@ const COLORS: MarginChartColors = {
   surface1: '#0d0d0d',
   surface3Solid: '#444444',
   white: '#ffffff',
+  black: '#000000',
 }
 
 // Lowercased (vs the market's checksummed) addresses keep positionsForMarket's case-insensitive
@@ -357,9 +368,13 @@ describe('composeMarginChartOverlays', () => {
     expect(withQuote.priceLines.find((l) => l.role === 'previewLiq')).toMatchObject({ price: 1600, priority: 2 })
     expect(withQuote.priceLines.find((l) => l.role === 'previewEntry')).toMatchObject({ price: 2010, priority: 3 })
 
-    // A quote with no liq price (risk block not yet loaded) renders nothing.
-    const noLiq = composeMarginChartOverlays(mkInput({ quote: mkQuote({ display: { liquidationPrice: undefined } }) }))
-    expect(noLiq.priceLines.some(isPreview)).toBe(false)
+    // A quote with no liq price (risk block not yet loaded) keeps its entry and estimates the liq from it
+    // at the form's leverage: 2010·(2/3)/0.86.
+    const noLiq = composeMarginChartOverlays(
+      mkInput({ quote: mkQuote({ display: { liquidationPrice: undefined } }), formLeverage: 3 }),
+    )
+    expect(noLiq.priceLines.find((l) => l.role === 'previewEntry')?.price).toBe(2010)
+    expect(noLiq.priceLines.find((l) => l.role === 'previewLiq')?.price).toBeCloseTo((2010 * (2 / 3)) / 0.86, 6)
 
     const off = composeMarginChartOverlays(
       mkInput({ quote: mkQuote(), prefs: { ...DEFAULT_MARGIN_CHART_PREFS, previewLines: false } }),
@@ -391,19 +406,26 @@ describe('composeMarginChartOverlays', () => {
   it('styles preview lines and wires the distance-annotated liq title', () => {
     const out = composeMarginChartOverlays(mkInput({ quote: mkQuote() }))
 
-    // preview-entry: accent1, dotted, axis tag hidden.
+    // preview-entry: dotted neutral1 stroke, labeled neutral1 axis tag with surface1 text.
     expect(out.priceLines.find((l) => l.role === 'previewEntry')).toMatchObject({
-      color: COLORS.accent1,
+      color: COLORS.neutral1,
       lineStyle: LineStyle.Dotted,
-      axisLabelVisible: false,
+      lineWidth: 1,
+      axisLabelColor: COLORS.neutral1,
+      axisLabelTextColor: COLORS.surface1,
+      axisLabelVisible: true,
       title: 'margin.chart.line.previewEntry',
     })
 
-    // preview-liq: statusCritical at 60% alpha, dotted, axis tag hidden.
+    // preview-liq: solid, labeled tag in the line's color; with no leverage known it falls back to
+    // statusCritical, and the tag text takes whichever of black/white contrasts more with it.
     expect(out.priceLines.find((l) => l.role === 'previewLiq')).toMatchObject({
-      color: opacify(60, COLORS.statusCritical),
-      lineStyle: LineStyle.Dotted,
-      axisLabelVisible: false,
+      color: COLORS.statusCritical,
+      lineStyle: LineStyle.Solid,
+      lineWidth: 1,
+      axisLabelColor: COLORS.statusCritical,
+      axisLabelTextColor: readableTextColor({ background: COLORS.statusCritical, colors: COLORS }),
+      axisLabelVisible: true,
       title: 'margin.chart.line.previewLiq',
     })
 
@@ -736,21 +758,20 @@ describe('composeMarginChartOverlays', () => {
     expect(out.markers).toEqual([])
   })
 
-  it('emits decrease markers at exit price, skipping decreases missing exitPrice', () => {
-    const withDecreases = mkPos({
-      decreases: [
-        { debtRepaid: raw(500, 6), collateralSold: raw(1, 17), exitPrice: X18(1900), timestamp: '250', txHash: '0xd1' },
-        // collateralSold 0 → exitPrice absent → skipped.
-        { debtRepaid: raw(100, 6), collateralSold: '0', timestamp: '350', txHash: '0xd2' },
-      ],
-    })
+  it('emits a decrease marker at each decrease’s fill, floored to its candle', () => {
+    const primaryDecreases = [{ timestamp: '1792688567', price: '2376854687000000000000' }]
     const out = composeMarginChartOverlays(
-      mkInput({ positions: [withDecreases], candleTimes: [100, 200, 300, 400].map(ts) }),
+      mkInput({ primaryDecreases, candleTimes: [100, 1792688000, 1792689000].map(ts) }),
     )
     expect(out.markers).toEqual([
-      { time: 100, price: 1800, kind: 'open' }, // openedAt 100
-      { time: 200, price: 1900, kind: 'decrease' }, // timestamp 250 → floor 200
+      { time: 100, price: 1800, kind: 'open' },
+      { time: 1792688000, price: 2376.854687, kind: 'decrease' },
     ])
+  })
+
+  it('draws only the open marker while the primary’s decreases are unread', () => {
+    const out = composeMarginChartOverlays(mkInput({ candleTimes: [100, 1792521000].map(ts) }))
+    expect(out.markers).toEqual([{ time: 100, price: 1800, kind: 'open' }])
   })
 
   it('emits markers for the primary position only', () => {
@@ -830,6 +851,242 @@ describe('composeMarginChartOverlays', () => {
     const none = composeMarginChartOverlays(mkInput({ positions: [] }))
     expect(none.econ).toBeUndefined()
     expect(none.primaryLeverage).toBeUndefined()
+  })
+})
+
+describe('estimateLiqPrice', () => {
+  const lltvWad = X18(0.8)
+
+  // Long: entry·((L−1)/L)/λ = 2000·(2/3)/0.8.
+  it('puts a long liq below entry', () => {
+    expect(estimateLiqPrice({ entry: 2000, leverage: 3, lltvWad, direction: MarginDirection.LONG })).toBeCloseTo(
+      1666.6667,
+      3,
+    )
+  })
+
+  // Short: entry·λ·(L+1)/L = 2000·0.8·4/3.
+  it('puts a short liq above entry', () => {
+    expect(estimateLiqPrice({ entry: 2000, leverage: 3, lltvWad, direction: MarginDirection.SHORT })).toBeCloseTo(
+      2133.3333,
+      3,
+    )
+  })
+
+  it.each([
+    { entry: 2000, leverage: 1, lltvWad },
+    { entry: 0, leverage: 3, lltvWad },
+    { entry: 2000, leverage: 3, lltvWad: '0' },
+    { entry: 2000, leverage: Number.NaN, lltvWad },
+  ])('has no estimate without debt or usable inputs (%o)', (input) => {
+    expect(estimateLiqPrice({ ...input, direction: MarginDirection.LONG })).toBeUndefined()
+  })
+})
+
+describe('readableTextColor', () => {
+  it('picks black on a light background and white on a dark one', () => {
+    expect(readableTextColor({ background: 'rgb(34, 197, 94)', colors: COLORS })).toBe(COLORS.black)
+    expect(readableTextColor({ background: '#0d0d0d', colors: COLORS })).toBe(COLORS.white)
+    expect(readableTextColor({ background: 'not-a-color', colors: COLORS })).toBe(COLORS.white)
+  })
+})
+
+describe('composeMarginChartOverlays preview without a quote', () => {
+  // live mark 2000 (mkLive), LLTV 0.86 (mkMarket): long liq at 3x = 2000·(2/3)/0.86.
+  const estimatedAt3 = (2000 * (2 / 3)) / 0.86
+  const preview = (over: Partial<ComposeInput>): MarginOverlayLine[] =>
+    composeMarginChartOverlays(mkInput({ positions: [], quote: undefined, ...over })).priceLines.filter(
+      (l) => l.role === 'previewEntry' || l.role === 'previewLiq',
+    )
+
+  it('estimates entry at the mark and liq at the form leverage once an amount is entered', () => {
+    const lines = preview({ hasEnteredAmount: true, formLeverage: 3 })
+    expect(lines.find((l) => l.role === 'previewEntry')?.price).toBe(2000)
+    expect(lines.find((l) => l.role === 'previewLiq')).toMatchObject({
+      price: expect.closeTo(estimatedAt3, 6),
+      title: 'margin.chart.line.previewLiq',
+      axisLabelVisible: true,
+    })
+  })
+
+  it('follows the unquoted leverage mid-drag', () => {
+    const lines = preview({ hasEnteredAmount: true, formLeverage: 5, previewLeverage: 5 })
+    expect(lines.find((l) => l.role === 'previewLiq')?.price).toBeCloseTo((2000 * (4 / 5)) / 0.86, 6)
+  })
+
+  it('takes the quoted value once a quote exists', () => {
+    const quote = mkQuote({ display: { liquidationPrice: X18(1600), effectivePrice: X18(2010), leverage: '3' } })
+    const lines = preview({ hasEnteredAmount: true, formLeverage: 3, quote })
+    expect(lines.find((l) => l.role === 'previewLiq')?.price).toBe(1600)
+    expect(lines.find((l) => l.role === 'previewEntry')?.price).toBe(2010)
+  })
+
+  it('draws nothing before an amount is entered', () => {
+    expect(preview({ formLeverage: 3 })).toEqual([])
+  })
+
+  it('draws nothing without a mark to estimate from', () => {
+    expect(preview({ hasEnteredAmount: true, formLeverage: 3, live: undefined })).toEqual([])
+  })
+
+  // A venue that can't quote reports a 0 live mark (present but unpriced); the candle close keeps
+  // Entry/Liq on the chart. A nullish-only fallback would keep the 0 and blank the lines.
+  it('falls back to the candle close when the live mark is zero', () => {
+    const lines = preview({
+      hasEnteredAmount: true,
+      formLeverage: 3,
+      live: mkLive({ markPriceX18: X18(0) }),
+      markFallback: 2000,
+    })
+    expect(lines.find((l) => l.role === 'previewEntry')?.price).toBe(2000)
+    expect(lines.find((l) => l.role === 'previewLiq')?.price).toBeCloseTo(estimatedAt3, 6)
+  })
+
+  // No live mark and no candle fallback: nothing to anchor the estimate, so draw nothing.
+  it('draws nothing when neither the live mark nor a candle fallback is usable', () => {
+    expect(preview({ hasEnteredAmount: true, formLeverage: 3, live: mkLive({ markPriceX18: X18(0) }) })).toEqual([])
+  })
+
+  it('keeps the entry but draws no liq line when the leverage carries no debt', () => {
+    const lines = preview({ hasEnteredAmount: true, formLeverage: 1 })
+    expect(lines.map((l) => l.role)).toEqual(['previewEntry'])
+  })
+
+  it('counts the settled estimate in the autoscale bounds', () => {
+    const out = composeMarginChartOverlays(
+      mkInput({ positions: [], quote: undefined, hasEnteredAmount: true, formLeverage: 3 }),
+    )
+    expect(out.autoscaleBounds?.min).toBeCloseTo(estimatedAt3 * 0.98, 6)
+  })
+})
+
+describe('scaleLiqPriceToLeverage', () => {
+  it('is the identity at the quoted leverage', () => {
+    expect(
+      scaleLiqPriceToLeverage({ liq: 1600, quotedLeverage: 3, targetLeverage: 3, direction: MarginDirection.LONG }),
+    ).toBeCloseTo(1600, 8)
+  })
+
+  // ratio = ((L'−1)/L' · L) / (L−1); 3x → 4x is (0.75 · 3) / 2 = 1.125.
+  it('moves a long liq toward the mark as leverage rises', () => {
+    expect(
+      scaleLiqPriceToLeverage({ liq: 1600, quotedLeverage: 3, targetLeverage: 4, direction: MarginDirection.LONG }),
+    ).toBeCloseTo(1800, 8)
+  })
+
+  // Short factor (L+1)/L: 3x → 4x is (5/4) / (4/3) = 15/16.
+  it('moves a short liq down toward the mark as leverage rises', () => {
+    expect(
+      scaleLiqPriceToLeverage({ liq: 2700, quotedLeverage: 3, targetLeverage: 4, direction: MarginDirection.SHORT }),
+    ).toBeCloseTo(2531.25, 8)
+  })
+
+  // Same model as the no-quote estimate, so a line scaled from a quote and one estimated from the mark
+  // agree at the same leverage.
+  it.each([MarginDirection.LONG, MarginDirection.SHORT] as const)('agrees with estimateLiqPrice (%s)', (direction) => {
+    const lltvWad = X18(0.86)
+    const at3 = estimateLiqPrice({ entry: 2000, leverage: 3, lltvWad, direction })
+    const at5 = estimateLiqPrice({ entry: 2000, leverage: 5, lltvWad, direction })
+    expect(at3).toBeDefined()
+    expect(scaleLiqPriceToLeverage({ liq: at3 ?? 0, quotedLeverage: 3, targetLeverage: 5, direction })).toBeCloseTo(
+      at5 ?? 0,
+      8,
+    )
+  })
+
+  it.each([
+    { quotedLeverage: 1, targetLeverage: 3 },
+    { quotedLeverage: 3, targetLeverage: 1 },
+    { quotedLeverage: Number.NaN, targetLeverage: 3 },
+  ])('has no estimate at or below 1x (%o)', ({ quotedLeverage, targetLeverage }) => {
+    expect(
+      scaleLiqPriceToLeverage({ liq: 1600, quotedLeverage, targetLeverage, direction: MarginDirection.LONG }),
+    ).toBeUndefined()
+  })
+})
+
+describe('leverageTierColor', () => {
+  const lltvWad = X18(0.86)
+  // Long HF = LLTV·L/(L−1): 2x → 1.72, 4x → 1.15, 6x → 1.03.
+  it.each([
+    { leverage: 2, color: COLORS.statusSuccess },
+    { leverage: 4, color: COLORS.statusWarning },
+    { leverage: 6, color: COLORS.statusCritical },
+  ])('maps $leverage x to the readout tier', ({ leverage, color }) => {
+    expect(leverageTierColor({ leverage, lltvWad, direction: MarginDirection.LONG, colors: COLORS })).toBe(color)
+  })
+
+  it('reads neutral, not healthy, on an unknown LLTV', () => {
+    expect(leverageTierColor({ leverage: 2, lltvWad: '0', direction: MarginDirection.LONG, colors: COLORS })).toBe(
+      COLORS.neutral2,
+    )
+  })
+})
+
+describe('composeMarginChartOverlays preview liq while dragging', () => {
+  const quote = mkQuote({ display: { liquidationPrice: X18(1600), leverage: '3' } })
+  const previewLiq = (over: Partial<ComposeInput>): MarginOverlayLine | undefined =>
+    composeMarginChartOverlays(mkInput({ positions: [], quote, ...over })).priceLines.find(
+      (l) => l.role === 'previewLiq',
+    )
+
+  it('sits at the quoted price, in the committed leverage tier, at rest', () => {
+    expect(previewLiq({ formLeverage: 3 })).toMatchObject({ price: 1600, color: COLORS.statusSuccess })
+  })
+
+  it('follows the unquoted leverage and takes its tier color mid-drag', () => {
+    expect(previewLiq({ formLeverage: 4, previewLeverage: 4 })).toMatchObject({
+      price: expect.closeTo(1800, 6),
+      color: COLORS.statusWarning,
+    })
+  })
+
+  it('holds the frozen quote price while a plan is in flight', () => {
+    expect(previewLiq({ formLeverage: 4, previewLeverage: 4, planInFlight: true })?.price).toBe(1600)
+  })
+
+  it('keeps the quoted price when the quote carries no leverage', () => {
+    const bare = mkQuote({ display: { liquidationPrice: X18(1600) } })
+    expect(previewLiq({ quote: bare, formLeverage: 4, previewLeverage: 4 })?.price).toBe(1600)
+  })
+})
+
+describe('preview lines and autoscale', () => {
+  const quote = mkQuote({ display: { liquidationPrice: X18(100), effectivePrice: X18(5000), leverage: '3' } })
+
+  // The preview liq/entry count toward the bounds, including mid-drag: a leverage change can push the
+  // preview liq well past the candles' range, so the chart rescales to keep the line in view as the
+  // thumb moves — the point of the live preview.
+  it('includes the preview lines in the bounds', () => {
+    const out = composeMarginChartOverlays(mkInput({ positions: [], quote }))
+    expect(out.priceLines.some((l) => l.role === 'previewLiq')).toBe(true)
+    expect(out.autoscaleBounds?.min).toBeCloseTo(100 * 0.98, 8)
+    expect(out.autoscaleBounds?.max).toBeCloseTo(5000 * 1.02, 8)
+  })
+
+  it("keeps an open position's liquidation line in the bounds", () => {
+    const withPosition = composeMarginChartOverlays(mkInput({ quote }))
+    const positionLiq = withPosition.priceLines.find((l) => l.role === 'liq')
+    expect(positionLiq).toBeDefined()
+    expect(withPosition.autoscaleBounds?.min).toBeLessThanOrEqual((positionLiq?.price ?? 0) * 0.98 + 1e-9)
+  })
+})
+
+describe('unquotedLeverage', () => {
+  const quote = mkQuote({ display: { liquidationPrice: X18(1600), leverage: '2' } })
+
+  // Mid-drag the slider has already written leverage, but the quote is still debouncing on the old one.
+  it('is the form leverage while the quote is stale and prices another', () => {
+    expect(unquotedLeverage({ leverage: 3.5, quote, isQuoteStale: true })).toBe(3.5)
+  })
+
+  it('defers to the quote once it prices the form leverage, or is current', () => {
+    expect(unquotedLeverage({ leverage: 2.02, quote, isQuoteStale: true })).toBeUndefined()
+    expect(unquotedLeverage({ leverage: 4, quote, isQuoteStale: false })).toBeUndefined()
+  })
+
+  it('has nothing to scale from without a quoted leverage', () => {
+    expect(unquotedLeverage({ leverage: 4, quote: undefined, isQuoteStale: true })).toBeUndefined()
   })
 })
 
@@ -941,5 +1198,84 @@ describe('nearestOverlay', () => {
     expect(nearestOverlay({ hover: { x: 0, y: 100 }, lines: [ghostEntry], markers: [], priceToY, timeToX })?.id).toBe(
       'entry-2',
     )
+  })
+})
+
+describe('scopeMarginOverlaysToPosition', () => {
+  const big = mkPos({ positionId: 'pos-big', notionalUsd: '50000', entryPrice: X18(1900) })
+  const small = mkPos({
+    positionId: 'pos-small',
+    notionalUsd: '100',
+    legs: [mkLeg({ subId: '7' })],
+    entryPrice: X18(1700),
+    liquidationPrice: X18(1200),
+  })
+
+  it('passes positions and prefs through when no position is in focus', () => {
+    const prefs = { ...DEFAULT_MARGIN_CHART_PREFS, showPosition: false }
+    const scoped = scopeMarginOverlaysToPosition({ positions: [big, small], prefs })
+    expect(scoped.positions).toEqual([big, small])
+    expect(scoped.prefs).toBe(prefs)
+  })
+
+  it('keeps only the focused position and shows it whatever the pref says', () => {
+    const scoped = scopeMarginOverlaysToPosition({
+      positions: [big, small],
+      prefs: { ...DEFAULT_MARGIN_CHART_PREFS, showPosition: false },
+      focusPositionId: 'pos-small',
+    })
+    expect(scoped.positions).toEqual([small])
+    expect(scoped.prefs.showPosition).toBe(true)
+  })
+
+  // Ranked among its siblings the smaller position is a dimmed, unlabeled ghost; in focus it is the
+  // primary, with full-strength labeled entry and liquidation lines and nothing of the larger one.
+  it('makes a smaller focused position the labeled primary instead of a ghost', () => {
+    const unfocused = composeMarginChartOverlays(mkInput({ positions: [big, small] }))
+    expect(unfocused.priceLines.find((l) => l.price === 1700)?.axisLabelVisible).toBe(false)
+
+    const scoped = scopeMarginOverlaysToPosition({
+      positions: [big, small],
+      prefs: DEFAULT_MARGIN_CHART_PREFS,
+      focusPositionId: 'pos-small',
+    })
+    const focused = composeMarginChartOverlays(mkInput(scoped))
+    expect(focused.priceLines.find((l) => l.id === 'entry')?.price).toBe(1700)
+    expect(focused.priceLines.find((l) => l.id === 'liq')?.price).toBe(1200)
+    expect(focused.priceLines.some((l) => l.price === 1900)).toBe(false)
+    expect(focused.legend).toBeDefined()
+  })
+})
+
+describe('showsMarginOpenPreview', () => {
+  const market = mkMarket()
+
+  it('draws the preview when the form charts this market and nothing is focused', () => {
+    expect(showsMarginOpenPreview({ previewMarket: market, market, focusPositionId: undefined })).toBe(true)
+  })
+
+  // Same pair, another venue: the form's quote prices a different market.
+  it('skips it for another venue on the same pair', () => {
+    const otherVenue = mkMarket({ key: `${market.key}-aave` })
+    expect(showsMarginOpenPreview({ previewMarket: otherVenue, market, focusPositionId: undefined })).toBe(false)
+  })
+
+  it('skips it while a position is focused', () => {
+    expect(showsMarginOpenPreview({ previewMarket: market, market, focusPositionId: '1' })).toBe(false)
+  })
+})
+
+describe('selectDecreaseFills', () => {
+  it('keeps each priced decrease of a served lifecycle and none of its other events', () => {
+    const activity = toMarginPositionActivityView([MARGIN_POSITION_ACTIVITY_WIRE_DECREASED])
+    expect(selectDecreaseFills(activity)).toEqual([{ timestamp: '1792688567', price: '2376854687000000000000' }])
+  })
+
+  it('drops a decrease that carries no fill price', () => {
+    const activity = toMarginPositionActivityView([MARGIN_POSITION_ACTIVITY_WIRE_DECREASED]).map((event) => ({
+      ...event,
+      price: undefined,
+    }))
+    expect(selectDecreaseFills(activity)).toEqual([])
   })
 })

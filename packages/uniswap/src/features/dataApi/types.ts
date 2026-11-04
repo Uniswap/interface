@@ -40,8 +40,6 @@ export interface BaseResult<T> {
   error?: Error
   /** Epoch ms when the underlying query last successfully fetched data. */
   dataUpdatedAt?: number
-  /** True while `data` is still the previous query key's result (e.g. the last wallet's portfolio). */
-  isPlaceholderData?: boolean
 }
 
 /** Outage state from data-fetching hooks — pairs an error with the last-known data timestamp. */
@@ -106,10 +104,10 @@ export type CurrencyInfo = {
    * survives chain-filtered flattens. Absent on the v1 path.
    */
   searchStats?: SearchTokenStats
-  /** Backend category ids in BE ranking order, from v2 data-api token payloads; absent on v1/GraphQL-built
+  /** Backend category ids in BE ranking order, from v2 data-api token payloads; absent on v1-built
    *  CurrencyInfo. Hydrate via ListCategories. */
   categoryIds?: string[]
-  /** Backend issuer branding of a tokenized RWA, from v2 data-api token payloads; absent on v1/GraphQL-built
+  /** Backend issuer branding of a tokenized RWA, from v2 data-api token payloads; absent on v1-built
    *  CurrencyInfo and on ordinary tokens. */
   issuer?: RWAIssuerDisplay
 }

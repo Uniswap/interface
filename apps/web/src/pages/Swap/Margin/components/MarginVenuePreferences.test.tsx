@@ -13,7 +13,7 @@ vi.mock('uniswap/src/components/modals/Modal', () => ({
   Modal: ({ children }: PropsWithChildren) => children,
 }))
 
-vi.mock('~/pages/Swap/Margin/components/MarginVenueLogo', () => ({
+vi.mock('~/features/margin/components/MarginVenueLogo', () => ({
   MarginVenueLogo: ({ venue }: { venue: string }) => <div data-testid={TestID.MarginVenueLogo} data-venue={venue} />,
 }))
 

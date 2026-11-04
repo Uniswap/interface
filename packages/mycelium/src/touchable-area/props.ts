@@ -146,7 +146,7 @@ export interface TouchableAreaSpecificProps extends TouchableAreaPressProps, Mod
   shouldStopPropagation?: boolean
   /**
    * If true (web default), clones children injecting the Spore color
-   * guidance: `color` (default $accent3), `backgroundColor`, and their
+   * guidance: `color` (default $neutral1), `backgroundColor`, and their
    * `$group-hover` hovered-token counterparts; disabled swaps the palette.
    */
   shouldAutomaticallyInjectColors?: boolean

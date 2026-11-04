@@ -279,7 +279,7 @@ function stripCommentsAndStringLiterals(source: string): string {
  * The second rule is what catches the leading case, and it fails in the safe direction: at worst
  * some prose is scanned as code, never a gate blanked out of existence.
  *
- * Backticks are excluded: `` css`…` `` and `` gql`…` `` are real tagged templates.
+ * Backticks are excluded: `` css`…` `` and other tagged templates are real.
  */
 function isTrailingApostrophe({ line, at, quote }: { line: string; at: number; quote: string }): boolean {
   return quote !== '`' && at > 0 && /[A-Za-z0-9_$]/.test(line.charAt(at - 1))

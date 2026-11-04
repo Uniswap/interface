@@ -2,11 +2,8 @@
 import type { SporeIconSizeToken } from './tokens'
 
 /**
- * Drop-in for `IconSizeTokens` from `ui/src/theme` (INFRA-3505): mutually
- * assignable, so an annotation converts by swapping the import alone. Both
- * sides are closed unions over the same `iconSize` map — no open residue,
- * unlike `ColorTokens`. `packages/tailwind/src/parity/space-icon-tokens` is
- * the drift guard.
+ * The legacy `$icon.N` size-token union (INFRA-3505): a closed union over the
+ * `iconSize` map — no open residue, unlike `ColorTokens`.
  *
  * Interop/annotation type only — parameters, returns, locals.
  */

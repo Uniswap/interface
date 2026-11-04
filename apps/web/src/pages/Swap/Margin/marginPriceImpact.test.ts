@@ -2,6 +2,7 @@ import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/type
 import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { describe, expect, it } from 'vitest'
 import {
+  MarginSwapSide,
   marginAdjustSwapSide,
   marginPriceImpactBps,
   marginPriceImpactSeverity,
@@ -27,7 +28,7 @@ describe('marginPriceImpactBps', () => {
         marginPriceImpactBps({
           execPriceX18: BUY_ADVERSE.exec,
           markPriceX18: BUY_ADVERSE.mark,
-          swapSide: 'BUY_COLLATERAL',
+          swapSide: MarginSwapSide.BUY_COLLATERAL,
           direction: MarginDirection.LONG,
         }),
       ).toBe(BUY_ADVERSE.bps)
@@ -38,7 +39,7 @@ describe('marginPriceImpactBps', () => {
         marginPriceImpactBps({
           execPriceX18: reciprocated(BUY_ADVERSE.exec),
           markPriceX18: reciprocated(BUY_ADVERSE.mark),
-          swapSide: 'BUY_COLLATERAL',
+          swapSide: MarginSwapSide.BUY_COLLATERAL,
           direction: MarginDirection.SHORT,
         }),
       ).toBe(BUY_ADVERSE.bps)
@@ -49,7 +50,7 @@ describe('marginPriceImpactBps', () => {
         marginPriceImpactBps({
           execPriceX18: x18(1900),
           markPriceX18: x18(1912),
-          swapSide: 'BUY_COLLATERAL',
+          swapSide: MarginSwapSide.BUY_COLLATERAL,
           direction: MarginDirection.LONG,
         }),
       ).toBe(0)
@@ -60,7 +61,7 @@ describe('marginPriceImpactBps', () => {
         marginPriceImpactBps({
           execPriceX18: reciprocated(x18(1900)),
           markPriceX18: reciprocated(x18(1912)),
-          swapSide: 'BUY_COLLATERAL',
+          swapSide: MarginSwapSide.BUY_COLLATERAL,
           direction: MarginDirection.SHORT,
         }),
       ).toBe(0)
@@ -73,7 +74,7 @@ describe('marginPriceImpactBps', () => {
         marginPriceImpactBps({
           execPriceX18: SELL_ADVERSE.exec,
           markPriceX18: SELL_ADVERSE.mark,
-          swapSide: 'SELL_COLLATERAL',
+          swapSide: MarginSwapSide.SELL_COLLATERAL,
           direction: MarginDirection.LONG,
         }),
       ).toBe(SELL_ADVERSE.bps)
@@ -84,7 +85,7 @@ describe('marginPriceImpactBps', () => {
         marginPriceImpactBps({
           execPriceX18: reciprocated(SELL_ADVERSE.exec),
           markPriceX18: reciprocated(SELL_ADVERSE.mark),
-          swapSide: 'SELL_COLLATERAL',
+          swapSide: MarginSwapSide.SELL_COLLATERAL,
           direction: MarginDirection.SHORT,
         }),
       ).toBe(SELL_ADVERSE.bps)
@@ -95,7 +96,7 @@ describe('marginPriceImpactBps', () => {
         marginPriceImpactBps({
           execPriceX18: x18(1930),
           markPriceX18: x18(1912),
-          swapSide: 'SELL_COLLATERAL',
+          swapSide: MarginSwapSide.SELL_COLLATERAL,
           direction: MarginDirection.LONG,
         }),
       ).toBe(0)
@@ -106,7 +107,7 @@ describe('marginPriceImpactBps', () => {
         marginPriceImpactBps({
           execPriceX18: reciprocated(x18(1930)),
           markPriceX18: reciprocated(x18(1912)),
-          swapSide: 'SELL_COLLATERAL',
+          swapSide: MarginSwapSide.SELL_COLLATERAL,
           direction: MarginDirection.SHORT,
         }),
       ).toBe(0)
@@ -126,7 +127,7 @@ describe('marginPriceImpactBps', () => {
         marginPriceImpactBps({
           execPriceX18,
           markPriceX18,
-          swapSide: 'BUY_COLLATERAL',
+          swapSide: MarginSwapSide.BUY_COLLATERAL,
           direction: MarginDirection.LONG,
         }),
       ).toBeUndefined()
@@ -136,11 +137,15 @@ describe('marginPriceImpactBps', () => {
 
 describe('marginAdjustSwapSide', () => {
   it('reads a decrease bound as selling collateral', () => {
-    expect(marginAdjustSwapSide({ decrease: { debtToRepay: '1', maxCollateralIn: '2' } })).toBe('SELL_COLLATERAL')
+    expect(marginAdjustSwapSide({ decrease: { debtToRepay: '1', maxCollateralIn: '2' } })).toBe(
+      MarginSwapSide.SELL_COLLATERAL,
+    )
   })
 
   it('reads an increase bound as buying collateral', () => {
-    expect(marginAdjustSwapSide({ increase: { collateralToBuy: '1', maxDebtIn: '2' } })).toBe('BUY_COLLATERAL')
+    expect(marginAdjustSwapSide({ increase: { collateralToBuy: '1', maxDebtIn: '2' } })).toBe(
+      MarginSwapSide.BUY_COLLATERAL,
+    )
   })
 
   it.each([
@@ -149,7 +154,7 @@ describe('marginAdjustSwapSide', () => {
   ])(
     'defaults to BUY_COLLATERAL with %s, which is inert because such a quote carries no effectivePrice',
     (_label, bounds) => {
-      expect(marginAdjustSwapSide(bounds)).toBe('BUY_COLLATERAL')
+      expect(marginAdjustSwapSide(bounds)).toBe(MarginSwapSide.BUY_COLLATERAL)
     },
   )
 })

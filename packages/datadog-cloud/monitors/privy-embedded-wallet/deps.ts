@@ -10,11 +10,16 @@ import {
   MIN_REQUESTS_DEP_LATENCY,
   minFailuresToAlert,
   PRIVY_EMBEDDED_WALLET_RUNBOOK,
+  PRIVY_RECOVERY_BLOB_FAILURE,
+  PRIVY_RECOVERY_BLOB_RESOURCE,
+  PRIVY_RECOVERY_BLOB_WINDOW,
+  PRIVY_RECOVERY_BLOB_WINDOW_LABEL,
   SERVICE_README_URL,
   TEAM,
   apmTagFilter,
   rateDenominatorFloor,
   volumeGatedPercentile,
+  webRumScope,
 } from './constants'
 
 const env = settings.environment
@@ -87,6 +92,49 @@ export const privyEmbeddedWalletDepsMonitors: MonitorDefinition[] = [
     readmeUrl: SERVICE_README_URL,
     dashboards: [],
     notifyNoData: false,
+  },
+
+  // ────────────────────────────────────────────────────────────────────────
+  // Privy API: browser calls to the encrypted authorization keys endpoint.
+  //
+  // The web client stores and fetches the passkey recovery blob there itself,
+  // so none of the service metrics above see these calls. Web RUM is the only
+  // record, session-sampled on a tiny base rate (5 prod calls in the 90 days
+  // to 2026-10-29, all 200), so one sampled failure is already anomalous and
+  // usually means every call is failing.
+  // ────────────────────────────────────────────────────────────────────────
+  {
+    id: 'privy_embedded_wallet_dep_privy_api_web_recovery_blob_failures',
+    name: 'Privy recovery blob calls failing from the web client',
+    type: 'rum alert',
+    query: `formula("query1").last("${PRIVY_RECOVERY_BLOB_WINDOW}") > 0`,
+    alertBody: `A web session hit a failed call to Privy's encrypted authorization keys endpoint, which stores and serves the passkey recovery blob, in the last ${PRIVY_RECOVERY_BLOB_WINDOW_LABEL}. Every sampled call in the 90 days before this monitor was created succeeded, so one failure is worth a look: seen through RUM session sampling, it usually means every call is failing.
+
+Open the matching RUM resource and read the status code. 401 "Invalid auth token" means the request reached Privy without the privy-client-id header, or with a token issued under a different app client. 0 means the browser blocked the request (CORS or network) before Privy answered. Backup login and wallet recovery on web are broken for as long as this persists.`,
+    recoveryBody: `No failed Privy recovery blob calls from the web client in the last ${PRIVY_RECOVERY_BLOB_WINDOW_LABEL}.`,
+    team: TEAM,
+    priority: 3,
+    thresholds: { critical: 0 },
+    logQuery: `${webRumScope(env)} ("Failed to store encrypted blob at Privy" OR "Failed to fetch encrypted blob from Privy")`,
+    runbookUrl: PRIVY_EMBEDDED_WALLET_RUNBOOK,
+    readmeUrl: SERVICE_README_URL,
+    dashboards: [],
+    // Too sparse to page on. The webhook keeps it visible: this team's prod stack has Slack off.
+    enablePaging: false,
+    onMissingData: 'default',
+    variables: {
+      eventQueries: [
+        {
+          name: 'query1',
+          dataSource: 'rum',
+          indexes: ['*'],
+          search: {
+            query: `${webRumScope(env)} ${PRIVY_RECOVERY_BLOB_RESOURCE} ${PRIVY_RECOVERY_BLOB_FAILURE}`,
+          },
+          computes: [{ aggregation: 'count' }],
+        },
+      ],
+    },
   },
 
   // ────────────────────────────────────────────────────────────────────────

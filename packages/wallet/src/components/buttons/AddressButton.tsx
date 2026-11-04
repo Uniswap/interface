@@ -1,4 +1,4 @@
-import { iconSizes, TextVariantTokens } from 'ui/src/theme'
+import { iconSizes, type TextVariantKey } from '@universe/mycelium'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { useENSName } from 'uniswap/src/features/ens/api'
@@ -9,7 +9,7 @@ import { LinkButton } from 'wallet/src/components/buttons/LinkButton'
 type AddressButtonProps = {
   address: string
   chainId: number
-  textVariant?: TextVariantTokens
+  textVariant?: TextVariantKey
 }
 
 export function AddressButton({ address, chainId, ...rest }: AddressButtonProps): JSX.Element {

@@ -6,7 +6,7 @@ import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 export type CurrencyKey = string
 
 export function buildCurrencyKey(chainId: UniverseChainId, address: string): CurrencyKey {
-  // We normalize for compatibility/indexability between gql tokens and sdk currencies
+  // We normalize for compatibility/indexability between backend tokens and sdk currencies
   return `${chainId}-${normalizeTokenAddressForCache(address)}`
 }
 

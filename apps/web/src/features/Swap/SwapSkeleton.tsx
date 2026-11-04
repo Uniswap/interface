@@ -1,7 +1,7 @@
 import { Flex, type FlexCompatProps, Text } from '@universe/mycelium'
+import { ArrowDown } from '@universe/mycelium/icons/ArrowDown'
 import { forwardRef, type ForwardRefExoticComponent, type RefAttributes } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ArrowDown } from 'ui/src/components/icons/ArrowDown'
 import { ArrowContainer, ArrowWrapper } from '~/features/Swap/styled'
 
 // Explicit return type: forwardRef's inferred type isn't nameable under declaration emit (TS2883).

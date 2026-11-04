@@ -1,11 +1,8 @@
+import { lookupToken, SPACE_TOKEN_PX } from '@universe/mycelium/compat'
 import { type UseSporeColorsReturn } from '@universe/mycelium/theme-hooks-compat'
+import { borderRadii, zIndexes } from '@universe/mycelium/tokens'
 import type { CSSProperties } from 'react'
 import type { PopoverFrameStyleProps } from 'ui/src/components/popover/types'
-import { borderRadii, spacing, zIndexes } from 'ui/src/theme'
-import { gap, padding } from 'ui/src/theme/spacing'
-
-/** All three space-token families call sites use (`$spacing*`, `$padding*`, `$gap*`). */
-const SPACE_TOKENS: Record<string, number> = { ...spacing, ...padding, ...gap }
 
 /**
  * Token → concrete-value resolution for the rebuilt Popover (INFRA-3318): the
@@ -20,11 +17,7 @@ function resolveSpace(value: number | string | undefined): number | string | und
   if (typeof value !== 'string' || !value.startsWith('$')) {
     return value
   }
-  const token = value.slice(1)
-  if (token in SPACE_TOKENS) {
-    return SPACE_TOKENS[token]
-  }
-  return value
+  return lookupToken(SPACE_TOKEN_PX, value) ?? value
 }
 
 function resolveRadius(value: number | string | undefined): number | string | undefined {

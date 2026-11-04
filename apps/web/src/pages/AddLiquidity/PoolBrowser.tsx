@@ -1,28 +1,25 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import type { Currency } from '@uniswap/sdk-core'
-import { UniverseChainId } from '@universe/chains'
-import { Flex, useMedia } from '@universe/mycelium'
+import { Button, Flex, useMedia } from '@universe/mycelium'
+import { Plus } from '@universe/mycelium/icons/Plus'
 import { createSerializer, useQueryStates } from 'nuqs'
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate, useParams } from 'react-router'
-import { Button } from 'ui/src'
-import { Plus } from 'ui/src/components/icons/Plus'
 import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
+import { useDebounce } from 'utilities/src/time/timing'
 import { ExpandableSearchInput } from '~/components/ExpandableSearchInput/ExpandableSearchInput'
 import { CurrencySearchModal } from '~/components/SearchModal/CurrencySearchModal'
 import { STICKY_HEADER_TOP_GAP } from '~/components/Table/constants'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { PoolSortFields } from '~/data/pools/poolStats'
 import { OrderDirection } from '~/data/util'
-import { BlastShutdownBanner } from '~/features/Liquidity/BlastShutdownBanner'
 import { getNextFlowStep } from '~/features/Liquidity/Create/flowSteps'
 import { PositionFlowStep } from '~/features/Liquidity/Create/types'
 import { CurrencySelector } from '~/features/Liquidity/CurrencySelector'
 import { usePoolsAprRange } from '~/features/Liquidity/PoolsFilter/aprRange'
 import { PoolsFilter } from '~/features/Liquidity/PoolsFilter/PoolsFilter'
 import { getProtocolVersionFromLabel } from '~/features/Liquidity/utils/protocolVersion'
-import { useDebounce } from '~/hooks/useDebounce'
 import { edgeFadeMaskStyle, useHorizontalScrollFades } from '~/hooks/useHorizontalScrollFades'
 import { buildPoolSearchParams } from '~/pages/AddLiquidity/poolLinkParams'
 import {
@@ -34,9 +31,9 @@ import { useV2ListPools } from '~/pages/Explore/hooks/useV2ListPools'
 import type { PoolLinkData } from '~/pages/Explore/tables/Pools/PoolTable'
 import { PoolsTable } from '~/pages/Explore/tables/Pools/PoolTable'
 import { usePoolTableStore } from '~/pages/Explore/tables/Pools/poolTableStore'
-import { SwitchNetworkAction } from '~/state/popups/types'
 import type { PoolsFilterState } from '~/types/poolsFilter'
 import { getChainUrlParam, useChainIdFromUrlParam } from '~/utils/params/chainParams'
+import { SwitchNetworkAction } from '~/utils/popups/types'
 
 const FEW_RESULTS_THRESHOLD = 10
 
@@ -254,12 +251,6 @@ export function PoolBrowser(): JSX.Element {
           />
         </Flex>
       </Flex>
-
-      {listChainId === UniverseChainId.Blast && (
-        <Flex mb="$spacing16">
-          <BlastShutdownBanner />
-        </Flex>
-      )}
 
       {/* The table renders its own error state, and only when it has no rows to show — a failed
           load-more keeps the pools already listed. */}

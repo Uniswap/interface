@@ -1,14 +1,21 @@
 import { isWebPlatform } from '@universe/environment'
-import { Flex, Text, TouchableArea, UniversalImage, useSporeColors } from '@universe/mycelium'
+import {
+  Button,
+  Flex,
+  Text,
+  TouchableArea,
+  UniversalImage,
+  useSporeColors,
+  borderRadii,
+  iconSizes,
+} from '@universe/mycelium'
+import { EarnSparkle } from '@universe/mycelium/icons/EarnSparkle'
+import { ExternalLink } from '@universe/mycelium/icons/ExternalLink'
+import { GauntletLogo } from '@universe/mycelium/icons/GauntletLogo'
+import { MorphoLogoFull } from '@universe/mycelium/icons/MorphoLogoFull'
 import dayjs from 'dayjs'
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button } from 'ui/src'
-import { EarnSparkle } from 'ui/src/components/icons/EarnSparkle'
-import { ExternalLink } from 'ui/src/components/icons/ExternalLink'
-import { GauntletLogo } from 'ui/src/components/icons/GauntletLogo'
-import { MorphoLogoFull } from 'ui/src/components/icons/MorphoLogoFull'
-import { borderRadii, iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { ExpandoRow } from 'uniswap/src/components/ExpandoRow/ExpandoRow'
 import {
@@ -105,9 +112,7 @@ export function DetailsTab({
         </Text>
 
         <TouchableArea width={70} height={14} onPress={vault.morphoUrl ? onOpenMorphoHome : undefined}>
-          {/* width/height are stripped from IconProps but flow through to the SVG at runtime,
-              which is the only way to render the 70x14 Morpho wordmark at its true aspect ratio. */}
-          {/* @ts-expect-error see comment above */}
+          {/* width/height, not size: the only way to render the 70x14 Morpho wordmark at its true aspect ratio. */}
           <MorphoLogoFull color="$neutral3" width="100%" height="100%" />
         </TouchableArea>
       </Flex>

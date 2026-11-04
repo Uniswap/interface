@@ -1,16 +1,20 @@
 import '~/test-utils/tokens/mocks'
+import type { UseQueryResult } from '@tanstack/react-query'
 import { HookListResponse } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/api_pb'
 import { HookEntry } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/types_pb'
-import { GraphQLApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
 import { useFeatureFlag } from '@universe/gating'
+import { TestID } from '@universe/test'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { DEFAULT_TICK_SPACING, DYNAMIC_FEE_AMOUNT } from 'uniswap/src/constants/pools'
 import { getCommonBase } from 'uniswap/src/constants/routing'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
+import { useListPoolCategoriesQuery } from 'uniswap/src/data/apiClients/dataApiService/categories/useListPoolCategoriesQuery'
 import { getFeeBreakdown } from 'uniswap/src/features/fees/getFeeBreakdown'
 import { buildHookRegistryMap, useHookRegistryMap } from 'uniswap/src/features/poolHooks/hooks/useHookRegistryMap'
+import type { PoolCategory } from 'uniswap/src/features/tokenCategories/types'
+import { poolCategory } from 'uniswap/src/test/fixtures/poolCategory'
 import { COLLAPSE_PROGRESS_VAR, COLLAPSE_TEXT_VISIBILITY_VAR } from '~/components/Table/PinnedColumns/collapse/utils'
 import {
   EMPTY_EXPLORE_POOLS_FILTER_STATE,
@@ -42,7 +46,7 @@ const HOOKED_ADDRESS = '0x0010d0d5db05933fa0d9f7038d365e1541a41888'
 function poolStat(overrides: Partial<PoolStat>): PoolStat {
   return {
     id: '1',
-    chain: 'mainnet',
+    chainId: UniverseChainId.Mainnet,
     token0: validRestPoolToken0,
     token1: validRestPoolToken1,
     feeTier: { feeAmount: 500, tickSpacing: DEFAULT_TICK_SPACING, isDynamic: false },
@@ -52,12 +56,13 @@ function poolStat(overrides: Partial<PoolStat>): PoolStat {
     volume30Day: { value: 1 },
     apr: 1,
     volOverTvl: 1,
-    protocolVersion: GraphQLApi.ProtocolVersion.V3,
+    protocolVersion: 'V3',
     ...overrides,
   } as unknown as PoolStat
 }
 
 vi.mock('~/pages/Explore/hooks/useListPools')
+vi.mock('uniswap/src/data/apiClients/dataApiService/categories/useListPoolCategoriesQuery')
 // Passthrough spy: real engine behavior, observable inputs/outputs.
 vi.mock('uniswap/src/features/fees/getFeeBreakdown', async (importOriginal) => {
   const actual = await importOriginal<typeof import('uniswap/src/features/fees/getFeeBreakdown')>()
@@ -85,9 +90,14 @@ vi.mock('react-router', async () => {
   }
 })
 
+function mockPoolCategories(categories: PoolCategory[] | undefined): void {
+  mocked(useListPoolCategoriesQuery).mockReturnValue({ data: categories } as UseQueryResult<PoolCategory[]>)
+}
+
 describe('PoolTable', () => {
   beforeEach(() => {
     mocked(useFeatureFlag).mockReturnValue(false)
+    mockPoolCategories(undefined)
   })
 
   it('renders loading state', () => {
@@ -161,7 +171,7 @@ describe('PoolTable', () => {
     const mockData = [
       {
         id: '1',
-        chain: 'mainnet',
+        chainId: UniverseChainId.Mainnet,
         token0: validRestPoolToken0,
         token1: validRestPoolToken1,
         feeTier: {
@@ -175,11 +185,11 @@ describe('PoolTable', () => {
         volume30Day: { value: 500 },
         apr: 6,
         volOverTvl: 1.84,
-        protocolVersion: GraphQLApi.ProtocolVersion.V3,
+        protocolVersion: 'V3',
       },
       {
         id: '2',
-        chain: 'mainnet',
+        chainId: UniverseChainId.Mainnet,
         token0: validRestPoolToken0,
         token1: validRestPoolToken1,
         feeTier: {
@@ -193,7 +203,7 @@ describe('PoolTable', () => {
         volume30Day: { value: 400 },
         apr: 4,
         volOverTvl: 1.5,
-        protocolVersion: GraphQLApi.ProtocolVersion.V4,
+        protocolVersion: 'V4',
         hookAddress,
       },
     ] as unknown as PoolStat[]
@@ -206,7 +216,6 @@ describe('PoolTable', () => {
       loadMore: vi.fn(),
       chainId: UniverseChainId.Mainnet,
     })
-    // validRestPoolToken0 is on ETHEREUM, so rows resolve to Mainnet (chainId 1)
     mocked(useHookRegistryMap).mockReturnValue(
       buildHookRegistryMap(
         new HookListResponse({
@@ -255,7 +264,7 @@ describe('PoolTable', () => {
 
   it('loads the full cross-chain hook registry when a hooked list is not filtered to a chain', () => {
     mocked(useListPools).mockReturnValue({
-      pools: [poolStat({ id: '1', protocolVersion: GraphQLApi.ProtocolVersion.V4, hookAddress: HOOKED_ADDRESS })],
+      pools: [poolStat({ id: '1', protocolVersion: 'V4', hookAddress: HOOKED_ADDRESS })],
       isLoading: false,
       isError: false,
       hasNextPage: false,
@@ -292,7 +301,7 @@ describe('PoolTable', () => {
 
   it('falls back to the truncated hook address when the registry has no entry for the hook', () => {
     mocked(useListPools).mockReturnValue({
-      pools: [poolStat({ id: '1', protocolVersion: GraphQLApi.ProtocolVersion.V4, hookAddress: HOOKED_ADDRESS })],
+      pools: [poolStat({ id: '1', protocolVersion: 'V4', hookAddress: HOOKED_ADDRESS })],
       isLoading: false,
       isError: false,
       hasNextPage: false,
@@ -311,9 +320,9 @@ describe('PoolTable', () => {
   it('skips the hook-registry fetch when nothing listed has a hook', () => {
     mocked(useListPools).mockReturnValue({
       pools: [
-        poolStat({ id: '1', protocolVersion: GraphQLApi.ProtocolVersion.V3 }),
+        poolStat({ id: '1', protocolVersion: 'V3' }),
         // a v4 pool with no hook reports the zero address, which must not count as hooked
-        poolStat({ id: '2', protocolVersion: GraphQLApi.ProtocolVersion.V4, hookAddress: ZERO_ADDRESS }),
+        poolStat({ id: '2', protocolVersion: 'V4', hookAddress: ZERO_ADDRESS }),
       ],
       isLoading: false,
       isError: false,
@@ -347,6 +356,48 @@ describe('PoolTable', () => {
     )
 
     expect(screen.getAllByRole('link').length).toBeGreaterThan(0)
+  })
+
+  describe('category tags', () => {
+    const stables = poolCategory({ id: 'stable-pools', name: 'Stables' })
+    const majors = poolCategory({ id: 'major-pools', name: 'Majors' })
+    const taggedPool = poolStat({ id: 'pool-1', categoryIds: ['not-a-category', 'stable-pools', 'major-pools'] })
+
+    function renderTable(props: {
+      surface: 'explore' | 'tdp' | 'add-liquidity-pool-browser'
+      scopedCategoryId?: string
+    }) {
+      return render(
+        <PoolTableStoreContextProvider>
+          <PoolsTable pools={[taggedPool]} loading={false} chainId={UniverseChainId.Mainnet} {...props} />
+        </PoolTableStoreContextProvider>,
+      )
+    }
+
+    beforeEach(() => {
+      mockPoolCategories([stables, majors])
+    })
+
+    it('tags an Explore row with its first known category on the details line', () => {
+      renderTable({ surface: 'explore' })
+      expect(screen.getByTestId(TestID.PoolRowCategoryTag)).toHaveTextContent('Stables')
+    })
+
+    it('skips the scoped category and tags the next one', () => {
+      renderTable({ surface: 'explore', scopedCategoryId: 'stable-pools' })
+      expect(screen.getByTestId(TestID.PoolRowCategoryTag)).toHaveTextContent('Majors')
+    })
+
+    it('tags the Create Position pool browser rows', () => {
+      renderTable({ surface: 'add-liquidity-pool-browser' })
+      expect(screen.getByTestId(TestID.PoolRowCategoryTag)).toHaveTextContent('Stables')
+    })
+
+    it('renders no tag and skips the categories query on the TDP surface', () => {
+      renderTable({ surface: 'tdp' })
+      expect(screen.queryByTestId(TestID.PoolRowCategoryTag)).toBeNull()
+      expect(useListPoolCategoriesQuery).toHaveBeenCalledWith({ enabled: false })
+    })
   })
 
   it('publishes the loaded rows APR range to the filter store and clears it when the table unmounts', () => {
@@ -412,7 +463,7 @@ describe('PoolTable', () => {
 
   it('unwraps a v2/v3 wrapped-native leg to the native currency', () => {
     mocked(useListPools).mockReturnValue({
-      pools: [poolStat({ protocolVersion: GraphQLApi.ProtocolVersion.V3 })],
+      pools: [poolStat({ protocolVersion: 'V3' })],
       isLoading: false,
       isError: false,
       hasNextPage: false,
@@ -430,7 +481,7 @@ describe('PoolTable', () => {
     mocked(useListPools).mockReturnValue({
       pools: [
         poolStat({
-          protocolVersion: GraphQLApi.ProtocolVersion.V4,
+          protocolVersion: 'V4',
           // Same cast as the fixtures: `PoolStat.token1` is the protobuf class, the spread is a plain object.
           token1: { ...validRestPoolToken1, logo: servedToken1Logo } as unknown as PoolStat['token1'],
         }),
@@ -456,7 +507,7 @@ describe('PoolTable', () => {
     function mockPool(boostedApr?: number, overrides: Partial<PoolStat> = {}) {
       const pool = {
         id: '1',
-        chain: 'mainnet',
+        chainId: UniverseChainId.Mainnet,
         token0: validRestPoolToken0,
         token1: validRestPoolToken1,
         feeTier: { feeAmount: 3000, tickSpacing: DEFAULT_TICK_SPACING, isDynamic: false },
@@ -466,7 +517,7 @@ describe('PoolTable', () => {
         volume30Day: { value: 500 },
         apr: 6,
         volOverTvl: 1.84,
-        protocolVersion: GraphQLApi.ProtocolVersion.V4,
+        protocolVersion: 'V4',
         boostedApr,
         rewards: boostedApr === undefined ? [] : toRewardAprEntries(boostedApr, USDC_MAINNET),
         ...overrides,
@@ -510,7 +561,7 @@ describe('PoolTable', () => {
     })
 
     // Regression: rows carry the lowercase protocol label `convertPoolToPoolStat` stamps on them
-    // ('v4'), so comparing against the GraphQL enum's 'V4' never matched in production — every v4 row
+    // ('v4'), so comparing against an uppercase 'V4' never matched in production — every v4 row
     // reached the APR tooltip with no currency info, leaving its pool-pair logo and network badge empty.
     it('resolves the pair currency info for a v4 row carrying the lowercase protocol label', async () => {
       mockPool(66.9, { protocolVersion: 'v4' })
@@ -534,14 +585,14 @@ describe('PoolTable', () => {
   describe('fee display column', () => {
     function mockPools(
       feeTier: { feeAmount: number; isDynamic: boolean },
-      protocolVersion: GraphQLApi.ProtocolVersion,
+      protocolVersion: 'V2' | 'V3' | 'V4',
       // Per-pool protocol fee (integer pips) as the data hook attaches it to each pool; the
       // fee-display column reads it straight off `pool.protocolFeePips`.
       served: { protocolFee?: number } = {},
     ) {
       const pool = {
         id: '1',
-        chain: 'mainnet',
+        chainId: UniverseChainId.Mainnet,
         token0: validRestPoolToken0,
         token1: validRestPoolToken1,
         feeTier: { ...feeTier, tickSpacing: DEFAULT_TICK_SPACING },
@@ -565,7 +616,7 @@ describe('PoolTable', () => {
     }
 
     it('renders a FeeDisplay for a static v4 fee tier', () => {
-      mockPools({ feeAmount: 3000, isDynamic: false }, GraphQLApi.ProtocolVersion.V4)
+      mockPools({ feeAmount: 3000, isDynamic: false }, 'V4')
       renderWithProvider(<ExploreTopPoolTable surface="explore" />)
       // FeeDisplay renders the fee standalone next to the version, not as the joined "v4 · 0.30%" text.
       expect(screen.getAllByText('0.30%').length).toBeGreaterThan(0)
@@ -573,7 +624,7 @@ describe('PoolTable', () => {
     })
 
     it('keeps the Dynamic label for dynamic fee tiers instead of rendering the sentinel as a fee', () => {
-      mockPools({ feeAmount: DYNAMIC_FEE_AMOUNT, isDynamic: true }, GraphQLApi.ProtocolVersion.V4)
+      mockPools({ feeAmount: DYNAMIC_FEE_AMOUNT, isDynamic: true }, 'V4')
       renderWithProvider(<ExploreTopPoolTable surface="explore" />)
       expect(screen.getAllByText(/^v4 · Dynamic/).length).toBeGreaterThan(0)
       // DYNAMIC_FEE_AMOUNT (8388608 pips) must never be formatted as a rate (~838%).
@@ -581,7 +632,7 @@ describe('PoolTable', () => {
     })
 
     it('renders the v2 fee through FeeDisplay', () => {
-      mockPools({ feeAmount: 3000, isDynamic: false }, GraphQLApi.ProtocolVersion.V2)
+      mockPools({ feeAmount: 3000, isDynamic: false }, 'V2')
       renderWithProvider(<ExploreTopPoolTable surface="explore" />)
       expect(screen.getAllByText('0.30%').length).toBeGreaterThan(0)
       expect(screen.queryByText(/^v2 · /)).toBeNull()
@@ -590,7 +641,7 @@ describe('PoolTable', () => {
     it('feeds the backend-served protocol fee (pips) to the engine as bps and gets a served breakdown', () => {
       mocked(getFeeBreakdown).mockClear()
       // 500 pips = 5 bps served for a 30 bps v4 pool.
-      mockPools({ feeAmount: 3000, isDynamic: false }, GraphQLApi.ProtocolVersion.V4, { protocolFee: 500 })
+      mockPools({ feeAmount: 3000, isDynamic: false }, 'V4', { protocolFee: 500 })
       renderWithProvider(<ExploreTopPoolTable surface="explore" />)
       expect(getFeeBreakdown).toHaveBeenCalledWith(
         expect.objectContaining({ feeAmount: 3000, servedProtocolFeeBps: 5 }),
@@ -604,7 +655,7 @@ describe('PoolTable', () => {
 
     it('is unavailable when the backend serves no protocol fee (the FE never computes fees)', () => {
       mocked(getFeeBreakdown).mockClear()
-      mockPools({ feeAmount: 3000, isDynamic: false }, GraphQLApi.ProtocolVersion.V4)
+      mockPools({ feeAmount: 3000, isDynamic: false }, 'V4')
       renderWithProvider(<ExploreTopPoolTable surface="explore" />)
       expect(getFeeBreakdown).toHaveBeenCalledWith(expect.objectContaining({ servedProtocolFeeBps: undefined }))
       // Unavailable: every breakdown has an undefined protocol fee; the served path never runs.

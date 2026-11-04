@@ -1,6 +1,5 @@
 import { type QueryKey, useQueryClient } from '@tanstack/react-query'
 import { HistoryDuration as RestHistoryDuration } from '@uniswap/client-data-api/dist/data/v2/types_pb'
-import { GraphQLApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
 import {
   getGetTokenHistoryOHLCQueryOptions,
@@ -34,7 +33,7 @@ let tokenIndex = 0
 function nextVariables(duration: HistoryDuration) {
   tokenIndex += 1
   return {
-    chain: GraphQLApi.Chain.Ethereum,
+    chainId: UniverseChainId.Mainnet,
     address: `0x${String(tokenIndex).padStart(40, '0')}`,
     duration,
     multichain: false,

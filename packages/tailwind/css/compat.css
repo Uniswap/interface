@@ -1,7 +1,6 @@
 /* Tamagui->Tailwind compat CSS layer (media variants + animation presets), shared by every compat component.
  *
- * Media variants mirror the Tamagui media queries in
- * packages/ui/src/theme/media.ts exactly (max-width / max-height, same
+ * Media variants mirror the legacy Tamagui media queries exactly (max-width / max-height, same
  * breakpoint values as the --breakpoint-* tokens in theme.css). Tailwind's
  * built-in max-* variants compile to exclusive ranges (`width < 450px`), so
  * these custom variants exist to keep the emitted media query text identical

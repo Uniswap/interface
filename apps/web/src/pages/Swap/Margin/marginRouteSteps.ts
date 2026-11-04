@@ -5,7 +5,7 @@ import type { MarginVenue } from 'uniswap/src/features/transactions/margin/types
 import { shortenAddress } from 'utilities/src/addresses'
 import type { MarginMarket } from '~/constants/margin'
 import { MARGIN_CHAIN_ID } from '~/constants/margin'
-import type { MarginSymbolResolver } from '~/pages/Swap/Margin/marginTokenDisplay'
+import type { MarginSymbolResolver } from '~/features/margin/utils/marginTokenDisplay'
 
 export type MarginRouteStep =
   | { type: 'swap'; fromSymbol: string; toSymbol: string; chainId: number }

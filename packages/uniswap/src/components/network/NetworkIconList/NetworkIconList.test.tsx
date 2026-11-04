@@ -49,7 +49,6 @@ describe('NetworkIconList showNumberBadge', () => {
   beforeEach(() => {
     vi.mocked(useEnabledChains).mockReturnValue({
       chains: chainIdsForOverflow,
-      gqlChains: [],
       defaultChainId: UniverseChainId.Mainnet,
       isTestnetModeEnabled: false,
     })

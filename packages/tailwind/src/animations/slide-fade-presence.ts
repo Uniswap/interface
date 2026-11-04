@@ -32,7 +32,7 @@ type WebAnimationProps = Partial<{
  * caller has to keep in sync by hand.
  *
  * The web `exitStyle` only gets a frame to animate if the caller keeps the node mounted through
- * unmount, e.g. by wrapping the conditional render in `ui/src`'s `AnimatePresence`. Without that,
+ * unmount, e.g. by wrapping the conditional render in mycelium's `Presence`. Without that,
  * the enter leg still works but the exit leg is inert on web (native's `exiting` fires regardless).
  */
 export function createSlideFadePresence(

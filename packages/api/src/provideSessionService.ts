@@ -1,7 +1,7 @@
-import type { Interceptors } from '@universe/api/src/transport'
 import type { SessionService, UniswapIdentifierService } from '@universe/sessions'
 import { PlatformSplitStubError } from 'utilities/src/errors'
 import type { Logger } from 'utilities/src/logger/logger'
+import type { Interceptors } from './transport'
 
 export function provideSessionService(_ctx: {
   getBaseUrl: () => string

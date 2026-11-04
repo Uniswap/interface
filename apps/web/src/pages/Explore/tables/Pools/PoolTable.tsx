@@ -2,9 +2,9 @@
 import { createColumnHelper, Row } from '@tanstack/react-table'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import type { HookEntry } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/types_pb'
-import { GraphQLApi } from '@universe/api'
 import { UniverseChainId, areEvmAddressesEqual } from '@universe/chains'
-import { Flex, type FlexCompatProps, Text, useMedia } from '@universe/mycelium'
+import { Flex, type FlexCompatProps, Text, useMedia, iconSizes } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import {
   forwardRef,
   type ForwardRefExoticComponent,
@@ -18,12 +18,11 @@ import {
   useState,
 } from 'react'
 import { useTranslation } from 'react-i18next'
-import { iconSizes } from 'ui/src/theme'
 import { FeeDisplay } from 'uniswap/src/components/FeeDisplay/FeeDisplay'
 import { UniswapBuiltHookMark } from 'uniswap/src/components/logos/UniswapBuiltHookMark'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { BIPS_BASE, ZERO_ADDRESS } from 'uniswap/src/constants/misc'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useListPoolCategoriesQuery } from 'uniswap/src/data/apiClients/dataApiService/categories/useListPoolCategoriesQuery'
 import { feeAmountToBps } from 'uniswap/src/features/fees/feeUnits'
 import { getFeeBreakdown } from 'uniswap/src/features/fees/getFeeBreakdown'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -35,6 +34,9 @@ import {
 import type { FeeData, PositionRewardApr } from 'uniswap/src/features/positions/types'
 import { ElementName, InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { selectRowCategoryTag } from 'uniswap/src/features/tokenCategories/selectRowCategoryTag'
+import { TokenCategoryTag } from 'uniswap/src/features/tokenCategories/TokenCategoryTag'
+import type { PoolCategory } from 'uniswap/src/features/tokenCategories/types'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { shouldReverseForWaterfall } from 'uniswap/src/features/tokens/waterfallPriority'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
@@ -57,9 +59,8 @@ import { HeaderCell } from '~/components/Table/styled'
 import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '~/constants/breakpoints'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
-import { supportedChainIdFromGQLChain } from '~/data/chainUtils'
 import { PoolSortFields } from '~/data/pools/poolStats'
-import { gqlToCurrency, OrderDirection } from '~/data/util'
+import { tokenStatToCurrency, OrderDirection } from '~/data/util'
 import { EXPLORE_API_PAGE_SIZE } from '~/features/Explore/state/constants'
 import {
   useExploreTablesFilterStore,
@@ -141,8 +142,8 @@ function buildV4CurrencyId(
   token0CurrencyId?: string
   token1CurrencyId?: string
 } {
-  // Rows carry the lowercase label `convertPoolToPoolStat` stamps on them ('v4'), not the GraphQL
-  // enum's 'V4' — comparing against the enum directly never matched, so v4 rows lost their currency ids.
+  // Rows carry the lowercase label `convertPoolToPoolStat` stamps on them ('v4'), not an uppercase
+  // 'V4' — comparing against 'V4' directly never matched, so v4 rows lost their currency ids.
   if (getProtocolVersionFromLabel(pool.protocolVersion?.toLowerCase()) !== ProtocolVersion.V4) {
     return {}
   }
@@ -261,6 +262,7 @@ function PoolDetailsLine({
   hookAddress,
   protocolFeePips,
   hookRegistry,
+  categoryTag,
 }: {
   chainId: UniverseChainId
   protocolVersion?: string
@@ -268,6 +270,8 @@ function PoolDetailsLine({
   hookAddress?: string
   protocolFeePips?: number
   hookRegistry?: Map<string, HookEntry>
+  /** Sits at the end of the details line, not beside the pair name (Figma). */
+  categoryTag?: PoolCategory
 }) {
   const { t } = useTranslation()
   const { formatPercent } = useLocalizationContext()
@@ -318,7 +322,7 @@ function PoolDetailsLine({
     </MouseoverTooltip>
   ) : null
 
-  if (!detailText && !hookNode) {
+  if (!detailText && !hookNode && !categoryTag) {
     return null
   }
 
@@ -357,6 +361,11 @@ function PoolDetailsLine({
           {hookNode}
         </>
       ) : null}
+      {categoryTag ? (
+        <Flex ml="$spacing4" flexShrink={0} testID={TestID.PoolRowCategoryTag}>
+          <TokenCategoryTag category={categoryTag} />
+        </Flex>
+      ) : null}
     </Flex>
   )
 }
@@ -370,6 +379,7 @@ function PoolDescription({
   hookAddress,
   protocolFeePips,
   hookRegistry,
+  categoryTag,
 }: {
   token0: PoolStat['token0']
   token1: PoolStat['token1']
@@ -379,14 +389,15 @@ function PoolDescription({
   hookAddress?: string
   protocolFeePips?: number
   hookRegistry?: Map<string, HookEntry>
+  categoryTag?: PoolCategory
 }) {
   // Unwrapping is the protocol's call: a v2/v3 wrapped-native leg reads as the native currency, a v4
   // one stays as served (v4 holds native and wrapped native as two distinct currencies).
   const restProtocolVersion = getProtocolVersionFromLabel(protocolVersion)
-  const currency0 = getCurrencyWithUnwrap(token0 ? gqlToCurrency(token0) : undefined, restProtocolVersion)
-  const currency1 = getCurrencyWithUnwrap(token1 ? gqlToCurrency(token1) : undefined, restProtocolVersion)
+  const currency0 = getCurrencyWithUnwrap(token0 ? tokenStatToCurrency(token0) : undefined, restProtocolVersion)
+  const currency1 = getCurrencyWithUnwrap(token1 ? tokenStatToCurrency(token1) : undefined, restProtocolVersion)
   // The served symbol is the fallback for a leg with no `Currency` to read one off (e.g. Tempo's
-  // native placeholder, which `gqlToCurrency` can't build).
+  // native placeholder, which `tokenStatToCurrency` can't build).
   const symbol0 = currency0?.symbol ?? token0?.symbol
   const symbol1 = currency1?.symbol ?? token1?.symbol
   const reverse = currency0 && currency1 ? shouldReverseForWaterfall(currency0, currency1) : false
@@ -421,13 +432,27 @@ function PoolDescription({
           hookAddress={hookAddress}
           protocolFeePips={protocolFeePips}
           hookRegistry={hookRegistry}
+          categoryTag={categoryTag}
         />
       </Flex>
     </CollapsibleCellLayout>
   )
 }
 
-type PoolTableSurface = 'explore' | 'tdp' | 'add-liquidity-pool-browser' | 'positions-discovery'
+export type PoolTableSurface =
+  | 'explore'
+  | 'category-details'
+  | 'tdp'
+  | 'add-liquidity-pool-browser'
+  | 'positions-discovery'
+
+// Figma tags Explore, category page and Create Position pool browser rows; TDP and discovery rows stay plain.
+const CATEGORY_TAG_SURFACES: ReadonlySet<PoolTableSurface> = new Set([
+  'explore',
+  'category-details',
+  'add-liquidity-pool-browser',
+])
+const EMPTY_POOL_CATEGORIES: PoolCategory[] = []
 
 function PoolTableHeader({
   category,
@@ -503,10 +528,14 @@ function ExploreTopPoolTableContent({
   staticSize,
   pageSize,
   surface,
+  categoryId,
+  categoryUnverified = false,
 }: {
   staticSize?: boolean
   pageSize?: number
   surface: PoolTableSurface
+  categoryId?: string
+  categoryUnverified?: boolean
 }): JSX.Element {
   const chainId = useChainIdFromUrlParam()
   const { sortMethod, sortAscending } = usePoolTableStore((s) => ({
@@ -537,7 +566,12 @@ function ExploreTopPoolTableContent({
     // so the two can't disagree.
     chainId,
     poolsFilter,
+    categoryId,
   })
+
+  // An unverified category may be a bogus slug the BE rejects or empties; keep the skeleton up until
+  // ListCategories settles it, since a fallback to All is about to replace this table anyway.
+  const holdUnverifiedResult = categoryUnverified && (isError || pools?.length === 0)
 
   // The toolbar's filter modal sits outside this table's sort store, so it can't run the same query; publish the
   // loaded rows' APR range for its placeholder hints instead. Cleared on unmount so a stale range never lingers.
@@ -551,8 +585,8 @@ function ExploreTopPoolTableContent({
     <TopPoolTable
       topPoolData={{
         topPools: pools,
-        isLoading,
-        isError,
+        isLoading: isLoading || holdUnverifiedResult,
+        isError: isError && !categoryUnverified,
         loadMore,
         chainId: listChainId,
         virtualized: true,
@@ -561,6 +595,7 @@ function ExploreTopPoolTableContent({
       staticSize={staticSize}
       pageSize={pageSize}
       surface={surface}
+      scopedCategoryId={categoryId}
     />
   )
 }
@@ -569,15 +604,27 @@ export const ExploreTopPoolTable = memo(function ExploreTopPoolTable({
   staticSize,
   pageSize,
   surface,
+  categoryId,
+  categoryUnverified,
 }: {
   // Render a fixed set of rows with no infinite scroll / internal scroll area (e.g. discovery surfaces).
   staticSize?: boolean
   pageSize?: number
   surface: PoolTableSurface
+  /** Pool category ListPools filter; undefined renders the unfiltered (All) list. */
+  categoryId?: string
+  /** The category id came from the URL and ListCategories hasn't confirmed it yet. */
+  categoryUnverified?: boolean
 }) {
   return (
     <PoolTableStoreContextProvider>
-      <ExploreTopPoolTableContent staticSize={staticSize} pageSize={pageSize} surface={surface} />
+      <ExploreTopPoolTableContent
+        staticSize={staticSize}
+        pageSize={pageSize}
+        surface={surface}
+        categoryId={categoryId}
+        categoryUnverified={categoryUnverified}
+      />
     </PoolTableStoreContextProvider>
   )
 })
@@ -587,11 +634,13 @@ const TopPoolTable = memo(function TopPoolTable({
   pageSize = EXPLORE_API_PAGE_SIZE,
   staticSize = false,
   surface,
+  scopedCategoryId,
 }: {
   topPoolData: TopPoolTableProps
   pageSize?: number
   staticSize?: boolean
   surface: PoolTableSurface
+  scopedCategoryId?: string
 }) {
   const { topPools, isLoading, isError, loadMore: backendLoadMore, chainId, virtualized, filterString } = topPoolData
 
@@ -616,6 +665,7 @@ const TopPoolTable = memo(function TopPoolTable({
         maxWidth={1200}
         chainId={chainId}
         surface={surface}
+        scopedCategoryId={scopedCategoryId}
         filterString={filterString}
         // A fixed-row discovery surface has nothing to virtualize.
         virtualized={staticSize ? false : virtualized}
@@ -638,6 +688,7 @@ export function PoolsTable({
   selectedPoolId,
   selectedPoolChainId,
   surface,
+  scopedCategoryId,
   virtualized,
   stickyTopOffset,
   mobileFullBleed,
@@ -663,6 +714,8 @@ export function PoolsTable({
   filterString?: string
   /** Where this table is mounted — attached to sort analytics so surfaces aren't conflated. */
   surface: PoolTableSurface
+  /** Category every row already belongs to (selected chip, category page); rows tag the next one instead. */
+  scopedCategoryId?: string
   // The matching row renders with a selected highlight — used by the add-liquidity pool browser,
   // where the table stays visible after a pool is picked.
   selectedPoolId?: string
@@ -687,19 +740,21 @@ export function PoolsTable({
     sortAscending: s.sortAscending,
   }))
   const orderDirection = sortAscending ? OrderDirection.Asc : OrderDirection.Desc
-  const { defaultChainId } = useEnabledChains()
   // One registry fetch for the whole list (not one per row), scoped to the list's chain filter and
   // skipped when nothing listed has a hook (v2/v3-only lists, zero-address v4 hooks).
   const hasHookedPool = !!pools?.some(
     (pool) => !!pool.hookAddress && !areEvmAddressesEqual(pool.hookAddress, ZERO_ADDRESS),
   )
   const hookRegistry = useHookRegistryMap({ chainId: listChainId, enabled: hasHookedPool })
+  // One cached ListCategories read per table; the hook also disables itself while the flag is off.
+  const showCategoryTags = CATEGORY_TAG_SURFACES.has(surface)
+  const { data: poolCategories = EMPTY_POOL_CATEGORIES } = useListPoolCategoriesQuery({ enabled: showCategoryTags })
 
   const poolTableValues: PoolTableValues[] | undefined = useMemo(
     () =>
       pools?.map((pool, index) => {
         const poolSortRank = index + 1
-        const chainId = supportedChainIdFromGQLChain(pool.token0?.chain as GraphQLApi.Chain) ?? defaultChainId
+        const chainId = pool.chainId
         const poolIdOrHash = pool.id
         const volumes = getPoolVolumes(pool)
         // The row link is built from this same `poolIdOrHash`, so exact equality is correct — and
@@ -720,6 +775,15 @@ export function PoolsTable({
               hookAddress={pool.hookAddress}
               protocolFeePips={pool.protocolFeePips}
               hookRegistry={hookRegistry}
+              categoryTag={
+                showCategoryTags
+                  ? selectRowCategoryTag({
+                      categoryIds: pool.categoryIds,
+                      categories: poolCategories,
+                      skipCategoryId: scopedCategoryId,
+                    })
+                  : undefined
+              }
             />
           ),
           tvl: formatVolume(volumes.tvl, convertFiatAmountFormatted),
@@ -751,7 +815,6 @@ export function PoolsTable({
       }) ?? [],
     [
       convertFiatAmountFormatted,
-      defaultChainId,
       hookRegistry,
       filterString,
       getLink,
@@ -759,6 +822,9 @@ export function PoolsTable({
       pools,
       selectedPoolId,
       selectedPoolChainId,
+      showCategoryTags,
+      poolCategories,
+      scopedCategoryId,
     ],
   )
 

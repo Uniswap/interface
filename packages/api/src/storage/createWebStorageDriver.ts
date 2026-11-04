@@ -1,4 +1,4 @@
-import { type StorageDriver } from '@universe/api/src/storage/types'
+import { type StorageDriver } from './types'
 
 export function createWebStorageDriver(): StorageDriver {
   return {

@@ -3,7 +3,10 @@ import { type Dispatch, type SetStateAction, useMemo, useRef, useState } from 'r
 import { type SharedValue, useDerivedValue } from 'react-native-reanimated'
 import { type ChartPoint } from 'uniswap/src/components/charts/computeChartPaths'
 import { appendLiveSpotPriceEntry } from 'uniswap/src/components/charts/utils'
-import { useTokenPriceChange, useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
+import {
+  useTokenPriceChange,
+  useTokenSpotPriceWithLoading,
+} from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { useTokenPriceHistoryRest } from 'uniswap/src/features/dataApi/tokenDetails/useTokenPriceHistoryRest'
 import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -31,7 +34,6 @@ export type PriceNumberOfDigits = {
 
 type ConvertFiatAmount = ReturnType<typeof useLocalizationContext>['convertFiatAmount']
 
-/** Accepts either the GraphQL-shaped entries or the shared REST hook's RestPriceHistoryPoint[]. */
 type PriceValueEntries = readonly ({ value: number } | null | undefined)[] | undefined
 
 function calculatePriceChange(priceHistory: PriceValueEntries): number | undefined {
@@ -102,9 +104,10 @@ export function useTokenPriceHistory({
   })
   const [duration, setDuration] = useState(initialDuration)
   const { convertFiatAmount } = useLocalizationContext()
-  const restSpotPrice = useTokenSpotPrice(currencyId, { isMultichainAggregateView })
+  const { price: restSpotPrice, isLoading: isSpotPriceLoading } = useTokenSpotPriceWithLoading(currencyId, {
+    isMultichainAggregateView,
+  })
   const restPriceChange24h = useTokenPriceChange(currencyId, { isMultichainAggregateView })
-  // Once on, the chart line also comes from REST instead of this hook's own GraphQL query.
   const restPriceHistory = useTokenPriceHistoryRest(currencyId, {
     duration,
     isMultichainAggregateView,
@@ -178,7 +181,8 @@ export function useTokenPriceHistory({
 
   return {
     data,
-    isLoading: skip || restPriceHistory.isLoading,
+    // PriceExplorer shows its error state for a missing spot price once loading ends, so the spot price must count too.
+    isLoading: skip || restPriceHistory.isLoading || isSpotPriceLoading,
     setDuration,
     selectedDuration: duration,
     numberOfDigits,

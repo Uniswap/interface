@@ -310,3 +310,55 @@ export function markPoolsBalanceCoachmarkEligible(state: any): any {
     },
   }
 }
+
+// Hardcoded: Blast is no longer in `UniverseChainId`.
+const BLAST_CHAIN_ID = 81457
+const isBlastCurrencyId = (currencyId: string): boolean => currencyId.startsWith(`${BLAST_CHAIN_ID}-`)
+
+// Mobile: 104
+// Extension: 37
+// Web: 65
+// Blast was removed from `UniverseChainId`, so persisted entries on chain 81457 would crash chain info lookups.
+export const removeBlastChainData = createSafeMigration({
+  name: 'removeBlastChainData',
+  migrate: (state: any) => {
+    if (!state) {
+      return state
+    }
+    const newState = { ...state }
+    if (state.transactions) {
+      newState.transactions = Object.fromEntries(
+        Object.entries(state.transactions).map(([address, txsByChain]) => {
+          const { [BLAST_CHAIN_ID]: _blastTxs, ...otherChains } = (txsByChain ?? {}) as Record<number, unknown>
+          return [address, otherChains]
+        }),
+      )
+    }
+    if (state.searchHistory?.results) {
+      newState.searchHistory = {
+        ...state.searchHistory,
+        results: state.searchHistory.results.filter((result: any) => result?.chainId !== BLAST_CHAIN_ID),
+      }
+    }
+    if (state.favorites?.tokens) {
+      newState.favorites = {
+        ...state.favorites,
+        tokens: state.favorites.tokens.filter((currencyId: string) => !isBlastCurrencyId(currencyId)),
+      }
+    }
+    if (state.visibility?.tokens) {
+      newState.visibility = {
+        ...state.visibility,
+        tokens: Object.fromEntries(
+          Object.entries(state.visibility.tokens).filter(([currencyId]) => !isBlastCurrencyId(currencyId)),
+        ),
+      }
+    }
+    return newState
+  },
+  onError: (state: any) => ({
+    ...state,
+    transactions: {},
+    searchHistory: { ...state?.searchHistory, results: [] },
+  }),
+})

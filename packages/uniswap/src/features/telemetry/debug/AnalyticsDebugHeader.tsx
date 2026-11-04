@@ -1,6 +1,8 @@
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
+import { Minus } from '@universe/mycelium/icons/Minus'
+import { Trash } from '@universe/mycelium/icons/Trash'
+import { X } from '@universe/mycelium/icons/X'
 import { useEffect, useRef } from 'react'
-import { Minus, Trash, X } from 'ui/src/components/icons'
 import { useEvent } from 'utilities/src/react/hooks'
 
 interface AnalyticsDebugHeaderProps {

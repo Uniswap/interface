@@ -1,6 +1,6 @@
 // oxlint-disable react/forbid-elements -- the compat chrome IS the raw DOM boundary (no Tamagui Flex here; Radix owns the frame element)
 import * as DialogPrimitive from '@radix-ui/react-dialog'
-import { isTouchable, isWebApp } from '@universe/environment'
+import { isWebApp } from '@universe/environment'
 import * as React from 'react'
 import { useDisableBodyScroll } from 'utilities/src/react/useDisableBodyScroll'
 import { useInjectSingleStylesheet } from 'utilities/src/react/useInjectSingleStylesheet'
@@ -69,7 +69,7 @@ export function WebBottomSheet({
   // renders the frame a paint after the hooks first run, so node arrival must re-fire the
   // drag/freeze effects (a ref read inside them would silently never attach on first open).
   const [frameNode, setFrameNode] = React.useState<HTMLDivElement | null>(null)
-  useSheetDrag({ isOpen, isTouchDevice: isTouchable, onClose, frame: frameNode })
+  useSheetDrag({ isOpen, onClose, frame: frameNode })
   useSheetEscapeToClose({ isOpen, onClose })
   // Strict Tamagui Sheet parity: fit mode measures the frame once at open and
   // freezes it there; percent mode is owned by the snap point.
@@ -255,7 +255,7 @@ export function WebBottomSheet({
   })
 
   return (
-    /* Non-modal + forceMount replicate the legacy Tamagui Sheet contract: children stay
+    /* Non-modal + forceMount replicate the legacy Sheet contract: children stay
        mounted (hidden off-screen) while closed, keeping their DOM and React state. Radix's
        modal mode is incompatible with that — it aria-hides the rest of the app and disables
        body pointer events for as long as the content is *mounted*, not just while open.

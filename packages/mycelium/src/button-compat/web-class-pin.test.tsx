@@ -1,44 +1,29 @@
 /**
- * ButtonCompat WEB OUTPUT PIN (INFRA-3230).
+ * ButtonCompat web class invariants (INFRA-3230).
  *
- * ButtonCompat's parity proof is 2,912 computed-style cell-pairs produced by
- * `labs/workbench/scripts/verify-button-parity.mts` against the real legacy
- * Tamagui Button. That proof is a statement about the CSS the emitted class
- * string resolves to — so ANY change to the emitted string invalidates it,
- * silently, without the workbench being re-run.
- *
- * INFRA-3230 extracts the class logic out of the render into `./compile` (the
- * native parity harness needs a pure `(props) => string`) and decomposes the
- * [variant][emphasis] tables by interaction scope. Both are meant to be
- * strictly behaviour-preserving on web. This file is the pin that says so:
- *
- *  1. A digest over `renderToStaticMarkup` for the full
+ *  1. The extracted `buttonCompatFrameClassName` returns exactly the class
+ *     string the component puts on its `<button>`, across the full
  *     variant × emphasis × size × fill × iconPosition × focusScaling × state
- *     matrix (8,960 cases). Not just the classes, the whole DOM (tags,
- *     attribute order, inline styles, the spinner SVG). If a single byte moves
- *     anywhere in the matrix, this fails. See the pin-history note on
- *     PINNED_MARKUP_DIGEST for when regenerating it is legitimate.
- *  2. The 32 re-joined [variant][emphasis] cells, verbatim, for both tables.
- *     The digest already covers them, but a digest mismatch is unreadable;
- *     these make a regression say which cell moved.
- *  3. That the extracted `buttonCompatFrameClassName` returns exactly the
- *     class string the component puts on its `<button>` — the property the
- *     native harness's `NativeParitySuiteConfig.className` relies on.
+ *     matrix. The native leg builds its frame from the same compiler.
+ *  2. The 32 scope-decomposed [variant][emphasis] cells re-join to the literal
+ *     strings Tailwind's scanner reads (see the note above those tests).
+ *  3. Out-of-enum variants/emphases degrade like legacy, and the label/icon
+ *     class selectors reproduce the rendered classes.
  */
-import { createHash } from 'node:crypto'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
+import { cn } from '../cn'
+import { SINGLE_LINE_ELLIPSIS } from '../text-compat/typography-classes'
 import { ButtonCompat } from './ButtonCompat'
+import type { ButtonEmphasis, ButtonFocusScaling, ButtonIconPosition, ButtonSize, ButtonVariant } from './compile'
 import {
   buttonCompatFrameClassName,
   buttonCompatIconClassName,
   buttonCompatTextClassName,
   FRAME_SCOPE_PREFIXES,
-  SPINNER_GLYPH,
   TEXT_SCOPE_PREFIXES,
   variantEmphasisClass,
 } from './compile'
-import type { ButtonEmphasis, ButtonFocusScaling, ButtonIconPosition, ButtonSize, ButtonVariant } from './compile'
 import {
   FRAME_JOINED_CELLS,
   FRAME_VARIANT_EMPHASIS,
@@ -68,26 +53,6 @@ const STATES = [
   { key: 'customBg+primaryColor', props: { backgroundColor: 'rgb(10, 20, 30)', 'primary-color': '#0af' } },
   { key: 'lineHeightDisabled', props: { lineHeightDisabled: true } },
 ] as const
-
-/**
- * Digest of the rendered markup over the full matrix. Regenerating this
- * constant is only legitimate alongside a re-run of
- * `labs/workbench/scripts/verify-button-parity.mts` — the 2,912-cell-pair
- * proof is what it stands in for.
- *
- * Pin history (dated, per the INFRA-3097 exception protocol):
- * - af7ddaf3: captured from the pre-INFRA-3230-refactor implementation
- *   (441b18eb…), standing in for the 2026-07-28 2,912/0 workbench run.
- * - 2026-08-04 (INFRA-3255 ruling, Charlie Bachmeier): re-pinned after the
- *   default/primary cell swapped to the canonical bg-neutral1 family — the one
- *   sanctioned emitted-string change. verify-button-parity.mts was re-run the
- *   same day on both sides of the swap: 2,912 cells, 0 unexplained, and the
- *   computed-style captures byte-identical (--accent3: var(--neutral1), so the
- *   rendered values did not move). Ledger:
- *   labs/workbench/scripts/button-parity-exceptions.ts.
- */
-const PINNED_MARKUP_DIGEST = 'd90f46b6647b0ed89255615656d8a9f412e68b2f78cc89821c69a2d63f3f3eec'
-const PINNED_MATRIX_SIZE = 8960
 
 interface MatrixCase {
   key: string
@@ -149,22 +114,12 @@ function renderCase(matrixCase: MatrixCase): string {
   )
 }
 
-describe('ButtonCompat web output is byte-identical across the full matrix', () => {
+describe('ButtonCompat web frame across the full matrix', () => {
   const matrix = buildMatrix()
 
-  it('covers the pinned matrix size', () => {
-    expect(matrix).toHaveLength(PINNED_MATRIX_SIZE)
-  })
-
-  it('renders the pinned markup digest (the workbench parity proof stays valid)', () => {
-    const body = matrix.map((matrixCase) => `${matrixCase.key}\t${renderCase(matrixCase)}`).join('\n')
-    expect(createHash('sha256').update(body).digest('hex')).toBe(PINNED_MARKUP_DIGEST)
-  })
-
-  it('emits the frame class string the compiler produces (the native harness contract)', () => {
-    // The harness types `NativeParitySuiteConfig.className` as
-    // `(props: P) => string`; this is the property that makes the extracted
-    // compiler usable as that callback.
+  it('emits the frame class string the compiler produces', () => {
+    // The native leg builds its frame from the same compiler, so the rendered web
+    // class string and the compiler output must agree.
     const mismatches: string[] = []
     for (const matrixCase of matrix) {
       const rendered = /class="([^"]*)"/.exec(renderCase(matrixCase))?.[1]
@@ -243,8 +198,15 @@ describe('the subcomponent class selectors are pure and exported', () => {
   it('text selector reproduces the rendered span classes', () => {
     const markup = renderToStaticMarkup(<ButtonCompat variant="branded">Swap</ButtonCompat>)
     const spanClass = [...markup.matchAll(/class="([^"]*)"/g)].map((m) => unescape(m[1] ?? '')).at(-1)
+    // The leg layers the single-line ellipsis over the cell, exactly as ./web-text does.
     expect(
-      buttonCompatTextClassName({ variant: 'branded', emphasis: 'primary', size: 'medium', isDisabled: false }),
+      buttonCompatTextClassName({
+        variant: 'branded',
+        emphasis: 'primary',
+        size: 'medium',
+        isDisabled: false,
+        className: cn(SINGLE_LINE_ELLIPSIS),
+      }),
     ).toBe(spanClass)
   })
 
@@ -258,36 +220,5 @@ describe('the subcomponent class selectors are pure and exported', () => {
     expect(
       buttonCompatIconClassName({ variant: 'critical', emphasis: 'tertiary', size: 'large', isDisabled: false }),
     ).toBe(iconClass)
-  })
-})
-
-/**
- * SPINNER_GLYPH exists because the native leg cannot inherit `currentColor` and
- * has to rebuild the same circle as `react-native-svg` elements. The web leg
- * deliberately keeps its literals so this file's byte-pinned DOM is untouched —
- * which means the shared constant could silently drift from what web paints.
- * This is the pin that stops it: every value is read back out of the RENDERED
- * web markup.
- */
-describe('SPINNER_GLYPH matches the glyph the web leg actually renders', () => {
-  const markup = renderToStaticMarkup(<ButtonCompat loading>Swap</ButtonCompat>)
-  const paths = [...markup.matchAll(/<path\b([^>]*)>/g)].map((m) => m[1] as string)
-  const attr = (tag: string, name: string): string | undefined => new RegExp(`${name}="([^"]*)"`).exec(tag)?.[1]
-
-  it('the web leg renders the two-path circle this constant describes', () => {
-    expect(paths, 'the web spinner is not two paths any more').toHaveLength(2)
-    expect(markup).toContain(`viewBox="${SPINNER_GLYPH.viewBox}"`)
-  })
-
-  it('both path geometries and stroke settings are the shared values', () => {
-    expect(attr(paths[0] as string, 'd')).toBe(SPINNER_GLYPH.trackPath)
-    expect(attr(paths[1] as string, 'd')).toBe(SPINNER_GLYPH.arcPath)
-    expect(attr(paths[0] as string, 'opacity')).toBe(SPINNER_GLYPH.trackOpacity)
-    for (const tag of paths) {
-      expect(attr(tag as string, 'stroke-width')).toBe(SPINNER_GLYPH.strokeWidth)
-      expect(attr(tag as string, 'stroke-linecap')).toBe('round')
-      // Web's mechanism, and precisely the one native cannot use.
-      expect(attr(tag as string, 'stroke')).toBe('currentColor')
-    }
   })
 })

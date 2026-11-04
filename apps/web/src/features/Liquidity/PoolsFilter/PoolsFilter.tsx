@@ -9,7 +9,7 @@ import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter/Netw
 import { useNetworkSelectorOptions } from 'uniswap/src/components/network/NetworkFilter/useNetworkSelectorOptions'
 import { COLLAPSED_SEARCH_WIDTH } from '~/components/ExpandableSearchInput/ExpandableSearchInput'
 import { useNetworkFilterChainIds } from '~/components/NetworkFilter/useFilteredChains'
-import { useActiveAddresses } from '~/features/accounts/store/hooks'
+import { useActiveAddresses } from '~/connection/accounts/hooks'
 import { PoolsFilterModal } from '~/features/Liquidity/PoolsFilter/PoolsFilterModal'
 import { countActivePoolsFilters } from '~/features/Liquidity/PoolsFilter/toRequest'
 import { EMPTY_POOLS_FILTER_STATE, type PoolsAprRange, type PoolsFilterState } from '~/types/poolsFilter'

@@ -1,4 +1,4 @@
-import { GraphQLApi } from '@universe/api'
+import { UniverseChainId } from '@universe/chains'
 import type { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { describe, expect, it } from 'vitest'
 import { getAggregateTokenBalance } from '~/pages/TokenDetails/components/earn/utils'
@@ -15,8 +15,8 @@ function createBalance(quantity: number, balanceUSD: number | undefined): Portfo
 describe('TokenDetails earn banner utils', () => {
   it('aggregates balances from the Token Details multichain map', () => {
     const multiChainMap = {
-      [GraphQLApi.Chain.Ethereum]: { balance: createBalance(100, 100) },
-      [GraphQLApi.Chain.Base]: { balance: createBalance(50, undefined) },
+      [UniverseChainId.Mainnet]: { balance: createBalance(100, 100) },
+      [UniverseChainId.Base]: { balance: createBalance(50, undefined) },
     } as MultiChainMap
 
     const balance = getAggregateTokenBalance(multiChainMap)

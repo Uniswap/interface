@@ -7,7 +7,6 @@ import {
   type RwaPriceDisplay,
 } from 'uniswap/src/data/apiClients/dataApiService/rwa/rwaMetrics'
 import type { IssuerToken, Rwa } from 'uniswap/src/data/apiClients/dataApiService/rwa/types'
-import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { getTokenDetailsURL } from '~/data/util'
 import { TDP_MULTICHAIN_CHAIN_QUERY_VALUE } from '~/utils/params/chainQueryParam'
@@ -53,7 +52,7 @@ export function linkForIssuer({
   }
   return getTokenDetailsURL({
     address: primary.chainToken.address,
-    chain: toGraphQLChain(primary.chainId),
+    chainId: primary.chainId,
     chainQueryParam: chainFilter ? undefined : TDP_MULTICHAIN_CHAIN_QUERY_VALUE,
   })
 }

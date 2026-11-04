@@ -29,6 +29,11 @@ vi.mock('ui/src', async (importOriginal) => {
     Content: ({ children }: { children: ReactNode }) => <>{children}</>,
     Close: ({ children }: { children: ReactNode }) => <>{children}</>,
   })
+  return { ...actual, Popover }
+})
+
+vi.mock('@universe/mycelium', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@universe/mycelium')>()
   function Switch({
     checked,
     onCheckedChange,
@@ -50,7 +55,7 @@ vi.mock('ui/src', async (importOriginal) => {
       />
     )
   }
-  return { ...actual, Popover, Switch }
+  return { ...actual, Switch }
 })
 
 // The glossary modal renders through the real Modal, which portals; honor isModalOpen so a closed

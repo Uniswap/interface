@@ -1,5 +1,5 @@
 import { Text, TouchableArea } from '@universe/mycelium'
-import { ExternalLink } from 'ui/src/components/icons'
+import { ExternalLink } from '@universe/mycelium/icons/ExternalLink'
 import { openUri } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'

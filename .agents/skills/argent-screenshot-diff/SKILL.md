@@ -1,6 +1,6 @@
 ---
 name: argent-screenshot-diff
-description: Capture stable before/after screenshots on an iOS simulator or Android emulator and pixel-diff them into evidence. Use when asked for a visual regression check, a screenshot diff, a before/after visual comparison, or when a visible mobile UI change needs pixel proof — including the executed screenshot-diff that a Tamagui conversion batch requires.
+description: Capture stable before/after screenshots on an iOS simulator or Android emulator and pixel-diff them into evidence. Use when asked for a visual regression check, a screenshot diff, a before/after visual comparison, or when a visible mobile UI change needs pixel proof — including the executed screenshot-diff that a component migration batch requires.
 ---
 
 ## 1. Use the first-party `screenshot-diff` tool
@@ -51,11 +51,11 @@ Get a `udid` per `argent-ios-simulator-setup` (iOS, UUID-shaped) or `argent-andr
 
 Everything below is the **argent-driven local-device path**, and that path needs a **locally attached simulator, emulator, or device** in a session running on a developer machine: argent's MCP server drives a local sim/emulator or an attached device, and a headless session has no argent binary, no argent MCP server, and no device.
 
-If you are headless, do **not** stage a diff and imply it ran. `tamagui-conversion` is explicit: *a staged-but-unrun diff is not evidence.* Instead do one of:
+If you are headless, do **not** stage a diff and imply it ran. A staged-but-unrun diff is not evidence. Instead do one of:
 
 1. **Hand off.** Stage the comparison surface (§ 4), commit it, and write the exact runnable steps — udid selection, story names, `scale: 1.0`, the `screenshot-diff` call and its `outputDir`, and the state matrix — into the Linear issue and PR body so a human-run session executes it verbatim.
 2. **Record the obligation.** Comment on the issue that the executed diff is outstanding, with the commit the diff must be run against. An unmet obligation on the record beats a fabricated verdict.
-3. **Substitute, with sign-off.** If no legacy twin exists there is nothing to diff at all — substitute self-contained behavioral tests plus **explicit requester sign-off** (the `tamagui-conversion` rule).
+3. **Substitute, with sign-off.** If no legacy twin exists there is nothing to diff at all — substitute self-contained behavioral tests plus **explicit requester sign-off**.
 
 ### Remote devices — the blockers above are narrower than "you need a developer machine"
 
@@ -213,7 +213,7 @@ So: a screenshot-diff session runs dev Metro *on purpose*, and booting into Stor
 An executed diff is only evidence once it is **on the record**. Post to both the Linear issue and the PR:
 
 1. **Before/after images** per state — legacy, rebuilt, and the diff PNG. Never commit the images into the repo (the web harness's rule: report JSON is committed, images are gitignored); attach them to the issue/PR instead.
-2. **Video for motion.** Static screenshots cannot prove an animation. Channel convention (Thomas's rule, carried in `tamagui-conversion`) is before/after screenshots **plus video for anything animated**.
+2. **Video for motion.** Static screenshots cannot prove an animation. Channel convention is before/after screenshots **plus video for anything animated**.
 3. **Provenance**: device model, OS version, platform, Metro mode, and the **commit SHA** the diff ran against. A diff against uncommitted work is not reproducible — the web harness refuses a dirty tree for exactly this reason.
 4. **The diff mechanism** (§ 7) — `screenshot-diff` and its mode, or the fallback with the thresholds you used and any deviation from the defaults and why.
 5. **A verdict per state**, not one aggregate. `pass` / `flagged` / `known drift (reason)`. Enumerate the full matrix so a reviewer can see nothing was quietly skipped.
@@ -233,4 +233,3 @@ Say plainly whether the diff **ran**. "Staged" and "executed" are different clai
 | `argent-android-emulator-setup` | Booting an Android emulator, getting an adb serial, `adb reverse` |
 | `argent-create-flow` | Record the navigate-and-capture sequence as a flow so before/after captures are byte-for-byte reproducible via `flow-execute` — this removes interaction variance, the largest source of diff noise |
 | `argent-react-native-app-workflow` | Getting the build installed and Metro running before any capture |
-| `tamagui-conversion` | The migration contract that requires an executed diff as the mobile proof artifact |

@@ -1,6 +1,6 @@
 import type { Currency } from '@uniswap/sdk-core'
 import { usePermissionedSwapPair } from 'uniswap/src/features/permissionedTokens/usePermissionedSwapPair'
-import { useAccount } from '~/hooks/useAccount'
+import { useAccount } from '~/connection/hooks/useAccount'
 
 type LPPermissionedGating = {
   isPermissioned: boolean

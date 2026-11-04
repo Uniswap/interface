@@ -1,5 +1,5 @@
 import { GetTokenHistoryTVLResponse } from '@uniswap/client-data-api/dist/data/v2/api_pb'
-import { GraphQLApi } from '@universe/api'
+import { UniverseChainId } from '@universe/chains'
 import { dataApiServiceClientV2 } from 'uniswap/src/data/apiClients/dataApiService/clients/DataApiClientV2'
 import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import { DataQuality } from '~/components/Charts/utils'
@@ -19,7 +19,7 @@ vi.mock('uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData', async (
 const mockClient = vi.mocked(dataApiServiceClientV2)
 const NOW_S = Math.floor(Date.now() / 1000)
 const VARIABLES = {
-  chain: GraphQLApi.Chain.Ethereum,
+  chainId: UniverseChainId.Mainnet,
   address: '0x0000000000000000000000000000000000000001',
   multichain: false,
 }

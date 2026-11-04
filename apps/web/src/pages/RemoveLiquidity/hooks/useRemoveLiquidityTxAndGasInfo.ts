@@ -1,7 +1,9 @@
-import { useQuery } from '@tanstack/react-query'
+import { skipToken, useQuery } from '@tanstack/react-query'
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Protocols } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/types_pb'
 import { DecreasePositionRequest, LPApprovalRequest } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/api_pb'
 import { LPAction, LPToken } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/types_pb'
+import { Hook, HookOptions } from '@uniswap/v4-sdk'
 import { useEffect, useMemo, useState } from 'react'
 import { liquidityQueries } from 'uniswap/src/data/apiClients/liquidityService/liquidityQueries'
 import { useCheckLPApprovalQuery } from 'uniswap/src/data/apiClients/liquidityService/useCheckLPApprovalQuery'
@@ -17,6 +19,7 @@ import { useLogLiquidityTxError } from 'uniswap/src/features/transactions/liquid
 import { getErrorMessageToDisplay, parseErrorMessageTitle } from 'uniswap/src/features/transactions/liquidity/utils'
 import { getWrappedTokenIfExists } from 'uniswap/src/utils/currency'
 import { logger } from 'utilities/src/logger/logger'
+import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { LP_GAS_URGENCY } from '~/features/Liquidity/constants'
 import { getTokenOrZeroAddress } from '~/features/Liquidity/utils/currency'
 import { getProtocols } from '~/features/Liquidity/utils/protocolVersion'
@@ -25,6 +28,7 @@ import {
   useRemoveLiquidityModalContext,
 } from '~/pages/RemoveLiquidity/RemoveLiquidityModalContext'
 import type { RemoveLiquidityTxInfo } from '~/pages/RemoveLiquidity/RemoveLiquidityTxContext'
+import { decreaseRevertsInHook } from '~/pages/RemoveLiquidity/utils/decreaseRevertsInHook'
 
 function buildCheckApprovalLPRequest({
   positionInfo,
@@ -62,6 +66,21 @@ function buildCheckApprovalLPRequest({
       return undefined
   }
 }
+
+/** The position's v4 hook, when it can act on (and so revert) a liquidity removal. */
+function getRemoveLiquidityHook(positionInfo: PositionInfo | undefined): string | undefined {
+  const hookAddress = positionInfo?.version === ProtocolVersion.V4 ? positionInfo.v4hook : undefined
+  if (!hookAddress) {
+    return undefined
+  }
+  const canActOnRemoval =
+    Hook.hasPermission(hookAddress, HookOptions.BeforeRemoveLiquidity) ||
+    Hook.hasPermission(hookAddress, HookOptions.AfterRemoveLiquidity)
+  return canActOnRemoval ? hookAddress : undefined
+}
+
+/** `revertsInHook` blocks the decrease; `unconfirmed` means it could not be estimated, but nothing showed a revert. */
+type UnestimatedDecrease = 'revertsInHook' | 'unconfirmed'
 
 // oxlint-disable-next-line complexity
 export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }): RemoveLiquidityTxInfo {
@@ -180,6 +199,9 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
     !hasCommitted &&
     ((!percentInvalid && !approvalQueryParams) || (!v2ApprovalLoading && !approvalError && Boolean(v2LpTokenApproval)))
 
+  const [unestimatedDecrease, setUnestimatedDecrease] = useState<UnestimatedDecrease>()
+  const hookRejectsRemoval = unestimatedDecrease === 'revertsInHook'
+
   const {
     data: decreaseCalldata,
     isLoading: decreaseCalldataLoading,
@@ -188,7 +210,9 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
   } = useQuery(
     liquidityQueries.decreasePosition({
       params: decreaseCalldataQueryParams,
-      refetchInterval: transactionError ? false : REMOVE_LIQUIDITY_REFETCH_INTERVAL_MS,
+      // Polling stops on a rejection too: each poll re-stamps the calldata's deadline, which would re-run the
+      // gas estimate and drop the rejection while it reloads.
+      refetchInterval: transactionError || hookRejectsRemoval ? false : REMOVE_LIQUIDITY_REFETCH_INTERVAL_MS,
       retry: false,
       enabled: isQueryEnabled && Boolean(decreaseCalldataQueryParams),
     }),
@@ -212,11 +236,39 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
     },
   })
 
-  const { displayValue: estimatedGasFee } = useTransactionGasFee({
+  const { displayValue: estimatedGasFee, isLoading: gasFeeLoading } = useTransactionGasFee({
     tx: decreaseCalldata?.decrease,
     skip: !!decreaseCalldata?.gasFee,
     urgency: LP_GAS_URGENCY,
   })
+
+  // When its simulation of the decrease fails the service still returns the calldata, just without a gas fee,
+  // and the gas estimate then reports no fee rather than the revert. Neither tells a revert from an RPC outage,
+  // so only an eth_call that reverts inside the hook may block the withdrawal; otherwise it is just a warning.
+  // Held in state because the calldata query above, which runs first, stops polling on a revert.
+  const removeLiquidityHook = getRemoveLiquidityHook(positionInfo)
+  const decreaseTx = decreaseCalldata?.decrease
+  const isDecreaseUnestimated =
+    Boolean(removeLiquidityHook && decreaseTx) &&
+    !decreaseCalldata?.gasFee &&
+    !!decreaseCalldataQueryParams?.simulateTransaction &&
+    !gasFeeLoading &&
+    !estimatedGasFee
+  const { data: revertsInHook, isLoading: hookRevertLoading } = useQuery({
+    queryKey: [ReactQueryCacheKey.LiquidityService, 'decreaseRevertsInHook', decreaseTx, removeLiquidityHook],
+    queryFn:
+      isDecreaseUnestimated && decreaseTx && removeLiquidityHook
+        ? (): Promise<boolean> => decreaseRevertsInHook({ tx: decreaseTx, hookAddress: removeLiquidityHook })
+        : skipToken,
+    retry: false,
+  })
+  useEffect(() => {
+    if (gasFeeLoading || hookRevertLoading) {
+      return
+    }
+    setUnestimatedDecrease(!isDecreaseUnestimated ? undefined : revertsInHook ? 'revertsInHook' : 'unconfirmed')
+  }, [gasFeeLoading, hookRevertLoading, isDecreaseUnestimated, revertsInHook])
+
   const decreaseGasFeeUsd =
     useUSDCurrencyAmountOfGasFee(
       toSupportedChainId(decreaseCalldata?.decrease?.chainId) ?? undefined,
@@ -231,7 +283,9 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
     decreaseCalldata,
     v2LpTokenApproval,
     approvalLoading: v2ApprovalLoading,
-    error: getErrorMessageToDisplay({ approvalError, calldataError }),
-    refetch: approvalError ? approvalRefetch : calldataError ? calldataRefetch : undefined,
+    error: getErrorMessageToDisplay({ approvalError, calldataError }) || hookRejectsRemoval,
+    hookRejectsRemoval,
+    decreaseMayFail: unestimatedDecrease === 'unconfirmed',
+    refetch: approvalError ? approvalRefetch : calldataError || hookRejectsRemoval ? calldataRefetch : undefined,
   }
 }

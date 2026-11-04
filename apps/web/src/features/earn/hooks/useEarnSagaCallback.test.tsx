@@ -20,12 +20,12 @@ vi.mock('react-redux', () => ({
   useDispatch: () => mocks.dispatch,
 }))
 
-vi.mock('~/features/accounts/store/hooks', () => ({
+vi.mock('~/connection/accounts/hooks', () => ({
   useActiveAccount: mocks.useActiveAccount,
   useAccountsStore: mocks.useAccountsStore,
 }))
 
-vi.mock('~/hooks/useSelectChain', () => ({
+vi.mock('~/connection/hooks/useSelectChain', () => ({
   useSelectChain: () => mocks.selectChain,
 }))
 

@@ -70,12 +70,12 @@ testLevel: unit
 runFrequency: pr-check
 # coverage
 code_paths:
-  - apps/web/src/features/wallet/connection/services/createConnectionService.ts
-  - apps/web/src/features/wallet/connection/services/multiplatformConnectionService.ts
+  - apps/web/src/connection/services/createConnectionService.ts
+  - apps/web/src/connection/services/multiplatformConnectionService.ts
 automationRefs:
-  - path: apps/web/src/features/wallet/connection/services/createConnectionService.test.ts
+  - path: apps/web/src/connection/services/createConnectionService.test.ts
     testName: createConnectionService > connect > should handle connection errors and rethrow unexpected errors
-  - path: apps/web/src/features/wallet/connection/services/createConnectionService.test.ts
+  - path: apps/web/src/connection/services/createConnectionService.test.ts
     testName: createConnectionService > connect > should ignore expected connection errors
 ---
 

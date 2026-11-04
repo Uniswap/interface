@@ -591,7 +591,7 @@ test.describe(
           '{"priceInverted":false,"fullRange":false,"minPrice":"2500","maxPrice":"5000","initialPrice":""}',
       }
 
-      test('V4 can increment/decrement price range correctly', async ({ page, graphql }) => {
+      test('V4 can increment/decrement price range correctly', async ({ page }) => {
         await page.goto(
           buildUrl({
             subPath: '/v4',
@@ -603,12 +603,11 @@ test.describe(
           }),
         )
 
-        await graphql.waitForResponse('PoolPriceHistory')
         await expectInputToBeFilled({ page })
         await incrementDecrementPrice({ page })
       })
 
-      test('V3 can increment/decrement price range correctly', async ({ page, graphql }) => {
+      test('V3 can increment/decrement price range correctly', async ({ page }) => {
         await stubTradingApiEndpoint({ page, endpoint: V1_TRADING_API_PATHS.quote })
         await page.goto(
           buildUrl({
@@ -620,7 +619,6 @@ test.describe(
             },
           }),
         )
-        await graphql.waitForResponse('PoolPriceHistory')
         await expectInputToBeFilled({ page })
         await incrementDecrementPrice({ page })
       })

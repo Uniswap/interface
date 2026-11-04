@@ -2,9 +2,8 @@
  * Token resolution contract for the icon factory (INFRA-2956, found by
  * INFRA-2971): Tamagui token wrapper props (`size="$icon.18"`,
  * `color="$statusSuccess"`) typecheck as strings and must NEVER reach the SVG
- * raw — the legacy factory resolves them, so converted call sites silently
- * lose sizing and theme color otherwise. The theme-aware resolved-value proof
- * lives in the tailwind parity suite; this pins the factory's emission.
+ * raw, or call sites silently lose sizing and theme color. This pins the
+ * factory's emission.
  *
  * Assertions read `renderToStaticMarkup` output (the INFRA-2971 repro
  * mechanism): jsdom's CSSOM drops `var()` inline-style values, so the
@@ -69,7 +68,7 @@ describe('createIcon token resolution', () => {
   it('resolves the no-size default to 8px on inline style, same channel as legacy (container CSS must lose to the default too)', () => {
     // The default rides the same inline-style channel as explicit sizes; on
     // the low-specificity presentation attribute, `[&_svg]:size-4` would beat
-    // it on this system only. The parity channel matrix pins the legacy side.
+    // it.
     const svg = renderCheckSvg({})
     expect(svg.styleWidth).toBe('8px')
     expect(svg.styleHeight).toBe('8px')
@@ -129,8 +128,8 @@ describe('createIcon token resolution', () => {
 
   it('passes non-token colors through unchanged on inline style, defaulting to currentColor', () => {
     // Every color — including the no-color-prop default — rides inline style
-    // to match legacy specificity (`svg { color: … }` must lose to the prop
-    // and the default alike); the parity channel matrix pins the legacy side.
+    // so container CSS (`svg { color: … }`) loses to the prop and the default
+    // alike.
     for (const [props, expected] of [
       [{ color: '#FF37C7' }, '#FF37C7'],
       [{ color: 'currentColor' }, 'currentColor'],

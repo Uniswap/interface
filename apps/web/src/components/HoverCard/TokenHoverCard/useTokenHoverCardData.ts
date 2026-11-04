@@ -1,4 +1,4 @@
-import { GraphQLApi } from '@universe/api'
+import { UniverseChainId } from '@universe/chains'
 import { useMemo } from 'react'
 import {
   useTokenMarketStats,
@@ -22,14 +22,14 @@ import { getNativeTokenDBAddress } from '~/utils/nativeTokens'
 export function useTokenHoverCardData({
   currencyInfoProp,
   currencyIdFromToken,
-  gqlChain,
+  chainId,
   rawAddress,
   hasOpenIntent,
   isOpen,
 }: {
   currencyInfoProp?: CurrencyInfo
   currencyIdFromToken?: string
-  gqlChain: GraphQLApi.Chain
+  chainId: UniverseChainId
   rawAddress?: string
   hasOpenIntent: boolean
   isOpen: boolean
@@ -62,16 +62,16 @@ export function useTokenHoverCardData({
   const isMultichainAsset = (currencyInfo?.searchMultichainParent?.tokenCurrencyIds.length ?? 0) > 1
 
   // NATIVE_CHAIN_ID is a frontend sentinel — the backend expects undefined (not 'NATIVE') for native-token price queries
-  const tokenAddress = !rawAddress || rawAddress === NATIVE_CHAIN_ID ? getNativeTokenDBAddress(gqlChain) : rawAddress
+  const tokenAddress = !rawAddress || rawAddress === NATIVE_CHAIN_ID ? getNativeTokenDBAddress(chainId) : rawAddress
 
   const variables = useMemo(
     () => ({
-      chain: gqlChain,
+      chainId,
       address: tokenAddress,
       duration: HistoryDuration.Day,
       multichain: isMultichainAsset,
     }),
-    [gqlChain, tokenAddress, isMultichainAsset],
+    [tokenAddress, isMultichainAsset, chainId],
   )
 
   // Hold the chart until currencyInfo settles: `variables.multichain` derives from it, so

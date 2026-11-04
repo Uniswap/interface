@@ -1,8 +1,9 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import type { Currency } from '@uniswap/sdk-core'
 import { parseRestProtocolVersion } from '@universe/api'
-import { cn, Flex as FlexCompat, type FlexCompatProps } from '@universe/mycelium'
+import { cn, Flex as FlexCompat, type FlexCompatProps, zIndexes } from '@universe/mycelium'
 import { Button, Flex, Text, TouchableArea } from '@universe/mycelium'
+import { RotateLeft } from '@universe/mycelium/icons/RotateLeft'
 import type { Dispatch, SetStateAction } from 'react'
 import {
   forwardRef,
@@ -14,8 +15,6 @@ import {
   useState,
 } from 'react'
 import { useTranslation } from 'react-i18next'
-import { RotateLeft } from 'ui/src/components/icons/RotateLeft'
-import { zIndexes } from 'ui/src/theme/zIndexes'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'

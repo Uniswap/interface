@@ -12,7 +12,7 @@ Shared by apps/web (Toucan) and apps/pools-xyz.
 
 ## Boundary
 
-Runtime dependencies are `viem` and nothing else: no Apollo, ethers, `@universe/chains`,
+Runtime dependencies are `viem` and nothing else: no `@universe/api`, ethers, `@universe/chains`,
 react-native, redux or i18n. `src/importGraph.test.ts` enforces it. App-specific inputs — chain
 registries, the quick-launch preset supply, wallet state, logging — are passed in by the caller.
 

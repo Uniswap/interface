@@ -30,11 +30,11 @@ vi.mock('uniswap/src/data/apiClients/dataApiService/auctions/auctionQueries', ()
     }),
   },
 }))
-vi.mock('~/features/accounts/store/hooks', () => ({
+vi.mock('~/connection/accounts/hooks', () => ({
   useActiveAddress: () => '0x1111111111111111111111111111111111111111',
 }))
 vi.mock('~/state/transactions/hooks', () => ({
-  useTransaction: () => undefined,
+  useTransactionByHashOrBatchId: () => undefined,
   useTransactions: () => new Map(mocks.transactions),
 }))
 vi.mock('~/utils/averageBlockTimeMs', () => ({ getPollingIntervalMs: () => 25 }))

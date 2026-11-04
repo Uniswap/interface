@@ -106,7 +106,7 @@ export function useAuctionTokenInfo(
   // Prefer backend error, fallback to contract error
   const error = backendError || contractError || undefined
 
-  // Check for logo override from config
+  // Name/symbol override from config
   const metadataOverride = useMemo(() => {
     if (chainId && tokenAddress) {
       const override = getAuctionMetadata({ chainId, tokenAddress })
@@ -119,24 +119,20 @@ export function useAuctionTokenInfo(
   const tokenInfo = useMemo((): CurrencyInfo | undefined => {
     // If we have usable API data, use it (with potential overrides)
     if (usableCurrencyInfo) {
-      const hasLogoOverride = !!metadataOverride?.logoUrl
       const hasNameOverride = !!metadataOverride?.tokenName || !!metadataOverride?.tokenSymbol
 
-      if (hasLogoOverride || hasNameOverride) {
-        const overriddenCurrency = hasNameOverride
-          ? buildCurrency({
-              chainId: usableCurrencyInfo.currency.chainId,
-              address: usableCurrencyInfo.currency.isToken ? usableCurrencyInfo.currency.address : undefined,
-              decimals: usableCurrencyInfo.currency.decimals,
-              symbol: metadataOverride.tokenSymbol ?? usableCurrencyInfo.currency.symbol,
-              name: metadataOverride.tokenName ?? usableCurrencyInfo.currency.name,
-            })
-          : undefined
+      if (hasNameOverride) {
+        const overriddenCurrency = buildCurrency({
+          chainId: usableCurrencyInfo.currency.chainId,
+          address: usableCurrencyInfo.currency.isToken ? usableCurrencyInfo.currency.address : undefined,
+          decimals: usableCurrencyInfo.currency.decimals,
+          symbol: metadataOverride.tokenSymbol ?? usableCurrencyInfo.currency.symbol,
+          name: metadataOverride.tokenName ?? usableCurrencyInfo.currency.name,
+        })
 
         return {
           ...usableCurrencyInfo,
           ...(overriddenCurrency && { currency: overriddenCurrency }),
-          ...(hasLogoOverride && { logoUrl: metadataOverride.logoUrl }),
         }
       }
       return usableCurrencyInfo
@@ -159,7 +155,7 @@ export function useAuctionTokenInfo(
       return {
         currency,
         currencyId,
-        logoUrl: metadataOverride?.logoUrl,
+        logoUrl: undefined,
       }
     }
 

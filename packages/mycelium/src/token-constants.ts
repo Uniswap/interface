@@ -1,11 +1,9 @@
 /**
- * The PLATFORM-INVARIANT ui/src/theme constant families, split out of
- * ./tokens.ts. Drop-in equivalents derived from `@universe/tailwind` — never
- * from copied ui literals. The tailwind TS
- * mirror is itself pinned to that package's css/theme.css by derivation
- * honesty guards (packages/tailwind/src/tokens.guard.test.ts, plus Layer 2 of
- * tokens.parity.test.ts), so ui values can only enter through the token
- * package. Exit test: tokens.parity.test.ts.
+ * The PLATFORM-INVARIANT constant families (icon/image sizes, spacing, heights,
+ * z-indexes, radii), split out of ./tokens.ts. Derived from
+ * `@universe/tailwind` — never from copied literals. The tailwind TS mirror is
+ * pinned to that package's css/theme.css by
+ * packages/tailwind/src/tokens.guard.test.ts.
  *
  * A LEAF module, apart from the `./tokens` barrel, because the barrel's
  * platform-resolved `fonts` reaches into ./text-compat and ./compat/tokens.ts
@@ -21,7 +19,7 @@ import {
   zIndexes as tailwindZIndexes,
 } from '@universe/tailwind'
 
-/** ui/src/theme/iconSizes.ts keys over the `--icon-size-*` values. */
+/** Legacy ui `iconSizes` keys over the `--icon-size-*` values. */
 export const iconSizes = {
   icon8: tailwindIconSizes['8'],
   icon12: tailwindIconSizes['12'],
@@ -42,7 +40,7 @@ export const iconSizes = {
   icon100: tailwindIconSizes['100'],
 }
 
-/** ui/src/theme/imageSizes.ts keys over the `--image-size-*` values. */
+/** Legacy ui `imageSizes` keys over the `--image-size-*` values. */
 export const imageSizes = {
   image12: tailwindImageSizes['12'],
   image16: tailwindImageSizes['16'],
@@ -77,12 +75,12 @@ export const spacing = {
   spacing60: tailwindSpacing['60'],
 }
 
-/** ui/src/theme/heights.ts constants over the `--height-*` values (INTERFACE_NAV_HEIGHT → 'interface-nav'). */
+/** The `--height-*` values (ui's former `INTERFACE_NAV_HEIGHT` is `interface-nav`). */
 export const heights = {
   'interface-nav': tailwindHeights['interface-nav'],
 }
 
-/** ui/src/theme/zIndexes.ts keys over the `--z-index-*` values. */
+/** Legacy ui `zIndexes` keys over the `--z-index-*` values. */
 export const zIndexes = {
   negative: tailwindZIndexes.negative,
   background: tailwindZIndexes.background,
@@ -103,7 +101,7 @@ export const zIndexes = {
   toast: tailwindZIndexes.toast,
 }
 
-/** ui/src/theme/borderRadii.ts keys over the `@universe/tailwind` `--radius-*` values. */
+/** Legacy ui `borderRadii` keys over the `@universe/tailwind` `--radius-*` values. */
 export const borderRadii = {
   none: radii.none,
   rounded4: radii['4'],
@@ -116,3 +114,13 @@ export const borderRadii = {
   rounded32: radii['32'],
   roundedFull: radii.full,
 }
+
+/** Extra touch target around small pressables; the parent needs matching padding for it to work. */
+export const defaultHitslop = 5
+
+/** The Basel web font stack, as the legacy cascade emitted it inline. */
+export const WEB_BASEL_FONT_STACK =
+  'Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
+
+/** Native line-height multiplier: the Basel font files render a few px low without it. */
+export const NATIVE_LINE_HEIGHT_SCALE = 1.15

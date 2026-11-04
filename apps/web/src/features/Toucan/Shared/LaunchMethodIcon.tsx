@@ -1,8 +1,8 @@
 import { Bolt } from '@universe/mycelium/icons/Bolt'
 import { Droplet } from '@universe/mycelium/icons/Droplet'
 import { Settings } from '@universe/mycelium/icons/Settings'
+import { colors } from '@universe/mycelium/theme-palette'
 import type { ComponentProps } from 'react'
-import { colors } from 'ui/src/theme'
 import { LaunchProvenanceMethod } from 'uniswap/src/features/dataApi/launchProvenance'
 import { usePoolsBrandGreen } from '~/hooks/usePoolsBrandGreen'
 

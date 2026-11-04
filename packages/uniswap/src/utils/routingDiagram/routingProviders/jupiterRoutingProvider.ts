@@ -1,6 +1,6 @@
 import { Percent } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
-import { JupiterLogoMonotone } from 'ui/src/components/logos/JupiterLogoMonotone'
+import { JupiterLogoMonotone } from '@universe/mycelium/logos/JupiterLogoMonotone'
 import { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isJupiter } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'

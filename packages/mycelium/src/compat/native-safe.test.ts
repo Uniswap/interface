@@ -167,8 +167,10 @@ describe('native-safe compat safelist', () => {
       // native 1174 - 1 = 1173, excluded stays 9283.
       // Pools brand green adds four plain theme entries (text, outline, background, border)
       // to both artifacts, leaving the exclusion census unchanged.
-      web: 10460,
-      native: 1177,
+      // Deleting the Blast chain drops its one `chain_81457` text-colour class
+      // from both artifacts: web 10460 - 1 = 10459, native 1177 - 1 = 1176.
+      web: 10459,
+      native: 1176,
       excluded: 9283,
       // negated-theme is 0 since INFRA-3263 respelled the light pool from
       // `not-dark:` to `light:` — the rule stays as vocabulary armor. The old

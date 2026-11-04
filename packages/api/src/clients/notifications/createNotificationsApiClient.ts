@@ -7,7 +7,7 @@ import type {
   GetNotificationsResponse,
   NotificationsApiClient,
   NotificationsClientContext,
-} from '@universe/api/src/clients/notifications/types'
+} from './types'
 
 /**
  * Factory function to create a NotificationsApiClient

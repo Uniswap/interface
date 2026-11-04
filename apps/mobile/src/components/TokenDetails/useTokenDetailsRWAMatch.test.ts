@@ -14,17 +14,6 @@ import { tokenCategory } from 'uniswap/src/test/fixtures/tokenCategory'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import type { MockedFunction } from 'vitest'
 
-vi.mock('@universe/api', async () => {
-  const actual = await vi.importActual<typeof import('@universe/api')>('@universe/api')
-  return {
-    ...actual,
-    GraphQLApi: {
-      ...actual.GraphQLApi,
-      useTokenDetailsScreenQuery: vi.fn(),
-    },
-  }
-})
-
 vi.mock('@universe/gating', async () => {
   const actual = await vi.importActual<typeof import('@universe/gating')>('@universe/gating')
   return { ...actual, useIsTokenCategoriesEnabled: vi.fn() }

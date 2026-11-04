@@ -20,7 +20,7 @@ import { type ReactNode, useContext } from 'react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 // expo-blur is a transitive dep reached through the AdaptiveWebModal import chain and ships
-// JSX in a `.js` file that Vite refuses to parse (same workaround as Tooltip.parity.web.test.tsx).
+// JSX in a `.js` file that Vite refuses to parse.
 vi.mock('expo-blur', () => ({
   BlurView: () => null,
 }))
@@ -88,6 +88,8 @@ vi.mock('@universe/mycelium/floating-overlay', async () => {
   }
 })
 
+import { colorsDark, colorsLight } from '@universe/mycelium/theme-palette'
+import { zIndexes } from '@universe/mycelium/tokens'
 import { EffectiveModalOrSheetZIndexContext } from 'ui/src/components/modal/AdaptiveWebModal'
 import { AdaptiveWebPopoverContent } from 'ui/src/components/popover/AdaptiveWebPopoverContent'
 import { Popover } from 'ui/src/components/popover/Popover'
@@ -100,7 +102,6 @@ import {
   resolveCollisionPadding,
   resolveNativeViewportPadding,
 } from 'ui/src/components/popover/shared'
-import { colorsDark, colorsLight, zIndexes } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
 
 type ThemeName = 'light' | 'dark'
@@ -177,7 +178,7 @@ function renderPopover({
  * Event constructor, which silently DROPS `pointerType` — a plain
  * `fireEvent.pointerDown(el, { pointerType })` reaches every handler as `undefined`.
  * Attach the field explicitly so Base UI's pointerType bookkeeping sees the real
- * device kind (same helper as Tooltip.parity.web.test.tsx).
+ * device kind.
  */
 function firePointerEvent({
   target,
@@ -729,6 +730,23 @@ describe('Popover.Content — portal containment inside a focus-trapping host (S
     const input = screen.getByLabelText<HTMLInputElement>('Max slippage')
     input.focus()
     expect(document.activeElement).toBe(input)
+  })
+
+  it('adds no layout box as a direct child of the host container', () => {
+    renderInDialog({ markContainer: true })
+    const dialogContent = screen.getByTestId('dialog-content')
+    const positioner = document.querySelector(POSITIONER_SELECTOR) as HTMLElement
+
+    const portalWrapper = Array.from(dialogContent.children).find((child) => child.contains(positioner))
+    expect(portalWrapper).toBeInstanceOf(HTMLElement)
+    expect(portalWrapper).not.toBe(positioner)
+    expect((portalWrapper as HTMLElement).style.display).toBe('contents')
+  })
+
+  it('keeps the body-level portal wrapper out of layout too', () => {
+    renderInDialog({ markContainer: false })
+    const positioner = document.querySelector(POSITIONER_SELECTOR) as HTMLElement
+    expect((positioner.parentElement as HTMLElement).style.display).toBe('contents')
   })
 })
 

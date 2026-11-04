@@ -12,9 +12,6 @@
       "path": "../../config/vitest-presets"
     },
     {
-      "path": "../tailwind"
-    },
-    {
       "path": "../mycelium"
     }
   ],

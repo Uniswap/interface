@@ -4,8 +4,8 @@ import { MarginBorrowingRow } from '~/pages/Swap/Margin/components/MarginAdjustB
 import { MarginPriceImpactRow } from '~/pages/Swap/Margin/components/MarginPriceImpactRow'
 import { marginAdjustSwapSide, marginPriceImpactBps } from '~/pages/Swap/Margin/marginPriceImpact'
 
-// Quote-derived rows for the adjust show-more section, shared by the add, withdraw, change-leverage
-// and adjust-position modals — all four render exactly this set. The position supplies what the
+// Quote-derived rows for the adjust show-more section, shared by the add, withdraw and
+// change-leverage modals — all three render exactly this set. The position supplies what the
 // projected-only quote cannot: the oracle mark, and the debt this action is measured against.
 export function MarginAdjustQuoteRows({
   quote,

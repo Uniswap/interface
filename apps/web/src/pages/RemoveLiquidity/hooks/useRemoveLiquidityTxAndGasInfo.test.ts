@@ -1,10 +1,12 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { act, renderHook as renderHookBase, waitFor } from '@testing-library/react'
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import {
   DecreasePositionRequest,
   DecreasePositionResponse,
 } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/api_pb'
 import { createElement, type PropsWithChildren } from 'react'
+import { useTransactionGasFee } from 'uniswap/src/features/gas/hooks'
 import type { PositionInfo } from 'uniswap/src/features/positions/types'
 import { useTransactionSettingsStore } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
 import { useRemoveLiquidityTxAndGasInfo } from '~/pages/RemoveLiquidity/hooks/useRemoveLiquidityTxAndGasInfo'
@@ -12,17 +14,26 @@ import {
   type CommittedDecrease,
   useRemoveLiquidityModalContext,
 } from '~/pages/RemoveLiquidity/RemoveLiquidityModalContext'
+import { REMOVE_LIQUIDITY_HOOK, REMOVE_LIQUIDITY_HOOK_REVERT_DATA } from '~/test-utils/pools/hookRevertFixtures'
 import {
   buildDecreaseTxContext,
   buildPositionInfo,
   LIQUIDITY_SERVICE_POSITION_OWNER,
 } from '~/test-utils/pools/liquidityServicePositionFixtures'
 
-const { mockDecreasePosition, queryFnSpy } = vi.hoisted(() => ({ mockDecreasePosition: vi.fn(), queryFnSpy: vi.fn() }))
+const { mockDecreasePosition, queryFnSpy, mockCall } = vi.hoisted(() => ({
+  mockDecreasePosition: vi.fn(),
+  queryFnSpy: vi.fn(),
+  mockCall: vi.fn(),
+}))
 
 vi.mock('uniswap/src/features/accounts/store/hooks', () => ({
   useConnectionStatus: vi.fn(() => ({ isConnecting: false })),
   useActiveAddress: vi.fn(() => LIQUIDITY_SERVICE_POSITION_OWNER),
+}))
+// The eth_call that checks whether an unestimated decrease reverts in the hook.
+vi.mock('~/constants/providers', () => ({
+  getInterfaceProvider: vi.fn(() => ({ call: mockCall })),
 }))
 vi.mock('~/pages/RemoveLiquidity/RemoveLiquidityModalContext', async (importOriginal) => ({
   ...(await importOriginal<typeof import('~/pages/RemoveLiquidity/RemoveLiquidityModalContext')>()),
@@ -50,6 +61,7 @@ vi.mock('uniswap/src/data/apiClients/liquidityService/liquidityQueries', async (
 })
 
 const mockUseRemoveLiquidityModalContext = vi.mocked(useRemoveLiquidityModalContext)
+const mockUseTransactionGasFee = vi.mocked(useTransactionGasFee)
 const mockUseTransactionSettingsStore = vi.mocked(useTransactionSettingsStore)
 
 const LIQUIDITY = '49387053232'
@@ -98,6 +110,10 @@ function renderHook<T>(hook: () => T): ReturnType<typeof renderHookBase<T, undef
 function lastRequest(): DecreasePositionRequest | undefined {
   const lastCall = mockDecreasePosition.mock.calls.at(-1)?.[0] as { params?: DecreasePositionRequest } | undefined
   return lastCall?.params
+}
+
+function lastRefetchInterval(): unknown {
+  return (mockDecreasePosition.mock.calls.at(-1)?.[0] as { refetchInterval?: unknown } | undefined)?.refetchInterval
 }
 
 function lastEnabled(): unknown {
@@ -186,5 +202,122 @@ describe('useRemoveLiquidityTxAndGasInfo', () => {
     expect(lastRequest()).not.toBe(firstRequest)
     expect(lastRequest()?.liquidityPercentageToDecrease).toBe(75)
     await waitFor(() => expect(queryFnSpy).toHaveBeenCalledTimes(2))
+  })
+
+  describe('when the pool has a remove-liquidity hook', () => {
+    function buildHookedPositionInfo(): PositionInfo {
+      const positionInfo = buildPositionInfo({ liquidity: LIQUIDITY })
+      if (positionInfo.version !== ProtocolVersion.V4) {
+        throw new Error('expected the v4 fixture')
+      }
+      return { ...positionInfo, v4hook: REMOVE_LIQUIDITY_HOOK }
+    }
+
+    function mockDecreaseWithoutGasFee(): void {
+      mockDecreasePosition.mockImplementation(({ params, ...rest }: { params?: unknown }) => ({
+        queryKey: ['test', 'decreasePosition', params],
+        queryFn: async (): Promise<DecreasePositionResponse> => {
+          queryFnSpy()
+          // The service's own simulation failed, so it quotes the calldata without a gas fee.
+          return new DecreasePositionResponse({ decrease: DECREASE_TX })
+        },
+        ...rest,
+      }))
+    }
+
+    // The gas hook reports a failed estimate as no fee, not an error: the gas service's 400 for that position
+    // (HookNotImplemented() from beforeRemoveLiquidity) falls back to a client-side estimate that swallows the revert.
+    function mockGasEstimate(displayValue: string | undefined): void {
+      mockUseTransactionGasFee.mockImplementation((({ tx, skip }: { tx?: unknown; skip?: boolean }) => ({
+        displayValue: tx && !skip ? displayValue : undefined,
+        error: null,
+        isLoading: false,
+      })) as never)
+    }
+
+    beforeEach(() => {
+      mockCall.mockReset()
+    })
+
+    it('blocks, offers a retry, and stops polling when the eth_call reverts in the hook', async () => {
+      mockDecreaseWithoutGasFee()
+      mockGasEstimate(undefined)
+      mockCall.mockResolvedValue(REMOVE_LIQUIDITY_HOOK_REVERT_DATA)
+      mockModalContext({
+        positionInfo: buildHookedPositionInfo(),
+        percent: '25',
+      })
+
+      const { result } = renderHook(() => useRemoveLiquidityTxAndGasInfo({ account: LIQUIDITY_SERVICE_POSITION_OWNER }))
+
+      await waitFor(() => expect(result.current.hookRejectsRemoval).toBe(true))
+      expect(result.current.decreaseCalldata).toBeDefined()
+      expect(result.current.error).toBe(true)
+      expect(result.current.refetch).toBeDefined()
+      expect(result.current.decreaseMayFail).toBe(false)
+      // A poll would re-stamp the deadline and re-run the estimate, hiding the rejection while it reloads.
+      expect(lastRefetchInterval()).toBe(false)
+    })
+
+    it('only warns, and keeps quoting, when the estimate is unavailable but nothing shows a revert', async () => {
+      mockDecreaseWithoutGasFee()
+      mockGasEstimate(undefined)
+      // e.g. the RPC is down: the check cannot see a revert, so it must not block the withdrawal.
+      mockCall.mockRejectedValue(new Error('401 Unauthorized'))
+      mockModalContext({ positionInfo: buildHookedPositionInfo(), percent: '25' })
+
+      const { result } = renderHook(() => useRemoveLiquidityTxAndGasInfo({ account: LIQUIDITY_SERVICE_POSITION_OWNER }))
+
+      await waitFor(() => expect(result.current.decreaseMayFail).toBe(true))
+      expect(mockCall).toHaveBeenCalledTimes(1)
+      expect(result.current.hookRejectsRemoval).toBe(false)
+      expect(result.current.error).toBe(false)
+      expect(lastRefetchInterval()).not.toBe(false)
+    })
+
+    it('does not report a rejection when the service simulated the decrease', async () => {
+      mockGasEstimate(undefined)
+      mockModalContext({
+        positionInfo: buildHookedPositionInfo(),
+        percent: '25',
+      })
+
+      const { result } = renderHook(() => useRemoveLiquidityTxAndGasInfo({ account: LIQUIDITY_SERVICE_POSITION_OWNER }))
+
+      await waitFor(() => expect(result.current.decreaseCalldata).toBeDefined())
+      expect(result.current.hookRejectsRemoval).toBe(false)
+      expect(result.current.decreaseMayFail).toBe(false)
+      expect(result.current.error).toBe(false)
+      expect(mockCall).not.toHaveBeenCalled()
+      expect(lastRefetchInterval()).not.toBe(false)
+    })
+
+    it('does not report a rejection when only the service simulation failed', async () => {
+      mockDecreaseWithoutGasFee()
+      mockGasEstimate('21000000000000')
+      mockModalContext({ positionInfo: buildHookedPositionInfo(), percent: '25' })
+
+      const { result } = renderHook(() => useRemoveLiquidityTxAndGasInfo({ account: LIQUIDITY_SERVICE_POSITION_OWNER }))
+
+      await waitFor(() => expect(result.current.decreaseCalldata).toBeDefined())
+      expect(result.current.hookRejectsRemoval).toBe(false)
+      expect(result.current.decreaseMayFail).toBe(false)
+      expect(result.current.error).toBe(false)
+      expect(mockCall).not.toHaveBeenCalled()
+    })
+
+    it('does not attribute a failed estimate to a pool without a remove-liquidity hook', async () => {
+      mockDecreaseWithoutGasFee()
+      mockGasEstimate(undefined)
+      mockModalContext({ positionInfo: buildPositionInfo({ liquidity: LIQUIDITY }), percent: '25' })
+
+      const { result } = renderHook(() => useRemoveLiquidityTxAndGasInfo({ account: LIQUIDITY_SERVICE_POSITION_OWNER }))
+
+      await waitFor(() => expect(result.current.decreaseCalldata).toBeDefined())
+      expect(result.current.hookRejectsRemoval).toBe(false)
+      expect(result.current.decreaseMayFail).toBe(false)
+      expect(result.current.error).toBe(false)
+      expect(mockCall).not.toHaveBeenCalled()
+    })
   })
 })

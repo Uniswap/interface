@@ -101,7 +101,7 @@ describe('migrate geo seam (useMigrateGeoGate composed with SelectPriceRangeStep
     expect(screen.queryByText('Continue')).toBeNull()
     fireEvent.click(screen.getByText('AAPLX unavailable in your region'))
     expect(onContinue).not.toHaveBeenCalled()
-    expect(screen.getByText('AAPLX isn’t available for liquidity provision in your region')).toBeInTheDocument()
+    expect(screen.getByText('AAPLX is unavailable in your region')).toBeInTheDocument()
   })
 
   it('falls back to the generic copy when the restricted token has no symbol', () => {
@@ -109,6 +109,6 @@ describe('migrate geo seam (useMigrateGeoGate composed with SelectPriceRangeStep
     render(<MigrateSeamHarness onContinue={vi.fn()} />)
 
     expect(screen.getByText('Not available in your region')).toBeInTheDocument()
-    expect(screen.getByText('This token isn’t available for liquidity provision in your region')).toBeInTheDocument()
+    expect(screen.getByText('This token is unavailable in your region')).toBeInTheDocument()
   })
 })

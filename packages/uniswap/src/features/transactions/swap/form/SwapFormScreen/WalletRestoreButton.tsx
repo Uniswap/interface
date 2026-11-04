@@ -1,6 +1,6 @@
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
+import { InfoCircleFilled } from '@universe/mycelium/icons/InfoCircleFilled'
 import { useTranslation } from 'react-i18next'
-import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { useEvent } from 'utilities/src/react/hooks'
 

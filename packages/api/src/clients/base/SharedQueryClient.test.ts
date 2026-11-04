@@ -1,8 +1,8 @@
 import { MutationObserver } from '@tanstack/react-query'
-import { SharedQueryClient } from '@universe/api/src/clients/base/SharedQueryClient'
 import { logger } from 'utilities/src/logger/logger'
 import { WalletSecretInPersistedSinkError } from 'utilities/src/security/persistedSinkTripwire'
 import { afterEach, describe, expect, it, vi } from 'vitest'
+import { SharedQueryClient } from './SharedQueryClient'
 
 vi.mock('utilities/src/logger/logger', () => ({
   logger: { warn: vi.fn(), error: vi.fn() },

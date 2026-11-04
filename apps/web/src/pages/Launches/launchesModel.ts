@@ -164,8 +164,7 @@ export function toLaunchItems({
           })
         : undefined
     const detailPath = supportedChainId
-      ? (auctionDetailsPath ??
-        getTokenDetailsURL({ chainUrlParam: getChainUrlParam(supportedChainId), address: token.address }))
+      ? (auctionDetailsPath ?? getTokenDetailsURL({ chainId: supportedChainId, address: token.address }))
       : undefined
     // The address is server-supplied, so it's encoded rather than trusted as a path segment.
     const poolsTokenUrl = supportedChainId

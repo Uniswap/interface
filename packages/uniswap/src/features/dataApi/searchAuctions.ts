@@ -97,12 +97,14 @@ function getAuctionOptionTokenMetadata({
   tokenAddress,
   tokenName,
   tokenSymbol,
+  tokenImageUrl,
   currencyInfo,
 }: {
   chainId: number
   tokenAddress: string
   tokenName: string | undefined
   tokenSymbol: string
+  tokenImageUrl: string | undefined
   currencyInfo: Maybe<CurrencyInfo>
 }): Pick<AuctionOption, 'tokenName' | 'tokenSymbol' | 'tokenLogoUrl'> {
   const metadataOverride = getAuctionMetadata({ chainId, tokenAddress })
@@ -110,7 +112,8 @@ function getAuctionOptionTokenMetadata({
   return {
     tokenName: metadataOverride?.tokenName || currencyInfo?.currency.name || tokenName || undefined,
     tokenSymbol: metadataOverride?.tokenSymbol || currencyInfo?.currency.symbol || tokenSymbol,
-    tokenLogoUrl: metadataOverride?.logoUrl || currencyInfo?.logoUrl || undefined,
+    // Same precedence as the auction page: API image (creator upload or backend override) -> indexed logo.
+    tokenLogoUrl: tokenImageUrl || currencyInfo?.logoUrl || undefined,
   }
 }
 
@@ -128,6 +131,7 @@ export function searchAuctionToAuctionOption({
     tokenAddress: auction.tokenAddress,
     tokenName: auction.tokenName,
     tokenSymbol: auction.tokenSymbol,
+    tokenImageUrl: auction.tokenImageUrl,
     currencyInfo,
   })
 
@@ -174,6 +178,7 @@ export function auctionWithStatsToAuctionOption({
     tokenAddress: auction.tokenAddress,
     tokenName: auction.tokenName,
     tokenSymbol: auction.tokenSymbol,
+    tokenImageUrl: auction.tokenImageUrl,
     currencyInfo,
   })
 

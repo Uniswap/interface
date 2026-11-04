@@ -50,7 +50,6 @@ describe('the subpath barrel resolves every symbol', () => {
   it('exports the component plus the shared contract', async () => {
     const barrel = await import('./index')
     expect(barrel.AnimatableCopyIconCompat).toBe(web.AnimatableCopyIconCompat)
-    expect(barrel.COPY_SHEETS_GLYPH.viewBox).toBe('0 0 24 24')
     expect(barrel.DEFAULT_COPY_ICON_COLOR).toBe('$neutral2')
     expect(barrel.COPY_ICON_CHECKMARK_COLOR).toBe('$statusSuccess')
   })

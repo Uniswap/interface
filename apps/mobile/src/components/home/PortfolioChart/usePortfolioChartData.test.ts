@@ -70,8 +70,13 @@ describe('usePortfolioChartData', () => {
         .current.isUnavailable
     }
 
-    it('is true when the query errored', () => {
+    it('is true when the query errored with no chart to draw', () => {
       expect(render({ data: undefined, error: new Error('timeout') })).toBe(true)
+    })
+
+    it('is false when a background refetch fails over the last good chart', () => {
+      const data = { points: [point], tokens: [point], pools: [point], earn: [point] }
+      expect(render({ data, error: new Error('timeout') })).toBe(false)
     })
 
     it('is true when a requested category series is missing', () => {

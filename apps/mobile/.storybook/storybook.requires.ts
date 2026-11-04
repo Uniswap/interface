@@ -46,13 +46,13 @@ const normalizedStories = [
   },
   {
     titlePrefix: "",
-    directory: "../../packages/swap-ui/src",
+    directory: "../../packages/transactions-ui/src",
     files: "**/*.stories.?(ts|tsx|js|jsx)",
     importPathMatcher:
       /^\.(?:(?:^|\/|(?:(?:(?!(?:^|\/)\.).)*?)\/)(?!\.)(?=.)[^/]*?\.stories\.(?:ts|tsx|js|jsx)?)$/,
     // @ts-ignore
     req: require.context(
-      "../../../packages/swap-ui/src",
+      "../../../packages/transactions-ui/src",
       true,
       /^\.(?:(?:^|\/|(?:(?:(?!(?:^|\/)\.).)*?)\/)(?!\.)(?=.)[^/]*?\.stories\.(?:ts|tsx|js|jsx)?)$/
     ),

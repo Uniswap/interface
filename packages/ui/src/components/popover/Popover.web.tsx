@@ -1,6 +1,7 @@
 import { Popover as PopoverPrimitive, type PopoverRootActions } from '@base-ui/react/popover'
 import { useSporeColors } from '@universe/mycelium'
 import { OVERLAY_PORTAL_CONTAINER_ATTRIBUTE } from '@universe/mycelium/popover-compat'
+import { zIndexes } from '@universe/mycelium/tokens'
 import {
   createContext,
   type CSSProperties,
@@ -54,7 +55,6 @@ import type {
   PopoverProps,
   PopoverVia,
 } from 'ui/src/components/popover/types'
-import { zIndexes } from 'ui/src/theme/zIndexes'
 import { useEvent } from 'utilities/src/react/hooks'
 
 /**
@@ -246,6 +246,9 @@ const PopoverRoot = forwardRef<PopoverImperativeHandle, PopoverProps>(function P
 /** Content registers the legacy trapFocus/disableFocusScope choice up to the root. */
 const TrapFocusModeContext = createContext<(mode: false | 'trap-focus') => void>(() => {})
 
+// Base UI's portal <div> would otherwise be a flex item in the host modal's gapped column, adding a gap of height.
+const PORTAL_WRAPPER_STYLE: CSSProperties = { display: 'contents' }
+
 function virtualElementFor(rect: { x: number; y: number; width: number; height: number }): {
   getBoundingClientRect: () => DOMRect
 } {
@@ -391,7 +394,7 @@ const PopoverContent = forwardRef<HTMLDivElement, PopoverContentProps>(function 
   const collisionPadding = resolveCollisionPadding(config.stayInFrame)
 
   return (
-    <PopoverPrimitive.Portal container={hostPortalContainer}>
+    <PopoverPrimitive.Portal container={hostPortalContainer} style={PORTAL_WRAPPER_STYLE}>
       <PopoverPrimitive.Positioner
         data-slot="ui-popover-positioner"
         side={side}

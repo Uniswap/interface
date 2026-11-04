@@ -6,6 +6,7 @@ import {
   useIsRowViewable,
   type UniversalListRenderItemInfo,
   type UniversalListStyle,
+  Loader,
 } from '@universe/mycelium'
 import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFilled'
 import { memo, useCallback, useMemo, useState } from 'react'
@@ -13,7 +14,6 @@ import { useTranslation } from 'react-i18next'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import type { TabProps } from 'src/components/layout/TabHelpers'
 import { usePoolsListRenderData } from 'src/screens/HomeScreen/portfolio/tabs/pools/hooks/usePoolsListRenderData'
-import { Loader } from 'ui/src'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { ExpandoRow } from 'uniswap/src/components/ExpandoRow/ExpandoRow'
 import { PositionItem } from 'uniswap/src/components/portfolio/PositionItem/PositionItem'

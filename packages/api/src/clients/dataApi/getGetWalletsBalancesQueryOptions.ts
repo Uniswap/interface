@@ -3,12 +3,12 @@ import type {
   GetWalletsBalancesRequest,
   GetWalletsBalancesResponse,
 } from '@uniswap/client-data-api/dist/data/v1/api_pb'
-import { type DataApiServiceClient } from '@universe/api/src/clients/dataApi/createDataApiServiceClient'
-import { transformWalletsInput, type WithoutWalletAccounts } from '@universe/api/src/connectRpc/utils'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { persistableQueryOptions } from 'utilities/src/reactQuery/persistableQueryOptions'
 import { type QueryOptionsResult } from 'utilities/src/reactQuery/queryOptions'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
+import { transformWalletsInput, type WithoutWalletAccounts } from '../../connectRpc/utils'
+import { type DataApiServiceClient } from './createDataApiServiceClient'
 
 /** Mirrors the BE `MAX_WALLET_BALANCES_BATCH_SIZE`; larger requests are rejected with a 400. */
 const MAX_WALLETS_PER_REQUEST = 20

@@ -1,6 +1,5 @@
 import '~/test-utils/tokens/mocks'
 import { type Currency, Token } from '@uniswap/sdk-core'
-import { GraphQLApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
 import { DEFAULT_TICK_SPACING } from 'uniswap/src/constants/pools'
 import { usePoolsFromTokenAddress } from '~/data/pools/usePoolsFromTokenAddress'
@@ -65,7 +64,7 @@ describe('TDPPoolTable', () => {
     const mockData = [
       {
         id: '0x123',
-        chain: 'mainnet',
+        chainId: UniverseChainId.Mainnet,
         token0: validRestPoolToken0,
         token1: validRestPoolToken1,
         feeTier: {
@@ -79,7 +78,7 @@ describe('TDPPoolTable', () => {
         volume30Day: { value: 500 },
         volOverTvl: 1.84,
         apr: 6,
-        protocolVersion: GraphQLApi.ProtocolVersion.V3,
+        protocolVersion: 'V3',
       },
     ] as unknown as PoolStat[]
     mocked(usePoolsFromTokenAddress).mockReturnValue({

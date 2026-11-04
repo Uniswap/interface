@@ -10,8 +10,8 @@ import { removeFiatOnRampTransaction, updateFiatOnRampTransaction } from '~/stat
 import { FiatOnRampTransactionStatus, FiatOnRampTransactionType } from '~/state/fiatOnRampTransactions/types'
 import { statusToTransactionInfoStatus } from '~/state/fiatOnRampTransactions/utils'
 import { useAppDispatch } from '~/state/hooks'
-import { popupRegistry } from '~/state/popups/registry'
-import { PopupType } from '~/state/popups/types'
+import { popupRegistry } from '~/utils/popups/registry'
+import { PopupType } from '~/utils/popups/types'
 
 export default function Updater(): null {
   const transactions = useFiatOnRampTransactions()

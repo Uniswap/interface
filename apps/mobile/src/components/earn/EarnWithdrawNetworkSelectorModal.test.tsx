@@ -90,7 +90,6 @@ describe(EarnWithdrawNetworkSelectorModal, () => {
     expect(screen.getByText('Base')).toBeTruthy()
     expect(screen.getByText('Unichain')).toBeTruthy()
     expect(screen.getByText('ZKsync')).toBeTruthy()
-    expect(screen.queryByText('Blast')).toBeNull()
 
     fireEvent.press(screen.getByText('Base'))
     expect(mockPopTo).toHaveBeenCalledWith(

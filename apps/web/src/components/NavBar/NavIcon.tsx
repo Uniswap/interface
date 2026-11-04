@@ -1,8 +1,7 @@
 import { isMobileWeb } from '@universe/environment'
-import { Flex, type FlexCompatProps, Text, TouchableArea } from '@universe/mycelium'
+import { Flex, type FlexCompatProps, Text, TouchableArea, zIndexes } from '@universe/mycelium'
 import { forwardRef, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { zIndexes } from 'ui/src/theme/zIndexes'
 
 type ContainerProps = FlexCompatProps & { active?: boolean }
 

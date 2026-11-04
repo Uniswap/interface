@@ -1,7 +1,7 @@
 /**
  * `@universe/mycelium/checkbox-compat` — the compat-capable checkbox pair
- * (INFRA-3233), replacing the legacy Tamagui `Checkbox` and `LabeledCheckbox`
- * from `packages/ui/src/components/checkbox/`.
+ * (INFRA-3233), which replaced the legacy Tamagui `Checkbox` and `LabeledCheckbox`
+ * from `ui/src`.
  *
  * Deliberately NOT named `Checkbox`: mycelium already exports a different,
  * web-only Radix `Checkbox` from `@universe/mycelium/components`

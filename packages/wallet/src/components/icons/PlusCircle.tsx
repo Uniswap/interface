@@ -1,7 +1,6 @@
 import { isExtensionApp } from '@universe/environment'
-import { Flex, useIsDarkMode } from '@universe/mycelium'
-import { Plus } from 'ui/src/components/icons'
-import { iconSizes } from 'ui/src/theme'
+import { Flex, useIsDarkMode, iconSizes } from '@universe/mycelium'
+import { Plus } from '@universe/mycelium/icons/Plus'
 export function PlusCircle(): JSX.Element {
   const isDarkMode = useIsDarkMode()
 

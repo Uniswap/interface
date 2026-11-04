@@ -1,5 +1,18 @@
-import { AnimatedFlex, Flex, Square, Text, TouchableArea, useSporeColors } from '@universe/mycelium'
+import {
+  AnimatedFlex,
+  Flex,
+  Square,
+  Text,
+  TouchableArea,
+  useSporeColors,
+  iconSizes,
+  zIndexes,
+} from '@universe/mycelium'
 import { DOT_GRID, UNISWAP_LOGO } from '@universe/mycelium/assets'
+import { FileListLock } from '@universe/mycelium/icons/FileListLock'
+import { Mobile } from '@universe/mycelium/icons/Mobile'
+import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
+import { Wifi } from '@universe/mycelium/icons/Wifi'
 import { SPORE_ANIMATION_CURVE_CSS } from '@universe/tailwind/animations'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -22,8 +35,6 @@ import { OnboardingRoutes, TopLevelRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import UAParser from 'ua-parser-js'
 import { Image } from 'ui/src'
-import { FileListLock, Mobile, RotatableChevron, Wifi } from 'ui/src/components/icons'
-import { iconSizes, zIndexes } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExtensionOnboardingFlow, ExtensionOnboardingScreens } from 'uniswap/src/types/screens/extension'
 import { logger } from 'utilities/src/logger/logger'

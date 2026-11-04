@@ -497,8 +497,7 @@ export function createCompatComponent<P extends CompatDomProps & CompatAnimation
   })
   Component.displayName = displayName
   // Opts every compat primitive out of the legacy wrappers' color injection
-  // (see primitive-marker.ts): injected legacy tokens like the `$accent3`
-  // default sit on the rejected side of the colour boundary and would throw
-  // in the emission compiler.
+  // (see primitive-marker.ts): they style themselves, and an injected legacy
+  // token outside the colour boundary would throw in the emission compiler.
   return markMyceliumPrimitive(Component)
 }

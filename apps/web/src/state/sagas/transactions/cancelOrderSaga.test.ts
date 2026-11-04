@@ -11,8 +11,8 @@ import {
 } from 'uniswap/src/features/transactions/slice'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import type { Mock } from 'vitest'
-import { popupRegistry } from '~/state/popups/registry'
 import { cancelOrderSaga } from '~/state/sagas/transactions/cancelOrderSaga'
+import { popupRegistry } from '~/utils/popups/registry'
 
 const { mockGetSigner, mockLogger, mockAppStore } = vi.hoisted(() => ({
   mockGetSigner: vi.fn(),

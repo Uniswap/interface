@@ -25,6 +25,7 @@ function everyDimensionSet(): ButtonCompatDimensionProps {
     alignItems: 'center',
     position: 'absolute',
     shadowColor: '#000000',
+    overflow: 'hidden',
   }
   for (const key of DIMENSION_PROP_KEYS) {
     // Chained `!==` rather than a Set: only the comparisons narrow the key
@@ -37,7 +38,8 @@ function everyDimensionSet(): ButtonCompatDimensionProps {
       key !== 'display' &&
       key !== 'alignItems' &&
       key !== 'position' &&
-      key !== 'shadowColor'
+      key !== 'shadowColor' &&
+      key !== 'overflow'
     ) {
       props[key] = 1
     }
@@ -49,20 +51,10 @@ describe('the native dimension pick derives from DIMENSION_PROP_KEYS minus a pin
   it('excludes exactly the web-only props the leg dev-warns — nothing more', () => {
     // Growing this set is how a prop stops painting on native with no warning
     // beyond the ledger, so it must never grow as a side effect of another edit.
-    // `width`/`flex` moved OUT of this set (INFRA-3750): their native call
-    // sites need them to actually render, not just typecheck.
+    // `width`/`flex` (INFRA-3750) and `borderRadius` (the SwapFormDecimalPad
+    // presets) moved OUT of this set: their native call sites need them to render.
     expect([...NATIVE_DROPPED_DIMENSION_PROP_KEYS].sort()).toEqual(
-      [
-        'alignItems',
-        'alignSelf',
-        'borderRadius',
-        'display',
-        'flexBasis',
-        'height',
-        'justifyContent',
-        'position',
-        'top',
-      ].sort(),
+      ['alignItems', 'alignSelf', 'display', 'flexBasis', 'height', 'justifyContent', 'position', 'top'].sort(),
     )
   })
 

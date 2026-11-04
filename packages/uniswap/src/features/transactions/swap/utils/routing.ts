@@ -166,6 +166,26 @@ export const ACROSS_DAPP_INFO = {
   icon: 'https://protocol-icons.s3.amazonaws.com/icons/across.jpg',
 }
 
+export const RELAY_DAPP_INFO = {
+  name: 'Relay API',
+  address: ADDRESS_ZERO,
+  icon: 'https://protocol-icons.s3.amazonaws.com/icons/relay.jpg',
+}
+
+const BRIDGE_PROVIDER_DAPP_INFO: Record<TradingApi.BridgeProvider, typeof ACROSS_DAPP_INFO> = {
+  [TradingApi.BridgeProvider.ACROSS]: ACROSS_DAPP_INFO,
+  [TradingApi.BridgeProvider.RELAY]: RELAY_DAPP_INFO,
+}
+
+/** The vendor serving a bridge quote. A quote without `provider` predates the bridge aggregator, so Across serves it. */
+export function getBridgeProvider(provider: TradingApi.BridgeProvider | undefined): TradingApi.BridgeProvider {
+  return provider ?? TradingApi.BridgeProvider.ACROSS
+}
+
+export function getBridgeDappInfo(provider: TradingApi.BridgeProvider | undefined): typeof ACROSS_DAPP_INFO {
+  return BRIDGE_PROVIDER_DAPP_INFO[getBridgeProvider(provider)]
+}
+
 /**
  * Converts a TradingApi.PlanStepType whose steps are derived from TradingApi.Routing to TradingApi.Routing.
  *

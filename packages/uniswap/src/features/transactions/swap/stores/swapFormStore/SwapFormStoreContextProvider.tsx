@@ -170,7 +170,7 @@ function SwapFormStoreContextProviderBase({
     useShallow((s) => s.actions),
   )
 
-  // prefilled state may load in -- i.e. `outputCurrency` URL param pulling from gql
+  // prefilled state may load in -- i.e. `outputCurrency` URL param resolving to a currency via a token query
   useUpdateSwapFormFromPrefilledCurrencies({
     prefilledState,
     setSwapForm: setSwapFormState,

@@ -51,14 +51,6 @@ export function MenuContentCompat(): never {
   return throwNativeStub('MenuContentCompat')
 }
 
-export function CheckCircleFilledGlyph(): never {
-  return throwNativeStub('CheckCircleFilledGlyph')
-}
-
-export function ExternalLinkGlyph(): never {
-  return throwNativeStub('ExternalLinkGlyph')
-}
-
 export function menuContentContainerClassName(): never {
   return throwNativeStub('menuContentContainerClassName')
 }

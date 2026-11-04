@@ -2,7 +2,7 @@
  * Pure color utilities for useExtractedTokenColor, ported from ui/src/utils/colors; parity-pinned.
  * passesContrast computes the WCAG ratio locally instead of via wcag-contrast — same math, no new dependency.
  */
-import { DARK_THEME_COLORS, LIGHT_THEME_COLORS } from './theme-colors.generated'
+import { DARK_THEME_COLORS, LIGHT_THEME_COLORS } from './theme-colors'
 
 /** The color-extraction result shape (`ui/src/utils/colors/types.ts` ExtractedColors). */
 export type ExtractedColors = {

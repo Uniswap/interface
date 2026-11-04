@@ -19,8 +19,6 @@ import {
   UniswapXOrderDetails,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { formatSwapSignedAnalyticsEventProperties } from '~/lib/utils/analytics'
-import { popupRegistry } from '~/state/popups/registry'
-import { PopupType } from '~/state/popups/types'
 import { sendSwapSignedEvent } from '~/state/sagas/transactions/swapSignedAnalytics'
 import {
   addTransactionBreadcrumb,
@@ -28,6 +26,8 @@ import {
   handleSignatureStep,
   TransactionBreadcrumbStatus,
 } from '~/state/sagas/transactions/utils'
+import { popupRegistry } from '~/utils/popups/registry'
+import { PopupType } from '~/utils/popups/types'
 
 interface HandleUniswapXSignatureStepParams extends HandleSignatureStepParams<UniswapXSignatureStep> {
   trade: UniswapXTrade
@@ -100,7 +100,7 @@ export function* handleUniswapXSignatureStep(params: HandleUniswapXSignatureStep
   )
   const transaction: UniswapXOrderDetails = {
     // Use orderHash as the ID to ensure consistency with orders fetched from remote
-    // This prevents duplicate orders when the same order is fetched from GraphQL
+    // This prevents duplicate orders when the same order is fetched from the activity feed
     id: orderHash,
     routing,
     orderHash,

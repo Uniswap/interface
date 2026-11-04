@@ -1,6 +1,6 @@
 import { iconSizes } from '@universe/mycelium'
+import { ContractInteraction } from '@universe/mycelium/icons/ContractInteraction'
 import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
-import { ContractInteraction } from 'ui/src/components/icons/ContractInteraction'
 import { SwapTypeTransactionInfo } from 'uniswap/src/components/activity/details/types'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { DappLogoWithWCBadge, LogoWithTxStatus } from 'uniswap/src/components/CurrencyLogo/LogoWithTxStatus'

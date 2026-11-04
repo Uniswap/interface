@@ -6,9 +6,14 @@ This file provides guidance to AI agents when working with code in this reposito
 
 Uniswap Universe is a monorepo containing all Uniswap front-end interfaces:
 
-- **Web** (`apps/web/`) - Decentralized exchange web interface
+- **Web** (`apps/web/`) - Decentralized exchange web interface (app.uniswap.org)
 - **Mobile** (`apps/mobile/`) - React Native app for iOS/Android
 - **Extension** (`apps/extension/`) - Browser wallet extension
+- **Pools** (`apps/pools-xyz/`) - Token launches and auctions at pools.xyz; a React Router SPA with a Bun server (infra id `rh-cca`)
+- **Dev Portal** (`apps/dev-portal/`) - Developer docs and dashboard at developers.uniswap.org
+- **Mission Control** (`apps/mission-control/`) - Internal ops tool, VPN-only
+
+Where these apps run, how they ship, and why the infra rules exist: [`docs/frontend-infrastructure.md`](docs/frontend-infrastructure.md). Recorded decisions are in [`docs/adr/`](docs/adr/).
 
 ## Common Development Commands
 
@@ -78,13 +83,14 @@ bun i18n:extract                # Extract localized strings (run after changing 
 
 #### Styling
 
-- **ALWAYS** use `styled` from `ui/src` (never styled-components); UI components may use inline styling where appropriate
+- Use `@universe/mycelium` components and `styled` from `@universe/mycelium/styled` (cross-platform by default; `platform: 'web'` for web-only components); never styled-components. UI components may use inline styling where appropriate
+- `packages/ui` is soft-deprecated: add new shared components to `@universe/mycelium`, and import the mycelium version when both exist
 - Use theme tokens instead of hardcoded values
 - Platform-specific files: `Component.ios.tsx`, `Component.android.tsx`, `Component.web.tsx`, `Component.native.tsx` (with stub files for platforms where specific implementation isn't needed)
 
 #### Images and Icons
 
-- Search `packages/mycelium/src/assets` and the generated icon components (`@universe/mycelium/icons`, `ui/src/components/icons`) before adding an image or icon
+- Search `packages/mycelium/src/assets` and the generated icon components (`@universe/mycelium/icons`) before adding an image or icon
 - Shared images go in `packages/mycelium/src/assets`, imported from `@universe/mycelium/assets`; an app's own directory is fine for an image only that app uses
 - Import generated icon components instead of `.svg` files; add new icons with `bun scripts/add-icons.ts` and the `build:icons` targets
 - Don't inline SVG markup in component files unless it needs something a static icon can't do, like per-path animation or data-driven geometry
@@ -135,7 +141,8 @@ bun i18n:extract                # Extract localized strings (run after changing 
 
 Core shared packages:
 
-- `packages/ui/` - Cross-platform UI components and theme
+- `packages/mycelium/` - Design system and shared components for web, mobile and extension (Tailwind v4)
+- `packages/ui/` - Soft-deprecated cross-platform leftovers, being moved into mycelium
 - `packages/uniswap/` - Core business logic and utilities
 - `packages/wallet/` - Wallet functionality
 - `packages/utilities/` - Common utilities

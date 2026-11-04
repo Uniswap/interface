@@ -23,10 +23,10 @@ import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/s
 import { currencyId, getCurrencyAddressForAnalytics } from 'uniswap/src/utils/currencyId'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
-import { useAccountsStore, useActiveAccount } from '~/features/accounts/store/hooks'
+import { useAccountsStore, useActiveAccount } from '~/connection/accounts/hooks'
+import { useSelectChain } from '~/connection/hooks/useSelectChain'
 import { useTotalBalancesUsdForAnalytics } from '~/features/balances/useTotalBalancesUsdForAnalytics'
-import { useSelectChain } from '~/hooks/useSelectChain'
-import { useSetOverrideOneClickSwapFlag } from '~/pages/Swap/Swap/settings/OneClickSwap'
+import { useSetOverrideOneClickSwapFlag } from '~/state/oneClickSwap/hooks'
 import { useGetOnPressRetry } from '~/state/sagas/transactions/retry'
 import {
   createHandleSwapTransactionWalletCallStep,

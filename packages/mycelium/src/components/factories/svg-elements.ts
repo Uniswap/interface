@@ -9,13 +9,12 @@
  * EXTENSIONLESS internal import instead: every generated icon renders
  * `<Svg>`/`<Path>`/… from here, web resolvers load this base leg (plain DOM
  * tag names — byte-identical markup to the previous lowercase emission), and
- * Metro / the native parity harness load `svg-elements.native.ts`
+ * Metro loads `svg-elements.native.ts`
  * (react-native-svg components).
  *
  * The values are intrinsic tag STRINGS typed as components: React renders a
  * string element type as the DOM host element, so the runtime output is
- * exactly the `<svg>`/`<path>` markup the generator used to emit inline —
- * the icons path-data parity suite and consumer snapshots see no change.
+ * exactly the `<svg>`/`<path>` markup the generator used to emit inline.
  *
  * Keep the export set in lockstep with the generator's TAG_MAP
  * (`src/scripts/componentize-icons.ts`) and with `svg-elements.native.ts`

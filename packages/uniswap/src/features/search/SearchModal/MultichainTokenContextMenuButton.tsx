@@ -1,12 +1,12 @@
 import { UniverseChainId, Platform } from '@universe/chains'
 import { isWebPlatform } from '@universe/environment'
 import { Flex } from '@universe/mycelium'
+import { CheckCircleFilled } from '@universe/mycelium/icons/CheckCircleFilled'
+import { CopyAlt } from '@universe/mycelium/icons/CopyAlt'
+import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
 import React, { useCallback, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
-import { CopyAlt } from 'ui/src/components/icons/CopyAlt'
-import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { rowPressExemptProps } from 'uniswap/src/components/lists/items/OptionItemPressableArea'
 import {
   TokenContextMenuAction,

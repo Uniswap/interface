@@ -9,7 +9,7 @@ import { describe, expect, it } from 'bun:test'
 import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-// @ts-expect-error uppercamelcase ships no types; the generators import it the same way
+// @ts-expect-error uppercamelcase ships no types; the generator imports it the same way
 import uppercamelcase from 'uppercamelcase'
 import {
   type IconFile,
@@ -26,7 +26,7 @@ import {
 
 const DIRS: TargetDirs = {
   svgDir: '/repo/packages/mycelium/src/assets/icons',
-  componentDirs: ['/repo/packages/ui/src/components/icons', '/repo/packages/mycelium/src/components/icons'],
+  componentDirs: ['/repo/packages/mycelium/src/components/icons'],
 }
 
 const GOOD_SVG = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -48,7 +48,7 @@ function validate(files: IconFile[], existing: string[] = [], replace = false): 
 }
 
 describe('toComponentName', () => {
-  it('matches uppercamelcase, which both generators use on the file stem', () => {
+  it('matches uppercamelcase, which the generator uses on the file stem', () => {
     for (const name of ['tag', 'game-controller', 'arrow-down-arrow-up', 'face-laugh-relaxed', 'x-twitter', 'web3']) {
       expect(toComponentName(name)).toBe(uppercamelcase(name))
     }
@@ -99,9 +99,23 @@ describe('validateBatch', () => {
     expect(validate([{ name: 'Bad Name', svg: GOOD_SVG }], [], true)[0]).toContain('kebab-case')
   })
 
-  it('rejects a name whose component exists in any generator output dir', () => {
-    const [ui, mycelium] = DIRS.componentDirs
-    expect(validate([{ name: 'coin', svg: GOOD_SVG }], [`${ui}/Coin.tsx`])).toHaveLength(1)
+  it('rejects a hand-written component name even when replace is set', () => {
+    expect(validate([{ name: 'caret', svg: GOOD_SVG }], [], true)).toEqual([
+      'caret: Caret is a hand-written component the generator skips. Rename the file.',
+    ])
+    const logoIssues = validateBatch([{ name: 'google-chrome-logo', svg: GOOD_SVG }], {
+      target: 'logos',
+      dirs: targetDirs('/repo', 'logos'),
+      replace: true,
+      exists: () => true,
+    })
+    expect(logoIssues.map((issue) => issue.message)).toEqual([
+      'GoogleChromeLogo is a hand-written component the generator skips. Rename the file.',
+    ])
+  })
+
+  it('rejects a name whose component already exists', () => {
+    const [mycelium] = DIRS.componentDirs
     expect(validate([{ name: 'coin', svg: GOOD_SVG }], [`${mycelium}/Coin.tsx`])).toHaveLength(1)
   })
 
@@ -303,25 +317,24 @@ describe('pathBBox', () => {
 })
 
 describe('targetDirs', () => {
-  it('covers both generators for icons and only ui for logos', () => {
+  it('maps icons and logos to their mycelium component dirs', () => {
     expect(targetDirs('/repo', 'icons')).toEqual(DIRS)
     expect(targetDirs('/repo', 'logos')).toEqual({
       svgDir: '/repo/packages/mycelium/src/assets/logos/svg',
-      componentDirs: ['/repo/packages/ui/src/components/logos'],
+      componentDirs: ['/repo/packages/mycelium/src/components/logos'],
     })
   })
 })
 
 describe('replacements', () => {
-  it('lists the paths a name would overwrite across the SVG and both component dirs', () => {
-    const [ui, mycelium] = DIRS.componentDirs
+  it('lists the paths a name would overwrite across the SVG and component dir', () => {
+    const [mycelium] = DIRS.componentDirs
     const existing = new Set([`${DIRS.svgDir}/coin.svg`, `${mycelium}/Coin.tsx`])
     expect(existingPathsFor('coin', DIRS, (path) => existing.has(path))).toEqual([
       `${DIRS.svgDir}/coin.svg`,
       `${mycelium}/Coin.tsx`,
     ])
     expect(existingPathsFor('robot', DIRS, (path) => existing.has(path))).toEqual([])
-    expect(ui).toBeDefined()
   })
 
   it('finds which files in a batch are replacements, in batch order', () => {
@@ -334,7 +347,7 @@ describe('replacements', () => {
     expect(findReplacements(files, DIRS, (path) => existing.has(path))).toEqual(['tag', 'coin'])
   })
 
-  it('removes the generated components of replaced names so the generators regenerate them', () => {
+  it('removes the generated components of replaced names so the generator regenerates them', () => {
     const root = mkdtempSync(join(tmpdir(), 'add-icons-'))
     try {
       const dirs = targetDirs(root, 'icons')

@@ -1,8 +1,5 @@
-import {
-  parseNotificationExtra,
-  serializeNotificationExtra,
-} from '@universe/api/src/clients/notifications/notificationExtra'
 import { describe, expect, it } from 'vitest'
+import { parseNotificationExtra, serializeNotificationExtra } from './notificationExtra'
 
 describe('notification extra serialization', () => {
   it('round-trips the persist-until-interaction flag', () => {

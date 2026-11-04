@@ -2,7 +2,7 @@ import {
   ProtectionResult as RestProtectionResult,
   SafetyLevel as RestSafetyLevel,
 } from '@uniswap/client-data-api/dist/data/v1/types_pb'
-import { GraphQLApi, TradingApi } from '@universe/api'
+import { TradingApi } from '@universe/api'
 import { ProtectionResult, SafetyLevel } from 'uniswap/src/features/dataApi/safetyEnums'
 import { AttackType } from 'uniswap/src/features/dataApi/types'
 import { fromV2Verdict as mapV2Verdict } from 'uniswap/src/features/tokens/warnings/tokenProtection'
@@ -10,40 +10,7 @@ import { logger } from 'utilities/src/logger/logger'
 
 export { ProtectionResult, SafetyLevel } from 'uniswap/src/features/dataApi/safetyEnums'
 
-/** Legacy GraphQL → domain; deleted with the GraphQL data paths. */
-export function fromGraphQLSafetyLevel(level: GraphQLApi.SafetyLevel | undefined): SafetyLevel | undefined {
-  switch (level) {
-    case GraphQLApi.SafetyLevel.Blocked:
-      return SafetyLevel.Blocked
-    case GraphQLApi.SafetyLevel.MediumWarning:
-      return SafetyLevel.MediumWarning
-    case GraphQLApi.SafetyLevel.StrongWarning:
-      return SafetyLevel.StrongWarning
-    case GraphQLApi.SafetyLevel.Verified:
-      return SafetyLevel.Verified
-    default:
-      return undefined
-  }
-}
-
-/** Legacy GraphQL → domain; deleted with the GraphQL data paths. */
-export function fromGraphQLProtectionResult(result: GraphQLApi.ProtectionResult | undefined): ProtectionResult {
-  switch (result) {
-    case GraphQLApi.ProtectionResult.Benign:
-      return ProtectionResult.Benign
-    case GraphQLApi.ProtectionResult.Malicious:
-      return ProtectionResult.Malicious
-    case GraphQLApi.ProtectionResult.Spam:
-      return ProtectionResult.Spam
-    case GraphQLApi.ProtectionResult.Warning:
-      return ProtectionResult.Warning
-    default:
-      return ProtectionResult.Unknown
-  }
-}
-
-/** data.v1 protobuf → domain. */
-export function fromRestSafetyLevel(level: RestSafetyLevel | undefined): SafetyLevel | undefined {
+export function fromDataApiSafetyLevel(level: RestSafetyLevel | undefined): SafetyLevel | undefined {
   switch (level) {
     case RestSafetyLevel.BLOCKED:
       return SafetyLevel.Blocked
@@ -58,8 +25,7 @@ export function fromRestSafetyLevel(level: RestSafetyLevel | undefined): SafetyL
   }
 }
 
-/** data.v1 protobuf → domain. */
-export function fromRestProtectionResult(result: RestProtectionResult | undefined): ProtectionResult {
+export function fromDataApiProtectionResult(result: RestProtectionResult | undefined): ProtectionResult {
   switch (result) {
     case RestProtectionResult.BENIGN:
       return ProtectionResult.Benign
@@ -100,8 +66,8 @@ export function fromV2Verdict(verdict: string | undefined): ProtectionResult {
 }
 
 /**
- * REST services that proxy GraphQL (search, explore rankings) serve safety levels as the GraphQL
- * wire strings; uppercase-validate into the domain like parseProtectionResult, warning on
+ * The search and explore-ranking v1 REST endpoints serve safety levels as uppercase enum strings
+ * ('VERIFIED'); uppercase-validate into the domain like parseProtectionResult, warning on
  * anything unrecognized.
  */
 export function parseSafetyLevel(safetyLevel: string | undefined): SafetyLevel | undefined {
@@ -139,10 +105,8 @@ export function parseProtectionResult(result: string | undefined): ProtectionRes
   return ProtectionResult.Unknown
 }
 
-// The serialized GraphQL ProtectionAttackType vocabulary, as served by the search/explore v1
-// REST endpoints (which proxy GraphQL). Removing the GraphQL client doesn't retire this — it
-// lives until those endpoints serve data.v2 safety shapes and callers move to
-// getRestCurrencySafetyInfoV2. Values beyond the PRD's four displayed types are recognized but
+// The attack-type strings the search/explore v1 REST endpoints serve. This lives until those
+// endpoints serve data.v2 safety shapes and callers move to getRestCurrencySafetyInfoV2. Values beyond the PRD's four displayed types are recognized but
 // unranked, so they collapse to Other in getHighestPriorityAttackType.
 const STRING_ATTACK_TYPES: Record<string, AttackType> = {
   HONEYPOT: AttackType.Honeypot,

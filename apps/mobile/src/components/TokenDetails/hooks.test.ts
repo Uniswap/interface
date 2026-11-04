@@ -2,7 +2,6 @@ import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { preloadedMobileState } from 'src/test/fixtures'
 import { act, renderHook, waitFor } from 'src/test/test-utils'
 import { useCrossChainBalances } from 'uniswap/src/data/apiClients/dataApiService/balances/hooks/useCrossChainBalances'
-import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { usePortfolioBalances } from 'uniswap/src/features/portfolio/balances/hooks'
 import {
   portfolioBalance,
@@ -147,7 +146,7 @@ describe(useCrossChainBalances, () => {
       const tokens = [usdcBaseV2Token(), usdcArbitrumV2Token()]
 
       const bridgeInfo = tokens.map((token) => ({
-        chain: toGraphQLChain(token.chainId),
+        chainId: token.chainId,
         address: token.address,
       }))
       const testPortfolioBalances = tokens.map((token) => portfolioBalance({ fromToken: token }))

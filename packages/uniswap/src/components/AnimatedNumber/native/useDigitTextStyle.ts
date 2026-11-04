@@ -1,8 +1,7 @@
+import { fonts, type ResolvedFontStyle } from '@universe/mycelium'
 import { useMemo } from 'react'
 import { Platform } from 'react-native'
 import type { TextStyle } from 'react-native'
-import { fonts } from 'ui/src/theme'
-import type { ResolvedFontStyle } from 'ui/src/theme'
 import { DIGIT_CELL_PADDING_RATIO } from 'uniswap/src/components/AnimatedNumber/native/constants'
 
 /** Fixed (tabular) width for a single digit cell so layout stays deterministic across digit changes. */

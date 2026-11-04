@@ -3,8 +3,8 @@ import { useEffect, useMemo } from 'react'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 // oxlint-disable-next-line no-restricted-imports -- Use wagmi version because it supports a chain being passed in
 import { useBlockNumber } from 'wagmi'
+import { useBlockTimestamp } from '~/features/Toucan/Auction/hooks/useBlockTimestamp'
 import { useAuctionStore, useAuctionStoreActions } from '~/features/Toucan/Auction/store/useAuctionStore'
-import { useBlockTimestamp } from '~/hooks/useBlockTimestamp'
 import { useMachineTimeMs } from '~/hooks/useMachineTime'
 
 /**

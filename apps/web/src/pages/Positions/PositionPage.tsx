@@ -5,20 +5,19 @@ import { areAddressesEqual, EVMUniverseChainId, isEVMChain, UniverseChainId } fr
 import { isMobileWeb } from '@universe/environment'
 import { Button, Flex, Text, TouchableArea } from '@universe/mycelium'
 import { FlexCompat, type FlexCompatProps } from '@universe/mycelium/flex-compat'
+import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFilled'
+import { ArrowLeft } from '@universe/mycelium/icons/ArrowLeft'
+import { ExchangeHorizontal } from '@universe/mycelium/icons/ExchangeHorizontal'
+import { Flag } from '@universe/mycelium/icons/Flag'
+import { InfoCircleFilled } from '@universe/mycelium/icons/InfoCircleFilled'
+import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
 import { SegmentedControl, type SegmentedControlOption } from '@universe/mycelium/segmented-control-compat'
-import { useDeviceDimensions } from '@universe/mycelium/theme-hooks-compat'
+import { useDeviceDimensions, BREAKPOINT_PX } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
 import { forwardRef, useMemo, useState } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { useTranslation } from 'react-i18next'
 import { Navigate, useLocation, useNavigate, useParams } from 'react-router'
-import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
-import { ArrowLeft } from 'ui/src/components/icons/ArrowLeft'
-import { ExchangeHorizontal } from 'ui/src/components/icons/ExchangeHorizontal'
-import { Flag } from 'ui/src/components/icons/Flag'
-import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
-import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
-import { breakpoints } from 'ui/src/theme/breakpoints'
 import { PollingInterval, ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
@@ -44,8 +43,8 @@ import { BreadcrumbNavContainer, BreadcrumbNavLink } from '~/components/Breadcru
 import { Dropdown } from '~/components/Dropdowns/Dropdown'
 import { LoadingFullscreen, LoadingRows } from '~/components/Loader/styled'
 import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
+import { useAccount } from '~/connection/hooks/useAccount'
 import { BaseQuoteFiatAmount } from '~/features/Liquidity/BaseQuoteFiatAmount'
-import { BlastShutdownBanner } from '~/features/Liquidity/BlastShutdownBanner'
 import { WrappedLiquidityPositionRangeChart } from '~/features/Liquidity/charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
 import { useEntryPointBreadcrumb } from '~/features/Liquidity/Create/hooks/useEntryPointBreadcrumb'
 import { useLpIncentivesFormattedEarnings } from '~/features/Liquidity/hooks/useLpIncentivesFormattedEarnings'
@@ -61,8 +60,7 @@ import { rewardCurrencyId } from '~/features/Liquidity/LPIncentives/utils'
 import { PositionNFT } from '~/features/Liquidity/PositionNFT'
 import { PositionPageActionButtons } from '~/features/Liquidity/PositionPageActionButtons'
 import { getBaseAndQuoteCurrencies } from '~/features/Liquidity/utils/currency'
-import { useCurrencyInfo } from '~/hooks/Tokens'
-import { useAccount } from '~/hooks/useAccount'
+import { useCurrencyInfo } from '~/hooks/currency/useCurrencyInfo'
 import { useDynamicMetatags } from '~/pages/metatags'
 import { NotFound } from '~/pages/NotFound'
 import { usePositionTokenURI } from '~/pages/Positions/usePositionTokenURI'
@@ -336,11 +334,11 @@ function PositionPage({ chainId }: { chainId: EVMUniverseChainId | undefined }) 
   const chartWidth = useMemo(() => {
     // The chart requires an exact numeric width to render correctly.
     // On mobile, we use the full width of the screen minus the padding.
-    if (screenWidth && screenWidth < breakpoints.lg) {
+    if (screenWidth && screenWidth < BREAKPOINT_PX.lg) {
       return screenWidth - 64
     }
     // On desktop, we use a max width of 620px and shrink the width as the screen gets smaller.
-    if (screenWidth && screenWidth < breakpoints.xxl) {
+    if (screenWidth && screenWidth < BREAKPOINT_PX.xxl) {
       return Math.min((screenWidth - 32) / 2, 620)
     }
     return 620
@@ -445,7 +443,6 @@ function PositionPage({ chainId }: { chainId: EVMUniverseChainId | undefined }) 
               <ArrowLeft size="$icon.16" /> {breadcrumb.label}
             </BreadcrumbNavLink>
           </BreadcrumbNavContainer>
-          {positionInfo.chainId === UniverseChainId.Blast && <BlastShutdownBanner />}
           <Flex
             row
             // The actions collapse into a compact '…' below $lg, so the header keeps its single-row

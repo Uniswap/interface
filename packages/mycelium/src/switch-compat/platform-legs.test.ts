@@ -17,8 +17,7 @@ import * as web from './SwitchCompat.web'
 
 // The native leg's dependency closure resolves untranspiled RN-flavored
 // sources under this jsdom config — serve the button-compat stand-ins instead
-// (the button-frame-compat precedent). The real modules are exercised by the
-// packages/tailwind native parity harness.
+// (the button-frame-compat precedent).
 vi.mock('react-native', () => import('../button-compat/testing/native-mocks'))
 vi.mock('react-native-gesture-handler', () => import('../button-compat/testing/gesture-handler-mock'))
 vi.mock('react-native-reanimated', () => import('../button-compat/testing/reanimated-mock'))

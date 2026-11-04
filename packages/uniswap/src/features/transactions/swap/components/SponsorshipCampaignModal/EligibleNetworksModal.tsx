@@ -1,9 +1,9 @@
 import { UniverseChainId } from '@universe/chains'
 import { isWebPlatform } from '@universe/environment'
 import { Button, Flex, iconSizes, Text } from '@universe/mycelium'
+import { GlobeFilled } from '@universe/mycelium/icons/GlobeFilled'
 import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import { useTranslation } from 'react-i18next'
-import { GlobeFilled } from 'ui/src/components/icons/GlobeFilled'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { NetworkPill } from 'uniswap/src/components/network/NetworkPill'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
@@ -45,7 +45,7 @@ export function EligibleNetworksModal({
             onlyUseText
             centered
             textVariant="buttonLabel3"
-            textColor="$accent3"
+            textColor="$neutral1"
             url={UniswapHelpUrls.articles.gasSponsorship}
           />
         </Flex>

@@ -9,28 +9,17 @@ import {
   RecoveryStep,
   useRecoveryFlow,
 } from '@universe/embedded-wallet'
-import { Anchor, Button, Flex, SpinningLoader, Text } from '@universe/mycelium'
+import { Button, Flex, SpinningLoader, Text } from '@universe/mycelium'
+import { Passkey } from '@universe/mycelium/icons/Passkey'
+import { UniswapLogo } from '@universe/mycelium/icons/UniswapLogo'
 import { useTranslation } from 'react-i18next'
 import { Trans } from 'ui/src'
-import { EnvelopeHeart } from 'ui/src/components/icons/EnvelopeHeart'
-import { Passkey } from 'ui/src/components/icons/Passkey'
-import { UniswapLogo } from 'ui/src/components/icons/UniswapLogo'
-import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { useOnchainDisplayName } from 'uniswap/src/features/accounts/useOnchainDisplayName'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { GetHelpButton } from '~/features/wallet/components/Passkey/GetHelpButton'
 import { HpkeHandshakeStatus } from '~/pages/ExtensionPasskeyAuthPopUp/useExtensionRecoveryBridge'
-
-export function GetHelpButton({ t }: { t: ReturnType<typeof useTranslation>['t'] }): JSX.Element {
-  return (
-    <Anchor target="_blank" rel="noreferrer" href={UniswapHelpUrls.articles.passkeysInfo} textDecorationLine="none">
-      <Button icon={<EnvelopeHeart size="$icon.16" color="$neutral2" />} size="xxsmall" emphasis="secondary">
-        {t('common.getHelp.button')}
-      </Button>
-    </Anchor>
-  )
-}
 
 export function DeniedView({ t }: { t: ReturnType<typeof useTranslation>['t'] }): JSX.Element {
   return (

@@ -1,0 +1,40 @@
+{
+  "name": "@universe/transactions-ui",
+  "version": "0.0.0",
+  "dependencies": {
+    "@universe/mycelium": "workspace:^",
+    "react-i18next": "15.7.4",
+    "utilities": "workspace:^"
+  },
+  "peerDependencies": {
+    "react": "19.2.3"
+  },
+  "devDependencies": {
+    "@storybook/react": "8.5.2",
+    "@testing-library/react": "16.3.0",
+    "@types/node": "22.19.17",
+    "@vitest/coverage-v8": "3.2.1",
+    "jsdom": "20.0.3",
+    "react": "19.2.3",
+    "vitest": "3.2.1",
+    "vitest-presets": "workspace:^"
+  },
+  "scripts": {
+    "typecheck": "nx typecheck transactions-ui",
+    "check": "nx check transactions-ui",
+    "check:fast": "nx check:fast transactions-ui",
+    "check:deps:usage": "nx check:deps:usage transactions-ui",
+    "test": "nx test transactions-ui",
+    "format": "nx format transactions-ui",
+    "generate:index": "bun src/scripts/generateIndex.ts",
+    "format:check": "nx format:check transactions-ui",
+    "lint": "nx lint transactions-ui",
+    "lint:fix": "nx lint:fix transactions-ui"
+  },
+  "nx": {
+    "includedScripts": []
+  },
+  "main": "src/index.ts",
+  "private": true,
+  "sideEffects": false
+}

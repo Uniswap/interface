@@ -82,7 +82,7 @@ function baseProps(overrides: Partial<UseMarginQuoteParams> = {}): UseMarginQuot
     position: positionFixture(),
     market: MARKET,
     swapper: SWAPPER,
-    action: 'adjust',
+    action: 'leverage',
     funding: { kind: 'none' },
     paymentToken: NATIVE_PAYMENT_TOKEN,
     targetLeverageX18: undefined,
@@ -337,16 +337,15 @@ describe('useMarginQuote — request mapping per funding kind', () => {
     expect(walletChainIdOf(lastParams())).toBe(ERC20_PAYMENT_TOKEN.chainId)
   })
 
-  it('withdraw-only: sends the amount in COLLATERAL units, and forbids the leverage-leg tolerance', () => {
+  it('withdraw-only: pays out in the COLLATERAL, sends the amount in its units, and forbids the leverage-leg tolerance', () => {
     renderHook(() =>
       useMarginQuote(baseProps({ funding: { kind: 'withdraw', withdrawAmountRaw: '250000000000000000' } })),
     )
     const params = lastParams()
-    // The wire names the pay/receive token at the envelope on a withdrawal too (the server discards it
-    // and reads the amount as collateral — the action key decides the denomination), the amount on the
-    // action key, and leaves only the rail's own tolerance on swapConfig.
+    // The payout token is the collateral whatever the modal's default pay token is (native ETH on this
+    // market): the server prices no payout swap and refuses any other token outright.
     expect(params).toMatchObject({
-      walletToken: MARGIN_NATIVE_TOKEN_ADDRESS,
+      walletToken: MARKET.collateral.address,
       walletChainId: MARGIN_CHAIN_ID,
       swapConfig: { slippageTolerance: 0.5 },
       withdrawEquity: { positionId: POSITION_ID, amount: '250000000000000000' },

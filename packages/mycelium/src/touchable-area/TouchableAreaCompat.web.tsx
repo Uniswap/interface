@@ -59,13 +59,13 @@ interface InjectedColorsOptions {
 
 /**
  * The legacy `WithInjectedColors` contract: clone children injecting the
- * Spore color guidance — `color` (default $accent3), `backgroundColor`, and a
+ * Spore color guidance — `color` (default $neutral1), `backgroundColor`, and a
  * `$group-hover` pool with their hovered-token counterparts; disabled swaps
  * to the disabled palette and drops the hover pool. Nested TouchableAreas
  * keep their own styling. Mycelium primitives (marked via
  * `compat/primitive-marker.ts`) are skipped entirely: they style themselves
- * against `@universe/tailwind`, and the injected `$accent3` default is a
- * rejected token their compilers throw on.
+ * against `@universe/tailwind`, so injected guidance would override their own
+ * colours.
  */
 function withInjectedColors({ children, disabled, variant, enabled }: InjectedColorsOptions): React.ReactNode {
   if (!enabled) {
@@ -80,7 +80,7 @@ function withInjectedColors({ children, disabled, variant, enabled }: InjectedCo
     }
     const childProps = child.props as Record<string, unknown>
     let groupHover = childProps['$group-hover'] as Record<string, unknown> | undefined
-    const maybeColor = (childProps['color'] as string | undefined) ?? '$accent3'
+    const maybeColor = (childProps['color'] as string | undefined) ?? '$neutral1'
     const maybeBackgroundColor = childProps['backgroundColor'] as string | undefined
     if (!groupHover && [maybeColor, maybeBackgroundColor].some((value) => typeof value === 'string')) {
       groupHover = {

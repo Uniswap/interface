@@ -58,7 +58,6 @@ const MYCELIUM_SEMANTIC_COLORS = [
   'shadow-color',
   'shadow-color-hover',
   'network-arc',
-  'network-blast',
   'network-bnb',
   'network-celo',
   'network-linea',

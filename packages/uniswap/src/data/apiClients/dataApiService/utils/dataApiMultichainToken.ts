@@ -6,8 +6,9 @@ import type {
   RankedMultichainToken,
 } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { SpamCode } from '@universe/api'
-import { chainIdToPlatform } from '@universe/chains'
+import { chainIdToPlatform, type UniverseChainId } from '@universe/chains'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
+import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import {
   CurrencyInfo,
   MultichainSearchResult,
@@ -45,7 +46,13 @@ type MultichainToken = DataApiMultichainToken
  * including on chains like Polygon/Celo whose canonical native address is a real contract address,
  * where `isNativeCurrencyAddress` alone would reject the placeholders.
  */
-export function normalizeBackendNativeAddress({ chainId, address }: { chainId: number; address: string }): string {
+export function normalizeBackendNativeAddress({
+  chainId,
+  address,
+}: {
+  chainId: UniverseChainId
+  address: string
+}): string {
   if (address === 'ETH' || isDefaultNativeAddress({ address, platform: chainIdToPlatform(chainId) })) {
     return getNativeAddress(chainId)
   }
@@ -53,7 +60,7 @@ export function normalizeBackendNativeAddress({ chainId, address }: { chainId: n
 }
 
 /** One chain deployment of a v2 MultichainToken. `address` is normalized for the app; `rawAddress` is as served. */
-export type MultichainDeployment = { chainId: number; address: string; rawAddress: string; decimals: number }
+export type MultichainDeployment = { chainId: UniverseChainId; address: string; rawAddress: string; decimals: number }
 
 /**
  * Decimals come from `deployments` only, never from the parent `decimals`: that value is the
@@ -61,8 +68,12 @@ export type MultichainDeployment = { chainId: number; address: string; rawAddres
  * 18 on BNB). The deprecated `addresses` map is never read for decimals, so a row persisted before
  * data-api served `deployments` yields no deployments until refetched.
  */
-function toMultichainDeployment(chainKey: string, deployment: ChainDeployment): MultichainDeployment {
+function toMultichainDeployment(chainKey: string, deployment: ChainDeployment): MultichainDeployment | undefined {
+  // Same filter as listSupportedChainAddresses.
   const chainId = Number(chainKey)
+  if (!isUniverseChainId(chainId)) {
+    return undefined
+  }
   return {
     chainId,
     address: normalizeBackendNativeAddress({ chainId, address: deployment.address }),
@@ -85,9 +96,9 @@ export function getMultichainDeployment({
 }
 
 export function listMultichainDeployments(multichainToken: MultichainToken): MultichainDeployment[] {
-  return Object.entries(multichainToken.deployments ?? {}).map(([chainKey, deployment]) =>
-    toMultichainDeployment(chainKey, deployment),
-  )
+  return Object.entries(multichainToken.deployments ?? {})
+    .map(([chainKey, deployment]) => toMultichainDeployment(chainKey, deployment))
+    .filter((deployment): deployment is MultichainDeployment => deployment !== undefined)
 }
 
 type ParentSafetyInfo = {
@@ -143,9 +154,8 @@ function dataApiChainAddressToCurrencyInfo({
 }
 
 /**
- * Expands a v2 MultichainToken into one CurrencyInfo per chain deployment — the v2 counterpart of
- * the GraphQL TokenProject → tokens fan-out. Deployments that can't be built (unsupported chain,
- * bad address) are dropped.
+ * Expands a v2 MultichainToken into one CurrencyInfo per chain deployment. Deployments that can't be
+ * built (unsupported chain, bad address) are dropped.
  */
 export function dataApiMultichainTokenToCurrencyInfos(multichainToken: MultichainToken): CurrencyInfo[] {
   const parentSafetyInfo = deriveParentSafetyInfo(multichainToken.safety, multichainToken.fees)
@@ -156,8 +166,23 @@ export function dataApiMultichainTokenToCurrencyInfos(multichainToken: Multichai
 }
 
 /**
+ * The deprecated `addresses` map's entries on chains the app supports. The backend keeps serving
+ * chains the app has removed (e.g. Blast), and every chain-info lookup downstream assumes a
+ * supported chain, so unsupported entries are dropped here.
+ */
+export function listSupportedChainAddresses(
+  addresses: Record<string, string>,
+): { chainId: UniverseChainId; address: string }[] {
+  return Object.entries(addresses).flatMap(([chainKey, address]) => {
+    const chainId = Number(chainKey)
+    return isUniverseChainId(chainId) ? [{ chainId, address }] : []
+  })
+}
+
+/**
  * Picks the (chainId, address) deployment to display for a multichain token: `chainId` when set,
- * else the highest-1d-volume deployment, else the first `addresses` entry.
+ * else the highest-1d-volume deployment, else the first `addresses` entry. Only supported chains
+ * are considered.
  */
 export function pickPrimaryDeployment({
   addresses,
@@ -167,27 +192,29 @@ export function pickPrimaryDeployment({
   addresses: Record<string, string>
   chainId: number | undefined
   chainStats?: readonly PlainMessage<ChainTokenRankStats>[]
-}): { chainId: number; address: string } | undefined {
-  const entries = Object.entries(addresses)
-  if (entries.length === 0) {
+}): { chainId: UniverseChainId; address: string } | undefined {
+  const deployments = listSupportedChainAddresses(addresses)
+  if (deployments.length === 0) {
     return undefined
   }
 
   if (chainId !== undefined) {
-    const match = entries.find(([chainIdStr]) => Number(chainIdStr) === chainId)
-    return match ? { chainId: Number(match[0]), address: match[1] } : undefined
+    return deployments.find((deployment) => deployment.chainId === chainId)
   }
 
+  const deploymentByChainId = new Map<number, (typeof deployments)[number]>(
+    deployments.map((deployment) => [deployment.chainId, deployment]),
+  )
   const byVolume = [...chainStats]
-    .filter((chainStat) => addresses[String(chainStat.chainId)])
+    .filter((chainStat) => deploymentByChainId.get(chainStat.chainId)?.address)
     .sort((a, b) => (b.stats?.volume1d ?? 0) - (a.stats?.volume1d ?? 0))[0]
-  const byVolumeAddress = byVolume && addresses[String(byVolume.chainId)]
-  if (byVolume && byVolumeAddress) {
-    return { chainId: byVolume.chainId, address: byVolumeAddress }
+  const byVolumeDeployment = byVolume && deploymentByChainId.get(byVolume.chainId)
+  if (byVolumeDeployment) {
+    return byVolumeDeployment
   }
 
-  const [chainIdStr, address] = entries[0] ?? []
-  return chainIdStr && address ? { chainId: Number(chainIdStr), address } : undefined
+  const [first] = deployments
+  return first?.address ? first : undefined
 }
 
 /**

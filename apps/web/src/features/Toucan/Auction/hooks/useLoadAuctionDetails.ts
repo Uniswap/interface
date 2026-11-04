@@ -14,7 +14,6 @@ import {
 import { computePreBidEndBlock, ParsedAuctionStepLike } from '~/features/Toucan/Auction/utils/emissionStartBlock'
 import { resolveAuctionTokenLogo } from '~/features/Toucan/Auction/utils/tokenMetadata'
 import { hasTokenTotalSupply } from '~/features/Toucan/Auction/utils/tokenTotalSupply'
-import { getAuctionMetadata } from '~/features/Toucan/Config/config'
 import { getPollingIntervalMs } from '~/utils/averageBlockTimeMs'
 
 /**
@@ -118,20 +117,7 @@ export function useLoadAuctionDetails(
         ? baseAuctionDetails.clearingPrice
         : baseAuctionDetails.floorPrice
 
-    // Logo precedence: config override (authoritative) -> creator-uploaded API image ->
-    // indexed token logo -> TokenLogo placeholder. The override is resolved explicitly so it
-    // wins over the API image, while the API image still beats the indexed logo.
-    const overrideLogoUrl = baseAuctionDetails.tokenAddress
-      ? getAuctionMetadata({
-          chainId: baseAuctionDetails.chainId,
-          tokenAddress: baseAuctionDetails.tokenAddress,
-        })?.logoUrl
-      : undefined
-    const token = resolveAuctionTokenLogo({
-      tokenInfo,
-      overrideLogoUrl,
-      tokenImageUrl: baseAuctionDetails.tokenImageUrl,
-    })
+    const token = resolveAuctionTokenLogo({ tokenInfo, tokenImageUrl: baseAuctionDetails.tokenImageUrl })
 
     const auctionDetails: AuctionDetails = {
       ...baseAuctionDetails,

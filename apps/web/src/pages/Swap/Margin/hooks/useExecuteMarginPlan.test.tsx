@@ -65,7 +65,6 @@ const mocks = vi.hoisted(() => ({
   getMarginPlan: vi.fn(),
   updateMarginPlan: vi.fn(),
   createMarginPlan: vi.fn(),
-  cancelMarginPlan: vi.fn(),
   signTypedData: vi.fn(),
   selectChain: vi.fn(),
   getClient: vi.fn(),
@@ -84,7 +83,6 @@ vi.mock('uniswap/src/data/apiClients/tradingApi/MarginApiClient', async (importO
       getMarginPlan: mocks.getMarginPlan,
       updateMarginPlan: mocks.updateMarginPlan,
       createMarginPlan: mocks.createMarginPlan,
-      cancelMarginPlan: mocks.cancelMarginPlan,
     },
   }
 })
@@ -95,7 +93,7 @@ vi.mock('uniswap/src/features/telemetry/send', () => ({
   },
 }))
 
-vi.mock('~/hooks/useAccount', () => ({
+vi.mock('~/connection/hooks/useAccount', () => ({
   useAccount: () => ({
     address: mocks.reactAddress,
     status: mocks.reactAddress ? 'connected' : 'disconnected',
@@ -104,11 +102,11 @@ vi.mock('~/hooks/useAccount', () => ({
   }),
 }))
 
-vi.mock('~/hooks/useSelectChain', () => ({
+vi.mock('~/connection/hooks/useSelectChain', () => ({
   useSelectChain: () => mocks.selectChain,
 }))
 
-vi.mock('~/hooks/useEthersProvider', () => ({
+vi.mock('~/connection/hooks/useEthersProvider', () => ({
   useEthersProvider: () => ({}),
   useEthersWeb3Provider: () => ({ getSigner: () => ({ sendTransaction: mocks.sendTransaction }) }),
   // Also the source-chain signer seam (getSignerForChain): a bridge/pre-swap on Base derives its
@@ -466,9 +464,6 @@ describe('marginPlanExecutionStore', () => {
     // evidence a tx exists for it, which outranks any promise the code makes about what was broadcast.
     // A proof on an EARLIER step is the ordinary case — that step completed and its tx landed.
     function restartWith(code: string, proofStepIndex = 1): { planId: string } {
-      // restartPlan releases the reservation best-effort, so the client must return a thenable here.
-      // Cleared per call: this describe does not reset mocks, so counts would carry across cases.
-      mocks.cancelMarginPlan.mockReset().mockResolvedValue(undefined)
       const epoch = actions().currentEpoch()
       const plan = fakePlan({ swapper: SWAPPER_A })
       // fakePlan reuses one planId, and the cases that deliberately KEEP a proof would otherwise leave
@@ -494,8 +489,7 @@ describe('marginPlanExecutionStore', () => {
       return { planId: plan.planId }
     }
 
-    // Nothing was broadcast, so the orphaned proof would only withhold the pending card's Cancel and
-    // leave the plan with no affordance until the cache TTL.
+    // Nothing was broadcast, so the orphaned proof would only linger until the cache TTL.
     it('restartPlan() clears the cached proofs when the failing step broadcast nothing', () => {
       const { planId } = restartWith('INSUFFICIENT_SOURCE_FUNDS')
       expect(readStepProof({ swapper: SWAPPER_A, planId, stepIndex: 1 })).toBeUndefined()
@@ -504,35 +498,20 @@ describe('marginPlanExecutionStore', () => {
     // Direct evidence outranks the code's promise. MAX_REMATERIALIZE_EXCEEDED guarantees nothing was
     // sent for the failing ATTEMPT, but a step that broadcast, took PROOF_REVERIFY_FAILED, was reset
     // and re-materialized until the budget ran out arrives holding a proof — a live deposit whose only
-    // local record this would delete, and whose Cancel-suppression it would lift.
+    // local record this would delete.
     it.each(['INSUFFICIENT_SOURCE_FUNDS', 'MAX_REMATERIALIZE_EXCEEDED'])(
       'restartPlan() KEEPS the proofs when the FAILING step holds one, even on %s',
       (code) => {
         const { planId } = restartWith(code, 0)
         expect(readStepProof({ swapper: SWAPPER_A, planId, stepIndex: 0 })).toBeDefined()
-        // The reservation release rides the same predicate, for the same reason.
-        expect(mocks.cancelMarginPlan).not.toHaveBeenCalled()
       },
     )
 
-    // The opposite hazard: this tx WAS broadcast and may still land. Its proof withholds Cancel on a
-    // plan with a possibly-live deposit, and is the only local record that a resume must replay
-    // rather than re-broadcast — dropping it risks a second leveraged position.
+    // The opposite hazard: this tx WAS broadcast and may still land. Its proof is the only local record
+    // that a resume must replay rather than re-broadcast — dropping it risks a second leveraged position.
     it('restartPlan() KEEPS the cached proofs when the failing step may have landed', () => {
       const { planId } = restartWith('PROOF_UNRECOVERABLE')
       expect(readStepProof({ swapper: SWAPPER_A, planId, stepIndex: 1 })).toBeDefined()
-    })
-
-    // The SERVER plan outlives a client-side terminal error — the balance guard mints one without the
-    // server ever learning the step failed — so the subId stays reserved and the create this button
-    // leads to would 409 until the TTL. Released on the same predicate as the proofs: a code whose tx
-    // may have LANDED must not cancel a plan with a live deposit.
-    it('restartPlan() releases the reservation only where nothing was broadcast', () => {
-      restartWith('INSUFFICIENT_SOURCE_FUNDS')
-      expect(mocks.cancelMarginPlan).toHaveBeenCalledTimes(1)
-
-      restartWith('PROOF_UNRECOVERABLE')
-      expect(mocks.cancelMarginPlan).not.toHaveBeenCalled()
     })
   })
 })
@@ -1344,9 +1323,8 @@ describe('runLoop (mocked wallet/network)', () => {
       expect(state().stepError).toEqual({ stepIndex: 0, code: 'INSUFFICIENT_SOURCE_FUNDS', message: 'Step failed' })
     })
 
-    // The pointer's only job is the resume banner, which shows for ANY pointer — so leaving one behind
-    // offers a resume for a plan that can never advance. Cancel is unaffected: the pending section
-    // reads the server's pendingPlans.
+    // The pointer's only job is the resume banner, so leaving one behind offers a resume for a plan
+    // that can never advance.
     it('clears the persisted pointer on a terminal plan, so no resume banner survives it', async () => {
       const failedPlan = marginPlan({
         planId: 'plan-failed-pointer',
@@ -1794,7 +1772,7 @@ describe('runLoop (mocked wallet/network)', () => {
       expect(state().plan?.status).toBe('AWAITING_ACTION')
       expect(state().executingPlanId).toBeUndefined()
       expect(state().isExecuting).toBe(false)
-      // The park invalidates positions so the pending card surfaces without waiting for the poll.
+      // The park invalidates positions so server rows refresh without waiting for the poll.
       expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: [ReactQueryCacheKey.TradingApi, 'margin/positions'] })
     })
 

@@ -1,4 +1,5 @@
 import { Code, ConnectError } from '@connectrpc/connect'
+import { FetchError } from '@universe/api'
 import { TFunction } from 'i18next'
 import { TransactionStepFailedError } from 'uniswap/src/features/transactions/errors'
 import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
@@ -10,6 +11,11 @@ import {
 } from '~/utils/swapErrorToUserReadableMessage'
 
 const t = ((key: string) => key) as unknown as TFunction
+
+// Built the way createFetchClient builds it: the status on the Response, the parsed JSON body on `data`.
+function fetchError(status: number, data: object): FetchError {
+  return new FetchError({ response: new Response(JSON.stringify(data), { status }), data })
+}
 
 describe('didUserReject', () => {
   it('detects top-level EIP-1193 rejection code', () => {
@@ -74,6 +80,30 @@ describe('isBlockedAccountError', () => {
     expect(isBlockedAccountError(err)).toBe(true)
   })
 
+  it('detects a trading 401 "Account is blocked" FetchError', () => {
+    expect(
+      isBlockedAccountError(fetchError(401, { errorCode: 'UnauthorizedError', detail: 'Account is blocked' })),
+    ).toBe(true)
+  })
+
+  it('detects an entry-gateway 403 COMPLIANCE_BLOCKED FetchError nested on cause', () => {
+    const err = new Error('swap failed', {
+      cause: fetchError(403, {
+        errorCode: 'COMPLIANCE_BLOCKED',
+        detail: 'Account is blocked',
+        compliance: { walletBlocked: true },
+      }),
+    })
+    expect(isBlockedAccountError(err)).toBe(true)
+  })
+
+  it('returns false for a 401 or 403 FetchError without a blocked-account body', () => {
+    expect(isBlockedAccountError(fetchError(401, { errorCode: 'UnauthorizedError', detail: 'Unauthorized' }))).toBe(
+      false,
+    )
+    expect(isBlockedAccountError(fetchError(403, { errorCode: 'Forbidden', detail: 'Forbidden' }))).toBe(false)
+  })
+
   it('returns false for other ConnectError codes', () => {
     expect(isBlockedAccountError(new ConnectError('deadline exceeded', Code.DeadlineExceeded))).toBe(false)
   })
@@ -90,6 +120,12 @@ describe('swapErrorToUserReadableMessage', () => {
       new ConnectError('UnauthorizedError: Account is blocked', Code.Unauthenticated),
     )
     expect(message).toBe('swap.error.accountBlocked')
+  })
+
+  it('returns blocked-account copy for a /quote 403 Forbidden "Account is blocked"', () => {
+    expect(
+      swapErrorToUserReadableMessage(t, fetchError(403, { errorCode: 'Forbidden', detail: 'Account is blocked' })),
+    ).toBe('swap.error.accountBlocked')
   })
 
   it('keeps the generic fallback for normal swap errors', () => {

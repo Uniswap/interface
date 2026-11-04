@@ -73,11 +73,23 @@ export type { TextLoaderWrapperProps } from './text-loader-wrapper'
 export { ALL_FONT_VARIANT_TOKENS, getFontStylesForVariant, getTextVariantKey } from './text-compat/font-variant'
 export { getIsValidSporeColor } from './compat/color-validation'
 export type { ResolvedFontStyle, TextVariantKey } from './text-compat/font-variant'
-export { borderRadii, fonts, heights, iconSizes, imageSizes, spacing, zIndexes } from './tokens'
+export {
+  borderRadii,
+  defaultHitslop,
+  fonts,
+  heights,
+  iconSizes,
+  imageSizes,
+  NATIVE_LINE_HEIGHT_SCALE,
+  spacing,
+  zIndexes,
+} from './tokens'
+export { defaultWeights } from './input-compat/font-tokens'
 export { getTokenValue, type GetTokenValueGroup, type GetTokenValueToken } from './get-token-value'
 export { COLOR_COUNT, UNICON_COLORS } from './unicon/colors'
 export { hashString } from './unicon/hash'
 export { Unicon } from './unicon/Unicon'
+export { getUniconColor } from './unicon/derive'
 export type { UniconProps } from './unicon/types'
 
 /**
@@ -172,14 +184,12 @@ export type {
 } from './scroll-view-compat/props'
 
 /**
- * Tamagui → Tailwind migration surface (INFRA-3600): the compat `Input` under
- * the same names the legacy `ui/src` barrel uses (`Input`, `InputProps`,
- * `InputStyleProps`, `inputStyles`), so `<Input value={…} onChangeText={…} />`
- * call sites convert as a mechanical barrel swap. The surface is the full
- * closed prop contract of the Tamagui-free ui/src Input rebuild (INFRA-3318),
- * type-parity-pinned in packages/tailwind/src/parity/input; web and native
- * legs. The `Input` name also carries the legacy instance-type alias, so
- * `useRef<Input>` consumers convert on the same swap.
+ * The cross-platform legacy `Input` (RN TextInput prop surface plus the legacy
+ * Tamagui style props), under the names the former `ui/src` Input used
+ * (`Input`, `InputProps`, `InputStyleProps`, `inputStyles`); web and native
+ * legs. The `Input` name also carries the instance-type alias, so
+ * `useRef<Input>` works. New web-only code uses the Tailwind
+ * `@universe/mycelium/components` Input instead.
  */
 export { InputCompat as Input } from './input-compat/InputCompat'
 export { inputStyles } from './input-compat/props'
@@ -306,10 +316,9 @@ export type { CopyIconProps } from './animatable-copy-icon-compat'
 /**
  * Tamagui → Tailwind migration surface (INFRA-3644): the compat `Separator`,
  * `Switch`, and `SpinningLoader` under the same names the legacy `ui/src`
- * barrel uses, so their call sites convert as a mechanical barrel swap. Each
+ * barrel used, so their call sites convert as a mechanical barrel swap. Each
  * is the full closed prop contract of its Tamagui-free ui/src rebuild
- * (INFRA-3318 Separator/Switch, INFRA-3286 SpinningLoader), parity-pinned in
- * packages/tailwind/src/parity/{separator,switch,spinning-loader}; web and
+ * (INFRA-3318 Separator/Switch, INFRA-3286 SpinningLoader); web and
  * native legs. `SwitchProps` rides along under its legacy barrel name; the
  * other two prop types keep their compat names (the legacy barrel never
  * exported them).
@@ -336,12 +345,15 @@ export type { FlexLoaderProps } from './flex-loader-compat'
  * Tamagui → Tailwind migration surface: the compat `IconButton` under the
  * same names the legacy `ui/src` barrel uses (`IconButton`,
  * `IconButtonProps`), so call sites convert as a mechanical barrel swap.
- * Full legacy prop surface, coverage-pinned against the live legacy type in
- * packages/tailwind/src/parity/icon-button. Root-barrel export only — no
+ * Full legacy prop surface. Root-barrel export only — no
  * subpath entry (the ProgressCompat precedent).
  */
 export { IconButtonCompat as IconButton } from './icon-button-compat/IconButtonCompat'
 export type { IconButtonCompatProps as IconButtonProps } from './icon-button-compat/props'
+
+/** The compat `DropdownButton` under the legacy `ui/src` names. Root-barrel export only (the IconButton precedent). */
+export { DropdownButtonCompat as DropdownButton } from './dropdown-button-compat/DropdownButtonCompat'
+export type { DropdownButtonCompatProps as DropdownButtonProps } from './dropdown-button-compat/props'
 
 // Legacy-name Reanimated wrappers. Native animates; web accepts and ignores the Reanimated props, like legacy.
 export { AnimatedFlexCompat as AnimatedFlex } from './animated-flex-compat/AnimatedFlexCompat'
@@ -367,6 +379,7 @@ export { useSporeColorsForTheme } from './theme-hooks-compat/useSporeColorsForTh
 
 // Legacy Loader namespace, composed on compat primitives — cross-platform without its own leg split.
 export { LoaderCompat as Loader } from './loader-compat/LoaderCompat'
+export { TXN_HISTORY_LOADER_ICON_SIZE } from './loader-compat/loaders'
 
 // Render on compat primitives — cross-platform without their own leg split.
 export { InsetCompat as Inset } from './inset-compat/InsetCompat'
@@ -383,8 +396,6 @@ export type { SquareCompatProps as SquareProps } from './square-compat/SquareCom
 export { SpacerCompat as Spacer } from './spacer-compat/SpacerCompat'
 export type { SpacerCompatProps as SpacerProps } from './spacer-compat/SpacerCompat'
 
-// Hand-swap only: this compat doesn't inert its positioner, so an open tooltip
-// swallows clicks beneath it (INFRA-3930).
 export { TooltipCompat as Tooltip } from './tooltip-compat'
 
 // Directory import (not the `./menu-compat` subpath) so Metro resolves `menu-compat/index.native.ts`

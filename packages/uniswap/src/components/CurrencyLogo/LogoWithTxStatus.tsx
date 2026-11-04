@@ -1,16 +1,22 @@
 import { UniverseChainId } from '@universe/chains'
-import { Flex, UniversalImage, UniversalImageResizeMode, useSporeColors } from '@universe/mycelium'
+import {
+  Flex,
+  UniversalImage,
+  UniversalImageResizeMode,
+  useSporeColors,
+  borderRadii,
+  zIndexes,
+} from '@universe/mycelium'
+import type { IconProps } from '@universe/mycelium/icons'
+import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFilled'
+import { Approve } from '@universe/mycelium/icons/Approve'
+import { ArrowDownInCircle } from '@universe/mycelium/icons/ArrowDownInCircle'
+import { ArrowDownToLine } from '@universe/mycelium/icons/ArrowDownToLine'
+import { ArrowUpInCircle } from '@universe/mycelium/icons/ArrowUpInCircle'
+import { QuestionInCircle } from '@universe/mycelium/icons/QuestionInCircle'
+import { SlashCircle } from '@universe/mycelium/icons/SlashCircle'
+import { Walletconnect } from '@universe/mycelium/icons/Walletconnect'
 import React, { useEffect } from 'react'
-import type { IconProps } from 'ui/src'
-import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
-import { Approve } from 'ui/src/components/icons/Approve'
-import { ArrowDownInCircle } from 'ui/src/components/icons/ArrowDownInCircle'
-import { ArrowDownToLine } from 'ui/src/components/icons/ArrowDownToLine'
-import { ArrowUpInCircle } from 'ui/src/components/icons/ArrowUpInCircle'
-import { QuestionInCircle } from 'ui/src/components/icons/QuestionInCircle'
-import { SlashCircle } from 'ui/src/components/icons/SlashCircle'
-import { Walletconnect } from 'ui/src/components/icons/Walletconnect'
-import { borderRadii, zIndexes } from 'ui/src/theme'
 import { STATUS_RATIO } from 'uniswap/src/components/CurrencyLogo/constants'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { TransactionSummaryNetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'

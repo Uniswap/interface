@@ -107,3 +107,18 @@ export function testMarkPoolsBalanceCoachmarkEligible(migration: (state: any) =>
   })
   expect(result.uniswapBehaviorHistory.hasDismissedPoolsBalanceCoachmark).toBe(false)
 }
+
+// Mobile: 104
+// Extension: 37
+// Web: 65
+export function testRemoveBlastChainData(migration: (state: any) => any, prevSchema: any): void {
+  const blastTx = { id: 'blast-tx', chainId: 81457 }
+  const mainnetTx = { id: 'mainnet-tx', chainId: 1 }
+  const result = migration({
+    ...prevSchema,
+    transactions: { '0xabc': { 1: { [mainnetTx.id]: mainnetTx }, 81457: { [blastTx.id]: blastTx } } },
+    favorites: { ...prevSchema.favorites, tokens: ['1-0xa', '81457-0xb'] },
+  })
+  expect(result.transactions).toEqual({ '0xabc': { 1: { [mainnetTx.id]: mainnetTx } } })
+  expect(result.favorites.tokens).toEqual(['1-0xa'])
+}

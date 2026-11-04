@@ -4,8 +4,7 @@
  * platformless BASE stub fails loudly for every compound part, and the three
  * legs (and their entry barrels) export the same symbol set — exactly the
  * drift the base leg's hand-restated types cannot surface through tsc alone.
- * Web rendering behavior is pinned by the packages/tailwind tooltip parity
- * suites; the native pass-through/null contract by the native parity harness.
+ * Web behavior is pinned by `TooltipCompat.web.test.tsx`.
  */
 import { PlatformSplitStubError } from '@universe/environment'
 import { renderToStaticMarkup } from 'react-dom/server'

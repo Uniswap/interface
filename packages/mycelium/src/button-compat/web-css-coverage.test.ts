@@ -2,7 +2,7 @@
  * ButtonCompat COMPILED-CSS GATE (INFRA-3230).
  *
  * Every other test in this family asserts on class *names* — the rendered
- * string (`web-class-pin.test.tsx`), the compiler's output, the native
+ * string, the compiler's output (`web-class-pin.test.tsx`), the native
  * expectations. None of them touches the compiled stylesheet, so none of them
  * can see the one failure mode that class-name assertions are structurally
  * blind to: a class that is emitted into the DOM but that Tailwind never
@@ -688,8 +688,8 @@ describe('the compiled CSS declares the disabled palette after the Button.Text t
       base: dirname(webTailwindEntry),
       loadStylesheet,
     })
-    // Composed at runtime: a literal twin in this scanned tree would register
-    // as scanner-visible in the native parity harness's coverage model.
+    // Composed at runtime: a literal twin in this scanned tree would be picked
+    // up by the Tailwind scanner.
     const token = 'neutral3'
     const tokenTwin = `[color:var(--stext-${token})]`
     const css = build(['text-neutral2', tokenTwin])

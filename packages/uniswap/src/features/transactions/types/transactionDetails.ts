@@ -106,7 +106,7 @@ export interface UniswapXOrderExtension {
 
   // Note: `orderHash` is an off-chain value used to track orders before they're filled on-chain.
   // UniswapX orders will also have a transaction `hash` if they become filled.
-  // `orderHash` will be an undefined if the object is built from a filled order received from graphql. Once filled, it is not needed for any tracking.
+  // `orderHash` will be an undefined if the object is built from a filled order received from the activity feed. Once filled, it is not needed for any tracking.
   orderHash?: string
 
   // Used to track status of the order before it is submitted
@@ -504,6 +504,8 @@ export interface BridgeTransactionInfo extends BaseTransactionInfo, PlanSwapTran
   quoteId?: string
   gasUseEstimate?: string
   routingDappInfo?: DappInfoTransactionDetails
+  /** The vendor whose deposit this is, from the quote, captured at submit for the finalization-time analytics. */
+  bridgeProvider?: TradingApi.BridgeProvider
   depositConfirmed?: boolean // interface only
   /** Whether a paymaster actually paid gas for this bridge (not just the quote's sponsorship offer),
    *  captured at submit so the finalization-time Swap Transaction Completed/Failed event can report

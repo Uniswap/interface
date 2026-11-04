@@ -1,10 +1,9 @@
 import { UniverseChainId } from '@universe/chains'
-import { Flex, Text } from '@universe/mycelium'
+import { Flex, Text, iconSizes } from '@universe/mycelium'
 import { styled } from '@universe/mycelium/styled'
 import { TestID } from '@universe/test'
 import { useContext, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { iconSizes } from 'ui/src/theme'
 import { CopyHelper } from 'uniswap/src/components/CopyHelper/CopyHelper'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { GroupHoverTransition } from 'uniswap/src/components/GroupHoverTransition'
@@ -13,7 +12,7 @@ import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { useResolveTokenCategories } from 'uniswap/src/data/apiClients/dataApiService/categories/useResolveTokenCategories'
 import { RWAIssuerTag } from 'uniswap/src/features/rwa/RWAIssuerTag'
 import type { RWAIssuerDisplay } from 'uniswap/src/features/rwa/types'
-import { selectTokenRowCategoryTag } from 'uniswap/src/features/tokenCategories/selectTokenRowCategoryTag'
+import { selectRowCategoryTag } from 'uniswap/src/features/tokenCategories/selectRowCategoryTag'
 import { TokenCategoryTag } from 'uniswap/src/features/tokenCategories/TokenCategoryTag'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
@@ -66,7 +65,7 @@ export function TokenDescription({
   const { t } = useTranslation()
   const rowHovered = useContext(TableRowHoverContext)
   const { categories } = useResolveTokenCategories({ categoryIds })
-  const categoryTag = useMemo(() => selectTokenRowCategoryTag({ categoryIds, categories }), [categoryIds, categories])
+  const categoryTag = useMemo(() => selectRowCategoryTag({ categoryIds, categories }), [categoryIds, categories])
   // A chain-filtered page's row is that chain's deployment only (its address, link and stats all
   // come from that leg), so it gets the same single-network treatment even for a multichain token.
   const isMultiNetworkRow = chainFilterId === undefined && chainIdsByVolume.length > 1

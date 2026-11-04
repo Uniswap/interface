@@ -276,7 +276,7 @@ export function AuctionGraduated() {
   const bidTokenSymbol = bidTokenCurrency?.symbol
 
   // Real (redeemable) token info for the redeem card's symbol. useAuctionTokenInfo falls back to
-  // an on-chain symbol read when the token isn't GraphQL-indexed, so the redeemable amount is
+  // an on-chain symbol read when the backend has no metadata for the token, so the redeemable amount is
   // never mislabeled with the virtual token's symbol.
   const { tokenInfo: realTokenInfo, loading: realTokenLoading } = useAuctionTokenInfo(
     isRedeemable && realTokenAddress ? realTokenAddress : undefined,

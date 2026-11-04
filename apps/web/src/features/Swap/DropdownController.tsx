@@ -1,8 +1,8 @@
 import { Flex, Separator, Text, TouchableArea } from '@universe/mycelium'
+import { ChevronsIn } from '@universe/mycelium/icons/ChevronsIn'
+import { ChevronsOut } from '@universe/mycelium/icons/ChevronsOut'
 import { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ChevronsIn } from 'ui/src/components/icons/ChevronsIn'
-import { ChevronsOut } from 'ui/src/components/icons/ChevronsOut'
 
 // TODO: Extract to Spore ExpandoRow component (WEB-7906)
 export function DropdownController({

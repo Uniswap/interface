@@ -1,5 +1,5 @@
-import type { StorageDriver } from '@universe/api/src/storage/types'
 import { getChromeWithThrow } from '@universe/environment'
+import type { StorageDriver } from './types'
 
 export function createExtensionStorageDriver(): StorageDriver {
   return {

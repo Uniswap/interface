@@ -1,9 +1,9 @@
 import { type Mutation, MutationCache, QueryCache, QueryClient } from '@tanstack/react-query'
-import { FetchError } from '@universe/api/src/clients/base/errors'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { hashKey } from 'utilities/src/reactQuery/hashKey'
 import { assertNoSecretsInPersistedSink, surfacePersistedSinkError } from 'utilities/src/security/persistedSinkTripwire'
 import { ONE_DAY_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
+import { FetchError } from './errors'
 
 // The label lands in the thrown message and in logger.error, so it must never carry key values: only
 // the leading cache-key name, which is a constant by convention, is safe to repeat.

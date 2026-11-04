@@ -1,7 +1,7 @@
 import type { EVMUniverseChainId } from '@universe/chains'
+import { useTokenPoolState } from '~/features/Toucan/Auction/hooks/useTokenPoolState'
 import { PoolAvailability, resolvePoolAvailability } from '~/features/Toucan/Auction/utils/resolveAuctionDisplayState'
 import { isTokenLaunchTradeLive } from '~/features/Toucan/Auction/utils/tokenLaunchedBannerUtils'
-import { useTokenPoolState } from '~/hooks/useTokenPoolState'
 
 export function useTokenLaunchedTradeAvailability({
   chainId,
@@ -36,7 +36,7 @@ export function useTokenLaunchedTradeAvailability({
     enabled: isRedeemableTradeEligible,
   })
 
-  // CAP has filtered pools while GraphQL reports a zero price. Ordinary auctions still need a live market price.
+  // CAP has filtered pools while the price service reports a zero price. Ordinary auctions still need a live market price.
   const isTradeAvailable = isRedeemable
     ? isRedeemableTradeEligible && resolvePoolAvailability(poolState) === PoolAvailability.HasPool
     : isTokenLaunchTradeLive({ isTradeAvailableFromStatus, hasLiveMarketPrice: hasMarketPrice })

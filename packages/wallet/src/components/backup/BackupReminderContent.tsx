@@ -1,6 +1,5 @@
-import { Flex, Text } from '@universe/mycelium'
+import { Button, Flex, Text } from '@universe/mycelium'
 import { useTranslation } from 'react-i18next'
-import { Button } from 'ui/src'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
 import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/balancesRest'

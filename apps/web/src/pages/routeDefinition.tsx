@@ -5,6 +5,7 @@ export interface RouterConfig {
   browserRouterEnabled?: boolean
   hash?: string
   isEmbeddedWalletEnabled?: boolean
+  isHooksExploreEnabled?: boolean
   isMarginEnabled?: boolean
 }
 

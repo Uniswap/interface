@@ -4,7 +4,7 @@ import { provideUniswapIdentifierService } from '@universe/api'
 import { uniswapIdentifierQuery } from '@universe/sessions'
 import { useEffect } from 'react'
 import { InterfaceUserPropertyName } from 'uniswap/src/features/telemetry/user'
-import { useAccount } from '~/hooks/useAccount'
+import { useAccount } from '~/connection/hooks/useAccount'
 
 /**
  * Every Datadog user property web publishes. Redux state never leaves the device, so this file is

@@ -13,8 +13,7 @@ const validPoolToken0 = {
   symbol: 'USDC',
   name: 'USD Coin',
   derivedETH: '0.0006240873011635544626425964678706127',
-  __typename: 'Token',
-  chain: 'ETHEREUM',
+  chainId: UniverseChainId.Mainnet,
   decimals: 6,
   project: {
     id: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
@@ -48,10 +47,9 @@ const validPoolToken1 = {
   symbol: 'WETH',
   name: 'Wrapped Ether',
   derivedETH: '1',
-  __typename: 'Token',
   address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
   id: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
-  chain: 'ETHEREUM',
+  chainId: UniverseChainId.Mainnet,
   decimals: 18,
   project: {
     id: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
@@ -66,7 +64,7 @@ const validPoolToken1 = {
 export const validBEPoolToken1 = validPoolToken1
 export const validRestPoolToken1 = validPoolToken1 as unknown as PoolStat['token0']
 
-// Parsed v2-native ParsedToken fixtures — what PoolData carries post-GraphQL.
+// Parsed v2-native ParsedToken fixtures — what PoolData carries.
 export const validParsedPoolToken0: ParsedToken = {
   chainId: UniverseChainId.Mainnet,
   address: validPoolToken0.address,

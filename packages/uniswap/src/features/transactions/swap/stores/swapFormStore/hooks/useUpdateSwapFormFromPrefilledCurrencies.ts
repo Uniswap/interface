@@ -11,7 +11,7 @@ export const useUpdateSwapFormFromPrefilledCurrencies = ({
   prefilledState?: SwapFormState
   setSwapForm: (swapForm: SwapFormState) => void
 }): void => {
-  // prefilled state may load in -- i.e. `outputCurrency` URL param pulling from gql
+  // prefilled state may load in -- i.e. `outputCurrency` URL param resolving to a currency via a token query
   const previousInitialInputCurrency = usePrevious(prefilledState?.input)
   const previousInitialOutputCurrency = usePrevious(prefilledState?.output)
   const defaultState = useDefaultSwapFormState()

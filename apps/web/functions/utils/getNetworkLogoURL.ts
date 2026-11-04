@@ -2,7 +2,6 @@ import { UniverseChainId } from '@universe/chains'
 import arbitrumLogo from '@universe/mycelium/assets/logos/png/arbitrum-logo.png?inline'
 import avalancheLogo from '@universe/mycelium/assets/logos/png/avalanche-logo.png?inline'
 import baseLogo from '@universe/mycelium/assets/logos/png/base-logo.png?inline'
-import blastLogo from '@universe/mycelium/assets/logos/png/blast-logo.png?inline'
 import bnbLogo from '@universe/mycelium/assets/logos/png/bnb-logo.png?inline'
 import celoLogo from '@universe/mycelium/assets/logos/png/celo-logo.png?inline'
 import optimismLogo from '@universe/mycelium/assets/logos/png/optimism-logo.png?inline'
@@ -23,7 +22,6 @@ export const OG_NETWORK_BADGE_CHAINS = [
   UniverseChainId.Base,
   UniverseChainId.Bnb,
   UniverseChainId.Avalanche,
-  UniverseChainId.Blast,
   UniverseChainId.Zora,
   UniverseChainId.Zksync,
   UniverseChainId.Unichain,
@@ -43,7 +41,6 @@ const NETWORK_LOGO_DATA_URL: Record<OgNetworkBadgeChain, string> = {
   [UniverseChainId.Base]: baseLogo,
   [UniverseChainId.Bnb]: bnbLogo,
   [UniverseChainId.Avalanche]: avalancheLogo,
-  [UniverseChainId.Blast]: blastLogo,
   [UniverseChainId.Zora]: zoraLogo,
   [UniverseChainId.Zksync]: zksyncLogo,
   [UniverseChainId.Unichain]: unichainLogo,

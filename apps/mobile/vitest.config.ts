@@ -115,4 +115,4 @@ const config = defineConfig({
   },
 })
 
-export default withRnPrimitives(config, 'native')
+export default withRnPrimitives(config)

@@ -1,7 +1,7 @@
 import { Flex, validColor } from '@universe/mycelium'
 import { Buy } from '@universe/mycelium/icons/Buy'
 import { opacify, useIsDarkMode } from '@universe/mycelium/theme-hooks-compat'
-import { colors } from 'ui/src/theme'
+import { colors } from '@universe/mycelium/theme-palette'
 export const BuyElement = (): JSX.Element => {
   const isDarkMode = useIsDarkMode()
 

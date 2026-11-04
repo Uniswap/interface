@@ -13,7 +13,7 @@ interface TokenMetadata {
 
 /**
  * Fetches token metadata directly from the blockchain via RPC calls.
- * This is used as a fallback when the GraphQL API doesn't have token data.
+ * This is used as a fallback when the backend doesn't have token data.
  *
  * @param tokenAddress - The token contract address
  * @param chainId - The chain ID where the token exists

@@ -8,8 +8,8 @@
  * The dimension props the NATIVE leg deliberately does NOT wire: their only
  * call sites are web (`flexBasis` — `DappRequestContent`,
  * `QueuedOrderModal`'s `isWebPlatform` guard; `height`/`justifyContent`
- * likewise; `borderRadius`/`alignSelf` — the Auctions discovery CTA, a
- * link-form call site the native leg mounts no anchor for anyway; `display` —
+ * likewise; `alignSelf` — the Auctions discovery CTA, a link-form call site
+ * the native leg mounts no anchor for anyway; `display` —
  * its only call-site shape is web breakpoint-hiding via the media pools, which
  * the leg already drops wholesale, and most `DisplayValue`s don't exist under
  * Yoga), so the leg dev-warns them instead of painting them. Everything not
@@ -43,7 +43,6 @@ export const NATIVE_DROPPED_DIMENSION_PROP_KEYS = [
   'height',
   'justifyContent',
   'flexBasis',
-  'borderRadius',
   'alignSelf',
   'display',
   'position',

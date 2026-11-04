@@ -16,8 +16,8 @@ import { useEvent } from 'utilities/src/react/hooks'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { zeroAddress } from '~/chains'
 import { getAuctionBidBaseAnalyticsProperties } from '~/features/Toucan/Auction/analytics'
+import { useToucanSubmitBid } from '~/features/Toucan/Auction/hooks/useToucanSubmitBid'
 import { useAuctionStore, useAuctionStoreActions } from '~/features/Toucan/Auction/store/useAuctionStore'
-import { useToucanSubmitBid } from '~/hooks/useToucanSubmitBid'
 
 export interface PreparedBidTransaction {
   txRequest: ValidatedTransactionRequest
@@ -35,6 +35,8 @@ export interface SubmitBidOptions {
    * If this returns false, the bid submission is aborted.
    */
   onPreBidStepsComplete?: () => Promise<boolean>
+  /** Send the pre-bid approvals and the bid as one atomic batch; see `SubmitToucanBidParams`. */
+  canBatchTransactions?: boolean
 }
 
 export interface SubmitState {
@@ -340,6 +342,7 @@ export function useBidFormSubmit({
         preBidSteps: options?.preBidSteps,
         analytics,
         onPreBidStepsComplete: options?.onPreBidStepsComplete,
+        canBatchTransactions: options?.canBatchTransactions,
         onSuccess: (hash: string) => {
           handleBidSubmitSuccess(hash)
           resolve()

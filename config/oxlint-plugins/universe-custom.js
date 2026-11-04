@@ -953,7 +953,9 @@ const noPlatformGateInChainFlags = {
 //   importerAllowlist — only paths matching allowedImporterPathMarkers may import
 //     modules matching importPrefixes; imports from within importerInternalPathMarkers are always allowed.
 //   importerDenylist — if a module matches importPrefixes and the importer path matches
-//     deniedImporterPathMarkers, the import is forbidden (no allowlist).
+//     deniedImporterPathMarkers, the import is forbidden (no allowlist). Optional
+//     exemptImportPrefixes carve sources back out, so a folder can deny `~/features/` yet still
+//     import itself (`~/features/wallet/`, or bare `~/features/wallet`).
 // A path marker is a substring, or an array of substrings that must ALL be present
 // (e.g. ["/features/transactions/swap/", "/views/"] marks views/ dirs inside the swap tree only).
 
@@ -983,6 +985,10 @@ function validatePathMarkers(id, key, markers) {
       `import-boundaries.json: boundary "${id}": every "${key}" entry must be a non-empty string or a non-empty array of non-empty strings (array = all substrings must match)`,
     )
   }
+}
+
+function isExemptImportSource(source, exemptImportPrefixes) {
+  return exemptImportPrefixes.some((prefix) => source.startsWith(prefix) || source === prefix.replace(/\/$/, ''))
 }
 
 function moduleImportSuffixForBoundary(source, boundary) {
@@ -1032,6 +1038,12 @@ function loadImportBoundaries() {
         )
       }
       validatePathMarkers(id, 'deniedImporterPathMarkers', b.deniedImporterPathMarkers)
+      const exemptImportPrefixes = b.exemptImportPrefixes ?? []
+      if (!Array.isArray(exemptImportPrefixes) || !exemptImportPrefixes.every((p) => typeof p === 'string' && p)) {
+        throw new Error(
+          `import-boundaries.json: boundary "${id}" (importerDenylist) "exemptImportPrefixes" must be an array of non-empty strings`,
+        )
+      }
       return {
         id,
         mode,
@@ -1039,6 +1051,7 @@ function loadImportBoundaries() {
         deniedImporterPathMarkers: b.deniedImporterPathMarkers,
         importPrefixes: b.importPrefixes,
         bareModuleSources: b.bareModuleSources,
+        exemptImportPrefixes,
       }
     }
 
@@ -1084,7 +1097,10 @@ const importBoundary = {
           continue
         }
         if (boundary.mode === 'importerDenylist') {
-          if (physicalPathHasMarker(physicalPath, boundary.deniedImporterPathMarkers)) {
+          if (
+            physicalPathHasMarker(physicalPath, boundary.deniedImporterPathMarkers) &&
+            !isExemptImportSource(sourceValue, boundary.exemptImportPrefixes)
+          ) {
             context.report({ node, message: boundary.message })
           }
           continue
@@ -1121,9 +1137,9 @@ const importBoundary = {
 // It's ok to update the allowlist if you're unable to use chains.
 
 const DIRECT_VIEM_ETHERS_IMPORT_ALLOWLIST = new Set([
-  'apps/web/src/hooks/useEthersProvider.ts',
-  'apps/web/src/hooks/useEthersSigner.ts',
-  'apps/web/src/hooks/useUniswapXSwapCallback.ts',
+  'apps/web/src/connection/hooks/useEthersProvider.ts',
+  'apps/web/src/connection/hooks/useEthersSigner.ts',
+  'apps/web/src/pages/Swap/Limit/hooks/useUniswapXSwapCallback.ts',
   'apps/web/src/state/routing/types.ts',
   'apps/web/src/state/routing/utils.ts',
 ])

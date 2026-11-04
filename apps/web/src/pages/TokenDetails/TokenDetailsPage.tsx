@@ -9,14 +9,17 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { NumberType } from 'utilities/src/format/types'
 import { useScrollCompact } from '~/hooks/useScrollCompact'
 import { useDynamicMetatags } from '~/pages/metatags'
+import { currencyForSelectedMultichainDeployment } from '~/pages/TokenDetails/components/header/currencyForSelectedMultichainDeployment'
 import { TokenDetailsPageSkeleton } from '~/pages/TokenDetails/components/skeleton/Skeleton'
 import { TokenDetailsContent } from '~/pages/TokenDetails/components/TokenDetails'
 import { TDPStoreContextProvider } from '~/pages/TokenDetails/context/TDPStoreContextProvider'
 import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
+import { useMultichainTokenEntries } from '~/pages/TokenDetails/hooks/useMultichainTokenEntries'
 import { getTokenPageDescription, getTokenPageTitle, getTokenStructuredData } from '~/pages/TokenDetails/pageMetadata'
 import { formatTokenMetatagTitleName } from '~/shared-cloud/metatags'
 import { ExploreTab } from '~/types/explore'
 import { getNativeTokenDBAddress } from '~/utils/nativeTokens'
+import { getChainUrlParam } from '~/utils/params/chainParams'
 
 export function TokenDetailsPage() {
   return (
@@ -33,14 +36,26 @@ function TDPPageContent() {
   const { convertFiatAmountFormatted } = useLocalizationContext()
   const isCompact = useScrollCompact({ thresholdCompact: 100, thresholdExpanded: 60 })
 
-  const { address, currency, currencyChain, currencyChainId, token, pageQueryLoading } = useTDPStore((s) => ({
-    address: s.address,
-    currency: s.currency,
-    currencyChain: s.currencyChain,
-    currencyChainId: s.currencyChainId,
-    token: s.token,
-    pageQueryLoading: s.pageQueryLoading,
-  }))
+  const { address, currency, currencyChainId, token, pageQueryLoading, multiChainMap, selectedMultichainChainId } =
+    useTDPStore((s) => ({
+      address: s.address,
+      currency: s.currency,
+      currencyChainId: s.currencyChainId,
+      token: s.token,
+      pageQueryLoading: s.pageQueryLoading,
+      multiChainMap: s.multiChainMap,
+      selectedMultichainChainId: s.selectedMultichainChainId,
+    }))
+
+  // Picking a network rewrites the URL with history.replaceState, so the route params (and store `currency`)
+  // keep the chain the page was loaded on; the title has to follow the selected deployment instead.
+  const multichainEntries = useMultichainTokenEntries(multiChainMap)
+  const selectedMultichainEntry =
+    multichainEntries.length > 1
+      ? multichainEntries.find((entry) => entry.chainId === selectedMultichainChainId)
+      : undefined
+  const titleCurrency = currency && currencyForSelectedMultichainDeployment(currency, selectedMultichainEntry)
+  const titleChainId = selectedMultichainEntry?.chainId ?? currencyChainId
 
   const featureFlaggedChainIds = useFeatureFlaggedChainIds()
   const { isStatsigReady } = useStatsigClientStatus()
@@ -56,14 +71,13 @@ function TDPPageContent() {
       image:
         window.location.origin +
         '/api/image/tokens/' +
-        // oxlint-disable-next-line universe-custom/no-tolowercase-address-currencyid -- chain name URL slug, not an address
-        currencyChain.toLowerCase() +
+        getChainUrlParam(currencyChainId) +
         '/' +
-        (currency?.isNative ? getNativeTokenDBAddress(currencyChain) : address),
+        (currency?.isNative ? getNativeTokenDBAddress(currencyChainId) : address),
       url: window.location.href,
       description: pageDescription,
     }
-  }, [address, currency, currencyChain, pageDescription, token?.name, token?.symbol])
+  }, [address, currency, currencyChainId, pageDescription, token?.name, token?.symbol])
   const metatags = useDynamicMetatags(metatagProperties)
 
   // Structured TDP data for SEO indexing
@@ -82,7 +96,7 @@ function TDPPageContent() {
   return (
     <>
       <Helmet>
-        <title>{getTokenPageTitle({ t, currency, chainId: currencyChainId })}</title>
+        <title>{getTokenPageTitle({ t, currency: titleCurrency, chainId: titleChainId })}</title>
         {metatags.map((tag, index) => (
           <meta key={index} {...tag} />
         ))}

@@ -24,9 +24,10 @@ import {
   type NearOverlay,
   type NearOverlayHit,
 } from '~/pages/Swap/Margin/chart/useMarginChartOverlays'
-import { colorVolumeBars, snapVolumeBars, type MarginVolumeBar } from '~/pages/Swap/Margin/chart/useMarginVolume'
+import { alignVolumeToCandles, colorVolumeBars, type MarginVolumeBar } from '~/pages/Swap/Margin/chart/useMarginVolume'
 import { zoomedPriceRange } from '~/pages/Swap/Margin/chart/verticalZoom'
 import { withOpacity } from '~/pages/Swap/Margin/chart/withOpacity'
+import { marginVolumePaneHeight } from '~/pages/Swap/Margin/marginChartLayout'
 
 // PriceChartModelParams isn't exported from the PriceChart barrel — mirror the ctor param
 // contract structurally (ChartModelParams<PriceChartData> & extras) and extend with overlays.
@@ -34,6 +35,9 @@ type MarginPriceChartModelParams = ConstructorParameters<typeof PriceChartModel>
   overlays: MarginChartOverlays
   onVisibleRangeChange?: (range?: { min: number; max: number }) => void
   volumeBars?: MarginVolumeBar[]
+  // The chart box's measured height: sizes the volume pane (marginVolumePaneHeight), and a change re-runs
+  // updateOptions, which re-pins that height after lightweight-charts rescales the panes on a resize.
+  boxHeight?: number
   // Vertical zoom (0..MAX_VERTICAL_ZOOM_STEP): 0 fits candles ∪ overlay bounds (default), max fits
   // the candles alone. Consumed by applyVerticalAutoscale.
   verticalZoomStep?: number
@@ -41,6 +45,10 @@ type MarginPriceChartModelParams = ConstructorParameters<typeof PriceChartModel>
   // never tracks or paints under the panel.
   suppressCrosshair?: boolean
 }
+
+const VOLUME_PANE_INDEX = 1
+// Headroom above the tallest bar for the pane's "Volume" title; no bottom margin, so bars stand on 0.
+const VOLUME_SCALE_MARGINS = { top: 0.25, bottom: 0 }
 
 // Pan/zoom streams fire the logical-range subscription per frame; cap React publishes.
 const VISIBLE_RANGE_PUBLISH_THROTTLE_MS = 100
@@ -64,10 +72,14 @@ export class MarginPriceChartModel extends PriceChartModel {
   private zonePrimitive: PriceZonePrimitive | undefined
   // Position-event markers (spec F10), likewise instantiated once and updated in place.
   private markerPrimitive: TimeMarkerPrimitive | undefined
-  // Optional real-volume histogram (spec F15), default OFF. Lives on its own hidden overlay price
-  // scale, independent of the price series — a price-series swap (T9) never touches it. Lazily
-  // created on the first non-empty bars; removed when the overlay is toggled off (empty bars).
+  // Optional real-volume histogram (spec F15), default OFF. Lives in its own pane below the price
+  // pane, independent of the price series — a price-series swap (T9) never touches it. Lazily
+  // created on the first non-empty bars; removed (and its pane with it) when toggled off.
   private volumeSeries: ISeriesApi<'Histogram'> | undefined
+  // Crosshair points are pane-relative, so a hover near the top of the volume pane carries the same
+  // y as one near the top of the price pane. Tracked from the DOM (capture phase, ahead of the
+  // chart's own handler) so overlay hit-testing only runs over the price pane.
+  private pointerInVolumePane = false
   private onVisibleRangeChange: ((range?: { min: number; max: number }) => void) | undefined
   private lastRangePublishMs = 0
   // Memo of the last applied vertical-autoscale inputs (scaled bounds + step + factor + series
@@ -78,6 +90,8 @@ export class MarginPriceChartModel extends PriceChartModel {
     | undefined
   // Pending post-paint visible-range republish (see applyVerticalAutoscale).
   private rangeRepublishRaf: number | undefined
+  // Pending next-frame re-assert of the volume pane height (see reconcileVolume).
+  private volumePaneRaf: number | undefined
   // True while a chart popover overlays the pane: crosshair mode is forced Hidden and hover emits are
   // short-circuited. Initial false is correct (popover starts closed) and survives the base ctor's
   // early virtual updateOptions() call.
@@ -101,6 +115,11 @@ export class MarginPriceChartModel extends PriceChartModel {
   // virtual call wrote.
   private priceLinesReady = false
 
+  private readonly handlePointerMove = (event: PointerEvent): void => {
+    const offsetY = event.clientY - this.chartDiv.getBoundingClientRect().top
+    this.pointerInVolumePane = this.volumeSeries !== undefined && offsetY > this.api.paneSize(0).height
+  }
+
   // Stable handle for subscribe/unsubscribe. Only ever invoked post-ctor (subscribed in the
   // ctor body, after field initializers ran), so no wipe hazard.
   private readonly handleVisibleLogicalRangeChange = (): void => {
@@ -114,6 +133,14 @@ export class MarginPriceChartModel extends PriceChartModel {
 
   constructor(chartDiv: HTMLDivElement, params: MarginPriceChartModelParams) {
     super(chartDiv, params)
+    // The base creates the chart without autoSize and turns it on afterwards, and lightweight-charts
+    // only lets its root element track the container when autoSize is on at creation: otherwise that
+    // element keeps its mount-time px size while the canvas table inside it resizes, so a taller
+    // container clips the bottom of the chart (the time axis, and any lower pane). This pane resizes
+    // with the terminal layout, so release the element to the container.
+    const chartElement = this.api.chartElement()
+    chartElement.style.width = '100%'
+    chartElement.style.height = '100%'
     this.priceLinesReady = true
     this.lastSeries = this.series
     this.onVisibleRangeChange = params.onVisibleRangeChange
@@ -121,8 +148,14 @@ export class MarginPriceChartModel extends PriceChartModel {
     this.currentOverlays = params.overlays
     this.reconcileOverlays({ overlays: params.overlays, colors: params.colors })
     this.applyVerticalAutoscale({ overlays: params.overlays, step: params.verticalZoomStep ?? 0 })
-    this.reconcileVolume({ bars: params.volumeBars, candles: params.data, colors: params.colors })
+    this.reconcileVolume({
+      bars: params.volumeBars,
+      candles: params.data,
+      colors: params.colors,
+      boxHeight: params.boxHeight,
+    })
     this.api.timeScale().subscribeVisibleLogicalRangeChange(this.handleVisibleLogicalRangeChange)
+    this.chartDiv.addEventListener('pointermove', this.handlePointerMove, { capture: true })
     this.publishVisibleRange(params.onVisibleRangeChange)
   }
 
@@ -145,6 +178,10 @@ export class MarginPriceChartModel extends PriceChartModel {
     // tags (the pane uses a bare <Chart> with no ChartHeader to show the hovered price/time).
     const { colors } = params
     this.api.applyOptions({
+      // Price ↔ volume pane boundary: a fixed hairline, not a draggable splitter.
+      layout: {
+        panes: { separatorColor: colors.surface3.val, separatorHoverColor: colors.surface3.val, enableResize: false },
+      },
       rightPriceScale: {
         scaleMargins: { top: 0.15, bottom: 0.12 },
         borderVisible: true,
@@ -186,16 +223,26 @@ export class MarginPriceChartModel extends PriceChartModel {
       this.applyVerticalAutoscale({ overlays: params.overlays, step: params.verticalZoomStep ?? 0 })
       // Independent of the swap/overlay reconcile above; setData is idempotent so this runs
       // unconditionally within the ready gate (skipped during the base ctor's virtual dispatch).
-      this.reconcileVolume({ bars: params.volumeBars, candles: params.data, colors: params.colors })
+      this.reconcileVolume({
+        bars: params.volumeBars,
+        candles: params.data,
+        colors: params.colors,
+        boxHeight: params.boxHeight,
+      })
     }
     this.publishVisibleRange(params.onVisibleRangeChange)
   }
 
   override remove(): void {
     this.clearDwell()
+    this.chartDiv.removeEventListener('pointermove', this.handlePointerMove, { capture: true })
     if (this.rangeRepublishRaf !== undefined) {
       cancelAnimationFrame(this.rangeRepublishRaf)
       this.rangeRepublishRaf = undefined
+    }
+    if (this.volumePaneRaf !== undefined) {
+      cancelAnimationFrame(this.volumePaneRaf)
+      this.volumePaneRaf = undefined
     }
     this.api.timeScale().unsubscribeVisibleLogicalRangeChange(this.handleVisibleLogicalRangeChange)
     super.remove()
@@ -242,7 +289,7 @@ export class MarginPriceChartModel extends PriceChartModel {
 
   private hitTestOverlays(hoverData: ChartHoverData<CandlestickData>): NearOverlayHit | undefined {
     const overlays = this.currentOverlays
-    if (!overlays) {
+    if (!overlays || this.pointerInVolumePane) {
       return undefined
     }
     const factor = this.lowPriceRangeScaleFactor
@@ -457,49 +504,80 @@ export class MarginPriceChartModel extends PriceChartModel {
     })
   }
 
-  // Real-volume histogram (spec F15) on its own hidden overlay price scale ('' scale id), pinned to
-  // the bottom 20%. Lazily created on the first non-empty bars, setData on every call (idempotent),
-  // and removed when the overlay is toggled off (empty/undefined bars). Bars are colored by their
-  // candle's direction (colorVolumeBars, from params.data) at 40% alpha — a data-only volume↔candle
-  // coupling; the series lifecycle stays independent. Not registered as an attachedPrimitive: it
-  // rides no series, so the base's chart-type swap (removeSeries+recreate of the price series) leaves
-  // it untouched. Teardown is via api.remove() (disposes every series), so remove() must not — and
-  // does not — removeSeries this handle.
+  // Real-volume histogram (spec F15) in its own pane under the price pane: a shared time scale keeps
+  // every bar under its candle and the crosshair spans both. One bar per candle
+  // (alignVolumeToCandles), colored by that candle's direction at 40% alpha. Lazily created on
+  // the first non-empty bars, setData on every call (idempotent), and removed when the overlay is
+  // toggled off — lightweight-charts drops the emptied pane with it. Not an attachedPrimitive: it
+  // rides no price series, so the base's chart-type swap leaves it untouched. Teardown is via
+  // api.remove(), so remove() does not removeSeries this handle.
   private reconcileVolume({
     bars,
     candles,
     colors,
+    boxHeight,
   }: {
     bars: MarginVolumeBar[] | undefined
     candles: PriceChartData[]
     colors: MarginPriceChartModelParams['colors']
+    boxHeight: number | undefined
   }): void {
-    if (bars?.length) {
-      if (!this.volumeSeries) {
-        this.volumeSeries = this.api.addSeries(HistogramSeries, {
-          priceScaleId: '',
+    if (!bars?.length) {
+      if (this.volumeSeries) {
+        this.api.removeSeries(this.volumeSeries)
+        this.volumeSeries = undefined
+      }
+      return
+    }
+    const justCreated = !this.volumeSeries
+    if (!this.volumeSeries) {
+      this.volumeSeries = this.api.addSeries(
+        HistogramSeries,
+        {
+          priceScaleId: 'right',
           lastValueVisible: false,
           priceLineVisible: false,
-        })
-        this.volumeSeries.priceScale().applyOptions({ scaleMargins: { top: 0.8, bottom: 0 } })
-      }
-      // Snap bars to candle times so the exact-time coloring match hits every bar. If every bar
-      // predates the first candle, snapped is empty → setData([]) clears the already-created series.
-      const snapped = snapVolumeBars({ bars, candleTimes: candles.map((c) => c.time) })
-      this.volumeSeries.setData(
-        colorVolumeBars({
-          bars: snapped,
-          candles,
-          colors: {
-            statusSuccess: colors.statusSuccess.val,
-            statusCritical: colors.statusCritical.val,
-            neutral2: colors.neutral2.val,
-          },
-        }),
+        },
+        VOLUME_PANE_INDEX,
       )
-    } else if (this.volumeSeries) {
-      this.api.removeSeries(this.volumeSeries)
-      this.volumeSeries = undefined
     }
+    // Re-asserted on every pass, not just at creation. `rightPriceScale` applied at chart level (the base
+    // and this model both do, on every update) lands on EVERY pane's right scale, so the price pane's
+    // margins would otherwise lift the volume base 12% off the floor. Bars grow from 0 at the pane's
+    // bottom, autoscaled 0→max of the visible bars.
+    this.volumeSeries.priceScale().applyOptions({ autoScale: true, scaleMargins: VOLUME_SCALE_MARGINS })
+    // Fixed height: on a resize lightweight-charts rescales panes proportionally, which would grow
+    // the volume pane along with the chart box instead of handing the room to price.
+    const volumePane = this.volumeSeries.getPane()
+    const volumeHeight = marginVolumePaneHeight(boxHeight)
+    if (volumePane.getHeight() !== volumeHeight) {
+      volumePane.setHeight(volumeHeight)
+    }
+    if (justCreated) {
+      // The setHeight above is overwritten by lightweight-charts' first ~50/50 pane layout, so without
+      // this the volume pane only reaches its real height on the next updateOptions (~130ms later),
+      // shrinking the price pane as the chart reveals. Re-assert next frame so it lands in ~2 frames.
+      if (this.volumePaneRaf !== undefined) {
+        cancelAnimationFrame(this.volumePaneRaf)
+      }
+      const createdSeries = this.volumeSeries
+      this.volumePaneRaf = requestAnimationFrame(() => {
+        this.volumePaneRaf = undefined
+        if (this.volumeSeries === createdSeries) {
+          createdSeries.getPane().setHeight(marginVolumePaneHeight(boxHeight))
+        }
+      })
+    }
+    this.volumeSeries.setData(
+      colorVolumeBars({
+        bars: alignVolumeToCandles({ bars, candles }),
+        candles,
+        colors: {
+          statusSuccess: colors.statusSuccess.val,
+          statusCritical: colors.statusCritical.val,
+          neutral2: colors.neutral2.val,
+        },
+      }),
+    )
   }
 }

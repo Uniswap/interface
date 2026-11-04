@@ -2,7 +2,7 @@ import type { PlainMessage } from '@bufbuild/protobuf'
 import type { Auction } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { AddressStringFormat, type EVMUniverseChainId, isEVMChain, normalizeAddress, Platform } from '@universe/chains'
 import { useMemo } from 'react'
-import { useActiveAddress } from '~/features/accounts/store/hooks'
+import { useActiveAddress } from '~/connection/accounts/hooks'
 import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
 import { useTokenDetailsCustomAuctions } from '~/pages/TokenDetails/hooks/useTokenDetailsCustomAuctions'
 

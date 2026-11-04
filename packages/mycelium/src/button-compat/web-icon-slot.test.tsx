@@ -4,9 +4,8 @@
  * The slot styles children via descendant CSS on the wrapper span
  * (`[&_svg]:size-*` + text color), but a `createIcon` glyph carries its own
  * size/color defaults on inline style, which wins — a bare glyph rendered at
- * its 8px default instead of the slot's size. `web-class-pin.test.tsx`
- * doesn't catch this: it only freezes the emitted class string, not what
- * reaches the svg.
+ * its 8px default instead of the slot's size. Class-string assertions don't
+ * catch this: the classes are right, but they never reach the svg.
  *
  * These tests cover the clone that fixes it: explicit glyph `color` wins,
  * the slot box always wins, and the clone applies only to `createIcon`

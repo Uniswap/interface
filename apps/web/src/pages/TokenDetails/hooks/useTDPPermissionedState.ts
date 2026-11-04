@@ -1,5 +1,5 @@
 import { useTokenKYCStatus } from 'uniswap/src/features/permissionedTokens/useTokenKYCStatus'
-import { useAccount } from '~/hooks/useAccount'
+import { useAccount } from '~/connection/hooks/useAccount'
 
 export type TDPPermissionedState = {
   isPermissioned: boolean

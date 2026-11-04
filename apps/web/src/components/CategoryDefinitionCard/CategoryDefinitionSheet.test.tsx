@@ -3,6 +3,7 @@ import { TestID } from '@universe/test'
 import { useNavigate } from 'react-router'
 import { ElementName, InterfaceEventName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { poolCategory } from 'uniswap/src/test/fixtures/poolCategory'
 import { tokenCategory } from 'uniswap/src/test/fixtures/tokenCategory'
 import { CategoryDefinitionSheet } from '~/components/CategoryDefinitionCard/CategoryDefinitionSheet'
 import { mocked } from '~/test-utils/mocked'
@@ -48,6 +49,7 @@ describe('CategoryDefinitionSheet', () => {
     expect(sendAnalyticsEvent).toHaveBeenCalledWith(InterfaceEventName.CategoryDefinitionCardOpened, {
       section: SectionName.ExploreCategoryChips,
       category_id: 'stocks',
+      category_kind: 'token',
       trigger: 'tap',
     })
   })
@@ -75,8 +77,23 @@ describe('CategoryDefinitionSheet', () => {
       element: ElementName.CategoryDefinitionSheet,
       section: SectionName.ExploreCategoryChips,
       category_id: 'stocks',
+      category_kind: 'token',
     })
     expect(onClose).toHaveBeenCalledTimes(1)
     expect(navigate).toHaveBeenCalledWith('/explore/category/stocks')
+  })
+
+  it('navigates a pool category to the pools category page', () => {
+    render(
+      <CategoryDefinitionSheet
+        category={poolCategory({ id: 'stable-pools' })}
+        isOpen
+        section={SectionName.ExploreCategoryChips}
+        onClose={vi.fn()}
+      />,
+    )
+
+    fireEvent.click(screen.getByTestId(TestID.CategoryDefinitionCard))
+    expect(navigate).toHaveBeenCalledWith('/pools/category/stable-pools')
   })
 })

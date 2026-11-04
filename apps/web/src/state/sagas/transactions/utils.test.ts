@@ -1,8 +1,12 @@
+import { TradeType } from '@uniswap/sdk-core'
+import { TradingApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
 import { runSaga } from 'redux-saga'
+import { USDC, WBTC } from 'uniswap/src/constants/tokens'
 import { addTransaction } from 'uniswap/src/features/transactions/slice'
 import type { HandleOnChainStepParams, OnChainTransactionStep } from 'uniswap/src/features/transactions/steps/types'
 import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
+import { createBridgeTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 
 const mockSendTransaction = vi.fn()
@@ -18,7 +22,7 @@ vi.mock('~/connection/wagmiConfig', () => ({
   wagmiConfig: {},
 }))
 
-vi.mock('~/hooks/useEthersProvider', () => ({
+vi.mock('~/connection/hooks/useEthersProvider', () => ({
   clientToProvider: vi.fn().mockReturnValue({
     getSigner: vi.fn().mockResolvedValue({
       sendTransaction: (...args: unknown[]) => mockSendTransaction(...args),
@@ -31,11 +35,11 @@ vi.mock('~/utils/signing', () => ({
   signTypedData: vi.fn(),
 }))
 
-vi.mock('~/state/popups/registry', () => ({
+vi.mock('~/utils/popups/registry', () => ({
   popupRegistry: { addPopup: vi.fn() },
 }))
 
-vi.mock('~/state/popups/types', () => ({
+vi.mock('~/utils/popups/types', () => ({
   PopupType: { Plan: 'Plan' },
 }))
 
@@ -189,5 +193,38 @@ describe('handleOnChainStep', () => {
 
     expect(mockSendUncheckedTransaction).toHaveBeenCalledWith(step.txRequest)
     expect(mockSendTransaction).not.toHaveBeenCalled()
+  })
+})
+
+describe('getSwapTransactionInfo', () => {
+  it.each([
+    { provider: TradingApi.BridgeProvider.RELAY, expected: TradingApi.BridgeProvider.RELAY },
+    { provider: TradingApi.BridgeProvider.ACROSS, expected: TradingApi.BridgeProvider.ACROSS },
+    { provider: undefined, expected: TradingApi.BridgeProvider.ACROSS },
+  ])('records the vendor of a bridge quote (provider $provider)', async ({ provider, expected }) => {
+    const { getSwapTransactionInfo } = await import('./utils')
+    const trade = createBridgeTrade({
+      quote: {
+        quote: {
+          input: { amount: '1000', maximumAmount: '1000' },
+          output: { amount: '990', minimumAmount: '990' },
+          provider,
+        },
+        requestId: '123',
+        routing: TradingApi.Routing.BRIDGE,
+        permitData: null,
+      },
+      currencyIn: USDC,
+      currencyOut: WBTC,
+      tradeType: TradeType.EXACT_INPUT,
+    })
+    if (!trade) {
+      throw new Error('Expected test bridge trade to be created')
+    }
+
+    expect(getSwapTransactionInfo({ trade })).toMatchObject({
+      type: TransactionType.Bridge,
+      bridgeProvider: expected,
+    })
   })
 })

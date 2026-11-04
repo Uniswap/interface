@@ -17,8 +17,23 @@ import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
+import { useAccount } from '~/connection/hooks/useAccount'
 import { MARGIN_CHAIN_ID, type MarginMarket } from '~/constants/margin'
-import { useAccount } from '~/hooks/useAccount'
+import { getMarginCurrencyInfo, useMarginCurrencyInfos } from '~/features/margin/hooks/useMarginCurrencyInfos'
+import { marginAssetCurrencyId } from '~/features/margin/utils/marginCurrencies'
+import {
+  bpsToPercent,
+  collateralUsdValue,
+  formatSignedFiat,
+  marginPriceUnitSymbol,
+  rawToNumber,
+} from '~/features/margin/utils/marginFormat'
+import {
+  marginPositionDebt,
+  marginPositionSubId,
+  marginPositionTokens,
+} from '~/features/margin/utils/marginPositionRow'
+import { marginRowDirection, marginUnwrapSymbol } from '~/features/margin/utils/marginTokenDisplay'
 import { MarginPriceImpactRow } from '~/pages/Swap/Margin/components/MarginPriceImpactRow'
 import { MarginActionModalShell } from '~/pages/Swap/Margin/components/shared/MarginActionModalShell'
 import { MarginDetailRow } from '~/pages/Swap/Margin/components/shared/MarginDetailRow'
@@ -29,22 +44,11 @@ import { MarginShowMoreToggle } from '~/pages/Swap/Margin/components/shared/Marg
 import { isPlanForAccount } from '~/pages/Swap/Margin/hooks/marginExecutionGuards'
 import { useExecuteMarginPlan } from '~/pages/Swap/Margin/hooks/useExecuteMarginPlan'
 import { useIsPlanInFlight } from '~/pages/Swap/Margin/hooks/useIsPlanInFlight'
-import { getMarginCurrencyInfo, useMarginCurrencyInfos } from '~/pages/Swap/Margin/hooks/useMarginCurrencyInfos'
 import { useMarginPositionMarkIsStale } from '~/pages/Swap/Margin/hooks/useMarginPositionMarkIsStale'
 import { useMarginQuote } from '~/pages/Swap/Margin/hooks/useMarginQuote'
 import { getCloseConfirmDisabled, isCloseUnderwater } from '~/pages/Swap/Margin/marginCloseGate'
-import { marginAssetCurrencyId } from '~/pages/Swap/Margin/marginCurrencies'
-import {
-  bpsToPercent,
-  collateralUsdValue,
-  formatSignedFiat,
-  marginPriceUnitSymbol,
-  rawToNumber,
-} from '~/pages/Swap/Margin/marginFormat'
 import { buildMarginEstPnlBreakdown } from '~/pages/Swap/Margin/marginPnlExplainer'
-import { marginPositionDebt, marginPositionSubId, marginPositionTokens } from '~/pages/Swap/Margin/marginPositionRow'
-import { marginPriceImpactBps } from '~/pages/Swap/Margin/marginPriceImpact'
-import { marginRowDirection, marginUnwrapSymbol } from '~/pages/Swap/Margin/marginTokenDisplay'
+import { MarginSwapSide, marginPriceImpactBps } from '~/pages/Swap/Margin/marginPriceImpact'
 import { marginPositionMark, marginUsdBasis } from '~/pages/Swap/Margin/marginUsdPnl'
 
 // The primary outcome block: quote-error / underwater / the "Withdrawing" section (est receive + USD +
@@ -239,7 +243,7 @@ export function MarginCloseModal({
   const priceImpactBps = marginPriceImpactBps({
     execPriceX18: quote?.display.effectivePrice,
     markPriceX18: position.oraclePrice,
-    swapSide: 'SELL_COLLATERAL',
+    swapSide: MarginSwapSide.SELL_COLLATERAL,
     direction,
   })
 

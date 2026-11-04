@@ -1,7 +1,7 @@
 /**
  * The `ModalCloseIcon` compat prop contract (INFRA-3282): the legacy
- * `CloseIconProps` surface (`ui/src/components/icons/CloseIconWithHover.tsx`,
- * the props `ui/src`'s `ModalCloseIcon` takes) carried name-for-name, so
+ * `CloseIconProps` surface (the props `ui/src`'s `ModalCloseIcon` took)
+ * carried name-for-name, so
  * `<ModalCloseIcon testId={…} role="none" onClose={…} />` call sites convert
  * as a mechanical barrel swap.
  *

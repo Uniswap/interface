@@ -28,7 +28,6 @@ const PROVIDER_PATTERNS: [RegExp, string][] = [
   [/polygon-rpc\.com/, 'polygon-native'],
   [/zora\.energy/, 'zora-native'],
   [/soneium\.org/, 'soneium-native'],
-  [/blast\.io/, 'blast-native'],
   [/forno\.celo\.org/, 'celo-native'],
 ]
 

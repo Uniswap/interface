@@ -1,7 +1,6 @@
-import { Flex, TouchableArea, UniversalImage, UniversalImageResizeMode } from '@universe/mycelium'
+import { Flex, TouchableArea, UniversalImage, UniversalImageResizeMode, SpinningLoader } from '@universe/mycelium'
 import { ImageUpload } from '@universe/mycelium/icons/ImageUpload'
 import { useTranslation } from 'react-i18next'
-import { SpinningLoader } from 'ui/src'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 

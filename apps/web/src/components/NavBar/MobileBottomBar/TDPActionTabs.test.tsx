@@ -42,11 +42,11 @@ vi.mock('~/pages/TokenDetails/context/useTDPStore', () => ({
   useTDPStore: (selector: (s: unknown) => unknown) => mockUseTDPStore(selector),
 }))
 
-vi.mock('~/features/accounts/store/hooks', () => ({
+vi.mock('~/connection/accounts/hooks', () => ({
   useActiveAccount: (...args: unknown[]) => mockUseActiveAccount(...args),
 }))
 
-vi.mock('~/hooks/useAccount', () => ({
+vi.mock('~/connection/hooks/useAccount', () => ({
   useAccount: () => mockUseAccount(),
 }))
 
@@ -58,7 +58,7 @@ vi.mock('~/hooks/useModalState', () => ({
   useModalState: (...args: unknown[]) => mockUseModalState(...args),
 }))
 
-vi.mock('~/hooks/useSelectChain', () => ({
+vi.mock('~/connection/hooks/useSelectChain', () => ({
   useSelectChain: () => mockUseSelectChain,
 }))
 
@@ -74,7 +74,6 @@ const ETHEREUM = 1
 function setupStore(overrides: Record<string, unknown> = {}): void {
   mockUseTDPStore.mockImplementation((selector: (s: unknown) => unknown) =>
     selector({
-      currencyChain: 'ethereum',
       currencyChainId: ETHEREUM,
       address: TPT2_ADDRESS,
       tokenColor: undefined,

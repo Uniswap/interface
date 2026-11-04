@@ -16,16 +16,12 @@ describe('ToucanGeoRestrictionCard', () => {
 
   it('renders the symbol-interpolated description', () => {
     render(<ToucanGeoRestrictionCard tokenSymbol="KALSHI" />)
-    expect(
-      screen.getByText('KALSHI is not tradable in some regions. Bypassing this restriction is prohibited.'),
-    ).toBeInTheDocument()
+    expect(screen.getByText('KALSHI is not tradable in some regions.')).toBeInTheDocument()
   })
 
   it('falls back to the generic description when no symbol', () => {
     render(<ToucanGeoRestrictionCard />)
-    expect(
-      screen.getByText('This token is not tradable in some regions. Bypassing this restriction is prohibited.'),
-    ).toBeInTheDocument()
+    expect(screen.getByText('This token is not tradable in some regions.')).toBeInTheDocument()
   })
 
   it('opens the geo-restriction help article on press', () => {

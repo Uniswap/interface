@@ -1,34 +1,38 @@
+import type { CategoryKind } from 'uniswap/src/features/tokenCategories/types'
+
 export interface CategoryDetailsNavState {
   from: string
   fromLabel: string
 }
 
-const TOKEN_DETAILS_PATH_PREFIX = '/explore/tokens/'
+/** The detail pages a category page can be entered from, per kind; the breadcrumb only links back inside these. */
+const DETAILS_PATH_PREFIX: Record<CategoryKind, string> = {
+  token: '/explore/tokens/',
+  pool: '/explore/pools/',
+}
 
 // Reads window.location, not the router: the TDP chain switch rewrites the URL with replaceState, which the
 // router never sees, so a router location snapshot would send the breadcrumb back to the pre-switch chain.
 export function createCategoryDetailsNavState({
-  tokenSymbol,
+  label,
 }: {
-  tokenSymbol: string | undefined
+  /** Breadcrumb label for the page being left (ticker, pair); undefined while it is still unknown. */
+  label: string | undefined
 }): CategoryDetailsNavState | undefined {
-  if (!tokenSymbol) {
+  if (!label) {
     return undefined
   }
   const { pathname, search } = window.location
-  return { from: `${pathname}${search}`, fromLabel: tokenSymbol }
+  return { from: `${pathname}${search}`, fromLabel: label }
 }
 
-function isTokenDetailsPath(from: string): boolean {
+function isDetailsPath(from: string, kind: CategoryKind): boolean {
+  const prefix = DETAILS_PATH_PREFIX[kind]
   const pathname = from.split('?')[0]
-  return (
-    pathname.startsWith(TOKEN_DETAILS_PATH_PREFIX) &&
-    pathname.length > TOKEN_DETAILS_PATH_PREFIX.length &&
-    !pathname.split('/').includes('..')
-  )
+  return pathname.startsWith(prefix) && pathname.length > prefix.length && !pathname.split('/').includes('..')
 }
 
-export function parseCategoryDetailsNavState(state: unknown): CategoryDetailsNavState | undefined {
+export function parseCategoryDetailsNavState(state: unknown, kind: CategoryKind): CategoryDetailsNavState | undefined {
   if (!state || typeof state !== 'object') {
     return undefined
   }
@@ -37,7 +41,7 @@ export function parseCategoryDetailsNavState(state: unknown): CategoryDetailsNav
     typeof from !== 'string' ||
     typeof fromLabel !== 'string' ||
     fromLabel.length === 0 ||
-    !isTokenDetailsPath(from)
+    !isDetailsPath(from, kind)
   ) {
     return undefined
   }

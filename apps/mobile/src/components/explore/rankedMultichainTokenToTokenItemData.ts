@@ -30,7 +30,7 @@ export function rankedMultichainTokenToTokenItemData({
   if (!deployment) {
     return null
   }
-  const chainId = deployment.chainId as UniverseChainId
+  const { chainId } = deployment
 
   // The grouping's addresses map is not scoped to the request's chains (it always carries every
   // deployment), so count only enabled chains — mirrors web's getAllowedAddressChainIds gating.

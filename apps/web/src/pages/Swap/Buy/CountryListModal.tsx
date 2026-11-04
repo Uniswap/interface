@@ -7,7 +7,9 @@ import {
   type UniversalListRenderItemInfo,
   type UniversalListStyle,
   useMedia,
+  ModalCloseIcon,
 } from '@universe/mycelium'
+import { Search } from '@universe/mycelium/icons/Search'
 import { useScrollbarStyles } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
 import {
@@ -20,8 +22,6 @@ import {
   useState,
 } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ModalCloseIcon } from 'ui/src'
-import { Search } from 'ui/src/components/icons/Search'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useFilteredCountryData } from 'uniswap/src/features/fiatOnRamp/hooks/useFilteredCountryData'
 import { FORCountry } from 'uniswap/src/features/fiatOnRamp/types'

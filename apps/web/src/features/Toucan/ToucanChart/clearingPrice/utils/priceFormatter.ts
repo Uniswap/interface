@@ -31,7 +31,7 @@ function formatPriceValue({ price, scaleFactor, locale }: FormatPriceValueParams
     }).format(originalPrice)
   }
 
-  const dust = subscriptDust(originalPrice)
+  const dust = subscriptDust(originalPrice, locale)
   if (dust !== undefined) {
     return dust
   }

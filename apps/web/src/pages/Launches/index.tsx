@@ -8,12 +8,11 @@ import {
   useDynamicConfigValue,
   useFeatureFlag,
 } from '@universe/gating'
-import { Flex, spacing, Text } from '@universe/mycelium'
+import { Flex, spacing, Text, heights } from '@universe/mycelium'
 import { InfoCircleFilled } from '@universe/mycelium/icons/InfoCircleFilled'
 import { TooltipCompat as Tooltip } from '@universe/mycelium/tooltip-compat'
 import { useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { logger } from 'utilities/src/logger/logger'
@@ -65,7 +64,7 @@ function isPoolsLaunch(launch: PlainMessage<Launch>): boolean {
 /** DOM id of the launches table section, used as the trending "View all" scroll target. */
 const LAUNCHES_TABLE_SECTION_ID = 'launches-table-section'
 /** scroll-margin-top on the table section: fixed-nav clearance for scrollIntoView. */
-const TABLE_SCROLL_MARGIN_TOP = INTERFACE_NAV_HEIGHT + spacing.spacing16
+const TABLE_SCROLL_MARGIN_TOP = heights['interface-nav'] + spacing.spacing16
 
 /** Info glyph + trending-methodology tooltip (main's #37299), rendered in the shelf header's badge slot. */
 function TrendingInfoTooltip(): JSX.Element {
@@ -378,9 +377,16 @@ export default function LaunchesPage(): JSX.Element {
           )}
 
           <Flex id={LAUNCHES_TABLE_SECTION_ID} gap="$spacing16" style={{ scrollMarginTop: TABLE_SCROLL_MARGIN_TOP }}>
-            <Text variant="subheading1" color="$neutral1">
-              {t('launches.allLaunches.title')}
-            </Text>
+            {/* The disclaimer sits under the title, not in a page footer: the table infinite-scrolls,
+                so anything below it is effectively unreachable. */}
+            <Flex gap="$spacing4">
+              <Text variant="subheading1" color="$neutral1">
+                {t('launches.allLaunches.title')}
+              </Text>
+              <Text variant="body4" color="$neutral2" maxWidth={720}>
+                {t('launches.tokensDisclaimer')}
+              </Text>
+            </Flex>
 
             {/* Header row per the redesign: quick-select category chips left, controls right. */}
             <Flex
@@ -414,13 +420,6 @@ export default function LaunchesPage(): JSX.Element {
               ascending={ascending}
               onSort={onSortChange}
             />
-          </Flex>
-
-          {/* Disclaimer bar: hairline divider + centered fine print. */}
-          <Flex borderTopWidth="$spacing1" borderColor="$surface3" pt="$spacing16" alignItems="center">
-            <Text variant="body4" color="$neutral2" textAlign="center" maxWidth={720}>
-              {t('launches.disclaimer')}
-            </Text>
           </Flex>
         </Flex>
       </Flex>

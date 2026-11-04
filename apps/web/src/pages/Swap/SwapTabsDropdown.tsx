@@ -1,8 +1,8 @@
 import { Text } from '@universe/mycelium'
+import { Check } from '@universe/mycelium/icons/Check'
 import type { SegmentedControlOption } from '@universe/mycelium/segmented-control-compat'
 import { TestID } from '@universe/test'
 import { useState } from 'react'
-import { Check } from 'ui/src/components/icons/Check'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { Dropdown, InternalMenuItem } from '~/components/Dropdowns/Dropdown'
 

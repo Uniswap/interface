@@ -18,7 +18,7 @@ vi.mock('~/features/Toucan/Auction/store/useAuctionStore', () => ({
 }))
 
 const mockSelectChain = vi.fn()
-vi.mock('~/hooks/useSelectChain', () => ({
+vi.mock('~/connection/hooks/useSelectChain', () => ({
   useSelectChain: () => mockSelectChain,
 }))
 

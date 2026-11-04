@@ -1,0 +1,16 @@
+import { createIcon } from '../factories/createIcon'
+import { Path, Svg } from '../factories/svg-elements'
+
+export const [DynamicFees, AnimatedDynamicFees] = createIcon({
+  name: 'DynamicFees',
+  getIcon: (props) => (
+    <Svg viewBox="0 0 24 24" fill="none" {...props}>
+      <Path
+        d="M12.3333 18H11.6667C11 18 10.6667 17.6667 10.6667 17V7C10.6667 6.33333 11 6 11.6667 6H12.3333C13 6 13.3333 6.33333 13.3333 7V17C13.3333 17.6667 13 18 12.3333 18ZM18 17V10.3333C18 9.66667 17.6667 9.33333 17 9.33333H16.3333C15.6667 9.33333 15.3333 9.66667 15.3333 10.3333V17C15.3333 17.6667 15.6667 18 16.3333 18H17C17.6667 18 18 17.6667 18 17ZM8.66667 17V13C8.66667 12.3333 8.33333 12 7.66667 12H7C6.33333 12 6 12.3333 6 13V17C6 17.6667 6.33333 18 7 18H7.66667C8.33333 18 8.66667 17.6667 8.66667 17Z"
+        fill="currentColor"
+        fillOpacity="0.63"
+      />
+    </Svg>
+  ),
+  defaultFill: '#131313',
+})

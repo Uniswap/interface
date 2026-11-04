@@ -48,6 +48,10 @@ describe('convertPoolToPoolStat', () => {
 
   // Every APR figure is served: `total_apr` is the backend's fee + reward sum, so nothing here
   // re-adds the boost, and an unserved APR stays undefined rather than becoming a displayed "0.00%".
+  it('passes categoryIds straight through', () => {
+    expect(convertPoolToPoolStat(buildPool({ categoryIds: ['stable-pools'] })).categoryIds).toEqual(['stable-pools'])
+  })
+
   it('passes the served APRs straight through', () => {
     const stat = convertPoolToPoolStat(buildPool({ apr: 4.99, totalApr: 9.49, rewardApr: 4.5 }))
     expect(stat.apr).toBe(4.99)

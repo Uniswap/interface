@@ -10,14 +10,8 @@ import { describe, expect, it } from 'vitest'
 const PKG_ROOT = join(__dirname, '../..')
 const REPO_ROOT = join(PKG_ROOT, '../..')
 const FORBIDDEN_PACKAGE =
-  /^(@apollo\/|ethers$|ethers\/|@ethersproject\/|react-native$|react-native\/|react-native-|@react-native|redux$|redux-|@reduxjs\/|react-redux$|i18next|react-i18next$)/
-const FORBIDDEN_FILES = [
-  'packages/api/src/index.ts',
-  'packages/api/src/clients/graphql/',
-  'packages/uniswap/',
-  'packages/wallet/',
-  'packages/ui/',
-]
+  /^(ethers$|ethers\/|@ethersproject\/|react-native$|react-native\/|react-native-|@react-native|redux$|redux-|@reduxjs\/|react-redux$|i18next|react-i18next$)/
+const FORBIDDEN_FILES = ['packages/api/src/index.ts', 'packages/uniswap/', 'packages/wallet/', 'packages/ui/']
 const WEB_EXTENSIONS = ['.web.ts', '.web.tsx', '.ts', '.tsx']
 const IMPORT_PATTERNS = [
   /^(?:import|export)\s+(?!type\b)[^'"]*?from\s+['"]([^'"]+)['"]/gm,

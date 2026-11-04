@@ -5,7 +5,6 @@ import { ARBITRUM_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/arbitr
 import { ARC_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/arc'
 import { AVALANCHE_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/avalanche'
 import { BASE_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/base'
-import { BLAST_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/blast'
 import { BNB_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/bnb'
 import { CELO_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/celo'
 import { INK_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/ink'
@@ -125,8 +124,6 @@ export const WETH_POLYGON = new Token(
   'WETH',
   'Wrapped Ether',
 )
-
-export const { USDB: USDB_BLAST } = BLAST_CHAIN_INFO.tokens
 
 export const ARB = new Token(
   UniverseChainId.ArbitrumOne,
@@ -277,13 +274,6 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
   [UniverseChainId.Base]: new Token(
     UniverseChainId.Base,
     '0x4200000000000000000000000000000000000006',
-    18,
-    'WETH',
-    'Wrapped Ether',
-  ),
-  [UniverseChainId.Blast]: new Token(
-    UniverseChainId.Blast,
-    '0x4300000000000000000000000000000000000004',
     18,
     'WETH',
     'Wrapped Ether',

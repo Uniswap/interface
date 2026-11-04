@@ -3,6 +3,12 @@
 
 export type { RequestContext, RequestStore } from './asyncContext'
 export * from './index'
+export type { IngestDeps, LogIngestInput } from './ingest'
+export { ingestClientLogs, logIngestSchema, MAX_REQUEST_BYTES } from './ingest'
+export type { ConcurrencyGate, ConcurrencyGateOptions, ConcurrencyGateStats } from './rateLimit/createConcurrencyGate'
+export { createConcurrencyGate, SHED } from './rateLimit/createConcurrencyGate'
+export type { RateLimiter } from './rateLimit/createSlidingWindowLimiter'
+export { createSlidingWindowLimiter } from './rateLimit/createSlidingWindowLimiter'
 export type { RequestScopedContext } from './requestContext'
 export { requestContext } from './requestContext'
 export type { ServerLogger, ServerLoggerCtx } from './serverLogger'

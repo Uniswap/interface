@@ -6,7 +6,7 @@ import { WETH_ADDRESS } from '@uniswap/universal-router-sdk'
 import { UniverseChainId, mainnet, normalizeTokenAddressForCache } from '@universe/chains'
 import PERMIT2_ABI from 'uniswap/src/abis/permit2'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
-import { DAI, USDC, USDT } from 'uniswap/src/constants/tokens'
+import { DAI, USDC, USDC_BNB, USDT } from 'uniswap/src/constants/tokens'
 import { type Address, assume0xAddress, erc20Abi } from '~/chains'
 import { resolvePinnedForkBlock } from '~/playwright/anvil/anvil-args'
 import type { AnvilClient as BaseAnvilClient } from '~/playwright/anvil/anvil-manager'
@@ -38,8 +38,8 @@ async function revertToSnapshotChecked(client: BaseAnvilClient, id: SnapshotId):
   return result === true
 }
 
-// Cached per worker: a historical block's base fee is immutable.
-let pinnedForkBaseFeePerGas: bigint | undefined
+// Cached per worker and chain: a historical block's base fee is immutable.
+const pinnedForkBaseFeePerGas = new Map<number, bigint>()
 
 /**
  * `anvil_setNextBlockBaseFeePerGas` is node fee config, not chain state — `evm_revert`
@@ -48,15 +48,20 @@ let pinnedForkBaseFeePerGas: bigint | undefined
  * live gas (~0.3 gwei) get rejected with "max fee per gas less than block base fee".
  * Re-anchor to the pinned fork block's own base fee at every test boundary.
  */
-async function resetNextBlockBaseFee(client: BaseAnvilClient): Promise<void> {
-  const forkBlockNumber = resolvePinnedForkBlock({ chainId: mainnet.id })
+async function resetNextBlockBaseFee(client: BaseAnvilClient, chainId: number): Promise<void> {
+  const forkBlockNumber = resolvePinnedForkBlock({ chainId })
   if (forkBlockNumber === undefined) {
     return
   }
-  pinnedForkBaseFeePerGas ??=
-    (await client.getBlock({ blockNumber: BigInt(forkBlockNumber) })).baseFeePerGas ?? undefined
-  if (pinnedForkBaseFeePerGas !== undefined) {
-    await client.setNextBlockBaseFeePerGas({ baseFeePerGas: pinnedForkBaseFeePerGas })
+  let baseFeePerGas = pinnedForkBaseFeePerGas.get(chainId)
+  if (baseFeePerGas === undefined) {
+    baseFeePerGas = (await client.getBlock({ blockNumber: BigInt(forkBlockNumber) })).baseFeePerGas ?? undefined
+    if (baseFeePerGas !== undefined) {
+      pinnedForkBaseFeePerGas.set(chainId, baseFeePerGas)
+    }
+  }
+  if (baseFeePerGas !== undefined) {
+    await client.setNextBlockBaseFeePerGas({ baseFeePerGas })
   }
 }
 
@@ -66,11 +71,13 @@ const allowedErc20BalanceAddresses = [
   DAI.address,
   WETH_ADDRESS(UniverseChainId.Mainnet),
   WEETH_ADDRESS,
+  USDC_BNB.address,
 ].map((address) => normalizeTokenAddressForCache(address))
 
 // Create anvil client with restart capability
-const createAnvilClient = () => {
-  const client: BaseAnvilClient = getAnvilManager().getClient()
+const createAnvilClient = (chainId: number = UniverseChainId.Mainnet) => {
+  const client: BaseAnvilClient = getAnvilManager(chainId).getClient()
+  const chain = client.chain ?? mainnet
   const helpers = {
     async getWalletAddress() {
       return TEST_WALLET_ADDRESS
@@ -129,14 +136,14 @@ const createAnvilClient = () => {
         functionName: 'approve',
         args: [spender, amount],
         account: owner ?? TEST_WALLET_ADDRESS,
-        chain: mainnet,
+        chain,
         maxFeePerGas: 100000000000n,
         maxPriorityFeePerGas: 1000000000n,
       })
     },
     async getPermit2Allowance({ owner, token, spender }: { owner?: Address; token: Address; spender: Address }) {
       const data = await client.readContract({
-        address: assume0xAddress(permit2Address(UniverseChainId.Mainnet)),
+        address: assume0xAddress(permit2Address(chainId)),
         abi: PERMIT2_ABI,
         functionName: 'allowance',
         args: [owner ?? TEST_WALLET_ADDRESS, token, spender],
@@ -159,12 +166,12 @@ const createAnvilClient = () => {
       expiration?: number
     }) {
       await client.writeContract({
-        address: assume0xAddress(permit2Address(UniverseChainId.Mainnet)),
+        address: assume0xAddress(permit2Address(chainId)),
         abi: PERMIT2_ABI,
         functionName: 'approve',
         args: [token, spender, amount, expiration],
         account: owner ?? TEST_WALLET_ADDRESS,
-        chain: mainnet,
+        chain,
       })
     },
     async setV2PoolReserves({
@@ -265,104 +272,139 @@ const createAnvilClient = () => {
   return Object.assign(client, helpers)
 }
 
-export const test = base.extend<{ anvil: AnvilClient; delegateToZeroAddress?: void }>({
+/**
+ * The per-test anvil lifecycle for one forked chain: health check, clock + base-fee re-anchor, a
+ * fresh snapshot, the test, then the verified revert. `beforeTest` runs inside the snapshot, so
+ * whatever it changes is reverted with the test's own state.
+ */
+async function withTestAnvil({
+  chainId,
+  beforeTest,
+  use,
+}: {
+  chainId: number
+  beforeTest?: (anvil: AnvilClient) => Promise<void>
+  use: (anvil: AnvilClient) => Promise<void>
+}): Promise<void> {
+  const manager = getAnvilManager(chainId)
+  // Ensure Anvil is running and healthy. Recovery (relaunch, session refresh,
+  // adopting a survivor node) happens ONLY here at the test boundary — anvil is
+  // never restarted mid-test, so snapshot IDs stay valid for the whole test.
+  if (!(await manager.ensureHealthy())) {
+    throw new Error(`Failed to ensure Anvil (chain ${chainId}) is healthy for test`)
+  }
+
+  // Get fresh client for this test
+  const testAnvil = createAnvilClient(chainId)
+
+  const lifecycleRpc: SnapshotLifecycleRpc = {
+    snapshot: () => testAnvil.snapshot(),
+    revert: (id) => revertToSnapshotChecked(testAnvil, id),
+    // Recovery re-fork: SAME upstream + pinned block (a bare anvil_reset would
+    // silently re-fork at the live tip). Drops all snapshots, hence recovery-only.
+    resetFork: () => manager.resetFork(),
+  }
+
+  // Clock sync EVERY boundary, before the snapshot: evm_revert rewinds anvil's
+  // internal clock offset to the snapshot point, so node time falls behind wall
+  // clock by the previous test's duration and the lag would accumulate across the
+  // run (breaking wall-clock-stamped quotes like the Across bridge deposit).
+  // Re-anchoring here bounds the lag within any test to that test's own runtime.
+  await syncClockToWallClock(clockSyncRpcFromClient(testAnvil))
+
+  // Fee re-anchor EVERY boundary: a previous test's base-fee pin survives evm_revert
+  // (node config, not chain state) and would reject this test's live-priced txs.
+  await resetNextBlockBaseFee(testAnvil, chainId)
+
+  // State isolation: a FRESH snapshot every test — evm_revert consumes snapshot
+  // IDs, so an ID from an earlier test can never be reused.
+  const snapshotId = await takeTestSnapshot(lifecycleRpc)
+
+  await beforeTest?.(testAnvil)
+
+  // Run the test
+  await use(testAnvil)
+
+  // Check anvil health status
+  const isHealthy = await manager.isHealthy()
+  if (!isHealthy) {
+    console.error('Anvil is not healthy after test, stopping...')
+    // Don't restart here - let the next test's ensureHealthy() relaunch it at the
+    // pinned fork state (a fresh anvil auto-mines by default). This avoids race
+    // conditions between parallel tests.
+    await manager.stop()
+    return
+  }
+
+  // Auto-mining re-enable BEFORE the revert, still inside the test that opted out: auto-mining is
+  // node config that evm_revert (and anvil_reset) do NOT restore, so a test that turned it off to
+  // observe a pending tx (the LP claim/migrate flows asserting "Collecting fees"/"Migrating
+  // liquidity") would otherwise leak the off state into later tests. Restoring here — rather than
+  // at the next test's setup — also mines any tx a *failed* automine-off test left in the pool,
+  // so the immediately-following restore drops it instead of it surviving into the next snapshot.
+  await testAnvil.setAutomine(true)
+
+  // Restore pre-test state, verifying the revert actually happened; a failed
+  // revert falls back to a full pinned re-fork so the next test starts clean.
+  await restoreTestSnapshot(lifecycleRpc, snapshotId)
+}
+
+/**
+ * Delegates the test wallet to the zero address, clearing any EIP-7702 delegation it carries on the
+ * forked chain (anvil's account 0 is delegated to sweeper contracts on several live chains). Fails
+ * loudly when the delegation cannot land — silently proceeding used to leave the wallet in an
+ * unknown delegation state and tests failing later in far less obvious ways.
+ */
+async function delegateTestWalletToZeroAddress(anvil: AnvilClient): Promise<void> {
+  try {
+    const originalBalance = await anvil.getBalance({ address: TEST_WALLET_ADDRESS })
+    const nonce = await anvil.getTransactionCount({
+      address: TEST_WALLET_ADDRESS,
+    })
+    // The client's hoisted account is the LOCAL test-wallet account, which can
+    // sign authorizations. Passing TEST_WALLET_ADDRESS here (as this fixture
+    // used to) parses as a json-rpc account and ALWAYS threw
+    // AccountTypeNotSupportedError — invisible while this fixture swallowed
+    // errors, so no test ever actually ran with the delegation cleared.
+    if (!anvil.account) {
+      throw new Error('anvil client has no hoisted local account to sign the 7702 authorization')
+    }
+    const auth = await anvil.signAuthorization({
+      account: anvil.account,
+      contractAddress: ZERO_ADDRESS,
+      chainId: anvil.chain?.id,
+      nonce: nonce + 1,
+    })
+    await anvil.sendTransaction({
+      authorizationList: [auth],
+      to: TEST_WALLET_ADDRESS,
+      account: TEST_WALLET_ADDRESS,
+      chain: anvil.chain ?? mainnet,
+    })
+    // Reset the wallet to the original balance because tests might rely on that
+    await anvil.setBalance({ address: TEST_WALLET_ADDRESS, value: originalBalance })
+  } catch (error) {
+    throw new Error(`Failed to delegate the test wallet to the zero address on anvil chain ${anvil.chain?.id}`, {
+      cause: error,
+    })
+  }
+}
+
+export const test = base.extend<{ anvil: AnvilClient; bnbAnvil: AnvilClient; delegateToZeroAddress?: void }>({
   // oxlint-disable-next-line no-empty-pattern -- it's ok here
   async anvil({}, use) {
-    // Ensure Anvil is running and healthy. Recovery (relaunch, session refresh,
-    // adopting a survivor node) happens ONLY here at the test boundary — anvil is
-    // never restarted mid-test, so snapshot IDs stay valid for the whole test.
-    if (!(await getAnvilManager().ensureHealthy())) {
-      throw new Error('Failed to ensure Anvil is healthy for test')
-    }
-
-    // Get fresh client for this test
-    const testAnvil = createAnvilClient()
-
-    const lifecycleRpc: SnapshotLifecycleRpc = {
-      snapshot: () => testAnvil.snapshot(),
-      revert: (id) => revertToSnapshotChecked(testAnvil, id),
-      // Recovery re-fork: SAME upstream + pinned block (a bare anvil_reset would
-      // silently re-fork at the live tip). Drops all snapshots, hence recovery-only.
-      resetFork: () => getAnvilManager().resetFork(),
-    }
-
-    // Clock sync EVERY boundary, before the snapshot: evm_revert rewinds anvil's
-    // internal clock offset to the snapshot point, so node time falls behind wall
-    // clock by the previous test's duration and the lag would accumulate across the
-    // run (breaking wall-clock-stamped quotes like the Across bridge deposit).
-    // Re-anchoring here bounds the lag within any test to that test's own runtime.
-    await syncClockToWallClock(clockSyncRpcFromClient(testAnvil))
-
-    // Fee re-anchor EVERY boundary: a previous test's base-fee pin survives evm_revert
-    // (node config, not chain state) and would reject this test's live-priced txs.
-    await resetNextBlockBaseFee(testAnvil)
-
-    // State isolation: a FRESH snapshot every test — evm_revert consumes snapshot
-    // IDs, so an ID from an earlier test can never be reused.
-    const snapshotId = await takeTestSnapshot(lifecycleRpc)
-
-    // Run the test
-    await use(testAnvil)
-
-    // Check anvil health status
-    const isHealthy = await getAnvilManager().isHealthy()
-    if (!isHealthy) {
-      console.error('Anvil is not healthy after test, stopping...')
-      // Don't restart here - let the next test's ensureHealthy() relaunch it at the
-      // pinned fork state (a fresh anvil auto-mines by default). This avoids race
-      // conditions between parallel tests.
-      await getAnvilManager().stop()
-      return
-    }
-
-    // Auto-mining re-enable BEFORE the revert, still inside the test that opted out: auto-mining is
-    // node config that evm_revert (and anvil_reset) do NOT restore, so a test that turned it off to
-    // observe a pending tx (the LP claim/migrate flows asserting "Collecting fees"/"Migrating
-    // liquidity") would otherwise leak the off state into later tests. Restoring here — rather than
-    // at the next test's setup — also mines any tx a *failed* automine-off test left in the pool,
-    // so the immediately-following restore drops it instead of it surviving into the next snapshot.
-    await testAnvil.setAutomine(true)
-
-    // Restore pre-test state, verifying the revert actually happened; a failed
-    // revert falls back to a full pinned re-fork so the next test starts clean.
-    await restoreTestSnapshot(lifecycleRpc, snapshotId)
+    await withTestAnvil({ chainId: UniverseChainId.Mainnet, use })
+  },
+  // A BNB Chain fork, started only by specs that ask for it. Needs a fork source that serves
+  // historical state (ANVIL_FORK_URL_BNB in CI, ANVIL_FORK_VIA_UNIRPC=1 locally; see anvil-args.ts).
+  // oxlint-disable-next-line no-empty-pattern -- it's ok here
+  async bnbAnvil({}, use) {
+    await withTestAnvil({ chainId: UniverseChainId.Bnb, beforeTest: delegateTestWalletToZeroAddress, use })
   },
   // Delegate the test wallet to the zero address to avoid any smart wallet conflicts.
-  // Fails the test loudly when the delegation cannot land — silently proceeding used
-  // to leave the wallet in an unknown delegation state and tests failing later in
-  // far less obvious ways.
   delegateToZeroAddress: [
     async ({ anvil }, use) => {
-      try {
-        const originalBalance = await anvil.getBalance({ address: TEST_WALLET_ADDRESS })
-        const nonce = await anvil.getTransactionCount({
-          address: TEST_WALLET_ADDRESS,
-        })
-        // The client's hoisted account is the LOCAL test-wallet account, which can
-        // sign authorizations. Passing TEST_WALLET_ADDRESS here (as this fixture
-        // used to) parses as a json-rpc account and ALWAYS threw
-        // AccountTypeNotSupportedError — invisible while this fixture swallowed
-        // errors, so no test ever actually ran with the delegation cleared.
-        if (!anvil.account) {
-          throw new Error('anvil client has no hoisted local account to sign the 7702 authorization')
-        }
-        const auth = await anvil.signAuthorization({
-          account: anvil.account,
-          contractAddress: ZERO_ADDRESS,
-          chainId: anvil.chain?.id,
-          nonce: nonce + 1,
-        })
-        await anvil.sendTransaction({
-          authorizationList: [auth],
-          to: TEST_WALLET_ADDRESS,
-          account: TEST_WALLET_ADDRESS,
-          chain: mainnet,
-        })
-        // Reset the wallet to the original balance because tests might rely on that
-        await anvil.setBalance({ address: TEST_WALLET_ADDRESS, value: originalBalance })
-      } catch (error) {
-        throw new Error('delegateToZeroAddress fixture failed to delegate the test wallet', { cause: error })
-      }
+      await delegateTestWalletToZeroAddress(anvil)
       await use(undefined)
     },
     { auto: true },

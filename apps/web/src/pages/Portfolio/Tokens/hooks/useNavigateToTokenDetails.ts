@@ -1,6 +1,5 @@
 import type { Currency } from '@uniswap/sdk-core'
 import { useNavigate } from 'react-router'
-import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import type { TdpChainSelection } from 'uniswap/src/utils/linking'
 import { useEvent } from 'utilities/src/react/hooks'
 import { getTokenDetailsURL } from '~/data/util'
@@ -25,7 +24,7 @@ export function useNavigateToTokenDetails(): (
 
     const url = getTokenDetailsURL({
       address: currency.isNative ? null : currency.address,
-      chain: toGraphQLChain(currency.chainId),
+      chainId: currency.chainId,
       chainQueryParam: getTdpChainQueryParam({ selection: chainSelection, tokenChainId: currency.chainId }),
     })
     navigate(url)

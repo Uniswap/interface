@@ -9,7 +9,9 @@ import {
   type UniversalListRenderItemInfo,
   type UniversalListScrollEvent,
   type UniversalListStyle,
+  Loader,
 } from '@universe/mycelium'
+import { NoTokens } from '@universe/mycelium/icons/NoTokens'
 import React, { useCallback, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useWindowDimensions } from 'react-native'
@@ -36,8 +38,6 @@ import {
 } from 'src/screens/CategoryDetailsScreen/CategoryDetailsHeader'
 import { CategoryGroupingRow } from 'src/screens/CategoryDetailsScreen/CategoryGroupingRow'
 import { CategoryHeaderTitleElement } from 'src/screens/CategoryDetailsScreen/CategoryHeaderTitleElement'
-import { Loader } from 'ui/src'
-import { NoTokens } from 'ui/src/components/icons'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { useListCategoriesQuery } from 'uniswap/src/data/apiClients/dataApiService/categories/useListCategoriesQuery'
 import type { Rwa } from 'uniswap/src/data/apiClients/dataApiService/rwa/types'

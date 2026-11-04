@@ -190,6 +190,8 @@ export type SwapTradeBaseProperties = {
   // `chain_id_in` and `chain_id_out` was added when bridging was introduced.
   chain_id_in?: number
   chain_id_out?: number
+  // The vendor serving a bridge, from its quote.
+  bridge_provider?: TradingApi.BridgeProvider
   token_in_amount?: string | number
   token_out_amount?: string | number
   token_in_amount_usd?: number
@@ -264,7 +266,12 @@ export type PositionsRangeFilter = 'all' | 'in_range' | 'out_of_range'
  * Which table an Explore-style sort or filter was used on. Shared by the sort and filter events and
  * by the filter components themselves, so a component can't declare a narrower set than it emits.
  */
-export type ExploreTableSurface = 'explore' | 'tdp' | 'add-liquidity-pool-browser' | 'positions-discovery'
+export type ExploreTableSurface =
+  | 'explore'
+  | 'category-details'
+  | 'tdp'
+  | 'add-liquidity-pool-browser'
+  | 'positions-discovery'
 
 export type EarnAnalyticsSurface = 'web' | 'mobile' | 'extension'
 
@@ -376,6 +383,8 @@ type BaseSwapTransactionResultProperties = {
   chain_id: number
   chain_id_in?: number
   chain_id_out?: number
+  // Persisted on the bridge typeInfo at submit. See SwapTradeBaseProperties.
+  bridge_provider?: SwapTradeBaseProperties['bridge_provider']
   id: string
   hash: string
   batch_id?: string
@@ -1226,7 +1235,7 @@ export type UniverseEventProperties = {
   }
   [InterfaceEventName.MarginPositionActionSelected]: {
     action: MarginManageAction
-    surface: 'menu' | 'drawer'
+    surface: 'menu'
   }
   [InterfaceEventName.MarginPositionClosed]: {
     realizedPnl?: string
@@ -1375,6 +1384,7 @@ export type UniverseEventProperties = {
   /** Fired once per open of a category definition (hover card, search/trending tooltip, touch sheet); `section` is the surface. */
   [InterfaceEventName.CategoryDefinitionCardOpened]: ITraceContext & {
     category_id: string
+    category_kind: CategoryKind
     trigger: CategoryDefinitionTrigger
   }
   [InterfaceEventName.AuctionHoverCardOpened]: ITraceContext & {
@@ -1622,7 +1632,7 @@ export type UniverseEventProperties = {
     tab_position?: number
     /** Token category chips on the TDP (Categories pills, Related tokens), in the token selector, and row category tags */
     category_id?: string
-    /** ElementName.TokenRowCategoryTag — which taxonomy the tagged category belongs to */
+    /** Which taxonomy `category_id` belongs to (row tags, hover card, definition sheet) */
     category_kind?: CategoryKind
     tags_rendered_count?: number
     /** Token selector filter chips — whether the press turned the chip on */
@@ -2124,12 +2134,6 @@ export type UniverseEventProperties = {
   [WalletEventName.OnboardingIntroCardSwiped]: OnboardingCardEventProperties
   [WalletEventName.OnboardingIntroCardPressed]: OnboardingCardEventProperties
   [WalletEventName.OnboardingIntroCardClosed]: OnboardingCardEventProperties
-  [WalletEventName.PerformanceGraphql]: {
-    dataSize: number
-    duration: number
-    operationName: string
-    operationType?: string
-  }
   [WalletEventName.PortfolioBalanceFreshnessLag]: {
     freshnessLag: number
     updatedCurrencies: string[]

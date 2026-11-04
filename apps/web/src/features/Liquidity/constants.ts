@@ -81,13 +81,18 @@ export function hasActiveV2StatusFilter(
   statusFilter: V2PositionStatusFilter[],
   rangeFilter: PositionStatus[],
 ): boolean {
-  const lifecycleActive =
-    statusFilter.length !== DEFAULT_V2_POSITION_STATUS_FILTER.length ||
-    !DEFAULT_V2_POSITION_STATUS_FILTER.every((status) => statusFilter.includes(status))
+  const lifecycleActive = hasActiveV2LifecycleFilter(statusFilter)
   const rangeActive =
     rangeFilter.length !== DEFAULT_LP_POSITION_STATUS_FILTER.length ||
     !DEFAULT_LP_POSITION_STATUS_FILTER.every((status) => rangeFilter.includes(status))
   return lifecycleActive || rangeActive
+}
+
+export function hasActiveV2LifecycleFilter(statusFilter: V2PositionStatusFilter[]): boolean {
+  return (
+    statusFilter.length !== DEFAULT_V2_POSITION_STATUS_FILTER.length ||
+    !DEFAULT_V2_POSITION_STATUS_FILTER.every((status) => statusFilter.includes(status))
+  )
 }
 
 // Companion to hasActiveV2StatusFilter for the protocol-version filter: a non-default version

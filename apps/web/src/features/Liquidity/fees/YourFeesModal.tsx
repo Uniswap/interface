@@ -9,8 +9,8 @@ import { useWalletPositionsBalance } from 'uniswap/src/features/positions/hooks/
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { CollectableFeesList } from '~/features/Liquidity/fees/CollectableFeesList'
 import { useCollectableFeePositions } from '~/features/Liquidity/fees/useCollectableFeePositions'
+import { useDocumentScrollLock } from '~/features/Liquidity/hooks/useDocumentScrollLock'
 import { formatUsdTotal } from '~/features/Liquidity/utils/formatUsdTotal'
-import { useDocumentScrollLock } from '~/hooks/useDocumentScrollLock'
 
 interface YourFeesModalProps {
   isOpen: boolean

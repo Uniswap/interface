@@ -16,7 +16,7 @@ import { isFinalizedTxStatus } from 'uniswap/src/features/transactions/types/uti
 import { convertOrderStatusToTransactionStatus } from 'uniswap/src/features/transactions/utils/uniswapX.utils'
 import { logger } from 'utilities/src/logger/logger'
 import { getConfig } from '~/config'
-import { useAccount } from '~/hooks/useAccount'
+import { useAccount } from '~/connection/hooks/useAccount'
 import { evaluateCancelTimeouts } from '~/state/activity/polling/cancelTimeouts'
 import { ActivityUpdateTransactionType, OnActivityUpdate } from '~/state/activity/types'
 import { getRwaSwapAnalyticsFromTypeInfo } from '~/state/activity/utils'
@@ -61,31 +61,6 @@ async function fetchStatuses({
   }
 
   const result = await global.fetch(`${UNISWAP_GATEWAY_DNS_URL}/${endpoint}?swapper=${swapper}&orderHashes=${hashes}`)
-  const statuses = (await result.json()) as OrderQueryResponse
-  return statuses.orders
-}
-
-export async function fetchOpenLimitOrders(params: {
-  account?: string
-  orderHashes?: string[]
-}): Promise<UniswapXBackendOrder[]> {
-  let url = `${UNISWAP_GATEWAY_DNS_URL}/limit-orders`
-  const queryParams: string[] = []
-
-  if (params.account) {
-    queryParams.push(`swapper=${params.account}`)
-    queryParams.push('orderStatus=open')
-  }
-
-  if (params.orderHashes && params.orderHashes.length > 0) {
-    queryParams.push(`orderHashes=${params.orderHashes.join(',')}`)
-  }
-
-  if (queryParams.length > 0) {
-    url += `?${queryParams.join('&')}`
-  }
-
-  const result = await global.fetch(url)
   const statuses = (await result.json()) as OrderQueryResponse
   return statuses.orders
 }

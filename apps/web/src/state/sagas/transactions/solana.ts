@@ -23,9 +23,9 @@ import { tryCatch } from 'utilities/src/errors'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { signSolanaTransactionWithCurrentWallet } from '~/connection/signSolanaTransaction'
 import store from '~/state'
-import { popupRegistry } from '~/state/popups/registry'
-import { PopupType } from '~/state/popups/types'
 import { getSwapTransactionInfo } from '~/state/sagas/transactions/utils'
+import { popupRegistry } from '~/utils/popups/registry'
+import { PopupType } from '~/utils/popups/types'
 
 type JupiterSwapParams = {
   address: string
@@ -71,7 +71,6 @@ function* refetchBalancesWithDelay({
   yield* call(refetchQueriesViaOnchainOverrideVariant, {
     transaction,
     activeAddress,
-    apolloClient: null,
   })
 }
 

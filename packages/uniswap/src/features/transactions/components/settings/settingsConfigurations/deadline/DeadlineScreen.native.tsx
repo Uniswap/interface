@@ -1,11 +1,13 @@
-import { Flex, Text, useSporeColors } from '@universe/mycelium'
+import { Flex, Text, useSporeColors, fonts, spacing } from '@universe/mycelium'
 import { useTranslation } from 'react-i18next'
-import { PlusMinusButton, PlusMinusButtonType } from 'ui/src'
-import { fonts, spacing } from 'ui/src/theme'
 import { BottomSheetTextInput } from 'uniswap/src/components/modals/Modal'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { MAX_CUSTOM_DEADLINE, MIN_CUSTOM_DEADLINE } from 'uniswap/src/constants/transactions'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
+import {
+  PlusMinusButton,
+  PlusMinusButtonType,
+} from 'uniswap/src/features/transactions/components/settings/PlusMinusButton'
 import { DeadlineWarning } from 'uniswap/src/features/transactions/components/settings/settingsConfigurations/deadline/DeadlineWarning'
 import { useDeadlineSettings } from 'uniswap/src/features/transactions/components/settings/settingsConfigurations/deadline/useDeadlineSettings'
 

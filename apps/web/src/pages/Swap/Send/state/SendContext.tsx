@@ -11,7 +11,8 @@ import {
 } from 'react'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useSwapAndLimitContext } from '~/features/Swap/state/useSwapContext'
-import { RecipientData, SendInfo, useDerivedSendInfo } from '~/pages/Swap/Send/state/hooks'
+import { useDerivedSendInfo } from '~/pages/Swap/Send/state/hooks/useDerivedSendInfo'
+import { RecipientData, SendInfo } from '~/pages/Swap/Send/state/types'
 
 export type SendState = {
   readonly exactAmountToken?: string

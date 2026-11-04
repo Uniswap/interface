@@ -44,14 +44,12 @@ function renderTooltip({
 }
 
 describe('MarginChartTooltip', () => {
-  it('renders the four OHLC rows', () => {
+  // OHLC reads off the legend above the chart; a hover with no margin rows draws no tooltip at all.
+  it('renders nothing for a candle with no position and no explainer', () => {
     renderTooltip()
-    expect(screen.getByText('Open')).toBeInTheDocument()
-    expect(screen.getByText('High')).toBeInTheDocument()
-    expect(screen.getByText('Low')).toBeInTheDocument()
-    expect(screen.getByText('Close')).toBeInTheDocument()
-    expect(screen.getByText(/1,990/)).toBeInTheDocument() // open
-    expect(screen.getByText(/2,010/)).toBeInTheDocument() // high
+    expect(screen.queryByText('Open')).not.toBeInTheDocument()
+    expect(screen.queryByText(/1,990/)).not.toBeInTheDocument()
+    expect(document.body.textContent).toBe('')
   })
 
   it('renders the PnL-at-price row when a primary position exists', () => {

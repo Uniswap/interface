@@ -1,5 +1,5 @@
-import { TrafficFlows } from '@universe/api/src/clients/base/urls'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { TrafficFlows } from './urls'
 
 const envConfigs = {
   webProd: {
@@ -152,7 +152,7 @@ describe('urls', () => {
     },
   )
 
-  it('generates correct URL for GraphQL flow in web/Playwright', async () => {
+  it('generates correct URL for a service flow in web/Playwright', async () => {
     vi.doMock('@universe/environment', () => ({
       isBetaEnv: () => false,
       isDevEnv: () => false,
@@ -166,9 +166,9 @@ describe('urls', () => {
     }))
 
     const { getCloudflareApiBaseUrl } = await import('./urls')
-    const result = getCloudflareApiBaseUrl({ flow: TrafficFlows.GraphQL })
+    const result = getCloudflareApiBaseUrl({ flow: TrafficFlows.Metrics })
 
-    expect(result).toBe('https://graphql.interface.gateway.uniswap.org')
+    expect(result).toBe('https://metrics.interface.gateway.uniswap.org')
   })
 
   describe('createHelpArticleUrl', () => {

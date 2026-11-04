@@ -1,8 +1,6 @@
 import { ElementAfterText, Flex, Text, TouchableArea } from '@universe/mycelium'
 import { useShadowPropsShort } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
-//! tamagui-ignore
-// TODO(EXT-732): fix encoding error in tamagui optimizer on this file
 import { useState } from 'react'
 import {
   LARGE_TOAST_RADIUS,

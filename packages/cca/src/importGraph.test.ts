@@ -2,8 +2,8 @@ import { readFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { describe, expect, it } from 'vitest'
 
-// The point of this package is that both apps can import it without Apollo (the @universe/api
-// barrel), ethers (or @universe/chains, which pulls it), react-native, redux or i18n. Walk the
+// The point of this package is that both apps can import it without the @universe/api barrel,
+// ethers (or @universe/chains, which pulls it), react-native, redux or i18n. Walk the
 // runtime imports reachable from the public entry (type-only imports are erased) and fail if any
 // reach a module outside the light set.
 describe('import graph', () => {

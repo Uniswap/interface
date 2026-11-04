@@ -1,4 +1,9 @@
-import { type UseSporeColorsReturn } from '@universe/mycelium/theme-hooks-compat'
+import {
+  BREAKPOINT_PX,
+  HEIGHT_BREAKPOINT_PX,
+  type MediaQueryKey,
+  type UseSporeColorsReturn,
+} from '@universe/mycelium/theme-hooks-compat'
 import { type CSSProperties, useCallback, useSyncExternalStore } from 'react'
 import {
   popoverNoop,
@@ -12,7 +17,6 @@ import {
   POPOVER_TRANSITION_DURATION_MS,
 } from 'ui/src/components/popover/shared'
 import type { PopoverFrameStyleProps, PopoverPresenceStyle, PopoverVia } from 'ui/src/components/popover/types'
-import { media } from 'ui/src/theme/media'
 
 /**
  * Web-leg helpers for the rebuilt Popover (INFRA-3318): the Tamagui `View` box
@@ -200,13 +204,14 @@ export function useMediaQueryMatch(query: string | undefined): boolean {
   return useSyncExternalStore(subscribe, getSnapshot, () => false)
 }
 
-export function mediaQueryFor(key: keyof typeof media): string {
-  const entry = media[key] as { maxWidth?: number; maxHeight?: number }
-  return entry.maxWidth !== undefined ? `(max-width: ${entry.maxWidth}px)` : `(max-height: ${entry.maxHeight}px)`
+export function mediaQueryFor(key: MediaQueryKey): string {
+  return key in BREAKPOINT_PX
+    ? `(max-width: ${BREAKPOINT_PX[key as keyof typeof BREAKPOINT_PX]}px)`
+    : `(max-height: ${HEIGHT_BREAKPOINT_PX[key as keyof typeof HEIGHT_BREAKPOINT_PX]}px)`
 }
 
 /** The eleven media keys in declaration order (least strong first — later wins, like Tamagui). */
-export const MEDIA_KEYS = Object.keys(media) as Array<keyof typeof media>
+export const MEDIA_KEYS = [...Object.keys(BREAKPOINT_PX), ...Object.keys(HEIGHT_BREAKPOINT_PX)] as MediaQueryKey[]
 
 /**
  * Resolve the `$<mediaKey>` style-override props against live matchMedia state,

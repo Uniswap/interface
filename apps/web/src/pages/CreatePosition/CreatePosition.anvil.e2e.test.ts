@@ -4,9 +4,9 @@ import { CHAIN_TO_ADDRESSES_MAP, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { computePairAddress } from '@uniswap/v2-sdk'
 import { UniverseChainId } from '@universe/chains'
 import { TestID } from '@universe/test'
-import { USDT } from 'uniswap/src/constants/tokens'
+import { USDC_BNB, USDT } from 'uniswap/src/constants/tokens'
 import { WETH } from 'uniswap/src/test/fixtures/lib/sdk'
-import { parseEther } from '~/chains'
+import { parseEther, parseUnits } from '~/chains'
 import { assume0xAddress } from '~/chains'
 import { ONE_MILLION_USDT } from '~/playwright/anvil/utils'
 import { expect, getTest, type Page } from '~/playwright/fixtures'
@@ -23,6 +23,10 @@ const WETH_ADDRESS = WETH.address
 // (see SLIPPAGE_CRITICAL_TOLERANCE = 20, which would open a blocking warning) — slippage so the
 // fork-vs-live drift can't fail the create. Real users never see this test-only gap.
 const E2E_CREATE_SLIPPAGE_TOLERANCE = 15
+
+// A deliberately wide band for the live BNB price: wrong decimals put it ~1e12 outside either edge.
+const MIN_PLAUSIBLE_BNB_PRICE_USD = 50
+const MAX_PLAUSIBLE_BNB_PRICE_USD = 50_000
 
 async function stubCreatePosition(page: Page): Promise<void> {
   await stubLiquidityServiceEndpoint({
@@ -56,26 +60,22 @@ test.describe(
     ],
   },
   () => {
-    test('Create position with full range', async ({ page, anvil, graphql }) => {
+    test('Create position with full range', async ({ page, anvil }) => {
       await stubCreatePosition(page)
-      await graphql.intercept('SearchTokens', Mocks.Token.search_token_tether)
       await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
       await page.goto('/positions/add/new')
       await selectEthUsdtWithDefaultFeeTier({ page })
       await page.getByRole('button', { name: 'Continue' }).click()
-      await graphql.waitForResponse('PoolPriceHistory')
       await page.getByText('Full range').click()
       await reviewAndCreatePosition({ page })
     })
 
-    test('Create position with custom range', async ({ page, anvil, graphql }) => {
+    test('Create position with custom range', async ({ page, anvil }) => {
       await stubCreatePosition(page)
-      await graphql.intercept('SearchTokens', Mocks.Token.search_token_tether)
       await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
       await page.goto('/positions/add/new')
       await selectEthUsdtWithDefaultFeeTier({ page })
       await page.getByRole('button', { name: 'Continue' }).click()
-      await graphql.waitForResponse('PoolPriceHistory')
       await page.getByTestId(TestID.RangeInputIncrement + '-0').click()
       await page.getByTestId(TestID.RangeInputDecrement + '-1').click()
       await reviewAndCreatePosition({ page })
@@ -135,15 +135,13 @@ test.describe(
     })
 
     test.describe('approval flow', () => {
-      test('should approve tokens and create a V4 position', async ({ page, anvil, graphql }) => {
+      test('should approve tokens and create a V4 position', async ({ page, anvil }) => {
         await stubCreatePosition(page)
-        await graphql.intercept('SearchTokens', Mocks.Token.search_token_tether)
         await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
 
         await page.goto('/positions/add/new')
         await selectEthUsdtWithDefaultFeeTier({ page })
         await page.getByRole('button', { name: 'Continue' }).click()
-        await graphql.waitForResponse('PoolPriceHistory')
         await page.getByText('Full range').click()
 
         await page.getByTestId(TestID.AmountInputIn).first().click()
@@ -156,7 +154,7 @@ test.describe(
         await expect(page.getByText('Created position')).toBeVisible()
       })
 
-      test('should handle approval when permit2 allowance is already set', async ({ page, anvil, graphql }) => {
+      test('should handle approval when permit2 allowance is already set', async ({ page, anvil }) => {
         await stubCreatePosition(page)
         await stubLiquidityServiceEndpoint({
           page,
@@ -166,7 +164,6 @@ test.describe(
             return { ...data, transactions: [], v4BatchPermitData: null }
           },
         })
-        await graphql.intercept('SearchTokens', Mocks.Token.search_token_tether)
         await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
         await anvil.setErc20Allowance({ address: assume0xAddress(USDT.address), spender: PERMIT2_ADDRESS })
         // checkLPApproval is stubbed to report no permit needed (v4BatchPermitData: null), so the
@@ -181,7 +178,6 @@ test.describe(
         await page.goto('/positions/add/new')
         await selectEthUsdtWithDefaultFeeTier({ page })
         await page.getByRole('button', { name: 'Continue' }).click()
-        await graphql.waitForResponse('PoolPriceHistory')
         await page.getByText('Full range').click()
 
         await page.getByTestId(TestID.AmountInputIn).first().click()
@@ -287,14 +283,13 @@ test.describe(
       // never satisfy it. Serve a recorded success response instead: this test only
       // asserts the slippage-warning UI driven by the response's `slippage` field
       // and never submits the returned calldata on chain.
-      test('shows low slippage warning for ETH/WEETH pool', async ({ page, anvil, graphql }) => {
+      test('shows low slippage warning for ETH/WEETH pool', async ({ page, anvil }) => {
         await page.route('**/uniswap.liquidity.v2.LiquidityService/CreatePosition*', async (route) => {
           await route.fulfill({ path: Mocks.LiquidityService.create_position_eth_weeth_low_slippage })
         })
         await page.route('**/uniswap.liquidity.v1.LiquidityService/PoolInfo*', async (route) => {
           await route.fulfill({ path: Mocks.LiquidityService.pool_info_eth_weeth })
         })
-        await graphql.intercept('PoolPriceHistory', Mocks.PoolPriceHistory.eth_weeth)
         await anvil.setBalance({ address: assume0xAddress(TEST_WALLET_ADDRESS), value: parseEther('10') })
         await anvil.setErc20Balance({ address: assume0xAddress(WEETH_ADDRESS), balance: parseEther('100') })
 
@@ -308,14 +303,13 @@ test.describe(
       // Recorded CreatePosition response: see 'shows low slippage warning' above.
       // The extreme `slippage` value in the fixture drives the warning modal; the
       // flow is cancelled at review so the fixture calldata is never executed.
-      test('shows very high slippage warning when backend returns extreme value', async ({ page, anvil, graphql }) => {
+      test('shows very high slippage warning when backend returns extreme value', async ({ page, anvil }) => {
         await page.route('**/uniswap.liquidity.v2.LiquidityService/CreatePosition*', async (route) => {
           await route.fulfill({ path: Mocks.LiquidityService.create_position_eth_weeth_high_slippage })
         })
         await page.route('**/uniswap.liquidity.v1.LiquidityService/PoolInfo*', async (route) => {
           await route.fulfill({ path: Mocks.LiquidityService.pool_info_eth_weeth })
         })
-        await graphql.intercept('PoolPriceHistory', Mocks.PoolPriceHistory.eth_weeth)
         await anvil.setBalance({ address: assume0xAddress(TEST_WALLET_ADDRESS), value: parseEther('10000') })
         await anvil.setErc20Balance({ address: assume0xAddress(WEETH_ADDRESS), balance: parseEther('10') })
 
@@ -328,6 +322,67 @@ test.describe(
         await page.getByRole('button', { name: 'Cancel' }).click()
         await expect(page.getByText('Very high slippage')).not.toBeVisible()
         await expect(page.getByRole('button', { name: 'Review' })).toBeVisible()
+      })
+    })
+
+    // USDC is 6 decimals on Ethereum but 18 on BNB Chain, and a v2 multichain token's parent
+    // `decimals` is Ethereum's. Creating a pool is where wrong decimals cost funds: the initial
+    // price is parsed with the same currency, so the screen stays self-consistent while the
+    // transaction moves 1e12 too little USDC into a pool initialized 1e12 off. So this drives the
+    // real token selector against live search and checks what the transaction does onchain.
+    test.describe('BNB USDC (18 decimals)', () => {
+      test('creates a new BNB/USDC pool that moves the typed USDC amount', async ({ page, bnbAnvil }) => {
+        const USDC_DEPOSIT = '10'
+        let createRequest: { independentToken?: { amount?: string }; newPool?: { initialPrice?: string } } | undefined
+        await stubLiquidityServiceEndpoint({
+          page,
+          endpoint: LiquidityService.methods.createPosition,
+          service: LiquidityService,
+          modifyRequestData: (data) => {
+            createRequest = data
+            return { ...data, slippageTolerance: E2E_CREATE_SLIPPAGE_TOLERANCE }
+          },
+        })
+        await bnbAnvil.setErc20Balance({
+          address: assume0xAddress(USDC_BNB.address),
+          balance: parseUnits('1000', USDC_BNB.decimals),
+        })
+        const usdcBefore = await bnbAnvil.getErc20Balance(assume0xAddress(USDC_BNB.address))
+
+        await page.goto('/positions/add/new?chain=bnb&currencyA=NATIVE')
+        await page.getByRole('button', { name: 'Choose token' }).click()
+        await page.getByTestId(TestID.ExploreSearchInput).fill('USDC')
+        await page.getByTestId(`token-option-${UniverseChainId.Bnb}-USDC`).first().click()
+        // Any tier without a pool: the live backend decides "Not created", and the fork's pinned
+        // state is older than live, so the pool does not exist there either. Wait for the tiers'
+        // pool stats first, or a tier still loading can read as "Not created".
+        await expect(page.getByRole('button', { name: /TVL/ }).first()).toBeVisible()
+        await page
+          .getByRole('button', { name: /Not created/ })
+          .first()
+          .click()
+        await page.getByRole('button', { name: 'Continue' }).click()
+        await expect(page.getByText('Creating new pool')).toBeVisible()
+        await page.getByText('Full range', { exact: true }).click()
+
+        // BNB sorts first (native), so the USDC leg is the second deposit input.
+        await page.getByTestId(TestID.AmountInputIn).last().click()
+        await page.getByTestId(TestID.AmountInputIn).last().fill(USDC_DEPOSIT)
+        await page.getByRole('button', { name: 'Review' }).click()
+        await page.getByRole('button', { name: 'Create' }).click()
+        await expect(page.getByText('Created position')).toBeVisible()
+
+        const expectedUsdc = parseUnits(USDC_DEPOSIT, USDC_BNB.decimals)
+        expect(createRequest?.independentToken?.amount).toBe(expectedUsdc.toString())
+        // The raw initial price (raw USDC per raw BNB, both 18 decimals) is the USD price of BNB,
+        // not 1e-12 of it.
+        const rawInitialPrice = (Number(createRequest?.newPool?.initialPrice) / 2 ** 96) ** 2
+        expect(rawInitialPrice).toBeGreaterThan(MIN_PLAUSIBLE_BNB_PRICE_USD)
+        expect(rawInitialPrice).toBeLessThan(MAX_PLAUSIBLE_BNB_PRICE_USD)
+        // The mint can leave a few wei of rounding behind; 6-decimal USDC would move ~1e-12 of it.
+        const usdcSpent = usdcBefore - (await bnbAnvil.getErc20Balance(assume0xAddress(USDC_BNB.address)))
+        expect(usdcSpent).toBeLessThanOrEqual(expectedUsdc)
+        expect(usdcSpent).toBeGreaterThan((expectedUsdc * 999n) / 1000n)
       })
     })
   },

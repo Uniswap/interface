@@ -1,7 +1,6 @@
 import type { Currency } from '@uniswap/sdk-core'
 import { useLayoutEffect, useMemo } from 'react'
 import { PollingInterval } from 'uniswap/src/constants/misc'
-import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import {
   useTokenPriceChange,
   useTokenPriceConfidenceScore,
@@ -43,13 +42,12 @@ export function useTokenPriceChartPanel({
   isError: boolean
   stale: boolean
 } {
-  const chainId = useMemo(() => fromGraphQLChain(variables.chain), [variables.chain])
   const spotCurrencyId = useMemo(() => {
     if (!variables.address) {
       return undefined
     }
-    return chainId ? buildCurrencyId(chainId, variables.address) : undefined
-  }, [chainId, variables.address])
+    return buildCurrencyId(variables.chainId, variables.address)
+  }, [variables.chainId, variables.address])
   // Authoritative even on the all-networks view — isMultichainAggregateView makes it return
   // GetTokenMultiChain's canonical-chain price rather than an arbitrary per-chain one.
   const currentPriceOverride = useTokenSpotPrice(spotCurrencyId, {

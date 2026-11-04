@@ -1,6 +1,6 @@
 import { PopupItem } from '~/components/Popups/PopupItem'
-import { PopupType } from '~/state/popups/types'
 import { render, screen } from '~/test-utils/render'
+import { PopupType } from '~/utils/popups/types'
 
 describe('PopupItem', () => {
   it('renders the transient "Try again" cancel-broadcast-failure surface', () => {

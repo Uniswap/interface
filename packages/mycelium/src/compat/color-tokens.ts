@@ -1,7 +1,7 @@
 // Cross-subpath type-only import of the generated Spore mirror — single source
 // of truth for the 148 `$` names. That module has no imports of its own, so
 // there is no cycle back into ./tokens.
-import type { ThemeColorName } from '../theme-hooks-compat/theme-colors.generated'
+import type { ThemeColorName } from '../theme-hooks-compat/theme-colors'
 import type { CssColorName } from './css-color-names.generated'
 
 /**

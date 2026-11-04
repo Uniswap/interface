@@ -1,19 +1,19 @@
 import { handleRouteToPasskeyManagement } from '~/pages/PasskeyManagement/index'
 
-vi.mock('~/components/AccountDrawer/MiniPortfolio/hooks', () => ({
+vi.mock('~/state/accountDrawer/hooks', () => ({
   useAccountDrawer: vi.fn(),
 }))
 
-vi.mock('~/features/accounts/store/hooks', () => ({
+vi.mock('~/connection/accounts/hooks', () => ({
   useActiveAddress: vi.fn(),
   useConnectionStatus: vi.fn(),
 }))
 
-vi.mock('~/hooks/useDisconnect', () => ({
+vi.mock('~/connection/hooks/useDisconnect', () => ({
   useDisconnect: vi.fn(),
 }))
 
-vi.mock('~/hooks/useSignInWithPasskey', () => ({
+vi.mock('~/features/wallet/hooks/useSignInWithPasskey', () => ({
   useSignInWithPasskey: vi.fn(),
 }))
 

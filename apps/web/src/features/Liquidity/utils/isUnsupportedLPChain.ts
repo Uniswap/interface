@@ -1,6 +1,6 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { UniverseChainId, isSVMChain } from '@universe/chains'
-import { SUPPORTED_V2POOL_CHAIN_IDS } from '~/hooks/useNetworkSupportsV2'
+import { SUPPORTED_V2POOL_CHAIN_IDS } from '~/features/Liquidity/hooks/useNetworkSupportsV2'
 import { isV4UnsupportedChain } from '~/utils/networkSupportsV4'
 
 export function isUnsupportedLPChain(chainId: UniverseChainId | undefined, protocolVersion: ProtocolVersion): boolean {

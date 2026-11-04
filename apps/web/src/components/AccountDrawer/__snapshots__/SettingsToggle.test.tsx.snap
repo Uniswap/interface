@@ -43,7 +43,7 @@ exports[`SettingsToggle > Updates value on click 1`] = `
             stroke="currentColor"
             stroke-linecap="round"
             stroke-width="8"
-            style="width: 14px; height: 14px; color: rgb(255, 55, 199);"
+            style="color: rgb(255, 55, 199); width: 14px; height: 14px;"
             viewBox="0 0 48 48"
           >
             <line
@@ -125,7 +125,7 @@ exports[`SettingsToggle > renders with icon 1`] = `
             stroke="currentColor"
             stroke-linecap="round"
             stroke-width="8"
-            style="width: 14px; height: 14px; color: rgb(255, 55, 199);"
+            style="color: rgb(255, 55, 199); width: 14px; height: 14px;"
             viewBox="0 0 48 48"
           >
             <line

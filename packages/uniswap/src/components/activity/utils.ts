@@ -1,5 +1,4 @@
-import { TXN_HISTORY_LOADER_ICON_SIZE } from 'ui/src'
-import { iconSizes } from 'ui/src/theme'
+import { TXN_HISTORY_LOADER_ICON_SIZE, iconSizes } from '@universe/mycelium'
 import {
   isReceiveTokenTransactionInfo,
   isSendTokenTransactionInfo,

@@ -36,15 +36,25 @@ export const getExploreTitle = (path?: string) => {
   }
 }
 
-export const getCategoryDetailsTitle = (path?: string) => {
+function getCategorySlugFromPath(path?: string): string | undefined {
   const slug = path
     ?.split('/')
     .filter((part) => part !== '')
     .at(-1)
-  if (!slug || slug.startsWith(':')) {
-    return i18n.t('categoryDetails.pageTitle')
-  }
-  return i18n.t('categoryDetails.pageTitle.withCategory', { category: capitalize(slug.replace(/-/g, ' ')) })
+  return !slug || slug.startsWith(':') ? undefined : capitalize(slug.replace(/-/g, ' '))
+}
+
+export const getCategoryDetailsTitle = (path?: string) => {
+  const category = getCategorySlugFromPath(path)
+  return category ? i18n.t('categoryDetails.pageTitle.withCategory', { category }) : i18n.t('categoryDetails.pageTitle')
+}
+
+export const getPoolCategoryDetailsTitle = (path?: string) => {
+  // Most pool category ids end in "-pools" (stable-pools); the title already says pools.
+  const category = getCategorySlugFromPath(path)?.replace(/ pools$/i, '')
+  return category
+    ? i18n.t('categoryDetails.pools.pageTitle.withCategory', { category })
+    : i18n.t('categoryDetails.pools.pageTitle')
 }
 
 export const getExploreDescription = (path?: string) => {

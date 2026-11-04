@@ -1,5 +1,5 @@
 import { Token } from '@uniswap/sdk-core'
-import { GraphQLApi, TradingApi } from '@universe/api'
+import { TradingApi } from '@universe/api'
 import { Platform, UniverseChainId } from '@universe/chains'
 import { ETH_LOGO, INK_LOGO } from '@universe/mycelium/assets'
 import { ALL_APPS_CHAIN_SUPPORTED_APPS } from 'uniswap/src/features/chains/chainAppSupport'
@@ -11,7 +11,7 @@ import {
 } from 'uniswap/src/features/chains/evm/rpc'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
 import { GENERIC_L2_GAS_CONFIG } from 'uniswap/src/features/chains/gasDefaults'
-import { GqlChainId, NetworkLayer, RPCType, UniverseChainInfo } from 'uniswap/src/features/chains/types'
+import { NetworkLayer, RPCType, UniverseChainInfo } from 'uniswap/src/features/chains/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 
 const tokens = buildChainTokens({
@@ -31,7 +31,6 @@ export const INK_CHAIN_INFO = {
   testnet: false,
   assetRepoNetworkName: 'ink',
   backendChain: {
-    chain: GraphQLApi.Chain.Ink as GqlChainId,
     backendSupported: true,
     nativeTokenBackendAddress: undefined,
   },

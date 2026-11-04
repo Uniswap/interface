@@ -4008,6 +4008,15 @@
           "tokenOutChainId": {
             "$ref": "#/components/schemas/ChainId"
           },
+          "quote": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BridgeQuote"
+              }
+            ],
+            "description": "The `BRIDGE` quote from `/quote`, passed as `/swap` takes it. The approval then goes to the contract that quote's deposit pulls from (the Across SpokePool, or Relay's depository or approval proxy) instead of the inferred spender. A provider quote must be one this API issued, unaltered and unexpired, and the quote's ERC-20 input must be `token` on `chainId`.",
+            "x-internal": true
+          },
           "walletExecutionContext": {
             "$ref": "#/components/schemas/WalletExecutionContext",
             "x-internal": true
@@ -4616,6 +4625,15 @@
           },
           "enforceExactIn": {
             "$ref": "#/components/schemas/EnforceExactIn"
+          },
+          "bridgeProviders": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BridgeProvider"
+            },
+            "minItems": 1,
+            "description": "The bridge vendors allowed to serve this request's bridge routes, whether a direct bridge or a leg of a chained quote. Omit to allow every vendor; an empty array is rejected. A FASTEST chained quote is estimated on Across, so it needs ACROSS in the list.",
+            "x-internal": true
           }
         },
         "required": [
@@ -5867,6 +5885,21 @@
             "type": "number",
             "description": "The expected value lost versus frictionless execution at current prices, as a percent between -100 and 100. Negative values indicate price improvement. For bridges this is the relayer fee as a percent of the input, 1 - amountOut / amountIn, computed on raw amounts since the same asset with the same decimals is bridged on both chains."
           },
+          "provider": {
+            "$ref": "#/components/schemas/BridgeProvider",
+            "x-internal": true
+          },
+          "approvalSpender": {
+            "type": "string",
+            "description": "The contract the swapper must approve to spend the input token for this quote. Absent for native input. Differs by provider (the Across SpokePool or a Relay contract), so approve against this address rather than assuming one.",
+            "pattern": "^(0x)?[0-9a-fA-F]{40}$",
+            "x-internal": true
+          },
+          "transactionRequest": {
+            "$ref": "#/components/schemas/TransactionRequest",
+            "description": "The deposit transaction the provider built, present on Relay quotes. Send the quote unchanged to /swap, which returns this transaction with gas fields attached.",
+            "x-internal": true
+          },
           "quoteId": {
             "$ref": "#/components/schemas/quoteId"
           },
@@ -5936,6 +5969,15 @@
             "description": "The deadline by which, if the order is not filled, the order will be reverted."
           }
         }
+      },
+      "BridgeProvider": {
+        "type": "string",
+        "enum": [
+          "ACROSS",
+          "RELAY"
+        ],
+        "description": "The bridge vendor serving the route.",
+        "x-internal": true
       },
       "SafetyLevel": {
         "type": "string",
@@ -6351,6 +6393,15 @@
           },
           "tokenOutChainId": {
             "$ref": "#/components/schemas/ChainId"
+          },
+          "quote": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BridgeQuote"
+              }
+            ],
+            "description": "The `BRIDGE` quote from `/quote`, passed as `/swap` takes it. The approval then goes to the contract that quote's deposit pulls from (the Across SpokePool, or Relay's depository or approval proxy) instead of the inferred spender. A provider quote must be one this API issued, unaltered and unexpired, and the quote's ERC-20 input must be `token` on `chainId`.",
+            "x-internal": true
           }
         },
         "required": [
@@ -8769,6 +8820,11 @@
           },
           "slippage": {
             "$ref": "#/components/schemas/slippageTolerance"
+          },
+          "bridgeProvider": {
+            "$ref": "#/components/schemas/BridgeProvider",
+            "description": "The vendor that built a bridge step's deposit transaction. Absent for Across bridge steps and for non-bridge steps.",
+            "x-internal": true
           }
         },
         "required": [
@@ -8845,6 +8901,11 @@
             "type": "number",
             "description": "The expected value lost versus frictionless execution at current prices, as a percent between -100 and 100. Negative values indicate price improvement. The value for this step alone, computed according to the step's order type; the chained quote's top-level value compounds these."
           },
+          "bridgeProvider": {
+            "$ref": "#/components/schemas/BridgeProvider",
+            "description": "The vendor currently winning a bridge step, ACROSS included. Absent on FASTEST previews, which quote no bridge, and on non-bridge steps. Indicative: plan creation re-runs the bridge competition.",
+            "x-internal": true
+          },
           "stepType": {
             "$ref": "#/components/schemas/PlanStepType"
           },
@@ -8877,6 +8938,15 @@
             "x-internal": true,
             "type": "number",
             "description": "The expected value lost versus frictionless execution at current prices, as a percent between -100 and 100. Negative values indicate price improvement. For chained trades this compounds the per-step values multiplicatively as 1 - product of (1 - stepValue/100) over the value-moving steps. Absent if any of those steps is missing its value."
+          },
+          "bridgeProviders": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BridgeProvider"
+            },
+            "minItems": 1,
+            "description": "The quote request's bridge vendor allow-list. Echo it back with the quote to /plan so plan creation and later re-quotes keep it.",
+            "x-internal": true
           },
           "swapper": {
             "$ref": "#/components/schemas/senderWalletAddress"

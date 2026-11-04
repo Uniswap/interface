@@ -9,7 +9,11 @@ import {
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { useSessionStoragePersistedQuery } from 'utilities/src/reactQuery/useSessionStoragePersistedQuery'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
-import { AuthenticatorProvider, getProvider, getProviderLabel } from '~/components/Passkey/authenticatorProvider'
+import {
+  AuthenticatorProvider,
+  getProvider,
+  getProviderLabel,
+} from '~/features/wallet/components/Passkey/authenticatorProvider'
 export function getListAuthenticatorsStorageKey(walletId: string | null | undefined): string {
   return `listAuth:${walletId ?? ''}`
 }

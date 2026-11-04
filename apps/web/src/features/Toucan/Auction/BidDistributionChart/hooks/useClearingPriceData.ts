@@ -2,12 +2,12 @@ import { useQuery } from '@tanstack/react-query'
 import { GetClearingPriceHistoryRequest } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { useMemo } from 'react'
 import { auctionQueries } from 'uniswap/src/data/apiClients/dataApiService/auctions/auctionQueries'
+import { useBlockTimestamp } from '~/features/Toucan/Auction/hooks/useBlockTimestamp'
 import type { AuctionDetails, BidTokenInfo } from '~/features/Toucan/Auction/store/types'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
 import { getClearingPrice } from '~/features/Toucan/Auction/utils/clearingPrice'
 import { getAuctionTokenDecimals } from '~/features/Toucan/Auction/utils/tokenMetadata'
 import { normalizeClearingSeries } from '~/features/Toucan/ToucanChart/clearingPrice/utils/normalizeSeries'
-import { useBlockTimestamp } from '~/hooks/useBlockTimestamp'
 import { getPollingIntervalMs } from '~/utils/averageBlockTimeMs'
 
 /**

@@ -30,7 +30,7 @@ function checkbox(): HTMLElement {
   return screen.getByRole('checkbox')
 }
 
-describe('onCheckPressed receives the PRE-TOGGLE state (LabeledCheckbox.tsx:44)', () => {
+describe('onCheckPressed receives the PRE-TOGGLE state', () => {
   it('passes false while unchecked', () => {
     const onCheckPressed = vi.fn()
     render(<LabeledCheckboxCompat checked={false} testID="labeled" onCheckPressed={onCheckPressed} />)

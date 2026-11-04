@@ -3,8 +3,7 @@
  * `StyleProp<ViewStyle>` (or the wider `StyleProp<ViewStyle | CSSProperties |
  * ...>` union the held call sites actually carry) must be accepted by the
  * compat primitives without casts. The type pins compile in this package's
- * composite tsc program (this file imports no `ui/src`, so it needs no
- * `tsconfig.test.json` entry), so a re-narrowed `style` fails
+ * tsc program, so a re-narrowed `style` fails
  * `mycelium:typecheck`, not just vitest. Runtime legs pin the web flatten
  * (StyleSheet.flatten semantics) end-to-end through rendered FlexCompat
  * (the `mergeCompatStyle` path in `dom.tsx`) and TextCompat (the one leg

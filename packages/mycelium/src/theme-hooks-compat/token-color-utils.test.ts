@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { LIGHT_THEME_COLORS } from './theme-colors.generated'
+import { LIGHT_THEME_COLORS } from './theme-colors'
 import { getRelativeLuminance, isGrayColor, passesContrast, pickContrastPassingTokenColor } from './token-color-utils'
 
 describe('isGrayColor', () => {

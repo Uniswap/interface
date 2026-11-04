@@ -7,7 +7,7 @@ import { AuctionEventName } from 'uniswap/src/features/telemetry/constants'
 import { logger } from 'utilities/src/logger/logger'
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { useActiveAddress } from '~/features/accounts/store/hooks'
+import { useActiveAddress } from '~/connection/accounts/hooks'
 import { useBidTokenInfo } from '~/features/Toucan/Auction/hooks/useBidTokenInfo'
 import { useWithdrawButtonState } from '~/features/Toucan/Auction/hooks/useWithdrawButtonState'
 import { TokenDetailsClaimCard } from '~/pages/TokenDetails/components/claim/TokenDetailsClaimCard'
@@ -34,8 +34,8 @@ vi.mock('react-router', async (importOriginal) => ({
   ...(await importOriginal<typeof import('react-router')>()),
   useNavigate: () => mockNavigate,
 }))
-vi.mock('~/features/accounts/store/hooks', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('~/features/accounts/store/hooks')>()),
+vi.mock('~/connection/accounts/hooks', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('~/connection/accounts/hooks')>()),
   useActiveAddress: vi.fn(),
 }))
 vi.mock('uniswap/src/features/dataApi/launchProvenance', async (importOriginal) => ({

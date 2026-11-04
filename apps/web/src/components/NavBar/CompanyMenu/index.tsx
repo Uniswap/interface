@@ -1,11 +1,12 @@
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Flex, Text, type TextCompatProps } from '@universe/mycelium'
+import { ArrowChange } from '@universe/mycelium/icons/ArrowChange'
+import { Hamburger } from '@universe/mycelium/icons/Hamburger'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router'
 import { Popover } from 'ui/src'
-import { ArrowChange } from 'ui/src/components/icons/ArrowChange'
-import { Hamburger } from 'ui/src/components/icons/Hamburger'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { NavIcon } from '~/components/Logo/NavIcon'
@@ -23,7 +24,8 @@ export function CompanyMenu() {
   const media = useMedia()
   const isMobileDrawer = useIsMobileDrawer()
   const areTabsVisible = useTabsVisible()
-  const isLargeScreen = !media.xxl
+  const isNewUserUxEnabled = useFeatureFlag(FeatureFlags.NewUserUx)
+  const isWordmarkVisible = !media.xxl && !isNewUserUxEnabled
   const location = useLocation()
   const [isOpen, setIsOpen] = useState(false)
 
@@ -53,7 +55,7 @@ export function CompanyMenu() {
             <Link to="/?intro=true" onClick={(e) => e.stopPropagation()} style={{ textDecoration: 'none' }}>
               <Flex row alignItems="center" gap="$gap4" data-testid={TestID.NavUniswapLogo}>
                 <NavIcon />
-                {isLargeScreen && (
+                {isWordmarkVisible && (
                   <Text variant="subheading1" color="$accent1" userSelect="none">
                     Uniswap
                   </Text>
@@ -61,11 +63,12 @@ export function CompanyMenu() {
               </Flex>
             </Link>
           </Trace>
-          {!areTabsVisible && <Hamburger size={24} color="$neutral2" cursor="pointer" ml="16px" />}
-          {areTabsVisible && (
+          {areTabsVisible ? (
             <ArrowDownWrapper open={isOpen}>
               <ArrowChange size="$icon.12" />
             </ArrowDownWrapper>
+          ) : (
+            <Hamburger size={24} color="$neutral2" cursor="pointer" ml="16px" />
           )}
         </Flex>
       </Popover.Trigger>

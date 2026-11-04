@@ -1,5 +1,5 @@
-import { createFetchClient } from '@universe/api/src/clients/base/createFetchClient'
-import type { FetchClient, FetchClientContext } from '@universe/api/src/clients/base/types'
+import { createFetchClient } from '../base/createFetchClient'
+import type { FetchClient, FetchClientContext } from '../base/types'
 
 /**
  * Context for a Trading API `FetchClient`. The session deps (`getSession`,

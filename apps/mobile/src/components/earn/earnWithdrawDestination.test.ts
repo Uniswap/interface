@@ -24,7 +24,6 @@ describe(getMobileEarnWithdrawDestinationChainIds, () => {
     expect(chainIds).toContain(UniverseChainId.Base)
     expect(chainIds).toContain(UniverseChainId.Unichain)
     expect(chainIds).toContain(UniverseChainId.Zksync)
-    expect(chainIds).not.toContain(UniverseChainId.Blast)
   })
 
   it('includes Unichain for a Mainnet USDC vault', () => {

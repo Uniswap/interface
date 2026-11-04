@@ -1,4 +1,4 @@
-import { Flex, type TextProps as TamaTextProps, TextLoaderWrapper, useSporeColors } from '@universe/mycelium'
+import { Flex, type TextProps as TamaTextProps, TextLoaderWrapper, useSporeColors, fonts } from '@universe/mycelium'
 import type { SporeColor } from '@universe/mycelium/theme-hooks-compat'
 import React from 'react'
 import { StyleProp, StyleSheet, TextInput, TextInputProps, TextStyle, useWindowDimensions } from 'react-native'
@@ -8,7 +8,6 @@ import Animated, {
   useAnimatedProps,
   useAnimatedStyle,
 } from 'react-native-reanimated'
-import { fonts } from 'ui/src/theme'
 // base animated text component using a TextInput
 // forked from https://github.com/wcandillon/react-native-redash/blob/master/src/ReText.tsx
 // and modified to support the loading state
@@ -137,7 +136,7 @@ export const AnimatedText = ({ style, variant = 'body2', color = '$neutral1', ..
           color: resolvedColor,
           fontFamily: font.family,
           fontSize: font.fontSize,
-          fontWeight: 'fontWeight' in font ? font.fontWeight : undefined,
+          fontWeight: ('fontWeight' in font ? font.fontWeight : undefined) as TextStyle['fontWeight'],
           lineHeight: font.lineHeight,
         },
         style,

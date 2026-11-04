@@ -95,7 +95,7 @@ priority: medium
 severity: medium
 # provenance
 source: existing-e2e
-sourceNote: "Existing web Playwright e2e apps/web/src/pages/Portfolio/NFTs/Nfts.e2e.test.ts ('NFT Grid Display' block, NftsTab GraphQL intercept). A previous 'Test NFTs tab' testlioRef was removed — it is not among the blueprint's declared Testlio titles and could not be verified against the raw CSVs."
+sourceNote: "Existing web Playwright e2e apps/web/src/pages/Portfolio/NFTs/Nfts.e2e.test.ts ('NFT Grid Display' block, GetWalletNfts data API intercept). A previous 'Test NFTs tab' testlioRef was removed — it is not among the blueprint's declared Testlio titles and could not be verified against the raw CSVs."
 # scope
 chains:
   - ethereum
@@ -127,7 +127,7 @@ automationRefs:
 
 > **medium · e2e · scheduled · automated** · chains: ethereum
 
-**Given** the user is on `/portfolio/nfts` with an address (TW-NFT-01) whose NFTs are mocked via the `NftsTab` GraphQL intercept
+**Given** the user is on `/portfolio/nfts` with an address (TW-NFT-01) whose NFTs are mocked via the `GetWalletNfts` data API intercept
 **When** the NFTs tab loads
 **Then** NFT cards render with their names and collection names, and the header shows the correct NFT count
 

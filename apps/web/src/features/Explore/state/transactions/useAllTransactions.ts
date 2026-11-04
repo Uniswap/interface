@@ -9,7 +9,7 @@ import {
   type PoolTransaction,
   type PoolTransactionEventType,
 } from '~/data/transactions/poolTransaction'
-import { useInfiniteLoadMore } from '~/hooks/useInfiniteLoadMore'
+import { useInfiniteLoadMore } from '~/features/Explore/hooks/useInfiniteLoadMore'
 
 export enum TransactionType {
   SWAP = 'Swap',

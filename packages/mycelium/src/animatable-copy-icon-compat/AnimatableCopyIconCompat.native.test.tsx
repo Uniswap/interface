@@ -4,12 +4,13 @@
  * `Unicon.native.test.tsx` pattern). The export-parity suite only proves the
  * leg imports; this proves it mounts — in particular that
  * `resolveCopyIconColor` finds every `$`-token it is handed in the spore map
- * (a miss throws, which on device is a hard render crash).
+ * (a miss throws, which on device is a hard render crash). This config
+ * resolves `.web.*` first, so the `CopySheets` icon mounts through the web
+ * icon factory (a DOM `svg`); the native leg's own wiring is what's under test.
  */
 import { act, create, type ReactTestRenderer } from 'react-test-renderer'
 import { describe, expect, it, vi } from 'vitest'
 import { LIGHT_THEME_COLORS } from '../theme-hooks-compat/tokens'
-import { COPY_SHEETS_GLYPH } from './resolve'
 
 // The native leg imports react-native-svg, whose real CJS build requires
 // react-native's flow sources; the real module is exercised on device, not
@@ -34,20 +35,19 @@ async function renderNativeLeg(props: { textColor?: string; dataTestId?: string 
 describe('AnimatableCopyIconCompat (native) render', () => {
   it('mounts the CopySheets glyph with the default $neutral2 resolved through the spore map (no throw)', async () => {
     const renderer = await renderNativeLeg({ dataTestId: 'copy-icon' })
-    const svg = renderer.root.findByType('Svg.Svg' as never)
-    expect(svg.props['viewBox']).toBe(COPY_SHEETS_GLYPH.viewBox)
-    expect(svg.props['testID']).toBe('copy-icon')
-    const path = renderer.root.findByType('Svg.Path' as never)
-    expect(path.props['d']).toBe(COPY_SHEETS_GLYPH.path)
+    const svg = renderer.root.findByType('svg' as never)
+    expect(svg.props['viewBox']).toBe('0 0 24 24')
+    expect(svg.props['data-testid']).toBe('copy-icon')
+    expect(renderer.root.findByType('path' as never).props['fill']).toBe('currentColor')
     // A missing $neutral2 entry would have thrown above; pin the literal too.
-    expect(path.props['fill']).toBe(LIGHT_THEME_COLORS.neutral2)
+    expect(svg.props['style']).toMatchObject({ color: LIGHT_THEME_COLORS.neutral2 })
     act(() => renderer.unmount())
   })
 
   it('resolves an explicit $-token textColor to its theme literal', async () => {
     const renderer = await renderNativeLeg({ textColor: '$statusSuccess' })
-    const path = renderer.root.findByType('Svg.Path' as never)
-    expect(path.props['fill']).toBe(LIGHT_THEME_COLORS.statusSuccess)
+    const svg = renderer.root.findByType('svg' as never)
+    expect(svg.props['style']).toMatchObject({ color: LIGHT_THEME_COLORS.statusSuccess })
     act(() => renderer.unmount())
   })
 })

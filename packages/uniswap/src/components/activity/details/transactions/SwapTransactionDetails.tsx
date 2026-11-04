@@ -1,7 +1,6 @@
 import { TradeType } from '@uniswap/sdk-core'
-import { useSporeColors } from '@universe/mycelium'
+import { useSporeColors, iconSizes } from '@universe/mycelium'
 import { Arrow } from 'ui/src/components/arrow/Arrow'
-import { iconSizes } from 'ui/src/theme'
 import {
   TwoTokenDetails,
   useTokenAmountInfo,

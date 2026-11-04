@@ -44,7 +44,9 @@ test.describe('Extension-connected web swap', { tag: '@publish-gate' }, () => {
     // Preferred path: drive the real connect flow — navbar Connect -> "Uniswap Extension"
     // option (detected via the injected EIP-6963 provider).
     await webPage.getByTestId(TestID.NavConnectWalletButton).first().click()
-    const extensionOption = webPage.getByTestId(CONNECT_EXTENSION_OPTION_TESTID).first()
+    const extensionOption = webPage.locator(
+      `[data-testid="${CONNECT_EXTENSION_OPTION_TESTID}"]:not([data-testid-ignore] *):not([data-testid-ignore])`,
+    )
 
     const connectedStatus = webPage.getByTestId(TestID.Web3StatusConnected)
 

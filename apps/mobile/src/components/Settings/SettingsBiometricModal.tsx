@@ -1,5 +1,5 @@
 import { isAndroid, isIOS } from '@universe/environment'
-import { Flex, Text, TouchableArea } from '@universe/mycelium'
+import { Flex, Text, TouchableArea, Switch } from '@universe/mycelium'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, ListRenderItemInfo } from 'react-native'
@@ -21,7 +21,6 @@ import {
   setRequiredForTransactions,
 } from 'src/features/biometricsSettings/slice'
 import { openSettings } from 'src/utils/linking'
-import { Switch } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 

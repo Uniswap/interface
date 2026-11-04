@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
-import { SharedQueryClient } from '@universe/api/src/clients/base/SharedQueryClient'
-import { bootstrapSession } from '@universe/api/src/session/provideSession'
 import type { SessionInitializationService } from '@universe/sessions'
 import { SESSION_INIT_QUERY_KEY, sessionInitQuery } from '@universe/sessions'
 import { useState } from 'react'
 import type { Logger } from 'utilities/src/logger/logger'
+import { SharedQueryClient } from '../clients/base/SharedQueryClient'
+import { bootstrapSession } from '../session/provideSession'
 
 interface ApiInitProps {
   getSessionInitService: () => SessionInitializationService

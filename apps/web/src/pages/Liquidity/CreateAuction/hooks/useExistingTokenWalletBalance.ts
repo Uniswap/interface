@@ -4,7 +4,7 @@ import { useMemo } from 'react'
 import { useReadContract } from 'wagmi'
 import { erc20Abi } from '~/chains'
 import { assume0xAddress } from '~/chains'
-import { useActiveAddress } from '~/features/accounts/store/hooks'
+import { useActiveAddress } from '~/connection/accounts/hooks'
 
 interface UseExistingTokenWalletBalanceResult {
   balance: CurrencyAmount<Token> | undefined

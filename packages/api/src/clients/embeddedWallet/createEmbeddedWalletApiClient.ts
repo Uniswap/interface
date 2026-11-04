@@ -31,7 +31,7 @@ import type {
   Sign7702AuthorizationResult,
   Sign7702TransactionParams,
   SignAuth,
-} from '@universe/api/src/clients/embeddedWallet/createEmbeddedWalletApiClient.types'
+} from './createEmbeddedWalletApiClient.types'
 
 export type {
   Action,
@@ -70,7 +70,7 @@ export type {
   Sign7702AuthorizationResult,
   Sign7702TransactionParams,
   SignAuth,
-} from '@universe/api/src/clients/embeddedWallet/createEmbeddedWalletApiClient.types'
+} from './createEmbeddedWalletApiClient.types'
 
 export function createEmbeddedWalletApiClient({
   rpcClient,

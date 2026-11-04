@@ -79,6 +79,7 @@ import {
   markPoolsBalanceCoachmarkEligible,
   migrateDismissedTokenWarnings,
   migrateSearchHistory,
+  removeBlastChainData,
   removeThaiBahtFromFiatCurrency,
   removeUniswapWrapped2025BehaviorHistory,
   unchecksumDismissedTokenWarningKeys,
@@ -214,6 +215,7 @@ export const migrations = {
   101: removeTweaksSlice,
   102: removePersistedApolloCache,
   103: addPriceAlertsEnabledToPushNotifications,
+  104: removeBlastChainData,
 }
 
-export const MOBILE_STATE_VERSION = 103
+export const MOBILE_STATE_VERSION = 104

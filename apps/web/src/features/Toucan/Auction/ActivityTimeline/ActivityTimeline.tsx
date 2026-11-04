@@ -1,10 +1,10 @@
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
 import { HeightAnimator } from '@universe/mycelium/height-animator'
+import { AnglesMaximize } from '@universe/mycelium/icons/AnglesMaximize'
+import { AnglesMinimize } from '@universe/mycelium/icons/AnglesMinimize'
 import { styled } from '@universe/mycelium/styled'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AnglesMaximize } from 'ui/src/components/icons/AnglesMaximize'
-import { AnglesMinimize } from 'ui/src/components/icons/AnglesMinimize'
 import { useColorHexFromThemeKey } from 'ui/src/hooks/useColorHexFromThemeKey'
 import { FORMAT_DATE_TIME_SHORT, useLocalizedDayjs } from 'uniswap/src/features/language/localizedDayjs'
 import {

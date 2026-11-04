@@ -6,8 +6,8 @@ import { DEFAULT_NATIVE_ADDRESS, DEFAULT_NATIVE_ADDRESS_LEGACY } from 'uniswap/s
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { isRemotePriceServiceSupportedChain } from 'uniswap/src/features/prices/isRemotePriceServiceSupportedChain'
 import { NumberType } from 'utilities/src/format/types'
-import { checkIsNative } from '~/hooks/Tokens'
 import type { PriceCellValue } from '~/pages/Explore/tables/Tokens/tokenTableTypes'
+import { checkIsNative } from '~/utils/checkIsNative'
 
 export function LivePriceCell({
   token,

@@ -1,8 +1,7 @@
-import { Flex, AnimatedFlex, useIsShortMobileDevice, useSporeColors } from '@universe/mycelium'
+import { Button, Flex, AnimatedFlex, useIsShortMobileDevice, useSporeColors } from '@universe/mycelium'
 import { ThemedSpinnerCompat } from '@universe/mycelium/button-frame-compat'
 import { useEffect, useMemo, useRef } from 'react'
 import { useAnimatedStyle, useSharedValue, withSequence, withTiming } from 'react-native-reanimated'
-import { Button } from 'ui/src'
 import {
   getPlanProgressEstimates,
   NO_ANIMATION_INDEX,

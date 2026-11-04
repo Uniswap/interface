@@ -1,7 +1,7 @@
-import type { FetchClient } from '@universe/api/src/clients/base/types'
-import { createTradingApiFetchClient } from '@universe/api/src/clients/trading/createTradingApiFetchClient'
 import type { SessionService } from '@universe/sessions'
 import { afterEach, describe, expect, it, vi } from 'vitest'
+import type { FetchClient } from '../base/types'
+import { createTradingApiFetchClient } from './createTradingApiFetchClient'
 
 /**
  * On web the session is an HttpOnly cookie; the browser only attaches it to

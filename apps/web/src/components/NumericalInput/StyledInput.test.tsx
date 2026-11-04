@@ -1,5 +1,5 @@
 import { fireEvent } from '@testing-library/react'
-import { colorsLight } from 'ui/src/theme'
+import { colorsLight } from '@universe/mycelium/theme-palette'
 import { StyledInput } from '~/components/NumericalInput/NumericalInput'
 import { render, screen } from '~/test-utils/render'
 
@@ -67,11 +67,12 @@ describe('StyledInput (props wrapper over the rebuilt Input)', () => {
     render(<StyledInput data-testid="numeric-hover" hoverStyle={{ opacity: 0.5 }} />)
     const el = screen.getByTestId('numeric-hover') as HTMLInputElement
 
-    expect(el.style.opacity).toBe('')
+    // A hoverStyle opacity with no base opacity synthesizes a resting `opacity: 1`, as legacy Tamagui did.
+    expect(el.style.opacity).toBe('1')
     fireEvent.mouseEnter(el)
     expect(el.style.opacity).toBe('0.5')
     fireEvent.mouseLeave(el)
-    expect(el.style.opacity).toBe('')
+    expect(el.style.opacity).toBe('1')
   })
 
   it('applies the amountLayout typography, and lets a call-site prop beat it', () => {

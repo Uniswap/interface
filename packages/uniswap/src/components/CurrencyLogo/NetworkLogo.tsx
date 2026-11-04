@@ -1,11 +1,10 @@
 import { UniverseChainId } from '@universe/chains'
 import { isMobileWeb } from '@universe/environment'
-import { Flex, type FlexProps, useSporeColors } from '@universe/mycelium'
+import { Flex, type FlexProps, useSporeColors, Loader, iconSizes, zIndexes } from '@universe/mycelium'
 import { ALL_NETWORKS_LOGO } from '@universe/mycelium/assets'
 import React from 'react'
 import type { ImageSourcePropType } from 'react-native'
-import { Image, Loader } from 'ui/src'
-import { iconSizes, zIndexes } from 'ui/src/theme'
+import { Image } from 'ui/src'
 import { getBadgeBorderRadius, getBadgeOuterSize } from 'uniswap/src/components/CurrencyLogo/badgeSizeUtils'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 

@@ -3,7 +3,7 @@
  * Anvil launch configuration for the e2e fork (Node-side Playwright code).
  *
  * Fork blocks are pinned per chain (checked-in defaults in `fork-blocks.json`,
- * runtime overrides via `ANVIL_FORK_BLOCK` / `ANVIL_FORK_BLOCK_BASE`) so tests see
+ * runtime overrides via `ANVIL_FORK_BLOCK` / `ANVIL_FORK_BLOCK_BASE` / `ANVIL_FORK_BLOCK_BNB`) so tests see
  * deterministic chain state instead of rotting against the live tip, and so the CI
  * RPC cache (keyed on os+chain+block in .github/actions/playwright_matrix_test) hits
  * across runs. Re-pin periodically; keep the pin recent enough for the uni RPC
@@ -29,6 +29,7 @@ interface PinnedForkBlock {
 const PINNED_FORK_BLOCKS: Partial<Record<number, PinnedForkBlock>> = {
   1: { envVar: 'ANVIL_FORK_BLOCK', defaultBlock: forkBlockDefaults.mainnet },
   8453: { envVar: 'ANVIL_FORK_BLOCK_BASE', defaultBlock: forkBlockDefaults.base },
+  56: { envVar: 'ANVIL_FORK_BLOCK_BNB', defaultBlock: forkBlockDefaults.bnb },
 }
 
 interface ForkChainDefaults {
@@ -46,6 +47,9 @@ interface ForkChainDefaults {
 const FORK_CHAIN_DEFAULTS: Partial<Record<number, ForkChainDefaults>> = {
   1: { defaultForkUrl: 'https://ethereum-rpc.publicnode.com', forkUrlEnvVar: 'ANVIL_FORK_URL', defaultPort: 8545 },
   8453: { defaultForkUrl: 'https://base-rpc.publicnode.com', forkUrlEnvVar: 'ANVIL_FORK_URL_BASE', defaultPort: 8546 },
+  // PublicNode's free BSC tier rejects historical state, so a pinned BNB fork needs ANVIL_FORK_URL_BNB
+  // (CI) or ANVIL_FORK_VIA_UNIRPC=1 (local).
+  56: { defaultForkUrl: 'https://bsc-rpc.publicnode.com', forkUrlEnvVar: 'ANVIL_FORK_URL_BNB', defaultPort: 8547 },
 }
 
 /**
@@ -93,10 +97,13 @@ function resolvePinnedForkBlock(ctx: { chainId: number; env?: NodeJS.ProcessEnv 
   return Number.parseInt(override, 10)
 }
 
+const MAINNET_CHAIN_ID = 1
+
 /** Chain names for the committed `--load-state` fixture filenames (state/<name>-<block>.json). */
 const LOAD_STATE_CHAIN_NAMES: Partial<Record<number, string>> = {
   1: 'mainnet',
   8453: 'base',
+  56: 'bnb',
 }
 
 /**
@@ -108,7 +115,8 @@ const LOAD_STATE_CHAIN_NAMES: Partial<Record<number, string>> = {
  * meaningless at another, so re-pinning automatically stops matching the stale fixture
  * (returning undefined) instead of silently loading wrong-block state. Runtime funding
  * then simply does all the work again. `ANVIL_LOAD_STATE` overrides with an explicit
- * path; `ANVIL_LOAD_STATE=0` (or `none`) disables loading entirely.
+ * path; `ANVIL_LOAD_STATE=0` (or `none`) disables loading entirely. The override is
+ * mainnet-only: a single path can't be right for every fork in a multi-chain run.
  */
 function defaultStateDir(): string | undefined {
   // Playwright (CJS transpile) and bun both define __dirname; vitest's ESM transform
@@ -123,7 +131,7 @@ function resolveLoadStatePath(ctx: {
   /** Directory holding the committed fixtures. Default: `state/` next to this module. */
   stateDir?: string
 }): string | undefined {
-  const override = (ctx.env ?? process.env).ANVIL_LOAD_STATE?.trim()
+  const override = ctx.chainId === MAINNET_CHAIN_ID ? (ctx.env ?? process.env).ANVIL_LOAD_STATE?.trim() : undefined
   if (override === '0' || override?.toLowerCase() === 'none') {
     return undefined
   }

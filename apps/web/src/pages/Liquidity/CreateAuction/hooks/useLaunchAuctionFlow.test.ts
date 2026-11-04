@@ -11,12 +11,12 @@ import type { ValidatedTransactionRequest } from 'uniswap/src/features/transacti
 import type { EVMAccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
 import { logger } from 'utilities/src/logger/logger'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { POPUP_MEDIUM_DISMISS_MS } from '~/components/Popups/constants'
 import { LaunchProgressStep } from '~/pages/Liquidity/CreateAuction/components/LaunchAuctionProgressIndicator'
 import type { CreateAuctionSubmitResult } from '~/pages/Liquidity/CreateAuction/hooks/useCreateAuctionSubmit'
 import { useLaunchAuctionFlow } from '~/pages/Liquidity/CreateAuction/hooks/useLaunchAuctionFlow'
-import { popupRegistry } from '~/state/popups/registry'
-import { PopupType } from '~/state/popups/types'
+import { POPUP_MEDIUM_DISMISS_MS } from '~/utils/popups/constants'
+import { popupRegistry } from '~/utils/popups/registry'
+import { PopupType } from '~/utils/popups/types'
 
 const WALLET = '0xF570F45f598fD48AF83FABD692629a2caFe899ec'
 const AUCTION_ADDRESS = '0x1111111111111111111111111111111111111111'
@@ -34,7 +34,7 @@ let lastSubmit: SubmitArgs | undefined
 const mockSubmitLaunchTransactions = vi.fn((args: SubmitArgs) => {
   lastSubmit = args
 })
-vi.mock('~/hooks/useAuctionLaunch', () => ({
+vi.mock('~/pages/Liquidity/CreateAuction/hooks/useAuctionLaunch', () => ({
   useAuctionLaunch: () => mockSubmitLaunchTransactions,
 }))
 
@@ -49,7 +49,7 @@ vi.mock('react-i18next', async (importOriginal) => ({
   useTranslation: () => ({ t: (key: string) => key }),
 }))
 
-vi.mock('~/state/popups/registry', () => ({
+vi.mock('~/utils/popups/registry', () => ({
   popupRegistry: { addPopup: vi.fn() },
 }))
 

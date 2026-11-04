@@ -1,9 +1,8 @@
 import { isWebApp, isWebPlatform } from '@universe/environment'
-import { type ColorTokens, Flex, Tooltip as TooltipComponent } from '@universe/mycelium'
+import { type ColorTokens, Flex, Tooltip as TooltipComponent, type IconSizeTokens } from '@universe/mycelium'
+import type { GeneratedIcon } from '@universe/mycelium/icons'
+import { Settings } from '@universe/mycelium/icons/Settings'
 import { memo } from 'react'
-import type { GeneratedIcon } from 'ui/src'
-import { Settings } from 'ui/src/components/icons/Settings'
-import { type IconSizeTokens } from 'ui/src/theme'
 import { TransactionSettingsModalId } from 'uniswap/src/features/transactions/components/settings/stores/TransactionSettingsModalStore/createTransactionSettingsModalStore'
 import { useModalVisibility } from 'uniswap/src/features/transactions/components/settings/stores/TransactionSettingsModalStore/useTransactionSettingsModalStore'
 

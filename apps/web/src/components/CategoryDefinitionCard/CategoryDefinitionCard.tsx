@@ -10,19 +10,22 @@ import {
   TouchableTextLink,
   type TouchableTextLinkProps,
 } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { getCategoryPileLogos } from 'uniswap/src/features/tokenCategories/getCategoryPileLogos'
 import { TokenLogoPile } from 'uniswap/src/features/tokenCategories/TokenLogoPile'
-import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
+import type { Category } from 'uniswap/src/features/tokenCategories/types'
+import { NumberType } from 'utilities/src/format/types'
 
 /** `popover`: the left-aligned desktop hover card. `sheet`: the centered mobile web bottom-sheet body. */
 export type CategoryDefinitionCardLayout = 'popover' | 'sheet'
 
 export interface CategoryDefinitionCardProps {
-  category: TokenCategory
+  category: Category
   layout: CategoryDefinitionCardLayout
   onPress: () => void
   testID?: string
@@ -85,6 +88,7 @@ export const CategoryDefinitionCard = memo(function CategoryDefinitionCard({
   testID,
 }: CategoryDefinitionCardProps): JSX.Element {
   const { t } = useTranslation()
+  const { convertFiatAmountFormatted } = useLocalizationContext()
   const style = LAYOUT_STYLES[layout]
   const centered = style.alignItems === 'center'
   const pileLogos = getCategoryPileLogos(category)
@@ -103,13 +107,22 @@ export const CategoryDefinitionCard = memo(function CategoryDefinitionCard({
           <Text color="$neutral1" variant={style.nameVariant}>
             {category.name}
           </Text>
-          {category.stats !== undefined && (
-            <RelativeChange
-              arrowSize={style.arrowSize}
-              change={category.stats.priceChange24hPct}
-              variant={style.changeVariant}
-            />
-          )}
+          {category.kind === 'pool'
+            ? category.stats !== undefined && (
+                // Figma: pools lead with 1D volume where tokens show the 24h price change.
+                <Text color="$neutral2" variant={style.changeVariant} testID={TestID.CategoryDefinitionVolume}>
+                  {t('explore.collections.volume1d', {
+                    volume: convertFiatAmountFormatted(category.stats.volume1d, NumberType.FiatTokenStats),
+                  })}
+                </Text>
+              )
+            : category.stats !== undefined && (
+                <RelativeChange
+                  arrowSize={style.arrowSize}
+                  change={category.stats.priceChange24hPct}
+                  variant={style.changeVariant}
+                />
+              )}
         </Flex>
         <Flex alignItems={style.alignItems} gap={style.descriptionGap} width="100%">
           <Text color="$neutral2" textAlign={centered ? 'center' : undefined} variant={style.descriptionVariant}>

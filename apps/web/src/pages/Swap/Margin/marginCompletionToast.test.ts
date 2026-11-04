@@ -9,7 +9,7 @@ import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { shortenAddress } from 'utilities/src/addresses'
 import { describe, expect, it } from 'vitest'
 import type { MarginMarket } from '~/constants/margin'
-import type { MarginMarketResolver } from '~/pages/Swap/Margin/hooks/useResolveMarginMarket'
+import type { MarginMarketResolver } from '~/features/margin/hooks/useResolveMarginMarket'
 import { buildCompletionToastMessage, findOpenedLeverageForPlan } from '~/pages/Swap/Margin/marginCompletionToast'
 
 // Passthrough stub — asserts on the i18n key (and its interpolations) rather than translated copy,
@@ -100,17 +100,26 @@ describe('buildCompletionToastMessage', () => {
     expect(build({ plan: makePlan(), action: 'leverage' })).toBe('margin.toast.leverageUpdated')
   })
 
-  it('reports the advanced modal as a position adjustment', () => {
-    expect(build({ plan: makePlan(), action: 'adjust' })).toBe('margin.toast.positionAdjusted')
+  // A plan resumed after a reload has no originating action on the store; the plan's own action names it.
+  it.each([
+    ['addEquity', 'margin.toast.marginAdded'],
+    ['withdrawEquity', 'margin.toast.marginWithdrawn'],
+    ['increaseLeverage', 'margin.toast.leverageUpdated'],
+    ['decreaseLeverage', 'margin.toast.leverageUpdated'],
+  ] as const)('names a resumed %s plan from the plan alone', (planAction, expected) => {
+    expect(build({ plan: makePlan({ action: planAction }) })).toBe(expected)
   })
 
-  // A plan resumed after a reload has no originating action on the store.
+  it("prefers the plan's action over a disagreeing store action", () => {
+    expect(build({ plan: makePlan({ action: 'withdrawEquity' }), action: 'add' })).toBe('margin.toast.marginWithdrawn')
+  })
+
   it('falls back to the generic adjustment sentence with no action', () => {
     expect(build({ plan: makePlan() })).toBe('margin.toast.positionAdjusted')
   })
 
   it('never reports an ADJUST run with the modal title', () => {
-    for (const action of ['add', 'withdraw', 'leverage', 'adjust', undefined] as const) {
+    for (const action of ['add', 'withdraw', 'leverage', undefined] as const) {
       expect(build({ plan: makePlan(), action })).not.toBe('margin.plan.title.adjust')
     }
   })

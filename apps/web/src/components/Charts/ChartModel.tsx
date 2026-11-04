@@ -53,6 +53,7 @@ export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType e
   v2HoverStyles = false,
   overrideColor,
   disableScrubbing = false,
+  animateHeight = true,
 }: {
   Model: new (chartDiv: HTMLDivElement, params: TParamType & ChartUtilParams<TDataType>) => ChartModel<TDataType>
   TooltipBody?: ChartTooltipBodyComponent<TDataType>
@@ -67,6 +68,7 @@ export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType e
   v2HoverStyles?: boolean
   overrideColor?: string // Optional token color override for accent1
   disableScrubbing?: boolean // When true, the live dot stays pinned at the last point even on hover
+  animateHeight?: boolean
 }) {
   const setRefitChartContent = useUpdateAtom(refitChartContentAtom)
   // Lightweight-charts injects a canvas into the page through the div referenced below
@@ -204,7 +206,7 @@ export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType e
       width="100%"
       position="relative"
       // scoped to height (the one prop that changes here): `transition: all` would animate theme-token colors on light/dark toggle
-      transition={`height ${SPORE_ANIMATION_CURVE_CSS.fast}`}
+      transition={animateHeight ? `height ${SPORE_ANIMATION_CURVE_CSS.fast}` : undefined}
       height={height}
       className={className}
       onTouchMove={touchMoveHandler as any} // any is used to avoid needing to import GestureResponderEvent from react-native

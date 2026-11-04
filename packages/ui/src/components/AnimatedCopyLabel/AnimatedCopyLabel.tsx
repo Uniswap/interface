@@ -2,10 +2,10 @@ import type { ColorTokens } from '@universe/mycelium'
 import { Flex } from '@universe/mycelium'
 import { Text } from '@universe/mycelium'
 import { TransitionItem } from '@universe/mycelium/animate-presence-pager'
+import { CheckmarkCircle } from '@universe/mycelium/icons/CheckmarkCircle'
+import { CopySheets } from '@universe/mycelium/icons/CopySheets'
+import { iconSizes } from '@universe/mycelium/tokens'
 import { ReactNode } from 'react'
-import { CheckmarkCircle } from 'ui/src/components/icons/CheckmarkCircle'
-import { CopySheets } from 'ui/src/components/icons/CopySheets'
-import { iconSizes } from 'ui/src/theme'
 
 interface AnimatedCopyLabelProps {
   isCopied: boolean

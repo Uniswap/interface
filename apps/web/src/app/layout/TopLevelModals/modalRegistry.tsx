@@ -10,7 +10,7 @@ import { createLazy, createLazyNoReload } from '~/utils/lazyWithRetry'
 const AddressClaimModal = createLazy(() => import('~/features/claim/AddressClaimModal'))
 const ConnectedAccountBlocked = createLazy(() => import('~/components/ConnectedAccountBlocked'))
 const PendingWalletConnectionModal = createLazyNoReload(
-  () => import('~/components/WalletModal/PendingWalletConnectionModal/PendingWalletConnectionModal'),
+  () => import('~/features/wallet/components/WalletModal/PendingWalletConnectionModal/PendingWalletConnectionModal'),
 )
 const UniwalletModal = createLazyNoReload(() => import('~/components/AccountDrawer/UniwalletModal'))
 const OffchainActivityModal = createLazyNoReload(() => import('~/components/modals/OffchainActivityModal'))
@@ -24,7 +24,7 @@ const TestnetModeModal = createLazy(() =>
   import('uniswap/src/features/testnets/TestnetModeModal').then((module) => ({ default: module.TestnetModeModal })),
 )
 const GetTheAppModal = createLazyNoReload(() =>
-  import('~/components/NavBar/DownloadApp/Modal').then((module) => ({ default: module.GetTheAppModal })),
+  import('~/features/wallet/components/GetTheAppModal').then((module) => ({ default: module.GetTheAppModal })),
 )
 const PrivacyPolicyModal = createLazy(() =>
   import('~/components/PrivacyPolicy').then((module) => ({ default: module.PrivacyPolicyModal })),
@@ -49,7 +49,7 @@ const ClaimFeeModal = createLazy(() =>
   import('~/features/Liquidity/ClaimFeeModal').then((module) => ({ default: module.ClaimFeeModal })),
 )
 const DelegationMismatchModal = createLazy(() =>
-  import('~/components/delegation/DelegationMismatchModal').then((module) => ({
+  import('~/features/wallet/components/delegation/DelegationMismatchModal').then((module) => ({
     default: module.default,
   })),
 )
@@ -94,40 +94,52 @@ const DataApiOutageModal = createLazy(() =>
 )
 
 const AddBackupLoginModal = createLazy(() =>
-  import('~/components/Passkey/AddBackupLoginModal').then((module) => ({ default: module.AddBackupLoginModal })),
+  import('~/features/wallet/components/Passkey/AddBackupLoginModal').then((module) => ({
+    default: module.AddBackupLoginModal,
+  })),
 )
 
 const ReconnectBackupLoginModal = createLazy(() =>
-  import('~/components/Passkey/ReconnectBackupLoginModal').then((module) => ({
+  import('~/features/wallet/components/Passkey/ReconnectBackupLoginModal').then((module) => ({
     default: module.ReconnectBackupLoginModal,
   })),
 )
 
 const AddPasskeyModal = createLazy(() =>
-  import('~/components/Passkey/AddPasskeyModal').then((module) => ({ default: module.AddPasskeyModal })),
+  import('~/features/wallet/components/Passkey/AddPasskeyModal').then((module) => ({
+    default: module.AddPasskeyModal,
+  })),
 )
 const RecoverWalletModal = createLazy(() =>
-  import('~/components/Passkey/RecoverWalletModal').then((module) => ({ default: module.RecoverWalletModal })),
+  import('~/features/wallet/components/Passkey/RecoverWalletModal').then((module) => ({
+    default: module.RecoverWalletModal,
+  })),
 )
 
 const RemovePasskeyModal = createLazy(() =>
-  import('~/components/Passkey/RemovePasskeyModal').then((module) => ({ default: module.RemovePasskeyModal })),
+  import('~/features/wallet/components/Passkey/RemovePasskeyModal').then((module) => ({
+    default: module.RemovePasskeyModal,
+  })),
 )
 
 const RemoveBackupLoginModal = createLazy(() =>
-  import('~/components/Passkey/RemoveBackupLoginModal').then((module) => ({
+  import('~/features/wallet/components/Passkey/RemoveBackupLoginModal').then((module) => ({
     default: module.RemoveBackupLoginModal,
   })),
 )
 
 const UnitagRateLimitSpeedbumpModal = createLazy(() =>
-  import('~/components/UnitagRateLimitSpeedbump/UnitagRateLimitSpeedbumpModal').then((module) => ({
+  import('~/features/wallet/components/UnitagRateLimitSpeedbump/UnitagRateLimitSpeedbumpModal').then((module) => ({
     default: module.UnitagRateLimitSpeedbumpModal,
   })),
 )
 
+const AddFundsModal = createLazy(() =>
+  import('~/components/AddFundsModal/AddFundsModal').then((module) => ({ default: module.AddFundsModal })),
+)
+
 const UnsupportedBrowserModal = createLazy(() =>
-  import('~/components/Passkey/UnsupportedBrowserModal').then((module) => ({
+  import('~/features/wallet/components/Passkey/UnsupportedBrowserModal').then((module) => ({
     default: module.UnsupportedBrowserModal,
   })),
 )
@@ -294,6 +306,10 @@ export const modalRegistry: ModalRegistry = {
   [ModalName.UnsupportedBrowser]: {
     component: UnsupportedBrowserModal,
     shouldMount: (state) => state.application.openModal?.name === ModalName.UnsupportedBrowser,
+  },
+  [ModalName.AddFunds]: {
+    component: AddFundsModal,
+    shouldMount: (state) => state.application.openModal?.name === ModalName.AddFunds,
   },
 } as const
 

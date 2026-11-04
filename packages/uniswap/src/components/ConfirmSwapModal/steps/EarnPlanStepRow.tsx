@@ -1,9 +1,9 @@
 import { TradingApi } from '@universe/api'
 import { Flex } from '@universe/mycelium'
+import { ArrowDownToLine } from '@universe/mycelium/icons/ArrowDownToLine'
+import { ArrowUpToLine } from '@universe/mycelium/icons/ArrowUpToLine'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ArrowDownToLine } from 'ui/src/components/icons/ArrowDownToLine'
-import { ArrowUpToLine } from 'ui/src/components/icons/ArrowUpToLine'
 import {
   getEarnPlanStepTitle,
   isEarnPlanStepType,

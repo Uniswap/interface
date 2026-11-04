@@ -155,7 +155,7 @@ export interface PopoverFrameStyleProps {
 }
 
 /**
- * The eleven desktop-first media keys (`ui/src/theme/media.ts`) accepted as
+ * The eleven desktop-first media keys (`BREAKPOINT_PX` / `HEIGHT_BREAKPOINT_PX`) accepted as
  * style-override props, least-strong first — later keys win where both match,
  * like the legacy Tamagui media precedence.
  */

@@ -5,17 +5,17 @@ import { DAI } from 'uniswap/src/constants/tokens'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UserRejectedRequestError as ViemUserRejectedRequestError } from 'viem'
 import { vi } from 'vitest'
+import { useAccount } from '~/connection/hooks/useAccount'
+import { useEthersWeb3Provider } from '~/connection/hooks/useEthersProvider'
+import { useSelectChain } from '~/connection/hooks/useSelectChain'
 import { useSendCallback } from '~/features/Swap/hooks/useSendCallback'
-import { useAccount } from '~/hooks/useAccount'
-import { useEthersWeb3Provider } from '~/hooks/useEthersProvider'
-import { useSelectChain } from '~/hooks/useSelectChain'
 import { tryParseCurrencyAmount } from '~/lib/utils/tryParseCurrencyAmount'
 import { renderHook } from '~/test-utils/render'
 import { UserRejectedRequestError } from '~/utils/errors'
 
-vi.mock('~/hooks/useAccount')
-vi.mock('~/hooks/useEthersProvider')
-vi.mock('~/hooks/useSelectChain')
+vi.mock('~/connection/hooks/useAccount')
+vi.mock('~/connection/hooks/useEthersProvider')
+vi.mock('~/connection/hooks/useSelectChain')
 vi.mock('uniswap/src/features/chains/hooks/useSupportedChainId')
 
 vi.mock('~/state/transactions/hooks', async (importOriginal) => {

@@ -2,13 +2,13 @@ import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { TradingApi } from '@universe/api'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Button, Flex, type FlexCompatProps, Separator, Text, TouchableArea } from '@universe/mycelium'
+import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFilled'
+import { ArrowDown } from '@universe/mycelium/icons/ArrowDown'
+import { X } from '@universe/mycelium/icons/X'
 import { atom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { type ComponentProps, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
-import { ArrowDown } from 'ui/src/components/icons/ArrowDown'
-import { X } from 'ui/src/components/icons/X'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import {
   FORMAT_DATE_TIME_SHORT,
@@ -49,8 +49,8 @@ import {
   OrderAlertContainer,
   showCancelPreCheckRefusalPopup,
 } from '~/components/modals/OffchainActivityCancelFlow'
-import { useCurrency } from '~/hooks/Tokens'
-import { useSelectChain } from '~/hooks/useSelectChain'
+import { useSelectChain } from '~/connection/hooks/useSelectChain'
+import { useCurrency } from '~/hooks/currency/useCurrency'
 import store from '~/state'
 import { useAppDispatch } from '~/state/hooks'
 import { useRevertCancellationCallback } from '~/state/sagas/transactions/revertCancellationSaga'

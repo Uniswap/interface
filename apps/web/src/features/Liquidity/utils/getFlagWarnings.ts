@@ -1,7 +1,7 @@
-import { GeneratedIcon } from 'ui/src'
-import { CoinConvert } from 'ui/src/components/icons/CoinConvert'
-import { Flag } from 'ui/src/components/icons/Flag'
-import { Pools } from 'ui/src/components/icons/Pools'
+import type { GeneratedIcon } from '@universe/mycelium/icons'
+import { CoinConvert } from '@universe/mycelium/icons/CoinConvert'
+import { Flag } from '@universe/mycelium/icons/Flag'
+import { Pools } from '@universe/mycelium/icons/Pools'
 import { AppTFunction } from 'utilities/src/i18n/types'
 
 export enum HookFlag {

@@ -29,7 +29,7 @@ vi.mock('uniswap/src/components/modals/Modal', () => ({
   Modal: ({ children }: { children: ReactNode }) => children,
 }))
 
-vi.mock('~/hooks/useAccount', () => ({ useAccount: () => ({ address: SWAPPER }) }))
+vi.mock('~/connection/hooks/useAccount', () => ({ useAccount: () => ({ address: SWAPPER }) }))
 
 vi.mock('~/pages/Swap/Margin/hooks/useExecuteMarginPlan', () => ({
   useExecuteMarginPlan: () => ({ executePlan: mockExecutePlan }),
@@ -37,8 +37,8 @@ vi.mock('~/pages/Swap/Margin/hooks/useExecuteMarginPlan', () => ({
 
 vi.mock('~/pages/Swap/Margin/hooks/useIsPlanInFlight', () => ({ useIsPlanInFlight: mockUseIsPlanInFlight }))
 
-vi.mock('~/pages/Swap/Margin/hooks/useMarginCurrencyInfos', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('~/pages/Swap/Margin/hooks/useMarginCurrencyInfos')>()),
+vi.mock('~/features/margin/hooks/useMarginCurrencyInfos', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('~/features/margin/hooks/useMarginCurrencyInfos')>()),
   useMarginCurrencyInfos: () => new Map(),
 }))
 
@@ -51,7 +51,7 @@ const registry = vi.hoisted(() => ({
   markPriceX18: undefined as string | undefined,
 }))
 
-vi.mock('~/pages/Swap/Margin/hooks/useMarginMarkets', () => ({
+vi.mock('~/features/margin/hooks/useMarginMarkets', () => ({
   // getLive backs the review sheet's price-impact and liquidation-distance figures; no live row means
   // no mark, so both hide and the pin assertions below are unaffected. `dataUpdatedAt` drives the
   // freshness bound — `registry.marketsUpdatedAt` lets a test age the poll out.

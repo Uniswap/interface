@@ -8,7 +8,7 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { CurrencySearch } from '~/components/SearchModal/CurrencySearch'
-import { SwitchNetworkAction } from '~/state/popups/types'
+import { SwitchNetworkAction } from '~/utils/popups/types'
 
 interface CurrencySearchModalProps {
   isOpen: boolean

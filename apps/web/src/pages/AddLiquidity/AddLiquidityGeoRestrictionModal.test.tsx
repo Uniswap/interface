@@ -22,7 +22,7 @@ vi.mock('uniswap/src/components/modals/Modal', () => ({
 const TOKEN0 = { symbol: 'TSLA' }
 const TOKEN1 = { symbol: 'TSLAon' }
 
-const TOKEN_TITLE = 'TSLA isn’t available for liquidity provision in your region'
+const TOKEN_TITLE = 'TSLA is unavailable in your region'
 
 function mockGeoRestriction(overrides: Partial<ReturnType<typeof useLPGeoRestriction>>): void {
   mocked(useLPGeoRestriction).mockReturnValue({
@@ -62,9 +62,7 @@ describe('AddLiquidityGeoRestrictionModal', () => {
 
     expect(screen.getByText(TOKEN_TITLE)).toBeInTheDocument()
     expect(
-      screen.getByText(
-        'Providing liquidity with this token isn’t available to persons located in your region. Bypassing this restriction is prohibited.',
-      ),
+      screen.getByText('Providing liquidity with this token isn’t available to persons located in your region.'),
     ).toBeInTheDocument()
   })
 
@@ -80,7 +78,7 @@ describe('AddLiquidityGeoRestrictionModal', () => {
     mockGeoRestriction({ isGeoRestricted: true, restrictedTokenSymbol: undefined })
     render(<AddLiquidityGeoRestrictionModal />)
 
-    expect(screen.getByText('This token isn’t available for liquidity provision in your region')).toBeInTheDocument()
+    expect(screen.getByText('This token is unavailable in your region')).toBeInTheDocument()
   })
 
   // The hook fails open while the check is in flight, so the restriction can land after mount.

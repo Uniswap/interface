@@ -98,12 +98,12 @@ export enum DynamicConfigs {
   LiquidityGasPreEstimation = 'liquidity_gas_pre_estimation',
   LPConfig = 'lp_config',
   LpIncentivesChainIds = 'lp_incentives_chain_ids',
+  Margin = 'margin_config',
   RWAIssuerLogos = 'rwa_issuer_logos',
   SynchronizedHeartbeats = 'synchronized_heartbeats',
   UniswapBuiltHookAddresses = 'uniswap_built_hook_addresses',
   VerifiedAuctions = 'verified_auctions',
   AuctionFdvWarning = 'auction_fdv_warning',
-  AuctionOverrides = 'auction_overrides',
 }
 
 // Config values go here for easy access
@@ -280,12 +280,12 @@ export enum LpIncentivesChainIdsConfigKey {
   ChainIds = 'chainIds',
 }
 
-export enum VerifiedAuctionsConfigKey {
-  VerifiedAuctionIds = 'verifiedAuctionIds',
+export enum MarginConfigKey {
+  SupportedChainIds = 'supportedChainIds',
 }
 
-export enum AuctionOverridesConfigKey {
-  LpPercentCommitted = 'lpPercentCommitted',
+export enum VerifiedAuctionsConfigKey {
+  VerifiedAuctionIds = 'verifiedAuctionIds',
 }
 
 export enum AuctionFdvWarningConfigKey {
@@ -351,7 +351,6 @@ export type DynamicConfigKeys = {
   // Web
   [DynamicConfigs.AllowedV4WethHookAddresses]: AllowedV4WethHookAddressesConfigKey
   [DynamicConfigs.AuctionFdvWarning]: AuctionFdvWarningConfigKey
-  [DynamicConfigs.AuctionOverrides]: AuctionOverridesConfigKey
   [DynamicConfigs.AstroChain]: AstroChainConfigKey
   [DynamicConfigs.EmbeddedWalletBetaPassphrases]: EmbeddedWalletBetaPassphrasesKey
   [DynamicConfigs.ExternallyConnectableExtension]: ExternallyConnectableExtensionConfigKey
@@ -360,6 +359,7 @@ export type DynamicConfigKeys = {
   [DynamicConfigs.LiquidityGasPreEstimation]: LiquidityGasPreEstimationConfigKey
   [DynamicConfigs.LPConfig]: LPConfigKey
   [DynamicConfigs.LpIncentivesChainIds]: LpIncentivesChainIdsConfigKey
+  [DynamicConfigs.Margin]: MarginConfigKey
   [DynamicConfigs.RWAIssuerLogos]: RWAIssuerLogosConfigKey
   [DynamicConfigs.SynchronizedHeartbeats]: SynchronizedHeartbeatsConfigKey
   [DynamicConfigs.UniswapBuiltHookAddresses]: UniswapBuiltHookAddressesConfigKey
@@ -374,7 +374,3 @@ export type RWAIssuerLogo = {
 }
 
 export type RWAIssuerLogosMap = Record<string, RWAIssuerLogo>
-
-// This type must match the format in the statsig dynamic config auction_overrides, under its lpPercentCommitted key:
-// auction id ("{chainId}_{checksummed auction contract address}") to percent, e.g. 34.6 => "34.6%".
-export type AuctionLpPercentOverridesMap = Record<string, number>

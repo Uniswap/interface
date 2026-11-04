@@ -1,13 +1,13 @@
 import { UniverseChainId } from '@universe/chains'
-import { Flex, Text, TouchableArea } from '@universe/mycelium'
+import { Flex, Text, TouchableArea, iconSizes } from '@universe/mycelium'
+import { CheckCircleFilled } from '@universe/mycelium/icons/CheckCircleFilled'
+import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
 import { useTranslation } from 'react-i18next'
 import { saveDappChain } from 'src/app/features/dapp/actions'
 import { useDappContext } from 'src/app/features/dapp/DappContext'
 import { useDappLastChainId } from 'src/app/features/dapp/hooks'
 import { Popover } from 'ui/src'
-import { CheckCircleFilled, RotatableChevron } from 'ui/src/components/icons'
 import { usePreventOverflowBelowFold } from 'ui/src/hooks/usePreventOverflowBelowFold'
-import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
@@ -85,7 +85,7 @@ export function SwitchNetworksModal({ onPress }: SwitchNetworksModalProps): JSX.
                   </Flex>
                   {activeChain === chain ? (
                     <Flex row>
-                      <CheckCircleFilled color="$accent3" size="$icon.20" />
+                      <CheckCircleFilled color="$neutral1" size="$icon.20" />
                     </Flex>
                   ) : null}
                 </Flex>

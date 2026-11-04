@@ -5,7 +5,6 @@ import { UTCTimestamp } from 'lightweight-charts'
 import { useMemo } from 'react'
 import { appendLiveSpotPriceEntry } from 'uniswap/src/components/charts/utils'
 import { getGetTokenHistoryTVLQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/tokens/queries'
-import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useTokenMarketStats } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { toRestHistoryDuration } from 'uniswap/src/features/dataApi/tokenDetails/useTokenPriceHistoryRest'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
@@ -44,18 +43,16 @@ export function useTDPTVLChartData({
   const restIsError = tvlQuery.isError
 
   // REST history buckets lag "now" by their bucket granularity; append the live TVL stat (same
-  // source StatsSection uses) so freshness matches the GraphQL path below, which does the same
-  // with `totalValueLocked`. Derived from `variables` (the same chain/address the REST history
+  // source StatsSection uses) so the curve ends at the current value. Derived from `variables` (the same chain/address the REST history
   // target uses, mirroring useTokenPriceChartPanel's spotCurrencyId) rather than a separate
   // `currency` prop, so the live point can never disagree with the curve on a multichain token
   // whose selected chain differs from the path token's chain.
-  const chainId = useMemo(() => fromGraphQLChain(variables.chain), [variables.chain])
   const currencyIdValue = useMemo(() => {
     if (!variables.address) {
       return undefined
     }
-    return chainId ? buildCurrencyId(chainId, variables.address) : undefined
-  }, [chainId, variables.address])
+    return buildCurrencyId(variables.chainId, variables.address)
+  }, [variables.chainId, variables.address])
   const { tvl: currentTvlV2 } = useTokenMarketStats(currencyIdValue, {
     isMultichainAggregateView: variables.multichain,
   })

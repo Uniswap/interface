@@ -1,5 +1,6 @@
 {
-  "$comment": "Pinned anvil fork blocks per chain. Re-pin periodically; keep recent enough for the uni RPC gateway's archival depth. Runtime overrides: ANVIL_FORK_BLOCK (mainnet) / ANVIL_FORK_BLOCK_BASE (base). Read by anvil-args.ts, scripts/start-anvil.sh, and the CI RPC cache key in .github/actions/playwright_matrix_test.",
-  "mainnet": 25935000,
-  "base": 48510000
+  "$comment": "Pinned anvil fork blocks per chain. Re-pin periodically; keep recent enough for the uni RPC gateway's archival depth. Runtime overrides: ANVIL_FORK_BLOCK (mainnet) / ANVIL_FORK_BLOCK_BASE (base) / ANVIL_FORK_BLOCK_BNB (bnb). Read by anvil-args.ts, scripts/start-anvil.sh, and the CI RPC cache key in .github/actions/playwright_matrix_test.",
+  "mainnet": 26224000,
+  "base": 52798000,
+  "bnb": 129208000
 }

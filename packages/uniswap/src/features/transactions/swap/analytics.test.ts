@@ -1,10 +1,17 @@
+import { TradeType } from '@uniswap/sdk-core'
 import { SharedQueryClient, TradingApi, V1_TRADING_API_PATHS, type CheckPermissionsResponse } from '@universe/api'
+import { USDC, WBTC } from 'uniswap/src/constants/tokens'
 import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { getRouteAnalyticsData } from 'uniswap/src/features/transactions/swap/analytics'
+import {
+  getBaseTradeAnalyticsProperties,
+  getRouteAnalyticsData,
+} from 'uniswap/src/features/transactions/swap/analytics'
 import { logSwapQuoteFetch } from 'uniswap/src/features/transactions/swap/logSwapQuoteFetch'
-import { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { createBridgeTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { NATIVE_ADDRESS_FOR_TRADING_API } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
+import { createMockCurrencyAmount, createMockTradeWithStatus } from 'uniswap/src/test/fixtures/transactions/swap'
+import { mockLocalizationContext } from 'uniswap/src/test/mocks/locale'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
 vi.mock('uniswap/src/features/telemetry/send', () => ({
@@ -246,6 +253,62 @@ describe('analytics', () => {
         uniswapXUsed: false,
         jupiterUsed: false,
       })
+    })
+  })
+
+  describe(getBaseTradeAnalyticsProperties, () => {
+    const formatter = mockLocalizationContext({}).useLocalizationContext()
+
+    function bridgeTrade(provider: TradingApi.BridgeProvider | undefined): Trade {
+      const trade = createBridgeTrade({
+        quote: {
+          quote: {
+            input: { amount: '1000', maximumAmount: '1000' },
+            output: { amount: '990', minimumAmount: '990' },
+            provider,
+          },
+          requestId: '123',
+          routing: TradingApi.Routing.BRIDGE,
+          permitData: null,
+        },
+        currencyIn: USDC,
+        currencyOut: WBTC,
+        tradeType: TradeType.EXACT_INPUT,
+      })
+      if (!trade) {
+        throw new Error('Expected test bridge trade to be created')
+      }
+      return trade
+    }
+
+    const classicTrade = createMockTradeWithStatus(
+      createMockCurrencyAmount(USDC, '1000'),
+      createMockCurrencyAmount(WBTC, '990'),
+    ).trade
+
+    it.each([
+      {
+        name: 'a Relay bridge',
+        trade: bridgeTrade(TradingApi.BridgeProvider.RELAY),
+        expected: TradingApi.BridgeProvider.RELAY,
+      },
+      {
+        name: 'an Across bridge',
+        trade: bridgeTrade(TradingApi.BridgeProvider.ACROSS),
+        expected: TradingApi.BridgeProvider.ACROSS,
+      },
+      {
+        name: 'a bridge quote without a provider (Across)',
+        trade: bridgeTrade(undefined),
+        expected: TradingApi.BridgeProvider.ACROSS,
+      },
+      { name: 'a classic swap', trade: classicTrade, expected: undefined },
+    ])('reports bridge_provider for $name', ({ trade, expected }) => {
+      if (!trade) {
+        throw new Error('Expected a test trade')
+      }
+
+      expect(getBaseTradeAnalyticsProperties({ formatter, trade, trace: {} }).bridge_provider).toBe(expected)
     })
   })
 })

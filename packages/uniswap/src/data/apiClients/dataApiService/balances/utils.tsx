@@ -20,7 +20,7 @@ export function calculateTotalBalancesUsdPerChainRest(
       }
 
       const chainId = balance.token.chainId
-      // using capitalized chain name to keep data consistent with legacy gql endpoint
+      // Keyed by uppercased chain label; keep stable, it's the key format telemetry already reports.
       const chainName = getChainInfo(chainId).label.toUpperCase()
       const balanceUsd = balance.valueUsd
 

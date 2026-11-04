@@ -10,8 +10,7 @@ import { withSporeCurve } from '@universe/tailwind/animations/reanimated'
  * prefers `.native.tsx`. Exports are identical across all three legs and pinned
  * by `platform-legs.test.tsx` (values) and `export-type-parity.test.ts` (types).
  *
- * The class surface comes from `./compile` (pure, shared with the web leg and
- * the native parity harness in `packages/tailwind/src/parity/button`). What
+ * The class surface comes from `./compile` (pure, shared with the web leg). What
  * differs here is everything uniwind or RN cannot express as a class:
  *
  * HOVER IS REACT STATE, NOT `hover:`. uniwind 1.7.0's CSS processor recognizes
@@ -52,7 +51,6 @@ import Animated, {
   withRepeat,
   withTiming,
 } from 'react-native-reanimated'
-import { Path, Svg } from 'react-native-svg'
 import { useResolveClassNames } from 'uniwind'
 import { getMaybeHexOrRgbColor } from '../button-frame-compat/custom-color'
 import { useLayoutAnimationOnLoadingChange } from '../button-frame-compat/layout-animation'
@@ -65,6 +63,8 @@ import {
 import { compatLayoutNativeStyle } from '../compat/native-style'
 import type { ColorValue as CompatColorValue } from '../compat/props'
 import { shadowColorExpressionOrUndefined, unwrapVariableForNativeStyle } from '../compat/tokens'
+import { CircleSpinner } from '../components/icons/CircleSpinner'
+import { textNativeStyle } from '../text-compat/native-style'
 import {
   buttonCompatNativeColorClassName,
   buttonCompatNativeFrameClassName,
@@ -73,7 +73,6 @@ import {
   isButtonDisabled,
   NATIVE_ICON_SIZE_PX,
   NATIVE_SPINNER_SIZE,
-  SPINNER_GLYPH,
   type ButtonContentClassProps,
   type ButtonIconPosition,
 } from './compile'
@@ -81,7 +80,7 @@ import { hasButtonCompatDimensions } from './dimensions'
 import { buttonCompatNativeDimensions, buttonCompatNativeDroppedDimensionNames } from './native-dimensions'
 import type { ButtonCompatProps, ButtonTextProps } from './native-props'
 import { PRESS_SCALE } from './press-scale'
-import { buttonTextDroppedStyleNames } from './text-props'
+import { buttonTextCallerColor, buttonTextDroppedStyleNames } from './text-props'
 
 // The public type + helper surface mirrors the web leg exactly.
 export { getContrastTextClass } from './compile'
@@ -140,14 +139,27 @@ function ButtonText({
   ...styled
 }: ButtonTextProps): JSX.Element {
   const ctx = useContext(ButtonContext)
-  warnUnsupportedNativeProps('ButtonCompat.Text', buttonTextDroppedStyleNames(styled))
+  const fontSize = styled.fontSize === undefined ? undefined : textNativeStyle({ fontSize: styled.fontSize })
+  warnUnsupportedNativeProps('ButtonCompat.Text', [
+    ...buttonTextDroppedStyleNames(styled),
+    ...(fontSize?.dropped ?? []),
+  ])
   const cell = { ...ctx, variant: styled.variant ?? ctx.variant, lineHeightDisabled, className }
+  const callerColor = buttonTextCallerColor(styled.color, ctx)
+  // Resolved into `style`: natively a caller `[color:…]` class isn't guaranteed to beat the cell's text color.
+  const tokenColor = useContentColor(callerColor.tokenClassName)
+  const color = callerColor.pin ?? tokenColor
   return (
     <Text
       className={buttonCompatNativeTextClassName(cell)}
       maxFontSizeMultiplier={MAX_FONT_SIZE_MULTIPLIER}
       numberOfLines={1}
-      style={[{ fontFamily: FONT_FAMILY_BUTTON, fontWeight: FONT_WEIGHT_BUTTON }, style]}
+      style={[
+        { fontFamily: FONT_FAMILY_BUTTON, fontWeight: FONT_WEIGHT_BUTTON },
+        color === undefined ? undefined : { color },
+        fontSize?.style,
+        style,
+      ]}
     >
       {children}
     </Text>
@@ -213,7 +225,7 @@ function ButtonIcon({ children, className }: ButtonIconProps): JSX.Element | nul
 }
 
 /**
- * Mirrors `ui/src/loading/SpinningLoader.native.tsx`: a shared rotation driven
+ * Mirrors `SpinningLoaderCompat.native.tsx`: a shared rotation driven
  * by `withRepeat(withTiming(360, …))` on a hand-written `Easing.bezier(0.83, 0,
  * 0.17, 1)` — a curve NOT in the Spore library (no 0.83 entry in
  * @universe/tailwind/animations/curves.ts), so hand-writing it is both required
@@ -221,10 +233,10 @@ function ButtonIcon({ children, className }: ButtonIconProps): JSX.Element | nul
  *
  * The WRAPPER rotates and carries pinned width/height: per SpinningLoader's own
  * comment the circle spinner floors float sizes, and every NATIVE_SPINNER_SIZE
- * is a float (14.95 / 17.25 / 21.85). The CHILD is the glyph — a `View` carrying only
- * text-colour classes paints nothing, so the wrapper is never self-closing, and
- * the stroke takes a concrete `useContentColor` value rather than web's
- * `currentColor`. Both are pinned in the native parity suite.
+ * is a float (14.95 / 17.25 / 21.85). The CHILD is mycelium's `CircleSpinner` — a
+ * `View` carrying only text-colour classes paints nothing, so the wrapper is never
+ * self-closing, and the icon takes a concrete `useContentColor` value rather than
+ * web's `currentColor`.
  */
 function ButtonSpinner(): JSX.Element {
   const ctx = useContext(ButtonContext)
@@ -252,16 +264,7 @@ function ButtonSpinner(): JSX.Element {
       style={[{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }, animatedStyle]}
       testID="button-compat-spinner"
     >
-      <Svg fill="none" height={size} viewBox={SPINNER_GLYPH.viewBox} width={size}>
-        <Path
-          d={SPINNER_GLYPH.trackPath}
-          opacity={SPINNER_GLYPH.trackOpacity}
-          stroke={stroke}
-          strokeLinecap="round"
-          strokeWidth={SPINNER_GLYPH.strokeWidth}
-        />
-        <Path d={SPINNER_GLYPH.arcPath} stroke={stroke} strokeLinecap="round" strokeWidth={SPINNER_GLYPH.strokeWidth} />
-      </Svg>
+      <CircleSpinner color={typeof stroke === 'string' ? stroke : undefined} size={size} />
     </Animated.View>
   )
 }
@@ -379,9 +382,8 @@ const ButtonComponent = forwardRef<View, ButtonCompatProps>(function ButtonCompa
 
   const handleHoverOut = useCallback(() => setHovered(false), [])
 
-  // Auto-contrast only against a colour that actually paints (hex/rgb); a theme
-  // token keeps the variant label colour. Token background resolution on this
-  // leg is the open INFRA-3230 escalation.
+  // Auto-contrast only against a hex/rgb colour; a theme token keeps the variant
+  // label colour, like web.
   const customBackgroundColor = getMaybeHexOrRgbColor(backgroundColor)
   const customTextClass = customBackgroundColor ? getContrastTextClass(customBackgroundColor) : undefined
 
@@ -463,8 +465,11 @@ const ButtonComponent = forwardRef<View, ButtonCompatProps>(function ButtonCompa
           // is painted directly. Legacy native derives the border from it too —
           // skipped when an explicit borderColor owns the border (it paints
           // through the class/style lanes, which this later entry would beat).
-          backgroundColor && !isDisabled
-            ? { backgroundColor, ...(dimensionProps.borderColor === undefined && { borderColor: backgroundColor }) }
+          customBackgroundColor && !isDisabled
+            ? {
+                backgroundColor: customBackgroundColor,
+                ...(dimensionProps.borderColor === undefined && { borderColor: customBackgroundColor }),
+              }
             : undefined,
           animatedStyle,
           style,

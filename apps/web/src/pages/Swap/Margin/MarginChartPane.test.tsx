@@ -1,4 +1,4 @@
-import { fireEvent, screen } from '@testing-library/react'
+import { act, fireEvent, screen } from '@testing-library/react'
 import { TestID } from '@universe/test'
 import type { ReactNode } from 'react'
 import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
@@ -9,7 +9,10 @@ import { getDefaultMarginMarket } from '~/pages/Swap/Margin/__fixtures__/marginC
 import { DEFAULT_MARGIN_CHART_PREFS, useMarginChartPrefs } from '~/pages/Swap/Margin/chart/marginChartPrefsStore'
 import { useMarginChartData, type MarginChartData } from '~/pages/Swap/Margin/chart/useMarginChartData'
 import { useMarginChartOverlays, type MarginChartOverlays } from '~/pages/Swap/Margin/chart/useMarginChartOverlays'
+import { useMarginVolume } from '~/pages/Swap/Margin/chart/useMarginVolume'
 import { MAX_VERTICAL_ZOOM_STEP } from '~/pages/Swap/Margin/chart/verticalZoom'
+import { setMarginChartHoveredCandle } from '~/pages/Swap/Margin/hooks/useMarginChartHoveredCandle'
+import { MARGIN_VOLUME_PANE_HEIGHT } from '~/pages/Swap/Margin/marginChartLayout'
 import { MarginChartPane } from '~/pages/Swap/Margin/MarginChartPane'
 import { render } from '~/test-utils/render'
 
@@ -45,7 +48,7 @@ const { mockMarketsUnresolved, mockMarketsError, mockMarketsRefetch, mockPairMar
     mockLiveByKey: { current: new Map<string, unknown>() },
   }),
 )
-vi.mock('~/pages/Swap/Margin/hooks/useMarginMarkets', () => ({
+vi.mock('~/features/margin/hooks/useMarginMarkets', () => ({
   useMarginMarkets: () => {
     // The stats strip maxes the headline leverage over the pair's allowed venues.
     const pairMarkets = mockMarketsUnresolved.current ? [] : (mockPairMarkets.current ?? [getDefaultMarginMarket()])
@@ -65,8 +68,8 @@ vi.mock('~/pages/Swap/Margin/hooks/useMarginMarkets', () => ({
 
 // Currency-info resolution drags in the data-API/token dependency web; the header needs it only for
 // logo art. Empty map → SplitLogo falls back to symbol art, so the state-machine tests stay hermetic.
-vi.mock('~/pages/Swap/Margin/hooks/useMarginCurrencyInfos', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('~/pages/Swap/Margin/hooks/useMarginCurrencyInfos')>()),
+vi.mock('~/features/margin/hooks/useMarginCurrencyInfos', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('~/features/margin/hooks/useMarginCurrencyInfos')>()),
   useMarginCurrencyInfos: () => new Map(),
 }))
 
@@ -88,13 +91,13 @@ vi.mock('~/pages/Swap/Margin/chart/useMarginChartOverlays', async (importOrigina
 // Volume overlay data hook (spec F15): decoupled here so the state-machine test never touches the
 // historical-volumes query. Default OFF → the pane threads empty bars into the chart params.
 vi.mock('~/pages/Swap/Margin/chart/useMarginVolume', () => ({
-  useMarginVolume: () => ({ volumeBars: [] }),
+  useMarginVolume: vi.fn(() => ({ volumeBars: [] })),
 }))
 
 // jsdom has no layout, so give the pane a non-zero width — otherwise showChart can never become
 // true and the ok/stale branch would never mount the chart.
 vi.mock('@visx/responsive', () => ({
-  useParentSize: () => ({ parentRef: { current: null }, width: 800 }),
+  useParentSize: () => ({ parentRef: { current: null }, width: 800, height: 480 }),
 }))
 
 // The real Chart mounts lightweight-charts on a canvas (and hosts the StaleBanner). Swap it for a
@@ -103,12 +106,20 @@ vi.mock('~/components/Charts/ChartModel', async (importOriginal) => {
   const actual = await importOriginal<typeof import('~/components/Charts/ChartModel')>()
   return {
     ...actual,
-    Chart: ({ params }: { params: { stale?: boolean; type?: string; verticalZoomStep?: number } }) => (
+    Chart: ({
+      params,
+      height,
+    }: {
+      params: { stale?: boolean; type?: string; verticalZoomStep?: number; volumeBars?: unknown[] }
+      height?: number
+    }) => (
       <div
         data-testid="margin-chart-mock"
         data-stale={String(Boolean(params.stale))}
         data-type={String(params.type)}
         data-vzoom={String(params.verticalZoomStep)}
+        data-volume-bars={String(params.volumeBars?.length ?? 0)}
+        data-height={String(height)}
       />
     ),
   }
@@ -199,7 +210,6 @@ describe('MarginChartPane state machine', () => {
 
     const chart = screen.getByTestId('margin-chart-mock')
     expect(chart).toHaveAttribute('data-stale', 'true')
-    expect(screen.queryByTestId(TestID.MarginChartSkeleton)).not.toBeInTheDocument()
   })
 
   it('shows the empty copy for INVALID quality even when candles are present', () => {
@@ -327,6 +337,76 @@ describe('MarginChartPane state machine', () => {
   })
 })
 
+describe('MarginChartPane time windows, OHLC legend and volume pane', () => {
+  const up = { ...candle(), open: 100, high: 112, low: 98, close: 110 }
+  const down = { ...candle(), time: 1_700_003_600 as PriceChartData['time'], open: 110, high: 111, low: 95, close: 96 }
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockOverlays({ priceLines: [], markers: [] })
+    useMarginChartPrefs.setState(DEFAULT_MARGIN_CHART_PREFS)
+  })
+
+  afterEach(() => {
+    act(() => setMarginChartHoveredCandle(undefined))
+    vi.mocked(useMarginVolume).mockImplementation(() => ({ volumeBars: [] }))
+  })
+
+  it('offers 4H/1D/1W/1M/1Y, opens on 1D, and refetches for the picked window', () => {
+    mockChart(chartData({ candles: [up], loading: false }))
+    render(<MarginChartPane />)
+
+    for (const label of ['4H', '1D', '1W', '1M', '1Y']) {
+      expect(screen.getByText(label)).toBeInTheDocument()
+    }
+    expect(vi.mocked(useMarginChartData)).toHaveBeenLastCalledWith(expect.objectContaining({ timeWindow: '1D' }))
+    expect(vi.mocked(useMarginVolume)).toHaveBeenLastCalledWith(expect.objectContaining({ timeWindow: '1D' }))
+
+    fireEvent.click(screen.getByText('1M'))
+
+    expect(vi.mocked(useMarginChartData)).toHaveBeenLastCalledWith(expect.objectContaining({ timeWindow: '1M' }))
+    expect(vi.mocked(useMarginVolume)).toHaveBeenLastCalledWith(expect.objectContaining({ timeWindow: '1M' }))
+  })
+
+  it('reads the latest candle in the OHLC legend, then follows the crosshair', () => {
+    mockChart(chartData({ candles: [up, down], loading: false }))
+    render(<MarginChartPane />)
+
+    const legend = screen.getByTestId(TestID.MarginChartOhlcLegend)
+    expect(legend).toHaveTextContent('O$110.00H$111.00L$95.00C$96.00')
+
+    act(() => setMarginChartHoveredCandle(up))
+    expect(legend).toHaveTextContent('O$100.00H$112.00L$98.00C$110.00')
+
+    act(() => setMarginChartHoveredCandle(undefined))
+    expect(legend).toHaveTextContent('C$96.00')
+  })
+
+  it('keeps the volume pane off by default', () => {
+    mockChart(chartData({ candles: [up], loading: false }))
+    render(<MarginChartPane />)
+
+    expect(screen.getByTestId('margin-chart-mock')).toHaveAttribute('data-volume-bars', '0')
+    // The chart fills the box the layout gives it; overlays space their labels over all of it.
+    expect(screen.getByTestId('margin-chart-mock')).toHaveAttribute('data-height', '100%')
+    expect(vi.mocked(useMarginChartOverlays).mock.lastCall?.[0].paneHeightPx).toBe(480)
+  })
+
+  it('carves the volume pane out of the same box when the overlay is on', () => {
+    useMarginChartPrefs.setState({ volume: true })
+    vi.mocked(useMarginVolume).mockImplementation(() => ({
+      volumeBars: [{ time: up.time, value: 1_000 }],
+    }))
+    mockChart(chartData({ candles: [up], loading: false }))
+    render(<MarginChartPane />)
+
+    expect(screen.getByTestId('margin-chart-mock')).toHaveAttribute('data-volume-bars', '1')
+    // Same box, not a taller one: the price pane gives up the volume pane's height.
+    expect(screen.getByTestId('margin-chart-mock')).toHaveAttribute('data-height', '100%')
+    expect(vi.mocked(useMarginChartOverlays).mock.lastCall?.[0].paneHeightPx).toBe(480 - MARGIN_VOLUME_PANE_HEIGHT)
+  })
+})
+
 describe('MarginChartPane chart-style toggle (spec F14)', () => {
   beforeEach(() => {
     vi.clearAllMocks()
@@ -428,6 +508,16 @@ describe('MarginChartPane vertical zoom', () => {
     expect(screen.getByTestId(TestID.MarginChartZoomReset)).toHaveAttribute('aria-disabled', 'true')
     expect(screen.getByTestId(TestID.MarginChartZoomIn)).not.toHaveAttribute('aria-disabled', 'true')
     expect(screen.getByTestId('margin-chart-mock')).toHaveAttribute('data-vzoom', '0')
+  })
+
+  // The mobile chart sheet: pinch zooms there, and the pill would push the controls past a phone's width.
+  it('drops the zoom pill in the compact pane, keeping the time-window and style controls', () => {
+    mockChart(chartData({ candles: [candle()], loading: false }))
+    render(<MarginChartPane compact />)
+
+    expect(screen.queryByTestId(TestID.MarginChartZoomIn)).not.toBeInTheDocument()
+    expect(screen.getByTestId(TestID.MarginChartStyleLine)).toBeInTheDocument()
+    expect(screen.getByTestId(TestID.MarginChartSettingsGear)).toBeInTheDocument()
   })
 
   it('steps the chart zoom param up to the cap (zoom-in disabling there) and back down', () => {

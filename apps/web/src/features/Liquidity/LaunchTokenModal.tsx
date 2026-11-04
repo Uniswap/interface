@@ -1,22 +1,21 @@
-import { Flex, Text, TouchableArea, useSporeColors } from '@universe/mycelium'
+import { Button, Flex, Text, TouchableArea, useSporeColors, iconSizes, validColor } from '@universe/mycelium'
+import type { GeneratedIcon } from '@universe/mycelium/icons'
+import { ChartPie } from '@universe/mycelium/icons/ChartPie'
+import { Check } from '@universe/mycelium/icons/Check'
+import { Clock } from '@universe/mycelium/icons/Clock'
+import { DocumentList } from '@universe/mycelium/icons/DocumentList'
+import { Dollar } from '@universe/mycelium/icons/Dollar'
+import { ExternalLink } from '@universe/mycelium/icons/ExternalLink'
+import { Person } from '@universe/mycelium/icons/Person'
+import { PoolsLogo } from '@universe/mycelium/icons/PoolsLogo'
+import { Rocket } from '@universe/mycelium/icons/Rocket'
+import { Shield } from '@universe/mycelium/icons/Shield'
+import { X } from '@universe/mycelium/icons/X'
+import { opacifyRaw } from '@universe/mycelium/theme-hooks-compat'
 import { TestID, TestIDType } from '@universe/test'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
-import { Button } from 'ui/src'
-import type { GeneratedIcon } from 'ui/src/components/factories/createIcon'
-import { ChartPie } from 'ui/src/components/icons/ChartPie'
-import { Check } from 'ui/src/components/icons/Check'
-import { Clock } from 'ui/src/components/icons/Clock'
-import { DocumentList } from 'ui/src/components/icons/DocumentList'
-import { Dollar } from 'ui/src/components/icons/Dollar'
-import { ExternalLink } from 'ui/src/components/icons/ExternalLink'
-import { Person } from 'ui/src/components/icons/Person'
-import { PoolsLogo } from 'ui/src/components/icons/PoolsLogo'
-import { Rocket } from 'ui/src/components/icons/Rocket'
-import { Shield } from 'ui/src/components/icons/Shield'
-import { X } from 'ui/src/components/icons/X'
-import { iconSizes, opacifyRaw, validColor } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -64,7 +63,7 @@ export function LaunchTokenModal({ isOpen, onClose }: LaunchTokenModalProps): JS
       name={ModalName.LaunchTokenSelection}
       isModalOpen={isOpen}
       onClose={onClose}
-      maxWidth={820}
+      maxWidth={720}
       padding="$spacing20"
     >
       <Flex gap="$spacing20" width="100%">

@@ -9,6 +9,7 @@ import type { ReactNode } from 'react'
 import { useCallback, useMemo } from 'react'
 import { liquidityQueries } from 'uniswap/src/data/apiClients/liquidityService/liquidityQueries'
 import { toLiquidityChainId } from 'uniswap/src/features/positions/utils'
+import { useHoverCardCopyAndClose } from '~/components/HoverCard/hooks/useHoverCardCopyAndClose'
 import {
   HoverCard,
   HoverCardArmOnHover,
@@ -18,7 +19,6 @@ import {
 } from '~/components/HoverCard/HoverCard'
 import { type PoolHoverCardPool, PoolHoverCardContent } from '~/components/HoverCard/PoolHoverCard/PoolHoverCardContent'
 import { toHourlyVolumes } from '~/components/HoverCard/PoolHoverCard/toHourlyVolumes'
-import { useHoverCardCopyAndClose } from '~/components/HoverCard/useHoverCardCopyAndClose'
 
 const POOL_PROTOCOL: Partial<Record<ProtocolVersion, PoolProtocol>> = {
   [ProtocolVersion.V2]: PoolProtocol.V2,

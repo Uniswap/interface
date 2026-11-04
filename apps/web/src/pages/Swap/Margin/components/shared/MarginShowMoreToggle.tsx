@@ -1,7 +1,6 @@
-import { Flex, Text, TouchableArea } from '@universe/mycelium'
+import { Flex, Text, TouchableArea, Separator } from '@universe/mycelium'
+import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
 import { useTranslation } from 'react-i18next'
-import { Separator } from 'ui/src'
-import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 
 // Centered divider toggle (design): Separator — "Show more/less ⌄" — Separator. Collapses/expands the
 // modals' detail rows.

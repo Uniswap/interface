@@ -8,6 +8,7 @@ import { SearchRequest, SearchResponse } from '@uniswap/client-data-api/dist/dat
 import { RankedPool } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { normalizeBackendNativeAddress } from 'uniswap/src/data/apiClients/dataApiService/utils/dataApiMultichainToken'
 import { entryGatewayProdPostTransport } from 'uniswap/src/data/transport'
+import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import { PoolSearchResult, PoolSearchStats } from 'uniswap/src/features/dataApi/types'
 import { SearchHistoryResultType } from 'uniswap/src/features/search/SearchHistoryResult'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
@@ -55,7 +56,12 @@ export function rankedPoolToPoolSearchResult(
   rankedPool: RankedPool | PlainMessage<RankedPool>,
 ): PoolSearchResult | undefined {
   const pool = rankedPool.pool
-  if (!pool?.token0 || !pool.token1 || pool.protocolVersion === ProtocolVersion.UNSPECIFIED) {
+  if (
+    !pool?.token0 ||
+    !pool.token1 ||
+    pool.protocolVersion === ProtocolVersion.UNSPECIFIED ||
+    !isUniverseChainId(pool.chainId)
+  ) {
     return undefined
   }
 

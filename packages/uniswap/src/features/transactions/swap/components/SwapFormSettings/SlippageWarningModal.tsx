@@ -1,9 +1,8 @@
 import { isMobileApp, isMobileWeb } from '@universe/environment'
-import { Flex, Text, TouchableArea } from '@universe/mycelium'
+import { Button, Flex, Text, TouchableArea } from '@universe/mycelium'
+import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFilled'
+import { X } from '@universe/mycelium/icons/X'
 import { useTranslation } from 'react-i18next'
-import { Button } from 'ui/src'
-import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
-import { X } from 'ui/src/components/icons/X'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 

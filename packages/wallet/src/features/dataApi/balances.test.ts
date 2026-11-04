@@ -3,7 +3,6 @@ import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/ba
 import type { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import {
   usePortfolioBalances,
-  usePortfolioValueModifiers,
   useSortedPortfolioBalances,
   useTokenBalancesGroupedByVisibility,
 } from 'uniswap/src/features/portfolio/balances/hooks'
@@ -30,137 +29,6 @@ import { renderHook } from 'wallet/src/test/test-utils'
 const daiPortfolioBalance = portfolioBalance({ fromToken: daiV2Token(), isHidden: true })
 const ethPortfolioBalance = portfolioBalance({ fromToken: ethV2Token(), isHidden: false })
 
-describe(usePortfolioValueModifiers, () => {
-  const sharedModifier = {
-    tokenIncludeOverrides: [],
-    tokenExcludeOverrides: [],
-    includeSmallBalances: false,
-    includeSpamTokens: false,
-  }
-
-  const mockUserSettingsState = (overrideSettings?: Partial<UserSettingsState>): UserSettingsState => ({
-    ...initialUserSettingsState,
-    ...overrideSettings,
-  })
-
-  const mockVisibilityState = (overrideTokensVisibility?: CurrencyIdToVisibility): VisibilityState => ({
-    ...initialVisibilityState,
-    tokens: {
-      ...initialVisibilityState.tokens,
-      ...overrideTokensVisibility,
-    },
-  })
-
-  it('returns undefined if no address is passed', () => {
-    const { result } = renderHook(() => usePortfolioValueModifiers())
-
-    expect(result.current).toEqual(undefined)
-  })
-
-  it('returns a single modifier if a single address is passed', () => {
-    const { result } = renderHook(() => usePortfolioValueModifiers(SAMPLE_SEED_ADDRESS_1))
-
-    expect(result.current).toEqual([{ ...sharedModifier, ownerAddress: SAMPLE_SEED_ADDRESS_1 }])
-  })
-
-  it('returns multiple modifiers if multiple addresses are passed', () => {
-    const { result } = renderHook(() => usePortfolioValueModifiers([SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2]))
-
-    expect(result.current).toEqual([
-      { ...sharedModifier, ownerAddress: SAMPLE_SEED_ADDRESS_1 },
-      { ...sharedModifier, ownerAddress: SAMPLE_SEED_ADDRESS_2 },
-    ])
-  })
-
-  describe('includeSmallBalances', () => {
-    it('returns modifiers with includeSmallBalances set to true if hideSmallBalances settings is false', () => {
-      const { result } = renderHook(() => usePortfolioValueModifiers([SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2]), {
-        preloadedState: { userSettings: mockUserSettingsState({ hideSmallBalances: false }) },
-      })
-
-      expect(result.current).toEqual([
-        { ...sharedModifier, ownerAddress: SAMPLE_SEED_ADDRESS_1, includeSmallBalances: true },
-        { ...sharedModifier, ownerAddress: SAMPLE_SEED_ADDRESS_2, includeSmallBalances: true },
-      ])
-    })
-
-    it('returns modifiers with includeSmallBalances set to false if hideSmallBalances settings is true', () => {
-      const { result } = renderHook(() => usePortfolioValueModifiers([SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2]), {
-        preloadedState: { userSettings: mockUserSettingsState({ hideSmallBalances: true }) },
-      })
-
-      expect(result.current).toEqual([
-        { ...sharedModifier, ownerAddress: SAMPLE_SEED_ADDRESS_1, includeSmallBalances: false },
-        { ...sharedModifier, ownerAddress: SAMPLE_SEED_ADDRESS_2, includeSmallBalances: false },
-      ])
-    })
-  })
-
-  describe('includeSpamTokens', () => {
-    it('returns modifiers with includeSpamTokens set to true if hideSpamTokens settings is false', () => {
-      const { result } = renderHook(() => usePortfolioValueModifiers([SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2]), {
-        preloadedState: { userSettings: mockUserSettingsState({ hideSpamTokens: false }) },
-      })
-
-      expect(result.current).toEqual([
-        { ...sharedModifier, ownerAddress: SAMPLE_SEED_ADDRESS_1, includeSpamTokens: true },
-        { ...sharedModifier, ownerAddress: SAMPLE_SEED_ADDRESS_2, includeSpamTokens: true },
-      ])
-    })
-
-    it('returns modifiers with includeSpamTokens set to false if hideSpamTokens settings is true', () => {
-      const { result } = renderHook(() => usePortfolioValueModifiers([SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2]), {
-        preloadedState: { userSettings: mockUserSettingsState({ hideSpamTokens: true }) },
-      })
-
-      expect(result.current).toEqual([
-        { ...sharedModifier, ownerAddress: SAMPLE_SEED_ADDRESS_1, includeSpamTokens: false },
-        { ...sharedModifier, ownerAddress: SAMPLE_SEED_ADDRESS_2, includeSpamTokens: false },
-      ])
-    })
-
-    it('returns includeSpamTokens true in testnet mode even when hideSpamTokens is true', () => {
-      const { result } = renderHook(() => usePortfolioValueModifiers([SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2]), {
-        preloadedState: {
-          userSettings: mockUserSettingsState({ hideSpamTokens: true, isTestnetModeEnabled: true }),
-        },
-      })
-
-      expect(result.current).toEqual([
-        {
-          ...sharedModifier,
-          ownerAddress: SAMPLE_SEED_ADDRESS_1,
-          includeSpamTokens: true,
-          includeSmallBalances: true,
-        },
-        {
-          ...sharedModifier,
-          ownerAddress: SAMPLE_SEED_ADDRESS_2,
-          includeSpamTokens: true,
-          includeSmallBalances: true,
-        },
-      ])
-    })
-  })
-
-  describe('token overrides', () => {
-    it('does not include token overrides in the result if tokensVisibility does not contain addresses visibility settings', () => {
-      const { result } = renderHook(() => usePortfolioValueModifiers(SAMPLE_SEED_ADDRESS_1), {
-        preloadedState: { visibility: mockVisibilityState() },
-      })
-
-      expect(result.current).toEqual([
-        {
-          ...sharedModifier,
-          ownerAddress: SAMPLE_SEED_ADDRESS_1,
-          tokenIncludeOverrides: [],
-          tokenExcludeOverrides: [],
-        },
-      ])
-    })
-  })
-})
-
 describe(usePortfolioBalances, () => {
   it('returns empty results if no address was specified', () => {
     const { result } = renderHook(() => usePortfolioBalances({}))
@@ -173,7 +41,6 @@ describe(usePortfolioBalances, () => {
       refetch: expect.any(Function),
       error: undefined,
       dataUpdatedAt: undefined,
-      isPlaceholderData: false,
     })
   })
 })

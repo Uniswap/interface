@@ -41,6 +41,7 @@ import {
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import type { SwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import type { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { isBridge } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { useEvent, usePrevious } from 'utilities/src/react/hooks'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
@@ -306,6 +307,11 @@ function getIsTokenApprovalApplicable(trade: Trade | null): boolean | undefined 
   return trade.quote.isTokenApprovalApplicable
 }
 
+/** The `BRIDGE` quote, which `/check_approval` takes to approve the contract the winning vendor's deposit pulls from. */
+function getBridgeQuote(trade: Trade | null): TradingApi.BridgeQuote | undefined {
+  return trade && isBridge(trade) ? trade.quote.quote : undefined
+}
+
 export function useSwapParams(): {
   approvalTxInfo: ApprovalTxInfo
   derivedSwapInfo: DerivedSwapInfo
@@ -330,6 +336,7 @@ export function useSwapParams(): {
     currencyOutAmount: currencyAmounts[CurrencyField.OUTPUT],
     routing: trade?.routing,
     isTokenApprovalApplicable: getIsTokenApprovalApplicable(trade),
+    bridgeQuote: getBridgeQuote(trade),
   })
 
   return {

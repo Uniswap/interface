@@ -1,11 +1,10 @@
 import { UniverseChainId } from '@universe/chains'
-import type { IconSizeTokens } from '@universe/mycelium'
+import type { IconProps } from '@universe/mycelium/icons'
 import React from 'react'
-import type { SvgProps } from 'react-native-svg'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useBlockExplorerLogo } from 'uniswap/src/features/chains/logos'
 
-type IconComponentProps = SvgProps & { size?: IconSizeTokens | number | { width: number; height: number } }
+type IconComponentProps = Pick<IconProps, 'size' | 'color'>
 
 const iconsCache = new Map<UniverseChainId, React.FC<IconComponentProps>>()
 

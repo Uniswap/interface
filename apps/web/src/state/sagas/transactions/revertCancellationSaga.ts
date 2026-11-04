@@ -26,12 +26,12 @@ import {
 import i18n from 'uniswap/src/i18n'
 import { createSaga } from 'uniswap/src/utils/saga'
 import { logger } from 'utilities/src/logger/logger'
-import { useSelectChain } from '~/hooks/useSelectChain'
+import { useSelectChain } from '~/connection/hooks/useSelectChain'
 import store from '~/state'
 import { fetchCancelTxReceiptStatus } from '~/state/activity/polling/cancelTimeouts'
-import { popupRegistry } from '~/state/popups/registry'
-import { PopupType } from '~/state/popups/types'
 import { getSigner } from '~/state/sagas/transactions/utils'
+import { popupRegistry } from '~/utils/popups/registry'
+import { PopupType } from '~/utils/popups/types'
 import { didUserReject } from '~/utils/swapErrorToUserReadableMessage'
 
 export interface RevertCancellationParams {

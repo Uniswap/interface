@@ -23,11 +23,11 @@ vi.mock('react-router', async () => ({
   useNavigate: vi.fn(),
 }))
 
-vi.mock('~/hooks/useSelectChain', () => ({
+vi.mock('~/connection/hooks/useSelectChain', () => ({
   useSelectChain: vi.fn(),
 }))
 
-vi.mock('~/hooks/useAccount', () => ({
+vi.mock('~/connection/hooks/useAccount', () => ({
   useAccount: vi.fn(),
 }))
 
@@ -43,9 +43,7 @@ vi.mock('utilities/src/telemetry/trace/TraceContext', () => ({
   useTrace: vi.fn(),
 }))
 
-vi.mock('~/hooks/Tokens', () => ({
-  useCurrencyInfo: vi.fn(),
-}))
+vi.mock('~/hooks/currency/useCurrencyInfo', () => ({ useCurrencyInfo: vi.fn() }))
 
 // The modal reads the LP geo gate, whose compliance query resolves to undefined without a network
 // layer here — react-query logs that as a console error, which the console guard fails the file on.
@@ -71,10 +69,10 @@ import { DAI, USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { LPTransactionSettingsStoreContextProvider } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/LPTransactionSettingsStoreContextProvider'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
+import { useAccount } from '~/connection/hooks/useAccount'
+import { useSelectChain } from '~/connection/hooks/useSelectChain'
 import { useInitialPriceAcceptance } from '~/features/Liquidity/Create/hooks/useInitialPriceAcceptance'
-import { useCurrencyInfo } from '~/hooks/Tokens'
-import { useAccount } from '~/hooks/useAccount'
-import { useSelectChain } from '~/hooks/useSelectChain'
+import { useCurrencyInfo } from '~/hooks/currency/useCurrencyInfo'
 import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 import { CreatePositionModal } from '~/pages/CreatePosition/CreatePositionModal'
 import { act, fireEvent, render } from '~/test-utils/render'

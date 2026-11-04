@@ -1,5 +1,6 @@
 import { ChartPeriod } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { Flex, Separator, Text, TouchableArea } from '@universe/mycelium'
+import { ChartBarCrossed } from '@universe/mycelium/icons/ChartBarCrossed'
 import { opacify, useDeviceDimensions, useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -10,7 +11,6 @@ import { DotGrid } from 'src/components/charts/DotGrid'
 import { type ChartData, SparklineChart } from 'src/components/charts/SparklineChart'
 import { Loader } from 'src/components/loading/loaders'
 import { WaveLoader } from 'ui/src'
-import { ChartBarCrossed } from 'ui/src/components/icons/ChartBarCrossed'
 import {
   CHART_PERIOD_OPTIONS,
   chartPeriodToElementName,

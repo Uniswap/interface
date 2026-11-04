@@ -39,7 +39,7 @@ vi.mock('@uniswap/sdk-core', async (importOriginal) => {
   }
 })
 
-vi.mock('~/features/accounts/store/hooks', () => ({
+vi.mock('~/connection/accounts/hooks', () => ({
   useActiveAddress: mockUseActiveAddress,
 }))
 

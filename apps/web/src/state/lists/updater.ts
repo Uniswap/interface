@@ -5,12 +5,12 @@ import { useCallback, useEffect } from 'react'
 import { logger } from 'utilities/src/logger/logger'
 import { useIsWindowVisible } from 'utilities/src/react/useIsWindowVisible'
 import { DEFAULT_INACTIVE_LIST_URLS } from '~/constants/lists'
-import { useFetchListCallback } from '~/hooks/useFetchListCallback'
-import { useStateRehydrated } from '~/hooks/useStateRehydrated'
 import { useInterval } from '~/lib/hooks/useInterval'
 import { useAppDispatch } from '~/state/hooks'
 import { acceptListUpdate } from '~/state/lists/actions'
 import { useAllLists } from '~/state/lists/hooks'
+import { useFetchListCallback } from '~/state/lists/useFetchListCallback'
+import { useStateRehydrated } from '~/state/useStateRehydrated'
 
 // TODO(WEB-3839): delete this when lists are removed from redux
 export function Updater(): null {

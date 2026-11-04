@@ -11,13 +11,8 @@
  * It also pins the value columns, calling `nativeFontsTable` with an explicit
  * environment because this config resolves `.web.*` first — so
  * `nativeFontEnvironment()` would only ever return the web-equivalent column.
- * That makes this a shape-and-assembly guard, NOT native evidence: the device
- * column is proven in
- * `packages/tailwind/src/parity/fonts-token/native-parity.test.ts`.
- *
- * Expected metrics are `ui/src/theme/fonts.ts`'s native branch read directly,
- * written as the same `<size> * <ratio>` arithmetic ui writes so a
- * transcription slip shows up in the diff.
+ * That makes this a shape-and-assembly guard; the native ramp values are
+ * pinned in `text-compat/native-font.test.ts`.
  */
 import { describe, expect, it } from 'vitest'
 import * as native from './font-tokens.native'
@@ -26,6 +21,7 @@ import * as native from './font-tokens.native'
 import * as base from './font-tokens.ts'
 import { type FontVariantName, fonts as webFonts } from './font-tokens.web'
 import { nativeFontsTable } from './native-fonts-table'
+import { nativeVariantFont } from './text-compat/native-font'
 
 /** `satisfies` proves each name is real; the first test proves completeness. */
 const VARIANTS = [
@@ -45,25 +41,6 @@ const VARIANTS = [
   'buttonLabel4',
   'monospace',
 ] as const satisfies readonly FontVariantName[]
-
-/** The `ui/src/theme` native column outside CJK locales (`smallFont: false`). */
-const NATIVE_RAMP: Readonly<Record<FontVariantName, { fontSize: number; lineHeight: number }>> = {
-  heading1: { fontSize: 53, lineHeight: 50 },
-  heading2: { fontSize: 37, lineHeight: 40 },
-  heading3: { fontSize: 25, lineHeight: 28 },
-  subheading1: { fontSize: 19, lineHeight: 24 },
-  subheading2: { fontSize: 17, lineHeight: 20 },
-  body1: { fontSize: 19, lineHeight: 24 },
-  body2: { fontSize: 17, lineHeight: 22 },
-  body3: { fontSize: 15, lineHeight: 18 },
-  body4: { fontSize: 13, lineHeight: 16 },
-  body5: { fontSize: 11, lineHeight: 12 },
-  buttonLabel1: { fontSize: 19, lineHeight: 19 * 1.15 },
-  buttonLabel2: { fontSize: 17, lineHeight: 17 * 1.15 },
-  buttonLabel3: { fontSize: 15, lineHeight: 15 * 1.15 },
-  buttonLabel4: { fontSize: 13, lineHeight: 13 * 1.15 },
-  monospace: { fontSize: 13, lineHeight: 16 },
-}
 
 /**
  * The variants whose line-height ui writes as a FIXED px value, which the ramp
@@ -144,8 +121,13 @@ describe('export parity across the legs', () => {
 describe('native table — non-CJK column (smallFont: false), where the ramp is visible', () => {
   const table = nativeFontsTable({ platform: 'ios', smallFont: false })
 
-  it.each(VARIANTS)("%s carries ui's adjusted size and line-height", (variant) => {
-    expect({ fontSize: table[variant].fontSize, lineHeight: table[variant].lineHeight }).toEqual(NATIVE_RAMP[variant])
+  // The ramp values themselves are pinned in text-compat/native-font.test.ts.
+  it.each(VARIANTS)('%s carries the text-compat native ramp', (variant) => {
+    const ramp = nativeVariantFont({ variant, smallFont: false })
+    expect({ fontSize: table[variant].fontSize, lineHeight: table[variant].lineHeight }).toEqual({
+      fontSize: ramp.fontSize,
+      lineHeight: ramp.lineHeight,
+    })
   })
 
   it.each(FIXED_LINE_HEIGHT_VARIANTS)('%s keeps its FIXED web line-height while the size gains +1', (variant) => {

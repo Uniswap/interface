@@ -1,10 +1,10 @@
 import { act, renderHook } from '@testing-library/react'
 import { UniverseChainId } from '@universe/chains'
 import { logger } from 'utilities/src/logger/logger'
-import { POPUP_MEDIUM_DISMISS_MS } from '~/components/Popups/constants'
 import { useNavigateToAuctionDetails } from '~/hooks/useNavigateToAuctionDetails'
-import { popupRegistry } from '~/state/popups/registry'
-import { PopupType } from '~/state/popups/types'
+import { POPUP_MEDIUM_DISMISS_MS } from '~/utils/popups/constants'
+import { popupRegistry } from '~/utils/popups/registry'
+import { PopupType } from '~/utils/popups/types'
 
 const mockNavigate = vi.fn()
 

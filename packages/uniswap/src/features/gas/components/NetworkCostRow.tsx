@@ -1,7 +1,7 @@
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
 import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFilled'
+import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
 import { useTranslation } from 'react-i18next'
-import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 
 export interface NetworkCostRowProps {
   gasFeeUsd: string | undefined

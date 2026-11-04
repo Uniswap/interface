@@ -6,21 +6,21 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { NumberType } from 'utilities/src/format/types'
 import { MARGIN_CHAIN_ID, type MarginMarket } from '~/constants/margin'
-import { MarginVenueLogo } from '~/pages/Swap/Margin/components/MarginVenueLogo'
-import { getMarginPairLogoProps, useMarginCurrencyInfos } from '~/pages/Swap/Margin/hooks/useMarginCurrencyInfos'
-import { positionLeverage } from '~/pages/Swap/Margin/marginAdjustPositionMath'
+import { MarginVenueLogo } from '~/features/margin/components/MarginVenueLogo'
+import { getMarginPairLogoProps, useMarginCurrencyInfos } from '~/features/margin/hooks/useMarginCurrencyInfos'
+import { positionLeverage } from '~/features/margin/utils/marginAdjustPositionMath'
 import {
   formatLeverageX,
   getMarginDirectionStyle,
   lltvToPercent,
   marginVenueLabel,
-} from '~/pages/Swap/Margin/marginFormat'
+} from '~/features/margin/utils/marginFormat'
 import {
   marginExposureLeg,
   marginPairLabel,
   marginPairLegs,
   marginUnwrapSymbol,
-} from '~/pages/Swap/Margin/marginTokenDisplay'
+} from '~/features/margin/utils/marginTokenDisplay'
 
 // Direction variant needs the position (current leverage lives on the ACTIVE row, not the market); the
 // union enforces it so a consumer can't reach for a direction subtitle without one.
@@ -28,7 +28,7 @@ type MarginPairHeadingProps =
   | { market: MarginMarket; variant: 'venue' }
   | { market: MarginMarket; variant: 'direction'; position: MarginActivePosition }
 
-// SplitLogo + "ETH / USDC" pair title with a subtitle: the lending venue + LLTV, or the position's
+// Pair logo + "ETH / USDC" pair title with a subtitle: the lending venue + LLTV, or the position's
 // direction + opened leverage in the direction color. Shared by the review + action modals.
 export function MarginPairHeading(props: MarginPairHeadingProps): JSX.Element {
   const { market, variant } = props
@@ -40,10 +40,11 @@ export function MarginPairHeading(props: MarginPairHeadingProps): JSX.Element {
   return (
     <Flex row alignItems="center" gap="$spacing12">
       <SplitLogo
+        orientation="stacked"
         size={32}
+        chainId={MARGIN_CHAIN_ID}
         inputCurrencyInfo={null}
         outputCurrencyInfo={null}
-        chainId={MARGIN_CHAIN_ID}
         {...getMarginPairLogoProps({ ...marginPairLegs(market), currencyInfos })}
       />
       {/* Flex defaults flexShrink 0, so the three-part direction subtitle would overflow the 420px

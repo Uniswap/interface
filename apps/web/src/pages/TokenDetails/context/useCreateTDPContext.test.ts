@@ -3,7 +3,6 @@ import { Code, ConnectError } from '@connectrpc/connect'
 import { keepPreviousData, useQueryClient } from '@tanstack/react-query'
 import type { GetTokenMultiChainResponse } from '@uniswap/client-data-api/dist/data/v2/api_pb'
 import type { Auction } from '@uniswap/client-launches/dist/data/v1/auction_pb'
-import { GraphQLApi } from '@universe/api'
 import { normalizeTokenAddressForCache, UniverseChainId } from '@universe/chains'
 import { useFeatureFlag } from '@universe/gating'
 import { useLocation, useParams } from 'react-router'
@@ -85,7 +84,7 @@ vi.mock('~/hooks/useColor', () => ({
   useSrcColor: vi.fn(() => ({ tokenColor: undefined })),
 }))
 
-vi.mock('~/features/accounts/store/hooks', () => ({
+vi.mock('~/connection/accounts/hooks', () => ({
   useActiveAddresses: vi.fn(() => ({ evmAddress: undefined, svmAddress: undefined })),
   useActiveWallet: vi.fn(() => undefined),
   useConnectionStatus: vi.fn(() => ({
@@ -203,7 +202,6 @@ describe('useCreateTDPContext', () => {
 
     expect(result.current.state).toMatchObject({
       currency: expect.anything(),
-      currencyChain: GraphQLApi.Chain.Ethereum,
       currencyChainId: UniverseChainId.Mainnet,
       address: expect.any(String),
       multiChainMap: expect.any(Object),

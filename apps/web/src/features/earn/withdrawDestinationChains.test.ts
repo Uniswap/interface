@@ -62,7 +62,6 @@ describe(getWithdrawDestinationChainIds, () => {
     expect(usdtChainIds).toContain(UniverseChainId.Base)
     expect(usdtChainIds).toContain(UniverseChainId.Unichain)
     expect(usdtChainIds).toContain(UniverseChainId.Zksync)
-    expect(usdtChainIds).not.toContain(UniverseChainId.Blast)
 
     const usdcChainIds = getWithdrawDestinationChainIds({
       isTestnetModeEnabled: false,

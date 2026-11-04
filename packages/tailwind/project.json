@@ -10,28 +10,22 @@
       "options": {
         "cwd": "{projectRoot}"
       },
-      "// inputs": "INFRA-3228. The first four entries re-state targetDefaults.test verbatim: a target-level `inputs` REPLACES the targetDefaults value (nx merges targets with a plain spread, not a concat), so omitting them would silently narrow the input set. The trailing workspaceRoot globs are the cross-package sources the recipes/animations tests compile — mycelium by relative path (`// nx-ignore-next-line`), ui via the `ui/src` alias — which nx cannot infer: tailwind has no workspace deps (mycelium depends on tailwind, not the reverse, so `^production` resolves to nothing) and `analyzeSourceFiles` is off. Without them a token added or removed on either side replays a cached green instead of failing the build. `packages/ui/src/**` is deliberately the whole tree, not `theme/**` + `env.d.ts`: the animations curve test resolves the legacy driver configs through the `ui/src` BARREL, so a narrower glob leaves the barrel out of the hash and dropping the re-export replays green when it shouldn't (measured). An `implicitDependencies` edge tailwind -> mycelium would also fix the hash, but it puts a real cycle in the project graph (nx tolerates it silently today) and widens invalidation for every tailwind target.",
+      "// TODO": "Drop the mycelium glob once the recipes tests (which import mycelium by relative path) move into mycelium.",
       "inputs": [
         "sourceFiles",
         "^production",
         "{projectRoot}/**/*.test.*",
         "{projectRoot}/**/*.spec.*",
-        "{workspaceRoot}/packages/mycelium/src/**",
-        "{workspaceRoot}/packages/ui/src/**"
+        "{workspaceRoot}/packages/mycelium/src/**"
       ]
     },
-    "typecheck": {
-      "command": "tsc -b && tsc -p tsconfig.cross-package.json",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
+    "typecheck": {},
     "typecheck:tsc": {},
     "typecheck:tsgo": {},
     "format": {},
     "format:check": {},
     "lint:oxlint": {
-      "dependsOn": ["prepare", { "projects": ["ui"], "target": "build:icons" }]
+      "dependsOn": ["prepare"]
     },
     "lint:oxlint:fix": {},
     "lint:oxlint:fast": {},

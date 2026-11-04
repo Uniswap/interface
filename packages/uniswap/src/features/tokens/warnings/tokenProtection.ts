@@ -1,5 +1,5 @@
 // Dependency-free on purpose: the token-protection derivation without this package's UI,
-// i18n or @universe/api (Apollo) barrels, so apps that can't take those can share it.
+// i18n or @universe/api barrels, so apps that can't take those can share it.
 // tokenProtection.test.ts fails if an import here starts pulling one in.
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/warningSeverity'
 import { AttackType, ProtectionResult, TokenList } from 'uniswap/src/features/dataApi/safetyEnums'

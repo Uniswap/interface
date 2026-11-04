@@ -178,53 +178,103 @@ exports[`PoolDetailsTransactionsTable > renders data filled state 1`] = `
                                 style="position: relative;"
                               >
                                 <span
-                                  style="display: inline-block; height: 22px; overflow: hidden; vertical-align: top;"
+                                  style="height: 22px; white-space: pre; opacity: 1;"
                                 >
                                   <span
-                                    style="display: inline-flex; justify-content: center; width: 9.815384615384616px; height: 22px; overflow: hidden; position: relative; vertical-align: top; --an-slide-pct: 50%;"
+                                    style="display: inline-block; vertical-align: top; width: 9.815384615384616px; text-align: center; font-size: 16px; font-weight: 400; line-height: 22px; height: 22px; font-family: Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-variant-numeric: tabular-nums; color: rgb(19, 19, 19); transition: color 250ms ease;"
                                   >
-                                    <span
-                                      style="font-size: 16px; font-weight: 400; line-height: 22px; height: 22px; font-family: Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-variant-numeric: tabular-nums; color: rgb(19, 19, 19); transition: color 250ms ease; display: flex; align-items: center; position: relative;"
-                                    >
-                                      1
-                                    </span>
+                                    1
+                                  </span>
+                                  <span
+                                    class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:22px] [font-weight:485] [color:var(--stext-neutral1)]"
+                                    style="color: rgb(19, 19, 19); height: 22px; display: inline-block; vertical-align: top; transition: color 250ms ease;"
+                                  >
+                                    m
+                                  </span>
+                                  <span
+                                    class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:22px] [font-weight:485] [color:var(--stext-neutral1)]"
+                                    style="color: rgb(19, 19, 19); height: 22px; display: inline-block; vertical-align: top; transition: color 250ms ease;"
+                                  >
+                                    o
+                                  </span>
+                                  <span
+                                    class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:22px] [font-weight:485] [color:var(--stext-neutral1)]"
+                                    style="color: rgb(19, 19, 19); height: 22px; display: inline-block; vertical-align: top; transition: color 250ms ease;"
+                                  >
+                                     
+                                  </span>
+                                  <span
+                                    class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:22px] [font-weight:485] [color:var(--stext-neutral1)]"
+                                    style="color: rgb(19, 19, 19); height: 22px; display: inline-block; vertical-align: top; transition: color 250ms ease;"
+                                  >
+                                    a
+                                  </span>
+                                  <span
+                                    class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:22px] [font-weight:485] [color:var(--stext-neutral1)]"
+                                    style="color: rgb(19, 19, 19); height: 22px; display: inline-block; vertical-align: top; transition: color 250ms ease;"
+                                  >
+                                    g
+                                  </span>
+                                  <span
+                                    class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:22px] [font-weight:485] [color:var(--stext-neutral1)]"
+                                    style="color: rgb(19, 19, 19); height: 22px; display: inline-block; vertical-align: top; transition: color 250ms ease;"
+                                  >
+                                    o
                                   </span>
                                 </span>
                                 <span
-                                  class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:22px] [font-weight:485] [color:var(--stext-neutral1)]"
-                                  style="color: rgb(19, 19, 19); height: 22px; display: inline-block; transition: color 250ms ease;"
+                                  aria-hidden="true"
+                                  style="display: flex; position: absolute; top: 0px; inset-inline-start: 0; visibility: hidden; pointer-events: none; user-select: none;"
                                 >
-                                  m
-                                </span>
-                                <span
-                                  class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:22px] [font-weight:485] [color:var(--stext-neutral1)]"
-                                  style="color: rgb(19, 19, 19); height: 22px; display: inline-block; transition: color 250ms ease;"
-                                >
-                                  o
-                                </span>
-                                <span
-                                  class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:22px] [font-weight:485] [color:var(--stext-neutral1)]"
-                                  style="color: rgb(19, 19, 19); height: 22px; display: inline-block; transition: color 250ms ease;"
-                                >
-                                   
-                                </span>
-                                <span
-                                  class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:22px] [font-weight:485] [color:var(--stext-neutral1)]"
-                                  style="color: rgb(19, 19, 19); height: 22px; display: inline-block; transition: color 250ms ease;"
-                                >
-                                  a
-                                </span>
-                                <span
-                                  class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:22px] [font-weight:485] [color:var(--stext-neutral1)]"
-                                  style="color: rgb(19, 19, 19); height: 22px; display: inline-block; transition: color 250ms ease;"
-                                >
-                                  g
-                                </span>
-                                <span
-                                  class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:22px] [font-weight:485] [color:var(--stext-neutral1)]"
-                                  style="color: rgb(19, 19, 19); height: 22px; display: inline-block; transition: color 250ms ease;"
-                                >
-                                  o
+                                  <span
+                                    style="display: inline-block; height: 22px; overflow: hidden; vertical-align: top;"
+                                  >
+                                    <span
+                                      style="display: inline-flex; justify-content: center; width: 9.815384615384616px; height: 22px; overflow: hidden; position: relative; vertical-align: top; --an-slide-pct: 50%;"
+                                    >
+                                      <span
+                                        style="font-size: 16px; font-weight: 400; line-height: 22px; height: 22px; font-family: Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-variant-numeric: tabular-nums; color: rgb(19, 19, 19); transition: color 250ms ease; display: flex; align-items: center; position: relative;"
+                                      >
+                                        1
+                                      </span>
+                                    </span>
+                                  </span>
+                                  <span
+                                    class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:22px] [font-weight:485] [color:var(--stext-neutral1)]"
+                                    style="color: rgb(19, 19, 19); height: 22px; display: inline-block; transition: color 250ms ease;"
+                                  >
+                                    m
+                                  </span>
+                                  <span
+                                    class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:22px] [font-weight:485] [color:var(--stext-neutral1)]"
+                                    style="color: rgb(19, 19, 19); height: 22px; display: inline-block; transition: color 250ms ease;"
+                                  >
+                                    o
+                                  </span>
+                                  <span
+                                    class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:22px] [font-weight:485] [color:var(--stext-neutral1)]"
+                                    style="color: rgb(19, 19, 19); height: 22px; display: inline-block; transition: color 250ms ease;"
+                                  >
+                                     
+                                  </span>
+                                  <span
+                                    class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:22px] [font-weight:485] [color:var(--stext-neutral1)]"
+                                    style="color: rgb(19, 19, 19); height: 22px; display: inline-block; transition: color 250ms ease;"
+                                  >
+                                    a
+                                  </span>
+                                  <span
+                                    class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:22px] [font-weight:485] [color:var(--stext-neutral1)]"
+                                    style="color: rgb(19, 19, 19); height: 22px; display: inline-block; transition: color 250ms ease;"
+                                  >
+                                    g
+                                  </span>
+                                  <span
+                                    class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:22px] [font-weight:485] [color:var(--stext-neutral1)]"
+                                    style="color: rgb(19, 19, 19); height: 22px; display: inline-block; transition: color 250ms ease;"
+                                  >
+                                    o
+                                  </span>
                                 </span>
                               </div>
                             </div>

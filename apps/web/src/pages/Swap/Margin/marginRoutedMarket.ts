@@ -1,7 +1,7 @@
 import type { MarginQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
 import type { MarginMarketKey, MarginVenue } from 'uniswap/src/features/transactions/margin/types'
 import { MARGIN_MARKETS_REFETCH_MS, type MarginMarket } from '~/constants/margin'
-import { isMarkStale, usablePriceX18 } from '~/pages/Swap/Margin/marginFormat'
+import { isMarkStale, usablePriceX18 } from '~/features/margin/utils/marginFormat'
 
 // `useMarginMarkets().getMarketByTokens`, narrowed to what this resolver needs.
 type GetMarketByTokens = (params: {

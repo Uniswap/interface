@@ -33,6 +33,7 @@ import {
 import { useShowDemoView } from '~/pages/Portfolio/hooks/useShowDemoView'
 import { ChartScrubBreakdown } from '~/pages/Portfolio/Overview/BalanceBreakdownPopover/ChartScrubBreakdown'
 import { chartPeriodToHistoryDuration } from '~/pages/Portfolio/Overview/chartPeriodToHistoryDuration'
+import { createPortfolioYAxisFormatters } from '~/pages/Portfolio/Overview/createPortfolioYAxisFormatters'
 import { PortfolioChartCategory } from '~/pages/Portfolio/Overview/hooks/usePortfolioChartSeries'
 import { PortfolioBalanceHeader } from '~/pages/Portfolio/Overview/PortfolioBalanceHeader'
 import { PortfolioChartCategorySelector } from '~/pages/Portfolio/Overview/PortfolioChartCategorySelector'
@@ -178,19 +179,10 @@ export function PortfolioChart({
 
   const isDisabled = isPortfolioZero || !!error
 
-  // Custom y-axis formatter that removes decimals
-  const yAxisFormatter = useMemo(() => {
-    return (price: number): string => {
-      const rounded = Math.floor(price)
-      const formatter = new Intl.NumberFormat(locale, {
-        style: 'currency',
-        currency: appFiatCurrencyInfo.code,
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
-      })
-      return formatter.format(rounded)
-    }
-  }, [locale, appFiatCurrencyInfo.code])
+  const yAxisFormatters = useMemo(
+    () => createPortfolioYAxisFormatters({ locale, currency: appFiatCurrencyInfo.code }),
+    [locale, appFiatCurrencyInfo.code],
+  )
 
   const bodyProps = {
     data: series,
@@ -200,7 +192,8 @@ export function PortfolioChart({
     timePeriod: chartPeriodToHistoryDuration(selectedPeriod),
     overrideColor: animatedChartColor,
     hideYAxis: !isTotalValueMatch,
-    yAxisFormatter,
+    ...yAxisFormatters,
+    disableLowPriceRangeScaling: true,
   }
 
   const shouldShowBalanceHeader = !isPortfolioZero

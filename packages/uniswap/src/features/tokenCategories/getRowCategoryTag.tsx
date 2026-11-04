@@ -1,6 +1,6 @@
 import { RwaCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { CategoryTag } from 'uniswap/src/features/expandableAsset/CategoryTag'
-import { selectTokenRowCategoryTag } from 'uniswap/src/features/tokenCategories/selectTokenRowCategoryTag'
+import { selectRowCategoryTag } from 'uniswap/src/features/tokenCategories/selectRowCategoryTag'
 import { TokenCategoryTag } from 'uniswap/src/features/tokenCategories/TokenCategoryTag'
 import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
 
@@ -18,6 +18,6 @@ export function getRowCategoryTag({
   if (rwaCategory != null && rwaCategory !== RwaCategory.UNSPECIFIED) {
     return <CategoryTag category={rwaCategory} />
   }
-  const category = selectTokenRowCategoryTag({ categoryIds, categories })
+  const category = selectRowCategoryTag({ categoryIds, categories })
   return category ? <TokenCategoryTag category={category} /> : undefined
 }

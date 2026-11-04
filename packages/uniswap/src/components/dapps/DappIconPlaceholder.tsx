@@ -1,7 +1,6 @@
-import { Flex, Text } from '@universe/mycelium'
+import { Flex, Text, iconSizes } from '@universe/mycelium'
 import { useColorSchemeFromSeed } from '@universe/mycelium/theme-hooks-compat'
 import { memo } from 'react'
-import { iconSizes } from 'ui/src/theme'
 
 export function UnmemoizedDappIconPlaceholder({ name, iconSize }: { name?: string; iconSize: number }): JSX.Element {
   const { foreground: textColor, background: backgroundColor } = useColorSchemeFromSeed(name ?? '')

@@ -1,11 +1,10 @@
 import '~/pages/Liquidity/CreateAuction/components/LaunchAuctionProgressIndicator.css'
-import { Flex, getTokenValue, Separator, Text } from '@universe/mycelium'
+import { Flex, getTokenValue, Separator, Text, zIndexes } from '@universe/mycelium'
+import { Rocket } from '@universe/mycelium/icons/Rocket'
 import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
 import { VerticalDottedLineSeparator } from 'ui/src'
-import { Rocket } from 'ui/src/components/icons/Rocket'
-import { zIndexes } from 'ui/src/theme/zIndexes'
 import {
   STEP_ROW_HEIGHT,
   STEP_ROW_ICON_SIZE,

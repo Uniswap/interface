@@ -4,7 +4,7 @@ import {
   EarnVault as DataApiEarnVault,
 } from '@uniswap/client-data-api/dist/data/v2/earn_pb'
 import { CurrencyAmount, Token as SdkToken } from '@uniswap/sdk-core'
-import { GraphQLApi, TradingApi } from '@universe/api'
+import { TradingApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
@@ -294,9 +294,9 @@ describe('earn API mappers', () => {
   it('builds currency ids for token project deployments', () => {
     expect(
       getTokenProjectCurrencyIds([
-        { chain: GraphQLApi.Chain.Ethereum, address: USDC_ADDRESS },
-        { chain: GraphQLApi.Chain.Ethereum, address: null },
-        { chain: GraphQLApi.Chain.Base, address: BASE_USDC_ADDRESS },
+        { chainId: UniverseChainId.Mainnet, address: USDC_ADDRESS },
+        { chainId: UniverseChainId.Mainnet, address: null },
+        { chainId: UniverseChainId.Base, address: BASE_USDC_ADDRESS },
       ]),
     ).toEqual([
       buildCurrencyId(UniverseChainId.Mainnet, USDC_ADDRESS),

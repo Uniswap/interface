@@ -12,7 +12,10 @@ const BPS_DENOM = 10_000n
 // Which way the leg trades, which is NOT the position's direction: the swap always sells the
 // market's debt to buy its collateral on the way in and the reverse on the way out, for LONG and
 // SHORT alike. Keying the sign off direction instead reports every close and delever as favourable.
-export type MarginSwapSide = 'BUY_COLLATERAL' | 'SELL_COLLATERAL'
+export enum MarginSwapSide {
+  BUY_COLLATERAL = 'BUY_COLLATERAL',
+  SELL_COLLATERAL = 'SELL_COLLATERAL',
+}
 
 /**
  * Execution price against the venue's oracle mark, in bps, clamped at 0 for a favourable fill.
@@ -45,7 +48,7 @@ export function marginPriceImpactBps(params: {
   const exec = direction === MarginDirection.SHORT ? (WAD * WAD) / execDisplay : execDisplay
   const mark = direction === MarginDirection.SHORT ? (WAD * WAD) / markDisplay : markDisplay
 
-  const adverse = swapSide === 'BUY_COLLATERAL' ? exec - mark : mark - exec
+  const adverse = swapSide === MarginSwapSide.BUY_COLLATERAL ? exec - mark : mark - exec
   if (adverse <= 0n) {
     return 0
   }
@@ -77,5 +80,5 @@ export function marginPriceImpactSeverity(bps: number | undefined): WarningSever
  * effectivePrice either, so the impact row hides regardless of what this returns.
  */
 export function marginAdjustSwapSide(bounds: MarginBounds | undefined): MarginSwapSide {
-  return bounds?.decrease ? 'SELL_COLLATERAL' : 'BUY_COLLATERAL'
+  return bounds?.decrease ? MarginSwapSide.SELL_COLLATERAL : MarginSwapSide.BUY_COLLATERAL
 }

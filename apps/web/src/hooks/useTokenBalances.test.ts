@@ -4,12 +4,12 @@ import { DAI, USDC } from 'uniswap/src/constants/tokens'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { usePortfolioBalances } from 'uniswap/src/features/portfolio/balances/hooks'
 import { WETH } from 'uniswap/src/test/fixtures/lib/sdk'
-import { useActiveAddresses } from '~/features/accounts/store/hooks'
+import { useActiveAddresses } from '~/connection/accounts/hooks'
 import { useTokenBalances } from '~/hooks/useTokenBalances'
 import { mocked } from '~/test-utils/mocked'
 import { renderHook } from '~/test-utils/render'
 
-vi.mock('~/features/accounts/store/hooks', () => ({
+vi.mock('~/connection/accounts/hooks', () => ({
   useActiveAddresses: vi.fn(),
   useActiveWallet: vi.fn(),
   useConnectionStatus: vi.fn(() => ({ isConnected: false, isConnecting: false, isDisconnected: true })),

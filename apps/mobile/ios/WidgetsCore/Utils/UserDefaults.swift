@@ -23,7 +23,13 @@ public struct WidgetDataFavorites: Decodable {
 
 public struct TokenInput: Decodable {
   public var address: String?
-  public var chain: String
+  public var chainId: Int?
+  /// Legacy chain name, present only in favorites written by app versions before chain ids.
+  public var chain: String?
+
+  public var resolvedChainId: Int? {
+    return chainId ?? LegacyChainNames.chainId(forName: chain)
+  }
 }
 
 public struct WidgetDataAccounts: Decodable {
@@ -65,7 +71,9 @@ public struct WidgetDataChains: Decodable {
 
 public struct WidgetChain: Decodable {
   public var chainId: Int
-  public var name: String
+  /// Web-app path segment for the chain, used in widget deeplinks. Absent in chains written by app
+  /// versions before chain ids, and for chains with no web-app link.
+  public var urlParam: String?
   public var nativeAddress: String?
 }
 
@@ -228,21 +236,21 @@ public struct UniswapUserDefaults {
     }
   }
 
-  private static func tokenColorKey(chain: String, address: String?) -> String {
-    return "\(chain.lowercased()):\(address?.lowercased() ?? "native")"
+  private static func tokenColorKey(chainId: Int, address: String?) -> String {
+    return "\(chainId):\(address?.lowercased() ?? "native")"
   }
 
   /// Last background color extracted for a token, so the widget can keep it while a refresh is failing.
-  public static func readTokenColor(chain: String, address: String?) -> UIColor? {
+  public static func readTokenColor(chainId: Int, address: String?) -> UIColor? {
     guard let colors = userDefaults?.dictionary(forKey: keyTokenColors),
-          let rgba = colors[tokenColorKey(chain: chain, address: address)] as? [Double],
+          let rgba = colors[tokenColorKey(chainId: chainId, address: address)] as? [Double],
           rgba.count == 4 else {
       return nil
     }
     return UIColor(red: rgba[0], green: rgba[1], blue: rgba[2], alpha: rgba[3])
   }
 
-  public static func writeTokenColor(chain: String, address: String?, color: UIColor) {
+  public static func writeTokenColor(chainId: Int, address: String?, color: UIColor) {
     guard let userDefaults = userDefaults else {
       return
     }
@@ -251,7 +259,7 @@ public struct UniswapUserDefaults {
       return
     }
     var colors = userDefaults.dictionary(forKey: keyTokenColors) ?? [:]
-    colors[tokenColorKey(chain: chain, address: address)] = [red, green, blue, alpha].map { Double($0) }
+    colors[tokenColorKey(chainId: chainId, address: address)] = [red, green, blue, alpha].map { Double($0) }
     userDefaults.set(colors, forKey: keyTokenColors)
   }
 }

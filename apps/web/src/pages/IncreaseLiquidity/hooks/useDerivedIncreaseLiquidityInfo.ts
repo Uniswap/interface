@@ -1,7 +1,7 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import { useAccount } from '~/connection/hooks/useAccount'
 import { useDepositInfo } from '~/features/Liquidity/Create/hooks/useDepositInfo'
 import { getCurrencyWithOptionalUnwrap } from '~/features/Liquidity/utils/currency'
-import { useAccount } from '~/hooks/useAccount'
 import type {
   IncreaseLiquidityDerivedInfo,
   IncreaseLiquidityState,

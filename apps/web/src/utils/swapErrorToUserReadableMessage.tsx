@@ -1,5 +1,6 @@
 import { Code, ConnectError } from '@connectrpc/connect'
 import { WalletSignTransactionError } from '@solana/wallet-adapter-base'
+import { isBlockedAccountFetchError } from '@universe/api'
 import { TFunction } from 'i18next'
 import { didUserReject, errorTextParts, someInErrorChain } from 'utilities/src/errors/walletRejection'
 import { logger } from 'utilities/src/logger/logger'
@@ -31,10 +32,13 @@ function isBlockedAccountOneLevel(error: any): boolean {
   if (error instanceof ConnectError && error.code === Code.Unauthenticated) {
     return true
   }
+  if (isBlockedAccountFetchError(error)) {
+    return true
+  }
   return errorTextParts(error).some((part) => part.match(/account is blocked/i))
 }
 
-/** A backend UnauthorizedError for a sanctioned/blocked wallet (ConnectRPC `Code.Unauthenticated` or an "account is blocked" reason anywhere in the chain). */
+/** A backend refusal for a sanctioned/blocked wallet (ConnectRPC `Code.Unauthenticated`, a Trading API 401/403 blocked-account body, or an "account is blocked" reason anywhere in the chain). */
 export function isBlockedAccountError(error: any): boolean {
   return someInErrorChain(error, isBlockedAccountOneLevel)
 }

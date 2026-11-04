@@ -1,6 +1,5 @@
+import { defaultWeights, Input as BaseInput, type InputProps as BaseInputProps } from '@universe/mycelium'
 import React, { type ElementRef, forwardRef, type ForwardRefExoticComponent, type RefAttributes } from 'react'
-import { Input as BaseInput, type InputProps as BaseInputProps } from 'ui/src'
-import { defaultWeights } from 'ui/src/theme'
 import { Locale } from 'uniswap/src/features/language/constants'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { escapeRegExp } from '~/utils/escapeRegExp'
@@ -63,7 +62,7 @@ export function localeUsesComma(locale: Locale): boolean {
 
 const inputRegex = RegExp(`^\\d*(?:\\\\[.])?\\d*$`) // match escaped "." characters via in a non-capturing group
 
-/** `ui/src` Input props accepted by `StyledInput`, excluding fields owned by numerical-input logic. */
+/** Compat Input props accepted by `StyledInput`, excluding fields owned by numerical-input logic. */
 export type NumericalInputPassthrough = Omit<
   StyledInputProps,
   'value' | 'onChangeText' | 'onChange' | 'defaultValue' | 'amountLayout'

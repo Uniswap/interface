@@ -1,5 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import { Text } from '@universe/mycelium'
+import { colorsLight } from '@universe/mycelium/theme-palette'
+import { zIndexes } from '@universe/mycelium/tokens'
 import {
   Coachmark,
   COACHMARK_BUBBLE_TEST_ID,
@@ -7,8 +9,6 @@ import {
   getNativePlacement,
 } from 'ui/src/components/coachmark/Coachmark.native'
 import { SharedUIUniswapProvider } from 'ui/src/test/render'
-import { colorsLight } from 'ui/src/theme/color/colors'
-import { zIndexes } from 'ui/src/theme/zIndexes'
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
 const { contentPropsSpy, arrowPropsSpy } = vi.hoisted(() => ({

@@ -36,7 +36,7 @@ vi.mock('@universe/gating', async () => ({
   getFeatureFlag: vi.fn(() => true),
 }))
 vi.mock('uniswap/src/features/telemetry/send', () => ({ sendAnalyticsEvent: vi.fn() }))
-vi.mock('~/hooks/useSelectChain', () => ({ useSelectChain: vi.fn() }))
+vi.mock('~/connection/hooks/useSelectChain', () => ({ useSelectChain: vi.fn() }))
 
 import { configureStore } from '@reduxjs/toolkit'
 import { UniverseChainId } from '@universe/chains'

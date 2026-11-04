@@ -11,11 +11,21 @@ import { useKeyDown } from 'utilities/src/device/keyboard/useKeyDown'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { NavIcon } from '~/components/NavBar/NavIcon'
 import { SearchModal } from '~/components/NavBar/SearchBar/SearchModal'
-import { useIsSearchBarVisible } from '~/components/NavBar/SearchBar/useIsSearchBarVisible'
+import { NavSearchVariant } from '~/components/NavBar/SearchBar/useNavSearchVariant'
 import { useModalState } from '~/hooks/useModalState'
 import { EllipsisTamaguiStyle } from '~/theme/components/styles'
 
-const NAV_SEARCH_MIN_WIDTH = '320px'
+export const NAV_CONTROL_HEIGHT = 36
+
+type SearchInputStyle = { width: string; height: number; showShortcut: boolean }
+
+// No `/` hint on the compact input: it only shows on touch-sized layouts.
+const SEARCH_INPUT_STYLES: Record<NavSearchVariant, SearchInputStyle | undefined> = {
+  [NavSearchVariant.Icon]: undefined,
+  [NavSearchVariant.LegacyInput]: { width: '320px', height: 40, showShortcut: true },
+  [NavSearchVariant.Input]: { width: '240px', height: NAV_CONTROL_HEIGHT, showShortcut: true },
+  [NavSearchVariant.CompactInput]: { width: '184px', height: NAV_CONTROL_HEIGHT, showShortcut: false },
+}
 
 const KeyShortcut = styled('div', {
   platform: 'web',
@@ -33,9 +43,9 @@ const NavSearchIcon = styled('div', {
   base: 'w-[20px] h-[20px] media-md:[&_path]:[fill-opacity:1]',
 })
 
-export const SearchBar = () => {
+export const SearchBar = ({ variant }: { variant: NavSearchVariant }) => {
   const { t } = useTranslation()
-  const isNavSearchInputVisible = useIsSearchBarVisible()
+  const inputStyle = SEARCH_INPUT_STYLES[variant]
   const isAuctionSearchEnabled = useFeatureFlag(FeatureFlags.AuctionSearch)
 
   const {
@@ -68,8 +78,8 @@ export const SearchBar = () => {
   return (
     <Trace section={SectionName.NavbarSearch}>
       <SearchModal isAuctionSearchEnabled={isAuctionSearchEnabled} />
-      {isNavSearchInputVisible ? (
-        <TouchableArea onPress={openSearchModal} testID="nav-search-input" width={NAV_SEARCH_MIN_WIDTH}>
+      {inputStyle ? (
+        <TouchableArea onPress={openSearchModal} testID="nav-search-input" width={inputStyle.width}>
           <Flex
             row
             backgroundColor="$surface2"
@@ -78,14 +88,14 @@ export const SearchBar = () => {
             py="$spacing8"
             px="$spacing16"
             borderRadius="$rounded20"
-            height={40}
+            height={inputStyle.height}
             alignItems="center"
             justifyContent="space-between"
             hoverStyle={{
               backgroundColor: '$surface1Hovered',
             }}
           >
-            <Flex shrink row gap="$spacing12">
+            <Flex shrink row alignItems="center" gap="$spacing12">
               <SearchIcon data-testid={TestID.NavSearchIcon}>
                 <Search size="$icon.20" color="$neutral2" />
               </SearchIcon>
@@ -100,7 +110,7 @@ export const SearchBar = () => {
                 </Text>
               </Trace>
             </Flex>
-            <KeyShortcut>/</KeyShortcut>
+            {inputStyle.showShortcut && <KeyShortcut>/</KeyShortcut>}
           </Flex>
         </TouchableArea>
       ) : (

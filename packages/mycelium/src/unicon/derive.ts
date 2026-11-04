@@ -1,9 +1,9 @@
 import { isEVMAddressWithChecksum } from 'utilities/src/addresses/evm/evm'
 import { isSVMAddress } from 'utilities/src/addresses/svm/svm'
-// Transitional coupling: the design system takes viem only for legacy avatar
-// parity, until ui/src/components/Unicon is removed (the INFRA-3476 swap path).
+// viem backs the address hash only: it keeps every wallet's avatar identical to
+// the one the retired ui/src Unicon drew.
 import { getAddress, keccak256, stringToBytes } from 'viem'
-import { COLOR_COUNT } from './colors'
+import { COLOR_COUNT, UNICON_COLORS } from './colors'
 import { hashString } from './hash'
 import { type IconPaths, Icons } from './icons'
 import type { UniconIdentityProps } from './types'
@@ -34,9 +34,8 @@ export interface UniconDerivation {
 /**
  * Legacy-parity hash for wallet addresses: keccak256 of the EIP-55
  * normalized (EVM) or raw base58 (SVM) address, first 10 hex chars as a
- * 40-bit integer — byte-for-byte the derivation of
- * `ui/src/components/Unicon/utils.ts` (`getUniconsDeterministicHash`), so the
- * same address renders the same avatar in both systems.
+ * 40-bit integer — byte-for-byte the derivation of the retired `ui/src`
+ * Unicon, so an address keeps the avatar it had there.
  *
  * Returns undefined for anything the legacy component rejects (it renders
  * null there); those inputs take the cyrb53 backup path instead.
@@ -93,6 +92,15 @@ export function deriveUnicon(input: string): UniconDerivation {
     colorIndex,
     paths: Icons[iconKeys[iconIndex] as keyof typeof Icons] as IconPaths,
   }
+}
+
+/**
+ * The avatar's palette colour as a literal hex, for callers that tint other UI
+ * from it (profile gradients, address colours) rather than rendering the avatar.
+ */
+export function getUniconColor(input: string, isDarkMode: boolean): string {
+  const palette = isDarkMode ? UNICON_COLORS.dark : UNICON_COLORS.light
+  return palette[deriveUnicon(input).colorIndex] ?? palette[0]
 }
 
 /** Layout math shared by both legs — identical geometry, identical avatar. */

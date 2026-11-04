@@ -10,7 +10,7 @@ import { PSEUDO_STYLE_KEYS, PSEUDO_VARIANT, type PseudoStyleKey } from '../compa
  * Anchor color contract (INFRA-3115 QA finding F1): a Text rendered as an
  * anchor must carry its resolved base color on the style attribute — legacy
  * apps keep an unlayered global `a { color }` that beats every
- * `@layer utilities` class, and the legacy Tamagui Anchor (unlayered atomic
+ * `@layer utilities` class, and the legacy Anchor (unlayered atomic
  * CSS) always painted its own color over it. Assertions read the serialized
  * markup (renderToStaticMarkup) because jsdom's CSSOM drops var()-valued
  * declarations (see createIcon.test.tsx precedent).

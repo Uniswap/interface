@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { AuctionBidStatus, AuctionOutcome } from '~/features/Toucan/Auction/store/types'
-import { getBidDisplayInfo } from '~/features/Toucan/Auction/utils/bidDetails'
+import { formatTokenAmountWithSubscript, getBidDisplayInfo } from '~/features/Toucan/Auction/utils/bidDetails'
 
 function displayInfo({
   outcome,
@@ -177,5 +177,38 @@ describe('getBidDisplayInfo', () => {
 
       expect(descriptionState).toBe('inRangeInProgress')
     })
+  })
+})
+
+describe('formatTokenAmountWithSubscript', () => {
+  it('renders 4+ leading zeros as en-US subscript with a dot separator', () => {
+    expect(formatTokenAmountWithSubscript({ raw: 12_345n, decimals: 9, symbol: 'ETH', locale: 'en-US' })).toBe(
+      '0.0₄123 ETH',
+    )
+  })
+
+  it('renders 4+ leading zeros as nl-NL subscript with a comma separator', () => {
+    expect(formatTokenAmountWithSubscript({ raw: 12_345n, decimals: 9, symbol: 'ETH', locale: 'nl-NL' })).toBe(
+      '0,0₄123 ETH',
+    )
+  })
+
+  it('formats amounts below the subscript threshold with the locale separators', () => {
+    expect(formatTokenAmountWithSubscript({ raw: 123n, decimals: 4, symbol: 'USDC', locale: 'en-US' })).toBe(
+      '0.0123 USDC',
+    )
+    expect(formatTokenAmountWithSubscript({ raw: 123n, decimals: 4, symbol: 'USDC', locale: 'nl-NL' })).toBe(
+      '0,0123 USDC',
+    )
+    expect(formatTokenAmountWithSubscript({ raw: 1_234_500_000n, decimals: 6, symbol: 'USDC', locale: 'en-US' })).toBe(
+      '1,234.5 USDC',
+    )
+    expect(formatTokenAmountWithSubscript({ raw: 1_234_500_000n, decimals: 6, symbol: 'USDC', locale: 'nl-NL' })).toBe(
+      '1.234,5 USDC',
+    )
+    expect(formatTokenAmountWithSubscript({ raw: 5_000_000n, decimals: 6, symbol: 'USDC', locale: 'nl-NL' })).toBe(
+      '5 USDC',
+    )
+    expect(formatTokenAmountWithSubscript({ raw: 0n, decimals: 6, symbol: 'USDC', locale: 'nl-NL' })).toBe('0 USDC')
   })
 })

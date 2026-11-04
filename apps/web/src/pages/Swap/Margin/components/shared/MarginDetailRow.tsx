@@ -1,7 +1,6 @@
-import { Flex, Text } from '@universe/mycelium'
+import { Flex, Text, Tooltip } from '@universe/mycelium'
+import { InfoCircleFilled } from '@universe/mycelium/icons/InfoCircleFilled'
 import type { ReactNode } from 'react'
-import { Tooltip } from 'ui/src'
-import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 
 // label (+ optional info-icon tooltip) left, value right. Generalizes the drawer's FeeRow/DrawerRow.
 // value is a ReactNode so callers can pass a health-colored Text; a plain string gets the default style.

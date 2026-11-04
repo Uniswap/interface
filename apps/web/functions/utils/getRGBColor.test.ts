@@ -4,7 +4,7 @@ const DEFAULT_COLOR = { red: 35, green: 43, blue: 43 }
 
 /**
  * Regression tests for the SSRF/defense-in-depth posture of the OG-image
- * color extractor. The URL flows in from the backend GraphQL response
+ * color extractor. The URL flows in from the backend data API response
  * (`project.logoUrl`); if the upstream ever returns a non-https or
  * IP-literal URL it should not be fetched.
  */

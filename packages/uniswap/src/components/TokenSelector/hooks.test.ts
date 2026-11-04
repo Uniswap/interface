@@ -573,11 +573,11 @@ describe(useCurrencyInfosToTokenOptions, () => {
       input: { currencyInfos, sortAlphabetically: true, portfolioBalancesById: balancesById },
       output: [
         // Arbitrum DAI does not exist in the portfolioBalancesById so we will create empty balance options
-        createEmptyBalanceOption(arbitrumDaiInfo), // GraphQLApi.Chain name: Arbitrum ETH
+        createEmptyBalanceOption(arbitrumDaiInfo), // name: Arbitrum ETH
         // USDC does not exist in the portfolioBalancesById so we will create empty balance options
-        createEmptyBalanceOption(usdcBaseInfo), // GraphQLApi.Chain name: Base ETH
+        createEmptyBalanceOption(usdcBaseInfo), // name: Base ETH
         // ETH exists in the portfolioBalancesById so we will get its balance
-        { ...balancesById[ethInfo.currencyId], type: OnchainItemListOptionType.Token }, // GraphQLApi.Chain name: ETH
+        { ...balancesById[ethInfo.currencyId], type: OnchainItemListOptionType.Token }, // name: ETH
       ],
     },
   ]

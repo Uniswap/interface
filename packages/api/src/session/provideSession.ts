@@ -1,7 +1,7 @@
-import { SharedQueryClient } from '@universe/api/src/clients/base/SharedQueryClient'
 import type { Session, SessionInitializationService } from '@universe/sessions'
 import { createSession, SessionNotBootstrappedError, sessionInitQuery } from '@universe/sessions'
 import type { Logger } from 'utilities/src/logger/logger'
+import { SharedQueryClient } from '../clients/base/SharedQueryClient'
 
 let cachedSession: Session | null = null
 
