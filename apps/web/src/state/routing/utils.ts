@@ -91,11 +91,24 @@ export function computeRoutes(args: GetQuoteArgs, routes: ClassicQuoteData['rout
       const isOnlyV2 = isVersionedRoute<V2PoolInRoute>(PoolType.V2Pool, route)
       const isOnlyV3 = isVersionedRoute<V3PoolInRoute>(PoolType.V3Pool, route)
 
+      // Trading API has returned route token decimals as the string "undefined" for
+      // non-divisible (decimals = 0) tokens (#8020). Prefer the request-side decimals
+      // we already trust for the trade currencies when the route payload is unusable.
+      const decimalsByAddress = tradeCurrencyDecimalsByAddress(currencyIn, currencyOut)
+      const parsePoolWithFallback = (pool: V3PoolInRoute) => parsePool(pool, decimalsByAddress)
+      const parsePairWithFallback = (pool: V2PoolInRoute) => parsePair(pool, decimalsByAddress)
+      const parsePoolOrPairWithFallback = (pool: V3PoolInRoute | V2PoolInRoute) =>
+        pool.type === PoolType.V3Pool
+          ? parsePoolWithFallback(pool)
+          : parsePairWithFallback(pool)
+
       return {
-        routev3: isOnlyV3 ? new V3Route(route.map(parsePool), currencyIn, currencyOut) : null,
-        routev2: isOnlyV2 ? new V2Route(route.map(parsePair), currencyIn, currencyOut) : null,
+        routev3: isOnlyV3 ? new V3Route(route.map(parsePoolWithFallback), currencyIn, currencyOut) : null,
+        routev2: isOnlyV2 ? new V2Route(route.map(parsePairWithFallback), currencyIn, currencyOut) : null,
         mixedRoute:
-          !isOnlyV3 && !isOnlyV2 ? new MixedRouteSDK(route.map(parsePoolOrPair), currencyIn, currencyOut) : null,
+          !isOnlyV3 && !isOnlyV2
+            ? new MixedRouteSDK(route.map(parsePoolOrPairWithFallback), currencyIn, currencyOut)
+            : null,
         inputAmount: CurrencyAmount.fromRawAmount(currencyIn, rawAmountIn),
         outputAmount: CurrencyAmount.fromRawAmount(currencyOut, rawAmountOut),
       }
@@ -104,10 +117,6 @@ export function computeRoutes(args: GetQuoteArgs, routes: ClassicQuoteData['rout
     logger.warn('routing/utils', 'computeRoutes', 'Failed to compute routes', { error: e })
     return undefined
   }
-}
-
-const parsePoolOrPair = (pool: V3PoolInRoute | V2PoolInRoute): Pool | Pair => {
-  return pool.type === PoolType.V3Pool ? parsePool(pool) : parsePair(pool)
 }
 
 function isVersionedRoute<T extends V2PoolInRoute | V3PoolInRoute>(
@@ -490,16 +499,63 @@ export async function transformQuoteToTrade({
   return { state: QuoteState.SUCCESS, trade: classicTrade }
 }
 
-function parseToken({ address, chainId, decimals, symbol, buyFeeBps, sellFeeBps }: TokenInRoute): Token {
-  const buyFeeBpsBN = buyFeeBps ? BigNumber.from(buyFeeBps) : undefined
-  const sellFeeBpsBN = sellFeeBps ? BigNumber.from(sellFeeBps) : undefined
-  return new Token(chainId, address, parseInt(decimals.toString()), symbol, undefined, false, buyFeeBpsBN, sellFeeBpsBN)
+function tradeCurrencyDecimalsByAddress(currencyIn: Currency, currencyOut: Currency): Map<string, number> {
+  const map = new Map<string, number>()
+  for (const currency of [currencyIn, currencyOut]) {
+    const address = (currency.isNative ? currency.wrapped.address : currency.address).toLowerCase()
+    map.set(address, currency.decimals)
+  }
+  return map
 }
 
-function parsePool({ fee, sqrtRatioX96, liquidity, tickCurrent, tokenIn, tokenOut }: V3PoolInRoute): Pool {
+/** Coerce route-token decimals; treats the string "undefined"/"null" and NaN as missing (#8020). */
+function resolveRouteTokenDecimals(
+  decimals: TokenInRoute['decimals'],
+  address: string,
+  decimalsByAddress?: Map<string, number>,
+): number {
+  if (typeof decimals === 'number' && Number.isFinite(decimals) && decimals >= 0) {
+    return decimals
+  }
+  const raw = String(decimals)
+  if (raw !== 'undefined' && raw !== 'null' && raw !== '') {
+    const parsed = Number.parseInt(raw, 10)
+    if (Number.isFinite(parsed) && parsed >= 0) {
+      return parsed
+    }
+  }
+  const fallback = decimalsByAddress?.get(address.toLowerCase())
+  if (fallback !== undefined) {
+    return fallback
+  }
+  throw new Error(`Invalid token decimals for ${address}: ${decimals}`)
+}
+
+function parseToken(
+  { address, chainId, decimals, symbol, buyFeeBps, sellFeeBps }: TokenInRoute,
+  decimalsByAddress?: Map<string, number>,
+): Token {
+  const buyFeeBpsBN = buyFeeBps ? BigNumber.from(buyFeeBps) : undefined
+  const sellFeeBpsBN = sellFeeBps ? BigNumber.from(sellFeeBps) : undefined
+  return new Token(
+    chainId,
+    address,
+    resolveRouteTokenDecimals(decimals, address, decimalsByAddress),
+    symbol,
+    undefined,
+    false,
+    buyFeeBpsBN,
+    sellFeeBpsBN,
+  )
+}
+
+function parsePool(
+  { fee, sqrtRatioX96, liquidity, tickCurrent, tokenIn, tokenOut }: V3PoolInRoute,
+  decimalsByAddress?: Map<string, number>,
+): Pool {
   return new Pool(
-    parseToken(tokenIn),
-    parseToken(tokenOut),
+    parseToken(tokenIn, decimalsByAddress),
+    parseToken(tokenOut, decimalsByAddress),
     parseInt(fee) as FeeAmount,
     sqrtRatioX96,
     liquidity,
@@ -507,10 +563,13 @@ function parsePool({ fee, sqrtRatioX96, liquidity, tickCurrent, tokenIn, tokenOu
   )
 }
 
-const parsePair = ({ reserve0, reserve1 }: V2PoolInRoute): Pair =>
+const parsePair = (
+  { reserve0, reserve1 }: V2PoolInRoute,
+  decimalsByAddress?: Map<string, number>,
+): Pair =>
   new Pair(
-    CurrencyAmount.fromRawAmount(parseToken(reserve0.token), reserve0.quotient),
-    CurrencyAmount.fromRawAmount(parseToken(reserve1.token), reserve1.quotient),
+    CurrencyAmount.fromRawAmount(parseToken(reserve0.token, decimalsByAddress), reserve0.quotient),
+    CurrencyAmount.fromRawAmount(parseToken(reserve1.token, decimalsByAddress), reserve1.quotient),
   )
 
 // TODO(WEB-2050): Convert other instances of tradeType comparison to use this utility function

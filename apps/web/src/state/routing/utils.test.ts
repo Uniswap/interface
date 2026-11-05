@@ -10,6 +10,14 @@ const DAI = new Token(1, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 6, 'DAI',
 const DAI_IN_ROUTE = toTokenInRoute(DAI)
 const MKR = new Token(1, '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2', 6, 'MKR', undefined, false)
 const MKR_IN_ROUTE = toTokenInRoute(MKR)
+// Non-divisible ERC-20 (decimals = 0); Trading API has returned decimals as the string "undefined" (#8020).
+const WAAC = new Token(1, '0x30aE41D5f9988D359c733232C6c693c0e645C77E', 0, 'WAAC', undefined, false)
+const WAAC_IN_ROUTE_BAD_DECIMALS: TokenInRoute = {
+  ...toTokenInRoute(WAAC),
+  // Simulate the Trading API payload that stringifies a missing/falsy decimals field.
+  decimals: 'undefined' as unknown as number,
+}
+
 
 const ETH = nativeOnChain(UniverseChainId.Mainnet)
 const WETH_IN_ROUTE = toTokenInRoute(ETH.wrapped)
@@ -55,6 +63,31 @@ describe('#useRoute', () => {
   it('handles empty edges and nodes', () => {
     const result = computeRoutes(constructArgs(USDC, DAI, URAQuoteType.CLASSIC), [])
     expect(result).toEqual([])
+  })
+
+  it('uses request-side decimals when the route token decimals are the string undefined (0-decimal tokens)', () => {
+    const result = computeRoutes(constructArgs(ETH, WAAC, URAQuoteType.CLASSIC), [
+      [
+        {
+          type: 'v3-pool',
+          address: '0xebA623e4F5c7735427a9EF491ecEE082DD4bF6CE',
+          amountIn: '1000000000000000000',
+          amountOut: '28',
+          fee: '10000',
+          sqrtRatioX96: '1036579878116322645845176611245035266',
+          liquidity: '3700174570818',
+          tickCurrent: '230027',
+          tokenIn: WETH_IN_ROUTE,
+          tokenOut: WAAC_IN_ROUTE_BAD_DECIMALS,
+        },
+      ],
+    ])
+
+    expect(result).toBeDefined()
+    expect(result?.[0]?.outputAmount.currency.decimals).toBe(0)
+    expect(result?.[0]?.outputAmount.quotient.toString()).toBe('28')
+    // Pool tokenOut must also resolve to 0 so route construction does not get NaN decimals.
+    expect(result?.[0]?.routev3?.output.decimals).toBe(0)
   })
 
   it('handles a single route trade from DAI to USDC from v3', () => {
