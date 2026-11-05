@@ -24,7 +24,7 @@ describe(sanitizeTransactionRequest, () => {
       to: '0x8c106EEDAd96553e64287A5A6839c3Cc78afA3D0',
       from: '0x8992850c6A7782C4fC57Ef308e734899Be90aeB2',
       data: '0x1234',
-      value: '0x00',
+      value: '0x0',
       chainId: 1,
       gasLimit: '395265',
       maxFeePerGas: '365377353',
@@ -38,3 +38,14 @@ describe(sanitizeTransactionRequest, () => {
     expect(sanitizeTransactionRequest({ to: '0x8c106EEDAd96553e64287A5A6839c3Cc78afA3D0' })).toBeUndefined()
   })
 })
+
+  it('canonicalizes QUANTITY hex value (EIP-1474, no leading zeros)', () => {
+    const sanitized = sanitizeTransactionRequest({
+      to: '0x8c106EEDAd96553e64287A5A6839c3Cc78afA3D0',
+      chainId: 4663,
+      value: '0x033f55c29d710000',
+      data: '0x',
+    })
+
+    expect(sanitized?.value).toBe('0x33f55c29d710000')
+  })
