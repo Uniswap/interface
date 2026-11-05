@@ -219,7 +219,7 @@ export function useBidReviewData({
 
   // Calculate Max FDV (totalSupply * maxPrice) in bid token
   const maxFdvData = useMemo(() => {
-    if (!preparedBid || !totalSupply || !auctionTokenDecimals || fallbackBidTokenDecimals === undefined) {
+    if (!preparedBid || !totalSupply || auctionTokenDecimals === undefined || fallbackBidTokenDecimals === undefined) {
       return { formatted: undefined, fiatFormatted: undefined, preciseFormatted: undefined }
     }
 
