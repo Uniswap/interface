@@ -19,6 +19,16 @@ export function isAddressTokenSearchQuery(query: string | null | undefined): boo
   )
 }
 
+/**
+ * Recognize explicit ENS names and subnames in token searches. Do not autocomplete
+ * normal token names/symbols into ENS lookups: that would change ordinary searches
+ * and could mislead users into selecting unrelated token addresses.
+ */
+export function getExplicitEnsTokenSearchName(query: string | null | undefined): string | null {
+  const name = query?.trim()
+  return name && /^(?:[^\s./#?]+\.)+eth$/i.test(name) ? name : null
+}
+
 export function tokenAddressOrNativeAddress(address: string, chainId: UniverseChainId): string | null {
   const nativeAddress = getNativeAddress(chainId)
 

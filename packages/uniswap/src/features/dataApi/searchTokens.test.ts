@@ -5,9 +5,20 @@ import type { CurrencyInfo, MultichainSearchResult } from 'uniswap/src/features/
 import { createRankedMultichainToken } from 'uniswap/src/test/fixtures/dataApi/rankedMultichainToken'
 import { renderHook } from 'uniswap/src/test/test-utils'
 
-const { mockUseEnabledChains, mockUseSearchQuery } = vi.hoisted(() => ({
+const { mockUseEnabledChains, mockUseSearchQuery, mockUseAddressFromEns } = vi.hoisted(() => ({
   mockUseEnabledChains: vi.fn(),
   mockUseSearchQuery: vi.fn(),
+  mockUseAddressFromEns: vi.fn(),
+}))
+
+vi.mock('@universe/environment', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@universe/environment')>()),
+  isWebApp: true,
+}))
+
+vi.mock('uniswap/src/features/ens/api', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('uniswap/src/features/ens/api')>()),
+  useAddressFromEns: mockUseAddressFromEns,
 }))
 
 vi.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
@@ -27,6 +38,8 @@ function getSelect(): (data: SearchResponse) => MultichainSearchResult[] {
 
 describe(useMultichainSearchTokens, () => {
   beforeEach(() => {
+    mockUseAddressFromEns.mockReset()
+    mockUseAddressFromEns.mockReturnValue({ data: null, isLoading: false })
     mockUseEnabledChains.mockReturnValue({
       chains: [UniverseChainId.Mainnet, UniverseChainId.Base, UniverseChainId.Robinhood],
     })
@@ -58,6 +71,37 @@ describe(useMultichainSearchTokens, () => {
       }),
     )
     expect(result.current.data).toBe(data)
+  })
+
+  it('looks up explicit ENS subnames and searches the resolved token address', () => {
+    const address = '0x00000000000000000000000000000000000000a1'
+    mockUseAddressFromEns.mockReturnValue({ data: address, isLoading: false })
+    renderHook(() =>
+      useMultichainSearchTokens({ searchQuery: 'token.example.eth', chainFilter: UniverseChainId.Mainnet, skip: false }),
+    )
+
+    expect(mockUseAddressFromEns).toHaveBeenCalledWith('token.example.eth')
+    expect(mockUseSearchQuery).toHaveBeenCalledWith(
+      expect.objectContaining({ input: expect.objectContaining({ searchQuery: address }) }),
+    )
+  })
+
+  it('does not resolve ENS for non-mainnet or restricted selectors', () => {
+    mockUseAddressFromEns.mockReturnValue({ data: '0x00000000000000000000000000000000000000a1' })
+    renderHook(() =>
+      useMultichainSearchTokens({ searchQuery: 'token.eth', chainFilter: UniverseChainId.Base, skip: false }),
+    )
+    expect(mockUseAddressFromEns).toHaveBeenCalledWith(null)
+    expect(mockUseSearchQuery).toHaveBeenCalledWith(
+      expect.objectContaining({ input: expect.objectContaining({ searchQuery: 'token.eth' }) }),
+    )
+  })
+
+  it('does not resolve plain token symbols as ENS names', () => {
+    renderHook(() =>
+      useMultichainSearchTokens({ searchQuery: 'USDC', chainFilter: UniverseChainId.Mainnet, skip: false }),
+    )
+    expect(mockUseAddressFromEns).toHaveBeenCalledWith(null)
   })
 
   it('passes the provided chainIds when all networks is selected in a constrained selector', () => {

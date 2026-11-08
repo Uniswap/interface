@@ -1,5 +1,5 @@
 import { UniverseChainId } from '@universe/chains'
-import { isExtensionApp } from '@universe/environment'
+import { isExtensionApp, isWebApp } from '@universe/environment'
 import {
   DynamicConfigs,
   useDynamicConfigValue,
@@ -16,6 +16,7 @@ import { useMultichainSearchResultsToOptions } from 'uniswap/src/components/Toke
 import { useAllTokenCategories } from 'uniswap/src/data/apiClients/dataApiService/categories/useAllTokenCategories'
 import { useSearchAuctionOptions } from 'uniswap/src/features/dataApi/searchAuctions'
 import { useSearchResults } from 'uniswap/src/features/dataApi/searchResults'
+import { useAddressFromEns } from 'uniswap/src/features/ens/api'
 import { toCategoryOptions } from 'uniswap/src/features/search/SearchModal/categories/toCategoryOptions'
 import { useEarnSearchResults } from 'uniswap/src/features/search/SearchModal/hooks/useEarnSearchResults'
 import {
@@ -40,7 +41,7 @@ import { applyRwaGroupingToSearchOptions } from 'uniswap/src/features/search/Sea
 import { applyServerTokenGroupsToSearchOptions } from 'uniswap/src/features/search/SearchModal/stocks/applyServerTokenGroups'
 import { useRwaIndex } from 'uniswap/src/features/search/SearchModal/stocks/useRwaIndex'
 import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
-import { isAddressTokenSearchQuery } from 'uniswap/src/features/search/utils'
+import { getExplicitEnsTokenSearchName, isAddressTokenSearchQuery } from 'uniswap/src/features/search/utils'
 
 export function useSectionsForSearchResults({
   chainFilter,
@@ -59,9 +60,22 @@ export function useSectionsForSearchResults({
 }): SearchModalSectionResult & { truncatedSectionKeys: OnchainItemSectionName[] } {
   const useMultichainPath = chainFilter === null
 
+  // ENS forward records resolve on Ethereum mainnet. For an explicit .eth name,
+  // reuse the existing lookup to search the token address without changing wallet
+  // search, arbitrary token symbols, or searches pinned to another chain.
+  const ensTokenName =
+    isWebApp &&
+    activeTab !== SearchTab.Wallets &&
+    (chainFilter === null || chainFilter === UniverseChainId.Mainnet)
+      ? getExplicitEnsTokenSearchName(searchFilter)
+      : null
+  const { data: ensTokenAddress } = useAddressFromEns(ensTokenName)
+  const resolvedTokenAddress = isAddressTokenSearchQuery(ensTokenAddress) ? ensTokenAddress : null
+  const tokenSearchQuery = resolvedTokenAddress ?? searchFilter
+
   // RWA (tokenized stock) grouping
   const rwaIndex = useRwaIndex()
-  const isAddressSearch = isAddressTokenSearchQuery(searchFilter)
+  const isAddressSearch = isAddressTokenSearchQuery(tokenSearchQuery)
 
   // Category rows render on the All tab only, and never on the extension, which has no Category Details surface.
   const tokenCategoriesEnabled = useIsTokenCategoriesEnabled()
@@ -79,7 +93,7 @@ export function useSectionsForSearchResults({
     refetch: refetchSearchResults,
     isLoading: searchLoading,
   } = useSearchResults({
-    searchQuery: searchFilter,
+    searchQuery: tokenSearchQuery,
     chainFilter,
     types: searchTypes,
     skip: shouldSkipSearch({ activeTab, searchFilter }),
