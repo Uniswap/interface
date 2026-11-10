@@ -214,7 +214,7 @@ export function getFieldsDisabled({
       isTokenSideExhausted({ pool: poolOrPair, edgeTick: tickUpper, isToken0: true }))
   const deposit1Disabled =
     typeof tickLower === 'number' &&
-    (poolOrPair.tickCurrent <= tickLower ||
+    (poolOrPair.tickCurrent < tickLower ||
       isTokenSideExhausted({ pool: poolOrPair, edgeTick: tickLower, isToken0: false }))
 
   return {

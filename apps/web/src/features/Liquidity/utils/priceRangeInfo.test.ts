@@ -1092,10 +1092,50 @@ describe('getFieldsDisabled', () => {
     })
   })
 
-  it('returns correct info when tickLower equals pool.tickCurrent (deposit1Disabled)', () => {
-    expect(getFieldsDisabled({ ticks: [pool.tickCurrent, pool.tickCurrent + 1], poolOrPair: pool })).toEqual({
+  it('disables token1 when the sqrt price sits exactly on the lower tick', () => {
+    const lowerTick = -198300
+    const poolOnLowerEdge = new V3Pool(
+      WETH,
+      USDT,
+      FeeAmount.MEDIUM,
+      TickMath.getSqrtRatioAtTick(lowerTick),
+      '7201247293608325509',
+      lowerTick,
+    )
+
+    expect(getFieldsDisabled({ ticks: [lowerTick, -197940], poolOrPair: poolOnLowerEdge })).toEqual({
       TOKEN0: false,
       TOKEN1: true,
+    })
+  })
+
+  it('keeps token1 enabled when the pool tick equals the lower tick but the sqrt price is above it', () => {
+    const lowerTick = -198300
+    const poolAboveLowerEdge = new V3Pool(
+      WETH,
+      USDT,
+      FeeAmount.MEDIUM,
+      JSBI.add(TickMath.getSqrtRatioAtTick(lowerTick), JSBI.BigInt(1)),
+      '7201247293608325509',
+      lowerTick,
+    )
+
+    expect(getFieldsDisabled({ ticks: [lowerTick, -197940], poolOrPair: poolAboveLowerEdge })).toEqual({
+      TOKEN0: false,
+      TOKEN1: false,
+    })
+  })
+
+  it('keeps token1 enabled for a v4 pool whose tick equals the lower tick mid-tick', () => {
+    const lowerTick = 0
+    const sqrtAtLower = TickMath.getSqrtRatioAtTick(lowerTick)
+    const sqrtAtNext = TickMath.getSqrtRatioAtTick(lowerTick + 1)
+    const sqrtInsideTick = JSBI.add(sqrtAtLower, JSBI.divide(JSBI.subtract(sqrtAtNext, sqrtAtLower), JSBI.BigInt(1000)))
+    const stablePool = new V4Pool(WETH, USDT, 100, 1, ZERO_ADDRESS, sqrtInsideTick, '7201247293608325509', lowerTick)
+
+    expect(getFieldsDisabled({ ticks: [lowerTick, lowerTick + 1], poolOrPair: stablePool })).toEqual({
+      TOKEN0: false,
+      TOKEN1: false,
     })
   })
 
