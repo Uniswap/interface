@@ -28,7 +28,6 @@ import { ChartSkeleton } from '~/components/Charts/LoadingState'
 import type { PriceChartData } from '~/components/Charts/PriceChart'
 import { PriceChartBody } from '~/components/Charts/PriceChart'
 import { PriceChartDelta } from '~/components/Charts/PriceChart/PriceChartDelta'
-import { ChartType, PriceChartType } from '~/components/Charts/utils'
 import { TimePeriod, toHistoryDuration } from '~/data/util'
 import { useSwapAndLimitContext } from '~/features/Swap/state/useSwapContext'
 import { useColor } from '~/hooks/useColor'
@@ -36,6 +35,7 @@ import type { TokenPriceChartQueryVariables } from '~/hooks/useTokenPriceChartDa
 import { useTokenPriceChartPanel } from '~/hooks/useTokenPriceChartPanel'
 import { useNavigateToTokenDetails } from '~/pages/Portfolio/Tokens/hooks/useNavigateToTokenDetails'
 import { useSlideoutChartCardCurrencies } from '~/pages/Swap/Swap/SlideoutChartCard/useSlideoutChartCardCurrencies'
+import { ChartType, PriceChartType } from '~/utils/charts'
 import { getNativeTokenDBAddress } from '~/utils/nativeTokens'
 
 const TIME_OPTIONS = [
@@ -298,7 +298,7 @@ function SlideoutChartCardBody({
             hideYAxis
             hideXAxis
             hideMinMaxLines
-            isStablecoin={getIsStablecoin({ tokenCategoriesEnabled, categoryIds })}
+            isStablecoin={getIsStablecoin({ tokenCategoriesEnabled, categoryIds }) === true}
           />
         )}
       </Flex>

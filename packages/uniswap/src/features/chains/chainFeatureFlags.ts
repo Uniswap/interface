@@ -7,6 +7,7 @@ import { FeatureFlags } from '@universe/gating'
  */
 export const CHAIN_ROLLOUT_FLAGS = {
   [UniverseChainId.Arc]: FeatureFlags.Arc,
+  [UniverseChainId.Elysium]: FeatureFlags.Elysium,
   [UniverseChainId.Ink]: FeatureFlags.Ink,
   [UniverseChainId.Linea]: FeatureFlags.Linea,
   [UniverseChainId.MegaETH]: FeatureFlags.MegaETH,

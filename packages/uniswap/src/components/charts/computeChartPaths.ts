@@ -1,4 +1,5 @@
 import { area, curveCardinal, line } from 'd3-shape'
+import { getSparklineValueDomain } from 'uniswap/src/components/charts/utils'
 
 export type ChartPoint = { timestamp: number; value: number }
 
@@ -80,6 +81,7 @@ export function computeChartPaths({
   height,
   yGutter,
   maxPoints,
+  isStablecoin = false,
 }: {
   /** Points in non-decreasing timestamp order. */
   data: ChartPoint[]
@@ -88,6 +90,7 @@ export function computeChartPaths({
   yGutter: number
   /** Optional geometry budget (minimum 4); scrub metadata always retains every source point. */
   maxPoints?: number
+  isStablecoin?: boolean
 }): ChartPathsResult {
   if (data.length < 2) {
     return { linePath: null, areaPath: null, lastPoint: null, timestamps: null }
@@ -122,12 +125,13 @@ export function computeChartPaths({
     }
   }
 
+  const [domainMinV, domainMaxV] = getSparklineValueDomain({ min: minV, max: maxV, isStablecoin })
   const rangeT = maxT - minT || 1
-  const rangeV = maxV - minV || 1
+  const rangeV = domainMaxV - domainMinV || 1
   const pathData = maxPoints === undefined ? data : sampleChartPoints({ data, maxPoints, minT, rangeT })
 
   const scaleX = (t: number): number => ((t - minT) / rangeT) * dataWidth
-  const scaleY = (v: number): number => yGutter + ((maxV - v) / rangeV) * (height - yGutter * 2)
+  const scaleY = (v: number): number => yGutter + ((domainMaxV - v) / rangeV) * (height - yGutter * 2)
 
   const lineGenerator = line<ChartPoint>()
     .x((d) => scaleX(d.timestamp))

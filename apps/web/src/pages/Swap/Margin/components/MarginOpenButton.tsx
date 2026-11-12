@@ -9,7 +9,7 @@ import { useEvent } from 'utilities/src/react/hooks'
 import { useAccount } from '~/connection/hooks/useAccount'
 import { MARGIN_CHAIN_ID } from '~/constants/margin'
 import { MarginVenueEmptyNotice } from '~/pages/Swap/Margin/components/MarginVenuePreferences'
-import { decideOpenAction } from '~/pages/Swap/Margin/hooks/marginExecutionGuards'
+import { decideOpenAction, heldPlan } from '~/pages/Swap/Margin/hooks/marginExecutionGuards'
 import { marginPlanExecutionStore, useMarginPlanExecution } from '~/pages/Swap/Margin/hooks/marginPlanExecutionStore'
 import type { DerivedMarginInfo } from '~/pages/Swap/Margin/hooks/useDerivedMarginInfo'
 import { useExecuteMarginPlan } from '~/pages/Swap/Margin/hooks/useExecuteMarginPlan'
@@ -73,8 +73,8 @@ export function MarginOpenButton({
   const onOpen = useEvent(() => {
     // Form is truth: the CTA opens what the form shows. Only re-focus an OPEN the executor still
     // holds in memory; a plan held under a foreign intent blocks. A plan stranded by a reload is
-    // not in memory, so it neither resumes nor blocks here — and it isn't resumable from the UI yet.
-    const existing = marginPlanExecutionStore.getState().plan
+    // not in memory, so it neither resumes nor blocks here; Activity's Continue resumes it instead.
+    const existing = heldPlan(marginPlanExecutionStore.getState())
     const action = decideOpenAction({ existing })
     if (action.kind === 'resume') {
       void resumePlan({ planId: action.planId })
@@ -89,7 +89,7 @@ export function MarginOpenButton({
 
   // Subscribed at render, not just read in the handler: a blocked action has to reach the label, or
   // the CTA stays enabled and swallows the press with nothing said.
-  const existingPlan = useMarginPlanExecution((state) => state.plan)
+  const existingPlan = useMarginPlanExecution(heldPlan)
 
   if (!account.address) {
     return (

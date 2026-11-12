@@ -13,7 +13,7 @@ import { Hover, RiseIn, RiseInText } from '~/pages/Landing/components/animations
 import { TokenCloud } from '~/pages/Landing/components/TokenCloud'
 import { useScrollParallax } from '~/pages/Landing/sections/useScrollParallax'
 import { Swap } from '~/pages/Swap'
-import { serializeSwapStateToURLParameters } from '~/pages/Swap/Swap/state/tradeQueryParams'
+import { serializeSwapStateToURLParameters } from '~/utils/params/tradeQueryParams'
 
 interface HeroProps {
   scrollToRef: () => void

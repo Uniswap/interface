@@ -222,7 +222,7 @@ const PriceExplorerContent = memo(function PriceExplorerContentInner(): JSX.Elem
 
   const tokenCategoriesEnabled = useIsTokenCategoriesEnabled()
   const { data: categoryIds } = useQuery(getTokenCategoryIdsQueryOptions(currencyId))
-  const isStablecoin = getIsStablecoin({ tokenCategoriesEnabled, categoryIds })
+  const isStablecoin = getIsStablecoin({ tokenCategoriesEnabled, categoryIds }) === true
 
   // Zoom out y-axis for low variance assets
   const shouldZoomOut = useMemo(() => {

@@ -1,8 +1,9 @@
+import type { UseQueryResult } from '@tanstack/react-query'
 import userEvent from '@testing-library/user-event'
 import { UniverseChainId } from '@universe/chains'
 import { TestID } from '@universe/test'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
-import type { UseTokenMetadataResult } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
+import type { TokenMetadataData } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { useTokenMetadata } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { Language } from 'uniswap/src/features/language/constants'
 import { useCurrentLanguage } from 'uniswap/src/features/language/hooks'
@@ -45,7 +46,7 @@ const MULTI_CHAIN_MAP = {
   [UniverseChainId.Base]: { address: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913' },
 }
 
-const VALID_METADATA: UseTokenMetadataResult = {
+const VALID_METADATA: TokenMetadataData = {
   name: 'USD Coin',
   symbol: 'USDC',
   description:
@@ -54,10 +55,13 @@ const VALID_METADATA: UseTokenMetadataResult = {
   twitterName: 'circle',
   logoUrl:
     'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png',
-  isLoading: false,
 }
 
-const EMPTY_METADATA: UseTokenMetadataResult = { isLoading: false }
+const EMPTY_METADATA: TokenMetadataData = {}
+
+function mockTokenMetadata(data: TokenMetadataData): void {
+  mocked(useTokenMetadata).mockReturnValue({ data, isLoading: false } as UseQueryResult<TokenMetadataData | undefined>)
+}
 
 function mockTDPState(state: Partial<TDPState>): void {
   mocked(useTDPStore).mockImplementation(((selector: (s: TDPState) => unknown) =>
@@ -75,19 +79,19 @@ describe('TokenDescription', () => {
   beforeEach(() => {
     mocked(useCurrency).mockReturnValue(validUSDCCurrency)
     mocked(useSwapTaxes).mockReturnValue({ inputTax: ZERO_PERCENT, outputTax: ZERO_PERCENT })
-    mocked(useTokenMetadata).mockReturnValue(VALID_METADATA)
+    mockTokenMetadata(VALID_METADATA)
     mocked(useCurrentLanguage).mockReturnValue(Language.English)
   })
 
   describe('translated description', () => {
-    const TRANSLATED_METADATA: UseTokenMetadataResult = {
+    const TRANSLATED_METADATA: TokenMetadataData = {
       ...VALID_METADATA,
       description: 'Short English description.',
       descriptionTranslations: { 'es-ES': 'Descripción corta en español.' },
     }
 
     it('shows the translation for the current language without interaction', () => {
-      mocked(useTokenMetadata).mockReturnValue(TRANSLATED_METADATA)
+      mockTokenMetadata(TRANSLATED_METADATA)
       mocked(useCurrentLanguage).mockReturnValue(Language.SpanishSpain)
       mockTDPState(USDC_STATE)
 
@@ -98,7 +102,7 @@ describe('TokenDescription', () => {
     })
 
     it('falls back to the original description when no translation matches', () => {
-      mocked(useTokenMetadata).mockReturnValue(TRANSLATED_METADATA)
+      mockTokenMetadata(TRANSLATED_METADATA)
       mocked(useCurrentLanguage).mockReturnValue(Language.Japanese)
       mockTDPState(USDC_STATE)
 
@@ -139,7 +143,7 @@ describe('TokenDescription', () => {
   })
 
   it('no description or social buttons shown when not available', async () => {
-    mocked(useTokenMetadata).mockReturnValue(EMPTY_METADATA)
+    mockTokenMetadata(EMPTY_METADATA)
     mockTDPState(USDC_STATE)
     const { asFragment } = render(<TokenDescription />)
     expect(asFragment()).toMatchSnapshot()
@@ -153,7 +157,7 @@ describe('TokenDescription', () => {
 
   it('does not render website pill for javascript: URI', () => {
     const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
-    mocked(useTokenMetadata).mockReturnValue({
+    mockTokenMetadata({
       ...VALID_METADATA,
       // oxlint-disable-next-line no-script-url
       homepageUrl: 'javascript:alert(1)',
@@ -183,7 +187,7 @@ describe('TokenDescription', () => {
     })
 
     it('drops the description block instead of the empty-state copy', () => {
-      mocked(useTokenMetadata).mockReturnValue(EMPTY_METADATA)
+      mockTokenMetadata(EMPTY_METADATA)
       mockTDPState(USDC_STATE)
 
       render(<TokenDescription launchInfo={<span>launch info</span>} />)

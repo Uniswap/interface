@@ -72,7 +72,11 @@ const NetworkPillsRow = memo(function NetworkPillsRow({
   const renderItemNetworkPills = useCallback(
     ({ item }: { item: UniverseChainId }) => {
       return (
-        <TouchableArea onPress={() => onSelectNetwork(item)}>
+        <TouchableArea
+          accessibilityState={{ selected: selectedNetwork === item }}
+          testID={`${TestID.ExploreFilterChainPrefix}${item}`}
+          onPress={() => onSelectNetwork(item)}
+        >
           <NetworkPill
             showIcon
             backgroundColor={selectedNetwork === item ? '$surface3' : '$surface1'}
@@ -85,7 +89,6 @@ const NetworkPillsRow = memo(function NetworkPillsRow({
             pr="$spacing12"
             py="$spacing4"
             showBackgroundColor={false}
-            testID={`${TestID.ExploreFilterChainPrefix}${item}`}
             textVariant="buttonLabel3"
           />
         </TouchableArea>

@@ -34,16 +34,18 @@
  * gate). An unmeasurable grant target (DOM/test hosts) leaves move-cancel
  * inert. A mid-gesture handler detach finishes the gesture eagerly: the
  * pending onPressOut fires with the last live handler set and the timer
- * dies. This hook is also TouchableAreaCompat's dispatch path (its RNGH-host
- * gesture props lose arbitration to outer RNGH gestures; the responder
- * pipeline does not) — TextCompat alone keeps RN Text's built-in
+ * dies. This hook is also the dispatch path of the RNGH-hosted press targets
+ * (TouchableAreaCompat, ButtonCompat, ButtonFrameCompat): their host's own
+ * gesture props lose arbitration to outer RNGH gestures and to an enclosing
+ * TouchableArea's native button; the responder pipeline does not — TextCompat alone keeps RN Text's built-in
  * pressability. RN's own Pressability stays deliberately unused: it is a
  * private deep import (react-native/Libraries/…) with no types or exports
  * entry, so this module implements the same contract on public API only.
  * Accepted divergence: no delayPressIn/delayPressOut/minPressDuration knobs.
  */
-import { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
 import type { GestureResponderEvent, MeasureOnSuccessCallback } from 'react-native'
+import { useEvent } from 'utilities/src/react/hooks'
 import {
   hasNativePressProps,
   nativePressProps,
@@ -261,4 +263,58 @@ export function useNativePressResponder(props: PressForwardableProps): NativePre
     onResponderTerminate,
     onResponderTerminationRequest,
   }
+}
+
+type AccessibilityAction = { name: string; label?: string }
+
+export interface NativeActivateActionInput {
+  /** The press handler a screen-reader activation should run; absent (or detached) means nothing is added. */
+  onPress?: (event: GestureResponderEvent) => void
+  /** The caller's own actions and handler, merged rather than replaced. */
+  accessibilityActions?: ReadonlyArray<AccessibilityAction>
+  onAccessibilityAction?: (event: unknown) => void
+}
+
+export interface NativeActivateActionProps {
+  accessibilityActions?: ReadonlyArray<AccessibilityAction>
+  onAccessibilityAction?: (event: unknown) => void
+}
+
+const ACTIVATE: AccessibilityAction = { name: 'activate' }
+
+/**
+ * Screen-reader activation for the RNGH-hosted press targets (TouchableArea,
+ * Button, ButtonFrame) — NOT the layout legs, which stay a11y-silent (header).
+ *
+ * Their host is RNGH's native button, which is natively clickable: TalkBack's
+ * double-tap lands on its `performClick`, which activates RNGH's own gesture,
+ * not the responder wiring above — so a responder-dispatched press would never
+ * run. Declaring `activate` makes RN's accessibility delegate claim that click
+ * (dispatching `onAccessibilityAction` without calling `performClick`), so it
+ * runs the press handler exactly once. A normal tap never produces an
+ * accessibility action. A caller that declares `activate` itself owns it.
+ */
+export function useNativeActivateAction({
+  onPress,
+  accessibilityActions,
+  onAccessibilityAction,
+}: NativeActivateActionInput): NativeActivateActionProps {
+  const live = onPress !== undefined && !(accessibilityActions ?? []).some((action) => action.name === ACTIVATE.name)
+
+  const actions = useMemo(() => [...(accessibilityActions ?? []), ACTIVATE], [accessibilityActions])
+
+  const handleAccessibilityAction = useEvent((event: unknown): void => {
+    const actionName = (event as { nativeEvent?: { actionName?: string } } | undefined)?.nativeEvent?.actionName
+    if (actionName === ACTIVATE.name && onPress) {
+      onPress(event as GestureResponderEvent)
+      return
+    }
+    onAccessibilityAction?.(event)
+  })
+
+  if (!live) {
+    return {}
+  }
+
+  return { accessibilityActions: actions, onAccessibilityAction: handleAccessibilityAction }
 }

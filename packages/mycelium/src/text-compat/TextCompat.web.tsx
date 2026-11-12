@@ -26,6 +26,13 @@ import { colorCssExpression } from './tokens'
  * Text in `components/text.tsx` is deprecated.
  */
 
+/**
+ * Heading semantics come from the variant: `heading1`–`heading3` render
+ * `h1`–`h3`, so screen-reader heading navigation follows the visual
+ * hierarchy. Declare page structure with these variants; reach for an
+ * explicit `tag` (`h4`–`h6`, or a non-heading tag to opt a styled heading
+ * out of the outline) only when the visual level and the document level differ.
+ */
 const VARIANT_TAG: Partial<Record<string, SafeCompatTag>> = {
   heading1: 'h1',
   heading2: 'h2',

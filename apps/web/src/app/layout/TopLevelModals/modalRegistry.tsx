@@ -7,12 +7,11 @@ import { useModalState } from '~/hooks/useModalState'
 import { useAppSelector } from '~/state/hooks'
 import { createLazy, createLazyNoReload } from '~/utils/lazyWithRetry'
 
-const AddressClaimModal = createLazy(() => import('~/features/claim/AddressClaimModal'))
-const ConnectedAccountBlocked = createLazy(() => import('~/components/ConnectedAccountBlocked'))
+const AddressClaimModal = createLazy(() => import('~/features/wallet/claim/AddressClaimModal'))
 const PendingWalletConnectionModal = createLazyNoReload(
   () => import('~/features/wallet/components/WalletModal/PendingWalletConnectionModal/PendingWalletConnectionModal'),
 )
-const UniwalletModal = createLazyNoReload(() => import('~/components/AccountDrawer/UniwalletModal'))
+const UniwalletModal = createLazyNoReload(() => import('~/features/wallet/components/AccountDrawer/UniwalletModal'))
 const OffchainActivityModal = createLazyNoReload(() => import('~/components/modals/OffchainActivityModal'))
 const TransactionDetailsModalDispatcher = createLazyNoReload(() =>
   import('~/app/layout/TopLevelModals/TransactionDetailsModalDispatcher').then((module) => ({
@@ -58,7 +57,7 @@ const HelpModal = createLazyNoReload(() =>
 )
 
 const ReceiveCryptoModal = createLazyNoReload(() =>
-  import('~/components/ReceiveCryptoModal').then((module) => ({ default: module.ReceiveCryptoModal })),
+  import('~/pages/Swap/Buy/ReceiveCryptoModal').then((module) => ({ default: module.ReceiveCryptoModal })),
 )
 
 const SendModal = createLazy(() =>
@@ -173,10 +172,6 @@ export const modalRegistry: ModalRegistry = {
   [ModalName.AddressClaim]: {
     component: AddressClaimModal,
     shouldMount: (state) => state.application.openModal?.name === ModalName.AddressClaim,
-  },
-  [ModalName.BlockedAccount]: {
-    component: ConnectedAccountBlocked,
-    shouldMount: (state) => state.application.openModal?.name === ModalName.BlockedAccount,
   },
   [ModalName.UniWalletConnect]: {
     component: UniwalletModal,

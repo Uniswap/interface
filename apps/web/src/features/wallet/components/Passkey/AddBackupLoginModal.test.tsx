@@ -31,7 +31,9 @@ vi.mock('@universe/embedded-wallet/src/state/embeddedWalletStore', () => ({
 vi.mock('@universe/embedded-wallet/src/features/passkey/embeddedWallet', () => ({
   encryptAndStoreRecovery: vi.fn(),
   authorizeAndCompleteRecovery: vi.fn(),
-  RecoveryMethod: vi.fn().mockImplementation((args: Record<string, unknown>) => args),
+  RecoveryMethod: vi.fn(function (args: Record<string, unknown>) {
+    return args
+  }),
   toRecoveryAuthMethodType: (provider: 'google' | 'apple' | null) =>
     provider === 'google' ? 'GOOGLE' : provider === 'apple' ? 'APPLE' : 'EMAIL',
 }))

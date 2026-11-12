@@ -15,6 +15,8 @@ export function useEntryPointBreadcrumb(): { label: string; to: string; hasEntry
       return { label: t('common.pools'), to: '/explore/pools', hasEntryPoint: true }
     } else if (entryPoint.kind === EntryPointKind.PortfolioPools) {
       return { label: t('common.portfolio'), to: entryPoint.to, hasEntryPoint: true }
+    } else if (entryPoint.kind === EntryPointKind.HookDetails) {
+      return { label: t('hooks.details.sections'), to: entryPoint.to, hasEntryPoint: true }
     }
     return { label: t('pool.positions.title'), to: '/positions', hasEntryPoint: false }
   }, [entryPoint.kind, entryPoint.to, t])

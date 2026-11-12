@@ -21,9 +21,9 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
-import { InterfaceTrade, OffchainOrderType, QuoteMethod, SubmittableTrade } from '~/state/routing/types'
-import { isClassicTrade, isSubmittableTrade, isUniswapXTrade } from '~/state/routing/utils'
+import { InterfaceTrade, OffchainOrderType, QuoteMethod, SubmittableTrade } from '~/types/routing'
 import { computeRealizedPriceImpact } from '~/utils/prices'
+import { isClassicTrade, isSubmittableTrade, isUniswapXTrade } from '~/utils/routing/routing'
 
 export const getDurationUntilTimestampSeconds = (futureTimestampInSecondsSinceEpoch?: number): number | undefined => {
   if (!futureTimestampInSecondsSinceEpoch) {

@@ -49,10 +49,10 @@ function SortButtonInner({ orderBy, onOrderByChange }: FilterGroupProps): JSX.El
         active: orderBy === RankingType.TotalValueLocked,
       },
       {
-        title: getTokensOrderByMenuLabel(RankingType.MarketCap, t),
-        orderBy: RankingType.MarketCap,
+        title: getTokensOrderByMenuLabel(CustomRankingType.FullyDilutedValuation, t),
+        orderBy: CustomRankingType.FullyDilutedValuation,
         icon: <ChartPie color="$neutral2" size="$icon.16" />,
-        active: orderBy === RankingType.MarketCap,
+        active: orderBy === CustomRankingType.FullyDilutedValuation,
       },
       {
         title: getTokensOrderByMenuLabel(CustomRankingType.PricePercentChange1DayDesc, t),

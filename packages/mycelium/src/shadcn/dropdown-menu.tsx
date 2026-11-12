@@ -188,7 +188,22 @@ function DropdownMenuRadioGroup({ ...props }: MenuPrimitive.RadioGroup.Props): R
   return <MenuPrimitive.RadioGroup data-slot="dropdown-menu-radio-group" {...props} />
 }
 
-function DropdownMenuRadioItem({ className, children, ...props }: MenuPrimitive.RadioItem.Props): React.JSX.Element {
+function DropdownMenuRadioItem({
+  className,
+  children,
+  unstyled = false,
+  ...props
+}: MenuPrimitive.RadioItem.Props & {
+  /** Headless item: skip the recipe chrome and built-in indicator; render `children` with `className` verbatim (compat layers). */
+  unstyled?: boolean
+}): React.JSX.Element {
+  if (unstyled) {
+    return (
+      <MenuPrimitive.RadioItem data-slot="dropdown-menu-radio-item" className={className} {...props}>
+        {children}
+      </MenuPrimitive.RadioItem>
+    )
+  }
   return (
     <MenuPrimitive.RadioItem
       data-slot="dropdown-menu-radio-item"

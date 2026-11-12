@@ -1,3 +1,4 @@
+import { PriceRangeDragTarget } from 'uniswap/src/features/telemetry/types'
 import {
   createParent,
   createRenderingContext,
@@ -9,9 +10,15 @@ const CURRENT_TICK = 0
 // A two-spacing range, so the whole-range drag's half-range lands on a spacing boundary.
 const INITIAL = { minTick: -3 * TICK_SPACING, maxTick: -TICK_SPACING }
 
-function createDragStore() {
+function createDragStore(onRangeDragEnd?: (target: PriceRangeDragTarget) => void) {
   const parent = createParent(INITIAL)
-  const store = createStore({ currentTick: CURRENT_TICK, ...INITIAL, creatingPoolOrPair: false, parent })
+  const store = createStore({
+    currentTick: CURRENT_TICK,
+    ...INITIAL,
+    creatingPoolOrPair: false,
+    parent,
+    onRangeDragEnd,
+  })
   store.setState({ renderingContext: createRenderingContext({ currentTick: CURRENT_TICK }) })
   return { parent, store }
 }
@@ -65,5 +72,72 @@ describe('createHandleDragBehavior', () => {
     // outcome the parent's per-edge clamp used to produce.
     expect(store.getState()).toMatchObject({ minTick: -2 * TICK_SPACING, maxTick: INITIAL.maxTick })
     expect(parent.state).toEqual({ minTick: -2 * TICK_SPACING, maxTick: INITIAL.maxTick })
+  })
+})
+
+describe('drag-end reporting', () => {
+  it('reports the grabbed handle once a handle drag moves the range', () => {
+    const onRangeDragEnd = vi.fn()
+    const { store } = createDragStore(onRangeDragEnd)
+    const behavior = store.getState().actions.createHandleDragBehavior('min')
+
+    // Pull min down from its rendered Y (180) to widen the range.
+    dragListener(behavior, 'start')({ y: 180 })
+    dragListener(behavior, 'end')({ y: 300 })
+
+    expect(store.getState()).toMatchObject({ minTick: -300, maxTick: INITIAL.maxTick })
+    expect(onRangeDragEnd).toHaveBeenCalledTimes(1)
+    expect(onRangeDragEnd).toHaveBeenCalledWith(PriceRangeDragTarget.MinHandle)
+  })
+
+  it('reports the whole range when it is dragged by its body', () => {
+    const onRangeDragEnd = vi.fn()
+    const { store } = createDragStore(onRangeDragEnd)
+    const behavior = store.getState().actions.createTickBasedDragBehavior()
+
+    dragListener(behavior, 'start')({ y: 1.5 * TICK_SPACING })
+    dragListener(behavior, 'end')({ y: -100 })
+
+    expect(onRangeDragEnd).toHaveBeenCalledTimes(1)
+    expect(onRangeDragEnd).toHaveBeenCalledWith(PriceRangeDragTarget.Range)
+  })
+
+  it('does not report a press that ends where the range started', () => {
+    const onRangeDragEnd = vi.fn()
+    const { parent, store } = createDragStore(onRangeDragEnd)
+    const behavior = store.getState().actions.createHandleDragBehavior('min')
+
+    // Release the min handle on the Y it is already rendered at: d3 still fires 'end'.
+    dragListener(behavior, 'start')({ y: 180 })
+    dragListener(behavior, 'end')({ y: 180 })
+
+    expect(parent.state).toEqual(INITIAL)
+    expect(onRangeDragEnd).not.toHaveBeenCalled()
+  })
+
+  it('reports a drag whose committed range differs from where it started on either edge', () => {
+    const onRangeDragEnd = vi.fn()
+    const { store } = createDragStore(onRangeDragEnd)
+    const { handleRangeDragEnd } = store.getState().actions
+
+    handleRangeDragEnd({ target: PriceRangeDragTarget.LiquidityArea, startRange: INITIAL })
+    expect(onRangeDragEnd).not.toHaveBeenCalled()
+
+    handleRangeDragEnd({
+      target: PriceRangeDragTarget.LiquidityArea,
+      startRange: { minTick: INITIAL.minTick, maxTick: INITIAL.maxTick + TICK_SPACING },
+    })
+    expect(onRangeDragEnd).toHaveBeenCalledExactlyOnceWith(PriceRangeDragTarget.LiquidityArea)
+  })
+
+  it('tolerates a store created without a listener', () => {
+    const { store } = createDragStore()
+
+    expect(() =>
+      store.getState().actions.handleRangeDragEnd({
+        target: PriceRangeDragTarget.LiquidityArea,
+        startRange: { minTick: 0, maxTick: TICK_SPACING },
+      }),
+    ).not.toThrow()
   })
 })

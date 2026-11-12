@@ -1,16 +1,19 @@
 import { configureStore } from '@reduxjs/toolkit'
+import { CurrencyAmount } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
 import ms from 'ms'
 import createSagaMiddleware from 'redux-saga'
+import { USDC, WBTC } from 'uniswap/src/constants/tokens'
 import { generateLPTransactionSteps } from 'uniswap/src/features/transactions/liquidity/steps/generateLPTransactionSteps'
 import type { ValidatedLiquidityTxContext } from 'uniswap/src/features/transactions/liquidity/types'
 import { LiquidityTransactionType } from 'uniswap/src/features/transactions/liquidity/types'
 import type { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
 import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { getMonitoredSagaReducers, SagaStatus } from 'uniswap/src/utils/saga'
+import { sleep } from 'utilities/src/time/timing'
 import { liquiditySaga } from '~/state/sagas/liquidity/liquiditySaga'
 import { handleAtomicSendCalls } from '~/state/sagas/transactions/5792'
-import { getDisplayableError, handleApprovalTransactionStep } from '~/state/sagas/transactions/utils'
+import { getDisplayableError, handleApprovalTransactionStep, handleOnChainStep } from '~/state/sagas/transactions/utils'
 
 vi.mock('uniswap/src/features/transactions/liquidity/steps/generateLPTransactionSteps', () => ({
   generateLPTransactionSteps: vi.fn(),
@@ -26,6 +29,10 @@ vi.mock('~/state/sagas/transactions/utils', () => ({
 
 vi.mock('~/state/sagas/transactions/5792', () => ({
   handleAtomicSendCalls: vi.fn(),
+}))
+
+vi.mock('~/utils/popups/registry', () => ({
+  popupRegistry: { addPopup: vi.fn() },
 }))
 
 vi.mock('utilities/src/logger/logger', () => ({
@@ -56,7 +63,7 @@ function deferred<T>(): { promise: Promise<T>; resolve: (value: T) => void; reje
   return { promise, resolve, reject }
 }
 
-const flush = (): Promise<void> => new Promise((resolve) => setTimeout(resolve, 0))
+const flush = (): Promise<void> => sleep(0)
 
 function createTestStore() {
   const sagaMiddleware = createSagaMiddleware()
@@ -252,5 +259,36 @@ describe('liquiditySaga cancellation', () => {
     expect(run.onSuccess).toHaveBeenCalledTimes(1)
     expect(run.onFailure).not.toHaveBeenCalled()
     expect(store.getState().saga[liquiditySaga.name]?.status).toBe(SagaStatus.Success)
+  })
+})
+
+describe('liquiditySaga position transaction', () => {
+  const txRequest = { to: '0x0000000000000000000000000000000000000001', data: '0x', chainId: UniverseChainId.Mainnet }
+  const txContext = {
+    action: {
+      type: LiquidityTransactionType.Decrease,
+      currency0Amount: CurrencyAmount.fromRawAmount(USDC, '1000'),
+      currency1Amount: CurrencyAmount.fromRawAmount(WBTC, '2000'),
+    },
+  } as unknown as ValidatedLiquidityTxContext
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+    vi.mocked(handleOnChainStep).mockReturnValue(Promise.resolve('0xhash') as never)
+  })
+
+  it.each([
+    [TransactionStepType.DecreasePositionTransaction, true],
+    [TransactionStepType.IncreasePositionTransaction, false],
+  ])('lets a %s through a finalized duplicate: %s', async (type, allowDuplicativeOfFinalizedTx) => {
+    vi.mocked(generateLPTransactionSteps).mockReturnValue([{ type, txRequest } as TransactionStep])
+    const store = createTestStore()
+
+    const run = makeTrigger({ txContext })
+    store.dispatch(run.action)
+    await flush()
+
+    expect(handleOnChainStep).toHaveBeenCalledWith(expect.objectContaining({ allowDuplicativeOfFinalizedTx }))
+    expect(run.onSuccess).toHaveBeenCalledTimes(1)
   })
 })

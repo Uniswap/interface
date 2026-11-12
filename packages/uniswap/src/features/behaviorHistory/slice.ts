@@ -5,6 +5,13 @@ import {
   getOrCreateEarnSwapUpsellTokenHistory,
   type EarnSwapUpsellHistory,
 } from 'uniswap/src/features/behaviorHistory/earn/swapUpsell'
+import {
+  getOrCreateNewUserOnboardingWalletHistory,
+  isNewUserOnboardingSwap,
+  type NewUserOnboardingHistory,
+  type NewUserOnboardingWalletHistory,
+} from 'uniswap/src/features/behaviorHistory/newUserOnboarding'
+import { finalizeTransaction } from 'uniswap/src/features/transactions/slice'
 
 /**
  * Used to store persisted info about a users interactions with UI.
@@ -50,6 +57,7 @@ export interface UniswapBehaviorHistoryState {
   /** Vault acknowledgements; any entry suppresses the Earn deposit explainer globally. */
   earnHowItWorksAcknowledgedByVaultId?: Record<string, true>
   earnSwapUpsell?: EarnSwapUpsellHistory
+  newUserOnboarding?: NewUserOnboardingHistory
 }
 
 export const initialUniswapBehaviorHistoryState: UniswapBehaviorHistoryState = {
@@ -74,6 +82,7 @@ export const initialUniswapBehaviorHistoryState: UniswapBehaviorHistoryState = {
   hasDismissedExploreEarnCoachmark: false,
   hasDismissedPoolsOutageBanner: false,
   earnHowItWorksAcknowledgedByVaultId: {},
+  newUserOnboarding: { byWallet: {} },
 }
 
 const slice = createSlice({
@@ -196,6 +205,20 @@ const slice = createSlice({
 
       tokenHistory.permanentlyDismissed = true
     },
+    setNewUserOnboardingWalletFlag: (
+      state,
+      action: PayloadAction<{ address: string; flag: keyof NewUserOnboardingWalletHistory }>,
+    ) => {
+      getOrCreateNewUserOnboardingWalletHistory(state, action.payload.address)[action.payload.flag] = true
+    },
+  },
+  extraReducers: (builder) => {
+    // Every platform's finalize path (web updaters, wallet sagas) dispatches this action
+    builder.addCase(finalizeTransaction, (state, { payload }) => {
+      if (isNewUserOnboardingSwap(payload)) {
+        getOrCreateNewUserOnboardingWalletHistory(state, payload.from).hasCompletedSwap = true
+      }
+    })
   },
 })
 
@@ -226,6 +249,7 @@ export const {
   recordEarnSwapUpsellQualifyingSwap,
   recordEarnSwapUpsellInteraction,
   permanentlyDismissEarnSwapUpsell,
+  setNewUserOnboardingWalletFlag,
 } = slice.actions
 
 export const uniswapBehaviorHistoryReducer = slice.reducer

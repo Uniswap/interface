@@ -178,6 +178,8 @@ import {
   v101Schema,
   v102Schema,
   v103Schema,
+  v104Schema,
+  v105Schema,
 } from 'src/app/schema'
 import { persistConfig } from 'src/app/store'
 import { initialBiometricsSettingsState } from 'src/features/biometricsSettings/slice'
@@ -208,6 +210,7 @@ import {
   testMigrateDismissedTokenWarnings,
   testMigrateSearchHistory,
   testRemoveBlastChainData,
+  testAddNewUserOnboardingHistory,
   testRemoveTHBFromCurrency,
   testRemoveUniswapWrapped2025BehaviorHistory,
 } from 'uniswap/src/state/uniswapMigrationTests'
@@ -802,5 +805,15 @@ describe('Redux state migrations', () => {
 
   it('migrates from v103 to v104', () => {
     testRemoveBlastChainData(migrations[104], v103Schema)
+  })
+
+  it('migrates from v104 to v105', () => {
+    const persistState = { version: 104, rehydrated: true }
+    const result = migrations[105]({ ...v104Schema, _persist: persistState })
+    expect(result).toEqual({ ...v105Schema, _persist: persistState })
+  })
+
+  it('migrates from v105 to v106', () => {
+    testAddNewUserOnboardingHistory(migrations[106], v105Schema)
   })
 })

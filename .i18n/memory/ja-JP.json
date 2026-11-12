@@ -14,8 +14,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "Apple",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-27T20-02-23Z",
-        "approvedAt": "2026-10-27T20:02:23.812Z",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
         "approvedBy": "agent"
       }
     ],
@@ -31,8 +31,76 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "Google",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-27T20-02-23Z",
-        "approvedAt": "2026-10-27T20:02:23.812Z",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:addFunds.modal.title",
+      {
+        "unitId": "addFunds.modal.title",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "3e6c3483e5428d50209fe1357435b291da7aadfb80996d1469b77e3899ed01ad",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "資金を追加して取引を開始",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-28T20-51-24Z",
+        "approvedAt": "2026-10-28T20:51:24.755Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:addFunds.option.buy",
+      {
+        "unitId": "addFunds.option.buy",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "ebe18e17551a9b522b2f5355fe0e665ffe9e3320451966f4fb4a17c13aa96f15",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "現金またはカードで購入",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-28T20-51-24Z",
+        "approvedAt": "2026-10-28T20:51:24.755Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:addFunds.option.transferAccount",
+      {
+        "unitId": "addFunds.option.transferAccount",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "675de4fb9e8bb67e95f3fec34fb2c6cb40a70eb5ac5a4e49155cd7c4bbdcaba6",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "アカウントから移動",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-28T20-51-24Z",
+        "approvedAt": "2026-10-28T20:51:24.755Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:addFunds.option.transferWallet",
+      {
+        "unitId": "addFunds.option.transferWallet",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "01db5b5b69677f24edfe931ad9162dc8765d6fb99363653c256ab1f404111f16",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "別のウォレットから移動",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-28T20-51-24Z",
+        "approvedAt": "2026-10-28T20:51:24.755Z",
         "approvedBy": "agent"
       }
     ],
@@ -48,8 +116,76 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "{{amount}} UNI",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-27T20-02-23Z",
-        "approvedAt": "2026-10-27T20:02:23.812Z",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:categoryDetails.poolCount_one",
+      {
+        "unitId": "categoryDetails.poolCount_one",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "5fea0c72d6ba84743dd6b4f4ae493770f431d7f8e8d50943bb1d39c5bee49f2b",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "{{count}} 件のプール",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-28T23-56-15Z",
+        "approvedAt": "2026-10-28T23:56:15.725Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:categoryDetails.poolCount_other",
+      {
+        "unitId": "categoryDetails.poolCount_other",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "177cde9139b3582e0acdba0157d46cb2e8f95c212dfc9f07719df3a4de3f3c94",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "{{count}} 件のプール",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-28T23-56-15Z",
+        "approvedAt": "2026-10-28T23:56:15.725Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:categoryDetails.pools.pageTitle",
+      {
+        "unitId": "categoryDetails.pools.pageTitle",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "8befa99e099d53dd2bcc087a9f1608222156498bbda8ef0838457af0126f7451",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "Uniswap でプールカテゴリを発見",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-28T23-56-15Z",
+        "approvedAt": "2026-10-28T23:56:15.725Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:categoryDetails.pools.pageTitle.withCategory",
+      {
+        "unitId": "categoryDetails.pools.pageTitle.withCategory",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "a51098d2b7dc039e863359e5c53953f8336bc876c52c092dc18a0e133944949e",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "Uniswap で {{category}} プールを発見",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-28T23-56-15Z",
+        "approvedAt": "2026-10-28T23:56:15.725Z",
         "approvedBy": "agent"
       }
     ],
@@ -269,8 +405,42 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "OK",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-27T20-02-23Z",
-        "approvedAt": "2026-10-27T20:02:23.812Z",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:common.button.previous",
+      {
+        "unitId": "common.button.previous",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "a57b08a480b822a0a572b993391c292ede593bf8000b406675b180bbb16260fa",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "前へ",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-29T04-02-00Z",
+        "approvedAt": "2026-10-29T04:02:00.399Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:common.inactive",
+      {
+        "unitId": "common.inactive",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "ac7c949f1211b7814bdd28a698e6c04e05e1a83f9f86e7ad43d2086d00e98afd",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "無効",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-04T16-49-06Z",
+        "approvedAt": "2026-11-04T16:49:06.274Z",
         "approvedBy": "agent"
       }
     ],
@@ -286,8 +456,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "Permit",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-27T20-02-23Z",
-        "approvedAt": "2026-10-27T20:02:23.812Z",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
         "approvedBy": "agent"
       }
     ],
@@ -337,8 +507,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "Uniswap v2",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-27T20-02-23Z",
-        "approvedAt": "2026-10-27T20:02:23.812Z",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
         "approvedBy": "agent"
       }
     ],
@@ -354,8 +524,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "Uniswap v3",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-27T20-02-23Z",
-        "approvedAt": "2026-10-27T20:02:23.812Z",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
         "approvedBy": "agent"
       }
     ],
@@ -371,8 +541,68 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "Uniswap v4",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-27T20-02-23Z",
-        "approvedAt": "2026-10-27T20:02:23.812Z",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:common.sevenDays.short",
+      {
+        "unitId": "common.sevenDays.short",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "d50aade27375357f547cd56c324fc12e877bcaf9665988766d9697cbdc435160",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "7 日",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "style",
+            "severity": "minor",
+            "detail": "Missing half-width space between the numeral and 日. The ja-JP style rule requires a space between Latin/numeric tokens and adjacent Japanese characters, and shipped strings use \"7 日平均\".",
+            "evidence": {
+              "rule": "Latin/Han spacing",
+              "sourceSpan": "7D",
+              "targetSpan": "7日"
+            },
+            "alternative": "7 日"
+          }
+        ],
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:common.thirtyDays.short",
+      {
+        "unitId": "common.thirtyDays.short",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "0ef5849949bcf7b63a4aafd392d689e6b689f7d94a5091a115fe1516bb753b9b",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "30 日",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "style",
+            "severity": "minor",
+            "detail": "Missing half-width space between the numeral and 日 per the Latin/Han spacing rule; shipped uses \"30 日平均\".",
+            "evidence": {
+              "rule": "Latin/Han spacing",
+              "sourceSpan": "30D",
+              "targetSpan": "30日"
+            },
+            "alternative": "30 日"
+          }
+        ],
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
         "approvedBy": "agent"
       }
     ],
@@ -649,6 +879,74 @@
       }
     ],
     [
+      "ja-JP:i18next-json:explore.categories.empty",
+      {
+        "unitId": "explore.categories.empty",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "12969fffdd2c61e0fefebcd6fd1c63b2b6c660834f8f8ce0ce92dad37014c692",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "利用可能なカテゴリがありません",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-28T19-04-41Z",
+        "approvedAt": "2026-10-28T19:04:41.068Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:explore.categories.single",
+      {
+        "unitId": "explore.categories.single",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "292c06f0045a45d044be282b132b7055ae224e18e02b523a451d8ea96fadfd24",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "カテゴリ",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-28T19-04-41Z",
+        "approvedAt": "2026-10-28T19:04:41.068Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:explore.categories.title",
+      {
+        "unitId": "explore.categories.title",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "b8b1d894c683725260dcd78f8ed64f979331a1ab61fc8311e9ccfc300fd5de20",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "カテゴリ",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-28T19-04-41Z",
+        "approvedAt": "2026-10-28T19:04:41.068Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:explore.categories.view",
+      {
+        "unitId": "explore.categories.view",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "437e30a10be2c35485d1a0b1067521f60a4bf6fb41680abe070e5cf9b3e2dd4c",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "カテゴリを表示",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-28T19-04-41Z",
+        "approvedAt": "2026-10-28T19:04:41.068Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "ja-JP:i18next-json:explore.collections.single",
       {
         "unitId": "explore.collections.single",
@@ -711,8 +1009,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "Earn",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-27T20-02-23Z",
-        "approvedAt": "2026-10-27T20:02:23.812Z",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
         "approvedBy": "agent"
       }
     ],
@@ -728,8 +1026,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "v2 TVL",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-27T20-02-23Z",
-        "approvedAt": "2026-10-27T20:02:23.812Z",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
         "approvedBy": "agent"
       }
     ],
@@ -745,8 +1043,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "v3 TVL",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-27T20-02-23Z",
-        "approvedAt": "2026-10-27T20:02:23.812Z",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
         "approvedBy": "agent"
       }
     ],
@@ -762,8 +1060,42 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "v4 TVL",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-27T20-02-23Z",
-        "approvedAt": "2026-10-27T20:02:23.812Z",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:fee.dynamic.current",
+      {
+        "unitId": "fee.dynamic.current",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "707b441899515c281bfb9c16bb38847f42d9542ebfb2641b1de1ae75cf0d4f79",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "現在の手数料",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-04T23-21-45Z",
+        "approvedAt": "2026-11-04T23:21:45.216Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:fee.dynamic.tooltip",
+      {
+        "unitId": "fee.dynamic.tooltip",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "a8b34f2d17b55b748230d3fcf48ebfb796811c0f9ee557a764f3c6f6b469fc93",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "このプールは動的手数料を課しています",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-04T23-21-45Z",
+        "approvedAt": "2026-11-04T23:21:45.216Z",
         "approvedBy": "agent"
       }
     ],
@@ -779,8 +1111,1968 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "Venmo",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-27T20-02-23Z",
-        "approvedAt": "2026-10-27T20:02:23.812Z",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.details.backToHooks",
+      {
+        "unitId": "hooks.details.backToHooks",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "55d6b6952704b202319bad75e3329804279e2563e25fa7835109cf2882ece58f",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "フック一覧に戻る",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.details.contracts",
+      {
+        "unitId": "hooks.details.contracts",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "0488acc63d8b513587cc45e2d7dd7c17cb873266452b23273c6dedb651764243",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "コントラクト",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-04T16-49-06Z",
+        "approvedAt": "2026-11-04T16:49:06.274Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.details.copyAddress",
+      {
+        "unitId": "hooks.details.copyAddress",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "fb9e7a65a39af805fb2a0acbe8bd3e5e9655069cb039309ce995a8421f1d6b0e",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "フックアドレスをコピー",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.details.copyContractAddress",
+      {
+        "unitId": "hooks.details.copyContractAddress",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "edc259fc4d15748aca0cdc5663a7c2af7be0e8fd01efd5a51fd56f600d919370",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "コントラクトアドレス {{address}} をコピー",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-04T16-49-06Z",
+        "approvedAt": "2026-11-04T16:49:06.274Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.details.copyDeployerAddress",
+      {
+        "unitId": "hooks.details.copyDeployerAddress",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "8c6e037e9aca54ff84535926b33ed3395db6f8f84d3e18fae0da37352d937299",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "デプロイヤーアドレス {{address}} をコピー",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-04T16-49-06Z",
+        "approvedAt": "2026-11-04T16:49:06.274Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.details.createPool",
+      {
+        "unitId": "hooks.details.createPool",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "d2bc23794d78b3a2317eaa0f2921d2868a50dec02390db4733ace91b570b3f81",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "プールを作成",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-04T16-49-06Z",
+        "approvedAt": "2026-11-04T16:49:06.274Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.details.createPool.description",
+      {
+        "unitId": "hooks.details.createPool.description",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "a77f975fa532b5406f669cdeafdc5b93e54022a5f4b60434b49a9d3f0594e4e0",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "このフックを独自のカスタムプールで使用できます。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-04T16-49-06Z",
+        "approvedAt": "2026-11-04T16:49:06.274Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.details.customAccounting",
+      {
+        "unitId": "hooks.details.customAccounting",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "36cfb2fbc43f2cecaa671ecbe32a36590035dca964cf5afd1fdad0897684029a",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "カスタム会計フック",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.details.customAccounting.description",
+      {
+        "unitId": "hooks.details.customAccounting.description",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "dfe822497d2a78c442150749f53884bdab0047d5af92874f3e74e8250e63aa3c",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "このフックはカスタム会計を使用しています。標準の出来高および手数料の指標は利用できません。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.details.deployer",
+      {
+        "unitId": "hooks.details.deployer",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "51c2540747190c7abf08dadddac93c461d9d01e2d2d6081eadd73f3814aaa513",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "デプロイヤー",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-04T16-49-06Z",
+        "approvedAt": "2026-11-04T16:49:06.274Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.details.deployers",
+      {
+        "unitId": "hooks.details.deployers",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "8c125ed90573b1760130e9eb54ac6694e369e0595137b2e00cb64065688f163b",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "デプロイヤー",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-04T16-49-06Z",
+        "approvedAt": "2026-11-04T16:49:06.274Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.details.deployments",
+      {
+        "unitId": "hooks.details.deployments",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "842a4697fd0dddaa2ffb9e593abdfcc1963640b7e3b28eb5e5ae1624a18eaf46",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "デプロイメント",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.details.deployments.unavailable",
+      {
+        "unitId": "hooks.details.deployments.unavailable",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "62246755f9c96962cadd7b823b7d913287ebe981ffa20b1c0a93e77034668e9f",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "デプロイメント情報はここに表示されます。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.details.error",
+      {
+        "unitId": "hooks.details.error",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "e67ae5aec4e3b6ab1968d1302c65e929ec6a5a36686eed2851ace740a19efb0a",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "フックの詳細を読み込めませんでした",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.details.error.description",
+      {
+        "unitId": "hooks.details.error.description",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "919057f6cde478b89070dc189ca6085f7d60f59e0cf73e2cb4f54e9f789acc30",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "フックの詳細は一時的に利用できません。もう一度お試しください。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.details.incompleteIndexing",
+      {
+        "unitId": "hooks.details.incompleteIndexing",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "19d460ee7cacf8ca5972db7f80760afd391efc8322931161759eaa89eef2b746",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "このフックのインデックス作成中は、一部の指標を利用できません。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.details.info",
+      {
+        "unitId": "hooks.details.info",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "170322a32f3c35b2c61576a5553d352d7b3c8ae7086dab78f15fc891a28c067c",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "情報",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.details.invalidAddress",
+      {
+        "unitId": "hooks.details.invalidAddress",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "ddae5997875efa2b4aff06ca9221a50572d008fae18e2813834582df5c7731fc",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "無効なフックアドレス",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.details.invalidAddress.description",
+      {
+        "unitId": "hooks.details.invalidAddress.description",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "d77093a2dcb802c9dede4cf6d8a72ef28b66bdad752fcd6f5facf598bbb8ccfb",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "完全な Ethereum 互換のコントラクトアドレスを入力してください。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.details.loading",
+      {
+        "unitId": "hooks.details.loading",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "f1492a76f4ef737b928b10c005649e3c0638fdfeb93a5048c1376c697cf09489",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "フックの詳細を読み込み中",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.details.loading.description",
+      {
+        "unitId": "hooks.details.loading.description",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "b16626600d345fbde8fbe8c8f011d8a7e29be0782c8be8d7a1f04e027e050775",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "このネットワークのフックアクティビティを取得しています。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.details.noDescription",
+      {
+        "unitId": "hooks.details.noDescription",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "4d4c2197d70e1ce418e54ac0cad39f967d26d2170e33c9d43557ea84c7a8cef3",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "説明はありません。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.details.notFound.description",
+      {
+        "unitId": "hooks.details.notFound.description",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "639f15ec053febe35f0d30d683a35055f50c5318db0346eb8c40e7c7f3829f73",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "選択したネットワークのこのアドレスにフックは見つかりませんでした。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.details.periodAllTime",
+      {
+        "unitId": "hooks.details.periodAllTime",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "074daba2b30cffe720f2ba5a7682047ecdafda08ecb587ed927676d2f831390c",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "全期間",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.details.permissions",
+      {
+        "unitId": "hooks.details.permissions",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "abccc78cc93c07931feccfbd0665c003373b48334fd8d4cf5c6d0c714e68f26e",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "権限",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.details.permissions.unavailable",
+      {
+        "unitId": "hooks.details.permissions.unavailable",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "da861e133d708177d4e3936e462f8a709b28ff5b23f5d3055d5160ef2284d7a0",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "権限情報はここに表示されます。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.details.pools",
+      {
+        "unitId": "hooks.details.pools",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "d46fbd72dc2e190c274d789641af87891a05bed069ed01c7f80f79161423e52e",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "プール",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.details.pools.empty",
+      {
+        "unitId": "hooks.details.pools.empty",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "ff394d7093c2193597be37a4b9f3b00e657be470f81c6366ddf34ff4694a9b56",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "このネットワークには、このフックを使用するプールがありません。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-04T16-49-06Z",
+        "approvedAt": "2026-11-04T16:49:06.274Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.details.pools.paginationError",
+      {
+        "unitId": "hooks.details.pools.paginationError",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "2e144de3cf34c7323f9f9deb3e90f357c18835c1756a2683dbc7039ad0ca5d06",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "追加のプールを読み込めませんでした。現在の結果は引き続き利用できます。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-04T16-49-06Z",
+        "approvedAt": "2026-11-04T16:49:06.274Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.details.pools.refreshError",
+      {
+        "unitId": "hooks.details.pools.refreshError",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "3f7df1b3275a37110845cd92cf0398e93f453a0c2c779343dabe7fdb9d37ba42",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "プールを更新できませんでした。現在の結果は引き続き利用できます。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-04T16-49-06Z",
+        "approvedAt": "2026-11-04T16:49:06.274Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.details.pools.unavailable",
+      {
+        "unitId": "hooks.details.pools.unavailable",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "35cde563f58e31343be78537f885ed1c4ce1cec906dbbf02c77b9d8409d83cb3",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "フックのプールアクティビティはここに表示されます。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.details.refreshError",
+      {
+        "unitId": "hooks.details.refreshError",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "59c046b3cee8ec9f28c97d1e7c6301c4fae938f3094a66f310bf0fa7d7246dd6",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "フックの詳細を更新できませんでした。最後に取得した情報を表示しています。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.details.sections",
+      {
+        "unitId": "hooks.details.sections",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "445145ac2804094d7539b8a20d3ce1ed21f12b03b5ceb73362bdf6df48c80ef9",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "フックの詳細",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.details.toggleMetricPeriod",
+      {
+        "unitId": "hooks.details.toggleMetricPeriod",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "44424f79a02cf1ccbc47cab504516529f750e4e9902ea9c8e84819f23e4b85e4",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "{{metric}}、{{period}}：{{value}}。全期間と 30 日間を切り替え",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.details.unsupportedChain",
+      {
+        "unitId": "hooks.details.unsupportedChain",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "427358a20709f775f0464459896d35d669f7fb007187673ec0ac792fc5a78296",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "未対応のネットワーク",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.details.unsupportedChain.description",
+      {
+        "unitId": "hooks.details.unsupportedChain.description",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "b818c1f7c5c8d08264be247f197224d5284c43362dcfa41c3d2c2a1a00f1ae99",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "フックの詳細は、対応する Ethereum 互換ネットワークで利用できます。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.details.viewAddressOnExplorer",
+      {
+        "unitId": "hooks.details.viewAddressOnExplorer",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "7591a073485b9d1e27dee53f0f80a1b03fac6d06ae1a94e9c755ae55139d2a34",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "{{network}} のエクスプローラーで {{address}} を表示（新しいタブで開きます）",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-04T16-49-06Z",
+        "approvedAt": "2026-11-04T16:49:06.274Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.details.viewContracts_one",
+      {
+        "unitId": "hooks.details.viewContracts_one",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "613cc3a6161023fbfb92b30a4bf6d8509f3269e559d79b7878566f2ca11f63f3",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "コントラクトを表示、{{count}} 件のアドレス",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-04T16-49-06Z",
+        "approvedAt": "2026-11-04T16:49:06.274Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.details.viewContracts_other",
+      {
+        "unitId": "hooks.details.viewContracts_other",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "c7892ff8e366d7a832a02ea558efad8ac25c570925858ce4cd1ed54dbf737f4a",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "コントラクトを表示、{{count}} 件のアドレス",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-04T16-49-06Z",
+        "approvedAt": "2026-11-04T16:49:06.274Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.details.viewDeployers_one",
+      {
+        "unitId": "hooks.details.viewDeployers_one",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "d4ff7acad8f3473fe5f4d5797607fa85a80f61b544578646286a69cf263b96c7",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "デプロイヤーを表示、{{count}} 件の既知のアドレス",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-04T16-49-06Z",
+        "approvedAt": "2026-11-04T16:49:06.274Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.details.viewDeployers_other",
+      {
+        "unitId": "hooks.details.viewDeployers_other",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "1fdd3cd26e3462e194e42a6c17ee6c195fdbf55352ff1193e73cd0a017b9dbe6",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "デプロイヤーを表示、{{count}} 件の既知のアドレス",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-04T16-49-06Z",
+        "approvedAt": "2026-11-04T16:49:06.274Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.filter.metadata",
+      {
+        "unitId": "hooks.filter.metadata",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "9eddf573cb509f1f62df633e25c052ac1b2a0ff9241e70223c77c73e834c0045",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "メタデータ",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-04T16-49-06Z",
+        "approvedAt": "2026-11-04T16:49:06.274Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.filter.metadata.description",
+      {
+        "unitId": "hooks.filter.metadata.description",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "ca0c76a87b4d7880d0046b7b53a8bc047a85a41bccbe53bc89b771f10a26c87c",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "名前や説明などのメタデータがあるフックのみ表示します。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-04T16-49-06Z",
+        "approvedAt": "2026-11-04T16:49:06.274Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.filter.routed",
+      {
+        "unitId": "hooks.filter.routed",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "eb7211309dbbf06dd13b4d88e4bd32f16354e13868ede3e0badb3aa1b83e31a4",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "プール経由でルーティング",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-04T16-49-06Z",
+        "approvedAt": "2026-11-04T16:49:06.274Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.filter.routed.description",
+      {
+        "unitId": "hooks.filter.routed.description",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "d9f5482319372bffe0f979a1694a2c7db912ace48b41d932106dad826ef82285",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "スワップがそのプールを経由してルーティングされるフックのみ表示します。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-04T16-49-06Z",
+        "approvedAt": "2026-11-04T16:49:06.274Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.filter.verifiedSource",
+      {
+        "unitId": "hooks.filter.verifiedSource",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "3b8602660d0ae2a3fceb0e5bc6be1dfe174073ad632842e46a78c3f374886119",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "検証済みのソースコード",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-04T16-49-06Z",
+        "approvedAt": "2026-11-04T16:49:06.274Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.filter.verifiedSource.description",
+      {
+        "unitId": "hooks.filter.verifiedSource.description",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "f03462cc4f2bc3823e75d47a205b0dc10843bfe1257318e47cad5a7ce80b1c37",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "バイトコードと一致する検証済みソースコードを持つフックのみ表示します。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-04T16-49-06Z",
+        "approvedAt": "2026-11-04T16:49:06.274Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.list.loadMore",
+      {
+        "unitId": "hooks.list.loadMore",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "bb238333bbacd1a65a49250730c52071eb9e0e2a5cac39d98965a50cfff462ab",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "さらにフックを読み込む",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.list.openHook",
+      {
+        "unitId": "hooks.list.openHook",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "0c8d0770996c113afe5f41c49eedcba86e954caaa03cbaac12675ce81cf107e9",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "{{networks}} の {{hookName}}",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.list.paginationError",
+      {
+        "unitId": "hooks.list.paginationError",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "be3d88039a380db0a15e99e1c3f0172ee7f61462cff51b5ffe27b2728aaaa1eb",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "追加のフックを読み込めませんでした。現在の結果は引き続き利用できます。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.list.search.label",
+      {
+        "unitId": "hooks.list.search.label",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "0f1606d7d2c347ccb2516418b8fffa0a409caffc8daab470adda949b4b1a6c60",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "名前またはアドレスでフックを検索",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-04T16-49-06Z",
+        "approvedAt": "2026-11-04T16:49:06.274Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.list.search.placeholder",
+      {
+        "unitId": "hooks.list.search.placeholder",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "1f85b0cc8477340f5d9f1c73b70b75e83e8acef6983cdd3c76b7ee3b64cb35b2",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "フックを検索",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-04T16-49-06Z",
+        "approvedAt": "2026-11-04T16:49:06.274Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.list.summary.error",
+      {
+        "unitId": "hooks.list.summary.error",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "11c3184873aa84abf451f37ee8aa0416c51b954c9523aae9a54e458899614edd",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "フックの合計を読み込めませんでした。テーブルの「再試行」ボタンでもう一度お試しください。",
+        "status": "clean",
+        "judgeIssues": [
+          {
+            "category": "accuracy",
+            "severity": "minor",
+            "detail": "The translation adds a second sentence (「テーブルの「再試行」ボタンでもう一度お試しください。」) with no counterpart in the source. It matches the shipped rendering exactly, so it appears to be an intentional shipped addition rather than MT drift; flagged for the record, not corrected, since shipped copy is the locale's source of truth and the added guidance is harmless.",
+            "evidence": {
+              "sourceSpan": "Couldn’t load hook totals.",
+              "targetSpan": "テーブルの「再試行」ボタンでもう一度お試しください。"
+            }
+          }
+        ],
+        "agentRunId": "ja-JP-2026-11-04T16-49-06Z",
+        "approvedAt": "2026-11-04T16:49:06.274Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.list.summary.partial",
+      {
+        "unitId": "hooks.list.summary.partial",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "480e2d0934b44b1a3a7d15a7184447a49ddaed14cab9f4834f314cd5394e7ad6",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "出来高と TVL には取得可能なアクティビティのみが含まれており、一部の指標は利用できません。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.list.summary.total",
+      {
+        "unitId": "hooks.list.summary.total",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "b9c57473ad2926cac3bf5d01e60f4937cb573be09a91c630c08d0e6408380adb",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "フック総数",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.list.summary.tvl",
+      {
+        "unitId": "hooks.list.summary.tvl",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "54e7246c56670019d26f6a94d5cd6115f1bb838c04cdc6146141ca9d6289ad1b",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "フック付きプールの TVL 合計",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-04T16-49-06Z",
+        "approvedAt": "2026-11-04T16:49:06.274Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.list.summary.tvl.short",
+      {
+        "unitId": "hooks.list.summary.tvl.short",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "361b1008db647d35913809aeb21c294769fafb81f3fe10d2cbfb91db26efb00a",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "TVL 合計",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.list.summary.volume",
+      {
+        "unitId": "hooks.list.summary.volume",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "b6f0235e0271153d101f8b6163be33159a09224f9b735e19924995414a032513",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "フック付きプールの 1 日出来高",
+        "status": "clean",
+        "judgeIssues": [
+          {
+            "category": "accuracy",
+            "severity": "minor",
+            "detail": "The source says \"Total hooked pools volume\" but the translation adds a time scope 「1 日」 (1-day) not present in the source. This exactly matches the shipped rendering, so it is likely a deliberate product-side clarification of what the metric measures; flagged for human review rather than corrected, since overriding shipped copy here risks desyncing from the actual metric.",
+            "evidence": {
+              "sourceSpan": "Total hooked pools volume",
+              "targetSpan": "フック付きプールの 1 日出来高"
+            }
+          }
+        ],
+        "agentRunId": "ja-JP-2026-11-04T16-49-06Z",
+        "approvedAt": "2026-11-04T16:49:06.274Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.list.summary.volume.short",
+      {
+        "unitId": "hooks.list.summary.volume.short",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "7c431ccaf9aed97b731441cd81e2eeb0c35cb4cd59f07dd470e7d2cc2204b7f4",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "出来高合計",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "terminology",
+            "severity": "major",
+            "detail": "Intra-slice term collision: \"volume\" is rendered 「出来高」 in i=1409/1411 (and in the shipped corpus) but 「取引量」 here. The corpus-preferred rendering is 出来高.",
+            "evidence": {
+              "sourceSpan": "volume",
+              "targetSpan": "取引量",
+              "rule": "shipped: 'Volume is the total amount…' → 出来高"
+            }
+          },
+          {
+            "category": "accuracy",
+            "severity": "major",
+            "detail": "Source is \"Total volume\" but the translation says 「1 日の取引量」 (\"1-day trading volume\") — it drops \"Total\" and invents a 1-day scope, so the user believes a cumulative figure is a daily one. Unlike i=1411 this string is not in the shipped corpus, so it should be corrected.",
+            "evidence": {
+              "sourceSpan": "Total volume",
+              "targetSpan": "1 日の取引量"
+            },
+            "alternative": "出来高合計"
+          }
+        ],
+        "agentRunId": "ja-JP-2026-11-04T16-49-06Z",
+        "approvedAt": "2026-11-04T16:49:06.274Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.permissions.about",
+      {
+        "unitId": "hooks.permissions.about",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "50a822d573545d7ddcd87b82e0724712708142b2739c40afa99c8e2603faba6d",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "権限について",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-04T16-49-06Z",
+        "approvedAt": "2026-11-04T16:49:06.274Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.permissions.afterAddLiquidity",
+      {
+        "unitId": "hooks.permissions.afterAddLiquidity",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "d412b3e606e7d24da40dab5bd5b2d9b1d187428934860dd277289fc6446f9338",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "afterAddLiquidity",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.permissions.afterAddLiquidity.description",
+      {
+        "unitId": "hooks.permissions.afterAddLiquidity.description",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "50d8e1bbcdbe03442c5fe5107adb938f60aaa136ee6459643a035d6d8f4aadc5",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "このフックを使用するプールに流動性が追加された後に実行されます。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-04T16-49-06Z",
+        "approvedAt": "2026-11-04T16:49:06.274Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.permissions.afterAddLiquidityReturnsDelta",
+      {
+        "unitId": "hooks.permissions.afterAddLiquidityReturnsDelta",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "2aaa29db43c940dc3d38c635ec6e01c81547474f8336d310286b8c8ad34deea8",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "afterAddLiquidityReturnDelta",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.permissions.afterAddLiquidityReturnsDelta.description",
+      {
+        "unitId": "hooks.permissions.afterAddLiquidityReturnsDelta.description",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "e955398ea732224df5c1184b18f95e6a7a7496692825ba8a81054eec8fce4011",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "流動性の追加時に、afterAddLiquidity コールバックがトークン残高の調整を返せるようにします。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-04T16-49-06Z",
+        "approvedAt": "2026-11-04T16:49:06.274Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.permissions.afterDonate",
+      {
+        "unitId": "hooks.permissions.afterDonate",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "5d78adc6b7847327336d4bf4beb0a05eaff29e8d9dd1bd9a1bc0a24951ab1233",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "afterDonate",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.permissions.afterDonate.description",
+      {
+        "unitId": "hooks.permissions.afterDonate.description",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "2e0ac57e6024941d2d21af58b58914756fd54f5596377a9ec5c11331a29b0043",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "このフックを使用するプールで、流動性プロバイダーにトークンが寄付された後に実行されます。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-04T16-49-06Z",
+        "approvedAt": "2026-11-04T16:49:06.274Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.permissions.afterInitialize",
+      {
+        "unitId": "hooks.permissions.afterInitialize",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "84e080dac177e0ec4e1a1fc24ceed3942b1264433e8aa66aed7f830a90a598de",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "afterInitialize",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.permissions.afterInitialize.description",
+      {
+        "unitId": "hooks.permissions.afterInitialize.description",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "56e13de18bab30b78ee189a2d6ae7e967dd9f34fed3d1a4f7bb82234c71cee99",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "このフックを使用する新しいプールが作成された後に実行され、フックが初期設定に応答できるようにします。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-04T16-49-06Z",
+        "approvedAt": "2026-11-04T16:49:06.274Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.permissions.afterRemoveLiquidity",
+      {
+        "unitId": "hooks.permissions.afterRemoveLiquidity",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "d345f9ec44f3a65990ab5d45c435c0cbc362b38fdc829d5c0315fae64388170b",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "afterRemoveLiquidity",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.permissions.afterRemoveLiquidity.description",
+      {
+        "unitId": "hooks.permissions.afterRemoveLiquidity.description",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "ed39cc17c6dc97ae574eb74dc1d1f02ab65de83107d9df7bd64279e9bc58f0cd",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "このフックを使用するプールから流動性が削除された後に実行されます。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-04T16-49-06Z",
+        "approvedAt": "2026-11-04T16:49:06.274Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.permissions.afterRemoveLiquidityReturnsDelta",
+      {
+        "unitId": "hooks.permissions.afterRemoveLiquidityReturnsDelta",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "80afb49c97172b1a24821ab0d1f3879ce2a92715fb3d8aee680a14400014b63f",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "afterRemoveLiquidityReturnDelta",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.permissions.afterRemoveLiquidityReturnsDelta.description",
+      {
+        "unitId": "hooks.permissions.afterRemoveLiquidityReturnsDelta.description",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "c95798ecdf2941cfcdd26d700b44dfd4899fdc4bdd232a6465c21a1a066d07e8",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "流動性の削除時に、afterRemoveLiquidity コールバックがトークン残高の調整を返せるようにします。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-04T16-49-06Z",
+        "approvedAt": "2026-11-04T16:49:06.274Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.permissions.afterSwap",
+      {
+        "unitId": "hooks.permissions.afterSwap",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "f0c60f5fba7b72c58dc44f83dd197f7d5517d03c66e80bf9ef0859c3f8bedd1b",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "afterSwap",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.permissions.afterSwap.description",
+      {
+        "unitId": "hooks.permissions.afterSwap.description",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "278392155e8d32cd6664c5b38c8fb827ad4d2923e17ea78035f555cae349c947",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "このフックを使用するプールでのスワップ後に実行されます。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-04T16-49-06Z",
+        "approvedAt": "2026-11-04T16:49:06.274Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.permissions.afterSwapReturnsDelta",
+      {
+        "unitId": "hooks.permissions.afterSwapReturnsDelta",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "29cf4eac9586c33fff70c3ffef2c131a0fe7e8bbc03f91e476cc38ba18744747",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "afterSwapReturnDelta",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.permissions.afterSwapReturnsDelta.description",
+      {
+        "unitId": "hooks.permissions.afterSwapReturnsDelta.description",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "bd2ca76277d6e1a6a253eae756c936c8f8f1265a669d1b60875eae1d3ec8c610",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "afterSwap コールバックが、スワップ金額に影響するトークン残高の調整を返せるようにします。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-04T16-49-06Z",
+        "approvedAt": "2026-11-04T16:49:06.274Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.permissions.beforeAddLiquidity",
+      {
+        "unitId": "hooks.permissions.beforeAddLiquidity",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "30935e1097158637d7aea5486f8294f9a309fcc144c5af3ecc38560535a49997",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "beforeAddLiquidity",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.permissions.beforeAddLiquidity.description",
+      {
+        "unitId": "hooks.permissions.beforeAddLiquidity.description",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "cbc02ad465e867f099de0ce1a47ecaf4fd5708b6b8c3dd6efa00e85c86285a1a",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "このフックを使用するプールに流動性が追加される前に実行されます。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-04T16-49-06Z",
+        "approvedAt": "2026-11-04T16:49:06.274Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.permissions.beforeDonate",
+      {
+        "unitId": "hooks.permissions.beforeDonate",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "b546593c6ee134aa27a79a9a1f257f10122dab13a3593c40c55d46e4b7af10b8",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "beforeDonate",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.permissions.beforeDonate.description",
+      {
+        "unitId": "hooks.permissions.beforeDonate.description",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "5153c71e72fef3618af4b9f01d54a1b4996e690f4d3aa8e0bb45b7f840d1170b",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "このフックを使用するプールで、流動性プロバイダーにトークンが寄付される前に実行されます。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-04T16-49-06Z",
+        "approvedAt": "2026-11-04T16:49:06.274Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.permissions.beforeInitialize",
+      {
+        "unitId": "hooks.permissions.beforeInitialize",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "06a0456d3711e0739baa9852f4bfa413a2b4aa4d39b1e0f54249190cddb167c2",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "beforeInitialize",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.permissions.beforeInitialize.description",
+      {
+        "unitId": "hooks.permissions.beforeInitialize.description",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "88a10910038074938050ddf74041f2527adbb53dc19dd63e52ad68c0ec0eead8",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "このフックを使用する新しいプールが作成される前に実行され、フックがプールの設定を確認し、許可しないプールを拒否できます。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-04T16-49-06Z",
+        "approvedAt": "2026-11-04T16:49:06.274Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.permissions.beforeRemoveLiquidity",
+      {
+        "unitId": "hooks.permissions.beforeRemoveLiquidity",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "3b0af23999330aaaf9567d29ac8681ed25edf6a78519a33bbeb8feaa145aa62d",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "beforeRemoveLiquidity",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.permissions.beforeRemoveLiquidity.description",
+      {
+        "unitId": "hooks.permissions.beforeRemoveLiquidity.description",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "49b4cd55c24de133cde6f23b0a802b0059fc72903ea676b453edc5cb533ba18f",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "このフックを使用するプールから流動性が削除される前に実行されます。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-04T16-49-06Z",
+        "approvedAt": "2026-11-04T16:49:06.274Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.permissions.beforeSwap",
+      {
+        "unitId": "hooks.permissions.beforeSwap",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "f896d0af4aa7af6f7946bd72343c9a9c4544fab56fba9af060a6cac031c120d2",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "beforeSwap",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.permissions.beforeSwap.description",
+      {
+        "unitId": "hooks.permissions.beforeSwap.description",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "2559117889199a4f02bb29887ff7de55e14314500f42d8c6156aa80e5e084fe4",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "このフックを使用するプールでのスワップ前に実行されます。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-04T16-49-06Z",
+        "approvedAt": "2026-11-04T16:49:06.274Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.permissions.beforeSwapReturnsDelta",
+      {
+        "unitId": "hooks.permissions.beforeSwapReturnsDelta",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "e34ecd190730aaf7e35bd91b353f9cd8b7f02d7593e37926158aefb747d2e9e9",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "beforeSwapReturnDelta",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.permissions.beforeSwapReturnsDelta.description",
+      {
+        "unitId": "hooks.permissions.beforeSwapReturnsDelta.description",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "32691accd48f1381e63902c2c5a88380b435546cfb6532070ff2d426cfafce10",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "beforeSwap コールバックが、スワップ金額に影響するトークン残高の調整を返せるようにします。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-04T16-49-06Z",
+        "approvedAt": "2026-11-04T16:49:06.274Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.permissions.description",
+      {
+        "unitId": "hooks.permissions.description",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "42b58870e5a9fcd1938b3bd62fac9bc70c1f5992e68604b723cf4288e99f3c1e",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "権限は、どのプールアクションがこのフックを呼び出せるかを決定します。このデプロイメントではアクティブな権限が有効になっています。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-04T16-49-06Z",
+        "approvedAt": "2026-11-04T16:49:06.274Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.preview.description",
+      {
+        "unitId": "hooks.preview.description",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "629d738f672be41fca491ea3b57e5cfba2d3227ce4ca1614cda345bc9d559554",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "サンプルデータでフックのアクティビティを確認できます。ライブデータは近日公開です。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-29T04-02-00Z",
+        "approvedAt": "2026-10-29T04:02:00.399Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.preview.label",
+      {
+        "unitId": "hooks.preview.label",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "2d859100b533b79cedce3baf9af50d0385c0b0cde634159e3e8f0d7de231ceb4",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "プレビュー · サンプルデータ",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-29T04-02-00Z",
+        "approvedAt": "2026-10-29T04:02:00.399Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.preview.name",
+      {
+        "unitId": "hooks.preview.name",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "dcd1d5223f73b3a965c07e3ff5dbee3eedcfedb806686a05b9b3868a2c3d6d50",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "名前",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-29T04-02-00Z",
+        "approvedAt": "2026-10-29T04:02:00.399Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.preview.notFound",
+      {
+        "unitId": "hooks.preview.notFound",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "698832b84745be5d6d401c8eda5d80f09af2ab37183e7261f2556e57c0673356",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "フックが見つかりません",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-29T04-02-00Z",
+        "approvedAt": "2026-10-29T04:02:00.399Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.preview.pageTitle",
+      {
+        "unitId": "hooks.preview.pageTitle",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "df73e8407dac2304f027f362345fcf2df0c7eb60e3833ae4438ef8b991e8cca3",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "Uniswap でフックを発見",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-29T04-02-00Z",
+        "approvedAt": "2026-10-29T04:02:00.399Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.preview.pagination",
+      {
+        "unitId": "hooks.preview.pagination",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "01c04e0187726457ecc3226b18b525381f9528a2028d097ce02f284be3ac017e",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "フックページ",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-29T04-02-00Z",
+        "approvedAt": "2026-10-29T04:02:00.399Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.status.provenance.built",
+      {
+        "unitId": "hooks.status.provenance.built",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "e982c7c1da5fa84e5221d09cb96871272158a9119b15b3b8ac4de86de7d34bbd",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "Uniswap Labs がこのフックを構築しました。デプロイメントの設定者は記載されていません。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.status.provenance.builtAndConfigured",
+      {
+        "unitId": "hooks.status.provenance.builtAndConfigured",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "e636ae4c617e539d398755411ff5942ffcafbcbaa9d81a110d60f6a8d82ebee9",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "このフックは Uniswap によって構築・設定されています。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.status.provenance.builtWithPartner",
+      {
+        "unitId": "hooks.status.provenance.builtWithPartner",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "7aeb80c501bfd95be2cb1c48da1adcfc1a4a193ad1a22277f5b285c065e6040b",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "このフックは Uniswap が構築し、{{partner}} が設定しました。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.status.provenance.configured",
+      {
+        "unitId": "hooks.status.provenance.configured",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "b75d9a31c54074808128c4f72112d8e1672b2ce8d78a5ea09347075366843cfb",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "Uniswap Labs がこのフックのデプロイメントを設定しました。構築者は記載されていません。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.status.provenance.configuredWithPartner",
+      {
+        "unitId": "hooks.status.provenance.configuredWithPartner",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "24aa9eb5ff4629743cbf5c8a740dffcf07df4241d18d4b11f930f2e0ef468886",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "このフックは {{partner}} が構築し、Uniswap が設定しました。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.status.routingAllowlisted",
+      {
+        "unitId": "hooks.status.routingAllowlisted",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "f3adb9340fb2d761c221126ba6579312ad9a14656d3c65b272f3f71faf7b9007",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "ルーティング許可リスト登録済み",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.status.routingAllowlisted.description",
+      {
+        "unitId": "hooks.status.routingAllowlisted.description",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "36691d9e9f6e3b8ca5720bbbc82efb51aff1f1e000580c20c6640d0b81dd8c12",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "Uniswap および Uniswap Trading API は、このフックのプールを経由してスワップをルーティングします。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.status.routingNotAllowlisted",
+      {
+        "unitId": "hooks.status.routingNotAllowlisted",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "7ea7fdced8cb2787d30b52a62869413ea3e8ac5bb00a4eb0c52e212a0c988df5",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "ルーティング許可リスト未登録",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.status.routingNotAllowlisted.description",
+      {
+        "unitId": "hooks.status.routingNotAllowlisted.description",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "a9c75e2a2fcd619e32d3cc020b18fb5404c73e243b73c30b70184c3ab03c6999",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "このフックは Uniswap ルーティングの許可リストに含まれていません。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.status.routingUnknown",
+      {
+        "unitId": "hooks.status.routingUnknown",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "7c0dd57bfe3483da69c29e0b69b0e7befdb3c5a4c1ec547c5cd0111181fefe83",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "ルーティングステータスを取得できません",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.status.routingUnknown.description",
+      {
+        "unitId": "hooks.status.routingUnknown.description",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "8afab8160bb8f1cd1c5e658e7c17c3e049d41cd408990b3d6c0e3e42548b1c85",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "このフックのルーティング対応は確認されていません。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.status.unknownSource.description",
+      {
+        "unitId": "hooks.status.unknownSource.description",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "438f27dcbc85dd865e5e4ead1e1d6cd59105671eabfd355fbdf5bfc12e1aeff9",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "評価が必要です",
+        "status": "clean",
+        "judgeIssues": [
+          {
+            "category": "accuracy",
+            "severity": "minor",
+            "detail": "\"Still\" is dropped: 「評価が必要です」 reads \"evaluation is needed\" without the nuance that evaluation has not yet happened. As a routing-status label the meaning is recoverable; nit-level, left as-is.",
+            "evidence": {
+              "sourceSpan": "Still needs evaluation",
+              "targetSpan": "評価が必要です"
+            },
+            "alternative": "まだ評価が必要です"
+          }
+        ],
+        "agentRunId": "ja-JP-2026-11-04T16-49-06Z",
+        "approvedAt": "2026-11-04T16:49:06.274Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.status.unverifiedSource",
+      {
+        "unitId": "hooks.status.unverifiedSource",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "d086da22dbdb144e66b3470b1d50ee40441e0db47d6b01da9c4abaa3cbbf25f3",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "ソース未検証",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.status.unverifiedSource.description",
+      {
+        "unitId": "hooks.status.unverifiedSource.description",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "1e1284cc27f8364a2dc4923a7a56cf973755dbc8737a4397696fc9df0ff4b8dd",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "このデプロイメントでは検証済みのソースコードを利用できません。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.status.verifiedSource",
+      {
+        "unitId": "hooks.status.verifiedSource",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "8013ffdad04c8d1ab57ee4c121ae097c13ff8dde902debdf8e10de0408f7f1d7",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "検証済みソース",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.status.verifiedSource.description",
+      {
+        "unitId": "hooks.status.verifiedSource.description",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "3488666b8d58d3f77a38f6687599ae8a1d64883ce7e3ff1489b3ec296521890a",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "このフックのコードはブロックエクスプローラーで公開されており、バイトコードと一致しています。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:hooks.title",
+      {
+        "unitId": "hooks.title",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "d412a062620ef57bace76558a0384077b1919e66ba0a35af91e5a372f873e65e",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "フック",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-29T04-02-00Z",
+        "approvedAt": "2026-10-29T04:02:00.399Z",
         "approvedBy": "agent"
       }
     ],
@@ -796,8 +3088,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "API",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-27T20-02-23Z",
-        "approvedAt": "2026-10-27T20:02:23.812Z",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
         "approvedBy": "agent"
       }
     ],
@@ -836,6 +3128,57 @@
       }
     ],
     [
+      "ja-JP:i18next-json:launches.table.launchpad.tooltip",
+      {
+        "unitId": "launches.table.launchpad.tooltip",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "5ec5cb069f2573130a0ee3eac4150fe46f6ec4d51e8979683e37a23539049fd2",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "ローンチパッドは、新しいトークンを Uniswap プールにローンチするプラットフォームです。各チェーンでのローンチ出来高シェアが 1% 以上のものを掲載しています。掲載自体は、いかなるローンチパッドの推奨でもありません。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-28T20-30-23Z",
+        "approvedAt": "2026-10-28T20:30:23.581Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:launches.table.liquidity.tooltip",
+      {
+        "unitId": "launches.table.liquidity.tooltip",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "0742e618620da9a9f4f5f41b8f7c22633968fa9526b8fc4f6590dc66e6928fe5",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "流動性は、このトークンが Uniswap の各プールで保有されている合計価値です。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-29T16-00-41Z",
+        "approvedAt": "2026-10-29T16:00:41.887Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:launches.tokensDisclaimer",
+      {
+        "unitId": "launches.tokensDisclaimer",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "778efbf942b74f777b20fab08390815e47df05893a8b6a6ea7d9b66f5aed0647",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "トークンはデフォルトでコミット済み出来高順に並び、Uniswap Labs はいかなるトークンについても評価、推奨、意見を提供しません。トークンの取引の可否はご自身で判断してください。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-29T16-27-13Z",
+        "approvedAt": "2026-10-29T16:27:13.555Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "ja-JP:i18next-json:liquidityPool.positions.table.column.apr",
       {
         "unitId": "liquidityPool.positions.table.column.apr",
@@ -847,8 +3190,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "APR",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-27T20-02-23Z",
-        "approvedAt": "2026-10-27T20:02:23.812Z",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
         "approvedBy": "agent"
       }
     ],
@@ -1189,6 +3532,40 @@
         "status": "clean",
         "agentRunId": "ja-JP-2026-10-13T21-25-53Z",
         "approvedAt": "2026-10-13T21:25:53.806Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:margin.chart.avatar.label",
+      {
+        "unitId": "margin.chart.avatar.label",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "8e08e9656caa5d4d52125624a7122e866fb8650880e7e7e0a1edcae5fedb6b37",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "このポジションのレベルをチャートに表示",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:margin.chart.avatar.labelWithId",
+      {
+        "unitId": "margin.chart.avatar.labelWithId",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "a6bfadf74e14a34c2c2a14ccc38fbdd63d0ffa2e4e2caa2be917fcb21734b7df",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "ポジション #{{id}} のレベルをチャートに表示",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
         "approvedBy": "agent"
       }
     ],
@@ -1709,8 +4086,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "C",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-27T20-02-23Z",
-        "approvedAt": "2026-10-27T20:02:23.812Z",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
         "approvedBy": "agent"
       }
     ],
@@ -1726,8 +4103,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "H",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-27T20-02-23Z",
-        "approvedAt": "2026-10-27T20:02:23.812Z",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
         "approvedBy": "agent"
       }
     ],
@@ -1743,8 +4120,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "L",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-27T20-02-23Z",
-        "approvedAt": "2026-10-27T20:02:23.812Z",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
         "approvedBy": "agent"
       }
     ],
@@ -1760,8 +4137,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "O",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-27T20-02-23Z",
-        "approvedAt": "2026-10-27T20:02:23.812Z",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
         "approvedBy": "agent"
       }
     ],
@@ -3411,6 +5788,23 @@
       }
     ],
     [
+      "ja-JP:i18next-json:margin.payment.available",
+      {
+        "unitId": "margin.payment.available",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "f68e8fbb13a19c9bd43663a914d63fcda4cb5921e7476a0fbe69ba5009aeebd3",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "{{balance}} 利用可能",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "ja-JP:i18next-json:margin.payment.conversion",
       {
         "unitId": "margin.payment.conversion",
@@ -3434,13 +5828,13 @@
         "providerId": "i18next-json",
         "locale": "ja-JP",
         "domain": "product-ui",
-        "sourceHash": "2bf63d817630601b992694bc0b0559715001b9a24e7fe0d741eea02dce9181af",
+        "sourceHash": "0da00b600a2df4981e1ecea7973a4a13d50c722b7cf177e878ffdbf8ec0af351",
         "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
-        "translation": "証拠金",
+        "translation": "入金",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-24T23-30-00Z",
-        "approvedAt": "2026-10-24T23:30:00.981Z",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
         "approvedBy": "agent"
       }
     ],
@@ -5123,6 +7517,363 @@
       }
     ],
     [
+      "ja-JP:i18next-json:margin.receipt.entry.blended",
+      {
+        "unitId": "margin.receipt.entry.blended",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "841488eeaf619f80eb7e70e88e8fbef347c522312477e06176dcc4fa0a5f7dcd",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "ブレンドエントリー",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:margin.receipt.entry.definition",
+      {
+        "unitId": "margin.receipt.entry.definition",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "cc1b73424b597826bda776b80973229fa510e2122cd3c2ac77fe4486bdd428b6",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "価格インパクトと手数料を含めた平均価格です。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:margin.receipt.entry.priceImpact",
+      {
+        "unitId": "margin.receipt.entry.priceImpact",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "f09dfb731f343bd931b2a6fffcaaf4c810ccaa8a66bd951436aaf66d62add4df",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "価格インパクト",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:margin.receipt.entry.quoted",
+      {
+        "unitId": "margin.receipt.entry.quoted",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "adfc6f7b606d5160a42b341ebb6544bad0c9e7c4351283d16817ebbcd7dded28",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "見積もりエントリー",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:margin.receipt.entry.worstCase",
+      {
+        "unitId": "margin.receipt.entry.worstCase",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "05bcba48a6e5785b952a38e56bf910aa76b854163966c4a7157b616a80f3d4cd",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "最大スリッページ {{slippage}} での最悪ケース",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:margin.receipt.estimated",
+      {
+        "unitId": "margin.receipt.estimated",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "e7da792d2e4ed920b3604654aa78bec94f7a483dfc17c167957973122e5c29f5",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "見積もりが確定するまでは推定値です",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:margin.receipt.leveragedRate.definition",
+      {
+        "unitId": "margin.receipt.leveragedRate.definition",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "2f1f50ffdd2ee33389cdd37770fd28a46402d98c89cad71b9f53660a51323ae8",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "担保の利回りを考慮した、ポジション全体の年間純レート。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:margin.receipt.leveragedRate.label",
+      {
+        "unitId": "margin.receipt.leveragedRate.label",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "a44583de6f4733478a0551d0c278fe4aca202c8ce7302d1d44e578c98e44c8e5",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "レバレッジレート",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:margin.receipt.leveragedRate.leverage",
+      {
+        "unitId": "margin.receipt.leveragedRate.leverage",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "c9968747d776fa3f31c41ef2a53f7f81e5ee0b862013152d71b27a5440111cd1",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "レバレッジ",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:margin.receipt.leveragedRate.marginRate",
+      {
+        "unitId": "margin.receipt.leveragedRate.marginRate",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "ab52ea6beab8dcf103c31a28a6cc353c117745f247f1e6da8e003f09383d9f26",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "証拠金に対する純レート",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:margin.receipt.leveragedRate.rate",
+      {
+        "unitId": "margin.receipt.leveragedRate.rate",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "d7414f968a888c94375bed6ba6703b4f32f9f72440ef4cbe1cbd7d1ac8d1d280",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "ポジションに対する純レート",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:margin.receipt.leveragedRate.youPay",
+      {
+        "unitId": "margin.receipt.leveragedRate.youPay",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "16c6e032c6d9e64e841b58a0298260d9f548fcbe3a8ad8dc475bd977b602898f",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "支払い",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:margin.receipt.liq.equityAtLiquidation",
+      {
+        "unitId": "margin.receipt.liq.equityAtLiquidation",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "2dc14bb357e392a31427c7d08d572f0111223c4497bdd7114c13edd82dc3e751",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "清算時のエクイティ",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:margin.receipt.liq.fullBody",
+      {
+        "unitId": "margin.receipt.liq.fullBody",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "c55a3c55ff7ca81db31a3c41dab5c0ec26e3e0714505fd8cca39fad24f6ac10d",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "負債を返済するためにポジション全体がクローズされます。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:margin.receipt.liq.fullTitle",
+      {
+        "unitId": "margin.receipt.liq.fullTitle",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "22dddcb0e8d6ab9e10c33ffe8539a41159566629d2204c9afb19da5053c6cc6e",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "全額清算",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:margin.receipt.liq.heldAs",
+      {
+        "unitId": "margin.receipt.liq.heldAs",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "bd715aed68e245060f0b2ca8475b0b1cccbcb3538ece97d70e3a6f374bec2f8c",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "保有形態",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:margin.receipt.liq.ifLiquidatedAt",
+      {
+        "unitId": "margin.receipt.liq.ifLiquidatedAt",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "2f3dd95cd7bd9220399d1e10cbdc9e89ac47101a912f4a3d32a8566f89d6f3ff",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "{{price}} で清算された場合",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:margin.receipt.liq.partialBody",
+      {
+        "unitId": "margin.receipt.liq.partialBody",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "9af3b1c10dbf82b594833609e68e3dfff71842aed88db8d5d2d3b503a54c3470",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "ポジションを再び安全な状態にするのに必要な分だけがクローズされます。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:margin.receipt.liq.partialTitle",
+      {
+        "unitId": "margin.receipt.liq.partialTitle",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "26fcd47fa5f133820f4e1d6e523541ba07fa0988836cf0f60610039e17c0814a",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "部分清算",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:margin.receipt.liq.penalty",
+      {
+        "unitId": "margin.receipt.liq.penalty",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "241c75409278874095b343a758827ebca7ef656c0268205b61bce32276dce56c",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "ペナルティ",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:margin.receipt.liq.youKeep",
+      {
+        "unitId": "margin.receipt.liq.youKeep",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "4f0bbc515a522af87fa55dcc91d95ce331f93beb74f7e2d125e7dbbb1985c652",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "ペナルティ適用前の受取額",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "ja-JP:i18next-json:margin.receipt.liquidationPrice",
       {
         "unitId": "margin.receipt.liquidationPrice",
@@ -5153,6 +7904,40 @@
         "status": "clean",
         "agentRunId": "ja-JP-2026-10-24T23-30-00Z",
         "approvedAt": "2026-10-24T23:30:00.981Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:margin.receipt.margin",
+      {
+        "unitId": "margin.receipt.margin",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "2bf63d817630601b992694bc0b0559715001b9a24e7fe0d741eea02dce9181af",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "証拠金",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:margin.receipt.marginTooltip",
+      {
+        "unitId": "margin.receipt.marginTooltip",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "30162f3b603b70373d06c5fa97398a0c7a1ca42c38ba2cc7eb61b78130b4adfb",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "担保から負債を差し引いた額：今クローズした場合におおよそ戻ってくる金額です。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
         "approvedBy": "agent"
       }
     ],
@@ -5225,6 +8010,40 @@
       }
     ],
     [
+      "ja-JP:i18next-json:margin.receipt.rate.borrowApy",
+      {
+        "unitId": "margin.receipt.rate.borrowApy",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "33429b974f515d6411758365c8eb783fee1517201a06856ffe76b978b32104f1",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "{{symbol}} の借入金利",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:margin.receipt.rate.collateralApy",
+      {
+        "unitId": "margin.receipt.rate.collateralApy",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "aaabfb5ff37fa44423a5a3f0a983f207b2ce27fd34d6e0944e652ed05c59ac3e",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "{{symbol}} の利回り",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "ja-JP:i18next-json:margin.receipt.swapping",
       {
         "unitId": "margin.receipt.swapping",
@@ -5238,6 +8057,23 @@
         "status": "clean",
         "agentRunId": "ja-JP-2026-10-24T23-30-00Z",
         "approvedAt": "2026-10-24T23:30:00.981Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:margin.receipt.swappingTooltip",
+      {
+        "unitId": "margin.receipt.swappingTooltip",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "7cbc9468d589d337a86bc25a24828e8597ea79e376ddd41863a0234a6635ff89",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "支払いのうち、このマーケットの担保にスワップされる部分です。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
         "approvedBy": "agent"
       }
     ],
@@ -5378,6 +8214,23 @@
       }
     ],
     [
+      "ja-JP:i18next-json:margin.route.auto",
+      {
+        "unitId": "margin.route.auto",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "0286249762f7c94349cdc0ba3bb2255baf9a80036e2193ead1d77696f888582f",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "自動",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "ja-JP:i18next-json:margin.route.autoBest",
       {
         "unitId": "margin.route.autoBest",
@@ -5391,6 +8244,91 @@
         "status": "clean",
         "agentRunId": "ja-JP-2026-10-13T21-25-53Z",
         "approvedAt": "2026-10-13T21:25:53.806Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:margin.route.column.borrowRate",
+      {
+        "unitId": "margin.route.column.borrowRate",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "70dbd16fa68ef78bfb89509dc32aec199e75778f493191520b9ac31b5510bc7a",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "借入金利",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:margin.route.highestLeverage",
+      {
+        "unitId": "margin.route.highestLeverage",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "1d63954a1c90f175b3327eb27855bc324f032ca060eea2118cc1109b34fc212d",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "最高レバレッジ",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:margin.route.highestLiquidity",
+      {
+        "unitId": "margin.route.highestLiquidity",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "2dba8116a35ed442eb8d97fc39ccd713778193cf7ae193335f590da65a46f12e",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "最高流動性",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:margin.route.lowestRate",
+      {
+        "unitId": "margin.route.lowestRate",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "1e8d63f4ca6b2109b3b8e64ec9444cbc9460cbcb7b2be38283db6c9198f2f3c0",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "最低金利",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:margin.route.manual",
+      {
+        "unitId": "margin.route.manual",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "b0b9fe24ffa9629125bdc59b122f80d605ab604eb1b74485c2f2ecfde26576ae",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "手動",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
         "approvedBy": "agent"
       }
     ],
@@ -5594,6 +8532,23 @@
       }
     ],
     [
+      "ja-JP:i18next-json:margin.selector.columnLowestRate",
+      {
+        "unitId": "margin.selector.columnLowestRate",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "1e8d63f4ca6b2109b3b8e64ec9444cbc9460cbcb7b2be38283db6c9198f2f3c0",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "最低金利",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "ja-JP:i18next-json:margin.selector.columnMarkPrice",
       {
         "unitId": "margin.selector.columnMarkPrice",
@@ -5641,6 +8596,23 @@
         "status": "clean",
         "agentRunId": "ja-JP-2026-10-27T20-02-23Z",
         "approvedAt": "2026-10-27T20:02:23.812Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:margin.selector.columnMaxLiquidity",
+      {
+        "unitId": "margin.selector.columnMaxLiquidity",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "dfb93e22afa2fa356586196278da460a47eeab82c41baad71f3968f9871ca13c",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "最大流動性",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
         "approvedBy": "agent"
       }
     ],
@@ -5764,6 +8736,74 @@
       }
     ],
     [
+      "ja-JP:i18next-json:margin.selector.marketCount_one",
+      {
+        "unitId": "margin.selector.marketCount_one",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "3fc8af857410a3845dad74d39a92569fdf4c367f2e84914815e85ea00fcdc5a1",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "{{count}} マーケット",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:margin.selector.marketCount_other",
+      {
+        "unitId": "margin.selector.marketCount_other",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "19c14adf50b7b9327382fef2235178ab0d7f1d19714179308ab4921018937ffd",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "{{count}} マーケット",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:margin.selector.quoteFilter.any",
+      {
+        "unitId": "margin.selector.quoteFilter.any",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "863e6a4959effad9f103d04ac4214edf5065031a8d88de43c8f608683ef43e85",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "任意のクオートトークン",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:margin.selector.quoteFilter.label",
+      {
+        "unitId": "margin.selector.quoteFilter.label",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "eb4cdebd82bf11944af040d30f8aa688fbf4c836f46dd8c4154adf40dc286ac6",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "クオート",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "ja-JP:i18next-json:margin.selector.searchLabel",
       {
         "unitId": "margin.selector.searchLabel",
@@ -5858,6 +8898,40 @@
         "status": "clean",
         "agentRunId": "ja-JP-2026-10-13T21-25-53Z",
         "approvedAt": "2026-10-13T21:25:53.806Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:margin.settings.marketOptions",
+      {
+        "unitId": "margin.settings.marketOptions",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "297b39733e0e8184d7d2b6513f7804fb332df3aa7d7bfdd0d0ea028e6329284a",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "マーケットオプション",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:margin.settings.marketOptions.allDescription",
+      {
+        "unitId": "margin.settings.marketOptions.allDescription",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "e4d1050fd184c2b3ad2cc69d90d43dd485b785b0d7b0fb25b3a5339b9050653f",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "すべてのペアで、すべてのマーケットにルーティングします。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
         "approvedBy": "agent"
       }
     ],
@@ -6355,6 +9429,23 @@
       }
     ],
     [
+      "ja-JP:i18next-json:margin.table.id",
+      {
+        "unitId": "margin.table.id",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "3843971dcfdee5083e6289e1bbdbb003e538b5a8a668fc43ae4f19d415ac18a2",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "ID",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "ja-JP:i18next-json:margin.table.incompleteOpen",
       {
         "unitId": "margin.table.incompleteOpen",
@@ -6485,8 +9576,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "PnL",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-27T20-02-23Z",
-        "approvedAt": "2026-10-27T20:02:23.812Z",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
         "approvedBy": "agent"
       }
     ],
@@ -6606,6 +9697,23 @@
         "status": "clean",
         "agentRunId": "ja-JP-2026-10-13T21-25-53Z",
         "approvedAt": "2026-10-13T21:25:53.806Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:margin.table.showOnChart",
+      {
+        "unitId": "margin.table.showOnChart",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "d9df232890058ebb9335d46d62e472da4b23fdde385c04b7dfeac273387a43b5",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "ポジションをチャートに表示",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
         "approvedBy": "agent"
       }
     ],
@@ -7182,8 +10290,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "APR",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-27T20-02-23Z",
-        "approvedAt": "2026-10-27T20:02:23.812Z",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
         "approvedBy": "agent"
       }
     ],
@@ -7269,6 +10377,23 @@
       }
     ],
     [
+      "ja-JP:i18next-json:pool.volumeToTvl",
+      {
+        "unitId": "pool.volumeToTvl",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "7d96419a1da895d78a012e067d55214f54a7833518e5cf065201cdaa0abee538",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "出来高/TVL",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T02-52-02Z",
+        "approvedAt": "2026-10-30T02:52:02.003Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "ja-JP:i18next-json:portfolio.defi.title",
       {
         "unitId": "portfolio.defi.title",
@@ -7280,8 +10405,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "DeFi",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-27T20-02-23Z",
-        "approvedAt": "2026-10-27T20:02:23.812Z",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
         "approvedBy": "agent"
       }
     ],
@@ -7433,8 +10558,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "The Badger",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-27T20-02-23Z",
-        "approvedAt": "2026-10-27T20:02:23.812Z",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
         "approvedBy": "agent"
       }
     ],
@@ -7473,6 +10598,57 @@
       }
     ],
     [
+      "ja-JP:i18next-json:rhcca.create.error.imageTooLargeToCheck",
+      {
+        "unitId": "rhcca.create.error.imageTooLargeToCheck",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "29b0533bf3cf182a7ec1c12c1f04e422f2a8263d5f20becf150cc5c67980207a",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "この画像は大きすぎて確認できません。4096 × 4096 ピクセル以下の画像を使用してください（アニメーションの場合は全フレームの合計）。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T18-53-33Z",
+        "approvedAt": "2026-10-30T18:53:33.893Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:rhcca.create.error.imageTooManyFrames",
+      {
+        "unitId": "rhcca.create.error.imageTooManyFrames",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "97da84154aad5c8e4939ac167447f319b05e6c1f3705f31a52848fa524c635a1",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "このアニメーションはフレーム数が多すぎます。静止画像か、より短いアニメーションを使用してください。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T18-53-33Z",
+        "approvedAt": "2026-10-30T18:53:33.893Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:rhcca.create.error.invalidImage",
+      {
+        "unitId": "rhcca.create.error.invalidImage",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "5b9a89d248a541d531d98a754213aea55743355cd4f99ddd098ec206f622ca5b",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "この画像は使用できませんでした。別の画像を選択して、もう一度お試しください。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T18-53-33Z",
+        "approvedAt": "2026-10-30T18:53:33.893Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "ja-JP:i18next-json:rhcca.create.feeRecipientLockedCrowdLaunch",
       {
         "unitId": "rhcca.create.feeRecipientLockedCrowdLaunch",
@@ -7501,8 +10677,25 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "$TICKER",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-27T20-02-23Z",
-        "approvedAt": "2026-10-27T20:02:23.812Z",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:rhcca.create.mechanism.auction.paused",
+      {
+        "unitId": "rhcca.create.mechanism.auction.paused",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "ba4c80b9e4ab83460a7942a5a6adc98e0d71d661f53673da44de1c5489516939",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "まもなく再開します",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-05T20-04-50Z",
+        "approvedAt": "2026-11-05T20:04:50.698Z",
         "approvedBy": "agent"
       }
     ],
@@ -7718,8 +10911,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "Crowd Launch",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-27T20-02-23Z",
-        "approvedAt": "2026-10-27T20:02:23.812Z",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
         "approvedBy": "agent"
       }
     ],
@@ -7735,8 +10928,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "Instant Launch",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-27T20-02-23Z",
-        "approvedAt": "2026-10-27T20:02:23.812Z",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
         "approvedBy": "agent"
       }
     ],
@@ -7904,6 +11097,23 @@
       }
     ],
     [
+      "ja-JP:i18next-json:search.results.stats.committed",
+      {
+        "unitId": "search.results.stats.committed",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "cc962289af2873dd6dad32931554372a7d2d2de5bd5859c8265eb58b5197a88e",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "コミット済み",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-27T21-50-14Z",
+        "approvedAt": "2026-10-27T21:50:14.142Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "ja-JP:i18next-json:send.warning.modal.button.cta.blocking",
       {
         "unitId": "send.warning.modal.button.cta.blocking",
@@ -7915,8 +11125,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "OK",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-27T20-02-23Z",
-        "approvedAt": "2026-10-27T20:02:23.812Z",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
         "approvedBy": "agent"
       }
     ],
@@ -7932,8 +11142,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "ENS",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-27T20-02-23Z",
-        "approvedAt": "2026-10-27T20:02:23.812Z",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
         "approvedBy": "agent"
       }
     ],
@@ -8040,6 +11250,62 @@
       }
     ],
     [
+      "ja-JP:i18next-json:stats.volume.7d.short",
+      {
+        "unitId": "stats.volume.7d.short",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "3db53737218236572fe3c06dbe1b6c6ef125fe89dc7fd00cee99e9810f88d678",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "7D 出来高",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "style",
+            "severity": "minor",
+            "detail": "Compact stat label expanded: \"7D vol\" becomes the full phrase 「7日間の出来高」, violating the Max/Min compact-abbreviation guidance for fixed-width stat tiles. Sibling keys keep the compact form (e.g. 2228 \"1D vol\").",
+            "evidence": {
+              "sourceSpan": "7D vol",
+              "targetSpan": "7日間の出来高",
+              "rule": "Context note: Max / Min (compact buttons) — source-compact abbreviations stay compact"
+            },
+            "alternative": "7D 出来高"
+          },
+          {
+            "category": "locale-conventions",
+            "severity": "minor",
+            "detail": "Missing half-width space between the Latin digit and Japanese character: 「7日間」 should be 「7 日間」 per the Latin/Han spacing rule (moot under the compact correction).",
+            "evidence": {
+              "targetSpan": "7日間",
+              "rule": "ja-JP style: insert a half-width space between Latin/numeric tokens and adjacent Japanese characters"
+            }
+          }
+        ],
+        "agentRunId": "ja-JP-2026-11-04T16-49-06Z",
+        "approvedAt": "2026-11-04T16:49:06.274Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:swap.details.orderRoutingInfo.relay",
+      {
+        "unitId": "swap.details.orderRoutingInfo.relay",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "5522a7ea4e91d4562300ad1ae4ed6b6f3c6b4c83c47befc19f778d02510ba931",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "このスワップは Relay 経由でルーティングされます。Relay は迅速な約定と競争力のある価格で資産をネットワーク間で移動するクロスチェーンプロトコルです。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-28T19-49-39Z",
+        "approvedAt": "2026-10-28T19:49:39.215Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "ja-JP:i18next-json:swap.routing.guidestar.copyPool",
       {
         "unitId": "swap.routing.guidestar.copyPool",
@@ -8068,8 +11334,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "Uniswap API",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-27T20-02-23Z",
-        "approvedAt": "2026-10-27T20:02:23.812Z",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
         "approvedBy": "agent"
       }
     ],
@@ -8172,6 +11438,40 @@
         "status": "clean",
         "agentRunId": "ja-JP-2026-10-08T18-32-51Z",
         "approvedAt": "2026-10-08T18:32:51.063Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:swap.settings.bridgingOptions.option.all.description",
+      {
+        "unitId": "swap.settings.bridgingOptions.option.all.description",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "1f3b05d10f56269ac77ba9b4bfccb3057b96d3c4a4f73ab21a31402ab2d92a58",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "Uniswap クライアントは、トークンの受取量とネットワーク代を考慮して最も有利な取引オプションを選択します。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T18-13-15Z",
+        "approvedAt": "2026-10-30T18:13:15.948Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:swap.settings.bridgingOptions.title",
+      {
+        "unitId": "swap.settings.bridgingOptions.title",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "eae2dbd7d5b99b9f1d1318ab7d64e94b0ab2bd03b701854c86faf1250d1ec2b1",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "ブリッジオプション",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T18-13-15Z",
+        "approvedAt": "2026-10-30T18:13:15.948Z",
         "approvedBy": "agent"
       }
     ],
@@ -8836,6 +12136,57 @@
       }
     ],
     [
+      "ja-JP:i18next-json:token.stats.tvl.allPools",
+      {
+        "unitId": "token.stats.tvl.allPools",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "f7a8e9c26768283d80b091425c4ca080e7391ff9166f59284a90d3f0f9eed018",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "{{symbol}} のすべてのプール",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-02T21-30-26Z",
+        "approvedAt": "2026-11-02T21:30:26.795Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:token.stats.tvl.pairedTokens",
+      {
+        "unitId": "token.stats.tvl.pairedTokens",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "da0d3dabc5a8790e0ebbbf9c798db684abee85e0550521cf93b23b3711b5a67f",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "ペアのトークン",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-02T21-30-26Z",
+        "approvedAt": "2026-11-02T21:30:26.795Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:token.stats.tvl.tokenInPools",
+      {
+        "unitId": "token.stats.tvl.tokenInPools",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "b99ab6e46c69a9d811763a8dccdaa40bc08ac1dc35844957a64794d0f384bfc3",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "プール内の {{symbol}}",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-02T21-30-26Z",
+        "approvedAt": "2026-11-02T21:30:26.795Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "ja-JP:i18next-json:tokens.selector.categoryFilter.clear_one",
       {
         "unitId": "tokens.selector.categoryFilter.clear_one",
@@ -9051,8 +12402,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "<value>{{fdv}}</value> FDV",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-27T20-02-23Z",
-        "approvedAt": "2026-10-27T20:02:23.812Z",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
         "approvedBy": "agent"
       }
     ],
@@ -9104,6 +12455,23 @@
         "status": "clean",
         "agentRunId": "ja-JP-2026-09-16T16-25-30Z",
         "approvedAt": "2026-09-16T16:25:30.335Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:toucan.auction.thresholdNotMet",
+      {
+        "unitId": "toucan.auction.thresholdNotMet",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "d210e81cbde067da534eee56b14d98625e8005ccdd3a08c9c92f1b980b6ba739",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "未達成",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-27T23-11-59Z",
+        "approvedAt": "2026-10-27T23:11:59.542Z",
         "approvedBy": "agent"
       }
     ],
@@ -9221,8 +12589,42 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "100% → 0.3% v4 LP",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-27T20-02-23Z",
-        "approvedAt": "2026-10-27T20:02:23.812Z",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:toucan.createAuction.step.configureAuction.duration.windowTooLong.error_one",
+      {
+        "unitId": "toucan.createAuction.step.configureAuction.duration.windowTooLong.error_one",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "3a50a044bad6675ead874ff70a1ab0ea64bf2c158d5a8bc2866253c2340bf75d",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "このオークションは {{chainName}} には長すぎます。{{count}} 日以内に短縮してください。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-03T20-20-18Z",
+        "approvedAt": "2026-11-03T20:20:18.014Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:toucan.createAuction.step.configureAuction.duration.windowTooLong.error_other",
+      {
+        "unitId": "toucan.createAuction.step.configureAuction.duration.windowTooLong.error_other",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "7c852dddc739c6c3cdf6db0593d162e5bb23990fb768ed6d1a77c901ff0ccdbd",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "このオークションは {{chainName}} には長すぎます。{{count}} 日以内に短縮してください。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-03T20-20-18Z",
+        "approvedAt": "2026-11-03T20:20:18.014Z",
         "approvedBy": "agent"
       }
     ],
@@ -9397,6 +12799,57 @@
       }
     ],
     [
+      "ja-JP:i18next-json:toucan.createAuction.step.tokenInfo.image.error.invalidImage",
+      {
+        "unitId": "toucan.createAuction.step.tokenInfo.image.error.invalidImage",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "a0cb9f1f93d948c03a21a64a4162dea794a4aa598641754d3dfcadc0ee9dc56a",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "この画像を読み込めませんでした。PNG または JPG として再書き出しするか、別の画像を選択してください。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T20-23-10Z",
+        "approvedAt": "2026-10-30T20:23:10.042Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:toucan.createAuction.step.tokenInfo.image.error.tooLargeToCheck",
+      {
+        "unitId": "toucan.createAuction.step.tokenInfo.image.error.tooLargeToCheck",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "29b0533bf3cf182a7ec1c12c1f04e422f2a8263d5f20becf150cc5c67980207a",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "この画像は大きすぎて確認できません。4096 × 4096 ピクセル以下の画像を使用してください（アニメーションの場合は全フレームの合計）。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T20-23-10Z",
+        "approvedAt": "2026-10-30T20:23:10.042Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:toucan.createAuction.step.tokenInfo.image.error.tooManyFrames",
+      {
+        "unitId": "toucan.createAuction.step.tokenInfo.image.error.tooManyFrames",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "97da84154aad5c8e4939ac167447f319b05e6c1f3705f31a52848fa524c635a1",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "このアニメーションはフレーム数が多すぎます。静止画像またはより短いアニメーションを使用してください。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-30T20-23-10Z",
+        "approvedAt": "2026-10-30T20:23:10.042Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "ja-JP:i18next-json:toucan.createAuction.step.tokenInfo.tickerPlaceholder",
       {
         "unitId": "toucan.createAuction.step.tokenInfo.tickerPlaceholder",
@@ -9408,8 +12861,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "$TICKER",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-27T20-02-23Z",
-        "approvedAt": "2026-10-27T20:02:23.812Z",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
         "approvedBy": "agent"
       }
     ],
@@ -9431,6 +12884,23 @@
       }
     ],
     [
+      "ja-JP:i18next-json:toucan.filter.verified.tooltip",
+      {
+        "unitId": "toucan.filter.verified.tooltip",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "7d450ace96a9e49c0b3dad71b35cd4c903796d99f5f059633140255ac2827a14",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "Verified Launch とは、ローンチが一定の客観的で検証可能な基準を満たしたことを意味します。推奨や推薦ではありません。",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-28T19-29-20Z",
+        "approvedAt": "2026-10-28T19:29:20.922Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "ja-JP:i18next-json:toucan.launchMethod.crowd",
       {
         "unitId": "toucan.launchMethod.crowd",
@@ -9442,8 +12912,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "Crowd Launch",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-27T20-02-23Z",
-        "approvedAt": "2026-10-27T20:02:23.812Z",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
         "approvedBy": "agent"
       }
     ],
@@ -9573,8 +13043,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "Instant Launch",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-27T20-02-23Z",
-        "approvedAt": "2026-10-27T20:02:23.812Z",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
         "approvedBy": "agent"
       }
     ],
@@ -9636,13 +13106,13 @@
         "providerId": "i18next-json",
         "locale": "ja-JP",
         "domain": "product-ui",
-        "sourceHash": "6836fec847c82e18c57a8f6726d1b9772f7417eded592146d144170dc6735a37",
+        "sourceHash": "4205b29646845068100a69a3aa50b97f50f0797e9a56d1a5b55d2f617803778c",
         "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
-        "translation": "Pools.trade",
+        "translation": "Pools.xyz",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-27T20-02-23Z",
-        "approvedAt": "2026-10-27T20:02:23.812Z",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
         "approvedBy": "agent"
       }
     ],
@@ -9728,6 +13198,23 @@
         "status": "clean",
         "agentRunId": "ja-JP-2026-10-13T21-25-53Z",
         "approvedAt": "2026-10-13T21:25:53.806Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:transaction.status.margin.interrupted",
+      {
+        "unitId": "transaction.status.margin.interrupted",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "4796e8cf1b0b0b59b65f4d8e5ec8ca3180aca2fe4fe51f04a0c3279efcc89ba0",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "ポジションのオープンが中断されました",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-29T23-53-03Z",
+        "approvedAt": "2026-10-29T23:53:03.934Z",
         "approvedBy": "agent"
       }
     ],
@@ -9868,6 +13355,23 @@
       }
     ],
     [
+      "ja-JP:i18next-json:transaction.status.marginClose.interrupted",
+      {
+        "unitId": "transaction.status.marginClose.interrupted",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "1fe6913b30f6480fde72157c5cd5829ddce7be7ccee010471eede394e07feb84",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "ポジションのクローズが中断されました",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-29T23-53-03Z",
+        "approvedAt": "2026-10-29T23:53:03.934Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "ja-JP:i18next-json:transaction.status.marginClose.pending",
       {
         "unitId": "transaction.status.marginClose.pending",
@@ -9970,6 +13474,108 @@
       }
     ],
     [
+      "ja-JP:i18next-json:transaction.status.marginUpdate.failed",
+      {
+        "unitId": "transaction.status.marginUpdate.failed",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "0f0cfe314e7d273cbb94bf38576f5c80549802a566e8761282c02d2be540fb93",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "ポジションの更新に失敗しました",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-29T23-53-03Z",
+        "approvedAt": "2026-10-29T23:53:03.934Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:transaction.status.marginUpdate.interrupted",
+      {
+        "unitId": "transaction.status.marginUpdate.interrupted",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "8c820495adab2c1eb994efd1457c0079548eab93031e963d35c564472f6de9e5",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "ポジションの更新が中断されました",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-29T23-53-03Z",
+        "approvedAt": "2026-10-29T23:53:03.934Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:transaction.status.marginUpdate.pending",
+      {
+        "unitId": "transaction.status.marginUpdate.pending",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "f504e84c54bf459ec2f423bfc24108091b40b0a06a470c2a3300a2ced9f63203",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "ポジションを更新中",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-29T23-53-03Z",
+        "approvedAt": "2026-10-29T23:53:03.934Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:transaction.status.marginUpdate.success",
+      {
+        "unitId": "transaction.status.marginUpdate.success",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "a41dd9c9004833dbb8fd99523e8191e9d36b44921802f7f3abc1f94af7dd100e",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "ポジションを更新しました",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-29T23-53-03Z",
+        "approvedAt": "2026-10-29T23:53:03.934Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:transaction.status.plan.step.bridge.via",
+      {
+        "unitId": "transaction.status.plan.step.bridge.via",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "559ceddf85c15713cbbade451112b451fdd0603bde21923fcf10f98b40e69bb2",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "{{bridgeName}} 経由で {{tokenInAmount}} {{tokenInSymbol}} を {{destinationChain}} にブリッジ",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-11-04T19-15-11Z",
+        "approvedAt": "2026-11-04T19:15:11.094Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "ja-JP:i18next-json:transaction.status.plan.step.unwrap",
+      {
+        "unitId": "transaction.status.plan.step.unwrap",
+        "providerId": "i18next-json",
+        "locale": "ja-JP",
+        "domain": "product-ui",
+        "sourceHash": "5280260a35f3dd92540bb856899ae1362e7c498de5a1b2ec496354dbb5201581",
+        "glossaryHash": "ced7594711fa9cc08380e071e04706d2834c838f521f8e12e8b69403a89d11dd",
+        "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
+        "translation": "{{amount}} {{symbol}} をアンラップ",
+        "status": "clean",
+        "agentRunId": "ja-JP-2026-10-28T18-18-40Z",
+        "approvedAt": "2026-10-28T18:18:40.047Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "ja-JP:i18next-json:uniswapx.item",
       {
         "unitId": "uniswapx.item",
@@ -9981,8 +13587,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "<icon /> <gradient>UniswapX</gradient> <info />",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-27T20-02-23Z",
-        "approvedAt": "2026-10-27T20:02:23.812Z",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
         "approvedBy": "agent"
       }
     ],
@@ -9998,8 +13604,8 @@
         "styleHash": "d7e7d2b9302e369c39493d1412dacfbff26082ef1a27de9f2848bf48df54756c",
         "translation": "yourname",
         "status": "clean",
-        "agentRunId": "ja-JP-2026-10-27T20-02-23Z",
-        "approvedAt": "2026-10-27T20:02:23.812Z",
+        "agentRunId": "ja-JP-2026-11-05T22-02-23Z",
+        "approvedAt": "2026-11-05T22:02:23.349Z",
         "approvedBy": "agent"
       }
     ]

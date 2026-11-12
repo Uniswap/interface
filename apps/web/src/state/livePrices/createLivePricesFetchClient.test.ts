@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, type Mock, vi } from 'vitest'
 import { createLivePricesFetchClient } from '~/state/livePrices/createLivePricesFetchClient'
 
 /**
@@ -12,7 +12,7 @@ describe('createLivePricesFetchClient', () => {
     vi.unstubAllGlobals()
   })
 
-  function setup(): { fetchMock: ReturnType<typeof vi.fn> } {
+  function setup(): { fetchMock: Mock } {
     const fetchMock = vi.fn(async () => new Response(JSON.stringify({}), { status: 200 }))
     vi.stubGlobal('fetch', fetchMock)
     return { fetchMock }

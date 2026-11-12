@@ -44,12 +44,12 @@ describe('getPosition', () => {
       name: 'WBTC/WETH',
       positionStatus: 'in_range',
       poolData: {
-        token0Symbol: 'WBTC',
-        token1Symbol: 'WETH',
+        baseSymbol: 'WBTC',
+        quoteSymbol: 'WETH',
         feeTier: '0.3%',
         protocolVersion: 'V3',
-        token0Image: 'https://logos/wbtc.png',
-        token1Image: 'https://logos/weth.png',
+        baseImage: 'https://logos/wbtc.png',
+        quoteImage: 'https://logos/weth.png',
       },
     })
   })

@@ -9,6 +9,7 @@ import { type EmbeddedWalletUnitagSource } from 'uniswap/src/features/telemetry/
 import { useCanClaimUnitagName } from 'uniswap/src/features/unitags/hooks/useCanClaimUnitagName'
 import type { SuggestedUnitag } from 'uniswap/src/features/unitags/suggestions/useSuggestedUnitag'
 import { useEvent } from 'utilities/src/react/hooks'
+import { sleep } from 'utilities/src/time/timing'
 import { ModalContent } from '~/features/wallet/components/GetTheAppModal/Content'
 import { SuggestedUnitagInput } from '~/features/wallet/components/GetTheAppModal/EmbeddedWalletOnboarding/SuggestedUnitagInput'
 import { PasskeyIconHeader } from '~/features/wallet/components/GetTheAppModal/PasskeyIconHeader'
@@ -64,7 +65,7 @@ export function CreateWalletScreen({
 
   const onSuccess = useEvent(async () => {
     setHasWalletCreationSuccess(true)
-    await new Promise((resolve) => setTimeout(resolve, SUCCESS_STATE_DISPLAY_MS))
+    await sleep(SUCCESS_STATE_DISPLAY_MS)
     onClose()
   })
 

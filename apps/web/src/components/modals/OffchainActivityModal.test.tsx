@@ -13,7 +13,8 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import i18n from 'uniswap/src/i18n'
 import { currencyId } from 'uniswap/src/utils/currencyId'
-import type { Mock } from 'vitest'
+import { currentTimeInSeconds } from 'utilities/src/time/time'
+import type { Mock, MockInstance } from 'vitest'
 import { getOrderTitle, showCancelPreCheckRefusalPopup } from '~/components/modals/OffchainActivityCancelFlow'
 import { OrderContent } from '~/components/modals/OffchainActivityModal'
 import { render } from '~/test-utils/render'
@@ -137,7 +138,7 @@ function createCancellingLimitOrder(overrides?: Partial<UniswapXOrderDetails>): 
     routing: TradingApi.Routing.DUTCH_LIMIT,
     status: TransactionStatus.Cancelling,
     encodedOrder: '0xencodedOrder',
-    expiry: Math.floor(Date.now() / 1000) + 3600,
+    expiry: currentTimeInSeconds() + 3600,
     addedTime: 1701715079,
     orderHash: '0xad7a8f73f28fd0cc16459111899dd1632164ae139fcf5281a1bced56e1ff6564',
     hash: '0xad7a8f73f28fd0cc16459111899dd1632164ae139fcf5281a1bced56e1ff6564',
@@ -218,7 +219,7 @@ describe('getOrderTitle', () => {
 })
 
 describe('showCancelPreCheckRefusalPopup', () => {
-  let addPopupSpy: ReturnType<typeof vi.spyOn>
+  let addPopupSpy: MockInstance
 
   beforeEach(() => {
     addPopupSpy = vi.spyOn(popupRegistry, 'addPopup').mockImplementation(() => undefined)

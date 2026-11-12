@@ -2,9 +2,10 @@ import { fireEvent } from '@testing-library/react'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { UniverseChainId } from '@universe/chains'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import type { Mock } from 'vitest'
 import { useActiveAddresses } from '~/connection/accounts/hooks'
+import { useCreateLiquidityContext } from '~/features/Liquidity/Create/CreateLiquidityContextProvider'
 import { SelectStepError } from '~/features/Liquidity/Create/SelectTokenStep'
-import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 import { mocked } from '~/test-utils/mocked'
 import { render } from '~/test-utils/render'
 
@@ -19,8 +20,8 @@ vi.mock('~/connection/accounts/hooks', async (importOriginal) => ({
   useActiveAddresses: vi.fn(),
 }))
 
-vi.mock('~/pages/CreatePosition/CreateLiquidityContextProvider', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('~/pages/CreatePosition/CreateLiquidityContextProvider')>()),
+vi.mock('~/features/Liquidity/Create/CreateLiquidityContextProvider', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('~/features/Liquidity/Create/CreateLiquidityContextProvider')>()),
   useCreateLiquidityContext: vi.fn(),
 }))
 
@@ -81,7 +82,7 @@ describe('SelectStepError', () => {
   describe('fee-on-transfer v2 fallback', () => {
     const FOT_TOKEN = { currency: { symbol: 'FOT' } } as CurrencyInfo
 
-    function renderFotError(pathname: string): { setPositionState: ReturnType<typeof vi.fn> } {
+    function renderFotError(pathname: string): { setPositionState: Mock } {
       const setPositionState = vi.fn()
       mocked(useCreateLiquidityContext).mockReturnValue({ setPositionState } as unknown as ReturnType<
         typeof useCreateLiquidityContext

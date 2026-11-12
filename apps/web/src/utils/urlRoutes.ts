@@ -1,3 +1,4 @@
+import { matchPath } from 'react-router'
 import { CHROME_EXTENSION_UNINSTALL_URL_PATH } from 'uniswap/src/constants/urls'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
@@ -29,6 +30,8 @@ export function getCurrentPageFromLocation(locationPathname: string): InterfaceP
     case locationPathname.startsWith('/explore/category/'):
     case locationPathname.startsWith('/pools/category/'):
       return InterfacePageName.CategoryDetailsPage
+    case Boolean(matchPath('/explore/hooks/:chainName/:hookAddress', locationPathname)):
+      return InterfacePageName.HookDetailsPage
     case locationPathname.startsWith('/explore'):
       return InterfacePageName.ExplorePage
     case locationPathname.startsWith('/vote'):

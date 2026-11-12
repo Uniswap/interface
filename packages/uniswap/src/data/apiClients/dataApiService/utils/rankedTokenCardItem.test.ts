@@ -51,6 +51,13 @@ describe(rankedTokenToCardItem, () => {
     })
   })
 
+  it('carries the category tags that gate stablecoin sparkline flattening', () => {
+    const token = createRankedMultichainToken({ address: UNI_MAINNET, symbol: 'USDT' })
+    token.multichainToken!.categoryIds = ['stablecoins']
+
+    expect(rankedTokenToCardItem(token)?.categoryIds).toEqual(['stablecoins'])
+  })
+
   it('leaves issuer unset for ordinary tokens', () => {
     expect(rankedTokenToCardItem(createRankedMultichainToken({ address: UNI_MAINNET }))?.issuer).toBeUndefined()
   })

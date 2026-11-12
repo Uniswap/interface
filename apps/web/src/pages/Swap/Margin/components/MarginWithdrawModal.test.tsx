@@ -252,7 +252,7 @@ describe('MarginWithdrawModal', () => {
   })
 
   it.each(['', '  ', 'abc', '0', '-1', 'Infinity', '1e5'])(
-    'treats %p as no funding rather than an empty-amount withdraw',
+    'treats %o as no funding rather than an empty-amount withdraw',
     (value) => {
       renderModal()
       fireEvent.change(screen.getByLabelText(AMOUNT_LABEL), { target: { value } })

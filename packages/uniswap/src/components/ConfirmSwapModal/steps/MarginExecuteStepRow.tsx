@@ -16,20 +16,12 @@ export function isMarginExecuteStep(step: TransactionStep): step is MarginExecut
   return 'stepType' in step && step.stepType === TradingApi.PlanStepType.MARGIN_EXECUTE && 'marginStepTitle' in step
 }
 
-// Approve at $icon.24 draws a 20px ring with a small check inside; action glyphs are full-bleed, so they
-// get the same ring drawn around them to sit at the same visual weight.
+// Sized to match Approve at $icon.24, which draws a 20px circle inside its 24px box.
 function MarginStepIconBadge({ Icon }: { Icon: GeneratedIcon }): JSX.Element {
   return (
     <Flex centered width="$spacing24" height="$spacing24">
-      <Flex
-        centered
-        width="$spacing20"
-        height="$spacing20"
-        borderRadius="$roundedFull"
-        borderWidth="$spacing2"
-        borderColor="$neutral2"
-      >
-        <Icon color="$neutral2" size="$icon.12" />
+      <Flex centered width="$spacing20" height="$spacing20" borderRadius="$roundedFull" backgroundColor="$neutral1">
+        <Icon color="$surface1" size="$icon.12" />
       </Flex>
     </Flex>
   )

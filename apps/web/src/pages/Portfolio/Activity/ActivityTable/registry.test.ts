@@ -10,7 +10,11 @@ import type {
   PlanTransactionDetails,
   TransactionDetails,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
+import {
+  buildCurrencyId,
+  buildNativeCurrencyId,
+  buildWrappedNativeCurrencyIdWithThrow,
+} from 'uniswap/src/utils/currencyId'
 import { buildActivityRowFragments } from '~/pages/Portfolio/Activity/ActivityTable/registry'
 import { ActivityFilterType } from '~/pages/Portfolio/Activity/Filters/activityFilterTypes'
 
@@ -100,6 +104,53 @@ function createLpIncentivesClaim({
 }
 
 describe('buildActivityRowFragments', () => {
+  describe('margin plans', () => {
+    const UNI = buildCurrencyId(UniverseChainId.Mainnet, UNI_ADDRESS)
+    const USDC = buildCurrencyId(UniverseChainId.Mainnet, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48')
+    const WETH = buildWrappedNativeCurrencyIdWithThrow(UniverseChainId.Mainnet)
+    const ETH = buildNativeCurrencyId(UniverseChainId.Mainnet)
+    const marginAction = { action: 'open' as const, collateralCurrencyId: WETH, debtCurrencyId: USDC }
+
+    function buildMarginPlanFragments(amounts: { input: string; output: string }) {
+      const plan = createEarnPlanTransaction({
+        earnAction: TradingApi.EarnAction.DEPOSIT,
+        status: TransactionStatus.Success,
+        id: `margin-${amounts.input}`,
+      })
+      return buildActivityRowFragments({
+        ...plan,
+        typeInfo: {
+          ...plan.typeInfo,
+          earnAction: undefined,
+          marginAction,
+          inputCurrencyId: UNI,
+          outputCurrencyId: WETH,
+          inputCurrencyAmountRaw: amounts.input,
+          outputCurrencyAmountRaw: amounts.output,
+        },
+      })
+    }
+
+    it('shows what the plan paid and the margin it deposited, wrapped native as native', () => {
+      const fragments = buildMarginPlanFragments({ input: '54900000000000000', output: '171000000000000' })
+
+      expect(fragments.amount).toEqual({
+        kind: 'pair',
+        inputCurrencyId: UNI,
+        outputCurrencyId: ETH,
+        inputAmountRaw: '54900000000000000',
+        outputAmountRaw: '171000000000000',
+      })
+      expect(fragments.typeLabel).toEqual({ baseGroup: null, overrideLabelKey: 'transaction.status.margin.success' })
+    })
+
+    it('falls back to the market when the plan has no amounts', () => {
+      const fragments = buildMarginPlanFragments({ input: '0', output: '0' })
+
+      expect(fragments.amount).toEqual({ kind: 'multi-token', currencyIds: [ETH, USDC] })
+    })
+  })
+
   it('shows interrupted Earn deposit plans as deposit activity', () => {
     const fragments = buildActivityRowFragments(
       createEarnPlanTransaction({ earnAction: TradingApi.EarnAction.DEPOSIT }),

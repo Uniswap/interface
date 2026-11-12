@@ -78,7 +78,9 @@ exports[`Header > renders without error 1`] = `
         style="--c-tr: rotate(180deg);"
       >
         <svg
+          aria-hidden="true"
           fill="none"
+          focusable="false"
           stroke-width="8"
           style="width: 20px; height: 20px;"
           viewBox="0 0 24 24"
@@ -105,8 +107,10 @@ exports[`InlineErrorState > renders without error 1`] = `
       class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] flex-row shrink items-center gap-[8px]"
     >
       <svg
+        aria-hidden="true"
         data-testid="error-icon"
         fill="currentColor"
+        focusable="false"
         stroke-width="8"
         style="width: 16px; height: 16px;"
         viewBox="0 0 24 24"

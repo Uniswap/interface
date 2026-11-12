@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { MARGIN_ACTIVE_POSITION_STATUSES } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
-import { useMarginPositionsQuery } from 'uniswap/src/data/apiClients/tradingApi/useMarginPositionsQuery'
+import { useMarginPositionsInfiniteQuery } from 'uniswap/src/data/apiClients/tradingApi/useMarginPositionsQuery'
 import { useAccount } from '~/connection/hooks/useAccount'
 import { MARGIN_CHAIN_ID, MARGIN_POSITIONS_REFETCH_MS } from '~/constants/margin'
 import { isMarkStale } from '~/features/margin/utils/marginFormat'
@@ -10,7 +10,7 @@ import { isMarkStale } from '~/features/margin/utils/marginFormat'
 // nothing about this one.
 export function useMarginPositionMarkIsStale(): boolean {
   const account = useAccount()
-  const { dataUpdatedAt } = useMarginPositionsQuery({
+  const { dataUpdatedAt } = useMarginPositionsInfiniteQuery({
     params: account.address
       ? { swapper: account.address, chainId: MARGIN_CHAIN_ID, statuses: MARGIN_ACTIVE_POSITION_STATUSES }
       : undefined,

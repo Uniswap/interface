@@ -38,38 +38,16 @@ export interface GetSecretValueResponse {
   lastModified?: string
 }
 
-export interface SecretChangeReply {
-  minimumSignatureRequired?: number
-}
-
-export interface ApproveSecretChangeReply {
-  remainingSignatureRequired?: number
-}
-
-export interface GetProposedSecretChangesInScopeResponse {
-  changeKeys?: string[]
-}
-
-export interface GetProposedSecretChangeResponse {
-  secretName?: string
-  data?: Record<string, string>
-  operation?: string
-  author?: string
-  proposedAt?: string
-  approvers?: string[]
-  remainingSignatureRequired?: number
-}
-
 // -----------------------------------------------------------------------------
 // Per-key secret proposals
 //
 // Many proposals can be pending on one secret at once, each a partial (per-key)
 // delta addressed by its own `proposalId`. Applying a proposal merges its delta
 // onto the secret's current data, so proposals on different keys compose instead
-// of overwriting one another (the whole-secret RPCs above still work).
+// of overwriting one another.
 // -----------------------------------------------------------------------------
 
-/** Sets `key` to `value`. There is no per-key delete; removing a key is a whole-secret SetSecretValue. */
+/** Sets `key` to `value`. A proposal cannot remove a key. */
 export interface SecretKeyChange {
   key: string
   /** Always sent; may be absent on the wire in replies, since proto JSON omits an empty string. */
@@ -149,15 +127,6 @@ export function createSecretsServerClient(config: SecretsServerClientConfig) {
   }
 
   return {
-    // oxlint-disable-next-line max-params -- verbatim signature from mission-control migration
-    async setSecretValue(
-      secretName: string,
-      data: Record<string, string>,
-      description: string,
-    ): Promise<SecretChangeReply> {
-      return rpcCall<SecretChangeReply>('SetSecretValue', { secret_name: secretName, data, description })
-    },
-
     async listSecrets(prefix: string): Promise<ListSecretsResponse> {
       return rpcCall<ListSecretsResponse>('ListSecrets', { prefix })
     },
@@ -166,25 +135,9 @@ export function createSecretsServerClient(config: SecretsServerClientConfig) {
       return rpcCall<GetSecretValueResponse>('GetSecretValue', { secret_name: secretName })
     },
 
-    async deleteSecret(secretName: string): Promise<SecretChangeReply> {
-      return rpcCall<SecretChangeReply>('DeleteSecret', { secret_name: secretName })
-    },
-
-    async getProposedSecretChangesInScope(scope: string): Promise<GetProposedSecretChangesInScopeResponse> {
-      return rpcCall<GetProposedSecretChangesInScopeResponse>('GetProposedSecretChangesInScope', { scope })
-    },
-
-    async getProposedSecretChange(changeKey: string): Promise<GetProposedSecretChangeResponse> {
-      return rpcCall<GetProposedSecretChangeResponse>('GetProposedSecretChange', { change_key: changeKey })
-    },
-
-    async approveProposedSecretChange(changeKey: string): Promise<ApproveSecretChangeReply> {
-      return rpcCall<ApproveSecretChangeReply>('ApproveProposedSecretChange', { change_key: changeKey })
-    },
-
     // --- Per-key proposals ---------------------------------------------------
 
-    // oxlint-disable-next-line max-params -- (name, changes, description) mirrors setSecretValue
+    // oxlint-disable-next-line max-params -- (name, changes, description) is the RPC's request shape
     async proposeSecretChange(
       secretName: string,
       changes: SecretKeyChange[],

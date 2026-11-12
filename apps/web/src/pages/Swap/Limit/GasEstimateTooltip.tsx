@@ -9,8 +9,8 @@ import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
 import { GasBreakdownTooltip } from '~/pages/Swap/Limit/GasBreakdownTooltip'
 import { UniswapXGradient, UniswapXRouterIcon } from '~/pages/Swap/Limit/RouterLabel/UniswapXRouterLabel'
 import { useMultichainContext } from '~/state/multichain/useMultichainContext'
-import { SubmittableTrade } from '~/state/routing/types'
-import { isUniswapXTrade } from '~/state/routing/utils'
+import { SubmittableTrade } from '~/types/routing'
+import { isUniswapXTrade } from '~/utils/routing/routing'
 
 export function GasEstimateTooltip({ trade, loading }: { trade?: SubmittableTrade; loading: boolean }) {
   const { chainId } = useMultichainContext()

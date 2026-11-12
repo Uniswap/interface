@@ -51,6 +51,7 @@ function CEXItemWrapper({
       >
         <Flex grow row alignItems="center" flexShrink={1} gap="$spacing12">
           <UniversalImage
+            alt=""
             uri={logoUrl}
             size={{ height: CEX_ICON_SIZE, width: CEX_ICON_SIZE, resizeMode: UniversalImageResizeMode.Cover }}
             style={{ image: { borderRadius: CEX_ICON_BORDER_RADIUS } }}

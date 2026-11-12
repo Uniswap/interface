@@ -2,6 +2,7 @@ import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes
 import { Currency } from '@uniswap/sdk-core'
 import { PropsWithChildren, ReactNode, useContext, useEffect, useState } from 'react'
 import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
+import type { PriceRangeDragTarget } from 'uniswap/src/features/telemetry/types'
 import { createLiquidityChartStore } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/createLiquidityChartStore'
 import { LiquidityChartStoreContext } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/LiquidityChartStoreContext'
 import type { TickRangeChange } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
@@ -35,6 +36,7 @@ interface LiquidityChartStoreProviderProps {
   onMaxTickChange: (tick?: number) => void
   onMinMaxTickChange: (range: TickRangeChange) => void
   onTimePeriodChange?: (timePeriod: HistoryDuration) => void
+  onRangeDragEnd?: (target: PriceRangeDragTarget) => void
   setIsFullRange: (isFullRange: boolean) => void
 }
 
@@ -114,6 +116,7 @@ export function LiquidityChartStoreProvider({
   onMaxTickChange,
   onMinMaxTickChange,
   onTimePeriodChange,
+  onRangeDragEnd,
   setIsFullRange,
 }: LiquidityChartStoreProviderProps) {
   const [store] = useState(() =>
@@ -137,6 +140,7 @@ export function LiquidityChartStoreProvider({
       onMaxTickChange,
       onMinMaxTickChange,
       onTimePeriodChange,
+      onRangeDragEnd,
       setIsFullRange,
     }),
   )

@@ -7,7 +7,7 @@ const { mockDataUpdatedAt } = vi.hoisted(() => ({ mockDataUpdatedAt: { current: 
 
 // The query is the seam: this hook's job is deciding when its `dataUpdatedAt` has aged out, not fetching.
 vi.mock('uniswap/src/data/apiClients/tradingApi/useMarginPositionsQuery', () => ({
-  useMarginPositionsQuery: () => ({ dataUpdatedAt: mockDataUpdatedAt.current }),
+  useMarginPositionsInfiniteQuery: () => ({ dataUpdatedAt: mockDataUpdatedAt.current }),
 }))
 
 vi.mock('~/connection/hooks/useAccount', () => ({

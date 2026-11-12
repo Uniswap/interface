@@ -126,6 +126,7 @@ export const networkColors = {
   megaeth: { light: '#19191A', dark: '#FFFFFF' },
   robinhood: { light: '#00C805', dark: '#00C805' },
   ink: { light: '#7757E2', dark: '#7757E2' },
+  elysium: { light: '#50D2C1', dark: '#50D2C1' },
   soneium: { light: '#000000', dark: '#FFFFFF' },
   tempo: { light: '#1A1A2E', dark: '#E8E8F0' },
   xlayer: { light: '#383838', dark: '#A7A7A7' },
@@ -171,6 +172,7 @@ const CHAIN_NETWORKS = {
   chain_4663: 'robinhood',
   chain_5042: 'arc',
   chain_57073: 'ink',
+  chain_99901: 'elysium',
   chain_501000101: 'solana',
   chain_143: 'monad',
   // Testnets

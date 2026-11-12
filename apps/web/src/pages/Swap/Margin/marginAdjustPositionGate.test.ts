@@ -30,7 +30,7 @@ describe('getAdjustTargetLeverageX18', () => {
   // and the slider clamps to a cap that is always finite). Pinned because the alternative is parseUnits throwing out of
   // render on a malformed decimal — refusing the target is the safe half of that trade.
   it.each([Number.NaN, Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY])(
-    'refuses a non-finite target rather than wiring a malformed decimal (%p)',
+    'refuses a non-finite target rather than wiring a malformed decimal (%o)',
     (value) => {
       expect(getAdjustTargetLeverageX18({ mode: { kind: 'explicit', value } })).toBeUndefined()
     },

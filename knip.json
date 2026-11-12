@@ -124,16 +124,13 @@
         "src/sideEffects.ts",
         "src/polyfills.ts",
         "functions/**/*.ts",
-        "scripts/anvil-fork-headers.ts"
+        "scripts/anvil-fork-headers.ts",
+        ".storybook/vitest.config.mts"
       ],
       "vite": false,
       "ignoreDependencies": [
         "@babel/preset-env",
         "@tailwindcss/vite",
-        "vite-plugin-bundlesize",
-        "vite-plugin-commonjs",
-        "vite-plugin-node-polyfills",
-        "vite-plugin-svgr",
         "vite-tsconfig-paths",
         "@chromatic-com/storybook",
         "@datadog/datadog-ci",
@@ -143,7 +140,6 @@
         "@rive-app/canvas",
         "@safe-global/safe-apps-provider",
         "@safe-global/safe-apps-sdk",
-        "@storybook/.+",
         "@svgr/webpack",
         "@swc/core",
         "@testing-library/dom",
@@ -158,14 +154,12 @@
         "babel-plugin-react-compiler",
         "buffer",
         "case-sensitive-paths-webpack-plugin",
-        "concurrently",
         "dd-trace",
         "detect-package-manager",
         "dotenv-cli",
         "expo-crypto",
         "hono",
         "html-entities",
-        "http-server",
         "jpeg-js",
         "lint-staged",
         "mini-css-extract-plugin",
@@ -215,6 +209,14 @@
     "labs/workbench": {
       "entry": ["functions/vercel-entry.ts", "scripts/build-vercel.ts", "scripts/vercel-ignore.ts"],
       "ignore": ["app/components/ui/**"]
+    },
+    "config/storybook": {
+      "ignoreDependencies": [
+        "@storybook/addon-a11y",
+        "@storybook/addon-docs",
+        "storybook-addon-pseudo-states",
+        "vitest-presets"
+      ]
     },
     "config/vitest-presets": {
       "ignoreDependencies": ["identity-obj-proxy"]

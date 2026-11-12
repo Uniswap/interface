@@ -11,6 +11,7 @@ import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { getPoolName } from 'uniswap/src/features/pools/names'
 import { useGetPositionInfo } from 'uniswap/src/features/positions/hooks/useGetPositionInfo'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { shortenAddress } from 'utilities/src/addresses'
@@ -116,18 +117,26 @@ function V2PositionPage() {
   const { currency0Amount, currency1Amount, liquidityAmount } = positionInfo ?? {}
 
   const metatagProperties = useMemo(() => {
-    const token0Symbol = currency0Amount?.currency.symbol
-    const token1Symbol = currency1Amount?.currency.symbol
-    if (!token0Symbol || !token1Symbol || !pairAddress) {
+    const poolName = getPoolName({
+      symbol0: currency0Amount?.currency.symbol,
+      symbol1: currency1Amount?.currency.symbol,
+      token0IsQuote: positionInfo?.isToken0Quote,
+    })
+    if (!poolName || !pairAddress) {
       return { title: 'Position on Uniswap', url: window.location.href }
     }
-    const poolName = `${token0Symbol}/${token1Symbol}`
     return {
       title: `${poolName} on Uniswap`,
       url: window.location.href,
       image: `${window.location.origin}/api/image/positions/v2/${chainInfo.urlParam}/${pairAddress}`,
     }
-  }, [currency0Amount?.currency.symbol, currency1Amount?.currency.symbol, chainInfo.urlParam, pairAddress])
+  }, [
+    positionInfo?.isToken0Quote,
+    currency0Amount?.currency.symbol,
+    currency1Amount?.currency.symbol,
+    chainInfo.urlParam,
+    pairAddress,
+  ])
   const metatags = useDynamicMetatags(metatagProperties)
 
   const token0USDValue = useUSDCValue(currency0Amount)

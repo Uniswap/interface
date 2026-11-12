@@ -6,6 +6,7 @@ import { TestID } from '@universe/test'
 import { AuctionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
+import { sleep } from 'utilities/src/time/timing'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { TradeTokenBanner } from '~/features/Toucan/Auction/Banners/TradeTokenBanner'
 import { useAuctionDisplayState } from '~/features/Toucan/Auction/hooks/useAuctionDisplayState'
@@ -28,7 +29,7 @@ const { mockGetToken } = vi.hoisted(() => ({
 }))
 const mockNavigate = vi.fn()
 const mockPrefetchAuction = vi.fn()
-vi.mock('~/pages/TokenDetails/hooks/usePrefetchTokenDetailsAuction', () => ({
+vi.mock('~/features/Toucan/hooks/usePrefetchTokenDetailsAuction', () => ({
   usePrefetchTokenDetailsAuction: () => mockPrefetchAuction,
 }))
 vi.mock('react-router', async (importOriginal) => ({
@@ -183,7 +184,7 @@ describe('TradeTokenBanner', () => {
     expect(await screen.findByRole('button', { name: 'Buy or sell CAP' })).toBeDefined()
     expect(screen.queryByText('Buy or sell Token')).toBeNull()
     // Let Trace's 50ms development dedupe expire before checking subsequent renders.
-    await act(() => new Promise<void>((resolve) => setTimeout(resolve, 51)))
+    await act(() => sleep(51))
     rerender()
 
     const impressions = sendEvent.mock.calls.filter(([event]) => event === AuctionEventName.AuctionBannerViewed)

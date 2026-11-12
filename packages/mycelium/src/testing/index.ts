@@ -14,3 +14,5 @@ export { MyceliumThemeTestWrapper, type MyceliumThemeTestWrapperProps } from './
  * `keyExtractor` but deliberately not virtualization; cover that on a real device or browser.
  */
 export { MockVirtualList as UniversalListTestDouble } from '../components/UniversalList/internal/MockVirtualList'
+
+export { AXE_TAGS, createAxeMatcher, runAxe } from './axe'

@@ -3,6 +3,7 @@ import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
 import { SwapDeadline } from 'uniswap/src/features/transactions/components/settings/settingsConfigurations/deadline/SwapDeadline'
 import { filterSettingsByPlatformAndTradeRouting } from 'uniswap/src/features/transactions/components/settings/utils'
+import { BridgingOptions } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/BridgingOptions/BridgingOptions'
 import { Slippage } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/slippage/Slippage/Slippage'
 import { TradeRoutingPreference } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/TradeRoutingPreference/TradeRoutingPreference'
 import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
@@ -11,7 +12,7 @@ import { useAppSelector } from '~/state/hooks'
 import { useMultichainContext } from '~/state/multichain/useMultichainContext'
 import { selectIsAtomicBatchingSupported } from '~/state/walletCapabilities/reducer'
 
-const DEFAULT_SETTINGS = [Slippage, SwapDeadline, TradeRoutingPreference]
+const DEFAULT_SETTINGS = [Slippage, SwapDeadline, TradeRoutingPreference, BridgingOptions]
 
 export function useWebSwapSettings() {
   const batchSwapEnabled = useFeatureFlag(FeatureFlags.BatchedSwaps)

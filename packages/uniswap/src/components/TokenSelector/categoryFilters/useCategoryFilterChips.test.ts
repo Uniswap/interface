@@ -18,14 +18,21 @@ vi.mock('uniswap/src/data/apiClients/dataApiService/categories/useAllTokenCatego
 }))
 
 function section(...categoryIdLists: string[][]): OnchainItemSection<TokenOption>[] {
+  return sectionWithQuantity(null, ...categoryIdLists)
+}
+
+function sectionWithQuantity(
+  quantity: number | null,
+  ...categoryIdLists: string[][]
+): OnchainItemSection<TokenOption>[] {
   return [
     {
       sectionKey: OnchainItemSectionName.SearchResults,
       data: categoryIdLists.map((categoryIds, index) => ({
         type: OnchainItemListOptionType.Token,
         currencyInfo: currencyInfo({ currencyId: `token-${index}`, categoryIds }),
-        quantity: null,
-        balanceUSD: null,
+        quantity,
+        balanceUSD: quantity,
       })),
     },
   ]
@@ -59,5 +66,38 @@ describe('useCategoryFilterChips', () => {
     rerender([withStocks])
     expect(result.current.chips.map((chip) => chip.id)).toEqual(['stocks', 'memes'])
     expect(result.current.activeIds).toEqual([])
+  })
+
+  it('offers "My tokens" when a search result has a balance', () => {
+    const { result } = renderHook(() =>
+      useCategoryFilterChips({
+        sections: sectionWithQuantity(1, ['stocks']),
+        isLoading: false,
+        isBalancesOnlySearch: false,
+      }),
+    )
+
+    expect(result.current.chips.map((chip) => chip.id)).toEqual(['my-tokens', 'stocks'])
+  })
+
+  it("offers only category chips in a balances-only search, where every row is already the user's token", () => {
+    const { result } = renderHook(() =>
+      useCategoryFilterChips({
+        sections: sectionWithQuantity(1, ['stocks'], ['memes']),
+        isLoading: false,
+        isBalancesOnlySearch: true,
+      }),
+    )
+
+    expect(result.current.chips.map((chip) => chip.id)).toEqual(['stocks', 'memes'])
+    expect(result.current.showSkeleton).toBe(false)
+  })
+
+  it('renders no chip row in a balances-only search whose balances have no categories', () => {
+    const { result } = renderHook(() =>
+      useCategoryFilterChips({ sections: sectionWithQuantity(1, []), isLoading: false, isBalancesOnlySearch: true }),
+    )
+
+    expect(result.current.chips).toEqual([])
   })
 })

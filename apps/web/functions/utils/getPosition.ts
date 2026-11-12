@@ -11,6 +11,8 @@ import {
 } from 'functions/utils/liquidityService'
 import { DYNAMIC_FEE_AMOUNT } from 'uniswap/src/constants/pools'
 import { URL_PARAM_TO_CHAIN_ID } from 'uniswap/src/features/chains/chainUrlParam'
+import { getPoolName } from 'uniswap/src/features/pools/names'
+import { isToken0Quote, orderPoolDataByQuoteToken } from 'uniswap/src/features/pools/quoteToken'
 import type { ProtocolVersionLabel } from 'uniswap/src/features/positions/utils'
 
 interface LiquidityPosition {
@@ -22,8 +24,10 @@ interface LiquidityPosition {
   tickLower?: number
   tickUpper?: number
   currentTick?: number
+  token0Address?: string
   token0Metadata?: LiquidityTokenMetadata
   token1Metadata?: LiquidityTokenMetadata
+  quoteTokenAddress?: string
 }
 
 /**
@@ -78,9 +82,17 @@ export default async function getPosition({
     return undefined
   }
 
-  const token0Symbol = position.token0Metadata?.symbol ?? 'Unknown'
-  const token1Symbol = position.token1Metadata?.symbol ?? 'Unknown'
-  const name = `${token0Symbol}/${token1Symbol}`
+  const [baseMetadata, quoteMetadata] = orderPoolDataByQuoteToken({
+    token0IsQuote: isToken0Quote({
+      token0Address: position.token0Address,
+      quoteTokenAddress: position.quoteTokenAddress,
+    }),
+    data0: position.token0Metadata,
+    data1: position.token1Metadata,
+  })
+  const baseSymbol = baseMetadata?.symbol ?? 'Unknown'
+  const quoteSymbol = quoteMetadata?.symbol ?? 'Unknown'
+  const name = getPoolName({ symbol0: baseSymbol, symbol1: quoteSymbol })
   const title = `${name} on Uniswap`
   // Twin of the transitional fallback in parseFeeData (parseLiquidityServicePosition.ts): until the
   // backend serves is_dynamic_fee on Position, the flag alone would render a dynamic position's
@@ -100,12 +112,12 @@ export default async function getPosition({
     name,
     positionStatus: derivePositionStatus(position),
     poolData: {
-      token0Symbol,
-      token1Symbol,
+      baseSymbol,
+      quoteSymbol,
       feeTier,
       protocolVersion: version === 'v3' ? 'V3' : 'V4',
-      token0Image: position.token0Metadata?.logoUrl,
-      token1Image: position.token1Metadata?.logoUrl,
+      baseImage: baseMetadata?.logoUrl,
+      quoteImage: quoteMetadata?.logoUrl,
     },
   }
 }

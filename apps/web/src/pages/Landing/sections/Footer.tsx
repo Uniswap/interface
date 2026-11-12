@@ -5,9 +5,9 @@ import { type ComponentPropsWithoutRef, type ComponentRef, forwardRef } from 're
 import { useTranslation } from 'react-i18next'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { Wiggle } from '~/components/animations/Wiggle'
+import { MenuItem, MenuSectionTitle, useMenuContent } from '~/components/CompanyMenu/Content'
+import { MenuLink } from '~/components/CompanyMenu/MenuLink'
 import { MobileTouchableArea } from '~/components/MobileTouchableArea'
-import { MenuItem, MenuSectionTitle, useMenuContent } from '~/components/NavBar/CompanyMenu/Content'
-import { MenuLink } from '~/components/NavBar/CompanyMenu/MenuLink'
 import { useModalState } from '~/hooks/useModalState'
 import { Discord, Github, Twitter } from '~/pages/Landing/components/Icons'
 

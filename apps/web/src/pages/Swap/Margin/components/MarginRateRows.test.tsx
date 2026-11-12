@@ -140,6 +140,13 @@ describe('MarginRateRows', () => {
     expect(screen.queryByText(/\([+−]\d+\.\d%\)/)).toBeNull()
   })
 
+  it('withholds the liquidation price while the quote is placeholder data', () => {
+    const info = derivedMarginInfoFixture()
+    const quote = { ...QUOTE, display: { ...QUOTE.display, liquidationPrice: `${3960n * 10n ** 18n}` } }
+    render(<MarginRateRows derivedMarginInfo={{ ...info, quote, isPlaceholderData: true }} />)
+    expect(screen.getByTestId(TestID.MarginReceipt)).not.toHaveTextContent('$3,960.00')
+  })
+
   // (−10.0%) is the $3,000 fill against the $3,300 mark.
   it('suffixes the Entry price with the impact against the oracle mark', () => {
     expect(renderWithDisplay({ oraclePrice: ORACLE_X18 }).textContent).toContain('(−10.0%)')

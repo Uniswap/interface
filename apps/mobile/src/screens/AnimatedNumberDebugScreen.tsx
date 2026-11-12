@@ -59,7 +59,7 @@ function buildInitialTokens(): TokenItemData[] {
       price,
       pricePercentChange24h: randomBetween(-15, 15),
       volume24h: price * randomBetween(1e3, 1e7),
-      marketCap: price * randomBetween(1e6, 1e9),
+      fdv: price * randomBetween(1e6, 1e9),
       networkCount: 1,
     }
   })

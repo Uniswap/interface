@@ -1,7 +1,7 @@
 import { Platform } from '@universe/chains'
 import { SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2 } from 'uniswap/src/test/fixtures/assets/constants'
 import { useActiveAddresses } from '~/connection/accounts/hooks'
-import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
+import { usePortfolioRoutes } from '~/hooks/usePortfolioRoutes/usePortfolioRoutes'
 import { DEMO_WALLET_ADDRESS, usePortfolioAddresses } from '~/pages/Portfolio/hooks/usePortfolioAddresses'
 import { mocked } from '~/test-utils/mocked'
 import { renderHook } from '~/test-utils/render'
@@ -14,7 +14,7 @@ vi.mock('~/connection/accounts/hooks', async (importOriginal) => {
   }
 })
 
-vi.mock('~/pages/Portfolio/Header/hooks/usePortfolioRoutes', () => ({
+vi.mock('~/hooks/usePortfolioRoutes/usePortfolioRoutes', () => ({
   usePortfolioRoutes: vi.fn(),
 }))
 

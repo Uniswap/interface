@@ -214,7 +214,7 @@ export function PoolDetailsStats({
     chainId,
   })
 
-  const [token0, token1]: [TokenFullData | undefined, TokenFullData | undefined] = useMemo(() => {
+  const [baseToken, quoteToken]: [TokenFullData | undefined, TokenFullData | undefined] = useMemo(() => {
     if (poolData && poolData.tvlToken0 && poolData.token0Price && poolData.tvlToken1 && poolData.token1Price) {
       const fullWidth = poolData.tvlToken0 * poolData.token0Price + poolData.tvlToken1 * poolData.token1Price
       const token0FullData: TokenFullData = {
@@ -237,7 +237,7 @@ export function PoolDetailsStats({
     }
   }, [currency0, currency1, isReversed, poolData])
 
-  if (loading || !token0 || !token1 || !poolData) {
+  if (loading || !baseToken || !quoteToken || !poolData) {
     return (
       <StatsWrapper>
         <HeaderText>
@@ -263,13 +263,13 @@ export function PoolDetailsStats({
           {t('pool.balances')}
         </Text>
         <PoolBalanceSymbols>
-          <PoolBalanceTokenNames token={token0} chainId={chainId} />
-          <PoolBalanceTokenNames token={token1} chainId={chainId} />
+          <PoolBalanceTokenNames token={baseToken} chainId={chainId} />
+          <PoolBalanceTokenNames token={quoteToken} chainId={chainId} />
         </PoolBalanceSymbols>
         {isLargeScreen && (
           <Flex row data-testid="pool-balance-chart">
-            <BalanceChartSide percent={token0.percent} color={tokenAColor} isLeft={true} />
-            <BalanceChartSide percent={token1.percent} color={tokenBColor} isLeft={false} />
+            <BalanceChartSide percent={baseToken.percent} color={tokenAColor} isLeft={true} />
+            <BalanceChartSide percent={quoteToken.percent} color={tokenBColor} isLeft={false} />
           </Flex>
         )}
       </StatItemColumn>

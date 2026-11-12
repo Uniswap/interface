@@ -83,7 +83,7 @@ runFrequency: scheduled
 # coverage
 code_paths:
   - apps/web/src/components/Web3Provider/
-  - apps/web/src/components/AccountDrawer/
+  - apps/web/src/features/wallet/components/AccountDrawer/
   - apps/web/src/connection/
 automationRefs:
   - path: apps/web/src/app/WalletConnection.e2e.test.ts

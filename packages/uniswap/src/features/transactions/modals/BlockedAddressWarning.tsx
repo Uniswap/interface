@@ -8,14 +8,19 @@ import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNati
 
 export function BlockedAddressWarning({
   isRecipientBlocked,
+  address,
   ...props
-}: { isRecipientBlocked?: boolean } & FlexProps): JSX.Element {
+}: { isRecipientBlocked?: boolean; address?: string } & FlexProps): JSX.Element {
   const { t } = useTranslation()
   const [showBlockedAddressModal, setShowBlockedAddressModal] = useState(false)
 
   return (
     <>
-      <BlockedAddressModal isOpen={showBlockedAddressModal} onClose={(): void => setShowBlockedAddressModal(false)} />
+      <BlockedAddressModal
+        isOpen={showBlockedAddressModal}
+        address={address}
+        onClose={(): void => setShowBlockedAddressModal(false)}
+      />
       <TouchableArea
         onPress={(): void => {
           dismissNativeKeyboard()

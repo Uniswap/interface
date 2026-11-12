@@ -16,6 +16,7 @@ export enum RankingType {
 }
 
 export enum CustomRankingType {
+  FullyDilutedValuation = 'FDV',
   PricePercentChange1DayAsc = 'PRICE_PERCENT_CHANGE_1_DAY_ASC',
   PricePercentChange1DayDesc = 'PRICE_PERCENT_CHANGE_1_DAY_DESC',
   Trending = 'TRENDING',

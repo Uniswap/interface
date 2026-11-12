@@ -183,13 +183,13 @@ describe('TokenItem', () => {
 
   describe('metadata subtitle', () => {
     const data = tokenItemData({
-      marketCap: 123.45,
+      fdv: 123.45,
       volume24h: 234.56,
       totalValueLocked: 345.67,
     })
 
     const cases = [
-      { test: 'market cap', type: TokenMetadataDisplayType.MarketCap, expected: 'explore.tokens.metadata.marketCap' },
+      { test: 'fdv', type: TokenMetadataDisplayType.Fdv, expected: 'explore.tokens.metadata.fdv' },
       { test: 'volume', type: TokenMetadataDisplayType.Volume, expected: 'explore.tokens.metadata.volume' },
       {
         test: 'total value locked',

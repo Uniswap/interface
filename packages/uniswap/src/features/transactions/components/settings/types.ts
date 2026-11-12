@@ -38,6 +38,8 @@ export interface TransactionSettingsState {
   customSlippageTolerance?: number
   customDeadline?: number
   selectedProtocols: FrontendSupportedProtocol[]
+  /** Bridging options: the vendors a cross-chain quote may use while `RelayBridgeAggregator` is on. */
+  selectedBridgeProviders: TradingApi.BridgeProvider[]
   slippageWarningModalSeen: boolean
   isV4HookPoolsEnabled: boolean
   isSlippageDirty: boolean

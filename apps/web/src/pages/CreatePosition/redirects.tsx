@@ -1,7 +1,7 @@
 import { parseRestProtocolVersion } from '@universe/api'
 import { Navigate, useParams, useSearchParams } from 'react-router'
 import { getProtocolVersionLabel } from '~/features/Liquidity/utils/protocolVersion'
-import { CREATE_POOL_PATH } from '~/pages/AddLiquidity/poolLinkParams'
+import { CREATE_POOL_PATH } from '~/utils/params/poolLinkParams'
 
 /**
  * Redirects the retired `/positions/create` and `/positions/create/:protocolVersion` routes onto the

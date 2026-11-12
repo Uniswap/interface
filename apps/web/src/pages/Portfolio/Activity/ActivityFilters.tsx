@@ -8,8 +8,8 @@ import { useTranslation } from 'react-i18next'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { DropdownSelector } from '~/components/Dropdowns/DropdownSelector'
+import { SearchInput } from '~/components/SearchInput/SearchInput'
 import { getTimePeriodFilterOptions, getTransactionTypeFilterOptions } from '~/pages/Portfolio/Activity/Filters/utils'
-import { SearchInput } from '~/pages/Portfolio/components/SearchInput'
 
 const DROPDOWN_MIN_WIDTH = {
   transactionType: 220,

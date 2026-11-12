@@ -27,7 +27,9 @@ exports[`StorageSettingsContent > renders correctly 1`] = `
                 class="flex flex-col basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 items-center justify-center"
               >
                 <svg
+                  aria-hidden="true"
                   fill="none"
+                  focusable="false"
                   stroke-width="8"
                   style="color: rgba(255, 255, 255, 0.65); width: 24px; height: 24px;"
                   viewBox="0 0 16 16"
@@ -71,7 +73,9 @@ exports[`StorageSettingsContent > renders correctly 1`] = `
                 class="flex flex-col basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 items-center justify-center"
               >
                 <svg
+                  aria-hidden="true"
                   fill="none"
+                  focusable="false"
                   stroke-width="8"
                   style="color: rgba(255, 255, 255, 0.65); width: 24px; height: 24px;"
                   viewBox="0 0 24 24"
@@ -115,7 +119,9 @@ exports[`StorageSettingsContent > renders correctly 1`] = `
                 class="flex flex-col basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 items-center justify-center"
               >
                 <svg
+                  aria-hidden="true"
                   fill="none"
+                  focusable="false"
                   stroke-width="8"
                   style="color: rgba(255, 255, 255, 0.65); width: 24px; height: 24px;"
                   viewBox="0 0 25 24"
@@ -157,7 +163,9 @@ exports[`StorageSettingsContent > renders correctly 1`] = `
           class="inline-flex shrink-0 items-center justify-center [&_svg]:shrink-0 [&_svg]:size-[20.7px] text-neutral1 group-hover/sbtn:text-neutral1-hovered"
         >
           <svg
+            aria-hidden="true"
             fill="none"
+            focusable="false"
             stroke-width="8"
             style="color: rgb(255, 255, 255); width: 20.7px; height: 20.7px;"
             viewBox="0 0 24 24"

@@ -23,6 +23,16 @@ export function getTimePeriodLabel(t: TFunction, period: TimePeriod): string {
   }
 }
 
+export function getDayBasedTimePeriodLabel(t: TFunction, period: TimePeriod): string {
+  if (period === TimePeriod.WEEK) {
+    return t('common.sevenDays.short')
+  }
+  if (period === TimePeriod.MONTH) {
+    return t('common.thirtyDays.short')
+  }
+  return getTimePeriodLabel(t, period)
+}
+
 export const ORDERED_TIMES: TimePeriod[] = [
   TimePeriod.HOUR,
   TimePeriod.DAY,
@@ -33,6 +43,10 @@ export const ORDERED_TIMES: TimePeriod[] = [
 ]
 
 export const SOLANA_ORDERED_TIMES: TimePeriod[] = [TimePeriod.HOUR, TimePeriod.DAY]
+
+export const LIVE_POOL_VOLUME_PERIODS = [TimePeriod.DAY, TimePeriod.MONTH] as const
+
+export type LivePoolVolumePeriod = (typeof LIVE_POOL_VOLUME_PERIODS)[number]
 
 export function getPillTimeSelectorOptions(
   t: TFunction,

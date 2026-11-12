@@ -30,6 +30,7 @@ exports[`PoolDetailsHeader > renders link for pool address 1`] = `
               style="box-sizing: border-box; display: flex; flex-direction: column; flex-shrink: 0; min-width: 0;"
             >
               <img
+                alt=""
                 height="20"
                 src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
                 style="object-fit: cover; width: 20px; height: 20px; border-radius: 20px; z-index: 1;"
@@ -56,6 +57,7 @@ exports[`PoolDetailsHeader > renders link for pool address 1`] = `
               style="box-sizing: border-box; display: flex; flex-direction: column; flex-shrink: 0; min-width: 0;"
             >
               <img
+                alt=""
                 height="20"
                 src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
                 style="object-fit: cover; width: 20px; height: 20px; border-radius: 20px; z-index: 1;"
@@ -123,7 +125,9 @@ exports[`PoolDetailsHeader > renders link for pool address 1`] = `
           0x88e6...5640
         </span>
         <svg
+          aria-hidden="true"
           fill="none"
+          focusable="false"
           stroke-width="8"
           style="width: 16px; height: 16px; flex-shrink: 0;"
           viewBox="0 0 24 24"
@@ -148,7 +152,9 @@ exports[`PoolDetailsHeader > renders link for pool address 1`] = `
           style="--ch-opacity: 0.8; --ca-opacity: 0.6; transition: opacity 100ms;"
         >
           <svg
+            aria-hidden="true"
             fill="none"
+            focusable="false"
             stroke-width="8"
             style="color: rgb(19, 19, 19); width: 16px; height: 16px;"
             viewBox="0 0 123 123"
@@ -192,6 +198,7 @@ exports[`PoolDetailsHeader > renders link for token address 1`] = `
           style="box-sizing: border-box; display: flex; flex-direction: column; flex-shrink: 0; min-width: 0;"
         >
           <img
+            alt=""
             height="20"
             src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
             style="object-fit: cover; width: 20px; height: 20px; border-radius: 20px; z-index: 1;"
@@ -247,7 +254,9 @@ exports[`PoolDetailsHeader > renders link for token address 1`] = `
               style="--c-tr: rotate(180deg);"
             >
               <svg
+                aria-hidden="true"
                 fill="none"
+                focusable="false"
                 stroke-width="8"
                 style="width: 16px; height: 16px;"
                 viewBox="0 0 24 24"
@@ -279,7 +288,9 @@ exports[`PoolDetailsHeader > renders link for token address 1`] = `
           0xA0b8...eB48
         </span>
         <svg
+          aria-hidden="true"
           fill="none"
+          focusable="false"
           stroke-width="8"
           style="width: 16px; height: 16px; flex-shrink: 0;"
           viewBox="0 0 24 24"
@@ -304,7 +315,9 @@ exports[`PoolDetailsHeader > renders link for token address 1`] = `
           style="--ch-opacity: 0.8; --ca-opacity: 0.6; transition: opacity 100ms;"
         >
           <svg
+            aria-hidden="true"
             fill="none"
+            focusable="false"
             stroke-width="8"
             style="color: rgb(19, 19, 19); width: 16px; height: 16px;"
             viewBox="0 0 123 123"

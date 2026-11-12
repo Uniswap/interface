@@ -2,7 +2,7 @@ import { Currency } from '@uniswap/sdk-core'
 import { Flex, Text } from '@universe/mycelium'
 import { TestID } from '@universe/test'
 import { useMemo } from 'react'
-import { PortfolioLogo } from '~/components/AccountDrawer/MiniPortfolio/PortfolioLogo'
+import { PortfolioLogo } from '~/components/Logo/PortfolioLogo'
 
 export function useTokenControlOptions(currencies: [Maybe<Currency>, Maybe<Currency>], size: 'small' | 'large') {
   const [token0, token1] = currencies

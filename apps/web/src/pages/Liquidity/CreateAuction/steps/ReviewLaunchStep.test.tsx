@@ -1,10 +1,10 @@
 import { UniverseChainId } from '@universe/chains'
 import { describe, expect, it, vi } from 'vitest'
 import { zeroAddress } from '~/chains'
+import { RaiseCurrency } from '~/features/Toucan/utils/raiseCurrency'
 import { ReviewLaunchStep } from '~/pages/Liquidity/CreateAuction/steps/ReviewLaunchStep'
 import { CreateAuctionStoreContext } from '~/pages/Liquidity/CreateAuction/store/CreateAuctionStoreContext'
 import { createCreateAuctionStore } from '~/pages/Liquidity/CreateAuction/store/createCreateAuctionStore'
-import { RaiseCurrency } from '~/pages/Liquidity/CreateAuction/types'
 import { getPrimaryStablecoin } from '~/pages/Liquidity/CreateAuction/utils'
 import { render, screen } from '~/test-utils/render'
 

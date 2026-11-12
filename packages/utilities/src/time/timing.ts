@@ -2,8 +2,8 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 export const DEFAULT_DELAY = 200
 
-export function sleep(milliseconds: number): Promise<boolean> {
-  return new Promise((resolve) => setTimeout(() => resolve(true), milliseconds))
+export function sleep(milliseconds: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds))
 }
 
 export async function promiseTimeout<T>(promise: Promise<T>, milliseconds: number): Promise<T | null> {

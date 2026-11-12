@@ -17,7 +17,7 @@
  * POLICY with a token that can never enter the maps, and pins `$shadowColor`
  * only as "never throws on the native lane" so both states compose.
  */
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, type MockInstance, vi } from 'vitest'
 import { __resetNativeStyleWarnings } from '../compat/native-diagnostics'
 import { compatNativeStyle } from '../compat/native-style'
 import { flexCompatClassName, nativeFlexCompatClassName } from './compile'
@@ -33,7 +33,7 @@ afterEach(() => {
   vi.restoreAllMocks()
 })
 
-function silenceWarnings(): ReturnType<typeof vi.spyOn> {
+function silenceWarnings(): MockInstance {
   return vi.spyOn(console, 'warn').mockImplementation(() => undefined)
 }
 

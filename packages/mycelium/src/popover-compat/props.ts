@@ -181,6 +181,7 @@ export interface PopoverCompatRootProps {
 }
 
 export interface PopoverCompatTriggerProps {
+  'aria-label'?: string
   children?: React.ReactNode
   className?: string
   /**

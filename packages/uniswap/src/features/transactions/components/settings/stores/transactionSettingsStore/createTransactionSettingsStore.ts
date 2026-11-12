@@ -1,6 +1,8 @@
+import type { TradingApi } from '@universe/api'
 import { isDevEnv } from '@universe/environment'
 import type { GasFeeOverrides } from 'uniswap/src/features/gas/types'
 import type { TransactionSettingsState } from 'uniswap/src/features/transactions/components/settings/types'
+import { SUPPORTED_BRIDGE_PROVIDERS } from 'uniswap/src/features/transactions/swap/utils/bridgeProviders'
 import {
   DEFAULT_PROTOCOL_OPTIONS,
   type FrontendSupportedProtocol,
@@ -14,6 +16,7 @@ export const initialTransactionSettingsState: TransactionSettingsState = {
   customSlippageTolerance: undefined,
   customDeadline: undefined,
   selectedProtocols: DEFAULT_PROTOCOL_OPTIONS,
+  selectedBridgeProviders: SUPPORTED_BRIDGE_PROVIDERS,
   slippageWarningModalSeen: false,
   isV4HookPoolsEnabled: true,
   isSlippageDirty: false,
@@ -29,6 +32,8 @@ export type TransactionSettingsStoreState = TransactionSettingsState & {
     setIsV4HookPoolsEnabled: (enabled: boolean) => void
     setIsSlippageDirty: (dirty: boolean) => void
     toggleProtocol: (protocol: FrontendSupportedProtocol) => void
+    setSelectedBridgeProviders: (providers: TradingApi.BridgeProvider[]) => void
+    toggleBridgeProvider: (provider: TradingApi.BridgeProvider) => void
     setGasOverrides: (overrides: GasFeeOverrides | undefined) => void
     clearGasOverrides: () => void
   }
@@ -56,6 +61,16 @@ export const createTransactionSettingsStore = (): { store: TransactionSettingsSt
             } else {
               set({ selectedProtocols: [...selectedProtocols, protocol] })
             }
+          },
+          setSelectedBridgeProviders: (providers: TradingApi.BridgeProvider[]): void =>
+            set({ selectedBridgeProviders: providers }),
+          toggleBridgeProvider: (provider: TradingApi.BridgeProvider): void => {
+            const { selectedBridgeProviders } = get()
+            set({
+              selectedBridgeProviders: selectedBridgeProviders.includes(provider)
+                ? selectedBridgeProviders.filter((p) => p !== provider)
+                : [...selectedBridgeProviders, provider],
+            })
           },
           setGasOverrides: (overrides: GasFeeOverrides | undefined): void => set({ gasOverrides: overrides }),
           clearGasOverrides: (): void => set({ gasOverrides: undefined }),

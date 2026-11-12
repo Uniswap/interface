@@ -2,14 +2,14 @@ import { fireEvent } from '@testing-library/react'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { openUri } from 'uniswap/src/utils/linking'
+import { useCreateLiquidityContext } from '~/features/Liquidity/Create/CreateLiquidityContextProvider'
 import { useLPGeoRestriction } from '~/features/Liquidity/useLPGeoRestriction'
 import { AddLiquidityGeoRestrictionModal } from '~/pages/AddLiquidity/AddLiquidityGeoRestrictionModal'
-import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 import { mocked } from '~/test-utils/mocked'
 import { render, screen } from '~/test-utils/render'
 
 vi.mock('~/features/Liquidity/useLPGeoRestriction', () => ({ useLPGeoRestriction: vi.fn() }))
-vi.mock('~/pages/CreatePosition/CreateLiquidityContextProvider', () => ({ useCreateLiquidityContext: vi.fn() }))
+vi.mock('~/features/Liquidity/Create/CreateLiquidityContextProvider', () => ({ useCreateLiquidityContext: vi.fn() }))
 vi.mock('uniswap/src/utils/linking', () => ({ openUri: vi.fn() }))
 
 // The real Modal is a Radix dialog / bottom sheet; render straight through so open/closed and the

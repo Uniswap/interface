@@ -1,5 +1,5 @@
 import { CurrencyAmount, type Currency } from '@uniswap/sdk-core'
-import { Button, Flex, iconSizes, Text, TouchableArea } from '@universe/mycelium'
+import { Button, Flex, Text, TouchableArea } from '@universe/mycelium'
 import { TestID } from '@universe/test'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -9,8 +9,7 @@ import { hasEarnPosition } from 'uniswap/src/features/earn/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { NumberType } from 'utilities/src/format/types'
-
-const VAULT_ROW_MIN_HEIGHT = 44
+import { EARN_ROW_LOGO_SIZE, EARN_ROW_MIN_HEIGHT } from '~/pages/Portfolio/Overview/constants'
 
 export function PortfolioEarnVaultRow({
   vault,
@@ -45,7 +44,7 @@ export function PortfolioEarnVaultRow({
     <TokenLogo
       key="logo"
       url={currencyInfo?.logoUrl}
-      size={iconSizes.icon32}
+      size={EARN_ROW_LOGO_SIZE}
       chainId={currency?.chainId}
       symbol={currency?.symbol}
       name={currency?.name}
@@ -69,7 +68,8 @@ export function PortfolioEarnVaultRow({
         </Text>
       </Flex>
     ) : hasTokenBalance ? (
-      <Button key="deposit" size="xsmall" emphasis="secondary" fill={false}>
+      // xsmall's own height is off the spacing grid; match the logo instead.
+      <Button key="deposit" size="xsmall" emphasis="secondary" fill={false} height={EARN_ROW_LOGO_SIZE}>
         {t('explore.earn.vault.deposit')}
       </Button>
     ) : null,
@@ -82,7 +82,7 @@ export function PortfolioEarnVaultRow({
         alignItems="center"
         gap="$spacing12"
         width="100%"
-        minHeight={VAULT_ROW_MIN_HEIGHT}
+        minHeight={EARN_ROW_MIN_HEIGHT}
         py="$spacing4"
         testID={`${TestID.PortfolioOverviewEarnVaultRowPrefix}${vault.id}`}
       >
@@ -97,7 +97,7 @@ export function PortfolioEarnVaultRow({
       alignItems="center"
       gap="$spacing12"
       width="100%"
-      minHeight={VAULT_ROW_MIN_HEIGHT}
+      minHeight={EARN_ROW_MIN_HEIGHT}
       py="$spacing4"
       borderRadius="$rounded12"
       cursor="pointer"
@@ -115,26 +115,25 @@ export function PortfolioEarnVaultRowSkeleton(): JSX.Element {
       row
       alignItems="center"
       gap="$spacing12"
-      minHeight={VAULT_ROW_MIN_HEIGHT}
-      px="$spacing12"
+      minHeight={EARN_ROW_MIN_HEIGHT}
       py="$spacing4"
       testID={TestID.PortfolioOverviewEarnVaultRowSkeleton}
     >
       <Flex
-        width={iconSizes.icon32}
-        height={iconSizes.icon32}
+        width={EARN_ROW_LOGO_SIZE}
+        height={EARN_ROW_LOGO_SIZE}
         borderRadius="$roundedFull"
         backgroundColor="$surface3"
       />
       <Flex flex={1} gap="$spacing4">
-        <Text variant="body2" loading>
+        <Text variant="body3" loading>
           -
         </Text>
         <Text variant="body4" loading>
           -
         </Text>
       </Flex>
-      <Text variant="body2" loading>
+      <Text variant="body3" loading>
         -
       </Text>
     </Flex>

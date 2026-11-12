@@ -7,5 +7,9 @@
     "types": ["node", "vitest/globals"],
     "paths": {}
   },
-  "references": []
+  "references": [
+    {
+      "path": "../utilities"
+    }
+  ]
 }

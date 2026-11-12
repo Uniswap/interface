@@ -33,10 +33,12 @@ test.describe(
       await expect(page.getByTestId(TestID.HookModalContinueButton)).not.toBeVisible()
       await expect(page.getByRole('heading', { name: 'Set your position' })).toBeVisible()
       await expect(page.getByTestId(TestID.PoolPairLabel)).toHaveText(/ETH.*USDC/)
-      await expect(page.getByText('Dynamic', { exact: true })).toBeVisible()
-      // Exact names: recent-activity rows are also role=button and can mention the same symbols.
-      await expect(page.getByRole('button', { name: 'ETH', exact: true })).toBeVisible()
-      await expect(page.getByRole('button', { name: 'USDC', exact: true })).toBeVisible()
+      // The dynamic fee badge shows the pool's live current fee, which moves with swaps, so match its
+      // shape; it falls back to "Dynamic" only while no swap has been indexed.
+      const poolHeader = page.getByTestId(TestID.PoolPairLabel).locator('..')
+      await expect(poolHeader.getByText(/^(<?[\d.]+%|Dynamic)$/)).toBeVisible()
+      // Both deposit panels are input-side, so each carries the input token label.
+      await expect(page.getByTestId(TestID.ChooseInputToken + '-label')).toHaveText(['ETH', 'USDC'])
     })
   },
 )

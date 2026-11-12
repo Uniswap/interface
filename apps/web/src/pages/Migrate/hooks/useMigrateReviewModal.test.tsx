@@ -1,11 +1,11 @@
 import { act, renderHook } from '@testing-library/react'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { DAI } from 'uniswap/src/constants/tokens'
-import { PositionFlowStep } from '~/features/Liquidity/Create/types'
 import {
   CreateLiquidityContextProvider,
   useCreateLiquidityContext,
-} from '~/pages/CreatePosition/CreateLiquidityContextProvider'
+} from '~/features/Liquidity/Create/CreateLiquidityContextProvider'
+import { PositionFlowStep } from '~/features/Liquidity/Create/types'
 import { useMigrateReviewModal } from '~/pages/Migrate/hooks/useMigrateReviewModal'
 
 vi.mock('~/features/Liquidity/Create/hooks/useDerivedPositionInfo', () => ({

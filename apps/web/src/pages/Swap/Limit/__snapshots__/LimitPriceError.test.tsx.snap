@@ -12,7 +12,9 @@ exports[`LimitPriceError > renders the limit price error correctly when there is
       class="flex flex-col basis-auto box-border relative min-h-[0px] min-w-[0px] items-center justify-center shrink-[0] w-[40px] h-[40px] bg-critical-secondary rounded-[12px]"
     >
       <svg
+        aria-hidden="true"
         fill="none"
+        focusable="false"
         stroke="currentColor"
         stroke-width="1"
         style="width: 20px; height: 20px;"
@@ -45,7 +47,7 @@ exports[`LimitPriceError > renders the limit price error correctly when there is
 </div>
 `;
 
-exports[`LimitPriceError > renders the limit price error correctly, inverted %p change %p false -10 1`] = `
+exports[`LimitPriceError > renders the limit price error correctly, inverted false change -10 1`] = `
 <div
   class="fade-presence fade-presence-translate fade-presence-delayed"
   style="--fade-presence-duration: 125ms; --fade-presence-delay: 125ms;"
@@ -57,7 +59,9 @@ exports[`LimitPriceError > renders the limit price error correctly, inverted %p 
       class="flex flex-col basis-auto box-border relative min-h-[0px] min-w-[0px] items-center justify-center shrink-[0] w-[40px] h-[40px] bg-critical-secondary rounded-[12px]"
     >
       <svg
+        aria-hidden="true"
         fill="none"
+        focusable="false"
         stroke="currentColor"
         stroke-width="1"
         style="width: 20px; height: 20px;"
@@ -90,7 +94,7 @@ exports[`LimitPriceError > renders the limit price error correctly, inverted %p 
 </div>
 `;
 
-exports[`LimitPriceError > renders the limit price error correctly, inverted %p change %p false 10 1`] = `
+exports[`LimitPriceError > renders the limit price error correctly, inverted false change 10 1`] = `
 <div
   class="fade-presence fade-presence-translate fade-presence-delayed"
   style="--fade-presence-duration: 125ms; --fade-presence-delay: 125ms;"
@@ -102,7 +106,9 @@ exports[`LimitPriceError > renders the limit price error correctly, inverted %p 
       class="flex flex-col basis-auto box-border relative min-h-[0px] min-w-[0px] items-center justify-center shrink-[0] w-[40px] h-[40px] bg-critical-secondary rounded-[12px]"
     >
       <svg
+        aria-hidden="true"
         fill="none"
+        focusable="false"
         stroke="currentColor"
         stroke-width="1"
         style="width: 20px; height: 20px;"
@@ -135,7 +141,7 @@ exports[`LimitPriceError > renders the limit price error correctly, inverted %p 
 </div>
 `;
 
-exports[`LimitPriceError > renders the limit price error correctly, inverted %p change %p true -10 1`] = `
+exports[`LimitPriceError > renders the limit price error correctly, inverted true change -10 1`] = `
 <div
   class="fade-presence fade-presence-translate fade-presence-delayed"
   style="--fade-presence-duration: 125ms; --fade-presence-delay: 125ms;"
@@ -147,7 +153,9 @@ exports[`LimitPriceError > renders the limit price error correctly, inverted %p 
       class="flex flex-col basis-auto box-border relative min-h-[0px] min-w-[0px] items-center justify-center shrink-[0] w-[40px] h-[40px] bg-critical-secondary rounded-[12px]"
     >
       <svg
+        aria-hidden="true"
         fill="none"
+        focusable="false"
         stroke="currentColor"
         stroke-width="1"
         style="width: 20px; height: 20px;"
@@ -180,7 +188,7 @@ exports[`LimitPriceError > renders the limit price error correctly, inverted %p 
 </div>
 `;
 
-exports[`LimitPriceError > renders the limit price error correctly, inverted %p change %p true 10 1`] = `
+exports[`LimitPriceError > renders the limit price error correctly, inverted true change 10 1`] = `
 <div
   class="fade-presence fade-presence-translate fade-presence-delayed"
   style="--fade-presence-duration: 125ms; --fade-presence-delay: 125ms;"
@@ -192,7 +200,9 @@ exports[`LimitPriceError > renders the limit price error correctly, inverted %p 
       class="flex flex-col basis-auto box-border relative min-h-[0px] min-w-[0px] items-center justify-center shrink-[0] w-[40px] h-[40px] bg-critical-secondary rounded-[12px]"
     >
       <svg
+        aria-hidden="true"
         fill="none"
+        focusable="false"
         stroke="currentColor"
         stroke-width="1"
         style="width: 20px; height: 20px;"

@@ -38,7 +38,7 @@ vi.mock('~/pages/Swap', () => ({
 
 describe('handleRouteToPasskeyManagement', () => {
   const mockSignInWithPasskey = vi.fn()
-  const mockNavigate = vi.fn()
+  const mockNavigateAfterSignIn = vi.fn()
   const mockCloseRecentlyConnectedModal = vi.fn()
   const mockDisconnect = vi.fn()
   const mockNavigateToPasskeyManagement = vi.fn()
@@ -64,7 +64,7 @@ describe('handleRouteToPasskeyManagement', () => {
     signInWithPasskey: mockSignInWithPasskey,
     accountDrawerHasBeenOpenedRef,
     passkeyConnectionAttemptedRef,
-    navigate: mockNavigate,
+    navigateAfterSignIn: mockNavigateAfterSignIn,
     closeRecentlyConnectedModal: mockCloseRecentlyConnectedModal,
     accountDrawer: mockAccountDrawer,
     disconnect: mockDisconnect,
@@ -90,7 +90,7 @@ describe('handleRouteToPasskeyManagement', () => {
     handler()
 
     expect(mockSignInWithPasskey).not.toHaveBeenCalled()
-    expect(mockNavigate).not.toHaveBeenCalled()
+    expect(mockNavigateAfterSignIn).not.toHaveBeenCalled()
     expect(mockCloseRecentlyConnectedModal).not.toHaveBeenCalled()
     expect(mockDisconnect).not.toHaveBeenCalled()
     expect(mockNavigateToPasskeyManagement).not.toHaveBeenCalled()
@@ -112,12 +112,12 @@ describe('handleRouteToPasskeyManagement', () => {
     expect(mockAccountDrawer.open).toHaveBeenCalled()
     expect(mockSignInWithPasskey).toHaveBeenCalled()
     expect(passkeyConnectionAttemptedRef.current).toBe(true)
-    expect(mockNavigate).not.toHaveBeenCalled()
+    expect(mockNavigateAfterSignIn).not.toHaveBeenCalled()
     expect(mockDisconnect).not.toHaveBeenCalled()
     expect(mockNavigateToPasskeyManagement).not.toHaveBeenCalled()
   })
 
-  it('navigates to swap if user has been prompted to sign in but address is not embedded wallet', () => {
+  it('navigates away if user has been prompted to sign in but address is not embedded wallet', () => {
     passkeyConnectionAttemptedRef.current = true
 
     const dependencies = {
@@ -132,7 +132,7 @@ describe('handleRouteToPasskeyManagement', () => {
     const handler = handleRouteToPasskeyManagement(dependencies)
     handler()
 
-    expect(mockNavigate).toHaveBeenCalledWith('/swap')
+    expect(mockNavigateAfterSignIn).toHaveBeenCalled()
     expect(mockDisconnect).not.toHaveBeenCalled()
     expect(mockNavigateToPasskeyManagement).not.toHaveBeenCalled()
   })
@@ -152,7 +152,7 @@ describe('handleRouteToPasskeyManagement', () => {
 
     expect(mockDispatch).toHaveBeenCalled()
     expect(mockDisconnect).toHaveBeenCalled()
-    expect(mockNavigate).not.toHaveBeenCalled()
+    expect(mockNavigateAfterSignIn).not.toHaveBeenCalled()
     expect(mockNavigateToPasskeyManagement).not.toHaveBeenCalled()
   })
 
@@ -173,7 +173,7 @@ describe('handleRouteToPasskeyManagement', () => {
 
     expect(mockNavigateToPasskeyManagement).toHaveBeenCalled()
     expect(mockSignInWithPasskey).not.toHaveBeenCalled()
-    expect(mockNavigate).not.toHaveBeenCalled()
+    expect(mockNavigateAfterSignIn).not.toHaveBeenCalled()
     expect(mockDisconnect).not.toHaveBeenCalled()
   })
 
@@ -195,7 +195,7 @@ describe('handleRouteToPasskeyManagement', () => {
 
     expect(mockNavigateToPasskeyManagement).not.toHaveBeenCalled()
     expect(mockSignInWithPasskey).not.toHaveBeenCalled()
-    expect(mockNavigate).not.toHaveBeenCalled()
+    expect(mockNavigateAfterSignIn).not.toHaveBeenCalled()
     expect(mockDisconnect).not.toHaveBeenCalled()
   })
 })

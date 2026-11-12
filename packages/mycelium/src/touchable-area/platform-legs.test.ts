@@ -345,3 +345,47 @@ describe('per-theme background guard (INFRA-3507)', () => {
     mounted.unmount()
   })
 })
+
+describe('screen-reader activation', () => {
+  const activateEvent = { nativeEvent: { actionName: 'activate' } }
+
+  it('runs onPress when TalkBack activates the area', async () => {
+    const onPress = vi.fn()
+    const mounted = await renderNative({ onPress })
+    act(() => {
+      ;(mounted.host().props['onAccessibilityAction'] as (event: unknown) => void)(activateEvent)
+    })
+    expect(onPress).toHaveBeenCalledTimes(1)
+    mounted.unmount()
+  })
+
+  it("keeps the caller's own actions and routes them to the caller's handler", async () => {
+    const onPress = vi.fn()
+    const onAccessibilityAction = vi.fn()
+    const mounted = await renderNative({
+      onPress,
+      accessibilityActions: [{ name: 'longpress' }],
+      onAccessibilityAction,
+    })
+    expect(mounted.host().props['accessibilityActions']).toEqual([{ name: 'longpress' }, { name: 'activate' }])
+    const longPressEvent = { nativeEvent: { actionName: 'longpress' } }
+    act(() => {
+      ;(mounted.host().props['onAccessibilityAction'] as (event: unknown) => void)(longPressEvent)
+    })
+    expect(onAccessibilityAction).toHaveBeenCalledWith(longPressEvent)
+    expect(onPress).not.toHaveBeenCalled()
+    mounted.unmount()
+  })
+
+  it('leaves a caller-declared activate to the caller', async () => {
+    const onPress = vi.fn()
+    const onAccessibilityAction = vi.fn()
+    const mounted = await renderNative({ onPress, accessibilityActions: [{ name: 'activate' }], onAccessibilityAction })
+    act(() => {
+      ;(mounted.host().props['onAccessibilityAction'] as (event: unknown) => void)(activateEvent)
+    })
+    expect(onAccessibilityAction).toHaveBeenCalledTimes(1)
+    expect(onPress).not.toHaveBeenCalled()
+    mounted.unmount()
+  })
+})

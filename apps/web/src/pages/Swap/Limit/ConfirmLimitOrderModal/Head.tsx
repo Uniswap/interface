@@ -1,7 +1,7 @@
 import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
 import { GetHelpHeader } from 'uniswap/src/components/dialog/GetHelpHeader'
-import { ConfirmModalState } from '~/pages/Swap/Limit/ConfirmLimitOrderModal/state'
+import { ConfirmModalState } from '~/components/ConfirmModal/types'
 
 export function SwapHead({
   onDismiss,

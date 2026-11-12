@@ -15,8 +15,9 @@ import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { benignSafetyInfo } from 'uniswap/src/test/fixtures'
 import { createGasEstimate } from 'uniswap/src/test/fixtures/tradingApi'
 import { CurrencyField } from 'uniswap/src/types/currency'
+import { currentTimeInSeconds } from 'utilities/src/time/time'
 
-export const TWENTY_MINUTES_FROM_NOW = Math.floor(Date.now() / 1000) + 60 * 20 // 20 minutes from now
+export const TWENTY_MINUTES_FROM_NOW = currentTimeInSeconds() + 60 * 20 // 20 minutes from now
 
 export const createMockCurrencyAmount = (token: Token, amount: string): CurrencyAmount<Token> =>
   CurrencyAmount.fromRawAmount(token, amount)

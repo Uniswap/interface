@@ -23,18 +23,22 @@ interface NetworkFilterTriggerProps {
   displayedChainId: UniverseChainId | null
   isOpen: boolean
   onPress: () => void
+  focusable?: boolean
   tooltipLabel?: string
   content?: ReactNode
   outlined?: boolean
+  chevronSize?: 16 | 20
 }
 
 export function NetworkFilterTrigger({
   displayedChainId,
   isOpen,
   onPress,
+  focusable,
   tooltipLabel,
   content,
   outlined,
+  chevronSize = 20,
 }: NetworkFilterTriggerProps): JSX.Element {
   const networkLogo = <NetworkLogo chainId={displayedChainId} size={NETWORK_ICON_SIZE} />
   const logo = tooltipLabel ? (
@@ -52,6 +56,8 @@ export function NetworkFilterTrigger({
   return (
     <TouchableArea
       {...(outlined ? OUTLINED_STYLE : undefined)}
+      focusable={focusable}
+      role={focusable === false ? 'presentation' : undefined}
       testID={TestID.TokensNetworkFilterTrigger}
       onPress={onPress}
     >
@@ -62,7 +68,7 @@ export function NetworkFilterTrigger({
           animateOnly={['transform', 'opacity']}
           color="$neutral2"
           direction={isOpen ? 'up' : 'down'}
-          size="$icon.20"
+          size={chevronSize}
         />
       </Flex>
     </TouchableArea>

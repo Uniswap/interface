@@ -6,17 +6,43 @@ import { FeeAmount, TICK_SPACINGS, TickMath, Pool as V3Pool } from '@uniswap/v3-
 import { Pool as V4Pool, Position as V4Position } from '@uniswap/v4-sdk'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { DAI, nativeOnChain } from 'uniswap/src/constants/tokens'
+import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import type { PositionInfo } from 'uniswap/src/features/positions/types'
+import { setCurrentFiatCurrency } from 'uniswap/src/features/settings/slice'
 import sourceTranslations from 'uniswap/src/i18n/locales/source/en-US.json'
 import { WETH } from 'uniswap/src/test/fixtures/lib/sdk'
-import { describe, expect, it } from 'vitest'
+import { currentTimeInSeconds } from 'utilities/src/time/time'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import {
   CreatedCellContent,
   FeesCellContent,
   getPositionValueDistribution,
   RangeCellContent,
 } from '~/features/Liquidity/PositionsTableRow'
-import { render, screen } from '~/test-utils/render'
+import store from '~/state'
+import { act, render, screen } from '~/test-utils/render'
+
+// Stands in for the data-api ConvertFiat rate; ignored while the app currency is USD.
+vi.mock('uniswap/src/data/apiClients/dataApiService/convert/useConversionRate', () => ({
+  useConversionRate: () => 0.9,
+}))
+
+// The global mock's fiat converter ignores the app currency; route fiat formatting through the real
+// converter so the selected currency (store userSettings) and its converted amount reach the formatter.
+vi.mock('uniswap/src/features/language/LocalizationContext', async () => {
+  const { useFiatConverter } = await vi.importActual<typeof import('uniswap/src/features/fiatCurrency/conversion')>(
+    'uniswap/src/features/fiatCurrency/conversion',
+  )
+  const { mockLocalizationContext } = await import('uniswap/src/test/mocks/locale')
+  const base = mockLocalizationContext({})
+  return {
+    ...base,
+    useLocalizationContext: () => {
+      const context = base.useLocalizationContext()
+      return { ...context, ...useFiatConverter({ formatNumberOrString: context.formatNumberOrString }) }
+    },
+  }
+})
 
 const ONE_UNIT = '1000000000000000000'
 const TWO_UNITS = '2000000000000000000'
@@ -150,6 +176,13 @@ const positionWithoutFees = (version: ProtocolVersion): PositionInfo =>
   ({ version, uncollectedFeesUsd: undefined }) as PositionInfo
 
 describe('FeesCellContent', () => {
+  // Runs before the rendered cell is unmounted, so the store update must be wrapped.
+  afterEach(() => {
+    act(() => {
+      store.dispatch(setCurrentFiatCurrency(FiatCurrency.UnitedStatesDollar))
+    })
+  })
+
   it('explains the dash on hover for a v2 position', async () => {
     render(<FeesCellContent position={positionWithoutFees(ProtocolVersion.V2)} />)
 
@@ -180,10 +213,25 @@ describe('FeesCellContent', () => {
 
     expect(screen.queryByText(V2_FEES_TOOLTIP)).toBeNull()
   })
+
+  // The fees column is narrow and clips on the left, so dust must not render at full precision.
+  it.each<[number, string, FiatCurrency?]>([
+    [0.000000285, '<$0.01'],
+    [0.0000000163, '<$0.01'],
+    [0, '$0.00'],
+    [0.5, '$0.50'],
+    [1234.5678, '$1,234.57'],
+    [0.000000285, '<€0.01', FiatCurrency.Euro],
+  ])('renders %s as %s', (uncollectedFeesUsd, expected, fiatCurrency = FiatCurrency.UnitedStatesDollar) => {
+    store.dispatch(setCurrentFiatCurrency(fiatCurrency))
+    render(<FeesCellContent position={{ version: ProtocolVersion.V3, uncollectedFeesUsd } as PositionInfo} />)
+
+    expect(screen.getByText(expected)).toBeInTheDocument()
+  })
 })
 
 describe('CreatedCellContent', () => {
-  const nowSeconds = Math.floor(Date.now() / 1_000)
+  const nowSeconds = currentTimeInSeconds()
 
   it('renders a dash without a creation time', () => {
     render(<CreatedCellContent position={{ createdAt: undefined } as PositionInfo} />)
@@ -210,7 +258,7 @@ describe('RangeCellContent current price', () => {
   // ≈ 0.001 token1 per token0, so the inverted quote is ≈ 1,000 and the two orientations can't be confused.
   const TICK_ONE_THOUSANDTH = -69082
 
-  function rangeCellPosition(tokenA: Token, tokenB: Token): PositionInfo {
+  function rangeCellPosition(tokenA: Token, tokenB: Token, isToken0Quote?: boolean): PositionInfo {
     const pool = new V3Pool(
       tokenA,
       tokenB,
@@ -225,13 +273,14 @@ describe('RangeCellContent current price', () => {
       currency0Amount: CurrencyAmount.fromRawAmount(pool.token0, ONE_UNIT),
       currency1Amount: CurrencyAmount.fromRawAmount(pool.token1, ZERO),
       poolOrPair: pool,
+      isToken0Quote,
     } as unknown as PositionInfo
   }
 
   // DAI sorts below WETH by address, so the pool's token0Price is WETH per DAI while the range above
-  // the current price is displayed as DAI per WETH (stablecoin quote). The hover price must follow.
+  // the current price is displayed as DAI per WETH (DAI served as quote). The hover price must follow.
   it("quotes in the range's asset when the pair is reversed for display", () => {
-    render(<RangeCellContent position={rangeCellPosition(WETH, DAI)} />)
+    render(<RangeCellContent position={rangeCellPosition(WETH, DAI, true)} />)
 
     const currentPrice = screen.getByText(/Current price:/)
     expect(currentPrice).toHaveTextContent(/(999|1,?000)/)
@@ -239,7 +288,7 @@ describe('RangeCellContent current price', () => {
     expect(currentPrice).not.toHaveTextContent('WETH')
   })
 
-  it("keeps the pool's token0Price when both tokens share a waterfall tier", () => {
+  it("keeps the pool's token0Price when token1 is the quote", () => {
     const abc = new Token(1, '0x0000000000000000000000000000000000000001', 18, 'ABC', 'Abc')
     const def = new Token(1, '0x0000000000000000000000000000000000000002', 18, 'DEF', 'Def')
     render(<RangeCellContent position={rangeCellPosition(abc, def)} />)

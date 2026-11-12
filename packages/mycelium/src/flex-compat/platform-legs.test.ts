@@ -33,7 +33,7 @@
  */
 import { createElement, useEffect } from 'react'
 import { act, create, type ReactTestInstance, type ReactTestRenderer } from 'react-test-renderer'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, type Mock, vi } from 'vitest'
 import { groupStatePropKey } from '../compat/group'
 import { __resetNativeStyleWarnings } from '../compat/native-diagnostics'
 import { PRESS_HANDLER_KEYS } from '../compat/native-props'
@@ -419,7 +419,7 @@ describe('press props fire on the native leg (INFRA-3536)', () => {
     // A quick tap must not long-press.
     expect(handlers['onLongPress']).not.toHaveBeenCalled()
     // Pressability's release order: deactivate (onPressOut) precedes onPress.
-    const order = (key: string): number => (handlers[key] as ReturnType<typeof vi.fn>).mock.invocationCallOrder[0] ?? -1
+    const order = (key: string): number => (handlers[key] as Mock).mock.invocationCallOrder[0] ?? -1
     expect(order('onPressIn')).toBeLessThan(order('onPressOut'))
     expect(order('onPressOut')).toBeLessThan(order('onPress'))
     // The class and style lanes are untouched by the press wiring.

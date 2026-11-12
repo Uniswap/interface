@@ -80,6 +80,8 @@ function RefreshButtonIconCompat({
   }, [])
 
   return (
+    // TODO(INFRA-4589): the tooltip label doesn't name this icon-only button, so it's announced as an unnamed
+    // button (aria-command-name). Use the label as its aria-label.
     <TouchableAreaCompat
       className={refreshButtonFrameClassName({ isLoading, disabled })}
       disabled={isLoading || disabled}
@@ -125,6 +127,8 @@ export function RefreshButtonCompat({
       }
     }
 
+    // TODO(INFRA-4589): a single-key shortcut on the whole window fails WCAG 2.1.4: it fires on any "r" outside a
+    // text field, and users can't turn it off or remap it. Scope it to focus, or add a modifier.
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [onPress, disabled])

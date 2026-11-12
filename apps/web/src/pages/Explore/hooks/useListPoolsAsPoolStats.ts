@@ -1,5 +1,5 @@
 import type { PartialMessage } from '@bufbuild/protobuf'
-import { InfiniteData, type RefetchOptions, useInfiniteQuery } from '@tanstack/react-query'
+import { InfiniteData, keepPreviousData, type RefetchOptions, useInfiniteQuery } from '@tanstack/react-query'
 import type { ListPoolsRequest, ListPoolsResponse } from '@uniswap/client-data-api/dist/data/v2/api_pb'
 import { useMemo } from 'react'
 import { getListPoolsInfiniteQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/pools/queries'
@@ -12,6 +12,8 @@ export interface ListPoolsAsPoolStatsResult {
   /** Backend-filtered rows in fetched pages, before client normalization. */
   rawPoolCount: number | undefined
   isLoading: boolean
+  isFetching: boolean
+  isPlaceholderData: boolean
   isSuccess: boolean
   isFetchedAfterMount: boolean
   refetch: (options?: RefetchOptions) => Promise<unknown>
@@ -20,6 +22,7 @@ export interface ListPoolsAsPoolStatsResult {
   fetchNextPage: () => void
   hasNextPage: boolean
   isFetchingNextPage: boolean
+  isFetchNextPageError: boolean
 }
 
 /**
@@ -35,6 +38,7 @@ export function useListPoolsAsPoolStats({
   pageSize,
   enabled,
   persist,
+  keepPreviousRows,
 }: {
   params: Omit<PartialMessage<ListPoolsRequest>, 'page'> | undefined
   pageSize: number
@@ -45,10 +49,13 @@ export function useListPoolsAsPoolStats({
    * rows while the fresh fetch is in flight, instead of a skeleton. Defaults to persisted.
    */
   persist?: boolean
+  keepPreviousRows?: boolean
 }): ListPoolsAsPoolStatsResult {
   const {
     data,
     isLoading,
+    isFetching,
+    isPlaceholderData,
     isSuccess,
     isFetchedAfterMount,
     refetch,
@@ -56,27 +63,42 @@ export function useListPoolsAsPoolStats({
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useInfiniteQuery(getListPoolsInfiniteQueryOptions({ params, pageSize, enabled, persist }))
+    isFetchNextPageError,
+  } = useInfiniteQuery({
+    ...getListPoolsInfiniteQueryOptions({ params, pageSize, enabled, persist }),
+    placeholderData: keepPreviousRows ? keepPreviousData : undefined,
+  })
 
   const infiniteData = data as InfiniteData<ListPoolsResponse> | undefined
   const rawPoolCount = useMemo(
     () => infiniteData?.pages.reduce((count, page) => count + page.pools.length, 0),
     [infiniteData?.pages],
   )
-  const allPools = useMemo(
+  const pools = useMemo(
     () =>
       infiniteData?.pages.flatMap((page: ListPoolsResponse) =>
-        page.pools.flatMap((rankedPool) => normalizeRankedPool(rankedPool) ?? []),
+        page.pools.flatMap((rankedPool) => {
+          const normalized = normalizeRankedPool(rankedPool)
+          if (!normalized) {
+            return []
+          }
+          // Canonical Pool uses zero for missing TVL; PoolStat must retain the served availability.
+          const tvl = rankedPool.stats?.tvl
+          return {
+            ...convertPoolToPoolStat(normalized),
+            totalLiquidity: tvl !== undefined && Number.isFinite(tvl) ? { value: tvl } : undefined,
+          }
+        }),
       ),
     [infiniteData?.pages],
   )
-
-  const pools = useMemo(() => allPools?.map(convertPoolToPoolStat), [allPools])
 
   return {
     pools,
     rawPoolCount,
     isLoading,
+    isFetching,
+    isPlaceholderData,
     isSuccess,
     isFetchedAfterMount,
     refetch,
@@ -85,5 +107,6 @@ export function useListPoolsAsPoolStats({
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    isFetchNextPageError,
   }
 }

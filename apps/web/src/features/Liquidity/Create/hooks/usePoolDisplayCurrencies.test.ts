@@ -3,10 +3,10 @@ import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes
 import type { Currency } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
 import { nativeOnChain, USDC_MAINNET } from 'uniswap/src/constants/tokens'
+import { useCreateLiquidityContext } from '~/features/Liquidity/Create/CreateLiquidityContextProvider'
 import { usePoolDisplayCurrencies } from '~/features/Liquidity/Create/hooks/usePoolDisplayCurrencies'
-import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 
-vi.mock('~/pages/CreatePosition/CreateLiquidityContextProvider', () => ({ useCreateLiquidityContext: vi.fn() }))
+vi.mock('~/features/Liquidity/Create/CreateLiquidityContextProvider', () => ({ useCreateLiquidityContext: vi.fn() }))
 
 const mockedUseCreateLiquidityContext = vi.mocked(useCreateLiquidityContext)
 

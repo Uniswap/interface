@@ -7,8 +7,8 @@ import { migration5 } from '~/state/migrations/5'
 import { migration6 } from '~/state/migrations/6'
 import { migration7 } from '~/state/migrations/7'
 import { migration8, PersistAppStateV8 } from '~/state/migrations/8'
-import { RouterPreference } from '~/state/routing/types'
 import { SlippageTolerance } from '~/state/user/types'
+import { RouterPreference } from '~/types/routing'
 
 const previousState: PersistAppStateV8 = {
   user: {

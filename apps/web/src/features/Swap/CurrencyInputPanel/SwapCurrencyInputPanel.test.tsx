@@ -27,15 +27,16 @@ import { TestID } from '@universe/test'
 import { nativeOnChain, USDT } from 'uniswap/src/constants/tokens'
 import { useActiveAddresses } from 'uniswap/src/features/accounts/store/hooks'
 import { CurrencyField } from 'uniswap/src/types/currency'
+import type { Mock } from 'vitest'
 import { useAccount } from '~/connection/hooks/useAccount'
 import { SwapCurrencyInputPanel } from '~/features/Swap/CurrencyInputPanel/SwapCurrencyInputPanel'
 import { useCurrencyBalance } from '~/state/connection/hooks'
 import { useMultichainContext } from '~/state/multichain/useMultichainContext'
 import { renderWithUniswapContext as render } from '~/test-utils/render'
 
-const mockUseCurrencyBalance = useCurrencyBalance as ReturnType<typeof vi.fn>
-const mockUseMultichainContext = useMultichainContext as ReturnType<typeof vi.fn>
-const mockUseActiveAddresses = useActiveAddresses as ReturnType<typeof vi.fn>
+const mockUseCurrencyBalance = useCurrencyBalance as Mock
+const mockUseMultichainContext = useMultichainContext as Mock
+const mockUseActiveAddresses = useActiveAddresses as Mock
 
 describe('SwapCurrencyInputPanel balance formatting', () => {
   const mockOnUserInput = vi.fn()

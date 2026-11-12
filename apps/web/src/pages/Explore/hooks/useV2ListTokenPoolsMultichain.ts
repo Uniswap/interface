@@ -6,9 +6,9 @@ import { PoolTableSortState } from '~/data/pools/poolStats'
 import { OrderDirection } from '~/data/util'
 import { useInfiniteLoadMore } from '~/features/Explore/hooks/useInfiniteLoadMore'
 import { poolSortFieldToOrderBy } from '~/features/Liquidity/utils/convertPoolToPoolStat'
-import { getMultichainTokenListPoolsParams } from '~/features/Liquidity/utils/getTokenListPoolsParams'
 import { useListPoolsAsPoolStats } from '~/pages/Explore/hooks/useListPoolsAsPoolStats'
 import type { PoolStat } from '~/types/explore'
+import { getMultichainTokenListPoolsParams } from '~/utils/getTokenListPoolsParams'
 
 // Matches the single-chain TDP hook's page size (useV2ListTokenPools).
 const TOKEN_LIST_POOLS_PAGE_SIZE = 20

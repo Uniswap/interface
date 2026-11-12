@@ -1,19 +1,21 @@
 import { Platform } from '@universe/chains'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Flex, Text } from '@universe/mycelium'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { InterfacePageName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useIsMissingPlatformWallet } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsMissingPlatformWallet'
-import { APP_BODY_MOBILE_GUTTER_PX } from '~/app/layout/constants'
 import { useAccount } from '~/connection/hooks/useAccount'
+import { APP_BODY_MOBILE_GUTTER_PX } from '~/constants/layout'
 import { PoolsUnavailableOnSolanaView } from '~/features/Liquidity/components/emptyStates/PoolsUnavailableOnSolanaView'
 import { LiquidityLearnMoreTiles } from '~/features/Liquidity/components/LearnMoreTiles'
 import { usePositionSort } from '~/features/Liquidity/hooks/usePositionSort'
 import { useShowHiddenPositions } from '~/features/Liquidity/hooks/useShowHiddenPositions'
 import { useV2StatusFilter } from '~/features/Liquidity/hooks/useV2StatusFilter'
 import { useWalletPositionsWeb } from '~/features/Liquidity/hooks/useWalletPositionsWeb'
-import { PositionsHeroHeader } from '~/features/Liquidity/PositionsHeroHeader'
+import { PoolAreaHeroHeader } from '~/features/Liquidity/PoolAreaHeroHeader'
+import { PoolAreaLayout } from '~/features/Liquidity/PoolAreaLayout'
 import { PositionsSummaryChips } from '~/features/Liquidity/PositionsSummaryChips'
 import { PositionsTable, PositionsTableError, PositionsTableLoader } from '~/features/Liquidity/PositionsTable'
 import {
@@ -21,6 +23,7 @@ import {
   type PositionsTableControlBarProps,
 } from '~/features/Liquidity/PositionsTableControlBar'
 import { EmptyPositionsDiscoveryView } from '~/pages/Positions/components/EmptyPositionsDiscoveryView'
+import { PositionsPoolAreaTabs } from '~/pages/Positions/components/PositionsPoolAreaTabs'
 import { usePositionFilters } from '~/pages/Positions/hooks/usePositionFilters'
 
 function getPositionsViewState({
@@ -55,6 +58,7 @@ export function Pool() {
   const account = useAccount()
   const { t } = useTranslation()
   const { address, isConnected } = account
+  const isHooksExploreEnabled = useFeatureFlag(FeatureFlags.HooksExplore)
 
   const connectedWithoutEVM = useIsMissingPlatformWallet(Platform.EVM)
 
@@ -138,23 +142,24 @@ export function Pool() {
 
   return (
     <Trace logImpression page={InterfacePageName.Positions} section={SectionName.PositionsList}>
-      <PositionsHeroHeader />
-      <Flex
+      <PoolAreaHeroHeader legacyLayout={!isHooksExploreEnabled} />
+      <PoolAreaLayout
         row
         justifyContent="space-between"
         $xl={{ flexDirection: 'column', gap: '$gap16' }}
-        width="100%"
         gap={20}
         py="$spacing24"
-        px="$spacing40"
-        $lg={{ px: '$spacing20' }}
+        px={isHooksExploreEnabled ? '$none' : '$spacing40'}
         $md={{ px: '$none' }}
       >
-        <Flex grow shrink gap="$spacing24" maxWidth="100%" $xl={{ maxWidth: '100%' }}>
+        <Flex grow shrink gap="$spacing24" minWidth={0} maxWidth="100%" $xl={{ maxWidth: '100%' }}>
+          <PositionsPoolAreaTabs />
           {showSummaryChips && (
             <PositionsSummaryChips walletAddress={account.address} bleedGutters={SUMMARY_CHIPS_BLEED_GUTTERS} />
           )}
-          {!showDiscoveryEmptyState && <Text variant="heading3">{t('pool.positions.title')}</Text>}
+          {!isHooksExploreEnabled && !showDiscoveryEmptyState && (
+            <Text variant="heading3">{t('pool.positions.title')}</Text>
+          )}
           {connectedWithoutEVM ? (
             <>
               <PoolsUnavailableOnSolanaView withBorder />
@@ -185,7 +190,7 @@ export function Pool() {
             <PositionsTableLoader {...controlBarProps} />
           )}
         </Flex>
-      </Flex>
+      </PoolAreaLayout>
     </Trace>
   )
 }

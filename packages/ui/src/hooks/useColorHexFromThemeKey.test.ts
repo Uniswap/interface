@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react'
 import { useSporeColors } from '@universe/mycelium'
 import { useColorHexFromThemeKey } from 'ui/src/hooks/useColorHexFromThemeKey'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, type Mock, vi } from 'vitest'
 
 // Mock the useSporeColors hook
 vi.mock('@universe/mycelium', async (importOriginal) => ({
@@ -9,7 +9,7 @@ vi.mock('@universe/mycelium', async (importOriginal) => ({
   useSporeColors: vi.fn(),
 }))
 
-const mockUseSporeColors = useSporeColors as ReturnType<typeof vi.fn>
+const mockUseSporeColors = useSporeColors as Mock
 
 describe(useColorHexFromThemeKey, () => {
   beforeEach(() => {

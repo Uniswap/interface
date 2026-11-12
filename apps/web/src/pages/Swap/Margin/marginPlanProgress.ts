@@ -1,10 +1,13 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { TradingApi } from '@universe/api'
 import type { GeneratedIcon } from '@universe/mycelium/icons'
-import { ArrowRightFromBracket } from '@universe/mycelium/icons/ArrowRightFromBracket'
+import { ArrowBack } from '@universe/mycelium/icons/ArrowBack'
+import { ArrowDown } from '@universe/mycelium/icons/ArrowDown'
+import { ArrowUp } from '@universe/mycelium/icons/ArrowUp'
+import { Check } from '@universe/mycelium/icons/Check'
 import { Minus } from '@universe/mycelium/icons/Minus'
 import { Plus } from '@universe/mycelium/icons/Plus'
-import { Sliders } from '@universe/mycelium/icons/Sliders'
+import { X } from '@universe/mycelium/icons/X'
 import type { TFunction } from 'i18next'
 import type { MarginExecuteStep } from 'uniswap/src/components/ConfirmSwapModal/steps/MarginExecuteStepRow'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
@@ -102,8 +105,7 @@ export function marginExecuteStepTitle({
   }
 }
 
-// The icons the position actions menu shows for the same actions. Open, recover and the composites have
-// none there, so the row keeps its default.
+// Composite adjust actions have no row title, so they never reach this.
 export function marginExecuteStepIcon({
   step,
   planAction,
@@ -111,20 +113,30 @@ export function marginExecuteStepIcon({
   step: MarginPlanStep
   planAction: MarginActionKey | undefined
 }): GeneratedIcon | undefined {
-  if (step.stepType === 'MARGIN_CLOSE') {
-    return ArrowRightFromBracket
+  switch (step.stepType) {
+    case 'MARGIN_OPEN':
+      return Check
+    case 'MARGIN_CLOSE':
+      return X
+    case 'MARGIN_RECOVER':
+      return ArrowBack
+    case 'MARGIN_ADJUST':
+      return adjustStepIcon(planAction)
+    default:
+      return undefined
   }
-  if (step.stepType !== 'MARGIN_ADJUST') {
-    return undefined
-  }
-  switch (planAction) {
+}
+
+function adjustStepIcon(action: MarginActionKey | undefined): GeneratedIcon | undefined {
+  switch (action) {
     case 'addEquity':
-      return Plus
+      return ArrowDown
     case 'withdrawEquity':
-      return Minus
+      return ArrowUp
     case 'increaseLeverage':
+      return Plus
     case 'decreaseLeverage':
-      return Sliders
+      return Minus
     default:
       return undefined
   }

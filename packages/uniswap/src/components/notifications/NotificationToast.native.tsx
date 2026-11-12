@@ -1,7 +1,9 @@
 import { spacing, AnimatedFlex } from '@universe/mycelium'
-import { useCallback, useMemo } from 'react'
-import { Directions, FlingGestureHandler, FlingGestureHandlerGestureEvent, State } from 'react-native-gesture-handler'
+import { TestID } from '@universe/test'
+import { useCallback, useMemo, useState } from 'react'
+import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import { useAnimatedStyle, useSharedValue, withDelay, withSpring } from 'react-native-reanimated'
+import { scheduleOnRN } from 'react-native-worklets'
 import type { NotificationToastProps } from 'uniswap/src/components/notifications/NotificationToast'
 import { NotificationToastContent } from 'uniswap/src/components/notifications/NotificationToastContent'
 import {
@@ -9,6 +11,9 @@ import {
   LARGE_TOAST_RADIUS,
   SPRING_ANIMATION,
   SPRING_ANIMATION_DELAY,
+  SWIPE_DISMISS_ACTIVATION_OFFSET,
+  SWIPE_DISMISS_DISTANCE,
+  SWIPE_DISMISS_VELOCITY,
 } from 'uniswap/src/features/notifications/constants'
 import { useNotificationLifecycle } from 'uniswap/src/features/notifications/hooks/useNotificationLifecycle'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
@@ -29,12 +34,14 @@ export function NotificationToast({
 }: NotificationToastProps): JSX.Element {
   const showOffset = useAppInsets().top + spacing.spacing4
   const bannerOffset = useSharedValue(HIDE_OFFSET_Y)
+  const swipeOffset = useSharedValue(0)
+  const [isSwiping, setIsSwiping] = useState(false)
 
   const animatedStyle = useAnimatedStyle(
     () => ({
-      transform: [{ translateY: bannerOffset.value }],
+      transform: [{ translateY: bannerOffset.value + swipeOffset.value }],
     }),
-    [bannerOffset],
+    [bannerOffset, swipeOffset],
   )
 
   const onDismissLatest = useCallback(() => {
@@ -43,6 +50,8 @@ export function NotificationToast({
   }, [])
 
   const onShowCurrentNotification = useCallback(() => {
+    swipeOffset.value = 0
+    setIsSwiping(false)
     bannerOffset.value = withDelay(SPRING_ANIMATION_DELAY, withSpring(showOffset, SPRING_ANIMATION))
     // oxlint-disable-next-line react/exhaustive-deps -- biome-parity: oxlint is stricter here
   }, [showOffset])
@@ -51,6 +60,7 @@ export function NotificationToast({
     actionButtonOnPress: actionButton?.onPress,
     address,
     hideDelay,
+    isDismissPaused: isSwiping,
     onPress,
     onDismissLatest,
     onShowCurrentNotification,
@@ -60,13 +70,33 @@ export function NotificationToast({
     [cancelDismiss, contentOverride, dismissLatest],
   )
 
-  const onFling = ({ nativeEvent }: FlingGestureHandlerGestureEvent): void => {
-    if (nativeEvent.state === State.ACTIVE) {
-      cancelDismiss()
-      onExplicitDismiss?.()
-      dismissLatest()
-    }
-  }
+  const onSwipeDismiss = useCallback(() => {
+    cancelDismiss()
+    onExplicitDismiss?.()
+    dismissLatest()
+  }, [cancelDismiss, onExplicitDismiss, dismissLatest])
+
+  const swipeGesture = useMemo(
+    () =>
+      Gesture.Pan()
+        .withTestId(TestID.NotificationToastSwipe)
+        .activeOffsetY(-SWIPE_DISMISS_ACTIVATION_OFFSET)
+        .onStart(() => {
+          scheduleOnRN(setIsSwiping, true)
+        })
+        .onUpdate(({ translationY }) => {
+          swipeOffset.value = Math.min(translationY, 0)
+        })
+        .onEnd(({ velocityY }) => {
+          if (swipeOffset.value < -SWIPE_DISMISS_DISTANCE || velocityY < -SWIPE_DISMISS_VELOCITY) {
+            scheduleOnRN(onSwipeDismiss)
+          } else {
+            swipeOffset.value = withSpring(0, SPRING_ANIMATION)
+            scheduleOnRN(setIsSwiping, false)
+          }
+        }),
+    [onSwipeDismiss, swipeOffset],
+  )
 
   const notificationContent = useMemo(
     () => (
@@ -98,7 +128,7 @@ export function NotificationToast({
   )
 
   return (
-    <FlingGestureHandler direction={Directions.UP} onHandlerStateChange={onFling}>
+    <GestureDetector gesture={swipeGesture}>
       <AnimatedFlex
         centered
         borderRadius={LARGE_TOAST_RADIUS}
@@ -111,6 +141,6 @@ export function NotificationToast({
       >
         {notificationContent}
       </AnimatedFlex>
-    </FlingGestureHandler>
+    </GestureDetector>
   )
 }

@@ -65,7 +65,7 @@
     "lib": ["dom", "dom.iterable", "esnext"],
     "jsx": "preserve",
     "resolveJsonModule": true,
-    "types": ["chrome", "vitest/globals", "node"],
+    "types": ["chrome", "vitest/globals", "node", "vitest-presets/vitest/jest-extended"],
     "paths": {
       "src/*": ["./src/*"],
       "e2e/*": ["./e2e/*"]

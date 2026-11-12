@@ -15,6 +15,7 @@ exports[`FavoriteHeaderRow > when editing > renders without error 1`] = `
       Editing Title
     </div>
     <button
+      accessibilityactions="[object Object]"
       android_ripple="[object Object]"
       hitslop="16"
       role="button"
@@ -52,6 +53,7 @@ exports[`FavoriteHeaderRow > when not editing > renders without error 1`] = `
       Title
     </div>
     <button
+      accessibilityactions="[object Object]"
       android_ripple="[object Object]"
       data-testid="edit"
       hitslop="16"

@@ -1,4 +1,5 @@
 import { toScreenInput, useIsBlockedAddress } from '@universe/compliance'
+import { isWebApp } from '@universe/environment'
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -17,7 +18,9 @@ export const GasAndWarningRows = memo(function GasAndWarningRows(): JSX.Element 
   const chainId = useSwapFormStoreDerivedSwapInfo((s) => s.chainId)
   const address = useActiveAddress(chainId)
 
-  const { isBlocked } = useIsBlockedAddress(toScreenInput(address, chainId))
+  // Same as useIsSwapButtonDisabled: web fills this entry on the Review press, the
+  // extension still screens at render.
+  const { isBlocked } = useIsBlockedAddress(toScreenInput(address, chainId), { enabled: !isWebApp })
 
   const { formScreenWarning, warnings } = useParsedSwapWarnings()
   const inlineWarning =
@@ -38,6 +41,7 @@ export const GasAndWarningRows = memo(function GasAndWarningRows(): JSX.Element 
           // TODO: review design of this warning.
           <BlockedAddressWarning
             row
+            address={address}
             alignItems="center"
             alignSelf="stretch"
             backgroundColor="$surface2"

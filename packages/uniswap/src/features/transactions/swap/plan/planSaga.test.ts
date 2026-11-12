@@ -12,6 +12,8 @@ import type { WatchPlanStepResult } from 'uniswap/src/features/transactions/swap
 import type { ValidatedChainedSwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { createChainedActionTrade, type ChainedActionTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { sleep } from 'utilities/src/time/timing'
+import type { Mock } from 'vitest'
 
 interface InitializePlanResult extends FetchAndTransformPlanResult {
   response?: TradingApi.PlanResponse
@@ -272,10 +274,10 @@ function createSwapTxContext(trade: ChainedActionTrade): ValidatedChainedSwapTxA
 
 function createPlanParams(trade: ChainedActionTrade): {
   params: Record<string, unknown>
-  onSuccess: ReturnType<typeof vi.fn>
-  onFailure: ReturnType<typeof vi.fn>
-  onPlanFinalized: ReturnType<typeof vi.fn>
-  handleSwapTransactionStep: ReturnType<typeof vi.fn>
+  onSuccess: Mock
+  onFailure: Mock
+  onPlanFinalized: Mock
+  handleSwapTransactionStep: Mock
 } {
   const onSuccess = vi.fn()
   const onFailure = vi.fn()
@@ -1289,7 +1291,7 @@ describe('plan saga — price change interrupts', () => {
         expect(onPlanFinalized).not.toHaveBeenCalled()
 
         releaseWatchPlanStep()
-        await new Promise((resolve) => setTimeout(resolve, 0))
+        await sleep(0)
 
         expect(onPlanFinalized).toHaveBeenCalledWith(
           expect.objectContaining({

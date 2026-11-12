@@ -14,6 +14,7 @@ import {
   migrateDismissedTokenWarnings,
   migrateSearchHistory,
   removeBlastChainData,
+  addNewUserOnboardingHistory,
   removeThaiBahtFromFiatCurrency,
   removeUniswapWrapped2025BehaviorHistory,
   unchecksumDismissedTokenWarningKeys,
@@ -82,6 +83,7 @@ export const migrations = {
   35: removePersistedApolloCache,
   36: clearPendingDappRequests,
   37: removeBlastChainData,
+  38: addNewUserOnboardingHistory,
 }
 
-export const EXTENSION_STATE_VERSION = 37
+export const EXTENSION_STATE_VERSION = 38

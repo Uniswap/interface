@@ -2,6 +2,7 @@ import { type Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { Button, Flex, Text } from '@universe/mycelium'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { AuctionEventName, ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -53,7 +54,7 @@ import {
 import { getDurationInvalidReason } from '~/pages/Liquidity/CreateAuction/utils/duration'
 import {
   EmissionScheduleError,
-  getAuctionEmissionScheduleError,
+  getAuctionEmissionScheduleIssue,
 } from '~/pages/Liquidity/CreateAuction/utils/emissionSchedule'
 
 const AUCTION_DISTRIBUTION_TOKEN_LOGO_SIZE = 24
@@ -295,27 +296,36 @@ export function ConfigureAuctionStep() {
   const minAuctionSupplyAmount = minimumAuctionSupplyDeposit(totalSupply.currency, postAuctionLiquidityAllocation)
 
   // Mirror the backend's emission-schedule derivation: the chosen window is converted to a block span
-  // using the chain's block time, and a too-short window (or one whose per-block rounding overshoots
-  // the supply budget) is rejected with "Emission schedule overshot the supply target" /
-  // "Auction window is too short". Catch both before submit and surface them on the duration picker.
+  // using the chain's block time, and a too-short window or one spanning more blocks than the schedule
+  // can emit over is rejected with "Auction window is too short" / "Emission schedule overshot the
+  // supply target". Catch both before submit and surface them on the duration picker.
   // Block times for the committed token's own chain, not the raise currency's: the committed
   // snapshot and `tokenForm.network` can diverge across the whole step, which is tracked on its own
   // rather than widened into here.
-  const emissionScheduleError = getAuctionEmissionScheduleError({
+  const emissionScheduleIssue = getAuctionEmissionScheduleIssue({
     startTime,
     endTime,
     preBidStartTime,
     chainId: totalSupply.currency.chainId,
   })
-  const emissionScheduleErrorMessage =
-    emissionScheduleError === EmissionScheduleError.Overshoot
-      ? t('toucan.createAuction.step.configureAuction.duration.emissionOvershoot.error')
-      : emissionScheduleError === EmissionScheduleError.WindowTooShort
-        ? t('toucan.createAuction.step.configureAuction.duration.windowTooShort.error')
-        : undefined
+  let emissionScheduleErrorMessage: string | undefined
+  switch (emissionScheduleIssue?.error) {
+    case EmissionScheduleError.WindowTooLong:
+      emissionScheduleErrorMessage = t('toucan.createAuction.step.configureAuction.duration.windowTooLong.error', {
+        chainName: getChainInfo(totalSupply.currency.chainId).label,
+        count: emissionScheduleIssue.maxDurationDays,
+      })
+      break
+    case EmissionScheduleError.Overshoot:
+      emissionScheduleErrorMessage = t('toucan.createAuction.step.configureAuction.duration.emissionOvershoot.error')
+      break
+    case EmissionScheduleError.WindowTooShort:
+      emissionScheduleErrorMessage = t('toucan.createAuction.step.configureAuction.duration.windowTooShort.error')
+      break
+  }
 
   // Block advancing when the chosen window can't produce a valid emission schedule.
-  const continueDisabled = isNextStepDisabled || emissionScheduleError !== undefined
+  const continueDisabled = isNextStepDisabled || emissionScheduleIssue !== undefined
 
   return (
     <Flex gap="$spacing16">

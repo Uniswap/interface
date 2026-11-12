@@ -4,6 +4,7 @@ import { WETH_ADDRESS } from '@uniswap/universal-router-sdk'
 import { normalizeTokenAddressForCache, UniverseChainId } from '@universe/chains'
 import { DEFAULT_NATIVE_ADDRESS as NATIVE_TOKEN_ADDRESS } from '@universe/prices'
 import { DAI, USDC, USDT } from 'uniswap/src/constants/tokens'
+import { promiseTimeout } from 'utilities/src/time/timing'
 import { WEETH_ADDRESS } from '~/playwright/anvil/utils'
 
 /**
@@ -39,10 +40,7 @@ export async function fetchLiveResponseWithDeadline({
     return undefined
   }
   const livePromise = route.fetch().catch(() => undefined)
-  return Promise.race([
-    livePromise,
-    new Promise<undefined>((resolve) => setTimeout(() => resolve(undefined), timeoutMs)),
-  ])
+  return (await promiseTimeout(livePromise, timeoutMs)) ?? undefined
 }
 
 /**

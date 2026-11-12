@@ -143,9 +143,10 @@ env:
       TARGET: 'USDC_From_Favorites'
       PHASE: 'start'
 
+# By testID: the first "USDC" text node on Explore can belong to the earn vault card or a top
+# token row, which opens a different screen.
 - tapOn:
-    text: "USDC"
-    index: 0
+    id: "${output.testIds.FavoriteTokenCardPrefix}USDC"
 
 - runScript:
     file: ../../scripts/performance/dist/actions/track-action.js

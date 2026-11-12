@@ -96,6 +96,7 @@ export function ConnectPopupContent({
               opacity={isConnected ? 1 : 0.7}
             >
               <UniversalImage
+                alt=""
                 style={{
                   image: { borderRadius: borderRadii.roundedFull },
                 }}

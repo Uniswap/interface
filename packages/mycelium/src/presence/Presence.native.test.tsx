@@ -8,7 +8,7 @@
 import { isTestEnv } from '@universe/environment'
 import { StrictMode, useLayoutEffect, type ComponentType, type JSX } from 'react'
 import { act, create, type ReactTestRenderer, type ReactTestRendererNode } from 'react-test-renderer'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, type MockInstance, vi } from 'vitest'
 import { Presence } from './Presence.native'
 import {
   __flushAnimationCallbacks,
@@ -432,7 +432,7 @@ describe('cancellation', () => {
 })
 
 describe('web-only props (custom/getExitProps)', () => {
-  function presenceNativeWarnings(warn: ReturnType<typeof vi.spyOn>): number {
+  function presenceNativeWarnings(warn: MockInstance): number {
     return warn.mock.calls.filter(
       ([message]) => typeof message === 'string' && message.startsWith('Presence (native):'),
     ).length

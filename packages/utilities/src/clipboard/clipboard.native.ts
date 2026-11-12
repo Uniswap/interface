@@ -6,8 +6,10 @@ const Clipboard: IClipboard = {
   setClipboard: async (value: string) => {
     try {
       await ExpoClipboard.setStringAsync(value)
+      return true
     } catch (error) {
       logger.error(error, { tags: { file: 'clipboard', function: 'setClipboard' } })
+      return false
     }
   },
   getClipboard: async () => {
@@ -58,7 +60,7 @@ function blobToBase64(blob: Blob): Promise<ArrayBuffer | string | null> {
   })
 }
 
-export function setClipboard(value: string): Promise<void> {
+export function setClipboard(value: string): Promise<boolean> {
   return Clipboard.setClipboard(value)
 }
 

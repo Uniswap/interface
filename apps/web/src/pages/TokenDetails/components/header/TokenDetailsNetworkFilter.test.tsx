@@ -61,6 +61,20 @@ describe('TokenDetailsNetworkFilter', () => {
     expect(host.children).toHaveLength(0)
   })
 
+  it('keeps a custom network count as the accessible trigger label', () => {
+    renderInHost(
+      <TokenDetailsNetworkFilter
+        chainIds={TWO_CHAINS}
+        selectedChainId={undefined}
+        setSelectedChainId={vi.fn()}
+        showAddressCopy={false}
+      />,
+    )
+    const trigger = screen.getByTestId(TestID.TokensNetworkFilterTrigger)
+    expect(trigger).toHaveAccessibleName('2 networks')
+    expect(trigger.closest('[data-slot="popover-compat-trigger"]')).not.toHaveAttribute('aria-label')
+  })
+
   it('mounts the interactive filter for multiple chains', () => {
     renderInHost(
       <TokenDetailsNetworkFilter

@@ -16,6 +16,7 @@ export const TransactionSummaryTitle: React.FC<TransactionSummaryTitleProps> = (
     transaction.typeInfo.type === TransactionType.OnRampPurchase ||
     transaction.typeInfo.type === TransactionType.OnRampTransfer ? (
       <UniversalImage
+        alt=""
         size={{ height: ICON_SIZE, width: ICON_SIZE }}
         style={{
           image: {

@@ -8,6 +8,8 @@ import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { PositionItemContextMenu } from 'uniswap/src/components/portfolio/PositionItem/PositionItemContextMenu'
 import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { getPoolName } from 'uniswap/src/features/pools/names'
+import { orderPoolDataByQuoteToken } from 'uniswap/src/features/pools/quoteToken'
 import { LiquidityPositionStatusIndicator } from 'uniswap/src/features/positions/components/LiquidityPositionStatusIndicator'
 import { getPositionUrl } from 'uniswap/src/features/positions/getPositionUrl'
 import type { PositionInfo } from 'uniswap/src/features/positions/types'
@@ -53,6 +55,17 @@ export const PositionItem = memo(function PositionItemInner({
     currencyId(currency0Amount.currency),
     currencyId(currency1Amount.currency),
   ])
+  const [baseInfo, quoteInfo] = orderPoolDataByQuoteToken({
+    token0IsQuote: positionInfo.isToken0Quote,
+    data0: currency0Info,
+    data1: currency1Info,
+  })
+  const poolName = getPoolName({
+    symbol0: currency0Amount.currency.symbol,
+    symbol1: currency1Amount.currency.symbol,
+    token0IsQuote: positionInfo.isToken0Quote,
+    spaced: true,
+  })
 
   const onManagePress = useEvent(() => {
     void openUri({
@@ -91,13 +104,13 @@ export const PositionItem = memo(function PositionItemInner({
       <Flex row shrink alignItems="center" gap="$spacing12">
         <SplitLogo
           chainId={chainId}
-          inputCurrencyInfo={currency0Info}
-          outputCurrencyInfo={currency1Info}
+          inputCurrencyInfo={baseInfo}
+          outputCurrencyInfo={quoteInfo}
           size={iconSizes.icon40}
         />
         <Flex shrink minWidth={0} alignItems="flex-start" gap="$spacing2" overflow="hidden">
           <Text ellipsizeMode="tail" numberOfLines={1} variant={TITLE_VARIANT}>
-            {currency0Amount.currency.symbol} / {currency1Amount.currency.symbol}
+            {poolName}
           </Text>
           <Flex row alignItems="center" gap="$spacing6">
             {protocolLabel ? (

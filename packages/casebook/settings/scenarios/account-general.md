@@ -203,7 +203,7 @@ runFrequency: pr-check
 code_paths:
   - packages/uniswap/src/features/settings/slice.ts
   - packages/uniswap/src/features/settings/hooks.ts
-  - apps/web/src/components/AccountDrawer/TestnetsToggle.tsx
+  - apps/web/src/features/wallet/components/AccountDrawer/TestnetsToggle.tsx
   - apps/mobile/src/features/settings/hooks/useAdvancedSettingsMenuState.ts
   - apps/extension/src/app/features/settings/SettingsScreen.tsx
 automationRefs:
@@ -361,7 +361,7 @@ testLevel: e2e
 runFrequency: release
 # coverage
 code_paths:
-  - apps/web/src/components/AccountDrawer/
+  - apps/web/src/features/wallet/components/AccountDrawer/
   - packages/uniswap/src/features/language/
   - packages/uniswap/src/features/fiatCurrency/
 automationRefs: []

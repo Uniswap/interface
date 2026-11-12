@@ -1,0 +1,135 @@
+/*
+ * Position is tracked in px along the design card's edge, clockwise from the left midpoint, then aimed
+ * at with a conic gradient; a plain rotating angle races along the short sides.
+ */
+@property --add-funds-shimmer-u {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+
+@keyframes add-funds-shimmer-travel {
+  to {
+    --add-funds-shimmer-u: 1;
+  }
+}
+
+/* The card's design size in px; the edge math below derives from it, so a resized card overrides these two. */
+.add-funds-shimmer-border {
+  --add-funds-shimmer-w: 536;
+  --add-funds-shimmer-h: 80;
+}
+
+/* Animates geometry, never a color, so light/dark toggles don't flash. */
+.add-funds-shimmer-border::before {
+  --add-funds-shimmer-half-w: calc(var(--add-funds-shimmer-w) / 2);
+  --add-funds-shimmer-half-h: calc(var(--add-funds-shimmer-h) / 2);
+  --add-funds-shimmer-half-perimeter: calc(var(--add-funds-shimmer-w) + var(--add-funds-shimmer-h));
+  --add-funds-shimmer-quarter-perimeter: calc(var(--add-funds-shimmer-half-perimeter) / 2);
+  --add-funds-shimmer-perimeter: calc(2 * var(--add-funds-shimmer-half-perimeter));
+  /*
+   * Speed eases up and back down on two half-cosines; blending toward their square lingers longer at
+   * the slow end.
+   */
+  --add-funds-shimmer-p1: min(var(--add-funds-shimmer-u) / 0.4, 1);
+  --add-funds-shimmer-p2: max((var(--add-funds-shimmer-u) - 0.4) / 0.6, 0);
+  --add-funds-shimmer-k: calc((1 - cos((var(--add-funds-shimmer-p1) - var(--add-funds-shimmer-p2)) * 180deg)) / 2);
+  --add-funds-shimmer-ease: calc(var(--add-funds-shimmer-k) * (0.8 + 0.2 * var(--add-funds-shimmer-k)));
+  /*
+   * Closed-form integral of that speed (4.325 over one loop), scaled so one loop is exactly the
+   * perimeter, starting at the slowest point.
+   */
+  --add-funds-shimmer-s: mod(
+    0.22 * var(--add-funds-shimmer-perimeter) +
+      var(--add-funds-shimmer-perimeter) / 4.325 *
+      (
+        var(--add-funds-shimmer-u) +
+          2.8 * (0.475 * var(--add-funds-shimmer-p1) - 0.159155 * sin(var(--add-funds-shimmer-p1) * 180deg) + 0.003979 * sin(var(--add-funds-shimmer-p1) * 360deg)) +
+          4.2 * (0.475 * var(--add-funds-shimmer-p2) + 0.159155 * sin(var(--add-funds-shimmer-p2) * 180deg) + 0.003979 * sin(var(--add-funds-shimmer-p2) * 360deg))
+      ),
+    var(--add-funds-shimmer-perimeter)
+  );
+  --add-funds-shimmer-tail: calc(120 + 120 * var(--add-funds-shimmer-ease));
+  --add-funds-shimmer-tail-s: mod(var(--add-funds-shimmer-s) - var(--add-funds-shimmer-tail) + var(--add-funds-shimmer-perimeter), var(--add-funds-shimmer-perimeter));
+  --add-funds-shimmer-lead-s: mod(var(--add-funds-shimmer-s) + var(--add-funds-shimmer-tail) * 0.5, var(--add-funds-shimmer-perimeter));
+
+  /*
+   * x and y are triangle waves of edge distance clamped to the edges (max(v, -v) stands in for abs()).
+   * Conic angles start pointing up, hence atan2(x, -y).
+   */
+  --add-funds-shimmer-angle: atan2(
+    clamp(-1 * var(--add-funds-shimmer-half-w), var(--add-funds-shimmer-quarter-perimeter) - max(var(--add-funds-shimmer-s) - var(--add-funds-shimmer-half-perimeter), var(--add-funds-shimmer-half-perimeter) - var(--add-funds-shimmer-s)), var(--add-funds-shimmer-half-w)),
+    -1 *
+      clamp(
+        -1 * var(--add-funds-shimmer-half-h),
+        var(--add-funds-shimmer-quarter-perimeter) -
+          max(
+            max(var(--add-funds-shimmer-s) - var(--add-funds-shimmer-quarter-perimeter), var(--add-funds-shimmer-quarter-perimeter) - var(--add-funds-shimmer-s)) - var(--add-funds-shimmer-half-perimeter),
+            var(--add-funds-shimmer-half-perimeter) - max(var(--add-funds-shimmer-s) - var(--add-funds-shimmer-quarter-perimeter), var(--add-funds-shimmer-quarter-perimeter) - var(--add-funds-shimmer-s))
+          ),
+        var(--add-funds-shimmer-half-h)
+      )
+  );
+  --add-funds-shimmer-tail-angle: atan2(
+    clamp(-1 * var(--add-funds-shimmer-half-w), var(--add-funds-shimmer-quarter-perimeter) - max(var(--add-funds-shimmer-tail-s) - var(--add-funds-shimmer-half-perimeter), var(--add-funds-shimmer-half-perimeter) - var(--add-funds-shimmer-tail-s)), var(--add-funds-shimmer-half-w)),
+    -1 *
+      clamp(
+        -1 * var(--add-funds-shimmer-half-h),
+        var(--add-funds-shimmer-quarter-perimeter) -
+          max(
+            max(var(--add-funds-shimmer-tail-s) - var(--add-funds-shimmer-quarter-perimeter), var(--add-funds-shimmer-quarter-perimeter) - var(--add-funds-shimmer-tail-s)) - var(--add-funds-shimmer-half-perimeter),
+            var(--add-funds-shimmer-half-perimeter) - max(var(--add-funds-shimmer-tail-s) - var(--add-funds-shimmer-quarter-perimeter), var(--add-funds-shimmer-quarter-perimeter) - var(--add-funds-shimmer-tail-s))
+          ),
+        var(--add-funds-shimmer-half-h)
+      )
+  );
+  --add-funds-shimmer-lead-angle: atan2(
+    clamp(-1 * var(--add-funds-shimmer-half-w), var(--add-funds-shimmer-quarter-perimeter) - max(var(--add-funds-shimmer-lead-s) - var(--add-funds-shimmer-half-perimeter), var(--add-funds-shimmer-half-perimeter) - var(--add-funds-shimmer-lead-s)), var(--add-funds-shimmer-half-w)),
+    -1 *
+      clamp(
+        -1 * var(--add-funds-shimmer-half-h),
+        var(--add-funds-shimmer-quarter-perimeter) -
+          max(
+            max(var(--add-funds-shimmer-lead-s) - var(--add-funds-shimmer-quarter-perimeter), var(--add-funds-shimmer-quarter-perimeter) - var(--add-funds-shimmer-lead-s)) - var(--add-funds-shimmer-half-perimeter),
+            var(--add-funds-shimmer-half-perimeter) - max(var(--add-funds-shimmer-lead-s) - var(--add-funds-shimmer-quarter-perimeter), var(--add-funds-shimmer-quarter-perimeter) - var(--add-funds-shimmer-lead-s))
+          ),
+        var(--add-funds-shimmer-half-h)
+      )
+  );
+
+  content: '';
+  position: absolute;
+  inset: -1px;
+  padding: 1.5px;
+  border-radius: inherit;
+  /* mod() keeps each offset from the tail within a full turn across the atan2 wrap. */
+  background: conic-gradient(
+    from var(--add-funds-shimmer-tail-angle),
+    transparent 0deg,
+    var(--accent1) mod(var(--add-funds-shimmer-angle) - var(--add-funds-shimmer-tail-angle) + 720deg, 360deg),
+    transparent mod(var(--add-funds-shimmer-lead-angle) - var(--add-funds-shimmer-tail-angle) + 720deg, 360deg),
+    transparent 360deg
+  );
+  /* Only the ring shows; it grows inward over the card's border so the card keeps its size. */
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+  pointer-events: none;
+  animation: add-funds-shimmer-travel 3s linear infinite;
+}
+
+/* Glow on its own layer so the card keeps its theme shadow, which differs in dark mode. */
+.add-funds-shimmer-border::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  box-shadow: 0 8px 20px 0 color-mix(in srgb, var(--accent1) 12%, transparent);
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .add-funds-shimmer-border::before {
+    animation: none;
+  }
+}

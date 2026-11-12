@@ -3,8 +3,8 @@ import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
-import { LaunchItem } from '~/pages/Launches/launchesModel'
-import { getLaunchpadLogoBorderRadius, LaunchpadLogo } from '~/pages/Launches/LaunchpadLogo'
+import { getLaunchpadLogoBorderRadius, LaunchpadLogo } from '~/features/Toucan/Shared/LaunchpadLogo'
+import { LaunchItem } from '~/features/Toucan/utils/launchesModel'
 import { LaunchStatPair } from '~/pages/Launches/LaunchStatPair'
 
 const THUMBNAIL_SIZE = 48

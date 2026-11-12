@@ -1,6 +1,5 @@
 import { TestID } from '@universe/test'
 import { expect, getTest } from '~/playwright/fixtures'
-import { setPersistedUserState } from '~/playwright/utils/reduxState'
 
 const test = getTest()
 const MOBILE_VIEWPORT = { width: 375, height: 667 }
@@ -59,12 +58,14 @@ test.describe(
     })
 
     test.describe('UK compliance banner', () => {
-      test('renders UK compliance banner in UK', async ({ page }) => {
-        await setPersistedUserState(page, { originCountry: 'GB' })
+      test.describe('in the UK', () => {
+        test.use({ originCountry: 'GB' })
 
-        await page.goto(`/swap${UNCONNECTED_USER_PARAM}`)
-        await page.getByText('Read more').click()
-        await expect(page.getByText('Disclaimer for UK residents')).toBeVisible()
+        test('renders UK compliance banner in UK', async ({ page }) => {
+          await page.goto(`/swap${UNCONNECTED_USER_PARAM}`)
+          await page.getByText('Read more').click()
+          await expect(page.getByText('Disclaimer for UK residents')).toBeVisible()
+        })
       })
 
       test('does not render UK compliance banner in US', async ({ page }) => {

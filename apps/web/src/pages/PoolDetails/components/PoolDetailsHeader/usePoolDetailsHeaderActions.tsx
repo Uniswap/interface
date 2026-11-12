@@ -19,8 +19,8 @@ type UsePoolDetailsHeaderActionsParams = {
   chainId?: UniverseChainId
   poolAddress?: string
   poolName: string
-  token0?: ParsedToken
-  token1?: ParsedToken
+  baseToken?: ParsedToken
+  quoteToken?: ParsedToken
   protocolVersion?: ProtocolVersion
   openReportDataIssueModal: () => void
   isMobileScreen: boolean
@@ -42,8 +42,8 @@ export function usePoolDetailsHeaderActions({
   chainId,
   poolAddress,
   poolName,
-  token0,
-  token1,
+  baseToken,
+  quoteToken,
   protocolVersion,
   openReportDataIssueModal,
   isMobileScreen,
@@ -58,7 +58,7 @@ export function usePoolDetailsHeaderActions({
     isMobileScreen,
   })
 
-  const hasReportData = Boolean(poolAddress && chainId && token0 && token1 && protocolVersion)
+  const hasReportData = Boolean(poolAddress && chainId && baseToken && quoteToken && protocolVersion)
 
   const BlockExplorerIcon = chainId ? getBlockExplorerIcon(chainId) : null
 
@@ -68,24 +68,24 @@ export function usePoolDetailsHeaderActions({
       : undefined
   // Absent address = native on the parsed shape; the NATIVE_CHAIN_ID sentinel keeps the explorer
   // row (linking to the chain's native asset page) instead of dropping the native leg entirely.
-  const token0Address = token0?.address
-  const token0IsNative = token0 ? isNativeParsedToken(token0) : false
-  const token0ExplorerUrl =
-    chainId && token0
+  const baseTokenAddress = baseToken?.address
+  const baseTokenIsNative = baseToken ? isNativeParsedToken(baseToken) : false
+  const baseTokenExplorerUrl =
+    chainId && baseToken
       ? getExplorerUrl({
           chainId,
-          address: token0Address ?? NATIVE_CHAIN_ID,
-          type: token0IsNative ? ExplorerDataType.NATIVE : ExplorerDataType.TOKEN,
+          address: baseTokenAddress ?? NATIVE_CHAIN_ID,
+          type: baseTokenIsNative ? ExplorerDataType.NATIVE : ExplorerDataType.TOKEN,
         })
       : undefined
-  const token1Address = token1?.address
-  const token1IsNative = token1 ? isNativeParsedToken(token1) : false
-  const token1ExplorerUrl =
-    chainId && token1
+  const quoteTokenAddress = quoteToken?.address
+  const quoteTokenIsNative = quoteToken ? isNativeParsedToken(quoteToken) : false
+  const quoteTokenExplorerUrl =
+    chainId && quoteToken
       ? getExplorerUrl({
           chainId,
-          address: token1Address ?? NATIVE_CHAIN_ID,
-          type: token1IsNative ? ExplorerDataType.NATIVE : ExplorerDataType.TOKEN,
+          address: quoteTokenAddress ?? NATIVE_CHAIN_ID,
+          type: quoteTokenIsNative ? ExplorerDataType.NATIVE : ExplorerDataType.TOKEN,
         })
       : undefined
 
@@ -112,23 +112,23 @@ export function usePoolDetailsHeaderActions({
         show: true,
       })
     }
-    if (token0ExplorerUrl && token0?.symbol) {
+    if (baseTokenExplorerUrl && baseToken?.symbol) {
       items.push({
-        title: token0.symbol,
-        subtitle: !token0IsNative && token0Address ? shortenAddress({ address: token0Address }) : undefined,
+        title: baseToken.symbol,
+        subtitle: !baseTokenIsNative && baseTokenAddress ? shortenAddress({ address: baseTokenAddress }) : undefined,
         icon: <BlockExplorerIcon size="$icon.18" color="$neutral1" />,
         trailingIcon: linkIcon,
-        onPress: () => window.open(token0ExplorerUrl, '_blank'),
+        onPress: () => window.open(baseTokenExplorerUrl, '_blank'),
         show: true,
       })
     }
-    if (token1ExplorerUrl && token1?.symbol) {
+    if (quoteTokenExplorerUrl && quoteToken?.symbol) {
       items.push({
-        title: token1.symbol,
-        subtitle: !token1IsNative && token1Address ? shortenAddress({ address: token1Address }) : undefined,
+        title: quoteToken.symbol,
+        subtitle: !quoteTokenIsNative && quoteTokenAddress ? shortenAddress({ address: quoteTokenAddress }) : undefined,
         icon: <BlockExplorerIcon size="$icon.18" color="$neutral1" />,
         trailingIcon: linkIcon,
-        onPress: () => window.open(token1ExplorerUrl, '_blank'),
+        onPress: () => window.open(quoteTokenExplorerUrl, '_blank'),
         show: true,
       })
     }
@@ -138,14 +138,14 @@ export function usePoolDetailsHeaderActions({
     BlockExplorerIcon,
     poolExplorerUrl,
     poolAddress,
-    token0ExplorerUrl,
-    token1ExplorerUrl,
-    token0?.symbol,
-    token1?.symbol,
-    token0Address,
-    token1Address,
-    token0IsNative,
-    token1IsNative,
+    baseTokenExplorerUrl,
+    quoteTokenExplorerUrl,
+    baseToken?.symbol,
+    quoteToken?.symbol,
+    baseTokenAddress,
+    quoteTokenAddress,
+    baseTokenIsNative,
+    quoteTokenIsNative,
     t,
   ])
 

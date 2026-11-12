@@ -2,9 +2,8 @@ import { HomeScreenPortfolio } from 'src/screens/HomeScreen/portfolio/HomeScreen
 import { useHomeScreenState } from 'src/screens/HomeScreen/useHomeScreenState'
 import { render, screen } from 'src/test/test-utils'
 import { usePoolsTabVisibility } from 'uniswap/src/features/positions/hooks/usePoolsTabVisibility'
+import { noop } from 'utilities/src/react/noop'
 import type { MockedFunction } from 'vitest'
-
-const noop = (): void => undefined
 
 const EMPTY_STATE_TEST_ID = 'empty-wallet-tokens-tab'
 const TAB_VIEW_TEST_ID = 'tab-view-body'

@@ -7,6 +7,7 @@ import { AVALANCHE_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/avala
 import { BASE_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/base'
 import { BNB_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/bnb'
 import { CELO_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/celo'
+import { ELYSIUM_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/elysium'
 import { INK_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/ink'
 import { LINEA_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/linea'
 import { MAINNET_CHAIN_INFO, SEPOLIA_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/mainnet'
@@ -47,6 +48,8 @@ export const { USDM: USDM_MEGAETH, USDe: USDE_MEGAETH } = MEGAETH_CHAIN_INFO.tok
 export const { USDG: USDG_ROBINHOOD } = ROBINHOOD_CHAIN_INFO.tokens
 
 export const { USDT0: USDT0_INK, USDC: USDC_INK } = INK_CHAIN_INFO.tokens
+
+export const { USDC: USDC_ELYSIUM } = ELYSIUM_CHAIN_INFO.tokens
 
 export const { USDC: USDC_SONEIUM } = SONEIUM_CHAIN_INFO.tokens
 
@@ -284,6 +287,13 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
     18,
     'WBNB',
     'Wrapped BNB',
+  ),
+  [UniverseChainId.Elysium]: new Token(
+    UniverseChainId.Elysium,
+    '0xbA876237B0F021A6c6D852d6c26E107997cC5E81',
+    18,
+    'WHYPE',
+    'Wrapped HYPE',
   ),
   [UniverseChainId.Celo]: new Token(
     UniverseChainId.Celo,

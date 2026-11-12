@@ -64,6 +64,7 @@ export function UnitagsIntroModal({ route }: AppStackScreenProp<typeof ModalName
         </Flex>
         <Flex alignItems="center" maxHeight={BANNER_MAX_HEIGHT}>
           <UniversalImage
+            alt=""
             size={{ height: bannerWidth / BANNER_ASPECT_RATIO, width: bannerWidth }}
             uri={isDarkMode ? UNITAGS_INTRO_BANNER_DARK : UNITAGS_INTRO_BANNER_LIGHT}
           />

@@ -17,10 +17,11 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { type ParsedToken, v2TokenToCurrency, v2UnwrapToken } from 'uniswap/src/features/dataApi/utils/parsedToken'
+import { getPoolName } from 'uniswap/src/features/pools/names'
+import { orderPoolDataByQuoteToken } from 'uniswap/src/features/pools/quoteToken'
 import { InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { shouldReverseForWaterfall } from 'uniswap/src/features/tokens/waterfallPriority'
-import { MOBILE_BAR_MAX_HEIGHT } from '~/components/NavBar/MobileBottomBar'
+import { MOBILE_BAR_MAX_HEIGHT } from '~/components/MobileBottomBar/MobileBottomBar'
 import { StickyCollapsibleHeader } from '~/components/StickyCollapsibleHeader/StickyCollapsibleHeader'
 import type { PoolData } from '~/data/pools/poolData'
 import { useLiquidityServicePoolData } from '~/data/pools/useLiquidityServicePoolData'
@@ -157,23 +158,17 @@ export function PoolDetailsPage() {
     protocolVersion: poolData?.protocolVersion,
   })
 
-  const waterfallDefault = useMemo(() => {
-    if (!unwrappedTokens[0] || !unwrappedTokens[1]) {
-      return false
-    }
-    const currA = v2TokenToCurrency(unwrappedTokens[0])
-    const currB = v2TokenToCurrency(unwrappedTokens[1])
-    return Boolean(currA && currB && shouldReverseForWaterfall(currA, currB))
-    // oxlint-disable-next-line react-hooks/exhaustive-deps -- unwrappedTokens changes every render; use underlying stable deps instead
-  }, [poolData?.token0, poolData?.token1, chainInfo?.id, poolData?.protocolVersion])
-
-  // The user's flip is stored relative to the waterfall default rather than as the absolute value,
-  // since poolData arrives after mount.
+  // The user's flip is stored relative to the backend-served quote default rather than as the
+  // absolute value, since poolData arrives after mount.
   const [userFlipped, setUserFlipped] = useState(false)
   const toggleReversed = () => setUserFlipped((flipped) => !flipped)
-  const isReversed = waterfallDefault !== userFlipped
+  const isReversed = Boolean(poolData?.isToken0Quote) !== userFlipped
 
-  const [token0, token1] = isReversed ? [unwrappedTokens[1], unwrappedTokens[0]] : unwrappedTokens
+  const [baseToken, quoteToken] = orderPoolDataByQuoteToken({
+    token0IsQuote: isReversed,
+    data0: unwrappedTokens[0],
+    data1: unwrappedTokens[1],
+  })
 
   // GetPool serves the fee tier and the protocol fee on the same row, so they always pair.
   const protocolFeePips = poolData?.protocolFeePips
@@ -190,30 +185,34 @@ export function PoolDetailsPage() {
 
   const colors = useSporeColors()
   const isDarkMode = useIsDarkMode()
-  const color0 = useColor(token0 && v2TokenToCurrency(token0), {
+  const color0 = useColor(unwrappedTokens[0] && v2TokenToCurrency(unwrappedTokens[0]), {
     backgroundColor: colors.surface2.val,
     darkMode: isDarkMode,
   })
-  const color1 = useColor(token1 && v2TokenToCurrency(token1), {
+  const color1 = useColor(unwrappedTokens[1] && v2TokenToCurrency(unwrappedTokens[1]), {
     backgroundColor: colors.surface2.val,
     darkMode: isDarkMode,
   })
+  const [baseColor, quoteColor] = orderPoolDataByQuoteToken({ token0IsQuote: isReversed, data0: color0, data1: color1 })
 
   const isInvalidPool = !poolAddress || !chainInfo
   const loading = poolLoading
   const poolNotFound = (!poolLoading && !poolData) || isInvalidPool
 
   const metatagProperties = useMemo(() => {
-    const token0Symbol = poolData?.token0.symbol
-    const token1Symbol = poolData?.token1.symbol
-    const poolName = `${token0Symbol}/${token1Symbol}`
+    const poolName =
+      getPoolName({
+        symbol0: poolData?.token0.symbol,
+        symbol1: poolData?.token1.symbol,
+        token0IsQuote: poolData?.isToken0Quote,
+      }) ?? ''
     const chainName = chainInfo?.label ?? 'Ethereum'
     return {
       title: poolName,
       url: window.location.href,
       description: `Swap ${poolName} on ${chainName}. Trade tokens and provide liquidity. Real-time prices, charts, transaction data, and more.`,
     }
-  }, [chainInfo?.label, poolData?.token0.symbol, poolData?.token1.symbol])
+  }, [chainInfo?.label, poolData?.isToken0Quote, poolData?.token0.symbol, poolData?.token1.symbol])
   const metatags = useDynamicMetatags(metatagProperties)
 
   // Every reward token the pool pays, not just the campaign's — `rewardsCampaign` collapses to the
@@ -246,8 +245,8 @@ export function PoolDetailsPage() {
       <PoolDetailsStats
         poolData={poolData}
         isReversed={isReversed}
-        tokenAColor={color0}
-        tokenBColor={color1}
+        tokenAColor={baseColor}
+        tokenBColor={quoteColor}
         chainId={chainInfo.id}
         loading={loading}
         poolApr={poolData?.apr}
@@ -258,7 +257,12 @@ export function PoolDetailsPage() {
         <TokenDetailsHeader>{t('common.links')}</TokenDetailsHeader>
         <LinksContainer>
           {poolData?.protocolVersion !== RestProtocolVersion.V4 && (
-            <PoolDetailsLink address={poolAddress} chainId={chainInfo.id} tokens={[token0, token1]} loading={loading} />
+            <PoolDetailsLink
+              address={poolAddress}
+              chainId={chainInfo.id}
+              tokens={[baseToken, quoteToken]}
+              loading={loading}
+            />
           )}
           <PoolDetailsLink
             address={poolData?.token0.address}
@@ -282,14 +286,20 @@ export function PoolDetailsPage() {
     <>
       {rewardsDistribution}
       <PdpPoolStats poolData={poolData} loading={loading} rewards={poolRewards} />
-      <PdpPoolTokens tokens={[token0, token1]} chainId={chainInfo.id} loading={loading} />
+      <PdpPoolTokens tokens={[baseToken, quoteToken]} chainId={chainInfo.id} loading={loading} />
     </>
   )
 
   return (
     <>
       <Helmet>
-        <title>{getPoolDetailPageTitle(t, { token0, token1 })}</title>
+        <title>
+          {getPoolDetailPageTitle(t, {
+            token0: unwrappedTokens[0],
+            token1: unwrappedTokens[1],
+            isToken0Quote: poolData?.isToken0Quote,
+          })}
+        </title>
         {metatags.map((tag, index) => (
           <meta key={index} {...tag} />
         ))}
@@ -309,15 +319,24 @@ export function PoolDetailsPage() {
           token1Name: poolData?.token1.name,
         }}
       >
-        <PoolDetailsBreadcrumb poolAddress={poolAddress} token0={token0} token1={token1} loading={loading} />
+        <PoolDetailsBreadcrumb
+          poolAddress={poolAddress}
+          baseToken={baseToken}
+          quoteToken={quoteToken}
+          loading={loading}
+        />
         <StickyCollapsibleHeader isCompact={isCompact}>
           <PoolDetailsHeader
             chainId={chainInfo.id}
             poolAddress={poolAddress}
-            token0={token0}
-            token1={token1}
+            baseToken={baseToken}
+            quoteToken={quoteToken}
+            token0={unwrappedTokens[0]}
+            token1={unwrappedTokens[1]}
+            isToken0Quote={poolData?.isToken0Quote}
             feeTier={feeTier}
             protocolFeePips={protocolFeePips}
+            currentLpFeePips={poolData?.currentLpFeePips}
             hookAddress={poolData?.hookAddress}
             protocolVersion={poolData?.protocolVersion}
             categoryIds={poolData?.categoryIds}
@@ -334,16 +353,16 @@ export function PoolDetailsPage() {
                 loading={loading}
                 isReversed={isReversed}
                 chainId={chainInfo.id}
-                tokenAColor={isReversed ? color1 : color0}
-                tokenBColor={isReversed ? color0 : color1}
+                tokenAColor={color0}
+                tokenBColor={color1}
               />
             </Flex>
             {isPdpRevampEnabled ? pdpPoolInfoSections : <Separator />}
             <PoolDetailsTableTab
               poolAddress={poolAddress}
               chainId={chainInfo.id}
-              token0={token0}
-              token1={token1}
+              baseToken={baseToken}
+              quoteToken={quoteToken}
               isPoolDataLoading={poolLoading}
               showWalletPositions={!isPdpRevampEnabled}
             />
@@ -359,8 +378,8 @@ export function PoolDetailsPage() {
               <PoolDetailsStatsButtons
                 chainId={chainInfo.id}
                 poolIdOrAddress={poolAddress}
-                token0={token0}
-                token1={token1}
+                baseToken={baseToken}
+                quoteToken={quoteToken}
                 feeTier={feeTier?.feeAmount}
                 tickSpacing={feeTier?.tickSpacing}
                 hookAddress={poolData?.hookAddress}

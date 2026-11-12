@@ -54,7 +54,7 @@ describe('getValidAddress – EVM', () => {
     expect(uppercasePrefixed).toEqual(lowercasePrefixed)
   })
 
-  it.each(NON_STRING_INVALIDS)('returns null for non-string input %p', (junk) => {
+  it.each(NON_STRING_INVALIDS)('returns null for non-string input %o', (junk) => {
     expect(getValidAddress({ address: junk as any, platform: Platform.EVM })).toBeNull()
   })
 })
@@ -70,7 +70,7 @@ describe('getValidAddress – SVM', () => {
     expect(getValidAddress({ address: input, platform: Platform.SVM })).toEqual(expected)
   })
 
-  it.each(NON_STRING_INVALIDS)('returns null for non-string input %p', (junk) => {
+  it.each(NON_STRING_INVALIDS)('returns null for non-string input %o', (junk) => {
     expect(getValidAddress({ address: junk as any, platform: Platform.SVM })).toBeNull()
   })
 })

@@ -10,5 +10,5 @@ export function UnitagImage({ size }: { size: number | string }): ReactElement {
   const px = Number(size)
   const imageSize = useMemo(() => ({ height: px, width: px }), [px])
 
-  return <UniversalImage allowLocalUri size={imageSize} uri={isDarkMode ? UNITAG_DARK : UNITAG_LIGHT} />
+  return <UniversalImage allowLocalUri alt="Unitag" size={imageSize} uri={isDarkMode ? UNITAG_DARK : UNITAG_LIGHT} />
 }

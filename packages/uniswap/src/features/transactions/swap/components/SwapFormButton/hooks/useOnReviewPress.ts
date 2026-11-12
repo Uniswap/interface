@@ -1,3 +1,4 @@
+import { useScreenActiveAddressOnPress } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useScreenActiveAddressOnPress'
 import { useSwapFormWarningStoreActions } from 'uniswap/src/features/transactions/swap/form/stores/swapFormWarningStore/useSwapFormWarningStore'
 import { usePrepareSwap } from 'uniswap/src/features/transactions/swap/services/hooks/usePrepareSwap'
 import { useWarningService } from 'uniswap/src/features/transactions/swap/services/hooks/useWarningService'
@@ -39,13 +40,18 @@ export const useOnReviewPress: UseOnReviewPress = () => {
 
   const prepareSwap = usePrepareSwap({ warningService })
 
+  const screenActiveAddress = useScreenActiveAddressOnPress()
+
+  // Screening sits here rather than in the press handlers so every route to
+  // `prepareSwap` — the plain press and each acknowledge — is screened. After the
+  // first press the rest are cache hits.
   const onReviewPress: OnReviewPress = useEvent(
     ({ skipBridgingWarning, skipTokenProtectionWarning, skipMaxTransferWarning, skipBridgedAssetWarning }) => {
       warningService.setSkipBridgingWarning(skipBridgingWarning)
       warningService.setSkipMaxTransferWarning(skipMaxTransferWarning)
       warningService.setSkipTokenProtectionWarning(skipTokenProtectionWarning)
       warningService.setSkipBridgedAssetWarning(skipBridgedAssetWarning)
-      prepareSwap()
+      screenActiveAddress(prepareSwap)
     },
   )
 

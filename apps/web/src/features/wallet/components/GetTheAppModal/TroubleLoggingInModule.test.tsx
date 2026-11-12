@@ -2,8 +2,8 @@ import { fireEvent } from '@testing-library/react'
 import { hasActiveNeckKey, useEmbeddedWalletState } from '@universe/embedded-wallet'
 import { TestID } from '@universe/test'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { useListAuthenticatorsQuery } from '~/components/AccountDrawer/PasskeyMenu/hooks/useListAuthenticatorsQuery'
 import { useIsEmbeddedWallet } from '~/connection/hooks/useIsEmbeddedWallet'
+import { useListAuthenticatorsQuery } from '~/features/wallet/components/AccountDrawer/PasskeyMenu/hooks/useListAuthenticatorsQuery'
 import { TroubleLoggingInModule } from '~/features/wallet/components/GetTheAppModal/TroubleLoggingInModule'
 import { render, screen } from '~/test-utils/render'
 
@@ -17,7 +17,7 @@ vi.mock('~/state/hooks', () => ({
   useAppSelector: vi.fn(),
 }))
 
-vi.mock('~/components/AccountDrawer/PasskeyMenu/hooks/useListAuthenticatorsQuery', () => ({
+vi.mock('~/features/wallet/components/AccountDrawer/PasskeyMenu/hooks/useListAuthenticatorsQuery', () => ({
   useListAuthenticatorsQuery: vi.fn(),
 }))
 

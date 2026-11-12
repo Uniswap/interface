@@ -25,7 +25,10 @@ import {
   type ListTokensRequest,
   type ListTokensResponse,
 } from '@uniswap/client-data-api/dist/data/v2/api_pb'
+import type { UniverseChainId } from '@universe/chains'
 import { dataApiServiceClientV2 } from 'uniswap/src/data/apiClients/dataApiService/clients/DataApiClientV2'
+import { getFeatureFlaggedChainIds } from 'uniswap/src/features/chains/hooks/useFeatureFlaggedChainIds'
+import { getEnabledChains } from 'uniswap/src/features/chains/utils'
 import { logger } from 'utilities/src/logger/logger'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { persistableQueryOptions } from 'utilities/src/reactQuery/persistableQueryOptions'
@@ -178,7 +181,16 @@ export const getGetTokensQueryOptions = createGetQueryOptions({
   policy: { staleTime: STATS_STALE_TIME_MS },
 })
 
-export const getGetTokenMultiChainQueryOptions = createGetQueryOptions({
+function getMultichainChainIds(): UniverseChainId[] {
+  // Metadata spans every chain the app can render, regardless of testnet mode.
+  return getEnabledChains({
+    includeTestnets: true,
+    isTestnetModeEnabled: false,
+    featureFlaggedChainIds: getFeatureFlaggedChainIds(),
+  }).chains
+}
+
+const getTokenMultiChainQueryOptions = createGetQueryOptions({
   name: 'getTokenMultiChain',
   // No single-chain fallback needed: the backend serves tokens outside the multichain index as a
   // single-entry response itself, so a NotFound here means the token is unknown to it entirely.
@@ -186,11 +198,29 @@ export const getGetTokenMultiChainQueryOptions = createGetQueryOptions({
   policy: { staleTime: PRICE_STALE_TIME_MS },
 })
 
-export const getGetTokensMultiChainQueryOptions = createGetQueryOptions({
+export function getGetTokenMultiChainQueryOptions<TSelectData = PlainMessage<GetTokenMultiChainResponse>>(
+  input: GetTokenMultiChainInput<TSelectData>,
+): ReturnType<typeof getTokenMultiChainQueryOptions<TSelectData>> {
+  return getTokenMultiChainQueryOptions({
+    ...input,
+    params: input.params ? { ...input.params, chainIds: getMultichainChainIds() } : undefined,
+  })
+}
+
+const getTokensMultiChainQueryOptions = createGetQueryOptions({
   name: 'getTokensMultiChain',
   fetch: (params: PartialMessage<GetTokensMultiChainRequest>) => dataApiServiceClientV2.getTokensMultiChain(params),
   policy: { staleTime: STATS_STALE_TIME_MS },
 })
+
+export function getGetTokensMultiChainQueryOptions<TSelectData = PlainMessage<GetTokensMultiChainResponse>>(
+  input: GetTokensMultiChainInput<TSelectData>,
+): ReturnType<typeof getTokensMultiChainQueryOptions<TSelectData>> {
+  return getTokensMultiChainQueryOptions({
+    ...input,
+    params: input.params ? { ...input.params, chainIds: getMultichainChainIds() } : undefined,
+  })
+}
 
 export const getGetTokenMarketsQueryOptions = createGetQueryOptions({
   name: 'getTokenMarkets',

@@ -7,10 +7,7 @@
  *  - press/hover state resets key on `blocked` (what actually disables the
  *    Pressable), so an explicit `disabled` prop can never strand the frame at
  *    press scale, and isDisabled + onDisabledPress never loses live hover;
- *  - the press event carries the shimmed `stopPropagation`/`preventDefault`,
- *    which RNGH's own event lacks but the compat prop types promise;
- *  - the press event carries the shimmed `stopPropagation`/`preventDefault`,
- *    which RNGH's own event lacks but the compat prop types promise;
+ *  - isDisabled + onDisabledPress routes to onDisabledPress, never onPress;
  *  - the spinner box honors `typeOfButton` exactly like the web leg;
  *  - a concrete label color yields to custom-background contrast, exactly
  *    like the web leg;
@@ -34,6 +31,16 @@ function frameClassName(tree: ReactTestRenderer): string {
   return tree.root.findByType('RNGHPressable' as never).props['className'] as string
 }
 
+/** A responder event the press hook can persist and measure-skip (no `currentTarget`). */
+function responderEvent(): Record<string, unknown> {
+  return { nativeEvent: { locationX: 1, locationY: 2 }, persist: () => undefined }
+}
+
+/** The frame dispatches through the RN responder pipeline: grant is press-in, release is press-out + press. */
+function hostProps(tree: ReactTestRenderer): Record<string, (event: unknown) => void> {
+  return tree.root.findByType('RNGHPressable' as never).props as Record<string, (event: unknown) => void>
+}
+
 function flatStyles(tree: ReactTestRenderer, type: string): Record<string, unknown> {
   const style = tree.root.findByType(type as never).props['style'] as unknown
   const flatten = (entry: unknown): Record<string, unknown>[] =>
@@ -49,7 +56,7 @@ describe('ButtonFrameCompat (native) — interaction state resets', () => {
       tree = create(<ButtonFrameCompat onPress={() => {}}>x</ButtonFrameCompat>)
     })
     act(() => {
-      ;(tree.root.findByType('RNGHPressable' as never).props['onPressIn'] as () => void)()
+      hostProps(tree)['onResponderGrant']?.(responderEvent())
     })
     // default/primary press scope inlined while pressed (tailwind-merge
     // collapses the bg conflict, so the -hovered cell replaces bg-neutral1).
@@ -112,7 +119,7 @@ describe('ButtonFrameCompat (native) — caller RN handlers compose with the int
       )
     })
     act(() => {
-      ;(tree.root.findByType('RNGHPressable' as never).props['onPressIn'] as () => void)()
+      hostProps(tree)['onResponderGrant']?.(responderEvent())
     })
     // Pre-fix, the internal handler overwrote the caller's (web composes via
     // mapRnHandlers) — the caller callback never fired.
@@ -121,44 +128,42 @@ describe('ButtonFrameCompat (native) — caller RN handlers compose with the int
   })
 })
 
-describe('ButtonFrameCompat (native) — the RNGH press event carries the shimmed propagation methods', () => {
-  // RNGH dispatches `{ nativeEvent }`, but the press props are typed
-  // GestureResponderEvent, so shared callers legitimately call
-  // `event.stopPropagation()` (PresetAmountButton does) — pre-shim that threw
-  // "undefined is not a function" on the first tap.
-  const rnghEvent = { nativeEvent: { locationX: 1, locationY: 2 } }
+describe('ButtonFrameCompat (native) — disabled routing', () => {
+  it('isDisabled + onDisabledPress routes the press to onDisabledPress, never onPress', async () => {
+    const { ButtonFrameCompat } = await import('./ButtonFrameCompat.native')
+    const onPress = vi.fn()
+    const onDisabledPress = vi.fn()
+    let tree!: ReactTestRenderer
+    act(() => {
+      tree = create(
+        <ButtonFrameCompat isDisabled onDisabledPress={onDisabledPress} onPress={onPress}>
+          x
+        </ButtonFrameCompat>,
+      )
+    })
+    expect(hostProps(tree)['accessibilityState']).toEqual({ disabled: undefined })
+    act(() => {
+      hostProps(tree)['onResponderGrant']?.(responderEvent())
+      hostProps(tree)['onResponderRelease']?.(responderEvent())
+    })
+    expect(onDisabledPress).toHaveBeenCalledTimes(1)
+    expect(onPress).not.toHaveBeenCalled()
+  })
 
-  it.each(['onPress', 'onPressIn', 'onPressOut', 'onLongPress'] as const)(
-    'a caller reading stopPropagation/preventDefault from %s does not throw',
-    async (handlerName) => {
-      const { ButtonFrameCompat } = await import('./ButtonFrameCompat.native')
-      const seen = vi.fn()
-      let tree!: ReactTestRenderer
-      act(() => {
-        tree = create(
-          createElement(
-            ButtonFrameCompat,
-            // Computed key: `as never` is this file's idiom for the props/type seam.
-            {
-              [handlerName]: (event: { stopPropagation: () => void; preventDefault: () => void }): void => {
-                event.stopPropagation()
-                event.preventDefault()
-                seen(event)
-              },
-            } as never,
-            'x',
-          ),
-        )
-      })
-      act(() => {
-        ;(tree.root.findByType('RNGHPressable' as never).props[handlerName] as (event: unknown) => void)(rnghEvent)
-      })
-      expect(seen).toHaveBeenCalledTimes(1)
-      // The shim copies rather than mutates, so RNGH's own event object is left alone.
-      expect(seen.mock.calls[0]?.[0]).toMatchObject({ nativeEvent: rnghEvent.nativeEvent })
-      expect(rnghEvent).not.toHaveProperty('stopPropagation')
-    },
-  )
+  it('isDisabled without onDisabledPress claims no touch and stays flagged disabled', async () => {
+    const { ButtonFrameCompat } = await import('./ButtonFrameCompat.native')
+    let tree!: ReactTestRenderer
+    act(() => {
+      tree = create(
+        <ButtonFrameCompat isDisabled onPress={vi.fn()}>
+          x
+        </ButtonFrameCompat>,
+      )
+    })
+    expect(hostProps(tree)['accessibilityState']).toEqual({ disabled: true })
+    expect(hostProps(tree)['onStartShouldSetResponder']).toBeUndefined()
+    expect(hostProps(tree)['onAccessibilityAction']).toBeUndefined()
+  })
 })
 
 describe('ButtonTextCompat (native) — re-broadcasts the resolved selection like web', () => {

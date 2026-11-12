@@ -5,8 +5,6 @@ import { FeeAmount } from '@uniswap/v3-sdk'
 import { UniverseChainId } from '@universe/chains'
 import { V2_DEFAULT_FEE_TIER } from 'uniswap/src/constants/pools'
 import { useLiquidityBarData } from '~/features/Liquidity/charts/LiquidityChart'
-import { MIN_DEPTH_BARS_PER_SIDE } from '~/pages/PoolDetails/components/ChartSection/DepthChart'
-import { buildDepthData } from '~/pages/PoolDetails/components/ChartSection/DepthChart.utils'
 import { TEST_TOKEN_1, TEST_TOKEN_2 } from '~/test-utils/constants'
 import { renderHook, waitFor } from '~/test-utils/render'
 import { PositionField } from '~/types/position'
@@ -158,20 +156,5 @@ describe('useLiquidityBarData', () => {
     const { barData } = result.current.tickData!
     // Uniform L is the whole point: every bar is the same height.
     expect(new Set(barData.map((b) => b.liquidity)).size).toBe(1)
-
-    // The depth chart needs enough real bars either side of the active tick to render at all.
-    const { sellData, buyData } = buildDepthData({
-      barData,
-      activeTick: result.current.activeTick!,
-      feeTier: V2_DEFAULT_FEE_TIER,
-      token0Decimals: TEST_TOKEN_1.decimals,
-      token1Decimals: TEST_TOKEN_2.decimals,
-      isReversed: false,
-    })
-    expect(sellData.length - 1).toBeGreaterThanOrEqual(MIN_DEPTH_BARS_PER_SIDE)
-    expect(buyData.length - 1).toBeGreaterThanOrEqual(MIN_DEPTH_BARS_PER_SIDE)
-    // Cumulative depth ramps monotonically away from the mid price.
-    const depths = buyData.map((p) => p.value)
-    expect(depths).toEqual(depths.slice().sort((a, b) => a - b))
   })
 })

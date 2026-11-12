@@ -86,12 +86,14 @@ function withRwaIssuerBranding({
   }
 }
 
-function optionSearchStats(option: SearchModalOption): SearchTokenStats | undefined {
+export function optionSearchStats(option: SearchModalOption): SearchTokenStats | undefined {
   switch (option.type) {
     case OnchainItemListOptionType.Token:
       return option.currencyInfo.searchStats
     case OnchainItemListOptionType.MultichainToken:
       return option.multichainResult.stats
+    case OnchainItemListOptionType.RwaCollection:
+      return option.searchStats
     default:
       return undefined
   }

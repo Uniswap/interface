@@ -2,17 +2,19 @@ import { Flex, Shine } from '@universe/mycelium'
 import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
 import { useTranslation } from 'react-i18next'
 import type { ParsedToken } from 'uniswap/src/features/dataApi/utils/parsedToken'
+import { getPoolName } from 'uniswap/src/features/pools/names'
 import { BreadcrumbNavContainer, BreadcrumbNavLink, CurrentPageBreadcrumb } from '~/components/BreadcrumbNav'
 
 interface PoolDetailsBreadcrumbProps {
   poolAddress?: string
-  token0?: ParsedToken
-  token1?: ParsedToken
+  baseToken?: ParsedToken
+  quoteToken?: ParsedToken
   loading?: boolean
 }
 
-export function PoolDetailsBreadcrumb({ poolAddress, token0, token1, loading }: PoolDetailsBreadcrumbProps) {
+export function PoolDetailsBreadcrumb({ poolAddress, baseToken, quoteToken, loading }: PoolDetailsBreadcrumbProps) {
   const { t } = useTranslation()
+  const poolName = getPoolName({ symbol0: baseToken?.symbol, symbol1: quoteToken?.symbol, spaced: true })
 
   return (
     <BreadcrumbNavContainer
@@ -32,7 +34,7 @@ export function PoolDetailsBreadcrumb({ poolAddress, token0, token1, loading }: 
           <Flex width={80} height={20} borderRadius={20} backgroundColor="$surface3" />
         </Shine>
       ) : (
-        <CurrentPageBreadcrumb poolName={`${token0?.symbol} / ${token1?.symbol}`} />
+        <CurrentPageBreadcrumb poolName={poolName} />
       )}
     </BreadcrumbNavContainer>
   )

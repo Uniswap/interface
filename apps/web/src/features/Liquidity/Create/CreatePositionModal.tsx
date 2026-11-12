@@ -1,0 +1,189 @@
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import { useCallback, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
+import { useLocation, useNavigate } from 'react-router'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import {
+  CreatePositionTxAndGasInfo,
+  isValidLiquidityTxContext,
+  MigratePositionTxAndGasInfo,
+} from 'uniswap/src/features/transactions/liquidity/types'
+import { getErrorMessageToDisplay } from 'uniswap/src/features/transactions/liquidity/utils'
+import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
+import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
+import { isSignerMnemonicAccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
+import { useAccount } from '~/connection/hooks/useAccount'
+import { useSelectChain } from '~/connection/hooks/useSelectChain'
+import { getLPBaseAnalyticsProperties } from '~/features/Liquidity/analytics'
+import { useCreateLiquidityContext } from '~/features/Liquidity/Create/CreateLiquidityContextProvider'
+import { useInitialPriceAcceptance } from '~/features/Liquidity/Create/hooks/useInitialPriceAcceptance'
+import { ReviewModal, ReviewModalProps } from '~/features/Liquidity/ReviewModal'
+import { getPoolIdOrAddressFromCreatePositionInfo } from '~/features/Liquidity/utils/getPoolIdOrAddressFromCreatePositionInfo'
+import { useSetOverrideOneClickSwapFlag } from '~/state/oneClickSwap/hooks'
+import { liquiditySaga } from '~/state/sagas/liquidity/liquiditySaga'
+import { EntryPointKind, resolveEntryPoint } from '~/utils/createPositionEntryPoint'
+
+export function CreatePositionModal({
+  formattedAmounts,
+  currencyAmounts,
+  currencyAmountsUSDValue,
+  txInfo,
+  gasFeeEstimateUSD,
+  transactionError,
+  setTransactionError,
+  isOpen,
+  onClose,
+}: Pick<
+  ReviewModalProps,
+  | 'formattedAmounts'
+  | 'currencyAmounts'
+  | 'currencyAmountsUSDValue'
+  | 'gasFeeEstimateUSD'
+  | 'transactionError'
+  | 'isOpen'
+  | 'onClose'
+> & {
+  txInfo?: CreatePositionTxAndGasInfo | MigratePositionTxAndGasInfo
+  setTransactionError: (error: string | boolean) => void
+}) {
+  const {
+    protocolVersion,
+    creatingPoolOrPair,
+    positionState: { fee, hook },
+    setCurrentTransactionStep,
+    poolOrPair,
+    ticks,
+  } = useCreateLiquidityContext()
+  const initialPriceAcceptance = useInitialPriceAcceptance()
+  const { t } = useTranslation()
+
+  const disableOneClickSwap = useSetOverrideOneClickSwapFlag()
+
+  const [steps, setSteps] = useState<TransactionStep[]>([])
+  const dispatch = useDispatch()
+  const account = useWallet().evmAccount
+  const selectChain = useSelectChain()
+  const connectedAccount = useAccount()
+  const startChainId = connectedAccount.chainId
+  const navigate = useNavigate()
+  const { search, state } = useLocation()
+  const entryPoint = resolveEntryPoint({ search, state })
+  const isHooksExploreEnabled = useFeatureFlag(FeatureFlags.HooksExplore)
+  const trace = useTrace()
+
+  const onSuccess = useCallback(() => {
+    setSteps([])
+    setCurrentTransactionStep(undefined)
+    onClose()
+    navigate('/positions')
+  }, [setCurrentTransactionStep, onClose, navigate])
+
+  const handleCreate = useCallback(() => {
+    setTransactionError(false)
+
+    const isValidTx = isValidLiquidityTxContext(txInfo)
+    if (
+      !account ||
+      !isSignerMnemonicAccountDetails(account) ||
+      !isValidTx ||
+      !currencyAmounts ||
+      !currencyAmounts.TOKEN0 ||
+      !currencyAmounts.TOKEN1
+    ) {
+      return
+    }
+
+    dispatch(
+      liquiditySaga.actions.trigger({
+        selectChain,
+        startChainId,
+        account,
+        liquidityTxContext: txInfo,
+        setCurrentStep: setCurrentTransactionStep,
+        setSteps,
+        onSuccess,
+        onFailure: (e) => {
+          if (e) {
+            setTransactionError(getErrorMessageToDisplay({ calldataError: e }))
+          }
+          setCurrentTransactionStep(undefined)
+        },
+        disableOneClickSwap,
+        analytics: {
+          ...getLPBaseAnalyticsProperties({
+            trace,
+            hook,
+            version: protocolVersion,
+            tickLower: ticks[0] ?? undefined,
+            tickUpper: ticks[1] ?? undefined,
+            fee: fee?.feeAmount,
+            tickSpacing: fee?.tickSpacing,
+            currency0: currencyAmounts.TOKEN0.currency,
+            currency1: currencyAmounts.TOKEN1.currency,
+            currency0AmountUsd: currencyAmountsUSDValue?.TOKEN0,
+            currency1AmountUsd: currencyAmountsUSDValue?.TOKEN1,
+            poolId: getPoolIdOrAddressFromCreatePositionInfo({
+              protocolVersion,
+              poolOrPair,
+              sdkCurrencies: {
+                TOKEN0: currencyAmounts.TOKEN0.currency,
+                TOKEN1: currencyAmounts.TOKEN1.currency,
+              },
+            }),
+          }),
+          ...(isHooksExploreEnabled && entryPoint.kind === EntryPointKind.HookDetails
+            ? { came_from_hook_detail: true }
+            : {}),
+          expectedAmountBaseRaw: currencyAmounts.TOKEN0.quotient.toString(),
+          expectedAmountQuoteRaw: currencyAmounts.TOKEN1.quotient.toString(),
+          createPool: creatingPoolOrPair,
+          createPosition: true,
+        },
+      }),
+    )
+  }, [
+    txInfo,
+    account,
+    currencyAmounts,
+    dispatch,
+    selectChain,
+    startChainId,
+    setTransactionError,
+    setCurrentTransactionStep,
+    onSuccess,
+    trace,
+    fee?.feeAmount,
+    fee?.tickSpacing,
+    ticks,
+    hook,
+    currencyAmountsUSDValue?.TOKEN0,
+    currencyAmountsUSDValue?.TOKEN1,
+    protocolVersion,
+    creatingPoolOrPair,
+    poolOrPair,
+    disableOneClickSwap,
+    entryPoint.kind,
+    isHooksExploreEnabled,
+  ])
+
+  return (
+    <ReviewModal
+      modalName={ModalName.CreatePosition}
+      headerTitle={t('position.create.modal.header')}
+      confirmButtonText={t('common.button.create')}
+      formattedAmounts={formattedAmounts}
+      currencyAmounts={currencyAmounts}
+      currencyAmountsUSDValue={currencyAmountsUSDValue}
+      initialPriceAcceptance={initialPriceAcceptance}
+      isDisabled={!txInfo?.action}
+      gasFeeEstimateUSD={gasFeeEstimateUSD}
+      transactionError={transactionError}
+      steps={steps}
+      isOpen={isOpen}
+      onClose={onClose}
+      onConfirm={handleCreate}
+    />
+  )
+}

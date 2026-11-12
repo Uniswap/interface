@@ -4,6 +4,7 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { SharedQueryClient } from '@universe/api'
 import { getIsPermissionedForAnalytics } from 'uniswap/src/features/permissionedTokens/getIsPermissionedForAnalytics'
+import { getPoolName } from 'uniswap/src/features/pools/names'
 import type { PositionInfo } from 'uniswap/src/features/positions/types'
 import { getDisplayedPriceSource } from 'uniswap/src/features/prices/getDisplayedPriceSource'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
@@ -51,7 +52,7 @@ export function getLPBaseAnalyticsProperties({
 }): Omit<LiquidityAnalyticsProperties, 'transaction_hash'> {
   return {
     ...trace,
-    label: [currency0.symbol, currency1.symbol].join('/'),
+    label: getPoolName({ symbol0: currency0.symbol, symbol1: currency1.symbol }) ?? '',
     type: ProtocolVersion[version],
     protocol_version: version,
     fee_tier: (typeof fee === 'string' ? parseInt(fee) : fee) ?? FeeAmount.MEDIUM,

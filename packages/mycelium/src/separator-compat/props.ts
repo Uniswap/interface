@@ -82,6 +82,13 @@ export type SeparatorCompatStyleProps = {
 export type SeparatorCompatProps = SeparatorCompatStyleProps & {
   vertical?: boolean
   /**
+   * Hidden from assistive tech by default, since most dividers are purely
+   * visual. Pass `false` when the divider marks a boundary a screen reader
+   * user needs announced. Web only; native separators are not exposed to
+   * accessibility either way.
+   */
+  decorative?: boolean
+  /**
    * Style overrides applied at or below the `$md` breakpoint (max-width 640px),
    * matching the legacy Tamagui media prop's boundary behavior.
    */

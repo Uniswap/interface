@@ -4,7 +4,7 @@ import { useIsCustomGasFlowAvailable } from 'uniswap/src/features/gas/hooks/useI
 import { useTradingApiGasOverrides } from 'uniswap/src/features/gas/hooks/useTradingApiGasOverrides'
 import type { GasFeeOverrides } from 'uniswap/src/features/gas/types'
 import { useTransactionSettingsStore } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
-import { vi } from 'vitest'
+import { type Mock, vi } from 'vitest'
 
 vi.mock('uniswap/src/features/gas/components/NetworkCostEditor/useRecommendedGasFields')
 vi.mock('uniswap/src/features/gas/hooks/useIsCustomGasFlowAvailable')
@@ -14,7 +14,7 @@ vi.mock(
 
 const mockUseRecommendedGasFields = vi.mocked(useRecommendedGasFields)
 const mockUseIsCustomGasFlowAvailable = vi.mocked(useIsCustomGasFlowAvailable)
-const mockUseTransactionSettingsStore = useTransactionSettingsStore as unknown as ReturnType<typeof vi.fn>
+const mockUseTransactionSettingsStore = useTransactionSettingsStore as unknown as Mock
 
 function setGasOverrides(gasOverrides: GasFeeOverrides | undefined): void {
   mockUseTransactionSettingsStore.mockImplementation(

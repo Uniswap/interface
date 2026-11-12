@@ -1,14 +1,15 @@
 import { Flex } from '@universe/mycelium'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { ComponentProps } from 'react'
-import { APP_BODY_MOBILE_GUTTER_PX } from '~/app/layout/constants'
 import { HEADER_TRANSITION } from '~/components/StickyCollapsibleHeader/constants'
+import { APP_BODY_MOBILE_GUTTER_PX } from '~/constants/layout'
 import { useAppHeaderHeight } from '~/hooks/useAppHeaderHeight'
 
 type StickyCollapsibleHeaderProps = ComponentProps<typeof Flex> & {
   children: React.ReactNode
   /** When true, reduces vertical padding for a compact sticky header. Pass from page scroll state. */
   isCompact?: boolean
+  withBorder?: boolean
 }
 
 /**
@@ -17,6 +18,7 @@ type StickyCollapsibleHeaderProps = ComponentProps<typeof Flex> & {
 export function StickyCollapsibleHeader({
   children,
   isCompact = false,
+  withBorder = true,
   ...flexProps
 }: StickyCollapsibleHeaderProps): JSX.Element {
   const appHeaderHeight = useAppHeaderHeight()
@@ -46,7 +48,7 @@ export function StickyCollapsibleHeader({
     >
       <Flex
         width="100%"
-        borderBottomWidth={1}
+        borderBottomWidth={withBorder ? 1 : 0}
         borderColor="$surface3"
         py={isCompact && media.sm ? '$spacing12' : '$spacing20'}
         transition={HEADER_TRANSITION}

@@ -18,7 +18,8 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-primary text-surface1 shadow hover:bg-primary/90',
+        default:
+          'bg-primary text-surface1 shadow hover:bg-primary/90 disabled:bg-surface2 disabled:text-neutral3 disabled:opacity-100',
         destructive: 'bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90',
         outline: 'border border-surface3 bg-transparent text-neutral1 hover:bg-surface2/50',
         secondary:
@@ -87,6 +88,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         <span className="button-loading-text inline-flex items-center gap-2" data-loading={showIndicator || undefined}>
           {children}
         </span>
+        {/* TODO(INFRA-4589): the spinner stays in the accessibility tree while hidden, so every idle button is
+            named "<label> Loading" and carries a status live region. Render it only while loading. */}
         <span
           className="button-state-spinner absolute inset-0 flex items-center justify-center"
           data-visible={isLoading || undefined}

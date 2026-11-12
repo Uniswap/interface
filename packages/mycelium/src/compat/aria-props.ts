@@ -26,6 +26,7 @@ export interface CompatAriaProps {
   'aria-labelledby'?: string
   'aria-live'?: 'polite' | 'assertive' | 'off'
   'aria-modal'?: boolean | 'true' | 'false'
+  'aria-pressed'?: boolean | 'true' | 'false' | 'mixed'
   'aria-selected'?: boolean | 'true' | 'false'
   'aria-valuemax'?: number
   'aria-valuemin'?: number

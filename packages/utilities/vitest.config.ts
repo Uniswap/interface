@@ -14,8 +14,10 @@ export default defineConfig({
     include: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
     exclude: ['node_modules', 'dist'],
     testTimeout: 15000,
-    deps: {
-      inline: [/packages\/ui/, /packages\/uniswap/],
+    server: {
+      deps: {
+        inline: [/packages\/ui/, /packages\/uniswap/],
+      },
     },
     reporters: ['verbose'],
     coverage: {

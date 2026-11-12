@@ -22,6 +22,7 @@ import {
 } from 'ui/src/components/modal/AdaptiveWebModal'
 import type { SheetFitHeight } from 'ui/src/components/modal/AdaptiveWebModalShared'
 import { SharedUIUniswapProvider } from 'ui/src/test/render'
+import { sleep } from 'utilities/src/time/timing'
 
 /** The sheet scrim's own selector, off the id the sheet exposes — never its styling class. */
 const SHEET_OVERLAY = `[data-testid="${WEB_BOTTOM_SHEET_OVERLAY_TEST_ID}"]`
@@ -277,7 +278,7 @@ describe('AdaptiveWebModal dismissal semantics (web dialog branch)', () => {
   async function waitForOutsideListeners(): Promise<void> {
     // Radix's pointer-down-outside listener attaches in a timeout(0) after mount.
     await act(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 0))
+      await sleep(0)
     })
   }
 
@@ -435,7 +436,7 @@ describe('WebBottomSheet dismissal semantics (web)', () => {
     )
     const overlay = await waitForOverlay()
     await act(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 250))
+      await sleep(250)
     })
     pressElement(overlay, 'touch')
     await waitFor(() => expect(onClose).toHaveBeenCalledTimes(1))
@@ -459,7 +460,7 @@ describe('WebBottomSheet dismissal semantics (web)', () => {
     await waitFor(() => expect(document.querySelectorAll(SHEET_OVERLAY).length).toBe(2))
     const overlay = await waitForOverlay()
     await act(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 250))
+      await sleep(250)
     })
     pressElement(overlay, 'touch')
     await waitFor(() => expect(onClose).toHaveBeenCalledTimes(1))
@@ -479,11 +480,11 @@ describe('WebBottomSheet dismissal semantics (web)', () => {
       )
       await waitFor(() => expect(document.querySelector('.uw-sheet-frame')).not.toBeNull())
       await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 250))
+        await sleep(250)
       })
       fireEvent.pointerDown(sibling, { button: 0 })
       await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 0))
+        await sleep(0)
       })
       expect(onClose).not.toHaveBeenCalled()
     } finally {
@@ -530,7 +531,7 @@ describe('WebModalWithBottomAttachment (web dialog branch)', () => {
       { wrapper: SharedUIUniswapProvider },
     )
     await act(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 0))
+      await sleep(0)
     })
     const overlay = document.querySelector('.uw-modal-overlay')
     expect(overlay).not.toBeNull()

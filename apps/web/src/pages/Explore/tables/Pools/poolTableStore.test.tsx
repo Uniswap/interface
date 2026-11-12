@@ -4,42 +4,25 @@ import { createPoolTableStore } from '~/pages/Explore/tables/Pools/poolTableStor
 
 describe('poolTableStore', () => {
   it('starts with 1 day volume and sortAscending false', () => {
-    const store = createPoolTableStore()
-    const state = store.getState()
-
+    const state = createPoolTableStore().getState()
     expect(state.sortMethod).toBe(PoolSortFields.Volume24h)
     expect(state.sortAscending).toBe(false)
   })
 
-  it('setSort with a new category sets sortMethod and resets sortAscending to false', () => {
+  it('stores the selected field and direction together', () => {
     const store = createPoolTableStore()
-
-    store.getState().actions.setSort(PoolSortFields.Apr)
-
+    store.getState().actions.setSort(PoolSortFields.Apr, true)
     expect(store.getState().sortMethod).toBe(PoolSortFields.Apr)
-    expect(store.getState().sortAscending).toBe(false)
-  })
-
-  it('setSort with the same category toggles sortAscending', () => {
-    const store = createPoolTableStore()
-
-    store.getState().actions.setSort(PoolSortFields.Volume24h)
     expect(store.getState().sortAscending).toBe(true)
-
-    store.getState().actions.setSort(PoolSortFields.Volume24h)
+    store.getState().actions.setSort(PoolSortFields.Volume30D, false)
+    expect(store.getState().sortMethod).toBe(PoolSortFields.Volume30D)
     expect(store.getState().sortAscending).toBe(false)
   })
 
   it('resetSort restores initial sortMethod and sortAscending', () => {
     const store = createPoolTableStore()
-
-    store.getState().actions.setSort(PoolSortFields.Apr)
-    store.getState().actions.setSort(PoolSortFields.Apr)
-    expect(store.getState().sortMethod).toBe(PoolSortFields.Apr)
-    expect(store.getState().sortAscending).toBe(true)
-
+    store.getState().actions.setSort(PoolSortFields.Apr, true)
     store.getState().actions.resetSort()
-
     expect(store.getState().sortMethod).toBe(PoolSortFields.Volume24h)
     expect(store.getState().sortAscending).toBe(false)
   })

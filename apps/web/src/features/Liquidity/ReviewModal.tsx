@@ -34,6 +34,7 @@ import {
   getLiquidityRangeChartProps,
   WrappedLiquidityPositionRangeChart,
 } from '~/features/Liquidity/charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
+import { useCreateLiquidityContext } from '~/features/Liquidity/Create/CreateLiquidityContextProvider'
 import type { InitialPriceAcceptance } from '~/features/Liquidity/Create/hooks/useInitialPriceAcceptance'
 import { PoolOutOfSyncError } from '~/features/Liquidity/Create/PoolOutOfSyncError'
 import { useIsLiquiditySagaRunning } from '~/features/Liquidity/hooks/useIsLiquiditySagaRunning'
@@ -46,7 +47,6 @@ import { getBaseAndQuoteCurrencies } from '~/features/Liquidity/utils/currency'
 import { getTickToPrice, getV4TickToPrice } from '~/features/Liquidity/utils/getTickToPrice'
 import { getTicksAtLimit } from '~/features/Liquidity/utils/priceRangeInfo'
 import { useCurrencyInfo } from '~/hooks/currency/useCurrencyInfo'
-import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 import { CurrencyAmountMap } from '~/types/liquidity'
 import { PositionField } from '~/types/position'
 

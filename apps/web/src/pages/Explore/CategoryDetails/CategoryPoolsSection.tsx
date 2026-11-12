@@ -17,7 +17,6 @@ import {
 } from '~/features/Explore/state/exploreTablesFilterStore'
 import { usePoolsAprRange } from '~/features/Liquidity/PoolsFilter/aprRange'
 import { PoolsFilter } from '~/features/Liquidity/PoolsFilter/PoolsFilter'
-import { ADD_LIQUIDITY_PATH } from '~/pages/AddLiquidity/poolLinkParams'
 import { getExplorePoolsURL, isCategoryUnsupportedChain } from '~/pages/Explore/categories/useExploreCategory'
 import { useListPools } from '~/pages/Explore/hooks/useListPools'
 import { SearchBar } from '~/pages/Explore/SearchBar'
@@ -26,6 +25,7 @@ import { PoolTableStoreContextProvider, usePoolTableStore } from '~/pages/Explor
 import { ExploreTab } from '~/types/explore'
 import type { PoolsFilterState } from '~/types/poolsFilter'
 import { getChainFilterFromSearchParams, withChainSearchParam } from '~/utils/params/chainQueryParam'
+import { ADD_LIQUIDITY_PATH } from '~/utils/params/poolLinkParams'
 
 function CategoryPoolsTable({
   categoryId,

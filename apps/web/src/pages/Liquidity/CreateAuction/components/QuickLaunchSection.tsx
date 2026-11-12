@@ -7,6 +7,8 @@ import { TooltipCompat as Tooltip } from '@universe/mycelium/tooltip-compat'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Trans } from 'ui/src'
+import { QUICK_LAUNCH_DURATION_HOURS } from '~/constants/tokenLaunch'
+import { RaiseCurrency } from '~/features/Toucan/utils/raiseCurrency'
 import { AdvancedSettingsSeparator } from '~/pages/Liquidity/CreateAuction/components/AdvancedSettingsSeparator'
 import {
   useCreateAuctionStore,
@@ -20,10 +22,9 @@ import {
   getQuickLaunchGraduationPricePerToken,
   applyQuickLaunchPoolPreset,
   getQuickLaunchFloorPricePerToken,
-  QUICK_LAUNCH_DURATION_HOURS,
   QUICK_LAUNCH_FLOOR_FDV_USD,
 } from '~/pages/Liquidity/CreateAuction/quickLaunch/quickLaunchPreset'
-import { CreateAuctionStep, RaiseCurrency, TimeLockPreset, TokenMode } from '~/pages/Liquidity/CreateAuction/types'
+import { CreateAuctionStep, TimeLockPreset, TokenMode } from '~/pages/Liquidity/CreateAuction/types'
 
 /** Emphasis inside story copy is color-only (neutral1 on a neutral2 line), per the design spec. */
 const STORY_HIGHLIGHT = <Text variant="body3" color="$neutral1" />

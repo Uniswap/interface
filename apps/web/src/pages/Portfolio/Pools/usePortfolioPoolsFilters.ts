@@ -12,8 +12,8 @@ import { usePositionSort, type UsePositionSortResult } from '~/features/Liquidit
 import { useShowHiddenPositions } from '~/features/Liquidity/hooks/useShowHiddenPositions'
 import { useV2StatusFilter } from '~/features/Liquidity/hooks/useV2StatusFilter'
 import type { PositionsTableControlBarProps } from '~/features/Liquidity/PositionsTableControlBar'
-import { PortfolioTab } from '~/pages/Portfolio/types'
-import { buildPortfolioUrl } from '~/pages/Portfolio/utils/portfolioUrls'
+import { PortfolioTab } from '~/hooks/usePortfolioRoutes/types'
+import { buildPortfolioUrl } from '~/hooks/usePortfolioRoutes/utils'
 
 /**
  * The portfolio header owns chain scope (the route's `?chain=`), so the table's chain setter must

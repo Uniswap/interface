@@ -50,6 +50,7 @@ import {
   v34Schema,
   v35Schema,
   v36Schema,
+  v37Schema,
 } from 'src/store/schema'
 import { USDC } from 'uniswap/src/constants/tokens'
 import { initialAppearanceSettingsState } from 'uniswap/src/features/appearance/slice'
@@ -70,6 +71,7 @@ import {
   testMigrateDismissedTokenWarnings,
   testMigrateSearchHistory,
   testRemoveBlastChainData,
+  testAddNewUserOnboardingHistory,
   testRemoveTHBFromCurrency,
   testRemoveUniswapWrapped2025BehaviorHistory,
 } from 'uniswap/src/state/uniswapMigrationTests'
@@ -415,5 +417,9 @@ describe('Redux state migrations', () => {
 
   it('migrates from v36 to v37', () => {
     testRemoveBlastChainData(migrations[37], v36Schema)
+  })
+
+  it('migrates from v37 to v38', () => {
+    testAddNewUserOnboardingHistory(migrations[38], v37Schema)
   })
 })

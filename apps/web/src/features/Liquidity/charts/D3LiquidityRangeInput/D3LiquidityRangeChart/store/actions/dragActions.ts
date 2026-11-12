@@ -1,5 +1,6 @@
 import { TickMath } from '@uniswap/v3-sdk'
 import * as d3 from 'd3'
+import { PriceRangeDragTarget } from 'uniswap/src/features/telemetry/types'
 import { CHART_DIMENSIONS } from '~/features/Liquidity/charts/D3LiquidityChartShared/constants'
 import type { ChartStoreState } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
 import { snapTickToSpacing } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/tickUtils'
@@ -155,12 +156,17 @@ export function createDragActions(get: () => ChartStoreState) {
 
           // Dragging one handle past the other swaps them, so both edges can move
           actions.handleTickRangeChange({ minTick, maxTick })
+          actions.handleRangeDragEnd({
+            target: lineType === 'min' ? PriceRangeDragTarget.MinHandle : PriceRangeDragTarget.MaxHandle,
+            startRange: { minTick: initialMinTick, maxTick: initialMaxTick },
+          })
         })
     },
 
     createTickBasedDragBehavior: () => {
       let dragOffsetY = 0
       let tickRangeSize = 0 // Now stores actual tick difference, not index difference
+      let startRange: { minTick?: number; maxTick?: number } = {}
 
       // Helper function to handle common drag logic
       const handleTickDrag = ({
@@ -213,6 +219,7 @@ export function createDragActions(get: () => ChartStoreState) {
         // Call callbacks only when drag ends
         if (isEnd) {
           actions.handleTickRangeChange({ minTick: newMinTick, maxTick: newMaxTick })
+          actions.handleRangeDragEnd({ target: PriceRangeDragTarget.Range, startRange })
         }
       }
 
@@ -235,6 +242,7 @@ export function createDragActions(get: () => ChartStoreState) {
 
           // Store the initial tick range size (actual tick difference)
           tickRangeSize = maxTick - minTick
+          startRange = { minTick, maxTick }
         })
         .on('drag', (event) => handleTickDrag({ event, isEnd: false }))
         .on('end', (event) => handleTickDrag({ event, isEnd: true }))

@@ -18,9 +18,15 @@ describe(exploreOrderByFromCategoryDefaultSort, () => {
     )
   })
 
+  it('maps an FDV default sort to FDV', () => {
+    expect(exploreOrderByFromCategoryDefaultSort({ orderBy: TokensOrderBy.FDV, ascending: false })).toBe(
+      CustomRankingType.FullyDilutedValuation,
+    )
+  })
+
   it('falls back to volume when unset or unmapped', () => {
     expect(exploreOrderByFromCategoryDefaultSort(undefined)).toBe(RankingType.Volume)
-    expect(exploreOrderByFromCategoryDefaultSort({ orderBy: TokensOrderBy.FDV, ascending: false })).toBe(
+    expect(exploreOrderByFromCategoryDefaultSort({ orderBy: TokensOrderBy.MARKET_CAP, ascending: false })).toBe(
       RankingType.Volume,
     )
   })

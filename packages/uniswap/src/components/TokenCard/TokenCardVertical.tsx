@@ -21,6 +21,7 @@ export function TokenCardVertical({
   priceUsd,
   pricePercentChange1d,
   sparkline,
+  categoryIds,
   hideNetworkLogo,
 }: TokenCardVerticalProps): JSX.Element {
   const { convertFiatAmountFormatted } = useLocalizationContext()
@@ -40,6 +41,7 @@ export function TokenCardVertical({
           url={logoUrl}
         />
         <TokenCardSparkline
+          categoryIds={categoryIds}
           data={sparkline}
           height={TOKEN_CARD_SPARKLINE_HEIGHT_VERTICAL}
           isNegative={(pricePercentChange1d ?? 0) < 0}

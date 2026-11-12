@@ -8,7 +8,7 @@ import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { logger } from 'utilities/src/logger/logger'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
-import { getRecoveryMethodLabel } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
+import { getRecoveryMethodLabel } from '~/features/wallet/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
 import { useModalState } from '~/hooks/useModalState'
 import type { RemoveBackupLoginModalParams } from '~/state/application/reducer'
 import { useAppSelector } from '~/state/hooks'

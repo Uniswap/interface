@@ -72,6 +72,7 @@ export function MenuContentCompat({
     // oxlint-disable-next-line react/forbid-elements -- verbatim port of the legacy propagation-stopper div
     <div
       data-slot="menu-content-compat"
+      role="presentation" // a propagation guard, not a control
       onContextMenu={preventAndStop}
       onClick={stopPropagation}
       onMouseDown={stopPropagation}
@@ -106,6 +107,7 @@ export function MenuContentCompat({
           return (
             <React.Fragment key={index}>
               {showDivider === true && (
+                // oxlint-disable-next-line jsx-a11y/control-has-associated-label -- a non-focusable menu separator needs no label; the rule treats every separator as a widget
                 <div role="separator" data-slot="menu-separator-compat" className={menuSeparatorClassName()} />
               )}
               {insideMenu ? (

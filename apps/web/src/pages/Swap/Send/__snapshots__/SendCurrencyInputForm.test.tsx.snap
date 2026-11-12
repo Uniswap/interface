@@ -77,7 +77,9 @@ exports[`SendCurrencyInputform > renders input in fiat correctly 1`] = `
             100.00 DAI
           </span>
           <svg
+            aria-hidden="true"
             fill="none"
+            focusable="false"
             stroke-width="8"
             style="width: 16px; height: 16px;"
             viewBox="0 0 24 24"
@@ -126,6 +128,7 @@ exports[`SendCurrencyInputform > renders input in fiat correctly 1`] = `
                   style="box-sizing: border-box; display: flex; flex-direction: column; flex-shrink: 0; min-width: 0;"
                 >
                   <img
+                    alt=""
                     height="36"
                     src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
                     style="object-fit: cover; width: 36px; height: 36px; border-radius: 36px; z-index: 1;"
@@ -187,7 +190,9 @@ exports[`SendCurrencyInputform > renders input in fiat correctly 1`] = `
           style="--c-tr: rotate(270deg);"
         >
           <svg
+            aria-hidden="true"
             fill="none"
+            focusable="false"
             stroke-width="8"
             style="color: rgb(155, 155, 155); width: 24px; height: 24px;"
             viewBox="0 0 24 24"
@@ -273,7 +278,9 @@ exports[`SendCurrencyInputform > renders input in token amount correctly 1`] = `
             $100.00
           </span>
           <svg
+            aria-hidden="true"
             fill="none"
+            focusable="false"
             stroke-width="8"
             style="width: 16px; height: 16px;"
             viewBox="0 0 24 24"
@@ -322,6 +329,7 @@ exports[`SendCurrencyInputform > renders input in token amount correctly 1`] = `
                   style="box-sizing: border-box; display: flex; flex-direction: column; flex-shrink: 0; min-width: 0;"
                 >
                   <img
+                    alt=""
                     height="36"
                     src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
                     style="object-fit: cover; width: 36px; height: 36px; border-radius: 36px; z-index: 1;"
@@ -383,7 +391,9 @@ exports[`SendCurrencyInputform > renders input in token amount correctly 1`] = `
           style="--c-tr: rotate(270deg);"
         >
           <svg
+            aria-hidden="true"
             fill="none"
+            focusable="false"
             stroke-width="8"
             style="color: rgb(155, 155, 155); width: 24px; height: 24px;"
             viewBox="0 0 24 24"
@@ -477,7 +487,9 @@ exports[`SendCurrencyInputform > should render placeholder values 1`] = `
             0 DAI
           </span>
           <svg
+            aria-hidden="true"
             fill="none"
+            focusable="false"
             stroke-width="8"
             style="width: 16px; height: 16px;"
             viewBox="0 0 24 24"
@@ -526,6 +538,7 @@ exports[`SendCurrencyInputform > should render placeholder values 1`] = `
                   style="box-sizing: border-box; display: flex; flex-direction: column; flex-shrink: 0; min-width: 0;"
                 >
                   <img
+                    alt=""
                     height="36"
                     src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
                     style="object-fit: cover; width: 36px; height: 36px; border-radius: 36px; z-index: 1;"
@@ -587,7 +600,9 @@ exports[`SendCurrencyInputform > should render placeholder values 1`] = `
           style="--c-tr: rotate(270deg);"
         >
           <svg
+            aria-hidden="true"
             fill="none"
+            focusable="false"
             stroke-width="8"
             style="color: rgb(155, 155, 155); width: 24px; height: 24px;"
             viewBox="0 0 24 24"

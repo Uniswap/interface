@@ -3,8 +3,8 @@ import { CandlestickChart } from '@universe/mycelium/icons/CandlestickChart'
 import { LineChartDots } from '@universe/mycelium/icons/LineChartDots'
 import { SegmentedControl } from '@universe/mycelium/segmented-control-compat'
 import { useTranslation } from 'react-i18next'
-import { PriceChartType } from '~/components/Charts/utils'
 import { MouseoverTooltip } from '~/components/Tooltip'
+import { PriceChartType } from '~/utils/charts'
 
 export function AdvancedPriceChartToggle({
   currentChartType,

@@ -1,6 +1,6 @@
 import { Navigate, useParams } from 'react-router'
 import { areCurrencyIdsEqual } from 'uniswap/src/utils/currencyId'
-import { CREATE_POOL_PATH } from '~/pages/AddLiquidity/poolLinkParams'
+import { CREATE_POOL_PATH } from '~/utils/params/poolLinkParams'
 
 export function AddLiquidityV2WithTokenRedirects() {
   const { currencyIdA, currencyIdB } = useParams<{ currencyIdA: string; currencyIdB: string }>()

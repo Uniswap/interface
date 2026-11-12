@@ -1,4 +1,4 @@
-import { ADD_LIQUIDITY_PATH } from '~/pages/AddLiquidity/poolLinkParams'
+import { ADD_LIQUIDITY_PATH } from '~/utils/params/poolLinkParams'
 
 /** Builds the create-position route — the generic "new position" CTA, which opens the pool browser. */
 export function buildCreatePositionHref({ entryPoint }: { entryPoint?: string } = {}): string {

@@ -1,7 +1,7 @@
 const crypto = require('crypto')
 const fs = require('fs')
 const path = require('path')
-const withStorybook = require('@storybook/react-native/metro/withStorybook')
+const { withStorybook } = require('@storybook/react-native/metro/withStorybook')
 const { mergeConfig } = require('@react-native/metro-config')
 const { getDefaultConfig: getExpoDefaultConfig } = require('expo/metro-config')
 const { withUniwindConfig } = require('uniwind/metro')
@@ -34,15 +34,15 @@ const customConfig = {
 }
 
 // STORYBOOK_ENABLED=true force-includes Storybook in release-mode bundles (the
-// device-farm storybook artifacts). StorybookScreen.tsx gates its .storybook require off the
+// device-farm storybook artifacts). StorybookScreen.tsx gates its .rnstorybook require off the
 // same babel-inlined flag, so the two gates must stay in sync.
 const IS_STORYBOOK_ENABLED =
   process.env.STORYBOOK_ENABLED === 'true' || (process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test')
 
 const finalConfig = withStorybook(mergeConfig(getExpoDefaultConfig(__dirname), defaultConfig, customConfig), {
+  // false also strips Storybook's modules from the bundle.
   enabled: IS_STORYBOOK_ENABLED,
-  onDisabledRemoveStorybook: true,
-  configPath: path.resolve(__dirname, './.storybook'),
+  configPath: path.resolve(__dirname, './.rnstorybook'),
 })
 
 // @hpke/* CJS bundles use a UMD wrapper where `require` is a parameter binding,

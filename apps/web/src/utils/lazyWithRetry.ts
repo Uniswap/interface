@@ -24,6 +24,7 @@ import {
   useState,
 } from 'react'
 import { logger } from 'utilities/src/logger/logger'
+import { sleep } from 'utilities/src/time/timing'
 
 interface RetryOptions {
   maxRetries?: number
@@ -168,7 +169,7 @@ function createRetryableImport<T extends ComponentType<any>>(
           lastError.message,
         )
 
-        await new Promise((resolve) => setTimeout(resolve, delay))
+        await sleep(delay)
       }
     }
 

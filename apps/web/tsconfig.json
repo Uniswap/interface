@@ -25,7 +25,7 @@
     "strict": true,
     "strictNullChecks": true,
     "target": "ESNext",
-    "types": ["chrome", "vitest/globals"],
+    "types": ["chrome", "vitest/globals", "vitest-presets/vitest/jest-dom", "vitest-presets/vitest/jest-extended"],
     "useUnknownInCatchVariables": false,
     "paths": {
       "~/*": ["./src/*"],
@@ -39,12 +39,13 @@
     "src/**/*.json",
     ".storybook/preview.tsx",
     ".storybook/main.ts",
+    ".storybook/vite.config.mts",
+    ".storybook/vitest.config.mts",
     "vite.config.mts",
     "vite.server.config.mts",
     "scripts/*",
     "vite/*"
   ],
-  "exclude": ["scripts/build-vercel.ts"],
   "references": [
     {
       "path": "../../packages/wallet"
@@ -111,6 +112,12 @@
     },
     {
       "path": "../../packages/cca"
+    },
+    {
+      "path": "../../config/storybook"
+    },
+    {
+      "path": "../../config/vite-presets"
     }
   ]
 }

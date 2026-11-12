@@ -9,6 +9,7 @@ import { Permit2TransactionStep } from 'uniswap/src/features/transactions/steps/
 import { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { useEvent } from 'utilities/src/react/hooks'
+import { currentTimeInSeconds } from 'utilities/src/time/time'
 import { assume0xAddress, encodeFunctionData, erc20Abi } from '~/chains'
 import { useAccount } from '~/connection/hooks/useAccount'
 import { AuctionDetails } from '~/features/Toucan/Auction/store/types'
@@ -73,7 +74,7 @@ export function useBidPermit2Flow({
     if (!bidTokenAmount || permitAllowance === undefined || permitExpiration === undefined) {
       return false
     }
-    const now = Math.floor(Date.now() / 1000)
+    const now = currentTimeInSeconds()
     return (
       (permitAllowance.greaterThan(bidTokenAmount) || permitAllowance.equalTo(bidTokenAmount)) &&
       permitExpiration >= now

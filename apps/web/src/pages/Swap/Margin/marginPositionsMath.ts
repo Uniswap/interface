@@ -1,3 +1,4 @@
+import { currentTimeInSeconds } from 'utilities/src/time/time'
 const AGE_STEPS: Array<{ seconds: number; suffix: string }> = [
   { seconds: 86_400, suffix: 'd' },
   { seconds: 3_600, suffix: 'h' },
@@ -5,7 +6,7 @@ const AGE_STEPS: Array<{ seconds: number; suffix: string }> = [
 ]
 
 export function formatAge({ openedAtSeconds, nowSeconds }: { openedAtSeconds: number; nowSeconds?: number }): string {
-  const elapsed = Math.max(0, (nowSeconds ?? Math.floor(Date.now() / 1000)) - openedAtSeconds)
+  const elapsed = Math.max(0, (nowSeconds ?? currentTimeInSeconds()) - openedAtSeconds)
   for (const { seconds, suffix } of AGE_STEPS) {
     if (elapsed >= seconds) {
       return `${Math.floor(elapsed / seconds)}${suffix}`

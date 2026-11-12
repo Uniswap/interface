@@ -1,0 +1,133 @@
+import { Flex, IconButton, Separator, Text, TouchableArea } from '@universe/mycelium'
+import type { GeneratedIcon } from '@universe/mycelium/icons'
+import { CopySheets } from '@universe/mycelium/icons/CopySheets'
+import { QrCode } from '@universe/mycelium/icons/QrCode'
+import { useTranslation } from 'react-i18next'
+import { CopyToClipboard } from 'uniswap/src/components/CopyHelper/CopyHelper'
+import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
+import { useENSName } from 'uniswap/src/features/ens/api'
+import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
+import { useCexTransferProviders } from 'uniswap/src/features/fiatOnRamp/useCexTransferProviders'
+import { useActiveAddresses } from '~/connection/accounts/hooks'
+import { useOpenReceiveCryptoModal } from '~/hooks/useOpenReceiveCryptoModal'
+import { ProviderConnectedView } from '~/pages/Swap/Buy/ProviderConnectedView'
+import { ProviderConnectionError } from '~/pages/Swap/Buy/ProviderConnectionError'
+import { AccountOption } from '~/pages/Swap/Buy/ReceiveCryptoModal/AccountOption'
+import { ProviderOption } from '~/pages/Swap/Buy/ReceiveCryptoModal/ProviderOption'
+import { ReceiveModalState } from '~/types/receiveCryptoModal'
+
+function ActionIcon({ Icon }: { Icon: GeneratedIcon }) {
+  return <IconButton emphasis="secondary" size="xxsmall" icon={<Icon />} />
+}
+
+function AccountCardItem({ address }: { address: Address }): JSX.Element {
+  const { data: unitag } = useUnitagsAddressQuery({
+    params: address ? { address } : undefined,
+  })
+  const { data: ENSName } = useENSName(address)
+
+  const onPressShowWalletQr = useOpenReceiveCryptoModal({
+    modalState: ReceiveModalState.QR_CODE,
+    qrCodeAddress: address,
+  })
+
+  return (
+    <Flex row alignItems="flex-start" gap="$spacing12">
+      <Flex
+        fill
+        row
+        borderColor="$surface3"
+        borderRadius="$rounded20"
+        borderWidth="$spacing1"
+        gap="$spacing12"
+        p="$spacing12"
+      >
+        <Flex fill>
+          <AccountOption account={address} ensUsername={ENSName} uniswapUsername={unitag?.username} />
+        </Flex>
+        <Flex centered row gap="$spacing12" px="$spacing8">
+          <CopyToClipboard toCopy={address}>
+            <ActionIcon Icon={CopySheets} />
+          </CopyToClipboard>
+          <TouchableArea onPress={onPressShowWalletQr}>
+            <ActionIcon Icon={QrCode} />
+          </TouchableArea>
+        </Flex>
+      </Flex>
+    </Flex>
+  )
+}
+
+type ChooseProviderProps = {
+  providersOnly?: boolean
+  errorProvider?: FORServiceProvider
+  connectedProvider?: FORServiceProvider
+  setConnectedProvider: (provider: FORServiceProvider) => void
+  setErrorProvider: (provider: FORServiceProvider | undefined) => void
+}
+
+export function ChooseProvider({
+  providersOnly = false,
+  errorProvider,
+  connectedProvider,
+  setConnectedProvider,
+  setErrorProvider,
+}: ChooseProviderProps): JSX.Element {
+  const { t } = useTranslation()
+  const activeAddresses = useActiveAddresses()
+  const providers = useCexTransferProviders()
+
+  if (errorProvider) {
+    return (
+      <ProviderConnectionError onBack={() => setErrorProvider(undefined)} selectedServiceProvider={errorProvider} />
+    )
+  }
+
+  if (connectedProvider) {
+    return <ProviderConnectedView selectedServiceProvider={connectedProvider} />
+  }
+
+  return (
+    <Flex grow gap="$spacing24" mb="$spacing16">
+      <Flex gap="$spacing4" p="$spacing8" pt="$spacing24">
+        <Text color="$neutral1" mt="$spacing2" textAlign="center" variant="subheading1">
+          {providersOnly ? t('home.empty.cexTransfer') : t('fiatOnRamp.receiveCrypto.title')}
+        </Text>
+        <Text color="$neutral2" mt="$spacing2" textAlign="center" variant="body3">
+          {providersOnly ? t('home.empty.cexTransfer.description') : t('fiatOnRamp.receiveCrypto.transferFunds')}
+        </Text>
+      </Flex>
+      <Flex gap="$spacing12">
+        {!providersOnly && (
+          <>
+            {activeAddresses.evmAddress && <AccountCardItem address={activeAddresses.evmAddress} />}
+            {activeAddresses.svmAddress && <AccountCardItem address={activeAddresses.svmAddress} />}
+          </>
+        )}
+        {providers.length > 0 && (
+          <Flex gap="$spacing12">
+            {!providersOnly && (
+              <Flex centered row shrink gap="$spacing12">
+                <Separator />
+                <Text color="$neutral2" textAlign="center" variant="body3">
+                  {t('fiatOnRamp.receiveCrypto.modal.sectionTitle.fromAccount')}
+                </Text>
+                <Separator />
+              </Flex>
+            )}
+            <Flex grow gap="$spacing12">
+              {providers.map((serviceProvider) => (
+                <ProviderOption
+                  key={serviceProvider.name}
+                  serviceProvider={serviceProvider}
+                  setConnectedProvider={setConnectedProvider}
+                  setErrorProvider={setErrorProvider}
+                />
+              ))}
+            </Flex>
+          </Flex>
+        )}
+      </Flex>
+    </Flex>
+  )
+}

@@ -3,12 +3,13 @@ import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes
 import { type Currency, Price } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
 import { nativeOnChain, USDT } from 'uniswap/src/constants/tokens'
+import type { Mock } from 'vitest'
+import { useCreateLiquidityContext } from '~/features/Liquidity/Create/CreateLiquidityContextProvider'
 import { useDefaultInitialPrice } from '~/features/Liquidity/Create/hooks/useDefaultInitialPrice'
 import { useInitialPriceAcceptance } from '~/features/Liquidity/Create/hooks/useInitialPriceAcceptance'
 import type { PriceRangeState } from '~/features/Liquidity/Create/types'
-import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 
-vi.mock('~/pages/CreatePosition/CreateLiquidityContextProvider', () => ({ useCreateLiquidityContext: vi.fn() }))
+vi.mock('~/features/Liquidity/Create/CreateLiquidityContextProvider', () => ({ useCreateLiquidityContext: vi.fn() }))
 vi.mock('~/features/Liquidity/Create/hooks/usePoolDisplayCurrencies', () => ({
   usePoolDisplayCurrencies: () => ({ TOKEN0: WETH, TOKEN1: USDT }),
 }))
@@ -35,7 +36,7 @@ function mockContext({
   creatingPoolOrPair?: boolean
   protocolVersion?: ProtocolVersion
   hasTickSpacing?: boolean
-}): { setPriceRangeState: ReturnType<typeof vi.fn> } {
+}): { setPriceRangeState: Mock } {
   const setPriceRangeState = vi.fn()
   mockedUseCreateLiquidityContext.mockReturnValue({
     creatingPoolOrPair,

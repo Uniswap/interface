@@ -50,14 +50,16 @@ export function ExistingTokenForm({ existing }: { existing: ExistingTokenFormSta
   const selectedCurrencyInfo = existing.existingTokenCurrencyInfo
   const selectedCurrency = selectedCurrencyInfo?.currency
   const { totalSupply, isLoading: totalSupplyLoading, isError: totalSupplyError } = useTotalSupply(selectedCurrency)
-  const projectMetadata = useTokenMetadata(selectedCurrencyInfo?.currencyId)
+  const { data: projectMetadata, isLoading: isProjectMetadataLoading } = useTokenMetadata(
+    selectedCurrencyInfo?.currencyId,
+  )
   const { isGeoRestricted, isGeoRestrictionPending, unavailableLabel } = useToucanGeoRestriction(selectedCurrency)
 
   const hasFetchError = (!!currencyError && !!lookupCurrencyId) || (totalSupplyError && !!selectedCurrencyInfo)
   const canContinue =
     useIsStepValid(CreateAuctionStep.ADD_TOKEN_INFO) &&
     !totalSupplyLoading &&
-    !projectMetadata.isLoading &&
+    !isProjectMetadataLoading &&
     !hasFetchError
   // Fail closed while the geo-restriction check is pending: keep the CTA disabled until the token is
   // confirmed clean, so a restricted token never briefly shows an enabled Continue button.
@@ -97,19 +99,26 @@ export function ExistingTokenForm({ existing }: { existing: ExistingTokenFormSta
   }, [totalSupply, existing.totalSupply, updateExistingTokenField])
 
   useEffect(() => {
-    if (projectMetadata.isLoading) {
+    if (isProjectMetadataLoading) {
       return
     }
-    if ((projectMetadata.description ?? '') !== existing.description) {
-      updateExistingTokenField('description', projectMetadata.description ?? '')
+    if ((projectMetadata?.description ?? '') !== existing.description) {
+      updateExistingTokenField('description', projectMetadata?.description ?? '')
     }
-    if ((projectMetadata.homepageUrl ?? '') !== existing.websiteLink) {
-      updateExistingTokenField('websiteLink', projectMetadata.homepageUrl ?? '')
+    if ((projectMetadata?.homepageUrl ?? '') !== existing.websiteLink) {
+      updateExistingTokenField('websiteLink', projectMetadata?.homepageUrl ?? '')
     }
-    if ((projectMetadata.twitterName ?? '') !== existing.xProfile) {
-      updateExistingTokenField('xProfile', projectMetadata.twitterName ?? '')
+    if ((projectMetadata?.twitterName ?? '') !== existing.xProfile) {
+      updateExistingTokenField('xProfile', projectMetadata?.twitterName ?? '')
     }
-  }, [projectMetadata, existing.description, existing.websiteLink, existing.xProfile, updateExistingTokenField])
+  }, [
+    isProjectMetadataLoading,
+    projectMetadata,
+    existing.description,
+    existing.websiteLink,
+    existing.xProfile,
+    updateExistingTokenField,
+  ])
 
   const [loggedErrorKey, setLoggedErrorKey] = useState<string | undefined>(undefined)
   useEffect(() => {

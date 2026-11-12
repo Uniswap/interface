@@ -6,7 +6,7 @@ import type {
 } from '@universe/sessions/src/headless/createHeadlessSessionClient'
 import { createSessionTransport } from '@universe/sessions/src/headless/createSessionTransport'
 import { mainnet } from 'viem/chains'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, type Mock, vi } from 'vitest'
 
 const HEADERS_A: HeadlessSessionHeaders = {
   'x-request-source': 'uniswap-extension',
@@ -21,8 +21,8 @@ const HEADERS_B: HeadlessSessionHeaders = {
 }
 
 interface StubSessionClient extends HeadlessSessionClient {
-  getSessionHeaders: ReturnType<typeof vi.fn>
-  recover: ReturnType<typeof vi.fn>
+  getSessionHeaders: Mock
+  recover: Mock
 }
 
 function createStubSessionClient(headers: HeadlessSessionHeaders = HEADERS_A): StubSessionClient {
@@ -40,7 +40,7 @@ interface CapturedRequest {
 
 let captured: CapturedRequest[]
 
-function stubFetch(...responses: (() => Response)[]): ReturnType<typeof vi.fn> {
+function stubFetch(...responses: (() => Response)[]): Mock {
   const fetchMock = vi.fn(async (url: string | URL | Request, init?: RequestInit) => {
     captured.push({
       url: String(url),

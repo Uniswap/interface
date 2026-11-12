@@ -115,6 +115,7 @@ export interface PoolOption extends BaseOption {
   chainId: UniverseChainId
   token0CurrencyInfo: CurrencyInfo
   token1CurrencyInfo: CurrencyInfo
+  isToken0Quote?: boolean
   protocolVersion: ProtocolVersion
   hookAddress?: string
   feeTier: number

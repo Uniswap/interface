@@ -27,3 +27,10 @@ export {
 } from './privy-embedded-wallet'
 
 export { liquidityFeErrorTrackingMonitors } from './liquidity-fe'
+
+export {
+  platformInfraAppStartMonitors,
+  platformInfraRumMetrics,
+  platformInfraWebRumMetrics,
+  platformInfraWebVitalMonitors,
+} from './platform-infra'

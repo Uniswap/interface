@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect } from 'react'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { useGlobalEarnVaultModalStore } from '~/features/earn/globalEarnVaultModalStore'
+import { useGlobalEarnVaultModalStore } from '~/state/globalEarnVaultModalStore'
 
 const EarnVaultModal = lazy(() =>
   import('~/features/earn/EarnVaultModal').then((module) => ({ default: module.EarnVaultModal })),

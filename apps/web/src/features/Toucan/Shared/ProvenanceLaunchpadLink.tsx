@@ -9,7 +9,7 @@ import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import type { TokenProvenanceAnalyticsProperties } from 'uniswap/src/features/telemetry/types'
 import { sanitizeUrl } from 'utilities/src/format/urls'
 import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
-import { UNISWAP_CCA_LAUNCHPAD_ID } from '~/pages/Launches/launchesModel'
+import { UNISWAP_CCA_LAUNCHPAD_ID } from '~/features/Toucan/utils/launchesModel'
 import { ExploreTab } from '~/types/explore'
 
 /** Explore's auctions tab, which lists Uniswap's own custom auctions. */

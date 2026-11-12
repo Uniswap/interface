@@ -54,10 +54,11 @@ notes.txt
 
 package-lock.json
 
-.vercel
-
 # Storybook
 *storybook.log
 storybook-static/
 
 coverage/
+
+# wrangler local cache
+/.wrangler

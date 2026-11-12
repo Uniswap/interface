@@ -2,7 +2,7 @@ import { defaultWeights, Input as BaseInput, type InputProps as BaseInputProps }
 import React, { type ElementRef, forwardRef, type ForwardRefExoticComponent, type RefAttributes } from 'react'
 import { Locale } from 'uniswap/src/features/language/constants'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
-import { escapeRegExp } from '~/utils/escapeRegExp'
+import { escapeRegExp } from 'utilities/src/primitives/string'
 
 /** Larger left-aligned type used by swap / limit amount fields. */
 export type AmountLayout = 'default' | 'swapCurrency'

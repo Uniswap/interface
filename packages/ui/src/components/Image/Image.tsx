@@ -17,6 +17,7 @@ import {
 import { buildPressHandlers, type PressTracker } from 'ui/src/components/Image/buildPressHandlers'
 import { isWebRender } from 'ui/src/components/Image/isWebRender'
 import { useIsXsBreakpoint } from 'ui/src/components/Image/useIsXsBreakpoint'
+import { getKeys } from 'utilities/src/primitives/objects'
 
 type RadiusTokenValue = `$${keyof typeof borderRadii}` | number
 type ColorTokenValue = `$${string & keyof UseSporeColorsReturn}`
@@ -278,7 +279,7 @@ function buildPropStyle(
   // collapses the value type in a way tsc versions disagree on (CI reported TS2367 on the
   // undefined guard); `unknown` keeps the guard meaningful under every tsc.
   const record: Record<string, unknown> = props
-  for (const key of Object.keys(record) as (keyof ImageProps)[]) {
+  for (const key of getKeys(record)) {
     const value = record[key]
     if (value === undefined) {
       continue

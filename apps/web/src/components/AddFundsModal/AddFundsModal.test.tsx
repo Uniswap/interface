@@ -2,7 +2,7 @@ import { TestID } from '@universe/test'
 import type { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { AddFundsModal } from '~/components/AddFundsModal/AddFundsModal'
 import { useAddFundsActions } from '~/components/emptyWallet/AddFundsOptions'
-import { useCexTransferProviderPress } from '~/components/ReceiveCryptoModal/useCexTransferProviderPress'
+import { useCexTransferProviderPress } from '~/hooks/useCexTransferProviderPress'
 import { useModalState } from '~/hooks/useModalState'
 import { mocked } from '~/test-utils/mocked'
 import { fireEvent, render, screen } from '~/test-utils/render'
@@ -15,7 +15,7 @@ vi.mock('~/components/emptyWallet/AddFundsOptions', () => ({
   useAddFundsActions: vi.fn(),
 }))
 
-vi.mock('~/components/ReceiveCryptoModal/useCexTransferProviderPress', () => ({
+vi.mock('~/hooks/useCexTransferProviderPress', () => ({
   useCexTransferProviderPress: vi.fn(),
 }))
 

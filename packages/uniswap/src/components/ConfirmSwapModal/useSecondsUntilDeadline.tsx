@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StepStatus } from 'uniswap/src/components/ConfirmSwapModal/types'
 import { noop } from 'utilities/src/react/noop'
+import { currentTimeInSeconds } from 'utilities/src/time/time'
 
 /**
  * Hook uses to calculate the number of seconds remaining until the deadline and return
@@ -20,7 +21,7 @@ export function useSecondsUntilDeadline(
       return noop
     }
 
-    const secondsUntilDeadline = deadline - Math.floor(Date.now() / 1000)
+    const secondsUntilDeadline = deadline - currentTimeInSeconds()
     if (secondsUntilDeadline <= 0) {
       return noop
     }

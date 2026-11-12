@@ -23,5 +23,6 @@ export const isMobileWebAndroid: boolean = false
 // App
 export const isExtensionApp: boolean = false
 export const isMobileApp: boolean = true
+export const isDevPortalApp: boolean = false
 export const isWebApp: boolean = false
 export const isWebAppDesktop: boolean = false

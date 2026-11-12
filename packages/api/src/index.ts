@@ -26,6 +26,8 @@ export {
   createHelpArticleUrl,
   DEV_ENTRY_GATEWAY_API_BASE_URL,
   DEV_ENTRY_GATEWAY_HOST,
+  DEV_RPC_API_BASE_URL,
+  DEV_RPC_HOST,
   ENTRY_GATEWAY_API_BASE_URLS,
   ENTRY_GATEWAY_HOSTS,
   getCloudflareApiBaseUrl,
@@ -34,8 +36,13 @@ export {
   helpUrl,
   PROD_ENTRY_GATEWAY_API_BASE_URL,
   PROD_ENTRY_GATEWAY_HOST,
+  PROD_RPC_API_BASE_URL,
+  PROD_RPC_HOST,
+  RPC_API_BASE_URLS,
   STAGING_ENTRY_GATEWAY_API_BASE_URL,
   STAGING_ENTRY_GATEWAY_HOST,
+  STAGING_RPC_API_BASE_URL,
+  STAGING_RPC_HOST,
   TrafficFlows,
 } from './clients/base/urls'
 
@@ -245,7 +252,15 @@ export type {
 } from './clients/notifications/types'
 
 // Config Service API (server-side only)
-export { RpcHttpError, isRpcNotFound, rpcConnectCode, rpcHttpStatus } from './clients/configService/connectrpcClient'
+export {
+  RpcHttpError,
+  isRpcNotFound,
+  rpcConnectCode,
+  rpcHttpStatus,
+  rpcUpstreamFromPath,
+  upstreamErrorFields,
+} from './clients/configService/connectrpcClient'
+export type { RpcUpstream } from './clients/configService/connectrpcClient'
 export { createConfigServerClient } from './clients/configService/createConfigServerClient'
 export type {
   ApproveProposedParamReply,
@@ -264,17 +279,13 @@ export type {
 export { createSecretsServerClient } from './clients/configService/createSecretsServerClient'
 export type {
   ApproveProposedSecretChangeByIdReply,
-  ApproveSecretChangeReply,
   GetProposedSecretChangeByIdResponse,
-  GetProposedSecretChangeResponse,
-  GetProposedSecretChangesInScopeResponse,
   GetSecretValueResponse,
   ListProposedSecretChangesInScopeResponse,
   ListSecretsResponse,
   ProposeSecretChangeReply,
   RejectProposedSecretChangeByIdReply,
   SecretChangeProposalSummary,
-  SecretChangeReply,
   SecretKeyChange,
   SecretMetadataResponse,
   SecretsServerClientConfig,
@@ -380,7 +391,9 @@ export { getTransport } from './transport'
 export {
   ENTRY_GATEWAY_PROXY_ENV_SEGMENT,
   ENTRY_GATEWAY_PROXY_PATH,
+  type EntryGatewayPathEnv,
   getEntryGatewayUrl,
+  resolveEntryGatewayEnvFromPath,
   getForApiUrl,
 } from './getEntryGatewayUrl'
 

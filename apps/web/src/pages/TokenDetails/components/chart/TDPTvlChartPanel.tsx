@@ -1,10 +1,10 @@
 import { useTranslation } from 'react-i18next'
 import { ChartSkeleton } from '~/components/Charts/LoadingState'
 import { LineChart } from '~/components/Charts/StackedLineChart'
-import { ChartType, DataQuality } from '~/components/Charts/utils'
 import { EXPLORE_CHART_HEIGHT_PX } from '~/features/Explore/constants'
 import { useTDPTVLChartData } from '~/pages/TokenDetails/components/chart/hooks/useTDPTVLChartData'
 import type { TDPChartQueryVariables } from '~/pages/TokenDetails/components/chart/TDPChartState'
+import { ChartType, DataQuality } from '~/utils/charts'
 
 interface TDPTvlChartPanelProps {
   variables: TDPChartQueryVariables

@@ -1,0 +1,11 @@
+/* The web app's Tailwind setup (apps/web/src/tailwind.css), minus the app's own sources. */
+@import "tailwindcss";
+@import "@universe/mycelium/tailwind";
+@import "@universe/mycelium/fonts";
+@import "@universe/mycelium/text-compat.css";
+@import "@universe/mycelium/shimmer.css";
+@import "@universe/mycelium/button-compat.css";
+
+:root {
+  --background: var(--surface1);
+}

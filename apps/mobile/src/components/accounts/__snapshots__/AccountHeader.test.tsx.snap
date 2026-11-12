@@ -20,6 +20,7 @@ exports[`AccountHeader > renders correctly 1`] = `
           style="gap: 12px;"
         >
           <button
+            accessibilityactions="[object Object]"
             android_ripple="[object Object]"
             data-testid="account-header-avatar"
             hitslop="20"
@@ -77,6 +78,7 @@ exports[`AccountHeader > renders correctly 1`] = `
             style="gap: 8px;"
           >
             <button
+              accessibilityactions="[object Object]"
               android_ripple="[object Object]"
               hitslop="20"
               role="button"
@@ -101,6 +103,7 @@ exports[`AccountHeader > renders correctly 1`] = `
               </div>
             </button>
             <button
+              accessibilityactions="[object Object]"
               android_ripple="[object Object]"
               data-testid="account-header-copy-address"
               role="button"
@@ -140,6 +143,7 @@ exports[`AccountHeader > renders correctly 1`] = `
         style="gap: 12px;"
       >
         <button
+          accessibilityactions="[object Object]"
           android_ripple="[object Object]"
           hitslop="5"
           role="button"

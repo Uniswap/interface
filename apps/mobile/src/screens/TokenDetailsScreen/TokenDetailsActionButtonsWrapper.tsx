@@ -68,7 +68,7 @@ export const TokenDetailsActionButtonsWrapper = memo(
 
     const { navigateToFiatOnRamp, navigateToSwapFlow, navigateToSend, navigateToReceive } = useWalletNavigation()
 
-    const metadata = useTokenMetadata(currencyId)
+    const { data: metadata } = useTokenMetadata(currencyId)
 
     const isBlocked = currencyInfo?.safetyInfo?.tokenList === TokenList.Blocked
 
@@ -292,13 +292,13 @@ export const TokenDetailsActionButtonsWrapper = memo(
       fiatOnRampCurrency,
       bridgingTokenWithHighestBalance,
       hasZeroGasBalance,
-      tokenSymbol: metadata.symbol,
+      tokenSymbol: metadata?.symbol,
       onPressBuyWithCash,
       onPressGet,
       onPressBuy,
     })
 
-    const geoRestrictedButtonTitle = metadata.symbol
+    const geoRestrictedButtonTitle = metadata?.symbol
       ? t('swap.geoRestriction.button', { tokenSymbol: metadata.symbol })
       : t('common.notAvailableInRegion.error')
 

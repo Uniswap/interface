@@ -13,7 +13,7 @@ import {
   sideSeriesOptions,
   tooltipTransform,
 } from '~/pages/PoolDetails/components/ChartSection/DepthChartModel.helpers'
-import { formatPriceWithSubscript } from '~/pages/PoolDetails/components/formatPriceWithSubscript'
+import { formatPriceWithSubscript } from '~/utils/formatPriceWithSubscript'
 
 /**
  * Below this magnitude the TokenTx formatter's `FiveDecimals` rule rounds every value

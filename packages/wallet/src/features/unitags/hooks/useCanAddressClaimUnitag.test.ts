@@ -2,6 +2,7 @@ import { SharedQueryClient } from '@universe/api'
 import { unitagsApiClient } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
 import { getUnitagsClaimEligibilityQueryOptions } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsClaimEligibilityQuery'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
+import { sleep } from 'utilities/src/time/timing'
 import type { Mock } from 'vitest'
 import {
   useCanAddressClaimUnitag,
@@ -26,7 +27,7 @@ const fetchClaimEligibilityMock = unitagsApiClient.fetchClaimEligibility as Mock
 function respondWith(canClaim: boolean, delayMs = 0): void {
   fetchClaimEligibilityMock.mockImplementation(async () => {
     if (delayMs > 0) {
-      await new Promise((resolve) => setTimeout(resolve, delayMs))
+      await sleep(delayMs)
     }
     return { canClaim, errorCode: undefined }
   })

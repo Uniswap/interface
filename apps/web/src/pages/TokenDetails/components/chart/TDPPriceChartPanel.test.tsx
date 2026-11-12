@@ -3,12 +3,12 @@ import { TestID } from '@universe/test'
 import type { ReactNode } from 'react'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
-import { ChartType, DataQuality, PriceChartType } from '~/components/Charts/utils'
 import { TimePeriod } from '~/data/util'
 import { AuctionDisplayPhase } from '~/features/Toucan/Auction/utils/resolveAuctionDisplayState'
 import { useTokenPriceChartPanel } from '~/hooks/useTokenPriceChartPanel'
 import { TDPPriceChartPanel } from '~/pages/TokenDetails/components/chart/TDPPriceChartPanel'
 import { render, screen } from '~/test-utils/render'
+import { ChartType, DataQuality, PriceChartType } from '~/utils/charts'
 
 vi.mock('~/components/Charts/LoadingState', () => ({
   ChartSkeleton: function MockChartSkeleton({

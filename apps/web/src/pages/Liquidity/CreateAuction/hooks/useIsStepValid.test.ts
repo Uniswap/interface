@@ -1,6 +1,7 @@
 import { renderHook } from '@testing-library/react'
 import { type Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { createElement, type ReactNode } from 'react'
+import { ONE_DAY_MS } from 'utilities/src/time/time'
 import { describe, expect, it } from 'vitest'
 import { useIsStepValid } from '~/pages/Liquidity/CreateAuction/hooks/useIsStepValid'
 import { CreateAuctionStoreContext } from '~/pages/Liquidity/CreateAuction/store/CreateAuctionStoreContext'
@@ -10,7 +11,7 @@ import {
 } from '~/pages/Liquidity/CreateAuction/store/createCreateAuctionStore'
 import { minimumAuctionSupplyDeposit } from '~/pages/Liquidity/CreateAuction/store/postAuctionLiquidityAllocationState'
 import { CreateAuctionStep } from '~/pages/Liquidity/CreateAuction/types'
-import { getMinStartTime, MS_PER_DAY } from '~/pages/Liquidity/CreateAuction/utils/duration'
+import { getMinStartTime } from '~/pages/Liquidity/CreateAuction/utils/duration'
 
 /**
  * Builds a store committed to a new-token auction with valid start/end times and a floor price, so
@@ -21,8 +22,8 @@ function buildConfiguredStore(): CreateAuctionStore {
   const store = createCreateAuctionStore()
   const { actions } = store.getState()
   actions.commitTokenFormAndAdvance()
-  actions.setStartTime(new Date(Date.now() + MS_PER_DAY))
-  actions.setEndTime(new Date(Date.now() + 6 * MS_PER_DAY))
+  actions.setStartTime(new Date(Date.now() + ONE_DAY_MS))
+  actions.setEndTime(new Date(Date.now() + 6 * ONE_DAY_MS))
   actions.setFloorPrice('0.1')
   return store
 }
@@ -92,7 +93,7 @@ describe('useIsStepValid', () => {
   describe('pre-bid window', () => {
     it('accepts a window that opens before the start date', () => {
       const store = buildConfiguredStore()
-      store.getState().actions.setPreBidStartTime(new Date(Date.now() + MS_PER_DAY - 15 * 60_000))
+      store.getState().actions.setPreBidStartTime(new Date(Date.now() + ONE_DAY_MS - 15 * 60_000))
       expect(renderStepValid(store, CreateAuctionStep.CONFIGURE_AUCTION)).toBe(true)
     })
 

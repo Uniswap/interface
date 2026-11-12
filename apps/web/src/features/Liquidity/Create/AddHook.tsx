@@ -11,10 +11,10 @@ import { getHookRegistryKey, useHookRegistryMap } from 'uniswap/src/features/poo
 import { useUniswapHookProvenance } from 'uniswap/src/features/poolHooks/hooks/useUniswapHookProvenance'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { useCreateLiquidityContext } from '~/features/Liquidity/Create/CreateLiquidityContextProvider'
 import { useLiquidityUrlState } from '~/features/Liquidity/Create/hooks/useLiquidityUrlState'
 import { HookCard } from '~/features/Liquidity/HookCard'
 import { UniswapBuiltHookIcon } from '~/features/Liquidity/UniswapBuiltHookIcon'
-import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 
 export function AddHook() {
   const { t } = useTranslation()

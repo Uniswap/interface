@@ -37,7 +37,7 @@ import {
 } from '~/components/Charts/ChartModel'
 import { ChartUnavailableOverlay } from '~/components/Charts/ChartUnavailableOverlay'
 import { PriceChartData } from '~/components/Charts/PriceChart'
-import { DataQuality, formatTickMarks, PriceChartType } from '~/components/Charts/utils'
+import { formatTickMarks } from '~/components/Charts/utils'
 import { ErrorBoundary } from '~/components/ErrorBoundary'
 import { ActiveLiquidityChart } from '~/features/Liquidity/charts/ActiveLiquidityChart/ActiveLiquidityChart'
 import { getCrosshairProps, priceToNumber } from '~/features/Liquidity/charts/LiquidityPositionRangeChart/utils'
@@ -46,6 +46,7 @@ import { useLiquidityServicePoolPriceChartData } from '~/features/Liquidity/char
 import { getBaseAndQuoteCurrencies } from '~/features/Liquidity/utils/currency'
 import { getPoolIdOrAddressFromCreatePositionInfo } from '~/features/Liquidity/utils/getPoolIdOrAddressFromCreatePositionInfo'
 import { isOutOfRange } from '~/features/Liquidity/utils/priceRangeInfo'
+import { DataQuality, PriceChartType } from '~/utils/charts'
 
 export const CHART_HEIGHT = 52
 export const CHART_WIDTH = 224

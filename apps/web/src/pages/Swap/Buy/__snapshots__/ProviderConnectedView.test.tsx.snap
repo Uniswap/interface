@@ -23,7 +23,9 @@ exports[`ProviderConnectedView > should render the component and call callbacks 
       tabindex="0"
     >
       <svg
+        aria-hidden="true"
         fill="none"
+        focusable="false"
         stroke-width="8"
         style="color: rgba(19, 19, 19, 0.63); width: 24px; height: 24px;"
         viewBox="0 0 16 16"
@@ -74,7 +76,6 @@ exports[`ProviderConnectedView > should render the component and call callbacks 
           class="box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-medium)] text-[12px] [line-height:13.8px] [font-weight:535] [color:var(--stext-neutral3)] no-underline [display:inline] [outline-style:none] hover:[color:var(--ch-col)] focus:[color:var(--cf-col)] focus:[text-decoration-line:var(--cf-tdl)] focus:[text-decoration-color:var(--cf-tdc)] focus-visible:[color:var(--cv-col)] focus-visible:[text-decoration-line:var(--cv-tdl)] focus-visible:[text-decoration-color:var(--cv-tdc)] [text-underline-position:from-font]"
           data-stext-anchor="h f v"
           href="https://uniswap.org/terms-of-service"
-          role="link"
           style="--ch-col: var(--stext-neutral3Hovered); --cf-col: var(--stext-neutral3Hovered); --cf-tdl: underline; --cf-tdc: var(--stext-neutral3Hovered); --cv-col: var(--stext-neutral3Hovered); --cv-tdl: underline; --cv-tdc: var(--stext-neutral3Hovered); --stext-a-col: var(--stext-neutral3); --stext-a-col-h: var(--stext-neutral3Hovered); --stext-a-col-f: var(--stext-neutral3Hovered); --stext-a-col-v: var(--stext-neutral3Hovered);"
           target="_blank"
         >
@@ -85,7 +86,6 @@ exports[`ProviderConnectedView > should render the component and call callbacks 
           class="box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-medium)] text-[12px] [line-height:13.8px] [font-weight:535] [color:var(--stext-neutral3)] no-underline [display:inline] [outline-style:none] hover:[color:var(--ch-col)] focus:[color:var(--cf-col)] focus:[text-decoration-line:var(--cf-tdl)] focus:[text-decoration-color:var(--cf-tdc)] focus-visible:[color:var(--cv-col)] focus-visible:[text-decoration-line:var(--cv-tdl)] focus-visible:[text-decoration-color:var(--cv-tdc)] [text-underline-position:from-font]"
           data-stext-anchor="h f v"
           href="https://uniswap.org/privacy-policy"
-          role="link"
           style="--ch-col: var(--stext-neutral3Hovered); --cf-col: var(--stext-neutral3Hovered); --cf-tdl: underline; --cf-tdc: var(--stext-neutral3Hovered); --cv-col: var(--stext-neutral3Hovered); --cv-tdl: underline; --cv-tdc: var(--stext-neutral3Hovered); --stext-a-col: var(--stext-neutral3); --stext-a-col-h: var(--stext-neutral3Hovered); --stext-a-col-f: var(--stext-neutral3Hovered); --stext-a-col-v: var(--stext-neutral3Hovered);"
           target="_blank"
         >

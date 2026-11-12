@@ -62,6 +62,15 @@ export interface PoolData {
    */
   protocolFeePips?: number
 
+  /**
+   * The LP fee the pool charges right now, in integer pips, from `PoolSummary.current_lp_fee`. Equals
+   * the fee tier except on a v4 dynamic-fee pool, where it's the most recent swap's fee; unset when
+   * that can't be established yet.
+   */
+  currentLpFeePips?: number
   /** Pool category ids in display precedence order, from `PoolSummary.category_ids`; empty when uncategorized. */
   categoryIds?: string[]
+
+  /** The backend-served quote token is token0, so the pair displays as token1 / token0. See `isToken0Quote`. */
+  isToken0Quote?: boolean
 }

@@ -1,6 +1,10 @@
 import { Code, ConnectError } from '@connectrpc/connect'
 import { errorFromJson } from '@connectrpc/connect/protocol-connect'
-import { isComplianceBlockError, isComplianceWalletBlockError } from '@universe/compliance/src/complianceBlock'
+import {
+  isAccountBlockedError,
+  isComplianceBlockError,
+  isComplianceWalletBlockError,
+} from '@universe/compliance/src/complianceBlock'
 import { describe, expect, it } from 'vitest'
 
 /**
@@ -74,5 +78,33 @@ describe(isComplianceWalletBlockError, () => {
     expect(isComplianceWalletBlockError(new ConnectError('Account is blocked', Code.Unauthenticated))).toBe(false)
     expect(isComplianceWalletBlockError(new Error('Account is blocked'))).toBe(false)
     expect(isComplianceWalletBlockError(null)).toBe(false)
+  })
+})
+
+describe(isAccountBlockedError, () => {
+  // How trading and the liquidity service answer a sanctioned wallet: UnauthorizedError
+  // carrying ACCOUNT_BLOCKED_ERROR, over ConnectRPC.
+  it('recognizes a service refusing a blocked wallet', () => {
+    expect(isAccountBlockedError(new ConnectError('Account is blocked', Code.Unauthenticated))).toBe(true)
+  })
+
+  it('recognizes it through the legacy error shape', () => {
+    expect(isAccountBlockedError({ data: { detail: 'Account is blocked' } })).toBe(true)
+  })
+
+  it('recognizes it on a plain Error', () => {
+    expect(isAccountBlockedError(new Error('UnauthorizedError: Account is blocked'))).toBe(true)
+  })
+
+  // An expired session is Unauthenticated too; calling that a blocked wallet would be
+  // worse than the generic error.
+  it('does not treat an expired session as a blocked wallet', () => {
+    expect(isAccountBlockedError(new ConnectError('Session expired', Code.Unauthenticated))).toBe(false)
+  })
+
+  it('ignores unrelated failures', () => {
+    expect(isAccountBlockedError(new ConnectError('FAILED_TO_ESTIMATE_GAS', Code.NotFound))).toBe(false)
+    expect(isAccountBlockedError(undefined)).toBe(false)
+    expect(isAccountBlockedError(null)).toBe(false)
   })
 })

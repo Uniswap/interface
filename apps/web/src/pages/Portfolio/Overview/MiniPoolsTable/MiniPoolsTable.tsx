@@ -15,16 +15,17 @@ import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constan
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { Table } from '~/components/Table'
+import { ViewAllButton } from '~/components/ViewAllButton'
+import { PortfolioTab } from '~/hooks/usePortfolioRoutes/types'
+import { usePortfolioRoutes } from '~/hooks/usePortfolioRoutes/usePortfolioRoutes'
+import { buildPortfolioUrl } from '~/hooks/usePortfolioRoutes/utils'
 import { PORTFOLIO_TABLE_ROW_HEIGHT } from '~/pages/Portfolio/constants'
-import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
+import { MINI_TABLE_HEADER_GAP, MINI_TABLE_ROW_GAP } from '~/pages/Portfolio/Overview/constants'
 import { usePoolsSectionWarning } from '~/pages/Portfolio/Overview/hooks/usePoolsSectionWarning'
 import { usePortfolioSectionTotalValue } from '~/pages/Portfolio/Overview/hooks/usePortfolioSectionTotalValue'
 import { useMiniPoolsTableColumns } from '~/pages/Portfolio/Overview/MiniPoolsTable/hooks/useMiniPoolsTableColumns'
 import { useMiniPoolsTableData } from '~/pages/Portfolio/Overview/MiniPoolsTable/hooks/useMiniPoolsTableData'
 import { TableSectionHeader } from '~/pages/Portfolio/Overview/TableSectionHeader'
-import { ViewAllButton } from '~/pages/Portfolio/Overview/ViewAllButton'
-import { PortfolioTab } from '~/pages/Portfolio/types'
-import { buildPortfolioUrl } from '~/pages/Portfolio/utils/portfolioUrls'
 
 const POOLS_TABLE_MAX_HEIGHT = 800
 const POOLS_TABLE_MAX_WIDTH = 1200
@@ -103,6 +104,7 @@ export const MiniPoolsTable = memo(function MiniPoolsTable({ account, maxPools, 
         })}
         loading={subtitleLoading}
         warningMessage={warningMessage}
+        contentGap={MINI_TABLE_HEADER_GAP}
         {...sectionTotalValue}
       >
         <Table
@@ -114,6 +116,7 @@ export const MiniPoolsTable = memo(function MiniPoolsTable({ account, maxPools, 
           rowWrapper={rowWrapper}
           rowHeight={PORTFOLIO_TABLE_ROW_HEIGHT}
           compactRowHeight={PORTFOLIO_TABLE_ROW_HEIGHT}
+          rowGap={MINI_TABLE_ROW_GAP}
           defaultPinnedColumns={['poolInfo']}
           maxWidth={POOLS_TABLE_MAX_WIDTH}
           centerArrows

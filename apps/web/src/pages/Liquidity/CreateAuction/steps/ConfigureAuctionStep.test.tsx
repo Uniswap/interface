@@ -1,9 +1,9 @@
 import { UniverseChainId } from '@universe/chains'
 import { describe, expect, it, vi } from 'vitest'
+import { RaiseCurrency } from '~/features/Toucan/utils/raiseCurrency'
 import { ConfigureAuctionStep } from '~/pages/Liquidity/CreateAuction/steps/ConfigureAuctionStep'
 import { CreateAuctionStoreContext } from '~/pages/Liquidity/CreateAuction/store/CreateAuctionStoreContext'
 import { createCreateAuctionStore } from '~/pages/Liquidity/CreateAuction/store/createCreateAuctionStore'
-import { RaiseCurrency } from '~/pages/Liquidity/CreateAuction/types'
 import { render, screen } from '~/test-utils/render'
 
 // Copy of the picker's option copy, so the assertions below are about what the user sees.

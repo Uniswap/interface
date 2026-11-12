@@ -4,8 +4,8 @@ import { lighten } from 'polished'
 import { PropsWithChildren, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { WaveLoader } from 'ui/src'
-import { ChartType } from '~/components/Charts/utils'
 import { ChartBarCrossedWithBackground } from '~/components/Table/ErrorBox'
+import { ChartType } from '~/utils/charts'
 
 const ERROR_WIDTH = 320
 
@@ -72,7 +72,7 @@ export function ChartErrorView({
   )
 }
 
-function ChartSkeletonAxes({
+export function ChartSkeletonAxes({
   height,
   fillColor,
   tickColor,

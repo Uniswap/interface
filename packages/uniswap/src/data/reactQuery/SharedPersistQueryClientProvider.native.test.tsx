@@ -47,6 +47,7 @@ vi.mock('utilities/src/logger/logger', () => ({
 // Importing the module under test triggers `persistQueryClientRestore()` once at
 // module load — so we capture that call record before any `mockClear()` runs.
 import { SharedPersistQueryClientProvider } from 'uniswap/src/data/reactQuery/SharedPersistQueryClientProvider.native'
+import { sleep } from 'utilities/src/time/timing'
 
 const moduleLoadRestoreCalls = mockRestore.mock.calls.slice()
 
@@ -125,7 +126,7 @@ describe('SharedPersistQueryClientProvider.native', () => {
       handlerRef.current?.('active')
     })
     // Flush any pending microtasks so a stray save would have a chance to fire.
-    await new Promise((resolve) => setTimeout(resolve, 0))
+    await sleep(0)
     expect(mockSave).not.toHaveBeenCalled()
   })
 

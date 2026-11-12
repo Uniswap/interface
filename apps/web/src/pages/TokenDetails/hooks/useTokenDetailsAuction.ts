@@ -5,8 +5,8 @@ import type { UniverseChainId } from '@universe/chains'
 import { FeatureFlags, useFeatureFlag, useStatsigClientStatus } from '@universe/gating'
 import { useMemo } from 'react'
 import { isHiddenAuction } from 'uniswap/src/features/toucan/hiddenAuctions'
+import { getTdpAuctionQueryOptions, getTdpAuctionRequest } from '~/features/Toucan/utils/tdpAuctionQueryOptions'
 import { TokenDetailsSourceState } from '~/pages/TokenDetails/context/tokenDetailsSourceState'
-import { getTdpAuctionQueryOptions, getTdpAuctionRequest } from '~/pages/TokenDetails/tdpAuctionQueryOptions'
 import { sortTokenDetailsAuctions } from '~/pages/TokenDetails/utils/tokenDetailsAuctionList'
 
 export type TokenDetailsAuctionSource =

@@ -1,4 +1,8 @@
 import { AddressStringFormat, normalizeAddress } from '@universe/chains'
+import {
+  getNewUserOnboardingWalletKey,
+  type NewUserOnboardingWalletHistory,
+} from 'uniswap/src/features/behaviorHistory/newUserOnboarding'
 import type { UniswapState } from 'uniswap/src/state/uniswapReducer'
 
 export const selectHasViewedBridgingBanner = (state: UniswapState): boolean =>
@@ -41,3 +45,9 @@ export const selectHasDismissedPoolsOutageBanner = (state: UniswapState): boolea
 
 export const selectHasAcknowledgedEarnHowItWorks = (state: UniswapState): boolean =>
   Object.keys(state.uniswapBehaviorHistory.earnHowItWorksAcknowledgedByVaultId ?? {}).length > 0
+
+export const selectNewUserOnboardingWalletHistory = (
+  state: UniswapState,
+  address: string | undefined,
+): NewUserOnboardingWalletHistory | undefined =>
+  address ? state.uniswapBehaviorHistory.newUserOnboarding?.byWallet[getNewUserOnboardingWalletKey(address)] : undefined

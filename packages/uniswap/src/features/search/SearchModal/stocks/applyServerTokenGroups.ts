@@ -4,7 +4,10 @@ import {
   normalizeWords,
   startsAWordOf,
 } from 'uniswap/src/features/search/SearchModal/hooks/useSectionsForSearchResultsUtils'
-import { optionChainAddresses } from 'uniswap/src/features/search/SearchModal/stocks/applyRwaGrouping'
+import {
+  optionChainAddresses,
+  optionSearchStats,
+} from 'uniswap/src/features/search/SearchModal/stocks/applyRwaGrouping'
 import {
   buildRwaCollectionOption,
   buildRwaSearchIndexFromRwas,
@@ -19,11 +22,11 @@ import { tagOptionAsRwa } from 'uniswap/src/features/search/SearchModal/stocks/t
 const MIN_ISSUERS_FOR_COLLECTION = 2
 
 /**
- * Group rows lead the list only for groups the query names directly, and only this many. The server also matches
- * through member names and symbols and returns up to its cap, so a one-letter query would otherwise stack fifteen
- * piles above every token hit.
+ * Group rows are drawn only for groups the query names directly, and only this many. The server also matches
+ * through member names and symbols and returns up to its cap, so a one-letter query would otherwise mix fifteen
+ * piles into the token hits.
  */
-const MAX_LEADING_GROUP_ROWS = 3
+const MAX_GROUP_ROWS = 3
 
 function isPile(rwa: Rwa): boolean {
   return rwa.issuerTokens.length >= MIN_ISSUERS_FOR_COLLECTION
@@ -39,10 +42,32 @@ function findGroupForOption(index: RwaSearchIndex, option: SearchModalOption): R
     .find(Boolean)
 }
 
+function optionVolume1dUsd(option: SearchModalOption): number {
+  return optionSearchStats(option)?.volume1dUsd ?? 0
+}
+
+/** Slots each row in ahead of the first option with less 1d volume; ties stay behind, so a group never outranks an equal token. */
+function insertByVolume({
+  rows,
+  options,
+}: {
+  rows: SearchModalOption[]
+  options: SearchModalOption[]
+}): SearchModalOption[] {
+  const merged = [...options]
+  for (const row of rows) {
+    const volume = optionVolume1dUsd(row)
+    const index = merged.findIndex((option) => optionVolume1dUsd(option) < volume)
+    merged.splice(index === -1 ? merged.length : index, 0, row)
+  }
+  return merged
+}
+
 /**
  * Lays the server's matched stock / ETF groups over the token hits. Every hit that belongs to a returned group is
- * tagged with it. Groups whose own name or ticker starts with the query lead the list, in the server's volume
- * order, up to MAX_LEADING_GROUP_ROWS: a multi-issuer group as one collection row, with the member tokens it covers
+ * tagged with it. Groups whose own name or ticker starts with the query, up to MAX_GROUP_ROWS in the server's volume
+ * order, get a row placed among the hits by 1d volume (a no-volume stock sits below a busy token rather than above
+ * it): a multi-issuer group as one collection row, with the member tokens it covers
  * dropped from the hits (the server still returns them); a single-issuer group as a single row when no hit
  * carries it. Groups matched only through a member keep their tagged tokens in place and make no row. An address
  * search never rolls up, as the v1 fold does. Groups arrive scoped to the requested chains, so nothing is filtered
@@ -80,7 +105,7 @@ export function applyServerTokenGroupsToSearchOptions({
   const leadingGroups = normalizedQuery
     ? groups
         .filter((rwa) => isNamedByQuery(rwa, normalizedQuery) && (isPile(rwa) || !groupsCarriedByAHit.has(rwa)))
-        .slice(0, MAX_LEADING_GROUP_ROWS)
+        .slice(0, MAX_GROUP_ROWS)
     : []
   const groupRows = leadingGroups.map((rwa) =>
     buildRwaCollectionOption({ rwa, showCategoryTag: true, searchStats: getRwaCollectionSearchStats(rwa) }),
@@ -90,5 +115,5 @@ export function applyServerTokenGroupsToSearchOptions({
     .filter(({ match }) => !match || !rolledUp.has(match.rwa))
     .map(({ option }) => option)
 
-  return [...groupRows, ...remainingOptions]
+  return insertByVolume({ rows: groupRows, options: remainingOptions })
 }

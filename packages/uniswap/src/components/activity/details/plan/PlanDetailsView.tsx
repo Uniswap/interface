@@ -181,7 +181,7 @@ function PlanDetailsSteps({ typeInfo }: { typeInfo: PlanTransactionInfo }): JSX.
     >
       {visibleSteps.map((txDetails, index) => (
         <Fragment key={`${txDetails.id}-step-row-${index}`}>
-          <PlanStepItem transactionDetails={txDetails} />
+          <PlanStepItem transactionDetails={txDetails} marginAction={typeInfo.marginAction} />
           {index < visibleSteps.length - 1 && (
             <Flex height="$spacing12" ml={dividerMargin}>
               <VerticalDottedLineSeparator strokeWidth={strokeWidth} />

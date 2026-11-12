@@ -1,0 +1,18 @@
+{
+  "extends": "../tsconfig/app.json",
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "compilerOptions": {
+    "noEmit": false,
+    "emitDeclarationOnly": true,
+    "types": ["node"],
+    "paths": {}
+  },
+  "references": [
+    {
+      "path": "../vite-presets"
+    },
+    {
+      "path": "../vitest-presets"
+    }
+  ]
+}

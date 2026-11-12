@@ -1,0 +1,420 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`PasskeyMenu > shows 3 skeleton rows while loading 1`] = `
+<body>
+  <div>
+    <div>
+      <span>
+        Login methods
+      </span>
+      <div
+        class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 gap-[24px] px-[8px] pb-[8px] media-md:pb-[14px]"
+      >
+        <div
+          class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 gap-[16px]"
+        >
+          <span
+            class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:20px] [font-weight:485] [color:var(--stext-neutral1)]"
+          >
+            Passkeys
+          </span>
+          <div
+            class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center gap-[12px]"
+            data-testid="passkey-loading-row"
+          >
+            <div
+              aria-hidden="true"
+              class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+              style="animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+            >
+              <div
+                class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 FlexLoader"
+              >
+                <div
+                  class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[40px] h-[40px] bg-neutral3 rounded-[999999px] opacity-[0.5]"
+                />
+              </div>
+            </div>
+            <div
+              class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 gap-[8px]"
+            >
+              <div
+                aria-hidden="true"
+                class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+                style="animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+              >
+                <div
+                  class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 FlexLoader"
+                >
+                  <div
+                    class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[var(--c-h)] bg-neutral3 rounded-[12px] opacity-[0.5]"
+                    style="--c-w: 72px; --c-h: 14px;"
+                  />
+                </div>
+              </div>
+              <div
+                aria-hidden="true"
+                class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+                style="animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+              >
+                <div
+                  class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 FlexLoader"
+                >
+                  <div
+                    class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[12px] bg-neutral3 rounded-[12px] opacity-[0.5]"
+                    style="--c-w: 112px;"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center gap-[12px]"
+            data-testid="passkey-loading-row"
+          >
+            <div
+              aria-hidden="true"
+              class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+              style="animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+            >
+              <div
+                class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 FlexLoader"
+              >
+                <div
+                  class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[40px] h-[40px] bg-neutral3 rounded-[999999px] opacity-[0.5]"
+                />
+              </div>
+            </div>
+            <div
+              class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 gap-[8px]"
+            >
+              <div
+                aria-hidden="true"
+                class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+                style="animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+              >
+                <div
+                  class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 FlexLoader"
+                >
+                  <div
+                    class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[var(--c-h)] bg-neutral3 rounded-[12px] opacity-[0.5]"
+                    style="--c-w: 72px; --c-h: 14px;"
+                  />
+                </div>
+              </div>
+              <div
+                aria-hidden="true"
+                class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+                style="animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+              >
+                <div
+                  class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 FlexLoader"
+                >
+                  <div
+                    class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[12px] bg-neutral3 rounded-[12px] opacity-[0.5]"
+                    style="--c-w: 112px;"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center gap-[12px]"
+            data-testid="passkey-loading-row"
+          >
+            <div
+              aria-hidden="true"
+              class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+              style="animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+            >
+              <div
+                class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 FlexLoader"
+              >
+                <div
+                  class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[40px] h-[40px] bg-neutral3 rounded-[999999px] opacity-[0.5]"
+                />
+              </div>
+            </div>
+            <div
+              class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 gap-[8px]"
+            >
+              <div
+                aria-hidden="true"
+                class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+                style="animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+              >
+                <div
+                  class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 FlexLoader"
+                >
+                  <div
+                    class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[var(--c-h)] bg-neutral3 rounded-[12px] opacity-[0.5]"
+                    style="--c-w: 72px; --c-h: 14px;"
+                  />
+                </div>
+              </div>
+              <div
+                aria-hidden="true"
+                class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+                style="animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+              >
+                <div
+                  class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 FlexLoader"
+                >
+                  <div
+                    class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[12px] bg-neutral3 rounded-[12px] opacity-[0.5]"
+                    style="--c-w: 112px;"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 gap-[16px]"
+        >
+          <span
+            class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:20px] [font-weight:485] [color:var(--stext-neutral1)]"
+          >
+            Backup login
+          </span>
+          <div
+            class="flex items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row self-stretch mt-[4px]"
+          >
+            <button
+              class="group/sbtn relative box-border flex min-h-0 min-w-0 cursor-pointer items-center justify-center border border-solid border-transparent select-none [transition:transform_100ms_cubic-bezier(0.17,0.67,0.45,1),filter_100ms_cubic-bezier(0.17,0.67,0.45,1)] active:scale-[0.98] focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-solid gap-2 rounded-16 px-4 py-3 flex-row flex-1 basis-0 self-stretch focus-visible:scale-x-[0.98] focus-visible:scale-y-[0.905] bg-surface3 hover:bg-surface3-hovered active:bg-surface3-hovered focus-visible:bg-surface3-hovered focus-visible:outline-neutral3-hovered"
+              type="button"
+            >
+              <span
+                class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-medium)] text-[16px] [line-height:18.4px] [font-weight:535] [color:var(--stext-neutral1)]"
+              >
+                Add a login
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`PasskeyMenu > shows authenticators and Add passkey button after loading 1`] = `
+<body>
+  <div>
+    <div>
+      <span>
+        Login methods
+      </span>
+      <div
+        class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 gap-[24px] px-[8px] pb-[8px] media-md:pb-[14px]"
+      >
+        <div
+          class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 gap-[16px]"
+        >
+          <span
+            class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:20px] [font-weight:485] [color:var(--stext-neutral1)]"
+          >
+            Passkeys
+          </span>
+          <div
+            class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center gap-[12px]"
+          >
+            <div
+              class="flex flex-col basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 items-center justify-center w-[40px] h-[40px] rounded-[12px] [background:var(--c-b)]"
+              style="--c-b: var(--surface2);"
+            >
+              <span
+                data-testid="icloud-password-logo"
+              />
+            </div>
+            <div
+              class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+            >
+              <span
+                class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:22px] [font-weight:485] [color:var(--stext-neutral1)]"
+              >
+                iCloud
+              </span>
+              <span
+                class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[14px] [line-height:18px] [font-weight:485] [color:var(--stext-neutral2)]"
+              >
+                Created Jan 1, 2024
+              </span>
+            </div>
+            <div
+              class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 ml-[auto]"
+            >
+              <div
+                aria-expanded="false"
+                aria-haspopup="dialog"
+                class="shrink-0"
+                data-base-ui-click-trigger=""
+                data-slot="popover-compat-trigger"
+                id="base-ui-_r_1_"
+                role="button"
+                tabindex="0"
+              >
+                <div
+                  class="[container-name:true] flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 [container-type:normal] rounded-[12px] [cursor:pointer] bg-transparent [transition:transform_80ms_ease-in-out,_opacity_80ms_ease-in-out] active:opacity-[0.75] active:[transform:scale(0.98)] focus-visible:[transform:scaleX(0.98)_scaleY(0.98)] focus-visible:[outline-offset:1px] focus-visible:[outline-style:solid] focus-visible:[outline-width:1px] focus-visible:[outline-color:var(--neutral3)] group"
+                  data-testid="delete-passkey"
+                  role="button"
+                  tabindex="0"
+                >
+                  <svg
+                    aria-hidden="true"
+                    fill="none"
+                    focusable="false"
+                    stroke-width="8"
+                    style="width: 20px; height: 20px;"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M4.02002 14C2.91602 14 2.01501 13.104 2.01501 12C2.01501 10.896 2.90501 10 4.01001 10H4.02002C5.12402 10 6.02002 10.896 6.02002 12C6.02002 13.104 5.12502 14 4.02002 14ZM14.02 12C14.02 10.896 13.124 10 12.02 10H12.01C10.906 10 10.015 10.896 10.015 12C10.015 13.104 10.915 14 12.02 14C13.125 14 14.02 13.104 14.02 12ZM22.02 12C22.02 10.896 21.124 10 20.02 10H20.01C18.906 10 18.015 10.896 18.015 12C18.015 13.104 18.915 14 20.02 14C21.125 14 22.02 13.104 22.02 12Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center gap-[12px]"
+          >
+            <div
+              class="flex flex-col basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 items-center justify-center w-[40px] h-[40px] rounded-[12px] [background:var(--c-b)]"
+              style="--c-b: var(--surface2);"
+            >
+              <svg
+                aria-hidden="true"
+                fill="none"
+                focusable="false"
+                stroke-width="8"
+                style="color: currentColor; width: 20px; height: 20px;"
+                viewBox="0 0 20 20"
+              >
+                <g
+                  clip-path="url(#clip0_10955_6746)"
+                >
+                  <path
+                    d="M18.8 10.2083C18.8 9.55834 18.7417 8.93334 18.6333 8.33334H10V11.8833H14.9333C14.7167 13.025 14.0667 13.9917 13.0917 14.6417V16.95H16.0667C17.8 15.35 18.8 13 18.8 10.2083Z"
+                    fill="#4285F4"
+                  />
+                  <path
+                    d="M10.0002 19.1667C12.4752 19.1667 14.5502 18.35 16.0669 16.95L13.0919 14.6417C12.2752 15.1917 11.2336 15.525 10.0002 15.525C7.6169 15.525 5.5919 13.9167 4.86689 11.75H1.81689V14.1167C3.32523 17.1083 6.41689 19.1667 10.0002 19.1667Z"
+                    fill="#34A853"
+                  />
+                  <path
+                    d="M4.86683 11.7417C4.6835 11.1917 4.57516 10.6083 4.57516 10C4.57516 9.39166 4.6835 8.80833 4.86683 8.25833V5.89166H1.81683C1.19183 7.125 0.833496 8.51666 0.833496 10C0.833496 11.4833 1.19183 12.875 1.81683 14.1083L4.19183 12.2583L4.86683 11.7417Z"
+                    fill="#FBBC05"
+                  />
+                  <path
+                    d="M10.0002 4.48334C11.3502 4.48334 12.5502 4.95001 13.5086 5.85001L16.1336 3.22501C14.5419 1.74168 12.4752 0.833344 10.0002 0.833344C6.41689 0.833344 3.32523 2.89168 1.81689 5.89168L4.86689 8.25834C5.59189 6.09168 7.61689 4.48334 10.0002 4.48334Z"
+                    fill="#EA4335"
+                  />
+                </g>
+                <defs>
+                  <clippath
+                    id="clip0_10955_6746"
+                  >
+                    <rect
+                      fill="white"
+                      height="20"
+                      width="20"
+                    />
+                  </clippath>
+                </defs>
+              </svg>
+            </div>
+            <div
+              class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+            >
+              <span
+                class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:22px] [font-weight:485] [color:var(--stext-neutral1)]"
+              >
+                Chrome
+              </span>
+              <span
+                class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[14px] [line-height:18px] [font-weight:485] [color:var(--stext-neutral2)]"
+              >
+                Created Feb 1, 2024
+              </span>
+            </div>
+            <div
+              class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 ml-[auto]"
+            >
+              <div
+                aria-expanded="false"
+                aria-haspopup="dialog"
+                class="shrink-0"
+                data-base-ui-click-trigger=""
+                data-slot="popover-compat-trigger"
+                id="base-ui-_r_3_"
+                role="button"
+                tabindex="0"
+              >
+                <div
+                  class="[container-name:true] flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 [container-type:normal] rounded-[12px] [cursor:pointer] bg-transparent [transition:transform_80ms_ease-in-out,_opacity_80ms_ease-in-out] active:opacity-[0.75] active:[transform:scale(0.98)] focus-visible:[transform:scaleX(0.98)_scaleY(0.98)] focus-visible:[outline-offset:1px] focus-visible:[outline-style:solid] focus-visible:[outline-width:1px] focus-visible:[outline-color:var(--neutral3)] group"
+                  data-testid="delete-passkey"
+                  role="button"
+                  tabindex="0"
+                >
+                  <svg
+                    aria-hidden="true"
+                    fill="none"
+                    focusable="false"
+                    stroke-width="8"
+                    style="width: 20px; height: 20px;"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M4.02002 14C2.91602 14 2.01501 13.104 2.01501 12C2.01501 10.896 2.90501 10 4.01001 10H4.02002C5.12402 10 6.02002 10.896 6.02002 12C6.02002 13.104 5.12502 14 4.02002 14ZM14.02 12C14.02 10.896 13.124 10 12.02 10H12.01C10.906 10 10.015 10.896 10.015 12C10.015 13.104 10.915 14 12.02 14C13.125 14 14.02 13.104 14.02 12ZM22.02 12C22.02 10.896 21.124 10 20.02 10H20.01C18.906 10 18.015 10.896 18.015 12C18.015 13.104 18.915 14 20.02 14C21.125 14 22.02 13.104 22.02 12Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="flex items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row self-stretch mt-[4px]"
+          >
+            <button
+              class="group/sbtn relative box-border flex min-h-0 min-w-0 cursor-pointer items-center justify-center border border-solid border-transparent select-none [transition:transform_100ms_cubic-bezier(0.17,0.67,0.45,1),filter_100ms_cubic-bezier(0.17,0.67,0.45,1)] active:scale-[0.98] focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-solid gap-2 rounded-16 px-4 py-3 flex-row flex-1 basis-0 self-stretch focus-visible:scale-x-[0.98] focus-visible:scale-y-[0.905] bg-surface3 hover:bg-surface3-hovered active:bg-surface3-hovered focus-visible:bg-surface3-hovered focus-visible:outline-neutral3-hovered"
+              type="button"
+            >
+              <span
+                class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-medium)] text-[16px] [line-height:18.4px] [font-weight:535] [color:var(--stext-neutral1)]"
+              >
+                Add a passkey
+              </span>
+            </button>
+          </div>
+        </div>
+        <div
+          class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 gap-[16px]"
+        >
+          <span
+            class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:20px] [font-weight:485] [color:var(--stext-neutral1)]"
+          >
+            Backup login
+          </span>
+          <div
+            class="flex items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row self-stretch mt-[4px]"
+          >
+            <button
+              class="group/sbtn relative box-border flex min-h-0 min-w-0 cursor-pointer items-center justify-center border border-solid border-transparent select-none [transition:transform_100ms_cubic-bezier(0.17,0.67,0.45,1),filter_100ms_cubic-bezier(0.17,0.67,0.45,1)] active:scale-[0.98] focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-solid gap-2 rounded-16 px-4 py-3 flex-row flex-1 basis-0 self-stretch focus-visible:scale-x-[0.98] focus-visible:scale-y-[0.905] bg-surface3 hover:bg-surface3-hovered active:bg-surface3-hovered focus-visible:bg-surface3-hovered focus-visible:outline-neutral3-hovered"
+              type="button"
+            >
+              <span
+                class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-medium)] text-[16px] [line-height:18.4px] [font-weight:535] [color:var(--stext-neutral1)]"
+              >
+                Add a login
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;

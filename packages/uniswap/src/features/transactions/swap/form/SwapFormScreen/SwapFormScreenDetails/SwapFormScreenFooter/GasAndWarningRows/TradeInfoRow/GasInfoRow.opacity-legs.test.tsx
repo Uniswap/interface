@@ -46,9 +46,11 @@ describe('GasInfoRow opacity legs', () => {
   // double re-invokes useSharedValue on every render and hands back the same instance, so only
   // distinct instances are collected.
   let sharedValues: { value: number }[] = []
+  // The test double is already a mock, and spying on a mock returns that same mock, so keep its
+  // implementation rather than the mock itself.
+  const useSharedValue = vi.mocked(Reanimated.useSharedValue).getMockImplementation()
   beforeEach(() => {
     sharedValues = []
-    const useSharedValue = Reanimated.useSharedValue
     vi.spyOn(Reanimated, 'useSharedValue').mockImplementation(((initial: number) => {
       const sharedValue = (useSharedValue as (i: number) => { value: number })(initial)
       if (!sharedValues.includes(sharedValue)) {

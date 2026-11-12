@@ -102,7 +102,10 @@ describe('ChartModel sizing', () => {
     )
     // lightweight-charts resolves colors through getComputedStyle, which jsdom leaves unresolved;
     // jsdom does normalize inline `style.color` to rgb(), so read it from there.
-    const getComputedStyle = window.getComputedStyle.bind(window)
+    // setupTests already mocks getComputedStyle, and spying on a mock returns that same mock.
+    const getComputedStyle =
+      vi.mocked(window.getComputedStyle).getMockImplementation() ??
+      ((): CSSStyleDeclaration => new CSSStyleDeclaration())
     vi.spyOn(window, 'getComputedStyle').mockImplementation((element, pseudoElement) => {
       const computed = getComputedStyle(element, pseudoElement)
       const inlineColor = element instanceof HTMLElement ? element.style.color : ''

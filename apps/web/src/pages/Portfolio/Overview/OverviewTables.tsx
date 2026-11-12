@@ -6,7 +6,7 @@ import { ActivityRenderData } from 'uniswap/src/features/activity/hooks/useActiv
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useConnectionStatus } from '~/connection/accounts/hooks'
 import { MARGIN_CHAIN_ID } from '~/constants/margin'
-import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
+import { usePortfolioRoutes } from '~/hooks/usePortfolioRoutes/usePortfolioRoutes'
 import {
   MAX_ACTIVITY_ROWS,
   MAX_POOLS_ROWS,

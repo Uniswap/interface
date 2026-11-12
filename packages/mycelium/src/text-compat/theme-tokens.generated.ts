@@ -58,6 +58,7 @@ export const THEME_COLOR_TOKENS = [
   'chain_7777777',
   'chain_80001',
   'chain_8453',
+  'chain_99901',
   'color',
   'colorFocus',
   'colorHover',

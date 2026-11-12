@@ -283,6 +283,7 @@ export const TokenLogo = memo(function TokenLogoInner({
 
       <UniversalImage
         allowLocalUri
+        alt=""
         fallback={fallback}
         size={{ height: tokenSize, width: tokenSize, resizeMode: imageResizeMode }}
         style={{

@@ -24,21 +24,21 @@ import { LPTransactionSettingsStoreContextProvider } from 'uniswap/src/features/
 import { useTransactionSettingsStore } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { Dropdown } from '~/components/Dropdowns/Dropdown'
+import {
+  CreateLiquidityContextProvider,
+  DEFAULT_PRICE_RANGE_STATE,
+  useCreateLiquidityContext,
+} from '~/features/Liquidity/Create/CreateLiquidityContextProvider'
+import { CreatePositionTxContextProvider } from '~/features/Liquidity/Create/CreatePositionTxContext'
 import { getNextFlowStep } from '~/features/Liquidity/Create/flowSteps'
 import { FormStepsWrapper, FormWrapper } from '~/features/Liquidity/Create/FormWrapper'
 import { useLiquidityUrlState } from '~/features/Liquidity/Create/hooks/useLiquidityUrlState'
 import { useLPSlippageValue } from '~/features/Liquidity/Create/hooks/useLPSlippageValues'
 import { ResetCreatePositionFormModal } from '~/features/Liquidity/Create/ResetCreatePositionsFormModal'
+import { SharedCreateModals } from '~/features/Liquidity/Create/SharedCreateModals'
 import { DEFAULT_POSITION_STATE, PositionFlowStep } from '~/features/Liquidity/Create/types'
 import { LPSettings } from '~/features/Liquidity/LPSettings'
 import { getProtocolVersionLabel } from '~/features/Liquidity/utils/protocolVersion'
-import {
-  CreateLiquidityContextProvider,
-  DEFAULT_PRICE_RANGE_STATE,
-  useCreateLiquidityContext,
-} from '~/pages/CreatePosition/CreateLiquidityContextProvider'
-import { CreatePositionTxContextProvider } from '~/pages/CreatePosition/CreatePositionTxContext'
-import { SharedCreateModals } from '~/pages/CreatePosition/SharedCreateModals'
 import { MultichainContextProvider } from '~/state/multichain/MultichainContext'
 import { useMultichainContext } from '~/state/multichain/useMultichainContext'
 

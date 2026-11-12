@@ -3,9 +3,11 @@ import { describe, expect, it } from 'vitest'
 import {
   EmissionScheduleError,
   getAuctionEmissionScheduleError,
+  getAuctionEmissionScheduleIssue,
 } from '~/pages/Liquidity/CreateAuction/utils/emissionSchedule'
 
 const nowMs = 1_000_000_000_000
+const DAY_MS = 24 * 60 * 60 * 1000
 
 describe('getAuctionEmissionScheduleError', () => {
   it('returns undefined when inputs are incomplete', () => {
@@ -124,6 +126,101 @@ describe('getAuctionEmissionScheduleError', () => {
     expect(
       getAuctionEmissionScheduleError({ startTime, endTime, chainId: UniverseChainId.Unichain, nowMs }),
     ).toBeUndefined()
+  })
+
+  describe('too-long window (more than 10,000,000 emission blocks)', () => {
+    // Expected values are hand-computed from each chain's fixed block time, deliberately not
+    // derived from the SDK: Arbitrum 0.25s → 2,500,000s ≈ 28.94 days, Robinhood 0.1s ≈ 11.57 days,
+    // Unichain 1s ≈ 115.74 days.
+    const startTime = new Date(nowMs + 60_000)
+
+    it('flags the window with the longest emission window that fits, in whole days', () => {
+      expect(
+        getAuctionEmissionScheduleIssue({
+          startTime,
+          endTime: new Date(startTime.getTime() + 29 * DAY_MS),
+          chainId: UniverseChainId.ArbitrumOne,
+          nowMs,
+        }),
+      ).toEqual({ error: EmissionScheduleError.WindowTooLong, maxDurationDays: 28 })
+      expect(
+        getAuctionEmissionScheduleIssue({
+          startTime,
+          endTime: new Date(startTime.getTime() + 12 * DAY_MS),
+          chainId: UniverseChainId.Robinhood,
+          nowMs,
+        }),
+      ).toEqual({ error: EmissionScheduleError.WindowTooLong, maxDurationDays: 11 })
+      expect(
+        getAuctionEmissionScheduleIssue({
+          startTime,
+          endTime: new Date(startTime.getTime() + 116 * DAY_MS),
+          chainId: UniverseChainId.Unichain,
+          nowMs,
+        }),
+      ).toEqual({ error: EmissionScheduleError.WindowTooLong, maxDurationDays: 115 })
+    })
+
+    it('reports it as WindowTooLong rather than Overshoot through the error-only helper', () => {
+      expect(
+        getAuctionEmissionScheduleError({
+          startTime,
+          endTime: new Date(startTime.getTime() + 29 * DAY_MS),
+          chainId: UniverseChainId.ArbitrumOne,
+          nowMs,
+        }),
+      ).toBe(EmissionScheduleError.WindowTooLong)
+    })
+
+    it('accepts exactly 10,000,000 emission blocks and rejects one second more', () => {
+      // 10,000,000s at 1s/block = 10,000,000 blocks; +1s = 10,000,001.
+      expect(
+        getAuctionEmissionScheduleIssue({
+          startTime,
+          endTime: new Date(startTime.getTime() + 10_000_000_000),
+          chainId: UniverseChainId.Unichain,
+          nowMs,
+        }),
+      ).toBeUndefined()
+      expect(
+        getAuctionEmissionScheduleIssue({
+          startTime,
+          endTime: new Date(startTime.getTime() + 10_000_001_000),
+          chainId: UniverseChainId.Unichain,
+          nowMs,
+        }),
+      ).toEqual({ error: EmissionScheduleError.WindowTooLong, maxDurationDays: 115 })
+    })
+
+    it('accepts a window of the reported maximum', () => {
+      for (const [chainId, maxDurationDays] of [
+        [UniverseChainId.ArbitrumOne, 28],
+        [UniverseChainId.Robinhood, 11],
+        [UniverseChainId.Unichain, 115],
+      ] as const) {
+        expect(
+          getAuctionEmissionScheduleIssue({
+            startTime,
+            endTime: new Date(startTime.getTime() + maxDurationDays * DAY_MS),
+            chainId,
+            nowMs,
+          }),
+        ).toBeUndefined()
+      }
+    })
+
+    it('does not count the pre-bid window toward the limit', () => {
+      // 28 days of emission fits on Arbitrum; 5 more days of pre-bid in front would not if counted.
+      expect(
+        getAuctionEmissionScheduleIssue({
+          startTime: new Date(startTime.getTime() + 5 * DAY_MS),
+          endTime: new Date(startTime.getTime() + 33 * DAY_MS),
+          preBidStartTime: startTime,
+          chainId: UniverseChainId.ArbitrumOne,
+          nowMs,
+        }),
+      ).toBeUndefined()
+    })
   })
 
   describe('Base Denim (2s → 200ms blocks at unix 1793901601)', () => {

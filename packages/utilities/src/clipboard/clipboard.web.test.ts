@@ -43,7 +43,7 @@ describe('clipboard.web', () => {
         configurable: true,
       })
 
-      await setClipboard('hello')
+      await expect(setClipboard('hello')).resolves.toBe(true)
 
       expect(writeText).toHaveBeenCalledWith('hello')
     })
@@ -57,7 +57,7 @@ describe('clipboard.web', () => {
       const execCommand = vi.fn().mockReturnValue(true)
       stubExecCommand(execCommand)
 
-      await setClipboard('fallback text')
+      await expect(setClipboard('fallback text')).resolves.toBe(true)
 
       expect(execCommand).toHaveBeenCalledWith('copy')
     })
@@ -72,9 +72,19 @@ describe('clipboard.web', () => {
       const execCommand = vi.fn().mockReturnValue(true)
       stubExecCommand(execCommand)
 
-      await setClipboard('after reject')
+      await expect(setClipboard('after reject')).resolves.toBe(true)
 
       expect(execCommand).toHaveBeenCalledWith('copy')
+    })
+    it('resolves false when both the Clipboard API and execCommand fail', async () => {
+      Object.defineProperty(navigator, 'clipboard', {
+        value: { writeText: vi.fn().mockRejectedValue(new Error('Permission denied')), readText: vi.fn() },
+        writable: true,
+        configurable: true,
+      })
+      stubExecCommand(vi.fn().mockReturnValue(false))
+
+      await expect(setClipboard('nowhere')).resolves.toBe(false)
     })
   })
 

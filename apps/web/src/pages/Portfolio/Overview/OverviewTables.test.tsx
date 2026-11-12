@@ -4,9 +4,9 @@ import type { ActivityRenderData } from 'uniswap/src/features/activity/hooks/use
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { SAMPLE_SEED_ADDRESS_1 } from 'uniswap/src/test/fixtures/assets/constants'
 import { useConnectionStatus } from '~/connection/accounts/hooks'
-import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
+import { PortfolioTab } from '~/hooks/usePortfolioRoutes/types'
+import { usePortfolioRoutes } from '~/hooks/usePortfolioRoutes/usePortfolioRoutes'
 import { PortfolioOverviewTables } from '~/pages/Portfolio/Overview/OverviewTables'
-import { PortfolioTab } from '~/pages/Portfolio/types'
 import { mocked } from '~/test-utils/mocked'
 import { render, screen } from '~/test-utils/render'
 
@@ -15,7 +15,7 @@ vi.mock('~/connection/accounts/hooks', async (importOriginal) => ({
   useConnectionStatus: vi.fn(),
 }))
 
-vi.mock('~/pages/Portfolio/Header/hooks/usePortfolioRoutes', () => ({
+vi.mock('~/hooks/usePortfolioRoutes/usePortfolioRoutes', () => ({
   usePortfolioRoutes: vi.fn(),
 }))
 

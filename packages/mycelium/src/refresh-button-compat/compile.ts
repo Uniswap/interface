@@ -40,6 +40,8 @@ export const REFRESH_FRAME_REVEAL_CLASSES = 'group-hover:opacity-100 legacy-grou
  * TouchableArea disabled pool's 0.6 opacity would otherwise reveal this
  * hover-only button.
  */
+// TODO(INFRA-4589): hiding it removes the button from the accessibility tree, so screen reader users aren't
+// told refreshing is unavailable. Consider keeping it present and announced as disabled.
 export const REFRESH_FRAME_HIDDEN_CLASS = 'hidden'
 
 /** Legacy sets the cursor manually so the disabled pool never breaks hover state. */

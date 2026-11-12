@@ -149,7 +149,7 @@ function rowFixture({
   venue: MarginVenue
   direction: MarginDirection
   // One row now covers a whole pair; pass several to exercise the per-venue expansion.
-  venues?: Array<{ venue: MarginVenue; maxLeverage: string }>
+  venues?: Array<{ venue: MarginVenue; maxLeverage: string; marketId?: string }>
 }): MarginMarketRow {
   const exposure = direction === MarginDirection.SHORT ? debt : collateral
   const counter = direction === MarginDirection.SHORT ? collateral : debt
@@ -161,13 +161,14 @@ function rowFixture({
     maxLeverage: '5',
     lltv: '860000000000000000',
     oraclePrice: '2000000000000000000000',
-    venues: (venues ?? [{ venue, maxLeverage: '5' }]).map((entry) => ({
+    venueMarkets: (venues ?? [{ venue, maxLeverage: '5' }]).map((entry) => ({
       venue: entry.venue,
       adapter: '0x0000000000000000000000000000000000000001',
       maxLeverage: entry.maxLeverage,
       lltv: '860000000000000000',
       availableBorrowLiquidity: '1000000000',
       feeBps: 5,
+      marketId: entry.marketId,
     })),
   }
 }
@@ -326,6 +327,26 @@ describe('useMarginMarkets', () => {
     expect(result.current.markets.map((m) => [m.venue, m.maxLeverage])).toEqual([
       ['AAVE_V3', 5.5],
       ['MORPHO', 3],
+    ])
+  })
+
+  it("carries each venue entry's marketId onto its market", () => {
+    mockRows([
+      rowFixture({
+        collateral: WETH,
+        debt: USDC,
+        venue: 'MORPHO',
+        direction: MarginDirection.LONG,
+        venues: [
+          { venue: 'MORPHO', maxLeverage: '3', marketId: '0x1cc8' },
+          { venue: 'AAVE_V3', maxLeverage: '5', marketId: '0x7d25' },
+        ],
+      }),
+    ])
+    const { result } = renderHook(() => useMarginMarkets())
+    expect(result.current.markets.map((m) => [m.venue, m.marketId])).toEqual([
+      ['AAVE_V3', '0x7d25'],
+      ['MORPHO', '0x1cc8'],
     ])
   })
 

@@ -45,18 +45,20 @@ describe('PoolInfoCard', () => {
   })
 
   it('matches served logos to display-order currencies by identity, not slot', () => {
-    // The create flow can hand ExpandablePoolInfo the pool's token1 in the first slot.
-    const { container } = render(
-      <ExpandablePoolInfo currency0={v2TokenToCurrency(poolData.token1)} currency1={undefined} poolData={poolData} />,
-    )
+    // Display order puts the pool's token1 first when token0 is the quote.
+    const weth = v2TokenToCurrency(poolData.token1)
+    const { container } = render(<ExpandablePoolInfo baseCurrency={weth} quoteCurrency={usdc} poolData={poolData} />)
 
     const sources = renderedImageSources(container)
-    expect(sources).toContain(validParsedPoolToken1.logoUrl)
-    expect(sources).not.toContain(validParsedPoolToken0.logoUrl)
+    const baseLogoIndex = sources.indexOf(validParsedPoolToken1.logoUrl ?? null)
+    expect(baseLogoIndex).toBeGreaterThanOrEqual(0)
+    expect(baseLogoIndex).toBeLessThan(sources.indexOf(validParsedPoolToken0.logoUrl ?? null))
   })
 
   it('labels the pair and the current price with the currencies the flow passes in', () => {
-    render(<PoolInfoCard poolData={poolData} currency0={usdc} currency1={eth} />)
+    render(
+      <PoolInfoCard poolData={poolData} currency0={usdc} currency1={eth} baseCurrency={usdc} quoteCurrency={eth} />,
+    )
 
     expect(screen.getByText('USDC / ETH')).toBeInTheDocument()
     expect(screen.getByText(/^[^A-Z]+ USDC \/ ETH$/)).toBeInTheDocument()
@@ -76,16 +78,25 @@ describe('PoolInfoCard', () => {
     expect(screen.getByText(/^[^A-Z]+ USDC \/ ETH$/)).toBeInTheDocument()
   })
 
-  it('keeps the current price in pool order when the pair arrives reversed', () => {
-    // The price is token1 per token0 (USDC per WETH here), whatever order the caller labels the pair in.
-    render(<ExpandablePoolInfo currency0={eth} currency1={usdc} poolData={poolData} />)
+  it('names the pair in display order while keeping the current price in pool order', () => {
+    // The price is token1 per token0 (USDC per WETH here), whatever order the pair is named in.
+    render(
+      <PoolInfoCard poolData={poolData} currency0={usdc} currency1={eth} baseCurrency={eth} quoteCurrency={usdc} />,
+    )
 
+    expect(screen.getByText('ETH / USDC')).toBeInTheDocument()
     expect(screen.getByText(/^[^A-Z]+ USDC \/ ETH$/)).toBeInTheDocument()
-    expect(screen.queryByText(/ETH \/ USDC/)).toBeNull()
+  })
+
+  it('orders the served fallback by the pool quote', () => {
+    render(<PoolInfoCard poolData={{ ...poolData, isToken0Quote: true }} />)
+
+    expect(screen.getByText('WETH / USDC')).toBeInTheDocument()
+    expect(screen.getByText(/^[^A-Z]+ USDC \/ WETH$/)).toBeInTheDocument()
   })
 
   it('ignores a half-passed pair rather than mixing display and served labels', () => {
-    render(<PoolInfoCard poolData={poolData} currency0={usdc} />)
+    render(<PoolInfoCard poolData={poolData} currency0={usdc} baseCurrency={usdc} />)
 
     expect(screen.getByText('USDC / WETH')).toBeInTheDocument()
     expect(screen.getByText(/^[^A-Z]+ USDC \/ WETH$/)).toBeInTheDocument()

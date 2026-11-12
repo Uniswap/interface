@@ -30,18 +30,15 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 import { currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
-import {
-  CancellationState,
-  CancelOrdersDialog,
-} from '~/components/AccountDrawer/MiniPortfolio/Activity/cancel/CancelOrdersDialog'
+import { CancellationState, CancelOrdersDialog } from '~/components/Activity/cancel/CancelOrdersDialog'
 import {
   OffchainOrderLineItem,
   OffchainOrderLineItemProps,
   OffchainOrderLineItemType,
-} from '~/components/AccountDrawer/MiniPortfolio/Activity/OffchainOrderLineItem'
-import { PortfolioLogo } from '~/components/AccountDrawer/MiniPortfolio/PortfolioLogo'
+} from '~/components/Activity/OffchainOrderLineItem'
 import { AmountHeader } from '~/components/AmountHeader'
 import { LimitDisclaimer } from '~/components/LimitDisclaimer'
+import { PortfolioLogo } from '~/components/Logo/PortfolioLogo'
 import {
   AlertIconContainer,
   CancelTimeoutAlert,

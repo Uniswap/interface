@@ -13,11 +13,11 @@ import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { TokenDetailsSourceState } from '~/pages/TokenDetails/context/tokenDetailsSourceState'
 import { useCreateTDPContext } from '~/pages/TokenDetails/context/useCreateTDPContext'
 import { useTokenDetailsAuction } from '~/pages/TokenDetails/hooks/useTokenDetailsAuction'
-import { getTdpTokenMultiChainQueryOptions } from '~/pages/TokenDetails/tdpTokenQueryOptions'
 import { mocked } from '~/test-utils/mocked'
 import { renderHook as renderHookWithProviders, waitFor } from '~/test-utils/render'
 import { createMockTDPChartState } from '~/test-utils/tokenDetails/fixtures'
 import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
+import { getTokenMultiChainQueryOptions } from '~/utils/tokenQueryOptions'
 
 const restMocks = vi.hoisted(() => ({
   // Salted per test so the module-level test QueryClient can't serve one test's cache to the next
@@ -560,7 +560,7 @@ describe('core new endpoint functionality', () => {
   })
 
   it('refetches a fresh persisted row without deployments on mount, stays unsettled, then resolves the currency', async () => {
-    const { queryKey } = getTdpTokenMultiChainQueryOptions({
+    const { queryKey } = getTokenMultiChainQueryOptions({
       chainId: UniverseChainId.Mainnet,
       address: normalizeTokenAddressForCache(USDC_MAINNET.address),
       isNative: false,
@@ -603,7 +603,7 @@ describe('core new endpoint functionality', () => {
       categoryIds: [],
       ...multichainDeploymentFields({ [String(UniverseChainId.Mainnet)]: USDC_BASE_ADDRESS }),
     }
-    const { queryKey } = getTdpTokenMultiChainQueryOptions({
+    const { queryKey } = getTokenMultiChainQueryOptions({
       chainId: UniverseChainId.Mainnet,
       address: normalizeTokenAddressForCache(USDC_BASE_ADDRESS),
       isNative: false,
@@ -650,7 +650,7 @@ describe('core new endpoint functionality', () => {
       categoryIds: [],
       ...multichainDeploymentFields({ [String(UniverseChainId.Mainnet)]: USDC_BASE_ADDRESS }),
     }
-    const { queryKey } = getTdpTokenMultiChainQueryOptions({
+    const { queryKey } = getTokenMultiChainQueryOptions({
       chainId: UniverseChainId.Mainnet,
       address: normalizeTokenAddressForCache(USDC_BASE_ADDRESS),
       isNative: false,

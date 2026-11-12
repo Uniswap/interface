@@ -19,6 +19,10 @@ import {
   storeNeckSigningKey,
 } from '@universe/embedded-wallet/src/features/passkey/deviceSession'
 import { authenticatePasskey, registerPasskey } from '@universe/embedded-wallet/src/features/passkey/passkey'
+import {
+  logPasskeyFlowError,
+  logPasskeyRejection,
+} from '@universe/embedded-wallet/src/features/passkey/passkeyRejection'
 import { authenticateWithPasskey } from '@universe/embedded-wallet/src/features/passkey/passkeySession'
 import { HexString } from '@universe/encoding'
 import { logger } from 'utilities/src/logger/logger'
@@ -38,11 +42,14 @@ export async function registerNewPasskey({
   authenticatorAttachment,
   action,
   walletId,
+  onPromptRejection,
 }: {
   username?: string
   authenticatorAttachment?: AuthenticatorAttachment
   action?: Action
   walletId?: string
+  /** Called with errors from the passkey prompt only, not from the challenge fetch before it. */
+  onPromptRejection?: (error: unknown) => void
 } = {}): Promise<{ credential: string }> {
   const options = { authenticatorAttachment, username } as unknown as RegistrationOptions
   try {
@@ -55,7 +62,10 @@ export async function registerNewPasskey({
     if (!challengeJson.challengeOptions) {
       throw new Error('No challenge options returned for passkey registration')
     }
-    const passkeyCredential = await registerPasskey(challengeJson.challengeOptions)
+    const passkeyCredential = await registerPasskey(challengeJson.challengeOptions).catch((promptError: unknown) => {
+      onPromptRejection?.(promptError)
+      throw promptError
+    })
     return { credential: passkeyCredential }
   } catch (registrationError: unknown) {
     if (registrationError instanceof Error && registrationError.name === 'AbortError') {
@@ -72,7 +82,15 @@ export async function createNewEmbeddedWallet(
 ): Promise<{ address: HexString; walletId: string } | undefined> {
   try {
     const { privateKey, publicKeyBase64: devicePublicKey } = await generateDeviceKeyPair()
-    const { credential } = await registerNewPasskey({ username: unitag })
+    const { credential } = await registerNewPasskey({
+      username: unitag,
+      onPromptRejection: (promptError) =>
+        logPasskeyRejection(promptError, {
+          file: 'embeddedWallet.ts',
+          function: 'createNewEmbeddedWallet',
+          ceremony: 'registration',
+        }),
+    })
 
     const createWalletResp = await EmbeddedWalletApiClient.fetchCreateWalletRequest({
       credential,
@@ -113,12 +131,7 @@ export async function createNewEmbeddedWallet(
     }
     return undefined
   } catch (error) {
-    logger.error(error, {
-      tags: {
-        file: 'embeddedWallet.ts',
-        function: 'createNewEmbeddedWallet',
-      },
-    })
+    logPasskeyFlowError(error, { file: 'embeddedWallet.ts', function: 'createNewEmbeddedWallet' })
     throw error
   }
 }
@@ -191,12 +204,7 @@ export async function signInWithPasskey(
     }
     return undefined
   } catch (error) {
-    logger.error(error, {
-      tags: {
-        file: 'embeddedWallet.ts',
-        function: 'signInWithPasskey',
-      },
-    })
+    logPasskeyFlowError(error, { file: 'embeddedWallet.ts', function: 'signInWithPasskey' })
     throw error
   }
 }

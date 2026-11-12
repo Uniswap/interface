@@ -10,6 +10,7 @@ import { SvgImage } from './internal/SvgImage'
 import { type UniversalImageProps } from './types'
 
 export function UniversalImage({
+  alt,
   uri,
   size,
   style,
@@ -24,7 +25,7 @@ export function UniversalImage({
 }: UniversalImageProps): JSX.Element | null {
   // Handle local require-source assets (numeric ids only exist on native; platform-split leaf)
   if (typeof uri === 'number') {
-    return <RequireImage fallback={fallback} size={size} style={style?.image} uri={uri} onError={onError} />
+    return <RequireImage alt={alt} fallback={fallback} size={size} style={style?.image} uri={uri} onError={onError} />
   }
 
   // Use the fallback if no URI at all
@@ -74,6 +75,7 @@ export function UniversalImage({
     return (
       <FlexCompat style={svgContainerStyle} testID={testID ? `svg-${testID}` : undefined}>
         <SvgImage
+          alt={alt}
           autoplay={autoplay}
           fallback={fallback}
           resizeMode={size.resizeMode}
@@ -89,6 +91,7 @@ export function UniversalImage({
   // Handle a plain image
   return (
     <PlainImage
+      alt={alt}
       autoplay={autoplay}
       fallback={fallback}
       priority={priority}

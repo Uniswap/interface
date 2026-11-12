@@ -1,7 +1,7 @@
 import type { IChartApi, UTCTimestamp } from 'lightweight-charts'
 import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import { getLowPriceRangeScaleFactor, PriceChartModel } from '~/components/Charts/PriceChart/PriceChartModel'
-import { PriceChartType } from '~/components/Charts/utils'
+import { PriceChartType } from '~/utils/charts'
 
 const { mockApplyOptions } = vi.hoisted(() => ({ mockApplyOptions: vi.fn() }))
 

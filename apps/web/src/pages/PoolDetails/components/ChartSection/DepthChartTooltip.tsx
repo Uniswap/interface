@@ -14,7 +14,7 @@ import {
   toDisplayPrice,
 } from '~/pages/PoolDetails/components/ChartSection/DepthChart.utils'
 import { formatFiatWithSubscript } from '~/pages/PoolDetails/components/formatFiatWithSubscript'
-import { formatPriceWithSubscript } from '~/pages/PoolDetails/components/formatPriceWithSubscript'
+import { formatPriceWithSubscript } from '~/utils/formatPriceWithSubscript'
 
 export const TooltipShell = ({ children }: { children: ReactNode }) => (
   <Flex

@@ -25,6 +25,8 @@ import { getPrimaryStablecoin } from 'uniswap/src/features/chains/utils'
 import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { getPoolName } from 'uniswap/src/features/pools/names'
+import { orderPoolDataByQuoteToken } from 'uniswap/src/features/pools/quoteToken'
 import { formatPositionPrice } from 'uniswap/src/features/positions/formatPositionPrice'
 import { useEffectivePositionStatus } from 'uniswap/src/features/positions/hooks/useEffectivePositionStatus'
 import { useGetPositionInfo } from 'uniswap/src/features/positions/hooks/useGetPositionInfo'
@@ -33,7 +35,6 @@ import type { PositionInfo, PositionRewardApr } from 'uniswap/src/features/posit
 import { getExactSharePercent } from 'uniswap/src/features/positions/utils'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { shouldReverseForWaterfall } from 'uniswap/src/features/tokens/waterfallPriority'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { usePositionVisibilityCheck } from 'uniswap/src/features/visibility/hooks/usePositionVisibilityCheck'
 import { currencyId, currencyIdToAddress } from 'uniswap/src/utils/currencyId'
@@ -168,12 +169,14 @@ function PositionPage({ chainId }: { chainId: EVMUniverseChainId | undefined }) 
   const { t } = useTranslation()
 
   const metatagProperties = useMemo(() => {
-    const token0Symbol = positionInfo?.currency0Amount.currency.symbol
-    const token1Symbol = positionInfo?.currency1Amount.currency.symbol
-    if (!token0Symbol || !token1Symbol || !chainInfo?.urlParam || !tokenIdFromUrl) {
+    const poolName = getPoolName({
+      symbol0: positionInfo?.currency0Amount.currency.symbol,
+      symbol1: positionInfo?.currency1Amount.currency.symbol,
+      token0IsQuote: positionInfo?.isToken0Quote,
+    })
+    if (!poolName || !chainInfo?.urlParam || !tokenIdFromUrl) {
       return { title: 'Position on Uniswap', url: window.location.href }
     }
-    const poolName = `${token0Symbol}/${token1Symbol}`
     const version = pathname.includes('v3') ? 'v3' : 'v4'
     return {
       title: `${poolName} on Uniswap`,
@@ -181,6 +184,7 @@ function PositionPage({ chainId }: { chainId: EVMUniverseChainId | undefined }) 
       image: `${window.location.origin}/api/image/positions/${version}/${chainInfo.urlParam}/${tokenIdFromUrl}`,
     }
   }, [
+    positionInfo?.isToken0Quote,
     positionInfo?.currency0Amount.currency.symbol,
     positionInfo?.currency1Amount.currency.symbol,
     pathname,
@@ -238,14 +242,12 @@ function PositionPage({ chainId }: { chainId: EVMUniverseChainId | undefined }) 
     navigateToPositions: true,
   })
 
-  // Waterfall priority picks the default quote asset (same as the pool details page). The user's flip is
-  // stored relative to that default rather than as the absolute value, since positionInfo arrives after mount.
-  const waterfallDefault = Boolean(
-    currency0Amount && currency1Amount && shouldReverseForWaterfall(currency0Amount.currency, currency1Amount.currency),
-  )
+  // The backend-served quote token picks the default quote asset (same as the pool details page). The user's
+  // flip is stored relative to that default rather than as the absolute value, since positionInfo arrives after mount.
+  const defaultInverted = Boolean(positionInfo?.isToken0Quote)
   const [userFlipped, setUserFlipped] = useState(false)
   const togglePriceInverted = useEvent(() => setUserFlipped((flipped) => !flipped))
-  const priceInverted = waterfallDefault !== userFlipped
+  const priceInverted = defaultInverted !== userFlipped
 
   const { formatNumberOrString } = useLocalizationContext()
   const { isPoolPriceStale, isPoolOutOfSync, marketPrice } = useEffectivePositionStatus(positionInfo)
@@ -411,6 +413,12 @@ function PositionPage({ chainId }: { chainId: EVMUniverseChainId | undefined }) 
   })
 
   const rewards = positionInfo.rewards ?? EMPTY_REWARDS
+  // The pair name keeps the canonical order; only the price display follows the user's flip.
+  const [pairBaseCurrency, pairQuoteCurrency] = orderPoolDataByQuoteToken({
+    token0IsQuote: positionInfo.isToken0Quote,
+    data0: currency0Amount.currency,
+    data1: currency1Amount.currency,
+  })
 
   return (
     <Trace
@@ -418,7 +426,7 @@ function PositionPage({ chainId }: { chainId: EVMUniverseChainId | undefined }) 
       page={InterfacePageName.PositionDetails}
       properties={{
         pool_address: positionInfo.poolId,
-        label: [currency0Amount.currency.symbol, currency1Amount.currency.symbol].join('/'),
+        label: getPoolName({ symbol0: currency0Amount.currency.symbol, symbol1: currency1Amount.currency.symbol }),
         type: positionInfo.version,
         fee_tier: positionInfo.feeTier?.feeAmount,
         baseCurrencyId: currencyIdToAddress(currencyId(currency0Amount.currency)),
@@ -428,8 +436,8 @@ function PositionPage({ chainId }: { chainId: EVMUniverseChainId | undefined }) 
       <Helmet>
         <title>
           {t(`liquidityPool.positions.page.title`, {
-            quoteSymbol: currency1Amount.currency.symbol ?? t('common.token'),
-            baseSymbol: currency0Amount.currency.symbol ?? t('common.token'),
+            quoteSymbol: pairQuoteCurrency.symbol ?? t('common.token'),
+            baseSymbol: pairBaseCurrency.symbol ?? t('common.token'),
           })}
         </title>
         {metatags.map((tag, index) => (

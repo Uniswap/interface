@@ -84,6 +84,18 @@ vi.mock('uniswap/src/features/permissionedTokens/useIsPermissionedSendBlocked', 
   useIsPermissionedSendBlocked: (...args: unknown[]) => mockUseIsPermissionedSendBlocked(...args),
 }))
 
+// These cases are about permissioned gating and gas, so let every press through the
+// address screen. Screening itself is covered in useScreenSendOnPress.test.tsx.
+vi.mock('~/pages/Swap/Send/useScreenSendOnPress', () => ({
+  useScreenSendOnPress: () => ({
+    screenSend: (onClear: () => void) => onClear(),
+    isScreening: false,
+    isBlocked: false,
+    blockedAddress: undefined,
+    dismissBlocked: vi.fn(),
+  }),
+}))
+
 vi.mock('uniswap/src/features/tokens/useCurrencyInfo', () => ({
   useCurrencyInfo: (...args: unknown[]) => mockUseCurrencyInfo(...args),
 }))

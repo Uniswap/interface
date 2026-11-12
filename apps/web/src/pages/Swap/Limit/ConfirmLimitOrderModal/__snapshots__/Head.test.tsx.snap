@@ -27,6 +27,8 @@ exports[`ConfirmSwapModal/Head > should render correctly for a Limit order 1`] =
           style="--ch-bg: var(--surface3-hovered);"
         >
           <svg
+            aria-hidden="true"
+            focusable="false"
             stroke-width="8"
             style="width: 16px; height: 16px;"
             viewBox="0 0 16 16"
@@ -49,7 +51,9 @@ exports[`ConfirmSwapModal/Head > should render correctly for a Limit order 1`] =
         role="none"
       >
         <svg
+          aria-hidden="true"
           fill="none"
+          focusable="false"
           stroke-width="8"
           style="color: rgba(19, 19, 19, 0.63); width: 24px; height: 24px;"
           viewBox="0 0 16 16"
@@ -92,6 +96,8 @@ exports[`ConfirmSwapModal/Head > should render correctly for a classic swap 1`] 
           style="--ch-bg: var(--surface3-hovered);"
         >
           <svg
+            aria-hidden="true"
+            focusable="false"
             stroke-width="8"
             style="width: 16px; height: 16px;"
             viewBox="0 0 16 16"
@@ -114,7 +120,9 @@ exports[`ConfirmSwapModal/Head > should render correctly for a classic swap 1`] 
         role="none"
       >
         <svg
+          aria-hidden="true"
           fill="none"
+          focusable="false"
           stroke-width="8"
           style="color: rgba(19, 19, 19, 0.63); width: 24px; height: 24px;"
           viewBox="0 0 16 16"

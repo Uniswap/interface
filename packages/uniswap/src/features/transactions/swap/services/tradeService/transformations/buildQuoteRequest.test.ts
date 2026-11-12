@@ -161,22 +161,28 @@ describe('createBuildQuoteRequest — wire shape', () => {
     expect(validateParsedInput(parsed)).toBeUndefined()
   })
 
-  describe('Relay bridge opt-in', () => {
+  describe('Bridging options', () => {
     const crossChainInput = { ...baseInput, tokenOutChainId: 42161 }
     const enableOnly = (enabled: FeatureFlags) => (flag: FeatureFlags) => flag === enabled
+    const { ACROSS, RELAY } = TradingApi.BridgeProvider
 
-    it('lists Across and Relay on a cross-chain quote when the gate is on', () => {
+    it.each([
+      { name: 'no selection lists every supported vendor', selected: undefined, expected: [ACROSS, RELAY] },
+      { name: 'an empty selection lists every supported vendor', selected: [], expected: [ACROSS, RELAY] },
+      { name: 'Relay only lists Relay', selected: [RELAY], expected: [RELAY] },
+      { name: 'Across only lists Across', selected: [ACROSS], expected: [ACROSS] },
+    ])('gate on, cross-chain: $name', ({ selected, expected }) => {
       vi.mocked(getFeatureFlag).mockImplementation(enableOnly(FeatureFlags.RelayBridgeAggregator))
 
-      const result = createBuildQuoteRequest(ctx)(crossChainInput)
+      const result = createBuildQuoteRequest(ctx)({ ...crossChainInput, bridgeProviders: selected })
 
-      expect(result.bridgeProviders).toEqual([TradingApi.BridgeProvider.ACROSS, TradingApi.BridgeProvider.RELAY])
+      expect(result.bridgeProviders).toEqual(expected)
     })
 
     it('omits the list when the gate is off, so the API serves Across only', () => {
       vi.mocked(getFeatureFlag).mockReturnValue(false)
 
-      const result = createBuildQuoteRequest(ctx)(crossChainInput)
+      const result = createBuildQuoteRequest(ctx)({ ...crossChainInput, bridgeProviders: [RELAY] })
 
       expect(result).not.toHaveProperty('bridgeProviders')
     })
@@ -187,6 +193,23 @@ describe('createBuildQuoteRequest — wire shape', () => {
       const result = createBuildQuoteRequest(ctx)(baseInput)
 
       expect(result).not.toHaveProperty('bridgeProviders')
+    })
+
+    it.each([
+      { name: 'carries the selection on a cross-chain quote', outputChainId: 42161, expected: [RELAY] },
+      { name: 'drops it on a same-chain quote, keeping that cache key', outputChainId: 1, expected: undefined },
+    ])('parsing $name', ({ outputChainId, expected }) => {
+      const parsed = parseTradeInputForTradingApiQuote({
+        amountSpecified: CurrencyAmount.fromRawAmount(
+          new Token(TradingApi.ChainId._1, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC'),
+          '1000000',
+        ),
+        otherCurrency: new Token(outputChainId, '0xaf88d065e77c8cC2239327C5EDb3A432268e5831', 6, 'USDC'),
+        tradeType: SdkTradeType.EXACT_INPUT,
+        selectedBridgeProviders: [RELAY],
+      })
+
+      expect(parsed.bridgeProviders).toEqual(expected)
     })
   })
 })

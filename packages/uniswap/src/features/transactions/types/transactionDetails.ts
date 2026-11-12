@@ -5,6 +5,7 @@ import { TradingApi } from '@universe/api'
 import type { GasEstimate } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
 import { providers } from 'ethers/lib/ethers'
+import type { MarginActionKey } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
 import { AssetType } from 'uniswap/src/entities/assets'
 import type { AuctionCreateAnalyticsProperties, SwapRouting } from 'uniswap/src/features/telemetry/types'
 import { ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
@@ -902,7 +903,11 @@ export interface PlanTransactionInfo extends BaseTransactionInfo {
   earnAction?: TradingApi.EarnAction
   // Margin's own plan — a chained plan, but not routed through the swap/earn plan sagas
   // (margin never enters prod planSaga). Lets plan-row consumers avoid swap/earn framing.
-  isMarginPlan?: boolean
+  marginAction?: {
+    action?: MarginActionKey
+    collateralCurrencyId: CurrencyId
+    debtCurrencyId: CurrencyId
+  }
 }
 
 export type TransactionTypeInfo =

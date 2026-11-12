@@ -6,6 +6,7 @@ import { opacifyRaw } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
 import { AuctionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { currentTimeInSeconds } from 'utilities/src/time/time'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import {
   TokenDetailsMoreAuctionsChip,
@@ -39,7 +40,7 @@ vi.mock('~/features/Toucan/Auction/hooks/useAuctionDisplayDataSources', () => ({
   }),
 }))
 
-const NOW_SECONDS = Math.floor(Date.now() / 1000)
+const NOW_SECONDS = currentTimeInSeconds()
 const ONE_HOUR = 60 * 60
 
 function auction({ auctionId, start, end }: { auctionId: string; start: number; end: number }): PlainMessage<Auction> {

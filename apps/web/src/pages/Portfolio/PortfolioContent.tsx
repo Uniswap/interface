@@ -2,15 +2,15 @@ import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Flex } from '@universe/mycelium'
 import { TransitionItem } from '@universe/mycelium/animate-presence-pager'
 import { useLocation } from 'react-router'
+import { PortfolioTab } from '~/hooks/usePortfolioRoutes/types'
+import { usePortfolioRoutes } from '~/hooks/usePortfolioRoutes/usePortfolioRoutes'
 import { PortfolioActivity } from '~/pages/Portfolio/Activity/Activity'
 import { PortfolioDefi } from '~/pages/Portfolio/Defi'
-import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
 import { usePortfolioTabsAnimation } from '~/pages/Portfolio/Header/hooks/usePortfolioTabsAnimation'
 import { PortfolioNfts } from '~/pages/Portfolio/NFTs/Nfts'
 import { PortfolioOverview } from '~/pages/Portfolio/Overview/Overview'
 import { PortfolioPools } from '~/pages/Portfolio/Pools/Pools'
 import { PortfolioTokens } from '~/pages/Portfolio/Tokens/Tokens'
-import { PortfolioTab } from '~/pages/Portfolio/types'
 
 function renderPortfolioContent({
   tab,

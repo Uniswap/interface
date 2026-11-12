@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { DEFAULT_DEADLINE_FROM_NOW } from '~/constants/misc'
-import { RouterPreference } from '~/state/routing/types'
 import { SlippageTolerance } from '~/state/user/types'
+import { RouterPreference } from '~/types/routing'
 
 const currentTimestamp = () => new Date().getTime()
 

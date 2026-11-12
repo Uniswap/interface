@@ -10,27 +10,9 @@ import {
   toRailWireParts,
   type MarginQuoteSwapConfig,
 } from 'uniswap/src/features/transactions/margin/stores/marginFormStore/marginSwapConfig'
-import { deriveMarginVenues } from 'uniswap/src/features/transactions/margin/stores/marginFormStore/marginVenuePreferences'
-import type { MarginDirection, MarginVenue } from 'uniswap/src/features/transactions/margin/types'
+import type { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 
 type MarginQuoteRequest = TradingApi.MarginQuoteRequest
-
-// The FE venue union carries COMPOUND_V3, which has no generated wire enum yet; map to the wire enum
-// at this one boundary and drop it, since the backend can't route it. Direction already IS the wire
-// enum (see MarginDirection in types), so it rides straight through with no mapping.
-function toWireVenues(venues: MarginVenue[]): TradingApi.MarginVenue[] {
-  const wire: TradingApi.MarginVenue[] = []
-  for (const venue of venues) {
-    if (venue === 'MORPHO') {
-      wire.push(TradingApi.MarginVenue.MORPHO)
-    } else if (venue === 'AAVE_V3') {
-      wire.push(TradingApi.MarginVenue.AAVE_V3)
-    } else if (venue === 'AAVE_V4') {
-      wire.push(TradingApi.MarginVenue.AAVE_V4)
-    }
-  }
-  return wire
-}
 
 // Keys that move leverage and nothing else, so they carry NO wallet-side rail — the only two keys
 // where walletToken/walletChainId/swapConfig are forbidden. Mirrors the backend's LEVERAGE_ONLY_KEYS
@@ -56,8 +38,8 @@ export interface MarginQuoteRequestInput {
   positionId?: string
   // Decimal string ('2.5', never a WAD). Required by the keys that move leverage, forbidden on the rest.
   leverageTarget?: string
-  // `open` only, and already derived (pair venues minus exclusions).
-  venues?: MarginVenue[]
+  // `open` only: the GET /margin/markets venue entry's `marketId` to quote on.
+  marketId?: string
   // The wallet-side rail, already complete (see buildMarginSwapConfig). Required by every key but the
   // two pure leverage moves; carries the pay/receive token, its chain, the equity magnitude, and the
   // pay-in swap's slippage — which the builder fans out to walletToken/walletChainId/amount/swapConfig.
@@ -79,7 +61,7 @@ export function buildMarginQuoteRequest({
   swapper,
   positionId,
   leverageTarget,
-  venues,
+  marketId,
   swapConfig,
   slippageTolerance,
 }: MarginQuoteRequestInput): MarginQuoteRequest | undefined {
@@ -120,12 +102,12 @@ export function buildMarginQuoteRequest({
     return undefined
   }
 
-  return assembleMarginRequest({ actionKey, base, wallet, lev, positionId, leverageTarget, amount, venues })
+  return assembleMarginRequest({ actionKey, base, wallet, lev, positionId, leverageTarget, amount, marketId })
 }
 
 // The computed pieces of a request. wallet/lev/amount are already validated for the action's needs by
 // buildMarginQuoteRequest; this only has to attach the action-specific fields (positionId, leverageTarget,
-// venues) and assemble a concrete union member. Split out so neither function's branching exceeds the
+// marketId) and assemble a concrete union member. Split out so neither function's branching exceeds the
 // complexity bound — the composites share one shape and route through buildCompositeRequest.
 interface MarginRequestParts {
   actionKey: MarginActionKey
@@ -135,18 +117,16 @@ interface MarginRequestParts {
   positionId?: string
   leverageTarget?: string
   amount?: string
-  venues?: MarginVenue[]
+  marketId?: string
 }
 
 function assembleMarginRequest(parts: MarginRequestParts): MarginQuoteRequest | undefined {
-  const { actionKey, base, wallet, lev, positionId, leverageTarget, amount, venues } = parts
+  const { actionKey, base, wallet, lev, positionId, leverageTarget, amount, marketId } = parts
   switch (actionKey) {
-    case 'open': {
-      const wireVenues = venues ? toWireVenues(venues) : []
-      return wallet && lev && wireVenues.length && leverageTarget && amount
-        ? { ...base, ...wallet, ...lev, open: { leverageTarget, venues: wireVenues, amount } }
+    case 'open':
+      return wallet && lev && marketId && leverageTarget && amount
+        ? { ...base, ...wallet, ...lev, open: { leverageTarget, amount, marketId } }
         : undefined
-    }
     case 'close':
       return wallet && lev && positionId ? { ...base, ...wallet, ...lev, close: { positionId } } : undefined
     case 'increaseLeverage':
@@ -188,8 +168,8 @@ function buildCompositeRequest(parts: MarginRequestParts): MarginQuoteRequest | 
   }
 }
 
-// The OPEN request, straight off form state: the derived allowlist gates it (an empty one leaves the
-// quote disabled), and the single slippage setting fills BOTH configs — the leverage leg's bound and
+// The OPEN request, straight off form state: the picked market gates it (none leaves the quote
+// disabled), and the single slippage setting fills BOTH configs — the leverage leg's bound and
 // the pay-in swap's own.
 export function buildMarginOpenQuoteRequest({
   positionChainId,
@@ -202,8 +182,7 @@ export function buildMarginOpenQuoteRequest({
   paymentToken,
   paymentChainId,
   slippageToleranceBps,
-  pairVenues,
-  excludedVenues,
+  marketId,
 }: {
   positionChainId: number
   exposureToken: string
@@ -217,8 +196,7 @@ export function buildMarginOpenQuoteRequest({
   paymentToken: string
   paymentChainId: number
   slippageToleranceBps: number
-  pairVenues: MarginVenue[]
-  excludedVenues: MarginVenue[]
+  marketId?: string
 }): MarginQuoteRequest | undefined {
   return buildMarginQuoteRequest({
     actionKey: 'open',
@@ -228,7 +206,7 @@ export function buildMarginOpenQuoteRequest({
     direction,
     swapper,
     leverageTarget: leverage.toFixed(2),
-    venues: deriveMarginVenues({ pairVenues, excludedVenues }),
+    marketId,
     slippageTolerance: bpsToSlippagePercent(slippageToleranceBps),
     swapConfig: buildMarginSwapConfig({
       token: paymentToken,

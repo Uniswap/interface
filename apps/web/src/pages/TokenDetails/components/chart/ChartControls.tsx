@@ -8,7 +8,6 @@ import { useTranslation } from 'react-i18next'
 import { InterfaceEventName, InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { refitChartContentAtom } from '~/components/Charts/ChartModel'
-import { ChartType, PriceChartType } from '~/components/Charts/utils'
 import {
   DropdownSelector,
   type SelectOption,
@@ -28,6 +27,7 @@ import {
 } from '~/pages/TokenDetails/components/chart/TDPChartState'
 import { useTDPChartStateContext } from '~/pages/TokenDetails/components/chart/TDPChartStateContext'
 import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
+import { ChartType, PriceChartType } from '~/utils/charts'
 
 const TOKEN_DETAILS_CHART_OPTIONS: TokenDetailsChartType[] = [ChartType.PRICE, ChartType.VOLUME, ChartType.TVL]
 

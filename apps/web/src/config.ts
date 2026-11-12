@@ -95,10 +95,7 @@ const webConfigValues = {
 export const webConfigSchema = z.object({
   // Environment & Build Metadata
   gitCommitHash: z.string().default('').describe('Git commit hash at build time'),
-  webBuildType: z
-    .string()
-    .optional()
-    .describe('Serving stack the web artifact was built for (workers | ecs | vercel | ipfs)'),
+  webBuildType: z.string().optional().describe('Serving stack the web artifact was built for (ecs | ipfs | local)'),
   // API Keys
   walletConnectProjectId: z.string().min(1).describe('Project ID for WalletConnect'),
 

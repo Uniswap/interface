@@ -1,10 +1,12 @@
 import { TradingApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
-import { Approve } from '@universe/mycelium/icons/Approve'
-import { ArrowRightFromBracket } from '@universe/mycelium/icons/ArrowRightFromBracket'
+import { ArrowBack } from '@universe/mycelium/icons/ArrowBack'
+import { ArrowDown } from '@universe/mycelium/icons/ArrowDown'
+import { ArrowUp } from '@universe/mycelium/icons/ArrowUp'
+import { Check } from '@universe/mycelium/icons/Check'
 import { Minus } from '@universe/mycelium/icons/Minus'
 import { Plus } from '@universe/mycelium/icons/Plus'
-import { Sliders } from '@universe/mycelium/icons/Sliders'
+import { X } from '@universe/mycelium/icons/X'
 import { TFunction } from 'i18next'
 import { computeStepStatus } from 'uniswap/src/components/ConfirmSwapModal/ProgressIndicator'
 import { isMarginExecuteStep } from 'uniswap/src/components/ConfirmSwapModal/steps/MarginExecuteStepRow'
@@ -205,27 +207,18 @@ describe('marginPlanProgress — step mapping', () => {
   })
 })
 
-// The same icons the position actions menu puts beside each action; actions the menu has no icon for
-// leave the row on its default.
 describe('marginPlanProgress — execute step icons', () => {
   it.each([
-    ['MARGIN_ADJUST', 'addEquity', Plus],
-    ['MARGIN_ADJUST', 'withdrawEquity', Minus],
-    ['MARGIN_ADJUST', 'increaseLeverage', Sliders],
-    ['MARGIN_ADJUST', 'decreaseLeverage', Sliders],
-    ['MARGIN_CLOSE', undefined, ArrowRightFromBracket],
-  ] as const)('gives a %s step under a %s plan the menu icon', (stepType, action, Icon) => {
+    ['MARGIN_OPEN', 'open', Check],
+    ['MARGIN_CLOSE', 'close', X],
+    ['MARGIN_ADJUST', 'addEquity', ArrowDown],
+    ['MARGIN_ADJUST', 'withdrawEquity', ArrowUp],
+    ['MARGIN_ADJUST', 'increaseLeverage', Plus],
+    ['MARGIN_ADJUST', 'decreaseLeverage', Minus],
+    ['MARGIN_RECOVER', undefined, ArrowBack],
+  ] as const)('gives a %s step under a %s plan its step icon', (stepType, action, Icon) => {
     const [execute] = progressOf([step(0, stepType)], { planOverrides: { action } }).steps
     expect(execute).toMatchObject({ marginStepIcon: Icon })
-    expect(Icon).not.toBe(Approve)
-  })
-
-  it.each([
-    ['MARGIN_OPEN', undefined],
-    ['MARGIN_RECOVER', undefined],
-  ] as const)('leaves a %s step under a %s plan on the default icon', (stepType, action) => {
-    const [execute] = progressOf([step(0, stepType)], { planOverrides: { action } }).steps
-    expect(execute).toMatchObject({ marginStepIcon: undefined })
   })
 })
 

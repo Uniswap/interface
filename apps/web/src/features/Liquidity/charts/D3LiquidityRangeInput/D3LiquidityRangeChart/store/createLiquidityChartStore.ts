@@ -2,6 +2,7 @@ import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes
 import { Currency } from '@uniswap/sdk-core'
 import { isDevEnv } from '@universe/environment'
 import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
+import type { PriceRangeDragTarget } from 'uniswap/src/features/telemetry/types'
 import type { StoreApi, UseBoundStore } from 'zustand'
 import { create } from 'zustand'
 import { devtools, subscribeWithSelector } from 'zustand/middleware'
@@ -75,6 +76,7 @@ export const createLiquidityChartStore = ({
   onMaxTickChange,
   onMinMaxTickChange,
   onTimePeriodChange,
+  onRangeDragEnd,
   setIsFullRange,
 }: {
   inputMode?: RangeAmountInputPriceMode
@@ -96,6 +98,7 @@ export const createLiquidityChartStore = ({
   onMaxTickChange: (tick?: number) => void
   onMinMaxTickChange: (range: TickRangeChange) => void
   onTimePeriodChange?: (timePeriod: HistoryDuration) => void
+  onRangeDragEnd?: (target: PriceRangeDragTarget) => void
   setIsFullRange: (isFullRange: boolean) => void
 }) => {
   // Group callbacks for action creators
@@ -185,6 +188,15 @@ export const createLiquidityChartStore = ({
               if (callbacks.onTimePeriodChange) {
                 callbacks.onTimePeriodChange(timePeriod)
               }
+            },
+
+            handleRangeDragEnd: ({ target, startRange }) => {
+              const { minTick: endMinTick, maxTick: endMaxTick } = get()
+              // d3 fires 'end' for a press with no movement too; only a drag that moved the range counts.
+              if (startRange.minTick === endMinTick && startRange.maxTick === endMaxTick) {
+                return
+              }
+              onRangeDragEnd?.(target)
             },
 
             // Spread all action groups

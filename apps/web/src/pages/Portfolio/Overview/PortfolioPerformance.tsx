@@ -14,7 +14,7 @@ import { useRestPortfolioValueModifier } from 'uniswap/src/features/dataApi/bala
 import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Dropdown, InternalMenuItem } from '~/components/Dropdowns/Dropdown'
-import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
+import { usePortfolioRoutes } from '~/hooks/usePortfolioRoutes/usePortfolioRoutes'
 import { usePortfolioAddresses } from '~/pages/Portfolio/hooks/usePortfolioAddresses'
 import { useShowDemoView } from '~/pages/Portfolio/hooks/useShowDemoView'
 

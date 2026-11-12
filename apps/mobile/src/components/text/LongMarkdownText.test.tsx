@@ -4,7 +4,8 @@ import React from 'react'
 import Markdown, { MarkdownProps } from 'react-native-markdown-display'
 import { LongMarkdownText } from 'src/components/text/LongMarkdownText'
 import { act, fireEvent, render, within } from 'src/test/test-utils'
-import type { Mock } from 'vitest'
+import { sleep } from 'utilities/src/time/timing'
+import type { Mock, MockInstance } from 'vitest'
 
 const TEXT_VARIANT = 'body2'
 const LINE_HEIGHT = fonts[TEXT_VARIANT].lineHeight
@@ -30,7 +31,7 @@ vi.mock('react-native-markdown-display', async () => {
  * carries realistic heights, like on a device: the hidden one-line measurer reports a
  * single line height and the markdown wrapper reports the given number of content lines.
  */
-let offsetHeightSpy: ReturnType<typeof vi.spyOn> | undefined
+let offsetHeightSpy: MockInstance | undefined
 
 // jsdom has no ResizeObserver; deliver one entry per observe() so mount measurement fires.
 class ImmediateResizeObserver implements ResizeObserver {
@@ -71,7 +72,7 @@ const renderMarkdown = async (text: string, contentLines: number): Promise<Retur
   const tree = render(<LongMarkdownText initialDisplayedLines={3} text={text} variant={TEXT_VARIANT} />)
   // The layout event's measurement is deferred a macrotask; flush it so the mount measurement lands.
   await act(async () => {
-    await new Promise((resolve) => setTimeout(resolve, 0))
+    await sleep(0)
   })
   return tree
 }

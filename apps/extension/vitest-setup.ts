@@ -6,7 +6,7 @@ import '../../packages/utilities/vitest-package-mocks'
 import '../../packages/ui/vitest-setup'
 // React Native component mocks (gesture-handler, reanimated, svg, safe-area, moti, matchMedia, ...)
 import { AppearanceSettingType } from 'uniswap/src/features/appearance/slice'
-import { vi } from 'vitest'
+import { type Mock, vi } from 'vitest'
 
 // Mirrors @universe/environment/jest-package-mocks: mock the env module so the throwing
 // platform-split stubs in src/environment/env.ts don't blow up at module load
@@ -205,7 +205,7 @@ global.chrome = {
 } as unknown as typeof global.chrome
 
 vi.mock('src/app/navigation/utils', () => ({
-  useExtensionNavigation: (): { navigateTo: ReturnType<typeof vi.fn>; navigateBack: ReturnType<typeof vi.fn> } => ({
+  useExtensionNavigation: (): { navigateTo: Mock; navigateBack: Mock } => ({
     navigateTo: vi.fn(),
     navigateBack: vi.fn(),
   }),

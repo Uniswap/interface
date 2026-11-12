@@ -16,7 +16,7 @@ export interface MarginVenueAllowlist {
   // The pair's markets the user has NOT opted out of, in registry order — or only the pinned venue's
   // market while a pin applies. What the slider ceiling maxes over.
   allowedMarkets: MarginMarket[]
-  // The same set as the wire carries it: deduped and sorted. This is the quote request's `open.venues`.
+  // The same set's venues, deduped and sorted. The open is quoted on one market picked from it.
   allowedVenues: MarginVenue[]
   // Exclusions that actually bite on THIS pair — the global preference may name venues the pair does
   // not offer, and counting those would overstate what the user turned off here.
@@ -55,9 +55,11 @@ export function useMarginVenueAllowlist({ market }: { market: MarginMarket | und
 }
 
 // The quote refusals that mean the allowed venues can't take this position — with a pin, the pinned venue
-// alone: none of them configured (400), none serving the pair (422), none able to lend enough (422).
+// alone: none of them configured (400), the market not served (422), none serving the pair (422), none
+// able to lend enough (422).
 const VENUE_CANNOT_FILL_CODES: ReadonlySet<MarginErrorCode> = new Set<MarginErrorCode>([
   'MARGIN_MARKET_NOT_SUPPORTED',
+  'MARGIN_MARKET_NOT_FOUND',
   'MARGIN_NO_ELIGIBLE_VENUE',
   'MARGIN_INSUFFICIENT_BORROW_LIQUIDITY',
 ])

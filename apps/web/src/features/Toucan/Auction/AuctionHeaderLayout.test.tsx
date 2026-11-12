@@ -10,7 +10,7 @@ const mockMedia = vi.fn<() => Partial<MediaState>>()
 const mockPrefetchAuction = vi.fn()
 const mockRedemption = { isRedeemable: false, realTokenAddress: undefined as string | undefined }
 
-vi.mock('~/pages/TokenDetails/hooks/usePrefetchTokenDetailsAuction', () => ({
+vi.mock('~/features/Toucan/hooks/usePrefetchTokenDetailsAuction', () => ({
   usePrefetchTokenDetailsAuction: () => mockPrefetchAuction,
 }))
 

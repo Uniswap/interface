@@ -124,6 +124,7 @@ const CHAIN_THEME_LIGHT: Record<UniverseChainId, ChainTheme> = {
   [UniverseChainId.Bnb]: { bgColor: '#EAB20033', textColor: '#EAB200' },
   [UniverseChainId.Celo]: { bgColor: '#FCFF5233', textColor: '#222222' },
   [UniverseChainId.Ink]: { bgColor: 'rgba(119, 87, 226, 0.12)', textColor: '#7757E2' },
+  [UniverseChainId.Elysium]: { bgColor: 'rgba(80, 210, 193, 0.12)', textColor: '#50D2C1' },
   [UniverseChainId.Linea]: { bgColor: 'rgba(97, 223, 255, 0.12)', textColor: '#121212' },
   [UniverseChainId.MegaETH]: { bgColor: 'rgba(25, 25, 26, 0.08)', textColor: '#19191A' },
   [UniverseChainId.Monad]: { bgColor: 'rgba(115, 91, 248, 0.08)', textColor: '#735BF8' },

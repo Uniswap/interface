@@ -57,6 +57,7 @@ const datadogAutoInstrumentation: AutoInstrumentationConfiguration = {
     firstPartyHosts: [
       { match: 'gateway.uniswap.org', propagatorTypes: [PropagatorType.DATADOG, PropagatorType.TRACECONTEXT] },
       { match: 'api.uniswap.org', propagatorTypes: [PropagatorType.DATADOG, PropagatorType.TRACECONTEXT] },
+      { match: 'rpc.uniswap.org', propagatorTypes: [PropagatorType.DATADOG, PropagatorType.TRACECONTEXT] },
     ],
     errorEventMapper: (event: ReturnType<ErrorEventMapper>): ReturnType<ErrorEventMapper> | null => {
       const ignoredErrors = getDynamicConfigValue<

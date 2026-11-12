@@ -9,12 +9,14 @@
  * mechanism): jsdom's CSSOM drops `var()` inline-style values, so the
  * serialized markup is the only honest view of the style channel.
  */
+import { render } from '@testing-library/react'
 import { createElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it, vi } from 'vitest'
 import { resetBoundedReportBudgets } from '../../compat/diagnostics'
 import { colorClasses } from '../../compat/style-classes'
 import { COLOR_TOKEN_CLASS, THEMED_COLOR_TOKEN_CLASSES } from '../../compat/tokens'
+import { runAxe } from '../../testing/axe'
 import { Check } from '../icons/Check'
 
 interface RenderedSvg {
@@ -204,5 +206,38 @@ describe('createIcon token resolution', () => {
 
   it('still fails closed on an unknown icon SIZE token — a different lane, unchanged here', () => {
     expect(() => renderCheckSvg({ size: '$spacing16' })).toThrow(/icon size token/)
+  })
+})
+
+describe('icon accessibility defaults', () => {
+  it('hides an unlabelled icon from assistive tech', async () => {
+    const { container } = render(<Check />)
+    const svg = container.querySelector('svg')
+    expect(svg?.getAttribute('aria-hidden')).toBe('true')
+    expect(svg?.getAttribute('focusable')).toBe('false')
+    expect(svg?.getAttribute('role')).toBeNull()
+    expect(await runAxe(container)).toHaveNoAxeViolations()
+  })
+
+  it('exposes a labelled icon as a named image', async () => {
+    const { container, getByRole } = render(<Check aria-label="Confirmed" />)
+    expect(getByRole('img', { name: 'Confirmed' })).toBe(container.querySelector('svg'))
+    expect(container.querySelector('svg')?.hasAttribute('aria-hidden')).toBe(false)
+    expect(await runAxe(container)).toHaveNoAxeViolations()
+  })
+
+  it('treats aria-labelledby as a label', () => {
+    const { getByRole } = render(
+      <>
+        <span id="icon-label">Done</span>
+        <Check aria-labelledby="icon-label" />
+      </>,
+    )
+    expect(getByRole('img', { name: 'Done' })).toBeTruthy()
+  })
+
+  it('lets an explicit aria-hidden override the default', () => {
+    const { container } = render(<Check aria-hidden={false} />)
+    expect(container.querySelector('svg')?.getAttribute('aria-hidden')).toBe('false')
   })
 })

@@ -102,7 +102,7 @@ function usePositionsTableColumns({
       columnHelper.display({
         id: 'pool' satisfies ColumnId,
         size: POOL_COLUMN_SIZE_PX,
-        header: () => <HeaderLabel id="pool" align="flex-start" />,
+        header: () => <HeaderLabel id="pool" align="flex-start" noTrailingPadding />,
         cell: (info) => {
           const position = info.row?.original?.position
           return (

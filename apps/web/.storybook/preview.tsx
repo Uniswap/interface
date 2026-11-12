@@ -1,35 +1,7 @@
 import '../src/global.css'
+import '../src/tailwind.css'
 import '../src/polyfills'
-import type { Preview } from '@storybook/react'
-import { Provider } from 'react-redux'
-import { MemoryRouter } from 'react-router'
-import { ReactRouterUrlProvider } from 'uniswap/src/contexts/UrlContext'
-import { ColorSchemeProvider } from '../src/theme/colorSchemeProvider'
-import store from '~/state'
+import { AXE_TAGS } from '@universe/mycelium/testing'
+import { createPreview } from 'storybook-presets/preview'
 
-const preview: Preview = {
-  decorators: [
-    (Story) => (
-      <MemoryRouter>
-        <ReactRouterUrlProvider>
-          <Provider store={store}>
-            <ColorSchemeProvider>
-              {/* 👇 Decorators in Storybook also accept a function. Replace <Story/> with Story() to enable it  */}
-              <Story />
-            </ColorSchemeProvider>
-          </Provider>
-        </ReactRouterUrlProvider>
-      </MemoryRouter>
-    ),
-  ],
-  parameters: {
-    controls: {
-      matchers: {
-        color: /(background|color)$/i,
-        date: /Date$/i,
-      },
-    },
-  },
-}
-
-export default preview
+export default createPreview({ axeTags: AXE_TAGS })

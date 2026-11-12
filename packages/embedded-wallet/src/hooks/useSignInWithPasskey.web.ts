@@ -3,6 +3,7 @@ import {
   createNewEmbeddedWallet,
   signInWithPasskey as signInWithPasskeyAPI,
 } from '@universe/embedded-wallet/src/features/passkey/embeddedWallet'
+import { logPasskeyFlowError } from '@universe/embedded-wallet/src/features/passkey/passkeyRejection'
 import { signMessageWithPasskey } from '@universe/embedded-wallet/src/features/passkey/signing'
 import { isUnsupportedPasskeyCreationError } from '@universe/embedded-wallet/src/features/passkey/unsupportedPasskeyError'
 import type {
@@ -14,7 +15,6 @@ import type {
 import { useEmbeddedWalletState } from '@universe/embedded-wallet/src/state/embeddedWalletStore'
 import { useClaimUnitag } from 'uniswap/src/features/unitags/hooks/useClaimUnitag'
 import { isUnitagRateLimitError } from 'uniswap/src/features/unitags/utils'
-import { logger } from 'utilities/src/logger/logger'
 
 /**
  * Signs in to or creates an embedded wallet via passkey, then runs the post-login sequence.
@@ -104,15 +104,16 @@ export function useSignInWithPasskey({
     },
     onError: (error: Error) => {
       if (createNewWallet) {
-        logger.error(error, { tags: { file: 'useSignInWithPasskey', function: 'onError' } })
+        logPasskeyFlowError(error, { file: 'useSignInWithPasskey', function: 'onError' })
         // Unsupported OS/browser: show the modal pointing the user to the mobile app (INFRA-2166).
         if (isUnsupportedPasskeyCreationError(error)) {
           deps.onUnsupportedPasskeyCreation()
         }
       } else {
         const { name, amplitudeType } = deps.getConnectorMeta()
-        logger.error(error, {
-          tags: { file: 'useSignInWithPasskey', function: 'onError' },
+        logPasskeyFlowError(error, {
+          file: 'useSignInWithPasskey',
+          function: 'onError',
           extra: { wallet_name: name, wallet_type: amplitudeType },
         })
       }

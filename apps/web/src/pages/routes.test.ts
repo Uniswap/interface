@@ -4,9 +4,9 @@ import { matchRoutes } from 'react-router'
 import { USDC_ARC } from 'uniswap/src/constants/tokens'
 import { parseStringPromise } from 'xml2js'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
-import { EMBED_BASE_PATH, isEmbedPath } from '~/pages/embedPaths'
 import type { RouterConfig } from '~/pages/routeDefinition'
 import { EMBED_ENTRY_ROUTES, findRouteByPath, routes } from '~/pages/RouteDefinitions'
+import { EMBED_BASE_PATH, isEmbedPath } from '~/utils/embedPaths'
 
 vi.mock('~/pages/Swap', () => ({
   SwapPage: () => React.createElement(React.Fragment),
@@ -78,6 +78,61 @@ describe('Hooks Explore routes', () => {
       }
     },
   )
+})
+
+describe('Hook detail routes', () => {
+  const path = '/explore/hooks/base/0x000000000000000000000000000000000000abcd'
+  const routePath = '/explore/hooks/:chainName/:hookAddress'
+
+  it('resolves the specific detail route before the Hooks list and generic Explore routes', () => {
+    const detailRouteIndex = routes.findIndex((route) => route.path === routePath)
+
+    expect(findRouteByPath(path)?.path).toBe(routePath)
+    expect(detailRouteIndex).toBeLessThan(routes.findIndex((route) => route.path === '/explore/hooks'))
+    expect(detailRouteIndex).toBeLessThan(routes.findIndex((route) => route.path === '/explore'))
+  })
+
+  it('keeps static metadata generic for the detail route', () => {
+    const detailRoute = findRouteByPath(path)
+    const exploreRoute = routes.find((route) => route.path === '/explore')
+
+    expect(detailRoute?.getTitle(path)).toBe(exploreRoute?.getTitle(path))
+    expect(detailRoute?.getDescription(path)).toBe(exploreRoute?.getDescription(path))
+  })
+
+  it.each([true, false, undefined])(
+    'registers the direct detail route before the flag resolves (%s)',
+    (isHooksExploreEnabled) => {
+      const routeTree = routes
+        .filter((route) => route.enabled({ isHooksExploreEnabled }))
+        .map((route) => ({ path: route.path, children: route.nestedPaths.map((path) => ({ path })) }))
+
+      expect(matchRoutes(routeTree, path)?.[0]?.route.path).toBe(routePath)
+    },
+  )
+})
+
+describe('Pools-area routes', () => {
+  it.each(['/explore/pools', '/explore/pools/base'])('resolves %s before generic Explore', (path) => {
+    expect(findRouteByPath(path)?.path).toBe('/explore/pools')
+  })
+
+  it('keeps the existing pool detail route', () => {
+    expect(findRouteByPath('/explore/pools/base/0x123')?.path).toBe('/explore/pools/:chainName/:poolAddress')
+  })
+
+  it.each([true, false, undefined])('gates only the new Pools composition (%s)', (isHooksExploreEnabled) => {
+    const routeTree = routes
+      .filter((route) => route.enabled({ isHooksExploreEnabled }))
+      .map((route) => ({ path: route.path, children: route.nestedPaths.map((path) => ({ path })) }))
+
+    for (const path of ['/explore/pools', '/explore/pools/base']) {
+      expect(matchRoutes(routeTree, path)?.[0]?.route.path).toBe(isHooksExploreEnabled ? '/explore/pools' : '/explore')
+    }
+    expect(matchRoutes(routeTree, '/explore/pools/base/0x123')?.[0]?.route.path).toBe(
+      '/explore/pools/:chainName/:poolAddress',
+    )
+  })
 })
 
 describe('Embed routes', () => {

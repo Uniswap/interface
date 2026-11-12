@@ -23,12 +23,12 @@ import {
 } from '~/features/Liquidity/hooks/useWalletPositionsWeb'
 import { PositionsSummaryChips } from '~/features/Liquidity/PositionsSummaryChips'
 import { PositionsTable } from '~/features/Liquidity/PositionsTable'
-import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
+import { PortfolioTab } from '~/hooks/usePortfolioRoutes/types'
+import { usePortfolioRoutes } from '~/hooks/usePortfolioRoutes/usePortfolioRoutes'
 import { usePortfolioAddresses } from '~/pages/Portfolio/hooks/usePortfolioAddresses'
 import { useResolvedAddresses } from '~/pages/Portfolio/hooks/useResolvedAddresses'
 import { useShowDemoView } from '~/pages/Portfolio/hooks/useShowDemoView'
 import { PortfolioPools } from '~/pages/Portfolio/Pools/Pools'
-import { PortfolioTab } from '~/pages/Portfolio/types'
 import { mocked } from '~/test-utils/mocked'
 import { act, render, screen } from '~/test-utils/render'
 
@@ -66,7 +66,7 @@ vi.mock('uniswap/src/features/telemetry/Trace', () => {
   return { default: Trace, Trace }
 })
 
-vi.mock('~/pages/Portfolio/Header/hooks/usePortfolioRoutes', () => ({
+vi.mock('~/hooks/usePortfolioRoutes/usePortfolioRoutes', () => ({
   usePortfolioRoutes: vi.fn(),
 }))
 

@@ -1,20 +1,14 @@
 import { LPTransactionSettingsStoreContextProvider } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/LPTransactionSettingsStoreContextProvider'
-import { WebUniswapProvider } from '~/app/WebUniswapContext'
-import { ExternalWalletProvider } from '~/connection/ExternalWalletProvider'
 import { LiquidityModalHeader } from '~/features/Liquidity/LiquidityModalHeader'
-import { act, fireEvent, render } from '~/test-utils/render'
+import { act, fireEvent, renderWithUniswapContext } from '~/test-utils/render'
 
 describe('LiquidityModalHeader', () => {
   it('should render with given title and call close callback', () => {
     const onClose = vi.fn()
-    const { getByText, getByTestId } = render(
-      <ExternalWalletProvider>
-        <WebUniswapProvider>
-          <LPTransactionSettingsStoreContextProvider>
-            <LiquidityModalHeader title="Test Title" closeModal={onClose} />
-          </LPTransactionSettingsStoreContextProvider>
-        </WebUniswapProvider>
-      </ExternalWalletProvider>,
+    const { getByText, getByTestId } = renderWithUniswapContext(
+      <LPTransactionSettingsStoreContextProvider>
+        <LiquidityModalHeader title="Test Title" closeModal={onClose} />
+      </LPTransactionSettingsStoreContextProvider>,
     )
     expect(getByText('Test Title')).toBeInTheDocument()
     expect(onClose).not.toHaveBeenCalled()

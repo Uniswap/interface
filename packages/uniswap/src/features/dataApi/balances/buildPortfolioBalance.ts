@@ -8,7 +8,10 @@ export type PortfolioTotalValue = {
   count?: number
 }
 
-export type PortfolioTotalValueResult = BaseResult<PortfolioTotalValue>
+export type PortfolioTotalValueResult = BaseResult<PortfolioTotalValue> & {
+  /** True while `data` is still the previous query key's result, e.g. right after switching wallets. */
+  isPlaceholderData?: boolean
+}
 
 export type PortfolioCacheUpdater = (hidden: boolean, portfolioBalance?: PortfolioBalance) => void
 

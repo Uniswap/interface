@@ -7,6 +7,7 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useActiveAddress, useConnectionStatus } from '~/connection/accounts/hooks'
 import { useDisconnect } from '~/connection/hooks/useDisconnect'
+import { useRedirectAfterConnect } from '~/features/wallet/hooks/useRedirectAfterConnect'
 import { useSignInWithPasskey } from '~/features/wallet/hooks/useSignInWithPasskey'
 import { useModalState } from '~/hooks/useModalState'
 import { SwapPage } from '~/pages/Swap'
@@ -23,7 +24,7 @@ type PasskeyManagementEffectDependencies = {
   signInWithPasskey: () => void
   accountDrawerHasBeenOpenedRef: React.MutableRefObject<boolean>
   passkeyConnectionAttemptedRef: React.MutableRefObject<boolean>
-  navigate: ReturnType<typeof useNavigate>
+  navigateAfterSignIn: () => void
   closeRecentlyConnectedModal: () => void
   accountDrawer: ReturnType<typeof useAccountDrawer>
   disconnect: () => void
@@ -38,7 +39,7 @@ export function handleRouteToPasskeyManagement({
   signInWithPasskey,
   accountDrawerHasBeenOpenedRef,
   passkeyConnectionAttemptedRef,
-  navigate,
+  navigateAfterSignIn,
   closeRecentlyConnectedModal,
   accountDrawer,
   disconnect,
@@ -54,10 +55,10 @@ export function handleRouteToPasskeyManagement({
   }
 
   // If the user is connected and the address is not the embedded wallet address first disconnect the wallet
-  // If the user has already been prompted to sign in, navigate to swap for non embedded wallet user
+  // If the user has already been prompted to sign in, navigate to swap (or Portfolio, if unfunded) for non embedded wallet user
   function handleInvalidWalletAddress() {
     if (passkeyConnectionAttemptedRef.current) {
-      navigate('/swap')
+      navigateAfterSignIn()
       return
     }
     dispatch(setIsTestnetModeEnabled(false))
@@ -110,7 +111,10 @@ export default function PasskeyManagement() {
   const setMenu = useSetMenu()
   const accountDrawerHasBeenOpenedRef = useRef<boolean>(accountDrawer.isOpen)
   const passkeyConnectionAttemptedRef = useRef<boolean>(false)
+  const redirectAfterConnect = useRedirectAfterConnect()
   const navigate = useNavigate()
+  // A cancelled prompt leaves no wallet, so there's no balance to wait on for the Portfolio check.
+  const navigateAfterSignIn = useEvent(() => (evmAddress ? redirectAfterConnect('/swap') : navigate('/swap')))
   const { closeModal: closeRecentlyConnectedModal } = useModalState(ModalName.RecentlyConnectedModal)
 
   const navigateToPasskeyManagement = useEvent(() => {
@@ -134,7 +138,7 @@ export default function PasskeyManagement() {
         signInWithPasskey,
         accountDrawerHasBeenOpenedRef,
         passkeyConnectionAttemptedRef,
-        navigate,
+        navigateAfterSignIn,
         closeRecentlyConnectedModal,
         accountDrawer,
         disconnect: stableDisconnect,
@@ -145,7 +149,7 @@ export default function PasskeyManagement() {
       embeddedWalletAddress,
       dispatch,
       signInWithPasskey,
-      navigate,
+      navigateAfterSignIn,
       closeRecentlyConnectedModal,
       accountDrawer,
       stableDisconnect,

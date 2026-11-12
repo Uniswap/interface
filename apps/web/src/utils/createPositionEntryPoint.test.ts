@@ -2,6 +2,25 @@ import { EntryPointKind, parseEntryPoint } from '~/utils/createPositionEntryPoin
 
 describe('createPositionEntryPoint', () => {
   describe('parseEntryPoint', () => {
+    it('recognizes a hook detail origin and preserves its query parameters', () => {
+      const entryPoint = '/explore/hooks/base/0x1111111111111111111111111111111111111111?network=all'
+      expect(parseEntryPoint(entryPoint)).toEqual({ kind: EntryPointKind.HookDetails, to: entryPoint })
+    })
+
+    it.each([
+      '/explore/hooks',
+      '/explore/hooks/base',
+      '/explore/hooks/base/not-an-address',
+      '/explore/hooks/base/0xgggggggggggggggggggggggggggggggggggggggg',
+      '/explore/hooks/base/0x0000000000000000000000000000000000000000',
+      '/explore/hooks/unknown/0x1111111111111111111111111111111111111111',
+      '/explore/hooks/base/0x1111111111111111111111111111111111111111/extra',
+      '//example.com/explore/hooks/base/0x1111111111111111111111111111111111111111',
+      '/explore/hooks/base/../0x1111111111111111111111111111111111111111',
+    ])('rejects an invalid hook detail origin: %s', (entryPoint) => {
+      expect(parseEntryPoint(entryPoint)).toEqual({ kind: EntryPointKind.None, to: null })
+    })
+
     it('should parse valid Portfolio Pools entry points', () => {
       expect(parseEntryPoint('/portfolio/pools')).toEqual({
         kind: EntryPointKind.PortfolioPools,

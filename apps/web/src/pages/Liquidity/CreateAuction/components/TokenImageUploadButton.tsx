@@ -36,6 +36,7 @@ export function TokenImageUploadButton({
       >
         {displayImageUri ? (
           <UniversalImage
+            alt=""
             uri={displayImageUri}
             size={{ width: size, height: size, resizeMode: UniversalImageResizeMode.Cover }}
             allowLocalUri

@@ -10,6 +10,7 @@ import { SectionName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import type { PoolData } from '~/data/pools/poolData'
 import { Container, PageLayout } from '~/features/Liquidity/Create/Container'
+import { useCreateLiquidityContext } from '~/features/Liquidity/Create/CreateLiquidityContextProvider'
 import { CreatePositionHeader } from '~/features/Liquidity/Create/CreatePositionHeader'
 import { EditSelectTokensStep } from '~/features/Liquidity/Create/EditStep'
 import { useEntryPointBreadcrumb } from '~/features/Liquidity/Create/hooks/useEntryPointBreadcrumb'
@@ -23,8 +24,7 @@ import {
   PoolProgressIndicatorHeader,
   SIDEBAR_WIDTH,
 } from '~/features/Liquidity/PoolProgressIndicator/PoolProgressIndicator'
-import { ADD_LIQUIDITY_PATH } from '~/pages/AddLiquidity/poolLinkParams'
-import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
+import { ADD_LIQUIDITY_PATH } from '~/utils/params/poolLinkParams'
 
 const WIDTH = {
   positionCard: 720,
@@ -41,6 +41,7 @@ export function FormStepsWrapper({
   priceRangeProps,
   onSelectTokensContinue,
   poolData,
+  token0IsQuote = poolData?.isToken0Quote,
 }: {
   isMigration?: boolean
   hideEditStepOnDesktop?: boolean
@@ -51,6 +52,7 @@ export function FormStepsWrapper({
   priceRangeSectionName?: SectionName
   onSelectTokensContinue: () => void
   poolData?: PoolData
+  token0IsQuote?: boolean
 }) {
   const { step } = useCreateLiquidityContext()
   const media = useMedia()
@@ -70,6 +72,7 @@ export function FormStepsWrapper({
                   <Trace logImpression section={selectSectionName}>
                     <SelectTokensStep
                       isMigration={isMigration}
+                      token0IsQuote={token0IsQuote}
                       currencyInputs={currencyInputs}
                       onContinue={onSelectTokensContinue}
                       setCurrencyInputs={setCurrencyInputs}
@@ -78,7 +81,7 @@ export function FormStepsWrapper({
                 </Flex>
               )}
             </Presence>
-            {showEditStep && <EditSelectTokensStep poolData={poolData} />}
+            {showEditStep && <EditSelectTokensStep poolData={poolData} token0IsQuote={token0IsQuote} />}
           </HeightAnimator>
         </Container>
       )}

@@ -53,7 +53,9 @@ exports[`SelfSendSpeedBumpModal > should render correctly 1`] = `
             data-testid="dialog-icon"
           >
             <svg
+              aria-hidden="true"
               fill="currentColor"
+              focusable="false"
               stroke-width="8"
               style="width: 28px; height: 28px;"
               viewBox="0 0 24 24"

@@ -8,9 +8,9 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
+import type { RaiseCurrency } from '~/features/Toucan/utils/raiseCurrency'
 import { ExpandableHelpLink } from '~/pages/Liquidity/CreateAuction/components/ExpandableHelpLink'
 import { getLaunchThreshold } from '~/pages/Liquidity/CreateAuction/launchThreshold'
-import { type RaiseCurrency } from '~/pages/Liquidity/CreateAuction/types'
 import { getRaiseCurrencyAsCurrency } from '~/pages/Liquidity/CreateAuction/utils'
 
 const LOGO_SIZE = iconSizes.icon24

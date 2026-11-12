@@ -1,5 +1,6 @@
 import { UniverseChainId } from '@universe/chains'
 import { describe, expect, it } from 'vitest'
+import { RaiseCurrency } from '~/features/Toucan/utils/raiseCurrency'
 import { tryParseCurrencyAmount } from '~/lib/utils/tryParseCurrencyAmount'
 import { getCustomPriceRangeLiquidityTotal } from '~/pages/Liquidity/CreateAuction/customPriceRanges'
 import { createCreateAuctionStore } from '~/pages/Liquidity/CreateAuction/store/createCreateAuctionStore'
@@ -11,7 +12,6 @@ import {
   MAX_POST_AUCTION_LIQUIDITY_TIERS,
   PostAuctionLiquidityAllocationType,
   PriceRangeStrategy,
-  RaiseCurrency,
   TokenMode,
 } from '~/pages/Liquidity/CreateAuction/types'
 import { percentOfSoldToLiquidityFromDepositAndLiquidityAmount } from '~/pages/Liquidity/CreateAuction/utils'

@@ -9,7 +9,7 @@ import { EmptyCell } from '~/pages/Portfolio/Activity/ActivityTable/ActivityAmou
 import { useActivityTypeLabel } from '~/pages/Portfolio/Activity/ActivityTable/ActivityAmountCell/useActivityTypeLabel'
 import {
   AMOUNT_COLUMN_WIDTH,
-  COMPACT_TOKEN_LOGO_SIZE,
+  COMPACT_THUMBNAIL_SIZE,
 } from '~/pages/Portfolio/Activity/ActivityTable/ActivityAmountCell/utils'
 import { ActivityAmountModel, ActivityCellVariant } from '~/pages/Portfolio/Activity/ActivityTable/activityTableModels'
 
@@ -69,7 +69,7 @@ export function MultiTokenAmountCell({
           resolved.length > 0 ? (
             <OverlappingCurrencyLogos
               currencyInfos={resolved}
-              size={COMPACT_TOKEN_LOGO_SIZE}
+              size={COMPACT_THUMBNAIL_SIZE}
               max={MAX_SHOWN}
               totalCount={totalCount}
             />

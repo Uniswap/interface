@@ -29,6 +29,8 @@ export enum UniverseChainId {
   MegaETH = UniswapSDKChainId.MEGAETH,
   Zksync = UniswapSDKChainId.ZKSYNC,
   Zora = UniswapSDKChainId.ZORA,
+  // TODO(CONS-4052): UniswapSDKChainId.ELYSIUM once sdks#782 ships
+  Elysium = 99901,
   Solana = 501000101,
 }
 

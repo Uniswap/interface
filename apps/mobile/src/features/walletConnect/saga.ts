@@ -51,7 +51,7 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import i18n from 'uniswap/src/i18n'
 import { DappRequestType, EthEvent, WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
-import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { currentTimeInSeconds, ONE_SECOND_MS } from 'utilities/src/time/time'
 import { InvalidSendCallsRequestError } from 'wallet/src/features/batchedTransactions/normalizeSendCalls'
 import {
   selectAccounts,
@@ -767,7 +767,7 @@ export function* populateActiveSessions() {
   const sessions = wcWeb3Wallet.getActiveSessions()
 
   const accounts = yield* select(selectAccounts)
-  const nowSeconds = Math.floor(Date.now() / 1000)
+  const nowSeconds = currentTimeInSeconds()
 
   for (const session of Object.values(sessions)) {
     // Disconnect expired sessions from the relay instead of restoring them

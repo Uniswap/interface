@@ -21,17 +21,17 @@ import { TokenCardCarousel } from '~/components/TokenCardCarousel/TokenCardCarou
 import { useCarouselLayout } from '~/components/TokenCardCarousel/useCarouselLayout'
 import { useHorizontalSnapCarousel } from '~/components/TokenCardCarousel/useHorizontalSnapCarousel'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '~/constants/breakpoints'
-import { AssetShelfHeader } from '~/pages/Explore/rwa/shelf/AssetShelfHeader'
-import { useAuctionAddressByToken } from '~/pages/Launches/data/useAuctionAddressByToken'
-import { useLaunches } from '~/pages/Launches/data/useLaunches'
-import { useLaunchpads } from '~/pages/Launches/data/useLaunchpads'
-import { LaunchesHero } from '~/pages/Launches/LaunchesHero'
 import {
   LaunchItem,
   POOLS_LAUNCHPAD_GROUP_ID,
   POOLS_LAUNCHPAD_MECHANISM_IDS,
   toLaunchItems,
-} from '~/pages/Launches/launchesModel'
+} from '~/features/Toucan/utils/launchesModel'
+import { AssetShelfHeader } from '~/pages/Explore/rwa/shelf/AssetShelfHeader'
+import { useAuctionAddressByToken } from '~/pages/Launches/data/useAuctionAddressByToken'
+import { useLaunches } from '~/pages/Launches/data/useLaunches'
+import { useLaunchpads } from '~/pages/Launches/data/useLaunchpads'
+import { LaunchesHero } from '~/pages/Launches/LaunchesHero'
 import { LaunchesTeaserBanner } from '~/pages/Launches/LaunchesTeaserBanner'
 import { LaunchFilterBar, LaunchQuickSelects } from '~/pages/Launches/LaunchFilterBar'
 import { LaunchTable } from '~/pages/Launches/LaunchTable'

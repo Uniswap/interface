@@ -11,6 +11,7 @@ import {
   usePortfolioTotalValue,
 } from 'uniswap/src/features/dataApi/balances/usePortfolioBalancePart'
 import { renderHookWithProviders } from 'uniswap/src/test/render'
+import type { Mock } from 'vitest'
 
 const {
   mockUseEnabledChains,
@@ -80,7 +81,7 @@ const makeQueryResult = <T>(
 ): {
   data: T
   isFetching: boolean
-  refetch: ReturnType<typeof vi.fn>
+  refetch: Mock
   error: null
   status: 'success'
   dataUpdatedAt: number

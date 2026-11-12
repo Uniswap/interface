@@ -43,7 +43,7 @@ describe(LinkButton, () => {
       { openExternalBrowser: true, isSafeUri: true },
     ]
 
-    it.each(cases)('calls openUri with %p', async ({ openExternalBrowser, isSafeUri }) => {
+    it.each(cases)('calls openUri with %o', async ({ openExternalBrowser, isSafeUri }) => {
       const { getByText } = render(
         <LinkButton
           isSafeUri={isSafeUri}

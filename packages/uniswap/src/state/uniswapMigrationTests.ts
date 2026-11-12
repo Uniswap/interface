@@ -122,3 +122,16 @@ export function testRemoveBlastChainData(migration: (state: any) => any, prevSch
   expect(result.transactions).toEqual({ '0xabc': { 1: { [mainnetTx.id]: mainnetTx } } })
   expect(result.favorites.tokens).toEqual(['1-0xa'])
 }
+
+// Mobile: 106
+// Extension: 38
+// Web: 66
+export function testAddNewUserOnboardingHistory(migration: (state: any) => any, prevSchema: any): void {
+  const swap = { id: 'swap', status: 'confirmed', typeInfo: { type: 'swap' } }
+  const send = { id: 'send', status: 'confirmed', typeInfo: { type: 'send' } }
+  const result = migration({
+    ...prevSchema,
+    transactions: { '0xABC': { 1: { [swap.id]: swap } }, '0xDEF': { 1: { [send.id]: send } } },
+  })
+  expect(result.uniswapBehaviorHistory.newUserOnboarding).toEqual({ byWallet: { '0xabc': { hasCompletedSwap: true } } })
+}

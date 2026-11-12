@@ -5,12 +5,10 @@ import { BridgedAssetModalAtom } from 'uniswap/src/components/BridgedAsset/Bridg
 import { WormholeModalAtom } from 'uniswap/src/components/BridgedAsset/WormholeModal'
 import { ReportTokenDataModalPropsAtom } from 'uniswap/src/components/reporting/ReportTokenDataModal'
 import { ReportTokenIssueModalPropsAtom } from 'uniswap/src/components/reporting/ReportTokenIssueModal'
-import { useActiveAddresses } from 'uniswap/src/features/accounts/store/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { AnalyticsDebugOverlayLazy } from 'uniswap/src/features/telemetry/debug/AnalyticsDebugOverlayLazy'
 import { useEvent } from 'utilities/src/react/hooks'
 import { ModalRenderer } from '~/app/layout/TopLevelModals/modalRegistry'
-import { useAccountRiskCheck } from '~/app/layout/TopLevelModals/useAccountRiskCheck'
 import { GlobalEarnVaultModal } from '~/features/earn/GlobalEarnVaultModal'
 import { OAuthRedirectProvider } from '~/features/wallet/components/Passkey/OAuthRedirectContext'
 import { useOAuthRedirectRouter } from '~/features/wallet/components/Passkey/useOAuthRedirectRouter'
@@ -23,8 +21,6 @@ export function TopLevelModals() {
   useOAuthRedirectRouter()
   const { t } = useTranslation()
   const isLandingPage = useIsPage(PageType.LANDING)
-  const { evmAddress, svmAddress } = useActiveAddresses()
-  const blockedAddress = useAccountRiskCheck({ evmAddress, svmAddress })
   const bridgedAssetModalProps = useAtomValue(BridgedAssetModalAtom)
   const wormholeModalProps = useAtomValue(WormholeModalAtom)
 
@@ -53,7 +49,6 @@ export function TopLevelModals() {
         <ModalRenderer modalName={ModalName.GetTheApp} />
         <ModalRenderer modalName={ModalName.FeatureFlags} />
         <ModalRenderer modalName={ModalName.UniWalletConnect} />
-        <ModalRenderer modalName={ModalName.BlockedAccount} />
         {shouldShowDevFlags && <ModalRenderer modalName={ModalName.DevFlags} />}
         <ModalRenderer modalName={ModalName.Help} />
         <ModalRenderer modalName={ModalName.OffchainActivity} />
@@ -74,7 +69,6 @@ export function TopLevelModals() {
   return (
     <OAuthRedirectProvider value={true}>
       <ModalRenderer modalName={ModalName.AddressClaim} />
-      <ModalRenderer modalName={ModalName.BlockedAccount} componentProps={{ blockedAddress }} />
       <ModalRenderer modalName={ModalName.UniWalletConnect} />
       <ModalRenderer modalName={ModalName.Banners} />
       <ModalRenderer modalName={ModalName.OffchainActivity} />

@@ -22,6 +22,15 @@ describe('useEntryPointBreadcrumb', () => {
     })
   })
 
+  it('returns to the originating hook detail page', () => {
+    const entryPoint = '/explore/hooks/base/0x1111111111111111111111111111111111111111?network=all'
+    window.history.pushState({}, '', `/positions/add/new?${new URLSearchParams({ entryPoint })}`)
+
+    const { result } = renderHook(() => useEntryPointBreadcrumb(), { wrapper })
+
+    expect(result.current).toEqual({ label: 'Hook details', to: entryPoint, hasEntryPoint: true })
+  })
+
   it('should use the Portfolio breadcrumb for a Portfolio Pools entry point query param', () => {
     const entryPoint = '/portfolio/pools?chain=base'
     window.history.pushState({}, '', `/positions/add/new?${new URLSearchParams({ entryPoint }).toString()}`)

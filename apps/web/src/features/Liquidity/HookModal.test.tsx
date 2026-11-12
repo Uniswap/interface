@@ -1,4 +1,5 @@
 import { fireEvent } from '@testing-library/react'
+import type { Mock } from 'vitest'
 import { HookModal } from '~/features/Liquidity/HookModal'
 import { render, screen } from '~/test-utils/render'
 
@@ -14,9 +15,9 @@ const SWAP_HOOK = '0x1111111111111111111111111111111111110080'
 const REMOVE_LIQUIDITY_HOOK = '0x1111111111111111111111111111111111110200'
 
 function renderModal(props?: Partial<React.ComponentProps<typeof HookModal>>): {
-  onClose: ReturnType<typeof vi.fn>
-  onCancel: ReturnType<typeof vi.fn>
-  onContinue: ReturnType<typeof vi.fn>
+  onClose: Mock
+  onCancel: Mock
+  onContinue: Mock
 } {
   const handlers = { onClose: vi.fn(), onCancel: vi.fn(), onContinue: vi.fn() }
   render(<HookModal isOpen address={SWAP_HOOK} {...handlers} {...props} />)

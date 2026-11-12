@@ -193,6 +193,7 @@ const RelatedTokenCard = memo(function RelatedTokenCard({
       pricePercentChange1d={token.pricePercentChange1d}
       priceUsd={token.priceUsd}
       sparkline={token.sparkline}
+      categoryIds={token.categoryIds}
       symbol={token.symbol}
       width={CARD_WIDTH}
       onPress={onPress}

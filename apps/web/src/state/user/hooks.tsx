@@ -2,9 +2,9 @@ import { Percent } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
 import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from '~/state/hooks'
-import { RouterPreference } from '~/state/routing/types'
 import { updateUserRouterPreference, updateUserSlippageTolerance } from '~/state/user/reducer'
 import { SlippageTolerance } from '~/state/user/types'
+import { RouterPreference } from '~/types/routing'
 
 export function useRouterPreference(): [RouterPreference, (routerPreference: RouterPreference) => void] {
   const dispatch = useAppDispatch()

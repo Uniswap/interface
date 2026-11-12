@@ -188,6 +188,7 @@
   --color-network-solana: #9945ff;
   --color-network-robinhood: #00c805;
   --color-network-ink: #7757e2;
+  --color-network-elysium: #50d2c1;
   --color-network-unichain: #fc0fa4;
   --color-network-zksync: #3667f6;
   /* Legacy alias for BNB Smart Chain; prefer network-bnb (mode-aware) */

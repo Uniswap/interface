@@ -4,9 +4,9 @@ import { mix } from 'polished'
 import { useMemo } from 'react'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { currencyId } from 'uniswap/src/utils/currencyId'
+import type { RaiseCurrency } from '~/features/Toucan/utils/raiseCurrency'
 import { useSrcColor } from '~/hooks/useColor'
 import type { TokenAccentHex } from '~/pages/Liquidity/CreateAuction/tokenAccentHex'
-import { type RaiseCurrency } from '~/pages/Liquidity/CreateAuction/types'
 import { getRaiseCurrencyAsCurrency } from '~/pages/Liquidity/CreateAuction/utils'
 
 /** Colors for the auction token distribution bar (fundraise + LP legs). */

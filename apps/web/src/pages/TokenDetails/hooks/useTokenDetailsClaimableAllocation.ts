@@ -10,9 +10,9 @@ import {
   resolveAuctionDisplayState,
 } from '~/features/Toucan/Auction/utils/resolveAuctionDisplayState'
 import { getUserBidsPollingEndBlock } from '~/features/Toucan/Auction/utils/userBidsPolling'
+import { getTdpAuctionRequest } from '~/features/Toucan/utils/tdpAuctionQueryOptions'
 import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
 import type { TokenDetailsClaimSession } from '~/pages/TokenDetails/hooks/useTokenDetailsClaimSessions'
-import { getTdpAuctionRequest } from '~/pages/TokenDetails/tdpAuctionQueryOptions'
 import {
   type ClaimableAllocation,
   ClaimableAllocationState,

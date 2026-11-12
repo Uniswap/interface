@@ -1,15 +1,19 @@
 import { Flex, Text, type TextCompatProps } from '@universe/mycelium'
 import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
 import { SPORE_ANIMATION_CURVE_CSS } from '@universe/tailwind/animations'
-import { useMemo } from 'react'
+import { type ComponentProps, useMemo } from 'react'
 import { AdaptiveDropdown, SharedDropdownProps } from '~/components/Dropdowns/AdaptiveDropdown'
 import { TriggerButton } from '~/components/Dropdowns/TriggerButton'
 
-export type InternalMenuItemProps = TextCompatProps & { disabled?: boolean }
+export type InternalMenuItemProps = TextCompatProps & {
+  disabled?: boolean
+  ref?: ComponentProps<typeof Text>['ref']
+}
 
-export function InternalMenuItem({ disabled, ...rest }: InternalMenuItemProps): JSX.Element {
+export function InternalMenuItem({ disabled, ref, ...rest }: InternalMenuItemProps): JSX.Element {
   return (
     <Text
+      ref={ref}
       display="flex"
       flex={1}
       alignItems="center"

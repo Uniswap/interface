@@ -59,7 +59,7 @@ export function MarginPositionSheet({
             <MarginPositionSheetHeader position={position} market={market} onClose={onClose} />
             {market ? (
               <Flex height={MARGIN_POSITION_SHEET_CHART_HEIGHT}>
-                <MarginChartPane compact pinnedMarket={market} focusPositionId={position.positionId} />
+                <MarginChartPane compact pinnedMarket={market} focusedPosition={position} />
               </Flex>
             ) : null}
             <Flex gap="$spacing16" px="$spacing4">

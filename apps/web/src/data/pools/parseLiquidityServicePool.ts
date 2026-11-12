@@ -13,6 +13,7 @@ import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import { buildCurrency } from 'uniswap/src/features/dataApi/utils/buildCurrency'
 import type { ParsedToken } from 'uniswap/src/features/dataApi/utils/parsedToken'
+import { isToken0Quote } from 'uniswap/src/features/pools/quoteToken'
 import type { PoolData, RewardsCampaign } from '~/data/pools/poolData'
 import { protocolsToProtocolVersion } from '~/data/pools/protocolVersion'
 
@@ -172,6 +173,8 @@ export function parseLiquidityServicePool(pool: PoolSummary, chainId: UniverseCh
     apr: pool.apr,
     totalApr: pool.totalApr,
     protocolFeePips: pool.protocolFee,
+    currentLpFeePips: pool.currentLpFee,
     categoryIds: pool.categoryIds,
+    isToken0Quote: isToken0Quote({ token0Address: pool.token0Address, quoteTokenAddress: pool.quoteTokenAddress }),
   }
 }

@@ -6,12 +6,14 @@
  * oxlint supports type-aware JS plugins.
  */
 
-import { readFileSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { dirname, join, relative, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import noSwallowedUpstreamError from './no-swallowed-upstream-error.js'
 import noThrowingStubImports from './no-throwing-stub-imports.js'
 import noWalletSecretsInState from './no-wallet-secrets-in-state.js'
 import preferUseIsMounted from './prefer-use-is-mounted.js'
+import preferUtilitiesSleep from './prefer-utilities-sleep.js'
 import styledFactoryLiteralClasses from './styled-factory-literal-classes.js'
 
 // ── Utilities ──────────────────────────────────────────────────────────
@@ -956,6 +958,12 @@ const noPlatformGateInChainFlags = {
 //     deniedImporterPathMarkers, the import is forbidden (no allowlist). Optional
 //     exemptImportPrefixes carve sources back out, so a folder can deny `~/features/` yet still
 //     import itself (`~/features/wallet/`, or bare `~/features/wallet`).
+//   siblingIsolation — a file under importerRootMarker (e.g. `/apps/web/src/pages/`) may import its
+//     own top-level folder but not a sibling's. Allowed: importers that are files at the layer root
+//     (the route table imports every page), targets named in allowedSiblings, and, with
+//     allowRootFiles, targets that resolve to a file at the layer root (`~/pages/paths`). A bare
+//     folder import (`~/pages/Swap` -> `pages/Swap/index.tsx`) is a sibling import, so root files are
+//     checked on disk rather than by counting slashes.
 // A path marker is a substring, or an array of substrings that must ALL be present
 // (e.g. ["/features/transactions/swap/", "/views/"] marks views/ dirs inside the swap tree only).
 
@@ -1007,18 +1015,20 @@ function moduleImportSuffixForBoundary(source, boundary) {
 }
 
 function loadImportBoundaries() {
-  const configPath = join(__importBoundaryDir, 'import-boundaries.json')
+  // Tests point this at a fixture config so modes can be exercised before any real boundary uses them.
+  const configPath =
+    process.env.UNIVERSE_IMPORT_BOUNDARIES_CONFIG ?? join(__importBoundaryDir, 'import-boundaries.json')
   const raw = readFileSync(configPath, 'utf8')
   const { boundaries } = JSON.parse(raw)
   if (!Array.isArray(boundaries) || boundaries.length === 0) {
     throw new Error(`import-boundaries.json must define a non-empty "boundaries" array (${configPath})`)
   }
-  return boundaries.map((b, i) => {
+  const parsed = boundaries.map((b, i) => {
     const id = b.id ?? `boundary[${i}]`
     const mode = b.mode ?? 'importerAllowlist'
-    if (mode !== 'importerAllowlist' && mode !== 'importerDenylist') {
+    if (mode !== 'importerAllowlist' && mode !== 'importerDenylist' && mode !== 'siblingIsolation') {
       throw new Error(
-        `import-boundaries.json: boundary "${id}" has unknown "mode" "${mode}" (use "importerAllowlist" or "importerDenylist")`,
+        `import-boundaries.json: boundary "${id}" has unknown "mode" "${mode}" (use "importerAllowlist", "importerDenylist" or "siblingIsolation")`,
       )
     }
     if (typeof b.message !== 'string' || !b.message.trim()) {
@@ -1029,6 +1039,35 @@ function loadImportBoundaries() {
     }
     if (!Array.isArray(b.bareModuleSources)) {
       throw new Error(`import-boundaries.json: boundary "${id}" must set "bareModuleSources" (array, may be empty)`)
+    }
+
+    if (mode === 'siblingIsolation') {
+      if (typeof b.importerRootMarker !== 'string' || !b.importerRootMarker.endsWith('/')) {
+        throw new Error(
+          `import-boundaries.json: boundary "${id}" (siblingIsolation) needs an "importerRootMarker" string ending in "/"`,
+        )
+      }
+      const allowedSiblings = b.allowedSiblings ?? []
+      if (!Array.isArray(allowedSiblings) || !allowedSiblings.every((n) => typeof n === 'string' && n)) {
+        throw new Error(
+          `import-boundaries.json: boundary "${id}" (siblingIsolation) "allowedSiblings" must be an array of non-empty strings`,
+        )
+      }
+      if (b.allowRootFiles !== undefined && typeof b.allowRootFiles !== 'boolean') {
+        throw new Error(
+          `import-boundaries.json: boundary "${id}" (siblingIsolation) "allowRootFiles" must be a boolean`,
+        )
+      }
+      return {
+        id,
+        mode,
+        message: b.message,
+        importerRootMarker: b.importerRootMarker,
+        importPrefixes: b.importPrefixes,
+        bareModuleSources: b.bareModuleSources,
+        allowedSiblings,
+        allowRootFiles: b.allowRootFiles ?? false,
+      }
     }
 
     if (mode === 'importerDenylist') {
@@ -1071,9 +1110,46 @@ function loadImportBoundaries() {
       bareModuleSources: b.bareModuleSources,
     }
   })
+  // siblingIsolation entries run before the rest whatever their position in the file: an
+  // importerAllowlist match returns, which would otherwise skip a sibling check on the same prefix.
+  return [
+    ...parsed.filter((boundary) => boundary.mode === 'siblingIsolation'),
+    ...parsed.filter((boundary) => boundary.mode !== 'siblingIsolation'),
+  ]
 }
 
 const importBoundaryBoundaries = loadImportBoundaries()
+
+const ROOT_FILE_EXTENSIONS = ['.ts', '.tsx']
+
+/** True when a sibling-isolation import should report. `suffix` is the source after the matched prefix. */
+function isSiblingImport(physicalPath, suffix, boundary) {
+  const markerIndex = physicalPath.lastIndexOf(boundary.importerRootMarker)
+  if (markerIndex === -1) {
+    return false
+  }
+  const rootDir = physicalPath.slice(0, markerIndex + boundary.importerRootMarker.length)
+  const importerRest = physicalPath.slice(rootDir.length)
+  if (!importerRest.includes('/')) {
+    return false
+  }
+  const importerSibling = importerRest.split('/')[0]
+  const targetSibling = suffix.split('/')[0]
+  if (targetSibling === '') {
+    return !boundary.allowRootFiles
+  }
+  if (targetSibling === importerSibling || boundary.allowedSiblings.includes(targetSibling)) {
+    return false
+  }
+  if (
+    boundary.allowRootFiles &&
+    !suffix.includes('/') &&
+    ROOT_FILE_EXTENSIONS.some((ext) => existsSync(join(rootDir, targetSibling + ext)))
+  ) {
+    return false
+  }
+  return true
+}
 
 const importBoundary = {
   meta: {
@@ -1094,6 +1170,13 @@ const importBoundary = {
       for (const boundary of importBoundaryBoundaries) {
         const suffix = moduleImportSuffixForBoundary(sourceValue, boundary)
         if (suffix === null) {
+          continue
+        }
+        if (boundary.mode === 'siblingIsolation') {
+          if (isSiblingImport(physicalPath, suffix, boundary)) {
+            context.report({ node, message: boundary.message })
+            return
+          }
           continue
         }
         if (boundary.mode === 'importerDenylist') {
@@ -1140,8 +1223,8 @@ const DIRECT_VIEM_ETHERS_IMPORT_ALLOWLIST = new Set([
   'apps/web/src/connection/hooks/useEthersProvider.ts',
   'apps/web/src/connection/hooks/useEthersSigner.ts',
   'apps/web/src/pages/Swap/Limit/hooks/useUniswapXSwapCallback.ts',
-  'apps/web/src/state/routing/types.ts',
-  'apps/web/src/state/routing/utils.ts',
+  'apps/web/src/types/routing.ts',
+  'apps/web/src/utils/routing/routing.ts',
 ])
 
 /**
@@ -1250,7 +1333,9 @@ const plugin = {
     'no-throwing-stub-imports': noThrowingStubImports,
     'styled-factory-literal-classes': styledFactoryLiteralClasses,
     'prefer-use-is-mounted': preferUseIsMounted,
+    'prefer-utilities-sleep': preferUtilitiesSleep,
     'no-wallet-secrets-in-state': noWalletSecretsInState,
+    'no-swallowed-upstream-error': noSwallowedUpstreamError,
   },
 }
 

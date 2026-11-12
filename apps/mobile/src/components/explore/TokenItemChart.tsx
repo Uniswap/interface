@@ -1,9 +1,11 @@
+import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { useExtractedTokenColor } from '@universe/mycelium'
 import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import { useMemo } from 'react'
 import { SparklineChart } from 'src/components/charts/SparklineChart'
 import { TokenItemData } from 'src/components/explore/TokenItemData'
 import { useTokenPriceHistory } from 'src/components/PriceExplorer/usePriceHistory'
+import { getIsStablecoin } from 'uniswap/src/components/charts/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 
@@ -25,6 +27,7 @@ export function TokenItemChart({
   const { convertFiatAmount } = useLocalizationContext()
   const conversionRate = convertFiatAmount(1).amount
   const colors = useSporeColors()
+  const tokenCategoriesEnabled = useIsTokenCategoriesEnabled()
 
   const currencyId = tokenItemData.address
     ? buildCurrencyId(tokenItemData.chainId, tokenItemData.address)
@@ -54,6 +57,7 @@ export function TokenItemChart({
 
   return (
     <SparklineChart
+      isStablecoin={getIsStablecoin({ tokenCategoriesEnabled, categoryIds: tokenItemData.categoryIds }) === true}
       data={convertedPriceHistory}
       width={width}
       height={height}

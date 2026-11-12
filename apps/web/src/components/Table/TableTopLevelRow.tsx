@@ -1,14 +1,15 @@
 import { Row, RowData } from '@tanstack/react-table'
 import { Flex } from '@universe/mycelium'
+import type { SpaceValue } from '@universe/mycelium/compat'
 import { memo } from 'react'
 import type { RenderUnifiedExpandableRow } from '~/components/Table/types'
 
 export type TableTopLevelRowProps<T extends RowData> = {
   row: Row<T>
   isExpanded: boolean
-  rowGap: string | undefined
+  rowGap: SpaceValue | undefined
   renderTableRow: (row: Row<T>) => JSX.Element
-  renderSubRows: (row: Row<T>, rowGap: string | undefined) => JSX.Element | null
+  renderSubRows: (row: Row<T>, rowGap: SpaceValue | undefined) => JSX.Element | null
   topLevelRowWrapper?: (row: Row<T>, content: JSX.Element) => JSX.Element
   renderUnifiedExpandableRow?: RenderUnifiedExpandableRow<T>
 }

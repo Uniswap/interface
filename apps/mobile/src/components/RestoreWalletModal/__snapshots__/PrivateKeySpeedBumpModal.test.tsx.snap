@@ -13,6 +13,7 @@ exports[`PrivateKeySpeedBumpModal > renders correctly 1`] = `
         class="css-view-175oi2r"
       >
         <button
+          accessibilityactions="[object Object]"
           accessibilitystate="[object Object]"
           class="relative box-border flex min-h-0 min-w-0 cursor-pointer items-center justify-center border border-solid border-transparent gap-2 flex-row shrink-0 bg-surface3 p-[12px] rounded-[16px]"
           role="button"
@@ -103,6 +104,7 @@ exports[`PrivateKeySpeedBumpModal > renders correctly 1`] = `
         style="padding-top: 24px; padding-bottom: 24px;"
       >
         <button
+          accessibilityactions="[object Object]"
           accessibilitystate="[object Object]"
           class="relative box-border flex min-h-0 min-w-0 cursor-pointer items-center justify-center border border-solid border-transparent gap-2 rounded-16 px-4 py-3 flex-row flex-1 basis-0 self-stretch bg-accent1"
           data-testid="continue"

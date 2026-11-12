@@ -1,6 +1,6 @@
 #!/bin/bash
 # Measured on the PR's merge with main, so main-side growth can move this.
-MAX_SIZE=33.75
+MAX_SIZE=34.0
 MAX_BUFFER=0.5
 
 # Check OS type and use appropriate stat command

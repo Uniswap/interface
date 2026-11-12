@@ -21,7 +21,6 @@ import { usePoolsAprRange } from '~/features/Liquidity/PoolsFilter/aprRange'
 import { PoolsFilter } from '~/features/Liquidity/PoolsFilter/PoolsFilter'
 import { getProtocolVersionFromLabel } from '~/features/Liquidity/utils/protocolVersion'
 import { edgeFadeMaskStyle, useHorizontalScrollFades } from '~/hooks/useHorizontalScrollFades'
-import { buildPoolSearchParams } from '~/pages/AddLiquidity/poolLinkParams'
 import {
   BROWSER_FILTER_PARSERS,
   useCreatePoolHrefFromSelection,
@@ -33,6 +32,7 @@ import { PoolsTable } from '~/pages/Explore/tables/Pools/PoolTable'
 import { usePoolTableStore } from '~/pages/Explore/tables/Pools/poolTableStore'
 import type { PoolsFilterState } from '~/types/poolsFilter'
 import { getChainUrlParam, useChainIdFromUrlParam } from '~/utils/params/chainParams'
+import { buildPoolSearchParams } from '~/utils/params/poolLinkParams'
 import { SwitchNetworkAction } from '~/utils/popups/types'
 
 const FEW_RESULTS_THRESHOLD = 10
@@ -190,7 +190,11 @@ export function PoolBrowser(): JSX.Element {
 
   const createPoolHref = useCreatePoolHrefFromSelection()
 
-  const showCreatePool = !isLoading && !hasNextPage && pools && pools.length > 0 && pools.length < FEW_RESULTS_THRESHOLD
+  // Zero results counts too: an empty table is exactly when the user needs a way to create the pool.
+  // Suppressed only when the table is in its error state; a failed refetch over visible rows keeps it.
+  const poolCount = pools?.length ?? 0
+  const showCreatePool =
+    !isLoading && !(isError && poolCount === 0) && !hasNextPage && poolCount < FEW_RESULTS_THRESHOLD
 
   const aprRange = usePoolsAprRange(pools)
 

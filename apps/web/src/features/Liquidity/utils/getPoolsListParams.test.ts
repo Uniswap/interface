@@ -170,4 +170,35 @@ describe('getPoolsListParams', () => {
     const params = getPoolsListParams({ fallbackChainIds: ENABLED_CHAINS, sort: SORT, searchQuery: 'eth' })
     expect(params.filter?.searchQuery).toBe('eth')
   })
+
+  it('sends a lowercase exact hook on the selected chain without removing visibility gates', () => {
+    const params = getPoolsListParams({
+      chainId: UniverseChainId.Base,
+      fallbackChainIds: ENABLED_CHAINS,
+      sort: SORT,
+      hookAddress: '0xAbCdEf123456789012345678901234567890AbCd',
+      filterParams: { protocolVersions: [ProtocolVersion.V4] },
+    })
+
+    expect(params.chainIds).toEqual([UniverseChainId.Base])
+    expect(params.filter).toMatchObject({
+      hooks: '0xabcdef123456789012345678901234567890abcd',
+      protocolVersions: [ProtocolVersion.V4],
+      includeSpam: false,
+      applyTopLevelFilters: true,
+    })
+  })
+
+  it('leaves unscoped request shapes unchanged and preserves an explicit hookless address', () => {
+    const unscoped = getPoolsListParams({ fallbackChainIds: ENABLED_CHAINS, sort: SORT })
+    expect(unscoped.filter).not.toHaveProperty('hooks')
+
+    const hookless = getPoolsListParams({
+      chainId: UniverseChainId.Mainnet,
+      fallbackChainIds: ENABLED_CHAINS,
+      sort: SORT,
+      hookAddress: ZERO_ADDRESS,
+    })
+    expect(hookless.filter?.hooks).toBe(ZERO_ADDRESS)
+  })
 })

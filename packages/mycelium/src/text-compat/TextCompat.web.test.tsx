@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { createRequire } from 'node:module'
 import { dirname, join, resolve } from 'node:path'
+import { render } from '@testing-library/react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { compile } from 'tailwindcss'
 import { beforeAll, describe, expect, it } from 'vitest'
@@ -16,6 +17,7 @@ import { PSEUDO_STYLE_KEYS, PSEUDO_VARIANT, type PseudoStyleKey } from '../compa
  * declarations (see createIcon.test.tsx precedent).
  */
 import type { SafeCompatTag } from '../compat/safe-tags'
+import { runAxe } from '../testing/axe'
 import { ANCHOR_BASE_VAR, ANCHOR_PSEUDO_CODE, anchorPseudoVar } from './anchor-vars'
 import type { TextCompatProps } from './props'
 import { TextCompat } from './TextCompat.web'
@@ -296,5 +298,41 @@ describe('TextCompat untrusted tag/href containment', () => {
     expect(tag.startsWith('<a ')).toBe(true)
     expect(tag).toContain('href="https://app.uniswap.org"')
     expect(tag).toContain('rel="noreferrer"')
+  })
+})
+
+describe('TextCompat heading semantics', () => {
+  it.each([
+    ['heading1', 'H1'],
+    ['heading2', 'H2'],
+    ['heading3', 'H3'],
+    ['body2', 'SPAN'],
+  ] as const)('renders the %s variant as %s', (variant, tagName) => {
+    const { container } = render(<TextCompat variant={variant}>Title</TextCompat>)
+    expect(container.firstElementChild?.tagName).toBe(tagName)
+  })
+
+  it('honours an explicit tag over the variant default', () => {
+    const { getByRole } = render(
+      <TextCompat tag="h4" variant="heading1">
+        Section
+      </TextCompat>,
+    )
+    expect(getByRole('heading', { level: 4, name: 'Section' })).toBeTruthy()
+  })
+
+  it('types tag to accept h1 through h6', () => {
+    const tags: SafeCompatTag[] = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']
+    expect(tags).toHaveLength(6)
+  })
+
+  it('passes axe for a heading outline', async () => {
+    const { container } = render(
+      <div>
+        <TextCompat variant="heading1">Swap</TextCompat>
+        <TextCompat variant="heading2">Settings</TextCompat>
+      </div>,
+    )
+    expect(await runAxe(container)).toHaveNoAxeViolations()
   })
 })

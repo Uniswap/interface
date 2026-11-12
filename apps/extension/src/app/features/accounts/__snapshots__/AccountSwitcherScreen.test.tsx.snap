@@ -17,7 +17,9 @@ exports[`AccountSwitcherScreen > renders correctly 1`] = `
             tabindex="0"
           >
             <svg
+              aria-hidden="true"
               fill="none"
+              focusable="false"
               stroke-width="8"
               style="width: 24px; height: 24px;"
               viewBox="0 0 16 16"
@@ -57,7 +59,9 @@ exports[`AccountSwitcherScreen > renders correctly 1`] = `
                   tabindex="0"
                 >
                   <svg
+                    aria-hidden="true"
                     fill="none"
+                    focusable="false"
                     stroke-width="8"
                     style="width: 20px; height: 20px;"
                     viewBox="0 0 18 4"
@@ -254,7 +258,9 @@ exports[`AccountSwitcherScreen > renders correctly 1`] = `
                   style="--c-bosh: 0px 0px 10px var(--surface3);"
                 >
                   <svg
+                    aria-hidden="true"
                     fill="none"
+                    focusable="false"
                     stroke-width="2"
                     style="width: 36px; height: 36px;"
                     viewBox="0 0 24 24"
@@ -290,7 +296,9 @@ exports[`AccountSwitcherScreen > renders correctly 1`] = `
           tabindex="0"
         >
           <svg
+            aria-hidden="true"
             fill="none"
+            focusable="false"
             stroke-width="8"
             style="width: 24px; height: 24px;"
             viewBox="0 0 16 16"
@@ -330,7 +338,9 @@ exports[`AccountSwitcherScreen > renders correctly 1`] = `
                 tabindex="0"
               >
                 <svg
+                  aria-hidden="true"
                   fill="none"
+                  focusable="false"
                   stroke-width="8"
                   style="width: 20px; height: 20px;"
                   viewBox="0 0 18 4"
@@ -527,7 +537,9 @@ exports[`AccountSwitcherScreen > renders correctly 1`] = `
                 style="--c-bosh: 0px 0px 10px var(--surface3);"
               >
                 <svg
+                  aria-hidden="true"
                   fill="none"
+                  focusable="false"
                   stroke-width="2"
                   style="width: 36px; height: 36px;"
                   viewBox="0 0 24 24"

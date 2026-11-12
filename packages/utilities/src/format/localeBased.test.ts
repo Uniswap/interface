@@ -20,6 +20,14 @@ it('formats token reference numbers correctly', () => {
   expect(formatNumber({ input: 0, type: NumberType.TokenNonTx, locale: 'en-US' })).toBe('0')
 })
 
+it('formats fiat standard no-decimals numbers correctly', () => {
+  const type = NumberType.FiatStandardNoDecimals
+  expect(formatNumber({ input: 112_821.49, type, locale: 'en-US' })).toBe('$112,821')
+  expect(formatNumber({ input: 55_431.5, type, locale: 'en-US' })).toBe('$55,432')
+  expect(formatNumber({ input: 0.4, type, locale: 'en-US' })).toBe('$0')
+  expect(formatNumber({ input: 1_234_567.89, type, locale: 'ja-JP' })).toBe('$1,234,568')
+})
+
 it('formats token transaction numbers correctly', () => {
   expect(formatNumber({ input: 1234567.8901, type: NumberType.TokenTx, locale: 'en-US' })).toBe('1,234,567.89')
   expect(formatNumber({ input: 765432.1, type: NumberType.TokenTx, locale: 'en-US' })).toBe('765,432.10')

@@ -1,5 +1,4 @@
 import { CellContext, flexRender, Row, RowData } from '@tanstack/react-table'
-import { isMobileWeb } from '@universe/environment'
 import { Flex, Text } from '@universe/mycelium'
 import type { SpaceValue } from '@universe/mycelium/compat'
 import { HeightAnimator } from '@universe/mycelium/height-animator'
@@ -7,7 +6,12 @@ import { WifiError } from '@universe/mycelium/icons/WifiError'
 import { useSporeColors, BREAKPOINT_PX } from '@universe/mycelium/theme-hooks-compat'
 import { forwardRef, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ROW_HEIGHT_DESKTOP, ROW_HEIGHT_MOBILE_WEB } from '~/components/Table/constants'
+import {
+  ROW_HEIGHT_DESKTOP,
+  ROW_HEIGHT_MOBILE_WEB,
+  TABLE_ROW_GAP_PX,
+  TABLE_ROW_GAP_TOKEN,
+} from '~/components/Table/constants'
 import { ErrorModal } from '~/components/Table/ErrorBox'
 import { TableBodyRenderMode, useTableBodyRenderMode } from '~/components/Table/hooks/useTableBodyRenderMode'
 import { useTableVirtualizer } from '~/components/Table/hooks/useTableVirtualizer'
@@ -18,8 +22,6 @@ import { useTableSize } from '~/components/Table/TableSizeProvider'
 import { TableTopLevelRow } from '~/components/Table/TableTopLevelRow'
 import { TableBodyProps } from '~/components/Table/types'
 import { StaticSkeletonContext } from '~/components/Tokens/loading'
-
-const ROW_GAP_PX = 2
 
 // The error overlay is centered against the skeleton block (top: 50%). On window-scroll tables the
 // container height equals content height, so a full-length skeleton would push the message below the
@@ -47,6 +49,7 @@ function TableBodyInner<T extends RowData>(
     rowHeight: propRowHeight,
     compactRowHeight: propCompactRowHeight,
     subRowHeight: propSubRowHeight,
+    rowGap: propRowGap,
     hasPinnedColumns = false,
     extendedPinnedColumnDivider = false,
     dimmed,
@@ -68,7 +71,8 @@ function TableBodyInner<T extends RowData>(
     [tableWidth, propRowHeight, propCompactRowHeight],
   )
 
-  const numericRowGap = !hasPinnedColumns ? ROW_GAP_PX : 0
+  const numericRowGap = hasPinnedColumns ? 0 : (propRowGap ?? TABLE_ROW_GAP_PX)
+  const rowGap: SpaceValue | undefined = hasPinnedColumns ? undefined : (propRowGap ?? TABLE_ROW_GAP_TOKEN)
   const topLevelRows = useMemo(() => rows.filter((row) => row.depth === 0), [rows])
 
   const flatEstimateSize = useCallback(() => skeletonRowHeight + numericRowGap, [skeletonRowHeight, numericRowGap])
@@ -113,7 +117,7 @@ function TableBodyInner<T extends RowData>(
   )
 
   const renderSubRows = useCallback(
-    (row: Row<T>, rowGap: string | undefined) => {
+    (row: Row<T>, subRowGap: SpaceValue | undefined) => {
       const subRows = row.subRows
       if (subRows.length === 0) {
         return null
@@ -132,7 +136,6 @@ function TableBodyInner<T extends RowData>(
         />
       ))
       const subRowsContent = subRowsWrapper ? subRowsWrapper(row, <>{subRowElements}</>) : <>{subRowElements}</>
-      const spaceGap = rowGap as SpaceValue | undefined
 
       return (
         <HeightAnimator
@@ -142,7 +145,7 @@ function TableBodyInner<T extends RowData>(
           // overflow-y: hidden would coerce overflow-x to auto (CSS disallows mixing visible with a clipped axis), breaking sticky pinned columns
           styleProps={{ '$platform-web': { overflowY: 'clip', overflowX: 'visible' } }}
         >
-          <Flex gap={spaceGap} paddingTop={spaceGap}>
+          <Flex gap={subRowGap} paddingTop={subRowGap}>
             {subRowsContent}
           </Flex>
         </HeightAnimator>
@@ -160,7 +163,7 @@ function TableBodyInner<T extends RowData>(
   )
 
   const renderTopLevelRow = useCallback(
-    (row: Row<T>, rowGapValue: string | undefined) => (
+    (row: Row<T>, rowGapValue: SpaceValue | undefined) => (
       <TableTopLevelRow
         row={row}
         isExpanded={row.getIsExpanded()}
@@ -173,8 +176,6 @@ function TableBodyInner<T extends RowData>(
     ),
     [renderTableRow, renderSubRows, topLevelRowWrapper, renderUnifiedExpandableRow],
   )
-
-  const rowGap = !hasPinnedColumns ? '$spacing2' : undefined
 
   if (renderMode === TableBodyRenderMode.Offline) {
     return (
@@ -193,7 +194,7 @@ function TableBodyInner<T extends RowData>(
     const skeletonRowCount = error ? Math.min(loadingRowsCount, ERROR_SKELETON_ROW_COUNT) : loadingRowsCount
     return (
       <StaticSkeletonContext.Provider value={!!error}>
-        <Flex ref={setContainerRef} gap={!hasPinnedColumns ? '$spacing2' : undefined}>
+        <Flex ref={setContainerRef} gap={rowGap}>
           {Array.from({ length: skeletonRowCount }, (_, rowIndex) => (
             <DataRow key={`skeleton-row-${rowIndex}`} height={skeletonRowHeight}>
               {table.getAllColumns().map((column, columnIndex) => (
@@ -257,19 +258,17 @@ function TableBodyInner<T extends RowData>(
       <Flex ref={setContainerRef} position="relative" style={{ height: flatRowVirtualizer.getTotalSize() }}>
         {virtualItems.map((virtualRow) => {
           const row = rows[virtualRow.index]!
-          // Container virtualizer has scrollMargin 0, so this is a no-op there.
-          const translateY = virtualRow.start - flatRowVirtualizer.options.scrollMargin
           return (
             <Flex
               key={virtualRow.key}
               position="absolute"
-              top={0}
               left={0}
               width="100%"
               style={{
                 height: virtualRow.size - numericRowGap,
-                transform: `translateY(${translateY}px)`,
-                willChange: isMobileWeb ? undefined : 'transform',
+                // `top`, not translateY: iOS WebKit composites a transformed row around its sticky pinned cell,
+                // ~2MB per row. Container virtualizer has scrollMargin 0, so the subtraction is a no-op there.
+                top: virtualRow.start - flatRowVirtualizer.options.scrollMargin,
               }}
             >
               {renderTableRow(row)}

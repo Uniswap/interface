@@ -2,12 +2,13 @@ import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes
 import type { Currency } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
 import { DAI, nativeOnChain, USDC_MAINNET } from 'uniswap/src/constants/tokens'
+import type { Mock } from 'vitest'
+import { useCreateLiquidityContext } from '~/features/Liquidity/Create/CreateLiquidityContextProvider'
 import { useUnwrapNativeCurrencyToggles } from '~/features/Liquidity/Create/hooks/useUnwrapNativeCurrencyToggles'
-import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 import { fireEvent, render, screen } from '~/test-utils/render'
 import { PositionField } from '~/types/position'
 
-vi.mock('~/pages/CreatePosition/CreateLiquidityContextProvider', () => ({ useCreateLiquidityContext: vi.fn() }))
+vi.mock('~/features/Liquidity/Create/CreateLiquidityContextProvider', () => ({ useCreateLiquidityContext: vi.fn() }))
 
 const mockedUseCreateLiquidityContext = vi.mocked(useCreateLiquidityContext)
 
@@ -27,7 +28,7 @@ function mockContext({
   protocolVersion: ProtocolVersion
   display: { TOKEN0: Currency; TOKEN1: Currency }
   sdk: { TOKEN0: Currency; TOKEN1: Currency }
-  setCurrencyInputs?: ReturnType<typeof vi.fn>
+  setCurrencyInputs?: Mock
 }): void {
   mockedUseCreateLiquidityContext.mockReturnValue({
     protocolVersion,

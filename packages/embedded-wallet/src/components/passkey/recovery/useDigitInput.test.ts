@@ -3,9 +3,9 @@ import {
   type FocusableRef,
   useDigitInput,
 } from '@universe/embedded-wallet/src/components/passkey/recovery/useDigitInput'
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, type Mock, vi } from 'vitest'
 
-type FakeRef = { focus: ReturnType<typeof vi.fn>; blur: ReturnType<typeof vi.fn> }
+type FakeRef = { focus: Mock; blur: Mock }
 
 function attachRefs(refs: React.MutableRefObject<(FocusableRef | null)[]>, length: number): FakeRef[] {
   const fakes: FakeRef[] = Array.from({ length }, () => ({ focus: vi.fn(), blur: vi.fn() }))

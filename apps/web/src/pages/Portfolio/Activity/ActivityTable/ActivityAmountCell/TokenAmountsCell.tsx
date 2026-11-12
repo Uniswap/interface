@@ -6,7 +6,7 @@ import { CompactLayout } from '~/pages/Portfolio/Activity/ActivityTable/Activity
 import { DualTokenLayout } from '~/pages/Portfolio/Activity/ActivityTable/ActivityAmountCell/DualTokenLayout'
 import { ActivityTokenAmount } from '~/pages/Portfolio/Activity/ActivityTable/ActivityAmountCell/useActivityTokenAmount'
 import {
-  COMPACT_TOKEN_LOGO_SIZE,
+  COMPACT_THUMBNAIL_SIZE,
   createTokenLogo,
 } from '~/pages/Portfolio/Activity/ActivityTable/ActivityAmountCell/utils'
 import { ActivityCellVariant } from '~/pages/Portfolio/Activity/ActivityTable/activityTableModels'
@@ -29,7 +29,7 @@ function createSplitLogo({
       chainId={chainId}
       inputCurrencyInfo={inputCurrencyInfo}
       outputCurrencyInfo={outputCurrencyInfo}
-      size={COMPACT_TOKEN_LOGO_SIZE}
+      size={COMPACT_THUMBNAIL_SIZE}
     />
   )
 }

@@ -279,6 +279,7 @@ export function convertRestBalanceToPortfolioBalance(
     isSpam,
     safetyInfo: getRestCurrencySafetyInfo(mappedSafetyLevel, protectionInfo),
     spamCode: spamCodeValue,
+    categoryIds: metadata?.categoryIds,
   })
 
   return buildPortfolioBalance({

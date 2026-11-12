@@ -17,9 +17,9 @@ import { createOnRampTransactionId } from 'uniswap/src/features/fiatOnRamp/utils
 import { FiatOffRampEventName, FiatOnRampEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useBuyFormContext } from '~/pages/Swap/Buy/BuyFormContext'
-import { getOnRampRedirectUrl } from '~/pages/Swap/Buy/onRampRedirectUrl'
 import { useAddFiatOnRampTransaction } from '~/state/fiatOnRampTransactions/hooks'
 import { FiatOnRampTransactionStatus, FiatOnRampTransactionType } from '~/state/fiatOnRampTransactions/types'
+import { getOnRampRedirectUrl } from '~/utils/onRampRedirectUrl'
 
 interface ProviderOptionProps {
   quote: FORQuote

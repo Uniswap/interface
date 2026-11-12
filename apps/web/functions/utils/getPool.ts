@@ -5,13 +5,17 @@ import {
   liquidityServicePost,
 } from 'functions/utils/liquidityService'
 import { URL_PARAM_TO_CHAIN_ID } from 'uniswap/src/features/chains/chainUrlParam'
+import { getPoolName } from 'uniswap/src/features/pools/names'
+import { isToken0Quote, orderPoolDataByQuoteToken } from 'uniswap/src/features/pools/quoteToken'
 
 interface LiquidityPoolSummary {
   protocolVersion?: PoolProtocolVersion
   feeTier?: number
   isDynamicFee?: boolean
+  token0Address?: string
   token0Metadata?: LiquidityTokenMetadata
   token1Metadata?: LiquidityTokenMetadata
+  quoteTokenAddress?: string
 }
 
 export default async function getPool({
@@ -46,7 +50,12 @@ export default async function getPool({
     isDynamicFee: pool.isDynamicFee,
     isV2: protocolVersion === 'V2',
   })
-  const name = `${pool.token0Metadata?.symbol ?? 'Unknown'}/${pool.token1Metadata?.symbol ?? 'Unknown'}`
+  const [baseMetadata, quoteMetadata] = orderPoolDataByQuoteToken({
+    token0IsQuote: isToken0Quote({ token0Address: pool.token0Address, quoteTokenAddress: pool.quoteTokenAddress }),
+    data0: pool.token0Metadata,
+    data1: pool.token1Metadata,
+  })
+  const name = getPoolName({ symbol0: baseMetadata?.symbol ?? 'Unknown', symbol1: quoteMetadata?.symbol ?? 'Unknown' })
   const title = `${name} on Uniswap`
 
   return {
@@ -55,12 +64,12 @@ export default async function getPool({
     url,
     name,
     poolData: {
-      token0Symbol: pool.token0Metadata?.symbol,
-      token1Symbol: pool.token1Metadata?.symbol,
+      baseSymbol: baseMetadata?.symbol,
+      quoteSymbol: quoteMetadata?.symbol,
       feeTier,
       protocolVersion,
-      token0Image: pool.token0Metadata?.logoUrl,
-      token1Image: pool.token1Metadata?.logoUrl,
+      baseImage: baseMetadata?.logoUrl,
+      quoteImage: quoteMetadata?.logoUrl,
     },
   }
 }

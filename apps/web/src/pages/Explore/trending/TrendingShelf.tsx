@@ -16,13 +16,13 @@ import { useCarouselLayout } from '~/components/TokenCardCarousel/useCarouselLay
 import { useHorizontalSnapCarousel } from '~/components/TokenCardCarousel/useHorizontalSnapCarousel'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '~/constants/breakpoints'
 import { getExploreTrendingTableURL, scrollToExploreTokenSection } from '~/pages/Explore/categories/useExploreCategory'
-import { getCategoryDetailsURL } from '~/pages/Explore/CategoryDetails/getCategoryDetailsURL'
 import { AssetShelfHeader } from '~/pages/Explore/rwa/shelf/AssetShelfHeader'
 import { TrendingShelfTokenCard } from '~/pages/Explore/trending/TrendingShelfTokenCard'
 import {
   TRENDING_CAROUSEL_TOKEN_COUNT,
   useTrendingCarouselTokens,
 } from '~/pages/Explore/trending/useTrendingCarouselTokens'
+import { getCategoryDetailsURL } from '~/utils/getCategoryDetailsURL'
 
 export function TrendingShelf(): JSX.Element | null {
   const { t } = useTranslation()

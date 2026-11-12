@@ -41,6 +41,7 @@ vi.mock('~/connection/hooks/useSelectChain', () => ({ useSelectChain: vi.fn() })
 import { configureStore } from '@reduxjs/toolkit'
 import { UniverseChainId } from '@universe/chains'
 import createSagaMiddleware from 'redux-saga'
+import { sleep } from 'utilities/src/time/timing'
 // Import after mocks
 import { revertCancellationSaga } from '~/state/sagas/transactions/revertCancellationSaga'
 
@@ -85,7 +86,7 @@ function runRevert(order: UniswapXOrderDetails, selectChain = vi.fn().mockResolv
   })
   const task = sagaMiddleware.run(revertCancellationSaga.wrappedSaga)
   store.dispatch(revertCancellationSaga.actions.trigger({ order, selectChain }))
-  return { task, selectChain, flush: () => new Promise((resolve) => setTimeout(resolve, 20)) }
+  return { task, selectChain, flush: () => sleep(20) }
 }
 
 describe('revertCancellationSaga', () => {

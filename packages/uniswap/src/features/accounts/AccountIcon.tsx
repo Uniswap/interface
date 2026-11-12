@@ -77,6 +77,7 @@ export function AccountIcon({
     >
       <Flex fill centered {...ACCOUNT_ICON_WEB_STYLING}>
         <UniversalImage
+          alt=""
           // Background lives on the image's own view (painted behind its pixels) rather than a
           // separate backdrop layer, which Fabric view-flattening composites over the avatar.
           style={{

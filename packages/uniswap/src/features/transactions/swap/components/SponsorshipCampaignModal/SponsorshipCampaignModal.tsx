@@ -117,6 +117,7 @@ function SponsorshipCampaignContent({
       {onNetworksPress && <NetworksHeaderButton onPress={onNetworksPress} />}
       <Flex mb="$spacing4" mt={centered ? '$spacing24' : '$none'}>
         <UniversalImage
+          alt=""
           size={{
             width: centered ? iconSizes.icon48 : iconSizes.icon24,
             height: centered ? iconSizes.icon48 : iconSizes.icon24,

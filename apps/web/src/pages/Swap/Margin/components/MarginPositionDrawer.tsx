@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { Flex, Text } from '@universe/mycelium'
+import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFilled'
 import { type CSSProperties, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { type MarginActivePosition } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
@@ -190,6 +191,31 @@ export function MarginPositionDrawer({
 
   const figureFor = (columnId: string): { figure: JSX.Element; align: DrawerAlign } | undefined => {
     switch (columnId) {
+      case MARGIN_ACTIVE_COLUMN.pair:
+        return nearLiquidation
+          ? {
+              figure: (
+                <Flex
+                  row
+                  width="100%"
+                  minWidth={0}
+                  gap="$spacing6"
+                  alignItems="flex-start"
+                  p="$spacing8"
+                  borderRadius="$rounded12"
+                  backgroundColor="$statusCritical2"
+                >
+                  <Flex flexShrink={0}>
+                    <AlertTriangleFilled size="$icon.16" color="$statusCritical" />
+                  </Flex>
+                  <Text variant="body4" color="$statusCritical" flexShrink={1} minWidth={0}>
+                    {t('margin.warning.nearLiquidation')}
+                  </Text>
+                </Flex>
+              ),
+              align: 'flex-start',
+            }
+          : undefined
       case MARGIN_ACTIVE_COLUMN.markEntry:
         return {
           figure: (
@@ -224,13 +250,6 @@ export function MarginPositionDrawer({
 
   return (
     <Flex pb="$spacing8" backgroundColor="$surface1">
-      {nearLiquidation ? (
-        <Flex mx="$spacing12" p="$spacing8" borderRadius="$rounded12" backgroundColor="$statusCritical2">
-          <Text variant="body4" color="$statusCritical">
-            {t('margin.warning.nearLiquidation')}
-          </Text>
-        </Flex>
-      ) : null}
       <Flex row width="100%">
         {spanBorrowingColumns(columns).map((column) => {
           const slot = figureFor(column.id)

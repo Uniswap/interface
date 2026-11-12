@@ -1,4 +1,4 @@
-import type { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { type Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import {
   MARGIN_NATIVE_TOKEN_ADDRESS,
@@ -15,7 +15,7 @@ import { buildCurrencyInfo } from 'uniswap/src/features/dataApi/utils/buildCurre
 import { usePortfolioBalances } from 'uniswap/src/features/portfolio/balances/hooks'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import { useUSDCPrice, useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { marginPairKey } from 'uniswap/src/features/transactions/margin/marginPairKey'
 import { buildMarginOpenQuoteRequest } from 'uniswap/src/features/transactions/margin/stores/marginFormStore/buildMarginQuoteRequest'
 import { useMarginFormStore } from 'uniswap/src/features/transactions/margin/stores/marginFormStore/useMarginFormStore'
@@ -34,6 +34,7 @@ import {
   MARGIN_QUOTE_REFETCH_MS,
   type MarginMarket,
 } from '~/constants/margin'
+import { useMarginMarkets } from '~/features/margin/hooks/useMarginMarkets'
 import {
   getMarketDefaultPaymentToken,
   getPaymentCurrency,
@@ -44,9 +45,7 @@ import { marginMarketDirection } from '~/features/margin/utils/marginTokenDispla
 import { useMarginVenueAllowlist } from '~/pages/Swap/Margin/hooks/useMarginVenueAllowlist'
 import { useMarginVenueRoutedAnalytics } from '~/pages/Swap/Margin/hooks/useMarginVenueRoutedAnalytics'
 import { getMarginLeverageCap } from '~/pages/Swap/Margin/marginOpenButtonGate'
-
-// The allowlist reaching the builder is already derived, so it has nothing left to subtract.
-const NO_EXCLUSIONS: MarginVenue[] = []
+import { canMarginMarketFundBorrow, pickMarginOpenMarket } from '~/pages/Swap/Margin/marginOpenMarket'
 
 export interface DerivedMarginInfo {
   market: MarginMarket
@@ -117,9 +116,10 @@ export function useDerivedMarginInfo({
   }))
   const account = useAccount()
   // The whole pair's venues minus the user's exclusions, not the resolved market's single one: the
-  // server picks among the allowlist. Excluding every one leaves the builder with no request, which
-  // is what disables the query.
+  // open is quoted on one market picked from them. Excluding every one leaves the builder with no
+  // request, which is what disables the query.
   const { allowedMarkets, allowedVenues, excludedCount } = useMarginVenueAllowlist({ market })
+  const { getLive } = useMarginMarkets()
 
   // Store value wins; otherwise the market default (collateral; native ETH on the ETH market).
   // Memoized: the default branch builds a fresh object, and an unstable identity would re-run
@@ -181,6 +181,33 @@ export function useDerivedMarginInfo({
     getCurrencyAmount({ value: debouncedMarginAmount, valueType: ValueType.Exact, currency: paymentCurrency }) ??
     undefined
   const paymentAmountRaw = debouncedAmount?.quotient.toString()
+  const debouncedUsdValue = useUSDCValue(debouncedAmount)
+  // Every allowed market is the same pair, so one debt-token price values all their borrow liquidity.
+  const debtCurrency = useMemo(
+    () => new Token(MARGIN_CHAIN_ID, market.debt.address, market.debt.decimals, market.debt.symbol),
+    [market.debt],
+  )
+  const { price: debtUsdPrice } = useUSDCPrice(debtCurrency)
+  const openMarketId = useMemo(() => {
+    const equityUsd = debouncedUsdValue ? Number(debouncedUsdValue.toExact()) : undefined
+    const availableBorrowUsdOf = (pairMarket: MarginMarket): number | undefined => {
+      const liquidity = getLive(pairMarket.key)?.availableBorrowLiquidity
+      return liquidity && debtUsdPrice
+        ? Number(debtUsdPrice.quote(CurrencyAmount.fromRawAmount(debtCurrency, liquidity)).toExact())
+        : undefined
+    }
+    return pickMarginOpenMarket({
+      markets: allowedMarkets,
+      leverage: debouncedLeverage,
+      getBorrowRateBps: (pairMarket) => getLive(pairMarket.key)?.borrowApyBps,
+      canFundBorrow: (pairMarket) =>
+        canMarginMarketFundBorrow({
+          availableBorrowUsd: availableBorrowUsdOf(pairMarket),
+          equityUsd,
+          leverage: debouncedLeverage,
+        }),
+    })?.marketId
+  }, [allowedMarkets, debouncedLeverage, getLive, debouncedUsdValue, debtUsdPrice, debtCurrency])
 
   // The request can't await the quote for its own direction (chicken-and-egg) — market.direction covers
   // every wire-sourced market; the derivation only backstops a market built with no wire data at all.
@@ -210,9 +237,7 @@ export function useDerivedMarginInfo({
         paymentToken: paymentToken.isNative ? MARGIN_NATIVE_TOKEN_ADDRESS : paymentToken.address,
         paymentChainId: paymentToken.chainId,
         slippageToleranceBps,
-        // Already derived (deduped + sorted); the builder's own derive is a no-op over it.
-        pairVenues: allowedVenues,
-        excludedVenues: NO_EXCLUSIONS,
+        marketId: openMarketId,
       }),
     [
       exposureToken,
@@ -223,7 +248,7 @@ export function useDerivedMarginInfo({
       paymentAmountRaw,
       paymentToken,
       slippageToleranceBps,
-      allowedVenues,
+      openMarketId,
     ],
   )
 

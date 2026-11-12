@@ -1,4 +1,4 @@
-import { useLocation, useParams } from 'react-router'
+import { matchPath, useLocation, useParams } from 'react-router'
 import { ExploreTab } from '~/types/explore'
 
 // Disambiguate URL params: useParams struggles with /explore/:chainName vs /explore/:tab
@@ -8,7 +8,17 @@ export function useExploreParams(): {
   tokenAddress?: string
 } {
   const { tab, chainName, tokenAddress } = useParams<{ tab: string; chainName: string; tokenAddress: string }>()
-  const isLegacyUrl = !useLocation().pathname.includes('explore')
+  const { pathname } = useLocation()
+  const isLegacyUrl = !pathname.includes('explore')
+  const poolAreaMatch = matchPath('/explore/:tab/:chainName?', pathname)
+
+  if (poolAreaMatch?.params.tab === ExploreTab.Pools || poolAreaMatch?.params.tab === ExploreTab.Hooks) {
+    return {
+      tab: poolAreaMatch.params.tab,
+      chainName: poolAreaMatch.params.chainName,
+      tokenAddress,
+    }
+  }
 
   const exploreTabs = Object.values(ExploreTab)
   if (tab && !chainName && exploreTabs.includes(tab as ExploreTab)) {

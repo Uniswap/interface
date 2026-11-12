@@ -229,6 +229,21 @@ describe('LiquidityPositionInfoBadges', () => {
       expect(screen.queryByText(/838/)).toBeNull()
     })
 
+    it('shows the served current fee for a dynamic fee tier', () => {
+      render(
+        <LiquidityPositionInfoBadges
+          version={ProtocolVersion.V4}
+          feeTier={{ feeAmount: DYNAMIC_FEE_AMOUNT, tickSpacing: DEFAULT_TICK_SPACING, isDynamic: true }}
+          // 7000 pips = 0.7%, what the pool's latest swap charged.
+          currentLpFeePips={7000}
+          size="default"
+        />,
+      )
+      expect(screen.getByText('0.70%')).toBeInTheDocument()
+      expect(screen.queryByText('Dynamic')).toBeNull()
+      expect(screen.queryByText(/838/)).toBeNull()
+    })
+
     it('renders the fixed v2 fee fallback', () => {
       const { getByText } = render(<LiquidityPositionInfoBadges version={ProtocolVersion.V2} size="default" />)
       expect(getByText('v2')).toBeInTheDocument()

@@ -3,10 +3,10 @@ import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { areCurrenciesEqual } from 'uniswap/src/utils/currencyId'
-import { useReportTotalBalancesUsdForAnalytics } from '~/features/balances/useReportTotalBalancesUsdForAnalytics'
+import { usePrevious } from 'utilities/src/react/hooks'
+import { useReportTotalBalancesUsdForAnalytics } from '~/features/Swap/hooks/useReportTotalBalancesUsdForAnalytics'
 import type { CurrencyState } from '~/features/Swap/state/types'
 import { SwapAndLimitContext } from '~/features/Swap/state/types'
-import { usePrevious } from '~/hooks/usePrevious'
 import { useMultichainContext } from '~/state/multichain/useMultichainContext'
 
 export function SwapAndLimitContextProvider({

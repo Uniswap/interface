@@ -9,7 +9,7 @@ import { useAuctionDisplayState } from '~/features/Toucan/Auction/hooks/useAucti
 import { useAuctionTradingToken } from '~/features/Toucan/Auction/hooks/useAuctionTradingToken'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
 import { buildProvenanceAnalyticsProperties } from '~/features/Toucan/Auction/utils/provenanceAnalytics'
-import { usePrefetchTokenDetailsAuction } from '~/pages/TokenDetails/hooks/usePrefetchTokenDetailsAuction'
+import { usePrefetchTokenDetailsAuction } from '~/features/Toucan/hooks/usePrefetchTokenDetailsAuction'
 
 /** One ADP → TDP hand-off for every trade surface: warm the auction lookup, report the click, then navigate. */
 export function useNavigateToAuctionTokenDetails({

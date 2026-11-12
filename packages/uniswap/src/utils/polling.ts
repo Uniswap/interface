@@ -1,7 +1,7 @@
 import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 
 const MS = 1000
-const ONE_MINUTE_MS = 60 * MS
 const TWO_SECONDS_MS = 2 * MS
 const FIVE_MINUTES_MS = 5 * ONE_MINUTE_MS
 

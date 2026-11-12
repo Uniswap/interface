@@ -3,7 +3,13 @@ import { UniverseChainId } from '@universe/chains'
 import { PlanStepItem } from 'uniswap/src/components/activity/details/plan/PlanStepItem'
 import { createTransactionDetails } from 'uniswap/src/features/activity/extract/extractPlanUtils'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
+import {
+  type TransactionDetails,
+  TransactionOriginType,
+  TransactionStatus,
+  TransactionType,
+  type TransactionTypeInfo,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { renderWithProviders } from 'uniswap/src/test/render'
 import { buildNativeCurrencyId, buildWrappedNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 
@@ -69,4 +75,89 @@ describe(PlanStepItem, () => {
       expect(useCurrencyInfo).not.toHaveBeenCalledWith(received)
     },
   )
+
+  it.each([
+    { bridgeProvider: TradingApi.BridgeProvider.RELAY, text: 'transaction.status.plan.step.bridge.via' },
+    { bridgeProvider: TradingApi.BridgeProvider.ACROSS, text: 'transaction.status.plan.step.bridge' },
+    { bridgeProvider: undefined, text: 'transaction.status.plan.step.bridge' },
+    // A vendor added to the API after this client shipped.
+    { bridgeProvider: 'LIFI' as TradingApi.BridgeProvider, text: 'transaction.status.plan.step.bridge' },
+  ])('describes a bridge step served by $bridgeProvider as $text', ({ bridgeProvider, text }) => {
+    const transactionDetails = createTransactionDetails({
+      routing: TradingApi.Routing.BRIDGE,
+      planId: 'plan-1',
+      status: TransactionStatus.Pending,
+      planStepType: TradingApi.PlanStepType.BRIDGE,
+      inputCurrencyAmountRaw: '100000000',
+      outputCurrencyAmountRaw: '99900000',
+      addedTime: 0,
+      from: '0x0000000000000000000000000000000000000001',
+      hash: undefined,
+      tokenInChainId: UniverseChainId.Base,
+      tokenInAddress: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
+      tokenOutChainId: UniverseChainId.Mainnet,
+      tokenOutAddress: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+      bridgeProvider,
+    })
+    if (!transactionDetails) {
+      throw new Error('Expected bridge step details')
+    }
+
+    const { queryByText } = renderWithProviders(<PlanStepItem transactionDetails={transactionDetails} />)
+
+    expect(queryByText(text)).toBeTruthy()
+  })
+
+  describe('in a margin plan', () => {
+    const marginOpen: TransactionTypeInfo = {
+      type: TransactionType.MarginOpenPosition,
+      marketKey: 'market',
+      collateralToken: BASE_WETH_ADDRESS,
+      debtToken: NATIVE_ADDRESS,
+      marginAmount: '1',
+      leverageX18: '0',
+      collateralToBuy: '0',
+      maxDebtIn: '0',
+    }
+    const unknown: TransactionTypeInfo = { type: TransactionType.Unknown }
+
+    function step(typeInfo: TransactionTypeInfo): TransactionDetails {
+      return {
+        routing: TradingApi.Routing.CLASSIC,
+        id: '0xhash',
+        hash: '0xhash',
+        chainId: UniverseChainId.Base,
+        from: '0x0000000000000000000000000000000000000001',
+        status: TransactionStatus.Success,
+        addedTime: 0,
+        transactionOriginType: TransactionOriginType.Internal,
+        options: { request: {} },
+        typeInfo,
+      }
+    }
+
+    it.each([
+      { action: 'open', typeInfo: marginOpen, text: 'margin.plan.step.open' },
+      { action: 'open', typeInfo: unknown, text: 'margin.plan.step.open' },
+      { action: 'close', typeInfo: unknown, text: 'margin.plan.title.close' },
+      { action: 'addEquity', typeInfo: unknown, text: 'margin.plan.title.addMargin' },
+      { action: 'withdrawEquity', typeInfo: unknown, text: 'margin.plan.title.withdrawMargin' },
+      { action: 'increaseLeverage', typeInfo: unknown, text: 'margin.plan.title.increaseLeverage' },
+      { action: 'decreaseLeverage', typeInfo: unknown, text: 'margin.plan.title.decreaseLeverage' },
+      { action: undefined, typeInfo: unknown, text: 'margin.plan.title.adjust' },
+    ] as const)('labels a $typeInfo.type step of a $action plan as $text', ({ action, typeInfo, text }) => {
+      const marginAction = { action, collateralCurrencyId: wrappedId ?? '', debtCurrencyId: nativeId }
+      const { queryByText } = renderWithProviders(
+        <PlanStepItem transactionDetails={step(typeInfo)} marginAction={marginAction} />,
+      )
+
+      expect(queryByText(text)).toBeTruthy()
+    })
+
+    it('leaves an untyped step blank outside a margin plan', () => {
+      const { queryByText } = renderWithProviders(<PlanStepItem transactionDetails={step(unknown)} />)
+
+      expect(queryByText('margin.plan.title.adjust')).toBeNull()
+    })
+  })
 })

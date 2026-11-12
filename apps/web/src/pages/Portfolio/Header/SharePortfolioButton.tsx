@@ -13,8 +13,8 @@ import { useCopyClipboard } from 'utilities/src/react/useCopyClipboard'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { Dropdown, InternalMenuItem } from '~/components/Dropdowns/Dropdown'
 import { useActiveAddresses } from '~/connection/accounts/hooks'
-import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
-import { buildPortfolioUrl } from '~/pages/Portfolio/utils/portfolioUrls'
+import { usePortfolioRoutes } from '~/hooks/usePortfolioRoutes/usePortfolioRoutes'
+import { buildPortfolioUrl } from '~/hooks/usePortfolioRoutes/utils'
 import { openTwitterShareWindow } from '~/utils/sharing'
 
 type ShareAccountItem = {

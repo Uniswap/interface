@@ -1,6 +1,6 @@
 // oxlint-disable eslint-js/no-restricted-syntax -- allow process.env access here
 import { AppId } from '@universe/config/src/AppId'
-import { boolIfDefined, boolFromOne, boolFromString, optionalString } from '@universe/config/src/commonSchemas'
+import { boolIfDefined, boolFromString, optionalString } from '@universe/config/src/commonSchemas'
 import type { EnvFieldRules } from '@universe/config/src/envFieldRules'
 import { Environment, NodeEnv, normalizeEnvironmentWireValue } from '@universe/config/src/Environment'
 import { z } from 'zod'
@@ -33,7 +33,6 @@ export const BaseConfigValues = {
     (process.env.NODE_ENV === NodeEnv.Production ? Environment.Production : Environment.Development),
   isUnitTest: process.env.JEST_WORKER_ID ?? process.env.VITEST_WORKER_ID,
   isE2ETest: process.env.IS_E2E_TEST,
-  isVercelEnvironment: process.env.VERCEL,
   // Build-time channel for the extension (dev/beta/prod). Used to resolve the env of
   // unpacked builds whose runtime extension ID matches none of the trusted IDs.
   buildEnv: process.env.BUILD_ENV,
@@ -106,7 +105,6 @@ export const BaseConfigSchema = z.object({
     .describe('Backend deployment environment; accepts deployer short forms dev/prod'),
   isUnitTest: boolIfDefined.describe('Is the app running in a unit test (Jest or Vitest)'),
   isE2ETest: boolFromString.describe('Is the app running in E2E test mode'),
-  isVercelEnvironment: boolFromOne.describe('Is the app deployed on Vercel'),
   buildEnv: optionalString.describe('Build-time channel for the extension (dev/beta/prod)'),
   isBetaUsingProdApi: boolFromString.describe('For Beta builds, point APIs at prod instead of staging'),
 

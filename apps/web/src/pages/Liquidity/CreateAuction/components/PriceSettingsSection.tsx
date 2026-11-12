@@ -11,13 +11,13 @@ import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useCurrencyInfo, useNativeCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
+import { RaiseCurrency } from '~/features/Toucan/utils/raiseCurrency'
 import {
   FloorPriceSelector,
   type FloorPriceSelectorHandle,
 } from '~/pages/Liquidity/CreateAuction/components/FloorPriceSelector'
 import { HookTileContainer } from '~/pages/Liquidity/CreateAuction/components/HookTile'
 import { type FloorPriceInputState, type InputCurrency } from '~/pages/Liquidity/CreateAuction/types'
-import { RaiseCurrency } from '~/pages/Liquidity/CreateAuction/types'
 import {
   areRaiseCurrencyOptionsSameToken,
   getPrimaryStablecoin,

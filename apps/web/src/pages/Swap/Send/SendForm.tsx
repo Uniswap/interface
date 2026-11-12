@@ -19,6 +19,7 @@ import {
   TransactionScreen,
   useTransactionModalContext,
 } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
+import { BlockedAddressModal } from 'uniswap/src/features/transactions/modals/BlockedAddressModal'
 import { CompatibleAddressModal } from 'uniswap/src/features/transactions/modals/CompatibleAddressModal'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
@@ -33,6 +34,7 @@ import { SendRecipientForm } from '~/pages/Swap/Send/SendRecipientForm'
 import { SendReviewModalInner } from '~/pages/Swap/Send/SendReviewModal'
 import { SmartContractSpeedBumpModal } from '~/pages/Swap/Send/SmartContractSpeedBump'
 import { useSendContext } from '~/pages/Swap/Send/state/SendContext'
+import { useScreenSendOnPress } from '~/pages/Swap/Send/useScreenSendOnPress'
 import { useAccountDrawer } from '~/state/accountDrawer/hooks'
 import { UserRejectedRequestError } from '~/utils/errors'
 
@@ -125,6 +127,7 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
   })
   const { sendState, derivedSendInfo } = useSendContext()
   const { inputError, recipientData, gasFee } = derivedSendInfo
+  const recipientAddress = recipientData?.address
   const inputCurrencyId = currencyId(sendState.inputCurrency)
   const inputCurrencyInfo = useCurrencyInfo(inputCurrencyId)
   const chainId = sendState.inputCurrency?.chainId ?? defaultChainId
@@ -134,7 +137,7 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
   const isUnichainBridgedAsset = Boolean(inputCurrencyInfo?.isBridged) && !isCompatibleAddressDismissed
 
   const { isSmartContractAddress, loading: loadingSmartContractAddress } = useIsSmartContractAddress(
-    recipientData?.address,
+    recipientAddress,
     chainId,
   )
 
@@ -147,29 +150,35 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
     useIsPermissionedSendBlocked({
       sendCurrency: inputCurrencyInfo?.currency,
       senderAddress: accountAddress,
-      recipientAddress: recipientData?.address,
+      recipientAddress,
     })
   const sendCurrency = inputCurrencyInfo?.currency
   const { transfers: recentTransfers, loading: transfersLoading } = useRecentTransfersByAddress(accountAddress)
   const isRecentAddress = useMemo(() => {
-    if (!recipientData?.address) {
+    if (!recipientAddress) {
       return undefined
     }
 
     return !!recentTransfers.find((transfer) =>
       areAddressesEqual({
         addressInput1: { address: transfer.address, platform: chainPlatform },
-        addressInput2: { address: recipientData.address, platform: chainPlatform },
+        addressInput2: { address: recipientAddress, platform: chainPlatform },
       }),
     )
-  }, [recentTransfers, recipientData?.address, chainPlatform])
+  }, [recentTransfers, recipientAddress, chainPlatform])
 
   const isCurrentWallet = useMemo(() => {
     return areAddressesEqual({
       addressInput1: { address: accountAddress, platform: chainPlatform },
-      addressInput2: { address: recipientData?.address, platform: chainPlatform },
+      addressInput2: { address: recipientAddress, platform: chainPlatform },
     })
-  }, [accountAddress, recipientData?.address, chainPlatform])
+  }, [accountAddress, recipientAddress, chainPlatform])
+
+  const { screenSend, isScreening, isBlocked, blockedAddress, dismissBlocked } = useScreenSendOnPress({
+    senderAddress: accountAddress,
+    recipientAddress,
+    chainId,
+  })
 
   const sendButtonState = useSendButtonState()
 
@@ -184,7 +193,7 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
       [SendSpeedBump.NEW_ADDRESS_SPEED_BUMP]: !isRecentAddress,
       [SendSpeedBump.COMPATIBLE_ADDRESS]: isUnichainBridgedAsset,
     }))
-  }, [isCurrentWallet, isRecentAddress, isSmartContractAddress, recipientData?.address, isUnichainBridgedAsset])
+  }, [isCurrentWallet, isRecentAddress, isSmartContractAddress, recipientAddress, isUnichainBridgedAsset])
 
   const handleSendButton = useCallback(
     (prevSpeedBump?: SendSpeedBump) => {
@@ -290,6 +299,7 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
 
   return (
     <>
+      <BlockedAddressModal isOpen={isBlocked} address={blockedAddress} onClose={dismissBlocked} />
       <Flex gap="$spacing8">
         <SendCurrencyInputForm disabled={disableTokenInputs} onCurrencyChange={onCurrencyChange} />
         <SendRecipientForm disabled={disableTokenInputs} />
@@ -345,7 +355,8 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
                 size="large"
                 fill
                 disabled={buttonDisabled}
-                onPress={() => handleSendButton()}
+                loading={isScreening}
+                onPress={() => screenSend(handleSendButton)}
               >
                 {sendButtonState.label}
               </Button>

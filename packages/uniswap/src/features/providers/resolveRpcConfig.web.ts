@@ -27,7 +27,7 @@ export type { RpcConfigResolver, RpcConfigResolverInput } from '@universe/chains
  * Mobile uses the `.native.ts` sibling.
  */
 const SHARED_UNI_RPC_CONFIG = {
-  // UniRPC-only chains (Arc/Robinhood) always route through UniRPC; everything
+  // UniRPC-only chains (Arc/Elysium/Robinhood) always route through UniRPC; everything
   // else is flag-gated. Saga init runs before the Statsig provider mounts; guard
   // so the flag read doesn't trigger StatsigClient.instance()'s broken-fallback
   // branch.

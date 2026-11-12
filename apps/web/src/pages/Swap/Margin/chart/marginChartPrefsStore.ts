@@ -1,27 +1,13 @@
+import { getKeys } from 'utilities/src/primitives/objects'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
-// Chart display preferences (spec F16). Persisted so a trader's toggles survive reloads. The pure
-// composer takes these as input; the settings popover (T16) mutates them via setChartPrefs.
+// Chart display preferences (spec F14). Persisted so a trader's chart style survives reloads.
 export interface MarginChartPrefs {
-  showPosition: boolean
-  liqZone: boolean
-  breakEven: boolean
-  markers: boolean
-  summaryChip: boolean
-  previewLines: boolean
-  volume: boolean
   chartStyle: 'candles' | 'line'
 }
 
 export const DEFAULT_MARGIN_CHART_PREFS: MarginChartPrefs = {
-  showPosition: true,
-  liqZone: true,
-  breakEven: true,
-  markers: true,
-  summaryChip: true,
-  previewLines: true,
-  volume: false,
   chartStyle: 'candles',
 }
 
@@ -37,7 +23,7 @@ function pruneToKnownPrefs(persisted: unknown): Partial<MarginChartPrefs> {
   }
   const source = persisted as Record<string, unknown>
   const known: Partial<Record<keyof MarginChartPrefs, unknown>> = {}
-  for (const key of Object.keys(DEFAULT_MARGIN_CHART_PREFS) as (keyof MarginChartPrefs)[]) {
+  for (const key of getKeys(DEFAULT_MARGIN_CHART_PREFS)) {
     if (key in source && typeof source[key] === typeof DEFAULT_MARGIN_CHART_PREFS[key]) {
       known[key] = source[key]
     }

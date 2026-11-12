@@ -29,7 +29,13 @@ export function UnitagProfilePicture({
       shadowRadius="$spacing4"
       width={size}
     >
-      <UniversalImage allowLocalUri size={{ height: size, width: size }} uri={unitagAvatarUri} fallback={uniconImage} />
+      <UniversalImage
+        allowLocalUri
+        alt=""
+        size={{ height: size, width: size }}
+        uri={unitagAvatarUri}
+        fallback={uniconImage}
+      />
     </Flex>
   ) : (
     <AccountIcon address={address} showBackground={true} showBorder={true} size={size} />

@@ -8,7 +8,7 @@ This package provides:
 
 - **`BaseConfigValues`** / **`BaseConfigSchema`** — shared config fields (API keys, feature flags, URL overrides) used by all apps
 - **`parseConfig()`** — validates values against a zod schema, auto-extending the base config
-- **Common zod schemas** — `boolFromString`, `boolIfDefined`, `boolFromOne`, `optionalString`
+- **Common zod schemas** — `boolFromString`, `boolIfDefined`, `optionalString`
 - **Env field rules** — per-environment required/forbidden field lists (`EnvFieldRules`), enforced by `parseConfig()`
 
 Each app (web, mobile, extension) has its own `config.ts` that defines app-specific fields and calls `parseConfig()`.

@@ -2,6 +2,9 @@ import {
   applyGatingUrlOverrides,
   type GatingOverrideTarget,
   parseGatingUrlOverrides,
+  serializeGatingSearchParams,
+  withGateOverrideParams,
+  withoutGatingUrlParams,
 } from '@universe/gating/src/urlOverrides'
 import { describe, expect, it } from 'vitest'
 
@@ -159,5 +162,91 @@ describe('applyGatingUrlOverrides', () => {
     const { target, calls } = recordingTarget()
     applyGatingUrlOverrides(parseGatingUrlOverrides({}), target)
     expect(calls).toEqual([])
+  })
+})
+
+describe('withGateOverrideParams', () => {
+  it('writes gates on and off as comma-separated lists', () => {
+    const next = withGateOverrideParams(new URLSearchParams(), [
+      ['a', true],
+      ['b', false],
+      ['c', true],
+    ])
+
+    expect(next.get('featureFlagOverride')).toBe('a,c')
+    expect(next.get('featureFlagOverrideOff')).toBe('b')
+  })
+
+  it('removes a gate param once no gate has that value', () => {
+    const next = withGateOverrideParams(new URLSearchParams('featureFlagOverride=a&featureFlagOverrideOff=b'), [
+      ['a', true],
+    ])
+
+    expect(next.get('featureFlagOverride')).toBe('a')
+    expect(next.has('featureFlagOverrideOff')).toBe(false)
+  })
+
+  it('keeps unrelated params and does not mutate its input', () => {
+    const params = new URLSearchParams('chain=base&experimentOverride=exp:test')
+    const next = withGateOverrideParams(params, [['a', true]])
+
+    expect(next.get('chain')).toBe('base')
+    expect(next.get('experimentOverride')).toBe('exp:test')
+    expect(params.has('featureFlagOverride')).toBe(false)
+  })
+
+  it('round-trips through parseGatingUrlOverrides', () => {
+    const next = withGateOverrideParams(new URLSearchParams(), [
+      ['a', true],
+      ['b', false],
+    ])
+
+    expect(parseGatingUrlOverrides(next).gates).toEqual([
+      { name: 'a', value: true },
+      { name: 'b', value: false },
+    ])
+  })
+})
+
+describe('withoutGatingUrlParams', () => {
+  it('drops every gating override param and keeps the rest', () => {
+    const next = withoutGatingUrlParams(
+      new URLSearchParams(
+        'chain=base&featureFlagOverride=a&featureFlagOverrideOff=b&experimentOverride=e:g&layerOverride=l:p&layerOverrideOff=l:q',
+      ),
+    )
+
+    expect(next.toString()).toBe('chain=base')
+  })
+})
+
+describe('serializeGatingSearchParams', () => {
+  it('keeps literal commas in gating params and encodes everything else as usual', () => {
+    const params = new URLSearchParams()
+    params.set('featureFlagOverride', 'arc,ink,margin')
+    params.set('note', 'a,b c')
+
+    expect(serializeGatingSearchParams(params)).toBe('featureFlagOverride=arc,ink,margin&note=a%2Cb+c')
+  })
+
+  it('round-trips through parseGatingUrlOverrides', () => {
+    const search = serializeGatingSearchParams(
+      withGateOverrideParams(new URLSearchParams('chain=base'), [
+        ['arc', true],
+        ['ink', true],
+        ['margin', false],
+      ]),
+    )
+
+    expect(search).toBe('chain=base&featureFlagOverride=arc,ink&featureFlagOverrideOff=margin')
+    expect(parseGatingUrlOverrides(new URLSearchParams(search)).gates).toEqual([
+      { name: 'arc', value: true },
+      { name: 'ink', value: true },
+      { name: 'margin', value: false },
+    ])
+  })
+
+  it('returns an empty string for empty params', () => {
+    expect(serializeGatingSearchParams(new URLSearchParams())).toBe('')
   })
 })

@@ -1,16 +1,20 @@
-import { skipToken, useQuery } from '@tanstack/react-query'
+import { skipToken, useInfiniteQuery, useQuery } from '@tanstack/react-query'
 import { renderHook } from '@testing-library/react'
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import { PoolsOrderBy } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { EVMUniverseChainId, UniverseChainId } from '@universe/chains'
 import { auctionQueries } from 'uniswap/src/data/apiClients/dataApiService/auctions/auctionQueries'
+import { getListPoolsInfiniteQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/pools/queries'
 import { viemClients } from 'uniswap/src/features/providers/viemClients'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { useAuctionDisplayDataSources } from '~/features/Toucan/Auction/hooks/useAuctionDisplayDataSources'
 import { CurrentBlockState } from '~/features/Toucan/Auction/utils/resolveAuctionDisplayState'
-import { useV2ListTokenPools } from '~/pages/Explore/hooks/useV2ListTokenPools'
+import { getTokenListPoolsParams } from '~/utils/getTokenListPoolsParams'
 
 vi.mock('@tanstack/react-query', async () => ({
   ...(await vi.importActual('@tanstack/react-query')),
   useQuery: vi.fn(),
+  useInfiniteQuery: vi.fn(),
 }))
 
 vi.mock('uniswap/src/features/providers/viemClients', () => ({
@@ -21,7 +25,9 @@ vi.mock('uniswap/src/data/apiClients/dataApiService/auctions/auctionQueries', ()
   auctionQueries: { getLatestCheckpoint: vi.fn((options) => ({ ...options, queryKey: ['checkpoint'] })) },
 }))
 
-vi.mock('~/pages/Explore/hooks/useV2ListTokenPools')
+vi.mock('uniswap/src/data/apiClients/dataApiService/pools/queries', () => ({
+  getListPoolsInfiniteQueryOptions: vi.fn((input) => input),
+}))
 
 const mockUseQuery = vi.mocked(useQuery)
 const mockUseBlockQuery = vi.fn<typeof useQuery>()
@@ -29,11 +35,27 @@ const mockUseCheckpointQuery = vi.fn<typeof useQuery>()
 const mockGetViemClient = vi.mocked(viemClients.getViemClient, { partial: true })
 const mockGetBlockNumber = vi.fn()
 const mockGetLatestCheckpoint = vi.mocked(auctionQueries.getLatestCheckpoint)
-const mockUseV2ListTokenPools = vi.mocked(useV2ListTokenPools)
+const mockUseInfiniteQuery = vi.mocked(useInfiniteQuery)
+const mockGetListPoolsInfiniteQueryOptions = vi.mocked(getListPoolsInfiniteQueryOptions)
 
 const TOKEN_ADDRESS = '0x1111111111111111111111111111111111111111'
 const AUCTION_ADDRESS = '0x2222222222222222222222222222222222222222'
 const mockRefetchPools = vi.fn()
+
+function mockPoolQuery({
+  poolCount,
+  isSuccess = false,
+  isFetchedAfterMount = false,
+  isError = false,
+}: { poolCount?: number; isSuccess?: boolean; isFetchedAfterMount?: boolean; isError?: boolean } = {}): void {
+  mockUseInfiniteQuery.mockReturnValue({
+    data: poolCount === undefined ? undefined : { pages: [{ pools: Array(poolCount).fill({}) }], pageParams: [''] },
+    isSuccess,
+    isFetchedAfterMount,
+    isError,
+    refetch: mockRefetchPools,
+  } as unknown as ReturnType<typeof useInfiniteQuery>)
+}
 
 function renderSources(
   enabled = true,
@@ -71,18 +93,7 @@ function getPollingInterval(blockNumber: bigint | undefined): number | false | u
 describe('useAuctionDisplayDataSources', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    mockUseV2ListTokenPools.mockReturnValue({
-      pools: undefined,
-      rawPoolCount: undefined,
-      isLoading: true,
-      isSuccess: false,
-      isFetchedAfterMount: false,
-      refetch: mockRefetchPools,
-      isError: false,
-      loadMore: vi.fn(),
-      hasNextPage: false,
-      isFetchingNextPage: false,
-    })
+    mockPoolQuery()
     mockGetViemClient.mockReturnValue({ getBlockNumber: mockGetBlockNumber })
     mockGetBlockNumber.mockResolvedValue(100n)
     mockUseBlockQuery.mockReturnValue({ data: undefined, isError: false } as ReturnType<typeof useQuery>)
@@ -99,61 +110,31 @@ describe('useAuctionDisplayDataSources', () => {
   it('uses one V2/V3/V4 token-pools query', () => {
     renderSources()
 
-    expect(mockUseV2ListTokenPools).toHaveBeenCalledOnce()
-    expect(mockUseV2ListTokenPools).toHaveBeenCalledWith({
-      chainId: UniverseChainId.Mainnet,
-      tokenAddress: TOKEN_ADDRESS,
-      isNative: false,
-      sortState: { sortBy: 'TVL', sortDirection: 'desc' },
+    expect(mockGetListPoolsInfiniteQueryOptions).toHaveBeenCalledExactlyOnceWith({
+      params: getTokenListPoolsParams({
+        chainId: UniverseChainId.Mainnet,
+        tokenAddress: TOKEN_ADDRESS,
+        isNative: false,
+        protocolVersions: [ProtocolVersion.V2, ProtocolVersion.V3, ProtocolVersion.V4],
+        sort: { orderBy: PoolsOrderBy.TVL, ascending: false },
+      }),
+      pageSize: 20,
       enabled: true,
     })
   })
 
   it('only reports NO_POOL input after a successful empty response', () => {
-    mockUseV2ListTokenPools.mockReturnValue({
-      pools: [],
-      rawPoolCount: 0,
-      isLoading: true,
-      isSuccess: false,
-      isFetchedAfterMount: false,
-      refetch: mockRefetchPools,
-      isError: false,
-      loadMore: vi.fn(),
-      hasNextPage: false,
-      isFetchingNextPage: false,
-    })
+    mockPoolQuery({ poolCount: 0 })
     const loadingWithCachedEmptyData = renderSources()
     expect(loadingWithCachedEmptyData.result.current.pools).toEqual({ status: 'loading' })
 
-    mockUseV2ListTokenPools.mockReturnValue({
-      pools: [],
-      rawPoolCount: 0,
-      isLoading: false,
-      isSuccess: true,
-      isFetchedAfterMount: true,
-      refetch: mockRefetchPools,
-      isError: false,
-      loadMore: vi.fn(),
-      hasNextPage: false,
-      isFetchingNextPage: false,
-    })
+    mockPoolQuery({ poolCount: 0, isSuccess: true, isFetchedAfterMount: true })
     const successfulEmpty = renderSources()
     expect(successfulEmpty.result.current.pools).toEqual({ status: 'success', poolCount: 0 })
   })
 
   it('keeps pool errors distinct from cached empty data', () => {
-    mockUseV2ListTokenPools.mockReturnValue({
-      pools: [],
-      rawPoolCount: 0,
-      isLoading: false,
-      isSuccess: false,
-      isFetchedAfterMount: false,
-      refetch: mockRefetchPools,
-      isError: true,
-      loadMore: vi.fn(),
-      hasNextPage: false,
-      isFetchingNextPage: false,
-    })
+    mockPoolQuery({ poolCount: 0, isError: true })
 
     const { result } = renderSources()
 
@@ -161,18 +142,7 @@ describe('useAuctionDisplayDataSources', () => {
   })
 
   it('does not treat raw rows that fail normalization as an empty response', () => {
-    mockUseV2ListTokenPools.mockReturnValue({
-      pools: [],
-      rawPoolCount: 1,
-      isLoading: false,
-      isSuccess: true,
-      isFetchedAfterMount: true,
-      refetch: mockRefetchPools,
-      isError: false,
-      loadMore: vi.fn(),
-      hasNextPage: false,
-      isFetchingNextPage: false,
-    } as ReturnType<typeof useV2ListTokenPools>)
+    mockPoolQuery({ poolCount: 1, isSuccess: true, isFetchedAfterMount: true })
 
     const { result } = renderSources()
 
@@ -223,42 +193,20 @@ describe('useAuctionDisplayDataSources', () => {
   })
 
   it('waits for a mounted pool fetch before trusting a hydrated empty response', () => {
-    const cachedPools = {
-      pools: [],
-      rawPoolCount: 0,
-      isLoading: false,
-      isSuccess: true,
-      isFetchedAfterMount: false,
-      isError: false,
-      refetch: mockRefetchPools,
-      loadMore: vi.fn(),
-      hasNextPage: false,
-      isFetchingNextPage: false,
-    }
-    mockUseV2ListTokenPools.mockReturnValue(cachedPools)
+    const cachedPools = { poolCount: 0, isSuccess: true }
+    mockPoolQuery(cachedPools)
     const { result, rerender } = renderSources()
 
     expect(result.current.pools).toEqual({ status: 'loading' })
     expect(mockRefetchPools).toHaveBeenCalledExactlyOnceWith({ cancelRefetch: false })
 
-    mockUseV2ListTokenPools.mockReturnValue({ ...cachedPools, isFetchedAfterMount: true })
+    mockPoolQuery({ ...cachedPools, isFetchedAfterMount: true })
     rerender()
     expect(result.current.pools).toEqual({ status: 'success', poolCount: 0 })
   })
 
   it('keeps a failed pool refresh distinct from the hydrated empty response', () => {
-    mockUseV2ListTokenPools.mockReturnValue({
-      pools: [],
-      rawPoolCount: 0,
-      isLoading: false,
-      isSuccess: false,
-      isFetchedAfterMount: true,
-      isError: true,
-      refetch: mockRefetchPools,
-      loadMore: vi.fn(),
-      hasNextPage: false,
-      isFetchingNextPage: false,
-    })
+    mockPoolQuery({ poolCount: 0, isFetchedAfterMount: true, isError: true })
 
     const { result } = renderSources()
 
@@ -421,7 +369,7 @@ describe('useAuctionDisplayDataSources', () => {
   it('keeps requests disabled with a supplied post-end block when the feature is off', () => {
     const { result } = renderSources(false, { currentBlock: { status: 'success', blockNumber: 100n } })
 
-    expect(mockUseV2ListTokenPools).toHaveBeenLastCalledWith(expect.objectContaining({ enabled: false }))
+    expect(mockGetListPoolsInfiniteQueryOptions).toHaveBeenLastCalledWith(expect.objectContaining({ enabled: false }))
     expect(mockUseBlockQuery).toHaveBeenLastCalledWith(
       expect.objectContaining({
         enabled: false,
@@ -624,7 +572,7 @@ describe('useAuctionDisplayDataSources', () => {
 
       const { result } = renderSources(true, { tokenAddress })
 
-      expect(mockUseV2ListTokenPools).toHaveBeenCalledWith(expect.objectContaining({ enabled: false }))
+      expect(mockGetListPoolsInfiniteQueryOptions).toHaveBeenCalledWith(expect.objectContaining({ enabled: false }))
       expect(mockRefetchPools).not.toHaveBeenCalled()
       expect(mockGetLatestCheckpoint).toHaveBeenLastCalledWith({
         params: { chainId: UniverseChainId.Mainnet, address: AUCTION_ADDRESS },
@@ -659,7 +607,7 @@ describe('useAuctionDisplayDataSources', () => {
   it('disables every request when its caller gates the feature off', () => {
     const { result } = renderSources(false)
 
-    expect(mockUseV2ListTokenPools).toHaveBeenCalledWith(expect.objectContaining({ enabled: false }))
+    expect(mockGetListPoolsInfiniteQueryOptions).toHaveBeenCalledWith(expect.objectContaining({ enabled: false }))
     expect(mockRefetchPools).not.toHaveBeenCalled()
     expect(mockUseBlockQuery).toHaveBeenCalledWith(expect.objectContaining({ enabled: false, queryFn: skipToken }))
     expect(mockGetLatestCheckpoint).toHaveBeenCalledWith({

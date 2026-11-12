@@ -19,15 +19,22 @@ export function PoolDetailsHeaderActions({
   chainId,
   poolAddress,
   poolName,
+  baseToken,
+  quoteToken,
   token0,
   token1,
+  isToken0Quote,
   protocolVersion,
 }: {
   chainId?: UniverseChainId
   poolAddress?: string
   poolName: string
+  baseToken?: ParsedToken
+  quoteToken?: ParsedToken
+  /** Pool order, for reporting the pool's data. */
   token0?: ParsedToken
   token1?: ParsedToken
+  isToken0Quote?: boolean
   protocolVersion?: ProtocolVersion
 }): JSX.Element {
   const { t } = useTranslation()
@@ -55,8 +62,8 @@ export function PoolDetailsHeaderActions({
     chainId,
     poolAddress,
     poolName,
-    token0,
-    token1,
+    baseToken,
+    quoteToken,
     protocolVersion,
     openReportDataIssueModal,
     isMobileScreen,
@@ -77,6 +84,7 @@ export function PoolDetailsHeaderActions({
             version: protocolVersion,
             token0: currency0,
             token1: currency1,
+            isToken0Quote,
           }}
           onReportSuccess={onReportDataSuccess}
           isOpen={reportDataIssueModalIsOpen}

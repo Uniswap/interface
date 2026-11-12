@@ -129,7 +129,9 @@ describe('PoolDetailsTransactionsTable', () => {
     })
     mocked(useAbbreviatedTimeString).mockReturnValue('1mo ago')
 
-    render(<PoolDetailsTransactionsTable poolAddress={usdcWethPoolAddress} token0={ethToken} token1={usdcToken} />)
+    render(
+      <PoolDetailsTransactionsTable poolAddress={usdcWethPoolAddress} baseToken={ethToken} quoteToken={usdcToken} />,
+    )
 
     const ethAmount = screen.getByText(/^0\.4217/)
     const usdcAmount = screen.getByText(/^1.?095/)

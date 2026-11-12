@@ -18,6 +18,7 @@ export function ChooseCountryNotification({
       icon={
         <Flex borderRadius="$roundedFull" overflow="hidden">
           <UniversalImage
+            alt=""
             size={{
               width: iconSizes.icon20,
               height: iconSizes.icon20,

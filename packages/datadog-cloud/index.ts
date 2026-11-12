@@ -1,7 +1,12 @@
+import * as datadog from '@pulumi/datadog'
 import * as pulumi from '@pulumi/pulumi'
 import { settings } from './config'
 import { createMonitors } from './factory'
 import {
+  platformInfraAppStartMonitors,
+  platformInfraRumMetrics,
+  platformInfraWebRumMetrics,
+  platformInfraWebVitalMonitors,
   devPortalLatencyMonitors,
   devPortalErrorMonitors,
   devPortalAvailabilityMonitors,
@@ -64,6 +69,15 @@ const teamMonitors: Record<string, { monitors: MonitorDefinition[]; category: st
     { monitors: privyEmbeddedWalletKillSwitchMonitors, category: 'killswitch' },
   ],
   'liquidity-fe': [{ monitors: liquidityFeErrorTrackingMonitors, category: 'error-tracking' }],
+  'platform-infra': [
+    { monitors: platformInfraAppStartMonitors, category: 'app-start' },
+    { monitors: platformInfraWebVitalMonitors, category: 'web-vitals' },
+  ],
+}
+
+// RUM custom metrics are org-wide; each is owned by exactly one team stack.
+const teamRumMetrics: Record<string, Record<string, datadog.RumMetricArgs>> = {
+  'platform-infra': { ...platformInfraRumMetrics, ...platformInfraWebRumMetrics },
 }
 
 // Get monitors for current team
@@ -83,6 +97,13 @@ for (const { monitors, category } of currentTeamMonitors) {
   createdMonitors[category] = Object.fromEntries(Object.entries(created).map(([k, v]) => [k, v.id]))
   totalCount += Object.keys(created).length
 }
+
+export const rumMetricIds = Object.fromEntries(
+  Object.entries(isProd ? (teamRumMetrics[team] ?? {}) : {}).map(([name, args]) => [
+    name,
+    new datadog.RumMetric(`${team}-${name}`, args).id,
+  ]),
+)
 
 // Export monitor IDs grouped by category
 export const monitorIds = createdMonitors

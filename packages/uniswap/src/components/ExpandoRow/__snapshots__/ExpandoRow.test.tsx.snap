@@ -16,6 +16,7 @@ exports[`ExpandoRow > matches snapshot when collapsed 1`] = `
         class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row grow items-center justify-center gap-[12px]"
       >
         <div
+          aria-hidden="true"
           style="display: flex; align-items: stretch; flex-direction: column; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0; min-width: 0; flex-grow: 1; flex-shrink: 1; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 0; border-right-width: 0; border-left-width: 0; border-top-color: rgba(255, 255, 255, 0.12); border-right-color: rgba(255, 255, 255, 0.12); border-bottom-color: rgba(255, 255, 255, 0.12); border-left-color: rgba(255, 255, 255, 0.12); height: 0px; max-height: 0; border-bottom-width: 1px;"
         />
         <div
@@ -32,7 +33,9 @@ exports[`ExpandoRow > matches snapshot when collapsed 1`] = `
             data-testid="expando-row-icon"
           >
             <svg
+              aria-hidden="true"
               fill="none"
+              focusable="false"
               stroke-width="8"
               style="width: 16px; height: 16px;"
               viewBox="0 0 17 16"
@@ -45,6 +48,7 @@ exports[`ExpandoRow > matches snapshot when collapsed 1`] = `
           </div>
         </div>
         <div
+          aria-hidden="true"
           style="display: flex; align-items: stretch; flex-direction: column; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0; min-width: 0; flex-grow: 1; flex-shrink: 1; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 0; border-right-width: 0; border-left-width: 0; border-top-color: rgba(255, 255, 255, 0.12); border-right-color: rgba(255, 255, 255, 0.12); border-bottom-color: rgba(255, 255, 255, 0.12); border-left-color: rgba(255, 255, 255, 0.12); height: 0px; max-height: 0; border-bottom-width: 1px;"
         />
       </div>
@@ -69,6 +73,7 @@ exports[`ExpandoRow > matches snapshot when expanded 1`] = `
         class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row grow items-center justify-center gap-[12px]"
       >
         <div
+          aria-hidden="true"
           style="display: flex; align-items: stretch; flex-direction: column; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0; min-width: 0; flex-grow: 1; flex-shrink: 1; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 0; border-right-width: 0; border-left-width: 0; border-top-color: rgba(255, 255, 255, 0.12); border-right-color: rgba(255, 255, 255, 0.12); border-bottom-color: rgba(255, 255, 255, 0.12); border-left-color: rgba(255, 255, 255, 0.12); height: 0px; max-height: 0; border-bottom-width: 1px;"
         />
         <div
@@ -85,7 +90,9 @@ exports[`ExpandoRow > matches snapshot when expanded 1`] = `
             data-testid="expando-row-icon"
           >
             <svg
+              aria-hidden="true"
               fill="none"
+              focusable="false"
               stroke-width="8"
               style="width: 16px; height: 16px;"
               viewBox="0 0 17 16"
@@ -100,6 +107,7 @@ exports[`ExpandoRow > matches snapshot when expanded 1`] = `
           </div>
         </div>
         <div
+          aria-hidden="true"
           style="display: flex; align-items: stretch; flex-direction: column; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0; min-width: 0; flex-grow: 1; flex-shrink: 1; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 0; border-right-width: 0; border-left-width: 0; border-top-color: rgba(255, 255, 255, 0.12); border-right-color: rgba(255, 255, 255, 0.12); border-bottom-color: rgba(255, 255, 255, 0.12); border-left-color: rgba(255, 255, 255, 0.12); height: 0px; max-height: 0; border-bottom-width: 1px;"
         />
       </div>

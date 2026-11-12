@@ -4,6 +4,7 @@ import { UniverseChainId } from '@universe/chains'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { TestID } from '@universe/test'
 import { logger } from 'utilities/src/logger/logger'
+import { currentTimeInSeconds } from 'utilities/src/time/time'
 import type { Mock } from 'vitest'
 import { vi } from 'vitest'
 import LaunchesPage from '~/pages/Launches'
@@ -76,7 +77,7 @@ function createLaunch({
     },
     poolId: `0xpool-${symbol}`,
     hooksAddress: undefined,
-    launchedAt: BigInt(Math.floor(Date.now() / 1000) - 300),
+    launchedAt: BigInt(currentTimeInSeconds() - 300),
     graduated: undefined,
     stats: {
       volume24hUsd,

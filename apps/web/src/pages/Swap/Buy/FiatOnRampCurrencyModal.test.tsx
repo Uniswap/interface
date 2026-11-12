@@ -2,6 +2,7 @@ import { Token } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
 import { TestID } from '@universe/test'
 import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
+import type { Mock } from 'vitest'
 import { BuyFormContext } from '~/pages/Swap/Buy/BuyFormContext'
 import { FiatOnRampCurrencyModal } from '~/pages/Swap/Buy/FiatOnRampCurrencyModal'
 import { mockBuyFormContext } from '~/pages/Swap/Buy/test/constants'
@@ -30,7 +31,7 @@ function renderModal({
 }: {
   currencies?: FiatOnRampCurrency[]
   unsupportedCurrencies?: FiatOnRampCurrency[]
-} = {}): { onSelectCurrency: ReturnType<typeof vi.fn>; onDismiss: ReturnType<typeof vi.fn> } {
+} = {}): { onSelectCurrency: Mock; onDismiss: Mock } {
   const onSelectCurrency = vi.fn()
   const onDismiss = vi.fn()
   render(

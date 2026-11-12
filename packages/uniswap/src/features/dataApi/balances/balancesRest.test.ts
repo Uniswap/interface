@@ -1,5 +1,6 @@
 import { type PlainMessage } from '@bufbuild/protobuf'
 import type { GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb.d'
+import { Amount, Balance, Token, TokenMetadata } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import { SharedQueryClient } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
 import { getPortfolioQuery } from 'uniswap/src/data/apiClients/dataApiService/balances/getPortfolio'
@@ -319,6 +320,45 @@ describe(convertRestBalanceToPortfolioBalance, () => {
     expect(result?.currencyInfo.currencyId).toBe(
       `${UniverseChainId.Polygon}-0x0000000000000000000000000000000000001010`,
     )
+  })
+
+  describe('category ids', () => {
+    function usdcBalance(metadata?: TokenMetadata): Balance {
+      return new Balance({
+        token: new Token({
+          chainId: UniverseChainId.Mainnet,
+          address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+          decimals: 6,
+          symbol: 'USDC',
+          name: 'USD Coin',
+          metadata,
+        }),
+        amount: new Amount({ amount: 1, raw: '1000000' }),
+        valueUsd: 1,
+      })
+    }
+
+    it('carries the category ids GetPortfolio serves on the token metadata, in BE order', () => {
+      const result = convertRestBalanceToPortfolioBalance(
+        usdcBalance(new TokenMetadata({ categoryIds: ['stablecoins', 'majors'] })),
+        '0xuser',
+      )
+
+      expect(result?.currencyInfo.categoryIds).toEqual(['stablecoins', 'majors'])
+    })
+
+    it('yields no category ids when the metadata has none', () => {
+      const result = convertRestBalanceToPortfolioBalance(usdcBalance(new TokenMetadata({})), '0xuser')
+
+      expect(result?.currencyInfo.categoryIds).toEqual([])
+    })
+
+    it('yields no category ids when the token has no metadata', () => {
+      const result = convertRestBalanceToPortfolioBalance(usdcBalance(), '0xuser')
+
+      expect(result).toBeDefined()
+      expect(result?.currencyInfo.categoryIds).toBeUndefined()
+    })
   })
 })
 

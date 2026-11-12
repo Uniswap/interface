@@ -42,6 +42,7 @@ export function normalizeRankedPool(rankedPool: RankedPool | PlainMessage<Ranked
     // the fee-tier grid or the TVL denominator, the serializer stopped populating fee_tier.
     feeTier: pool.feeTier,
     isDynamicFee: pool.isDynamicFee,
+    currentLpFee: pool.currentLpFee,
     // Same proto3 reasoning as `feeTier` above: an unserved tick spacing arrives as 0, and 0 is
     // never a valid spacing (it must be >= 1). Normalized to undefined so the consumer's fallback
     // fires rather than a bogus 0 reaching tick math or the v4 pool-id hash.
@@ -65,5 +66,6 @@ export function normalizeRankedPool(rankedPool: RankedPool | PlainMessage<Ranked
     // enrichment fails, in which case consumers treat the protocol fee as unavailable.
     protocolFee: pool.protocolFee,
     categoryIds: pool.categoryIds,
+    quoteTokenAddress: pool.quoteTokenAddress,
   }
 }

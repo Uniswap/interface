@@ -6,7 +6,7 @@ const USDC_MAINNET = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
 const ENABLED_CHAIN_IDS = [UniverseChainId.Mainnet, UniverseChainId.Base]
 
 describe(rankedMultichainTokenToTokenItemData, () => {
-  it('shows market cap, not FDV, in the market cap slot', () => {
+  it('shows FDV, not market cap, to match the FDV sort', () => {
     const rankedToken = createRankedMultichainToken({ marketCap: 3_900_000_000, fdv: 5_600_000_000 })
 
     const result = rankedMultichainTokenToTokenItemData({
@@ -15,19 +15,7 @@ describe(rankedMultichainTokenToTokenItemData, () => {
       enabledChainIds: ENABLED_CHAIN_IDS,
     })
 
-    expect(result?.marketCap).toBe(3_900_000_000)
-  })
-
-  it('falls back to FDV when market cap is unavailable', () => {
-    const rankedToken = createRankedMultichainToken({ fdv: 5_600_000_000 })
-
-    const result = rankedMultichainTokenToTokenItemData({
-      rankedToken,
-      selectedNetwork: null,
-      enabledChainIds: ENABLED_CHAIN_IDS,
-    })
-
-    expect(result?.marketCap).toBe(5_600_000_000)
+    expect(result?.fdv).toBe(5_600_000_000)
   })
 
   it('maps the primary deployment and enabled network count', () => {
@@ -55,6 +43,19 @@ describe(rankedMultichainTokenToTokenItemData, () => {
       totalValueLocked: 50,
       networkCount: 2,
     })
+  })
+
+  it('carries the category tags that gate stablecoin sparkline flattening', () => {
+    const rankedToken = createRankedMultichainToken({})
+    rankedToken.multichainToken!.categoryIds = ['stablecoins']
+
+    const result = rankedMultichainTokenToTokenItemData({
+      rankedToken,
+      selectedNetwork: null,
+      enabledChainIds: ENABLED_CHAIN_IDS,
+    })
+
+    expect(result?.categoryIds).toEqual(['stablecoins'])
   })
 
   it('returns null when the selected network has no deployment', () => {

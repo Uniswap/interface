@@ -7,6 +7,7 @@ import {
   parseQuoteCurrencies,
 } from 'uniswap/src/features/transactions/swap/hooks/useTrade/parseQuoteCurrencies'
 import type { UseTradeArgs } from 'uniswap/src/features/transactions/swap/types/trade'
+import { SUPPORTED_BRIDGE_PROVIDERS } from 'uniswap/src/features/transactions/swap/utils/bridgeProviders'
 import {
   buildUrgency,
   DEFAULT_URGENCY_LEVEL,
@@ -17,10 +18,6 @@ import {
   QuoteSlippageParamsResult,
   toTradingApiSupportedChainId,
 } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
-
-// The Trading API serves Relay only to callers that list it, because Relay-won bridges need the
-// quote-first approval from `useTokenApprovalInfo`.
-const RELAY_OPT_IN_BRIDGE_PROVIDERS = [TradingApi.BridgeProvider.ACROSS, TradingApi.BridgeProvider.RELAY]
 
 export interface QuoteRequestResult {
   amount: string
@@ -58,6 +55,7 @@ export interface ValidatedTradeInput {
   isUSDQuote?: boolean
   walletExecutionContext?: TradingApi.WalletExecutionContext
   gasOverrides?: TradingApi.UrgencyOverrides
+  bridgeProviders?: TradingApi.BridgeProvider[]
 }
 
 interface BuildQuoteRequestContext {
@@ -84,7 +82,11 @@ export function createBuildQuoteRequest(
     // TODO(GasFeeOverrides): remove flag gate once the new urgency-based payload ships fully.
     const shouldUseUrgency = getFeatureFlag(FeatureFlags.GasFeeOverrides)
     const isCrossChain = validatedInput.tokenInChainId !== validatedInput.tokenOutChainId
-    const shouldOptIntoRelay = isCrossChain && getFeatureFlag(FeatureFlags.RelayBridgeAggregator)
+    // Without the gate the request lists no vendor, so the Trading API serves Across only.
+    const bridgeProviders =
+      isCrossChain && getFeatureFlag(FeatureFlags.RelayBridgeAggregator)
+        ? getBridgeProvidersToRequest(validatedInput.bridgeProviders)
+        : undefined
 
     const base = {
       amount: validatedInput.amount.quotient.toString(),
@@ -100,7 +102,7 @@ export function createBuildQuoteRequest(
       walletExecutionContext: validatedInput.walletExecutionContext,
       routingParams,
       slippageParams,
-      ...(shouldOptIntoRelay ? { bridgeProviders: RELAY_OPT_IN_BRIDGE_PROVIDERS } : {}),
+      ...(bridgeProviders ? { bridgeProviders } : {}),
     }
 
     if (shouldUseUrgency) {
@@ -116,6 +118,11 @@ export function createBuildQuoteRequest(
       urgency: DEFAULT_URGENCY_LEVEL,
     }
   }
+}
+
+/** Callers without Bridging options get every supported vendor, as does an empty list, which the API rejects. */
+function getBridgeProvidersToRequest(selected: TradingApi.BridgeProvider[] | undefined): TradingApi.BridgeProvider[] {
+  return selected?.length ? selected : SUPPORTED_BRIDGE_PROVIDERS
 }
 
 // Helper type for flattening the result with routing and slippage params
@@ -148,10 +155,14 @@ export interface ParsedTradeInput {
   isUSDQuote?: boolean
   walletExecutionContext?: TradingApi.WalletExecutionContext
   gasOverrides?: TradingApi.UrgencyOverrides
+  bridgeProviders?: TradingApi.BridgeProvider[]
 }
 
 export function parseTradeInputForTradingApiQuote(input: UseTradeArgs): ParsedTradeInput {
   const { currencyIn, currencyOut, requestTradeType } = parseQuoteCurrencies(input)
+  const tokenInChainId = toTradingApiSupportedChainId(currencyIn?.chainId)
+  const tokenOutChainId =
+    input.quoteOutputOverride?.tokenOutChainId ?? toTradingApiSupportedChainId(currencyOut?.chainId)
 
   return {
     currencyIn,
@@ -159,8 +170,8 @@ export function parseTradeInputForTradingApiQuote(input: UseTradeArgs): ParsedTr
     amount: input.amountSpecified,
     requestTradeType,
     activeAccountAddress: input.account?.address,
-    tokenInChainId: toTradingApiSupportedChainId(currencyIn?.chainId),
-    tokenOutChainId: input.quoteOutputOverride?.tokenOutChainId ?? toTradingApiSupportedChainId(currencyOut?.chainId),
+    tokenInChainId,
+    tokenOutChainId,
     tokenInAddress: getTokenAddressForApi(currencyIn),
     tokenOutAddress: input.quoteOutputOverride?.tokenOutAddress ?? getTokenAddressForApi(currencyOut),
     generatePermitAsTransaction: input.generatePermitAsTransaction,
@@ -168,6 +179,8 @@ export function parseTradeInputForTradingApiQuote(input: UseTradeArgs): ParsedTr
     isUSDQuote: input.isUSDQuote ?? false,
     walletExecutionContext: input.walletExecutionContext,
     gasOverrides: input.gasOverrides,
+    // Same-chain quotes list no vendor, so Bridging options stay out of their cache key.
+    bridgeProviders: tokenInChainId !== tokenOutChainId ? input.selectedBridgeProviders : undefined,
   }
 }
 
@@ -206,6 +219,7 @@ export function validateParsedInput(input: ParsedTradeInput): ValidatedTradeInpu
     isUSDQuote: input.isUSDQuote,
     walletExecutionContext: input.walletExecutionContext,
     gasOverrides: input.gasOverrides,
+    bridgeProviders: input.bridgeProviders,
   }
 }
 

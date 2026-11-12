@@ -8,6 +8,7 @@ exports[`SortButton > renders without error 1`] = `
     style="gap: 4px;"
   >
     <button
+      accessibilityactions="[object Object]"
       android_ripple="[object Object]"
       role="button"
       style="background-color: transparent;"

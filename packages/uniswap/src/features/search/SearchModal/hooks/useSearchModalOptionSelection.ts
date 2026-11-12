@@ -4,7 +4,7 @@ import {
   SearchModalListOption,
   SearchModalOption,
 } from 'uniswap/src/components/lists/items/types'
-import { OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
+import { OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { useAddToSearchHistory } from 'uniswap/src/components/TokenSelector/hooks/useAddToSearchHistory'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { sendSearchOptionItemClickedAnalytics } from 'uniswap/src/features/search/SearchModal/analytics/analytics'
@@ -108,7 +108,13 @@ export function useSearchModalOptionSelection({
   })
 
   const recordSelection = useEvent(({ item, section, index, rowIndex }: SearchModalOptionSelection): void => {
-    registerSearchItem(item, { tdpChainFilter: tdpChain(item) })
+    // Re-selecting a recent must keep its history key even when the active network changes.
+    const historyChainFilter =
+      section.sectionKey === OnchainItemSectionName.RecentSearches &&
+      item.type === OnchainItemListOptionType.MultichainToken
+        ? (item.tdpChainFilter ?? null)
+        : tdpChain(item)
+    registerSearchItem(item, { tdpChainFilter: historyChainFilter })
     sendSearchOptionItemClickedAnalytics({ item, section, sectionIndex: index, rowIndex, searchFilters, trace })
   })
 

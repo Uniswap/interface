@@ -1,11 +1,12 @@
 import { Store } from '@reduxjs/toolkit'
 import { persistStore } from 'redux-persist'
 import { initialTransactionsState } from 'uniswap/src/features/transactions/slice'
+import { sleep } from 'utilities/src/time/timing'
 import { createDefaultStore } from '~/state'
 import { initialState as initialListsState } from '~/state/lists/reducer'
 import { PERSIST_VERSION } from '~/state/migrations'
-import { RouterPreference } from '~/state/routing/types'
 import { initialState as initialUserState } from '~/state/user/reducer'
+import { RouterPreference } from '~/types/routing'
 
 const defaultState = {
   lists: {},
@@ -53,7 +54,7 @@ describe('redux migrations', () => {
 
     persistStore(store)
     // wait for the migration to complete
-    await new Promise((resolve) => setTimeout(resolve, 0))
+    await sleep(0)
 
     expect(localStorage.getItem('redux_localstorage_simple_transactions')).toBeNull()
     expect(localStorage.getItem('redux_localstorage_simple_user')).toBeNull()
@@ -88,7 +89,7 @@ describe('redux migrations', () => {
 
     persistStore(store)
     // wait for the migration to complete
-    await new Promise((resolve) => setTimeout(resolve, 0))
+    await sleep(0)
 
     const state = store.getState()
     expect(state).toMatchObject(defaultState)
@@ -99,7 +100,7 @@ describe('redux migrations', () => {
   it('initial state with no previous persisted state', async () => {
     persistStore(store)
     // wait for the migration to complete
-    await new Promise((resolve) => setTimeout(resolve, 0))
+    await sleep(0)
 
     const state = store.getState()
     expect(state).toMatchObject(defaultState)
@@ -118,7 +119,7 @@ describe('redux migrations', () => {
 
     persistStore(store)
     // wait for the migration to complete
-    await new Promise((resolve) => setTimeout(resolve, 0))
+    await sleep(0)
 
     const state = store.getState()
     expect(state).toMatchObject(defaultState)

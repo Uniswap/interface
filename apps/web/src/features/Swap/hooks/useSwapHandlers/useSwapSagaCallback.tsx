@@ -25,7 +25,7 @@ import { useEvent } from 'utilities/src/react/hooks'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { useAccountsStore, useActiveAccount } from '~/connection/accounts/hooks'
 import { useSelectChain } from '~/connection/hooks/useSelectChain'
-import { useTotalBalancesUsdForAnalytics } from '~/features/balances/useTotalBalancesUsdForAnalytics'
+import { useTotalBalancesUsdForAnalytics } from '~/features/Swap/hooks/useTotalBalancesUsdForAnalytics'
 import { useSetOverrideOneClickSwapFlag } from '~/state/oneClickSwap/hooks'
 import { useGetOnPressRetry } from '~/state/sagas/transactions/retry'
 import {

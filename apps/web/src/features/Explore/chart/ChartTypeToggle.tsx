@@ -4,8 +4,8 @@ import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { TFunction } from 'i18next'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ChartType } from '~/components/Charts/utils'
 import { MouseoverTooltip } from '~/components/Tooltip'
+import { ChartType } from '~/utils/charts'
 
 const CHART_TYPE_ORDER = [
   ChartType.PRICE,

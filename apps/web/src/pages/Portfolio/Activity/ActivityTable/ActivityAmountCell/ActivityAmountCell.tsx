@@ -71,7 +71,7 @@ function ActivityAmountCellInner({ transaction, variant = 'full' }: ActivityAmou
     case 'multi-token':
       return <MultiTokenAmountCell transaction={transaction} amount={amount} variant={variant} />
     case 'nft':
-      return <NftAmountCell amount={amount} />
+      return <NftAmountCell transaction={transaction} amount={amount} variant={variant} />
     case 'approve':
       return <ApproveAmountCell transaction={transaction} amount={amount} variant={variant} />
     default:

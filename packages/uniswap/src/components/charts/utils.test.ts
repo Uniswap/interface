@@ -2,40 +2,89 @@ import {
   appendLiveSpotPriceEntry,
   getIsStablecoin,
   getLowVarianceAxisDecimals,
+  getSparklineValueDomain,
   isLowVarianceRange,
 } from 'uniswap/src/components/charts/utils'
 import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 
-describe('isLowVarianceRange', () => {
-  // XAUt over a very quiet day: ~0.34%, under the 0.5% 1D cutoff
+// Literals on purpose: deriving them from the 1.5% threshold would let a changed threshold pass.
+describe('shared stablecoin flattening rule', () => {
+  const day = HistoryDuration.Day
+  const tokenPageFlattens = (range: { min: number; max: number; isStablecoin: boolean }): boolean =>
+    isLowVarianceRange({ ...range, duration: day })
+  const sparklineFlattens = (range: { min: number; max: number; isStablecoin: boolean }): boolean => {
+    const [lo, hi] = getSparklineValueDomain(range)
+    return lo !== range.min || hi !== range.max
+  }
+
+  it.each([
+    { name: 'a stablecoin moving 1.0%', range: { min: 1, max: 1.01, isStablecoin: true }, flattened: true },
+    {
+      name: 'a stablecoin moving just under 1.5%',
+      range: { min: 100, max: 101.49, isStablecoin: true },
+      flattened: true,
+    },
+    { name: 'a stablecoin moving exactly 1.5%', range: { min: 100, max: 101.5, isStablecoin: true }, flattened: false },
+    { name: 'a stablecoin moving 1.6%', range: { min: 1, max: 1.016, isStablecoin: true }, flattened: false },
+    { name: 'a depegged stablecoin', range: { min: 0.8, max: 1, isStablecoin: true }, flattened: false },
+    { name: 'a non-stablecoin moving 0.1%', range: { min: 1, max: 1.001, isStablecoin: false }, flattened: false },
+    { name: 'a quiet ETH day (~1.3%)', range: { min: 4500, max: 4560, isStablecoin: false }, flattened: false },
+  ])('agrees on the token page chart and sparkline for $name', ({ range, flattened }) => {
+    expect(tokenPageFlattens(range)).toBe(flattened)
+    expect(sparklineFlattens(range)).toBe(flattened)
+  })
+
+  it('ignores the chart duration for token charts', () => {
+    const range = { min: 1, max: 1.01, isStablecoin: true }
+    for (const duration of [HistoryDuration.Hour, HistoryDuration.Week, HistoryDuration.Max, undefined]) {
+      expect(isLowVarianceRange({ ...range, duration })).toBe(true)
+    }
+  })
+})
+
+describe('isLowVarianceRange without a token category', () => {
+  // XAUt over a very quiet day: ~0.34%, under the 0.5% range-only cutoff
   const flatGoldDay = { min: 4146, max: 4160, duration: HistoryDuration.Day }
 
-  it('judges on the range alone when isStablecoin is unknown', () => {
+  it('judges on the range alone', () => {
     expect(isLowVarianceRange(flatGoldDay)).toBe(true)
     expect(isLowVarianceRange({ min: 4000, max: 4200, duration: HistoryDuration.Day })).toBe(false)
   })
 
   it('does not flatten a quiet ETH day or hour', () => {
-    // ~1.3% range, which the old 1.5% 1H/1D cutoff flattened
     const quietEth = { min: 4500, max: 4560 }
     expect(isLowVarianceRange({ ...quietEth, duration: HistoryDuration.Day })).toBe(false)
     expect(isLowVarianceRange({ ...quietEth, duration: HistoryDuration.Hour })).toBe(false)
-    // ~0.7%
     expect(isLowVarianceRange({ min: 4500, max: 4530, duration: HistoryDuration.Day })).toBe(false)
-  })
-
-  it('never qualifies a non-stablecoin, however flat', () => {
-    expect(isLowVarianceRange({ ...flatGoldDay, isStablecoin: false })).toBe(false)
-  })
-
-  it('qualifies a flat stablecoin but not a depegged one', () => {
-    const stablecoin = { duration: HistoryDuration.Day, isStablecoin: true }
-    expect(isLowVarianceRange({ ...stablecoin, min: 0.9999, max: 1.0001 })).toBe(true)
-    expect(isLowVarianceRange({ ...stablecoin, min: 0.8, max: 1 })).toBe(false)
   })
 
   it('returns false without a duration', () => {
     expect(isLowVarianceRange({ min: 1, max: 1 })).toBe(false)
+  })
+})
+
+describe('getSparklineValueDomain', () => {
+  const expectDomain = (actual: [number, number], expected: [number, number]): void => {
+    expect(actual[0]).toBeCloseTo(expected[0], 10)
+    expect(actual[1]).toBeCloseTo(expected[1], 10)
+  }
+
+  it('shrinks a flat stablecoin range to the middle 2% of the chart', () => {
+    expectDomain(getSparklineValueDomain({ min: 1, max: 1.01, isStablecoin: true }), [0.755, 1.255])
+    expectDomain(getSparklineValueDomain({ min: 0.9998, max: 1.0002, isStablecoin: true }), [0.99, 1.01])
+    // Centred on where the price actually is, not on $1
+    expectDomain(getSparklineValueDomain({ min: 0.9988, max: 0.9992, isStablecoin: true }), [0.989, 1.009])
+  })
+
+  it('centres a constant stablecoin series', () => {
+    expectDomain(getSparklineValueDomain({ min: 1, max: 1, isStablecoin: true }), [0.5, 1.5])
+  })
+
+  it('keeps every other range at its own min/max', () => {
+    expect(getSparklineValueDomain({ min: 0.9998, max: 1.0002, isStablecoin: false })).toEqual([0.9998, 1.0002])
+    expect(getSparklineValueDomain({ min: 1, max: 1, isStablecoin: false })).toEqual([1, 1])
+    expect(getSparklineValueDomain({ min: 0, max: 0, isStablecoin: true })).toEqual([0, 0])
+    expect(getSparklineValueDomain({ min: Number.NaN, max: 1, isStablecoin: true })).toEqual([Number.NaN, 1])
   })
 })
 

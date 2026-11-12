@@ -5,6 +5,7 @@
  * composition, the overlay z-index bridge, click-through, arrow geometry and
  * colors, and the touch affordance (tap toggles, tap-away dismisses).
  */
+import { Popover as PopoverPrimitive } from '@base-ui/react/popover'
 import { act, cleanup, fireEvent, render, type RenderResult, screen } from '@testing-library/react'
 import { type JSX, type ReactNode, useContext } from 'react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
@@ -315,6 +316,34 @@ describe('TooltipCompat.Content — stacking bridge (EffectiveOverlayZIndexConte
   })
 })
 
+describe('TooltipCompat.Content — nested inside a popover hosted by a modal', () => {
+  // Base UI appends a nested portal into its parent overlay's portal. The settings popover's portal
+  // is display:contents inside the modal's gapped flex column, so any boxed wrapper here becomes a
+  // new flex item and the modal grows by one gap (and re-centers) every time the tooltip opens.
+  it('opening the tooltip adds no in-flow box to the host column', () => {
+    const host = document.createElement('div')
+    host.style.display = 'flex'
+    host.style.flexDirection = 'column'
+    host.style.gap = '12px'
+    document.body.appendChild(host)
+    try {
+      const view = render(<TooltipInHostedPopover host={host} tooltipOpen={false} />)
+      const closedFlow = inFlowChildren(host)
+
+      view.rerender(<TooltipInHostedPopover host={host} tooltipOpen />)
+      const portalWrapper = getPositioner().parentElement as HTMLElement
+
+      expect(screen.getByTestId('popover-popup').contains(portalWrapper)).toBe(false)
+      expect(host.contains(portalWrapper)).toBe(true)
+      expect(portalWrapper.style.display).toBe('contents')
+      expect(inFlowChildren(host)).toEqual(closedFlow)
+    } finally {
+      cleanup()
+      host.remove()
+    }
+  })
+})
+
 describe('TooltipCompat — click-through while open (legacy pointerEvents contract)', () => {
   // Base UI only inerts the positioner while closed; without the explicit
   // style an open tooltip swallows clicks aimed beneath its rect.
@@ -474,6 +503,40 @@ function renderArrow({
       </Tooltip.Content>
     </Tooltip>,
   )
+}
+
+function TooltipInHostedPopover({ host, tooltipOpen }: { host: HTMLElement; tooltipOpen: boolean }): JSX.Element {
+  return (
+    <PopoverPrimitive.Root open>
+      <PopoverPrimitive.Trigger>settings</PopoverPrimitive.Trigger>
+      <PopoverPrimitive.Portal container={host} style={{ display: 'contents' }}>
+        <PopoverPrimitive.Positioner style={{ position: 'fixed' }}>
+          <PopoverPrimitive.Popup data-testid="popover-popup">
+            <Tooltip open={tooltipOpen}>
+              <Tooltip.Trigger>
+                <span>info</span>
+              </Tooltip.Trigger>
+              <Tooltip.Content>
+                <span data-testid="tooltip-content">tip</span>
+              </Tooltip.Content>
+            </Tooltip>
+          </PopoverPrimitive.Popup>
+        </PopoverPrimitive.Positioner>
+      </PopoverPrimitive.Portal>
+    </PopoverPrimitive.Root>
+  )
+}
+
+/** The host's flex items: children with display:contents are see-through, out-of-flow children are skipped. */
+function inFlowChildren(container: HTMLElement): HTMLElement[] {
+  return Array.from(container.children).flatMap((child) => {
+    const element = child as HTMLElement
+    if (element.style.display === 'contents') {
+      return inFlowChildren(element)
+    }
+    const position = element.style.position
+    return position === 'absolute' || position === 'fixed' ? [] : [element]
+  })
 }
 
 function ZIndexProbe(): JSX.Element {

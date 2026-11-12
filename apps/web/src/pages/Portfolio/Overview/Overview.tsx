@@ -24,7 +24,7 @@ import { usePortfolioChartBalanceMismatch } from 'uniswap/src/features/portfolio
 import { ElementName, InterfacePageName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import { EmptyWalletCards } from '~/components/emptyWallet/EmptyWalletCards'
-import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
+import { usePortfolioRoutes } from '~/hooks/usePortfolioRoutes/usePortfolioRoutes'
 import { usePortfolioAddresses } from '~/pages/Portfolio/hooks/usePortfolioAddresses'
 import { OverviewActionTiles } from '~/pages/Portfolio/Overview/ActionTiles'
 import { ExploreTokensModule } from '~/pages/Portfolio/Overview/ExploreTokensModule/ExploreTokensModule'

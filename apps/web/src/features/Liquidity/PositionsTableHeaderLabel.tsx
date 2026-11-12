@@ -17,20 +17,24 @@ export function HeaderLabel({
   sortField,
   sort,
   onSort,
+  noTrailingPadding,
 }: {
   id: ColumnId
   align: CellAlign
   sortField?: PositionSortField
   sort?: PositionSort
   onSort?: (field: PositionSortField) => void
+  // The collapsed pinned column leaves its label only 32px between paddings, too narrow for some
+  // translations (zh-CN "资金池" is 42px); dropping the right padding gives it the column's spare room.
+  noTrailingPadding?: boolean
 }): JSX.Element {
   const { t } = useTranslation()
   const label = getColumnLabel(id, t)
 
   if (!sortField || !onSort) {
     return (
-      <HeaderCell justifyContent={align}>
-        <Text variant="body3" color="$neutral2" userSelect="none">
+      <HeaderCell justifyContent={align} {...(noTrailingPadding ? { pr: '$none' } : undefined)}>
+        <Text variant="body3" color="$neutral2" userSelect="none" numberOfLines={1}>
           {label}
         </Text>
       </HeaderCell>

@@ -53,7 +53,9 @@ exports[`BreadcrumbNav > renders hover components correctly 1`] = `
           style="--c-tr: translateY(5px); --c-t: opacity 200ms ease-in-out, transform 200ms ease-in-out;"
         >
           <svg
+            aria-hidden="true"
             fill="none"
+            focusable="false"
             stroke-width="8"
             style="width: 16px; height: 16px;"
             viewBox="0 0 17 18"

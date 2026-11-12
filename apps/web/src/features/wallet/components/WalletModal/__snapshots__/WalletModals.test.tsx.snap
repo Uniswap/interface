@@ -44,7 +44,9 @@ exports[`EmbeddedWalletConnectionsModal > renders correctly 1`] = `
                 class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 p-[6px] bg-accent2 rounded-[8px]"
               >
                 <svg
+                  aria-hidden="true"
                   fill="none"
+                  focusable="false"
                   stroke-width="8"
                   style="width: 20px; height: 20px;"
                   viewBox="0 0 24 24"
@@ -68,7 +70,9 @@ exports[`EmbeddedWalletConnectionsModal > renders correctly 1`] = `
               style="--c-tr: rotate(180deg);"
             >
               <svg
+                aria-hidden="true"
                 fill="none"
+                focusable="false"
                 stroke-width="8"
                 style="width: 24px; height: 24px;"
                 viewBox="0 0 24 24"
@@ -88,6 +92,7 @@ exports[`EmbeddedWalletConnectionsModal > renders correctly 1`] = `
         class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center justify-center gap-[16px] px-[12px] py-[4px] w-[100%]"
       >
         <div
+          aria-hidden="true"
           style="display: flex; align-items: stretch; flex-direction: column; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0; min-width: 0; flex-grow: 1; flex-shrink: 1; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 0; border-right-width: 0; border-left-width: 0; border-top-color: rgba(19, 19, 19, 0.08); border-right-color: rgba(19, 19, 19, 0.08); border-bottom-color: rgba(19, 19, 19, 0.08); border-left-color: rgba(19, 19, 19, 0.08); height: 0px; max-height: 0; border-bottom-width: 1px;"
         />
         <span
@@ -96,6 +101,7 @@ exports[`EmbeddedWalletConnectionsModal > renders correctly 1`] = `
           or
         </span>
         <div
+          aria-hidden="true"
           style="display: flex; align-items: stretch; flex-direction: column; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0; min-width: 0; flex-grow: 1; flex-shrink: 1; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 0; border-right-width: 0; border-left-width: 0; border-top-color: rgba(19, 19, 19, 0.08); border-right-color: rgba(19, 19, 19, 0.08); border-bottom-color: rgba(19, 19, 19, 0.08); border-left-color: rgba(19, 19, 19, 0.08); height: 0px; max-height: 0; border-bottom-width: 1px;"
         />
       </div>
@@ -128,7 +134,9 @@ exports[`EmbeddedWalletConnectionsModal > renders correctly 1`] = `
             class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center gap-[4px] [color:var(--accent1)] group-hover:[color:var(--accent1-hovered)]"
           >
             <svg
+              aria-hidden="true"
               fill="none"
+              focusable="false"
               stroke-width="8"
               style="color: currentColor; width: 20px; height: 20px;"
               viewBox="0 0 24 24"
@@ -213,8 +221,10 @@ exports[`OtherWalletsModal > renders correctly with EW disabled 1`] = `
         tabindex="0"
       >
         <svg
+          aria-hidden="true"
           class="[color:var(--c-col)] group-hover:[color:var(--cgh-col)]"
           fill="none"
+          focusable="false"
           stroke-width="8"
           style="width: 20px; height: 20px; --c-col: var(--neutral2); --cgh-col: var(--neutral2-hovered);"
           viewBox="0 0 24 24"
@@ -302,8 +312,10 @@ exports[`OtherWalletsModal > renders correctly with EW enabled 1`] = `
         tabindex="0"
       >
         <svg
+          aria-hidden="true"
           class="[color:var(--c-col)] group-hover:[color:var(--cgh-col)]"
           fill="none"
+          focusable="false"
           stroke-width="8"
           style="width: 20px; height: 20px; --c-col: var(--neutral2); --cgh-col: var(--neutral2-hovered);"
           viewBox="0 0 24 24"
@@ -455,7 +467,9 @@ exports[`StandardWalletModal > renders correctly 1`] = `
               class="flex flex-col basis-auto box-border min-h-[0px] shrink-0 items-center justify-center w-[32px] h-[32px] min-w-[32px] bg-accent2 rounded-[8px] relative"
             >
               <svg
+                aria-hidden="true"
                 fill="none"
+                focusable="false"
                 stroke-width="8"
                 style="width: 22.4px; height: 22.4px;"
                 viewBox="0 0 96 96"
@@ -506,6 +520,7 @@ exports[`StandardWalletModal > renders correctly 1`] = `
         style="--ch-opacity: 0.8; --ca-opacity: 0.6; transition: opacity 100ms;"
       >
         <div
+          aria-hidden="true"
           style="display: flex; align-items: stretch; flex-direction: column; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0; min-width: 0; flex-grow: 1; flex-shrink: 1; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 0; border-right-width: 0; border-left-width: 0; border-top-color: rgba(19, 19, 19, 0.08); border-right-color: rgba(19, 19, 19, 0.08); border-bottom-color: rgba(19, 19, 19, 0.08); border-left-color: rgba(19, 19, 19, 0.08); height: 0px; max-height: 0; border-bottom-width: 1px;"
         />
         <div
@@ -517,7 +532,9 @@ exports[`StandardWalletModal > renders correctly 1`] = `
             Other wallets
           </span>
           <svg
+            aria-hidden="true"
             fill="none"
+            focusable="false"
             stroke-width="8"
             style="width: 20px; height: 20px;"
             viewBox="0 0 17 16"
@@ -531,6 +548,7 @@ exports[`StandardWalletModal > renders correctly 1`] = `
           </svg>
         </div>
         <div
+          aria-hidden="true"
           style="display: flex; align-items: stretch; flex-direction: column; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0; min-width: 0; flex-grow: 1; flex-shrink: 1; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 0; border-right-width: 0; border-left-width: 0; border-top-color: rgba(19, 19, 19, 0.08); border-right-color: rgba(19, 19, 19, 0.08); border-bottom-color: rgba(19, 19, 19, 0.08); border-left-color: rgba(19, 19, 19, 0.08); height: 0px; max-height: 0; border-bottom-width: 1px;"
         />
       </div>

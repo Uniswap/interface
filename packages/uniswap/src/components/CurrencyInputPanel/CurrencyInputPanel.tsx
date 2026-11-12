@@ -1,4 +1,4 @@
-import { isExtensionApp, isMobileWeb, isWebAppDesktop } from '@universe/environment'
+import { isE2eTestEnv, isExtensionApp, isMobileWeb, isWebAppDesktop } from '@universe/environment'
 import { Flex, TouchableArea, useIsShortMobileDevice } from '@universe/mycelium'
 import { forwardRef, memo, useCallback } from 'react'
 import { useShakeAnimation } from 'ui/src'
@@ -148,6 +148,9 @@ export const CurrencyInputPanel = memo(
       return (
         <TouchableArea
           group
+          // On iOS the pressable is one accessibility element, which hides the token button and
+          // the amount input from the e2e test tree; only e2e builds opt out of that
+          accessible={!isE2eTestEnv()}
           scaleTo={disablePressAnimation ? 1 : undefined}
           disabledStyle={{
             cursor: 'default',

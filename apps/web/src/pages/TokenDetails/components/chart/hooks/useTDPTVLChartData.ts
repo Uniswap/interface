@@ -10,9 +10,9 @@ import { toRestHistoryDuration } from 'uniswap/src/features/dataApi/tokenDetails
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { isQueryLoading } from 'utilities/src/reactQuery/isQueryLoading'
 import { StackedLineData } from '~/components/Charts/StackedLineChart'
-import { ChartQueryResult, ChartType, checkDataQuality, getCurrentUTCTimestamp } from '~/components/Charts/utils'
 import { useRestHistoryTarget } from '~/hooks/useRestHistoryTarget'
 import type { TDPChartQueryVariables } from '~/pages/TokenDetails/components/chart/TDPChartState'
+import { ChartQueryResult, ChartType, checkDataQuality, getCurrentUTCTimestamp } from '~/utils/charts'
 
 function selectTvlEntries(data: PlainMessage<GetTokenHistoryTVLResponse> | undefined): StackedLineData[] {
   return (

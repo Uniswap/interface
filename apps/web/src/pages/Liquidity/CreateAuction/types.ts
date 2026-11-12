@@ -9,13 +9,10 @@ import { FeeAmount } from '@uniswap/v3-sdk'
 import { UniverseChainId } from '@universe/chains'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import type { FeeData } from 'uniswap/src/features/positions/types'
+import { NEW_TOKEN_PLACEHOLDER_ADDRESS } from '~/constants/tokenLaunch'
+import { RaiseCurrency } from '~/features/Toucan/utils/raiseCurrency'
 import type { TokenAccentHex } from '~/pages/Liquidity/CreateAuction/tokenAccentHex'
 
-/**
- * Placeholder address for a token that is being created and does not have an address yet.
- * Must not be ZERO_ADDRESS (native token). Do not use for API lookups or pool fetches.
- */
-export const NEW_TOKEN_PLACEHOLDER_ADDRESS = '0x0000000000000000000000000000000000000001'
 // Sourced from the launcher SDK (the factory mints new tokens at this decimals); re-exported so
 // existing importers keep working off a single source of truth.
 export { NEW_TOKEN_DECIMALS }
@@ -87,17 +84,6 @@ export const DEFAULT_NEW_TOKEN_AUCTION_SUPPLY_PERCENT = new Percent(100, 100)
 
 /** Default share for existing tokens: auction the user's entire wallet balance. */
 export const DEFAULT_EXISTING_TOKEN_AUCTION_SUPPLY_PERCENT = new Percent(100, 100)
-
-/**
- * Which raise-currency option the creator picked: the chain's native currency (ETH/AVAX/OKB) or its
- * curated primary stablecoin (USDC/USDG/USDT0). Resolve to the actual token via
- * `getRaiseCurrencyAsCurrency` / `getPrimaryStablecoin`.
- */
-export enum RaiseCurrency {
-  // oxlint-disable-next-line eslint-js/no-restricted-syntax -- raise-currency slot name, not the NATIVE_CHAIN_ID sentinel
-  NATIVE = 'NATIVE',
-  STABLECOIN = 'STABLECOIN',
-}
 
 /** What currency the user types floor price / FDV in (raise token vs USD fiat). */
 export type InputCurrency = 'raise' | 'usd'

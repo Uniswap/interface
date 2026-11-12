@@ -5,6 +5,8 @@
     "src/**/*.json",
     ".storybook/preview.tsx",
     ".storybook/main.ts",
+    ".storybook/vite.config.mts",
+    ".storybook/vitest.config.mts",
     "functions/**/*",
     "*.ts",
     "vite/**/*",

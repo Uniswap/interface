@@ -3,11 +3,11 @@ import { useNavigate, useSearchParams } from 'react-router'
 import { poolCategory } from 'uniswap/src/test/fixtures/poolCategory'
 import { PoolSortFields } from '~/data/pools/poolStats'
 import { OrderDirection } from '~/data/util'
-import { ADD_LIQUIDITY_PATH } from '~/pages/AddLiquidity/poolLinkParams'
 import { CategoryPoolsSection } from '~/pages/Explore/CategoryDetails/CategoryPoolsSection'
 import { useListPools } from '~/pages/Explore/hooks/useListPools'
 import { mocked } from '~/test-utils/mocked'
 import { fireEvent, render, screen } from '~/test-utils/render'
+import { ADD_LIQUIDITY_PATH } from '~/utils/params/poolLinkParams'
 
 vi.mock('~/pages/Explore/hooks/useListPools')
 vi.mock('~/features/Liquidity/PoolsFilter/PoolsFilter', () => ({

@@ -8,9 +8,9 @@ import { StepStatus } from 'uniswap/src/components/ConfirmSwapModal/types'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { ICON_SIZE, Step, StepDetails } from '~/components/ConfirmModal/ProgressIndicator/Step'
+import { ConfirmModalState } from '~/components/ConfirmModal/types'
 import { useColor } from '~/hooks/useColor'
-import { ICON_SIZE, Step, StepDetails } from '~/pages/Swap/Limit/ConfirmLimitOrderModal/ProgressIndicator/Step'
-import { ConfirmModalState } from '~/pages/Swap/Limit/ConfirmLimitOrderModal/state'
 import { Divider } from '~/theme/components/Dividers'
 
 export type ProgressIndicatorStep = Extract<

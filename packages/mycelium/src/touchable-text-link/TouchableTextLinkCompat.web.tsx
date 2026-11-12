@@ -72,6 +72,7 @@ export const TouchableTextLinkCompat = React.forwardRef<HTMLElement, TouchableTe
       }, 0)
     })
 
+    const href = disabled === true ? undefined : link
     const text = (
       <TextCompat
         ref={setTextRef}
@@ -86,10 +87,11 @@ export const TouchableTextLinkCompat = React.forwardRef<HTMLElement, TouchableTe
         color={linkTextColor(color, disabled)}
         forceStyle={forceStyle}
         outlineStyle="none"
-        href={disabled === true ? undefined : link}
+        href={href}
         target={target}
         tag="a"
-        role="link"
+        // An `a` with an href is already a link; without one (disabled) it needs the role spelled out.
+        role={href === undefined ? 'link' : undefined}
         onPress={onlyUseText === true && disabled !== true ? handlePressWithLink : undefined}
         {...textProps}
       >

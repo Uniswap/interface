@@ -67,6 +67,7 @@ describe('TDPPoolTable', () => {
         chainId: UniverseChainId.Mainnet,
         token0: validRestPoolToken0,
         token1: validRestPoolToken1,
+        isToken0Quote: true,
         feeTier: {
           feeAmount: 10000,
           tickSpacing: DEFAULT_TICK_SPACING,

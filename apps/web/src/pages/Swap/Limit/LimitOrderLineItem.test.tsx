@@ -1,7 +1,6 @@
 /* oxlint-disable jest/expect-expect -- testTradeLineItems calls expect via render+toMatchSnapshot */
 import '~/test-utils/tokens/mocks'
 import { LimitOrderLineItem, LimitOrderLineItemType } from '~/pages/Swap/Limit/LimitOrderLineItem'
-import { InterfaceTrade } from '~/state/routing/types'
 import {
   LIMIT_ORDER_TRADE,
   PREVIEW_EXACT_IN_TRADE,
@@ -14,6 +13,7 @@ import {
   TEST_TRADE_FEE_ON_SELL,
 } from '~/test-utils/constants'
 import { render, screen } from '~/test-utils/render'
+import { InterfaceTrade } from '~/types/routing'
 
 // Forces tooltips to render in snapshots
 vi.mock('react-dom', () => {

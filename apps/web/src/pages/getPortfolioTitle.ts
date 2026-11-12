@@ -1,5 +1,5 @@
 import i18n from 'uniswap/src/i18n'
-import { isPortfolioTab, PortfolioTab } from '~/pages/Portfolio/types'
+import { isPortfolioTab, PortfolioTab } from '~/hooks/usePortfolioRoutes/types'
 
 export const getPortfolioTitle = (path?: string): string => {
   const parts = path?.split('/').filter((part) => part !== '')

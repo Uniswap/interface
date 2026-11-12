@@ -7,6 +7,8 @@ import { TokenOption } from 'uniswap/src/components/lists/items/types'
 import { type OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { SectionHeader } from 'uniswap/src/components/lists/SectionHeader'
 import { useOnchainItemListSection } from 'uniswap/src/components/lists/utils'
+import { CategoryFilterChipRow } from 'uniswap/src/components/TokenSelector/categoryFilters/CategoryFilterChipRow'
+import { useCategoryFilterChips } from 'uniswap/src/components/TokenSelector/categoryFilters/useCategoryFilterChips'
 import { usePortfolioBalancesForAddressById } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioBalancesForAddressById'
 import { usePortfolioTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioTokenOptions'
 import { TokenSelectorList } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
@@ -135,21 +137,29 @@ function TokenSelectorSendListInner({
     chainFilter,
     chainIds,
   })
+  const { chips, activeIds, filteredSections, toggleChip } = useCategoryFilterChips({
+    sections,
+    isLoading,
+    isBalancesOnlySearch: true,
+  })
   const emptyElement = useMemo(() => <EmptyList onEmptyActionPress={onEmptyActionPress} />, [onEmptyActionPress])
 
   return (
-    <TokenSelectorList
-      showTokenAddress
-      chainFilter={chainFilter}
-      emptyElement={emptyElement}
-      hasError={Boolean(error)}
-      loading={isLoading}
-      refetch={refetch}
-      sections={sections}
-      showTokenWarnings={false}
-      renderedInModal={renderedInModal}
-      onSelectCurrency={onSelectCurrency}
-    />
+    <Flex fill>
+      <CategoryFilterChipRow activeIds={activeIds} addresses={addresses} chips={chips} onToggle={toggleChip} />
+      <TokenSelectorList
+        showTokenAddress
+        chainFilter={chainFilter}
+        emptyElement={emptyElement}
+        hasError={Boolean(error)}
+        loading={isLoading}
+        refetch={refetch}
+        sections={filteredSections}
+        showTokenWarnings={false}
+        renderedInModal={renderedInModal}
+        onSelectCurrency={onSelectCurrency}
+      />
+    </Flex>
   )
 }
 

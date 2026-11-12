@@ -5,7 +5,6 @@ import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { getIsStablecoin } from 'uniswap/src/components/charts/utils'
 import { AuctionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { ChartType } from '~/components/Charts/utils'
 import { toHistoryDuration } from '~/data/util'
 import { shouldShowAuctionOnlyLayout } from '~/features/Toucan/Auction/utils/auctionDisplayVisibility'
 import { AuctionDisplayPhase } from '~/features/Toucan/Auction/utils/resolveAuctionDisplayState'
@@ -23,6 +22,7 @@ import { getTDPChartTarget } from '~/pages/TokenDetails/hooks/getTDPChartTarget'
 import { useTDPMultichainAggregate } from '~/pages/TokenDetails/hooks/useTDPMultichainAggregate'
 import { useTokenDetailsAuctionDisplay } from '~/pages/TokenDetails/hooks/useTokenDetailsAuctionDisplay'
 import { getTokenDetailsProvenanceProperties } from '~/pages/TokenDetails/utils/tokenDetailsProvenanceAnalytics'
+import { ChartType } from '~/utils/charts'
 
 function ChartSectionBody(): JSX.Element {
   const { tokenColor, currency, multichainToken, pathChainId, pathTokenDbAddress, selectedMultichainChainId } =
@@ -105,7 +105,7 @@ function ChartSectionBody(): JSX.Element {
           tokenColor={tokenColor}
           timePeriod={timePeriod}
           currency={currency}
-          isStablecoin={getIsStablecoin({ tokenCategoriesEnabled, categoryIds: multichainToken?.categoryIds })}
+          isStablecoin={getIsStablecoin({ tokenCategoriesEnabled, categoryIds: multichainToken?.categoryIds }) === true}
           auctionOnlyPhase={isAuctionOnly ? auctionDisplay.phase : undefined}
           isAuctionOnlyPending={auctionDisplay.isAuctionOnlyPending}
           onPriceDiscoveryViewed={onPriceDiscoveryViewed}

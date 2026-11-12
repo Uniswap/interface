@@ -2,6 +2,8 @@ import React from 'react'
 import { useParams } from 'react-router'
 import { dismissTokenWarning } from 'uniswap/src/features/tokens/warnings/slice/slice'
 import { TokenProtectionWarning } from 'uniswap/src/features/tokens/warnings/types'
+import { sleep } from 'utilities/src/time/timing'
+import type { Mock } from 'vitest'
 import { useLiquidityServicePoolData } from '~/data/pools/useLiquidityServicePoolData'
 import { PoolDetailsPage as PoolDetails } from '~/pages/PoolDetails'
 import store from '~/state'
@@ -10,7 +12,7 @@ import { validParams, validPoolDataResponse } from '~/test-utils/pools/fixtures'
 import { act, render, waitFor } from '~/test-utils/render'
 
 // oxlint-disable-next-line jest/no-export
-export const mockNavigate = vi.fn()
+export const mockNavigate: Mock = vi.fn()
 
 vi.mock('react-router', async () => {
   const actual = await vi.importActual('react-router')
@@ -89,7 +91,7 @@ describe('PoolDetailsPage', () => {
     render(<PoolDetails />)
 
     await act(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 1))
+      await sleep(1)
     })
 
     await waitFor(() => {
@@ -102,7 +104,7 @@ describe('PoolDetailsPage', () => {
     render(<PoolDetails />)
 
     await act(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 1))
+      await sleep(1)
     })
 
     await waitFor(() => {
@@ -115,7 +117,7 @@ describe('PoolDetailsPage', () => {
     render(<PoolDetails />)
 
     await act(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 1))
+      await sleep(1)
     })
 
     await waitFor(() => {
@@ -132,7 +134,7 @@ describe('PoolDetailsPage', () => {
     render(<PoolDetails />)
 
     await act(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 1))
+      await sleep(1)
     })
 
     await waitFor(() => {

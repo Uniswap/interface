@@ -2,19 +2,19 @@ import { fireEvent } from '@testing-library/react'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import type { Currency } from '@uniswap/sdk-core'
 import { TestID } from '@universe/test'
+import { useCreateLiquidityContext } from '~/features/Liquidity/Create/CreateLiquidityContextProvider'
+import { useCreatePositionTxContext } from '~/features/Liquidity/Create/CreatePositionTxContext'
 import { useBlockedTokens } from '~/features/Liquidity/Create/hooks/useBlockedTokens'
 import { DepositStep } from '~/features/Liquidity/Deposit'
 import { useLPGeoRestriction } from '~/features/Liquidity/useLPGeoRestriction'
 import { useLPPermissionedGating } from '~/features/Liquidity/usePermissionedLP'
-import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
-import { useCreatePositionTxContext } from '~/pages/CreatePosition/CreatePositionTxContext'
 import { render, screen } from '~/test-utils/render'
 
 vi.mock('~/features/Liquidity/useLPGeoRestriction', () => ({ useLPGeoRestriction: vi.fn() }))
 vi.mock('~/features/Liquidity/usePermissionedLP', () => ({ useLPPermissionedGating: vi.fn() }))
 vi.mock('~/features/Liquidity/Create/hooks/useBlockedTokens', () => ({ useBlockedTokens: vi.fn() }))
-vi.mock('~/pages/CreatePosition/CreateLiquidityContextProvider', () => ({ useCreateLiquidityContext: vi.fn() }))
-vi.mock('~/pages/CreatePosition/CreatePositionTxContext', () => ({ useCreatePositionTxContext: vi.fn() }))
+vi.mock('~/features/Liquidity/Create/CreateLiquidityContextProvider', () => ({ useCreateLiquidityContext: vi.fn() }))
+vi.mock('~/features/Liquidity/Create/CreatePositionTxContext', () => ({ useCreatePositionTxContext: vi.fn() }))
 vi.mock('~/features/Liquidity/Create/hooks/useDefaultInitialPrice', () => ({
   useDefaultInitialPrice: () => ({ price: undefined }),
 }))
@@ -45,8 +45,8 @@ vi.mock('~/features/Liquidity/hooks/useDependentAmountFallback', () => ({
 vi.mock('~/features/Liquidity/DepositInputForm', () => ({ DepositInputForm: () => null }))
 vi.mock('~/features/Liquidity/DisplayCurrentPrice', () => ({ DisplayCurrentPrice: () => null }))
 vi.mock('~/features/Liquidity/LowLPSlippageWarning', () => ({ LowLPSlippageWarning: () => null }))
-vi.mock('~/pages/CreatePosition/CreatePositionModal', () => ({ CreatePositionModal: () => null }))
-vi.mock('~/pages/CreatePosition/ConfirmCreatePositionModal', () => ({ ConfirmCreatePositionModal: () => null }))
+vi.mock('~/features/Liquidity/Create/CreatePositionModal', () => ({ CreatePositionModal: () => null }))
+vi.mock('~/features/Liquidity/Create/ConfirmCreatePositionModal', () => ({ ConfirmCreatePositionModal: () => null }))
 vi.mock('~/components/PermissionedPool/VerifyIdentityModal', () => ({ VerifyIdentityModal: () => null }))
 vi.mock('uniswap/src/features/transactions/swap/components/SwapFormSettings/SlippageWarningModal', () => ({
   default: () => null,

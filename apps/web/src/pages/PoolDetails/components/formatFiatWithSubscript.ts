@@ -13,8 +13,7 @@ type LocalizationContextState = ReturnType<typeof useLocalizationContext>
  * `subscriptThreshold`. Converts the USD value into the user's local fiat first,
  * then re-applies the locale's currency symbol via `addFiatSymbolToNumber`.
  *
- * The fiat counterpart to `formatPriceWithSubscript`. Lives alongside it because
- * both helpers are scoped to the pool detail page.
+ * The fiat counterpart to `~/utils/formatPriceWithSubscript`.
  */
 export function formatFiatWithSubscript({
   usdValue,

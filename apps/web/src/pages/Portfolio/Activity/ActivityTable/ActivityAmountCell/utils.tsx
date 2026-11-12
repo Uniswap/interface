@@ -6,7 +6,7 @@ import { TransactionDetails } from 'uniswap/src/features/transactions/types/tran
 import { buildActivityRowFragments } from '~/pages/Portfolio/Activity/ActivityTable/registry'
 import { getTransactionTypeFilterOptions } from '~/pages/Portfolio/Activity/Filters/utils'
 
-export const COMPACT_TOKEN_LOGO_SIZE = iconSizes.icon24
+export const COMPACT_THUMBNAIL_SIZE = iconSizes.icon32
 export const AMOUNT_COLUMN_WIDTH = 180
 
 export function getTransactionTypeLabel({
@@ -35,7 +35,7 @@ export function createTokenLogo(currencyInfo: CurrencyInfo | null | undefined): 
       chainId={currencyInfo.currency.chainId}
       name={currencyInfo.currency.name}
       symbol={currencyInfo.currency.symbol}
-      size={COMPACT_TOKEN_LOGO_SIZE}
+      size={COMPACT_THUMBNAIL_SIZE}
       url={currencyInfo.logoUrl}
     />
   )

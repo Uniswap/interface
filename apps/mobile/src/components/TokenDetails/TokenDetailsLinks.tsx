@@ -113,7 +113,8 @@ export function TokenDetailsLinks(): JSX.Element {
     return [initialSnap, '100%']
   }, [screenHeight])
 
-  const { homepageUrl, twitterName } = useTokenMetadata(currencyId)
+  const { data: metadata } = useTokenMetadata(currencyId)
+  const { homepageUrl, twitterName } = metadata ?? {}
 
   const explorerLink = getExplorerLink({ chainId, data: address, type: ExplorerDataType.TOKEN })
   const explorerName = getChainInfo(chainId).explorer.name

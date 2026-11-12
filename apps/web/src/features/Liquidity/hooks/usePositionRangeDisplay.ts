@@ -2,11 +2,10 @@ import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes
 import { useMemo } from 'react'
 import { useGetRangeDisplay } from 'uniswap/src/features/positions/hooks/useGetRangeDisplay'
 import type { PositionInfo } from 'uniswap/src/features/positions/types'
-import { shouldReverseForWaterfall } from 'uniswap/src/features/tokens/waterfallPriority'
 
 /**
- * A position's price range as displayed: min/max in waterfall order, with a v2 pair's implicit
- * 0 → ∞ range filled in. `hasRange` is false for a v3/v4 position whose ticks weren't served.
+ * A position's price range as displayed: min/max priced in the pool's backend-served quote token,
+ * with a v2 pair's implicit 0 → ∞ range filled in. `hasRange` is false for a v3/v4 position whose ticks weren't served.
  */
 export function usePositionRangeDisplay(position: PositionInfo): {
   minPrice: string
@@ -16,7 +15,7 @@ export function usePositionRangeDisplay(position: PositionInfo): {
   pricesInverted: boolean
   hasRange: boolean
 } {
-  const pricesInverted = shouldReverseForWaterfall(position.currency0Amount.currency, position.currency1Amount.currency)
+  const pricesInverted = Boolean(position.isToken0Quote)
   const isV2 = position.version === ProtocolVersion.V2
 
   const priceOrdering = useMemo(() => {

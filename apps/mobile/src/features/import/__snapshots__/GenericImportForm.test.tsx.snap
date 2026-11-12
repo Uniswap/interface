@@ -46,6 +46,7 @@ exports[`GenericImportForm > renders a placeholder when there is no value 1`] = 
           class="css-view-175oi2r"
         >
           <button
+            accessibilityactions="[object Object]"
             android_ripple="[object Object]"
             role="button"
             style="padding: 8px; border-radius: 12px;"

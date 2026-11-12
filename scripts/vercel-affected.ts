@@ -85,22 +85,7 @@ export const DEPLOYABLE_PROJECTS: DeployableProject[] = [
     projectId: 'prj_p6uzKC6v0hrzPVb3F9bdB8P6DDRt',
     dirs: labsProjectDirs['@universe/sandbox'],
   },
-  {
-    name: '@universe/pools-xyz',
-    vercelProject: 'universe-rh-cca',
-    projectId: 'prj_pzxwKP6jDElhfM0KGs1vsXhwgwmx',
-    // Pools runs on ECS (dev.pools.xyz tracks main). A production build here
-    // only served main against the prod backend behind Vercel SSO.
-    previewOnly: true,
-    rootDirectory: 'apps/pools-xyz',
-  },
-  {
-    name: '@universe/dev-portal',
-    vercelProject: 'dev-portal',
-    projectId: 'prj_ZUGIdLPpK4CSWPXPhGBZhfdlDD1f',
-  },
-  // mission-control is intentionally absent: its session backend is only
-  // reachable from inside the VPC, so a Vercel preview cannot log in.
+  // App previews (web, pools-xyz, dev-portal, mission-control) run on AWS via preview_build.yml.
 ]
 
 // stdout is reserved for the JSON matrix

@@ -4,13 +4,13 @@ import { GetPoolHistoryVolumeRequest } from '@uniswap/client-liquidity/dist/unis
 import { UTCTimestamp } from 'lightweight-charts'
 import { useMemo } from 'react'
 import { liquidityQueries } from 'uniswap/src/data/apiClients/liquidityService/liquidityQueries'
-import { ChartQueryResult, ChartType, checkDataQuality } from '~/components/Charts/utils'
 import { SingleHistogramData } from '~/components/Charts/VolumeChart/utils'
 import {
   toLiquidityHistoryDuration,
   versionFromVars,
   type PDPChartQueryVars,
 } from '~/features/Liquidity/charts/liquidityServiceHistoryVars'
+import { ChartQueryResult, ChartType, checkDataQuality } from '~/utils/charts'
 
 /**
  * Pool Details Page volume-chart data source backed by the liquidity-service `GetPoolHistoryVolume`

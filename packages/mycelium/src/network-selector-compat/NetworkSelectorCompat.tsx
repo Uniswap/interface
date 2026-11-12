@@ -150,6 +150,8 @@ export function NetworkSelectorCompat<TChainId extends number = number>({
       offset={{ mainAxis: NETWORK_SELECTOR_DROPDOWN_OFFSET }}
       onOpenChange={handleOpenChange}
     >
+      {/* TODO(INFRA-4589): the trigger's role="button" wraps TriggerButton's own role="button" (nested-interactive).
+          Render one button. */}
       <PopoverCompat.Trigger>
         {/* The legacy trigger: logo + rotating chevron, no pill chrome. */}
         <TriggerButtonCompat
@@ -167,6 +169,8 @@ export function NetworkSelectorCompat<TChainId extends number = number>({
         </TriggerButtonCompat>
       </PopoverCompat.Trigger>
 
+      {/* TODO(INFRA-4589): the popup is a role="dialog" with no name, and the selector has no prop to pass one
+          (aria-dialog-name). Name it, for example from the search placeholder or a title label. */}
       <AdaptiveWebPopoverContentCompat
         {...NETWORK_SELECTOR_POPOVER_CONTENT_PROPS_COMPAT}
         isOpen={isOpen}

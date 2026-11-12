@@ -2,7 +2,7 @@ import '~/test-utils/tokens/mocks'
 import { TestID } from '@universe/test'
 import { DAI, USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
-import type { Activity } from '~/components/AccountDrawer/MiniPortfolio/Activity/types'
+import type { Activity } from '~/components/Activity/types'
 import { ActivityPopupContent } from '~/components/Popups/PopupContent'
 import { render, screen } from '~/test-utils/render'
 

@@ -11,11 +11,11 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { Pending } from '~/pages/Swap/Limit/ConfirmLimitOrderModal/Pending'
-import { TradeFillType } from '~/state/routing/types'
 import { useUniswapXOrderByOrderHash } from '~/state/transactions/hooks'
 import { LIMIT_ORDER_TRADE } from '~/test-utils/constants'
 import { mocked } from '~/test-utils/mocked'
 import { render, screen } from '~/test-utils/render'
+import { TradeFillType } from '~/types/trade'
 import type { LimitOrderResult } from '~/types/trade'
 
 vi.mock('~/state/transactions/hooks', async () => {
@@ -67,7 +67,7 @@ describe('Pending - uniswapX trade titles', () => {
     [false, false, undefined, LIMIT_ORDER_TRADE, uniswapXLimitOrderResult, filledOrderDetails, 'Limit filled!'],
     [false, false, undefined, LIMIT_ORDER_TRADE, undefined, undefined, 'Confirm limit'],
   ])(
-    'renders limit order correctly, with approvalPending= %p , revocationPending= %p, wrapTxHash= %p',
+    'renders limit order correctly, with approvalPending= %o , revocationPending= %o, wrapTxHash= %o',
     async (approvalPending, revocationPending, wrapTxHash, trade, limitOrderResult, orderDetails, expectedTitle) => {
       mocked(useUniswapXOrderByOrderHash).mockReturnValue(orderDetails)
       const { asFragment } = render(

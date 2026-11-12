@@ -4,6 +4,7 @@ import { useImageLoadError } from '../hooks/useImageLoadError'
 import { type PlainImageProps, UniversalImageResizeMode } from '../types'
 
 export function PlainImage({
+  alt,
   uri,
   size,
   fallback,
@@ -30,6 +31,7 @@ export function PlainImage({
       // remount on uri change: a queued error event for the old src can fire after the new src
       // commits to the same element, which would mark the new uri as errored
       key={uri}
+      alt={alt}
       height={size.height}
       src={uri}
       // width/height also set as inline CSS: global stylesheet rules (img { height: auto }) override

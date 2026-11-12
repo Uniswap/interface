@@ -1,7 +1,9 @@
+import { MarginPlanAction } from '@uniswap/client-data-api/dist/data/v1/plan_pb'
 import { PlanActivity, PlanTransaction, TokenAmount } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import { TradeType } from '@uniswap/sdk-core'
 import { TradingApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
+import { resolveWirePlanIntent } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
 import { createTransactionDetails } from 'uniswap/src/features/activity/extract/extractPlanUtils'
 import {
   mapDAPIEarnPlanActionToTAPIEarnAction,
@@ -21,7 +23,7 @@ import {
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { CurrencyId } from 'uniswap/src/types/currency'
-import { validateAndBuildCurrencyId } from 'uniswap/src/utils/currencyId'
+import { buildCurrencyId, validateAndBuildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 
 /**
@@ -31,6 +33,7 @@ import { logger } from 'utilities/src/logger/logger'
 export default function extractPlanDetails(transaction: PlanTransaction): PlanTransactionDetails | null {
   const { planId, createdAtMillis, lastUserActionAtMillis, status, swapper, assetsIn, assetsOut, activities, gasFee } =
     transaction
+  const { marginMetadata } = transaction
 
   const extractedAssetDetails = extractPlanAssetDetails(assetsIn, assetsOut)
   if (!extractedAssetDetails) {
@@ -59,6 +62,15 @@ export default function extractPlanDetails(transaction: PlanTransaction): PlanTr
     outputCurrencyAmountRaw: assetOut.amount?.raw ?? '0',
     tradeType: TradeType.EXACT_INPUT,
     earnAction: mapDAPIEarnPlanActionToTAPIEarnAction(transaction.earnMetadata?.action),
+    // On the out chain: a bridge-funded plan's input sits on the source chain, its position on the margin chain.
+    marginAction:
+      marginMetadata?.collateralToken && marginMetadata.debtToken
+        ? {
+            action: resolveWirePlanIntent(MarginPlanAction[marginMetadata.action]).action,
+            collateralCurrencyId: buildCurrencyId(tokenOutChainId, marginMetadata.collateralToken),
+            debtCurrencyId: buildCurrencyId(tokenOutChainId, marginMetadata.debtToken),
+          }
+        : undefined,
     transactionHashes: activities.map((activity) => activity.transactionHash).filter((hash) => hash !== undefined),
   }
 

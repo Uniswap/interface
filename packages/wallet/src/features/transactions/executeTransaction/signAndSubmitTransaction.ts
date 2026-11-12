@@ -5,6 +5,7 @@ import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/evm/defaults'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { sleep } from 'utilities/src/time/timing'
 import { hexlifyTransaction } from 'utilities/src/transactions/hexlifyTransaction'
 import { PublicClient } from 'viem'
 import { getAccountDelegationDetails } from 'wallet/src/features/smartWallet/delegation/utils'
@@ -144,7 +145,7 @@ export async function signAndSubmitTransaction({
             throw error
           }
           retryCount++
-          await new Promise((resolve) => setTimeout(resolve, ONE_SECOND_MS))
+          await sleep(ONE_SECOND_MS)
         }
       }
       return { transactionResponse, populatedRequest, timestampBeforeSign, timestampBeforeSend }

@@ -10,8 +10,8 @@ import { migration8 } from '~/state/migrations/8'
 import { migration9 } from '~/state/migrations/9'
 import { migration10, PersistAppStateV10 } from '~/state/migrations/10'
 import { migration11 } from '~/state/migrations/11'
-import { RouterPreference } from '~/state/routing/types'
 import { SlippageTolerance } from '~/state/user/types'
+import { RouterPreference } from '~/types/routing'
 
 const persistUserState: PersistAppStateV10['user'] = {
   userRouterPreference: RouterPreference.X,

@@ -65,7 +65,8 @@ function PositionDetailsContent({ positionInfo }: { positionInfo: PositionInfo }
   const { t } = useTranslation()
   const { bottomScreenTotalGap } = useBottomScreenGap()
   const { convertFiatAmountFormatted, formatNumberOrString, formatPercent } = useLocalizationContext()
-  const [priceInverted, setPriceInverted] = useState(false)
+  // Price the position in the pool's backend-served quote token by default, matching the pair name.
+  const [priceInverted, setPriceInverted] = useState(Boolean(positionInfo.isToken0Quote))
 
   const {
     currency0Amount,

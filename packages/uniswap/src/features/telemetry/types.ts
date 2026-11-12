@@ -23,6 +23,7 @@ import {
 } from 'uniswap/src/features/dappRequests/types'
 import type { ProtectionResult } from 'uniswap/src/features/dataApi/safety'
 import { type FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
+import type { HookDetailsReferrer } from 'uniswap/src/features/poolHooks/types'
 import type { PriceSourceTag } from 'uniswap/src/features/prices/getDisplayedPriceSource'
 import {
   type AuctionEventName,
@@ -270,6 +271,7 @@ export type ExploreTableSurface =
   | 'explore'
   | 'category-details'
   | 'tdp'
+  | 'hook-details'
   | 'add-liquidity-pool-browser'
   | 'positions-discovery'
 
@@ -571,6 +573,20 @@ export enum LiquiditySource {
 export enum FeePoolSelectAction {
   Manual = 'Manual',
   Search = 'Search',
+}
+
+export enum PriceRangeInputSource {
+  Typed = 'typed',
+  Stepper = 'stepper',
+}
+
+export enum PriceRangeDragTarget {
+  MinHandle = 'min_handle',
+  MaxHandle = 'max_handle',
+  /** The whole range, moved by its body or its side indicator. */
+  Range = 'range',
+  /** A new range swept (or clicked) over the liquidity bars. */
+  LiquidityArea = 'liquidity_area',
 }
 
 export enum DappRequestAction {
@@ -1310,6 +1326,9 @@ export type UniverseEventProperties = {
   [InterfaceEventName.OnChainAddLiquidityFailed]: {
     message: string
   } & (PartialMessage<CreatePositionRequest> | PartialMessage<IncreasePositionRequest>)
+  [InterfaceEventName.UnfundedRedirectToPortfolio]: {
+    source: 'create' | 'connect'
+  }
   [InterfaceEventName.EmbeddedWalletCreated]: {
     wallet_address: string
     unitag_source?: EmbeddedWalletUnitagSource
@@ -1355,7 +1374,7 @@ export type UniverseEventProperties = {
     result_count?: number
   }
   [InterfaceEventName.ExploreTableSorted]: {
-    table_type: 'tokens' | 'pools'
+    table_type: 'tokens' | 'pools' | 'hooks'
     sort_method: string
     sort_direction: 'asc' | 'desc'
     surface: ExploreTableSurface
@@ -1437,11 +1456,20 @@ export type UniverseEventProperties = {
     outputPoolHookAddress?: string
   } & LiquidityAnalyticsProperties
   [LiquidityEventName.AddLiquiditySubmitted]: {
+    came_from_hook_detail?: boolean
     createPool?: boolean
     createPosition?: boolean
     expectedAmountBaseRaw: string
     expectedAmountQuoteRaw: string
   } & LiquidityAnalyticsProperties
+  [LiquidityEventName.PriceRangeDragged]: {
+    drag_target: PriceRangeDragTarget
+  } & ITraceContext
+  [LiquidityEventName.PriceRangeInputChanged]: {
+    bound: 'min' | 'max'
+    source: PriceRangeInputSource
+    input_mode: 'price' | 'percentage'
+  } & ITraceContext
   [LiquidityEventName.RemoveLiquiditySubmitted]: {
     expectedAmountBaseRaw: string
     expectedAmountQuoteRaw: string
@@ -1606,6 +1634,10 @@ export type UniverseEventProperties = {
         iframe_parent_origin: string
       }
   [SharedEventName.ELEMENT_CLICKED]: ITraceContext & {
+    // Covering ElementName.HookListRow
+    hook_address?: string
+    position?: number
+    sort?: string
     // Covering ElementName.PortfolioNftItem
     collection_name?: string
     collection_address?: string
@@ -1679,6 +1711,15 @@ export type UniverseEventProperties = {
     action?: SwapFormButtonAction
   }
   [SharedEventName.PAGE_VIEWED]: ITraceContext & {
+    /** Hook detail property names follow the product metrics contract. */
+    hook_address?: string
+    chain?: UniverseChainId | typeof ALL_NETWORKS_LABEL
+    has_metadata?: boolean
+    allowlisted?: boolean
+    referrer?: HookDetailsReferrer
+    status?: 'loading' | 'error' | 'not-found' | 'invalid-address' | 'unsupported-chain'
+    sort?: string
+    filters?: readonly string[]
     /** Token details */
     multichain?: boolean
     /** Category details page / screen — the viewed category's BE id */

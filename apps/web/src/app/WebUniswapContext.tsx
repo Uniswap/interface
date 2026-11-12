@@ -33,7 +33,6 @@ import {
 } from 'uniswap/src/utils/linking'
 import { useEvent, usePrevious } from 'utilities/src/react/hooks'
 import { noop } from 'utilities/src/react/noop'
-import { useOpenReceiveCryptoModal } from '~/components/ReceiveCryptoModal/useOpenReceiveCryptoModal'
 import { useConnectionStatus } from '~/connection/accounts/hooks'
 import { useAccountsStoreContext } from '~/connection/accounts/provider'
 import { useAccount } from '~/connection/hooks/useAccount'
@@ -44,9 +43,9 @@ import { useGetSwapDelegationInfo } from '~/features/Swap/hooks/useGetSwapDelega
 import { PageType } from '~/hooks/useIsPage'
 import { useModalState } from '~/hooks/useModalState'
 import { useNavigateToAuctionDetails } from '~/hooks/useNavigateToAuctionDetails'
-import { getCategoryDetailsURL } from '~/pages/Explore/CategoryDetails/getCategoryDetailsURL'
-import { buildPortfolioUrl } from '~/pages/Portfolio/utils/portfolioUrls'
-import { serializeSwapAddressesToURLParameters } from '~/pages/Swap/Swap/state/tradeQueryParams'
+import { useOpenReceiveCryptoModal } from '~/hooks/useOpenReceiveCryptoModal'
+import { buildPortfolioUrl } from '~/hooks/usePortfolioRoutes/utils'
+import { MARGIN_RESUME_PLAN_PARAM } from '~/pages/Swap/Margin/hooks/useResumeMarginPlanFromUrl'
 import { EARN_ENTRY_POINT_QUERY_PARAM } from '~/pages/TokenDetails/components/earn/earnEntryPointQuery'
 import { useAccountDrawer } from '~/state/accountDrawer/hooks'
 import { MenuStateVariant, useMenuState } from '~/state/accountDrawer/menuState'
@@ -56,8 +55,10 @@ import { useHasAlternateGasFeesByChainIdCallback } from '~/state/walletCapabilit
 import { useIsAtomicBatchingSupportedByChainIdCallback } from '~/state/walletCapabilities/hooks/useIsAtomicBatchingSupportedByChain'
 import { useHasMismatchCallback, useShowMismatchToast } from '~/state/walletCapabilities/hooks/useMismatchAccount'
 import { ReceiveModalState } from '~/types/receiveCryptoModal'
+import { getCategoryDetailsURL } from '~/utils/getCategoryDetailsURL'
 import { isIFramed } from '~/utils/isIFramed'
 import { getTdpChainQueryParam } from '~/utils/params/chainQueryParam'
+import { serializeSwapAddressesToURLParameters } from '~/utils/params/tradeQueryParams'
 import { SwitchNetworkAction } from '~/utils/popups/types'
 import { showSwitchNetworkNotification } from '~/utils/showSwitchNetworkNotification'
 
@@ -252,6 +253,15 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
     [navigate, closeSearchModal, accountDrawer],
   )
 
+  const isMarginEnabled = useFeatureFlag(FeatureFlags.Margin)
+  const navigateToMarginPlan = useCallback(
+    ({ planId }: { planId: string }) => {
+      navigate(`/margin?${MARGIN_RESUME_PLAN_PARAM}=${encodeURIComponent(planId)}`)
+      accountDrawer.close()
+    },
+    [navigate, accountDrawer],
+  )
+
   const getHasMismatch = useHasAccountMismatchCallback()
   const isPermitMismatchUxEnabled = useFeatureFlag(FeatureFlags.EnablePermitMismatchUX)
   const getIsUniswapXSupported = useEvent((innerChainId?: UniverseChainId) => {
@@ -369,6 +379,7 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
       navigateToNftDetails={navigateToNftDetails}
       navigateToPoolDetails={navigateToPoolDetails}
       navigateToEarnVault={navigateToEarnVault}
+      navigateToMarginPlan={isMarginEnabled ? navigateToMarginPlan : undefined}
       navigateToAuction={navigateToAuction}
       navigateToCategoryDetails={navigateToCategoryDetails}
       handleShareToken={handleShareToken}

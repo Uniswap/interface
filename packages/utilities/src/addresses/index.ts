@@ -103,16 +103,19 @@ function ellipseAddressAdd0x(address: string, charsStart: number, charsEnd: numb
  * @param target
  * @param charsStart amount of character to shorten (from both ends / in the beginning)
  * @param charsEnd amount of characters to shorten in the end
+ * @param ellipsis the separator, "..." by default
  * @returns formatted string
  */
 export function ellipseMiddle({
   str,
   charsStart = 4,
   charsEnd = 4,
+  ellipsis = '...',
 }: {
   str: string
   charsStart?: number
   charsEnd?: number
+  ellipsis?: string
 }): string {
-  return `${str.slice(0, charsStart)}...${str.slice(str.length - charsEnd)}`
+  return `${str.slice(0, charsStart)}${ellipsis}${str.slice(str.length - charsEnd)}`
 }

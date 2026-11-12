@@ -12,10 +12,11 @@ import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { getStackedLogoWidth, SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { getPoolName } from 'uniswap/src/features/pools/names'
+import { orderPoolDataByQuoteToken } from 'uniswap/src/features/pools/quoteToken'
 import { LiquidityPositionStatusIndicator } from 'uniswap/src/features/positions/components/LiquidityPositionStatusIndicator'
 import { PositionInfo } from 'uniswap/src/features/positions/types'
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { shouldReverseForWaterfall } from 'uniswap/src/features/tokens/waterfallPriority'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { getPoolDetailsURL } from 'uniswap/src/utils/linking'
 import { getDetailHeaderLogoSize } from '~/components/StickyCollapsibleHeader/getHeaderLogoSize'
@@ -227,13 +228,17 @@ export function LiquidityPositionInfo({
     currencyId(currency0Amount.currency),
     currencyId(currency1Amount.currency),
   ])
-  // Same base/quote orientation as the positions table row and the pool details header, so the pair
-  // reads the same on the list, the detail page, and the flows launched from it.
-  const reversed = shouldReverseForWaterfall(currency0Amount.currency, currency1Amount.currency)
-  const [baseCurrency, quoteCurrency] = reversed
-    ? [currency1Amount.currency, currency0Amount.currency]
-    : [currency0Amount.currency, currency1Amount.currency]
-  const [baseInfo, quoteInfo] = reversed ? [currency1Info, currency0Info] : [currency0Info, currency1Info]
+  const poolName = getPoolName({
+    symbol0: currency0Amount.currency.symbol,
+    symbol1: currency1Amount.currency.symbol,
+    token0IsQuote: positionInfo.isToken0Quote,
+    spaced: true,
+  })
+  const [baseInfo, quoteInfo] = orderPoolDataByQuoteToken({
+    token0IsQuote: positionInfo.isToken0Quote,
+    data0: currency0Info,
+    data1: currency1Info,
+  })
 
   const includeNetworkInLogo = useMemo(() => !includeNetwork || media.lg, [includeNetwork, media.lg])
   const isDetailHeader = stackedLogo && !isMiniVersion
@@ -295,13 +300,11 @@ export function LiquidityPositionInfo({
                   // hover/press here, and color transitions must stay excluded (theme-toggle flash).
                   transition="opacity 0.2s"
                 >
-                  {baseCurrency.symbol} / {quoteCurrency.symbol}
+                  {poolName}
                 </Text>
               </Text>
             ) : (
-              <Text variant="subheading1">
-                {baseCurrency.symbol} / {quoteCurrency.symbol}
-              </Text>
+              <Text variant="subheading1">{poolName}</Text>
             )}
           </Flex>
           {!isMobileDetailHeader && badges}

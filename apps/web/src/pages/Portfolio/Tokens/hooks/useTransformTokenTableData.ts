@@ -15,14 +15,14 @@ import {
 } from 'uniswap/src/features/portfolio/balances/buildExtensionMultichainBalancesListData'
 import { useSortedPortfolioBalancesMultichain } from 'uniswap/src/features/portfolio/balances/hooks'
 import { useCurrencyIdToVisibility } from 'uniswap/src/features/transactions/selectors'
-import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/utils/currencyId'
-import { buildCurrencyId, currencyAddress, currencyId } from 'uniswap/src/utils/currencyId'
+import { currencyAddress } from 'uniswap/src/utils/currencyId'
 import { usePortfolioAddresses } from '~/pages/Portfolio/hooks/usePortfolioAddresses'
 import {
   buildPnlLookupsFromProfitLoss,
   pnlLookupKeyFromPortfolioChainBalance,
   resolveAggregatedPnlForChainTokens,
 } from '~/pages/Portfolio/Tokens/hooks/portfolioTokenTablePnl'
+import { getVaultShareCurrencyIds, withoutVaultShareTokens } from '~/utils/vaultShareTokens'
 
 /** Per-chain token instance (use TokenData['tokens'][number] in other modules) */
 interface TokenDataToken {
@@ -59,25 +59,6 @@ export interface TokenData {
   isSpamHidden?: boolean
 }
 
-function filterVaultShareTokens({
-  balance,
-  vaultShareCurrencyIds,
-}: {
-  balance: PortfolioMultichainBalance
-  vaultShareCurrencyIds: Set<string>
-}): PortfolioMultichainBalance {
-  if (vaultShareCurrencyIds.size === 0) {
-    return balance
-  }
-
-  const tokens = balance.tokens.filter((token) => {
-    const tokenCurrencyId = normalizeCurrencyIdForMapLookup(currencyId(token.currencyInfo.currency))
-    return !vaultShareCurrencyIds.has(tokenCurrencyId)
-  })
-
-  return tokens.length === balance.tokens.length ? balance : { ...balance, tokens }
-}
-
 export function useTransformTokenTableData({
   chainIds,
   limit,
@@ -103,13 +84,7 @@ export function useTransformTokenTableData({
   const currencyIdToTokenVisibility = useCurrencyIdToVisibility(ownerAddresses)
   const { isTestnetModeEnabled } = useEnabledChains()
   const { isLoadingVaults, vaults } = useEarnVaults()
-  const vaultShareCurrencyIds = useMemo(
-    () =>
-      new Set(
-        vaults.map((vault) => normalizeCurrencyIdForMapLookup(buildCurrencyId(vault.chainId, vault.vaultAddress))),
-      ),
-    [vaults],
-  )
+  const vaultShareCurrencyIds = useMemo(() => getVaultShareCurrencyIds(vaults), [vaults])
 
   const {
     data: sortedBalances,
@@ -160,13 +135,11 @@ export function useTransformTokenTableData({
       return { visible: [], hidden: [], totalCount: 0, loading, refetching: false, error, refetch }
     }
 
-    const balancesWithTokens = (balances: PortfolioMultichainBalance[]): PortfolioMultichainBalance[] =>
-      balances
-        .map((balance) => filterVaultShareTokens({ balance, vaultShareCurrencyIds }))
-        .filter((b) => b.tokens.length > 0)
-
-    const visibleBalances = balancesWithTokens(sortedBalances.balances)
-    const hiddenBalancesFiltered = balancesWithTokens(sortedBalances.hiddenBalances)
+    const visibleBalances = withoutVaultShareTokens({ balances: sortedBalances.balances, vaultShareCurrencyIds })
+    const hiddenBalancesFiltered = withoutVaultShareTokens({
+      balances: sortedBalances.hiddenBalances,
+      vaultShareCurrencyIds,
+    })
 
     const { partitions: visibleBalancePartitions, totalUsdVisible: totalUSDVisible } =
       partitionMultichainBalancesByPerChainVisibility({

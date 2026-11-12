@@ -11,7 +11,7 @@ import {
   type TriggerCondition,
 } from '@universe/notifications/src/notification-data-source/implementations/createLocalTriggerDataSource'
 import { type NotificationTracker } from '@universe/notifications/src/notification-tracker/NotificationTracker'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, type Mock, vi } from 'vitest'
 
 function createMockNotification(id: string): InAppNotification {
   return new Notification({
@@ -331,7 +331,7 @@ describe('createLocalTriggerDataSource', () => {
     dataSource.start(onNotifications)
 
     await vi.advanceTimersByTimeAsync(0)
-    const callCountBeforeStop = (trigger.shouldShow as ReturnType<typeof vi.fn>).mock.calls.length
+    const callCountBeforeStop = (trigger.shouldShow as Mock).mock.calls.length
 
     await dataSource.stop()
 

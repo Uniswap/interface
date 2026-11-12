@@ -39,6 +39,7 @@ export function AssetLogo({ address, chainId, logoUrl, borderRadius }: AssetLogo
   return logoUrl ? (
     <Flex width={DAPP_REQUEST_LOGO_SIZE} height={DAPP_REQUEST_LOGO_SIZE}>
       <UniversalImage
+        alt=""
         fallback={
           <Flex
             borderRadius={borderRadius}

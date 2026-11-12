@@ -14,6 +14,7 @@ import {
   TransactionTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { logger } from 'utilities/src/logger/logger'
+import { sleep } from 'utilities/src/time/timing'
 import type { Address } from 'viem'
 import type { RpcUserOperation } from 'viem/account-abstraction'
 import { entryPoint08Address } from 'viem/account-abstraction'
@@ -410,7 +411,7 @@ describe('TransactionService', () => {
       expect(result.transactionHash).toMatch(/^0x[a-fA-F0-9]{64}$/)
 
       // Wait for background operations to complete
-      await new Promise((resolve) => setTimeout(resolve, 100))
+      await sleep(100)
 
       // Assert background operations
       expect(mockTransactionRepository.addTransaction).toHaveBeenCalledWith({
@@ -487,7 +488,7 @@ describe('TransactionService', () => {
       await service.submitTransaction(params)
 
       // Wait for background operations to complete
-      await new Promise((resolve) => setTimeout(resolve, 100))
+      await sleep(100)
 
       // Assert
       expect(mockAnalyticsService.trackSwapSubmitted).toHaveBeenCalledWith(
@@ -548,7 +549,7 @@ describe('TransactionService', () => {
       await service.submitTransaction(params)
 
       // Wait for background operations to complete
-      await new Promise((resolve) => setTimeout(resolve, 100))
+      await sleep(100)
 
       // Assert
       expect(mockAnalyticsService.trackSwapSubmitted).not.toHaveBeenCalled()
@@ -581,7 +582,7 @@ describe('TransactionService', () => {
       expect(result.transactionHash).toMatch(/^0x[a-fA-F0-9]{64}$/)
 
       // Wait for background operations to complete
-      await new Promise((resolve) => setTimeout(resolve, 100))
+      await sleep(100)
 
       // Assert background error handling
       expect(mockTransactionRepository.addTransaction).toHaveBeenCalledWith({
@@ -635,7 +636,7 @@ describe('TransactionService', () => {
       await service.submitTransaction(params)
 
       // Wait for background operations to complete
-      await new Promise((resolve) => setTimeout(resolve, 100))
+      await sleep(100)
 
       // Assert
       expect(mockAnalyticsService.trackSwapSubmitted).toHaveBeenCalledWith(
@@ -697,7 +698,7 @@ describe('TransactionService', () => {
       await service.submitTransaction(params)
 
       // Wait for background operations to complete
-      await new Promise((resolve) => setTimeout(resolve, 100))
+      await sleep(100)
 
       // Assert
       expect(mockAnalyticsService.trackSwapSubmitted).not.toHaveBeenCalled()
@@ -1453,7 +1454,7 @@ describe('TransactionService', () => {
       expect(result.transactionHash).toBe('0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890')
 
       // Wait for background operations to complete
-      await new Promise((resolve) => setTimeout(resolve, 100))
+      await sleep(100)
 
       // Verify error was logged for background submission failure
       expect(mockLogger.error).toHaveBeenCalledWith(expect.any(Error), {
@@ -1532,7 +1533,7 @@ describe('TransactionService', () => {
       expect(result.transactionHash).toBe(txHash)
 
       // Wait for background operations to complete
-      await new Promise((resolve) => setTimeout(resolve, 100))
+      await sleep(100)
 
       // 2. Verify analytics were tracked for the swap
       expect(mockAnalyticsService.trackSwapSubmitted).toHaveBeenCalledWith(
@@ -1920,7 +1921,7 @@ describe('TransactionService', () => {
 
       // Act
       await service.submitTransaction(params)
-      await new Promise((resolve) => setTimeout(resolve, 100))
+      await sleep(100)
 
       // Assert
       expect(mockAnalyticsService.trackSwapSubmitted).toHaveBeenCalledWith(
@@ -1958,7 +1959,7 @@ describe('TransactionService', () => {
 
       // Act
       await service.submitTransaction(params)
-      await new Promise((resolve) => setTimeout(resolve, 100))
+      await sleep(100)
 
       // Assert
       expect(mockAnalyticsService.trackSwapSubmitted).not.toHaveBeenCalled()
@@ -2012,7 +2013,7 @@ describe('TransactionService', () => {
 
       // Act
       await service.submitTransaction(params)
-      await new Promise((resolve) => setTimeout(resolve, 100))
+      await sleep(100)
 
       // Assert
       expect(mockAnalyticsService.trackSwapSubmitted).toHaveBeenCalledWith(
@@ -2048,7 +2049,7 @@ describe('TransactionService', () => {
 
       // Act
       await service.submitTransaction(params)
-      await new Promise((resolve) => setTimeout(resolve, 100))
+      await sleep(100)
 
       // Assert
       expect(mockAnalyticsService.trackSwapSubmitted).not.toHaveBeenCalled()
@@ -2090,7 +2091,7 @@ describe('TransactionService', () => {
 
       // Act
       await service.submitTransaction(params)
-      await new Promise((resolve) => setTimeout(resolve, 100))
+      await sleep(100)
 
       // Assert
       expect(mockAnalyticsService.trackSwapSubmitted).not.toHaveBeenCalled()
@@ -2127,7 +2128,7 @@ describe('TransactionService', () => {
 
       // Act
       await service.submitTransaction(params)
-      await new Promise((resolve) => setTimeout(resolve, 100))
+      await sleep(100)
 
       // Assert
       expect(mockAnalyticsService.trackSwapSubmitted).not.toHaveBeenCalled()
@@ -2162,7 +2163,7 @@ describe('TransactionService', () => {
 
       // Act
       await service.submitTransaction(params)
-      await new Promise((resolve) => setTimeout(resolve, 100))
+      await sleep(100)
 
       // Assert
       expect(mockAnalyticsService.trackSwapSubmitted).not.toHaveBeenCalled()

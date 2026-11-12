@@ -18,7 +18,7 @@ import {
 } from '@universe/sessions'
 import React from 'react'
 import { sleep } from 'utilities/src/time/timing'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, type Mock, vi } from 'vitest'
 import { ApiInit } from './ApiInit'
 
 // Mock platform detection - we're testing as extension by default
@@ -33,9 +33,9 @@ describe('ApiInit Integration', () => {
   let queryClient: QueryClient
   let mockStorage: Map<string, any>
   let mockApiClient: {
-    initSession: ReturnType<typeof vi.fn>
-    challenge: ReturnType<typeof vi.fn>
-    verify: ReturnType<typeof vi.fn>
+    initSession: Mock
+    challenge: Mock
+    verify: Mock
   }
   let sessionStorage: SessionStorage
   let deviceIdService: DeviceIdService

@@ -1,5 +1,6 @@
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { AreaData, UTCTimestamp } from 'lightweight-charts'
+import { priceFromTick } from '~/features/Liquidity/utils/getTickToPrice'
 
 export type DepthPoint = AreaData<UTCTimestamp> & {
   tick: number
@@ -89,19 +90,6 @@ export function getDisplayPair<T>({ tokenA, tokenB, isReversed }: { tokenA: T; t
   quote: T
 } {
   return isReversed ? { base: tokenB, quote: tokenA } : { base: tokenA, quote: tokenB }
-}
-
-// price0 at tick T, in token1 units per token0 unit, accounting for decimals.
-export function priceFromTick({
-  tick,
-  token0Decimals,
-  token1Decimals,
-}: {
-  tick: number
-  token0Decimals: number
-  token1Decimals: number
-}): number {
-  return Math.pow(1.0001, tick) * Math.pow(10, token0Decimals - token1Decimals)
 }
 
 export function buildDepthData({

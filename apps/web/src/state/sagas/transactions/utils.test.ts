@@ -1,13 +1,15 @@
+import { datadogRum } from '@datadog/browser-rum'
 import { TradeType } from '@uniswap/sdk-core'
 import { TradingApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
 import { runSaga } from 'redux-saga'
 import { USDC, WBTC } from 'uniswap/src/constants/tokens'
+import { TransactionStepFailedError } from 'uniswap/src/features/transactions/errors'
 import { addTransaction } from 'uniswap/src/features/transactions/slice'
 import type { HandleOnChainStepParams, OnChainTransactionStep } from 'uniswap/src/features/transactions/steps/types'
 import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { createBridgeTrade } from 'uniswap/src/features/transactions/swap/types/trade'
-import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 
 const mockSendTransaction = vi.fn()
 const mockSendUncheckedTransaction = vi.fn()
@@ -182,6 +184,66 @@ describe('handleOnChainStep', () => {
     expect(result).toBe(hash)
     expect(onModification).not.toHaveBeenCalled()
     expect(warnSpy).toHaveBeenCalled()
+  })
+
+  // The signer path's modification check can outlast the tx's confirmation, so the activity updater finalizes it
+  // before the step starts waiting for it.
+  function waitForTxFinalizedDuringModificationCheck(status: TransactionStatus): Promise<unknown> {
+    const state = { transactions: { [address]: { [chainId]: { [hash]: { id: hash, hash, status } } } } }
+    return runSaga(
+      { dispatch: vi.fn(), getState: () => state, onError: vi.fn() },
+      handleOnChainStep,
+      createParams({ shouldWaitForConfirmation: true, onModification: vi.fn() }),
+    ).toPromise()
+  }
+
+  it('returns the hash and records the step complete when the tx confirmed before the step waits for it', async () => {
+    await expect(waitForTxFinalizedDuringModificationCheck(TransactionStatus.Success)).resolves.toBe(hash)
+    expect(datadogRum.addAction).toHaveBeenCalledWith(
+      'Transaction Action',
+      expect.objectContaining({ message: `${step.type} complete` }),
+    )
+  })
+
+  it('fails the step when the tx failed before the step waits for it', async () => {
+    await expect(waitForTxFinalizedDuringModificationCheck(TransactionStatus.Failed)).rejects.toBeInstanceOf(
+      TransactionStepFailedError,
+    )
+  })
+
+  describe('when a recent tx has the same info', () => {
+    const earlierHash = '0xearlier'
+
+    function runWithEarlierTx(status: TransactionStatus, overrides: Partial<HandleOnChainStepParams> = {}) {
+      const earlierTx = { id: earlierHash, hash: earlierHash, from: address, chainId, status, typeInfo: info }
+      const state = {
+        transactions: { [address]: { [chainId]: { [earlierHash]: { ...earlierTx, addedTime: Date.now() - 5_000 } } } },
+      }
+      return runSaga(
+        { dispatch: vi.fn(), getState: () => state },
+        handleOnChainStep,
+        createParams(overrides),
+      ).toPromise()
+    }
+
+    it('resolves to the confirmed tx without prompting the wallet by default', async () => {
+      await expect(runWithEarlierTx(TransactionStatus.Success)).resolves.toBe(earlierHash)
+      expect(mockSendUncheckedTransaction).not.toHaveBeenCalled()
+    })
+
+    it('prompts the wallet for a new tx when finalized duplicates are allowed', async () => {
+      await expect(runWithEarlierTx(TransactionStatus.Success, { allowDuplicativeOfFinalizedTx: true })).resolves.toBe(
+        hash,
+      )
+      expect(mockSendUncheckedTransaction).toHaveBeenCalledWith(step.txRequest)
+    })
+
+    it('still resolves to a pending tx when finalized duplicates are allowed', async () => {
+      await expect(runWithEarlierTx(TransactionStatus.Pending, { allowDuplicativeOfFinalizedTx: true })).resolves.toBe(
+        earlierHash,
+      )
+      expect(mockSendUncheckedTransaction).not.toHaveBeenCalled()
+    })
   })
 
   it('submits without ethers sendTransaction, which reads the block number through the wallet provider', async () => {

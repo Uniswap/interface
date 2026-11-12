@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router'
-import { ON_RAMP_RETURN_PATH } from '~/pages/Swap/Buy/onRampRedirectUrl'
 import { OnRampReturn } from '~/pages/Swap/Buy/OnRampReturn'
+import { ON_RAMP_RETURN_PATH } from '~/utils/onRampRedirectUrl'
 
 function LocationSnapshot(): JSX.Element {
   const { pathname, search } = useLocation()

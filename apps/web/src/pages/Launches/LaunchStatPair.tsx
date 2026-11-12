@@ -2,7 +2,7 @@ import { Flex, Text } from '@universe/mycelium'
 import { useTranslation } from 'react-i18next'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
-import { LaunchItem } from '~/pages/Launches/launchesModel'
+import { LaunchItem } from '~/features/Toucan/utils/launchesModel'
 
 /**
  * Shared FDV / volume stat block for the regular launch card: two equal columns with a hairline

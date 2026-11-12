@@ -6,7 +6,7 @@ import { useQueryState, useQueryStates } from 'nuqs'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useCurrencyInfoWithLoading } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { vi } from 'vitest'
+import { type Mock, vi } from 'vitest'
 import { useLiquidityUrlState } from '~/features/Liquidity/Create/hooks/useLiquidityUrlState'
 import { DEFAULT_FEE_DATA, PositionFlowStep } from '~/features/Liquidity/Create/types'
 import { mocked } from '~/test-utils/mocked'
@@ -57,7 +57,7 @@ vi.mock('@universe/gating', async (importOriginal) => {
   }
 })
 
-const useQueryStateMock = mocked(useQueryState) as unknown as ReturnType<typeof vi.fn>
+const useQueryStateMock = mocked(useQueryState) as unknown as Mock
 const useQueryStatesMock = mocked(useQueryStates)
 const useFeatureFlagMock = mocked(useFeatureFlag)
 const useStatsigClientStatusMock = mocked(useStatsigClientStatus)

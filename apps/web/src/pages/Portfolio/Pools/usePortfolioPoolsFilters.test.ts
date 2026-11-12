@@ -4,9 +4,9 @@ import { UniverseChainId } from '@universe/chains'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { DEFAULT_V2_POSITION_STATUS_FILTER } from '~/features/Liquidity/constants'
 import { useV2StatusFilter } from '~/features/Liquidity/hooks/useV2StatusFilter'
+import { PortfolioTab } from '~/hooks/usePortfolioRoutes/types'
+import { buildPortfolioUrl } from '~/hooks/usePortfolioRoutes/utils'
 import { usePortfolioPoolsFilters } from '~/pages/Portfolio/Pools/usePortfolioPoolsFilters'
-import { PortfolioTab } from '~/pages/Portfolio/types'
-import { buildPortfolioUrl } from '~/pages/Portfolio/utils/portfolioUrls'
 import { mocked } from '~/test-utils/mocked'
 
 const navigate = vi.fn()

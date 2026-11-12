@@ -662,7 +662,7 @@ describe('marginHealthFromLeverage on inputs that are not position states', () =
 // Both legs decode through usablePriceX18 now — a bare truthiness test admits the '0' sentinel and lets
 // a non-integer wire value throw a SyntaxError out of BigInt mid-render.
 describe('quoteLiqDistanceSignedPct on unusable wire prices', () => {
-  it.each(['0', '', '1.5', '1e18'])('withholds the distance for an unusable liq price (%p)', (liquidationPriceX18) => {
+  it.each(['0', '', '1.5', '1e18'])('withholds the distance for an unusable liq price (%o)', (liquidationPriceX18) => {
     expect(() =>
       quoteLiqDistanceSignedPct({ liquidationPriceX18, markPriceX18: (2000n * 10n ** 18n).toString() }),
     ).not.toThrow()
@@ -671,7 +671,7 @@ describe('quoteLiqDistanceSignedPct on unusable wire prices', () => {
     ).toBeUndefined()
   })
 
-  it.each(['0', '1.5'])('withholds the distance for an unusable mark (%p)', (markPriceX18) => {
+  it.each(['0', '1.5'])('withholds the distance for an unusable mark (%o)', (markPriceX18) => {
     expect(
       quoteLiqDistanceSignedPct({ liquidationPriceX18: (1600n * 10n ** 18n).toString(), markPriceX18 }),
     ).toBeUndefined()
@@ -690,7 +690,7 @@ describe('quoteLiqDistanceSignedPct on unusable wire prices', () => {
 // The one wire string in this file that was decoded without a guard, and it sits on the slider's render
 // path via marginLeverageTrackColor — an unguarded BigInt throw there takes the control down.
 describe('marginHealthFromLeverage on an unusable LLTV', () => {
-  it.each(['0.86', '8.6e17', '', 'not-a-number', '0'])('reports no health for lltvWad %p', (lltvWad) => {
+  it.each(['0.86', '8.6e17', '', 'not-a-number', '0'])('reports no health for lltvWad %o', (lltvWad) => {
     expect(() => marginHealthFromLeverage({ leverage: 3, lltvWad, direction: MarginDirection.LONG })).not.toThrow()
     expect(marginHealthFromLeverage({ leverage: 3, lltvWad, direction: MarginDirection.LONG })).toBeUndefined()
   })
@@ -698,7 +698,7 @@ describe('marginHealthFromLeverage on an unusable LLTV', () => {
 
 // The last X18 reader in this file that called BigInt bare, and it runs inside its callers' renders.
 describe('leverageX18ToNumber on an unparseable wire value', () => {
-  it.each(['2.5e18', '1.5', 'not-a-number', ''])('reports %p as unknown rather than throwing', (x18) => {
+  it.each(['2.5e18', '1.5', 'not-a-number', ''])('reports %o as unknown rather than throwing', (x18) => {
     expect(() => leverageX18ToNumber(x18)).not.toThrow()
     expect(Number.isNaN(leverageX18ToNumber(x18))).toBe(true)
   })

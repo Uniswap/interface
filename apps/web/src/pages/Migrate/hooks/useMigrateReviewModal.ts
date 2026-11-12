@@ -1,5 +1,5 @@
 import { useEvent } from 'utilities/src/react/hooks'
-import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
+import { useCreateLiquidityContext } from '~/features/Liquidity/Create/CreateLiquidityContextProvider'
 
 /**
  * Migrate's review modal open state lives in the create-liquidity context, where opening it also locks

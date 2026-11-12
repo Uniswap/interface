@@ -4,12 +4,11 @@ import { PollingInterval } from 'uniswap/src/constants/misc'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
-import type { PriceChartData } from '~/components/Charts/PriceChart'
-import { ChartType, DataQuality, PriceChartType, type ChartQueryResult } from '~/components/Charts/utils'
 import { TimePeriod } from '~/data/util'
 import { useTokenPriceChartData } from '~/hooks/useTokenPriceChartData'
 import { useTokenPriceChartPanel } from '~/hooks/useTokenPriceChartPanel'
 import { renderHook } from '~/test-utils/render'
+import { ChartType, DataQuality, PriceChartType, type ChartQueryResult, type PriceChartData } from '~/utils/charts'
 
 vi.mock('~/hooks/useTokenPriceChartData', async (importOriginal) => {
   const actual = await importOriginal<typeof import('~/hooks/useTokenPriceChartData')>()

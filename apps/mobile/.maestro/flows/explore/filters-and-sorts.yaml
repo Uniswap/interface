@@ -31,32 +31,41 @@ env:
 
 - waitForAnimationToEnd
 
-# Select Unichain chain filter (chainId 130)
+# The pills row sits below the Explore header sections, so bring it on screen first
+- scrollUntilVisible:
+    element:
+      id: 'explore-filter-chain-all'
+    direction: DOWN
+    centerElement: true
+- waitForAnimationToEnd
+
+# Select the Ethereum chain filter (chainId 1): it is the first chain pill in both the default
+# and the server-configured order, so no horizontal paging is needed
 - runScript:
     file: ../../scripts/performance/dist/actions/track-action.js
     env:
       ACTION: 'tap'
-      TARGET: 'ExploreFilterChain130'
+      TARGET: 'ExploreFilterChain1'
       PHASE: 'start'
 
-# Tap on Unichain filter (chainId 130)
 - tapOn:
-    id: 'explore-filter-chain-130'
+    id: 'explore-filter-chain-1'
 
 - runScript:
     file: ../../scripts/performance/dist/actions/track-action.js
     env:
       ACTION: 'tap'
-      TARGET: 'ExploreFilterChain130'
+      TARGET: 'ExploreFilterChain1'
       PHASE: 'end'
 
 - waitForAnimationToEnd
 
-# Assert that the filter has been applied
-# Look for Unichain-specific token in the results
+# Assert that the filter has been applied. Explore rows use multichain token
+# names, so there is no chain-specific row text to match on.
 - extendedWaitUntil:
     visible:
-      text: ".*Unichain ETH.*"
+      id: 'explore-filter-chain-1'
+      selected: true
     timeout: 5000
 
 # Sort sub-tests skipped on iOS pending INFRA-2008 — Tamagui portal
@@ -76,12 +85,6 @@ env:
       ACTION: 'tap'
       TARGET: 'ExploreFilterChainAll'
       PHASE: 'start'
-
-# Tap on Ethereum filter to scroll all chains filter back into view
-- tapOn:
-    id: 'explore-filter-chain-1'
-
-- waitForAnimationToEnd
 
 # Tap on All networks filter to show all chains
 - tapOn:

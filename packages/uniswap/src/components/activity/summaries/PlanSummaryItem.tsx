@@ -8,6 +8,7 @@ import { AssetType } from 'uniswap/src/entities/assets'
 import { getEarnPlanDisplayInfo } from 'uniswap/src/features/activity/utils/getEarnPlanDisplayInfo'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { getMarginDisplayCurrencyId } from 'uniswap/src/features/transactions/margin/marginDisplayCurrencyId'
 import { CrossChainCurrencyRow } from 'uniswap/src/features/transactions/swap/components/CrossChainCurrencyRow'
 import {
   type PlanTransactionInfo,
@@ -34,8 +35,13 @@ function PlanSummaryItemInner({
   const { inputCurrencyId, outputCurrencyId, inputCurrencyAmountRaw, outputCurrencyAmountRaw } = typeInfo
   const earnDisplayInfo = useMemo(() => getEarnPlanDisplayInfo(typeInfo), [typeInfo])
   const earnTransactionType = earnDisplayInfo?.transactionType
-  const inputCurrencyInfo = useCurrencyInfo(inputCurrencyId)
-  const outputCurrencyInfo = useCurrencyInfo(outputCurrencyId)
+  const { marginAction } = typeInfo
+  const inputCurrencyInfo = useCurrencyInfo(
+    marginAction ? getMarginDisplayCurrencyId(marginAction.collateralCurrencyId) : inputCurrencyId,
+  )
+  const outputCurrencyInfo = useCurrencyInfo(
+    marginAction ? getMarginDisplayCurrencyId(marginAction.debtCurrencyId) : outputCurrencyId,
+  )
   const earnCurrencyInfo = useCurrencyInfo(earnDisplayInfo?.currencyId)
   const formatter = useLocalizationContext()
 
@@ -54,6 +60,12 @@ function PlanSummaryItemInner({
 
     if (!inputCurrencyInfo || !outputCurrencyInfo) {
       return ''
+    }
+
+    if (marginAction) {
+      return [inputCurrencyInfo, outputCurrencyInfo]
+        .map((info) => getSymbolDisplayText(info.currency.symbol))
+        .join(' / ')
     }
 
     const { currency: inputCurrency } = inputCurrencyInfo
@@ -83,6 +95,7 @@ function PlanSummaryItemInner({
       />
     )
   }, [
+    marginAction,
     earnCurrencyInfo,
     earnDisplayInfo,
     inputCurrencyInfo,

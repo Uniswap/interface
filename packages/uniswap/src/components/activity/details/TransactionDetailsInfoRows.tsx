@@ -20,6 +20,7 @@ import { useDispatch } from 'react-redux'
 import { UniswapXText } from 'ui/src'
 import { InfoRow } from 'uniswap/src/components/activity/details/InfoRow'
 import { InfoRowActionButton } from 'uniswap/src/components/activity/details/InfoRowActionButton'
+import { getActivityDisplayMarginRows } from 'uniswap/src/components/activity/details/MarginPlanTransactionInfoRows'
 import { getVisiblePlanSteps } from 'uniswap/src/components/activity/details/plan/getVisiblePlanSteps'
 import { getActivityDisplayVaultRows } from 'uniswap/src/components/activity/details/TransactionDetailsInfoRowsVaultRows'
 import { TransactionParticipantRow } from 'uniswap/src/components/activity/details/TransactionParticipantRow'
@@ -110,6 +111,7 @@ function useTransactionDetailsInfoRows({
   if (vaultRows) {
     specificRows.push(...vaultRows)
   }
+  specificRows.push(...getActivityDisplayMarginRows(typeInfo))
 
   switch (typeInfo.type) {
     case TransactionType.Approve:
@@ -296,6 +298,7 @@ function NetworkFeeRow({ transactionDetails }: { transactionDetails: Transaction
         <Flex row centered gap="$spacing4">
           {sponsorInfo?.icon && (
             <UniversalImage
+              alt=""
               size={{ width: iconSizes.icon16, height: iconSizes.icon16 }}
               style={{ image: { borderRadius: borderRadii.roundedFull } }}
               uri={sponsorInfo.icon}
@@ -326,12 +329,15 @@ function TransactionHashRow({
   transactionDetails: TransactionDetails
   openPlanView: () => void
 }): JSX.Element | null {
-  const { hash, chainId, typeInfo } = transactionDetails
+  const { typeInfo } = transactionDetails
   const { t } = useTranslation()
 
   const stepDetails = typeInfo.type === TransactionType.Plan ? typeInfo.stepDetails : undefined
 
-  const stepInfosLength = stepDetails ? getVisiblePlanSteps(stepDetails).length : 0
+  const visibleSteps = stepDetails ? getVisiblePlanSteps(stepDetails) : []
+  const stepInfosLength = visibleSteps.length
+  // A one-transaction plan has no hash of its own, so it links its only step.
+  const { hash, chainId } = (!transactionDetails.hash && stepInfosLength === 1 && visibleSteps[0]) || transactionDetails
   if (stepInfosLength > 1) {
     return (
       <InfoRow key="transactionId" label={t('transaction.details.transactions')}>
@@ -405,16 +411,13 @@ function DappInfoRow({ label, name, iconUrl }: { label: string; name: string; ic
       <Flex row alignItems="flex-start" justifyContent="flex-end" maxWidth="70%" gap="$gap4">
         {iconUrl && (
           <UniversalImage
+            alt=""
             size={{
               width: iconSizes.icon20,
               height: iconSizes.icon20,
               resizeMode: UniversalImageResizeMode.Contain,
             }}
-            style={{
-              image: {
-                borderRadius: borderRadii.roundedFull,
-              },
-            }}
+            style={{ image: { borderRadius: borderRadii.roundedFull } }}
             uri={iconUrl}
           />
         )}
@@ -462,16 +465,13 @@ function FORProviderRow({
   return (
     <InfoRow key="forProvider" label={t('transaction.details.from')}>
       <UniversalImage
+        alt=""
         size={{
           width: iconSizes.icon16,
           height: iconSizes.icon16,
           resizeMode: UniversalImageResizeMode.Contain,
         }}
-        style={{
-          image: {
-            borderRadius: borderRadii.rounded4,
-          },
-        }}
+        style={{ image: { borderRadius: borderRadii.rounded4 } }}
         uri={isDarkMode ? typeInfo.serviceProvider.logoDarkUrl : typeInfo.serviceProvider.logoLightUrl}
       />
       <Text variant="body3">{typeInfo.serviceProvider.name}</Text>

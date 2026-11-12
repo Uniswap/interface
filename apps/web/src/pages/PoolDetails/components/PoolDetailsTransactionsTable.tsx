@@ -35,8 +35,8 @@ import {
   PoolTableTransactionType,
   usePoolTransactions,
 } from '~/features/Explore/state/transactions/usePoolTransactions'
-import { formatPriceWithSubscript } from '~/pages/PoolDetails/components/formatPriceWithSubscript'
 import { ExternalLink, type ExternalLinkProps } from '~/theme/components/Links'
+import { formatPriceWithSubscript } from '~/utils/formatPriceWithSubscript'
 import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
 
 // `stroke` has no compat style prop (it exists only to tint the inline external-link glyph),
@@ -84,13 +84,13 @@ function comparePoolTokens(tokenA: PoolTableTransaction['pool']['token0'], token
 
 export function PoolDetailsTransactionsTable({
   poolAddress,
-  token0,
-  token1,
+  baseToken,
+  quoteToken,
   isPoolDataLoading,
 }: {
   poolAddress: string
-  token0?: ParsedToken
-  token1?: ParsedToken
+  baseToken?: ParsedToken
+  quoteToken?: ParsedToken
   isPoolDataLoading?: boolean
 }) {
   const { t } = useTranslation()
@@ -113,7 +113,7 @@ export function PoolDetailsTransactionsTable({
     address: poolAddress,
     chainId,
     filter,
-    token0Address: token0 ? (token0.address ?? NATIVE_CHAIN_ID) : undefined,
+    baseTokenAddress: baseToken ? (baseToken.address ?? NATIVE_CHAIN_ID) : undefined,
     isPoolDataLoading,
   })
 
@@ -152,10 +152,10 @@ export function PoolDetailsTransactionsTable({
           let text: string
           if (row.type === PoolTableTransactionType.BUY) {
             color = '$statusSuccess'
-            text = `${t('common.buy.label')} ${token0?.symbol}`
+            text = `${t('common.buy.label')} ${baseToken?.symbol}`
           } else if (row.type === PoolTableTransactionType.SELL) {
             color = '$statusCritical'
-            text = `${t('common.sell.label')} ${token0?.symbol}`
+            text = `${t('common.sell.label')} ${baseToken?.symbol}`
           } else {
             color = row.type === PoolTableTransactionType.ADD ? '$statusSuccess' : '$statusCritical'
             text = row.type === PoolTableTransactionType.ADD ? t('common.add.label') : t('common.remove.label')
@@ -222,13 +222,13 @@ export function PoolDetailsTransactionsTable({
           </Cell>
         ),
       }),
-      columnHelper.accessor((row) => (comparePoolTokens(row.pool.token0, token0) ? row.amount0 : row.amount1), {
+      columnHelper.accessor((row) => (comparePoolTokens(row.pool.token0, baseToken) ? row.amount0 : row.amount1), {
         id: 'input-amount',
         maxSize: PoolTransactionColumnWidth[PoolTransactionColumn.InputAmount],
         header: () => (
           <Cell loading={showLoadingSkeleton} justifyContent="flex-end" grow>
             <Text variant="body3" color="$neutral1">
-              {token0?.symbol}
+              {baseToken?.symbol}
             </Text>
           </Cell>
         ),
@@ -246,13 +246,13 @@ export function PoolDetailsTransactionsTable({
           </Cell>
         ),
       }),
-      columnHelper.accessor((row) => (comparePoolTokens(row.pool.token0, token0) ? row.amount1 : row.amount0), {
+      columnHelper.accessor((row) => (comparePoolTokens(row.pool.token0, baseToken) ? row.amount1 : row.amount0), {
         id: 'output-amount',
         maxSize: PoolTransactionColumnWidth[PoolTransactionColumn.OutputAmount],
         header: () => (
           <Cell loading={showLoadingSkeleton} justifyContent="flex-end" grow>
             <Text variant="body3" color="$neutral1">
-              {token1?.symbol}
+              {quoteToken?.symbol}
             </Text>
           </Cell>
         ),
@@ -304,8 +304,8 @@ export function PoolDetailsTransactionsTable({
     formatNumberOrString,
     locale,
     showLoadingSkeleton,
-    token0,
-    token1?.symbol,
+    baseToken,
+    quoteToken?.symbol,
     t,
   ])
 

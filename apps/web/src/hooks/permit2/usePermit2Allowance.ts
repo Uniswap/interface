@@ -6,9 +6,9 @@ import { useAccount } from '~/connection/hooks/useAccount'
 import { PermitSignature, usePermitAllowance, useUpdatePermitAllowance } from '~/hooks/permit2/usePermitAllowance'
 import { useRevokeTokenAllowance, useTokenAllowance, useUpdateTokenAllowance } from '~/hooks/permit2/useTokenAllowance'
 import { useInterval } from '~/lib/hooks/useInterval'
-import { TradeFillType } from '~/state/routing/types'
 import { useTransactionAdderFromHash } from '~/state/transactions/adder'
 import { useHasPendingApproval, useHasPendingRevocation } from '~/state/transactions/hooks'
+import { TradeFillType } from '~/types/trade'
 
 enum ApprovalState {
   PENDING = 0,

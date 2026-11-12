@@ -77,7 +77,9 @@ import {
   type ButtonIconPosition,
 } from './compile'
 import { hasButtonCompatDimensions } from './dimensions'
+import { hitSlopAreaStyle } from './hit-slop'
 import { buttonCompatNativeDimensions, buttonCompatNativeDroppedDimensionNames } from './native-dimensions'
+import { useButtonNativePress } from './native-press'
 import type { ButtonCompatProps, ButtonTextProps } from './native-props'
 import { PRESS_SCALE } from './press-scale'
 import { buttonTextCallerColor, buttonTextDroppedStyleNames } from './text-props'
@@ -323,10 +325,7 @@ const ButtonComponent = forwardRef<View, ButtonCompatProps>(function ButtonCompa
     href,
     target,
     rel,
-    // Wired directly onto the Pressable (INFRA-3750, the mobile
-    // LandingScreen.tsx create-account CTA): unlike the dimension slice below,
-    // hitSlop compiles to no class on either leg, so it rides its own
-    // destructure rather than the picked dimension props.
+    // INFRA-3750: no class on either leg. Host hitSlop is iOS's hit rect; Android needs the slop child (./hit-slop).
     hitSlop,
     'dd-action-name': ddActionName,
     // Inert with NO dev-warning — legacy parity, not a drop (the rationale lives on
@@ -372,6 +371,14 @@ const ButtonComponent = forwardRef<View, ButtonCompatProps>(function ButtonCompa
     setPressed(false)
     scale.value = withSporeCurve('fast', 1)
   }, [scale])
+
+  const blocked = isDisabled && !interactiveWhileDisabled
+  const pressProps = useButtonNativePress({
+    pressHandler,
+    blocked,
+    onPressIn: handlePressIn,
+    onPressOut: handlePressOut,
+  })
 
   const handleHoverIn = useCallback(() => {
     if (isDisabled && !interactiveWhileDisabled) {
@@ -447,16 +454,15 @@ const ButtonComponent = forwardRef<View, ButtonCompatProps>(function ButtonCompa
     <ButtonContext.Provider value={ctx}>
       <AnimatedPressable
         accessibilityRole="button"
-        accessibilityState={{ disabled: isDisabled || undefined }}
+        // Not while onDisabledPress keeps it interactive: Android maps this flag to setEnabled(false).
+        accessibilityState={{ disabled: blocked || undefined }}
         className={frameClassName}
         dd-action-name={ddActionName ?? (typeof children === 'string' ? children : undefined)}
-        disabled={isDisabled && !interactiveWhileDisabled}
+        disabled={blocked}
         hitSlop={hitSlop}
         onHoverIn={handleHoverIn}
         onHoverOut={handleHoverOut}
-        onPress={pressHandler}
-        onPressIn={handlePressIn}
-        onPressOut={handlePressOut}
+        {...pressProps}
         ref={ref}
         style={[
           frameStyle,
@@ -476,6 +482,7 @@ const ButtonComponent = forwardRef<View, ButtonCompatProps>(function ButtonCompa
         ]}
         testID={testID}
       >
+        {hitSlop ? <View collapsable={false} style={hitSlopAreaStyle(hitSlop)} /> : null}
         {!loading && icon ? <ButtonIcon>{icon}</ButtonIcon> : null}
         {loading ? <ButtonSpinner /> : null}
         {isTextChild ? <ButtonText lineHeightDisabled={lineHeightDisabled}>{children}</ButtonText> : children}

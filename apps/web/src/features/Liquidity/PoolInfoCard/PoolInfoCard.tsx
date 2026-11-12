@@ -11,7 +11,8 @@ import { type ComponentProps, type ReactNode, useCallback, useMemo, useState } f
 import { useTranslation } from 'react-i18next'
 import { v2TokenToCurrency } from 'uniswap/src/features/dataApi/utils/parsedToken'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { getWrappedTokenIfExists } from 'uniswap/src/utils/currency'
+import { getPoolName } from 'uniswap/src/features/pools/names'
+import { orderPoolDataByQuoteToken } from 'uniswap/src/features/pools/quoteToken'
 import { NumberType } from 'utilities/src/format/types'
 import { getPriceBounds } from '~/components/Charts/PriceChart/utils'
 import { LineChart } from '~/components/Charts/SparklineChart/LineChart'
@@ -219,7 +220,7 @@ export function PoolStatsContent({
   sparklineWidth,
 }: {
   poolData: PoolData
-  /** The pool's tokens as the flow displays them (e.g. ETH for a v2/v3 WETH leg), in either order; served tokens when absent. */
+  /** The pool's tokens as the flow displays them (e.g. ETH for a v2/v3 WETH leg); served tokens when absent. */
   currency0?: Maybe<Currency>
   currency1?: Maybe<Currency>
   sparklineWidth?: number
@@ -229,22 +230,10 @@ export function PoolStatsContent({
   const rewards = toPoolRewardAprEntries(poolData.rewardTokens)
   const [servedCurrency0, servedCurrency1] = useServedLogos(poolData).map((logo) => logo.currency)
 
-  // The price below is token1 per token0, so its labels must follow pool order even when the pair
-  // arrives in display order. Exact identity outranks a shared wrapped form so an ETH/WETH pool
-  // still orients correctly.
-  const wrappedServed0 = getWrappedTokenIfExists(servedCurrency0)
-  const rankAsToken0 = (currency: Currency): number => {
-    if (servedCurrency0 && currency.equals(servedCurrency0)) {
-      return 2
-    }
-    return wrappedServed0 && getWrappedTokenIfExists(currency)?.equals(wrappedServed0) ? 1 : 0
-  }
+  // The price below is token1 per token0, so its labels are in pool order. All-or-nothing: a
+  // half-passed pair would label one leg as ETH and the other as served WETH.
   const [labelCurrency0, labelCurrency1] =
-    currency0 && currency1
-      ? rankAsToken0(currency1) > rankAsToken0(currency0)
-        ? [currency1, currency0]
-        : [currency0, currency1]
-      : [servedCurrency0, servedCurrency1]
+    currency0 && currency1 ? [currency0, currency1] : [servedCurrency0, servedCurrency1]
   const symbol0 = labelCurrency0?.symbol ?? poolData.token0.symbol
   const symbol1 = labelCurrency1?.symbol ?? poolData.token1.symbol
 
@@ -309,8 +298,7 @@ export function PoolStatsContent({
 
 /**
  * The pool's served token logos, each tied to its currency so DoubleCurrencyLogo can skip its
- * per-token lookup whatever order the currencies arrive in (ExpandablePoolInfo's callers pass
- * display order, which can be the reverse of the pool's sorted token0/token1).
+ * per-token lookup whatever order the currencies are rendered in.
  */
 function useServedLogos(poolData: PoolData | undefined): ServedLogo[] {
   return useMemo(
@@ -325,29 +313,56 @@ function useServedLogos(poolData: PoolData | undefined): ServedLogo[] {
   )
 }
 
+/**
+ * The pair in display order, base then quote. All-or-nothing: a half-passed pair would render one
+ * leg as ETH and the other as served WETH, so it falls back to the served tokens ordered by quote.
+ */
+function getDisplayPair({
+  poolData,
+  servedLogos,
+  baseCurrency,
+  quoteCurrency,
+}: {
+  poolData: PoolData | undefined
+  servedLogos: ServedLogo[]
+  baseCurrency: Maybe<Currency>
+  quoteCurrency: Maybe<Currency>
+}): [Currency | undefined, Currency | undefined] {
+  if (baseCurrency && quoteCurrency) {
+    return [baseCurrency, quoteCurrency]
+  }
+  return orderPoolDataByQuoteToken({
+    token0IsQuote: poolData?.isToken0Quote,
+    data0: servedLogos[0]?.currency,
+    data1: servedLogos[1]?.currency,
+  })
+}
+
 export function PoolInfoCard({
   poolData,
   loading,
   onAddLiquidity,
-  currency0: displayCurrency0,
-  currency1: displayCurrency1,
+  currency0,
+  currency1,
+  baseCurrency,
+  quoteCurrency,
 }: {
   poolData?: PoolData
   loading?: boolean
   onAddLiquidity?: () => void
-  /** The pool's token0/token1 as the surrounding flow displays them (e.g. ETH for a v2/v3 WETH leg). */
+  /** The pool's token0/token1 as the flow displays them (e.g. ETH for a v2/v3 WETH leg); served tokens when absent. */
   currency0?: Maybe<Currency>
   currency1?: Maybe<Currency>
+  /** The same pair in display order, base then quote; served tokens ordered by the pool's quote when absent. */
+  baseCurrency?: Maybe<Currency>
+  quoteCurrency?: Maybe<Currency>
 }) {
   const { t } = useTranslation()
   const headerHeight = useAppHeaderHeight()
   const servedLogos = useServedLogos(poolData)
-  // All-or-nothing: a half-passed pair would render one leg as ETH and the other as served WETH.
-  const [currency0, currency1] =
-    displayCurrency0 && displayCurrency1
-      ? [displayCurrency0, displayCurrency1]
-      : servedLogos.map((logo) => logo.currency)
-  const chainId = (currency0?.chainId ?? currency1?.chainId) as UniverseChainId | undefined
+  const [displayBase, displayQuote] = getDisplayPair({ poolData, servedLogos, baseCurrency, quoteCurrency })
+  const chainId = (displayBase?.chainId ?? displayQuote?.chainId) as UniverseChainId | undefined
+  const poolName = getPoolName({ symbol0: displayBase?.symbol, symbol1: displayQuote?.symbol, spaced: true })
 
   if (!poolData) {
     if (loading) {
@@ -368,10 +383,10 @@ export function PoolInfoCard({
       gap="$spacing16"
     >
       <Flex row gap="$spacing18" alignItems="center">
-        <DoubleCurrencyLogo currencies={[currency0, currency1]} servedLogos={servedLogos} size={48} />
+        <DoubleCurrencyLogo currencies={[displayBase, displayQuote]} servedLogos={servedLogos} size={48} />
         <Flex gap="$spacing4">
           <Text variant="subheading1" color="$neutral1" testID={TestID.PoolPairLabel}>
-            {currency0?.symbol} / {currency1?.symbol}
+            {poolName}
           </Text>
           <Flex row flexWrap="wrap" gap="$spacing2">
             <LiquidityPositionInfoBadges
@@ -379,6 +394,7 @@ export function PoolInfoCard({
               v4hook={poolData.hookAddress}
               chainId={chainId}
               feeTier={poolData.feeTier}
+              currentLpFeePips={poolData.currentLpFeePips}
               protocolFeePips={poolData.protocolFeePips}
               size="default"
             />
@@ -400,13 +416,19 @@ export function PoolInfoCard({
 export function ExpandablePoolInfo({
   currency0,
   currency1,
+  baseCurrency,
+  quoteCurrency,
   version,
   v4hook,
   feeTier,
   poolData,
 }: {
-  currency0?: Currency
-  currency1?: Currency
+  /** The pool's token0/token1 as the flow displays them (e.g. ETH for a v2/v3 WETH leg); served tokens when absent. */
+  currency0?: Maybe<Currency>
+  currency1?: Maybe<Currency>
+  /** The same pair in display order, base then quote; served tokens ordered by the pool's quote when absent. */
+  baseCurrency?: Maybe<Currency>
+  quoteCurrency?: Maybe<Currency>
   version?: ComponentProps<typeof LiquidityPositionInfoBadges>['version']
   v4hook?: string
   feeTier?: ComponentProps<typeof LiquidityPositionInfoBadges>['feeTier']
@@ -417,6 +439,7 @@ export function ExpandablePoolInfo({
   const [sparklineWidth, setSparklineWidth] = useState(0)
   const toggleExpand = useCallback(() => setIsExpanded((prev) => !prev), [])
   const servedLogos = useServedLogos(poolData)
+  const [displayBase, displayQuote] = getDisplayPair({ poolData, servedLogos, baseCurrency, quoteCurrency })
 
   return (
     // Measure on the always-rendered outer container (its width matches the inner expanded
@@ -425,23 +448,24 @@ export function ExpandablePoolInfo({
     <Flex gap={isExpanded ? '$gap12' : 0} onLayout={(e) => setSparklineWidth(e.nativeEvent.layout.width)}>
       <Flex row gap="$gap12" alignItems="center">
         <DoubleCurrencyLogo
-          currencies={[currency0, currency1]}
+          currencies={[displayBase, displayQuote]}
           servedLogos={servedLogos}
           size={media.md ? iconSizes.icon44 : iconSizes.icon32}
         />
         <Flex row grow gap="$gap12" $md={{ flexDirection: 'column', gap: '$gap4' }}>
           <Flex row gap="$gap8" alignItems="center" testID={TestID.PoolPairLabel}>
-            <Text variant="subheading1">{currency0?.symbol}</Text>
+            <Text variant="subheading1">{displayBase?.symbol}</Text>
             <Text variant="subheading1">/</Text>
-            <Text variant="subheading1">{currency1?.symbol}</Text>
+            <Text variant="subheading1">{displayQuote?.symbol}</Text>
           </Flex>
           <Flex row gap={2} alignItems="center">
             <LiquidityPositionInfoBadges
               size="small"
               version={version}
               v4hook={v4hook}
-              chainId={(currency0?.chainId ?? currency1?.chainId) as UniverseChainId | undefined}
+              chainId={(displayBase?.chainId ?? displayQuote?.chainId) as UniverseChainId | undefined}
               feeTier={feeTier}
+              currentLpFeePips={poolData.currentLpFeePips}
             />
           </Flex>
         </Flex>

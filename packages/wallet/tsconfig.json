@@ -49,6 +49,6 @@
     }
   ],
   "compilerOptions": {
-    "types": ["chrome", "vitest/globals"]
+    "types": ["chrome", "vitest/globals", "vitest-presets/vitest/jest-extended"]
   }
 }

@@ -1,5 +1,5 @@
 import { createContext, useContext, useMemo, useState, type ReactNode } from 'react'
-import { isEmbedPath } from '~/pages/embedPaths'
+import { isEmbedPath } from '~/utils/embedPaths'
 
 /**
  * Which surface an /embed document renders. Selected by the `view` query param at the

@@ -12,7 +12,8 @@ import {
 import { useStore } from 'zustand'
 
 function planIsNotExecuting(typeInfo: TransactionTypeInfo, status: TransactionStatus): boolean {
-  if (typeInfo.type !== TransactionType.Plan) {
+  // Resume reloads the plan into the swap form; margin plans resume from the margin UI instead.
+  if (typeInfo.type !== TransactionType.Plan || typeInfo.marginAction) {
     return false
   }
 

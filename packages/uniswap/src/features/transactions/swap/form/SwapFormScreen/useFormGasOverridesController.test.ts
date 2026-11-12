@@ -11,6 +11,7 @@ import {
   useSwapFormStore,
   useSwapFormStoreDerivedSwapInfo,
 } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
+import type { Mock } from 'vitest'
 
 vi.mock('uniswap/src/features/gas/hooks/useGasChipDispatch')
 vi.mock(
@@ -31,12 +32,12 @@ vi.mock('utilities/src/react/hooks', () => ({
   useEvent: vi.fn((fn) => fn),
 }))
 
-const mockUseGasChipDispatch = useGasChipDispatch as ReturnType<typeof vi.fn>
-const mockUseTransactionSettingsStore = useTransactionSettingsStore as unknown as ReturnType<typeof vi.fn>
-const mockUseTransactionSettingsActions = useTransactionSettingsActions as ReturnType<typeof vi.fn>
-const mockUseSwapFormScreenStore = useSwapFormScreenStore as unknown as ReturnType<typeof vi.fn>
-const mockUseSwapFormStore = useSwapFormStore as unknown as ReturnType<typeof vi.fn>
-const mockUseSwapFormStoreDerivedSwapInfo = useSwapFormStoreDerivedSwapInfo as unknown as ReturnType<typeof vi.fn>
+const mockUseGasChipDispatch = useGasChipDispatch as Mock
+const mockUseTransactionSettingsStore = useTransactionSettingsStore as unknown as Mock
+const mockUseTransactionSettingsActions = useTransactionSettingsActions as Mock
+const mockUseSwapFormScreenStore = useSwapFormScreenStore as unknown as Mock
+const mockUseSwapFormStore = useSwapFormStore as unknown as Mock
+const mockUseSwapFormStoreDerivedSwapInfo = useSwapFormStoreDerivedSwapInfo as unknown as Mock
 
 describe('useFormGasOverridesController', () => {
   const setGasOverrides = vi.fn()

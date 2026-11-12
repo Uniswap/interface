@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { defineConfig } from 'oxlint'
 
 export const isFastLint = process.env.ENABLE_FAST_LINT === 'true'
@@ -26,7 +27,7 @@ export const rootIgnorePatterns = [
   '**/.react-router/**',
   '**/.source/**',
   '**/.maestro/**',
-  '**/.storybook/storybook.requires.ts',
+  '**/.rnstorybook/storybook.requires.ts',
   '**/babel.*',
   '**/vite.*',
   '**/vitest.config*',
@@ -43,7 +44,7 @@ export const rootIgnorePatterns = [
   'apps/mobile/metro.config.js',
   'apps/mobile/ReactotronConfig.ts',
   'apps/mobile/index.js',
-  'apps/mobile/.storybook/**',
+  'apps/mobile/.rnstorybook/**',
   'apps/mobile/src/polyfills/**',
   // ── apps/web ──
   'apps/web/src/setupTests.ts',
@@ -186,6 +187,11 @@ export const sharedRestrictedImportPaths = [
     name: 'wallet/src',
     message: 'Avoid importing directly from the wallet/src barrel which causes circular imports.',
   },
+  ...['utilities', 'utilities/src', 'utilities/src/index'].map((name) => ({
+    name,
+    message:
+      "utilities/src/index.ts is a catalog for finding helpers, not an import path. Import from the defining file, e.g. 'utilities/src/primitives/string'.",
+  })),
   {
     name: '@uniswap/sdk-core',
     importNames: ['ChainId'],
@@ -321,7 +327,8 @@ const webRestrictedSyntaxSelectors = [
   {
     selector:
       "VariableDeclarator[id.type='ObjectPattern'][init.callee.name='useWeb3React'] > ObjectPattern > Property[key.name='account']",
-    message: "Do not use account directly from useWeb3React. Use the useAccount hook from 'connection/hooks/useAccount' instead.",
+    message:
+      "Do not use account directly from useWeb3React. Use the useAccount hook from 'connection/hooks/useAccount' instead.",
   },
   {
     selector:
@@ -351,8 +358,94 @@ const jsxPropOrderConfig = [
   },
 ] as const
 
+// Every jsx-a11y rule is listed so its level is deliberate: enabling the plugin also turns on
+// all of its correctness-category rules at the category default.
+const jsxA11yErrorRules = {
+  'jsx-a11y/alt-text': 'error',
+  'jsx-a11y/anchor-has-content': 'error',
+  // TouchableTextLink takes its href as `link`.
+  'jsx-a11y/anchor-is-valid': ['error', { specialLink: ['link'] }],
+  'jsx-a11y/aria-activedescendant-has-tabindex': 'error',
+  'jsx-a11y/aria-props': 'error',
+  'jsx-a11y/aria-proptypes': 'error',
+  'jsx-a11y/aria-role': 'error',
+  'jsx-a11y/aria-unsupported-elements': 'error',
+  'jsx-a11y/autocomplete-valid': 'error',
+  'jsx-a11y/click-events-have-key-events': 'error',
+  // Compat buttons nest their label (Button > Flex > Button.Text), past the default depth of 2.
+  'jsx-a11y/control-has-associated-label': ['error', { depth: 4 }],
+  'jsx-a11y/heading-has-content': 'error',
+  'jsx-a11y/html-has-lang': 'error',
+  'jsx-a11y/iframe-has-title': 'error',
+  'jsx-a11y/img-redundant-alt': 'error',
+  'jsx-a11y/interactive-supports-focus': 'error',
+  'jsx-a11y/label-has-associated-control': 'error',
+  'jsx-a11y/lang': 'error',
+  'jsx-a11y/media-has-caption': 'error',
+  'jsx-a11y/mouse-events-have-key-events': 'error',
+  'jsx-a11y/no-access-key': 'error',
+  'jsx-a11y/no-aria-hidden-on-focusable': 'error',
+  'jsx-a11y/no-autofocus': 'error',
+  'jsx-a11y/no-distracting-elements': 'error',
+  'jsx-a11y/no-interactive-element-to-noninteractive-role': 'error',
+  'jsx-a11y/no-noninteractive-element-interactions': 'error',
+  'jsx-a11y/no-noninteractive-element-to-interactive-role': 'error',
+  'jsx-a11y/no-noninteractive-tabindex': 'error',
+  'jsx-a11y/no-redundant-roles': 'error',
+  'jsx-a11y/no-static-element-interactions': 'error',
+  'jsx-a11y/role-has-required-aria-props': 'error',
+  'jsx-a11y/role-supports-aria-props': 'error',
+  'jsx-a11y/scope': 'error',
+  'jsx-a11y/tabindex-no-positive': 'error',
+  'jsx-a11y/anchor-ambiguous-text': 'warn',
+  // Misfires on the compat layer (would swap role="status" for <output>, role="checkbox" for <input>).
+  'jsx-a11y/prefer-tag-over-role': 'off',
+} as const
+
+// Every rule at warn, including prefer-tag-over-role, which is off in the shared layer only.
+const jsxA11yWarnRules = Object.fromEntries(
+  Object.entries(jsxA11yErrorRules).map(([rule, config]) => [
+    rule,
+    Array.isArray(config) ? ['warn', ...config.slice(1)] : 'warn',
+  ]),
+) as Record<keyof typeof jsxA11yErrorRules, 'warn' | readonly ['warn', ...unknown[]]>
+
+const jsxA11yOffRules = Object.fromEntries(
+  Object.keys(jsxA11yErrorRules).map((rule) => [rule, 'off' as const]),
+) as Record<keyof typeof jsxA11yErrorRules, 'off'>
+
 export default defineConfig({
   plugins: ['react', 'typescript', 'import', 'jest', 'vitest', 'unicorn'],
+  // One global table: TouchableArea counts as a button even in anchor mode. UniversalImage
+  // is left out: its type requires `alt` or `decorative`, which alt-text can't read.
+  settings: {
+    'jsx-a11y': {
+      polymorphicPropName: 'tag',
+      components: {
+        Image: 'img',
+        Anchor: 'a',
+        AnchorCompat: 'a',
+        TouchableTextLink: 'a',
+        TouchableTextLinkCompat: 'a',
+        Input: 'input',
+        InputCompat: 'input',
+        TextInput: 'input',
+        Textarea: 'textarea',
+        Label: 'label',
+        FieldLabel: 'label',
+        Button: 'button',
+        ButtonCompat: 'button',
+        DropdownButton: 'button',
+        DropdownButtonCompat: 'button',
+        IconButton: 'button',
+        IconButtonCompat: 'button',
+        TouchableArea: 'button',
+        TouchableAreaCompat: 'button',
+        AnimatedTouchableArea: 'button',
+        AnimatedTouchableAreaCompat: 'button',
+      },
+    },
+  },
   jsPlugins: isFastLint
     ? []
     : [
@@ -658,6 +751,7 @@ export default defineConfig({
       'universe-custom/no-platform-gate-in-chain-flags': 'error',
       'universe-custom/styled-factory-literal-classes': 'error',
       'universe-custom/prefer-use-is-mounted': 'error',
+      'universe-custom/prefer-utilities-sleep': 'error',
       'universe-custom/no-wallet-secrets-in-state': 'error',
       // typed-redux-saga
       '@jambit/typed-redux-saga/use-typed-effects': 'error',
@@ -709,7 +803,7 @@ export default defineConfig({
     },
     // ── Storybook: allow alerts ───────────────────────────────────────
     {
-      files: ['**/*.stories.*', '**/.storybook/**'],
+      files: ['**/*.stories.*', '**/.storybook/**', '**/.rnstorybook/**'],
       rules: {
         'no-alert': 'off',
       },
@@ -744,6 +838,16 @@ export default defineConfig({
     // decision from this gate.
     ...(!isFastLint
       ? [
+          {
+            // Backend clients and services: an upstream failure rethrows; absence is isRpcNotFound only.
+            files: [
+              'apps/mission-control/app/lib/services/**/*.ts',
+              'apps/mission-control/app/features/**/api/**/*.ts',
+            ],
+            rules: {
+              'universe-custom/no-swallowed-upstream-error': 'error' as const,
+            },
+          },
           {
             files: [
               'apps/web/**/*.ts',
@@ -894,11 +998,13 @@ export default defineConfig({
           'error',
           {
             paths: [
+              ...sharedRestrictedImportPaths,
               {
                 name: 'src/lib/github/auth',
                 message: 'Token handling is background-only. Send a message through src/lib/messaging.ts instead.',
               },
             ],
+            patterns: sharedRestrictedImportPatterns,
           },
         ],
       },
@@ -1134,7 +1240,10 @@ export default defineConfig({
     // ── apps/web ──────────────────────────────────────────────────────
     {
       files: ['apps/web/**'],
+      // jsx-a11y at warn until each flow directory is fixed and promoted.
+      plugins: ['jsx-a11y'],
       rules: {
+        ...jsxA11yWarnRules,
         'typescript/explicit-function-return-type': 'off',
         'typescript/no-floating-promises': 'off',
       },
@@ -1369,6 +1478,8 @@ export default defineConfig({
           // The prototypes were left out of the useIsMounted migration, so the
           // exclusion goes away with them (or with a follow-up labs sweep).
           'universe-custom/prefer-use-is-mounted': 'off' as const,
+          // labs/ can't depend on utilities, so there is no shared sleep to use.
+          'universe-custom/prefer-utilities-sleep': 'off' as const,
           // Promoted to error at root; labs/ has not been cleaned up yet.
           'eslint-js/no-undef-init': 'warn' as const,
         }),
@@ -1449,6 +1560,12 @@ export default defineConfig({
     },
 
     // ── packages/uniswap ──────────────────────────────────────────────
+    {
+      files: ['packages/uniswap/**'],
+      // jsx-a11y at warn until each flow directory is fixed and promoted.
+      plugins: ['jsx-a11y'],
+      rules: jsxA11yWarnRules,
+    },
     ...(!isFastLint
       ? [
           {
@@ -1497,7 +1614,9 @@ export default defineConfig({
     // ── packages/ui ───────────────────────────────────────────────────
     {
       files: ['packages/ui/**'],
+      plugins: ['jsx-a11y'],
       rules: {
+        ...jsxA11yErrorRules,
         'no-restricted-imports': [
           'error',
           {
@@ -1559,7 +1678,9 @@ export default defineConfig({
     // ── packages/mycelium ─────────────────────────────────────────────
     {
       files: ['packages/mycelium/**'],
+      plugins: ['jsx-a11y'],
       rules: {
+        ...jsxA11yErrorRules,
         'no-restricted-imports': [
           'error',
           {
@@ -1652,7 +1773,10 @@ export default defineConfig({
     // ═══════════════════════════════════════════════════════════════════
     {
       files: ['**/*.test.ts', '**/*.test.tsx', '**/*.spec.ts', '**/*.spec.tsx', '**/test/**', '**/tests/**'],
+      // Fixtures build deliberately bare markup to probe behaviour; axe in the test is the a11y check.
+      plugins: ['jsx-a11y'],
       rules: {
+        ...jsxA11yOffRules,
         'max-nested-callbacks': 'off',
         complexity: 'off',
         'max-depth': 'off',

@@ -230,10 +230,10 @@ export const createPriceActions = ({
     }, CHART_BEHAVIOR.ANIMATION_DURATION)
   },
 
-  incrementMax: ({ tickSpacing, baseCurrency, quoteCurrency, protocolVersion }: TickNavigationParams) => {
+  incrementMax: ({ tickSpacing, baseCurrency, quoteCurrency, protocolVersion }: TickNavigationParams): boolean => {
     const { maxTick, actions, renderingContext } = get()
     if (maxTick === undefined) {
-      return
+      return false
     }
 
     const result = navigateTick({
@@ -246,19 +246,20 @@ export const createPriceActions = ({
       liquidityData: renderingContext?.liquidityData,
     })
     if (!result) {
-      return
+      return false
     }
 
     const newTick = result.tick
 
     actions.setChartState({ maxTick: newTick })
     actions.handleTickChange({ changeType: 'max', tick: newTick })
+    return newTick !== maxTick
   },
 
-  decrementMax: ({ tickSpacing, baseCurrency, quoteCurrency, protocolVersion }: TickNavigationParams) => {
+  decrementMax: ({ tickSpacing, baseCurrency, quoteCurrency, protocolVersion }: TickNavigationParams): boolean => {
     const { maxTick, actions, renderingContext } = get()
     if (maxTick === undefined) {
-      return
+      return false
     }
 
     const result = navigateTick({
@@ -271,19 +272,20 @@ export const createPriceActions = ({
       liquidityData: renderingContext?.liquidityData,
     })
     if (!result) {
-      return
+      return false
     }
 
     const newTick = result.tick
 
     actions.setChartState({ maxTick: newTick })
     actions.handleTickChange({ changeType: 'max', tick: newTick })
+    return newTick !== maxTick
   },
 
-  incrementMin: ({ tickSpacing, baseCurrency, quoteCurrency, protocolVersion }: TickNavigationParams) => {
+  incrementMin: ({ tickSpacing, baseCurrency, quoteCurrency, protocolVersion }: TickNavigationParams): boolean => {
     const { minTick, actions, renderingContext } = get()
     if (minTick === undefined) {
-      return
+      return false
     }
 
     const result = navigateTick({
@@ -296,19 +298,20 @@ export const createPriceActions = ({
       liquidityData: renderingContext?.liquidityData,
     })
     if (!result) {
-      return
+      return false
     }
 
     const newTick = result.tick
 
     actions.setChartState({ minTick: newTick })
     actions.handleTickChange({ changeType: 'min', tick: newTick })
+    return newTick !== minTick
   },
 
-  decrementMin: ({ tickSpacing, baseCurrency, quoteCurrency, protocolVersion }: TickNavigationParams) => {
+  decrementMin: ({ tickSpacing, baseCurrency, quoteCurrency, protocolVersion }: TickNavigationParams): boolean => {
     const { minTick, actions, renderingContext } = get()
     if (minTick === undefined) {
-      return
+      return false
     }
 
     const result = navigateTick({
@@ -321,13 +324,14 @@ export const createPriceActions = ({
       liquidityData: renderingContext?.liquidityData,
     })
     if (!result) {
-      return
+      return false
     }
 
     const newTick = result.tick
 
     actions.setChartState({ minTick: newTick })
     actions.handleTickChange({ changeType: 'min', tick: newTick })
+    return newTick !== minTick
   },
 
   syncCurrentTickFromParent: ({

@@ -8,6 +8,7 @@ import {
   PROD_ENTRY_GATEWAY_API_BASE_URL,
   STAGING_ENTRY_GATEWAY_API_BASE_URL,
 } from '@universe/api/src/clients/base/entryGatewayUrls'
+import { escapeRegExp } from 'utilities/src/primitives/string'
 
 const ENTRY_GATEWAY_PROXY_PATH = '/entry-gateway'
 
@@ -110,7 +111,7 @@ function createEntryGatewayProxy(
 ): ProxyOptions {
   const { getLogger } = ctx
   // oxlint-disable-next-line security/detect-non-literal-regexp
-  const stripPrefix = new RegExp(`^${pathPrefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`)
+  const stripPrefix = new RegExp(`^${escapeRegExp(pathPrefix)}`)
   return {
     target,
     changeOrigin: true,

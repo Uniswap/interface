@@ -3,6 +3,7 @@ import {
   UNITAG_ELIGIBILITY_TIMEOUT_MS,
 } from 'src/screens/Onboarding/resolveUnitagEligibility'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { sleep } from 'utilities/src/time/timing'
 
 describe(resolveUnitagEligibility, () => {
   beforeEach(() => {
@@ -14,9 +15,7 @@ describe(resolveUnitagEligibility, () => {
   })
 
   it('waits for an eligible answer that arrives after the old five-second cutoff', async () => {
-    const resolution = resolveUnitagEligibility(
-      () => new Promise((resolve) => setTimeout(() => resolve(true), 6 * ONE_SECOND_MS)),
-    )
+    const resolution = resolveUnitagEligibility(() => sleep(6 * ONE_SECOND_MS).then(() => true))
 
     await vi.advanceTimersByTimeAsync(6 * ONE_SECOND_MS)
 

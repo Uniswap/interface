@@ -3,8 +3,8 @@ import { useCallback } from 'react'
 import { shuffleArray } from 'uniswap/src/components/IconCloud/utils'
 import { type RestTokens, useRestTokensQuery } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
+import { approvedERC20, InteractiveToken } from '~/constants/approvedTokens'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
-import { approvedERC20, InteractiveToken } from '~/pages/Landing/assets/approvedTokens'
 
 const tokenList = shuffleArray(approvedERC20) as InteractiveToken[]
 

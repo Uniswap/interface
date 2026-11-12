@@ -241,7 +241,7 @@ function createAnvilManager(chainId: number, configOverrides?: Partial<AnvilConf
       console.warn(`Anvil health check failed (attempt ${attempt + 1}/${maxAttempts}): ${result.error}`)
 
       if (attempt < maxAttempts - 1) {
-        await new Promise((resolve) => setTimeout(resolve, delay))
+        await sleep(delay)
         delay = Math.min(delay * 2, maxDelay)
       }
     }

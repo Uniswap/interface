@@ -201,7 +201,7 @@ export const PopoverClose = forwardRef<HTMLDivElement, PopoverCloseProps>(functi
   }
 
   return (
-    // oxlint-disable-next-line react/forbid-elements -- the rebuilt close IS the raw DOM boundary (no Tamagui Flex here)
+    // oxlint-disable-next-line react/forbid-elements, jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions -- the rebuilt close IS the raw DOM boundary (no Tamagui Flex here); keyboard users reach it through the focusable child's click bubbling up
     <div
       ref={ref}
       data-slot="ui-popover-close"

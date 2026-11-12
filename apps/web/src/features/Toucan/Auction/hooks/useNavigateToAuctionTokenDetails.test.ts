@@ -15,7 +15,7 @@ import {
 const mockNavigate = vi.fn()
 const mockPrefetchAuction = vi.fn()
 vi.mock('react-router', () => ({ useNavigate: () => mockNavigate }))
-vi.mock('~/pages/TokenDetails/hooks/usePrefetchTokenDetailsAuction', () => ({
+vi.mock('~/features/Toucan/hooks/usePrefetchTokenDetailsAuction', () => ({
   usePrefetchTokenDetailsAuction: () => mockPrefetchAuction,
 }))
 vi.mock('~/features/Toucan/Auction/hooks/useAuctionDisplayState', () => ({ useAuctionDisplayState: vi.fn() }))

@@ -6,13 +6,13 @@ import {
   TransactionType,
   UniswapXOrderDetails,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { useOpenLimitOrders } from '~/components/AccountDrawer/MiniPortfolio/Activity/hooks'
+import { useOpenLimitOrders } from '~/components/Activity/hooks'
 import { OpenLimitOrdersButton } from '~/pages/Swap/Limit/OpenLimitOrdersButton'
 import { mocked } from '~/test-utils/mocked'
 import { fireEvent, render, screen } from '~/test-utils/render'
 
-vi.mock('~/components/AccountDrawer/MiniPortfolio/Activity/hooks', async () => {
-  const actual = await vi.importActual('~/components/AccountDrawer/MiniPortfolio/Activity/hooks')
+vi.mock('~/components/Activity/hooks', async () => {
+  const actual = await vi.importActual('~/components/Activity/hooks')
   return {
     ...actual,
     useOpenLimitOrders: vi.fn(),

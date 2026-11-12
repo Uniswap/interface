@@ -1,6 +1,7 @@
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
 import { describe, expect, it } from 'vitest'
+import { RaiseCurrency } from '~/features/Toucan/utils/raiseCurrency'
 import { getLaunchThreshold, quoteRaiseAtFloor } from '~/pages/Liquidity/CreateAuction/launchThreshold'
 import { minimumAuctionSupplyDeposit } from '~/pages/Liquidity/CreateAuction/store/postAuctionLiquidityAllocationState'
 import {
@@ -8,7 +9,6 @@ import {
   MAX_CUSTOM_PRICE_RANGE_ENTRIES,
   type PostAuctionLiquidityAllocation,
   PostAuctionLiquidityAllocationType,
-  RaiseCurrency,
   UNBOUNDED_TIER_ID,
 } from '~/pages/Liquidity/CreateAuction/types'
 import {

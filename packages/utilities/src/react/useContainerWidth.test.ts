@@ -1,10 +1,11 @@
 import { act, renderHook } from '@testing-library/react'
 import { useContainerWidth } from 'utilities/src/react/useContainerWidth'
+import type { Mock } from 'vitest'
 
 describe('useContainerWidth', () => {
   let observerCallback: ResizeObserverCallback
-  let mockObserve: ReturnType<typeof vi.fn>
-  let mockDisconnect: ReturnType<typeof vi.fn>
+  let mockObserve: Mock
+  let mockDisconnect: Mock
 
   beforeEach(() => {
     mockObserve = vi.fn()
@@ -12,7 +13,7 @@ describe('useContainerWidth', () => {
     Object.defineProperty(globalThis, 'ResizeObserver', {
       writable: true,
       configurable: true,
-      value: vi.fn().mockImplementation((cb: ResizeObserverCallback) => {
+      value: vi.fn(function (cb: ResizeObserverCallback) {
         observerCallback = cb
         return { observe: mockObserve, disconnect: mockDisconnect, unobserve: vi.fn() }
       }),

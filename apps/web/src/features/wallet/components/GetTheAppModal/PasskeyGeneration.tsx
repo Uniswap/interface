@@ -8,6 +8,7 @@ import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import { useEvent } from 'utilities/src/react/hooks'
+import { sleep } from 'utilities/src/time/timing'
 import { Page } from '~/features/wallet/components/GetTheAppModal/constants'
 import { ModalContent } from '~/features/wallet/components/GetTheAppModal/Content'
 import { PasskeyIconHeader } from '~/features/wallet/components/GetTheAppModal/PasskeyIconHeader'
@@ -31,7 +32,7 @@ export function PasskeyGenerationModal({
 
   const onSuccess = useEvent(async () => {
     setHasWalletCreationSuccess(true)
-    await new Promise((resolve) => setTimeout(resolve, 500)) // show success state for 500ms
+    await sleep(500) // show success state for 500ms
     closeModal()
     setPage(Page.DownloadApp)
   })

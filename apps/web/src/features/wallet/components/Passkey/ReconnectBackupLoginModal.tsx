@@ -12,7 +12,7 @@ import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useEvent } from 'utilities/src/react/hooks'
-import { useListAuthenticatorsQuery } from '~/components/AccountDrawer/PasskeyMenu/hooks/useListAuthenticatorsQuery'
+import { useListAuthenticatorsQuery } from '~/features/wallet/components/AccountDrawer/PasskeyMenu/hooks/useListAuthenticatorsQuery'
 import { ConfirmPasscodeExtra, SuccessStep } from '~/features/wallet/components/Passkey/AddBackupLoginFinalSteps'
 import {
   EmailCodeStep,

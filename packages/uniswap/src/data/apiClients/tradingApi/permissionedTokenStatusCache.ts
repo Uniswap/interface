@@ -13,7 +13,7 @@ import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 //
 // Until then: the trading-API header builder runs synchronously when a quote fires, so it can't
 // await `/permissions`. On a cold form the wallet-keyed `/permissions` cache hasn't resolved yet,
-// so the first quote for a permissioned token would ship the default 2.0/2.1.1 header and fail
+// so the first quote for a permissioned token would ship no version header and fail
 // until a later poll. We avoid that by remembering confirmed-permissioned tokens here, keyed by
 // (chainId, token), persisted across reloads (see the `meta.persist` default registered on
 // `SharedQueryClient`). Once a token is confirmed permissioned it stays permissioned (monotonic),

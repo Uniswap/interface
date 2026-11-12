@@ -60,6 +60,15 @@ describe('parseLiquidityServicePool', () => {
     expect(data.feeTier?.isDynamic).toBe(true)
   })
 
+  it('passes the served current LP fee through, unset when the backend has none', () => {
+    const dynamic = { feeTier: DYNAMIC_FEE_AMOUNT, isDynamicFee: true, tickSpacing: 200 }
+    expect(
+      parseLiquidityServicePool(poolSummary({ ...dynamic, currentLpFee: 7000 }), UniverseChainId.Mainnet)
+        .currentLpFeePips,
+    ).toBe(7000)
+    expect(parseLiquidityServicePool(poolSummary(dynamic), UniverseChainId.Mainnet).currentLpFeePips).toBeUndefined()
+  })
+
   // V2 has no onchain fee tier — the backend leaves it at the proto3 default 0, so we backfill the
   // protocol's constant 0.30%.
   it('backfills the v2 default fee tier for a v2 pair whose served tier is 0', () => {
@@ -87,6 +96,18 @@ describe('parseLiquidityServicePool', () => {
 
   // True-optional on the wire: an absent value means "unavailable", and the FE never computes one,
   // so it must not collapse to 0 — a served 0 is the real fee-switch-off value.
+  it('flags token0 as the quote only when the backend serves it as the quote token', () => {
+    const token0 = '0x1111111111111111111111111111111111111111'
+    const token1 = '0x2222222222222222222222222222222222222222'
+    expect(
+      parseLiquidityServicePool(poolSummary({ quoteTokenAddress: token0 }), UniverseChainId.Mainnet).isToken0Quote,
+    ).toBe(true)
+    expect(
+      parseLiquidityServicePool(poolSummary({ quoteTokenAddress: token1 }), UniverseChainId.Mainnet).isToken0Quote,
+    ).toBe(false)
+    expect(parseLiquidityServicePool(poolSummary(), UniverseChainId.Mainnet).isToken0Quote).toBe(false)
+  })
+
   it('carries the served protocol fee and distinguishes a served 0 from an absent one', () => {
     expect(parseLiquidityServicePool(poolSummary({ protocolFee: 500 }), UniverseChainId.Mainnet).protocolFeePips).toBe(
       500,

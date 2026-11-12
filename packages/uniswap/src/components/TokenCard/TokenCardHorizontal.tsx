@@ -15,6 +15,7 @@ export function TokenCardHorizontal({
   symbol,
   pricePercentChange1d,
   sparkline,
+  categoryIds,
   hideNetworkLogo,
 }: TokenCardHorizontalProps): JSX.Element {
   return (
@@ -43,6 +44,7 @@ export function TokenCardHorizontal({
         </Flex>
       </Flex>
       <TokenCardSparkline
+        categoryIds={categoryIds}
         data={sparkline}
         height={TOKEN_CARD_SPARKLINE_HEIGHT_HORIZONTAL}
         isNegative={(pricePercentChange1d ?? 0) < 0}

@@ -215,6 +215,9 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
       refetchInterval: transactionError || hookRejectsRemoval ? false : REMOVE_LIQUIDITY_REFETCH_INTERVAL_MS,
       retry: false,
       enabled: isQueryEnabled && Boolean(decreaseCalldataQueryParams),
+      // The request names a percentage but the calldata encodes absolute liquidity, so a response cached by an
+      // earlier session predates any removal since; drop it once the modal closes so a reopen re-quotes.
+      gcTime: 0,
     }),
   )
 

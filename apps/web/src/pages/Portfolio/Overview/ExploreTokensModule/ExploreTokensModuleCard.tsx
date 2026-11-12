@@ -48,6 +48,7 @@ export const ExploreTokensModuleCard = memo(function ExploreTokensModuleCard({
       priceUsd={token.priceUsd}
       pricePercentChange1d={token.pricePercentChange1d}
       sparkline={token.sparkline}
+      categoryIds={token.categoryIds}
       onPress={onPress}
     />
   )

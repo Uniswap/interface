@@ -1,7 +1,7 @@
 import type { UniverseChainId } from '@universe/chains'
 import { useEffect, useMemo, useState } from 'react'
 import { useUSDCPrice } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
-import type { RaiseCurrency } from '~/pages/Liquidity/CreateAuction/types'
+import type { RaiseCurrency } from '~/features/Toucan/utils/raiseCurrency'
 import { getRaiseCurrencyAsCurrency } from '~/pages/Liquidity/CreateAuction/utils'
 
 /**

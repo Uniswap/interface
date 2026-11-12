@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next'
 import { Navigate, useLocation, useNavigate, useParams } from 'react-router'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { v2TokenToCurrency } from 'uniswap/src/features/dataApi/utils/parsedToken'
+import { orderPoolDataByQuoteToken } from 'uniswap/src/features/pools/quoteToken'
 import type { FeeData } from 'uniswap/src/features/positions/types'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -18,13 +19,19 @@ import { STICKY_HEADER_TOP_GAP } from '~/components/Table/constants'
 import type { PoolData } from '~/data/pools/poolData'
 import { useLiquidityServicePoolData } from '~/data/pools/useLiquidityServicePoolData'
 import { PageLayout } from '~/features/Liquidity/Create/Container'
+import {
+  CreateLiquidityContextProvider,
+  useCreateLiquidityContext,
+} from '~/features/Liquidity/Create/CreateLiquidityContextProvider'
 import { CreatePositionHeader } from '~/features/Liquidity/Create/CreatePositionHeader'
+import { CreatePositionTxContextProvider } from '~/features/Liquidity/Create/CreatePositionTxContext'
 import { getNextFlowStep } from '~/features/Liquidity/Create/flowSteps'
 import { FormStepsWrapper } from '~/features/Liquidity/Create/FormWrapper'
 import { useEntryPointBreadcrumb } from '~/features/Liquidity/Create/hooks/useEntryPointBreadcrumb'
 import { useLiquidityUrlState } from '~/features/Liquidity/Create/hooks/useLiquidityUrlState'
 import { useLPSlippageValue } from '~/features/Liquidity/Create/hooks/useLPSlippageValues'
 import { usePoolProgressSteps } from '~/features/Liquidity/Create/hooks/usePoolProgressSteps'
+import { SharedCreateModals } from '~/features/Liquidity/Create/SharedCreateModals'
 import { PositionFlowStep } from '~/features/Liquidity/Create/types'
 import { parseAsDepositState, parseAsPriceRangeState, parseAsStep } from '~/features/Liquidity/parsers/urlParsers'
 import { PoolInfoCard } from '~/features/Liquidity/PoolInfoCard/PoolInfoCard'
@@ -38,18 +45,12 @@ import { getProtocolVersionFromLabel } from '~/features/Liquidity/utils/protocol
 import { AddLiquidityGeoRestrictionModal } from '~/pages/AddLiquidity/AddLiquidityGeoRestrictionModal'
 import { type FlowState, resolveAddLiquidityRenderGuard } from '~/pages/AddLiquidity/addLiquidityRenderGuard'
 import { PoolBrowser } from '~/pages/AddLiquidity/PoolBrowser'
-import { ADD_LIQUIDITY_PATH } from '~/pages/AddLiquidity/poolLinkParams'
 import { useCreatePoolHrefFromSelection } from '~/pages/AddLiquidity/useCreatePoolHrefFromSelection'
 import { useSeedPositionFromPool } from '~/pages/AddLiquidity/useSeedPositionFromPool'
-import {
-  CreateLiquidityContextProvider,
-  useCreateLiquidityContext,
-} from '~/pages/CreatePosition/CreateLiquidityContextProvider'
-import { CreatePositionTxContextProvider } from '~/pages/CreatePosition/CreatePositionTxContext'
-import { SharedCreateModals } from '~/pages/CreatePosition/SharedCreateModals'
 import { PoolTableStoreContextProvider } from '~/pages/Explore/tables/Pools/poolTableStore'
 import { MultichainContextProvider } from '~/state/multichain/MultichainContext'
 import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
+import { ADD_LIQUIDITY_PATH } from '~/utils/params/poolLinkParams'
 
 function resolveSelectedProtocolVersion(poolData: PoolData | undefined, fallback: ProtocolVersion): ProtocolVersion {
   if (!poolData) {
@@ -127,6 +128,11 @@ function AddLiquidityContent(): JSX.Element {
         }) ?? undefined,
     }
   }, [poolData, protocolVersion, urlToken0, urlToken1])
+  const [baseToken, quoteToken] = orderPoolDataByQuoteToken({
+    token0IsQuote: poolData?.isToken0Quote,
+    data0: token0,
+    data1: token1,
+  })
 
   // The header CTA sits above the pool browser, so it reads the browser's token selection off the
   // URL and carries it into the create form rather than opening it blank.
@@ -213,6 +219,8 @@ function AddLiquidityContent(): JSX.Element {
                   loading={poolLoading}
                   currency0={token0}
                   currency1={token1}
+                  baseCurrency={baseToken}
+                  quoteCurrency={quoteToken}
                 />
               )}
             </Flex>

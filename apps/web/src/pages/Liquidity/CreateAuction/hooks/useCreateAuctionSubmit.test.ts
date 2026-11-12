@@ -3,6 +3,7 @@ import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { UniverseChainId, AddressStringFormat, normalizeAddress } from '@universe/chains'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { AuctionEventName } from 'uniswap/src/features/telemetry/constants'
+import { ONE_DAY_MS } from 'utilities/src/time/time'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { zeroAddress } from '~/chains'
 import {
@@ -13,7 +14,6 @@ import {
 } from '~/pages/Liquidity/CreateAuction/hooks/useCreateAuctionSubmit'
 import { createCreateAuctionStore } from '~/pages/Liquidity/CreateAuction/store/createCreateAuctionStore'
 import { TokenMode } from '~/pages/Liquidity/CreateAuction/types'
-import { MS_PER_DAY } from '~/pages/Liquidity/CreateAuction/utils/duration'
 
 const WALLET = '0xF570F45f598fD48AF83FABD692629a2caFe899ec'
 
@@ -50,8 +50,8 @@ function buildableParams(overrides: Partial<Params> = {}): Params {
   const { actions } = store.getState()
   actions.commitTokenFormAndAdvance()
   // Relative to `now` so the past-start-time launch guard holds regardless of when the suite runs.
-  actions.setStartTime(new Date(Date.now() + MS_PER_DAY))
-  actions.setEndTime(new Date(Date.now() + 4 * MS_PER_DAY))
+  actions.setStartTime(new Date(Date.now() + ONE_DAY_MS))
+  actions.setEndTime(new Date(Date.now() + 4 * ONE_DAY_MS))
   actions.setFloorPrice('0.1')
   const { tokenForm, configureAuction, customizePool } = store.getState()
   return {
@@ -81,8 +81,8 @@ function existingTokenParams(depositRaw: string, overrides: Partial<Params> = {}
     totalSupply: CurrencyAmount.fromRawAmount(uni, '1000000000000000000000000000'),
   })
   actions.commitTokenFormAndAdvance()
-  actions.setStartTime(new Date(Date.now() + MS_PER_DAY))
-  actions.setEndTime(new Date(Date.now() + 4 * MS_PER_DAY))
+  actions.setStartTime(new Date(Date.now() + ONE_DAY_MS))
+  actions.setEndTime(new Date(Date.now() + 4 * ONE_DAY_MS))
   actions.setFloorPrice('0.1')
   actions.setAuctionConfig({ auctionSupplyAmount: CurrencyAmount.fromRawAmount(uni, depositRaw) })
   const { tokenForm, configureAuction, customizePool } = store.getState()
@@ -182,7 +182,7 @@ describe('useCreateAuctionSubmit', () => {
       configureAuction: {
         ...params.configureAuction,
         // Emission start is still comfortably in the future...
-        startTime: new Date(Date.now() + MS_PER_DAY),
+        startTime: new Date(Date.now() + ONE_DAY_MS),
         // ...but bidding was due to open a minute ago.
         preBidStartTime: new Date(Date.now() - 60_000),
       },
@@ -214,7 +214,7 @@ describe('useCreateAuctionSubmit', () => {
       ...params,
       configureAuction: {
         ...params.configureAuction,
-        preBidStartTime: new Date(Date.now() + MS_PER_DAY - 15 * 60_000),
+        preBidStartTime: new Date(Date.now() + ONE_DAY_MS - 15 * 60_000),
       },
     }
     const { result } = renderHook(() => useCreateAuctionSubmit(withWindow))
@@ -246,7 +246,7 @@ describe('useCreateAuctionSubmit', () => {
       ...params,
       configureAuction: {
         ...params.configureAuction,
-        startTime: new Date(Date.now() + MS_PER_DAY),
+        startTime: new Date(Date.now() + ONE_DAY_MS),
         // Left over from the manual flow before the switch — the request omits it.
         preBidStartTime: new Date(Date.now() - 60_000),
       },

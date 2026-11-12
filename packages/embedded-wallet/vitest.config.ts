@@ -21,17 +21,6 @@ export default defineConfig({
     include: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
     exclude: ['node_modules', 'dist'],
     testTimeout: 15000,
-    deps: {
-      inline: [
-        /ui\/src\/theme/,
-        /packages\/ui/,
-        /packages\/utilities/,
-        /packages\/uniswap/,
-        /@testing-library\/react-native/,
-        /@react-navigation\/core/,
-        /@react-navigation\/native/,
-      ],
-    },
     server: {
       deps: {
         inline: [

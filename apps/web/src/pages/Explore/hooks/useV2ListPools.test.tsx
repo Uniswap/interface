@@ -127,6 +127,32 @@ describe('useV2ListPools', () => {
     )
   })
 
+  it('starts a separate ranked query when volume sorting changes from 1D to 30D', async () => {
+    const actual = await vi.importActual<typeof import('uniswap/src/data/apiClients/dataApiService/pools/queries')>(
+      'uniswap/src/data/apiClients/dataApiService/pools/queries',
+    )
+    mockPools([buildPool()], { hasNextPage: true })
+
+    listPoolsMock.withImplementation(actual.getListPoolsInfiniteQueryOptions, () => {
+      const { result, rerender } = renderHook(
+        ({ sortBy }) => useV2ListPools({ sortState: { sortBy, sortDirection: OrderDirection.Asc }, filterString: '' }),
+        { initialProps: { sortBy: PoolSortFields.Volume24h } },
+      )
+      const dayOptions = useInfiniteQueryMock.mock.lastCall?.[0]
+
+      expect(dayOptions?.queryKey[2]).toMatchObject({ sort: { orderBy: PoolsOrderBy.VOLUME_1D, ascending: true } })
+      expect(dayOptions?.initialPageParam).toBe('')
+      expect(result.current.hasNextPage).toBe(true)
+
+      rerender({ sortBy: PoolSortFields.Volume30D })
+      const monthOptions = useInfiniteQueryMock.mock.lastCall?.[0]
+
+      expect(monthOptions?.queryKey[2]).toMatchObject({ sort: { orderBy: PoolsOrderBy.VOLUME_30D, ascending: true } })
+      expect(monthOptions?.queryKey).not.toEqual(dayOptions?.queryKey)
+      expect(monthOptions?.initialPageParam).toBe('')
+    })
+  })
+
   // POOLS_ORDER_BY_APR ranks on total_apr (fee apr + reward apr), so it covers reward sorting —
   // the shared map routes RewardApr there rather than degrading to the TVL default.
   it('sorts reward APR by the endpoint total-APR order-by', () => {

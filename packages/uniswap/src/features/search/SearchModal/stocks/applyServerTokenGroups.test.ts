@@ -15,11 +15,13 @@ function issuer({
   slug,
   chainTokens,
   priceUsd,
+  volume24hUsd = 10,
 }: {
   symbol: string
   slug: string
   chainTokens: ChainToken[]
   priceUsd: number
+  volume24hUsd?: number
 }): IssuerToken {
   return {
     symbol,
@@ -29,7 +31,7 @@ function issuer({
     issuerDisplayName: slug.toUpperCase(),
     priceUsd,
     priceChange24hPct: 1,
-    volume24hUsd: 10,
+    volume24hUsd,
     sparkline1d: { points: [] },
     chainTokens,
   }
@@ -56,12 +58,13 @@ const novo = group('NVO', [
   issuer({ symbol: 'NVOON', slug: 'ondo', chainTokens: [{ chainId: MAINNET, address: '0xn' }], priceUsd: 50 }),
 ])
 
-function token(chainId: number, address: string, symbol: string): TokenOption {
+function token(chainId: number, address: string, symbol: string, volume1dUsd?: number): TokenOption {
   return {
     type: OnchainItemListOptionType.Token,
     currencyInfo: {
       currencyId: `${chainId}-${address}`,
       currency: { chainId, address, isNative: false, symbol },
+      ...(volume1dUsd !== undefined && { searchStats: { volume1dUsd } }),
     } as never,
     quantity: null,
     balanceUSD: undefined,
@@ -165,6 +168,47 @@ describe('applyServerTokenGroupsToSearchOptions', () => {
     })
 
     expect(out.map((option) => isCollection(option) && option.rwa.symbol)).toEqual(['AAPL', 'AMZN', 'AMD'])
+  })
+
+  it('places a group row the query names below a token with more volume', () => {
+    const booking = group('BKNG', [
+      issuer({
+        symbol: 'BKNGON',
+        slug: 'ondo',
+        chainTokens: [{ chainId: MAINNET, address: '0xb' }],
+        priceUsd: 1,
+        volume24hUsd: 0,
+      }),
+    ])
+    const boomer = token(MAINNET, '0xboomer', 'BOOMER', 1_000_000)
+    const quiet = token(MAINNET, '0xquiet', 'BOOQ', 0)
+    const out = applyServerTokenGroupsToSearchOptions({
+      options: [boomer, quiet],
+      groups: [booking],
+      searchQuery: 'b',
+      isAddressSearch: false,
+      plainTokenNames: true,
+    })
+
+    expect(out[0]).toBe(boomer)
+    expect(out[1]).toBe(quiet)
+    expect(out[2] && isCollection(out[2]) && out[2].rwa).toBe(booking)
+  })
+
+  it('places a group row above tokens with less volume', () => {
+    const busy = token(MAINNET, '0xbusy', 'TSLAPUMP', 100)
+    const quiet = token(MAINNET, '0xquiet', 'TSLADOG', 5)
+    const out = applyServerTokenGroupsToSearchOptions({
+      options: [busy, quiet],
+      groups: [tesla],
+      searchQuery: 'tsl',
+      isAddressSearch: false,
+      plainTokenNames: true,
+    })
+
+    expect(out[0]).toBe(busy)
+    expect(out[1] && isCollection(out[1]) && out[1].rwa).toBe(tesla)
+    expect(out[2]).toBe(quiet)
   })
 
   it('never rolls up on an address search, only tags the matched token', () => {

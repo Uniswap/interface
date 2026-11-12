@@ -6,6 +6,7 @@ import { LaunchProvenanceMethod } from 'uniswap/src/features/dataApi/launchProve
 import { AuctionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
+import { sleep } from 'utilities/src/time/timing'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import {
   AuctionDisplayPhase,
@@ -126,7 +127,7 @@ describe('TokenDetailsAuctionCard', () => {
       mockDisplay({ phase })
       rerender(<TokenDetailsAuctionCard />)
       // Let Trace's 50ms development dedupe expire before checking subsequent renders.
-      await act(() => new Promise<void>((resolve) => setTimeout(resolve, 51)))
+      await act(() => sleep(51))
       rerender(<TokenDetailsAuctionCard />)
 
       const impressions = sendEvent.mock.calls.filter(([event]) => event === AuctionEventName.AuctionBannerViewed)

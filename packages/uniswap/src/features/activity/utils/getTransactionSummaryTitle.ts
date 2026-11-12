@@ -1,4 +1,5 @@
 import { getEarnPlanStatusTitleKeyFromTransactionStatus } from 'uniswap/src/features/earn/planActivityTitles'
+import { getMarginPlanStatusTitleKey } from 'uniswap/src/features/transactions/margin/planActivityTitles'
 import {
   NFTTradeType,
   REVOKE_APPROVAL_AMOUNT,
@@ -23,6 +24,10 @@ export function getTransactionSummaryTitle({
         transactionStatus: tx.status,
       }),
     )
+  }
+
+  if (tx.typeInfo.type === TransactionType.Plan && tx.typeInfo.marginAction) {
+    return t(getMarginPlanStatusTitleKey(tx.typeInfo.marginAction.action, tx.status))
   }
 
   const { success, pending, failed, canceling, canceled, expired, insufficientFunds, awaitingAction } =

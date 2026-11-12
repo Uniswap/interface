@@ -3,7 +3,7 @@ import { useMemo } from 'react'
 import { ItemPoint } from 'uniswap/src/components/IconCloud/IconCloud'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { DeltaArrow } from '~/components/DeltaArrow/DeltaArrow'
-import { InteractiveToken } from '~/pages/Landing/assets/approvedTokens'
+import { InteractiveToken } from '~/constants/approvedTokens'
 
 interface TickerProps {
   itemPoint: ItemPoint<InteractiveToken>

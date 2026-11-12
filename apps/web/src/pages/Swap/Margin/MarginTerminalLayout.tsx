@@ -7,10 +7,11 @@ import { useParentSize } from '@visx/responsive'
 import { Suspense, useEffect, useRef, useState, type CSSProperties, type ReactNode, type RefObject } from 'react'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { useEvent } from 'utilities/src/react/hooks'
-import { APP_BODY_MOBILE_GUTTER_PX } from '~/app/layout/constants'
+import { APP_BODY_MOBILE_GUTTER_PX } from '~/constants/layout'
 import { useSwapAndLimitContext } from '~/features/Swap/state/useSwapContext'
 import { useAppHeaderHeight } from '~/hooks/useAppHeaderHeight'
 import { usePrefersReducedMotion } from '~/hooks/usePrefersReducedMotion'
+import { useHeightBeforePaint } from '~/pages/Swap/Margin/hooks/useHeightBeforePaint'
 import { MarginMorphProvider } from '~/pages/Swap/Margin/MarginMorphContext'
 import { MARGIN_TABLE_PANE_CHROME, MARGIN_TABLE_ROW_HEIGHT } from '~/pages/Swap/Margin/marginTableConstants'
 import { useMarginTerminalResizeStore } from '~/pages/Swap/Margin/marginTerminalResizeStore'
@@ -166,6 +167,7 @@ export function marginTableMaxHeight({
 // appears (see chartBlockReady / morphSettled below).
 
 const CHART_COLUMN_SCROLL_STYLE: CSSProperties = { scrollbarGutter: 'stable', scrollbarWidth: 'thin' }
+const CHART_COLUMN_HIDDEN_STYLE: CSSProperties = { ...CHART_COLUMN_SCROLL_STYLE, visibility: 'hidden' }
 
 export function useIsMarginTerminal(): boolean {
   const isMarginEnabled = useFeatureFlag(FeatureFlags.Margin)
@@ -232,10 +234,9 @@ export function MarginTerminalLayout({
 
   // The column's height is set by the pinned shell (never by its own content), so budgeting the chart
   // block off it can't loop. Measured on the ROW: the chart column mounts late (chartPane is a
-  // deferred import) and useParentSize attaches its observer once, on mount. No debounce: the entrance
-  // holds the view hidden only briefly, so the chart block must take its fixed height on the first
-  // measure (not ~50ms later) or the chart visibly resizes as it fades in.
-  const { parentRef: rowRef, height: rowHeight } = useParentSize({ debounceTime: 0 })
+  // deferred import). Measured before paint: the row outlives a swap → margin switch, so a late measure
+  // would size the chart block off the shorter swap layout for the first frames of the fade-in.
+  const { ref: rowRef, height: rowHeight } = useHeightBeforePaint()
   const hasPositionsPane = isTerminal && Boolean(positionsTable)
   const [paneContentHeight, setPaneContentHeight] = useState<number | undefined>(undefined)
   const chartBlockOverride = useMarginTerminalResizeStore((state) => state.chartBlockHeight)
@@ -301,7 +302,9 @@ export function MarginTerminalLayout({
               // The column is its own scroll box. Stable gutter: a scrollbar appearing never narrows
               // the column and shifts the chart's price axis.
               $platform-web={{ overflowX: 'hidden', overflowY: 'auto' }}
-              style={CHART_COLUMN_SCROLL_STYLE}
+              // Hidden until the block takes its split height: the pane measures a frame or two after it
+              // mounts, and until then the block flexes, so the chart and table would visibly jump.
+              style={chartBlockReady ? CHART_COLUMN_SCROLL_STYLE : CHART_COLUMN_HIDDEN_STYLE}
             >
               {/* Block the chart pane fills. The class exempts it from the global layout-animation
                   height-ease (global.css) so it doesn't ease as the pane settles. */}

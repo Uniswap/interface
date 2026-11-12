@@ -1,0 +1,16 @@
+export enum ConfirmModalState {
+  REVIEWING = 0,
+  WRAPPING = 1,
+  RESETTING_TOKEN_ALLOWANCE = 2,
+  APPROVING_TOKEN = 3,
+  PERMITTING = 4,
+  PENDING_CONFIRMATION = 5,
+}
+
+export enum PendingModalError {
+  TOKEN_APPROVAL_ERROR = 0,
+  PERMIT_ERROR = 1,
+  XV2_HARD_QUOTE_ERROR = 2,
+  CONFIRMATION_ERROR = 3,
+  WRAP_ERROR = 4,
+}

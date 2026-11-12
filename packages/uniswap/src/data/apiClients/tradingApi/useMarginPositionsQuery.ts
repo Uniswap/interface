@@ -1,8 +1,11 @@
 import {
   type DataTag,
+  type InfiniteData,
   queryOptions,
   skipToken,
   type UndefinedInitialDataOptions,
+  useInfiniteQuery,
+  type UseInfiniteQueryResult,
   useQuery,
   type UseQueryResult,
 } from '@tanstack/react-query'
@@ -55,5 +58,30 @@ export function useMarginPositionsQuery({
       ? async (): Promise<MarginPositionsResponse> => await MarginApiClient.fetchMarginPositions(params)
       : skipToken,
     ...rest,
+  })
+}
+
+export function useMarginPositionsInfiniteQuery({
+  params,
+  refetchInterval,
+  refetchIntervalInBackground,
+}: {
+  params: Omit<MarginPositionsRequest, 'cursor'> | undefined
+  refetchInterval?: number
+  refetchIntervalInBackground?: boolean
+}): UseInfiniteQueryResult<InfiniteData<MarginPositionsResponse, string | undefined>> {
+  return useInfiniteQuery({
+    queryKey: [...MARGIN_POSITIONS_QUERY_KEY, 'infinite', params],
+    queryFn: params
+      ? async ({ pageParam }): Promise<MarginPositionsResponse> =>
+          await MarginApiClient.fetchMarginPositions({
+            ...params,
+            ...(pageParam !== undefined && { cursor: pageParam }),
+          })
+      : skipToken,
+    initialPageParam: undefined as string | undefined,
+    getNextPageParam: (lastPage) => lastPage.nextCursor,
+    refetchInterval,
+    refetchIntervalInBackground,
   })
 }

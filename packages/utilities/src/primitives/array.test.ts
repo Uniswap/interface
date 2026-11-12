@@ -1,6 +1,7 @@
 import {
   arraysAreEqual,
   bubbleToTop,
+  chunkArray,
   differenceWith,
   next,
   removeDuplicatesBy,
@@ -130,5 +131,15 @@ describe('removeDuplicatesBy', () => {
     ]
     const result = removeDuplicatesBy(array, 'id')
     expect(result).toEqual([{ id: 1, name: 'Alice' }])
+  })
+})
+
+describe('chunkArray', () => {
+  it('splits into runs of at most size, keeping order', () => {
+    expect(chunkArray([1, 2, 3, 4, 5], 2)).toEqual([[1, 2], [3, 4], [5]])
+  })
+
+  it('returns no chunks for an empty array', () => {
+    expect(chunkArray([], 3)).toEqual([])
   })
 })

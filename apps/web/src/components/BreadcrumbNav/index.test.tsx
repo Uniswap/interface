@@ -8,6 +8,14 @@ import { TokenFromList } from '~/state/lists/tokenFromList'
 import { render, screen } from '~/test-utils/render'
 
 describe('BreadcrumbNav', () => {
+  it('retains the full accessible page name when the visual breadcrumb is truncated', () => {
+    const name = 'Reference-price liquidity management and dynamic fee configuration preview'
+    render(<CurrentPageBreadcrumb poolName={name} truncate />)
+
+    expect(screen.getByRole('heading', { level: 1, name })).toBeInTheDocument()
+    expect(screen.getByTestId(TestID.CurrentBreadcrumb)).toHaveAttribute('aria-current', 'page')
+  })
+
   it('renders hover components correctly', async () => {
     const currency = new TokenFromList({
       chainId: 1,

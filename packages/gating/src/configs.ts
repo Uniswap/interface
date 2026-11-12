@@ -97,7 +97,6 @@ export enum DynamicConfigs {
   LiquidityApprovalSimulation = 'liquidity_approval_simulation',
   LiquidityGasPreEstimation = 'liquidity_gas_pre_estimation',
   LPConfig = 'lp_config',
-  LpIncentivesChainIds = 'lp_incentives_chain_ids',
   Margin = 'margin_config',
   RWAIssuerLogos = 'rwa_issuer_logos',
   SynchronizedHeartbeats = 'synchronized_heartbeats',
@@ -276,10 +275,6 @@ export enum UniswapBuiltHookAddressesConfigKey {
   Both = 'both',
 }
 
-export enum LpIncentivesChainIdsConfigKey {
-  ChainIds = 'chainIds',
-}
-
 export enum MarginConfigKey {
   SupportedChainIds = 'supportedChainIds',
 }
@@ -358,7 +353,6 @@ export type DynamicConfigKeys = {
   [DynamicConfigs.LiquidityApprovalSimulation]: LiquidityApprovalSimulationConfigKey
   [DynamicConfigs.LiquidityGasPreEstimation]: LiquidityGasPreEstimationConfigKey
   [DynamicConfigs.LPConfig]: LPConfigKey
-  [DynamicConfigs.LpIncentivesChainIds]: LpIncentivesChainIdsConfigKey
   [DynamicConfigs.Margin]: MarginConfigKey
   [DynamicConfigs.RWAIssuerLogos]: RWAIssuerLogosConfigKey
   [DynamicConfigs.SynchronizedHeartbeats]: SynchronizedHeartbeatsConfigKey

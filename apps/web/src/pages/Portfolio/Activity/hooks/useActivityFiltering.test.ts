@@ -7,6 +7,7 @@ import {
   TransactionDetails,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import type { Mock } from 'vitest'
 import { ActivityFilterType } from '~/pages/Portfolio/Activity/Filters/activityFilterTypes'
 import { useActivityFiltering } from '~/pages/Portfolio/Activity/hooks/useActivityFiltering'
 
@@ -87,7 +88,7 @@ const mockEarnWithdrawPlanTx = {
 } as TransactionDetails
 
 function mockActivityData(txs: TransactionDetails[]) {
-  ;(useActivityData as ReturnType<typeof vi.fn>).mockReturnValue({
+  ;(useActivityData as Mock).mockReturnValue({
     sectionData: txs,
     fetchNextPage: vi.fn(),
     hasNextPage: false,

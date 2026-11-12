@@ -1,18 +1,19 @@
 import type { UniverseChainId } from '@universe/chains'
-import { Button, Flex, Text } from '@universe/mycelium'
-import { Sliders } from '@universe/mycelium/icons/Sliders'
+import { Flex } from '@universe/mycelium'
 import { TestID } from '@universe/test'
 import { useState } from 'react'
 import type { ReactNode } from 'react'
-import { useTranslation } from 'react-i18next'
 import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter/NetworkFilter'
 import { useNetworkSelectorOptions } from 'uniswap/src/components/network/NetworkFilter/useNetworkSelectorOptions'
 import { COLLAPSED_SEARCH_WIDTH } from '~/components/ExpandableSearchInput/ExpandableSearchInput'
 import { useNetworkFilterChainIds } from '~/components/NetworkFilter/useFilteredChains'
 import { useActiveAddresses } from '~/connection/accounts/hooks'
+import { PoolFilterButton } from '~/features/Liquidity/PoolsFilter/components'
 import { PoolsFilterModal } from '~/features/Liquidity/PoolsFilter/PoolsFilterModal'
 import { countActivePoolsFilters } from '~/features/Liquidity/PoolsFilter/toRequest'
 import { EMPTY_POOLS_FILTER_STATE, type PoolsAprRange, type PoolsFilterState } from '~/types/poolsFilter'
+
+export type PoolsFilterLayout = 'inline' | 'poolArea'
 
 /**
  * Shared pools-table filter cluster: the surface's own
@@ -31,6 +32,8 @@ export function PoolsFilter({
   onApply,
   aprRange,
   networks,
+  layout = 'inline',
+  periodSelector,
 }: {
   search: ReactNode
   value: PoolsFilterState
@@ -39,10 +42,12 @@ export function PoolsFilter({
   aprRange?: PoolsAprRange
   /** Selectable chains for the network filters. Pools have no SVM support, so the surface passes its non-SVM set. */
   networks?: UniverseChainId[]
+  layout?: PoolsFilterLayout
+  periodSelector?: ReactNode
 }): JSX.Element {
-  const { t } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
   const [draft, setDraft] = useState(value)
+  const isPoolArea = layout === 'poolArea'
 
   // Badge reflects the committed filter, not the in-modal draft, so it tracks what's actually applied.
   const activeCount = countActivePoolsFilters(value)
@@ -68,10 +73,17 @@ export function PoolsFilter({
   const tieredNetworkOptions = useNetworkSelectorOptions({ addresses: activeAddresses, chainIds })
 
   return (
-    <Flex row gap="$spacing8" alignItems="center">
+    <Flex
+      row
+      gap="$spacing8"
+      alignItems="center"
+      width={isPoolArea ? '100%' : undefined}
+      position={isPoolArea ? 'relative' : undefined}
+    >
       {/* Network stays a top-level filter (also in the modal); changing it commits immediately. */}
       <NetworkFilter
         trigger={{ variant: 'pill' }}
+        placement={isPoolArea ? 'bottom-start' : 'bottom-end'}
         includeAllNetworks
         chainIds={chainIds}
         allNetworksChainIds={allNetworksChainIds}
@@ -79,47 +91,23 @@ export function PoolsFilter({
         tieredOptions={tieredNetworkOptions}
         onPressChain={(chainId) => onApply({ ...value, chainId: chainId ?? undefined })}
       />
-      <Flex position="relative">
-        {/* Explicit box so the icon button isn't padding-squished; it borrows the collapsed search's
-            footprint so the two sit as one pair. `size="small"` already matches its 12px radius.
-            Sliders bakes a hardcoded near-black defaultFill when given no color, which ignores the
-            theme — pass $neutral2, the weight the search glyph renders at (its path bakes 63% opacity). */}
-        <Button
-          size="small"
-          emphasis="tertiary"
-          icon={<Sliders color="$neutral2" />}
-          fill={false}
-          height={40}
-          width={COLLAPSED_SEARCH_WIDTH}
-          aria-label={
-            activeCount > 0 ? t('pool.filter.buttonWithCount', { count: activeCount }) : t('pool.filter.button')
-          }
-          testID={TestID.PoolsFilterButton}
-          onPress={openModal}
-        />
-        {activeCount > 0 && (
-          // Count badge overlapping the button's top-right corner; pointer-events off so it never eats the tap.
-          <Flex
-            position="absolute"
-            top={-4}
-            right={-4}
-            minWidth={16}
-            height={16}
-            px="$spacing2"
-            borderRadius="$roundedFull"
-            backgroundColor="$neutral1"
-            alignItems="center"
-            justifyContent="center"
-            pointerEvents="none"
-            testID={TestID.PoolsFilterButtonBadge}
-          >
-            <Text variant="buttonLabel4" color="$surface1">
-              {activeCount}
-            </Text>
-          </Flex>
-        )}
-      </Flex>
-      {search}
+      {periodSelector}
+      <PoolFilterButton
+        activeCount={activeCount}
+        isOpen={isOpen}
+        onPress={openModal}
+        testID={TestID.PoolsFilterButton}
+        badgeTestID={TestID.PoolsFilterButtonBadge}
+        mobileBadgeTop={isPoolArea ? 0 : undefined}
+      />
+      {isPoolArea ? (
+        // Keep the mobile search overlay anchored to the whole toolbar rather than this trailing slot.
+        <Flex row ml="auto" height={40} position="static" $md={{ width: COLLAPSED_SEARCH_WIDTH }}>
+          {search}
+        </Flex>
+      ) : (
+        search
+      )}
       <PoolsFilterModal
         isOpen={isOpen}
         onClose={closeModal}

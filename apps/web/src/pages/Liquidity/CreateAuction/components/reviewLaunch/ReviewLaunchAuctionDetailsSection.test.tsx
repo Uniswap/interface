@@ -2,10 +2,10 @@ import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import i18n from 'uniswap/src/i18n'
+import { ONE_DAY_MS } from 'utilities/src/time/time'
 import { vi } from 'vitest'
 import { ReviewLaunchAuctionDetailsSection } from '~/pages/Liquidity/CreateAuction/components/reviewLaunch/ReviewLaunchAuctionDetailsSection'
 import { DEFAULT_CREATE_AUCTION_STATE, type AuctionTokenAmounts } from '~/pages/Liquidity/CreateAuction/types'
-import { MS_PER_DAY } from '~/pages/Liquidity/CreateAuction/utils/duration'
 import { render, screen } from '~/test-utils/render'
 
 const token = new Token(UniverseChainId.Mainnet, `0x${'1'.padStart(40, '0')}`, 18, 'TKN')
@@ -20,14 +20,14 @@ const raiseCurrencyInfo = { currency: token } as CurrencyInfo
 const PRE_BID_LABEL = i18n.t('toucan.createAuction.step.configureAuction.preBid.startDate')
 
 function renderSection({ isQuickLaunch }: { isQuickLaunch: boolean }): ReturnType<typeof render> {
-  const startTime = new Date(Date.now() + MS_PER_DAY)
+  const startTime = new Date(Date.now() + ONE_DAY_MS)
   return render(
     <ReviewLaunchAuctionDetailsSection
       configureAuction={{
         ...DEFAULT_CREATE_AUCTION_STATE.configureAuction,
         committed,
         startTime,
-        endTime: new Date(startTime.getTime() + 4 * MS_PER_DAY),
+        endTime: new Date(startTime.getTime() + 4 * ONE_DAY_MS),
         preBidStartTime: new Date(startTime.getTime() - 15 * 60_000),
       }}
       committed={committed}

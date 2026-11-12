@@ -3,11 +3,13 @@ import { createColumnHelper, Row } from '@tanstack/react-table'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import type { HookEntry } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/types_pb'
 import { UniverseChainId, areEvmAddressesEqual } from '@universe/chains'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Flex, type FlexCompatProps, Text, useMedia, iconSizes } from '@universe/mycelium'
 import { TestID } from '@universe/test'
 import {
   forwardRef,
   type ForwardRefExoticComponent,
+  Fragment,
   memo,
   ReactElement,
   ReactNode,
@@ -20,6 +22,7 @@ import {
 import { useTranslation } from 'react-i18next'
 import { FeeDisplay } from 'uniswap/src/components/FeeDisplay/FeeDisplay'
 import { UniswapBuiltHookMark } from 'uniswap/src/components/logos/UniswapBuiltHookMark'
+import { InfoTooltip } from 'uniswap/src/components/tooltip/InfoTooltip'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { BIPS_BASE, ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { useListPoolCategoriesQuery } from 'uniswap/src/data/apiClients/dataApiService/categories/useListPoolCategoriesQuery'
@@ -31,14 +34,16 @@ import {
   type UniswapHookProvenance,
   useUniswapHookProvenance,
 } from 'uniswap/src/features/poolHooks/hooks/useUniswapHookProvenance'
+import { getPoolName } from 'uniswap/src/features/pools/names'
+import { orderPoolDataByQuoteToken } from 'uniswap/src/features/pools/quoteToken'
 import type { FeeData, PositionRewardApr } from 'uniswap/src/features/positions/types'
 import { ElementName, InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import type { ExploreTableSurface } from 'uniswap/src/features/telemetry/types'
 import { selectRowCategoryTag } from 'uniswap/src/features/tokenCategories/selectRowCategoryTag'
 import { TokenCategoryTag } from 'uniswap/src/features/tokenCategories/TokenCategoryTag'
 import type { PoolCategory } from 'uniswap/src/features/tokenCategories/types'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { shouldReverseForWaterfall } from 'uniswap/src/features/tokens/waterfallPriority'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { shortenAddress } from 'utilities/src/addresses'
 import { type FiatNumberType, NumberType } from 'utilities/src/format/types'
@@ -56,16 +61,20 @@ import {
 import { ClickableHeaderRow, HeaderArrow, HeaderSortText } from '~/components/Table/shared/SortableHeader'
 import { EllipsisText, TableText } from '~/components/Table/shared/TableText'
 import { HeaderCell } from '~/components/Table/styled'
+import type { TableEmptyState, TableErrorState } from '~/components/Table/types'
 import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '~/constants/breakpoints'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { PoolSortFields } from '~/data/pools/poolStats'
 import { tokenStatToCurrency, OrderDirection } from '~/data/util'
+import { useEffectiveVolumeTimePeriod } from '~/features/Explore/hooks/useEffectiveVolumeTimePeriod'
 import { EXPLORE_API_PAGE_SIZE } from '~/features/Explore/state/constants'
 import {
   useExploreTablesFilterStore,
   useExploreTablesFilterStoreActions,
 } from '~/features/Explore/state/exploreTablesFilterStore'
+import { LIVE_POOL_VOLUME_PERIODS, type LivePoolVolumePeriod } from '~/features/Explore/timeLabels'
+import { DynamicFeeIcon, DynamicFeeTooltipContent, useDynamicFeeLabel } from '~/features/Liquidity/DynamicFee'
 import { HookDetailsModal } from '~/features/Liquidity/HookDetailsModal'
 import { HookTooltip } from '~/features/Liquidity/HookTooltip'
 import { PoolAprTooltip } from '~/features/Liquidity/LPIncentives/PoolAprTooltip'
@@ -82,6 +91,11 @@ import {
   usePoolTableStore,
   usePoolTableStoreActions,
 } from '~/pages/Explore/tables/Pools/poolTableStore'
+import {
+  getPoolSortMethodForPeriod,
+  getPoolVolumePeriodStats,
+  POOL_VOLUME_PERIOD_CONFIG,
+} from '~/pages/Explore/tables/Pools/poolVolumePeriods'
 import { PoolStat } from '~/types/explore'
 import { getChainUrlParam, useChainIdFromUrlParam } from '~/utils/params/chainParams'
 
@@ -117,6 +131,7 @@ interface PoolTableValues {
   totalApr?: number
   volume24h: string
   volume30d: string
+  selectedVolume: string
   volOverTvl?: number
   link: string
   linkState?: { entryPoint?: string }
@@ -183,6 +198,15 @@ function formatVolume(
   convertFiatAmountFormatted: (amount: number, type: FiatNumberType) => string,
 ): string {
   return amount ? convertFiatAmountFormatted(amount, NumberType.FiatTokenStats) : '-'
+}
+
+function formatOptionalFiatAmount(
+  amount: number | undefined,
+  convertFiatAmountFormatted: (amount: number, type: FiatNumberType) => string,
+): string {
+  return amount === undefined
+    ? '-'
+    : convertFiatAmountFormatted(amount, amount === 0 ? NumberType.FiatStandard : NumberType.FiatTokenStats)
 }
 
 function HookNameText({
@@ -255,10 +279,35 @@ function HookNameText({
   )
 }
 
+/** A dynamic tier's live rate behind an icon, with a hover note that the fee floats. */
+function DynamicFeeLabel({ currentLpFeePips }: { currentLpFeePips?: number }) {
+  const { label, hasCurrentFee } = useDynamicFeeLabel(currentLpFeePips)
+
+  // InfoTooltip's own wrapper shrinks, which would ellipsize the rate in a squeezed row; the rate stays
+  // whole and the hook name gives up the space instead.
+  return (
+    <Flex flexShrink={0}>
+      <InfoTooltip
+        placement="top"
+        trigger={
+          <Flex row alignItems="center" gap="$gap4" flexShrink={0}>
+            <DynamicFeeIcon />
+            <Text variant="body3" color="$neutral2" numberOfLines={1}>
+              {label}
+            </Text>
+          </Flex>
+        }
+        text={<DynamicFeeTooltipContent hasCurrentFee={hasCurrentFee} />}
+      />
+    </Flex>
+  )
+}
+
 function PoolDetailsLine({
   chainId,
   protocolVersion,
   feeTier,
+  currentLpFeePips,
   hookAddress,
   protocolFeePips,
   hookRegistry,
@@ -267,6 +316,7 @@ function PoolDetailsLine({
   chainId: UniverseChainId
   protocolVersion?: string
   feeTier?: FeeData
+  currentLpFeePips?: number
   hookAddress?: string
   protocolFeePips?: number
   hookRegistry?: Map<string, HookEntry>
@@ -289,9 +339,10 @@ function PoolDetailsLine({
   // the entry's self-reported chainId, so a response claiming another chain can't earn that chain's badge.
   const provenance = hookEntry ? getUniswapHookProvenance({ chainId, address: hookEntry.address }) : undefined
   const restProtocolVersion = getProtocolVersionFromLabel(protocolVersion)
+  const isDynamic = feeTier ? isDynamicFeeTier(feeTier) : false
   // Dynamic tiers are excluded: their feeAmount is a sentinel, not a rate.
   const feeBreakdown =
-    feeTier && restProtocolVersion !== undefined && !isDynamicFeeTier(feeTier)
+    feeTier && restProtocolVersion !== undefined && !isDynamic
       ? getFeeBreakdown({
           feeAmount: feeTier.feeAmount,
           protocolVersion: restProtocolVersion,
@@ -299,12 +350,15 @@ function PoolDetailsLine({
         })
       : undefined
 
-  const feeTierLabel = feeTier
-    ? isDynamicFeeTier(feeTier)
-      ? t('common.dynamic')
-      : formatPercent(feeTier.feeAmount / BIPS_BASE, 4)
-    : undefined
-  const detailText = [protocolVersion, feeTierLabel].filter(Boolean).join(' · ')
+  const feeNode = !feeTier ? null : isDynamic ? (
+    <DynamicFeeLabel currentLpFeePips={currentLpFeePips} />
+  ) : (
+    <FeeDisplay feeBreakdown={feeBreakdown}>
+      <Text variant="body3" color="$neutral2" numberOfLines={1} flexShrink={0}>
+        {formatPercent(feeTier.feeAmount / BIPS_BASE, 4)}
+      </Text>
+    </FeeDisplay>
+  )
 
   const hookNode = hookEntry ? (
     <HookNameText hookEntry={hookEntry} chainId={chainId} provenance={provenance} />
@@ -322,45 +376,32 @@ function PoolDetailsLine({
     </MouseoverTooltip>
   ) : null
 
-  if (!detailText && !hookNode && !categoryTag) {
+  const segments = [
+    protocolVersion ? (
+      <Text key="version" variant="body3" color="$neutral2" numberOfLines={1} flexShrink={0}>
+        {protocolVersion}
+      </Text>
+    ) : null,
+    feeNode ? <Fragment key="fee">{feeNode}</Fragment> : null,
+    hookNode ? <Fragment key="hook">{hookNode}</Fragment> : null,
+  ].filter((segment) => segment !== null)
+
+  if (segments.length === 0 && !categoryTag) {
     return null
   }
 
   return (
     <Flex row alignItems="center" gap="$gap4" minWidth={0} maxWidth="100%">
-      {feeBreakdown ? (
-        <>
-          {protocolVersion ? (
-            <Text variant="body3" color="$neutral2" numberOfLines={1} flexShrink={0}>
-              {protocolVersion}
-            </Text>
-          ) : null}
-          {protocolVersion ? (
+      {segments.map((segment, index) => (
+        <Fragment key={segment.key}>
+          {index > 0 ? (
             <Text variant="body3" color="$neutral2" flexShrink={0}>
               ·
             </Text>
           ) : null}
-          <FeeDisplay feeBreakdown={feeBreakdown}>
-            <Text variant="body3" color="$neutral2" numberOfLines={1} flexShrink={0}>
-              {feeTierLabel}
-            </Text>
-          </FeeDisplay>
-        </>
-      ) : detailText ? (
-        <Text variant="body3" color="$neutral2" numberOfLines={1} flexShrink={0}>
-          {detailText}
-        </Text>
-      ) : null}
-      {hookNode ? (
-        <>
-          {detailText ? (
-            <Text variant="body3" color="$neutral2" flexShrink={0}>
-              ·
-            </Text>
-          ) : null}
-          {hookNode}
-        </>
-      ) : null}
+          {segment}
+        </Fragment>
+      ))}
       {categoryTag ? (
         <Flex ml="$spacing4" flexShrink={0} testID={TestID.PoolRowCategoryTag}>
           <TokenCategoryTag category={categoryTag} />
@@ -373,9 +414,11 @@ function PoolDetailsLine({
 function PoolDescription({
   token0,
   token1,
+  isToken0Quote,
   chainId,
   protocolVersion,
   feeTier,
+  currentLpFeePips,
   hookAddress,
   protocolFeePips,
   hookRegistry,
@@ -383,9 +426,11 @@ function PoolDescription({
 }: {
   token0: PoolStat['token0']
   token1: PoolStat['token1']
+  isToken0Quote?: boolean
   chainId: UniverseChainId
   protocolVersion?: string
   feeTier?: FeeData
+  currentLpFeePips?: number
   hookAddress?: string
   protocolFeePips?: number
   hookRegistry?: Map<string, HookEntry>
@@ -400,9 +445,8 @@ function PoolDescription({
   // native placeholder, which `tokenStatToCurrency` can't build).
   const symbol0 = currency0?.symbol ?? token0?.symbol
   const symbol1 = currency1?.symbol ?? token1?.symbol
-  const reverse = currency0 && currency1 ? shouldReverseForWaterfall(currency0, currency1) : false
-  const [baseSymbol, quoteSymbol] = reverse ? [symbol1, symbol0] : [symbol0, symbol1]
-  const currencies = reverse ? [currency1, currency0] : [currency0, currency1]
+  const currencies = orderPoolDataByQuoteToken({ token0IsQuote: isToken0Quote, data0: currency0, data1: currency1 })
+  const poolName = getPoolName({ symbol0, symbol1, token0IsQuote: isToken0Quote })
 
   return (
     <CollapsibleCellLayout
@@ -422,13 +466,12 @@ function PoolDescription({
       }
     >
       <Flex gap="$spacing2">
-        <EllipsisText>
-          {baseSymbol}/{quoteSymbol}
-        </EllipsisText>
+        <EllipsisText>{poolName}</EllipsisText>
         <PoolDetailsLine
           chainId={chainId}
           protocolVersion={protocolVersion}
           feeTier={feeTier}
+          currentLpFeePips={currentLpFeePips}
           hookAddress={hookAddress}
           protocolFeePips={protocolFeePips}
           hookRegistry={hookRegistry}
@@ -439,15 +482,8 @@ function PoolDescription({
   )
 }
 
-export type PoolTableSurface =
-  | 'explore'
-  | 'category-details'
-  | 'tdp'
-  | 'add-liquidity-pool-browser'
-  | 'positions-discovery'
-
 // Figma tags Explore, category page and Create Position pool browser rows; TDP and discovery rows stay plain.
-const CATEGORY_TAG_SURFACES: ReadonlySet<PoolTableSurface> = new Set([
+const CATEGORY_TAG_SURFACES: ReadonlySet<ExploreTableSurface> = new Set([
   'explore',
   'category-details',
   'add-liquidity-pool-browser',
@@ -459,24 +495,29 @@ function PoolTableHeader({
   isCurrentSortMethod,
   direction,
   surface,
+  label,
+  sortable = true,
 }: {
   category: PoolSortFields
   isCurrentSortMethod: boolean
   direction: OrderDirection
-  surface: PoolTableSurface
+  surface: ExploreTableSurface
+  label?: string
+  sortable?: boolean
 }) {
   const { setSort } = usePoolTableStoreActions()
   const handleSortCategory = useCallback(() => {
-    const newSortAscending = setSort(category)
+    const ascending = isCurrentSortMethod && direction !== OrderDirection.Asc
+    setSort(category, ascending)
     sendAnalyticsEvent(InterfaceEventName.ExploreTableSorted, {
       table_type: 'pools',
       sort_method: category,
-      sort_direction: newSortAscending ? OrderDirection.Asc : OrderDirection.Desc,
+      sort_direction: ascending ? OrderDirection.Asc : OrderDirection.Desc,
       surface,
     })
     // No-ops outside Explore (TDP, add-liquidity pool browser) — the section anchor only exists there.
     scrollToExploreTokenSection()
-  }, [setSort, category, surface])
+  }, [setSort, category, surface, isCurrentSortMethod, direction])
   const { t } = useTranslation()
 
   const HEADER_DESCRIPTIONS: Partial<Record<PoolSortFields, ReactNode>> = {
@@ -493,6 +534,10 @@ function PoolTableHeader({
     [PoolSortFields.VolOverTvl]: t('pool.volOverTvl'),
   }
 
+  if (!sortable) {
+    return <HeaderSortText variant="body3">{label ?? HEADER_TEXT[category]}</HeaderSortText>
+  }
+
   return (
     <Flex width="100%">
       <MouseoverTooltip
@@ -505,7 +550,7 @@ function PoolTableHeader({
         <ClickableHeaderRow justifyContent="flex-end" onPress={handleSortCategory} group>
           {isCurrentSortMethod && <HeaderArrow orderDirection={direction} size="$icon.16" />}
           <HeaderSortText active={isCurrentSortMethod} variant="body3">
-            {HEADER_TEXT[category]}
+            {label ?? HEADER_TEXT[category]}
           </HeaderSortText>
         </ClickableHeaderRow>
       </MouseoverTooltip>
@@ -533,11 +578,14 @@ function ExploreTopPoolTableContent({
 }: {
   staticSize?: boolean
   pageSize?: number
-  surface: PoolTableSurface
+  surface: ExploreTableSurface
   categoryId?: string
   categoryUnverified?: boolean
 }): JSX.Element {
   const chainId = useChainIdFromUrlParam()
+  const isHooksExploreEnabled = useFeatureFlag(FeatureFlags.HooksExplore)
+  const effectiveVolumeTimePeriod = useEffectiveVolumeTimePeriod(LIVE_POOL_VOLUME_PERIODS)
+  const volumeTimePeriod = isHooksExploreEnabled && surface === 'explore' ? effectiveVolumeTimePeriod : undefined
   const { sortMethod, sortAscending } = usePoolTableStore((s) => ({
     sortMethod: s.sortMethod,
     sortAscending: s.sortAscending,
@@ -559,7 +607,7 @@ function ExploreTopPoolTableContent({
     chainId: listChainId,
   } = useListPools({
     sortState: {
-      sortBy: sortMethod,
+      sortBy: getPoolSortMethodForPeriod(sortMethod, volumeTimePeriod),
       sortDirection: sortAscending ? OrderDirection.Asc : OrderDirection.Desc,
     },
     // The filter's Network control reads and writes this same URL path segment (see ExploreTableFilters),
@@ -596,6 +644,7 @@ function ExploreTopPoolTableContent({
       pageSize={pageSize}
       surface={surface}
       scopedCategoryId={categoryId}
+      volumeTimePeriod={volumeTimePeriod}
     />
   )
 }
@@ -610,7 +659,7 @@ export const ExploreTopPoolTable = memo(function ExploreTopPoolTable({
   // Render a fixed set of rows with no infinite scroll / internal scroll area (e.g. discovery surfaces).
   staticSize?: boolean
   pageSize?: number
-  surface: PoolTableSurface
+  surface: ExploreTableSurface
   /** Pool category ListPools filter; undefined renders the unfiltered (All) list. */
   categoryId?: string
   /** The category id came from the URL and ListCategories hasn't confirmed it yet. */
@@ -635,11 +684,13 @@ const TopPoolTable = memo(function TopPoolTable({
   staticSize = false,
   surface,
   scopedCategoryId,
+  volumeTimePeriod,
 }: {
   topPoolData: TopPoolTableProps
+  volumeTimePeriod?: LivePoolVolumePeriod
   pageSize?: number
   staticSize?: boolean
-  surface: PoolTableSurface
+  surface: ExploreTableSurface
   scopedCategoryId?: string
 }) {
   const { topPools, isLoading, isError, loadMore: backendLoadMore, chainId, virtualized, filterString } = topPoolData
@@ -667,6 +718,7 @@ const TopPoolTable = memo(function TopPoolTable({
         surface={surface}
         scopedCategoryId={scopedCategoryId}
         filterString={filterString}
+        volumeTimePeriod={volumeTimePeriod}
         // A fixed-row discovery surface has nothing to virtualize.
         virtualized={staticSize ? false : virtualized}
       />
@@ -678,6 +730,8 @@ export function PoolsTable({
   pools,
   loading,
   error,
+  errorState,
+  emptyState,
   loadMore,
   maxWidth,
   maxHeight,
@@ -694,10 +748,20 @@ export function PoolsTable({
   mobileFullBleed,
   chainId: listChainId,
   filterString,
+  volumeTimePeriod,
+  showHookBadges = true,
+  rowAnalyticsProperties,
+  columnOrder,
 }: {
   pools?: PoolStat[]
+  showHookBadges?: boolean
+  rowAnalyticsProperties?: Record<string, unknown>
+  columnOrder?: readonly (keyof PoolTableValues)[]
+  volumeTimePeriod?: LivePoolVolumePeriod
   loading: boolean
   error?: boolean
+  errorState?: TableErrorState
+  emptyState?: TableEmptyState
   loadMore?: ({ onComplete }: { onComplete?: () => void }) => void
   maxWidth?: number
   maxHeight?: number
@@ -713,7 +777,7 @@ export function PoolsTable({
    */
   filterString?: string
   /** Where this table is mounted — attached to sort analytics so surfaces aren't conflated. */
-  surface: PoolTableSurface
+  surface: ExploreTableSurface
   /** Category every row already belongs to (selected chip, category page); rows tag the next one instead. */
   scopedCategoryId?: string
   // The matching row renders with a selected highlight — used by the add-liquidity pool browser,
@@ -739,12 +803,15 @@ export function PoolsTable({
     sortMethod: s.sortMethod,
     sortAscending: s.sortAscending,
   }))
+  const effectiveSortMethod = getPoolSortMethodForPeriod(sortMethod, volumeTimePeriod)
+  const volumeConfig = volumeTimePeriod !== undefined ? POOL_VOLUME_PERIOD_CONFIG[volumeTimePeriod] : undefined
+  const volumeSortMethod = volumeConfig?.sortField ?? PoolSortFields.Volume24h
   const orderDirection = sortAscending ? OrderDirection.Asc : OrderDirection.Desc
   // One registry fetch for the whole list (not one per row), scoped to the list's chain filter and
   // skipped when nothing listed has a hook (v2/v3-only lists, zero-address v4 hooks).
-  const hasHookedPool = !!pools?.some(
-    (pool) => !!pool.hookAddress && !areEvmAddressesEqual(pool.hookAddress, ZERO_ADDRESS),
-  )
+  const hasHookedPool =
+    showHookBadges &&
+    !!pools?.some((pool) => !!pool.hookAddress && !areEvmAddressesEqual(pool.hookAddress, ZERO_ADDRESS))
   const hookRegistry = useHookRegistryMap({ chainId: listChainId, enabled: hasHookedPool })
   // One cached ListCategories read per table; the hook also disables itself while the flag is off.
   const showCategoryTags = CATEGORY_TAG_SURFACES.has(surface)
@@ -757,6 +824,8 @@ export function PoolsTable({
         const chainId = pool.chainId
         const poolIdOrHash = pool.id
         const volumes = getPoolVolumes(pool)
+        const periodStats =
+          volumeTimePeriod !== undefined ? getPoolVolumePeriodStats(pool, volumeTimePeriod) : undefined
         // The row link is built from this same `poolIdOrHash`, so exact equality is correct — and
         // address-casing rules don't apply to v4 pool-id hashes anyway.
         const selected =
@@ -769,10 +838,12 @@ export function PoolsTable({
             <PoolDescription
               token0={pool.token0}
               token1={pool.token1}
+              isToken0Quote={pool.isToken0Quote}
               chainId={chainId}
               protocolVersion={pool.protocolVersion?.toLowerCase()}
               feeTier={pool.feeTier ?? undefined}
-              hookAddress={pool.hookAddress}
+              currentLpFeePips={pool.currentLpFeePips}
+              hookAddress={showHookBadges ? pool.hookAddress : undefined}
               protocolFeePips={pool.protocolFeePips}
               hookRegistry={hookRegistry}
               categoryTag={
@@ -786,10 +857,11 @@ export function PoolsTable({
               }
             />
           ),
-          tvl: formatVolume(volumes.tvl, convertFiatAmountFormatted),
+          tvl: formatOptionalFiatAmount(pool.totalLiquidity?.value, convertFiatAmountFormatted),
           volume24h: formatVolume(volumes.volume24h, convertFiatAmountFormatted),
           volume30d: formatVolume(volumes.volume30d, convertFiatAmountFormatted),
-          volOverTvl: pool.volOverTvl,
+          selectedVolume: formatOptionalFiatAmount(periodStats?.volume, convertFiatAmountFormatted),
+          volOverTvl: periodStats ? periodStats.volOverTvl : pool.volOverTvl,
           apr: pool.apr,
           totalApr: pool.totalApr,
           rewards: pool.rewards,
@@ -799,6 +871,7 @@ export function PoolsTable({
           analytics: {
             elementName: ElementName.PoolsTableRow,
             properties: {
+              ...rowAnalyticsProperties,
               chain_id: chainId,
               pool_address: poolIdOrHash,
               token0_address: pool.token0?.address,
@@ -825,6 +898,9 @@ export function PoolsTable({
       showCategoryTags,
       poolCategories,
       scopedCategoryId,
+      showHookBadges,
+      rowAnalyticsProperties,
+      volumeTimePeriod,
     ],
   )
 
@@ -884,7 +960,7 @@ export function PoolsTable({
               <HeaderCell>
                 <PoolTableHeader
                   category={PoolSortFields.TVL}
-                  isCurrentSortMethod={sortMethod === PoolSortFields.TVL}
+                  isCurrentSortMethod={effectiveSortMethod === PoolSortFields.TVL}
                   direction={orderDirection}
                   surface={surface}
                 />
@@ -898,14 +974,14 @@ export function PoolsTable({
           })
         : null,
       !hiddenColumns?.includes(PoolSortFields.Volume24h)
-        ? columnHelper.accessor((row) => row.volume24h, {
-            id: 'volume24h',
+        ? columnHelper.accessor((row) => (volumeTimePeriod !== undefined ? row.selectedVolume : row.volume24h), {
+            id: volumeTimePeriod !== undefined ? 'volume' : 'volume24h',
             size: 110,
             header: () => (
               <HeaderCell>
                 <PoolTableHeader
-                  category={PoolSortFields.Volume24h}
-                  isCurrentSortMethod={sortMethod === PoolSortFields.Volume24h}
+                  category={volumeSortMethod}
+                  isCurrentSortMethod={effectiveSortMethod === volumeSortMethod}
                   direction={orderDirection}
                   surface={surface}
                 />
@@ -920,7 +996,7 @@ export function PoolsTable({
             },
           })
         : null,
-      !hiddenColumns?.includes(PoolSortFields.Volume30D)
+      volumeTimePeriod === undefined && !hiddenColumns?.includes(PoolSortFields.Volume30D)
         ? columnHelper.accessor((row) => row.volume30d, {
             id: 'volume30Day',
             size: 110,
@@ -928,7 +1004,7 @@ export function PoolsTable({
               <HeaderCell>
                 <PoolTableHeader
                   category={PoolSortFields.Volume30D}
-                  isCurrentSortMethod={sortMethod === PoolSortFields.Volume30D}
+                  isCurrentSortMethod={effectiveSortMethod === PoolSortFields.Volume30D}
                   direction={orderDirection}
                   surface={surface}
                 />
@@ -949,23 +1025,31 @@ export function PoolsTable({
               <HeaderCell>
                 <PoolTableHeader
                   category={PoolSortFields.VolOverTvl}
-                  isCurrentSortMethod={sortMethod === PoolSortFields.VolOverTvl}
+                  label={volumeTimePeriod !== undefined ? t('pool.volumeToTvl') : undefined}
+                  sortable={volumeConfig?.ratioSortable ?? true}
+                  isCurrentSortMethod={effectiveSortMethod === PoolSortFields.VolOverTvl}
                   direction={orderDirection}
                   surface={surface}
                 />
               </HeaderCell>
             ),
-            cell: (volOverTvl) => (
-              <Cell loading={showLoadingSkeleton}>
-                <TableText>
-                  {formatNumberOrString({
-                    value: volOverTvl.getValue?.(),
-                    type: NumberType.TokenQuantityStats,
-                    placeholder: '-',
-                  })}
-                </TableText>
-              </Cell>
-            ),
+            cell: (volOverTvl) => {
+              const value = volOverTvl.getValue?.()
+              return (
+                <Cell loading={showLoadingSkeleton}>
+                  <TableText>
+                    {formatNumberOrString({
+                      value,
+                      type:
+                        volumeTimePeriod !== undefined && value === 0
+                          ? NumberType.TokenNonTx
+                          : NumberType.TokenQuantityStats,
+                      placeholder: '-',
+                    })}
+                  </TableText>
+                </Cell>
+              )
+            },
           })
         : null,
       !hiddenColumns?.includes(PoolSortFields.Apr)
@@ -976,7 +1060,7 @@ export function PoolsTable({
               <HeaderCell>
                 <PoolTableHeader
                   category={PoolSortFields.Apr}
-                  isCurrentSortMethod={sortMethod === PoolSortFields.Apr}
+                  isCurrentSortMethod={effectiveSortMethod === PoolSortFields.Apr}
                   direction={orderDirection}
                   surface={surface}
                 />
@@ -1003,15 +1087,28 @@ export function PoolsTable({
           })
         : null,
     ]
-    return filteredColumns.filter((column): column is NonNullable<(typeof filteredColumns)[number]> => Boolean(column))
+    const visibleColumns = filteredColumns.filter((column): column is NonNullable<(typeof filteredColumns)[number]> =>
+      Boolean(column),
+    )
+    if (columnOrder) {
+      const positions = new Map<string, number>(columnOrder.map((id, index): [string, number] => [id, index]))
+      visibleColumns.sort(
+        (a, b) => (positions.get(a.id ?? '') ?? columnOrder.length) - (positions.get(b.id ?? '') ?? columnOrder.length),
+      )
+    }
+    return visibleColumns
   }, [
     media.lg,
+    columnOrder,
     hiddenColumns,
     hideIndex,
     showBoostedApr,
     showLoadingSkeleton,
     t,
-    sortMethod,
+    effectiveSortMethod,
+    volumeSortMethod,
+    volumeTimePeriod,
+    volumeConfig?.ratioSortable,
     orderDirection,
     formatNumberOrString,
     surface,
@@ -1024,6 +1121,8 @@ export function PoolsTable({
       data={poolTableValues}
       loading={loading}
       error={showError}
+      errorState={errorState}
+      emptyState={emptyState}
       rowHeight={ROW_HEIGHT}
       compactRowHeight={ROW_HEIGHT}
       loadMore={loadMore}

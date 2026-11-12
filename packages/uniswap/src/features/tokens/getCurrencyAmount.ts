@@ -2,6 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { parseUnits } from '@ethersproject/units'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { convertScientificNotationToNumber } from 'utilities/src/format/convertScientificNotation'
+import { truncateToMaxDecimals } from 'utilities/src/format/truncateToMaxDecimals'
 import { logger } from 'utilities/src/logger/logger'
 
 // Allow for digits and one of either period or comma
@@ -40,7 +41,12 @@ export function getCurrencyAmount<T extends Currency>({
     let parsedValue = sanitizeTokenAmount({ value, valueType })
 
     if (valueType === ValueType.Exact) {
-      parsedValue = parseUnits(parsedValue, currency.decimals).toString()
+      // parseUnits throws on more fractional digits than the token supports (e.g. a full-precision
+      // fiat conversion into a 6-decimal token), so drop the excess instead of failing the amount.
+      parsedValue = parseUnits(
+        truncateToMaxDecimals({ value: parsedValue, maxDecimals: currency.decimals }),
+        currency.decimals,
+      ).toString()
     }
 
     return CurrencyAmount.fromRawAmount(currency, parsedValue)

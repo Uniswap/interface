@@ -1,8 +1,10 @@
+import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { Flex } from '@universe/mycelium'
 import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import { memo, useId, useMemo } from 'react'
 import Svg, { Defs, LinearGradient, Path, Stop } from 'react-native-svg'
 import { type ChartPoint, computeChartPaths } from 'uniswap/src/components/charts/computeChartPaths'
+import { getIsStablecoin } from 'uniswap/src/components/charts/utils'
 
 const STROKE_WIDTH = 1.5
 const Y_GUTTER = 2
@@ -13,20 +15,24 @@ export const TokenCardSparkline = memo(function TokenCardSparkline({
   width,
   height,
   isNegative,
+  categoryIds,
 }: {
   data: ChartPoint[]
   width: number
   height: number
   isNegative: boolean
+  categoryIds?: readonly string[]
 }): JSX.Element {
   const colors = useSporeColors()
+  const tokenCategoriesEnabled = useIsTokenCategoriesEnabled()
+  const isStablecoin = getIsStablecoin({ tokenCategoriesEnabled, categoryIds }) === true
   const id = useId()
   // useId can emit colons, which are invalid inside SVG url() references
   const gradientId = useMemo(() => `token-card-sparkline-${id.replace(/:/g, '')}`, [id])
 
   const { linePath, areaPath } = useMemo(
-    () => computeChartPaths({ data, dataWidth: width, height, yGutter: Y_GUTTER }),
-    [data, width, height],
+    () => computeChartPaths({ data, dataWidth: width, height, yGutter: Y_GUTTER, isStablecoin }),
+    [data, width, height, isStablecoin],
   )
 
   if (!linePath) {

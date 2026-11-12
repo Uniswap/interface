@@ -215,15 +215,15 @@ describe(useTokenMetadata, () => {
 
     const { result } = renderHookWithProviders(() => useTokenMetadata(CURRENCY_ID))
 
-    await waitFor(() => expect(result.current.name).toBe('Token Name'))
+    await waitFor(() => expect(result.current.data?.name).toBe('Token Name'))
 
-    expect(result.current.symbol).toBe('TKN')
-    expect(result.current.logoUrl).toBe('https://example.com/logo.png')
-    expect(result.current.description).toBe('A description.')
-    expect(result.current.descriptionTranslations).toEqual({ 'es-ES': 'Una descripción.' })
-    expect(result.current.homepageUrl).toBe('https://example.com')
-    expect(result.current.twitterName).toBe('handle')
-    expect(result.current.isSpam).toBe(false)
+    expect(result.current.data?.symbol).toBe('TKN')
+    expect(result.current.data?.logoUrl).toBe('https://example.com/logo.png')
+    expect(result.current.data?.description).toBe('A description.')
+    expect(result.current.data?.descriptionTranslations).toEqual({ 'es-ES': 'Una descripción.' })
+    expect(result.current.data?.homepageUrl).toBe('https://example.com')
+    expect(result.current.data?.twitterName).toBe('handle')
+    expect(result.current.data?.isSpam).toBe(false)
   })
 
   it('normalizes a full profile URL from GetToken (Solana metadata) to a bare handle', async () => {
@@ -237,7 +237,7 @@ describe(useTokenMetadata, () => {
 
     const { result } = renderHookWithProviders(() => useTokenMetadata(CURRENCY_ID))
 
-    await waitFor(() => expect(result.current.twitterName).toBe('bonk_inu'))
+    await waitFor(() => expect(result.current.data?.twitterName).toBe('bonk_inu'))
   })
 
   it('leaves fields undefined when GetToken omits them', async () => {
@@ -247,11 +247,11 @@ describe(useTokenMetadata, () => {
 
     const { result } = renderHookWithProviders(() => useTokenMetadata(CURRENCY_ID))
 
-    await waitFor(() => expect(result.current.name).toBe('Token Name'))
+    await waitFor(() => expect(result.current.data?.name).toBe('Token Name'))
 
-    expect(result.current.description).toBeUndefined()
-    expect(result.current.homepageUrl).toBeUndefined()
-    expect(result.current.twitterName).toBeUndefined()
+    expect(result.current.data?.description).toBeUndefined()
+    expect(result.current.data?.homepageUrl).toBeUndefined()
+    expect(result.current.data?.twitterName).toBeUndefined()
   })
 
   it('skips the query and reports not-loading when currencyId is undefined', () => {
@@ -262,7 +262,7 @@ describe(useTokenMetadata, () => {
     expect(mockGetGetTokenQueryOptions).toHaveBeenCalledWith(
       expect.objectContaining({ enabled: false, params: undefined }),
     )
-    expect(result.current.name).toBeUndefined()
+    expect(result.current.data?.name).toBeUndefined()
     expect(result.current.isLoading).toBe(false)
   })
 })

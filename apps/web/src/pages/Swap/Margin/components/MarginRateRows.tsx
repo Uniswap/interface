@@ -283,8 +283,9 @@ function MarginReceipt({
     figures.healthFactor === undefined
       ? '$neutral1'
       : (getMarginHealthStatus(figures.healthFactor).color as ColorTokens)
+  // A bridged quote was priced on a market the open may have left, so its liquidation price is withheld too.
   const liqValue =
-    figures.liquidationPrice === undefined ? (
+    isPlaceholderData || figures.liquidationPrice === undefined ? (
       empty
     ) : (
       <ReceiptFigure

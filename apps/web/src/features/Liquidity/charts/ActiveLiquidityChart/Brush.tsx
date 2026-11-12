@@ -2,12 +2,12 @@ import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import { BrushBehavior, brushY, D3BrushEvent, ScaleLinear, select } from 'd3'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { usePrevious } from 'utilities/src/react/hooks'
 import {
   brushHandleAccentPath,
   brushHandlePath,
   OffScreenHandle,
 } from '~/features/Liquidity/charts/LiquidityRangeInput/svg'
-import { usePrevious } from '~/hooks/usePrevious'
 
 // flips the handles draggers when close to the container edges
 const FLIP_HANDLE_THRESHOLD_PX = 20

@@ -1,16 +1,25 @@
-import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
+import { AddressStringFormat, normalizeAddress } from '@universe/chains'
+import { matchPath } from 'react-router'
+import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
+import { isEVMAddress, isEVMAddressWithChecksum } from 'utilities/src/addresses/evm/evm'
 import { isSVMAddress } from 'utilities/src/addresses/svm/svm'
+import { isChainUrlParam } from '~/utils/params/chainParams'
 
 export enum EntryPointKind {
   ExplorePoolDetail = 'explore-pool-detail',
   ExplorePools = 'explore-pools',
   PortfolioPools = 'portfolio-pools',
+  HookDetails = 'hook-details',
   None = 'none',
 }
 
 export type ParsedEntryPoint =
   | {
-      kind: EntryPointKind.ExplorePoolDetail | EntryPointKind.ExplorePools | EntryPointKind.PortfolioPools
+      kind:
+        | EntryPointKind.ExplorePoolDetail
+        | EntryPointKind.ExplorePools
+        | EntryPointKind.PortfolioPools
+        | EntryPointKind.HookDetails
       to: string
     }
   | { kind: EntryPointKind.None; to: null }
@@ -54,6 +63,17 @@ export function parseEntryPoint(entryPoint?: string | null): ParsedEntryPoint {
   const path = stripSearch(entryPoint)
   if (hasPathTraversal(path)) {
     return { kind: EntryPointKind.None, to: null }
+  }
+
+  const hookDetails = matchPath('/explore/hooks/:chainName/:hookAddress', path)
+  const hookAddress = normalizeAddress(hookDetails?.params.hookAddress ?? '', AddressStringFormat.Lowercase)
+  if (
+    hookDetails?.params.chainName &&
+    isChainUrlParam(hookDetails.params.chainName) &&
+    hookAddress !== ZERO_ADDRESS &&
+    isEVMAddressWithChecksum(hookAddress)
+  ) {
+    return { kind: EntryPointKind.HookDetails, to: entryPoint }
   }
 
   if (isExplorePoolDetailPath(path)) {

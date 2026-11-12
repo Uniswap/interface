@@ -2,13 +2,13 @@ import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes
 import { type Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { TestID } from '@universe/test'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { useCreateLiquidityContext } from '~/features/Liquidity/Create/CreateLiquidityContextProvider'
 import { ReviewModal } from '~/features/Liquidity/ReviewModal'
 import { useLPGeoRestriction } from '~/features/Liquidity/useLPGeoRestriction'
-import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 import { render, screen } from '~/test-utils/render'
 
 vi.mock('~/features/Liquidity/useLPGeoRestriction', () => ({ useLPGeoRestriction: vi.fn() }))
-vi.mock('~/pages/CreatePosition/CreateLiquidityContextProvider', () => ({ useCreateLiquidityContext: vi.fn() }))
+vi.mock('~/features/Liquidity/Create/CreateLiquidityContextProvider', () => ({ useCreateLiquidityContext: vi.fn() }))
 vi.mock('~/hooks/currency/useCurrencyInfo', () => ({ useCurrencyInfo: () => undefined }))
 vi.mock('~/connection/hooks/useAccount', () => ({
   useAccount: () => ({ isConnected: true, connector: { id: 'injected' } }),

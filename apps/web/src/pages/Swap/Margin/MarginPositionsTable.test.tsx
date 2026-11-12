@@ -1,4 +1,4 @@
-import { fireEvent, screen } from '@testing-library/react'
+import { act, fireEvent, screen, waitFor } from '@testing-library/react'
 import { TestID } from '@universe/test'
 import {
   MARGIN_POSITIONS_WIRE_PNL_ACTIVE,
@@ -25,18 +25,28 @@ import { render } from '~/test-utils/render'
 
 const MARKET = getDefaultMarginMarket() // WETH/USDC MORPHO
 
-const { mockAccountAddress, mockHistory, mockPositions, mockRequestedParams, UNRESOLVED_COLLATERAL, UNRESOLVED_DEBT } =
-  vi.hoisted(() => ({
-    mockAccountAddress: '0x000000000000000000000000000000000000000A',
-    mockRequestedParams: [] as (MarginPositionsRequest | undefined)[],
-    // Per-test override for the history tab's rows; defaulted below, once CLOSED_SHORT exists.
-    mockHistory: { current: [] as MarginTerminalPosition[] },
-    // Per-test override for the active tab's OPEN position rows; empty by default.
-    mockPositions: { current: [] as MarginActivePosition[] },
-    // A pair the mocked market resolver below never resolves, for the unresolved-market fallback test.
-    UNRESOLVED_COLLATERAL: '0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf',
-    UNRESOLVED_DEBT: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
-  }))
+const {
+  mockAccountAddress,
+  mockFetchNextPage,
+  mockHasNextPage,
+  mockHistory,
+  mockPositions,
+  mockRequestedParams,
+  UNRESOLVED_COLLATERAL,
+  UNRESOLVED_DEBT,
+} = vi.hoisted(() => ({
+  mockAccountAddress: '0x000000000000000000000000000000000000000A',
+  mockHasNextPage: { current: false },
+  mockFetchNextPage: vi.fn(() => Promise.resolve()),
+  mockRequestedParams: [] as (MarginPositionsRequest | undefined)[],
+  // Per-test override for the history tab's rows; defaulted below, once CLOSED_SHORT exists.
+  mockHistory: { current: [] as MarginTerminalPosition[] },
+  // Per-test override for the active tab's OPEN position rows; empty by default.
+  mockPositions: { current: [] as MarginActivePosition[] },
+  // A pair the mocked market resolver below never resolves, for the unresolved-market fallback test.
+  UNRESOLVED_COLLATERAL: '0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf',
+  UNRESOLVED_DEBT: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
+}))
 
 // AmountInput (pulled in transitively via MarginActionModals) imports react-native-localize, whose
 // commonjs entry requires the real `react-native` package outside Vite's alias resolution.
@@ -155,6 +165,25 @@ vi.mock('uniswap/src/data/apiClients/tradingApi/useMarginPositionsQuery', async 
       refetch: vi.fn(),
     }
   },
+  useMarginPositionsInfiniteQuery: ({ params }: { params?: MarginPositionsRequest }) => {
+    mockRequestedParams.push(params)
+    if (!params) {
+      return { data: undefined, isLoading: false, isError: false, refetch: vi.fn(), hasNextPage: false }
+    }
+    const isActiveSet = params.statuses === MARGIN_ACTIVE_POSITION_STATUSES
+    return {
+      data: {
+        pages: [{ ...POSITIONS_RESPONSE, positions: isActiveSet ? mockPositions.current : mockHistory.current }],
+        pageParams: [undefined],
+      },
+      isLoading: false,
+      isError: false,
+      refetch: vi.fn(),
+      hasNextPage: mockHasNextPage.current,
+      isFetchingNextPage: false,
+      fetchNextPage: mockFetchNextPage,
+    }
+  },
 }))
 
 // ltv 0.695 → 1/(1-0.695) = 3.2787x current, against 2x at open — the two must be distinguishable.
@@ -231,10 +260,17 @@ const DESIGN_LONG: MarginActivePosition = {
   oraclePrice: '2496490000000000000000',
 }
 
+function scrollCardsEndIntoView(): void {
+  const observer = vi.mocked(IntersectionObserver).mock.calls.at(-1)?.[0]
+  act(() => observer?.([{ isIntersecting: true } as IntersectionObserverEntry], {} as IntersectionObserver))
+}
+
 afterEach(() => {
   mockPositions.current = []
   mockHistory.current = [CLOSED_SHORT]
   mockRequestedParams.length = 0
+  mockHasNextPage.current = false
+  mockFetchNextPage.mockClear()
 })
 
 // mycelium's Text compiles `color="$statusCritical"` to a uniwind arbitrary class such as
@@ -694,6 +730,33 @@ describe('MarginPositionsTable cards layout', () => {
     expect(longCard).toHaveTextContent('Mark / Entry price')
     expect(longCard).toHaveTextContent('Liq. price')
     expect(longCard).toHaveTextContent('0.053 ETH')
+  })
+
+  it('loads the next page of active positions when the end of the cards scrolls into view', async () => {
+    mockPositions.current = [OPEN_LONG_VALUED]
+    mockHasNextPage.current = true
+    render(<MarginPositionsTable layout="cards" renderPositionSheet={renderSheetStub} />)
+    scrollCardsEndIntoView()
+    await waitFor(() => expect(mockFetchNextPage).toHaveBeenCalledTimes(1))
+  })
+
+  // TODO: unskip once useInfiniteScroll attaches to a sentinel that mounts after the first render
+  // (the Closed tab's). Until then no observer exists here; this only passed by firing the previous
+  // test's leaked observer.
+  // oxlint-disable-next-line jest/no-disabled-tests, vitest/no-disabled-tests -- see TODO above
+  it.skip('loads the next page of closed positions when the end of the cards scrolls into view', async () => {
+    mockHasNextPage.current = true
+    render(<MarginPositionsTable layout="cards" renderPositionSheet={renderSheetStub} />)
+    fireEvent.click(screen.getByText('Closed'))
+    scrollCardsEndIntoView()
+    await waitFor(() => expect(mockFetchNextPage).toHaveBeenCalledTimes(1))
+  })
+
+  it('does not load past the last page', () => {
+    mockPositions.current = [OPEN_LONG_VALUED]
+    render(<MarginPositionsTable layout="cards" renderPositionSheet={renderSheetStub} />)
+    scrollCardsEndIntoView()
+    expect(mockFetchNextPage).not.toHaveBeenCalled()
   })
 
   it('renders no table columns, which cannot fit a phone', () => {

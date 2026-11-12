@@ -20,7 +20,7 @@ import { TokenWarningCard } from 'uniswap/src/features/tokens/warnings/TokenWarn
 import TokenWarningModal from 'uniswap/src/features/tokens/warnings/TokenWarningModal'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { LPGeoRestrictionBanner } from '~/components/GeoRestriction/LPGeoRestrictionBanner'
-import { MobileBottomBar } from '~/components/NavBar/MobileBottomBar'
+import { MobileBottomBar } from '~/components/MobileBottomBar/MobileBottomBar'
 import { LoadingBubble } from '~/components/Tokens/loading'
 import { useAccount } from '~/connection/hooks/useAccount'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
@@ -29,9 +29,9 @@ import { PositionFlowStep } from '~/features/Liquidity/Create/types'
 import { useLPGeoRestriction } from '~/features/Liquidity/useLPGeoRestriction'
 import { getProtocolVersionLabel } from '~/features/Liquidity/utils/protocolVersion'
 import { ScrollDirection, useScroll } from '~/hooks/useScroll'
-import { buildPoolSearchParams } from '~/pages/AddLiquidity/poolLinkParams'
 import { Swap } from '~/pages/Swap'
 import { getChainUrlParam } from '~/utils/params/chainParams'
+import { buildPoolSearchParams } from '~/utils/params/poolLinkParams'
 
 // `$xl` stays `$xl`: mycelium's `media-xl` is `(max-width: 1024px)`; Tailwind's stock `xl:` is the inversion.
 // Explicit return type: forwardRef's inferred type isn't nameable under declaration emit (TS2883).
@@ -63,8 +63,8 @@ const PoolDetailsStatsButtonsRow: ForwardRefExoticComponent<FlexCompatProps & Re
 interface PoolDetailsStatsButtonsProps {
   chainId?: UniverseChainId
   poolIdOrAddress: string
-  token0?: ParsedToken
-  token1?: ParsedToken
+  baseToken?: ParsedToken
+  quoteToken?: ParsedToken
   feeTier?: number
   tickSpacing?: number
   hookAddress?: string
@@ -100,8 +100,8 @@ const PoolButton = ({ isOpen, icon, onPress, children, 'data-testid': dataTestId
 export function PoolDetailsStatsButtons({
   chainId,
   poolIdOrAddress,
-  token0,
-  token1,
+  baseToken,
+  quoteToken,
   feeTier,
   tickSpacing,
   hookAddress,
@@ -130,23 +130,23 @@ export function PoolDetailsStatsButtons({
   const navigate = useNavigate()
   const location = useLocation()
   const protocolVersionLabel = protocolVersion !== undefined ? getProtocolVersionLabel(protocolVersion) : undefined
-  const currency0 = token0 && v2TokenToCurrency(token0)
-  const currency1 = token1 && v2TokenToCurrency(token1)
-  const currencyInfo0 = useCurrencyInfo(currency0 && currencyId(currency0))
-  const currencyInfo1 = useCurrencyInfo(currency1 && currencyId(currency1))
+  const baseCurrency = baseToken && v2TokenToCurrency(baseToken)
+  const quoteCurrency = quoteToken && v2TokenToCurrency(quoteToken)
+  const baseCurrencyInfo = useCurrencyInfo(baseCurrency && currencyId(baseCurrency))
+  const quoteCurrencyInfo = useCurrencyInfo(quoteCurrency && currencyId(quoteCurrency))
 
   // Drives the banner only. The CTA below only navigates; the add-liquidity flow it lands in gates on
   // the same hook before anything is signed.
   const { isGeoRestricted, restrictedTokenSymbol } = useLPGeoRestriction({
-    token0: currency0,
-    token1: currency1,
+    token0: baseCurrency,
+    token1: quoteCurrency,
   })
 
   const handleAddLiquidity = async () => {
-    if (currency0 && currency1) {
-      const currency0Address = currency0.isNative ? NATIVE_CHAIN_ID : currency0.address
-      const currency1Address = currency1.isNative ? NATIVE_CHAIN_ID : currency1.address
-      const chainUrlParam = getChainUrlParam(chainId ?? currency0.chainId)
+    if (baseCurrency && quoteCurrency) {
+      const baseCurrencyAddress = baseCurrency.isNative ? NATIVE_CHAIN_ID : baseCurrency.address
+      const quoteCurrencyAddress = quoteCurrency.isNative ? NATIVE_CHAIN_ID : quoteCurrency.address
+      const chainUrlParam = getChainUrlParam(chainId ?? baseCurrency.chainId)
 
       if (tokenId) {
         navigate(`/positions/${protocolVersionLabel}/${chainUrlParam}/${tokenId}`, {
@@ -154,8 +154,8 @@ export function PoolDetailsStatsButtons({
         })
       } else {
         const params = buildPoolSearchParams({
-          currencyA: currency0Address,
-          currencyB: currency1Address,
+          currencyA: baseCurrencyAddress,
+          currencyB: quoteCurrencyAddress,
           chain: chainUrlParam,
           fee:
             feeTier !== undefined
@@ -192,7 +192,7 @@ export function PoolDetailsStatsButtons({
     setShowWarningModal(true)
   }, [])
 
-  if (loading || !currency0 || !currency1) {
+  if (loading || !baseCurrency || !quoteCurrency) {
     return (
       <Flex row justifyContent="space-between" data-testid="pdp-buttons-loading-skeleton" mb="$spacing12">
         <LoadingBubble width="95%" containerProps={{ width: '50%' }} />
@@ -243,11 +243,14 @@ export function PoolDetailsStatsButtons({
           <Swap
             syncTabToUrl={false}
             initialInputChainId={chainId}
-            initialInputCurrency={currency0}
-            initialOutputCurrency={currency1}
+            initialInputCurrency={baseCurrency}
+            initialOutputCurrency={quoteCurrency}
           />
-          <TokenWarningCard currencyInfo={currencyInfo0} onPress={() => onWarningCardCtaPressed(currencyInfo0)} />
-          <TokenWarningCard currencyInfo={currencyInfo1} onPress={() => onWarningCardCtaPressed(currencyInfo1)} />
+          <TokenWarningCard currencyInfo={baseCurrencyInfo} onPress={() => onWarningCardCtaPressed(baseCurrencyInfo)} />
+          <TokenWarningCard
+            currencyInfo={quoteCurrencyInfo}
+            onPress={() => onWarningCardCtaPressed(quoteCurrencyInfo)}
+          />
           {warningModalCurrencyInfo && (
             // Intentionally duplicative with the TokenWarningModal in the swap component; this one only displays when user clicks "i" Info button on the TokenWarningCard
             <TokenWarningModal

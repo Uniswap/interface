@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { Arrow } from 'ui/src/components/arrow/Arrow'
 import { isCancelTimedOut } from 'uniswap/src/features/transactions/cancel/cancelTimeoutStateMachine'
 import type { UniswapXOrderDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { useOpenLimitOrders } from '~/components/AccountDrawer/MiniPortfolio/Activity/hooks'
+import { useOpenLimitOrders } from '~/components/Activity/hooks'
 
 function getExtraWarning({
   openLimitOrders,

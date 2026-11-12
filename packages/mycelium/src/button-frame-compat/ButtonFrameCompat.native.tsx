@@ -24,7 +24,6 @@ import { I18nManager, View } from 'react-native'
 import { Pressable } from 'react-native-gesture-handler'
 import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
 import { useResolveClassNames } from 'uniwind'
-import { noop } from 'utilities/src/react/noop'
 import {
   buttonCompatNativeFrameClassName,
   getContrastTextClass,
@@ -33,6 +32,7 @@ import {
 import { PRESS_SCALE } from '../button-compat/press-scale'
 import { cn } from '../cn'
 import { warnUnsupportedNativeProps } from '../compat/native-diagnostics'
+import { useNativeActivateAction, useNativePressResponder } from '../compat/native-pressability'
 import { nativeCompatProps } from '../compat/native-props'
 import { compatNativeStyle, type CompatNativeStyle } from '../compat/native-style'
 import {
@@ -90,32 +90,6 @@ function chainHandlers<E>(internal: (event: E) => void, caller: unknown): (event
     internal(event)
     ;(caller as (event: E) => void)(event)
   }
-}
-
-type NativePressEvent = Parameters<ButtonFramePressHandler>[0]
-
-/** What this leg actually dispatches: RNGH's event plus the two shimmed methods. */
-type ShimmedPressEvent = NativePressEvent & { stopPropagation: () => void; preventDefault: () => void }
-
-/**
- * RNGH's Pressable dispatches its own `PressableEvent` (`{ nativeEvent }`), but
- * the compat press props type the native arm as `GestureResponderEvent`
- * (`../compat/props.ts`), and the Tamagui frame this leg replaced really did
- * deliver one — Tamagui routes native presses through RN's `Pressability`. So
- * shared callers write `event.stopPropagation()`, typecheck green, and crash on
- * device. Re-add the two methods they reach for, as no-ops — which is what they
- * already were on native, where the responder system does not bubble presses.
- *
- * TRADEOFF: this narrows the type lie, it does not end it — a caller reaching
- * past these two still breaks. Remove once the press props are typed against
- * RNGH's event the way `../button-compat/press-handler.ts` does.
- */
-function shimPressEvent(caller: unknown): ButtonFramePressHandler | undefined {
-  if (typeof caller !== 'function') {
-    return undefined
-  }
-  const handler = caller as (event: ShimmedPressEvent) => void
-  return (event: NativePressEvent): void => handler({ ...event, stopPropagation: noop, preventDefault: noop })
 }
 
 export const ButtonFrameCompat = forwardRef<View, ButtonFrameCompatProps>(
@@ -177,6 +151,27 @@ export const ButtonFrameCompat = forwardRef<View, ButtonFrameCompatProps>(
       scale.value = withSporeCurve('fast', 1)
     }, [scale])
 
+    // Press dispatch rides the RN responder system (../compat/native-pressability.ts), not the
+    // RNGH Pressable's own gesture, so a frame nested in a TouchableArea still gets its press on Android.
+    // isDisabled + onDisabledPress stays interactive and routes to onDisabledPress, never onPress.
+    const callerHandlers = open as Record<string, ButtonFramePressHandler | undefined>
+    const pressHandler = isDisabled ? onDisabledPress : onPress
+    const onLongPress = isDisabled ? undefined : callerHandlers['onLongPress']
+    const live =
+      !blocked && [pressHandler, onLongPress, callerHandlers['onPressIn'], callerHandlers['onPressOut']].some(Boolean)
+    const responderProps = useNativePressResponder({
+      onPress: pressHandler as never,
+      onLongPress: onLongPress as never,
+      onPressIn: live ? (chainHandlers(handlePressIn, callerHandlers['onPressIn']) as never) : undefined,
+      onPressOut: live ? (chainHandlers(handlePressOut, callerHandlers['onPressOut']) as never) : undefined,
+      disabled: blocked,
+    })
+    const activateProps = useNativeActivateAction({
+      onPress: blocked ? undefined : pressHandler,
+      accessibilityActions: open.accessibilityActions,
+      onAccessibilityAction: open.onAccessibilityAction as never,
+    })
+
     const handleHoverIn = useCallback(() => {
       if (blocked) {
         return
@@ -228,7 +223,8 @@ export const ButtonFrameCompat = forwardRef<View, ButtonFrameCompatProps>(
       <ButtonFrameContextProvider value={ctx}>
         <AnimatedPressable
           accessibilityRole="button"
-          accessibilityState={{ disabled: isDisabled || undefined }}
+          // Not while onDisabledPress keeps it interactive: Android maps this flag to setEnabled(false).
+          accessibilityState={{ disabled: blocked || undefined }}
           {...nativeCompatProps(open as Parameters<typeof nativeCompatProps>[0])}
           dd-action-name={ddActionName}
           disabled={blocked}
@@ -237,10 +233,8 @@ export const ButtonFrameCompat = forwardRef<View, ButtonFrameCompatProps>(
           // so a caller's onPressIn/onHoverIn must fire on native too.
           onHoverIn={chainHandlers(handleHoverIn, (open as Record<string, unknown>)['onHoverIn'])}
           onHoverOut={chainHandlers(handleHoverOut, (open as Record<string, unknown>)['onHoverOut'])}
-          onLongPress={shimPressEvent((open as Record<string, unknown>)['onLongPress']) as never}
-          onPress={blocked ? undefined : shimPressEvent(onPress)}
-          onPressIn={chainHandlers(handlePressIn, shimPressEvent((open as Record<string, unknown>)['onPressIn']))}
-          onPressOut={chainHandlers(handlePressOut, shimPressEvent((open as Record<string, unknown>)['onPressOut']))}
+          {...responderProps}
+          {...activateProps}
           ref={ref}
           style={[
             frameClassStyle,

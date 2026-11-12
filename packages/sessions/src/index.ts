@@ -162,6 +162,10 @@ export type {
   OAuthUserInfo,
 } from '@universe/sessions/src/oauth-service/types'
 
+// Gateway cookies (same-origin BFF relays)
+export { pickGatewayCookies, reportRelayedCookieDomain } from '@universe/sessions/src/gateway-cookies/gatewayCookies'
+export type { RelayedCookieLogger } from '@universe/sessions/src/gateway-cookies/gatewayCookies'
+
 // Performance Tracking
 export type { PerformanceTracker } from '@universe/sessions/src/performance/types'
 export {

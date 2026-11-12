@@ -1,11 +1,11 @@
 import { useTranslation } from 'react-i18next'
 import { ChartSkeleton } from '~/components/Charts/LoadingState'
-import { ChartType, DataQuality } from '~/components/Charts/utils'
 import { VolumeChart } from '~/components/Charts/VolumeChart'
 import { TimePeriod } from '~/data/util'
 import { EXPLORE_CHART_HEIGHT_PX } from '~/features/Explore/constants'
 import { useTDPVolumeChartData } from '~/pages/TokenDetails/components/chart/hooks/useTDPVolumeChartData'
 import type { TDPChartQueryVariables } from '~/pages/TokenDetails/components/chart/TDPChartState'
+import { ChartType, DataQuality } from '~/utils/charts'
 
 interface TDPVolumeChartPanelProps {
   variables: TDPChartQueryVariables

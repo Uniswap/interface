@@ -10,6 +10,7 @@ import {
   useMeasuredFieldWidth,
 } from '~/components/NumericalInput/LargeAmountInput'
 import { StyledPercentInput } from '~/components/PercentInput'
+import { PredefinedAmount } from '~/components/PredefinedAmount/PredefinedAmount'
 import { LiquidityModalDetailRows } from '~/features/Liquidity/LiquidityModalDetailRows'
 import { LiquidityPositionInfo } from '~/features/Liquidity/LiquidityPositionInfo'
 import { canUnwrapCurrency } from '~/features/Liquidity/utils/currency'
@@ -18,7 +19,6 @@ import {
   useRemoveLiquidityModalContext,
 } from '~/pages/RemoveLiquidity/RemoveLiquidityModalContext'
 import { useRemoveLiquidityTxContext } from '~/pages/RemoveLiquidity/RemoveLiquidityTxContext'
-import { PredefinedAmount } from '~/pages/Swap/Buy/PredefinedAmount'
 
 const isValidPercentageInput = (value: string): boolean => {
   const numValue = Number(value)

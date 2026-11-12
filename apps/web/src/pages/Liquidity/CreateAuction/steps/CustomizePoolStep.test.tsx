@@ -1,10 +1,11 @@
 import type { Currency } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
 import { describe, expect, it, vi } from 'vitest'
+import { NEW_TOKEN_PLACEHOLDER_ADDRESS } from '~/constants/tokenLaunch'
+import { RaiseCurrency } from '~/features/Toucan/utils/raiseCurrency'
 import { CustomizePoolStep } from '~/pages/Liquidity/CreateAuction/steps/CustomizePoolStep'
 import { CreateAuctionStoreContext } from '~/pages/Liquidity/CreateAuction/store/CreateAuctionStoreContext'
 import { createCreateAuctionStore } from '~/pages/Liquidity/CreateAuction/store/createCreateAuctionStore'
-import { NEW_TOKEN_PLACEHOLDER_ADDRESS, RaiseCurrency } from '~/pages/Liquidity/CreateAuction/types'
 import { getPrimaryStablecoin } from '~/pages/Liquidity/CreateAuction/utils'
 import { render } from '~/test-utils/render'
 

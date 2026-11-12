@@ -1,5 +1,6 @@
 import type { HookEntry } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/types_pb'
 import type { UniverseChainId } from '@universe/chains'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Flex, ModalCloseIcon, Text, TouchableArea } from '@universe/mycelium'
 import { BookOpen } from '@universe/mycelium/icons/BookOpen'
 import { Code } from '@universe/mycelium/icons/Code'
@@ -29,6 +30,7 @@ import { openUri } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 import { logger } from 'utilities/src/logger/logger'
+import { HookPermissions } from '~/features/Liquidity/HookPermissions'
 import { getActiveHookFlags } from '~/features/Liquidity/utils/getActiveHookFlags'
 
 interface HookDetailsModalProps {
@@ -69,6 +71,7 @@ function DetailRow({ icon, label, children }: { icon: ReactNode; label: string; 
 // center, the configuring deployer, and a documentation link).
 export function HookDetailsModal({ hookEntry, chainId, isOpen, onClose }: HookDetailsModalProps) {
   const { t } = useTranslation()
+  const isHooksExploreEnabled = useFeatureFlag(FeatureFlags.HooksExplore)
   const activeFlags = useMemo(() => getActiveHookFlags(hookEntry.flags), [hookEntry.flags])
   const getUniswapHookProvenance = useUniswapHookProvenance()
   // Gate on the trusted `chainId` prop — the chain the UI displays and looked the hook up by — not the
@@ -163,7 +166,9 @@ export function HookDetailsModal({ hookEntry, chainId, isOpen, onClose }: HookDe
             </DetailRow>
           ) : null}
 
-          {activeFlags.length > 0 ? (
+          {isHooksExploreEnabled ? (
+            <HookPermissions hookAddress={hookEntry.address} />
+          ) : activeFlags.length > 0 ? (
             <DetailRow icon={<Code size="$icon.16" color="$neutral2" />} label={t('common.flags')}>
               <Flex row flexWrap="wrap" gap="$gap4">
                 {activeFlags.map((flag) => (

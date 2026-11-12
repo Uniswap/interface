@@ -11,6 +11,7 @@ import { useTimeout } from 'utilities/src/time/timing'
 interface NotificationLifecycleProps {
   address?: string
   hideDelay?: number
+  isDismissPaused?: boolean
   onPress?: () => void
   onDismissLatest?: () => void
   onShowCurrentNotification?: () => void
@@ -20,6 +21,7 @@ interface NotificationLifecycleProps {
 export function useNotificationLifecycle({
   address,
   hideDelay,
+  isDismissPaused,
   onPress,
   onShowCurrentNotification,
   onDismissLatest,
@@ -33,40 +35,42 @@ export function useNotificationLifecycle({
   const dispatch = useDispatch()
   const evmAddress = useActiveAddress(Platform.EVM)
   const notifications = useSelectAddressNotifications(evmAddress ?? null)
+  const scope = address ?? evmAddress ?? undefined
   const currentNotification = notifications?.[0]
   const hasQueuedNotification =
     notifications?.slice(1).some((notification) => notification.type !== AppNotificationType.EarnSwapUpsell) ?? false
 
   useEffect(() => {
     if (currentNotification?.shown) {
-      dispatch(popNotification({ address }))
+      dispatch(popNotification({ address: scope }))
     }
     // oxlint-disable-next-line react/exhaustive-deps -- biome-parity: oxlint is stricter here
-  }, [address, dispatch])
+  }, [scope, dispatch])
 
   useEffect(() => {
     if (currentNotification) {
       onShowCurrentNotification?.()
       // delay to ensure the notification is shown if theres a quick navigation event
       setTimeout(() => {
-        dispatch(setNotificationViewed({ address }))
+        dispatch(setNotificationViewed({ address: scope }))
       }, SPRING_ANIMATION_DELAY * 2)
     }
-  }, [currentNotification, dispatch, address, onShowCurrentNotification])
+  }, [currentNotification, dispatch, scope, onShowCurrentNotification])
 
   const dismissLatest = useCallback(() => {
     onDismissLatest?.()
-    setTimeout(() => dispatch(popNotification({ address })), 500)
-  }, [address, dispatch, onDismissLatest])
+    setTimeout(() => dispatch(popNotification({ address: scope })), 500)
+  }, [scope, dispatch, onDismissLatest])
 
   // If there is another notification in the queue then hide the current one immediately
   const delay = hasQueuedNotification ? 0 : (hideDelay ?? DEFAULT_TOAST_HIDE_DELAY)
-  const cancelDismiss = useTimeout(dismissLatest, delay)
+  // useTimeout skips negative delays; unpausing restarts the full delay
+  const cancelDismiss = useTimeout(dismissLatest, isDismissPaused ? -1 : delay)
 
   const onNotificationPress = (): void => {
     cancelDismiss()
     if (onPress) {
-      dispatch(popNotification({ address }))
+      dispatch(popNotification({ address: scope }))
       onPress()
     } else {
       dismissLatest()

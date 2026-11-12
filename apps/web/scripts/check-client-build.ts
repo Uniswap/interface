@@ -1,7 +1,7 @@
 /* oxlint-disable no-console -- CI check script */
 // Built-client gate (INFRA-3217 + bundle budgets): ONE pass over build/client
 // that enforces
-//  - the gzipped entry-chunk budget,
+//  - the gzipped initial-JS baseline (entry + modulepreloads, ratcheted both ways),
 //  - the render-blocking CSS gzip budget (pinned near the var-lane number per
 //    the INFRA-3217 round-2 ruling so per-value enumeration cannot creep back),
 //  - the compat class-emission contract: closed set ⊆ built CSS, the
@@ -11,7 +11,7 @@
 // each read every CSS asset (round-3 simplification pass, item 6).
 // Requires a completed client build (build/client). Run via
 // `bun run check:client-build`.
-import { readdirSync, readFileSync } from 'node:fs'
+import { appendFileSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { gzipSync } from 'node:zlib'
 // Relative cross-package import (script-only): the emitted-class parsing and
@@ -43,9 +43,9 @@ import {
   unresolvedCustomProperties,
 } from '../../../packages/mycelium/src/compat/gate-helpers'
 
-// Current entry chunk is ~2,749 KB gzipped (2026-07). Ratchet this budget down
-// as entry-size reductions land.
-const ENTRY_GZIP_BUDGET_BYTES = 2_850_000
+// Initial JS (entry + modulepreloads) gates every page's first render; growth must be deliberate.
+// bundle-sizes.json must stay within this of the build, in either direction.
+const BASELINE_TOLERANCE_BYTES = 5_000
 
 // CI fails the build when the render-blocking stylesheet exceeds this gzipped.
 // Pinned near the measured var-indirection number (~126.5 kB) so the retired
@@ -57,6 +57,8 @@ const GZIP_LEVEL = 9
 const webRoot = join(import.meta.dirname, '..')
 const clientDir = join(webRoot, 'build', 'client')
 const genFile = join(webRoot, '..', '..', 'packages', 'mycelium', 'compat-classes.gen.txt')
+const baselineFile = join(webRoot, 'bundle-sizes.json')
+const reportFile = join(webRoot, 'build', 'bundle-size-report.md')
 
 function kb(bytes: number): string {
   return `${(bytes / 1000).toFixed(1)} kB`
@@ -67,42 +69,90 @@ function fail(message: string): never {
   process.exit(1)
 }
 
-function parseEntryScriptPaths(html: string): string[] {
-  const scriptTags = html.match(/<script\b[^>]*>/g) ?? []
-  return scriptTags
-    .filter((tag) => tag.includes('type="module"'))
-    .map((tag) => /\bsrc="([^"]+)"/.exec(tag)?.[1])
+/** Every JS file index.html fetches before first render: module entry scripts plus their modulepreloads. */
+function parseInitialScriptPaths(html: string): string[] {
+  const tags = html.match(/<(?:script|link)\b[^>]*>/g) ?? []
+  return tags
+    .filter((tag) => tag.includes('type="module"') || tag.includes('rel="modulepreload"'))
+    .map((tag) => /\b(?:src|href)="([^"]+)"/.exec(tag)?.[1])
     .filter((src): src is string => src !== undefined && src.startsWith('/assets/') && src.endsWith('.js'))
 }
 
-function checkEntryBudget(): void {
+function measureInitialJs(): { gzipBytes: number; files: number } {
   let html: string
   try {
     html = readFileSync(join(clientDir, 'index.html'), 'utf-8')
   } catch {
     fail(`Missing ${clientDir}/index.html — run a client build first (e.g. bun run build:staging).`)
   }
-  const entryPaths = parseEntryScriptPaths(html)
-  if (entryPaths.length === 0) {
+  const paths = parseInitialScriptPaths(html)
+  if (paths.length === 0) {
     fail(
-      'No module entry scripts under /assets/ found in build/client/index.html.\n' +
+      'No module entry script or modulepreload under /assets/ found in build/client/index.html.\n' +
         'The build output layout may have changed — update scripts/check-client-build.ts.',
     )
   }
-  let totalGzipBytes = 0
-  for (const entryPath of entryPaths) {
-    const gzipBytes = gzipSync(readFileSync(join(clientDir, entryPath)), { level: GZIP_LEVEL }).byteLength
-    totalGzipBytes += gzipBytes
-    console.info(`${entryPath}: ${kb(gzipBytes)} gzip`)
+  let gzipBytes = 0
+  for (const path of paths) {
+    gzipBytes += gzipSync(readFileSync(join(clientDir, path)), { level: GZIP_LEVEL }).byteLength
   }
-  console.info(`Entry total: ${kb(totalGzipBytes)} gzip (budget: ${kb(ENTRY_GZIP_BUDGET_BYTES)})`)
-  if (totalGzipBytes > ENTRY_GZIP_BUDGET_BYTES) {
+  console.info(`Initial JS: ${kb(gzipBytes)} gzip across ${paths.length} files (entry + modulepreloads).`)
+  return { gzipBytes, files: paths.length }
+}
+
+function readBaselineInitialJs(): number {
+  const { initialJsGzipBytes } = JSON.parse(readFileSync(baselineFile, 'utf-8')) as { initialJsGzipBytes?: unknown }
+  if (typeof initialJsGzipBytes !== 'number') {
+    fail(`${baselineFile} must contain a numeric initialJsGzipBytes.`)
+  }
+  return initialJsGzipBytes
+}
+
+function signedKb(bytes: number): string {
+  return `${bytes >= 0 ? '+' : '−'}${kb(Math.abs(bytes))}`
+}
+
+function writeReport({
+  initialJs,
+  baseline,
+  cssGzipBytes,
+}: {
+  initialJs: { gzipBytes: number; files: number }
+  baseline: number
+  cssGzipBytes: number
+}): void {
+  const delta = initialJs.gzipBytes - baseline
+  const status = Math.abs(delta) > BASELINE_TOLERANCE_BYTES ? '❌' : '✅'
+  const cssStatus = cssGzipBytes > CSS_GZIP_BUDGET_BYTES ? '❌' : '✅'
+  const report =
+    '### Web bundle size (gzip)\n\n' +
+    '| | Size | Reference | Delta |\n|---|---|---|---|\n' +
+    `| ${status} Initial JS (${initialJs.files} files) | ${kb(initialJs.gzipBytes)} | ${kb(baseline)} baseline | ${signedKb(delta)} |\n` +
+    `| ${cssStatus} CSS | ${kb(cssGzipBytes)} | ${kb(CSS_GZIP_BUDGET_BYTES)} budget | ${signedKb(cssGzipBytes - CSS_GZIP_BUDGET_BYTES)} |\n\n` +
+    `Initial JS is everything \`index.html\` loads before first render, \`/swap\` included. ` +
+    `It must stay within ±${kb(BASELINE_TOLERANCE_BYTES)} of \`apps/web/bundle-sizes.json\`. ` +
+    'Keep it flat: put new routes, modals and heavy dependencies behind `lazy()` / `import()` ' +
+    'instead of importing them statically from the app shell.\n'
+  writeFileSync(reportFile, report)
+  if (process.env.GITHUB_STEP_SUMMARY) {
+    appendFileSync(process.env.GITHUB_STEP_SUMMARY, report)
+  }
+}
+
+function checkInitialJsBudget(gzipBytes: number, baseline: number): void {
+  const delta = gzipBytes - baseline
+  const update = `set initialJsGzipBytes in apps/web/bundle-sizes.json to ${gzipBytes}`
+  if (delta > BASELINE_TOLERANCE_BYTES) {
     fail(
-      `Entry bundle is over budget by ${kb(totalGzipBytes - ENTRY_GZIP_BUDGET_BYTES)}. ` +
-        'Reduce entry-chunk weight (lazy-load, dedupe, or drop dependencies) rather than raising the budget.',
+      `Initial JS grew ${kb(delta)} over the baseline (${kb(baseline)}). It loads before every page renders, so ` +
+        'move the new weight behind lazy() / import(), dedupe it, or drop it. ' +
+        `If the growth is intended, ${update} and explain why in the PR.`,
     )
   }
-  console.info('Entry bundle is within budget.')
+  if (delta < -BASELINE_TOLERANCE_BYTES) {
+    fail(`Initial JS shrank ${kb(-delta)} below the baseline — lock in the win: ${update}.`)
+  }
+  console.info(`Initial JS is within ${kb(BASELINE_TOLERANCE_BYTES)} of the baseline (${signedKb(delta)}).`)
 }
 
 /** Read every built CSS asset ONCE; both the budget and the compat checks consume this. */
@@ -125,7 +175,7 @@ function readCssAssets(): Map<string, string> {
   return cssByFile
 }
 
-function checkCssBudget(cssByFile: Map<string, string>): void {
+function measureCss(cssByFile: Map<string, string>): { gzipBytes: number; perAsset: string[] } {
   const perAsset: string[] = []
   let totalCssGzipBytes = 0
   for (const [file, css] of cssByFile) {
@@ -135,6 +185,10 @@ function checkCssBudget(cssByFile: Map<string, string>): void {
     console.info(`assets/${file}: ${kb(gzipBytes)} gzip`)
   }
   console.info(`CSS total: ${kb(totalCssGzipBytes)} gzip (budget: ${kb(CSS_GZIP_BUDGET_BYTES)})`)
+  return { gzipBytes: totalCssGzipBytes, perAsset }
+}
+
+function checkCssBudget({ gzipBytes: totalCssGzipBytes, perAsset }: { gzipBytes: number; perAsset: string[] }): void {
   if (totalCssGzipBytes > CSS_GZIP_BUDGET_BYTES) {
     fail(
       `Built CSS is over budget by ${kb(totalCssGzipBytes - CSS_GZIP_BUDGET_BYTES)} ` +
@@ -382,9 +436,13 @@ function checkCompatResolution(cssByFile: Map<string, string>): void {
 }
 
 function main(): void {
-  checkEntryBudget()
+  const initialJs = measureInitialJs()
+  const baseline = readBaselineInitialJs()
   const cssByFile = readCssAssets()
-  checkCssBudget(cssByFile)
+  const css = measureCss(cssByFile)
+  writeReport({ initialJs, baseline, cssGzipBytes: css.gzipBytes })
+  checkInitialJsBudget(initialJs.gzipBytes, baseline)
+  checkCssBudget(css)
   checkCompatEmission(cssByFile)
   checkCompatResolution(cssByFile)
   console.info('check:client-build OK.')

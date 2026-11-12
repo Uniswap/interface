@@ -4,11 +4,11 @@ import { PollingInterval } from 'uniswap/src/constants/misc'
 import { WALLET_POSITIONS_QUERY_KEY_PREFIX } from 'uniswap/src/data/apiClients/liquidityService/queryKeys'
 import { SAMPLE_SEED_ADDRESS_1 } from 'uniswap/src/test/fixtures/assets/constants'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+import { PortfolioTab } from '~/hooks/usePortfolioRoutes/types'
 import { useInterval } from '~/lib/hooks/useInterval'
 import { usePortfolioAddresses } from '~/pages/Portfolio/hooks/usePortfolioAddresses'
 import { usePortfolioHeartbeatCoordinator } from '~/pages/Portfolio/hooks/usePortfolioHeartbeatCoordinator'
 import { useShowDemoView } from '~/pages/Portfolio/hooks/useShowDemoView'
-import { PortfolioTab } from '~/pages/Portfolio/types'
 
 const mockRefetchQueries = vi.fn().mockResolvedValue(undefined)
 

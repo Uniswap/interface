@@ -6,9 +6,9 @@ import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
 import { AmountInput } from 'uniswap/src/components/AmountInput/AmountInput'
 import { numericInputRegex } from 'uniswap/src/components/AmountInput/utils/numericInputEnforcer'
+import { useCreateLiquidityContext } from '~/features/Liquidity/Create/CreateLiquidityContextProvider'
 import { RangeAmountInputPriceMode } from '~/features/Liquidity/Create/types'
 import { getBaseAndQuoteCurrencies } from '~/features/Liquidity/utils/currency'
-import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 
 enum RangeSelectionInput {
   MIN = 0,

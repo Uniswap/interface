@@ -5,7 +5,7 @@ import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Dialog } from 'uniswap/src/components/dialog/Dialog'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
+import { useCreateLiquidityContext } from '~/features/Liquidity/Create/CreateLiquidityContextProvider'
 
 export const DynamicFeeTierSpeedbump = () => {
   const { setPositionState, dynamicFeeTierSpeedbumpData, setDynamicFeeTierSpeedbumpData } = useCreateLiquidityContext()

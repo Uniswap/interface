@@ -114,10 +114,12 @@ export function usePortfolioBalancePart({
     data: walletBalancesResult.data,
     loading: walletBalancesResult.isFetching,
     isPending: walletBalancesResult.isPending,
+    isPlaceholderData: walletBalancesResult.isPlaceholderData,
     isError: walletBalancesResult.isError,
     refetch: walletBalancesResult.refetch,
     error: walletBalancesResult.error || undefined,
     dataUpdatedAt: walletBalancesResult.dataUpdatedAt || undefined,
+    errorUpdatedAt: walletBalancesResult.errorUpdatedAt || undefined,
   }
 }
 

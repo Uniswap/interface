@@ -23,9 +23,11 @@ const nowISO = new Date().toISOString()
 // Should be kept in sync with PROD_ENTRY_GATEWAY_API_BASE_URL in packages/api/src/clients/base/entryGatewayUrls.ts
 const DATA_API_V2_URL = 'https://entry-gateway.backend-prod.api.uniswap.org/data.v2.DataApiService'
 const POOLS_PER_CHAIN = 50
+const TOKENS_PER_CHAIN = 50
+const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
-// Explore URL slug → chain id for the chains whose top pools get sitemap entries
-const poolChains = {
+// Explore URL slug → chain id for the chains whose top pools and tokens get sitemap entries
+const sitemapChains = {
   ethereum: 1,
   arbitrum: 42161,
   optimism: 10,
@@ -55,34 +57,46 @@ fs.readFile('./public/tokens-sitemap.xml', 'utf8', async (_err, data) => {
       })
     }
 
-    const tokensResponse = await fetch(
-      'https://interface.gateway.uniswap.org/v2/uniswap.explore.v1.ExploreStatsService/TokenRankings?connect=v1&encoding=json&message=' +
-        encodeURIComponent(JSON.stringify({ chainId: 'ALL_NETWORKS' })),
-      {
-        method: 'GET',
+    for (const [chainSlug, chainId] of Object.entries(sitemapChains)) {
+      // Top tokens by volume; data API v2 has no "trending" sort like the retired Explore TokenRankings
+      const tokensResponse = await fetch(`${DATA_API_V2_URL}/ListTokens`, {
+        method: 'POST',
         headers: {
-          accept: '*/*',
-          origin: 'https://app.uniswap.org',
-          'content-type': 'application/json',
+          'Content-Type': 'application/json',
+          'Connect-Protocol-Version': '1',
         },
-      },
-    )
-
-    const tokensJSON = await tokensResponse.json()
-    const tokenAddresses = tokensJSON.tokenRankings.TRENDING.tokens.map((token) => {
-      return { chainName: token.chain.toLowerCase(), address: token.address ? token.address : 'NATIVE' }
-    })
-
-    tokenAddresses.forEach(({ chainName, address }) => {
-      const tokenURL = `https://app.uniswap.org/explore/tokens/${chainName}/${normalizeTokenAddressForCache(address)}`
-      if (!(tokenURL in tokenURLs)) {
-        sitemap.urlset.url.push({
-          loc: [tokenURL],
-          lastmod: [nowISO],
-          priority: [0.8],
-        })
+        body: JSON.stringify({
+          chainIds: [chainId],
+          page: { pageSize: TOKENS_PER_CHAIN },
+          sort: { orderBy: 'TOKENS_ORDER_BY_VOLUME_ALL', ascending: false },
+          // Required by the API; UNSPECIFIED is rejected
+          sparklineDuration: 'HISTORY_DURATION_DAY',
+        }),
+      })
+      if (!tokensResponse.ok) {
+        throw new Error(`ListTokens for ${chainSlug} returned HTTP ${tokensResponse.status}`)
       }
-    })
+      const tokensJSON = await tokensResponse.json()
+
+      for (const { multichainToken } of tokensJSON.multichainTokens ?? []) {
+        // A token is native only where its address on this chain is the zero address: ETH is
+        // TOKEN_TYPE_NATIVE across chains, but on e.g. BNB and Polygon it has no native address
+        const chainAddress = multichainToken?.addresses?.[String(chainId)]
+        if (!chainAddress) {
+          continue
+        }
+        const address = chainAddress === ZERO_ADDRESS ? 'NATIVE' : chainAddress
+        const tokenURL = `https://app.uniswap.org/explore/tokens/${chainSlug}/${normalizeTokenAddressForCache(address)}`
+        if (!(tokenURL in tokenURLs)) {
+          tokenURLs[tokenURL] = true
+          sitemap.urlset.url.push({
+            loc: [tokenURL],
+            lastmod: [nowISO],
+            priority: [0.8],
+          })
+        }
+      }
+    }
 
     const builder = new Builder()
     const xml = builder.buildObject(sitemap)
@@ -102,6 +116,8 @@ fs.readFile('./public/tokens-sitemap.xml', 'utf8', async (_err, data) => {
     })
   } catch (e) {
     console.error(e)
+    // Fail the run so a broken API can't leave a sitemap silently stale
+    process.exitCode = 1
   }
 })
 
@@ -119,7 +135,7 @@ fs.readFile('./public/pools-sitemap.xml', 'utf8', async (_err, data) => {
       })
     }
 
-    for (const [chainSlug, chainId] of Object.entries(poolChains)) {
+    for (const [chainSlug, chainId] of Object.entries(sitemapChains)) {
       // Top pools by TVL across every protocol version; poolId is the pair/pool address, or the pool id for v4
       const poolsResponse = await fetch(`${DATA_API_V2_URL}/ListPools`, {
         method: 'POST',
@@ -133,6 +149,9 @@ fs.readFile('./public/pools-sitemap.xml', 'utf8', async (_err, data) => {
           page: { pageSize: POOLS_PER_CHAIN },
         }),
       })
+      if (!poolsResponse.ok) {
+        throw new Error(`ListPools for ${chainSlug} returned HTTP ${poolsResponse.status}`)
+      }
       const poolsJSON = await poolsResponse.json()
       const poolIds = (poolsJSON.pools ?? []).map((rankedPool) => rankedPool.pool?.poolId).filter(Boolean)
 
@@ -166,5 +185,7 @@ fs.readFile('./public/pools-sitemap.xml', 'utf8', async (_err, data) => {
     })
   } catch (e) {
     console.error(e)
+    // Fail the run so a broken API can't leave a sitemap silently stale
+    process.exitCode = 1
   }
 })

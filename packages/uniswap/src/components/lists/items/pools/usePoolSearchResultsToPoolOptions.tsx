@@ -35,8 +35,17 @@ export function usePoolSearchResultsToPoolOptions(searchResults: PoolSearchResul
     // build PoolOptions
     return searchResults
       .map((searchResult): PoolOption | undefined => {
-        const { chainId, poolId, protocolVersion, hookAddress, feeTier, token0CurrencyId, token1CurrencyId, stats } =
-          searchResult
+        const {
+          chainId,
+          poolId,
+          protocolVersion,
+          hookAddress,
+          feeTier,
+          token0CurrencyId,
+          token1CurrencyId,
+          isToken0Quote,
+          stats,
+        } = searchResult
         const token0CurrencyInfo = currencyIdToCurrencyInfo[normalizeCurrencyIdForMapLookup(token0CurrencyId)]
         const token1CurrencyInfo = currencyIdToCurrencyInfo[normalizeCurrencyIdForMapLookup(token1CurrencyId)]
 
@@ -53,6 +62,7 @@ export function usePoolSearchResultsToPoolOptions(searchResults: PoolSearchResul
           feeTier: protocolVersion === ProtocolVersion.V2 ? V2_DEFAULT_FEE_TIER : feeTier,
           token0CurrencyInfo,
           token1CurrencyInfo,
+          isToken0Quote,
           volume1dUsd: stats?.volume1dUsd,
           apr: stats?.apr,
         }

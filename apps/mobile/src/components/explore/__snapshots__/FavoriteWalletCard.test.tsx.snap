@@ -7,6 +7,7 @@ exports[`FavoriteWalletCard > renders without error 1`] = `
     style="border-top-left-radius: 16px; border-top-right-radius: 16px; border-bottom-right-radius: 16px; border-bottom-left-radius: 16px;"
   >
     <button
+      accessibilityactions="[object Object]"
       android_ripple="[object Object]"
       data-testid="favorite-wallet-card"
       role="button"

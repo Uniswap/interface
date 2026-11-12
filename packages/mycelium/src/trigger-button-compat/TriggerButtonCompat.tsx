@@ -69,6 +69,7 @@ export const TriggerButtonCompat = React.forwardRef<HTMLDivElement, TriggerButto
     }
 
     return (
+      // oxlint-disable-next-line jsx-a11y/click-events-have-key-events -- TODO: drop once compat buttons get Enter/Space activation
       <div
         ref={ref}
         role="button"

@@ -36,7 +36,7 @@ runFrequency: scheduled
 code_paths:
   - apps/web/src/features/wallet/components/WalletModal/EmbeddedWalletModal.tsx
   - apps/web/src/connection/
-  - apps/web/src/components/AccountDrawer/PasskeyMenu/
+  - apps/web/src/features/wallet/components/AccountDrawer/PasskeyMenu/
 automationRefs:
   - path: apps/web/src/features/wallet/components/WalletModal/EmbeddedWalletModal.e2e.test.ts
     testName: Embedded Wallet — connections panel > Connect button opens EmbeddedWalletConnectionsModal
@@ -118,7 +118,7 @@ runFrequency: release
 # coverage
 code_paths:
   - apps/web/src/features/wallet/components/GetTheAppModal/EmbeddedWalletOnboarding/
-  - apps/web/src/components/AccountDrawer/PasskeyMenu/
+  - apps/web/src/features/wallet/components/AccountDrawer/PasskeyMenu/
 automationRefs:
   - path: apps/web/src/features/wallet/components/GetTheAppModal/EWRegistration.e2e.test.ts
     testName: EW Registration > Modal opens to ChooseUnitag step when EW enabled
@@ -161,7 +161,7 @@ runFrequency: release
 code_paths:
   - apps/web/src/features/wallet/components/WalletModal/WalletModalLayout.tsx
   - apps/web/src/connection/
-  - apps/web/src/components/AccountDrawer/PasskeyMenu/
+  - apps/web/src/features/wallet/components/AccountDrawer/PasskeyMenu/
 automationRefs:
   - path: apps/web/src/features/wallet/components/WalletModal/WalletModals.test.tsx
     testName: EmbeddedWalletConnectionsModal > OAuth initiation > Google button calls initOAuth and sets sessionStorage
@@ -205,11 +205,11 @@ testLevel: e2e
 runFrequency: release
 # coverage
 code_paths:
-  - apps/web/src/components/AccountDrawer/PasskeyMenu/
+  - apps/web/src/features/wallet/components/AccountDrawer/PasskeyMenu/
 automationRefs:
-  - path: apps/web/src/components/AccountDrawer/PasskeyMenu/PasskeyMenu.e2e.test.ts
+  - path: apps/web/src/features/wallet/components/AccountDrawer/PasskeyMenu/PasskeyMenu.e2e.test.ts
     testName: shows authenticators after API response
-  - path: apps/web/src/components/AccountDrawer/PasskeyMenu/PasskeyMenu.e2e.test.ts
+  - path: apps/web/src/features/wallet/components/AccountDrawer/PasskeyMenu/PasskeyMenu.e2e.test.ts
     testName: calls StartAuthenticatedSession before AddAuthenticator
 ---
 
@@ -250,11 +250,11 @@ testLevel: e2e
 runFrequency: release
 # coverage
 code_paths:
-  - apps/web/src/components/AccountDrawer/PasskeyMenu/
+  - apps/web/src/features/wallet/components/AccountDrawer/PasskeyMenu/
 automationRefs:
-  - path: apps/web/src/components/AccountDrawer/PasskeyMenu/PasskeyMenu.e2e.test.ts
+  - path: apps/web/src/features/wallet/components/AccountDrawer/PasskeyMenu/PasskeyMenu.e2e.test.ts
     testName: opens delete passkey speedbump when trash icon is clicked
-  - path: apps/web/src/components/AccountDrawer/PasskeyMenu/PasskeyMenu.e2e.test.ts
+  - path: apps/web/src/features/wallet/components/AccountDrawer/PasskeyMenu/PasskeyMenu.e2e.test.ts
     testName: deleting a non-last passkey keeps the wallet connected
 ---
 
@@ -296,7 +296,7 @@ runFrequency: release
 code_paths:
   - apps/web/src/features/wallet/components/WalletModal/
   - apps/web/src/connection/
-  - apps/web/src/components/AccountDrawer/PasskeyMenu/
+  - apps/web/src/features/wallet/components/AccountDrawer/PasskeyMenu/
 automationRefs: []
 ---
 

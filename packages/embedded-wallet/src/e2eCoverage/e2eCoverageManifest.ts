@@ -54,6 +54,7 @@ export const NON_SIGNING_MODULES: Readonly<Record<string, string>> = {
     'Decrypts the exported phrase client-side; the export challenge is covered by signing#exportEncryptedSeedPhrase.',
   'features/passkey/constants': HELPERS,
   'features/passkey/errors': HELPERS,
+  'features/passkey/passkeyRejection': HELPERS,
   'features/passkey/unsupportedPasskeyError': HELPERS,
   'features/passkey/utils': HELPERS,
 }
@@ -66,7 +67,8 @@ export const EwSpec = {
   ClaimFees: 'apps/web/src/pages/Positions/ClaimFees.embeddedWallet.anvil.e2e.test.ts',
   LimitOrder: 'apps/web/src/pages/Swap/Limit/Limit.embeddedWallet.anvil.e2e.test.ts',
   SponsoredSwap: 'apps/web/src/pages/Swap/Swap/SponsoredSwap.embeddedWallet.anvil.e2e.test.ts',
-  SeedPhraseExport: 'apps/web/src/components/AccountDrawer/RecoveryPhraseMenu/RecoveryPhraseMenu.e2e.test.ts',
+  SeedPhraseExport:
+    'apps/web/src/features/wallet/components/AccountDrawer/RecoveryPhraseMenu/RecoveryPhraseMenu.e2e.test.ts',
 } as const
 
 const READ_ONLY: CoverageRow = { exempt: 'Read-only RPC; nothing is signed.' }

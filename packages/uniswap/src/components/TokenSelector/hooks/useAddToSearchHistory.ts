@@ -101,13 +101,14 @@ export function useAddToSearchHistory(): {
 }
 
 function poolOptionToSearchHistoryResult(item: PoolOption): PoolSearchHistoryResult {
-  const { chainId, poolId, token0CurrencyInfo, token1CurrencyInfo, protocolVersion, feeTier } = item
+  const { chainId, poolId, token0CurrencyInfo, token1CurrencyInfo, isToken0Quote, protocolVersion, feeTier } = item
   return {
     type: SearchHistoryResultType.Pool,
     chainId,
     poolId,
     token0CurrencyId: token0CurrencyInfo.currencyId,
     token1CurrencyId: token1CurrencyInfo.currencyId,
+    isToken0Quote,
     protocolVersion,
     feeTier,
   }

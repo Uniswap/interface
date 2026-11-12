@@ -19,7 +19,7 @@ vi.mock('uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData', () => (
   useTokenSpotPrice: () => mockSpotPrice.current,
 }))
 vi.mock('~/hooks/useRestHistoryTarget', () => ({ useRestHistoryTarget: () => ({ chain: 'ETHEREUM' }) }))
-vi.mock('~/lib/hooks/usePageVisibility', () => ({ usePageVisibility: () => true }))
+vi.mock('utilities/src/react/useIsWindowVisible', () => ({ useIsWindowVisible: () => true }))
 
 const useQueryMock = vi.mocked(useQuery)
 const MARKET = getDefaultMarginMarket()

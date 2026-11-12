@@ -22,6 +22,7 @@ export interface RankedTokenCardItem {
   priceUsd?: number
   pricePercentChange1d?: number
   sparkline: ChartPoint[]
+  categoryIds: string[]
 }
 
 export function rankedTokenToCardItem(token: PlainMessage<RankedMultichainToken>): RankedTokenCardItem | undefined {
@@ -47,5 +48,6 @@ export function rankedTokenToCardItem(token: PlainMessage<RankedMultichainToken>
     priceUsd: mc.price?.spotUsd,
     pricePercentChange1d: mc.price?.percentChange1d,
     sparkline: token.sparkline.map((point) => ({ timestamp: Number(point.timestamp), value: point.value })),
+    categoryIds: mc.categoryIds,
   }
 }

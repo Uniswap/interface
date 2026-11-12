@@ -7,7 +7,7 @@ import { Plus } from '@universe/mycelium/icons/Plus'
 import { styled } from '@universe/mycelium/styled'
 import { NamedExoticComponent, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate, useSearchParams } from 'react-router'
+import { useNavigate } from 'react-router'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { ElementName, InterfacePageName } from 'uniswap/src/features/telemetry/constants'
@@ -17,10 +17,9 @@ import { PoolNotFoundModal } from '~/components/NotFoundModal/PoolNotFoundModal'
 import { TokenNotFoundModal } from '~/components/NotFoundModal/TokenNotFoundModal'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '~/constants/breakpoints'
 import { getTokenExploreURL } from '~/data/util'
-import { ExploreTablesFilterStoreContextProvider } from '~/features/Explore/state/exploreTablesFilterStore'
+import { useExploreParams } from '~/features/Explore/hooks/useExploreParams'
 import { useToucanAuctionSupportedChains } from '~/features/Toucan/supportedChains'
 import { edgeFadeMaskStyle, useHorizontalScrollFades } from '~/hooks/useHorizontalScrollFades'
-import { ADD_LIQUIDITY_PATH } from '~/pages/AddLiquidity/poolLinkParams'
 import { AuctionQuickFilters } from '~/pages/Explore/AuctionQuickFilters'
 import { AuctionStatusFilter as AuctionStatusFilterComponent } from '~/pages/Explore/AuctionStatusFilter'
 import { ExplorePoolsTab } from '~/pages/Explore/categories/ExplorePoolsTab'
@@ -36,10 +35,8 @@ import {
 } from '~/pages/Explore/ExploreAssetsIntegration'
 import { ExploreStatsSection } from '~/pages/Explore/ExploreStatsSection'
 import { ExploreTableFilters } from '~/pages/Explore/ExploreTableFilters'
-import { AUCTION_FILTER_PARAM, auctionQuickFilterFromParam } from '~/pages/Explore/hooks/useAuctionQuickFilterParam'
 import { useExploreHeartbeatCoordinator } from '~/pages/Explore/hooks/useExploreHeartbeatCoordinator'
 import { TableNetworkFilter } from '~/pages/Explore/NetworkFilter'
-import { useExploreParams } from '~/pages/Explore/redirects'
 import { SearchBar } from '~/pages/Explore/SearchBar'
 import { ToucanTable } from '~/pages/Explore/tables/Auctions/TopAuctionsTable'
 import { TopVerifiedAuctionsSection } from '~/pages/Explore/tables/Auctions/TopVerifiedAuctionsSection'
@@ -48,6 +45,7 @@ import { TopTokensTable } from '~/pages/Explore/tables/Tokens/TopTokensTable'
 import { useExploreNotFoundModal } from '~/pages/Explore/useExploreNotFoundModal'
 import { ExploreTab } from '~/types/explore'
 import { getChainUrlParam, useChainIdFromUrlParam } from '~/utils/params/chainParams'
+import { ADD_LIQUIDITY_PATH } from '~/utils/params/poolLinkParams'
 
 interface Page {
   title: React.ReactNode
@@ -125,7 +123,6 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   const tabNavRef = useRef<HTMLDivElement>(null)
   const { scrollerRef: auctionActionsScrollerRef, edgeFades: auctionActionsEdgeFades } = useHorizontalScrollFades()
   const Pages = usePages()
-  const [params] = useSearchParams()
   const navigate = useNavigate()
   const initialKey: number = useMemo(() => {
     const key = initialTab && Pages.findIndex((page) => page.key === initialTab)
@@ -139,12 +136,6 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   // to allow backward navigation between tabs
   const { tab: tabName } = useExploreParams()
   const tab = tabName ?? ExploreTab.Tokens
-
-  // Deep links like /explore/auctions?filter=verified seed the filter store at creation.
-  // Keyed off the same route param the active tab resolves from, not the initialTab prop.
-  const [initialQuickFilter] = useState(() =>
-    tabName === ExploreTab.Toucan ? auctionQuickFilterFromParam(params.get(AUCTION_FILTER_PARAM)) : undefined,
-  )
 
   const auctionSupportedChains = useToucanAuctionSupportedChains()
 
@@ -227,41 +218,124 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
         tab: tabName,
       }}
     >
-      <ExploreTablesFilterStoreContextProvider initialQuickFilter={initialQuickFilter}>
+      <Flex
+        width="100%"
+        minWidth={320}
+        pt="$spacing24"
+        pb="$spacing48"
+        px="$spacing40"
+        $md={{ py: '$spacing16', px: '$none' }}
+      >
+        <ExploreStatsSection shouldHideStats={isSolanaChain} />
+        {showTrendingShelf && <ExploreTrendingShelfSection />}
+        {showAssetShelf && <ExploreAssetShelfSection />}
+        {showEarnSection && (
+          <Flex mt={showHeroShelf ? '$none' : '$spacing32'} $md={{ mt: showHeroShelf ? '$none' : '$spacing20' }}>
+            <EarnVaultsSection />
+          </Flex>
+        )}
         <Flex
+          ref={tabNavRef}
+          id={EXPLORE_TOKEN_SECTION_ID}
+          row
+          maxWidth={MAX_WIDTH_MEDIA_BREAKPOINT}
+          mt={tabNavMarginTop}
+          mx="auto"
+          mb="$spacing4"
+          $md={{
+            ...(showEarnSection && { mt: '$spacing20' }),
+            mb: EXPLORE_SECTION_MWEB_GAP,
+          }}
+          alignItems="center"
+          justifyContent="space-between"
           width="100%"
-          minWidth={320}
-          pt="$spacing24"
-          pb="$spacing48"
-          px="$spacing40"
-          $md={{ py: '$spacing16', px: '$none' }}
+          $platform-web={{
+            transition: 'margin-top 300ms ease',
+          }}
+          $lg={{
+            row: false,
+            flexDirection: 'column',
+            mx: 'unset',
+            alignItems: 'flex-start',
+            gap: '$spacing16',
+          }}
+          // Pools page needs to break to multiple rows at larger breakpoint due to the extra filter options
+          {...(currentKey === ExploreTab.Pools && {
+            $lg: {},
+            $xl: {
+              row: false,
+              flexDirection: 'column',
+              mx: 'unset',
+              alignItems: 'flex-start',
+              gap: '$spacing16',
+            },
+          })}
         >
-          <ExploreStatsSection shouldHideStats={isSolanaChain} />
-          {showTrendingShelf && <ExploreTrendingShelfSection />}
-          {showAssetShelf && <ExploreAssetShelfSection />}
-          {showEarnSection && (
-            <Flex mt={showHeroShelf ? '$none' : '$spacing32'} $md={{ mt: showHeroShelf ? '$none' : '$spacing20' }}>
-              <EarnVaultsSection />
+          <Flex
+            row
+            gap="$spacing24"
+            flexWrap="wrap"
+            justifyContent="flex-start"
+            $md={{ gap: '$spacing16' }}
+            data-testid="explore-navbar"
+          >
+            {Pages.map(({ title, loggingElementName, key }, index) => {
+              // don't render tab; don't disrupt indices
+              if (isSolanaChain && key !== ExploreTab.Tokens) {
+                return null
+              }
+
+              const url = getTokenExploreURL({
+                tab: key,
+                chainUrlParam: chainInfo ? getChainUrlParam(chainInfo.id) : '',
+              })
+              return (
+                <Trace key={key} logPress eventOnTrigger={SharedEventName.NAVBAR_CLICKED} element={loggingElementName}>
+                  <HeaderTab
+                    // Replace the not-found entry so browser back cannot land on it and reopen the modal.
+                    onClick={() => navigate(url, { replace: isNotFoundModalOpen })}
+                    active={currentTab === index}
+                  >
+                    {title}
+                  </HeaderTab>
+                </Trace>
+              )
+            })}
+          </Flex>
+          {/* Auctions has no filters; an empty wrapper would still add the column gap on mobile. */}
+          {!showExploreCategoryTables && currentKey !== ExploreTab.Toucan && (
+            <Flex row gap="$spacing8" justifyContent="flex-start" $md={{ width: '100%' }}>
+              {currentKey === ExploreTab.Pools && (
+                <Flex row>
+                  <Trace logPress element={ElementName.ExplorePoolsNewPosition}>
+                    <Button
+                      size="small"
+                      icon={<Plus />}
+                      onPress={() =>
+                        navigate(ADD_LIQUIDITY_PATH, {
+                          state: { entryPoint: '/explore/pools' },
+                        })
+                      }
+                    >
+                      {media.sm ? t('common.new') : t('pool.newPosition.title')}
+                    </Button>
+                  </Trace>
+                </Flex>
+              )}
+              <ExploreTableFilters currentKey={currentKey} tabSupportedNetworks={tabSupportedNetworks} />
             </Flex>
           )}
+        </Flex>
+        {currentKey === ExploreTab.Toucan && <TopVerifiedAuctionsSection />}
+        {currentKey === ExploreTab.Toucan && (
           <Flex
-            ref={tabNavRef}
-            id={EXPLORE_TOKEN_SECTION_ID}
             row
             maxWidth={MAX_WIDTH_MEDIA_BREAKPOINT}
-            mt={tabNavMarginTop}
             mx="auto"
-            mb="$spacing4"
-            $md={{
-              ...(showEarnSection && { mt: '$spacing20' }),
-              mb: EXPLORE_SECTION_MWEB_GAP,
-            }}
             alignItems="center"
             justifyContent="space-between"
             width="100%"
-            $platform-web={{
-              transition: 'margin-top 300ms ease',
-            }}
+            paddingTop="$spacing24"
             $lg={{
               row: false,
               flexDirection: 'column',
@@ -269,134 +343,44 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
               alignItems: 'flex-start',
               gap: '$spacing16',
             }}
-            // Pools page needs to break to multiple rows at larger breakpoint due to the extra filter options
-            {...(currentKey === ExploreTab.Pools && {
-              $lg: {},
-              $xl: {
-                row: false,
-                flexDirection: 'column',
-                mx: 'unset',
-                alignItems: 'flex-start',
-                gap: '$spacing16',
-              },
-            })}
+            $md={{ paddingTop: '$spacing12' }}
           >
+            <Text variant="subheading1" color="$neutral1" $md={{ variant: 'subheading2' }}>
+              {t('toucan.allAuctions')}
+            </Text>
+            {/* Actions can exceed small viewports — scroll the whole row in place instead of stacking or widening the page. */}
             <Flex
+              ref={media.md ? auctionActionsScrollerRef : undefined}
               row
-              gap="$spacing24"
-              flexWrap="wrap"
+              gap="$spacing8"
               justifyContent="flex-start"
-              $md={{ gap: '$spacing16' }}
-              data-testid="explore-navbar"
-            >
-              {Pages.map(({ title, loggingElementName, key }, index) => {
-                // don't render tab; don't disrupt indices
-                if (isSolanaChain && key !== ExploreTab.Tokens) {
-                  return null
-                }
-
-                const url = getTokenExploreURL({
-                  tab: key,
-                  chainUrlParam: chainInfo ? getChainUrlParam(chainInfo.id) : '',
-                })
-                return (
-                  <Trace
-                    key={key}
-                    logPress
-                    eventOnTrigger={SharedEventName.NAVBAR_CLICKED}
-                    element={loggingElementName}
-                  >
-                    <HeaderTab
-                      // Replace the not-found entry so browser back cannot land on it and reopen the modal.
-                      onClick={() => navigate(url, { replace: isNotFoundModalOpen })}
-                      active={currentTab === index}
-                    >
-                      {title}
-                    </HeaderTab>
-                  </Trace>
-                )
-              })}
-            </Flex>
-            {/* Auctions has no filters; an empty wrapper would still add the column gap on mobile. */}
-            {!showExploreCategoryTables && currentKey !== ExploreTab.Toucan && (
-              <Flex row gap="$spacing8" justifyContent="flex-start" $md={{ width: '100%' }}>
-                {currentKey === ExploreTab.Pools && (
-                  <Flex row>
-                    <Trace logPress element={ElementName.ExplorePoolsNewPosition}>
-                      <Button
-                        size="small"
-                        icon={<Plus />}
-                        onPress={() =>
-                          navigate(ADD_LIQUIDITY_PATH, {
-                            state: { entryPoint: '/explore/pools' },
-                          })
-                        }
-                      >
-                        {media.sm ? t('common.new') : t('pool.newPosition.title')}
-                      </Button>
-                    </Trace>
-                  </Flex>
-                )}
-                <ExploreTableFilters currentKey={currentKey} tabSupportedNetworks={tabSupportedNetworks} />
-              </Flex>
-            )}
-          </Flex>
-          {currentKey === ExploreTab.Toucan && <TopVerifiedAuctionsSection />}
-          {currentKey === ExploreTab.Toucan && (
-            <Flex
-              row
-              maxWidth={MAX_WIDTH_MEDIA_BREAKPOINT}
-              mx="auto"
               alignItems="center"
-              justifyContent="space-between"
-              width="100%"
-              paddingTop="$spacing24"
-              $lg={{
-                row: false,
-                flexDirection: 'column',
-                mx: 'unset',
-                alignItems: 'flex-start',
-                gap: '$spacing16',
-              }}
-              $md={{ paddingTop: '$spacing12' }}
+              className="scrollbar-hidden"
+              $platform-web={media.md ? edgeFadeMaskStyle(auctionActionsEdgeFades) : undefined}
+              $md={{ width: '100%', '$platform-web': { overflowX: 'auto' } }}
             >
-              <Text variant="subheading1" color="$neutral1" $md={{ variant: 'subheading2' }}>
-                {t('toucan.allAuctions')}
-              </Text>
-              {/* Actions can exceed small viewports — scroll the whole row in place instead of stacking or widening the page. */}
-              <Flex
-                ref={media.md ? auctionActionsScrollerRef : undefined}
-                row
-                gap="$spacing8"
-                justifyContent="flex-start"
-                alignItems="center"
-                className="scrollbar-hidden"
-                $platform-web={media.md ? edgeFadeMaskStyle(auctionActionsEdgeFades) : undefined}
-                $md={{ width: '100%', '$platform-web': { overflowX: 'auto' } }}
-              >
-                <Button size="small" icon={<Plus />} fill={false} onPress={() => navigate('/liquidity/launch-auction')}>
-                  {t('toucan.createAuction.launchAuction')}
-                </Button>
-                <TableNetworkFilter networks={auctionSupportedChains} />
-                <AuctionStatusFilterComponent />
-                <SearchBar tab={currentKey} />
-              </Flex>
+              <Button size="small" icon={<Plus />} fill={false} onPress={() => navigate('/liquidity/launch-auction')}>
+                {t('toucan.createAuction.launchAuction')}
+              </Button>
+              <TableNetworkFilter networks={auctionSupportedChains} />
+              <AuctionStatusFilterComponent />
+              <SearchBar tab={currentKey} />
             </Flex>
-          )}
-          {currentKey === ExploreTab.Toucan && (
-            <Flex
-              maxWidth={MAX_WIDTH_MEDIA_BREAKPOINT}
-              mx="auto"
-              width="100%"
-              paddingTop="$spacing16"
-              $lg={{ mx: 'unset' }}
-            >
-              <AuctionQuickFilters />
-            </Flex>
-          )}
-          <ExploreCategoryTablesOrPage showExploreCategoryTables={showExploreCategoryTables} page={<Page />} />
-        </Flex>
-      </ExploreTablesFilterStoreContextProvider>
+          </Flex>
+        )}
+        {currentKey === ExploreTab.Toucan && (
+          <Flex
+            maxWidth={MAX_WIDTH_MEDIA_BREAKPOINT}
+            mx="auto"
+            width="100%"
+            paddingTop="$spacing16"
+            $lg={{ mx: 'unset' }}
+          >
+            <AuctionQuickFilters />
+          </Flex>
+        )}
+        <ExploreCategoryTablesOrPage showExploreCategoryTables={showExploreCategoryTables} page={<Page />} />
+      </Flex>
       <TokenNotFoundModal isOpen={isTokenNotFoundOpen} closeModal={closeNotFoundModal} />
       <PoolNotFoundModal isOpen={isPoolNotFoundOpen} closeModal={closeNotFoundModal} />
     </Trace>

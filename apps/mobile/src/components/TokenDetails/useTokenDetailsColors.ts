@@ -8,14 +8,14 @@ export function useTokenDetailsColors({ currencyId }: { currencyId: string }): {
 } {
   const isDarkMode = useIsDarkMode()
   const colors = useSporeColors()
-  const metadata = useTokenMetadata(currencyId)
+  const { data: metadata } = useTokenMetadata(currencyId)
 
   const { tokenColor, tokenColorLoading } = useExtractedTokenColor({
-    imageUrl: metadata.logoUrl,
-    tokenName: metadata.symbol,
+    imageUrl: metadata?.logoUrl,
+    tokenName: metadata?.symbol,
     backgroundColor: colors.surface1.val,
     defaultColor: colors.neutral3.val,
-    colorOverrides: metadata.colorOverrides,
+    colorOverrides: metadata?.colorOverrides,
   })
 
   return {

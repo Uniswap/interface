@@ -245,6 +245,7 @@ function ConnectionStatusIcon({
   return isConnectedToNetwork ? (
     <Flex>
       <UniversalImage
+        alt=""
         fallback={<DappIconPlaceholder iconSize={iconSizes.icon20} name={uppercaseDappName} />}
         size={{ height: iconSizes.icon20, width: iconSizes.icon20 }}
         style={{ image: { borderRadius: borderRadii.rounded8 } }}

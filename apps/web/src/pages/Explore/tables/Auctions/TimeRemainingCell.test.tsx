@@ -1,4 +1,5 @@
 import { UniverseChainId } from '@universe/chains'
+import { currentTimeInSeconds } from 'utilities/src/time/time'
 import { TimeRemainingCell } from '~/pages/Explore/tables/Auctions/TimeRemainingCell'
 import { fireEvent, render, screen } from '~/test-utils/render'
 
@@ -21,7 +22,7 @@ vi.mock('wagmi', async (importOriginal) => {
   }
 })
 
-const NOW_SECONDS = Math.floor(Date.now() / 1000)
+const NOW_SECONDS = currentTimeInSeconds()
 const ONE_DAY_SECONDS = 24 * 60 * 60
 
 const TOKEN_ADDRESS = '0x1111111111111111111111111111111111111111'

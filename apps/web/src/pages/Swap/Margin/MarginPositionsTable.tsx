@@ -16,7 +16,7 @@ import {
   type MarginPlanIntent,
   type MarginTerminalPosition,
 } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
-import { useMarginPositionsQuery } from 'uniswap/src/data/apiClients/tradingApi/useMarginPositionsQuery'
+import { useMarginPositionsInfiniteQuery } from 'uniswap/src/data/apiClients/tradingApi/useMarginPositionsQuery'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -24,6 +24,7 @@ import { MarginDirection, type MarginManageAction } from 'uniswap/src/features/t
 /* oxlint-disable max-lines */
 import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
+import { useInfiniteScroll } from 'utilities/src/react/useInfiniteScroll'
 import { Table } from '~/components/Table'
 import { Cell } from '~/components/Table/Cell'
 import { HeaderCell } from '~/components/Table/styled'
@@ -620,7 +621,7 @@ export function MarginPositionsTable(props: MarginPositionsTableProps = {}): JSX
   const isExecuting = useMarginPlanExecution((s) => s.isExecuting)
   const { resumePlan } = useExecuteMarginPlan()
 
-  const activeQuery = useMarginPositionsQuery({
+  const activeQuery = useMarginPositionsInfiniteQuery({
     params: account.address
       ? { swapper: account.address, chainId: MARGIN_CHAIN_ID, statuses: MARGIN_ACTIVE_POSITION_STATUSES }
       : undefined,
@@ -631,20 +632,38 @@ export function MarginPositionsTable(props: MarginPositionsTableProps = {}): JSX
   })
   // Read only while the Closed tab is open, and not polled: every close path invalidates the positions
   // key, and reopening the tab refetches a stale entry.
-  const terminalQuery = useMarginPositionsQuery({
+  const terminalQuery = useMarginPositionsInfiniteQuery({
     params:
       account.address && tab === 'completed'
         ? { swapper: account.address, chainId: MARGIN_CHAIN_ID, statuses: MARGIN_TERMINAL_POSITION_STATUSES }
         : undefined,
   })
-  const { data, isLoading, isError, refetch } = tab === 'active' ? activeQuery : terminalQuery
+  const visibleQuery = tab === 'active' ? activeQuery : terminalQuery
+  const { data, isLoading, isError, refetch } = visibleQuery
 
   // The server filters by status; the guards only narrow the row type. Terminal rows arrive newest first.
-  const activePositions = useMemo(() => activeQuery.data?.positions.filter(isMarginActivePosition), [activeQuery.data])
+  const activePositions = useMemo(
+    () => activeQuery.data?.pages.flatMap((page) => page.positions).filter(isMarginActivePosition),
+    [activeQuery.data],
+  )
   const historyRows = useMemo(
-    () => terminalQuery.data?.positions.filter(isMarginTerminalPosition) ?? [],
+    () => terminalQuery.data?.pages.flatMap((page) => page.positions).filter(isMarginTerminalPosition) ?? [],
     [terminalQuery.data],
   )
+  const loadMore = useEvent(({ onComplete }: { onComplete?: () => void } = {}) => {
+    if (visibleQuery.hasNextPage && !visibleQuery.isFetchingNextPage) {
+      void visibleQuery.fetchNextPage().finally(() => onComplete?.())
+    } else {
+      onComplete?.()
+    }
+  })
+  const { sentinelRef } = useInfiniteScroll({
+    onLoadMore: async () => {
+      await visibleQuery.fetchNextPage()
+    },
+    hasNextPage: visibleQuery.hasNextPage,
+    isFetching: visibleQuery.isFetchingNextPage,
+  })
   const resolverPositions = useMemo(() => [...(activePositions ?? []), ...historyRows], [activePositions, historyRows])
   const resolveMarket = useResolveMarginMarket({ positions: resolverPositions })
 
@@ -1062,6 +1081,17 @@ export function MarginPositionsTable(props: MarginPositionsTableProps = {}): JSX
     })
   }
 
+  const renderCardsPageEnd = (): JSX.Element => (
+    <>
+      <Flex ref={sentinelRef} height={1} />
+      {visibleQuery.isFetchingNextPage && (
+        <Flex centered py="$spacing8">
+          <SpinningLoader />
+        </Flex>
+      )}
+    </>
+  )
+
   const renderActiveCards = (): JSX.Element => {
     if (showLoadingSkeleton) {
       return <MarginPositionCardSkeletons count={LOADING_ROWS} />
@@ -1131,6 +1161,7 @@ export function MarginPositionsTable(props: MarginPositionsTableProps = {}): JSX
             />
           )
         })}
+        {renderCardsPageEnd()}
       </Flex>
     )
   }
@@ -1186,6 +1217,7 @@ export function MarginPositionsTable(props: MarginPositionsTableProps = {}): JSX
             />
           )
         })}
+        {renderCardsPageEnd()}
       </Flex>
     )
   }
@@ -1242,6 +1274,7 @@ export function MarginPositionsTable(props: MarginPositionsTableProps = {}): JSX
             loading={showLoadingSkeleton}
             error={false}
             getRowId={activeRowId}
+            loadMore={activeQuery.hasNextPage ? loadMore : undefined}
             getSubRows={getMarginTableSubRows}
             renderUnifiedExpandableRow={renderDrawerRow}
             singleExpandedRow
@@ -1276,6 +1309,7 @@ export function MarginPositionsTable(props: MarginPositionsTableProps = {}): JSX
           loading={showLoadingSkeleton}
           error={false}
           getRowId={historyRowId}
+          loadMore={terminalQuery.hasNextPage ? loadMore : undefined}
           loadingRowsCount={LOADING_ROWS}
           rowHeight={MARGIN_TABLE_ROW_HEIGHT}
           compactRowHeight={MARGIN_TABLE_ROW_HEIGHT}

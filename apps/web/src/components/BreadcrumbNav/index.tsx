@@ -75,16 +75,17 @@ const PageTitleText = forwardRef<HTMLElement, TextCompatProps>(function PageTitl
   )
 })
 
-// Used in both TDP & PDP.
-// On TDP, currency is defined & poolName is undefined. On PDP, currency is undefined & poolName is defined.
+// Truncation clips the visual title while preserving its full heading and current-page semantics.
 export const CurrentPageBreadcrumb = ({
   address,
   currency,
   poolName,
+  truncate = false,
 }: {
   address?: string
   currency?: Currency
   poolName?: string
+  truncate?: boolean
 }) => {
   const { t } = useTranslation()
   const isNative = currency?.isNative
@@ -97,11 +98,18 @@ export const CurrentPageBreadcrumb = ({
   return (
     <CurrentPageBreadcrumbContainer
       aria-current="page"
+      className={truncate ? 'min-w-0 flex-1 basis-0 shrink overflow-hidden' : undefined}
       data-testid={TestID.CurrentBreadcrumb}
       onMouseEnter={() => setIsBreadcrumbHover(true)}
       onMouseLeave={() => setIsBreadcrumbHover(false)}
     >
-      <PageTitleText>{currency ? tokenSymbolName : poolName}</PageTitleText>
+      <PageTitleText
+        minWidth={truncate ? 0 : undefined}
+        flexShrink={truncate ? 1 : undefined}
+        numberOfLines={truncate ? 1 : undefined}
+      >
+        {currency ? tokenSymbolName : poolName}
+      </PageTitleText>
       {(!currency || !isNative) && address && (
         <CopyHelper
           toCopy={address}

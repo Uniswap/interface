@@ -1,5 +1,5 @@
 import { type PlainMessage } from '@bufbuild/protobuf'
-import { useQuery } from '@tanstack/react-query'
+import { type UseQueryResult, useQuery } from '@tanstack/react-query'
 import type {
   GetTokenMarketsMultiChainResponse,
   GetTokenMarketsResponse,
@@ -223,6 +223,7 @@ function mapRestTokenMarketStats(stats: PlainMessage<RestTokenMarketStats> | und
     marketCapUsd: stats.marketCapUsd,
     fullyDilutedValuationUsd: stats.fullyDilutedValuationUsd,
     totalValueLockedUsd: stats.totalValueLockedUsd,
+    poolsTotalValueLockedUsd: stats.poolsTotalValueLockedUsd,
   }
 }
 
@@ -335,23 +336,16 @@ function selectTokenMetadata(data: PlainMessage<GetTokenResponse> | undefined): 
   }
 }
 
-export interface UseTokenMetadataResult extends TokenMetadataData {
-  /** True only while the REST metadata request is in flight with no cached data to show yet. */
-  isLoading: boolean
-}
-
-export function useTokenMetadata(currencyId: CurrencyId | undefined): UseTokenMetadataResult {
+export function useTokenMetadata(currencyId: CurrencyId | undefined): UseQueryResult<TokenMetadataData | undefined> {
   const restTokenIdentifier = useMemo(
     () => (currencyId ? currencyIdToRestContractInput(currencyId) : undefined),
     [currencyId],
   )
-  const { data, isLoading } = useQuery(
+  return useQuery(
     getGetTokenQueryOptions({
       params: restTokenIdentifier,
       enabled: !!restTokenIdentifier,
       select: selectTokenMetadata,
     }),
   )
-
-  return useMemo(() => ({ ...data, isLoading }), [data, isLoading])
 }

@@ -17,7 +17,7 @@ import {
 
 const Transaction = memo(function _Transaction({ repeat = 1 }: { repeat?: number }): JSX.Element {
   return (
-    <Shimmer>
+    <Shimmer decorative>
       <FlexCompat>
         {/* oxlint-disable-next-line max-params */}
         {new Array(repeat).fill(null).map((_, i, { length }) => (
@@ -39,7 +39,7 @@ const SearchResult = memo(function _SearchResult({ repeat = 1 }: { repeat?: numb
 
 function Box({ disableShimmer, ...props }: FlexLoaderProps & { disableShimmer?: boolean }): JSX.Element {
   return (
-    <Shimmer disabled={disableShimmer}>
+    <Shimmer decorative disabled={disableShimmer}>
       <FlexLoaderCompat {...props} />
     </Shimmer>
   )
@@ -57,7 +57,7 @@ function Token({
   gap?: FlexCompatProps['gap']
 }): JSX.Element {
   return (
-    <Shimmer>
+    <Shimmer decorative>
       <FlexCompat grow gap={gap}>
         {/* oxlint-disable-next-line max-params */}
         {new Array(repeat).fill(null).map((_, i, { length }) => (
@@ -72,7 +72,7 @@ function Token({
 
 function InsufficientFundsNetworkRow({ repeat = 1 }: { repeat?: number }): JSX.Element {
   return (
-    <Shimmer>
+    <Shimmer decorative>
       <FlexCompat grow>
         {Array.from({ length: repeat }, (_, i) => (
           <React.Fragment key={i}>
@@ -107,12 +107,12 @@ function NFT({ repeat = 1 }: { repeat?: number }): JSX.Element {
     [repeat],
   )
 
-  return <Shimmer>{loader}</Shimmer>
+  return <Shimmer decorative>{loader}</Shimmer>
 }
 
 function Image(): JSX.Element {
   return (
-    <Shimmer>
+    <Shimmer decorative>
       {/* 0 is the exact value the legacy getToken('$none', 'radius') resolved to; the $none
           token spelling resolves to a CSS var on web instead of the literal the old code set. */}
       <FlexLoaderCompat aspectRatio={1} borderRadius={0} />
@@ -122,7 +122,7 @@ function Image(): JSX.Element {
 
 function Wallets({ repeat = 1 }: { repeat?: number }): JSX.Element {
   return (
-    <Shimmer>
+    <Shimmer decorative>
       <FlexCompat gap="$spacing12">
         {/* oxlint-disable-next-line max-params */}
         {new Array(repeat).fill(null).map((_, i, { length }) => (

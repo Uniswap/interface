@@ -4,9 +4,7 @@ import { MAX_DISPLAYABLE_PRICE_AGE_MS } from '@universe/prices'
 import { dataApiServiceClientV2 } from 'uniswap/src/data/apiClients/dataApiService/clients/DataApiClientV2'
 import { useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
-import { ONE_MINUTE_MS } from 'utilities/src/time/time'
-import type { PriceChartData } from '~/components/Charts/PriceChart'
-import { ChartType, DataQuality, PriceChartType } from '~/components/Charts/utils'
+import { currentTimeInSeconds, ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { TimePeriod } from '~/data/util'
 import {
   getCalculatedPricePercentChange,
@@ -16,6 +14,7 @@ import {
   useTokenPriceChartData,
 } from '~/hooks/useTokenPriceChartData'
 import { renderHook, waitFor } from '~/test-utils/render'
+import { ChartType, DataQuality, type PriceChartData, PriceChartType } from '~/utils/charts'
 
 vi.mock('uniswap/src/data/apiClients/dataApiService/clients/DataApiClientV2', () => ({
   dataApiServiceClientV2: { getTokenHistoryOHLC: vi.fn(), getTokenHistoryPrice: vi.fn() },
@@ -39,7 +38,7 @@ const BASE_VARIABLES = {
 const SPOT_PRICE = 42
 
 /** Recent timestamps (unix seconds) so `checkDataQuality` doesn't read the fixtures as stale. */
-const NOW_SECONDS = Math.floor(Date.now() / 1000)
+const NOW_SECONDS = currentTimeInSeconds()
 const T = [NOW_SECONDS - 3000, NOW_SECONDS - 2000, NOW_SECONDS - 1000]
 
 const PRICE_POINTS = [

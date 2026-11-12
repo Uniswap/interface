@@ -5,7 +5,6 @@
     "app.json",
     "expo.json",
     "nextjs.json",
-    "storybook.json",
     "ui.json"
   ],
   "private": true

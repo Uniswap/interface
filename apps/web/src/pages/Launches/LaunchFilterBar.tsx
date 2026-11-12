@@ -16,9 +16,9 @@ import { ElementName, InterfacePageName, UniswapEventName } from 'uniswap/src/fe
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Dropdown } from '~/components/Dropdowns/Dropdown'
 import { useNetworkFilterChainIds } from '~/components/NetworkFilter/useFilteredChains'
+import { getLaunchpadLogoBorderRadius, LaunchpadLogo } from '~/features/Toucan/Shared/LaunchpadLogo'
 import { edgeFadeMaskStyle, useHorizontalScrollFades } from '~/hooks/useHorizontalScrollFades'
 import { ExploreFilterChip } from '~/pages/Explore/categories/ExploreCategoryChips'
-import { getLaunchpadLogoBorderRadius, LaunchpadLogo } from '~/pages/Launches/LaunchpadLogo'
 import { LaunchQuickFilter } from '~/pages/Launches/useLaunchesList'
 
 // Launchpad menu chrome, matching the 40px network filter pill it sits next to.

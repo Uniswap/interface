@@ -115,10 +115,10 @@ vi.mock('src/components/TokenDetails/TokenDetailsActionButtons', () => ({
 
 // The wrapper reads token metadata through a tanstack useQuery internally, which would
 // require a QueryClientProvider in the render tree. Mock at the hook boundary instead;
-// the wrapper only consumes `metadata.symbol` (for the RWA sell-toast copy).
+// the wrapper only consumes `metadata?.symbol` (for the RWA sell-toast copy).
 vi.mock('uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData', async (importOriginal) => ({
   ...(await importOriginal<typeof import('uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData')>()),
-  useTokenMetadata: vi.fn().mockReturnValue({ symbol: 'TPT2' }),
+  useTokenMetadata: vi.fn().mockReturnValue({ data: { symbol: 'TPT2' } }),
 }))
 
 vi.mock('uniswap/src/features/bridging/hooks/tokens', () => ({

@@ -2,6 +2,7 @@ import { fireEvent, screen } from '@testing-library/react'
 import { TestID } from '@universe/test'
 import { LowNativeBalanceModal } from 'uniswap/src/features/transactions/modals/LowNativeBalanceModal'
 import { renderWithProviders } from 'uniswap/src/test/render'
+import type { Mock } from 'vitest'
 
 // The bottom sheet needs native modal context jsdom can't provide; the modal content is what's under test.
 vi.mock('uniswap/src/components/modals/Modal', () => ({
@@ -9,7 +10,7 @@ vi.mock('uniswap/src/components/modals/Modal', () => ({
     isModalOpen ? <>{children}</> : null,
 }))
 
-function renderModal(): { onAcknowledge: ReturnType<typeof vi.fn>; hasDismissed: () => boolean | undefined } {
+function renderModal(): { onAcknowledge: Mock; hasDismissed: () => boolean | undefined } {
   const onAcknowledge = vi.fn()
   const { store } = renderWithProviders(
     <LowNativeBalanceModal isOpen onClose={vi.fn()} onAcknowledge={onAcknowledge} />,

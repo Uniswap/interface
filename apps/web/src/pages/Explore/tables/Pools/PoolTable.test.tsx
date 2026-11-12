@@ -1,9 +1,11 @@
 import '~/test-utils/tokens/mocks'
 import type { UseQueryResult } from '@tanstack/react-query'
+import { SharedEventName } from '@uniswap/analytics-events'
+import { GetTokenResponse } from '@uniswap/client-data-api/dist/data/v2/api_pb'
 import { HookListResponse } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/api_pb'
 import { HookEntry } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/types_pb'
 import { UniverseChainId } from '@universe/chains'
-import { useFeatureFlag } from '@universe/gating'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { TestID } from '@universe/test'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
@@ -11,15 +13,22 @@ import { DEFAULT_TICK_SPACING, DYNAMIC_FEE_AMOUNT } from 'uniswap/src/constants/
 import { getCommonBase } from 'uniswap/src/constants/routing'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { useListPoolCategoriesQuery } from 'uniswap/src/data/apiClients/dataApiService/categories/useListPoolCategoriesQuery'
+import { dataApiServiceClientV2 } from 'uniswap/src/data/apiClients/dataApiService/clients/DataApiClientV2'
 import { getFeeBreakdown } from 'uniswap/src/features/fees/getFeeBreakdown'
 import { buildHookRegistryMap, useHookRegistryMap } from 'uniswap/src/features/poolHooks/hooks/useHookRegistryMap'
+import { ElementName, InterfaceEventName, InterfacePageName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import type { PoolCategory } from 'uniswap/src/features/tokenCategories/types'
 import { poolCategory } from 'uniswap/src/test/fixtures/poolCategory'
 import { COLLAPSE_PROGRESS_VAR, COLLAPSE_TEXT_VISIBILITY_VAR } from '~/components/Table/PinnedColumns/collapse/utils'
+import { PoolSortFields } from '~/data/pools/poolStats'
+import { OrderDirection, TimePeriod } from '~/data/util'
 import {
   EMPTY_EXPLORE_POOLS_FILTER_STATE,
   ExploreTablesFilterStoreContextProvider,
   useExploreTablesFilterStore,
+  useExploreTablesFilterStoreActions,
 } from '~/features/Explore/state/exploreTablesFilterStore'
 import { toRewardAprEntries } from '~/features/Liquidity/LPIncentives/utils'
 import { useListPools } from '~/pages/Explore/hooks/useListPools'
@@ -42,12 +51,28 @@ function AprRangeProbe() {
 
 const HOOKED_ADDRESS = '0x0010d0d5db05933fa0d9f7038d365e1541a41888'
 
+const { sendEvent } = vi.hoisted(() => ({ sendEvent: vi.fn() }))
+
+vi.unmock('uniswap/src/features/telemetry/Trace')
+vi.mock('@react-navigation/core', () => ({ useFocusEffect: vi.fn() }))
+vi.mock('@uniswap/analytics-events', () => ({
+  SharedEventName: { ELEMENT_CLICKED: 'Element Clicked', PAGE_VIEWED: 'Page Viewed' },
+  BrowserEvent: { onClick: 'onClick', onFocus: 'onFocus', onKeyPress: 'onKeyPress' },
+  sendAnalyticsEvent: vi.fn(),
+  trace: vi.fn(),
+}))
+vi.mock('utilities/src/telemetry/analytics/analytics', async (importOriginal) => {
+  const original = await importOriginal<typeof import('utilities/src/telemetry/analytics/analytics')>()
+  return { ...original, analytics: { ...original.analytics, sendEvent } }
+})
+
 /** A mainnet pool row with just enough shape to render; override what a test cares about. */
 function poolStat(overrides: Partial<PoolStat>): PoolStat {
   return {
     id: '1',
     chainId: UniverseChainId.Mainnet,
     token0: validRestPoolToken0,
+    isToken0Quote: true,
     token1: validRestPoolToken1,
     feeTier: { feeAmount: 500, tickSpacing: DEFAULT_TICK_SPACING, isDynamic: false },
     txCount: 1,
@@ -62,6 +87,7 @@ function poolStat(overrides: Partial<PoolStat>): PoolStat {
 }
 
 vi.mock('~/pages/Explore/hooks/useListPools')
+vi.mock('uniswap/src/features/telemetry/send')
 vi.mock('uniswap/src/data/apiClients/dataApiService/categories/useListPoolCategoriesQuery')
 // Passthrough spy: real engine behavior, observable inputs/outputs.
 vi.mock('uniswap/src/features/fees/getFeeBreakdown', async (importOriginal) => {
@@ -96,6 +122,7 @@ function mockPoolCategories(categories: PoolCategory[] | undefined): void {
 
 describe('PoolTable', () => {
   beforeEach(() => {
+    vi.spyOn(dataApiServiceClientV2, 'getToken').mockResolvedValue(new GetTokenResponse())
     mocked(useFeatureFlag).mockReturnValue(false)
     mockPoolCategories(undefined)
   })
@@ -166,6 +193,155 @@ describe('PoolTable', () => {
     expect(screen.getByTestId('table-error-modal')).not.toBeNull()
   })
 
+  it('builds fixture-row destinations through the shared pool link builder', () => {
+    const getLink = vi.fn(() => '/pool-destination')
+    render(
+      <PoolTableStoreContextProvider>
+        <PoolsTable
+          pools={[poolStat({ id: 'preview-pool' })]}
+          loading={false}
+          chainId={UniverseChainId.Mainnet}
+          surface="hook-details"
+          getLink={getLink}
+        />
+      </PoolTableStoreContextProvider>,
+    )
+
+    expect(getLink).toHaveBeenCalledWith(expect.objectContaining({ poolIdOrHash: 'preview-pool' }))
+    expect(screen.getByRole('link')).toHaveAttribute('href', '/pool-destination')
+  })
+
+  it('keeps the canonical pool destination and explicitly supplied row context', () => {
+    render(
+      <Trace page={InterfacePageName.HookDetailsPage}>
+        <PoolTableStoreContextProvider>
+          <PoolsTable
+            pools={[poolStat({ id: 'real-pool', hookAddress: `0x${HOOKED_ADDRESS.slice(2).toUpperCase()}` })]}
+            loading={false}
+            chainId={UniverseChainId.Mainnet}
+            surface="hook-details"
+            rowAnalyticsProperties={{ hook_address: HOOKED_ADDRESS }}
+          />
+        </PoolTableStoreContextProvider>
+      </Trace>,
+    )
+
+    const link = screen.getByRole('link')
+    expect(link).toHaveAttribute('href', '/explore/pools/ethereum/real-pool')
+    fireEvent.click(link)
+
+    expect(sendEvent).toHaveBeenCalledWith(
+      SharedEventName.ELEMENT_CLICKED,
+      expect.objectContaining({
+        page: InterfacePageName.HookDetailsPage,
+        element: ElementName.PoolsTableRow,
+        chain_id: UniverseChainId.Mainnet,
+        pool_address: 'real-pool',
+        hook_address: HOOKED_ADDRESS,
+      }),
+    )
+  })
+
+  it.each([
+    { surface: 'hook-details', value: 0, expected: '$0.00' },
+    { surface: 'hook-details', value: undefined, expected: '-' },
+    { surface: 'tdp', value: 0, expected: '$0.00' },
+    { surface: 'tdp', value: undefined, expected: '-' },
+    { surface: 'explore', value: 0, expected: '$0.00' },
+    { surface: 'explore', value: undefined, expected: '-' },
+  ] as const)('renders TVL $value as $expected on $surface', ({ surface, value, expected }) => {
+    render(
+      <PoolTableStoreContextProvider>
+        <PoolsTable
+          pools={[poolStat({ totalLiquidity: value === undefined ? undefined : { value } })]}
+          loading={false}
+          chainId={UniverseChainId.Mainnet}
+          surface={surface}
+          hideIndex
+          hiddenColumns={[
+            PoolSortFields.Apr,
+            PoolSortFields.Volume24h,
+            PoolSortFields.Volume30D,
+            PoolSortFields.VolOverTvl,
+          ]}
+        />
+      </PoolTableStoreContextProvider>,
+    )
+
+    expect(screen.getByText(expected)).toBeInTheDocument()
+    if (expected === '-') {
+      expect(screen.queryByText('$0.00')).not.toBeInTheDocument()
+    }
+  })
+
+  it('orders hook-detail columns like the design and identifies its sort surface', () => {
+    render(
+      <PoolTableStoreContextProvider>
+        <PoolsTable
+          pools={[poolStat({})]}
+          loading={false}
+          chainId={UniverseChainId.Mainnet}
+          surface="hook-details"
+          columnOrder={['poolDescription', 'tvl', 'apr']}
+          volumeTimePeriod={TimePeriod.DAY}
+          hideIndex
+        />
+      </PoolTableStoreContextProvider>,
+    )
+
+    const headings = ['Pool', 'TVL', 'Pool APR', '1D vol', 'Vol/TVL'].map((label) => screen.getByText(label))
+    headings.slice(1).forEach((heading, index) => {
+      expect(headings[index].compareDocumentPosition(heading) & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(0)
+    })
+    fireEvent.click(screen.getByText('TVL'))
+    expect(sendAnalyticsEvent).toHaveBeenCalledWith(
+      InterfaceEventName.ExploreTableSorted,
+      expect.objectContaining({ table_type: 'pools', sort_method: PoolSortFields.TVL, surface: 'hook-details' }),
+    )
+  })
+
+  it('controls hook badges and registry requests independently of the analytics surface', () => {
+    const registry = buildHookRegistryMap(
+      new HookListResponse({
+        hooks: [new HookEntry({ address: HOOKED_ADDRESS, chainId: UniverseChainId.Mainnet, name: 'Registered hook' })],
+      }),
+    )
+    const table = (surface: 'hook-details' | 'tdp', showHookBadges?: boolean): React.ReactElement => (
+      <PoolTableStoreContextProvider>
+        <PoolsTable
+          pools={[poolStat({ hookAddress: HOOKED_ADDRESS })]}
+          loading={false}
+          chainId={UniverseChainId.Mainnet}
+          surface={surface}
+          showHookBadges={showHookBadges}
+        />
+      </PoolTableStoreContextProvider>
+    )
+    mocked(useHookRegistryMap).withImplementation(
+      () => registry,
+      () => {
+        const { rerender } = render(table('hook-details', false))
+
+        expect(useHookRegistryMap).toHaveBeenLastCalledWith({ chainId: UniverseChainId.Mainnet, enabled: false })
+        expect(screen.queryByText('Registered hook')).not.toBeInTheDocument()
+        expect(screen.queryByText('0x0010...1888')).not.toBeInTheDocument()
+
+        rerender(table('tdp', false))
+        expect(useHookRegistryMap).toHaveBeenLastCalledWith({ chainId: UniverseChainId.Mainnet, enabled: false })
+        expect(screen.queryByText('Registered hook')).not.toBeInTheDocument()
+
+        rerender(table('hook-details'))
+        expect(useHookRegistryMap).toHaveBeenLastCalledWith({ chainId: UniverseChainId.Mainnet, enabled: true })
+        expect(screen.getByRole('link', { name: /Registered hook/ })).toBeInTheDocument()
+
+        rerender(table('tdp'))
+
+        expect(useHookRegistryMap).toHaveBeenLastCalledWith({ chainId: UniverseChainId.Mainnet, enabled: true })
+        expect(screen.getByRole('link', { name: /Registered hook/ })).toBeInTheDocument()
+      },
+    )
+  })
+
   it('renders data filled state', () => {
     const hookAddress = '0x0010d0d5db05933fa0d9f7038d365e1541a41888'
     const mockData = [
@@ -173,6 +349,7 @@ describe('PoolTable', () => {
         id: '1',
         chainId: UniverseChainId.Mainnet,
         token0: validRestPoolToken0,
+        isToken0Quote: true,
         token1: validRestPoolToken1,
         feeTier: {
           feeAmount: 10000,
@@ -191,6 +368,7 @@ describe('PoolTable', () => {
         id: '2',
         chainId: UniverseChainId.Mainnet,
         token0: validRestPoolToken0,
+        isToken0Quote: true,
         token1: validRestPoolToken1,
         feeTier: {
           feeAmount: 500,
@@ -358,13 +536,220 @@ describe('PoolTable', () => {
     expect(screen.getAllByRole('link').length).toBeGreaterThan(0)
   })
 
+  describe('selected-period volume', () => {
+    function PeriodControls(): JSX.Element {
+      const { setTimePeriod } = useExploreTablesFilterStoreActions()
+      const period = useExploreTablesFilterStore((s) => s.timePeriod)
+      return (
+        <>
+          <button onClick={() => setTimePeriod(TimePeriod.HOUR)}>Choose 1H</button>
+          <button onClick={() => setTimePeriod(TimePeriod.DAY)}>Choose 1D</button>
+          <button onClick={() => setTimePeriod(TimePeriod.MONTH)}>Choose 30D</button>
+          <span>Stored period: {period}</span>
+        </>
+      )
+    }
+
+    function expectSort(sortBy: PoolSortFields, sortDirection = OrderDirection.Desc): void {
+      expect(useListPools).toHaveBeenLastCalledWith(expect.objectContaining({ sortState: { sortBy, sortDirection } }))
+    }
+
+    function renderPeriodTable(surface: 'explore' | 'positions-discovery' = 'explore') {
+      return renderWithProvider(
+        <>
+          <PeriodControls />
+          <ExploreTopPoolTable surface={surface} />
+        </>,
+      )
+    }
+
+    beforeEach(() => {
+      mocked(useFeatureFlag).mockImplementation((flag) => flag === FeatureFlags.HooksExplore)
+      mocked(useListPools).mockReturnValue({
+        pools: [
+          poolStat({
+            totalLiquidity: { value: 100 },
+            volume1Day: { value: 40 },
+            volume30Day: { value: 900 },
+            volOverTvl: 0.4,
+          }),
+        ],
+        isLoading: false,
+        isError: false,
+        hasNextPage: false,
+        isFetchingNextPage: false,
+        loadMore: vi.fn(),
+        chainId: UniverseChainId.Mainnet,
+      })
+    })
+
+    it('uses the same period for the single volume column, ratio and server sort', () => {
+      renderPeriodTable()
+      expect(screen.getByText('1D vol')).toBeInTheDocument()
+      expect(screen.getByText('Vol/TVL')).toBeInTheDocument()
+      expect(screen.queryByText('Volume')).not.toBeInTheDocument()
+      expect(screen.queryByText('30D vol')).not.toBeInTheDocument()
+      expect(screen.getByText('$40.00')).toBeInTheDocument()
+      expect(screen.queryByText('$900.00')).not.toBeInTheDocument()
+      expect(screen.getByText('0.40')).toBeInTheDocument()
+      expectSort(PoolSortFields.Volume24h)
+
+      fireEvent.click(screen.getByText('Choose 30D'))
+      expect(screen.getByText('30D vol')).toBeInTheDocument()
+      expect(screen.queryByText('1D vol')).not.toBeInTheDocument()
+      expect(screen.getByText('$900.00')).toBeInTheDocument()
+      expect(screen.queryByText('$40.00')).not.toBeInTheDocument()
+      expect(screen.getByText('9.00')).toBeInTheDocument()
+      expectSort(PoolSortFields.Volume30D)
+
+      fireEvent.click(screen.getByText('30D vol'))
+      expectSort(PoolSortFields.Volume30D, OrderDirection.Asc)
+      fireEvent.click(screen.getByText('Choose 1D'))
+      expectSort(PoolSortFields.Volume24h, OrderDirection.Asc)
+      fireEvent.click(screen.getByText('1D vol'))
+      expectSort(PoolSortFields.Volume24h)
+    })
+
+    it('falls back from 1D ratio ordering to volume on 30D and disables ratio sorting', () => {
+      renderPeriodTable()
+      fireEvent.click(screen.getByText('Vol/TVL'))
+      expectSort(PoolSortFields.VolOverTvl)
+      fireEvent.click(screen.getByText('Choose 30D'))
+      expectSort(PoolSortFields.Volume30D)
+      mocked(sendAnalyticsEvent).mockClear()
+      fireEvent.click(screen.getByText('Vol/TVL'))
+      expectSort(PoolSortFields.Volume30D)
+      expect(sendAnalyticsEvent).not.toHaveBeenCalledWith(InterfaceEventName.ExploreTableSorted, expect.anything())
+      fireEvent.click(screen.getByText('30D vol'))
+      expectSort(PoolSortFields.Volume30D, OrderDirection.Asc)
+    })
+
+    it.each([
+      { status: 'loading', isLoading: true, isError: false },
+      { status: 'error', isLoading: false, isError: true },
+    ])('renders selected-period skeletons during $status', ({ isLoading, isError }) => {
+      mocked(useListPools).mockReturnValue({
+        pools: [],
+        isLoading,
+        isError,
+        hasNextPage: false,
+        isFetchingNextPage: false,
+        loadMore: vi.fn(),
+      })
+
+      renderPeriodTable()
+
+      expect(screen.getByText('Vol/TVL')).toBeInTheDocument()
+      expect(screen.getAllByTestId('cell-loading-bubble').length).toBeGreaterThan(0)
+    })
+
+    it('derives 1D from an unsupported shared period without changing it', () => {
+      renderPeriodTable()
+      fireEvent.click(screen.getByText('Choose 1H'))
+      expect(screen.getByText('Stored period: H')).toBeInTheDocument()
+      expect(screen.getByText('$40.00')).toBeInTheDocument()
+      expectSort(PoolSortFields.Volume24h)
+    })
+
+    it.each(['explore', 'positions-discovery'] as const)(
+      'keeps fixed columns for %s when the period mode is inactive',
+      (surface) => {
+        if (surface === 'explore') {
+          mocked(useFeatureFlag).mockReturnValue(false)
+        }
+        renderPeriodTable(surface)
+        fireEvent.click(screen.getByText('Choose 30D'))
+        expect(screen.getByText('1D vol')).toBeInTheDocument()
+        expect(screen.getByText('30D vol')).toBeInTheDocument()
+        expect(screen.getByText('1D vol/TVL')).toBeInTheDocument()
+        expectSort(PoolSortFields.Volume24h)
+      },
+    )
+
+    it.each([
+      {
+        period: TimePeriod.DAY,
+        volume1Day: { value: 0 },
+        volume30Day: undefined,
+        volOverTvl: 0,
+        volume: '$0.00',
+        ratio: '0',
+      },
+      {
+        period: TimePeriod.MONTH,
+        volume1Day: undefined,
+        volume30Day: { value: 0 },
+        volOverTvl: undefined,
+        volume: '$0.00',
+        ratio: '0',
+      },
+      {
+        period: TimePeriod.MONTH,
+        volume1Day: { value: 40 },
+        volume30Day: undefined,
+        volOverTvl: 0.4,
+        volume: '-',
+        ratio: '-',
+      },
+    ])(
+      'preserves zero and missing values for $period volume',
+      ({ period, volume1Day, volume30Day, volOverTvl, volume, ratio }) => {
+        mocked(useListPools).mockReturnValue({
+          pools: [poolStat({ totalLiquidity: { value: 100 }, volume1Day, volume30Day, volOverTvl })],
+          isLoading: false,
+          isError: false,
+          hasNextPage: false,
+          isFetchingNextPage: false,
+          loadMore: vi.fn(),
+        })
+        renderPeriodTable()
+        if (period === TimePeriod.MONTH) {
+          fireEvent.click(screen.getByText('Choose 30D'))
+        }
+        expect(screen.getAllByText(volume).length).toBeGreaterThan(0)
+        expect(screen.getAllByText(ratio).length).toBeGreaterThan(0)
+        if (volume === '-') {
+          expect(screen.queryByText('$0.00')).not.toBeInTheDocument()
+          expect(screen.getAllByText('-')).toHaveLength(2)
+        }
+      },
+    )
+
+    it.each(['explore', 'positions-discovery'] as const)('keeps zero placeholders on inactive %s tables', (surface) => {
+      if (surface === 'explore') {
+        mocked(useFeatureFlag).mockReturnValue(false)
+      }
+      mocked(useListPools).mockReturnValue({
+        pools: [
+          poolStat({
+            totalLiquidity: { value: 100 },
+            volume1Day: { value: 0 },
+            volume30Day: { value: 0 },
+            volOverTvl: 0,
+          }),
+        ],
+        isLoading: false,
+        isError: false,
+        hasNextPage: false,
+        isFetchingNextPage: false,
+        loadMore: vi.fn(),
+      })
+
+      renderPeriodTable(surface)
+
+      expect(screen.queryByText('$0.00')).not.toBeInTheDocument()
+      expect(screen.queryByText('0')).not.toBeInTheDocument()
+      expect(screen.getAllByText('-')).toHaveLength(3)
+    })
+  })
+
   describe('category tags', () => {
     const stables = poolCategory({ id: 'stable-pools', name: 'Stables' })
     const majors = poolCategory({ id: 'major-pools', name: 'Majors' })
     const taggedPool = poolStat({ id: 'pool-1', categoryIds: ['not-a-category', 'stable-pools', 'major-pools'] })
 
     function renderTable(props: {
-      surface: 'explore' | 'tdp' | 'add-liquidity-pool-browser'
+      surface: 'explore' | 'tdp' | 'hook-details' | 'add-liquidity-pool-browser'
       scopedCategoryId?: string
     }) {
       return render(
@@ -393,8 +778,8 @@ describe('PoolTable', () => {
       expect(screen.getByTestId(TestID.PoolRowCategoryTag)).toHaveTextContent('Stables')
     })
 
-    it('renders no tag and skips the categories query on the TDP surface', () => {
-      renderTable({ surface: 'tdp' })
+    it.each(['tdp', 'hook-details'] as const)('renders no tag and skips the categories query on %s', (surface) => {
+      renderTable({ surface })
       expect(screen.queryByTestId(TestID.PoolRowCategoryTag)).toBeNull()
       expect(useListPoolCategoriesQuery).toHaveBeenCalledWith({ enabled: false })
     })
@@ -509,6 +894,7 @@ describe('PoolTable', () => {
         id: '1',
         chainId: UniverseChainId.Mainnet,
         token0: validRestPoolToken0,
+        isToken0Quote: true,
         token1: validRestPoolToken1,
         feeTier: { feeAmount: 3000, tickSpacing: DEFAULT_TICK_SPACING, isDynamic: false },
         txCount: 200,
@@ -588,12 +974,13 @@ describe('PoolTable', () => {
       protocolVersion: 'V2' | 'V3' | 'V4',
       // Per-pool protocol fee (integer pips) as the data hook attaches it to each pool; the
       // fee-display column reads it straight off `pool.protocolFeePips`.
-      served: { protocolFee?: number } = {},
+      served: { protocolFee?: number; currentLpFee?: number } = {},
     ) {
       const pool = {
         id: '1',
         chainId: UniverseChainId.Mainnet,
         token0: validRestPoolToken0,
+        isToken0Quote: true,
         token1: validRestPoolToken1,
         feeTier: { ...feeTier, tickSpacing: DEFAULT_TICK_SPACING },
         txCount: 200,
@@ -604,6 +991,7 @@ describe('PoolTable', () => {
         volOverTvl: 1.84,
         protocolVersion,
         protocolFeePips: served.protocolFee,
+        currentLpFeePips: served.currentLpFee,
       } as unknown as PoolStat
       mocked(useListPools).mockReturnValue({
         pools: [pool],
@@ -626,8 +1014,19 @@ describe('PoolTable', () => {
     it('keeps the Dynamic label for dynamic fee tiers instead of rendering the sentinel as a fee', () => {
       mockPools({ feeAmount: DYNAMIC_FEE_AMOUNT, isDynamic: true }, 'V4')
       renderWithProvider(<ExploreTopPoolTable surface="explore" />)
-      expect(screen.getAllByText(/^v4 · Dynamic/).length).toBeGreaterThan(0)
+      expect(screen.getAllByText('Dynamic').length).toBeGreaterThan(0)
       // DYNAMIC_FEE_AMOUNT (8388608 pips) must never be formatted as a rate (~838%).
+      expect(screen.queryByText(/838/)).toBeNull()
+    })
+
+    it('shows the served current fee for a dynamic fee tier', () => {
+      // 7000 pips = 0.7%, what the pool's latest swap charged.
+      mockPools({ feeAmount: DYNAMIC_FEE_AMOUNT, isDynamic: true }, 'V4', {
+        currentLpFee: 7000,
+      })
+      renderWithProvider(<ExploreTopPoolTable surface="explore" />)
+      expect(screen.getAllByText('0.70%').length).toBeGreaterThan(0)
+      expect(screen.queryByText('Dynamic')).toBeNull()
       expect(screen.queryByText(/838/)).toBeNull()
     })
 

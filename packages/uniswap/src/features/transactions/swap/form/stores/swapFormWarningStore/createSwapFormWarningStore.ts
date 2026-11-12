@@ -10,6 +10,13 @@ export type SwapFormWarningStoreState = {
   isViewOnlyModalVisible: boolean
   isBridgedAssetModalVisible: boolean
   isVerifyIdentityModalVisible: boolean
+  isBlockedAddressModalVisible: boolean
+  /**
+   * The address the press-time screen refused, captured when the modal opens so the
+   * modal keeps naming it. Reading the active address at render instead would retitle
+   * an open modal after a wallet switch.
+   */
+  blockedAddress: string | undefined
   actions: {
     handleShowTokenWarningModal: () => void
     handleHideTokenWarningModal: () => void
@@ -23,6 +30,8 @@ export type SwapFormWarningStoreState = {
     handleHideViewOnlyModal: () => void
     handleShowVerifyIdentityModal: () => void
     handleHideVerifyIdentityModal: () => void
+    handleShowBlockedAddressModal: (address?: string) => void
+    handleHideBlockedAddressModal: () => void
   }
 }
 
@@ -38,6 +47,8 @@ export const createSwapFormWarningStore = (): SwapFormWarningStore =>
         isViewOnlyModalVisible: false,
         isBridgedAssetModalVisible: false,
         isVerifyIdentityModalVisible: false,
+        isBlockedAddressModalVisible: false,
+        blockedAddress: undefined,
         actions: {
           handleShowTokenWarningModal: (): void => set({ isTokenWarningModalVisible: true }),
           handleHideTokenWarningModal: (): void => set({ isTokenWarningModalVisible: false }),
@@ -51,6 +62,10 @@ export const createSwapFormWarningStore = (): SwapFormWarningStore =>
           handleHideBridgedAssetModal: (): void => set({ isBridgedAssetModalVisible: false }),
           handleShowVerifyIdentityModal: (): void => set({ isVerifyIdentityModalVisible: true }),
           handleHideVerifyIdentityModal: (): void => set({ isVerifyIdentityModalVisible: false }),
+          handleShowBlockedAddressModal: (address?: string): void =>
+            set({ isBlockedAddressModalVisible: true, blockedAddress: address }),
+          handleHideBlockedAddressModal: (): void =>
+            set({ isBlockedAddressModalVisible: false, blockedAddress: undefined }),
         },
       }),
       {

@@ -9,11 +9,13 @@
 import { UniverseChainId } from '@universe/chains'
 import { SearchHistoryResultType } from 'uniswap/src/features/search/SearchHistoryResult'
 import { TokenProtectionWarning } from 'uniswap/src/features/tokens/warnings/types'
+import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { PreV55SearchResultType } from 'uniswap/src/state/oldTypes'
 import {
   addActivityVisibility,
   addDismissedBridgedAndCompatibleWarnings,
   addEnableCustomGasFeeEntry,
+  addNewUserOnboardingHistory,
   migrateDismissedTokenWarnings,
   migrateSearchHistory,
   removeThaiBahtFromFiatCurrency,
@@ -476,5 +478,86 @@ describe('removeUniswapWrapped2025BehaviorHistory', () => {
     const state = { otherData: 'preserved' }
     const result = removeUniswapWrapped2025BehaviorHistory(state)
     expect(result).toBe(state)
+  })
+})
+
+// Mobile: 106
+// Extension: 38
+// Web: 66
+describe('addNewUserOnboardingHistory', () => {
+  const tx = (id: string, type: TransactionType, status = TransactionStatus.Success, extra = {}) => ({
+    [id]: { id, status, typeInfo: { type, stepDetails: [], ...extra } },
+  })
+
+  it('marks wallets with a successful swap, bridge or non-earn plan as having swapped', () => {
+    const state = {
+      transactions: {
+        '0xAAA': { [UniverseChainId.Mainnet]: tx('a', TransactionType.Swap) },
+        '0xbbb': { [UniverseChainId.Base]: tx('b', TransactionType.Bridge) },
+        '0xccc': { [UniverseChainId.Mainnet]: tx('c', TransactionType.Plan) },
+      },
+      uniswapBehaviorHistory: { hasViewedBridgingBanner: true },
+    }
+    const result = addNewUserOnboardingHistory(state)
+    expect(result.uniswapBehaviorHistory).toEqual({
+      hasViewedBridgingBanner: true,
+      newUserOnboarding: {
+        byWallet: {
+          '0xaaa': { hasCompletedSwap: true },
+          '0xbbb': { hasCompletedSwap: true },
+          '0xccc': { hasCompletedSwap: true },
+        },
+      },
+    })
+  })
+
+  it('skips failed swaps, earn plans and other transaction types', () => {
+    const state = {
+      transactions: {
+        '0xaaa': { [UniverseChainId.Mainnet]: tx('a', TransactionType.Swap, TransactionStatus.Failed) },
+        '0xbbb': {
+          [UniverseChainId.Mainnet]: tx('b', TransactionType.Plan, TransactionStatus.Success, {
+            earnAction: 'deposit',
+          }),
+        },
+        '0xccc': { [UniverseChainId.Mainnet]: tx('c', TransactionType.Send) },
+        '0xddd': {
+          [UniverseChainId.Mainnet]: tx('d', TransactionType.Plan, TransactionStatus.Success, {
+            stepDetails: [{ typeInfo: { type: TransactionType.Unknown } }],
+          }),
+        },
+      },
+    }
+    expect(addNewUserOnboardingHistory(state).uniswapBehaviorHistory.newUserOnboarding).toEqual({ byWallet: {} })
+  })
+
+  it('skips a malformed transaction without dropping other wallets', () => {
+    const state = {
+      transactions: {
+        '0xaaa': { [UniverseChainId.Mainnet]: { bad: { id: 'bad', status: TransactionStatus.Success } } },
+        '0xbbb': {
+          [UniverseChainId.Mainnet]: {
+            bad: { id: 'bad', status: TransactionStatus.Success, typeInfo: { type: TransactionType.Plan } },
+          },
+        },
+        '0xccc': { [UniverseChainId.Mainnet]: tx('c', TransactionType.Swap) },
+      },
+    }
+    expect(addNewUserOnboardingHistory(state).uniswapBehaviorHistory.newUserOnboarding).toEqual({
+      byWallet: { '0xccc': { hasCompletedSwap: true } },
+    })
+  })
+
+  it('initializes an empty record when there are no transactions', () => {
+    expect(addNewUserOnboardingHistory({}).uniswapBehaviorHistory.newUserOnboarding).toEqual({ byWallet: {} })
+  })
+
+  it('returns undefined state unchanged', () => {
+    expect(addNewUserOnboardingHistory(undefined)).toBeUndefined()
+  })
+
+  it('falls back to an empty record when transactions are malformed', () => {
+    const state = createThrowingProxy({ uniswapBehaviorHistory: {} }, { throwingMethods: ['transactions'] })
+    expect(addNewUserOnboardingHistory(state).uniswapBehaviorHistory.newUserOnboarding).toEqual({ byWallet: {} })
   })
 })

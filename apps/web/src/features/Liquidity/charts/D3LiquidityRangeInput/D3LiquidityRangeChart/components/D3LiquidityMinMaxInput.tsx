@@ -2,6 +2,11 @@ import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes
 import { Token } from '@uniswap/sdk-core'
 import { Flex } from '@universe/mycelium'
 import { useCallback, useMemo, useState } from 'react'
+import { LiquidityEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { PriceRangeInputSource } from 'uniswap/src/features/telemetry/types'
+import { useEvent } from 'utilities/src/react/hooks'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { D3RangeAmountInput } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/components/D3RangeAmountInput'
 import {
   useChartCurrentPrice,
@@ -13,11 +18,11 @@ import {
 } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/selectors/viewSelectors'
 import { TickNavigationParams } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
 import { useLiquidityChartStoreActions } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/useLiquidityChartStore'
+import { useCreateLiquidityContext } from '~/features/Liquidity/Create/CreateLiquidityContextProvider'
 import { RangeSelectionInput } from '~/features/Liquidity/Create/RangeAmountInput'
 import { RangeAmountInputPriceMode } from '~/features/Liquidity/Create/types'
 import { getBaseAndQuoteCurrencies } from '~/features/Liquidity/utils/currency'
 import { getTicksAtLimit, tryParseV4Tick } from '~/features/Liquidity/utils/priceRangeInfo'
-import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 import { tryParseTick } from '~/state/mint/v3/utils'
 
 // Convert user input to price based on the input mode
@@ -71,6 +76,16 @@ export function D3LiquidityMinMaxInput() {
     toggleInputMode,
   } = useLiquidityChartStoreActions()
 
+  const trace = useTrace()
+  const logRangeInputChanged = useEvent((input: RangeSelectionInput, source: PriceRangeInputSource) => {
+    sendAnalyticsEvent(LiquidityEventName.PriceRangeInputChanged, {
+      bound: input === RangeSelectionInput.MIN ? 'min' : 'max',
+      source,
+      input_mode: inputMode,
+      ...trace,
+    })
+  })
+
   // Shared with the %-delta selector: the displayed delta and the value typed against it
   // have to anchor on the same price. Without a mounted chart only the store has one.
   const currentPrice = useChartCurrentPrice()
@@ -94,6 +109,12 @@ export function D3LiquidityMinMaxInput() {
       protocolVersion: positionState.protocolVersion,
     }
   }, [positionState.fee, currencies.sdk, priceRangeState.priceInverted, positionState.protocolVersion])
+
+  const stepRange = useEvent((input: RangeSelectionInput, step: (params: TickNavigationParams) => boolean) => {
+    if (tickNavigationParams && step(tickNavigationParams)) {
+      logRangeInputChanged(input, PriceRangeInputSource.Stepper)
+    }
+  })
 
   const ticksAtLimit = useMemo(() => {
     return getTicksAtLimit({
@@ -184,6 +205,8 @@ export function D3LiquidityMinMaxInput() {
         })
       }
 
+      const previousTick = input === RangeSelectionInput.MIN ? priceRangeState.minTick : priceRangeState.maxTick
+
       // Route through handleTickRangeChange (not a raw setPriceRangeState) so the edit re-detects the
       // strategy, the same as the drag and increment paths. A typed range that no longer matches the
       // selected preset clears the (now stale) label — otherwise a later streamed re-seed that crosses
@@ -194,9 +217,23 @@ export function D3LiquidityMinMaxInput() {
         handleTickRangeChange({ minTick: priceRangeState.minTick, maxTick: tickToSet })
       }
 
+      // Like the steppers and drags, only a committed move counts: focusing and leaving without typing,
+      // retyping the same price, or clearing the field with no liquidity edge to fall back to (no
+      // parsable tick) all blur without one. A clear that snaps to the distribution's edge does move it.
+      if (displayUserTypedValue[input] && tickToSet !== undefined && tickToSet !== previousTick) {
+        logRangeInputChanged(input, PriceRangeInputSource.Typed)
+      }
       setDisplayUserTypedValue((prev) => ({ ...prev, [input]: false }))
     },
-    [handleTickRangeChange, priceRangeState.minTick, priceRangeState.maxTick, tickNavigationParams, positionState],
+    [
+      handleTickRangeChange,
+      priceRangeState.minTick,
+      priceRangeState.maxTick,
+      tickNavigationParams,
+      positionState,
+      displayUserTypedValue,
+      logRangeInputChanged,
+    ],
   )
 
   return (
@@ -213,8 +250,8 @@ export function D3LiquidityMinMaxInput() {
       <D3RangeAmountInput
         isDisabled={isFullRange}
         input={RangeSelectionInput.MIN}
-        handleDecrement={() => tickNavigationParams && decrementMin(tickNavigationParams)}
-        handleIncrement={() => tickNavigationParams && incrementMin(tickNavigationParams)}
+        handleDecrement={() => stepRange(RangeSelectionInput.MIN, decrementMin)}
+        handleIncrement={() => stepRange(RangeSelectionInput.MIN, incrementMin)}
         showIncrementButtons={!isFullRange}
         value={getDisplayValue(RangeSelectionInput.MIN)}
         handlePriceRangeInput={handlePriceRangeInput}
@@ -229,8 +266,8 @@ export function D3LiquidityMinMaxInput() {
       <D3RangeAmountInput
         isDisabled={isFullRange}
         input={RangeSelectionInput.MAX}
-        handleDecrement={() => tickNavigationParams && decrementMax(tickNavigationParams)}
-        handleIncrement={() => tickNavigationParams && incrementMax(tickNavigationParams)}
+        handleDecrement={() => stepRange(RangeSelectionInput.MAX, decrementMax)}
+        handleIncrement={() => stepRange(RangeSelectionInput.MAX, incrementMax)}
         showIncrementButtons={!isFullRange}
         value={getDisplayValue(RangeSelectionInput.MAX)}
         handlePriceRangeInput={handlePriceRangeInput}

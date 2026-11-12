@@ -16,5 +16,8 @@ export const LARGE_TOAST_RADIUS = borderRadii.rounded24
 export const SMALL_TOAST_RADIUS = borderRadii.roundedFull
 
 export const NOTIFICATION_HEIGHT = 64
+export const SWIPE_DISMISS_ACTIVATION_OFFSET = spacing.spacing8
+export const SWIPE_DISMISS_DISTANCE = NOTIFICATION_HEIGHT / 2
+export const SWIPE_DISMISS_VELOCITY = 800
 export const MAX_TEXT_LENGTH = 20
 export const NOTIFICATION_ICON_SIZE = iconSizes.icon36

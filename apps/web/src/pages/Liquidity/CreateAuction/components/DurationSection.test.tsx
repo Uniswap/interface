@@ -1,11 +1,12 @@
 import userEvent from '@testing-library/user-event'
 import { useRef, useState } from 'react'
 import i18n from 'uniswap/src/i18n'
+import { ONE_DAY_MS } from 'utilities/src/time/time'
 import { vi } from 'vitest'
 import { DurationSection, type DurationSectionHandle } from '~/pages/Liquidity/CreateAuction/components/DurationSection'
 import { CreateAuctionStoreContext } from '~/pages/Liquidity/CreateAuction/store/CreateAuctionStoreContext'
 import { createCreateAuctionStore } from '~/pages/Liquidity/CreateAuction/store/createCreateAuctionStore'
-import { CREATE_AUCTION_MIN_START_LEAD_TIME_MINUTES, MS_PER_DAY } from '~/pages/Liquidity/CreateAuction/utils/duration'
+import { CREATE_AUCTION_MIN_START_LEAD_TIME_MINUTES } from '~/pages/Liquidity/CreateAuction/utils/duration'
 import { act, render, screen } from '~/test-utils/render'
 
 const ADD_PRE_BID = i18n.t('toucan.createAuction.step.configureAuction.preBid.add')
@@ -23,8 +24,8 @@ type Duration = { startTime: Date | undefined; endTime: Date | undefined; preBid
 vi.useFakeTimers({ toFake: ['Date'] })
 vi.setSystemTime(new Date(2026, 5, 15, 12))
 
-const START = new Date(Date.now() + MS_PER_DAY)
-const END = new Date(Date.now() + 6 * MS_PER_DAY)
+const START = new Date(Date.now() + ONE_DAY_MS)
+const END = new Date(Date.now() + 6 * ONE_DAY_MS)
 
 /**
  * Renders the section against real state, so the round trip through `onChange` — the thing that
@@ -100,7 +101,7 @@ describe('DurationSection pre-bid module', () => {
     // Only just past the minimum lead, so the window cannot fit in front of it and seeding
     // moves the emission start.
     const tightStart = new Date(Date.now() + (CREATE_AUCTION_MIN_START_LEAD_TIME_MINUTES + 1) * 60_000)
-    const tightEnd = new Date(tightStart.getTime() + 5 * MS_PER_DAY)
+    const tightEnd = new Date(tightStart.getTime() + 5 * ONE_DAY_MS)
     const { seen } = renderSection({ startTime: tightStart, endTime: tightEnd })
 
     await userEvent.click(screen.getByText(ADD_PRE_BID))
@@ -185,7 +186,7 @@ describe('DurationSection pre-bid module', () => {
 
     // Open the pre-bid module's own calendar and pick a day well after the emission start.
     await userEvent.click(screen.getByLabelText(PRE_BID_START))
-    const dayAfterStart = new Date(START.getTime() + 3 * MS_PER_DAY)
+    const dayAfterStart = new Date(START.getTime() + 3 * ONE_DAY_MS)
     // The calendar opens on the pre-bid start's month; near a month end the target day is in the
     // next one, and the visible grid has no enabled cell for it.
     const monthsAhead =
@@ -217,7 +218,7 @@ describe('DurationSection pre-bid module', () => {
   })
 
   it('shows the ordering error once a start date makes the pair out of order', () => {
-    const start = new Date(Date.now() + MS_PER_DAY)
+    const start = new Date(Date.now() + ONE_DAY_MS)
     renderSection({ startTime: start, preBidStartTime: new Date(start.getTime() + 60_000) })
 
     expect(screen.getByText(PRE_BID_RANGE_ERROR)).toBeInTheDocument()

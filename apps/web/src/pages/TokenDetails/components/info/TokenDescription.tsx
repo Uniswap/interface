@@ -15,9 +15,10 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { ExplorerDataType, getExplorerLink, openUri } from 'uniswap/src/utils/linking'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
+import { useMultichainPopoverContentProps } from '~/components/MultichainPillDropdown/MultichainPillDropdown'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
+import { useTokenAddressCopy } from '~/hooks/useTokenAddressCopy'
 import { useSwapTaxes } from '~/pages/TokenDetails/components/info/hooks/useSwapTaxes'
-import { useMultichainPopoverContentProps } from '~/pages/TokenDetails/components/info/MultichainPillDropdown'
 import {
   AddressPill,
   type AboutPillsProps,
@@ -33,7 +34,6 @@ import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
 import { useMultichainTokenEntries } from '~/pages/TokenDetails/hooks/useMultichainTokenEntries'
 import { useTDPEffectiveCurrency } from '~/pages/TokenDetails/hooks/useTDPEffectiveCurrency'
 import { useTDPPermissionedState } from '~/pages/TokenDetails/hooks/useTDPPermissionedState'
-import { useTokenAddressCopy } from '~/pages/TokenDetails/hooks/useTokenAddressCopy'
 
 /** With `launchInfo`, the section becomes the token's Info module: provenance first, then the about details. */
 export function TokenDescription({ launchInfo }: { launchInfo?: ReactNode }) {
@@ -60,9 +60,8 @@ export function TokenDescription({ launchInfo }: { launchInfo?: ReactNode }) {
 
   const displayAddress = effectiveCurrency.isNative ? NATIVE_CHAIN_ID : effectiveCurrency.address
 
-  const { description, descriptionTranslations, homepageUrl, twitterName } = useTokenMetadata(
-    currencyId(effectiveCurrency),
-  )
+  const { data: metadata } = useTokenMetadata(currencyId(effectiveCurrency))
+  const { description, descriptionTranslations, homepageUrl, twitterName } = metadata ?? {}
   const localizedDescription = getTranslation(descriptionTranslations, currentLanguage) ?? description
 
   const explorerUrl = getExplorerLink({

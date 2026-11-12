@@ -1,7 +1,7 @@
 import type { Currency } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
+import { useCreateLiquidityContext } from '~/features/Liquidity/Create/CreateLiquidityContextProvider'
 import { getCurrencyWithUnwrap } from '~/features/Liquidity/utils/currency'
-import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 import { PositionField } from '~/types/position'
 
 /**

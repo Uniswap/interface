@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
-import { LogoContainer } from '~/components/AccountDrawer/MiniPortfolio/Activity/Logos'
+import { LogoContainer } from '~/components/Activity/Logos'
 import { OrderContent } from '~/components/modals/OffchainActivityModal'
 import { useAccount } from '~/connection/hooks/useAccount'
 import {
@@ -17,11 +17,11 @@ import {
   LoadingIndicatorOverlay,
 } from '~/pages/Swap/Limit/ConfirmLimitOrderModal/PendingStatusIcons'
 import { TradeSummary } from '~/pages/Swap/Limit/ConfirmLimitOrderModal/TradeSummary'
-import { InterfaceTrade } from '~/state/routing/types'
-import { isLimitTrade, isUniswapXTradeType } from '~/state/routing/utils'
 import { useIsTransactionConfirmed, useUniswapXOrderByOrderHash } from '~/state/transactions/hooks'
 import { ExternalLink } from '~/theme/components/Links'
+import { InterfaceTrade } from '~/types/routing'
 import type { LimitOrderResult } from '~/types/trade'
+import { isLimitTrade, isUniswapXTradeType } from '~/utils/routing/routing'
 
 function AnimationWrapper(props: ViewCompatProps): JSX.Element {
   return <View position="relative" width="100%" minHeight={72} flexGrow={1} {...props} />

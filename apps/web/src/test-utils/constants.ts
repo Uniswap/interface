@@ -25,7 +25,7 @@ import {
   PreviewTrade,
   QuoteMethod,
   V2DutchOrderTrade,
-} from '~/state/routing/types'
+} from '~/types/routing'
 
 export const TEST_TOKEN_1 = new Token(1, '0x0000000000000000000000000000000000000001', 18, 'ABC', 'Abc')
 export const TEST_TOKEN_1_INFO: CurrencyInfo = {

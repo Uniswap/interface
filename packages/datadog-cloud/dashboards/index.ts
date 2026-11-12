@@ -2,7 +2,7 @@ import * as pulumi from '@pulumi/pulumi'
 import { settings } from './config'
 import { createDashboards } from './dashboard-factory'
 import { DashboardDefinition } from './dashboard-types'
-import { devPortalDashboards, privyEmbeddedWalletDashboards } from './definitions'
+import { devPortalDashboards, privyEmbeddedWalletDashboards, webReleasePerfDashboard } from './definitions'
 
 // Log configuration
 pulumi.log.info(`Environment: ${settings.environment}`)
@@ -13,6 +13,7 @@ pulumi.log.info(`Tag Filter: ${settings.tagFilter}`)
 const teamDashboards: Record<string, DashboardDefinition[]> = {
   'dev-portal': devPortalDashboards,
   'privy-embedded-wallet': privyEmbeddedWalletDashboards,
+  'platform-infra': [webReleasePerfDashboard],
 }
 
 // Get dashboards for current team

@@ -17,19 +17,21 @@ const mockCreateRecipientContext = vi.fn()
 const mockOpen = vi.fn()
 
 vi.mock('@hpke/core', () => ({
-  CipherSuite: vi.fn(() => ({
-    createRecipientContext: (...args: unknown[]) => mockCreateRecipientContext(...args),
-  })),
-  DhkemP256HkdfSha256: vi.fn(() => ({
-    generateKeyPair: vi
-      .fn()
-      .mockResolvedValue({ publicKey: 'fake-crypto-pub' as unknown as CryptoKey, privateKey: 'fake-crypto-priv' }),
-  })),
-  HkdfSha256: vi.fn(() => ({})),
+  CipherSuite: vi.fn(function () {
+    return { createRecipientContext: (...args: unknown[]) => mockCreateRecipientContext(...args) }
+  }),
+  DhkemP256HkdfSha256: vi.fn(function () {
+    return {
+      generateKeyPair: vi
+        .fn()
+        .mockResolvedValue({ publicKey: 'fake-crypto-pub' as unknown as CryptoKey, privateKey: 'fake-crypto-priv' }),
+    }
+  }),
+  HkdfSha256: vi.fn(function () {}),
 }))
 
 vi.mock('@hpke/chacha20poly1305', () => ({
-  Chacha20Poly1305: vi.fn(() => ({})),
+  Chacha20Poly1305: vi.fn(function () {}),
 }))
 
 const FAKE_SPKI_BYTES = new Uint8Array(91) // 26-byte prefix + 65-byte point; content irrelevant for orchestration tests

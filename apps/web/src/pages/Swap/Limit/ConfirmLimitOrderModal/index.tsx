@@ -2,16 +2,15 @@ import { Currency } from '@uniswap/sdk-core'
 import { Flex } from '@universe/mycelium'
 import { AnimateTransition } from '@universe/mycelium/animate-presence-pager'
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 // oxlint-disable-next-line no-restricted-imports -- ui constant needed for modal animation timing
 import { ADAPTIVE_MODAL_ANIMATION_DURATION } from 'ui/src/components/modal/AdaptiveWebModal'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { CurrencyField } from 'uniswap/src/types/currency'
+import { ConfirmModalState, PendingModalError } from '~/components/ConfirmModal/types'
 import { ZERO_PERCENT } from '~/constants/misc'
 import { Allowance, AllowanceState } from '~/hooks/permit2/usePermit2Allowance'
-import {
-  Error as ConfirmLimitOrderErrorPanel,
-  PendingModalError,
-} from '~/pages/Swap/Limit/ConfirmLimitOrderModal/Error'
+import { Error as ConfirmLimitOrderErrorPanel } from '~/pages/Swap/Limit/ConfirmLimitOrderModal/Error'
 import { SwapHead } from '~/pages/Swap/Limit/ConfirmLimitOrderModal/Head'
 import { SwapModal } from '~/pages/Swap/Limit/ConfirmLimitOrderModal/Modal'
 import { Pending } from '~/pages/Swap/Limit/ConfirmLimitOrderModal/Pending'
@@ -20,18 +19,17 @@ import {
   type ProgressIndicatorStep,
   ProgressIndicator as LimitOrderProgressIndicator,
 } from '~/pages/Swap/Limit/ConfirmLimitOrderModal/ProgressIndicator/ProgressIndicator'
-import { ConfirmModalState } from '~/pages/Swap/Limit/ConfirmLimitOrderModal/state'
 import { useConfirmModalState } from '~/pages/Swap/Limit/ConfirmLimitOrderModal/useConfirmModalState'
 import { LimitOrderDetails } from '~/pages/Swap/Limit/LimitOrderDetails'
 import { LimitOrderPreview } from '~/pages/Swap/Limit/LimitOrderPreview'
 import { useSuppressPopups } from '~/state/application/hooks'
-import { InterfaceTrade } from '~/state/routing/types'
-import { isLimitTrade, isPreviewTrade, isUniswapXTradeType } from '~/state/routing/utils'
 import { useUniswapXOrderByOrderHash } from '~/state/transactions/hooks'
+import { InterfaceTrade } from '~/types/routing'
 import type { LimitOrderResult } from '~/types/trade'
 import { SignatureExpiredError, UniswapXv2HardQuoteError } from '~/utils/errors'
 import { PopupType } from '~/utils/popups/types'
-import { didUserReject } from '~/utils/swapErrorToUserReadableMessage'
+import { isLimitTrade, isPreviewTrade, isUniswapXTradeType } from '~/utils/routing/routing'
+import { didUserReject, swapErrorToUserReadableMessage } from '~/utils/swapErrorToUserReadableMessage'
 
 /** Must match `curve` on `AnimateTransition` below so held error UI clears after exit completes. */
 const CONFIRM_LIMIT_ORDER_MODAL_BODY_TRANSITION_MS = 200
@@ -82,6 +80,11 @@ function ConfirmLimitOrderModalBodyPanel({
   displayedModalErrorType,
   resetToReviewScreen,
 }: ConfirmModalBodyPanelProps): JSX.Element {
+  const { t } = useTranslation()
+  // `/order` refuses a blocked wallet with a 401 after the user has already signed, so
+  // the raw upstream message is what they would otherwise be left with.
+  const limitOrderErrorMessage = orderFlowFailed ? swapErrorToUserReadableMessage(t, limitOrderError) : undefined
+
   switch (panelId) {
     case 'review':
       return (
@@ -106,7 +109,7 @@ function ConfirmLimitOrderModalBodyPanel({
                 fiatValueInput={fiatValueInput}
                 fiatValueOutput={fiatValueOutput}
                 showAcceptChanges={false}
-                limitOrderErrorMessage={orderFlowFailed ? limitOrderError?.message : undefined}
+                limitOrderErrorMessage={limitOrderErrorMessage}
               />
             </Flex>
           </Flex>

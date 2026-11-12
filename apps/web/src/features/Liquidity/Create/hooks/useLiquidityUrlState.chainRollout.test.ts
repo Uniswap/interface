@@ -4,7 +4,7 @@ import { FeatureFlags, useFeatureFlag, useStatsigClientStatus } from '@universe/
 import { useQueryState, useQueryStates } from 'nuqs'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { selectIsTestnetModeEnabled } from 'uniswap/src/features/settings/selectors'
-import { vi } from 'vitest'
+import { type Mock, vi } from 'vitest'
 import {
   CHAIN_ROLLOUT_READINESS_TIMEOUT_MS,
   useLiquidityUrlState,
@@ -59,7 +59,7 @@ vi.mock('@universe/gating', async (importOriginal) => {
   }
 })
 
-const useQueryStateMock = mocked(useQueryState) as unknown as ReturnType<typeof vi.fn>
+const useQueryStateMock = mocked(useQueryState) as unknown as Mock
 const useQueryStatesMock = mocked(useQueryStates)
 const useCurrencyWithLoadingMock = mocked(useCurrencyWithLoading)
 const useFeatureFlagMock = mocked(useFeatureFlag)

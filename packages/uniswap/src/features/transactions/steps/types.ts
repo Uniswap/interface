@@ -111,6 +111,8 @@ export interface HandleOnChainStepParams<
   setCurrentStep: SetCurrentStepFn
   /** Controls whether the function allow submitting a duplicate tx (a tx w/ identical `info` to another recent/pending tx). Defaults to false. */
   allowDuplicativeTx?: boolean
+  /** Only a pending tx with identical `info` blocks submission; a finalized one is an earlier, separate action (e.g. a second decrease of the same amounts). Defaults to false. */
+  allowDuplicativeOfFinalizedTx?: boolean
   /** Controls whether the function should throw an error upon interrupt or not, defaults to `false`. */
   ignoreInterrupt?: boolean
   /** Controls whether the function should wait to return until after the transaction has confirmed. Defaults to `true`. */

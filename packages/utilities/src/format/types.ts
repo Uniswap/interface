@@ -23,6 +23,9 @@ export enum NumberType {
   // fiat number that uses standard formatting without any specific rules
   FiatStandard = 'fiat-standard',
 
+  // fiat number in standard notation rounded to whole units, e.g. "$55,432"
+  FiatStandardNoDecimals = 'fiat-standard-no-decimals',
+
   // fiat prices in any component that belongs in the Token Details flow (except for token stats)
   FiatTokenDetails = 'fiat-token-details',
 
@@ -64,6 +67,7 @@ export type FiatNumberType = Extract<
   | NumberType.FiatRewardsPrecise
   | NumberType.PortfolioBalance
   | NumberType.FiatStandard
+  | NumberType.FiatStandardNoDecimals
 >
 
 export type PercentNumberDecimals = 1 | 2 | 3 | 4

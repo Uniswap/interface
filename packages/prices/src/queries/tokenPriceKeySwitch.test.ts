@@ -7,7 +7,7 @@ import { tokenPriceQueryOptions } from '@universe/prices/src/queries/tokenPriceQ
 import { MAX_DISPLAYABLE_PRICE_AGE_MS } from '@universe/prices/src/sources/rest/constants'
 import type { RestPriceBatcher } from '@universe/prices/src/sources/rest/RestPriceBatcher'
 import type { TokenPriceData } from '@universe/prices/src/types'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, type Mock, vi } from 'vitest'
 
 /**
  * A mounted observer switching ONTO a token whose cached entry is old (e.g.
@@ -23,7 +23,7 @@ const REST_PRICE = 4_000
 
 function setup(): {
   queryClient: QueryClient
-  fetchSpy: ReturnType<typeof vi.fn>
+  fetchSpy: Mock
   observer: QueryObserver<TokenPriceData | null>
   restBatcher: RestPriceBatcher
   dispose: () => void

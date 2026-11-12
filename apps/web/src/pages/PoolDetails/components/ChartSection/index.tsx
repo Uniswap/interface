@@ -23,7 +23,6 @@ import { ChartSkeleton } from '~/components/Charts/LoadingState'
 import { PriceChartData, PriceChartModel } from '~/components/Charts/PriceChart'
 import { PriceChartDelta } from '~/components/Charts/PriceChart/PriceChartDelta'
 import { getCandlestickPriceBounds } from '~/components/Charts/PriceChart/utils'
-import { ChartQueryResult, ChartType, DataQuality, PriceChartType } from '~/components/Charts/utils'
 import { VolumeChart } from '~/components/Charts/VolumeChart'
 import { SingleHistogramData } from '~/components/Charts/VolumeChart/utils'
 import type { PoolData } from '~/data/pools/poolData'
@@ -34,8 +33,6 @@ import { getPillTimeSelectorOptions, ORDERED_TIMES } from '~/features/Explore/ti
 import { ZoomButtons } from '~/features/Liquidity/charts/D3LiquidityChartShared/components/ZoomButtons'
 import { useLiquidityServicePoolPriceChartData } from '~/features/Liquidity/charts/useLiquidityServicePoolPriceChartData'
 import { useLiquidityServicePoolVolumeChartData } from '~/features/Liquidity/charts/useLiquidityServicePoolVolumeChartData'
-import { useLiquidityServiceGetPool } from '~/features/Liquidity/hooks/useLiquidityServiceGetPool'
-import { getTickToPrice, getV4TickToPrice } from '~/features/Liquidity/utils/getTickToPrice'
 import { V2Reserves } from '~/features/Liquidity/utils/v2SyntheticTicks'
 import { tryParseCurrencyAmount } from '~/lib/utils/tryParseCurrencyAmount'
 import { ChartPriceText, PriceDisplayContainer } from '~/pages/PoolDetails/components/ChartSection/ChartPriceDisplay'
@@ -44,12 +41,12 @@ import {
   D3LiquidityPoolChartZoomActions,
 } from '~/pages/PoolDetails/components/ChartSection/D3LiquidityPoolChart'
 import { DepthChart } from '~/pages/PoolDetails/components/ChartSection/DepthChart'
-import { formatPriceWithSubscript } from '~/pages/PoolDetails/components/formatPriceWithSubscript'
+import { usePoolSpotPrice } from '~/pages/PoolDetails/components/ChartSection/usePoolSpotPrice'
+import { ChartQueryResult, ChartType, DataQuality, PriceChartType } from '~/utils/charts'
+import { formatPriceWithSubscript } from '~/utils/formatPriceWithSubscript'
 import { unwrappedToken } from '~/utils/unwrappedToken'
 
 const PDP_CHART_HEIGHT_PX = 356
-// Pool prices routinely run to 1e-6 and below, so keep enough significant digits to survive `Number()`.
-const SPOT_PRICE_SIGNIFICANT_DIGITS = 12
 const PDP_CHART_SELECTOR_OPTIONS = [ChartType.VOLUME, ChartType.PRICE, ChartType.LIQUIDITY, ChartType.DEPTH] as const
 
 export type PoolsDetailsChartType = (typeof PDP_CHART_SELECTOR_OPTIONS)[number]
@@ -95,50 +92,6 @@ type TDPChartState = {
   activeQuery: ActiveQuery
   dataQuality?: DataQuality
   priceEntries?: PriceChartData[]
-}
-
-/**
- * Live spot price from the pool's active tick, oriented to match the chart's `priceInverted`
- * display so it lands in the same units as the price-history entries.
- *
- * Reads the same liquidity-service `GetPool` row the liquidity and depth tabs already load for this
- * pool (keyed on `{chainId, poolId}`), so the request is shared with them rather than being a new
- * data source.
- */
-function usePoolSpotPrice({
-  poolData,
-  isReversed,
-  chainId,
-  version,
-  enabled,
-}: {
-  poolData: PoolData | undefined
-  isReversed: boolean
-  chainId: UniverseChainId
-  version: RestProtocolVersion
-  enabled: boolean
-}): number | undefined {
-  const poolId = poolData?.idOrAddress
-  const { data } = useLiquidityServiceGetPool({ chainId, poolId, enabled })
-  const pool = data?.pool
-
-  return useMemo(() => {
-    // `sqrtPriceX96` is only set on an initialized pool; pair it with `currentTick` (proto3-optional,
-    // absent on an uninitialized row) so a real tick 0 (price 1) reads differently from "no tick".
-    if (!pool?.sqrtPriceX96 || pool.currentTick === undefined || !poolData) {
-      return undefined
-    }
-    const currency0 = v2TokenToCurrency(poolData.token0)
-    const currency1 = v2TokenToCurrency(poolData.token1)
-    const [base, quote] = isReversed ? [currency1, currency0] : [currency0, currency1]
-
-    const price =
-      version === RestProtocolVersion.V4
-        ? getV4TickToPrice({ baseCurrency: base, quoteCurrency: quote, tick: pool.currentTick })
-        : getTickToPrice({ baseToken: base?.wrapped, quoteToken: quote?.wrapped, tick: pool.currentTick })
-
-    return price ? Number(price.toSignificant(SPOT_PRICE_SIGNIFICANT_DIGITS)) : undefined
-  }, [pool?.sqrtPriceX96, pool?.currentTick, poolData, isReversed, version])
 }
 
 function usePDPChartState({

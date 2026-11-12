@@ -24,6 +24,7 @@
  * universe exactly — pinned by `icon-prop-coverage.test.ts`.
  */
 import type * as React from 'react'
+import { getKeys } from 'utilities/src/primitives/objects'
 // The display enum map is the Flex/View one — icons must not fork it (same cross-directory import as closed-set.ts).
 import { flexDisplayClass } from '../flex-compat/flex-style-classes'
 import { composeCompatEmission, type CompatEmission } from './compose'
@@ -325,7 +326,7 @@ export function iconStyleClasses(style: IconCompatStyleProps): string[] {
     }
   }
   const rest = { ...style }
-  for (const prop of Object.keys(ICON_SPACE_UTILITY) as (keyof typeof ICON_SPACE_UTILITY)[]) {
+  for (const prop of getKeys(ICON_SPACE_UTILITY)) {
     const value = rest[prop]
     if (value !== undefined) {
       cls.push(`${ICON_SPACE_UTILITY[prop]}-[${arbitrary(sizeValue(value))}]`)

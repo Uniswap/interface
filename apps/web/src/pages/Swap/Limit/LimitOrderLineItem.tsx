@@ -19,8 +19,8 @@ import { SwapFeeTooltipContent } from '~/features/Swap/SwapLineItemTooltips'
 import { GasBreakdownTooltip } from '~/pages/Swap/Limit/GasBreakdownTooltip'
 import { GasEstimateTooltip } from '~/pages/Swap/Limit/GasEstimateTooltip'
 import { RoutingTooltip } from '~/pages/Swap/Limit/LimitOrderRoute'
-import { InterfaceTrade, SubmittableTrade } from '~/state/routing/types'
-import { isLimitTrade, isPreviewTrade, isUniswapXTrade } from '~/state/routing/utils'
+import { InterfaceTrade, SubmittableTrade } from '~/types/routing'
+import { isLimitTrade, isPreviewTrade, isUniswapXTrade } from '~/utils/routing/routing'
 
 export enum LimitOrderLineItemType {
   EXCHANGE_RATE = 0,

@@ -106,7 +106,9 @@ exports[`SmartWalletSettingsContent > renders correctly with active and inactive
                   style="--c-tr: rotate(180deg);"
                 >
                   <svg
+                    aria-hidden="true"
                     fill="none"
+                    focusable="false"
                     stroke-width="8"
                     style="width: 20px; height: 20px;"
                     viewBox="0 0 24 24"
@@ -208,7 +210,9 @@ exports[`SmartWalletSettingsContent > renders correctly with active and inactive
                   style="--c-tr: rotate(180deg);"
                 >
                   <svg
+                    aria-hidden="true"
                     fill="none"
+                    focusable="false"
                     stroke-width="8"
                     style="width: 20px; height: 20px;"
                     viewBox="0 0 24 24"

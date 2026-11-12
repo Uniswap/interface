@@ -2,11 +2,11 @@ import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes
 import { Token } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
 import { Chart } from '~/components/Charts/ChartModel'
-import { DataQuality } from '~/components/Charts/utils'
 import { WrappedLiquidityPositionRangeChart } from '~/features/Liquidity/charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
 import { useDensityChartData } from '~/features/Liquidity/charts/LiquidityRangeInput/hooks'
 import { useLiquidityServicePoolPriceChartData } from '~/features/Liquidity/charts/useLiquidityServicePoolPriceChartData'
 import { render, screen } from '~/test-utils/render'
+import { DataQuality } from '~/utils/charts'
 
 vi.mock('use-resize-observer', () => ({ default: () => ({ ref: vi.fn(), width: 400 }) }))
 vi.mock('~/components/Charts/ChartModel', async (importOriginal) => ({

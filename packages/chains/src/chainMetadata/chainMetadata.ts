@@ -77,6 +77,13 @@ export const CHAIN_METADATA: Record<UniverseChainId, ChainMetadata> = {
     testnet: false,
     explorer: { name: 'CeloScan', url: 'https://celoscan.io' },
   },
+  [UniverseChainId.Elysium]: {
+    id: UniverseChainId.Elysium,
+    label: 'Elysium',
+    urlParam: 'elysium',
+    testnet: false,
+    explorer: { name: 'Elysium Explorer', url: 'https://elysium.kinetiq.xyz/explorer' },
+  },
   [UniverseChainId.Ink]: {
     id: UniverseChainId.Ink,
     label: 'Ink',

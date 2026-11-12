@@ -8,12 +8,12 @@ import {
 } from 'uniswap/src/data/apiClients/dataApiService/tokens/queries'
 import { type HistoryTarget, toHistoryTarget } from 'uniswap/src/features/dataApi/tokenDetails/useTokenPriceHistoryRest'
 import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
-import { ChartType, PriceChartType } from '~/components/Charts/utils'
 import { TimePeriod } from '~/data/util'
 import { usePrefetchTDPChartHistory } from '~/pages/TokenDetails/components/chart/hooks/usePrefetchTDPChartHistory'
 import type { TokenDetailsChartType } from '~/pages/TokenDetails/components/chart/TDPChartState'
-import { getTdpTokenPriceHistoryQueryOptions } from '~/pages/TokenDetails/tdpTokenQueryOptions'
 import { act, renderHook } from '~/test-utils/render'
+import { ChartType, PriceChartType } from '~/utils/charts'
+import { getTokenPriceHistoryQueryOptions } from '~/utils/tokenQueryOptions'
 
 const mockClient = vi.hoisted(() => ({
   getTokenHistoryVolume: vi.fn(),
@@ -96,7 +96,7 @@ const PREFETCH_CASES: {
     displayPriceChartType: PriceChartType.LINE,
     method: 'getTokenHistoryPrice',
     keyFor: (target: HistoryTarget) =>
-      getTdpTokenPriceHistoryQueryOptions({ target, duration: HistoryDuration.Week }).queryKey,
+      getTokenPriceHistoryQueryOptions({ target, duration: HistoryDuration.Week }).queryKey,
   },
 ]
 

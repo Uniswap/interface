@@ -52,5 +52,6 @@ export const isMobileWebAndroid: boolean = isTouchable && isWebAndroid
 // App
 export const isExtensionApp: boolean = getConfig().appId === AppId.Extension
 export const isMobileApp: boolean = false
+export const isDevPortalApp: boolean = getConfig().appId === AppId.DevPortal
 export const isWebApp: boolean = getConfig().appId === AppId.Web
 export const isWebAppDesktop: boolean = isWebApp && !isMobileWeb

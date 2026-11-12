@@ -3,7 +3,7 @@ import { useTransactionSettingsActions } from 'uniswap/src/features/transactions
 import { useResetGasOverridesOnTokenChange } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/useResetGasOverridesOnTokenChange'
 import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { vi } from 'vitest'
+import { type Mock, vi } from 'vitest'
 
 vi.mock(
   'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore',
@@ -11,7 +11,7 @@ vi.mock(
 vi.mock('uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore')
 
 const mockUseTransactionSettingsActions = vi.mocked(useTransactionSettingsActions)
-const mockUseSwapFormStoreDerivedSwapInfo = useSwapFormStoreDerivedSwapInfo as unknown as ReturnType<typeof vi.fn>
+const mockUseSwapFormStoreDerivedSwapInfo = useSwapFormStoreDerivedSwapInfo as unknown as Mock
 
 // Token identities (currencyId strings) used by the hook.
 const ETH = 'eip155:130/slip44:60'

@@ -39,7 +39,7 @@
     "@vitejs/plugin-react": "5.2.0",
     "jsdom": "20.0.3",
     "react-native-passkey": "3.3.1",
-    "vitest": "3.2.1",
+    "vitest": "5.0.5",
     "vitest-presets": "workspace:^"
   },
   "scripts": {

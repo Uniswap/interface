@@ -2,9 +2,9 @@ import { PoolsLogo } from '@universe/mycelium/icons/PoolsLogo'
 import { UniswapLogo } from '@universe/mycelium/icons/UniswapLogo'
 import type { LaunchProvenance } from 'uniswap/src/features/dataApi/launchProvenance'
 import { resolveIpfsGatewayUrl } from 'utilities/src/format/gatewayUrls'
+import { LaunchpadLogo } from '~/features/Toucan/Shared/LaunchpadLogo'
+import { POOLS_LAUNCHPAD_GROUP_ID, UNISWAP_CCA_LAUNCHPAD_ID } from '~/features/Toucan/utils/launchesModel'
 import { usePoolsBrandGreen } from '~/hooks/usePoolsBrandGreen'
-import { POOLS_LAUNCHPAD_GROUP_ID, UNISWAP_CCA_LAUNCHPAD_ID } from '~/pages/Launches/launchesModel'
-import { LaunchpadLogo } from '~/pages/Launches/LaunchpadLogo'
 
 /** A supplied registry logo wins; without one, only the Uniswap CCA and pools.xyz launchpads fall back to their marks. */
 export function ProvenanceLaunchpadLogo({

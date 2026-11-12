@@ -155,6 +155,7 @@ function ServiceProviderLogo({ uri }: { uri: string }): JSX.Element {
       overflow="hidden"
     >
       <UniversalImage
+        alt=""
         uri={uri}
         size={{
           height: iconSizes.icon24,

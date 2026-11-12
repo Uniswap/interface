@@ -10,6 +10,7 @@ exports[`PoolDetailsHeader > loading skeleton is shown 1`] = `
       class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] flex-row items-center gap-[12px] grow-[1] shrink"
     >
       <div
+        aria-busy="true"
         class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
         style="animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
       >
@@ -25,6 +26,7 @@ exports[`PoolDetailsHeader > loading skeleton is shown 1`] = `
         style="--cE-gap: 0px;"
       >
         <div
+          aria-busy="true"
           class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
           style="animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
         >
@@ -34,6 +36,7 @@ exports[`PoolDetailsHeader > loading skeleton is shown 1`] = `
           />
         </div>
         <div
+          aria-busy="true"
           class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
           style="animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
         >
@@ -48,6 +51,7 @@ exports[`PoolDetailsHeader > loading skeleton is shown 1`] = `
       class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center justify-center gap-[8px]"
     >
       <div
+        aria-busy="true"
         class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
         style="animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
       >
@@ -57,6 +61,7 @@ exports[`PoolDetailsHeader > loading skeleton is shown 1`] = `
         />
       </div>
       <div
+        aria-busy="true"
         class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
         style="animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
       >
@@ -66,6 +71,7 @@ exports[`PoolDetailsHeader > loading skeleton is shown 1`] = `
         />
       </div>
       <div
+        aria-busy="true"
         class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
         style="animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
       >
@@ -101,7 +107,9 @@ exports[`PoolDetailsHeader > renders breadcrumb text correctly 1`] = `
           style="--c-tr: rotate(180deg);"
         >
           <svg
+            aria-hidden="true"
             fill="none"
+            focusable="false"
             stroke-width="8"
             style="color: rgb(155, 155, 155); width: 16px; height: 16px;"
             viewBox="0 0 24 24"
@@ -174,6 +182,7 @@ exports[`PoolDetailsHeader > renders header text correctly 1`] = `
                     style="box-sizing: border-box; display: flex; flex-direction: column; flex-shrink: 0; min-width: 0;"
                   >
                     <img
+                      alt=""
                       height="56"
                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
                       style="object-fit: cover; width: 56px; height: 56px; border-radius: 56px; z-index: 1;"
@@ -201,6 +210,7 @@ exports[`PoolDetailsHeader > renders header text correctly 1`] = `
                     style="box-sizing: border-box; display: flex; flex-direction: column; flex-shrink: 0; min-width: 0;"
                   >
                     <img
+                      alt=""
                       height="56"
                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
                       style="object-fit: cover; width: 56px; height: 56px; border-radius: 56px; z-index: 1;"
@@ -259,7 +269,9 @@ exports[`PoolDetailsHeader > renders header text correctly 1`] = `
                 tabindex="0"
               >
                 <svg
+                  aria-hidden="true"
                   fill="none"
+                  focusable="false"
                   stroke-width="8"
                   style="width: 20px; height: 20px;"
                   viewBox="0 0 24 24"
@@ -353,7 +365,9 @@ exports[`PoolDetailsHeader > renders header text correctly 1`] = `
                   style="--c-tr: translateY(5px); --c-t: opacity 200ms ease-in-out, transform 200ms ease-in-out;"
                 >
                   <svg
+                    aria-hidden="true"
                     fill="none"
+                    focusable="false"
                     stroke-width="8"
                     style="width: 16px; height: 16px;"
                     viewBox="0 0 17 18"
@@ -402,7 +416,9 @@ exports[`PoolDetailsHeader > renders header text correctly 1`] = `
                         class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center gap-[12px] w-[100%]"
                       >
                         <svg
+                          aria-hidden="true"
                           fill="none"
+                          focusable="false"
                           stroke-width="8"
                           style="width: 18px; height: 18px;"
                           viewBox="0 0 123 123"
@@ -432,7 +448,9 @@ exports[`PoolDetailsHeader > renders header text correctly 1`] = `
                           </span>
                         </div>
                         <svg
+                          aria-hidden="true"
                           fill="none"
+                          focusable="false"
                           stroke-width="0"
                           style="width: 16px; height: 16px;"
                           viewBox="0 0 24 24"
@@ -453,7 +471,9 @@ exports[`PoolDetailsHeader > renders header text correctly 1`] = `
                         class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center gap-[12px] w-[100%]"
                       >
                         <svg
+                          aria-hidden="true"
                           fill="none"
+                          focusable="false"
                           stroke-width="8"
                           style="width: 18px; height: 18px;"
                           viewBox="0 0 123 123"
@@ -483,7 +503,9 @@ exports[`PoolDetailsHeader > renders header text correctly 1`] = `
                           </span>
                         </div>
                         <svg
+                          aria-hidden="true"
                           fill="none"
+                          focusable="false"
                           stroke-width="0"
                           style="width: 16px; height: 16px;"
                           viewBox="0 0 24 24"
@@ -504,7 +526,9 @@ exports[`PoolDetailsHeader > renders header text correctly 1`] = `
                         class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center gap-[12px] w-[100%]"
                       >
                         <svg
+                          aria-hidden="true"
                           fill="none"
+                          focusable="false"
                           stroke-width="8"
                           style="width: 18px; height: 18px;"
                           viewBox="0 0 123 123"
@@ -534,7 +558,9 @@ exports[`PoolDetailsHeader > renders header text correctly 1`] = `
                           </span>
                         </div>
                         <svg
+                          aria-hidden="true"
                           fill="none"
+                          focusable="false"
                           stroke-width="0"
                           style="width: 16px; height: 16px;"
                           viewBox="0 0 24 24"
@@ -563,7 +589,9 @@ exports[`PoolDetailsHeader > renders header text correctly 1`] = `
                       class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center justify-between gap-[8px] w-[100%]"
                     >
                       <svg
+                        aria-hidden="true"
                         fill="none"
+                        focusable="false"
                         stroke-width="8"
                         style="width: 18px; height: 18px;"
                         viewBox="0 0 20 20"
@@ -606,7 +634,9 @@ exports[`PoolDetailsHeader > renders header text correctly 1`] = `
                         class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center gap-[12px] w-[100%]"
                       >
                         <svg
+                          aria-hidden="true"
                           fill="currentColor"
+                          focusable="false"
                           stroke-width="8"
                           style="width: 18px; height: 18px;"
                           viewBox="0 0 24 25"
@@ -641,7 +671,9 @@ exports[`PoolDetailsHeader > renders header text correctly 1`] = `
                         class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center gap-[12px] w-[100%]"
                       >
                         <svg
+                          aria-hidden="true"
                           fill="none"
+                          focusable="false"
                           stroke-width="8"
                           style="width: 18px; height: 18px;"
                           viewBox="0 0 24 24"
@@ -680,7 +712,9 @@ exports[`PoolDetailsHeader > renders header text correctly 1`] = `
                       class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center justify-between gap-[8px] w-[100%]"
                     >
                       <svg
+                        aria-hidden="true"
                         fill="none"
+                        focusable="false"
                         stroke-width="8"
                         style="width: 18px; height: 18px;"
                         viewBox="0 0 24 24"

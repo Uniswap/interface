@@ -77,6 +77,7 @@ export const ARIA_PROP_KEYS = [
   'aria-labelledby',
   'aria-live',
   'aria-modal',
+  'aria-pressed',
   'aria-selected',
   'aria-valuemax',
   'aria-valuemin',

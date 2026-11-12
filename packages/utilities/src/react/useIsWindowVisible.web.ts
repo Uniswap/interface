@@ -1,11 +1,20 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useSyncExternalStore } from 'react'
 
-function isVisibilityStateSupported(): boolean {
-  return typeof document !== 'undefined' && 'visibilityState' in document
+function subscribe(onChange: () => void): () => void {
+  if (typeof document === 'undefined') {
+    return () => {}
+  }
+  document.addEventListener('visibilitychange', onChange)
+  return () => document.removeEventListener('visibilitychange', onChange)
 }
 
-function isWindowVisible(): boolean {
-  return !isVisibilityStateSupported() || document.visibilityState !== 'hidden'
+function getSnapshot(): boolean {
+  return typeof document === 'undefined' || document.visibilityState !== 'hidden'
+}
+
+// A server render has no tab to hide, so it assumes visible.
+function getServerSnapshot(): boolean {
+  return true
 }
 
 /**
@@ -13,22 +22,5 @@ function isWindowVisible(): boolean {
  * Useful for pausing expensive operations (like animations) when the tab is in the background.
  */
 export function useIsWindowVisible(): boolean {
-  const [visible, setVisible] = useState(isWindowVisible)
-
-  const listener = useCallback(() => {
-    setVisible(isWindowVisible())
-  }, [])
-
-  useEffect(() => {
-    if (!isVisibilityStateSupported()) {
-      return undefined
-    }
-
-    document.addEventListener('visibilitychange', listener)
-    return () => {
-      document.removeEventListener('visibilitychange', listener)
-    }
-  }, [listener])
-
-  return visible
+  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
 }

@@ -1,19 +1,17 @@
 import { TFunction } from 'i18next'
 import type { ParsedToken } from 'uniswap/src/features/dataApi/utils/parsedToken'
-import { v2TokenToCurrency } from 'uniswap/src/features/dataApi/utils/parsedToken'
-import { shouldReverseForWaterfall } from 'uniswap/src/features/tokens/waterfallPriority'
+import { getPoolName } from 'uniswap/src/features/pools/names'
 
-export const getPoolDetailPageTitle = (t: TFunction, tokens?: { token0?: ParsedToken; token1?: ParsedToken }) => {
+export const getPoolDetailPageTitle = (
+  t: TFunction,
+  tokens?: { token0?: ParsedToken; token1?: ParsedToken; isToken0Quote?: boolean },
+) => {
   const baseTitle = t('common.buyAndSell')
-  const { token0, token1 } = tokens ?? {}
-  if (!token0?.symbol || !token1?.symbol) {
-    return baseTitle
-  }
+  const poolName = getPoolName({
+    symbol0: tokens?.token0?.symbol,
+    symbol1: tokens?.token1?.symbol,
+    token0IsQuote: tokens?.isToken0Quote,
+  })
 
-  const currency0 = v2TokenToCurrency(token0)
-  const currency1 = v2TokenToCurrency(token1)
-  const reverse = currency0 && currency1 ? shouldReverseForWaterfall(currency0, currency1) : false
-  const [baseSymbol, quoteSymbol] = reverse ? [token1.symbol, token0.symbol] : [token0.symbol, token1.symbol]
-
-  return `${baseSymbol}/${quoteSymbol}: ${baseTitle}`
+  return poolName ? `${poolName}: ${baseTitle}` : baseTitle
 }

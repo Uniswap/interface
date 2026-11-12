@@ -6,7 +6,6 @@
     "@radix-ui/react-dialog": "1.1.15",
     "@react-native-masked-view/masked-view": "0.3.2",
     "@shopify/react-native-skia": "2.2.20",
-    "@storybook/react": "8.5.2",
     "@testing-library/react": "16.3.0",
     "@universe/environment": "workspace:^",
     "@universe/mycelium": "workspace:^",
@@ -26,7 +25,6 @@
     "wcag-contrast": "3.0.0"
   },
   "devDependencies": {
-    "@storybook/test": "8.5.2",
     "@types/chrome": "0.0.304",
     "@types/node": "22.19.17",
     "@types/qrcode": "1.5.5",
@@ -35,7 +33,7 @@
     "esbuild-register": "3.6.0",
     "jsdom": "20.0.3",
     "moti": "0.30.0",
-    "vitest": "3.2.1",
+    "vitest": "5.0.5",
     "vitest-presets": "workspace:^"
   },
   "files": [

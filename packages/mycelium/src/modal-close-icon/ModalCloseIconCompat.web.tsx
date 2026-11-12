@@ -47,6 +47,8 @@ export function ModalCloseIconCompat({
   }
 
   return (
+    // TODO(INFRA-4589): no prop names this icon-only button, so it's announced as an unnamed button
+    // (aria-command-name). Accept an aria-label, defaulting to "Close".
     <TouchableAreaCompat role={role} testID={testId} shouldAutomaticallyInjectColors={false} onPress={onClose}>
       <X
         size={size}

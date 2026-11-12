@@ -143,6 +143,7 @@
     }
   },
   "devDependencies": {
+    "@storybook/react": "10.6.5",
     "@tailwindcss/oxide": "4.3.2",
     "@testing-library/react": "16.3.0",
     "@testing-library/user-event": "14.5.1",
@@ -150,6 +151,7 @@
     "@types/react-dom": "19.0.6",
     "@types/react-test-renderer": "19.1.0",
     "@vitejs/plugin-react": "5.2.0",
+    "axe-core": "4.14.0",
     "camelcase": "6.3.0",
     "cheerio": "1.0.0-rc.12",
     "expo-image": "57.0.0",
@@ -164,9 +166,11 @@
     "react-native-svg": "15.12.1",
     "react-native-webview": "13.15.0",
     "react-test-renderer": "19.2.3",
+    "storybook": "10.6.5",
+    "storybook-presets": "workspace:*",
     "tailwindcss": "4.3.2",
     "uppercamelcase": "3.0.0",
-    "vitest": "3.2.1",
+    "vitest": "5.0.5",
     "vitest-presets": "workspace:^"
   },
   "scripts": {
@@ -182,7 +186,9 @@
     "lint:fix": "nx lint:fix @universe/mycelium",
     "test": "nx test @universe/mycelium",
     "generate:compat-classes": "nx generate:compat-classes @universe/mycelium",
-    "generate:compat-classes:native": "nx generate:compat-classes:native @universe/mycelium"
+    "generate:compat-classes:native": "nx generate:compat-classes:native @universe/mycelium",
+    "storybook:run": "nx storybook:run @universe/mycelium",
+    "storybook:test": "nx storybook:test @universe/mycelium"
   },
   "nx": {
     "includedScripts": []

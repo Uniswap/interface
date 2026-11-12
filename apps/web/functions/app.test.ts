@@ -1,5 +1,6 @@
 import { Environment } from '@universe/config'
 import { ENTRY_GATEWAY_URLS, createApp } from 'functions/app'
+import type { Mock } from 'vitest'
 
 const mockHtml = `<!DOCTYPE html><html><head><title>Uniswap</title></head><body></body></html>`
 
@@ -34,7 +35,7 @@ describe('entry-gateway proxy: env pinning', () => {
     vi.unstubAllGlobals()
   })
 
-  function extractFetchUrl(spy: ReturnType<typeof vi.fn>): string {
+  function extractFetchUrl(spy: Mock): string {
     const arg = spy.mock.calls[0]?.[0]
     if (typeof arg === 'string') {
       return arg
@@ -96,7 +97,7 @@ describe('BFF proxies: upstream header hygiene', () => {
     vi.unstubAllGlobals()
   })
 
-  function capturedHeaders(spy: ReturnType<typeof vi.fn>): Headers {
+  function capturedHeaders(spy: Mock): Headers {
     const [input, init] = spy.mock.calls[0] ?? []
     if (input instanceof Request) {
       return input.headers

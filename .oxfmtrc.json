@@ -57,7 +57,7 @@
     "**/.next/**",
     "**/.react-router/**",
     "**/.source/**",
-    "**/.storybook/storybook.requires.ts",
+    "**/.rnstorybook/storybook.requires.ts",
     "packages/api/src/clients/trading/api.json",
     "apps/dev-portal/app/lib/deployments/*.json",
     "tools/**/files/**",

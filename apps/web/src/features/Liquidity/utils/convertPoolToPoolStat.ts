@@ -1,6 +1,7 @@
 import { PoolsOrderBy } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { UniverseChainId } from '@universe/chains'
 import { DEFAULT_TICK_SPACING } from 'uniswap/src/constants/pools'
+import { isToken0Quote } from 'uniswap/src/features/pools/quoteToken'
 import { PoolSortFields } from '~/data/pools/poolStats'
 import type { Pool } from '~/features/Liquidity/utils/pool'
 import { getProtocolVersionLabel } from '~/features/Liquidity/utils/protocolVersion'
@@ -66,6 +67,8 @@ export function convertPoolToPoolStat(pool: Pool): PoolStat {
     volOverTvl: pool.volume1dTvlRatio,
     hookAddress: pool.hookAddress,
     protocolFeePips,
+    currentLpFeePips: pool.currentLpFee,
     categoryIds: pool.categoryIds,
+    isToken0Quote: isToken0Quote({ token0Address: pool.token0Address, quoteTokenAddress: pool.quoteTokenAddress }),
   } as PoolStat
 }

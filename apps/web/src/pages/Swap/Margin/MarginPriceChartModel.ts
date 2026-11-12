@@ -16,7 +16,6 @@ import type { RoundedCandleSeriesOptions } from '~/components/Charts/PriceChart/
 import { computeOverlaysReconcileKey } from '~/pages/Swap/Margin/chart/overlayReconcileKey'
 import { scaleOverlaysForRender, toScaledPrice, unscaleVisibleRange } from '~/pages/Swap/Margin/chart/overlayScaling'
 import { PriceZonePrimitive } from '~/pages/Swap/Margin/chart/PriceZonePrimitive'
-import { TimeMarkerPrimitive } from '~/pages/Swap/Margin/chart/TimeMarkerPrimitive'
 import {
   nearestOverlay,
   shouldForceOverlayRebuild,
@@ -41,9 +40,6 @@ type MarginPriceChartModelParams = ConstructorParameters<typeof PriceChartModel>
   // Vertical zoom (0..MAX_VERTICAL_ZOOM_STEP): 0 fits candles ∪ overlay bounds (default), max fits
   // the candles alone. Consumed by applyVerticalAutoscale.
   verticalZoomStep?: number
-  // Set while a chart popover overlays the pane (spec F16): hide the crosshair + tooltip so the chart
-  // never tracks or paints under the panel.
-  suppressCrosshair?: boolean
 }
 
 const VOLUME_PANE_INDEX = 1
@@ -65,13 +61,11 @@ export class MarginPriceChartModel extends PriceChartModel {
   // Base-class series-swap survival: on chart-type change the base updateOptions silently
   // removeSeries+recreates this.series, killing every attached price line/primitive with it.
   private lastSeries: ISeriesApi<'Area'> | ISeriesApi<'Custom'> | undefined
-  // Primitives to carry across swaps (populated by primitive overlays as they land; PluginBase
-  // .attached is re-callable so re-attaching to the new series is safe).
+  // Primitives to carry across swaps (PluginBase.attached is re-callable so re-attaching to the new
+  // series is safe).
   private attachedPrimitives: Array<ISeriesPrimitive<Time>> = []
   // Shaded liquidation zone (spec F7). Instantiated once on the first reconcile, then updated in place.
   private zonePrimitive: PriceZonePrimitive | undefined
-  // Position-event markers (spec F10), likewise instantiated once and updated in place.
-  private markerPrimitive: TimeMarkerPrimitive | undefined
   // Optional real-volume histogram (spec F15), default OFF. Lives in its own pane below the price
   // pane, independent of the price series — a price-series swap (T9) never touches it. Lazily
   // created on the first non-empty bars; removed (and its pane with it) when toggled off.
@@ -92,10 +86,6 @@ export class MarginPriceChartModel extends PriceChartModel {
   private rangeRepublishRaf: number | undefined
   // Pending next-frame re-assert of the volume pane height (see reconcileVolume).
   private volumePaneRaf: number | undefined
-  // True while a chart popover overlays the pane: crosshair mode is forced Hidden and hover emits are
-  // short-circuited. Initial false is correct (popover starts closed) and survives the base ctor's
-  // early virtual updateOptions() call.
-  private suppressCrosshair = false
   // Hover hit-test inputs (T14b). rawChartData mirrors params.data — the base keeps its raw
   // original-data copy private, and the hovered/emitted items must be RAW while the series renders
   // scaled. currentOverlays keeps the composer's RAW output for hit-testing.
@@ -167,12 +157,6 @@ export class MarginPriceChartModel extends PriceChartModel {
     const seriesSwapped = shouldForceOverlayRebuild({ prevSeries: this.lastSeries, nextSeries: this.series })
     this.lastSeries = this.series
 
-    // Suppress the crosshair while a chart popover overlays the pane (spec F16). Force-clear on the
-    // open transition so a parked crosshair/tooltip disappears immediately; restore Magnet on close.
-    const nextSuppress = params.suppressCrosshair ?? false
-    const justSuppressed = nextSuppress && !this.suppressCrosshair
-    this.suppressCrosshair = nextSuppress
-
     // Terminal styling layered on the base PriceChart defaults: tighter y-margins so candles fill
     // the pane, faint horizontal gridlines for price levels, axis hairlines, and crosshair read-off
     // tags (the pane uses a bare <Chart> with no ChartHeader to show the hovered price/time).
@@ -197,15 +181,11 @@ export class MarginPriceChartModel extends PriceChartModel {
         vertLines: { visible: false },
       },
       crosshair: {
-        mode: nextSuppress ? CrosshairMode.Hidden : CrosshairMode.Magnet,
+        mode: CrosshairMode.Magnet,
         horzLine: { labelVisible: true, labelBackgroundColor: colors.surface3Solid.val },
         vertLine: { labelVisible: true, labelBackgroundColor: colors.surface3Solid.val },
       },
     })
-    if (justSuppressed) {
-      this.api.clearCrosshairPosition()
-      this.onSeriesHover(undefined)
-    }
     // Rectangular candles (pro-terminal look) instead of the default rounded bodies.
     this.series.applyOptions({ radius: () => 0 } as Partial<RoundedCandleSeriesOptions> & AreaSeriesPartialOptions)
 
@@ -255,13 +235,6 @@ export class MarginPriceChartModel extends PriceChartModel {
   // React commit). The dwell timer re-emits once more with dwellElapsed=true after 300ms parked,
   // since subscribeCrosshairMove fires only on movement.
   override onSeriesHover(hoverData?: ChartHoverData<CandlestickData>): void {
-    // While a popover overlays the pane, never surface a crosshair/tooltip — even for hovers on the
-    // still-visible chart area beside the panel.
-    if (this.suppressCrosshair) {
-      this.clearDwell()
-      super.onSeriesHover(undefined)
-      return
-    }
     if (!hoverData) {
       this.clearDwell()
       super.onSeriesHover(undefined)
@@ -296,11 +269,8 @@ export class MarginPriceChartModel extends PriceChartModel {
     return nearestOverlay({
       hover: { x: hoverData.x, y: hoverData.y },
       lines: overlays.priceLines,
-      markers: overlays.markers,
-      zone: overlays.zone,
       // Scale discipline: overlays carry RAW prices; the series maps SCALED prices to coordinates.
       priceToY: (price) => this.series.priceToCoordinate(toScaledPrice({ price, factor })),
-      timeToX: (time) => this.api.timeScale().timeToCoordinate(time),
     })
   }
 
@@ -353,9 +323,8 @@ export class MarginPriceChartModel extends PriceChartModel {
   private clearStaleDwellExplainer(): void {
     const last = this.lastNearHover
     this.clearDwell()
-    // Don't re-surface a crosshair item while a popover suppresses the crosshair (the concurrent
-    // `suppressCrosshair` mechanism in onSeriesHover) — just clear. Also a no-op before the first hover.
-    if (last && !this.suppressCrosshair) {
+    // No-op before the first hover.
+    if (last) {
       this.onCrosshairMove?.(last.item, last.logicalIndex)
     }
   }
@@ -376,14 +345,10 @@ export class MarginPriceChartModel extends PriceChartModel {
   }
 
   // Keyed reconcile of the composer's output. The key covers every rendered price-line attribute
-  // plus the autoscale bounds, so an in-flight dim (opacity), a label-collision flip, or a text-color
-  // change re-renders while steady-state updateOptions calls stay free. The liq zone carries its own
-  // edge/side/emphasis segment: prefs are runtime-mutable (T15), so toggling liqZone flips the zone
-  // to/from undefined while the mark/liq lines stay put — it can no longer ride their key. Markers
-  // likewise carry their own time/price/kind segment (event times are not otherwise in the key); both
-  // zone and marker colors ride the theme via the line colors. The scale-factor segment forces a full
-  // rebuild when the base low-price-range factor flips on a timeframe switch — the old lines carry
-  // prices scaled by the previous factor.
+  // plus the autoscale bounds and liq zone, so an in-flight dim (opacity), a label-collision flip, or a text-color
+  // change re-renders while steady-state updateOptions calls stay free. The scale-factor segment forces
+  // a full rebuild when the base low-price-range factor flips on a timeframe switch — the old lines
+  // carry prices scaled by the previous factor.
   private reconcileOverlays({
     overlays,
     colors,
@@ -429,17 +394,6 @@ export class MarginPriceChartModel extends PriceChartModel {
       this.series.attachPrimitive(this.zonePrimitive)
     }
     this.zonePrimitive.update({ zone: scaled.zone, color: colors.statusCritical.val })
-    // Position-event markers (spec F10), drawn above the candles. Same lazy-instantiate + register
-    // pattern as the zone so the swap path re-attaches it to a recreated series.
-    if (!this.markerPrimitive) {
-      this.markerPrimitive = new TimeMarkerPrimitive()
-      this.attachedPrimitives.push(this.markerPrimitive)
-      this.series.attachPrimitive(this.markerPrimitive)
-    }
-    this.markerPrimitive.update({
-      markers: scaled.markers,
-      colors: { open: colors.statusSuccess.val, decrease: colors.neutral2.val, ring: colors.surface1.val },
-    })
   }
 
   // Single writer of the series autoscaleInfoProvider. createPriceLine markers do NOT extend
@@ -507,9 +461,9 @@ export class MarginPriceChartModel extends PriceChartModel {
   // Real-volume histogram (spec F15) in its own pane under the price pane: a shared time scale keeps
   // every bar under its candle and the crosshair spans both. One bar per candle
   // (alignVolumeToCandles), colored by that candle's direction at 40% alpha. Lazily created on
-  // the first non-empty bars, setData on every call (idempotent), and removed when the overlay is
-  // toggled off — lightweight-charts drops the emptied pane with it. Not an attachedPrimitive: it
-  // rides no price series, so the base's chart-type swap leaves it untouched. Teardown is via
+  // the first non-empty bars, setData on every call (idempotent), and removed when there are no
+  // bars — lightweight-charts drops the emptied pane with it. It rides no price series, so the
+  // base's chart-type swap leaves it untouched. Teardown is via
   // api.remove(), so remove() does not removeSeries this handle.
   private reconcileVolume({
     bars,

@@ -25,10 +25,10 @@ import { PermitMethod } from 'uniswap/src/features/transactions/swap/types/permi
 import { validatePermit, validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { useCreateLiquidityContext } from '~/features/Liquidity/Create/CreateLiquidityContextProvider'
 import { PositionFlowStep } from '~/features/Liquidity/Create/types'
 import { getCurrencyForProtocol } from '~/features/Liquidity/utils/currency'
 import { isInvalidPrice, isInvalidRange } from '~/features/Liquidity/utils/priceRangeInfo'
-import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 import {
   buildCheckLPApprovalRequestParams,
   buildMigrationRequest,

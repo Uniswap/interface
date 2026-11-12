@@ -78,6 +78,7 @@ export enum InterfaceEventName {
   TokenImported = 'Token Imported',
   TokenSelected = 'Token Selected',
   TokenSelectorOpened = 'Token Selector Opened',
+  UnfundedRedirectToPortfolio = 'Unfunded Redirect To Portfolio',
   UniswapWalletAppDownloadOpened = 'Uniswap Wallet App Download Opened',
   UniswapWalletConnectModalOpened = 'Uniswap wallet modal opened',
   UniswapWalletMicrositeOpened = 'Uniswap Wallet Microsite Opened',

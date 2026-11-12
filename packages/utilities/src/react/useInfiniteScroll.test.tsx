@@ -15,7 +15,7 @@ beforeAll(() => {
   Object.defineProperty(globalThis, 'IntersectionObserver', {
     writable: true,
     configurable: true,
-    value: vi.fn((callback) => {
+    value: vi.fn(function (callback) {
       intersectionCallback = callback
       return {
         observe: mockObserve,

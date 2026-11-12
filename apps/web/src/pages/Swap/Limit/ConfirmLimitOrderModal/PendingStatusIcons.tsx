@@ -1,5 +1,5 @@
 import { Flex, iconSizes } from '@universe/mycelium'
-import { ConfirmedIcon, SubmittedIcon } from '~/components/AccountDrawer/MiniPortfolio/Activity/Logos'
+import { ConfirmedIcon, SubmittedIcon } from '~/components/Activity/Logos'
 import { LogoLoadingSpinner } from '~/components/LogoLoadingSpinner'
 import { FadePresence } from '~/theme/components/FadePresence/FadePresence'
 

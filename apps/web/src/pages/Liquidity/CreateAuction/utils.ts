@@ -395,7 +395,7 @@ export {
   getRaiseCurrencyAddress,
   getRaiseCurrencyAsCurrency,
   getSupportedAuctionCurrencyAddresses,
-} from '~/pages/Liquidity/CreateAuction/raiseCurrency'
+} from '~/features/Toucan/utils/raiseCurrency'
 
 /**
  * Converts a float percentage into a SDK Percent (exact rational).

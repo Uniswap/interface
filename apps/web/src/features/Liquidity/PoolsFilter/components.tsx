@@ -1,6 +1,9 @@
-import { Flex, Input, Text, TouchableArea } from '@universe/mycelium'
+import { Button, Flex, Input, Text, TouchableArea } from '@universe/mycelium'
+import { Sliders } from '@universe/mycelium/icons/Sliders'
 import type { ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 import { numericInputEnforcer } from 'uniswap/src/components/AmountInput/utils/numericInputEnforcer'
+import { COLLAPSED_SEARCH_WIDTH } from '~/components/ExpandableSearchInput/ExpandableSearchInput'
 
 /** A titled section in the pools filter modal. Titles sit above their content, or inline for toggles/rows. */
 export function PoolFilterSection({
@@ -8,15 +11,18 @@ export function PoolFilterSection({
   orientation = 'vertical',
   children,
 }: {
-  title: string
+  title: ReactNode
   orientation?: 'vertical' | 'horizontal'
   children: ReactNode
 }): JSX.Element {
-  const heading = (
-    <Text variant="subheading2" color="$neutral1">
-      {title}
-    </Text>
-  )
+  const heading =
+    typeof title === 'string' ? (
+      <Text variant="subheading2" color="$neutral1">
+        {title}
+      </Text>
+    ) : (
+      title
+    )
 
   if (orientation === 'horizontal') {
     return (
@@ -49,6 +55,8 @@ export function PoolFilterChip({
 }): JSX.Element {
   return (
     <TouchableArea
+      tag="button"
+      aria-pressed={selected}
       row
       alignItems="center"
       justifyContent="center"
@@ -142,6 +150,66 @@ export function PoolFilterRangeRow({ min, max }: { min: JSX.Element; max: JSX.El
         —
       </Text>
       {max}
+    </Flex>
+  )
+}
+
+export function PoolFilterButton({
+  activeCount,
+  isOpen,
+  onPress,
+  testID,
+  badgeTestID,
+  mobileBadgeTop,
+}: {
+  activeCount: number
+  isOpen: boolean
+  onPress: () => void
+  testID: string
+  badgeTestID: string
+  mobileBadgeTop?: number
+}): JSX.Element {
+  const { t } = useTranslation()
+  return (
+    <Flex position="relative">
+      <Button
+        size="small"
+        emphasis="tertiary"
+        fill={false}
+        height={40}
+        width={COLLAPSED_SEARCH_WIDTH}
+        aria-label={
+          activeCount > 0 ? t('pool.filter.buttonWithCount', { count: activeCount }) : t('pool.filter.button')
+        }
+        aria-haspopup="dialog"
+        aria-expanded={isOpen}
+        testID={testID}
+        onPress={onPress}
+      >
+        <Sliders size="$icon.20" color="$neutral2" flexShrink={0} />
+      </Button>
+      {activeCount > 0 && (
+        <Flex
+          position="absolute"
+          top={-4}
+          $md={{ top: mobileBadgeTop }}
+          right={-4}
+          minWidth={16}
+          height={16}
+          px="$spacing2"
+          borderRadius="$roundedFull"
+          backgroundColor="$neutral1"
+          alignItems="center"
+          justifyContent="center"
+          pointerEvents="none"
+          aria-hidden
+          testID={badgeTestID}
+        >
+          <Text variant="buttonLabel4" color="$surface1">
+            {activeCount}
+          </Text>
+        </Flex>
+      )}
     </Flex>
   )
 }

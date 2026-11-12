@@ -13,7 +13,7 @@ import {
   InMemoryDeviceIdService,
   InMemorySessionStorage,
 } from '@universe/sessions/src/test-utils'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, type Mock, vi } from 'vitest'
 
 // In-memory stand-in for the file store so persistence-seam tests never touch the real
 // filesystem (`~/.uniswap/session.json`). Only used by tests that omit a seam — every
@@ -58,9 +58,9 @@ interface Harness {
   client: ReturnType<typeof createHeadlessSessionClient>
   sessionStorage: InMemorySessionStorage
   deviceIdService: InMemoryDeviceIdService
-  initSession: ReturnType<typeof vi.fn>
-  challenge: ReturnType<typeof vi.fn>
-  verify: ReturnType<typeof vi.fn>
+  initSession: Mock
+  challenge: Mock
+  verify: Mock
 }
 
 async function createHarness(options?: {

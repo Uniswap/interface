@@ -29,10 +29,12 @@ vi.mock('utilities/src/logger/logger', () => ({
 }))
 
 vi.mock('src/contentScript/WindowEthereumProxy', () => ({
-  WindowEthereumProxy: vi.fn().mockImplementation(() => ({
-    emit: vi.fn(),
-    isMetaMask: false,
-  })),
+  WindowEthereumProxy: vi.fn(function () {
+    return {
+      emit: vi.fn(),
+      isMetaMask: false,
+    }
+  }),
 }))
 
 describe('ethereum.content', () => {

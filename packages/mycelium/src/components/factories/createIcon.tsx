@@ -236,6 +236,7 @@ export function createIcon({
 
     return getIcon({
       strokeWidth: resolveIconStrokeWidth(strokeWidth),
+      ...iconA11yDefaults(passthrough),
       ...passthrough,
       className: poolResolution === undefined ? className : poolResolution.emission.className,
       // Web callers pass the DOM flavor of the widened per-platform `style`
@@ -257,4 +258,15 @@ export function createIcon({
   markMyceliumIcon(Icon)
 
   return [Icon, Icon] as const
+}
+
+/**
+ * Icons are decorative unless labelled; an `aria-label` or `aria-labelledby`
+ * makes the icon a named image instead. `focusable="false"` keeps legacy Edge
+ * from adding every SVG to the tab order. Caller-supplied values still win
+ * via the passthrough spread that follows.
+ */
+function iconA11yDefaults(passthrough: Record<string, unknown>): Partial<SVGProps<SVGSVGElement>> {
+  const labelled = passthrough['aria-label'] !== undefined || passthrough['aria-labelledby'] !== undefined
+  return labelled ? { role: 'img', focusable: 'false' } : { 'aria-hidden': true, focusable: 'false' }
 }

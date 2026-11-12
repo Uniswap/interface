@@ -1,4 +1,5 @@
 import * as d3 from 'd3'
+import { PriceRangeDragTarget } from 'uniswap/src/features/telemetry/types'
 import { CHART_DIMENSIONS } from '~/features/Liquidity/charts/D3LiquidityChartShared/constants'
 import {
   createEntryFromBucket,
@@ -167,6 +168,8 @@ export function createLiquidityBarsOverlayRenderer({
       }
     }
 
+    let dragStartRange: { minTick?: number; maxTick?: number } = {}
+
     // Helper function to handle common drag logic
     const handleDragEvent = ({
       event,
@@ -194,6 +197,7 @@ export function createLiquidityBarsOverlayRenderer({
 
       if (isEnd) {
         handleTickRangeChange({ minTick: constrainedMinTick, maxTick: constrainedMaxTick })
+        actions.handleRangeDragEnd({ target: PriceRangeDragTarget.LiquidityArea, startRange: dragStartRange })
 
         actions.setChartState({ dragStartY: null, dragCurrentTick: undefined })
       }
@@ -228,6 +232,8 @@ export function createLiquidityBarsOverlayRenderer({
         .on('start', (event) => {
           const { tickScale } = context
           const tickValue = tickScale.axisToTick(event.y)
+          const { minTick, maxTick } = getState()
+          dragStartRange = { minTick, maxTick }
 
           setChartState({
             dragStartY: event.y,

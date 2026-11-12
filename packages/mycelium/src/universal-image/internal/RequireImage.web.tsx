@@ -7,6 +7,11 @@ import type { RequireImageProps } from '../types'
 // unregistered numeric source as an empty box, which is exactly what this renders (mycelium
 // web legs must not import react-native). No load is performed, so the error path (fallback +
 // onError, accepted for prop-surface parity with the native leg) cannot fire here.
-export function RequireImage({ size, style }: RequireImageProps): JSX.Element {
-  return <FlexCompat style={{ height: size.height, width: size.width, ...style }} />
+export function RequireImage({ alt, size, style }: RequireImageProps): JSX.Element {
+  return (
+    <FlexCompat
+      {...(alt ? { role: 'img', 'aria-label': alt } : { 'aria-hidden': true })}
+      style={{ height: size.height, width: size.width, ...style }}
+    />
+  )
 }

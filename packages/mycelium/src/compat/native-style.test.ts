@@ -1,3 +1,4 @@
+import { getKeys } from 'utilities/src/primitives/objects'
 /**
  * Token resolution on the native style lane.
  *
@@ -301,7 +302,7 @@ describe('zIndex tokens resolve through Z_INDEX_TOKEN (INFRA-3272)', () => {
   })
 
   it('resolves every token in the map to the exact number the web leg emits', () => {
-    for (const token of Object.keys(Z_INDEX_TOKEN) as (keyof typeof Z_INDEX_TOKEN)[]) {
+    for (const token of getKeys(Z_INDEX_TOKEN)) {
       const { style, dropped } = compatNativeStyle({ zIndex: token })
       expect(style.zIndex).toBe(Number(zIndexValue(token)))
       expect(typeof style.zIndex).toBe('number')
@@ -417,7 +418,7 @@ describe('physical border width tokens resolve through SPACE_TOKEN_PX (INFRA-327
   })
 
   it('resolves every space token to the exact px number the web leg emits', () => {
-    for (const token of Object.keys(SPACE_TOKEN_PX) as (keyof typeof SPACE_TOKEN_PX)[]) {
+    for (const token of getKeys(SPACE_TOKEN_PX)) {
       const width = styleOf({ borderWidth: token })['borderWidth']
       expect(width).toBe(Number.parseFloat(borderWidthPx(token)))
       expect(typeof width).toBe('number')

@@ -2,7 +2,7 @@ import type { PlainMessage } from '@bufbuild/protobuf'
 import { act, renderHook } from '@testing-library/react'
 import { LaunchesOrderBy, LaunchWindow, type Launch } from '@uniswap/client-launches/dist/launches/v1/types_pb'
 import { UniverseChainId } from '@universe/chains'
-import { toLaunchItems } from '~/pages/Launches/launchesModel'
+import { toLaunchItems } from '~/features/Toucan/utils/launchesModel'
 import { LaunchQuickFilter, toLaunchesRequestParams, useLaunchesFilters } from '~/pages/Launches/useLaunchesList'
 
 describe('toLaunchesRequestParams', () => {

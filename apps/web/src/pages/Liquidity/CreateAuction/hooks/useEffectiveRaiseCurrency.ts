@@ -1,6 +1,6 @@
+import type { RaiseCurrency } from '~/features/Toucan/utils/raiseCurrency'
 import { useCreateAuctionStore } from '~/pages/Liquidity/CreateAuction/CreateAuctionContext'
 import { useLaunchChainId } from '~/pages/Liquidity/CreateAuction/hooks/useLaunchChainId'
-import type { RaiseCurrency } from '~/pages/Liquidity/CreateAuction/types'
 import { getEffectiveRaiseCurrency } from '~/pages/Liquidity/CreateAuction/utils'
 
 /**

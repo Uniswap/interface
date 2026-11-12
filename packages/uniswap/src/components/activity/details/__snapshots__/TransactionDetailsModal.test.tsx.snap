@@ -102,7 +102,9 @@ exports[`TransactionDetails Components > renders TransactionDetailsHeader withou
             class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 p-[4px] rounded-[999999px]"
           >
             <svg
+              aria-hidden="true"
               fill="none"
+              focusable="false"
               stroke-width="8"
               style="width: 20px; height: 20px;"
               viewBox="0 0 18 4"
@@ -202,7 +204,9 @@ exports[`TransactionDetails Components > renders TransactionDetailsInfoRows with
             0xb568...0600
           </span>
           <svg
+            aria-hidden="true"
             fill="none"
+            focusable="false"
             stroke-width="8"
             style="width: 16px; height: 16px;"
             viewBox="0 0 24 24"
@@ -302,7 +306,9 @@ exports[`TransactionDetails Components > renders TransactionDetailsInfoRows with
             0xb568...0600
           </span>
           <svg
+            aria-hidden="true"
             fill="none"
+            focusable="false"
             stroke-width="8"
             style="width: 16px; height: 16px;"
             viewBox="0 0 24 24"

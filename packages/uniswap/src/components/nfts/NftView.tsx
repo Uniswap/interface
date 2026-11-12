@@ -18,6 +18,8 @@ export function NftView({ item, onPress, index, openContextMenu, hoverAnimation 
   const nftView = (
     <NFTViewer
       svgRenderingDisabled
+      // The grid cell is a pressable with no label of its own, so the image names it.
+      alt={item.name ?? item.collectionName ?? ''}
       // Disable autoplay in the grid — animated GIF/WebP NFTs hold per-cell frame
       // buffers and tank scroll perf on memory-constrained devices.
       autoplay={false}

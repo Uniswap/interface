@@ -96,6 +96,8 @@ export interface UseTradeArgs {
   // TODO(SWAP-154): Remove skip
   skip?: boolean
   selectedProtocols?: FrontendSupportedProtocol[]
+  /** Bridging options; sent as `bridgeProviders` on cross-chain quotes while `RelayBridgeAggregator` is on. */
+  selectedBridgeProviders?: TradingApi.BridgeProvider[]
   isDebouncing?: boolean
   generatePermitAsTransaction?: boolean
   isV4HookPoolsEnabled?: boolean

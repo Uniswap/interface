@@ -145,6 +145,7 @@ export function SponsoredFee({
       {preSavingsGasFee && <StrikethroughGasFee value={preSavingsGasFee} smaller={smaller} />}
       {sponsorMetadata.icon && (
         <UniversalImage
+          alt=""
           size={{
             width: smaller ? iconSizes.icon12 : iconSizes.icon16,
             height: smaller ? iconSizes.icon12 : iconSizes.icon16,

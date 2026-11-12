@@ -41,7 +41,14 @@ describe(rankedPoolToPoolSearchResult, () => {
       feeTier: 500,
       token0CurrencyId: buildCurrencyId(UniverseChainId.Mainnet, TOKEN0_ADDRESS),
       token1CurrencyId: buildCurrencyId(UniverseChainId.Mainnet, TOKEN1_ADDRESS),
+      isToken0Quote: false,
     })
+  })
+
+  it('flags token0 as the quote when the backend serves it as the quote token', () => {
+    const result = rankedPoolToPoolSearchResult(createRankedPool({ quoteTokenAddress: TOKEN0_ADDRESS }))
+
+    expect(result?.isToken0Quote).toBe(true)
   })
 
   // fee_tier is served for every protocol version now — the pool key's fee (the v4 dynamic-fee flag)

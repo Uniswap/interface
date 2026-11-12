@@ -1,5 +1,6 @@
 import { UniverseChainId } from '@universe/chains'
 import type { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
+import { ONE_DAY_MS } from 'utilities/src/time/time'
 import { describe, expect, it } from 'vitest'
 import {
   getAuctionCreateFailedProperties,
@@ -12,7 +13,6 @@ import {
 } from '~/pages/Liquidity/CreateAuction/analytics'
 import { createCreateAuctionStore } from '~/pages/Liquidity/CreateAuction/store/createCreateAuctionStore'
 import { CUSTOM_PRICE_RANGE_POSITIVE_INFINITY, TokenMode } from '~/pages/Liquidity/CreateAuction/types'
-import { MS_PER_DAY } from '~/pages/Liquidity/CreateAuction/utils/duration'
 
 const trace: ITraceContext = {}
 
@@ -24,8 +24,8 @@ function committedStore() {
   actions.updateCreateNewTokenField('symbol', 'TEST')
   actions.updateCreateNewTokenField('description', 'a token')
   actions.commitTokenFormAndAdvance()
-  actions.setStartTime(new Date(Date.now() + MS_PER_DAY))
-  actions.setEndTime(new Date(Date.now() + 4 * MS_PER_DAY))
+  actions.setStartTime(new Date(Date.now() + ONE_DAY_MS))
+  actions.setEndTime(new Date(Date.now() + 4 * ONE_DAY_MS))
   actions.setFloorPrice('0.1')
   return store
 }
@@ -124,7 +124,7 @@ describe('getAuctionPoolDetailsInfoEnteredProperties', () => {
   it('includes the unlock date only when the timelock is enabled', () => {
     const store = createCreateAuctionStore()
     store.getState().actions.setTimeLockEnabled(true)
-    const unlock = new Date(Date.now() + 30 * MS_PER_DAY)
+    const unlock = new Date(Date.now() + 30 * ONE_DAY_MS)
     const props = getAuctionPoolDetailsInfoEnteredProperties({
       trace,
       customizePool: store.getState().customizePool,

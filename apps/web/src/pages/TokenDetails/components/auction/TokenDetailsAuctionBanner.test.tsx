@@ -7,6 +7,8 @@ import { LaunchProvenanceMethod } from 'uniswap/src/features/dataApi/launchProve
 import { AuctionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { sleep } from 'utilities/src/time/timing'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import {
   AuctionDisplayPhase,
@@ -56,7 +58,6 @@ const AUCTION = {
   startBlock: '100',
   endBlock: '200',
 } as PlainMessage<Auction>
-const ONE_SECOND_MS = 1000
 const SEVEN_DAYS_THIRTEEN_HOURS_MS = (7 * 24 + 13) * 60 * 60 * 1000
 
 function mockDisplay(overrides: Partial<TokenDetailsAuctionDisplayModel> = {}): void {
@@ -132,7 +133,7 @@ describe('TokenDetailsAuctionBanner', () => {
     mockDisplay()
     rerender(<TokenDetailsAuctionBanner />)
     // Let Trace's 50ms development dedupe expire before checking subsequent renders.
-    await act(() => new Promise<void>((resolve) => setTimeout(resolve, 51)))
+    await act(() => sleep(51))
     rerender(<TokenDetailsAuctionBanner />)
     const impressions = sendEvent.mock.calls.filter(([event]) => event === AuctionEventName.AuctionBannerViewed)
     expect(impressions).toHaveLength(1)
@@ -193,7 +194,7 @@ describe('TokenDetailsAuctionBanner', () => {
       mockDisplay({ hasConfirmedPool: true })
       const { rerender } = render(<TokenDetailsAuctionBanner />)
       // Let Trace's 50ms development dedupe expire so a genuine remount would be recorded.
-      await act(() => new Promise<void>((resolve) => setTimeout(resolve, 51)))
+      await act(() => sleep(51))
 
       mockDisplay({ poolAvailability, hasConfirmedPool: true })
       rerender(<TokenDetailsAuctionBanner />)

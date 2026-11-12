@@ -215,10 +215,7 @@ export function BannerTemplate({
   )
 }
 
-/**
- * Only the web leg's `MouseEvent` carries `stopPropagation`; the native leg's RNGH `PressableEvent`
- * does not. tsc resolves the web leg for both, so an unguarded call typechecks and throws on device.
- */
+/** Defensive: tsc only sees the web leg's event type, so don't assume every leg's event has `stopPropagation`. */
 function stopPropagation(event: object): void {
   if ('stopPropagation' in event && typeof event.stopPropagation === 'function') {
     event.stopPropagation()

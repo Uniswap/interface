@@ -7,6 +7,7 @@ import {
   getSectionRowId,
 } from 'uniswap/src/components/lists/OnchainItemList/rowKeys'
 import { type OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
+import { getKeys } from 'utilities/src/primitives/objects'
 
 export enum ProcessedRowType {
   Header = 'header',
@@ -140,7 +141,7 @@ function reuseIfEqual(next: ProcessedRow, previous: ProcessedRow | undefined): P
   if (next.type === ProcessedRowType.Header && previous.type === ProcessedRowType.Header) {
     const a = next.data.section
     const b = previous.data.section
-    return (Object.keys(a) as (keyof typeof a)[]).every((field) => a[field] === b[field]) ? previous : next
+    return getKeys(a).every((field) => a[field] === b[field]) ? previous : next
   }
   if (next.type === ProcessedRowType.Footer && previous.type === ProcessedRowType.Footer) {
     return next.data.footerElement === previous.data.footerElement ? previous : next

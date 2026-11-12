@@ -17,6 +17,7 @@ import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { isAddress } from '~/chains'
 import { useActiveAddress } from '~/connection/accounts/hooks'
 import { BIPS_BASE } from '~/constants/misc'
+import { RaiseCurrency } from '~/features/Toucan/utils/raiseCurrency'
 import {
   getAuctionCreateAnalyticsProperties,
   getAuctionCreateFailedDiagnostics,
@@ -47,13 +48,7 @@ import { useStableRaiseUsdPrice } from '~/pages/Liquidity/CreateAuction/hooks/us
 import { getLaunchThreshold } from '~/pages/Liquidity/CreateAuction/launchThreshold'
 import { applyQuickLaunchAuctionWindow } from '~/pages/Liquidity/CreateAuction/quickLaunch/quickLaunchPreset'
 import { useIsQuickLaunchModalFlow } from '~/pages/Liquidity/CreateAuction/quickLaunchModalContext'
-import {
-  CreateAuctionStep,
-  PriceRangeStrategy,
-  RaiseCurrency,
-  TimeLockPreset,
-  TokenMode,
-} from '~/pages/Liquidity/CreateAuction/types'
+import { CreateAuctionStep, PriceRangeStrategy, TimeLockPreset, TokenMode } from '~/pages/Liquidity/CreateAuction/types'
 import { getPrimaryStablecoin, getRaiseCurrencyAddress } from '~/pages/Liquidity/CreateAuction/utils'
 
 // oxlint-disable-next-line complexity

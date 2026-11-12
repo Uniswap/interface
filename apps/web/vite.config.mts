@@ -7,15 +7,28 @@ import { fileURLToPath } from 'url'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 import { defineConfig, type ViteDevServer } from 'vite'
-import bundlesize from 'vite-plugin-bundlesize'
-import commonjs from 'vite-plugin-commonjs'
-import { nodePolyfills } from 'vite-plugin-node-polyfills'
-import svgr from 'vite-plugin-svgr'
+import {
+  WEB_DEDUPE,
+  WEB_NODE_POLYFILL_SHIMS,
+  WEB_OPTIMIZE_DEPS_EXCLUDE,
+  WEB_OPTIMIZE_DEPS_INCLUDE,
+  WEB_OPTIMIZE_DEPS_ROLLDOWN_OPTIONS,
+  WEB_RESOLVE_EXTENSIONS,
+} from 'vite-presets/moduleResolutions'
+import {
+  jsbiEsmInteropPlugin,
+  reactNativeJsxPlugin,
+  svgImportFixPlugin,
+  webCommonjsPlugin,
+  webNodePolyfillsPlugin,
+  webSvgrPlugin,
+} from 'vite-presets/plugins'
 import { createEntryGatewayProxies, createWebSocketProxy } from './vite/entry-gateway-proxy'
 import { generateVersionFilePlugin } from './vite/generateVersionFilePlugin.js'
 import { honoDevServerPlugin } from './vite/honoDevServerPlugin'
+import { createWebAliases } from './vite/moduleResolutions'
 import { resolveEnvConfigs } from './vite/resolveEnvConfigs'
-import { cspMetaTagPlugin } from './vite/vite.plugins.js'
+import { cspMetaTagPlugin } from './vite/vite.plugins'
 
 // Get current file directory (ESM equivalent of __dirname)
 const __filename = fileURLToPath(import.meta.url)
@@ -166,44 +179,20 @@ export default defineConfig(({ mode, command, isPreview }) => {
   )
 
   const isProduction = mode === 'production'
-  const isVercelDeploy = DEPLOY_TARGET === 'vercel'
   const isEcsDeploy = DEPLOY_TARGET === 'ecs'
   const isIpfsDeploy = DEPLOY_TARGET === 'ipfs'
   if (isIpfsDeploy) {
     // IPFS gateways have no same-origin BFF: hit the entry gateway and statsig proxy directly (both allow cross-origin).
     env.ENABLE_ENTRY_GATEWAY_PROXY = 'false'
-    env.STATSIG_PROXY_URL_OVERRIDE = 'https://gating.interface.gateway.uniswap.org/v1/statsig-proxy'
+    env.STATSIG_PROXY_URL_OVERRIDE = 'https://rpc.uniswap.org/v1/statsig-proxy'
   }
   const isOptimizedBuild = isProduction || isEcsDeploy
-  const isMinifiedBuild = isOptimizedBuild && !isVercelDeploy
+  const isMinifiedBuild = isOptimizedBuild
   // A CI static client build whose sourcemaps a workflow uploads to Datadog
   // (web_test_sourcemap_upload.yml); every other CI static build sets DISABLE_SOURCEMAP.
   // Prod sourcemaps ship from the ECS image build. Local builds skip GITHUB_ACTIONS.
   const isSourcemapUploadBuild = !DEPLOY_TARGET && isMinifiedBuild && !DISABLE_SOURCEMAP && IS_GITHUB_ACTIONS
   const root = path.resolve(__dirname)
-
-  // External package aliases only
-  const overrides = {
-    // External package aliases
-    'react-native': 'react-native-web',
-    'expo-blur': path.resolve(__dirname, './.storybook/__mocks__/expo-blur.jsx'),
-    '@web3-react/core': path.resolve(__dirname, 'src/connection/web3reactShim.ts'),
-    'uniswap/src': path.resolve(__dirname, '../../packages/uniswap/src'),
-    'utilities/src': path.resolve(__dirname, '../../packages/utilities/src'),
-    'ui/src': path.resolve(__dirname, '../../packages/ui/src'),
-    'expo-clipboard': path.resolve(__dirname, 'src/lib/expo-clipboard.jsx'),
-    // Force JSBI to use ESM build so transform plugin can add __esModule marker
-    jsbi: path.resolve(__dirname, '../../node_modules/jsbi/dist/jsbi.mjs'),
-  }
-
-  // Aliases that need exact matching (using resolve.alias array format)
-  const exactAliases = [
-    // Use web app-specific i18n entry that doesn't import wallet's i18n-setup (exact match only)
-    {
-      find: /^uniswap\/src\/i18n$/,
-      replacement: path.resolve(__dirname, '../../packages/uniswap/src/i18n/index.web-app.ts'),
-    },
-  ]
 
   // Create process.env definitions for ALL environment variables
   const envDefines = Object.fromEntries(
@@ -235,16 +224,12 @@ export default defineConfig(({ mode, command, isPreview }) => {
     'process.env.ENVIRONMENT': JSON.stringify(mode),
     'process.env.EXPO_OS': JSON.stringify('web'),
     'process.env.GIT_COMMIT_HASH': JSON.stringify(commitHash),
-    // So getConfig().isVercelEnvironment is true in the client on Vercel; enables direct staging WS URL to match EGW
-    ...(isVercelDeploy ? { 'process.env.VERCEL': JSON.stringify(process.env.VERCEL ?? '0') } : {}),
     ...envDefines,
     // Must come after envDefines: also emitted to build/client/version.json so the deploy can
     // assert it against the release tag before uploading sourcemaps.
     'process.env.VERSION': JSON.stringify(bundleVersion),
     // Serving stack this artifact is built for; tags DD RUM + Amplitude events per cohort.
-    'process.env.WEB_BUILD_TYPE': JSON.stringify(
-      isEcsDeploy ? 'ecs' : isVercelDeploy ? 'vercel' : isIpfsDeploy ? 'ipfs' : 'local',
-    ),
+    'process.env.WEB_BUILD_TYPE': JSON.stringify(isEcsDeploy ? 'ecs' : isIpfsDeploy ? 'ipfs' : 'local'),
   }
 
   const cacheDir = path.resolve(__dirname, 'node_modules/.vite')
@@ -262,90 +247,15 @@ export default defineConfig(({ mode, command, isPreview }) => {
       // Native replacement for vite-tsconfig-paths: per-importer resolution, no tsconfig crawl.
       tsconfigPaths: true,
 
-      // .web-app file extensions take priority over .web for web app-specific overrides
-      extensions: [
-        '.web-app.tsx',
-        '.web-app.ts',
-        '.web-app.js',
-        '.web.tsx',
-        '.web.ts',
-        // .mjs before .js (matching Vite's defaults): packages like @rn-primitives publish
-        // paired .web.mjs/.web.js legs, and resolving the CJS leg breaks named ESM imports in dev
-        '.web.mjs',
-        '.web.js',
-        '.tsx',
-        '.ts',
-        '.mjs',
-        '.js',
-      ],
+      extensions: WEB_RESOLVE_EXTENSIONS,
       modules: [path.resolve(root, 'node_modules')],
-      dedupe: [
-        '@uniswap/sdk-core',
-        '@uniswap/v2-sdk',
-        '@uniswap/v3-sdk',
-        '@uniswap/v4-sdk',
-        '@uniswap/router-sdk',
-        '@uniswap/universal-router-sdk',
-        '@uniswap/uniswapx-sdk',
-        '@uniswap/permit2-sdk',
-        '@visx/responsive',
-        'jsbi',
-        'ethers',
-        'react',
-        'react-dom',
-      ],
-      alias: [...exactAliases, ...Object.entries(overrides).map(([find, replacement]) => ({ find, replacement }))],
+      dedupe: WEB_DEDUPE,
+      alias: createWebAliases(__dirname),
     },
 
     plugins: [
-      // Fix JSBI ESM interop issue:
-      // Rollup's interop wrapper checks for __esModule and passes through if present.
-      // JSBI's pure ESM build doesn't have __esModule, so Rollup creates a proxy wrapper
-      // that loses static methods like BigInt(). By adding __esModule as a named export,
-      // the module namespace will include it, and the interop function returns the module
-      // as-is, preserving all static methods.
-      {
-        name: 'jsbi-esm-interop-fix',
-        enforce: 'pre' as const,
-        transform(code: string, id: string) {
-          // Only transform the JSBI ESM module
-          if (!id.includes('node_modules/jsbi/dist/jsbi.mjs')) {
-            return null
-          }
-
-          // Add __esModule as a named export so Rollup's interop passes it through
-          // The interop checks: hasOwnProperty(moduleNamespace, "__esModule")
-          // By exporting it, it will be a property on the module namespace object
-          return {
-            code: `${code}\nexport const __esModule = true;`,
-            map: null,
-          }
-        },
-      },
-      {
-        name: 'transform-react-native-jsx',
-        async transform(code: string, id: string) {
-          // Transform JSX in react-native libraries that ship JSX in .js files
-          const needsJsxTransform = [
-            'node_modules/react-native-reanimated',
-            'node_modules/expo-blur', // In case it's not fully mocked
-            'node_modules/@rn-primitives', // tsup dist ships raw JSX in .js/.mjs
-          ].some((path) => id.includes(path))
-
-          if (!needsJsxTransform || !/\.(js|mjs)$/.test(id)) {
-            return null
-          }
-
-          // Dynamic import to avoid top-level import issues
-          const { transformWithEsbuild } = await import('vite')
-
-          // Use Vite's transformWithEsbuild to handle JSX
-          return transformWithEsbuild(code, id, {
-            loader: 'jsx',
-            jsx: 'automatic',
-          })
-        },
-      },
+      jsbiEsmInteropPlugin(),
+      reactNativeJsxPlugin(),
       portWarningPlugin(isProduction),
       reactPlugin(),
       // Tailwind v4 — compiles @import "tailwindcss" + @universe/tailwind tokens.
@@ -355,93 +265,29 @@ export default defineConfig(({ mode, command, isPreview }) => {
         applyToEnvironment: (environment: { name: string }) => environment.name === 'client',
       })),
       env.SKIP_CSP ? undefined : cspMetaTagPlugin(mode, env),
-      svgr({
-        svgrOptions: {
-          icon: false,
-          ref: true,
-          titleProp: true,
-          exportType: 'named',
-          svgo: true,
-          svgoConfig: {
-            plugins: [
-              {
-                name: 'preset-default',
-                params: {
-                  overrides: { removeViewBox: false },
-                },
-              },
-              'removeDimensions',
-            ],
-          },
-        },
-        include: '**/*.svg',
-      }),
+      webSvgrPlugin(),
       {
         name: 'copy-rive-wasm',
         async buildStart() {
           await import('./scripts/copy-rive-wasm.js')
         },
       },
-      {
-        name: 'svg-import-fix',
-        transform(code: string) {
-          const regex = /import\s+([a-zA-Z0-9_$]+)\s+from\s+['"]([^'"]+\.svg)['"]/g
-
-          const transformed = code.replace(regex, (match, varName, path) => {
-            // Don't touch named imports like { ReactComponent }
-            if (match.includes('{')) return match
-            // Skip if it already has a query param
-            if (path.includes('?')) return match
-
-            return `import ${varName} from '${path}?url'`
-          })
-
-          return transformed === code ? null : transformed
-        },
-      },
-      nodePolyfills({
-        globals: {
-          // In dev, `true` injects a per-module `import ... as process` shim that shadows
-          // `process`, so rolldown/oxc's scope-aware define skips the `process.env.*`
-          // replacements above (empty shim env -> config boot crash). `'dev'` instead sets
-          // `globalThis.process` via the dep optimizer, keeping defines working; build
-          // keeps the module shim (`true`) so prod output is unchanged.
-          process: command === 'serve' ? 'dev' : true,
-        },
-        include: ['path', 'buffer'],
-      }),
-      // nodePolyfills (above) banners `import ... from 'vite-plugin-node-polyfills/shims/*'` onto every
-      // optimized dep, where the dep scanner can't see it. Every environment, client included, must
-      // know the shims up front, or each one is discovered on first chunk load, costing an extra
-      // optimize pass and a page reload. (Rolldown dropped the esbuild `inject` that covered the client.)
+      svgImportFixPlugin(),
+      webNodePolyfillsPlugin(command),
+      // Every environment, client included, must pre-bundle the polyfill shims (see
+      // WEB_NODE_POLYFILL_SHIMS). Rolldown dropped the esbuild `inject` that covered the client.
       {
         name: 'pre-bundle-node-polyfill-shims',
         configEnvironment() {
           return {
             optimizeDeps: {
-              include: [
-                'vite-plugin-node-polyfills/shims/buffer',
-                'vite-plugin-node-polyfills/shims/global',
-                'vite-plugin-node-polyfills/shims/process',
-              ],
+              include: WEB_NODE_POLYFILL_SHIMS,
             },
           }
         },
       },
-      commonjs({
-        dynamic: {
-          loose: false,
-        },
-      }),
-      isOptimizedBuild || DISABLE_SOURCEMAP
-        ? undefined
-        : bundlesize({
-            limits: [
-              { name: 'assets/index-*.js', limit: '2.40 MB', mode: 'gzip' },
-              { name: '**/*', limit: Infinity, mode: 'uncompressed' },
-            ],
-          }),
-      generateVersionFilePlugin(!isVercelDeploy, bundleVersion, __dirname),
+      webCommonjsPlugin(),
+      generateVersionFilePlugin(bundleVersion, __dirname),
       {
         name: 'copy-twist-config',
         writeBundle() {
@@ -479,10 +325,7 @@ export default defineConfig(({ mode, command, isPreview }) => {
       force: forceOptimize,
       entries: ['index.html'],
       include: [
-        'expo-linear-gradient',
-        'invariant',
-        'react-native-web',
-        'react-native-gesture-handler',
+        ...WEB_OPTIMIZE_DEPS_INCLUDE,
         'ui',
         '@uniswap/sdk-core',
         '@uniswap/v2-sdk',
@@ -499,42 +342,19 @@ export default defineConfig(({ mode, command, isPreview }) => {
       ],
       // Libraries that shouldn't be pre-bundled
       exclude: [
-        'expo-clipboard',
+        ...WEB_OPTIMIZE_DEPS_EXCLUDE,
         '@connectrpc/connect',
         '@uniswap/client-liquidity',
         '@uniswap/client-privy-embedded-wallet',
-        'expo-modules-core',
       ],
-      rolldownOptions: {
-        resolve: {
-          extensions: [
-            '.web-app.js',
-            '.web-app.ts',
-            '.web-app.tsx',
-            '.web.mjs',
-            '.web.js',
-            '.web.ts',
-            '.web.tsx',
-            '.mjs',
-            '.js',
-            '.ts',
-            '.tsx',
-          ],
-        },
-        moduleTypes: {
-          '.js': 'jsx',
-          '.mjs': 'jsx',
-          '.ts': 'ts',
-          '.tsx': 'tsx',
-        },
-      },
+      rolldownOptions: WEB_OPTIMIZE_DEPS_ROLLDOWN_OPTIONS,
     },
 
     server: {
       port: DEFAULT_PORT,
       proxy: {
         '/config': {
-          target: 'https://gating.interface.gateway.uniswap.org',
+          target: 'https://rpc.uniswap.org',
           changeOrigin: true,
           secure: true,
           rewrite: (path) => path.replace(/^\/config/, '/v1/statsig-proxy'),
@@ -546,8 +366,8 @@ export default defineConfig(({ mode, command, isPreview }) => {
     },
 
     build: {
-      // build/server holds the ECS bundle (vite.server.config.mts); Vercel reads build/ directly.
-      outDir: isVercelDeploy ? 'build' : 'build/client',
+      // build/server holds the ECS bundle (vite.server.config.mts).
+      outDir: 'build/client',
       sourcemap: DISABLE_SOURCEMAP ? false : isMinifiedBuild ? 'hidden' : true,
       minify: isMinifiedBuild ? 'esbuild' : undefined,
       rollupOptions: {
@@ -561,7 +381,7 @@ export default defineConfig(({ mode, command, isPreview }) => {
       },
       // Increase the warning limit for larger chunks
       chunkSizeWarningLimit: 800,
-      // Log-only gzip sizing; size enforcement lives in check-bundle-size.ts
+      // Size enforcement lives in scripts/check-client-build.ts
       reportCompressedSize: false,
       commonjsOptions: {
         include: [/node_modules/],

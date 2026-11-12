@@ -1,0 +1,10 @@
+# Production stack for Platform Infra: app-performance RUM metrics and telemetry-health monitors.
+# ESC key `platform-infra` exists in shared-infra/incident with EP + @slack-eng-platform-alerts.
+environment:
+  - datadog-cloud-universe/platform-infra
+config:
+  datadog-cloud-universe:environment: prod
+  datadog-cloud-universe:tagFilter: "(unienv:prod OR env:prod)"
+  datadog-cloud-universe:incidentWebhook: "@webhook-Incident-io"
+  datadog-cloud-universe:disablePaging: "false"
+  datadog-cloud-universe:disableSlack: "false"

@@ -59,7 +59,7 @@ function tokenItemDataAreEqual(prev: TokenItemData, next: TokenItemData): boolea
     prev.address === next.address &&
     prev.symbol === next.symbol &&
     prev.price === next.price &&
-    prev.marketCap === next.marketCap &&
+    prev.fdv === next.fdv &&
     prev.pricePercentChange24h === next.pricePercentChange24h &&
     prev.volume24h === next.volume24h &&
     prev.totalValueLocked === next.totalValueLocked &&

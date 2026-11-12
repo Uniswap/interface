@@ -95,6 +95,12 @@ bun i18n:extract                # Extract localized strings (run after changing 
 - Import generated icon components instead of `.svg` files; add new icons with `bun scripts/add-icons.ts` and the `build:icons` targets
 - Don't inline SVG markup in component files unless it needs something a static icon can't do, like per-path animation or data-driven geometry
 
+#### Utilities and Helpers
+
+- Before writing a generic helper (strings, arrays, objects, numbers, async, time, formatting, URLs, errors, React hooks), search the catalog in `packages/utilities/src/index.ts`; it lists every export in the package, grouped by purpose
+- Import from the defining file the catalog names (e.g. `utilities/src/primitives/string`), never from `utilities` or `utilities/src`; lint blocks those
+- A missing helper that doesn't depend on a product area or app goes in `packages/utilities` with a test, and gets an entry in the catalog
+
 #### State Management
 
 - **Redux** for complex global state
@@ -145,7 +151,7 @@ Core shared packages:
 - `packages/ui/` - Soft-deprecated cross-platform leftovers, being moved into mycelium
 - `packages/uniswap/` - Core business logic and utilities
 - `packages/wallet/` - Wallet functionality
-- `packages/utilities/` - Common utilities
+- `packages/utilities/` - Common utilities; `src/index.ts` catalogs them
 
 ## Blockchain Integration
 

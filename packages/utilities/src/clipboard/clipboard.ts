@@ -3,7 +3,8 @@ import { PlatformSplitStubError } from 'utilities/src/errors'
 /** Dummy clipboard class. Overridden by mobile or extension related code. */
 
 export interface IClipboard {
-  setClipboard(value: string): Promise<void>
+  /** Resolves false when the copy failed; it never rejects. */
+  setClipboard(value: string): Promise<boolean>
   getClipboard(): Promise<string | void>
   setClipboardImage(imageUrl: string | undefined): Promise<void>
 }
@@ -21,7 +22,7 @@ const Clipboard: IClipboard = {
   },
 }
 
-export async function setClipboard(value: string): Promise<void> {
+export async function setClipboard(value: string): Promise<boolean> {
   return Clipboard.setClipboard(value)
 }
 

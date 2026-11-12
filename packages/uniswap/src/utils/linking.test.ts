@@ -1,18 +1,34 @@
 import { UniverseChainId } from '@universe/chains'
+import * as WebBrowser from 'expo-web-browser'
 import { EarnEntryPoint } from 'uniswap/src/features/earn/analytics'
 import type { EarnVaultInfo } from 'uniswap/src/features/earn/types'
+import { HookDetailsReferrer } from 'uniswap/src/features/poolHooks/types'
+import { openURL } from 'uniswap/src/utils/link'
 import {
   ExplorerDataType,
   getEarnVaultUrl,
   getExplorerLink,
   getFiatOnRampURL,
+  getHookDetailsURL,
   getTokenDetailsURL,
   getTokenUrl,
+  openUri,
   TDP_MULTICHAIN_CHAIN_QUERY_VALUE,
   tdpChainSelectionFromFilter,
   TdpChainSelectionType,
   TDPView,
 } from 'uniswap/src/utils/linking'
+import { logger } from 'utilities/src/logger/logger'
+
+vi.mock('expo-web-browser', () => ({
+  openBrowserAsync: vi.fn(),
+  WebBrowserPresentationStyle: { FULL_SCREEN: 'fullScreen' },
+}))
+
+vi.mock('uniswap/src/utils/link', () => ({
+  openURL: vi.fn(),
+  canOpenURL: vi.fn(),
+}))
 
 const earnVault = {
   displayCurrencyId: `${UniverseChainId.Base}-0x4200000000000000000000000000000000000006`,
@@ -113,6 +129,27 @@ describe(getEarnVaultUrl, () => {
   })
 })
 
+describe(getHookDetailsURL, () => {
+  const hookAddress = '0x000000000000000000000000000000000000ABcD'
+
+  it.each([
+    [UniverseChainId.Mainnet, 'ethereum'],
+    [UniverseChainId.Base, 'base'],
+    [UniverseChainId.ArbitrumOne, 'arbitrum'],
+  ] as const)('builds a clean canonical URL for chain %s', (chainId, chainName) => {
+    expect(getHookDetailsURL({ hookAddress, chainId })).toBe(`/explore/hooks/${chainName}/${hookAddress}`)
+  })
+
+  it.each([HookDetailsReferrer.List, HookDetailsReferrer.Badge] as const)(
+    'encodes the declared %s origin in the scoped query parameter',
+    (referrer) => {
+      expect(getHookDetailsURL({ hookAddress, chainId: UniverseChainId.Base, referrer })).toBe(
+        `/explore/hooks/base/${hookAddress}?hookReferrer=${referrer}`,
+      )
+    },
+  )
+})
+
 describe(getTokenDetailsURL, () => {
   it('returns aggregate multichain TDP URL when requested', () => {
     expect(
@@ -159,5 +196,79 @@ describe(getTokenUrl, () => {
     ).toEqual(
       'https://app.uniswap.org/explore/tokens/base/0x4200000000000000000000000000000000000006?utm_medium=mobile&utm_source=share-tdp',
     )
+  })
+})
+
+describe(openUri, () => {
+  const uri = 'https://app.uniswap.org'
+  const noBrowserError = new Error('No matching browser activity found')
+
+  beforeEach(() => {
+    vi.mocked(WebBrowser.openBrowserAsync).mockReset()
+    vi.mocked(openURL).mockReset()
+    vi.spyOn(logger, 'error').mockImplementation(() => undefined)
+    vi.spyOn(logger, 'warn').mockImplementation(() => undefined)
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  it('opens the in-app browser without touching the fallback', async () => {
+    vi.mocked(WebBrowser.openBrowserAsync).mockResolvedValue({ type: 'opened' } as WebBrowser.WebBrowserResult)
+
+    await openUri({ uri, isSafeUri: true })
+
+    expect(WebBrowser.openBrowserAsync).toHaveBeenCalledWith(uri, expect.any(Object))
+    expect(openURL).not.toHaveBeenCalled()
+    expect(logger.error).not.toHaveBeenCalled()
+  })
+
+  it('falls back to openURL when Android has no browser activity', async () => {
+    vi.mocked(WebBrowser.openBrowserAsync).mockRejectedValue(noBrowserError)
+    vi.mocked(openURL).mockResolvedValue(null)
+
+    await openUri({ uri, isSafeUri: true, throwOnError: true })
+
+    expect(openURL).toHaveBeenCalledWith(uri)
+    expect(logger.warn).toHaveBeenCalledTimes(1)
+    expect(logger.error).not.toHaveBeenCalled()
+  })
+
+  it('logs and rethrows when the fallback also fails', async () => {
+    const fallbackError = new Error('No Activity found to handle Intent')
+    vi.mocked(WebBrowser.openBrowserAsync).mockRejectedValue(noBrowserError)
+    vi.mocked(openURL).mockRejectedValue(fallbackError)
+
+    await expect(openUri({ uri, isSafeUri: true, throwOnError: true })).rejects.toBe(fallbackError)
+    expect(logger.error).toHaveBeenCalledWith(fallbackError, expect.objectContaining({ extra: { uri } }))
+  })
+
+  it('logs without throwing when the fallback fails and throwOnError is off', async () => {
+    vi.mocked(WebBrowser.openBrowserAsync).mockRejectedValue(noBrowserError)
+    vi.mocked(openURL).mockRejectedValue(new Error('No Activity found to handle Intent'))
+
+    await expect(openUri({ uri, isSafeUri: true })).resolves.toBeUndefined()
+    expect(logger.error).toHaveBeenCalledTimes(1)
+  })
+
+  it('does not use the in-app browser or retry when opening externally', async () => {
+    const externalError = new Error('No Activity found to handle Intent')
+    vi.mocked(openURL).mockRejectedValue(externalError)
+
+    await expect(openUri({ uri, isSafeUri: true, openExternalBrowser: true, throwOnError: true })).rejects.toBe(
+      externalError,
+    )
+    expect(WebBrowser.openBrowserAsync).not.toHaveBeenCalled()
+    expect(openURL).toHaveBeenCalledTimes(1)
+  })
+
+  it('does not fall back for other in-app browser errors', async () => {
+    const otherError = new Error('Another WebBrowser is already being presented')
+    vi.mocked(WebBrowser.openBrowserAsync).mockRejectedValue(otherError)
+
+    await expect(openUri({ uri, isSafeUri: true, throwOnError: true })).rejects.toBe(otherError)
+    expect(openURL).not.toHaveBeenCalled()
+    expect(logger.error).toHaveBeenCalledWith(otherError, expect.any(Object))
   })
 })

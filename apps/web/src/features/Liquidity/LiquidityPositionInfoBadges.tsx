@@ -25,6 +25,7 @@ import type { FeeData } from 'uniswap/src/features/positions/types'
 import { shortenAddress } from 'utilities/src/addresses'
 import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 import { Portal } from '~/components/Popups/Portal'
+import { DynamicFeeIcon, DynamicFeeTooltipContent, useDynamicFeeLabel } from '~/features/Liquidity/DynamicFee'
 import { HookDetailsModal } from '~/features/Liquidity/HookDetailsModal'
 import { HookTooltip } from '~/features/Liquidity/HookTooltip'
 import { isDynamicFeeTier } from '~/features/Liquidity/utils/feeTiers'
@@ -101,6 +102,7 @@ export function LiquidityPositionInfoBadges({
   v4hook,
   chainId,
   feeTier,
+  currentLpFeePips,
   protocolFeePips,
   feeBreakdown: feeBreakdownOverride,
   size,
@@ -110,6 +112,8 @@ export function LiquidityPositionInfoBadges({
   v4hook?: string
   chainId?: UniverseChainId
   feeTier?: FeeData
+  // The pool's served live LP fee (pips). Only read for a dynamic tier, whose `feeAmount` is a sentinel.
+  currentLpFeePips?: number
   protocolFeePips?: number
   // Pre-computed breakdown for the fee badge, overriding the served-from-`protocolFeePips` path. The
   // create/migrate flow passes this so the badge can reveal a curve-derived fee for a pool that doesn't
@@ -121,6 +125,7 @@ export function LiquidityPositionInfoBadges({
   const { t } = useTranslation()
   const [showHookDetails, setShowHookDetails] = useState(false)
   const getUniswapHookProvenance = useUniswapHookProvenance()
+  const { label: dynamicFeeLabel, hasCurrentFee } = useDynamicFeeLabel(currentLpFeePips)
 
   // The lookup below also requires a non-zero v4hook, so v2/v3 positions (no hook) skip the fetch too.
   const hookRegistry = useHookRegistryMap({ chainId, enabled: !!chainId && !!v4hook && v4hook !== ZERO_ADDRESS })
@@ -144,8 +149,8 @@ export function LiquidityPositionInfoBadges({
     const restProtocolVersion = getProtocolVersionFromLabel(versionLabel)
     // Attach a FeeBreakdown to the fee badge so it renders a FeeDisplay hover breakdown. The protocol
     // fee is backend-served or nothing (the FE never computes fees); with no served value FeeDisplay
-    // drops the tooltip and the badge stays a plain %. pips -> bps is exact (/100). Dynamic tiers keep
-    // the plain "Dynamic" label — their feeAmount is a sentinel, not a rate.
+    // drops the tooltip and the badge stays a plain %. pips -> bps is exact (/100). Dynamic tiers get no
+    // breakdown — their feeAmount is a sentinel, not a rate; they show the served current fee instead.
     const isDynamic = feeTier ? isDynamicFeeTier(feeTier) : false
     // v2's protocol fee is fixed and its payload serves none, so fall back to the constant. A
     // caller-provided value still wins.
@@ -165,7 +170,11 @@ export function LiquidityPositionInfoBadges({
 
     const feeTierLabel = feeTier
       ? isDynamic
-        ? { label: t('common.dynamic') }
+        ? {
+            label: dynamicFeeLabel,
+            icon: <DynamicFeeIcon />,
+            tooltipNode: <DynamicFeeTooltipContent hasCurrentFee={hasCurrentFee} />,
+          }
         : { label: `${feeTier.feeAmount / BIPS_BASE}%`, feeBreakdown }
       : isV2
         ? { label: `${V2_DEFAULT_FEE_TIER / BIPS_BASE}%`, feeBreakdown }
@@ -202,7 +211,19 @@ export function LiquidityPositionInfoBadges({
       feeTierLabel,
       cta,
     ].filter(Boolean) as BadgeData[]
-  }, [version, v4hook, hookEntry, provenance, feeTier, protocolFeePips, feeBreakdownOverride, cta, t])
+  }, [
+    version,
+    v4hook,
+    hookEntry,
+    provenance,
+    feeTier,
+    dynamicFeeLabel,
+    hasCurrentFee,
+    protocolFeePips,
+    feeBreakdownOverride,
+    cta,
+    t,
+  ])
 
   return (
     <>

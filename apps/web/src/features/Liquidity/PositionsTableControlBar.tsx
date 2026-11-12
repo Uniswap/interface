@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDebouncedCallback } from 'utilities/src/react/useDebouncedCallback'
 import { ExpandableSearchInput } from '~/components/ExpandableSearchInput/ExpandableSearchInput'
+import { SearchInput } from '~/components/SearchInput/SearchInput'
 import {
   hasActiveV2StatusFilter,
   hasActiveV2VersionFilter,
@@ -18,7 +19,6 @@ import {
   StatusFilterDropdown,
 } from '~/features/Liquidity/positionsFilters'
 import { PositionsRangeFilterDropdown, PositionsStatusChips } from '~/features/Liquidity/PositionsStatusChips'
-import { SearchInput } from '~/pages/Portfolio/components/SearchInput'
 
 const SEARCH_DEBOUNCE_MS = 300
 
@@ -132,7 +132,7 @@ export function PositionsTableControlBar({
       <Flex gap="$spacing8" alignItems="stretch">
         <PositionsRangeFilterDropdown statusFilter={rangeFilter} setStatusFilter={setRangeFilter} />
         {/* Wraps rather than overflowing when both filters are active on a narrow screen. */}
-        <Flex row flexWrap="wrap" alignItems="center" gap="$spacing8">
+        <Flex row flexWrap="wrap" position="relative" alignItems="center" gap="$spacing8">
           {statusDropdown}
           {protocolDropdown}
           {networkFilter}

@@ -10,12 +10,13 @@ import { GroupHoverTransition } from 'uniswap/src/components/GroupHoverTransitio
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { getPoolName } from 'uniswap/src/features/pools/names'
+import { orderPoolDataByQuoteToken } from 'uniswap/src/features/pools/quoteToken'
 import { LiquidityPositionStatusIndicator } from 'uniswap/src/features/positions/components/LiquidityPositionStatusIndicator'
 import { lpStatusConfig } from 'uniswap/src/features/positions/lpStatusConfig'
 import type { PositionInfo } from 'uniswap/src/features/positions/types'
 import { getExactSharePercent, getFeeLabel, getProtocolVersionLabel } from 'uniswap/src/features/positions/utils'
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { shouldReverseForWaterfall } from 'uniswap/src/features/tokens/waterfallPriority'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
@@ -45,9 +46,17 @@ export function PoolCellContent({ position }: { position: PositionInfo }): JSX.E
     currencyId(currency1Amount.currency),
   ])
 
-  const reversed = shouldReverseForWaterfall(currency0Amount.currency, currency1Amount.currency)
-  const [baseAmount, quoteAmount] = reversed ? [currency1Amount, currency0Amount] : [currency0Amount, currency1Amount]
-  const [baseInfo, quoteInfo] = reversed ? [currency1Info, currency0Info] : [currency0Info, currency1Info]
+  const [baseInfo, quoteInfo] = orderPoolDataByQuoteToken({
+    token0IsQuote: position.isToken0Quote,
+    data0: currency0Info,
+    data1: currency1Info,
+  })
+  const poolName = getPoolName({
+    symbol0: currency0Amount.currency.symbol,
+    symbol1: currency1Amount.currency.symbol,
+    token0IsQuote: position.isToken0Quote,
+    spaced: true,
+  })
 
   return (
     <CollapsibleCellLayout
@@ -58,7 +67,7 @@ export function PoolCellContent({ position }: { position: PositionInfo }): JSX.E
     >
       <Flex gap="$spacing2">
         <Text variant="body3" color="$neutral1" numberOfLines={1}>
-          {baseAmount.currency.symbol} / {quoteAmount.currency.symbol}
+          {poolName}
         </Text>
         <Flex row alignItems="center" gap="$spacing6">
           {protocolLabel && (
@@ -191,7 +200,7 @@ export function FeesCellContent({ position }: { position: PositionInfo }): JSX.E
   const { convertFiatAmountFormatted } = useLocalizationContext()
   const feesText = (
     <TableText variant="body3">
-      {convertFiatAmountFormatted(position.uncollectedFeesUsd, NumberType.FiatTokenPrice, '–')}
+      {convertFiatAmountFormatted(position.uncollectedFeesUsd, NumberType.FiatTokenQuantity, '–')}
     </TableText>
   )
 

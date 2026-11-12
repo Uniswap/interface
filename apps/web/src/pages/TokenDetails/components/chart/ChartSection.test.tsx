@@ -5,7 +5,6 @@ import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { LaunchProvenanceMethod } from 'uniswap/src/features/dataApi/launchProvenance'
 import { AuctionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { ChartType, DataQuality, PriceChartType } from '~/components/Charts/utils'
 import { TimePeriod } from '~/data/util'
 import {
   AuctionDisplayPhase,
@@ -19,6 +18,7 @@ import {
   useTokenDetailsAuctionDisplay,
 } from '~/pages/TokenDetails/hooks/useTokenDetailsAuctionDisplay'
 import { render } from '~/test-utils/render'
+import { ChartType, DataQuality, PriceChartType } from '~/utils/charts'
 
 vi.mock('uniswap/src/features/telemetry/send', () => ({ sendAnalyticsEvent: vi.fn() }))
 vi.mock('~/hooks/useTokenPriceChartPanel', () => ({ useTokenPriceChartPanel: vi.fn() }))

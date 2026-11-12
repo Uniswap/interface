@@ -5,6 +5,7 @@ import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { isExpiredMarginPlan } from 'uniswap/src/features/transactions/margin/isExpiredMarginPlan'
 import { useSelectAddressTransactions } from 'uniswap/src/features/transactions/selectors'
 import { finalizeTransaction, updateTransactionWithoutWatch } from 'uniswap/src/features/transactions/slice'
 import {
@@ -88,9 +89,13 @@ function isPlanTrackedInStore(planId: string): boolean {
 /**
  * For plans that are currently being tracked (active or backgrounded),
  * show Pending instead of AwaitingAction to avoid showing "interrupted" UI
- * while the user is still actively working on the plan.
+ * while the user is still actively working on the plan. A margin plan past
+ * its deadline shows Failed.
  */
 function withDisplayStatusForTrackedPlans(tx: TransactionDetails): TransactionDetails {
+  if (isExpiredMarginPlan(tx)) {
+    return { ...tx, status: TransactionStatus.Failed }
+  }
   if (isPlanTransactionDetails(tx) && tx.status === TransactionStatus.AwaitingAction) {
     if (isPlanTrackedInStore(tx.typeInfo.planId)) {
       return { ...tx, status: TransactionStatus.Pending }
@@ -288,7 +293,10 @@ export function useMergeLocalAndRemoteTransactions({
       if (!visibleLocalTransactions) {
         return undefined
       }
-      return sortTransactionsNewestFirst(visibleLocalTransactions.map(withDisplayStatusForTrackedPlans))
+      const planStepHashes = collectPlanStepHashesFromArray(visibleLocalTransactions)
+      return sortTransactionsNewestFirst(
+        filterPlanStepTransactions(visibleLocalTransactions, planStepHashes).map(withDisplayStatusForTrackedPlans),
+      )
     }
 
     // If only remote transactions exist, filter out plan step transactions and return

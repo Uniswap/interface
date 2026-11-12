@@ -4,6 +4,7 @@ import type { Auction } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { UniverseChainId } from '@universe/chains'
 import { FeatureFlags } from '@universe/gating'
 import { AuctionStaleTime } from 'uniswap/src/data/apiClients/dataApiService/auctions/queryTypes'
+import { currentTimeInSeconds } from 'utilities/src/time/time'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { TokenDetailsSourceState } from '~/pages/TokenDetails/context/tokenDetailsSourceState'
 import { useTokenDetailsAuction } from '~/pages/TokenDetails/hooks/useTokenDetailsAuction'
@@ -174,7 +175,7 @@ describe(useTokenDetailsAuction, () => {
   })
 
   it('prefers a live auction over a newer one that already ended', () => {
-    const nowSeconds = BigInt(Math.floor(Date.now() / 1000))
+    const nowSeconds = BigInt(currentTimeInSeconds())
     const endedRelaunch = {
       ...AUCTION,
       estimatedStartTime: { seconds: nowSeconds - 7200n, nanos: 0 },

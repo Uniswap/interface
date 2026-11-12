@@ -62,6 +62,7 @@ export const OptionRowCompat = React.forwardRef<HTMLDivElement, OptionRowCompatP
       )
 
     return (
+      // oxlint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions -- the render target of CommandItem, which injects role="option" and owns keyboard selection
       <div
         ref={ref}
         {...rest}

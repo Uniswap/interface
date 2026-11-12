@@ -11,7 +11,7 @@ import { LiquidityBarData } from '~/features/Liquidity/charts/LiquidityChart/typ
 import { ChartEntry } from '~/features/Liquidity/charts/LiquidityRangeInput/types'
 import { getDisplayPriceFromTick } from '~/features/Liquidity/utils/getTickToPrice'
 import { tryParseCurrencyAmount } from '~/lib/utils/tryParseCurrencyAmount'
-import { formatPriceWithSubscript } from '~/pages/PoolDetails/components/formatPriceWithSubscript'
+import { formatPriceWithSubscript } from '~/utils/formatPriceWithSubscript'
 
 export function shouldShowSinglePrice(params: {
   showSingleTick: boolean | undefined

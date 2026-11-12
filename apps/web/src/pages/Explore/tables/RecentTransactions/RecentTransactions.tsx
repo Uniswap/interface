@@ -17,9 +17,9 @@ import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
-import { PortfolioLogo } from '~/components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { WalletHoverCard } from '~/components/HoverCard/WalletHoverCard/WalletHoverCard'
 import { InternalLink } from '~/components/InternalLink'
+import { PortfolioLogo } from '~/components/Logo/PortfolioLogo'
 import { Table } from '~/components/Table'
 import { Cell } from '~/components/Table/Cell'
 import { Filter } from '~/components/Table/Filter'
@@ -43,8 +43,8 @@ import {
   TransactionType,
   useAllTransactions,
 } from '~/features/Explore/state/transactions/useAllTransactions'
+import { buildPortfolioUrl } from '~/hooks/usePortfolioRoutes/utils'
 import { useFilteredTransactions } from '~/pages/Explore/tables/RecentTransactions/useFilterTransaction'
-import { buildPortfolioUrl } from '~/pages/Portfolio/utils/portfolioUrls'
 import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
 
 const TableRow = styled(Flex, {

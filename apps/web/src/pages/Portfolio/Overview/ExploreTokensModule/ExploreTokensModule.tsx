@@ -9,6 +9,7 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { getCategoryIcon } from 'uniswap/src/features/tokenCategories/categoryIcons'
 import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
 import { useEvent } from 'utilities/src/react/hooks'
+import { HorizontalFadeScroller } from '~/components/HorizontalFadeScroller/HorizontalFadeScroller'
 import { TokenCardSkeletonRow } from '~/components/TokenCardCarousel/TokenCardSkeleton'
 import { ExploreTokensModuleCard } from '~/pages/Portfolio/Overview/ExploreTokensModule/ExploreTokensModuleCard'
 import {
@@ -74,7 +75,7 @@ export function ExploreTokensModule(): JSX.Element | null {
         {t('common.exploreTokens')}
       </Text>
       {showChips && (
-        <Flex row alignItems="center" gap="$spacing4" py="$spacing4" flexWrap="wrap">
+        <HorizontalFadeScroller gap="$spacing4" py="$spacing4">
           {categories.map((category) => (
             <CategoryChip
               key={category.id}
@@ -83,7 +84,7 @@ export function ExploreTokensModule(): JSX.Element | null {
               onSelect={setSelectedCategoryId}
             />
           ))}
-        </Flex>
+        </HorizontalFadeScroller>
       )}
       <Flex
         gap="$spacing12"

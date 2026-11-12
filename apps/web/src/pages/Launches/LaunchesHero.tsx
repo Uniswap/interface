@@ -12,9 +12,9 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { DeltaArrow, getDeltaTextColor } from '~/components/DeltaArrow/DeltaArrow'
+import { LaunchItem } from '~/features/Toucan/utils/launchesModel'
 import { POOLS_URL } from '~/pages/Launches/constants'
 import { LaunchesHeroNetworkLockup } from '~/pages/Launches/LaunchesHeroNetworkLockup'
-import { LaunchItem } from '~/pages/Launches/launchesModel'
 import { usePoolsWordmarkGreen } from '~/pages/Launches/usePoolsWordmarkGreen'
 
 const HERO_PADDING = 24

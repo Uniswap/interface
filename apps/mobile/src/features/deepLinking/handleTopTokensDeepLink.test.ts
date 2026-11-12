@@ -95,7 +95,7 @@ describe('handleTopTokensDeepLink', () => {
         screen: MobileScreens.Explore,
         params: {
           showFavorites: false,
-          orderByMetric: 'MARKET_CAP',
+          orderByMetric: 'FDV',
           chainId: undefined,
         },
       })
@@ -207,7 +207,8 @@ describe('handleTopTokensDeepLink', () => {
           url: 'https://app.uniswap.org/explore/tokens/unichain?metric=total_value_locked',
           expected: 'TOTAL_VALUE_LOCKED',
         },
-        { url: 'https://app.uniswap.org/explore/tokens/unichain?metric=market_cap', expected: 'MARKET_CAP' },
+        { url: 'https://app.uniswap.org/explore/tokens/unichain?metric=market_cap', expected: 'FDV' },
+        { url: 'https://app.uniswap.org/explore/tokens/unichain?metric=MARKET_CAP', expected: 'FDV' },
         {
           url: 'https://app.uniswap.org/explore/tokens/unichain?metric=price_percent_change_1_day_asc',
           expected: 'PRICE_PERCENT_CHANGE_1_DAY_ASC',
@@ -331,7 +332,7 @@ describe('handleTopTokensDeepLink', () => {
           screen: MobileScreens.Explore,
           params: {
             showFavorites: false,
-            orderByMetric: 'MARKET_CAP',
+            orderByMetric: 'FDV',
             chainId: unichainChainId,
           },
         })
@@ -387,7 +388,7 @@ describe('handleTopTokensDeepLink', () => {
           screen: MobileScreens.Explore,
           params: {
             showFavorites: false,
-            orderByMetric: 'MARKET_CAP',
+            orderByMetric: 'FDV',
             chainId: unichainChainId,
           },
         })
@@ -433,7 +434,7 @@ describe('handleTopTokensDeepLink', () => {
     })
 
     it('should handle valid RankingType values - all uppercase variants', () => {
-      const validMetrics = ['VOLUME', 'MARKET_CAP', 'TOTAL_VALUE_LOCKED']
+      const validMetrics = ['VOLUME', 'TOTAL_VALUE_LOCKED']
 
       return Promise.all(
         validMetrics.map((metric) => {
@@ -454,7 +455,7 @@ describe('handleTopTokensDeepLink', () => {
     })
 
     it('should handle valid CustomRankingType values except TRENDING', () => {
-      const validCustomMetrics = ['PRICE_PERCENT_CHANGE_1_DAY_ASC', 'PRICE_PERCENT_CHANGE_1_DAY_DESC']
+      const validCustomMetrics = ['FDV', 'PRICE_PERCENT_CHANGE_1_DAY_ASC', 'PRICE_PERCENT_CHANGE_1_DAY_DESC']
 
       return Promise.all(
         validCustomMetrics.map((metric) => {
@@ -514,7 +515,7 @@ describe('handleTopTokensDeepLink', () => {
           screen: MobileScreens.Explore,
           params: {
             showFavorites: false,
-            orderByMetric: 'MARKET_CAP',
+            orderByMetric: 'FDV',
             chainId: unichainChainId,
           },
         })

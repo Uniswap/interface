@@ -63,6 +63,7 @@ const SheetContent = React.forwardRef<React.ElementRef<typeof SheetPrimitive.Con
             and lose the pointer hit test -- being later in tree order restores it. */}
         {!hideClose && (
           <SheetPrimitive.Close
+            // TODO(INFRA-4589): keeps the close button out of the tab order, so keyboard users can only close with Escape.
             tabIndex={-1}
             className="absolute right-4 top-4 cursor-pointer rounded-8 p-1 text-neutral2 transition-all duration-80 ease-in-out hover:text-neutral1 hover:bg-surface2 focus:outline-none focus:ring-1 focus:ring-ring disabled:pointer-events-none active:scale-90"
           >

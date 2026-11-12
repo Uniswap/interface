@@ -1,0 +1,119 @@
+import { TradingApi } from '@universe/api'
+import dayjs from 'dayjs'
+import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
+import i18n from 'uniswap/src/i18n'
+import { logger } from 'utilities/src/logger/logger'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { DEFAULT_ERC20_DECIMALS } from 'utilities/src/tokens/constants'
+import { parseUnits } from '~/chains'
+import { Activity, ActivityMap } from '~/components/Activity/types'
+
+interface ActivityGroup {
+  title: string
+  transactions: Array<Activity>
+}
+
+/**
+ * Helper function to parse token amount with decimal fallback
+ */
+export function parseTokenAmount(quantity: string, decimals?: number | null): string {
+  return parseUnits(quantity, decimals ?? DEFAULT_ERC20_DECIMALS).toString()
+}
+
+const sortActivities = (a: Activity, b: Activity) => b.timestamp - a.timestamp
+export const createGroups = (activities: Array<Activity> = [], hideSpam = false) => {
+  if (activities.length === 0) {
+    return []
+  }
+  const now = Date.now()
+
+  const pending: Array<Activity> = []
+  const today: Array<Activity> = []
+  const currentWeek: Array<Activity> = []
+  const last30Days: Array<Activity> = []
+  const currentYear: Array<Activity> = []
+  const yearMap: { [key: string]: Array<Activity> } = {}
+
+  // TODO(cartcrom): create different time bucket system for activities to fall in based on design wants
+  activities.forEach((activity) => {
+    if (hideSpam && activity.isSpam) {
+      return
+    }
+
+    const addedTime = activity.timestamp * ONE_SECOND_MS
+    if (activity.status === TransactionStatus.Pending) {
+      if (activity.offchainOrderDetails?.routing === TradingApi.Routing.DUTCH_LIMIT) {
+        // limit orders are only displayed in their own pane
+      } else {
+        pending.push(activity)
+      }
+    } else if (dayjs(now).isSame(addedTime, 'day')) {
+      today.push(activity)
+    } else if (dayjs(addedTime).isSame(now, 'week')) {
+      currentWeek.push(activity)
+    } else if (dayjs(addedTime).isSame(now, 'month')) {
+      last30Days.push(activity)
+    } else if (dayjs(addedTime).isSame(now, 'year')) {
+      currentYear.push(activity)
+    } else {
+      const year = dayjs(addedTime).year()
+
+      // oxlint-disable-next-line typescript/no-unnecessary-condition
+      if (!yearMap[year]) {
+        yearMap[year] = [activity]
+      } else {
+        yearMap[year].push(activity)
+      }
+    }
+  })
+  const sortedYears = Object.keys(yearMap)
+    .sort((a, b) => parseInt(b) - parseInt(a))
+    .map((year) => ({ title: year, transactions: yearMap[year] }))
+
+  const transactionGroups: Array<ActivityGroup> = [
+    { title: i18n.t('common.pending'), transactions: pending.sort(sortActivities) },
+    { title: i18n.t('common.today'), transactions: today.sort(sortActivities) },
+    { title: i18n.t('common.thisWeek'), transactions: currentWeek.sort(sortActivities) },
+    { title: i18n.t('common.thisMonth'), transactions: last30Days.sort(sortActivities) },
+    { title: i18n.t('common.thisYear'), transactions: currentYear.sort(sortActivities) },
+    ...sortedYears,
+  ]
+
+  return transactionGroups.filter(({ transactions }) => transactions.length > 0)
+}
+
+/**
+ * Creates an ActivityMap from an array of activities, using the transaction hash as the key.
+ *
+ * This centralized function ensures consistent behavior between local and remote activity parsing,
+ * preventing divergence in how activities are keyed in the map.
+ *
+ * Note: All activity types set a hash value:
+ * - Regular transactions: use their transaction hash
+ * - Fiat on/off ramps: set hash = id in the parser
+ * - UniswapX orders: set hash = orderHash
+ *
+ * @param activities Array of activities to map
+ * @returns ActivityMap keyed by transaction hash
+ */
+export function createActivityMapByHash(activities: (Activity | undefined)[]): ActivityMap {
+  return activities.reduce<ActivityMap>((acc, activity) => {
+    if (!activity) {
+      return acc
+    }
+
+    // Unfilled UniswapX orders will not have a hash, use the orderHash instead
+    const activityHash = activity.hash ?? activity.offchainOrderDetails?.orderHash
+
+    if (!activityHash) {
+      // This should not happen as all activity parsers set a hash or orderHash value
+      logger.warn('utils', 'createActivityMapByHash', 'Activity without hash skipped', {
+        activityId: activity.id,
+      })
+      return acc
+    }
+
+    acc[activityHash] = activity
+    return acc
+  }, {})
+}

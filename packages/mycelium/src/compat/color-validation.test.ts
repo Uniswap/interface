@@ -96,6 +96,7 @@ const LEGACY_ACCEPTED_COLOR_NAMES: readonly string[] = [
   'chain_7777777',
   'chain_80001',
   'chain_8453',
+  'chain_99901',
   'color',
   'colorFocus',
   'colorHover',
@@ -196,7 +197,7 @@ describe('getIsValidSporeColor', () => {
   })
 
   it('enumerates the full legacy union (count pin against silent truncation)', () => {
-    expect(LEGACY_ACCEPTED_COLOR_NAMES).toHaveLength(151)
+    expect(LEGACY_ACCEPTED_COLOR_NAMES).toHaveLength(152)
   })
 
   it('accepts nothing beyond the legacy union (set-size pin — subset check plus equal size means set equality)', () => {

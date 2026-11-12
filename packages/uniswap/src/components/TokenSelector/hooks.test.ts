@@ -51,13 +51,6 @@ import { portfolioBalancesById } from 'uniswap/src/utils/balances'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import type { Mock } from 'vitest'
 
-// Extend vitest's expect types with jest-extended matchers
-declare module 'vitest' {
-  interface AsymmetricMatchersContaining {
-    toIncludeSameMembers<E = unknown>(members: readonly E[]): void
-  }
-}
-
 expect.extend({ toIncludeSameMembers })
 
 vi.mock('uniswap/src/features/telemetry/send')

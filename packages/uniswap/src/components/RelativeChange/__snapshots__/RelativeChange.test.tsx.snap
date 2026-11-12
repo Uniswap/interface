@@ -7,7 +7,9 @@ exports[`renders a relative change 1`] = `
     data-testid="relative-change"
   >
     <svg
+      aria-hidden="true"
       fill="none"
+      focusable="false"
       stroke-width="2"
       style="width: 16px; height: 16px; transform: rotate(180deg);"
       viewBox="0 0 24 24"
@@ -38,7 +40,9 @@ exports[`renders placeholders with absolute change 1`] = `
     data-testid="relative-change"
   >
     <svg
+      aria-hidden="true"
       fill="none"
+      focusable="false"
       stroke-width="2"
       style="width: 16px; height: 16px; transform: rotate(180deg);"
       viewBox="0 0 24 24"

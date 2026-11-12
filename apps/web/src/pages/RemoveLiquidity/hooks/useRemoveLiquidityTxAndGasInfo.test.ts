@@ -9,6 +9,7 @@ import { createElement, type PropsWithChildren } from 'react'
 import { useTransactionGasFee } from 'uniswap/src/features/gas/hooks'
 import type { PositionInfo } from 'uniswap/src/features/positions/types'
 import { useTransactionSettingsStore } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
+import { ONE_DAY_MS } from 'utilities/src/time/time'
 import { useRemoveLiquidityTxAndGasInfo } from '~/pages/RemoveLiquidity/hooks/useRemoveLiquidityTxAndGasInfo'
 import {
   type CommittedDecrease,
@@ -100,8 +101,10 @@ function mockModalContext({
 
 // With the modal context, settings and gas hooks mocked above, the hook only needs a query client; the app-wide
 // test providers would also start the wagmi connectors.
-function renderHook<T>(hook: () => T): ReturnType<typeof renderHookBase<T, undefined>> {
-  const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false, gcTime: 0 } } })
+function renderHook<T>(
+  hook: () => T,
+  queryClient = new QueryClient({ defaultOptions: { queries: { retry: false, gcTime: 0 } } }),
+): ReturnType<typeof renderHookBase<T, undefined>> {
   const wrapper = ({ children }: PropsWithChildren): JSX.Element =>
     createElement(QueryClientProvider, { client: queryClient }, children)
   return renderHookBase(hook, { wrapper })
@@ -202,6 +205,31 @@ describe('useRemoveLiquidityTxAndGasInfo', () => {
     expect(lastRequest()).not.toBe(firstRequest)
     expect(lastRequest()?.liquidityPercentageToDecrease).toBe(75)
     await waitFor(() => expect(queryFnSpy).toHaveBeenCalledTimes(2))
+  })
+
+  it('re-quotes when the modal is reopened, instead of reusing the calldata quoted before an earlier removal', async () => {
+    // The app's client caches for a day; without a custom deadline the request, and so the key, is the same
+    // on every open.
+    const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false, gcTime: ONE_DAY_MS } } })
+    mockUseTransactionSettingsStore.mockImplementation(((selector: (s: unknown) => unknown) =>
+      selector({ customDeadline: undefined, customSlippageTolerance: 0.5 })) as never)
+    mockModalContext({ positionInfo: buildPositionInfo({ liquidity: LIQUIDITY }), percent: '50' })
+    const useHook = (): ReturnType<typeof useRemoveLiquidityTxAndGasInfo> =>
+      useRemoveLiquidityTxAndGasInfo({ account: LIQUIDITY_SERVICE_POSITION_OWNER })
+
+    const firstOpen = renderHook(useHook, queryClient)
+    await waitFor(() => expect(firstOpen.result.current.decreaseCalldata).toBeDefined())
+    firstOpen.unmount()
+    await waitFor(() =>
+      expect(queryClient.getQueryCache().findAll({ queryKey: ['test', 'decreasePosition'] })).toEqual([]),
+    )
+
+    const secondOpen = renderHook(useHook, queryClient)
+
+    expect(secondOpen.result.current.decreaseCalldata).toBeUndefined()
+    expect(secondOpen.result.current.decreaseCalldataLoading).toBe(true)
+    await waitFor(() => expect(secondOpen.result.current.decreaseCalldata).toBeDefined())
+    expect(queryFnSpy).toHaveBeenCalledTimes(2)
   })
 
   describe('when the pool has a remove-liquidity hook', () => {

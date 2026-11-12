@@ -130,6 +130,7 @@ describe('getUniRpcEndpointUrl', () => {
       `https://gateway.example/rpc/${UniverseChainId.Robinhood}`,
     )
     expect(getUniRpcEndpointUrl(UniverseChainId.Ink)).toBe(`https://gateway.example/rpc/${UniverseChainId.Ink}`)
+    expect(getUniRpcEndpointUrl(UniverseChainId.Elysium)).toBe(`https://gateway.example/rpc/${UniverseChainId.Elysium}`)
   })
 })
 

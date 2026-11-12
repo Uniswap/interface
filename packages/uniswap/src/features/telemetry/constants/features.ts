@@ -99,6 +99,8 @@ export enum LiquidityEventName {
   AddLiquiditySubmitted = 'Add Liquidity Submitted',
   CollectLiquiditySubmitted = 'Collect Liquidity Submitted',
   MigrateLiquiditySubmitted = 'Migrate Liquidity Submitted',
+  PriceRangeDragged = 'Price Range Dragged',
+  PriceRangeInputChanged = 'Price Range Input Changed',
   RemoveLiquiditySubmitted = 'Remove Liquidity Submitted',
   SelectLiquidityPoolFeeTier = 'Select Liquidity Pool Fee Tier',
   TransactionModifiedInWallet = 'Transaction Modified in Wallet',

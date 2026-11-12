@@ -1,8 +1,8 @@
 import { useCallback } from 'react'
 import { useNavigate } from 'react-router'
 import { IconCloud, ItemPoint } from 'uniswap/src/components/IconCloud/IconCloud'
+import { InteractiveToken } from '~/constants/approvedTokens'
 import { getTokenDetailsURL } from '~/data/util'
-import { InteractiveToken } from '~/pages/Landing/assets/approvedTokens'
 import { Ticker } from '~/pages/Landing/components/TokenCloud/Ticker'
 import { usePromoTokensData } from '~/pages/Landing/components/TokenCloud/usePromoTokensData'
 

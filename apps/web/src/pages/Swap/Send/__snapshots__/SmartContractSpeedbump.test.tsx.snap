@@ -61,6 +61,8 @@ exports[`SmartContractSpeedBumpModal > should render correctly 1`] = `
                 style="--ch-bg: var(--surface3-hovered);"
               >
                 <svg
+                  aria-hidden="true"
+                  focusable="false"
                   stroke-width="8"
                   style="width: 16px; height: 16px;"
                   viewBox="0 0 16 16"
@@ -82,7 +84,9 @@ exports[`SmartContractSpeedBumpModal > should render correctly 1`] = `
               role="none"
             >
               <svg
+                aria-hidden="true"
                 fill="none"
+                focusable="false"
                 stroke-width="8"
                 style="color: rgba(19, 19, 19, 0.63); width: 24px; height: 24px;"
                 viewBox="0 0 16 16"
@@ -103,7 +107,9 @@ exports[`SmartContractSpeedBumpModal > should render correctly 1`] = `
             data-testid="dialog-icon"
           >
             <svg
+              aria-hidden="true"
               fill="currentColor"
+              focusable="false"
               stroke-width="8"
               style="width: 28px; height: 28px;"
               viewBox="0 0 24 24"

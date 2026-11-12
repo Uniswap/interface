@@ -18,8 +18,9 @@ function Field({ className, ...props }: React.ComponentProps<'div'>): React.JSX.
 }
 
 /** Label slot for a Field: mycelium's Label plus the `field-label` marker. */
-function FieldLabel({ className, ...props }: React.ComponentProps<typeof Label>): React.JSX.Element {
-  return <Label data-slot="field-label" className={cn(className)} {...props} />
+function FieldLabel({ className, htmlFor, ...props }: React.ComponentProps<typeof Label>): React.JSX.Element {
+  // htmlFor is passed explicitly so jsx-a11y/label-has-associated-control can see it through the spread
+  return <Label data-slot="field-label" htmlFor={htmlFor} className={cn(className)} {...props} />
 }
 
 export { Field, FieldLabel }

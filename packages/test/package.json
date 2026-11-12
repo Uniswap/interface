@@ -4,8 +4,8 @@
   "dependencies": {},
   "devDependencies": {
     "@types/node": "22.19.17",
-    "@vitest/coverage-v8": "3.2.1",
-    "vitest": "3.2.1",
+    "@vitest/coverage-v8": "5.0.5",
+    "vitest": "5.0.5",
     "vitest-presets": "workspace:^"
   },
   "scripts": {

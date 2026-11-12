@@ -2,6 +2,7 @@ import { Flex } from '@universe/mycelium'
 import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import { curveCardinal, scaleLinear } from 'd3'
 import { memo } from 'react'
+import { getSparklineValueDomain } from 'uniswap/src/components/charts/utils'
 import { ChartModelWithLiveDot, LiveDotRenderer } from '~/components/Charts/LiveDotRenderer'
 import { getPriceBounds } from '~/components/Charts/PriceChart/utils'
 import { LineChart } from '~/components/Charts/SparklineChart/LineChart'
@@ -23,6 +24,7 @@ interface SparklineChartProps {
   showGradientFill?: boolean
   /** Mark the last point with the pulsing live dot the TDP chart uses. */
   showLiveDot?: boolean
+  isStablecoin?: boolean
 }
 
 // LiveDotRenderer reads the last point from a chart model; the sparkline has none and passes coordinates directly.
@@ -38,6 +40,7 @@ function SparklineChartInner({
   strokeFadeIn = false,
   showGradientFill = false,
   showLiveDot = false,
+  isStablecoin = false,
 }: SparklineChartProps) {
   const colors = useSporeColors()
   const pricePoints = multichainId ? sparklineMap[multichainId] : null
@@ -53,7 +56,7 @@ function SparklineChartInner({
 
   const startingPrice = pricePoints[0]
   const endingPrice = pricePoints[pricePoints.length - 1]
-  const { min, max } = getPriceBounds(pricePoints)
+  const valueDomain = getSparklineValueDomain({ ...getPriceBounds(pricePoints), isStablecoin })
 
   // A stroke is centered on its path, so a point at the very edge of a scale's range leaves
   // half the stroke outside the SVG, which has no viewBox and so clips at its own bounds.
@@ -65,7 +68,7 @@ function SparklineChartInner({
     .domain([startingPrice.timestamp, endingPrice.timestamp])
     .range([padding, width - padding])
   const rdScale = scaleLinear()
-    .domain([min, max])
+    .domain(valueDomain)
     .range([height - padding, padding])
   const curveTension = 0.9
 

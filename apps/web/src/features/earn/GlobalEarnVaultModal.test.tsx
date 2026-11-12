@@ -3,7 +3,7 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { EarnVaultView } from 'uniswap/src/features/earn/hooks/useEarnVaultModalFlow'
 import type { EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import { GlobalEarnVaultModal } from '~/features/earn/GlobalEarnVaultModal'
-import { useGlobalEarnVaultModalStore } from '~/features/earn/globalEarnVaultModalStore'
+import { useGlobalEarnVaultModalStore } from '~/state/globalEarnVaultModalStore'
 import { act, render, screen, waitFor } from '~/test-utils/render'
 
 vi.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({

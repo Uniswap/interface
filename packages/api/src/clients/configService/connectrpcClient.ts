@@ -28,26 +28,58 @@ export class RpcHttpError extends Error {
     message: string,
     readonly httpStatus: number,
     readonly connectCode?: string,
+    /** Which backend RPC failed, for log facets; see `upstreamErrorFields`. */
+    readonly upstream?: RpcUpstream,
   ) {
     super(message)
     this.name = 'RpcHttpError'
   }
 }
 
+/** The backend service and RPC a failed call was addressed to. */
+export interface RpcUpstream {
+  service: string
+  rpc: string
+}
+
+/** `/pkg.v1.Service/Method` → `{ service: 'pkg.v1.Service', rpc: 'Method' }`. */
+export function rpcUpstreamFromPath(path: string): RpcUpstream {
+  const [service = '', rpc = ''] = path.replace(/^\/+/, '').split('/')
+  return { service, rpc }
+}
+
+function findRpcHttpError(error: unknown): RpcHttpError | undefined {
+  if (error instanceof RpcHttpError) {
+    return error
+  }
+  return error instanceof Error && error.cause instanceof Error ? findRpcHttpError(error.cause) : undefined
+}
+
+/**
+ * Flat log fields for a failed backend call, through any number of re-wraps.
+ * Empty when the error never came from an RPC. These are what the Datadog
+ * drift monitors facet on, so the keys are part of the alerting contract.
+ */
+export function upstreamErrorFields(error: unknown): Record<string, string | number> {
+  const rpcError = findRpcHttpError(error)
+  if (!rpcError) {
+    return {}
+  }
+  return {
+    upstream_status: rpcError.httpStatus,
+    ...(rpcError.connectCode ? { upstream_code: rpcError.connectCode } : {}),
+    ...(rpcError.upstream ? { upstream_service: rpcError.upstream.service, upstream_rpc: rpcError.upstream.rpc } : {}),
+  }
+}
+
 /** The HTTP status of a failed `rpcPost`, through any number of re-wraps. */
 export function rpcHttpStatus(error: unknown): number | undefined {
-  if (error instanceof RpcHttpError) {
-    return error.httpStatus
-  }
-  return error instanceof Error && error.cause instanceof Error ? rpcHttpStatus(error.cause) : undefined
+  return findRpcHttpError(error)?.httpStatus
 }
 
 /** The Connect error code of a failed `rpcPost`, through any number of re-wraps. */
 export function rpcConnectCode(error: unknown): string | undefined {
-  if (error instanceof RpcHttpError) {
-    return error.connectCode
-  }
-  return error instanceof Error && error.cause instanceof Error ? rpcConnectCode(error.cause) : undefined
+  return findRpcHttpError(error)?.connectCode
 }
 
 /**
@@ -78,12 +110,13 @@ export async function rpcPost<T>(
   })
 
   const text = await response.text()
+  const upstream = rpcUpstreamFromPath(path)
   let parsed: unknown
   try {
     parsed = JSON.parse(text)
   } catch {
     if (!response.ok) {
-      throw new RpcHttpError(`HTTP ${response.status}`, response.status)
+      throw new RpcHttpError(`HTTP ${response.status}`, response.status, undefined, upstream)
     }
     return {} as T
   }
@@ -92,7 +125,8 @@ export async function rpcPost<T>(
     const errorBody =
       typeof parsed === 'object' && parsed !== null ? (parsed as { message?: unknown; code?: unknown }) : {}
     const msg = 'message' in errorBody ? String(errorBody.message) : `HTTP ${response.status}`
-    throw new RpcHttpError(msg, response.status, typeof errorBody.code === 'string' ? errorBody.code : undefined)
+    const code = typeof errorBody.code === 'string' ? errorBody.code : undefined
+    throw new RpcHttpError(msg, response.status, code, upstream)
   }
 
   return parsed as T

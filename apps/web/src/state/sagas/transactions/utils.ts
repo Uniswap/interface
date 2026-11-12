@@ -18,6 +18,7 @@ import {
   TransactionStepFailedError,
   UnexpectedTransactionStateError,
 } from 'uniswap/src/features/transactions/errors'
+import { selectTransaction } from 'uniswap/src/features/transactions/selectors'
 import {
   addTransaction,
   finalizeTransaction,
@@ -68,7 +69,11 @@ import {
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import type { TransactionTypeInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { getInterfaceTransaction, isInterfaceTransaction } from 'uniswap/src/features/transactions/types/utils'
+import {
+  getInterfaceTransaction,
+  isFinalizedTxStatus,
+  isInterfaceTransaction,
+} from 'uniswap/src/features/transactions/types/utils'
 import { parseERC20ApproveCalldata } from 'uniswap/src/utils/approvals'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { interruptTransactionFlow } from 'uniswap/src/utils/saga'
@@ -128,6 +133,7 @@ export function* handleOnChainStep<T extends OnChainTransactionStep>(params: Han
     setCurrentStep,
     info,
     allowDuplicativeTx,
+    allowDuplicativeOfFinalizedTx,
     ignoreInterrupt,
     onModification,
     shouldWaitForConfirmation,
@@ -138,7 +144,13 @@ export function* handleOnChainStep<T extends OnChainTransactionStep>(params: Han
   addTransactionBreadcrumb({ step, data: { ...info } })
 
   // Avoid sending prompting a transaction if the user already submitted an equivalent tx, e.g. by closing and reopening a transaction flow
-  const duplicativeTx = yield* findDuplicativeTx({ info, address, chainId, allowDuplicativeTx })
+  const duplicativeTx = yield* findDuplicativeTx({
+    info,
+    address,
+    chainId,
+    allowDuplicativeTx,
+    allowDuplicativeOfFinalizedTx,
+  })
 
   const interfaceDuplicativeTx = duplicativeTx ? getInterfaceTransaction(duplicativeTx) : undefined
   if (interfaceDuplicativeTx && interfaceDuplicativeTx.hash) {
@@ -231,24 +243,28 @@ export function* handleOnChainStep<T extends OnChainTransactionStep>(params: Han
 
 /** Waits for a transaction to complete, or immediately throws if interrupted. */
 function* handleOnChainConfirmation(params: HandleOnChainStepParams, hash: string): SagaGenerator<string> {
-  const { step, shouldWaitForConfirmation = true, ignoreInterrupt } = params
+  const { address, step, shouldWaitForConfirmation = true, ignoreInterrupt } = params
   if (!shouldWaitForConfirmation) {
     return hash
   }
 
-  // Delay returning until transaction is confirmed
-  if (ignoreInterrupt) {
+  // The signer path adds the tx to state before blocking on the modification check, so the activity updater can
+  // finalize it before we start waiting; its finalizeTransaction action would then never be seen.
+  const transaction = yield* select(selectTransaction, { address, chainId: step.txRequest.chainId, txId: hash })
+  if (transaction && isFinalizedTxStatus(transaction.status)) {
+    throwIfFailedOnChain(transaction.status, step)
+  } else if (ignoreInterrupt) {
+    // Delay returning until transaction is confirmed
     yield* call(waitForTransaction, hash, step)
-    return hash
-  }
+  } else {
+    const { interrupt }: { interrupt?: Action } = yield* race({
+      transactionFinished: call(waitForTransaction, hash, step),
+      interrupt: take(interruptTransactionFlow.type),
+    })
 
-  const { interrupt }: { interrupt?: Action } = yield* race({
-    transactionFinished: call(waitForTransaction, hash, step),
-    interrupt: take(interruptTransactionFlow.type),
-  })
-
-  if (interrupt) {
-    throw new HandledTransactionInterrupt('Transaction flow was interrupted')
+    if (interrupt) {
+      throw new HandledTransactionInterrupt('Transaction flow was interrupted')
+    }
   }
 
   addTransactionBreadcrumb({ step, data: { txHash: hash }, status: TransactionBreadcrumbStatus.Complete })
@@ -439,11 +455,13 @@ function* findDuplicativeTx({
   address,
   chainId,
   allowDuplicativeTx,
+  allowDuplicativeOfFinalizedTx,
 }: {
   info: TransactionTypeInfo
   address: Address
   chainId: number
   allowDuplicativeTx?: boolean
+  allowDuplicativeOfFinalizedTx?: boolean
 }) {
   if (allowDuplicativeTx) {
     return undefined
@@ -468,7 +486,9 @@ function* findDuplicativeTx({
 
   // Check all pending and recent transactions
   return transactionsForAccount.find(
-    (tx) => (isPendingTx(tx) || isRecentTx(tx)) && JSON.stringify(tx.typeInfo) === JSON.stringify(info),
+    (tx) =>
+      (isPendingTx(tx) || (!allowDuplicativeOfFinalizedTx && isRecentTx(tx))) &&
+      JSON.stringify(tx.typeInfo) === JSON.stringify(info),
   )
 }
 
@@ -510,12 +530,15 @@ function* waitForTransaction(hash: string | undefined, step: TransactionStep) {
     // Note: This function is only used for classic/bridge transactions that have immediate transaction hashes.
     // UniswapX orders use a different flow (handleUniswapXSignatureStep) and don't call this function.
     if (payload.id === hash) {
-      if (payload.status === TransactionStatus.Success) {
-        return payload
-      } else {
-        throw new TransactionStepFailedError({ message: `${step.type} failed on-chain`, step })
-      }
+      throwIfFailedOnChain(payload.status, step)
+      return payload
     }
+  }
+}
+
+function throwIfFailedOnChain(status: TransactionStatus, step: TransactionStep): void {
+  if (status !== TransactionStatus.Success) {
+    throw new TransactionStepFailedError({ message: `${step.type} failed on-chain`, step })
   }
 }
 

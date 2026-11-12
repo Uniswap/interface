@@ -1,9 +1,9 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { type Currency, CurrencyAmount, Price, Token } from '@uniswap/sdk-core'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { useCreateLiquidityContext } from '~/features/Liquidity/Create/CreateLiquidityContextProvider'
 import type { InitialPriceAcceptance } from '~/features/Liquidity/Create/hooks/useInitialPriceAcceptance'
 import { ReviewModal } from '~/features/Liquidity/ReviewModal'
-import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 import { fireEvent, render, screen } from '~/test-utils/render'
 
 vi.mock('~/features/Liquidity/useLPGeoRestriction', () => ({
@@ -13,7 +13,7 @@ vi.mock('~/features/Liquidity/useLPGeoRestriction', () => ({
     unavailableLabel: 'Not available in your region',
   }),
 }))
-vi.mock('~/pages/CreatePosition/CreateLiquidityContextProvider', () => ({ useCreateLiquidityContext: vi.fn() }))
+vi.mock('~/features/Liquidity/Create/CreateLiquidityContextProvider', () => ({ useCreateLiquidityContext: vi.fn() }))
 vi.mock('~/hooks/currency/useCurrencyInfo', () => ({ useCurrencyInfo: () => undefined }))
 vi.mock('~/connection/hooks/useAccount', () => ({
   useAccount: () => ({ isConnected: true, connector: { id: 'injected' } }),

@@ -2,9 +2,10 @@ import { GetTokenHistoryTVLResponse } from '@uniswap/client-data-api/dist/data/v
 import { UniverseChainId } from '@universe/chains'
 import { dataApiServiceClientV2 } from 'uniswap/src/data/apiClients/dataApiService/clients/DataApiClientV2'
 import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
-import { DataQuality } from '~/components/Charts/utils'
+import { currentTimeInSeconds } from 'utilities/src/time/time'
 import { useTDPTVLChartData } from '~/pages/TokenDetails/components/chart/hooks/useTDPTVLChartData'
 import { renderHook, waitFor } from '~/test-utils/render'
+import { DataQuality } from '~/utils/charts'
 
 vi.mock('uniswap/src/data/apiClients/dataApiService/clients/DataApiClientV2', () => ({
   dataApiServiceClientV2: { getTokenHistoryTVL: vi.fn() },
@@ -17,7 +18,7 @@ vi.mock('uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData', async (
 }))
 
 const mockClient = vi.mocked(dataApiServiceClientV2)
-const NOW_S = Math.floor(Date.now() / 1000)
+const NOW_S = currentTimeInSeconds()
 const VARIABLES = {
   chainId: UniverseChainId.Mainnet,
   address: '0x0000000000000000000000000000000000000001',

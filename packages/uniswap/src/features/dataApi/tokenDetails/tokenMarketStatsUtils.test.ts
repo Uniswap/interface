@@ -1,6 +1,7 @@
 import {
   clamp52wWithCurrentPrice,
   computeTokenMarketStats,
+  getTokenTvlBreakdown,
 } from 'uniswap/src/features/dataApi/tokenDetails/tokenMarketStatsUtils'
 import { describe, expect, it } from 'vitest'
 
@@ -56,6 +57,30 @@ describe('clamp52wWithCurrentPrice', () => {
   })
 })
 
+describe('getTokenTvlBreakdown', () => {
+  it('should split pools TVL into the token side and the paired side', () => {
+    expect(getTokenTvlBreakdown({ tvl: 55_432, poolsTvl: 112_821 })).toEqual({
+      tokenTvl: 55_432,
+      pairedTvl: 57_389,
+      poolsTvl: 112_821,
+    })
+  })
+
+  it('should return undefined when either TVL is missing', () => {
+    expect(getTokenTvlBreakdown({ tvl: undefined, poolsTvl: 100 })).toBeUndefined()
+    expect(getTokenTvlBreakdown({ tvl: 100, poolsTvl: undefined })).toBeUndefined()
+  })
+
+  it('should return undefined when pools TVL is below token TVL', () => {
+    expect(getTokenTvlBreakdown({ tvl: 28_608_745, poolsTvl: 21_281_489 })).toBeUndefined()
+    expect(getTokenTvlBreakdown({ tvl: 100, poolsTvl: 0 })).toBeUndefined()
+  })
+
+  it('should allow pools TVL equal to token TVL', () => {
+    expect(getTokenTvlBreakdown({ tvl: 100, poolsTvl: 100 })).toEqual({ tokenTvl: 100, pairedTvl: 0, poolsTvl: 100 })
+  })
+})
+
 describe('computeTokenMarketStats', () => {
   it('should resolve price from currentPrice then market', () => {
     // With only currentPrice and no 52w data, high52w/low52w stay undefined
@@ -80,13 +105,19 @@ describe('computeTokenMarketStats', () => {
     expect(fromMarket.low52w).toBe(5)
   })
 
-  it('should resolve marketCap, fdv and tvl from market', () => {
+  it('should resolve marketCap, fdv, tvl and poolsTvl from market', () => {
     const result = computeTokenMarketStats({
-      market: { marketCapUsd: 1_000_000, fullyDilutedValuationUsd: 2_000_000, totalValueLockedUsd: 3_000_000 },
+      market: {
+        marketCapUsd: 1_000_000,
+        fullyDilutedValuationUsd: 2_000_000,
+        totalValueLockedUsd: 3_000_000,
+        poolsTotalValueLockedUsd: 5_000_000,
+      },
     })
     expect(result.marketCap).toBe(1_000_000)
     expect(result.fdv).toBe(2_000_000)
     expect(result.tvl).toBe(3_000_000)
+    expect(result.poolsTvl).toBe(5_000_000)
   })
 
   it('should resolve volume from volumeUsd', () => {
@@ -120,6 +151,7 @@ describe('computeTokenMarketStats', () => {
       high52w: undefined,
       low52w: undefined,
       tvl: undefined,
+      poolsTvl: undefined,
     })
   })
 })

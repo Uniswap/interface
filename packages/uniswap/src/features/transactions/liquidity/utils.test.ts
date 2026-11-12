@@ -1,5 +1,9 @@
 import { Code, ConnectError } from '@connectrpc/connect'
-import { isPoolRejectsLiquidityError, parseErrorMessageTitle } from 'uniswap/src/features/transactions/liquidity/utils'
+import {
+  getErrorMessageToDisplay,
+  isPoolRejectsLiquidityError,
+  parseErrorMessageTitle,
+} from 'uniswap/src/features/transactions/liquidity/utils'
 
 describe(parseErrorMessageTitle, () => {
   it('extracts the name field from an embedded JSON payload', () => {
@@ -64,5 +68,30 @@ describe(isPoolRejectsLiquidityError, () => {
     expect(isPoolRejectsLiquidityError(new Error('something else went wrong'))).toBe(false)
     expect(isPoolRejectsLiquidityError(new ConnectError('RateLimited', Code.ResourceExhausted))).toBe(false)
     expect(isPoolRejectsLiquidityError({ data: { detail: 'other' } })).toBe(false)
+  })
+})
+
+describe(getErrorMessageToDisplay, () => {
+  const blocked = new ConnectError('Account is blocked', Code.Unauthenticated)
+
+  // No catalog is loaded here, so `t` echoes the key. That still tells the branches
+  // apart: the parser path would return the raw upstream message plus a request id.
+  const BLOCKED_COPY_KEY = 'swap.error.accountBlocked'
+
+  it('shows the blocked-wallet copy instead of the raw upstream message', () => {
+    expect(getErrorMessageToDisplay({ calldataError: blocked })).toBe(BLOCKED_COPY_KEY)
+  })
+
+  it('shows it for a blocked approval too', () => {
+    expect(getErrorMessageToDisplay({ calldataError: undefined, approvalError: blocked })).toBe(BLOCKED_COPY_KEY)
+  })
+
+  it('leaves other failures to the normal parser', () => {
+    expect(
+      getErrorMessageToDisplay({
+        calldataError: new ConnectError('BadRequest: {"name":"ResourceNotFound"}', Code.NotFound),
+      }),
+    ).toBe('ResourceNotFound')
+    expect(getErrorMessageToDisplay({ calldataError: undefined })).toBe(false)
   })
 })

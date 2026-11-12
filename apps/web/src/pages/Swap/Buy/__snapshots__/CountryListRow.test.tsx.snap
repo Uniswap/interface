@@ -56,7 +56,9 @@ exports[`CountryListRow > should render selected country 1`] = `
     </span>
   </div>
   <svg
+    aria-hidden="true"
     fill="none"
+    focusable="false"
     stroke="currentColor"
     stroke-linecap="round"
     stroke-width="8"

@@ -17,6 +17,7 @@ import {
 } from '~/pages/Portfolio/Activity/ActivityTable/registryCache'
 import { buildEarnPlanActivityRowFragments } from '~/pages/Portfolio/Activity/ActivityTable/registryEarnPlanFragments'
 import { logInvalidTransactionType } from '~/pages/Portfolio/Activity/ActivityTable/registryLogging'
+import { buildMarginPlanActivityRowFragments } from '~/pages/Portfolio/Activity/ActivityTable/registryMarginPlanFragments'
 import {
   buildNFTMintActivityRowFragments,
   buildNFTTradeActivityRowFragments,
@@ -77,6 +78,9 @@ function buildActivityRowFragmentsInternal(details: TransactionDetails): Activit
       const status = details.status
       if (typeInfo.earnAction) {
         return buildEarnPlanActivityRowFragments(typeInfo, status)
+      }
+      if (typeInfo.marginAction) {
+        return buildMarginPlanActivityRowFragments(typeInfo, status)
       }
 
       const overrideLabelKey =

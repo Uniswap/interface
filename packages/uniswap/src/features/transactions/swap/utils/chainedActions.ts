@@ -11,6 +11,7 @@ export const DEFAULT_CHAINED_ACTIONS_UNSUPPORTED_CHAIN_IDS: UniverseChainId[] = 
   UniverseChainId.Avalanche,
   UniverseChainId.Bnb,
   UniverseChainId.Celo,
+  UniverseChainId.Elysium,
   UniverseChainId.Polygon,
   UniverseChainId.Solana,
   UniverseChainId.Tempo,

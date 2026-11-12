@@ -550,7 +550,10 @@ describe('useMergeLocalAndRemoteTransactions', () => {
   })
 
   describe('Plan step transaction filtering', () => {
-    it('should filter out transactions that are part of a plan stepDetails', () => {
+    it.each([
+      { source: 'remote', state: 'only remote transactions exist' },
+      { source: 'local', state: 'only local transactions exist' },
+    ])('should filter out transactions that are part of a plan stepDetails when $state', ({ source }) => {
       const STEP_HASH_1 = '0xstephash1'
       const STEP_HASH_2 = '0xstephash2'
       const PLAN_ID = 'plan-123'
@@ -612,7 +615,8 @@ describe('useMergeLocalAndRemoteTransactions', () => {
       // Create an unrelated transaction that should NOT be filtered
       const unrelatedTx = createTestTransaction({ hash: '0xunrelated', status: TransactionStatus.Success })
 
-      const { result } = renderMergeHook([planTx, stepTx1, stepTx2, unrelatedTx])
+      const transactions = [planTx, stepTx1, stepTx2, unrelatedTx]
+      const { result } = source === 'remote' ? renderMergeHook(transactions) : renderMergeHook(undefined, transactions)
 
       // Should only return the plan transaction and the unrelated transaction
       // Step transactions should be filtered out

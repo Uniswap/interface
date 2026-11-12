@@ -13,11 +13,7 @@ export default defineConfig({
     globalSetup: ['./functions/fixtures/globalSetup.ts'],
     testTimeout: 360000,
     retry: 3,
-    poolOptions: {
-      threads: {
-        singleThread: true,
-      },
-    },
+    maxWorkers: 1,
   },
   // Relative to the web root
   cacheDir: './node_modules/.cache/cloud-vitest',

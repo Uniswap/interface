@@ -51,7 +51,9 @@ exports[`PaymentMethodFilter > Shared Components > renders PaymentMethodItem cor
       class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center gap-[4px] p-[8px] pl-[4px] bg-surface3 border-surface3 border-[1px] rounded-[12px]"
     >
       <svg
+        aria-hidden="true"
         fill="none"
+        focusable="false"
         stroke-width="8"
         style="width: 20px; height: 20px;"
         viewBox="0 0 20 20"
@@ -99,7 +101,9 @@ exports[`PaymentMethodFilter > Shared Components > renders PaymentMethodItem whe
       class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center gap-[4px] p-[8px] pl-[4px] bg-surface1 border-surface3 border-[1px] rounded-[12px]"
     >
       <svg
+        aria-hidden="true"
         fill="none"
+        focusable="false"
         stroke-width="8"
         style="width: 20px; height: 20px;"
         viewBox="0 0 24 24"

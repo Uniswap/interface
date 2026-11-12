@@ -1,6 +1,6 @@
 import { act, renderHook } from '@testing-library/react'
 import { type ReactNode } from 'react'
-import { afterEach, beforeEach, describe, expect, it, type MockInstance, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, type Mock, type MockInstance, vi } from 'vitest'
 import { useXOAuthFlow } from '~/pages/Liquidity/CreateAuction/hooks/useXOAuthFlow'
 import { CreateAuctionStoreContext } from '~/pages/Liquidity/CreateAuction/store/CreateAuctionStoreContext'
 import { createCreateAuctionStore } from '~/pages/Liquidity/CreateAuction/store/createCreateAuctionStore'
@@ -29,8 +29,8 @@ class NoopBroadcastChannel {
 
 interface StubPopup {
   closed: boolean
-  close: ReturnType<typeof vi.fn>
-  location: { replace: ReturnType<typeof vi.fn> }
+  close: Mock
+  location: { replace: Mock }
 }
 
 function makePopup(): StubPopup {

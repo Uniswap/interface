@@ -15,6 +15,7 @@ interface TokenCardContentBase {
   symbol?: string
   pricePercentChange1d?: number
   sparkline: ChartPoint[]
+  categoryIds?: readonly string[]
   hideNetworkLogo?: boolean
 }
 

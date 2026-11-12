@@ -16,13 +16,13 @@ import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
+import { HorizontalFadeScroller } from '~/components/HorizontalFadeScroller/HorizontalFadeScroller'
 import { CAROUSEL_CARD_GAP, CAROUSEL_FADE_WIDTH } from '~/components/TokenCardCarousel/constants'
 import { TokenCardCarousel } from '~/components/TokenCardCarousel/TokenCardCarousel'
 import { TokenCardSkeletonRow } from '~/components/TokenCardCarousel/TokenCardSkeleton'
 import { useHorizontalSnapCarousel } from '~/components/TokenCardCarousel/useHorizontalSnapCarousel'
 import { LoadingBubble } from '~/components/Tokens/loading'
 import { getTokenDetailsURL } from '~/data/util'
-import { edgeFadeMaskStyle, useHorizontalScrollFades } from '~/hooks/useHorizontalScrollFades'
 import {
   deriveRelatedTokensSectionState,
   selectRelatedTokensCategory,
@@ -65,8 +65,6 @@ export function RelatedTokensSection({
     t,
   })
 
-  const { scrollerRef: chipsScrollerRef, edgeFades } = useHorizontalScrollFades()
-
   const onSelectCategory = useEvent((categoryId: string): void => {
     if (categoryId === selectedCategoryId) {
       return
@@ -96,23 +94,16 @@ export function RelatedTokensSection({
     <Flex gap="$gap16" testID={TestID.TokenDetailsRelatedTokens}>
       <Text variant="heading3">{title}</Text>
       {showChips && (
-        <Flex
-          ref={chipsScrollerRef}
-          maxWidth="100%"
-          className="scrollbar-hidden"
-          $platform-web={{ overflowX: 'auto', overscrollBehaviorX: 'none', ...edgeFadeMaskStyle(edgeFades) }}
-        >
-          <Flex row alignItems="center" gap="$spacing4">
-            {categories.map((category) => (
-              <CategoryChip
-                key={category.id}
-                category={category}
-                selected={category.id === selectedCategory.id}
-                onSelect={onSelectCategory}
-              />
-            ))}
-          </Flex>
-        </Flex>
+        <HorizontalFadeScroller maxWidth="100%" gap="$spacing4">
+          {categories.map((category) => (
+            <CategoryChip
+              key={category.id}
+              category={category}
+              selected={category.id === selectedCategory.id}
+              onSelect={onSelectCategory}
+            />
+          ))}
+        </HorizontalFadeScroller>
       )}
       {isListEmpty ? (
         <Text variant="body2" color="$neutral2">
@@ -225,6 +216,7 @@ const RelatedTokenCard = memo(function RelatedTokenCard({
       pricePercentChange1d={token.pricePercentChange1d}
       priceUsd={token.priceUsd}
       sparkline={token.sparkline}
+      categoryIds={token.categoryIds}
       symbol={token.symbol}
       width={CARD_WIDTH}
       onPress={onPress}

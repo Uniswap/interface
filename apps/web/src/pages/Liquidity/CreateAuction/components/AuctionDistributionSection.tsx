@@ -5,9 +5,9 @@ import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
+import type { RaiseCurrency } from '~/features/Toucan/utils/raiseCurrency'
 import { TokenDistributionBar } from '~/pages/Liquidity/CreateAuction/components/TokenDistributionBar'
 import type { TokenAccentHex } from '~/pages/Liquidity/CreateAuction/tokenAccentHex'
-import { type RaiseCurrency } from '~/pages/Liquidity/CreateAuction/types'
 
 export function AuctionDistributionSection({
   auctionSupplyAmount,

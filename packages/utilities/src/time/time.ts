@@ -16,7 +16,7 @@ export function isStale(lastUpdated: number | null, staleTime: number): boolean 
 }
 
 export function currentTimeInSeconds(): number {
-  return dayjs().unix() // in seconds
+  return Math.floor(Date.now() / 1000)
 }
 
 export function inXMinutesUnix(x: number): number {

@@ -47,12 +47,11 @@ export function rankedMultichainTokenToTokenItemData({
     address: normalizeBackendNativeAddress({ chainId, address: deployment.address }),
     symbol: multichainToken.symbol,
     price: multichainToken.price?.spotUsd,
-    // The list is server-sorted by real market cap, so show that value. Fall back to FDV rather than
-    // blank where the pipeline has no circulating-supply source (e.g. Solana).
-    marketCap: rankedToken.stats?.marketCap ?? rankedToken.stats?.fdv,
+    fdv: rankedToken.stats?.fdv,
     pricePercentChange24h: multichainToken.price?.percentChange1d,
     volume24h: rankedToken.stats?.volume1d,
     totalValueLocked: rankedToken.stats?.tvl,
     networkCount: networkCount || undefined,
+    categoryIds: multichainToken.categoryIds,
   }
 }

@@ -31,8 +31,13 @@ export function useTransactionDetailSeparatorsRenderState(
 ): TransactionDetailSeparatorsRenderState {
   const isEmptyPermit2ApproveContent = useIsEmptyPermit2ApproveContent(transactionDetails)
   const isNftTransaction = isNFTActivity(transactionDetails.typeInfo)
+  const isMarginPlan =
+    transactionDetails.typeInfo.type === TransactionType.Plan && !!transactionDetails.typeInfo.marginAction
   const hideTopSeparator =
-    isNftTransaction || isUnknownTransactionInfo(transactionDetails.typeInfo) || isEmptyPermit2ApproveContent
+    isNftTransaction ||
+    isUnknownTransactionInfo(transactionDetails.typeInfo) ||
+    isEmptyPermit2ApproveContent ||
+    isMarginPlan
   const hideBottomSeparator = isNftTransaction
 
   return { hideTopSeparator, hideBottomSeparator }

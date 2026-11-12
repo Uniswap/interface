@@ -3,6 +3,7 @@ import { QUICK_LAUNCH_DURATION_SECONDS } from '@uniswap/liquidity-launcher-sdk'
 import { UniverseChainId } from '@universe/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { zeroAddress } from '~/chains'
+import { QUICK_LAUNCH_DURATION_HOURS } from '~/constants/tokenLaunch'
 import { buildCreateAuctionRequest } from '~/pages/Liquidity/CreateAuction/buildCreateAuctionRequest'
 import {
   applyQuickLaunchAuctionWindow,
@@ -10,7 +11,6 @@ import {
   getQuickLaunchAuctionWindow,
   getQuickLaunchFloorPricePerToken,
   getQuickLaunchGraduationPricePerToken,
-  QUICK_LAUNCH_DURATION_HOURS,
   QUICK_LAUNCH_FALLBACK_FLOOR_ETH_PER_TOKEN,
   QUICK_LAUNCH_FALLBACK_GRADUATION_ETH_PER_TOKEN,
   QUICK_LAUNCH_START_LEAD_MINUTES,

@@ -70,6 +70,7 @@ export const useAllTransactionSettings = (): TransactionSettings => {
     customSlippageTolerance: s.customSlippageTolerance,
     customDeadline: s.customDeadline,
     selectedProtocols: s.selectedProtocols,
+    selectedBridgeProviders: s.selectedBridgeProviders,
     slippageWarningModalSeen: s.slippageWarningModalSeen,
     isV4HookPoolsEnabled: s.isV4HookPoolsEnabled,
     isSlippageDirty: s.isSlippageDirty,

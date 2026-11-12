@@ -1,12 +1,13 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import type { SetStateAction } from 'react'
+import type { Mock } from 'vitest'
 import { AddHook } from '~/features/Liquidity/Create/AddHook'
+import { useCreateLiquidityContext } from '~/features/Liquidity/Create/CreateLiquidityContextProvider'
 import { useLiquidityUrlState } from '~/features/Liquidity/Create/hooks/useLiquidityUrlState'
 import { DEFAULT_POSITION_STATE, type PositionState } from '~/features/Liquidity/Create/types'
-import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 import { render } from '~/test-utils/render'
 
-vi.mock('~/pages/CreatePosition/CreateLiquidityContextProvider', () => ({ useCreateLiquidityContext: vi.fn() }))
+vi.mock('~/features/Liquidity/Create/CreateLiquidityContextProvider', () => ({ useCreateLiquidityContext: vi.fn() }))
 vi.mock('~/features/Liquidity/Create/hooks/useLiquidityUrlState', () => ({ useLiquidityUrlState: vi.fn() }))
 vi.mock('uniswap/src/features/poolHooks/hooks/useHookRegistryMap', () => ({
   getHookRegistryKey: () => 'key',
@@ -27,7 +28,7 @@ const OTHER_HOOK = '0x0000000000000000000000000000000000000Abc'
 /** Mounts AddHook over `state` and returns what its URL-seed effect left position state as, plus the setter. */
 function renderAndApplySeed({ state, urlHook }: { state: PositionState; urlHook: string }): {
   next: PositionState
-  setPositionState: ReturnType<typeof vi.fn>
+  setPositionState: Mock
   rerender: ReturnType<typeof render>['rerender']
 } {
   let next = state

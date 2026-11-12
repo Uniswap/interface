@@ -1159,3 +1159,19 @@ export const addPriceAlertsEnabledToPushNotifications = createSafeMigration<
   },
   onError: (state) => state,
 })
+
+// Explore dropped the market cap sort for FDV. Literals, not enums, so later enum edits can't change
+// what this migration did.
+export const migrateExploreMarketCapSortToFdv = createSafeMigration({
+  name: 'migrateExploreMarketCapSortToFdv',
+  migrate: (state: any) => {
+    if (state?.wallet?.settings?.tokensOrderBy !== 'MARKET_CAP') {
+      return state
+    }
+    return {
+      ...state,
+      wallet: { ...state.wallet, settings: { ...state.wallet.settings, tokensOrderBy: 'FDV' } },
+    }
+  },
+  onError: (state: any) => state,
+})

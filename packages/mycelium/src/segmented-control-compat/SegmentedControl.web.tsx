@@ -300,6 +300,8 @@ export function SegmentedControl<T extends string = string>({
                 optionNodesRef.current.delete(value)
               }
             },
+            // TODO(INFRA-4589): role="button" with aria-selected inside a tablist is invalid ARIA (aria-allowed-attr,
+            // aria-required-children), and every option is a tab stop: use role="tab" with a roving tabindex.
             role: !itemDisabled && href ? 'link' : 'button',
             // Disabled options leave the tab sequence and the arrow-key path (legacy).
             tabIndex: itemDisabled ? -1 : 0,

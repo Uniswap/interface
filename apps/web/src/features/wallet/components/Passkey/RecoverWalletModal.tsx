@@ -31,10 +31,10 @@ import { WalletConnectionResult } from 'uniswap/src/features/telemetry/types'
 import { shortenAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
-import { resetListAuthenticators } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
 import { getPrivyConfig } from '~/config'
 import { wagmiConfig } from '~/connection/wagmiConfig'
 import { walletTypeToAmplitudeWalletType } from '~/connection/walletConnect'
+import { resetListAuthenticators } from '~/features/wallet/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
 import { PasscodeStep } from '~/features/wallet/components/Passkey/AddBackupLoginSteps'
 import {
   AddPasskeyStep,

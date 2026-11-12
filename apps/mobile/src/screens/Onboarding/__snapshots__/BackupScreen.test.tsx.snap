@@ -58,6 +58,7 @@ exports[`BackupScreen > renders backup options when none are completed 1`] = `
                       style="box-shadow: 0px 1px 6px rgba(0,0,0,0.02); gap: 12px;"
                     >
                       <button
+                        accessibilityactions="[object Object]"
                         android_ripple="[object Object]"
                         data-testid="add-cloud-backup"
                         role="button"
@@ -134,6 +135,7 @@ exports[`BackupScreen > renders backup options when none are completed 1`] = `
                         </div>
                       </button>
                       <button
+                        accessibilityactions="[object Object]"
                         android_ripple="[object Object]"
                         data-testid="add-manual-backup"
                         role="button"
@@ -203,6 +205,7 @@ exports[`BackupScreen > renders backup options when none are completed 1`] = `
                 style="gap: 12px;"
               >
                 <button
+                  accessibilityactions="[object Object]"
                   android_ripple="[object Object]"
                   role="button"
                   style="background-color: transparent; gap: 8px;"
@@ -237,6 +240,7 @@ exports[`BackupScreen > renders backup options when none are completed 1`] = `
       style="padding-right: 16px; padding-left: 16px; top: 0px; right: 0px; left: 0px; z-index: 1020; pointer-events: box-none;"
     >
       <button
+        accessibilityactions="[object Object]"
         android_ripple="[object Object]"
         data-testid="onboarding-header-back"
         hitslop="24"
@@ -329,6 +333,7 @@ exports[`BackupScreen > renders backup options when some are completed 1`] = `
                       style="box-shadow: 0px 1px 6px rgba(0,0,0,0.02); gap: 12px;"
                     >
                       <button
+                        accessibilityactions="[object Object]"
                         android_ripple="[object Object]"
                         data-testid="add-cloud-backup"
                         role="button"
@@ -405,6 +410,7 @@ exports[`BackupScreen > renders backup options when some are completed 1`] = `
                         </div>
                       </button>
                       <button
+                        accessibilityactions="[object Object]"
                         android_ripple="[object Object]"
                         data-testid="add-manual-backup"
                         role="button"
@@ -474,6 +480,7 @@ exports[`BackupScreen > renders backup options when some are completed 1`] = `
                 style="gap: 12px;"
               >
                 <button
+                  accessibilityactions="[object Object]"
                   android_ripple="[object Object]"
                   role="button"
                   style="background-color: transparent; gap: 8px;"
@@ -508,6 +515,7 @@ exports[`BackupScreen > renders backup options when some are completed 1`] = `
       style="padding-right: 16px; padding-left: 16px; top: 0px; right: 0px; left: 0px; z-index: 1020; pointer-events: box-none;"
     >
       <button
+        accessibilityactions="[object Object]"
         android_ripple="[object Object]"
         data-testid="onboarding-header-back"
         hitslop="24"

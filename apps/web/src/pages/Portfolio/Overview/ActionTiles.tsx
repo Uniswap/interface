@@ -7,7 +7,7 @@ import { CopyAddressActionTile } from '~/components/ActionTiles/CopyAddressActio
 import { MoreActionTile } from '~/components/ActionTiles/MoreActionTile'
 import { ReceiveActionTile } from '~/components/ActionTiles/ReceiveActionTile'
 import { SendActionTile } from '~/components/ActionTiles/SendActionTile/SendActionTile'
-import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
+import { usePortfolioRoutes } from '~/hooks/usePortfolioRoutes/usePortfolioRoutes'
 
 const ACTION_TILE_GAP = 12
 const ACTION_TILE_WIDTH = `calc(50% - ${ACTION_TILE_GAP / 2}px)`

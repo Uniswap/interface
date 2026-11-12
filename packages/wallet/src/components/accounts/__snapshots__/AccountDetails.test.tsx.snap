@@ -180,7 +180,9 @@ exports[`AccountDetails > renders without error with chevron 1`] = `
         style="--c-tr: rotate(180deg);"
       >
         <svg
+          aria-hidden="true"
           fill="none"
+          focusable="false"
           stroke-width="8"
           style="width: 24px; height: 24px;"
           viewBox="0 0 24 24"

@@ -3,13 +3,13 @@ import { nearestUsableTick, TickMath } from '@uniswap/v3-sdk'
 import JSBI from 'jsbi'
 import { describe, expect, it } from 'vitest'
 import { buildSegmentsFromRawTicks } from '~/features/Liquidity/charts/D3LiquidityChartShared/utils/liquidityBucketing/liquidityBucketing'
+import { priceFromTick } from '~/features/Liquidity/utils/getTickToPrice'
 import {
   buildV2SyntheticPool,
   buildV2SyntheticTicksProcessed,
   V2_SYNTHETIC_BUCKETS_PER_SIDE,
   V2_SYNTHETIC_TICK_SPACING,
 } from '~/features/Liquidity/utils/v2SyntheticTicks'
-import { priceFromTick } from '~/pages/PoolDetails/components/ChartSection/DepthChart.utils'
 
 const TOKEN_18 = new Token(1, '0x0000000000000000000000000000000000000001', 18, 'T18')
 const TOKEN_18_B = new Token(1, '0x0000000000000000000000000000000000000002', 18, 'T18B')

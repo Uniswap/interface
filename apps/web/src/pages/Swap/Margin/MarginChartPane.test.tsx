@@ -1,9 +1,7 @@
 import { act, fireEvent, screen } from '@testing-library/react'
 import { TestID } from '@universe/test'
 import type { ReactNode } from 'react'
-import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { PriceChartData } from '~/components/Charts/PriceChart'
-import { DataQuality, PriceChartType } from '~/components/Charts/utils'
 import type { MarginMarket } from '~/constants/margin'
 import { getDefaultMarginMarket } from '~/pages/Swap/Margin/__fixtures__/marginCatalog'
 import { DEFAULT_MARGIN_CHART_PREFS, useMarginChartPrefs } from '~/pages/Swap/Margin/chart/marginChartPrefsStore'
@@ -15,6 +13,7 @@ import { setMarginChartHoveredCandle } from '~/pages/Swap/Margin/hooks/useMargin
 import { MARGIN_VOLUME_PANE_HEIGHT } from '~/pages/Swap/Margin/marginChartLayout'
 import { MarginChartPane } from '~/pages/Swap/Margin/MarginChartPane'
 import { render } from '~/test-utils/render'
+import { DataQuality, PriceChartType } from '~/utils/charts'
 
 // The pane's own data hook — the state machine under test is driven entirely by its return.
 // Keep the module's pure helpers (volatileLeg) real.
@@ -85,11 +84,11 @@ vi.mock('uniswap/src/features/transactions/margin/stores/marginFormStore/useMarg
 // positionsForMarket, types) pass through and only the wiring hook is stubbed.
 vi.mock('~/pages/Swap/Margin/chart/useMarginChartOverlays', async (importOriginal) => ({
   ...(await importOriginal<typeof import('~/pages/Swap/Margin/chart/useMarginChartOverlays')>()),
-  useMarginChartOverlays: vi.fn(() => ({ priceLines: [], markers: [] })),
+  useMarginChartOverlays: vi.fn(() => ({ priceLines: [] })),
 }))
 
-// Volume overlay data hook (spec F15): decoupled here so the state-machine test never touches the
-// historical-volumes query. Default OFF → the pane threads empty bars into the chart params.
+// Volume data hook (spec F15): decoupled here so the state-machine test never touches the
+// historical-volumes query. Defaults to no bars.
 vi.mock('~/pages/Swap/Margin/chart/useMarginVolume', () => ({
   useMarginVolume: vi.fn(() => ({ volumeBars: [] })),
 }))
@@ -155,15 +154,7 @@ function mockOverlays(overlays: MarginChartOverlays): void {
 describe('MarginChartPane state machine', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    // Default: no overlay output (each legend test opts in explicitly).
-    mockOverlays({ priceLines: [], markers: [] })
-  })
-
-  it('renders the chart settings gear in the timeframe row', () => {
-    mockChart(chartData({ candles: [candle()], loading: false }))
-    render(<MarginChartPane />)
-
-    expect(screen.getByTestId(TestID.MarginChartSettingsGear)).toBeInTheDocument()
+    mockOverlays({ priceLines: [] })
   })
 
   it('renders the split logo leading the pair identity', () => {
@@ -219,122 +210,6 @@ describe('MarginChartPane state machine', () => {
     expect(screen.getByText('No price history yet')).toBeInTheDocument()
     expect(screen.queryByTestId('margin-chart-mock')).not.toBeInTheDocument()
   })
-
-  it('renders the legend chip with PnL, live interest and venue when a legend is present', () => {
-    mockChart(chartData({ candles: [candle()], loading: false }))
-    mockOverlays({
-      priceLines: [],
-      markers: [],
-      positionsDataUpdatedAt: Date.now(),
-      legend: {
-        pair: 'ETH / USDC',
-        leverage: '2x',
-        venue: 'MORPHO',
-        pnlUsd: 514,
-        pnlPct: 30.24,
-        accruedUsd: 50,
-        ticker: {
-          normalizedAccrued: 50,
-          normalizedDebt: 1786,
-          apyBps: 400,
-          direction: MarginDirection.LONG,
-          mark: 2000,
-        },
-      },
-    })
-    render(<MarginChartPane />)
-
-    expect(screen.getByTestId(TestID.MarginChartLegendChip)).toBeInTheDocument()
-    expect(screen.getByText('ETH / USDC 2x')).toBeInTheDocument()
-    expect(screen.getByText(/PnL/)).toHaveTextContent('514')
-    expect(screen.getByText(/Interest/)).toHaveTextContent('50')
-    expect(screen.getByText('Morpho')).toBeInTheDocument()
-  })
-
-  it('omits the amount segments when a legend carries no PnL or interest', () => {
-    mockChart(chartData({ candles: [candle()], loading: false }))
-    mockOverlays({
-      priceLines: [],
-      markers: [],
-      legend: { pair: 'ETH / USDC', leverage: '2x', venue: 'MORPHO' },
-    })
-    render(<MarginChartPane />)
-
-    expect(screen.getByTestId(TestID.MarginChartLegendChip)).toBeInTheDocument()
-    expect(screen.queryByText(/PnL/)).not.toBeInTheDocument()
-    expect(screen.queryByText(/Interest/)).not.toBeInTheDocument()
-  })
-
-  // The chip's figures are computed at the POSITION's mark, so its cue tracks the positions poll —
-  // a stale markets poll dims the mark line instead.
-  it('renders the stale dot on the legend chip when its figures are stale', () => {
-    mockChart(chartData({ candles: [candle()], loading: false }))
-    mockOverlays({
-      priceLines: [],
-      markers: [],
-      figuresStale: true,
-      legend: { pair: 'ETH / USDC', leverage: '2x', venue: 'MORPHO' },
-    })
-    render(<MarginChartPane />)
-
-    expect(screen.getByTestId(TestID.MarginChartLegendStaleDot)).toBeInTheDocument()
-  })
-
-  it('omits the stale dot when the mark is fresh', () => {
-    mockChart(chartData({ candles: [candle()], loading: false }))
-    mockOverlays({
-      priceLines: [],
-      markers: [],
-      legend: { pair: 'ETH / USDC', leverage: '2x', venue: 'MORPHO' },
-    })
-    render(<MarginChartPane />)
-
-    expect(screen.getByTestId(TestID.MarginChartLegendChip)).toBeInTheDocument()
-    expect(screen.queryByTestId(TestID.MarginChartLegendStaleDot)).not.toBeInTheDocument()
-  })
-
-  it('reflects a fresh legend.accruedUsd at render when not ticking (no stale trap)', () => {
-    mockChart(chartData({ candles: [candle()], loading: false }))
-    mockOverlays({
-      priceLines: [],
-      markers: [],
-      legend: {
-        pair: 'ETH / USDC',
-        leverage: '2x',
-        venue: 'MORPHO',
-        accruedUsd: 50,
-        ticker: {
-          normalizedAccrued: 50,
-          normalizedDebt: 1786,
-          apyBps: 400,
-          direction: MarginDirection.LONG,
-          mark: 2000,
-        },
-      },
-    })
-    const { rerender } = render(<MarginChartPane />)
-    expect(screen.getByText(/Interest/)).toHaveTextContent('50')
-
-    mockOverlays({
-      priceLines: [],
-      markers: [],
-      legend: {
-        pair: 'ETH / USDC',
-        leverage: '2x',
-        venue: 'MORPHO',
-        accruedUsd: 80,
-        ticker: {
-          normalizedAccrued: 80,
-          normalizedDebt: 1786,
-          apyBps: 400,
-          direction: MarginDirection.LONG,
-          mark: 2000,
-        },
-      },
-    })
-    rerender(<MarginChartPane />)
-    expect(screen.getByText(/Interest/)).toHaveTextContent('80')
-  })
 })
 
 describe('MarginChartPane time windows, OHLC legend and volume pane', () => {
@@ -343,7 +218,7 @@ describe('MarginChartPane time windows, OHLC legend and volume pane', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-    mockOverlays({ priceLines: [], markers: [] })
+    mockOverlays({ priceLines: [] })
     useMarginChartPrefs.setState(DEFAULT_MARGIN_CHART_PREFS)
   })
 
@@ -382,7 +257,7 @@ describe('MarginChartPane time windows, OHLC legend and volume pane', () => {
     expect(legend).toHaveTextContent('C$96.00')
   })
 
-  it('keeps the volume pane off by default', () => {
+  it('draws no volume pane without bars', () => {
     mockChart(chartData({ candles: [up], loading: false }))
     render(<MarginChartPane />)
 
@@ -392,8 +267,7 @@ describe('MarginChartPane time windows, OHLC legend and volume pane', () => {
     expect(vi.mocked(useMarginChartOverlays).mock.lastCall?.[0].paneHeightPx).toBe(480)
   })
 
-  it('carves the volume pane out of the same box when the overlay is on', () => {
-    useMarginChartPrefs.setState({ volume: true })
+  it('carves the volume pane out of the same box when there are bars', () => {
     vi.mocked(useMarginVolume).mockImplementation(() => ({
       volumeBars: [{ time: up.time, value: 1_000 }],
     }))
@@ -410,7 +284,7 @@ describe('MarginChartPane time windows, OHLC legend and volume pane', () => {
 describe('MarginChartPane chart-style toggle (spec F14)', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    mockOverlays({ priceLines: [], markers: [] })
+    mockOverlays({ priceLines: [] })
     // The pane consumes the real persisted prefs store — reset to defaults (chartStyle: 'candles').
     useMarginChartPrefs.setState(DEFAULT_MARGIN_CHART_PREFS)
   })
@@ -497,7 +371,7 @@ describe('MarginChartPane vertical zoom', () => {
     useMarginChartPrefs.setState(DEFAULT_MARGIN_CHART_PREFS)
     pairKeyRef.current = 'test-pair'
     // Overlay bounds present → there is headroom to zoom away.
-    mockOverlays({ priceLines: [], markers: [], autoscaleBounds: { min: 1500, max: 3250 } })
+    mockOverlays({ priceLines: [], autoscaleBounds: { min: 1500, max: 3250 } })
   })
 
   it('renders the zoom pill in the control row at the default step, with out/reset disabled', () => {
@@ -517,7 +391,6 @@ describe('MarginChartPane vertical zoom', () => {
 
     expect(screen.queryByTestId(TestID.MarginChartZoomIn)).not.toBeInTheDocument()
     expect(screen.getByTestId(TestID.MarginChartStyleLine)).toBeInTheDocument()
-    expect(screen.getByTestId(TestID.MarginChartSettingsGear)).toBeInTheDocument()
   })
 
   it('steps the chart zoom param up to the cap (zoom-in disabling there) and back down', () => {
@@ -573,7 +446,7 @@ describe('MarginChartPane vertical zoom', () => {
   })
 
   it('does not zoom in when overlays provide no autoscale bounds (already candle-fit)', () => {
-    mockOverlays({ priceLines: [], markers: [] })
+    mockOverlays({ priceLines: [] })
     mockChart(chartData({ candles: [candle()], loading: false }))
     render(<MarginChartPane />)
 
@@ -587,7 +460,7 @@ describe('MarginChartPane vertical zoom', () => {
 describe('MarginChartPane when the market cannot be resolved', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    mockOverlays({ priceLines: [], markers: [] })
+    mockOverlays({ priceLines: [] })
     mockMarketsUnresolved.current = true
     mockMarketsError.current = new Error('boom')
   })
@@ -626,7 +499,7 @@ describe('MarginStatsStrip venue keying', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-    mockOverlays({ priceLines: [], markers: [] })
+    mockOverlays({ priceLines: [] })
     mockChart(chartData({ candles: [candle()] }))
     mockPairMarkets.current = [MORPHO, AAVE]
     mockLiveByKey.current = new Map([
@@ -651,7 +524,7 @@ describe('MarginStatsStrip venue keying', () => {
   })
 
   it('keys the quoted venue once the quote has one', () => {
-    mockOverlays({ priceLines: [], markers: [], routedVenue: 'AAVE_V3' })
+    mockOverlays({ priceLines: [], routedVenue: 'AAVE_V3' })
     render(<MarginChartPane />)
 
     expect(screen.getByText('Borrow APY 5.10%')).toBeInTheDocument()
@@ -662,7 +535,7 @@ describe('MarginStatsStrip venue keying', () => {
 
   // A venue the pair no longer offers (a stale quote across a market switch) must not blank the strip.
   it('falls back to the pair group when the quoted venue is not one of its markets', () => {
-    mockOverlays({ priceLines: [], markers: [], routedVenue: 'AAVE_V4' })
+    mockOverlays({ priceLines: [], routedVenue: 'AAVE_V4' })
     render(<MarginChartPane />)
 
     expect(screen.getByText('Borrow APY 4.20%')).toBeInTheDocument()

@@ -11,6 +11,7 @@ exports[`PoolDetailsStatsButton > loading skeleton shown correctly 1`] = `
       style="--c-w: 50%;"
     >
       <div
+        aria-busy="true"
         class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
         style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
       >
@@ -28,6 +29,7 @@ exports[`PoolDetailsStatsButton > loading skeleton shown correctly 1`] = `
       style="--c-w: 50%;"
     >
       <div
+        aria-busy="true"
         class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
         style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
       >
@@ -63,7 +65,9 @@ exports[`PoolDetailsStatsButton > renders both buttons correctly 1`] = `
             class="inline-flex shrink-0 items-center justify-center [&_svg]:shrink-0 [&_svg]:size-[20.7px] text-accent1 group-hover/sbtn:text-accent1-hovered"
           >
             <svg
+              aria-hidden="true"
               fill="none"
+              focusable="false"
               stroke-width="8"
               style="color: currentColor; width: 20.7px; height: 20.7px;"
               viewBox="0 0 24 24"
@@ -90,7 +94,9 @@ exports[`PoolDetailsStatsButton > renders both buttons correctly 1`] = `
             class="inline-flex shrink-0 items-center justify-center [&_svg]:shrink-0 [&_svg]:size-[20.7px] text-accent1 group-hover/sbtn:text-accent1-hovered"
           >
             <svg
+              aria-hidden="true"
               fill="none"
+              focusable="false"
               stroke-width="8"
               style="color: currentColor; width: 20.7px; height: 20.7px;"
               viewBox="0 0 24 24"

@@ -154,7 +154,7 @@ describe('useResolveMarginMarket', () => {
       maxLeverage: '5',
       lltv: '860000000000000000',
       oraclePrice: '2000000000000000000000',
-      venues: [
+      venueMarkets: [
         {
           venue: 'MORPHO',
           adapter: '0x0000000000000000000000000000000000000001',

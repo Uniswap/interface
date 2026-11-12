@@ -19,10 +19,11 @@ import { ElementName, InterfacePageName, SectionName, UniswapEventName } from 'u
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { parseChainFromTokenSearchQuery } from 'uniswap/src/utils/search/parseChainFromTokenSearchQuery'
+import { SearchInput } from '~/components/SearchInput/SearchInput'
+import { PortfolioTab } from '~/hooks/usePortfolioRoutes/types'
+import { usePortfolioRoutes } from '~/hooks/usePortfolioRoutes/usePortfolioRoutes'
 import { useIsSynchronizedHeartbeatEnabled } from '~/lib/hooks/useHeartbeatCoordinator'
 import { PortfolioBalanceCountIndicator } from '~/pages/Portfolio/components/PortfolioBalanceCountIndicator'
-import { SearchInput } from '~/pages/Portfolio/components/SearchInput'
-import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
 import { usePortfolioAddresses } from '~/pages/Portfolio/hooks/usePortfolioAddresses'
 import { usePortfolioHeartbeatEnabled } from '~/pages/Portfolio/hooks/usePortfolioHeartbeatCoordinator'
 import { useShowDemoView } from '~/pages/Portfolio/hooks/useShowDemoView'
@@ -30,7 +31,6 @@ import { useTransformTokenTableData } from '~/pages/Portfolio/Tokens/hooks/useTr
 import { TokensAllocationChart } from '~/pages/Portfolio/Tokens/Table/TokensAllocationChart'
 import { TokensTable } from '~/pages/Portfolio/Tokens/Table/TokensTable'
 import { filterTokensBySearch } from '~/pages/Portfolio/Tokens/utils/filterTokensBySearch'
-import { PortfolioTab } from '~/pages/Portfolio/types'
 
 // Disabled until polished in future projects
 const SHOW_TOKEN_ALLOCATION_CHART = false

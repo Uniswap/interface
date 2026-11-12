@@ -3,9 +3,9 @@ import { type ReactNode, useCallback, useMemo } from 'react'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { getWrappedTokenIfExists } from 'uniswap/src/utils/currency'
 import { areCurrenciesEqual } from 'uniswap/src/utils/currencyId'
+import { useCreateLiquidityContext } from '~/features/Liquidity/Create/CreateLiquidityContextProvider'
 import { UnwrapNativeCurrencyToggle } from '~/features/Liquidity/UnwrapNativeCurrencyToggle'
 import { canUnwrapCurrency } from '~/features/Liquidity/utils/currency'
-import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 import { PositionField } from '~/types/position'
 
 /**

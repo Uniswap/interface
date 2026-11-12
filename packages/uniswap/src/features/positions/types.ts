@@ -95,6 +95,8 @@ interface BasePositionInfo {
   createdAt?: number
   /** Live LP-incentive APR boosts on this position's pool, one entry per reward token. Unset when the pool runs no live campaign (always unset for v2 pairs, which have none). */
   rewards?: PositionRewardApr[]
+  /** The pool's backend-served quote token is token0, so the pair displays as token1 / token0. See `isToken0Quote`. */
+  isToken0Quote?: boolean
 }
 
 export type V2PairInfo = BasePositionInfo & {

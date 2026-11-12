@@ -57,7 +57,7 @@ const Clipboard: IClipboard = {
     if (clipboard) {
       try {
         await clipboard.writeText(value)
-        return
+        return true
       } catch (error) {
         logger.debug('clipboard.web', 'setClipboard', 'Clipboard API failed, trying fallback', { error })
       }
@@ -68,6 +68,7 @@ const Clipboard: IClipboard = {
         tags: { file: 'clipboard.web', function: 'setClipboard' },
       })
     }
+    return success
   },
   getClipboard: async () => {
     const clipboard = getClipboardAPI()
@@ -88,7 +89,7 @@ const Clipboard: IClipboard = {
   },
 }
 
-export async function setClipboard(value: string): Promise<void> {
+export async function setClipboard(value: string): Promise<boolean> {
   return Clipboard.setClipboard(value)
 }
 

@@ -1,8 +1,8 @@
+import { ONE_DAY_MS, ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { describe, expect, it, vi } from 'vitest'
 import {
   CREATE_AUCTION_MIN_START_LEAD_TIME_MINUTES,
   DEFAULT_PRE_BID_DURATION_MINUTES,
-  MS_PER_DAY,
   getDurationInvalidReason,
   getEffectivePreBidStartTime,
   getMinEmissionStartTime,
@@ -12,17 +12,15 @@ import {
   shiftEndTimeToPreserveDuration,
 } from '~/pages/Liquidity/CreateAuction/utils/duration'
 
-const MS_PER_MINUTE = 60_000
-
 describe('seedPreBidWindow', () => {
   it('places the window in front of a start date that has room for it', () => {
-    const startTime = new Date(Date.now() + MS_PER_DAY)
+    const startTime = new Date(Date.now() + ONE_DAY_MS)
 
     const seeded = seedPreBidWindow(startTime)
 
     expect(seeded.startTime).toBe(startTime)
     expect(startTime.getTime() - seeded.preBidStartTime.getTime()).toBe(
-      DEFAULT_PRE_BID_DURATION_MINUTES * MS_PER_MINUTE,
+      DEFAULT_PRE_BID_DURATION_MINUTES * ONE_MINUTE_MS,
     )
   })
 
@@ -32,14 +30,14 @@ describe('seedPreBidWindow', () => {
     // Leaves the start date for the creator — the module's empty state in the design.
     expect(seeded.startTime).toBeUndefined()
     expect(seeded.preBidStartTime.getTime()).toBeGreaterThanOrEqual(
-      Date.now() + (CREATE_AUCTION_MIN_START_LEAD_TIME_MINUTES - 1) * MS_PER_MINUTE,
+      Date.now() + (CREATE_AUCTION_MIN_START_LEAD_TIME_MINUTES - 1) * ONE_MINUTE_MS,
     )
   })
 
   it('pushes the start date out when there is no room in front of it', () => {
     // Only just past the minimum lead — clamping the pre-bid start alone would put it at or
     // after the emission start, i.e. a module that is invalid the instant it is added.
-    const startTime = new Date(Date.now() + (CREATE_AUCTION_MIN_START_LEAD_TIME_MINUTES + 1) * MS_PER_MINUTE)
+    const startTime = new Date(Date.now() + (CREATE_AUCTION_MIN_START_LEAD_TIME_MINUTES + 1) * ONE_MINUTE_MS)
 
     const seeded = seedPreBidWindow(startTime)
 
@@ -47,16 +45,16 @@ describe('seedPreBidWindow', () => {
     expect(seeded.startTime!.getTime()).toBeGreaterThan(startTime.getTime())
     // The invariant that matters: adding the module always lands in a valid state.
     expect(seeded.preBidStartTime.getTime()).toBeLessThan(seeded.startTime!.getTime())
-    expect(seeded.preBidStartTime.getTime()).toBeGreaterThanOrEqual(getMinStartTime().getTime() - MS_PER_MINUTE)
+    expect(seeded.preBidStartTime.getTime()).toBeGreaterThanOrEqual(getMinStartTime().getTime() - ONE_MINUTE_MS)
   })
 })
 
 describe('shiftEndTimeToPreserveDuration', () => {
-  const START = new Date(Date.now() + MS_PER_DAY)
-  const END = new Date(START.getTime() + 5 * MS_PER_DAY)
+  const START = new Date(Date.now() + ONE_DAY_MS)
+  const END = new Date(START.getTime() + 5 * ONE_DAY_MS)
 
   it('pushes the end date out by the same delta the start date moved', () => {
-    const nextStartTime = new Date(START.getTime() + 2 * MS_PER_DAY)
+    const nextStartTime = new Date(START.getTime() + 2 * ONE_DAY_MS)
 
     const shifted = shiftEndTimeToPreserveDuration({ previousStartTime: START, nextStartTime, endTime: END })
 
@@ -94,7 +92,7 @@ describe('shiftEndTimeToPreserveDuration', () => {
   })
 
   it('keeps a valid range valid — the end date can never be overtaken by the start it follows', () => {
-    const nextStartTime = new Date(END.getTime() + MS_PER_DAY)
+    const nextStartTime = new Date(END.getTime() + ONE_DAY_MS)
 
     const shifted = shiftEndTimeToPreserveDuration({ previousStartTime: START, nextStartTime, endTime: END })
 
@@ -104,7 +102,7 @@ describe('shiftEndTimeToPreserveDuration', () => {
 
 describe('isPreBidRangeValid', () => {
   it('accepts a window that opens before emission begins, and rejects one that does not', () => {
-    const startTime = new Date(Date.now() + MS_PER_DAY)
+    const startTime = new Date(Date.now() + ONE_DAY_MS)
 
     expect(isPreBidRangeValid({ startTime, preBidStartTime: new Date(startTime.getTime() - 60_000) })).toBe(true)
     expect(isPreBidRangeValid({ startTime, preBidStartTime: startTime })).toBe(false)
@@ -112,7 +110,7 @@ describe('isPreBidRangeValid', () => {
   })
 
   it('accepts no window at all', () => {
-    expect(isPreBidRangeValid({ startTime: new Date(Date.now() + MS_PER_DAY), preBidStartTime: undefined })).toBe(true)
+    expect(isPreBidRangeValid({ startTime: new Date(Date.now() + ONE_DAY_MS), preBidStartTime: undefined })).toBe(true)
     expect(isPreBidRangeValid({ startTime: undefined, preBidStartTime: undefined })).toBe(true)
   })
 
@@ -128,7 +126,7 @@ describe('isPreBidRangeValid', () => {
 
 describe('getEffectivePreBidStartTime', () => {
   it('keeps the configured window in the manual wizard', () => {
-    const preBidStartTime = new Date(Date.now() + MS_PER_DAY)
+    const preBidStartTime = new Date(Date.now() + ONE_DAY_MS)
 
     expect(getEffectivePreBidStartTime({ preBidStartTime, isQuickLaunch: false })).toBe(preBidStartTime)
   })
@@ -137,14 +135,14 @@ describe('getEffectivePreBidStartTime', () => {
   // nor any surface describing it — the review step's rows and the launch-time staleness guard.
   it('drops a window that survived a switch into quick launch', () => {
     expect(
-      getEffectivePreBidStartTime({ preBidStartTime: new Date(Date.now() + MS_PER_DAY), isQuickLaunch: true }),
+      getEffectivePreBidStartTime({ preBidStartTime: new Date(Date.now() + ONE_DAY_MS), isQuickLaunch: true }),
     ).toBeUndefined()
   })
 })
 
 describe('getDurationInvalidReason', () => {
-  const FUTURE_START = new Date(Date.now() + MS_PER_DAY)
-  const FUTURE_END = new Date(Date.now() + 6 * MS_PER_DAY)
+  const FUTURE_START = new Date(Date.now() + ONE_DAY_MS)
+  const FUTURE_END = new Date(Date.now() + 6 * ONE_DAY_MS)
 
   it('returns undefined for a launchable window', () => {
     expect(
@@ -199,7 +197,7 @@ describe('getMinEmissionStartTime', () => {
 
   it('raises the floor above a future pre-bid start', () => {
     const preBid = new Date(Date.now() + 2 * 60 * 60_000)
-    expect(getMinEmissionStartTime(preBid).getTime()).toBe(preBid.getTime() + MS_PER_MINUTE)
+    expect(getMinEmissionStartTime(preBid).getTime()).toBe(preBid.getTime() + ONE_MINUTE_MS)
   })
 
   it('never drops the floor into the past when the pre-bid start has elapsed', () => {

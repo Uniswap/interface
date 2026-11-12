@@ -20,7 +20,8 @@ export const TokenDetailsAbout = memo(function TokenDetailsAboutInner(): JSX.Ele
 
   const { currencyId, tokenColor } = useTokenDetailsContext()
 
-  const { name, description, descriptionTranslations } = useTokenMetadata(currencyId)
+  const { data: metadata } = useTokenMetadata(currencyId)
+  const { name, description, descriptionTranslations } = metadata ?? {}
   const currentDescription = getTranslation(descriptionTranslations, currentLanguage) ?? description
 
   if (!currentDescription) {

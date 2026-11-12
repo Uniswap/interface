@@ -34,15 +34,15 @@ const TableHeaderText = forwardRef<HTMLElement, TextCompatProps>(function TableH
 export function PoolDetailsTableTab({
   poolAddress,
   chainId,
-  token0,
-  token1,
+  baseToken,
+  quoteToken,
   isPoolDataLoading,
   showWalletPositions = true,
 }: {
   poolAddress: string
   chainId: UniverseChainId
-  token0?: ParsedToken
-  token1?: ParsedToken
+  baseToken?: ParsedToken
+  quoteToken?: ParsedToken
   isPoolDataLoading?: boolean
   /** False when the page lists the wallet's positions elsewhere, which drops the Positions tab. */
   showWalletPositions?: boolean
@@ -86,8 +86,8 @@ export function PoolDetailsTableTab({
       ) : (
         <PoolDetailsTransactionsTable
           poolAddress={poolAddress}
-          token0={token0}
-          token1={token1}
+          baseToken={baseToken}
+          quoteToken={quoteToken}
           isPoolDataLoading={isPoolDataLoading}
         />
       )}

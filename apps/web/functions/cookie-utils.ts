@@ -2,7 +2,7 @@
  * Cookie utilities for rewriting Set-Cookie headers from the Entry Gateway proxy.
  *
  * The backend sets cookies with Domain=.uniswap.org and __Host-/__Secure- prefixes.
- * On Vercel previews (*.vercel.app) or staging domains, the browser silently drops
+ * On hosts outside .uniswap.org (e.g. localhost), the browser silently drops
  * these cookies because the domain doesn't match. This causes session-based flows
  * (InitSession -> RequestChallenge) to fail with "no session id provided".
  *

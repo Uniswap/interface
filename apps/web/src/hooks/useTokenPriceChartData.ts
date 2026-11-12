@@ -14,21 +14,20 @@ import { toRestHistoryDuration } from 'uniswap/src/features/dataApi/tokenDetails
 import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import { isRefreshingAgedPrice } from 'uniswap/src/features/prices/isRefreshingAgedPrice'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
+import { useIsWindowVisible } from 'utilities/src/react/useIsWindowVisible'
 import { isQueryLoading } from 'utilities/src/reactQuery/isQueryLoading'
-import { PriceChartData } from '~/components/Charts/PriceChart'
+import { TimePeriod } from '~/data/util'
+import { useRestHistoryTarget } from '~/hooks/useRestHistoryTarget'
 import {
   ChartQueryResult,
   ChartType,
   checkDataQuality,
   DataQuality,
   getCurrentUTCTimestamp,
-  isZeroOhlcSeries,
+  PriceChartData,
   PriceChartType,
-} from '~/components/Charts/utils'
-import { TimePeriod } from '~/data/util'
-import { useRestHistoryTarget } from '~/hooks/useRestHistoryTarget'
-import { usePageVisibility } from '~/lib/hooks/usePageVisibility'
-import { getTdpTokenPriceHistoryQueryOptions } from '~/pages/TokenDetails/tdpTokenQueryOptions'
+} from '~/utils/charts'
+import { getTokenPriceHistoryQueryOptions } from '~/utils/tokenQueryOptions'
 
 export type TokenPriceChartQueryVariables = {
   chainId: UniverseChainId
@@ -81,6 +80,15 @@ export function toStrictlyAscendingByTime(entries: PriceChartData[]): PriceChart
 }
 
 export const CANDLESTICK_FALLBACK_THRESHOLD = 0.1
+
+/** Backend sometimes returns invalid OHLC data on some chains: a long run of 0-valued candles. Used to trigger a fallback to price history. */
+export function isZeroOhlcSeries(entries: { value: number }[]): boolean {
+  if (!entries.length) {
+    return true
+  }
+  const zeroCount = entries.filter((entry) => entry.value === 0).length
+  return zeroCount / entries.length > CANDLESTICK_FALLBACK_THRESHOLD
+}
 
 /**
  * Merges an ascending series into `resolutionSeconds` candles on the absolute time grid: first open, max
@@ -164,7 +172,7 @@ export function useTokenPriceChartData({
   keepPreviousData?: boolean
 }): ChartQueryResult<PriceChartData, ChartType.PRICE> & { disableCandlestickUI: boolean } {
   const [fallback, enablePriceHistoryFallback] = useReducer(() => true, false)
-  const isVisible = usePageVisibility()
+  const isVisible = useIsWindowVisible()
 
   // Fetch CoinGecko data for line charts to prefer its priceHistory
   // Construct currencyId from chain and address for the CoinGecko query
@@ -202,7 +210,7 @@ export function useTokenPriceChartData({
     }),
   )
   const restPriceQuery = useQuery(
-    getTdpTokenPriceHistoryQueryOptions({
+    getTokenPriceHistoryQueryOptions({
       target: restTarget,
       duration: variables.duration,
       enabled: restCommonEnabled && !useRestOhlc,

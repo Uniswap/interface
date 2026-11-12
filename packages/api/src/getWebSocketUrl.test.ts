@@ -55,9 +55,4 @@ describe('getWebSocketUrl', () => {
     setConfig({ enableEntryGatewayProxy: true })
     expect(getWebSocketUrl()).toBe('/ws')
   })
-
-  it('bypasses the proxy path on Vercel, which cannot forward a socket', () => {
-    setConfig({ enableEntryGatewayProxy: true, isVercelEnvironment: true })
-    expect(getWebSocketUrl()).toBe('wss://entry-gateway.backend-staging.api.uniswap.org/ws')
-  })
 })

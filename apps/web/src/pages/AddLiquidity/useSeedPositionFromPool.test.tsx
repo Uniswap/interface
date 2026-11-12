@@ -1,11 +1,11 @@
 import { renderHook } from '@testing-library/react'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import type { PoolData } from '~/data/pools/poolData'
+import { useCreateLiquidityContext } from '~/features/Liquidity/Create/CreateLiquidityContextProvider'
 import type { PositionState } from '~/features/Liquidity/Create/types'
 import { useSeedPositionFromPool } from '~/pages/AddLiquidity/useSeedPositionFromPool'
-import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 
-vi.mock('~/pages/CreatePosition/CreateLiquidityContextProvider', () => ({ useCreateLiquidityContext: vi.fn() }))
+vi.mock('~/features/Liquidity/Create/CreateLiquidityContextProvider', () => ({ useCreateLiquidityContext: vi.fn() }))
 
 const HOOK = '0x1111111111111111111111111111111111110080'
 const FEE = { feeAmount: 3000, tickSpacing: 60, isDynamic: false }

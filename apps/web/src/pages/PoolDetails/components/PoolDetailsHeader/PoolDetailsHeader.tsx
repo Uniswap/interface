@@ -4,6 +4,7 @@ import { Flex, Text } from '@universe/mycelium'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { CopyHelper } from 'uniswap/src/components/CopyHelper/CopyHelper'
 import type { ParsedToken } from 'uniswap/src/features/dataApi/utils/parsedToken'
+import { getPoolName } from 'uniswap/src/features/pools/names'
 import type { FeeData } from 'uniswap/src/features/positions/types'
 import { shortenHash } from 'utilities/src/addresses'
 import { getPoolHeaderColumnGapProps } from '~/components/StickyCollapsibleHeader/getHeaderLogoSize'
@@ -18,11 +19,18 @@ import { PoolDetailsTitle } from '~/pages/PoolDetails/components/PoolDetailsHead
 interface PoolDetailsHeaderProps {
   chainId?: number
   poolAddress?: string
+  /** Display order */
+  baseToken?: ParsedToken
+  quoteToken?: ParsedToken
+  /** Pool order */
   token0?: ParsedToken
   token1?: ParsedToken
+  isToken0Quote?: boolean
   feeTier?: FeeData
   /** Integer pips, served alongside the fee tier by the page's `GetPool` row. */
   protocolFeePips?: number
+  /** The pool's live LP fee (integer pips); what a dynamic tier's badge shows. */
+  currentLpFeePips?: number
   protocolVersion?: ProtocolVersion
   toggleReversed: React.DispatchWithoutAction
   loading?: boolean
@@ -35,10 +43,14 @@ interface PoolDetailsHeaderProps {
 function PoolDetailsHeaderContent({
   chainId,
   poolAddress,
+  baseToken,
+  quoteToken,
   token0,
   token1,
+  isToken0Quote,
   feeTier,
   protocolFeePips,
+  currentLpFeePips,
   protocolVersion,
   hookAddress,
   categoryIds,
@@ -46,7 +58,7 @@ function PoolDetailsHeaderContent({
   isCompact,
 }: Omit<PoolDetailsHeaderProps, 'loading'>): JSX.Element {
   const media = useMedia()
-  const poolName = `${token0?.symbol} / ${token1?.symbol}`
+  const poolName = getPoolName({ symbol0: baseToken?.symbol, symbol1: quoteToken?.symbol, spaced: true }) ?? ''
   const poolChainId = chainId as UniverseChainId | undefined
 
   const badges = (
@@ -58,6 +70,7 @@ function PoolDetailsHeaderContent({
         v4hook={hookAddress}
         chainId={poolChainId}
         feeTier={feeTier}
+        currentLpFeePips={currentLpFeePips}
         protocolFeePips={protocolFeePips}
         size={media.md ? 'compact' : 'default'}
       />
@@ -69,12 +82,18 @@ function PoolDetailsHeaderContent({
       <Flex row alignItems="center" justifyContent="space-between" width="100%" gap="$gap8">
         <Flex row flex={1} minWidth={0} alignItems="center" gap="$gap12">
           {/* Desktop shows the network on row 2, so the logo badge is redundant; mobile hides that row and keeps the badge. */}
-          <AnimatedDoubleLogo token0={token0} token1={token1} isCompact={isCompact} stacked includeNetwork={media.md} />
+          <AnimatedDoubleLogo
+            token0={baseToken}
+            token1={quoteToken}
+            isCompact={isCompact}
+            stacked
+            includeNetwork={media.md}
+          />
           <Flex minWidth={0} shrink {...getPoolHeaderColumnGapProps(isCompact)}>
             <Flex row flex={1} minWidth={0} alignItems="flex-end" gap="$gap8" $md={{ width: '100%' }}>
               <PoolDetailsTitle
-                token0={token0}
-                token1={token1}
+                baseToken={baseToken}
+                quoteToken={quoteToken}
                 chainId={poolChainId}
                 toggleReversed={toggleReversed}
                 poolAddress={poolAddress}
@@ -114,8 +133,11 @@ function PoolDetailsHeaderContent({
           chainId={poolChainId}
           poolAddress={poolAddress}
           poolName={poolName}
+          baseToken={baseToken}
+          quoteToken={quoteToken}
           token0={token0}
           token1={token1}
+          isToken0Quote={isToken0Quote}
           protocolVersion={protocolVersion}
         />
       </Flex>

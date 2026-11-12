@@ -75,27 +75,17 @@ export const TokenItem = memo(function TokenItemInner({
   // Rows stay mounted ~3 screens past the viewport; animating all of them exhausted native memory.
   const isViewable = useIsRowViewable(rowKey)
 
-  const {
-    name,
-    logoUrl,
-    chainId,
-    address,
-    symbol,
-    price,
-    marketCap,
-    pricePercentChange24h,
-    volume24h,
-    totalValueLocked,
-  } = tokenItemData
+  const { name, logoUrl, chainId, address, symbol, price, fdv, pricePercentChange24h, volume24h, totalValueLocked } =
+    tokenItemData
   const _currencyId = address ? buildCurrencyId(chainId, address) : buildNativeCurrencyId(chainId)
-  const marketCapFormatted = convertFiatAmountFormatted(marketCap, NumberType.FiatTokenDetails)
+  const fdvFormatted = convertFiatAmountFormatted(fdv, NumberType.FiatTokenDetails)
   const volume24hFormatted = convertFiatAmountFormatted(volume24h, NumberType.FiatTokenDetails)
   const totalValueLockedFormatted = convertFiatAmountFormatted(totalValueLocked, NumberType.FiatTokenDetails)
 
   const metadataSubtitle = useMemo((): string | undefined => {
     switch (metadataDisplayType) {
-      case TokenMetadataDisplayType.MarketCap:
-        return t('explore.tokens.metadata.marketCap', { number: marketCapFormatted })
+      case TokenMetadataDisplayType.Fdv:
+        return t('explore.tokens.metadata.fdv', { number: fdvFormatted })
       case TokenMetadataDisplayType.Volume:
         return t('explore.tokens.metadata.volume', { number: volume24hFormatted })
       case TokenMetadataDisplayType.TVL:
@@ -107,7 +97,7 @@ export const TokenItem = memo(function TokenItemInner({
       default:
         return undefined
     }
-  }, [metadataDisplayType, marketCapFormatted, volume24hFormatted, totalValueLockedFormatted, symbol, t])
+  }, [metadataDisplayType, fdvFormatted, volume24hFormatted, totalValueLockedFormatted, symbol, t])
 
   const onLayout = useEvent((e: LayoutChangeEvent): void => {
     onPriceWrapperLayout?.(e.nativeEvent.layout)

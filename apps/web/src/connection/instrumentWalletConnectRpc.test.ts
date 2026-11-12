@@ -1,6 +1,7 @@
 import { type RpcErrorContext, type RpcObserver, UniverseChainId } from '@universe/chains'
 import { getRpcObserver, setRpcObserver } from '@universe/chains'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import type { Mock } from 'vitest'
 import type { CreateConnectorFn } from 'wagmi'
 import { instrumentWalletConnectRpc } from '~/connection/instrumentWalletConnectRpc'
 
@@ -18,7 +19,7 @@ function instantiate(provider: FakeProvider): { getProvider: () => Promise<FakeP
 }
 
 describe('instrumentWalletConnectRpc', () => {
-  let onError: ReturnType<typeof vi.fn>
+  let onError: Mock
   let originalObserver: RpcObserver
 
   beforeEach(() => {

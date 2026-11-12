@@ -6,20 +6,24 @@ import { ChartPie } from '@universe/mycelium/icons/ChartPie'
 import { ChartPyramid } from '@universe/mycelium/icons/ChartPyramid'
 import { GlobeFilled } from '@universe/mycelium/icons/GlobeFilled'
 import { InfoCircleFilled } from '@universe/mycelium/icons/InfoCircleFilled'
+import { Pools } from '@universe/mycelium/icons/Pools'
 import { TrendDown } from '@universe/mycelium/icons/TrendDown'
 import { TrendUp } from '@universe/mycelium/icons/TrendUp'
 import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
+import { TestID } from '@universe/test'
 import React, { memo, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
 import { StatsRow } from 'src/components/TokenDetails/TokenDetailsStats/StatsRow'
 import { StatValue } from 'src/components/TokenDetails/TokenDetailsStats/StatValue'
+import { TvlBreakdownModal } from 'src/components/TokenDetails/TokenDetailsStats/TvlBreakdownModal'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { NetworkPile } from 'uniswap/src/components/network/NetworkPile/NetworkPile'
 import { selectHasViewedContractAddressExplainer } from 'uniswap/src/features/behaviorHistory/selectors'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { getTokenTvlBreakdown } from 'uniswap/src/features/dataApi/tokenDetails/tokenMarketStatsUtils'
 import { useTokenMarketStats } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -42,9 +46,13 @@ export const TokenDetailsMarketData = memo(function TokenDetailsMarketDataInner(
     initialIsMultichainAsset,
     multichainTokens,
     hasMultichainAddresses,
+    currencyInfo,
   } = useTokenDetailsContext()
   const hasViewedContractAddressExplainer = useSelector(selectHasViewedContractAddressExplainer)
   const [showVolumeInfo, setShowVolumeInfo] = useState(false)
+  const [showTvlBreakdown, setShowTvlBreakdown] = useState(false)
+  const openTvlBreakdown = useCallback((): void => setShowTvlBreakdown(true), [])
+  const closeTvlBreakdown = useCallback((): void => setShowTvlBreakdown(false), [])
 
   const networkChainIds = useMemo((): UniverseChainId[] => {
     if (!hasMultichainAddresses) {
@@ -90,10 +98,13 @@ export const TokenDetailsMarketData = memo(function TokenDetailsMarketDataInner(
     volume,
     high52w,
     low52w,
+    tvl,
+    poolsTvl,
     isLoading: isStatsLoading,
   } = useTokenMarketStats(currencyId, {
     isMultichainAggregateView: initialIsMultichainAsset || hasMultichainAddresses,
   })
+  const tvlBreakdown = getTokenTvlBreakdown({ tvl, poolsTvl })
 
   const hasLimitedVolumeData = chainId === UniverseChainId.Tempo
 
@@ -107,6 +118,19 @@ export const TokenDetailsMarketData = memo(function TokenDetailsMarketDataInner(
 
   return (
     <Flex gap="$spacing8">
+      <TouchableArea disabled={!tvlBreakdown} testID={TestID.TokenDetailsStatsTvl} onPress={openTvlBreakdown}>
+        <StatsRow
+          label={t('common.totalValueLocked')}
+          statsIcon={<Pools color={tokenColor ?? defaultTokenColor} size="$icon.16" />}
+        >
+          <StatValue
+            isLoading={isStatsLoading}
+            numericValue={tvl ?? undefined}
+            formattedValue={convertFiatAmountFormatted(tvl, NumberType.FiatTokenStats)}
+          />
+        </StatsRow>
+      </TouchableArea>
+
       <StatsRow
         label={t('token.stats.marketCap')}
         statsIcon={<ChartPie color={tokenColor ?? defaultTokenColor} size="$icon.16" />}
@@ -171,6 +195,14 @@ export const TokenDetailsMarketData = memo(function TokenDetailsMarketDataInner(
         tokenColor={tokenColor}
         onMultichainNetworksRowPress={onMultichainNetworksRowPress}
       />
+
+      {showTvlBreakdown && tvlBreakdown && (
+        <TvlBreakdownModal
+          breakdown={tvlBreakdown}
+          symbol={currencyInfo?.currency.symbol ?? t('common.token')}
+          onClose={closeTvlBreakdown}
+        />
+      )}
 
       {hasLimitedVolumeData && (
         <WarningModal

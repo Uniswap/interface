@@ -87,6 +87,8 @@ export function InlineCardCompat({
           {headingElement}
           {descriptionElement}
         </FlexCompat>
+        {/* TODO(INFRA-4589): the icon-only call-to-action has no name and no prop to give it one
+            (button-name). Add a label prop for it. */}
         {CtaButtonIcon && (
           <TouchableAreaCompat onPress={onPressCtaButton}>
             <CtaButtonIcon color={CtaButtonIconColor} size={iconSize} />

@@ -170,6 +170,8 @@ export const TouchableAreaCompat = React.forwardRef<HTMLElement, TouchableAreaCo
 
     const anchorMode = modifierPressHref !== undefined
     const tag = anchorMode ? 'a' : props.tag
+    // TODO(INFRA-4589): role="button" is focusable but doesn't activate on Enter or Space: compat/dom.tsx wires
+    // onPress to onClick only. Every TouchableArea-based control inherits this.
     const role = props.role ?? (anchorMode ? 'link' : 'button')
     const unfocusable = props.disabled === true || props.focusable === false
     const tabIndex = props.tabIndex ?? (unfocusable ? -1 : anchorMode || !TABBABLE_ROLES.has(role) ? undefined : 0)

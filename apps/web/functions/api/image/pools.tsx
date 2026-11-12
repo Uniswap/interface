@@ -36,20 +36,20 @@ function UnknownTokenImage({ symbol }: { symbol?: string }) {
 }
 
 export function PoolImage({
-  token0ImageUrl,
-  token1ImageUrl,
-  tokenSymbol0,
-  tokenSymbol1,
+  baseImageUrl,
+  quoteImageUrl,
+  baseSymbol,
+  quoteSymbol,
   children,
 }: {
-  token0ImageUrl?: string
-  token1ImageUrl?: string
-  tokenSymbol0?: string
-  tokenSymbol1?: string
+  baseImageUrl?: string
+  quoteImageUrl?: string
+  baseSymbol?: string
+  quoteSymbol?: string
   children?: React.ReactNode
 }) {
-  const token0Image = getSatoriImageUrl(token0ImageUrl)
-  const token1Image = getSatoriImageUrl(token1ImageUrl)
+  const baseImage = getSatoriImageUrl(baseImageUrl)
+  const quoteImage = getSatoriImageUrl(quoteImageUrl)
 
   return (
     <div
@@ -60,12 +60,12 @@ export function PoolImage({
         position: 'relative',
       }}
     >
-      {token0Image ? (
+      {baseImage ? (
         <div
           style={{
             width: '84px',
             height: '168px',
-            backgroundImage: `url(${token0Image})`,
+            backgroundImage: `url(${baseImage})`,
             backgroundSize: '200% 100%',
             borderRadius: '168px 0 0 168px',
             borderRight: '4px solid #1B1B1B', // Border on the right edge of the first image
@@ -73,14 +73,14 @@ export function PoolImage({
           }}
         />
       ) : (
-        <UnknownTokenImage symbol={tokenSymbol0} />
+        <UnknownTokenImage symbol={baseSymbol} />
       )}
-      {token1Image ? (
+      {quoteImage ? (
         <div
           style={{
             width: '84px',
             height: '168px',
-            backgroundImage: `url(${token1Image})`,
+            backgroundImage: `url(${quoteImage})`,
             backgroundPosition: '100% 0%',
             backgroundSize: '200% 100%',
             borderRadius: '0 168px 168px 0',
@@ -89,7 +89,7 @@ export function PoolImage({
           }}
         />
       ) : (
-        <UnknownTokenImage symbol={tokenSymbol1} />
+        <UnknownTokenImage symbol={quoteSymbol} />
       )}
       {children}
     </div>
@@ -148,10 +148,10 @@ export async function renderPoolOgImage({
           }}
         >
           <PoolImage
-            token0ImageUrl={data.poolData?.token0Image}
-            token1ImageUrl={data.poolData?.token1Image}
-            tokenSymbol0={data.poolData?.token0Symbol}
-            tokenSymbol1={data.poolData?.token1Symbol}
+            baseImageUrl={data.poolData?.baseImage}
+            quoteImageUrl={data.poolData?.quoteImage}
+            baseSymbol={data.poolData?.baseSymbol}
+            quoteSymbol={data.poolData?.quoteSymbol}
           >
             {networkLogo !== '' && (
               <img

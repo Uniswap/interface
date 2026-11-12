@@ -104,9 +104,9 @@ vi.mock('@reown/walletkit', () => ({
 }))
 
 vi.mock('@walletconnect/core', () => ({
-  Core: vi.fn().mockImplementation(() => ({
-    crypto: { getClientId: vi.fn() },
-  })),
+  Core: vi.fn(function () {
+    return { crypto: { getClientId: vi.fn() } }
+  }),
 }))
 
 vi.mock('@walletconnect/utils', () => ({

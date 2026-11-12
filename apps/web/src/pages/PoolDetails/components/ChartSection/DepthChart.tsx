@@ -16,7 +16,6 @@ import { Chart } from '~/components/Charts/ChartModel'
 import { ChartSkeleton } from '~/components/Charts/LoadingState'
 import { PriceChartData } from '~/components/Charts/PriceChart'
 import { PriceChartDelta } from '~/components/Charts/PriceChart/PriceChartDelta'
-import { ChartType } from '~/components/Charts/utils'
 import { SubscriptZeroPrice } from '~/components/SubscriptZeroPrice'
 import { LoadingChart } from '~/features/Explore/chart/LoadingChart'
 import { useLiquidityBarData } from '~/features/Liquidity/charts/LiquidityChart'
@@ -41,6 +40,7 @@ import {
   TooltipShell,
 } from '~/pages/PoolDetails/components/ChartSection/DepthChartTooltip'
 import { usePdpPool } from '~/pages/PoolDetails/components/ChartSection/usePdpPool'
+import { ChartType } from '~/utils/charts'
 import { unwrappedToken } from '~/utils/unwrappedToken'
 
 export type { DepthChartZoomActions } from '~/pages/PoolDetails/components/ChartSection/DepthChartModel'

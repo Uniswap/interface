@@ -1,0 +1,59 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`PredefinedAmount > renders correctly with amount= 100 , disabled= false 1`] = `
+<div
+  class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center justify-center gap-[8px] px-[16px] py-[8px] bg-surface1 border-[1px] rounded-[999999px] [cursor:pointer] [user-select:none] hover:bg-[color:var(--ch-bg)] hover:border-[color:var(--ch-bdc)]"
+  style="--ch-bg: var(--surface1-hovered); --ch-bdc: var(--surface3-hovered); border-color: rgba(19, 19, 19, 0.08);"
+>
+  <span
+    class="[display:inline] box-border m-0 [word-wrap:break-word] [font-family:var(--stext-font-medium)] text-[16px] [line-height:18.4px] [font-weight:535] [color:var(--stext-neutral1)] max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
+    style="color: rgba(19, 19, 19, 0.63); padding-top: 1px;"
+  >
+    $100
+  </span>
+</div>
+`;
+
+exports[`PredefinedAmount > renders correctly with amount= 300 , disabled= true 1`] = `
+<div
+  aria-disabled="true"
+  class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center justify-center gap-[8px] px-[16px] py-[8px] bg-surface2 border-[1px] rounded-[999999px] [cursor:default] [user-select:none]"
+  style="border-color: rgba(19, 19, 19, 0.08);"
+>
+  <span
+    class="[display:inline] box-border m-0 [word-wrap:break-word] [font-family:var(--stext-font-medium)] text-[16px] [line-height:18.4px] [font-weight:535] [color:var(--stext-neutral1)] max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
+    style="color: rgba(19, 19, 19, 0.35); padding-top: 1px;"
+  >
+    $300
+  </span>
+</div>
+`;
+
+exports[`PredefinedAmount > renders correctly with amount= 1000 , disabled= false 1`] = `
+<div
+  class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center justify-center gap-[8px] px-[16px] py-[8px] bg-surface1 border-[1px] rounded-[999999px] [cursor:pointer] [user-select:none] hover:bg-[color:var(--ch-bg)] hover:border-[color:var(--ch-bdc)]"
+  style="--ch-bg: var(--surface1-hovered); --ch-bdc: var(--surface3-hovered); border-color: rgba(19, 19, 19, 0.08);"
+>
+  <span
+    class="[display:inline] box-border m-0 [word-wrap:break-word] [font-family:var(--stext-font-medium)] text-[16px] [line-height:18.4px] [font-weight:535] [color:var(--stext-neutral1)] max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
+    style="color: rgba(19, 19, 19, 0.63); padding-top: 1px;"
+  >
+    $1000
+  </span>
+</div>
+`;
+
+exports[`PredefinedAmount > renders correctly with amount= 1000 , disabled= true 1`] = `
+<div
+  aria-disabled="true"
+  class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center justify-center gap-[8px] px-[16px] py-[8px] bg-surface2 border-[1px] rounded-[999999px] [cursor:default] [user-select:none]"
+  style="border-color: rgba(19, 19, 19, 0.08);"
+>
+  <span
+    class="[display:inline] box-border m-0 [word-wrap:break-word] [font-family:var(--stext-font-medium)] text-[16px] [line-height:18.4px] [font-weight:535] [color:var(--stext-neutral1)] max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
+    style="color: rgba(19, 19, 19, 0.35); padding-top: 1px;"
+  >
+    $1000
+  </span>
+</div>
+`;

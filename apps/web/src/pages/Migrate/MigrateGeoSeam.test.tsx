@@ -2,9 +2,9 @@ import { fireEvent } from '@testing-library/react'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import type { Currency } from '@uniswap/sdk-core'
 import { TestID } from '@universe/test'
+import { useCreateLiquidityContext } from '~/features/Liquidity/Create/CreateLiquidityContextProvider'
 import { SelectPriceRangeStep } from '~/features/Liquidity/Create/RangeSelectionStep'
 import { useLPGeoRestriction } from '~/features/Liquidity/useLPGeoRestriction'
-import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 import { useMigrateGeoGate } from '~/pages/Migrate/useMigrateGeoGate'
 import { render, screen } from '~/test-utils/render'
 
@@ -12,7 +12,7 @@ import { render, screen } from '~/test-utils/render'
 // real here, which is the point of this file: their unit tests each assert one side of the
 // `{ disableContinue, geoRestriction }` contract, so neither would catch the two drifting apart.
 vi.mock('~/features/Liquidity/useLPGeoRestriction', () => ({ useLPGeoRestriction: vi.fn() }))
-vi.mock('~/pages/CreatePosition/CreateLiquidityContextProvider', () => ({ useCreateLiquidityContext: vi.fn() }))
+vi.mock('~/features/Liquidity/Create/CreateLiquidityContextProvider', () => ({ useCreateLiquidityContext: vi.fn() }))
 vi.mock('~/features/Liquidity/Create/hooks/useTokenControlOptions', () => ({ useTokenControlOptions: () => [] }))
 vi.mock('~/features/Liquidity/Create/hooks/useDefaultInitialPrice', () => ({
   useDefaultInitialPrice: () => ({ price: undefined, isLoading: false }),

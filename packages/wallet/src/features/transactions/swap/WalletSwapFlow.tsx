@@ -1,5 +1,6 @@
 import { SwapDeadline } from 'uniswap/src/features/transactions/components/settings/settingsConfigurations/deadline/SwapDeadline'
 import { SwapTransactionSettingsStoreContextProvider } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/SwapTransactionSettingsStoreContextProvider'
+import { BridgingOptions } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/BridgingOptions/BridgingOptions'
 import { Slippage } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/slippage/Slippage/Slippage'
 import { TradeRoutingPreference } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/TradeRoutingPreference/TradeRoutingPreference'
 import { SwapDependenciesStoreContextProvider } from 'uniswap/src/features/transactions/swap/stores/swapDependenciesStore/SwapDependenciesStoreContextProvider'
@@ -12,7 +13,13 @@ type WalletSwapFlowProps = Omit<SwapFlowProps, 'settings'> & {
   onSubmitSwap?: () => Promise<void>
 }
 
-const SETTINGS: SwapFlowProps['settings'] = [Slippage, SwapProtection, TradeRoutingPreference, SwapDeadline]
+const SETTINGS: SwapFlowProps['settings'] = [
+  Slippage,
+  SwapProtection,
+  TradeRoutingPreference,
+  BridgingOptions,
+  SwapDeadline,
+]
 
 export function WalletSwapFlow(props: WalletSwapFlowProps): JSX.Element {
   return (

@@ -64,3 +64,25 @@ describe('Shimmer (web)', () => {
     )
   })
 })
+
+describe('Shimmer (web) accessibility', () => {
+  it('marks real content as busy while sweeping, without hiding it', () => {
+    const html = renderToStaticMarkup(<Shimmer>$1,000</Shimmer>)
+    expect(html).toContain('aria-busy="true"')
+    expect(html).not.toContain('aria-hidden')
+  })
+
+  it('drops aria-busy once disabled', () => {
+    expect(renderToStaticMarkup(<Shimmer disabled>$1,000</Shimmer>)).not.toContain('aria-busy')
+  })
+
+  it('hides decorative skeleton boxes from assistive tech', () => {
+    const html = renderToStaticMarkup(
+      <Shimmer decorative>
+        <div />
+      </Shimmer>,
+    )
+    expect(html).toContain('aria-hidden="true"')
+    expect(html).not.toContain('aria-busy')
+  })
+})

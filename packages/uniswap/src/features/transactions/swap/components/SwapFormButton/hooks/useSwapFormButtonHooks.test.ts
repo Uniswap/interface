@@ -129,6 +129,12 @@ vi.mock('uniswap/src/features/transactions/swap/services/hooks/usePrepareSwap', 
   usePrepareSwap: vi.fn(),
 }))
 
+// These cases are about the skip flags, so let every press through the address screen.
+// Screening itself is covered in useScreenActiveAddressOnPress.test.ts.
+vi.mock('uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useScreenActiveAddressOnPress', () => ({
+  useScreenActiveAddressOnPress: () => (onClear: () => void) => onClear(),
+}))
+
 vi.mock('uniswap/src/features/transactions/swap/services/hooks/useWarningService', () => ({
   useWarningService: vi.fn(),
 }))

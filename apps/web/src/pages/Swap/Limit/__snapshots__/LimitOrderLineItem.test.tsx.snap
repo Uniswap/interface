@@ -284,7 +284,9 @@ exports[`LimitOrderLineItem.tsx > exact input 1`] = `
                     class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center gap-[4px] w-[fit-content]"
                   >
                     <svg
+                      aria-hidden="true"
                       fill="none"
+                      focusable="false"
                       stroke-width="8"
                       style="width: 16px; height: 16px;"
                       viewBox="0 0 17 16"
@@ -384,7 +386,9 @@ exports[`LimitOrderLineItem.tsx > exact input api 1`] = `
                     class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center gap-[4px] w-[fit-content]"
                   >
                     <svg
+                      aria-hidden="true"
                       fill="none"
+                      focusable="false"
                       stroke-width="8"
                       style="width: 16px; height: 16px;"
                       viewBox="0 0 17 16"
@@ -484,7 +488,9 @@ exports[`LimitOrderLineItem.tsx > exact output 1`] = `
                     class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center gap-[4px] w-[fit-content]"
                   >
                     <svg
+                      aria-hidden="true"
                       fill="none"
+                      focusable="false"
                       stroke-width="8"
                       style="width: 16px; height: 16px;"
                       viewBox="0 0 17 16"
@@ -584,7 +590,9 @@ exports[`LimitOrderLineItem.tsx > fee on buy 1`] = `
                     class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center gap-[4px] w-[fit-content]"
                   >
                     <svg
+                      aria-hidden="true"
                       fill="none"
+                      focusable="false"
                       stroke-width="8"
                       style="width: 16px; height: 16px;"
                       viewBox="0 0 17 16"
@@ -684,7 +692,9 @@ exports[`LimitOrderLineItem.tsx > fee on sell 1`] = `
                     class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center gap-[4px] w-[fit-content]"
                   >
                     <svg
+                      aria-hidden="true"
                       fill="none"
+                      focusable="false"
                       stroke-width="8"
                       style="width: 16px; height: 16px;"
                       viewBox="0 0 17 16"

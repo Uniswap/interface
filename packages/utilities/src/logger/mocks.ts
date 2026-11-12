@@ -1,3 +1,4 @@
+import type { Mock } from 'vitest'
 // mock this since it errors about multiple SDK instances in test mode
 vi.mock('@datadog/browser-logs', () => ({
   datadogLogs: {
@@ -11,11 +12,11 @@ vi.mock('@datadog/browser-logs', () => ({
  * Call this function to get a fresh mock logger for each test if needed.
  */
 export function createMockLogger(): {
-  debug: ReturnType<typeof vi.fn>
-  info: ReturnType<typeof vi.fn>
-  warn: ReturnType<typeof vi.fn>
-  error: ReturnType<typeof vi.fn>
-  setDatadogEnabled: ReturnType<typeof vi.fn>
+  debug: Mock
+  info: Mock
+  warn: Mock
+  error: Mock
+  setDatadogEnabled: Mock
 } {
   return {
     debug: vi.fn(),

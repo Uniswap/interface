@@ -7,10 +7,10 @@ import {
   useTokenSpotPrice,
 } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { buildCurrencyId, currencyId } from 'uniswap/src/utils/currencyId'
-import { DataQuality, PriceChartType } from '~/components/Charts/utils'
 import { TimePeriod } from '~/data/util'
 import { useTokenPriceChartData } from '~/hooks/useTokenPriceChartData'
 import { getDisplayedPricePercentChange, type TokenPriceChartQueryVariables } from '~/hooks/useTokenPriceChartData'
+import { DataQuality, PriceChartType } from '~/utils/charts'
 
 export interface UseTokenPriceChartPanelParams {
   variables: TokenPriceChartQueryVariables

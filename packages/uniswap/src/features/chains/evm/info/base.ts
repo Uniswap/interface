@@ -57,7 +57,7 @@ export const BASE_CHAIN_INFO = {
     logo: ETH_LOGO,
   },
   networkLayer: NetworkLayer.L2,
-  blockTimeMs: 2000,
+  blockTimeMs: 200,
   pendingTransactionsRetryOptions: DEFAULT_RETRY_OPTIONS,
   statusPage: 'https://status.base.org/',
   supportedURVersions: [TradingApi.UniversalRouterVersion._2_0, TradingApi.UniversalRouterVersion._2_1_1],

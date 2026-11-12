@@ -207,7 +207,9 @@ export function ClaimFeeModal() {
   } = useQuery(
     liquidityQueries.claimFees({
       params: claimFeesQueryParams,
-      enabled: Boolean(claimFeesQueryParams),
+      // Coming back from a wallet app refocuses the window; a refetch then can simulate a collect that already
+      // landed and fail, so hold the calldata once it's handed to the wallet.
+      enabled: Boolean(claimFeesQueryParams) && !currentTransactionStep,
     }),
   )
 

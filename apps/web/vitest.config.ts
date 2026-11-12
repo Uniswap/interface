@@ -29,8 +29,10 @@ const config = defineConfig({
       '.nx',
     ],
     testTimeout: 15000,
-    deps: {
-      inline: [/packages\/ui/, /packages\/utilities/, /packages\/uniswap/],
+    server: {
+      deps: {
+        inline: [/packages\/ui/, /packages\/utilities/, /packages\/uniswap/],
+      },
     },
     reporters: ['verbose'],
     coverage: {

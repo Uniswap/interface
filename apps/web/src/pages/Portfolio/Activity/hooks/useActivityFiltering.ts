@@ -6,12 +6,12 @@ import { TransactionDetails } from 'uniswap/src/features/transactions/types/tran
 import { useInfiniteScroll } from 'utilities/src/react/useInfiniteScroll'
 import { ONE_DAY_MS } from 'utilities/src/time/time'
 import {
-  filterTransactionDetailsFromActivityItems,
   getServerTransactionTypesForFilter,
   getTransactionTypeForActivityFilter,
   getTransactionTypesForFilter,
   TimePeriod,
 } from '~/pages/Portfolio/Activity/Filters/utils'
+import { filterTransactionDetailsFromActivityItems } from '~/utils/activityItems'
 import { filterDefinedWalletAddresses } from '~/utils/filterDefinedWalletAddresses'
 
 function isWithinTimePeriod(txTime: number, period: string): boolean {

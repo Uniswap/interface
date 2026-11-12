@@ -9,8 +9,8 @@ import { getChainGasToken } from 'uniswap/src/features/gas/hooks/useChainGasToke
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { currencyAddress } from 'uniswap/src/utils/currencyId'
 import { useCurrency } from '~/hooks/currency/useCurrency'
-import { queryParametersToCurrencyState } from '~/pages/Swap/Swap/state/tradeQueryParams'
 import { useMultichainContext } from '~/state/multichain/useMultichainContext'
+import { queryParametersToCurrencyState } from '~/utils/params/tradeQueryParams'
 
 // Despite a lighter QuickTokenBalances query we've received feedback that the initial load time is too slow.
 // Removing the logic that uses user's balance to determine the initial currency.

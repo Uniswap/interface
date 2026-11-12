@@ -1,11 +1,16 @@
 import { fireEvent } from '@testing-library/react'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import type { Currency } from '@uniswap/sdk-core'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { TestID } from '@universe/test'
+import type { ComponentProps } from 'react'
+import type { Mock } from 'vitest'
+import { useCreateLiquidityContext } from '~/features/Liquidity/Create/CreateLiquidityContextProvider'
 import { useBlockedTokens } from '~/features/Liquidity/Create/hooks/useBlockedTokens'
 import { SelectTokensStep } from '~/features/Liquidity/Create/SelectTokenStep'
+import type { PositionState } from '~/features/Liquidity/Create/types'
+import type { HookModal } from '~/features/Liquidity/HookModal'
 import { useLPGeoRestriction } from '~/features/Liquidity/useLPGeoRestriction'
-import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 import { render, screen } from '~/test-utils/render'
 
 const mockNavigate = vi.fn()
@@ -15,7 +20,7 @@ vi.mock('react-router', async (importOriginal) => {
 })
 vi.mock('~/features/Liquidity/useLPGeoRestriction', () => ({ useLPGeoRestriction: vi.fn() }))
 vi.mock('~/features/Liquidity/Create/hooks/useBlockedTokens', () => ({ useBlockedTokens: vi.fn() }))
-vi.mock('~/pages/CreatePosition/CreateLiquidityContextProvider', () => ({ useCreateLiquidityContext: vi.fn() }))
+vi.mock('~/features/Liquidity/Create/CreateLiquidityContextProvider', () => ({ useCreateLiquidityContext: vi.fn() }))
 vi.mock('~/features/Liquidity/Create/hooks/useLiquidityUrlState', () => ({
   useLiquidityUrlState: () => ({ loadingA: false, loadingB: false, hook: undefined }),
 }))
@@ -29,7 +34,16 @@ vi.mock('~/features/Liquidity/hooks/useAllFeeTierPoolData', () => ({
   useAllFeeTierPoolData: () => ({ feeTierData: {}, hasExistingFeeTiers: false }),
 }))
 vi.mock('~/components/SearchModal/CurrencySearchModal', () => ({ CurrencySearchModal: () => null }))
-vi.mock('~/features/Liquidity/HookModal', () => ({ HookModal: () => null }))
+vi.mock('~/features/Liquidity/HookModal', () => ({
+  HookModal: ({ isOpen, onClose, onCancel, onContinue }: ComponentProps<typeof HookModal>) =>
+    isOpen ? (
+      <div role="dialog" aria-label="Review hook">
+        <button onClick={onClose}>Dismiss hook review</button>
+        <button onClick={onCancel}>Remove hook</button>
+        <button onClick={onContinue}>Continue with hook</button>
+      </div>
+    ) : null,
+}))
 vi.mock('~/features/Liquidity/Create/AddHook', () => ({ AddHook: () => <div data-testid="add-hook" /> }))
 vi.mock('~/features/Liquidity/Create/PoolParsingError', () => ({ PoolParsingError: () => null }))
 vi.mock('~/features/Liquidity/LPIncentives/RewardAprBadge', () => ({ RewardAprBadge: () => null }))
@@ -51,6 +65,11 @@ const AAPLX = { symbol: 'AAPLX', chainId: 1, address: '0xaaplx', isNative: false
 const USDC = { symbol: 'USDC', chainId: 1, address: '0xusdc', isNative: false } as Currency
 
 const CURRENCY_INPUTS = { tokenA: AAPLX, tokenB: USDC }
+const HOOK = '0x1111111111111111111111111111111111111111'
+
+beforeEach(() => {
+  window.history.replaceState({}, '', '/positions/add/new')
+})
 
 function mockGeoRestriction(overrides: Partial<ReturnType<typeof useLPGeoRestriction>>): void {
   mockedUseLPGeoRestriction.mockReturnValue({
@@ -72,29 +91,37 @@ interface PoolCase {
  * does — an existing pool navigates into it, a pool being created advances the form — so each suite
  * pins its own case.
  */
-function mockCreateLiquidityContext(pool: PoolCase): void {
-  mockedUseCreateLiquidityContext.mockReturnValue({
-    positionState: {
-      hook: undefined,
-      userApprovedHook: undefined,
-      fee: { feeAmount: 3000, tickSpacing: 60, isDynamic: false },
-      migratingPosition: undefined,
-    },
-    setPositionState: vi.fn(),
+function mockCreateLiquidityContext(
+  pool: PoolCase,
+  positionOverrides: Partial<PositionState> = {},
+): Pick<ReturnType<typeof useCreateLiquidityContext>, 'positionState' | 'setPositionState'> {
+  const positionState: PositionState = {
     protocolVersion: ProtocolVersion.V3,
+    hook: undefined,
+    userApprovedHook: undefined,
+    fee: { feeAmount: 3000, tickSpacing: 60, isDynamic: false },
+    migratingPosition: undefined,
+    ...positionOverrides,
+  }
+  const setPositionState = vi.fn()
+  mockedUseCreateLiquidityContext.mockReturnValue({
+    positionState,
+    setPositionState,
+    protocolVersion: positionState.protocolVersion,
     currencies: { display: { TOKEN0: AAPLX, TOKEN1: USDC }, sdk: { TOKEN0: AAPLX, TOKEN1: USDC } },
     poolOrPairLoading: false,
     protocolFee: undefined,
     setFeeTierSearchModalOpen: vi.fn(),
     ...pool,
   } as unknown as ReturnType<typeof useCreateLiquidityContext>)
+  return { positionState, setPositionState }
 }
 
 const EXISTING_POOL: PoolCase = { creatingPoolOrPair: false, poolOrPair: { id: 'pool-id' }, poolId: 'pool-id' }
 /** No pool at the selected tier yet, so the CTA advances the form rather than navigating into one. */
 const NEW_POOL: PoolCase = { creatingPoolOrPair: true }
 
-function renderStep(onContinue = vi.fn()): { onContinue: ReturnType<typeof vi.fn> } {
+function renderStep(onContinue = vi.fn()): { onContinue: Mock } {
   render(<SelectTokensStep currencyInputs={CURRENCY_INPUTS} setCurrencyInputs={vi.fn()} onContinue={onContinue} />)
   return { onContinue }
 }
@@ -219,6 +246,39 @@ describe('SelectTokensStep existing-pool CTA', () => {
     expect(mockNavigate.mock.calls[0][1]).toEqual({ state: { from: expect.any(String) } })
   })
 
+  it.each([
+    {
+      entryPoint: '/explore/hooks/ethereum/0x1111111111111111111111111111111111111111',
+      expected: '/explore/hooks/ethereum/0x1111111111111111111111111111111111111111',
+    },
+    { entryPoint: '/explore/pools', expected: null },
+    { entryPoint: '//example.com/hooks', expected: null },
+    { entryPoint: '', expected: null },
+  ])('preserves only a hook detail entry point into the existing pool: $entryPoint', ({ entryPoint, expected }) => {
+    vi.mocked(useFeatureFlag).mockImplementation((flag) => flag === FeatureFlags.HooksExplore)
+    const search = `?${new URLSearchParams({ entryPoint, unrelated: 'drop' })}`
+    window.history.replaceState({}, '', `/positions/add/new${search}`)
+    const { setPositionState } = mockCreateLiquidityContext(EXISTING_POOL, {
+      protocolVersion: ProtocolVersion.V4,
+      hook: HOOK,
+    })
+    renderStep()
+
+    fireEvent.click(screen.getByText('Continue'))
+
+    expect(mockNavigate).toHaveBeenCalledOnce()
+    const target = new URL(mockNavigate.mock.calls[0][0] as string, 'https://app.uniswap.org')
+    expect(target.pathname).toBe('/positions/add/ethereum/pool-id')
+    expect(target.searchParams.get('hook')).toBe(HOOK)
+    expect(target.searchParams.get('protocolVersion')).toBe('v4')
+    expect(target.searchParams.get('entryPoint')).toBe(expected)
+    expect(target.searchParams.has('source')).toBe(false)
+    expect(target.searchParams.has('unrelated')).toBe(false)
+    expect(target.searchParams.has('step')).toBe(false)
+    expect(mockNavigate.mock.calls[0][1]).toEqual({ state: { from: `/positions/add/new${search}` } })
+    expect(setPositionState).not.toHaveBeenCalled()
+  })
+
   // A v2 migration has no `migratingPosition` (that's v3-only), so the existing-pool hop must key off
   // the migration itself — otherwise the user lands on the add-liquidity deposit form.
   it('advances the migration form instead of navigating when the target pool exists', () => {
@@ -236,5 +296,86 @@ describe('SelectTokensStep existing-pool CTA', () => {
 
     expect(mockNavigate).not.toHaveBeenCalled()
     expect(onContinue).toHaveBeenCalledOnce()
+  })
+
+  it('keeps the existing-pool URL unchanged when Hooks Explore is disabled', () => {
+    vi.mocked(useFeatureFlag).mockReturnValue(false)
+    const entryPoint = '/explore/hooks/ethereum/0x1111111111111111111111111111111111111111'
+    window.history.replaceState({}, '', `/positions/add/new?${new URLSearchParams({ entryPoint })}`)
+    mockCreateLiquidityContext(EXISTING_POOL, { protocolVersion: ProtocolVersion.V4, hook: HOOK })
+    renderStep()
+
+    fireEvent.click(screen.getByText('Continue'))
+
+    const target = new URL(mockNavigate.mock.calls[0][0] as string, 'https://app.uniswap.org')
+    expect(target.pathname).toBe('/positions/add/ethereum/pool-id')
+    expect(target.searchParams.has('entryPoint')).toBe(false)
+    expect(target.searchParams.has('source')).toBe(false)
+  })
+})
+
+describe('SelectTokensStep hook-detail consent', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    window.history.replaceState(
+      {},
+      '',
+      `/positions/add/new?hook=${HOOK}&protocolVersion=v4&entryPoint=%2Fexplore%2Fhooks%2Fethereum%2F0x1111111111111111111111111111111111111111`,
+    )
+    mockGeoRestriction({})
+    mockedUseBlockedTokens.mockReturnValue({ hasBlockedToken: false, blockedTokenSymbols: [] })
+  })
+
+  it('opens and reopens the review without approval, and approves only on the modal Continue', () => {
+    const { positionState, setPositionState } = mockCreateLiquidityContext(NEW_POOL, {
+      protocolVersion: ProtocolVersion.V4,
+      hook: HOOK,
+    })
+    const { onContinue } = renderStep()
+    expect(screen.queryByRole('dialog', { name: 'Review hook' })).not.toBeInTheDocument()
+    expect(setPositionState).not.toHaveBeenCalled()
+
+    fireEvent.click(screen.getByText('Continue'))
+
+    expect(screen.getByRole('dialog', { name: 'Review hook' })).toBeInTheDocument()
+    expect(onContinue).not.toHaveBeenCalled()
+    expect(setPositionState).not.toHaveBeenCalled()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Dismiss hook review' }))
+    expect(screen.queryByRole('dialog', { name: 'Review hook' })).not.toBeInTheDocument()
+    expect(setPositionState).not.toHaveBeenCalled()
+    expect(onContinue).not.toHaveBeenCalled()
+
+    fireEvent.click(screen.getByText('Continue'))
+    expect(screen.getByRole('dialog', { name: 'Review hook' })).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'Continue with hook' }))
+
+    expect(setPositionState).toHaveBeenCalledOnce()
+    const update = vi.mocked(setPositionState).mock.lastCall?.[0]
+    if (typeof update !== 'function') {
+      throw new Error('Expected the modal to update position state')
+    }
+    expect(update(positionState)).toEqual({ ...positionState, userApprovedHook: HOOK })
+    expect(onContinue).toHaveBeenCalledOnce()
+    expect(screen.queryByRole('dialog', { name: 'Review hook' })).not.toBeInTheDocument()
+  })
+
+  it('removes the hook and fee without approval when the user declines the modal', () => {
+    const { positionState, setPositionState } = mockCreateLiquidityContext(NEW_POOL, {
+      protocolVersion: ProtocolVersion.V4,
+      hook: HOOK,
+    })
+    const { onContinue } = renderStep()
+    fireEvent.click(screen.getByText('Continue'))
+    fireEvent.click(screen.getByRole('button', { name: 'Remove hook' }))
+
+    expect(setPositionState).toHaveBeenCalledOnce()
+    const update = vi.mocked(setPositionState).mock.lastCall?.[0]
+    if (typeof update !== 'function') {
+      throw new Error('Expected declining the hook to update position state')
+    }
+    expect(update(positionState)).toEqual({ ...positionState, hook: undefined, fee: undefined })
+    expect(onContinue).not.toHaveBeenCalled()
+    expect(screen.queryByRole('dialog', { name: 'Review hook' })).not.toBeInTheDocument()
   })
 })

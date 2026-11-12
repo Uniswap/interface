@@ -1,3 +1,4 @@
+import { sleep } from 'utilities/src/time/timing'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { type FileStorage } from '../storage/fileStorage'
 import { createFileStorageMock } from '../storage/fileStorage.mock'
@@ -54,7 +55,7 @@ describe('createLock.withLock — basics', () => {
 
     const first = lock.withLock(async () => {
       log.push('a-start')
-      await new Promise((resolve) => setTimeout(resolve, 200))
+      await sleep(200)
       log.push('a-end')
     })
 

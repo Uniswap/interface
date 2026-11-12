@@ -3,7 +3,7 @@ import { ListTopAuctionsRequest } from '@uniswap/client-launches/dist/data/v1/au
 import { useEffect, useMemo } from 'react'
 import { auctionQueries } from 'uniswap/src/data/apiClients/dataApiService/auctions/auctionQueries'
 import { logger } from 'utilities/src/logger/logger'
-import { getAuctionTokenKey } from '~/pages/Launches/launchesModel'
+import { getAuctionTokenKey } from '~/features/Toucan/utils/launchesModel'
 
 // Same "whole list" page size the Explore auctions surface uses (see useTopAuctions).
 const AUCTIONS_PAGE_SIZE = 200

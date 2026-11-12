@@ -2,6 +2,7 @@ import { UniverseChainId } from '@universe/chains'
 
 const V2_MIGRATION_UNSUPPORTED_CHAINS: ReadonlySet<number> = new Set([
   UniverseChainId.Arc,
+  UniverseChainId.Elysium,
   UniverseChainId.Ink,
   UniverseChainId.Robinhood,
 ])

@@ -218,6 +218,7 @@ export const SearchModalList = memo(function SearchModalListInner({
             <PoolOptionItem
               token0CurrencyInfo={item.token0CurrencyInfo}
               token1CurrencyInfo={item.token1CurrencyInfo}
+              isToken0Quote={item.isToken0Quote}
               poolId={item.poolId}
               chainId={item.chainId}
               protocolVersion={item.protocolVersion}

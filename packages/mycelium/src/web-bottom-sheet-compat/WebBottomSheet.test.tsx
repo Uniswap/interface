@@ -2,6 +2,7 @@ import * as DialogPrimitive from '@radix-ui/react-dialog'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import * as React from 'react'
 import { markRadixEscapePreventedBySheet } from 'utilities/src/react/useSheetEscapeToClose'
+import { sleep } from 'utilities/src/time/timing'
 import { describe, expect, it, vi } from 'vitest'
 import type { WebBottomSheetCompatProps } from '../popover-compat/props'
 import { EffectiveOverlayZIndexContext } from '../popover-compat/z-index'
@@ -126,7 +127,7 @@ describe('WebBottomSheet compat', () => {
     )
     const overlay = await waitForOpenOverlay()
     await React.act(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 250))
+      await sleep(250)
     })
     pressElement(overlay, 'touch')
     await waitFor(() => expect(onClose).toHaveBeenCalledTimes(1))
@@ -149,7 +150,7 @@ describe('WebBottomSheet compat', () => {
     await waitFor(() => expect(document.querySelectorAll(OVERLAY).length).toBe(2))
     const overlay = await waitForOpenOverlay()
     await React.act(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 250))
+      await sleep(250)
     })
     pressElement(overlay, 'touch')
     await waitFor(() => expect(onClose).toHaveBeenCalledTimes(1))

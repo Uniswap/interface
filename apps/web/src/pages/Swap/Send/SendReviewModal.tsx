@@ -22,8 +22,8 @@ import { TransactionType } from 'uniswap/src/features/transactions/types/transac
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
-import { PortfolioLogo } from '~/components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { ChainLogo } from '~/components/Logo/ChainLogo'
+import { PortfolioLogo } from '~/components/Logo/PortfolioLogo'
 import { useAccount } from '~/connection/hooks/useAccount'
 import { useSendContext } from '~/pages/Swap/Send/state/SendContext'
 

@@ -1,6 +1,6 @@
 // Single source of truth for whether a build ships the BFF's debug routes
 // (functions/app.ts). Every build that compiles app.ts feeds its own platform
-// variable through here: vite/honoDevServerPlugin.ts for the dev server, vite.server.config.mts for ECS/Vercel.
+// variable through here: vite/honoDevServerPlugin.ts for the dev server, vite.server.config.mts for ECS.
 const DEBUG_ROUTE_ENVS = new Set(['development', 'dev', 'staging', 'preview'])
 
 /**

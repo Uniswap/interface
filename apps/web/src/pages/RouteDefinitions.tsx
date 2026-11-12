@@ -7,8 +7,8 @@ import { CHROME_EXTENSION_UNINSTALL_URL_PATH } from 'uniswap/src/constants/urls'
 import { WRAPPED_SOL_ADDRESS_SOLANA } from 'uniswap/src/features/chains/svm/defaults'
 import i18n from 'uniswap/src/i18n'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
-import { isEmbedPath } from '~/pages/embedPaths'
 import { EMBED_ENTRY_ROUTES } from '~/pages/embedRoutes'
+import { PoolAreaRoute } from '~/pages/Explore/PoolAreaRoute'
 import {
   getCategoryDetailsTitle,
   getExploreDescription,
@@ -21,6 +21,7 @@ import {
   getPositionPageDescription,
   getPositionPageTitle,
 } from '~/pages/getPositionPageTitle'
+import { HookDetailsRoute } from '~/pages/HookDetails/HookDetailsRoute'
 // High-traffic pages (index and /swap) should not be lazy-loaded.
 import { Landing } from '~/pages/Landing'
 import {
@@ -30,17 +31,18 @@ import {
   StaticTitlesAndDescriptions,
 } from '~/pages/routeDefinition'
 import { SwapPage } from '~/pages/Swap'
-import { ON_RAMP_RETURN_PATH } from '~/pages/Swap/Buy/onRampRedirectUrl'
 import { OnRampReturn } from '~/pages/Swap/Buy/OnRampReturn'
+import { isEmbedPath } from '~/utils/embedPaths'
 import { isBrowserRouterEnabled } from '~/utils/env'
 import { createLazy } from '~/utils/lazyWithRetry'
+import { ON_RAMP_RETURN_PATH } from '~/utils/onRampRedirectUrl'
 
 const AddLiquidity = createLazy(() => import('~/pages/AddLiquidity/AddLiquidity'))
 const CreatePosition = createLazy(() => import('~/pages/CreatePosition/CreatePosition'))
 const AddLiquidityV3WithTokenRedirects = createLazy(() => import('~/pages/AddLiquidityV3/redirects'))
 const AddLiquidityV2WithTokenRedirects = createLazy(() => import('~/pages/AddLiquidityV2/redirects'))
 const CreatePositionRedirects = createLazy(() => import('~/pages/CreatePosition/redirects'))
-const RedirectExplore = createLazy(() => import('~/pages/Explore/redirects'))
+const ExploreRoute = createLazy(() => import('~/pages/Explore/ExploreRoute'))
 const MigrateV3 = createLazy(() => import('~/pages/Migrate'))
 const NotFound = createLazy(() => import('~/pages/NotFound'))
 const Pool = createLazy(() => import('~/pages/Positions'))
@@ -59,7 +61,8 @@ const PoolDetails = createLazy(() => import('~/pages/PoolDetails'))
 const TokenDetails = createLazy(() => import('~/pages/TokenDetails/TokenDetailsPage'))
 const CategoryDetails = createLazy(() => import('~/pages/Explore/CategoryDetails'))
 const PoolCategoryDetails = createLazy(() => import('~/pages/Explore/CategoryDetails/PoolCategoryDetails'))
-const HooksPreview = createLazy(() => import('~/pages/Explore/tables/Hooks/HooksPreview'))
+const HooksPage = createLazy(() => import('~/pages/Explore/HooksPage'))
+const PoolsPage = createLazy(() => import('~/pages/Explore/PoolsPage'))
 const ExtensionPasskeyAuthPopUp = createLazy(() => import('~/pages/ExtensionPasskeyAuthPopUp'))
 const PasskeyManagement = createLazy(() => import('~/pages/PasskeyManagement'))
 const ExtensionUninstall = createLazy(() => import('~/pages/ExtensionUninstall/ExtensionUninstall'))
@@ -72,24 +75,22 @@ const Launches = createLazy(() => import('~/pages/Launches'))
 
 const getSuspendedElement = (children: ReactNode): JSX.Element => <Suspense fallback={null}>{children}</Suspense>
 
-/**
- * Convenience hook which organizes the router configuration into a single object.
- */
+function getPoolAreaElement(tab: 'pools' | 'hooks', children: ReactNode): JSX.Element {
+  return (
+    <ExploreRoute>
+      <PoolAreaRoute tab={tab}>{children}</PoolAreaRoute>
+    </ExploreRoute>
+  )
+}
+
 export function useRouterConfig(): RouterConfig {
   const browserRouterEnabled = isBrowserRouterEnabled()
   const { hash } = useLocation()
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
   const isHooksExploreEnabled = useFeatureFlag(FeatureFlags.HooksExplore)
   const isMarginEnabled = useFeatureFlag(FeatureFlags.Margin)
-
   return useMemo(
-    () => ({
-      browserRouterEnabled,
-      hash,
-      isEmbeddedWalletEnabled,
-      isHooksExploreEnabled,
-      isMarginEnabled,
-    }),
+    () => ({ browserRouterEnabled, hash, isEmbeddedWalletEnabled, isHooksExploreEnabled, isMarginEnabled }),
     [browserRouterEnabled, hash, isEmbeddedWalletEnabled, isHooksExploreEnabled, isMarginEnabled],
   )
 }
@@ -117,11 +118,29 @@ export const routes: RouteDefinition[] = [
     getElement: () => getSuspendedElement(<PoolCategoryDetails />),
   }),
   createRouteDefinition({
+    path: '/explore/hooks/:chainName/:hookAddress',
+    getTitle: getExploreTitle,
+    getDescription: getExploreDescription,
+    getElement: () => (
+      <ExploreRoute>
+        <HookDetailsRoute />
+      </ExploreRoute>
+    ),
+  }),
+  createRouteDefinition({
     path: '/explore/hooks',
     getTitle: getExploreTitle,
     getDescription: getExploreDescription,
     nestedPaths: [':chainName'],
-    getElement: () => <HooksPreview />,
+    getElement: () => getPoolAreaElement('hooks', <HooksPage />),
+    enabled: (args) => Boolean(args.isHooksExploreEnabled),
+  }),
+  createRouteDefinition({
+    path: '/explore/pools',
+    getTitle: getExploreTitle,
+    getDescription: getExploreDescription,
+    nestedPaths: [':chainName'],
+    getElement: () => getPoolAreaElement('pools', <PoolsPage />),
     enabled: (args) => Boolean(args.isHooksExploreEnabled),
   }),
   createRouteDefinition({
@@ -129,7 +148,7 @@ export const routes: RouteDefinition[] = [
     getTitle: getExploreTitle,
     getDescription: getExploreDescription,
     nestedPaths: [':tab', ':chainName', ':tab/:chainName'],
-    getElement: () => <RedirectExplore />,
+    getElement: () => <ExploreRoute />,
   }),
   // Special case: redirect WSOL to SOL TDP, as directly trading WSOL is not supported currently.
   createRouteDefinition({
@@ -161,13 +180,13 @@ export const routes: RouteDefinition[] = [
     path: '/tokens/:chainName',
     getTitle: getExploreTitle,
     getDescription: getExploreDescription,
-    getElement: () => <RedirectExplore />,
+    getElement: () => <ExploreRoute />,
   }),
   createRouteDefinition({
     path: '/tokens/:chainName/:tokenAddress',
     getTitle: () => StaticTitlesAndDescriptions.DetailsPageBaseTitle,
     getDescription: () => StaticTitlesAndDescriptions.TDPDescription,
-    getElement: () => <RedirectExplore />,
+    getElement: () => <ExploreRoute />,
   }),
   createRouteDefinition({
     path: '/explore/pools/:chainName/:poolAddress',
@@ -286,7 +305,6 @@ export const routes: RouteDefinition[] = [
     getTitle: () => StaticTitlesAndDescriptions.SwapTitle,
     enabled: (args) => Boolean(args.isMarginEnabled),
   }),
-  // Refreshed pool routes
   createRouteDefinition({
     path: '/positions/add/new',
     getElement: () => <CreatePosition />,
@@ -346,7 +364,6 @@ export const routes: RouteDefinition[] = [
     getTitle: () => StaticTitlesAndDescriptions.MigrateTitleV3,
     getDescription: () => StaticTitlesAndDescriptions.MigrateDescriptionV4,
   }),
-  // Legacy pool routes
   createRouteDefinition({
     path: '/pool',
     getElement: () => <LegacyPoolRedirects />,
@@ -431,7 +448,6 @@ export const routes: RouteDefinition[] = [
     getTitle: () => StaticTitlesAndDescriptions.PasskeyManagementTitle,
     enabled: (args) => args.isEmbeddedWalletEnabled ?? false,
   }),
-  // Portfolio Pages
   createRouteDefinition({
     path: '/portfolio',
     getElement: () => <Portfolio />,
@@ -451,7 +467,6 @@ export const routes: RouteDefinition[] = [
       ':walletAddress/activity',
     ],
   }),
-  // Uniswap Extension Uninstall Page
   createRouteDefinition({
     path: CHROME_EXTENSION_UNINSTALL_URL_PATH,
     getElement: () => <ExtensionUninstall />,
@@ -470,28 +485,16 @@ export const routes: RouteDefinition[] = [
   createRouteDefinition({ path: '/not-found', getElement: () => <NotFound /> }),
 ]
 
-// Route primitives live in a sibling module (routeDefinition.tsx) to keep this file
-// within the max-lines limit; re-exported here so consumers keep a single import.
+// Re-export sibling route modules so consumers can keep a single import.
 export type { RouteDefinition } from '~/pages/routeDefinition'
-// Re-exported here so consumers keep a single import (see embedRoutes.tsx / Body.tsx).
 export { EMBED_ENTRY_ROUTES } from '~/pages/embedRoutes'
 
 export const findRouteByPath = (pathname: string) => {
   // Search /embed entry routes first so /embed and /embed/* resolve before the `*` catch-all.
   const searchSpace = isEmbedPath(pathname) ? [...EMBED_ENTRY_ROUTES, ...routes] : routes
-  for (const route of searchSpace) {
-    const match = matchPath(route.path, pathname)
-    if (match) {
-      return route
-    }
-    const subPaths = route.nestedPaths.map((nestedPath) => `${route.path}/${nestedPath}`)
-    for (const subPath of subPaths) {
-      // oxlint-disable-next-line no-shadow
-      const match = matchPath(subPath, pathname)
-      if (match) {
-        return route
-      }
-    }
-  }
-  return undefined
+  return searchSpace.find(
+    (route) =>
+      matchPath(route.path, pathname) ||
+      route.nestedPaths.some((nestedPath) => matchPath(`${route.path}/${nestedPath}`, pathname)),
+  )
 }

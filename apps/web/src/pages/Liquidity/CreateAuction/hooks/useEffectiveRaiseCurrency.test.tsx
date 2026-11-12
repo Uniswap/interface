@@ -1,9 +1,10 @@
 import { UniverseChainId } from '@universe/chains'
 import { describe, expect, it } from 'vitest'
+import { RaiseCurrency } from '~/features/Toucan/utils/raiseCurrency'
 import { useEffectiveRaiseCurrency } from '~/pages/Liquidity/CreateAuction/hooks/useEffectiveRaiseCurrency'
 import { CreateAuctionStoreContext } from '~/pages/Liquidity/CreateAuction/store/CreateAuctionStoreContext'
 import { createCreateAuctionStore } from '~/pages/Liquidity/CreateAuction/store/createCreateAuctionStore'
-import { DEFAULT_EXISTING_TOKEN_FORM, RaiseCurrency } from '~/pages/Liquidity/CreateAuction/types'
+import { DEFAULT_EXISTING_TOKEN_FORM } from '~/pages/Liquidity/CreateAuction/types'
 import { render, screen } from '~/test-utils/render'
 
 const EFFECTIVE_TEST_ID = 'effective-raise-currency'

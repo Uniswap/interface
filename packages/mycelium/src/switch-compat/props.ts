@@ -47,4 +47,5 @@ export type SwitchCompatProps = {
   disabledStyle?: CSSProperties
   /** Web only: accessible name, for when the visible label beside the switch is shortened. */
   'aria-label'?: string
+  'aria-describedby'?: string
 }

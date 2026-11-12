@@ -1,6 +1,6 @@
 import { DAI, USDC_MAINNET } from 'uniswap/src/constants/tokens'
-import { LimitPriceErrorType } from '~/features/Swap/CurrencyInputPanel/LimitPriceInputPanel/useCurrentPriceAdjustment'
 import { LimitPriceError, shouldShowLimitPriceError } from '~/pages/Swap/Limit/LimitPriceError'
+import { LimitPriceErrorType } from '~/pages/Swap/Limit/LimitPriceInputPanel/useCurrentPriceAdjustment'
 import { render } from '~/test-utils/render'
 
 describe('LimitPriceError', () => {
@@ -9,7 +9,7 @@ describe('LimitPriceError', () => {
     [false, 10],
     [true, -10],
     [false, -10],
-  ])('renders the limit price error correctly, inverted %p change %p', async (inverted, change) => {
+  ])('renders the limit price error correctly, inverted %o change %o', async (inverted, change) => {
     const { container } = render(
       <LimitPriceError
         inputCurrency={DAI}

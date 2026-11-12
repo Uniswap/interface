@@ -18,6 +18,7 @@ import { execFileSync } from 'node:child_process'
 import { readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { escapeRegExp } from 'utilities/src/primitives/string'
 
 // Uniswap Labs (Universal Navigation Inc.) Apple Developer team.
 const TEAM_ID = 'JH3UHGZD75'
@@ -65,7 +66,7 @@ function resetSigning(): void {
 
 /** Resolve a target's build-configuration object id from the config lists. */
 function configIdFor(text: string, target: string, configName: string): string | undefined {
-  const escaped = target.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  const escaped = escapeRegExp(target)
   const listRe = new RegExp(
     `/\\* Build configuration list for PBXNativeTarget "${escaped}" \\*/ = \\{[\\s\\S]*?buildConfigurations = \\(([\\s\\S]*?)\\);`,
   )

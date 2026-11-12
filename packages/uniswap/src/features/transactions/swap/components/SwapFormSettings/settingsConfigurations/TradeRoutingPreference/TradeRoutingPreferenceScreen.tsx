@@ -1,23 +1,22 @@
 import { TradingApi } from '@universe/api'
 import { isMobileApp, isMobileWeb } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { Flex, type FlexProps, Text, Switch, spacing, zIndexes } from '@universe/mycelium'
+import { Flex, Text, spacing, zIndexes } from '@universe/mycelium'
 import { HeightAnimator } from '@universe/mycelium/height-animator'
 import { InfoCircleFilled } from '@universe/mycelium/icons/InfoCircleFilled'
 import { UniswapX } from '@universe/mycelium/icons/UniswapX'
 import type { TFunction } from 'i18next'
-import type { ReactNode } from 'react'
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { UniswapXText, Trans } from 'ui/src'
 import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
-import Trace from 'uniswap/src/features/telemetry/Trace'
 import {
   useTransactionSettingsActions,
   useTransactionSettingsStore,
 } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
+import { OptionRow } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/OptionRow'
 import { isDefaultTradeRouteOptions } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/TradeRoutingPreference/isDefaultTradeRouteOptions'
 import { UniswapXInfo } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/TradeRoutingPreference/UniswapXInfo'
 import { V4HooksInfo } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/TradeRoutingPreference/V4HooksInfo'
@@ -184,64 +183,6 @@ function UniswapXInfoTooltipTrigger(): JSX.Element {
     </Text>
   )
 }
-type OptionRowProps = {
-  title: JSX.Element | string
-  active: boolean
-  elementName: ElementName
-  cantDisable: boolean
-  onSelect: () => void
-  description?: string | ReactNode
-  disabled?: boolean
-  alignItems?: Extract<FlexProps['alignItems'], 'flex-start' | 'center'>
-  footerContent?: JSX.Element
-}
-
-function OptionRow({
-  title,
-  description,
-  active,
-  elementName,
-  cantDisable,
-  onSelect,
-  disabled,
-  alignItems = 'center',
-  footerContent,
-}: OptionRowProps): JSX.Element {
-  return (
-    <Flex flexDirection="column" gap="$spacing12">
-      <Flex row py="$spacing2" alignItems={alignItems} gap="$spacing16" justifyContent="space-between">
-        <Flex shrink gap="$spacing4">
-          {typeof title === 'string' ? (
-            <Text color="$neutral1" variant="subheading2">
-              {title}
-            </Text>
-          ) : (
-            title
-          )}
-
-          {typeof description === 'string' ? (
-            <Text color="$neutral2" variant="body3">
-              {description}
-            </Text>
-          ) : (
-            description
-          )}
-        </Flex>
-        {/* Only log this event if toggle value is off, and then turned on */}
-        <Trace element={elementName} logPress={!active}>
-          <Switch
-            disabled={(active && cantDisable) || disabled}
-            checked={active}
-            variant="branded"
-            onCheckedChange={onSelect}
-          />
-        </Trace>
-      </Flex>
-      {footerContent}
-    </Flex>
-  )
-}
-
 function DefaultOptionDescription({ v4SwapEnabled }: { v4SwapEnabled: boolean }): JSX.Element {
   const { t } = useTranslation()
   const cheapestRouteText = t('swap.settings.routingPreference.option.default.description.preV4')

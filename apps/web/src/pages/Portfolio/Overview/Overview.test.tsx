@@ -91,7 +91,7 @@ vi.mock('~/components/emptyWallet/EmptyWalletCards', () => ({
   EmptyWalletCards: () => <div data-testid={TestID.EmptyWalletCards} />,
 }))
 
-vi.mock('~/pages/Portfolio/Header/hooks/usePortfolioRoutes', () => ({
+vi.mock('~/hooks/usePortfolioRoutes/usePortfolioRoutes', () => ({
   usePortfolioRoutes: () => ({ chainId: undefined, isExternalWallet: false }),
 }))
 

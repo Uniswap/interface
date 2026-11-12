@@ -1,3 +1,6 @@
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import { nearestUsableTick, TickMath } from '@uniswap/v3-sdk'
+import { DAI, USDC } from 'uniswap/src/constants/tokens'
 import {
   createParent,
   createRenderingContext,
@@ -580,5 +583,34 @@ describe('handleTickRangeChange', () => {
 
     expect(store.getState().maxTick).toBe(TICK_SPACING)
     expect(parent.state).toEqual({ minTick: 0, maxTick: TICK_SPACING })
+  })
+})
+
+describe('tick steppers', () => {
+  const NAVIGATION = {
+    tickSpacing: TICK_SPACING,
+    baseCurrency: DAI,
+    quoteCurrency: USDC,
+    protocolVersion: ProtocolVersion.V4,
+  }
+
+  it('report a step that moved the edge', () => {
+    const parent = createParent({ minTick: -600, maxTick: 600 })
+    const store = createStore({ currentTick: 0, minTick: -600, maxTick: 600, parent })
+
+    expect(store.getState().actions.incrementMax(NAVIGATION)).toBe(true)
+    expect(store.getState().maxTick).toBe(600 + TICK_SPACING)
+    expect(store.getState().actions.decrementMin(NAVIGATION)).toBe(true)
+    expect(store.getState().minTick).toBe(-600 - TICK_SPACING)
+  })
+
+  it('report no step at the usable tick limit or before an edge is set', () => {
+    const maxUsableTick = nearestUsableTick(TickMath.MAX_TICK, TICK_SPACING)
+    const parent = createParent({ minTick: undefined, maxTick: maxUsableTick })
+    const store = createStore({ currentTick: 0, minTick: undefined, maxTick: maxUsableTick, parent })
+
+    expect(store.getState().actions.incrementMax(NAVIGATION)).toBe(false)
+    expect(store.getState().maxTick).toBe(maxUsableTick)
+    expect(store.getState().actions.incrementMin(NAVIGATION)).toBe(false)
   })
 })

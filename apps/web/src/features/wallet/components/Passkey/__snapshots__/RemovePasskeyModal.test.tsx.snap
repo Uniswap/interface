@@ -55,7 +55,9 @@ exports[`RemovePasskeyModal > renders snapshot of the speedbump step 1`] = `
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 p-[12px] bg-critical-secondary rounded-[12px]"
             >
               <svg
+                aria-hidden="true"
                 fill="currentColor"
+                focusable="false"
                 stroke-width="8"
                 style="width: 24px; height: 24px;"
                 viewBox="0 0 24 24"
@@ -93,7 +95,9 @@ exports[`RemovePasskeyModal > renders snapshot of the speedbump step 1`] = `
                   class="flex flex-col basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 items-center justify-center w-[40px] h-[40px] bg-surface2 rounded-[12px]"
                 >
                   <svg
+                    aria-hidden="true"
                     fill="none"
+                    focusable="false"
                     stroke-width="8"
                     style="width: 20px; height: 20px;"
                     viewBox="0 0 24 24"
@@ -123,7 +127,9 @@ exports[`RemovePasskeyModal > renders snapshot of the speedbump step 1`] = `
                   style="--c-tr: rotate(180deg);"
                 >
                   <svg
+                    aria-hidden="true"
                     fill="none"
+                    focusable="false"
                     stroke-width="8"
                     style="width: 20px; height: 20px;"
                     viewBox="0 0 24 24"

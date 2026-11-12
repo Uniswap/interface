@@ -95,7 +95,9 @@ exports[`SendRecipientForm > should render correctly with verified recipient 1`]
         tabindex="0"
       >
         <svg
+          aria-hidden="true"
           fill="none"
+          focusable="false"
           stroke-width="8"
           style="width: 20px; height: 20px;"
           viewBox="0 0 16 16"

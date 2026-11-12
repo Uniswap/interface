@@ -13,8 +13,8 @@ import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import { getPortfolioChartPercentChange } from 'uniswap/src/features/portfolio/portfolioChartPercentChange'
 import { parseFiniteNumber } from 'utilities/src/primitives/number'
 import type { PriceChartData } from '~/components/Charts/PriceChart'
-import { PriceChartType } from '~/components/Charts/utils'
 import { useTokenPriceChartData } from '~/hooks/useTokenPriceChartData'
+import { PriceChartType } from '~/utils/charts'
 
 export interface AuctionHoverCardData {
   fdvUsd: number | undefined

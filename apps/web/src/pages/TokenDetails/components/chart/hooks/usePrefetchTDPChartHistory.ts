@@ -6,11 +6,11 @@ import {
 } from 'uniswap/src/data/apiClients/dataApiService/tokens/queries'
 import { toRestHistoryDuration } from 'uniswap/src/features/dataApi/tokenDetails/useTokenPriceHistoryRest'
 import { useEvent } from 'utilities/src/react/hooks'
-import { ChartType, PriceChartType } from '~/components/Charts/utils'
 import { TimePeriod, toHistoryDuration } from '~/data/util'
 import { useRestHistoryTarget } from '~/hooks/useRestHistoryTarget'
 import type { TDPChartQueryVariables, TokenDetailsChartType } from '~/pages/TokenDetails/components/chart/TDPChartState'
-import { getTdpTokenPriceHistoryQueryOptions } from '~/pages/TokenDetails/tdpTokenQueryOptions'
+import { ChartType, PriceChartType } from '~/utils/charts'
+import { getTokenPriceHistoryQueryOptions } from '~/utils/tokenQueryOptions'
 
 /**
  * Warms the hovered time period's history query for the active chart so selecting it paints from
@@ -46,7 +46,7 @@ export function usePrefetchTDPChartHistory({
         if (displayPriceChartType === PriceChartType.CANDLESTICK) {
           void queryClient.prefetchQuery(getGetTokenHistoryOHLCQueryOptions({ params }))
         } else {
-          void queryClient.prefetchQuery(getTdpTokenPriceHistoryQueryOptions({ target, duration }))
+          void queryClient.prefetchQuery(getTokenPriceHistoryQueryOptions({ target, duration }))
         }
         break
     }

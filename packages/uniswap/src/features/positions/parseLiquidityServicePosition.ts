@@ -7,6 +7,7 @@ import { areEvmAddressesEqual } from '@universe/chains'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { DEFAULT_TICK_SPACING, DYNAMIC_FEE_AMOUNT } from 'uniswap/src/constants/pools'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
+import { isToken0Quote } from 'uniswap/src/features/pools/quoteToken'
 import { computeTotalValueUsd } from 'uniswap/src/features/positions/computePositionValuation'
 import { parseLiquidityServiceRewards } from 'uniswap/src/features/positions/parseLiquidityServiceRewards'
 import { parseUncollectedFees } from 'uniswap/src/features/positions/parseLiquidityServiceValuation'
@@ -419,6 +420,10 @@ export function parseLiquidityServicePosition(position: LiquidityServicePosition
           ? Number(position.createdAt)
           : undefined,
       rewards,
+      isToken0Quote: isToken0Quote({
+        token0Address: position.token0Address,
+        quoteTokenAddress: position.quoteTokenAddress,
+      }),
     }
 
     // Balances are V4-only on the domain type: V3 has no per-position attribution upstream.

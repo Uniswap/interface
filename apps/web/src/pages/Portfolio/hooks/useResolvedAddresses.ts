@@ -1,7 +1,7 @@
 import { Platform } from '@universe/chains'
 import { useMemo } from 'react'
 import { useActiveAddresses } from '~/connection/accounts/hooks'
-import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
+import { usePortfolioRoutes } from '~/hooks/usePortfolioRoutes/usePortfolioRoutes'
 
 /**
  * Resolves portfolio addresses based on whether viewing an external wallet or connected wallet.

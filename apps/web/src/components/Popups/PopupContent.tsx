@@ -20,10 +20,10 @@ import { noop } from 'utilities/src/react/noop'
 import {
   getFORTransactionToActivityQueryOptions,
   getTransactionToActivityQueryOptions,
-} from '~/components/AccountDrawer/MiniPortfolio/Activity/parseLocal/queryOptions'
-import type { Activity } from '~/components/AccountDrawer/MiniPortfolio/Activity/types'
-import { PendingPortfolioLogo } from '~/components/AccountDrawer/MiniPortfolio/PendingPortfolioLogo'
-import { PortfolioLogo } from '~/components/AccountDrawer/MiniPortfolio/PortfolioLogo'
+} from '~/components/Activity/parseLocal/queryOptions'
+import type { Activity } from '~/components/Activity/types'
+import { PendingPortfolioLogo } from '~/components/Logo/PendingPortfolioLogo'
+import { PortfolioLogo } from '~/components/Logo/PortfolioLogo'
 import { useOpenOffchainActivityModal } from '~/components/modals/OffchainActivityModal'
 import { ToastRegularSimple } from '~/components/Popups/ToastRegularSimple'
 import { useOpenTransactionDetailsModal } from '~/state/transactionDetailsModalStore'

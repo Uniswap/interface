@@ -19,13 +19,13 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { isAllowedExternalUri } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
-import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
-import { FOTTooltipContent } from '~/features/Swap/SwapLineItemTooltips'
 import {
   MultichainPillDropdown,
   TokenInfoButton,
   tokenPillStyles,
-} from '~/pages/TokenDetails/components/info/MultichainPillDropdown'
+} from '~/components/MultichainPillDropdown/MultichainPillDropdown'
+import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
+import { FOTTooltipContent } from '~/features/Swap/SwapLineItemTooltips'
 import type { useMultichainTokenEntries } from '~/pages/TokenDetails/hooks/useMultichainTokenEntries'
 
 const TRUNCATE_CHARACTER_COUNT = 300

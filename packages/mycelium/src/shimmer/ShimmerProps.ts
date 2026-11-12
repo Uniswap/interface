@@ -18,6 +18,12 @@ export interface ShimmerProps {
    */
   disabled?: boolean
   /**
+   * The children are skeleton boxes, not content: hide them from assistive
+   * tech. Leave unset when the shimmer sweeps over real values (a warm-loading
+   * balance), which then stay readable and are marked `aria-busy`. Web only.
+   */
+  decorative?: boolean
+  /**
    * Seconds per full sweep. Defaults match the legacy `Shine` per-platform
    * timing: 1s on web, 2s on native.
    */

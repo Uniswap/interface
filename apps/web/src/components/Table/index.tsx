@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next'
 import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync'
 import { useComposedRefs } from 'utilities/src/react/composeRefs'
 import { useEvent } from 'utilities/src/react/hooks'
-import { APP_BODY_MOBILE_GUTTER_PX } from '~/app/layout/constants'
+import { STICKY_TABLE_HEAD_SPACER_PX, TABLE_ROW_GAP_TOKEN } from '~/components/Table/constants'
 import { useTableBodyRenderMode, TableBodyRenderMode } from '~/components/Table/hooks/useTableBodyRenderMode'
 import { useTableBottomFade } from '~/components/Table/hooks/useTableBottomFade'
 import { useTableExpandedState } from '~/components/Table/hooks/useTableExpandedState'
@@ -34,6 +34,7 @@ import {
   getPinnedRegionWidthCss,
   getRowContentMinWidthCss,
 } from '~/components/Table/utils/getColumnSizingStyles'
+import { APP_BODY_MOBILE_GUTTER_PX } from '~/constants/layout'
 import { useAppHeaderHeight } from '~/hooks/useAppHeaderHeight'
 
 // Set on TableContainer only while bleeding, so the last column's scroll-end gutter drops out otherwise.
@@ -132,9 +133,9 @@ const TableHead = (
     backgroundColor="$surface1"
     className="scrollbar-hidden"
     $platform-web={props.$isSticky ? { position: 'sticky' } : {}}
-    mb={props.mb}
+    mb={props.mb ?? TABLE_ROW_GAP_TOKEN}
   >
-    {props.$isSticky && <Flex height={12} />}
+    {props.$isSticky && <Flex height={STICKY_TABLE_HEAD_SPACER_PX} />}
     {/* Masks the $topGap band between the app header and this row, which rows would otherwise scroll
         through. Absolutely positioned on purpose: a flex child here is absorbed by the header row and
         makes it taller (the whole point of the gap is space *above* the table, not a taller header). */}
@@ -198,6 +199,7 @@ export function Table<T extends RowData>({
   rowHeight,
   compactRowHeight,
   subRowHeight,
+  rowGap,
   singleExpandedRow = false,
   collapseExpandedRowsKey,
   centerArrows = false,
@@ -331,8 +333,8 @@ export function Table<T extends RowData>({
     const bodyHeight = hideHeader ? maxHeight : maxHeight - headerHeight
     const itemHeight = rowHeight ?? compactRowHeight
 
-    return computeBodyMaxHeight({ bodyHeight, itemHeight, hasPinnedColumns })
-  }, [maxHeight, hideHeader, headerHeight, rowHeight, compactRowHeight, hasPinnedColumns])
+    return computeBodyMaxHeight({ bodyHeight, itemHeight, rowGap: hasPinnedColumns ? 0 : rowGap })
+  }, [maxHeight, hideHeader, headerHeight, rowHeight, compactRowHeight, hasPinnedColumns, rowGap])
 
   const extendedPinnedColumnDivider = hasPinnedColumns
   const bodyRenderMode = useTableBodyRenderMode({
@@ -371,7 +373,7 @@ export function Table<T extends RowData>({
         />
       ) : null}
       <>
-        <TableHead $isSticky={isSticky} $top={headerHeight + stickyTopOffset} $topGap={stickyTopOffset} mb="$spacing2">
+        <TableHead $isSticky={isSticky} $top={headerHeight + stickyTopOffset} $topGap={stickyTopOffset} mb={rowGap}>
           {hasPinnedColumns && (
             <TableSideScrollButtons
               {...sideScrollButtons}
@@ -380,7 +382,6 @@ export function Table<T extends RowData>({
               pinnedWidthOverride={pinnedWidthOverride}
             />
           )}
-
           {!hideHeader && (
             <ScrollSyncPane group={scrollGroup}>
               <HeaderRow testID={headerTestId} dimmed={!!error}>
@@ -425,6 +426,7 @@ export function Table<T extends RowData>({
             rowHeight={rowHeight}
             compactRowHeight={compactRowHeight}
             subRowHeight={subRowHeight}
+            rowGap={rowGap}
             hasPinnedColumns={hasPinnedColumns}
             extendedPinnedColumnDivider={extendedPinnedColumnDivider}
             virtualization={virtualized ? (maxHeight ? 'container' : 'window') : undefined}
@@ -437,7 +439,6 @@ export function Table<T extends RowData>({
       {showBottomFade && <TableBottomFade />}
       {showHiddenRowsSection && (
         <>
-          {/* Separator with expand/collapse control */}
           <TableSeparatorRow
             borderBottomRightRadius={areHiddenRowsShown ? 0 : '$rounded12'}
             borderBottomLeftRadius={areHiddenRowsShown ? 0 : '$rounded12'}
@@ -462,7 +463,6 @@ export function Table<T extends RowData>({
             <Separator />
           </TableSeparatorRow>
 
-          {/* Animated hidden rows */}
           <HeightAnimator
             open={areHiddenRowsShown}
             animation="200ms"
@@ -478,6 +478,7 @@ export function Table<T extends RowData>({
                   rowHeight={rowHeight}
                   compactRowHeight={compactRowHeight}
                   subRowHeight={subRowHeight}
+                  rowGap={rowGap}
                   hasPinnedColumns={hasPinnedColumns}
                   extendedPinnedColumnDivider={extendedPinnedColumnDivider}
                   dimmed={true}

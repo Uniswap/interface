@@ -3,16 +3,17 @@ import { GetTokenHistoryVolumeResponse } from '@uniswap/client-data-api/dist/dat
 import { UniverseChainId } from '@universe/chains'
 import { dataApiServiceClientV2 } from 'uniswap/src/data/apiClients/dataApiService/clients/DataApiClientV2'
 import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
-import { DataQuality } from '~/components/Charts/utils'
+import { currentTimeInSeconds } from 'utilities/src/time/time'
 import { useTDPVolumeChartData } from '~/pages/TokenDetails/components/chart/hooks/useTDPVolumeChartData'
 import { renderHook, waitFor } from '~/test-utils/render'
+import { DataQuality } from '~/utils/charts'
 
 vi.mock('uniswap/src/data/apiClients/dataApiService/clients/DataApiClientV2', () => ({
   dataApiServiceClientV2: { getTokenHistoryVolume: vi.fn() },
 }))
 
 const mockClient = vi.mocked(dataApiServiceClientV2)
-const NOW_S = Math.floor(Date.now() / 1000)
+const NOW_S = currentTimeInSeconds()
 
 // The test QueryClient is shared across this file, so each test gets its own token to keep keys apart.
 let tokenIndex = 0

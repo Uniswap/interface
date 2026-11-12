@@ -5,6 +5,7 @@ import { fireEvent, render, screen } from 'src/test/test-utils'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { EarnAction, type EarnPositionInfo, type EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
+import type { Mock } from 'vitest'
 
 const UNICHAIN_USDT0_ADDRESS = '0x9151434b16b9763660705744891fA906F660EcC5'
 const setInputFontSizeMock = vi.hoisted(() => vi.fn())
@@ -192,7 +193,7 @@ function renderWithdrawContent({
 }: {
   initialChainId: UniverseChainId
   vault: EarnVaultInfo
-  onReview: ReturnType<typeof vi.fn>
+  onReview: Mock
 }): void {
   render(
     <EarnDepositAmountContent

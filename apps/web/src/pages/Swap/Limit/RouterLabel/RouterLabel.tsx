@@ -1,8 +1,8 @@
 import { Text, type TextCompatProps as TextProps } from '@universe/mycelium'
 import { useTranslation } from 'react-i18next'
 import { UniswapXRouterLabel } from '~/pages/Swap/Limit/RouterLabel/UniswapXRouterLabel'
-import { QuoteMethod, SubmittableTrade } from '~/state/routing/types'
-import { isUniswapXTrade } from '~/state/routing/utils'
+import { QuoteMethod, SubmittableTrade } from '~/types/routing'
+import { isUniswapXTrade } from '~/utils/routing/routing'
 
 export function RouterLabel({ trade, color }: { trade: SubmittableTrade; color?: TextProps['color'] }) {
   const { t } = useTranslation()

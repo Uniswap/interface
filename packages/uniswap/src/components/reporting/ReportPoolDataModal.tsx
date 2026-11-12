@@ -9,6 +9,7 @@ import type { BaseModalProps } from 'uniswap/src/components/modals/ModalProps'
 import { ReportModal, ReportOption } from 'uniswap/src/components/reporting/ReportModal'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { getPoolName } from 'uniswap/src/features/pools/names'
 import { PoolDataReportOption, submitPoolDataReport } from 'uniswap/src/features/reporting/reports'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -21,6 +22,7 @@ export type ReportPoolDataModalProps = {
     version: ProtocolVersion
     token0: Currency
     token1: Currency
+    isToken0Quote?: boolean
   }
 }
 
@@ -64,6 +66,13 @@ export function ReportPoolDataModal({
     },
   )
 
+  const poolName = getPoolName({
+    symbol0: poolInfo.token0.symbol,
+    symbol1: poolInfo.token1.symbol,
+    token0IsQuote: poolInfo.isToken0Quote,
+    spaced: true,
+  })
+
   const reportOptions: ReportOption<PoolDataReportOption>[] = useMemo(
     () => [
       {
@@ -99,7 +108,7 @@ export function ReportPoolDataModal({
     <ReportModal
       modalName={ModalName.ReportPoolData}
       modalTitle={t('reporting.token.data.title.withSymbol', {
-        symbol: `${poolInfo.token0.symbol ?? ''} / ${poolInfo.token1.symbol ?? ''}`,
+        symbol: poolName ?? '',
       })}
       icon={ChartBarCrossed}
       reportOptions={reportOptions}

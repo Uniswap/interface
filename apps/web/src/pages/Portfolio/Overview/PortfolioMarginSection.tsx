@@ -17,6 +17,7 @@ import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { Table } from '~/components/Table'
 import { Cell } from '~/components/Table/Cell'
 import { hasRow } from '~/components/Table/utils/hasRow'
+import { ViewAllButton } from '~/components/ViewAllButton'
 import { MARGIN_CHAIN_ID, MARGIN_POSITIONS_REFETCH_MS, type MarginMarket } from '~/constants/margin'
 import { getMarginPairLogoProps, useMarginCurrencyInfos } from '~/features/margin/hooks/useMarginCurrencyInfos'
 import { type MarginMarketResolver, useResolveMarginMarket } from '~/features/margin/hooks/useResolveMarginMarket'
@@ -24,10 +25,14 @@ import { formatLeverage, getMarginDirectionStyle, scaledE18ToNumber } from '~/fe
 import { marginAmountLabel, resolveMarketForPosition } from '~/features/margin/utils/marginPositionDisplay'
 import { marginCurrentLeverage, marginPositionTokens } from '~/features/margin/utils/marginPositionRow'
 import { marginFallbackPairLabel, marginPairLabel, marginPairLegs } from '~/features/margin/utils/marginTokenDisplay'
-import { PORTFOLIO_TABLE_ROW_HEIGHT } from '~/pages/Portfolio/constants'
-import { MAX_MARGIN_ROWS, MINI_TABLE_MOBILE_BLEED_PX } from '~/pages/Portfolio/Overview/constants'
+import {
+  HEADERLESS_MINI_TABLE_CONTENT_GAP,
+  HEADERLESS_MINI_TABLE_ROW_HEIGHT,
+  MAX_MARGIN_ROWS,
+  MINI_TABLE_MOBILE_BLEED_PX,
+  MINI_TABLE_ROW_GAP,
+} from '~/pages/Portfolio/Overview/constants'
 import { TableSectionHeader } from '~/pages/Portfolio/Overview/TableSectionHeader'
-import { ViewAllButton } from '~/pages/Portfolio/Overview/ViewAllButton'
 
 const MARGIN_PATH = '/margin'
 const PAIR_LOGO_SIZE = 32
@@ -173,7 +178,7 @@ export const PortfolioMarginSection = memo(function PortfolioMarginSection({
         id: 'pair',
         minSize: 200,
         cell: (info) => (
-          <Cell justifyContent="flex-start" pl="$none">
+          <Cell justifyContent="flex-start" py="$spacing4" pl="$none">
             {hasRow<MarginActivePosition>(info) && (
               <PositionInfoCell
                 position={info.row.original}
@@ -187,7 +192,7 @@ export const PortfolioMarginSection = memo(function PortfolioMarginSection({
       columnHelper.display({
         id: 'pnl',
         cell: (info) => (
-          <Cell justifyContent="flex-end" pr="$none">
+          <Cell justifyContent="flex-end" py="$spacing4" pr="$none">
             {hasRow<MarginActivePosition>(info) && (
               <PositionPnlCell
                 position={info.row.original}
@@ -222,7 +227,7 @@ export const PortfolioMarginSection = memo(function PortfolioMarginSection({
     <TableSectionHeader
       title={t('portfolio.margin.title')}
       subtitle={t('portfolio.margin.openPositions', { count: activePositions.length })}
-      contentGap="$spacing2"
+      contentGap={HEADERLESS_MINI_TABLE_CONTENT_GAP}
       testId={TestID.PortfolioOverviewMarginSection}
     >
       <Flex $md={{ mx: -MINI_TABLE_MOBILE_BLEED_PX }}>
@@ -234,8 +239,9 @@ export const PortfolioMarginSection = memo(function PortfolioMarginSection({
           loading={false}
           error={false}
           rowWrapper={rowWrapper}
-          rowHeight={PORTFOLIO_TABLE_ROW_HEIGHT}
-          compactRowHeight={PORTFOLIO_TABLE_ROW_HEIGHT}
+          rowHeight={HEADERLESS_MINI_TABLE_ROW_HEIGHT}
+          compactRowHeight={HEADERLESS_MINI_TABLE_ROW_HEIGHT}
+          rowGap={MINI_TABLE_ROW_GAP}
         />
       </Flex>
       {isReadOnly ? null : (

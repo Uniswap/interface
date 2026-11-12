@@ -3,6 +3,7 @@
 exports[`CloseButton > renders without error 1`] = `
 <DocumentFragment>
   <button
+    accessibilityactions="[object Object]"
     android_ripple="[object Object]"
     data-testid="buttons/close-button"
     role="button"

@@ -1,4 +1,6 @@
 import type { UniverseChainId } from '@universe/chains'
+import type { UniswapHookProvenance } from 'uniswap/src/features/poolHooks/hooks/useUniswapHookProvenance'
+import type { HookListOptions } from '~/features/Hooks/hookListOptions'
 
 export enum HooksFixtureScenario {
   Default = 'default',
@@ -8,9 +10,18 @@ export enum HooksFixtureScenario {
   NotFound = 'not-found',
 }
 
+export enum HookSortField {
+  Volume = 'volume',
+  Tvl = 'tvl',
+  Pools = 'pools',
+}
+
+export type HookVolumePeriod = '1d' | '7d' | '30d'
+
 export enum HookSourceVerification {
   Verified = 'verified',
   Unverified = 'unverified',
+  Unknown = 'unknown',
 }
 
 export enum HookRoutingStatus {
@@ -30,7 +41,8 @@ export enum HookIndexingStatus {
 }
 
 export interface HookMetrics {
-  volumeUsd: Record<'1d' | '7d' | '30d', number | null>
+  volumeUsd: Record<HookVolumePeriod, number | null>
+  volumeAllTimeUsd: number | null
   tvlUsd: number | null
   feesAllTimeUsd: number | null
   poolCount: number | null
@@ -43,10 +55,15 @@ export interface HookActor {
 export interface HookDeployment {
   chainId: UniverseChainId
   address: string
+  deployerAddress: string | null
   provenance: {
     builder: HookActor | null
     configurer: HookActor | null
   }
+  fixtureProvenance: {
+    kind: UniswapHookProvenance
+    partnerName: string | null
+  } | null
   sourceVerification: HookSourceVerification
   routingStatus: HookRoutingStatus
   accounting: HookAccounting
@@ -55,17 +72,35 @@ export interface HookDeployment {
   isFixture: boolean
 }
 
+export type HookDeploymentAddress = Pick<HookDeployment, 'chainId' | 'address' | 'deployerAddress'>
+
 export interface Hook {
   id: string
   name: string | null
+  hasMetadata: boolean | null
   description: string
+  descriptionGeneratedByAi: boolean
   deployments: readonly [HookDeployment, ...HookDeployment[]]
   metrics: HookMetrics
   isFixture: boolean
 }
 
+export interface HookDetail extends Pick<
+  Hook,
+  'id' | 'name' | 'description' | 'descriptionGeneratedByAi' | 'isFixture'
+> {
+  deployment: HookDeployment
+  deployments: readonly HookDeploymentAddress[]
+}
+
+export interface HookListSummary {
+  totalHooks: number
+  volumeAllTimeUsd: number | null
+  tvlUsd: number | null
+}
+
 export interface HookListPage {
   hooks: readonly Hook[]
-  totalCount: number
-  nextPage: number | null
+  nextCursor: string | null
+  options: HookListOptions & { chainId: UniverseChainId | undefined }
 }

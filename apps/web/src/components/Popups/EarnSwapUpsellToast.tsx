@@ -21,7 +21,7 @@ import { useEarnSwapUpsellState } from 'uniswap/src/features/earn/hooks/useEarnS
 import { invalidateEarnPortfolioQuery } from 'uniswap/src/features/earn/portfolioInvalidation'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useActiveAccount } from '~/connection/accounts/hooks'
-import { useGlobalEarnVaultModalStore } from '~/features/earn/globalEarnVaultModalStore'
+import { useGlobalEarnVaultModalStore } from '~/state/globalEarnVaultModalStore'
 import { POPUP_MAX_WIDTH } from '~/utils/popups/constants'
 
 const EARN_TOAST_ICON_SIZE = iconSizes.icon36

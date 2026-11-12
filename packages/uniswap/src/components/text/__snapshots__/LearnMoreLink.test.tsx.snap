@@ -12,7 +12,6 @@ exports[`LearnMoreLink > renders without error 1`] = `
       class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-medium)] text-[16px] [line-height:18.4px] [font-weight:535] [color:var(--stext-accent1)] no-underline [outline-style:none] hover:[color:var(--ch-col)] focus:[color:var(--cf-col)] focus:[text-decoration-line:var(--cf-tdl)] focus:[text-decoration-color:var(--cf-tdc)] focus-visible:[color:var(--cv-col)] focus-visible:[text-decoration-line:var(--cv-tdl)] focus-visible:[text-decoration-color:var(--cv-tdc)] [text-underline-position:from-font]"
       data-stext-anchor="h f v"
       href="https://example.com"
-      role="link"
       style="--ch-col: var(--stext-accent1Hovered); --cf-col: var(--stext-accent1Hovered); --cf-tdl: underline; --cf-tdc: var(--stext-accent1Hovered); --cv-col: var(--stext-accent1Hovered); --cv-tdl: underline; --cv-tdc: var(--stext-accent1Hovered); --stext-a-col: var(--stext-accent1); --stext-a-col-h: var(--stext-accent1Hovered); --stext-a-col-f: var(--stext-accent1Hovered); --stext-a-col-v: var(--stext-accent1Hovered);"
       target="_blank"
     >

@@ -10,7 +10,8 @@ import type {
 } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
 import { MARGIN_NATIVE_TOKEN_ADDRESS } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
 import { MARGIN_ROUTER_ADDRESS } from '~/constants/margin'
-import type { StoredStepProof } from '~/pages/Swap/Margin/hooks/marginStepProofCache'
+import type { MarginPlanExecutionState } from '~/pages/Swap/Margin/hooks/marginPlanExecutionStore'
+import { readStepProof, type StoredStepProof } from '~/pages/Swap/Margin/hooks/marginStepProofCache'
 
 // PermitSingle { PermitDetails details; address spender; uint256 sigDeadline }. Every read below goes
 // through asString, so a non-string (absent / reshaped) value becomes undefined and the caller's
@@ -357,13 +358,31 @@ export function mayClearProofsOnAbandon({
   return code !== undefined && PROOF_CLEARABLE_STEP_ERROR_CODES.has(code) && !failingStepHasProof
 }
 
+export function heldPlan(
+  state: Pick<MarginPlanExecutionState, 'plan' | 'isExecuting' | 'stepError'>,
+): MarginPlanResponse | undefined {
+  const { plan, stepError } = state
+  if (!plan || isTerminalPlanStatus(plan.status)) {
+    return undefined
+  }
+  // Released so Open doesn't re-send a dead step (e.g. DeadlinePassed) forever; held while its tx may land.
+  if (
+    stepError &&
+    !state.isExecuting &&
+    !readStepProof({ swapper: plan.swapper, planId: plan.planId, stepIndex: stepError.stepIndex })
+  ) {
+    return undefined
+  }
+  return plan
+}
+
 export type OpenCtaAction = { kind: 'resume'; planId: string } | { kind: 'block' } | { kind: 'create' }
 
 // Open CTA decision — "form is truth": the CTA always opens what the form shows. Re-focus an OPEN
 // that the in-memory executor still holds (resume its live run). Block a fresh OPEN while ANY other
 // in-memory plan (any intent) is still in flight — it reserves a subId and the Open CTA can't resume
 // it under a foreign intent; its in-flight row owns that path. Otherwise create. A plan stranded by a
-// reload is not in memory, so it never reaches here, and it isn't resumable from the UI yet.
+// reload is not in memory, so it never reaches here; Activity's Continue resumes it instead.
 export function decideOpenAction({
   existing,
 }: {

@@ -14,8 +14,10 @@ import type { TransactionDetailsModalProps } from 'uniswap/src/components/activi
 import { OffRampPendingSupportCard } from 'uniswap/src/components/activity/details/transactions/OffRampPendingSupportCard'
 import { isOffRampSaleTransactionInfo } from 'uniswap/src/components/activity/details/types'
 import { MenuOptionItem } from 'uniswap/src/components/menus/ContextMenu'
+import { useUniswapContextSelector } from 'uniswap/src/contexts/UniswapContext'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useIsCancelable } from 'uniswap/src/features/transactions/hooks/useIsCancelable'
+import { isResumableMarginPlan } from 'uniswap/src/features/transactions/margin/isResumableMarginPlan'
 import { useCanResumePlan } from 'uniswap/src/features/transactions/swap/plan/intermediaryState/useCanResumePlan'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
@@ -44,6 +46,7 @@ export function TransactionDetailsOverview({
   const { evmAccount } = useWallet()
   const readonly = evmAccount?.accountType === AccountType.Readonly
   const canResumePlan = useCanResumePlan(typeInfo, status)
+  const navigateToMarginPlan = useUniswapContextSelector((ctx) => ctx.navigateToMarginPlan)
   const isCancelable = useIsCancelable(transactionDetails) && !readonly
 
   const hideTransactionActions = readonly || isExternalProfile
@@ -53,6 +56,21 @@ export function TransactionDetailsOverview({
     buttons.push(
       <Flex key="resume" row testID="resume-button">
         <ResumePlanButton typeInfo={typeInfo} onSuccess={onClose} />
+      </Flex>,
+    )
+  }
+  // Margin plans resume in the margin terminal, which only some platforms wire.
+  if (navigateToMarginPlan && !hideTransactionActions && isResumableMarginPlan(typeInfo, status)) {
+    const { planId } = typeInfo
+    const onContinue = (): void => {
+      onClose()
+      navigateToMarginPlan({ planId })
+    }
+    buttons.push(
+      <Flex key="resume" row testID="resume-button">
+        <Button size="medium" emphasis="primary" variant="branded" onPress={onContinue}>
+          {t('common.button.continue')}
+        </Button>
       </Flex>,
     )
   }

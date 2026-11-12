@@ -13,21 +13,16 @@ import type { Plugin } from 'vite'
  * Served publicly alongside the other client assets — it holds only the version string the bundle
  * already exposes.
  *
- * @param enabled - Whether the plugin should run
  * @param version - The resolved version baked into the bundle
  * @param projectRoot - The root directory of the project
  */
 // This plugin is used in vite.config.mts
 // oxlint-disable-next-line import/no-unused-modules
-export function generateVersionFilePlugin(enabled: boolean, version: string, projectRoot: string): Plugin {
+export function generateVersionFilePlugin(version: string, projectRoot: string): Plugin {
   return {
     name: 'generate-version-file',
     apply: 'build',
     closeBundle() {
-      if (!enabled) {
-        return
-      }
-
       const clientDir = path.resolve(projectRoot, 'build/client')
       fs.mkdirSync(clientDir, { recursive: true })
       fs.writeFileSync(path.join(clientDir, 'version.json'), `${JSON.stringify({ version }, null, 2)}\n`, 'utf-8')

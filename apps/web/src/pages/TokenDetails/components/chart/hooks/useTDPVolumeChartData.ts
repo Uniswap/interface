@@ -6,10 +6,10 @@ import { useMemo } from 'react'
 import { getGetTokenHistoryVolumeQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/tokens/queries'
 import { toRestHistoryDuration } from 'uniswap/src/features/dataApi/tokenDetails/useTokenPriceHistoryRest'
 import { isQueryLoading } from 'utilities/src/reactQuery/isQueryLoading'
-import { ChartQueryResult, ChartType, checkDataQuality } from '~/components/Charts/utils'
 import { SingleHistogramData } from '~/components/Charts/VolumeChart/utils'
 import { useRestHistoryTarget } from '~/hooks/useRestHistoryTarget'
 import type { TDPChartQueryVariables } from '~/pages/TokenDetails/components/chart/TDPChartState'
+import { ChartQueryResult, ChartType, checkDataQuality } from '~/utils/charts'
 
 function selectVolumeEntries(data: PlainMessage<GetTokenHistoryVolumeResponse> | undefined): SingleHistogramData[] {
   return (

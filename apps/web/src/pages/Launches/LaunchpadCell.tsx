@@ -1,6 +1,6 @@
 import { Flex, iconSizes } from '@universe/mycelium'
 import { EllipsisText } from '~/components/Table/shared/TableText'
-import { LaunchpadLogo } from '~/pages/Launches/LaunchpadLogo'
+import { LaunchpadLogo } from '~/features/Toucan/Shared/LaunchpadLogo'
 
 // Shared by every table that renders a Launchpad column so they stay visually in sync.
 // `CellContainer` is `grow: true`, so `size` only caps the column once `meta.flexGrow` is 0.

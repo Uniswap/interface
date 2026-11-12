@@ -123,6 +123,12 @@
     },
     {
       "path": "packages/cca"
+    },
+    {
+      "path": "config/storybook"
+    },
+    {
+      "path": "config/vite-presets"
     }
   ]
 }

@@ -1,7 +1,8 @@
 import { memo, useEffect, useState } from 'react'
 import { useLocation } from 'react-router'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
-import { isPortfolioTab } from '~/pages/Portfolio/types'
+import { isPortfolioTab } from '~/hooks/usePortfolioRoutes/types'
+import { getChainFilterFromSearchParams } from '~/utils/params/chainQueryParam'
 import { getCurrentPageFromLocation } from '~/utils/urlRoutes'
 
 /**
@@ -25,12 +26,15 @@ const PORTFOLIO_PAGES = new Set<InterfacePageName>([
 // stripped: `/portfolio` and `/portfolio/tokens` share one key (tab switches
 // keep scroll), while `/portfolio/<address>[/tab]` keys per wallet address, so
 // landing on another wallet's portfolio still resets scroll.
-function getPortfolioScrollKey(pathname: string): string {
+// The chain filter is part of the key: a filter change swaps the content for a
+// short skeleton, which would otherwise strand the viewport below the page.
+function getPortfolioScrollKey({ pathname, search }: { pathname: string; search: string }): string {
   const segments = pathname.split('/').filter(Boolean)
   if (isPortfolioTab(segments[segments.length - 1])) {
     segments.pop()
   }
-  return `/${segments.join('/')}`
+  const { chainId } = getChainFilterFromSearchParams(new URLSearchParams(search))
+  return `/${segments.join('/')}?chain=${chainId ?? ''}`
 }
 
 // Details pages keep one page name across many URLs, so they key on the full pathname: navigating to a
@@ -41,23 +45,30 @@ const DETAILS_PAGES = new Set<InterfacePageName>([
 ])
 
 // All other pages key on currentPage to avoid resetting scroll on intra-page URL changes.
-function getScrollKey({ currentPage, pathname }: { currentPage?: InterfacePageName; pathname: string }): string {
+function getScrollKey({
+  currentPage,
+  pathname,
+  search,
+}: {
+  currentPage?: InterfacePageName
+  pathname: string
+  search: string
+}): string {
   if (currentPage !== undefined && DETAILS_PAGES.has(currentPage)) {
     return pathname
   }
   if (currentPage !== undefined && PORTFOLIO_PAGES.has(currentPage)) {
-    return getPortfolioScrollKey(pathname)
+    return getPortfolioScrollKey({ pathname, search })
   }
   return String(currentPage)
 }
 
 export const ResetPageScrollEffect = memo(function ResetPageScrollEffect() {
-  const location = useLocation()
-  const { pathname } = location
+  const { pathname, search } = useLocation()
   const currentPage = getCurrentPageFromLocation(pathname)
   const [hasChangedOnce, setHasChangedOnce] = useState(false)
 
-  const scrollKey = getScrollKey({ currentPage, pathname })
+  const scrollKey = getScrollKey({ currentPage, pathname, search })
 
   useEffect(() => {
     if (!hasChangedOnce) {

@@ -1,7 +1,7 @@
 import { type Currency, CurrencyAmount, Price } from '@uniswap/sdk-core'
 import type { UniverseChainId } from '@universe/chains'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
-import { type RaiseCurrency } from '~/pages/Liquidity/CreateAuction/types'
+import type { RaiseCurrency } from '~/features/Toucan/utils/raiseCurrency'
 import { getRaiseCurrencyAsCurrency } from '~/pages/Liquidity/CreateAuction/utils'
 
 /**

@@ -21,8 +21,8 @@ function anchorOf(container: HTMLElement): HTMLAnchorElement {
 }
 
 describe('anchor semantics (the legacy web render)', () => {
-  it('renders an <a href target role="link"> carrying the children', () => {
-    const { container } = render(
+  it('renders an <a href target> carrying the children, a link by its href alone', () => {
+    const { container, getByRole } = render(
       <TouchableTextLinkCompat link="https://uniswap.org" target="_self">
         Learn more
       </TouchableTextLinkCompat>,
@@ -30,8 +30,19 @@ describe('anchor semantics (the legacy web render)', () => {
     const anchor = anchorOf(container)
     expect(anchor.getAttribute('href')).toBe('https://uniswap.org')
     expect(anchor.getAttribute('target')).toBe('_self')
+    expect(anchor.hasAttribute('role')).toBe(false)
+    expect(getByRole('link', { name: 'Learn more' })).toBe(anchor)
+  })
+
+  it('keeps an explicit link role when disabled drops the href', () => {
+    const { container } = render(
+      <TouchableTextLinkCompat disabled link="https://uniswap.org">
+        Learn more
+      </TouchableTextLinkCompat>,
+    )
+    const anchor = anchorOf(container)
+    expect(anchor.hasAttribute('href')).toBe(false)
     expect(anchor.getAttribute('role')).toBe('link')
-    expect(anchor.textContent).toBe('Learn more')
   })
 
   it('defaults target to _blank, exactly like legacy', () => {

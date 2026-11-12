@@ -1,3 +1,4 @@
+import userEvent from '@testing-library/user-event'
 import { UniverseChainId } from '@universe/chains'
 import { TestID } from '@universe/test'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
@@ -35,6 +36,7 @@ const POPULATED_STATS = {
   high52w: 12.34,
   low52w: 4.56,
   tvl: 1_000_000_000,
+  poolsTvl: 1_800_000_000,
   isLoading: false,
 }
 
@@ -45,12 +47,22 @@ const EMPTY_STATS = {
   high52w: undefined,
   low52w: undefined,
   tvl: undefined,
+  poolsTvl: undefined,
   isLoading: false,
 }
 
 function mockTDPState(state: Partial<TDPState>): void {
   mocked(useTDPStore).mockImplementation(((selector: (s: TDPState) => unknown) =>
     selector(state as TDPState)) as typeof useTDPStore)
+}
+
+// AnimatedNumber renders per-character nodes, so hover the tooltip trigger wrapping it instead.
+async function hoverTvlValue(): Promise<void> {
+  const trigger = screen.getByTestId(`${TestID.TokenDetailsStatsTvl}-value`).firstElementChild
+  if (!trigger) {
+    throw new Error('missing TVL value tooltip trigger')
+  }
+  await userEvent.hover(trigger)
 }
 
 describe('StatsSection', () => {
@@ -88,6 +100,33 @@ describe('StatsSection', () => {
 
     expect(screen.getByTestId(`${TestID.TokenDetailsStatsMarketCap}-value`)).toHaveTextContent('$1.2M')
     expect(screen.getByTestId(`${TestID.TokenDetailsStatsFdv}-value`)).toHaveTextContent('$234.6K')
+  })
+
+  it('shows the token vs pool TVL breakdown on hover of the TVL value', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+    mocked(useTokenMarketStats).mockReturnValue({ ...EMPTY_STATS, tvl: 55_432, poolsTvl: 112_821 })
+
+    render(<StatsSection />)
+
+    expect(screen.getByTestId(`${TestID.TokenDetailsStatsTvl}-value`)).toHaveTextContent('$55.4K')
+
+    await hoverTvlValue()
+
+    const breakdown = await screen.findByTestId(TestID.TokenDetailsStatsTvlBreakdown)
+    expect(breakdown).toHaveTextContent('USDC in pools$55,432')
+    expect(breakdown).toHaveTextContent('Paired tokens$57,389')
+    expect(breakdown).toHaveTextContent('All USDC pools$112,821')
+  })
+
+  it('omits the TVL breakdown when pools TVL is missing', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+    mocked(useTokenMarketStats).mockReturnValue({ ...EMPTY_STATS, tvl: 55_432 })
+
+    render(<StatsSection />)
+
+    await userEvent.hover(screen.getByTestId(`${TestID.TokenDetailsStatsTvl}-value`))
+
+    expect(screen.queryByTestId(TestID.TokenDetailsStatsTvlBreakdown)).toBeNull()
   })
 
   it('shows the "no stats available" fallback when every stat is missing', () => {

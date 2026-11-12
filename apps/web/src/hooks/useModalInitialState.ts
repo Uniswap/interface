@@ -11,9 +11,6 @@ type ExtractModalInitialState<T extends OpenModalParams['name']> = Extract<OpenM
  *
  * @example
  * ```tsx
- * // For BlockedAccount modal - accessing blockedAddress
- * const blockedAddress = useModalInitialState(ModalName.BlockedAccount)?.blockedAddress
- *
  * // For AddLiquidity modal - accessing position info
  * const positionInfo = useModalInitialState(ModalName.AddLiquidity)
  *

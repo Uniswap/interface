@@ -20,9 +20,9 @@ import { useAccount } from '~/connection/hooks/useAccount'
 import { useSelectChain } from '~/connection/hooks/useSelectChain'
 import { useUniswapXSwapCallback } from '~/pages/Swap/Limit/hooks/useUniswapXSwapCallback'
 import { useMultichainContext } from '~/state/multichain/useMultichainContext'
-import type { InterfaceTrade } from '~/state/routing/types'
-import { isLimitTrade, isUniswapXTrade } from '~/state/routing/utils'
+import type { InterfaceTrade } from '~/types/routing'
 import type { LimitOrderResult } from '~/types/trade'
+import { isLimitTrade, isUniswapXTrade } from '~/utils/routing/routing'
 
 // Returns a function that will execute a swap, if the parameters are all valid
 // and the user has approved the slippage adjusted input amount for the trade

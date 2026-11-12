@@ -294,7 +294,7 @@ runFrequency: release
 # coverage
 code_paths:
   - apps/web/src/pages/Swap/Limit/
-  - apps/web/src/components/AccountDrawer/MiniPortfolio/Activity/cancel/
+  - apps/web/src/components/Activity/cancel/
 automationRefs: []
 ---
 

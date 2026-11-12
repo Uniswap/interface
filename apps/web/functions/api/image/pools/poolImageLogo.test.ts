@@ -6,9 +6,9 @@ import { createElement } from 'react'
 
 const interFont = readFileSync(resolve(__dirname, '../../../../public/fonts/Inter-normal.var.ttf'))
 
-async function renderPoolImage(token0ImageUrl?: string, token1ImageUrl?: string): Promise<ArrayBuffer> {
+async function renderPoolImage(baseImageUrl?: string, quoteImageUrl?: string): Promise<ArrayBuffer> {
   const response = new ImageResponse(
-    createElement(PoolImage, { token0ImageUrl, token1ImageUrl, tokenSymbol0: 'AAA', tokenSymbol1: 'BBB' }),
+    createElement(PoolImage, { baseImageUrl, quoteImageUrl, baseSymbol: 'AAA', quoteSymbol: 'BBB' }),
     { width: 200, height: 200, fonts: [{ name: 'Inter', data: interFont, style: 'normal' }] },
   ) as Response
   return response.arrayBuffer()

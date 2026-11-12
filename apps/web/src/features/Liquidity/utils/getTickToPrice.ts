@@ -77,3 +77,16 @@ export function getV4TickToPrice({
   }
   return tickToPriceV4(baseCurrency, quoteCurrency, tick)
 }
+
+// price0 at tick T, in token1 units per token0 unit, accounting for decimals.
+export function priceFromTick({
+  tick,
+  token0Decimals,
+  token1Decimals,
+}: {
+  tick: number
+  token0Decimals: number
+  token1Decimals: number
+}): number {
+  return Math.pow(1.0001, tick) * Math.pow(10, token0Decimals - token1Decimals)
+}

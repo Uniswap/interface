@@ -5,9 +5,10 @@ import { useTranslation } from 'react-i18next'
 import { shortenPoolId, usePoolIdentityLabels } from 'uniswap/src/components/lists/items/pools/usePoolIdentityLabels'
 import type { PoolOption } from 'uniswap/src/components/lists/items/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { getPoolName } from 'uniswap/src/features/pools/names'
+import { orderPoolDataByQuoteToken } from 'uniswap/src/features/pools/quoteToken'
 import { NumberType } from 'utilities/src/format/types'
 import { ChartUnavailableOverlay } from '~/components/Charts/ChartUnavailableOverlay'
-import { ChartType } from '~/components/Charts/utils'
 import {
   HoverCardBody,
   HoverCardDotSeparator,
@@ -15,6 +16,7 @@ import {
   HoverCardIdentity,
 } from '~/components/HoverCard/HoverCardContent'
 import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
+import { ChartType } from '~/utils/charts'
 
 const POOL_HOVER_CARD_CHART_HEIGHT = 74
 const POOL_HOVER_CARD_BAR_COUNT = 24
@@ -30,6 +32,7 @@ export type PoolHoverCardPool = Pick<
   | 'chainId'
   | 'token0CurrencyInfo'
   | 'token1CurrencyInfo'
+  | 'isToken0Quote'
   | 'protocolVersion'
   | 'hookAddress'
   | 'feeTier'
@@ -136,6 +139,7 @@ function PoolHoverCardContentInner({
   chainId,
   token0CurrencyInfo,
   token1CurrencyInfo,
+  isToken0Quote,
   protocolVersion,
   hookAddress,
   feeTier,
@@ -154,8 +158,13 @@ function PoolHoverCardContentInner({
   const headlineLoading = volume1dUsd === undefined && loading
 
   const currencies = useMemo(
-    () => [token0CurrencyInfo.currency, token1CurrencyInfo.currency],
-    [token0CurrencyInfo, token1CurrencyInfo],
+    () =>
+      orderPoolDataByQuoteToken({
+        token0IsQuote: isToken0Quote,
+        data0: token0CurrencyInfo.currency,
+        data1: token1CurrencyInfo.currency,
+      }),
+    [isToken0Quote, token0CurrencyInfo, token1CurrencyInfo],
   )
   const servedLogos = useMemo(
     () => [
@@ -164,6 +173,12 @@ function PoolHoverCardContentInner({
     ],
     [token0CurrencyInfo, token1CurrencyInfo],
   )
+  const poolName = getPoolName({
+    symbol0: token0CurrencyInfo.currency.symbol,
+    symbol1: token1CurrencyInfo.currency.symbol,
+    token0IsQuote: isToken0Quote,
+    spaced: true,
+  })
 
   return (
     <HoverCardBody
@@ -177,7 +192,7 @@ function PoolHoverCardContentInner({
               orientation="stacked"
             />
           }
-          title={`${token0CurrencyInfo.currency.symbol} / ${token1CurrencyInfo.currency.symbol}`}
+          title={poolName}
           subtitle={shortenPoolId({ poolId, protocolVersion })}
         />
       }

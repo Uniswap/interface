@@ -1,6 +1,7 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { TradingApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
+import { resolveWirePlanIntent } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
 import { createTransactionDetails } from 'uniswap/src/features/activity/extract/extractPlanUtils'
 import {
   mapTAPIPlanStatusToTXStatus,
@@ -17,7 +18,7 @@ import {
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { CurrencyId } from 'uniswap/src/types/currency'
-import { validateAndBuildCurrencyId } from 'uniswap/src/utils/currencyId'
+import { buildCurrencyId, validateAndBuildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 
 /**
@@ -30,7 +31,7 @@ export default function extractPlanResponseDetails(
   if (!planResponse) {
     return null
   }
-  const { planId, swapper, status, steps, createdAt, lastUserActionAt, gasFee } = planResponse
+  const { planId, swapper, status, steps, createdAt, lastUserActionAt, gasFee, marginIntent } = planResponse
 
   const extractedAssetDetails = extractPlanResponseAssetDetails(steps)
   if (!extractedAssetDetails || !createdAt) {
@@ -62,6 +63,14 @@ export default function extractPlanResponseDetails(
     planId,
     planStatus: status,
     earnAction: planResponse.earnIntent?.action,
+    marginAction:
+      marginIntent?.collateralToken && marginIntent.debtToken
+        ? {
+            action: resolveWirePlanIntent(marginIntent.intent).action,
+            collateralCurrencyId: buildCurrencyId(tokenOutChainId, marginIntent.collateralToken),
+            debtCurrencyId: buildCurrencyId(tokenOutChainId, marginIntent.debtToken),
+          }
+        : undefined,
     stepDetails: extractStepDetailsFromPlanResponse({
       steps,
       swapper,
@@ -190,6 +199,7 @@ function extractStepDetailsFromPlanResponse({
         addedTime: updatedMillis,
         from: swapper,
         hash: step.proof?.txHash ?? step.proof?.orderId,
+        bridgeProvider: step.bridgeProvider,
       })
     })
     .filter((step) => step !== null)

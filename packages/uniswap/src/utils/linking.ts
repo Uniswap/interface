@@ -6,6 +6,7 @@ import { UniswapHelpUrls, UniswapStaticUrls } from 'uniswap/src/constants/urls'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { toUniswapWebAppLink } from 'uniswap/src/features/chains/utils'
 import type { EarnVaultInfo } from 'uniswap/src/features/earn/types'
+import type { HookDetailsReferrer } from 'uniswap/src/features/poolHooks/types'
 import { BACKEND_NATIVE_CHAIN_ADDRESS_STRING } from 'uniswap/src/features/search/utils'
 import type { EarnAnalyticsEntryPoint } from 'uniswap/src/features/telemetry/types'
 import { ServiceProviderInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
@@ -121,18 +122,27 @@ export async function openUri({
     if (openExternalBrowser) {
       await openURL(uri)
     } else {
-      await WebBrowser.openBrowserAsync(uri, {
-        // iOS only
-        controlsColor,
-        presentationStyle: WebBrowser.WebBrowserPresentationStyle.FULL_SCREEN,
+      try {
+        await WebBrowser.openBrowserAsync(uri, {
+          // iOS only
+          controlsColor,
+          presentationStyle: WebBrowser.WebBrowserPresentationStyle.FULL_SCREEN,
 
-        // Android only
-        // This is needed to avoid the browser automatically closing when the user comes back from another app (for example, when using the camera during FOR KYC).
-        showInRecents: true,
+          // Android only
+          // This is needed to avoid the browser automatically closing when the user comes back from another app (for example, when using the camera during FOR KYC).
+          showInRecents: true,
 
-        // Web only
-        windowFeatures: 'popup=false',
-      })
+          // Web only
+          windowFeatures: 'popup=false',
+        })
+      } catch (error) {
+        // Android rejects when no installed browser supports Custom Tabs, but the system intent can still open the link.
+        if (!isNoMatchingBrowserError(error)) {
+          throw error
+        }
+        logger.warn('linking', 'openUri', 'No in-app browser available, falling back to openURL', { uri })
+        await openURL(uri)
+      }
     }
   } catch (error) {
     logger.error(error, { tags: { file: 'linking', function: 'openUri' }, extra: { uri } })
@@ -140,6 +150,10 @@ export async function openUri({
       throw error
     }
   }
+}
+
+function isNoMatchingBrowserError(error: unknown): boolean {
+  return error instanceof Error && error.message.includes('No matching browser activity found')
 }
 
 export enum ExplorerDataType {
@@ -321,6 +335,27 @@ export function getFiatOnRampURL(chainIdOrParams?: UniverseChainId | FiatOnRampU
 export function getPoolDetailsURL(address: string, chain: UniverseChainId): string {
   const chainName = getChainInfo(chain).urlParam
   return `/explore/pools/${chainName}/${address}`
+}
+
+export const HOOK_DETAILS_REFERRER_QUERY_PARAM = 'hookReferrer'
+
+export function getHookDetailsURL({
+  hookAddress,
+  chainId,
+  referrer,
+}: {
+  hookAddress: string
+  chainId: UniverseChainId
+  referrer?: HookDetailsReferrer.List | HookDetailsReferrer.Badge
+}): string {
+  const chainName = getChainInfo(chainId).urlParam
+  const path = `/explore/hooks/${chainName}/${hookAddress}`
+  const searchParams = new URLSearchParams()
+  if (referrer) {
+    searchParams.set(HOOK_DETAILS_REFERRER_QUERY_PARAM, referrer)
+  }
+  const query = searchParams.toString()
+  return query ? `${path}?${query}` : path
 }
 
 export async function openTransactionLink(hash: string | undefined, chainId: UniverseChainId): Promise<void> {

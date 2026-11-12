@@ -9,7 +9,7 @@ import { tokenPriceQueryOptions } from '@universe/prices/src/queries/tokenPriceQ
 import { REST_POLL_INTERVAL_MS } from '@universe/prices/src/sources/rest/constants'
 import type { RestPriceBatcher } from '@universe/prices/src/sources/rest/RestPriceBatcher'
 import type { TokenPriceData } from '@universe/prices/src/types'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, type Mock, vi } from 'vitest'
 
 /**
  * The freshness contract this query owes its consumers when the WS stream
@@ -41,7 +41,7 @@ function createClient(): QueryClient {
 
 interface Harness {
   queryClient: QueryClient
-  fetchSpy: ReturnType<typeof vi.fn>
+  fetchSpy: Mock
   writeTick: () => void
   /** Advance fake time in steps while a WS tick lands every `tickEveryMs`. */
   advanceWithTicks: (totalMs: number, tickEveryMs: number) => Promise<void>

@@ -120,6 +120,59 @@ export function parseGatingUrlOverrides(params: GatingUrlParams): GatingUrlOverr
   return overrides
 }
 
+/**
+ * A copy of `params` whose gate params list exactly `gates` (the inverse of the gate half of
+ * `parseGatingUrlOverrides`). A gate param left with no entries is removed; every other param is kept.
+ */
+export function withGateOverrideParams(
+  params: URLSearchParams,
+  gates: ReadonlyArray<readonly [name: string, value: boolean]>,
+): URLSearchParams {
+  const next = new URLSearchParams(params)
+  const writeList = (key: string, names: string[]): void => {
+    if (names.length > 0) {
+      next.set(key, names.join(','))
+    } else {
+      next.delete(key)
+    }
+  }
+  writeList(
+    GATING_URL_PARAMS.gatesOn,
+    gates.filter(([, value]) => value).map(([name]) => name),
+  )
+  writeList(
+    GATING_URL_PARAMS.gatesOff,
+    gates.filter(([, value]) => !value).map(([name]) => name),
+  )
+  return next
+}
+
+/** A copy of `params` without any gating override param; every other param is kept. */
+export function withoutGatingUrlParams(params: URLSearchParams): URLSearchParams {
+  const next = new URLSearchParams(params)
+  for (const key of Object.values(GATING_URL_PARAMS)) {
+    next.delete(key)
+  }
+  return next
+}
+
+const GATING_PARAM_KEYS: ReadonlySet<string> = new Set(Object.values(GATING_URL_PARAMS))
+
+/**
+ * `params` as a query string (no leading `?`), like `URLSearchParams.toString()` but with the list separators
+ * in gating params left as literal commas so shared links stay readable. Other params are encoded as usual.
+ */
+export function serializeGatingSearchParams(params: URLSearchParams): string {
+  return params
+    .toString()
+    .split('&')
+    .map((pair) => {
+      const key = pair.slice(0, pair.indexOf('='))
+      return GATING_PARAM_KEYS.has(key) ? pair.replace(/%2C/gi, ',') : pair
+    })
+    .join('&')
+}
+
 /** One params object per name, in first-seen order, so the adapter (which assigns, not merges) gets every param at once. */
 function groupParamsByName(
   entries: Array<{ name: string; param: string; value: unknown }>,

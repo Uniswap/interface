@@ -2,6 +2,7 @@ import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes
 import type { Currency, Price } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { useEvent } from 'utilities/src/react/hooks'
+import { useCreateLiquidityContext } from '~/features/Liquidity/Create/CreateLiquidityContextProvider'
 import {
   formatDefaultInitialPrice,
   useDefaultInitialPrice,
@@ -12,7 +13,6 @@ import {
   getInitialPriceChangePercent,
   reapplyRangeToInitialPrice,
 } from '~/features/Liquidity/utils/initialPriceAcceptance'
-import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 import { PositionField } from '~/types/position'
 
 export interface InitialPriceAcceptance {

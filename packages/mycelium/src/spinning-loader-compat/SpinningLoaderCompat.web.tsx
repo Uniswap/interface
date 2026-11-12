@@ -48,7 +48,13 @@ const FLEX_RESET: CSSProperties = {
   position: 'relative',
 }
 
-export function SpinningLoaderCompat({ size = 20, disabled, color, unstyled }: SpinningLoaderCompatProps): JSX.Element {
+export function SpinningLoaderCompat({
+  size = 20,
+  disabled,
+  color,
+  unstyled,
+  label,
+}: SpinningLoaderCompatProps): JSX.Element {
   useInjectSingleStylesheet({ id: CSS_RULE_ID, css: SPINNING_LOADER_CSS, active: !disabled })
 
   if (disabled) {
@@ -58,7 +64,7 @@ export function SpinningLoaderCompat({ size = 20, disabled, color, unstyled }: S
   if (unstyled) {
     return (
       // oxlint-disable-next-line react/forbid-elements -- deliberately Tamagui-free: plain div hosts mirror the legacy rebuild's cascade output (INFRA-3644)
-      <div className="RotateElement" style={FLEX_RESET}>
+      <div aria-label={label} className="RotateElement" role="status" style={FLEX_RESET}>
         <CircleSpinner color={color} size={size} />
       </div>
     )
@@ -67,6 +73,8 @@ export function SpinningLoaderCompat({ size = 20, disabled, color, unstyled }: S
   return (
     // oxlint-disable-next-line react/forbid-elements -- deliberately Tamagui-free: plain div hosts mirror the legacy rebuild's cascade output (INFRA-3644)
     <div
+      aria-label={label}
+      role="status"
       style={{
         ...FLEX_RESET,
         alignItems: 'center',

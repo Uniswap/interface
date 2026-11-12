@@ -17,17 +17,23 @@ import { ONE_DAY_MS } from 'utilities/src/time/time'
 import { Table } from '~/components/Table'
 import { Cell } from '~/components/Table/Cell'
 import { hasRow } from '~/components/Table/utils/hasRow'
+import { ViewAllButton } from '~/components/ViewAllButton'
+import { PortfolioTab } from '~/hooks/usePortfolioRoutes/types'
+import { usePortfolioRoutes } from '~/hooks/usePortfolioRoutes/usePortfolioRoutes'
+import { buildPortfolioUrl } from '~/hooks/usePortfolioRoutes/utils'
 import { ActivityAmountCell } from '~/pages/Portfolio/Activity/ActivityTable/ActivityAmountCell/ActivityAmountCell'
 import { TimeCell } from '~/pages/Portfolio/Activity/ActivityTable/TimeCell'
-import { filterTransactionDetailsFromActivityItems } from '~/pages/Portfolio/Activity/Filters/utils'
 import { PORTFOLIO_TABLE_ROW_HEIGHT } from '~/pages/Portfolio/constants'
-import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
-import { MAX_ACTIVITY_ROWS, MINI_TABLE_MOBILE_BLEED_PX } from '~/pages/Portfolio/Overview/constants'
+import {
+  HEADERLESS_MINI_TABLE_CONTENT_GAP,
+  HEADERLESS_MINI_TABLE_ROW_HEIGHT,
+  MAX_ACTIVITY_ROWS,
+  MINI_TABLE_MOBILE_BLEED_PX,
+  MINI_TABLE_ROW_GAP,
+} from '~/pages/Portfolio/Overview/constants'
 import { TableSectionHeader } from '~/pages/Portfolio/Overview/TableSectionHeader'
-import { ViewAllButton } from '~/pages/Portfolio/Overview/ViewAllButton'
-import { PortfolioTab } from '~/pages/Portfolio/types'
-import { buildPortfolioUrl } from '~/pages/Portfolio/utils/portfolioUrls'
 import { useOpenTransactionDetailsModal } from '~/state/transactionDetailsModalStore'
+import { filterTransactionDetailsFromActivityItems } from '~/utils/activityItems'
 
 interface MiniActivityTableProps {
   maxActivities?: number
@@ -91,7 +97,8 @@ export const MiniActivityTable = memo(function MiniActivityTable({
         },
         cell: (info) => {
           return (
-            <Cell loading={showLoadingSkeleton} justifyContent="flex-start" p="$spacing8" pl="$none">
+            // Cell's default py wins over `p`; the tighter py keeps the two-line label inside the row.
+            <Cell loading={showLoadingSkeleton} justifyContent="flex-start" p="$spacing8" py="$spacing4" pl="$none">
               {hasRow<TransactionDetails>(info) && (
                 <ActivityAmountCell transaction={info.row.original} variant="compact" />
               )}
@@ -110,7 +117,7 @@ export const MiniActivityTable = memo(function MiniActivityTable({
         },
         cell: (info) => {
           return (
-            <Cell loading={showLoadingSkeleton} justifyContent="flex-end" p="$spacing8" pr="$none">
+            <Cell loading={showLoadingSkeleton} justifyContent="flex-end" p="$spacing8" py="$spacing4" pr="$none">
               {hasRow<TransactionDetails>(info) && (
                 <TimeCell timestamp={info.row.original.addedTime} textAlign="right" />
               )}
@@ -178,7 +185,7 @@ export const MiniActivityTable = memo(function MiniActivityTable({
         subtitle={subtitle}
         loading={loading}
         testId={TestID.PortfolioOverviewActivitySection}
-        contentGap={hasData ? '$gap4' : '$gap16'}
+        contentGap={hasData ? HEADERLESS_MINI_TABLE_CONTENT_GAP : '$gap16'}
       >
         {hasData ? (
           <Flex $md={{ mx: -MINI_TABLE_MOBILE_BLEED_PX }}>
@@ -191,8 +198,9 @@ export const MiniActivityTable = memo(function MiniActivityTable({
               error={false}
               rowWrapper={rowWrapper}
               loadingRowsCount={MAX_ACTIVITY_ROWS}
-              rowHeight={PORTFOLIO_TABLE_ROW_HEIGHT}
-              compactRowHeight={PORTFOLIO_TABLE_ROW_HEIGHT}
+              rowHeight={HEADERLESS_MINI_TABLE_ROW_HEIGHT}
+              compactRowHeight={HEADERLESS_MINI_TABLE_ROW_HEIGHT}
+              rowGap={MINI_TABLE_ROW_GAP}
             />
           </Flex>
         ) : (

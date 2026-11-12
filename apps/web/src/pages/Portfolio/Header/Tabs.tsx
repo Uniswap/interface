@@ -3,10 +3,10 @@ import { TestID } from '@universe/test'
 import { Link } from 'react-router'
 import { ElementName, InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
+import { PortfolioTab } from '~/hooks/usePortfolioRoutes/types'
+import { usePortfolioRoutes } from '~/hooks/usePortfolioRoutes/usePortfolioRoutes'
+import { buildPortfolioUrl, pathToPortfolioTab } from '~/hooks/usePortfolioRoutes/utils'
 import { PortfolioTabInfo, usePortfolioTabs } from '~/pages/Portfolio/Header/hooks/usePortfolioTabs'
-import { PortfolioTab } from '~/pages/Portfolio/types'
-import { buildPortfolioUrl, pathToPortfolioTab } from '~/pages/Portfolio/utils/portfolioUrls'
 
 const PORTFOLIO_TAB_TEST_IDS: Record<PortfolioTab, string> = {
   [PortfolioTab.Overview]: TestID.PortfolioTabOverview,

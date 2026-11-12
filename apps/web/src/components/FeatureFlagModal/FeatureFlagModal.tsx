@@ -42,9 +42,10 @@ import {
   EXTENSION_ID_LABEL,
   NETWORK_REQUESTS_LABEL,
 } from '~/components/FeatureFlagModal/flagGroups'
+import { useGatingUrlSync } from '~/dev/useGatingUrlSync'
 import { usePinnedExperiments, usePinnedFeatureFlags, usePinnedFlagGroups } from '~/dev/usePinnedFeatureFlags'
+import { useExternallyConnectableExtensionId } from '~/hooks/useExternallyConnectableExtensionId'
 import { useModalState } from '~/hooks/useModalState'
-import { useExternallyConnectableExtensionId } from '~/pages/ExtensionPasskeyAuthPopUp/useExternallyConnectableExtensionId'
 import { EllipsisTamaguiStyle } from '~/theme/components/styles'
 
 const CenteredRow = forwardRef<HTMLDivElement, FlexCompatProps>(function CenteredRow(props, ref) {
@@ -197,11 +198,9 @@ const FeatureFlagOption = memo(function FeatureFlagOption({ flag, label }: Featu
   const name = getFeatureFlagName(flag)
   const { isPinned, pinFlag, unpinFlag } = usePinnedFeatureFlags()
   const isOptionPinned = isPinned(name)
+  const { overrideGate } = useGatingUrlSync()
 
-  // oxlint-disable-next-line no-shadow
-  const onFlagVariantChange = useEvent((enabled: boolean) => {
-    getOverrideAdapter().overrideGate(name, enabled)
-  })
+  const onFlagVariantChange = useEvent((checked: boolean) => overrideGate(name, checked))
 
   const onPinPress = useEvent(() => {
     if (isOptionPinned) {
@@ -332,10 +331,12 @@ export function FeatureFlagModal(): JSX.Element {
   const externallyConnectableExtensionId = useExternallyConnectableExtensionId()
   const [searchQuery, setSearchQuery] = useState('')
   const { pinnedGroups } = usePinnedFlagGroups()
+  const { clearGatingUrlParams } = useGatingUrlSync()
 
   const removeAllOverrides = useEvent(() => {
     getOverrideAdapter().removeAllOverrides()
     clearComplianceOverrides()
+    clearGatingUrlParams()
   })
 
   const handleReload = useEvent(() => {
@@ -385,7 +386,7 @@ export function FeatureFlagModal(): JSX.Element {
         <CenteredRow borderBottomColor="$surface3" borderBottomWidth={1} borderRadius={0}>
           <Flex row grow alignItems="center" justifyContent="space-between">
             <Text variant="subheading2">Feature Flag Settings</Text>
-            <Button onPress={removeAllOverrides} variant="branded" size="small" fill={false}>
+            <Button onPress={removeAllOverrides} emphasis="secondary" size="small" fill={false} mr="$spacing8">
               Clear Overrides
             </Button>
           </Flex>

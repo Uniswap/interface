@@ -285,6 +285,7 @@ function VaultDetailsList({ vault }: { vault: EarnVaultInfo }): JSX.Element {
                 ) : (
                   vault.curator.imageUrl && (
                     <UniversalImage
+                      alt=""
                       size={{ width: curatorLogoSize, height: curatorLogoSize }}
                       style={{ image: { borderRadius: borderRadii.roundedFull } }}
                       uri={vault.curator.imageUrl}

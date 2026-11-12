@@ -51,3 +51,17 @@ export const DEV_PORTAL_API_BASE_URL: string = `https://${DEV_PORTAL_API_HOST}`
 export const STAGING_PORTAL_API_BASE_URL: string = `https://${STAGING_PORTAL_API_HOST}`
 /** Dev-portal Entry Gateway base URL for the production backend environment. */
 export const PROD_PORTAL_API_BASE_URL: string = `https://${PROD_PORTAL_API_HOST}`
+
+/** Public front-door (CloudFront) hostname of the dev Entry Gateway. */
+export const DEV_RPC_HOST = 'dev.rpc.uniswap.org'
+/** Public front-door (CloudFront) hostname of the staging Entry Gateway. */
+export const STAGING_RPC_HOST = 'staging.rpc.uniswap.org'
+/** Public front-door (CloudFront) hostname of the production Entry Gateway. */
+export const PROD_RPC_HOST = 'rpc.uniswap.org'
+
+/** Public front-door base URL of the dev Entry Gateway. */
+export const DEV_RPC_API_BASE_URL: string = `https://${DEV_RPC_HOST}`
+/** Public front-door base URL of the staging Entry Gateway. */
+export const STAGING_RPC_API_BASE_URL: string = `https://${STAGING_RPC_HOST}`
+/** Public front-door base URL of the production Entry Gateway. */
+export const PROD_RPC_API_BASE_URL: string = `https://${PROD_RPC_HOST}`

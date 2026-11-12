@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
+import type { RaiseCurrency } from '~/features/Toucan/utils/raiseCurrency'
 import { ExpandableHelpLink } from '~/pages/Liquidity/CreateAuction/components/ExpandableHelpLink'
 import { PostAuctionLiquiditySelector } from '~/pages/Liquidity/CreateAuction/components/PostAuctionLiquiditySelector'
 import { quoteRaiseAtFloor } from '~/pages/Liquidity/CreateAuction/launchThreshold'
@@ -14,7 +15,6 @@ import {
   type PostAuctionLiquidityAllocation,
   PostAuctionLiquidityAllocationType,
   type PostAuctionLiquidityTier,
-  type RaiseCurrency,
 } from '~/pages/Liquidity/CreateAuction/types'
 import { getRaiseCurrencyAsCurrency } from '~/pages/Liquidity/CreateAuction/utils'
 

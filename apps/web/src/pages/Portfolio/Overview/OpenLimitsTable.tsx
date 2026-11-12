@@ -20,14 +20,19 @@ import { currencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { getDurationRemainingString } from 'utilities/src/time/duration'
-import { useOpenLimitOrders } from '~/components/AccountDrawer/MiniPortfolio/Activity/hooks'
+import { useOpenLimitOrders } from '~/components/Activity/hooks'
 import { useOpenOffchainActivityModal, useOrderAmounts } from '~/components/modals/OffchainActivityModal'
 import { Table } from '~/components/Table'
 import { Cell } from '~/components/Table/Cell'
 import { HeaderCell } from '~/components/Table/styled'
 import { hasRow } from '~/components/Table/utils/hasRow'
-import { PORTFOLIO_TABLE_ROW_HEIGHT } from '~/pages/Portfolio/constants'
-import { MAX_LIMITS_LOADING_ROWS, MINI_TABLE_MOBILE_BLEED_PX } from '~/pages/Portfolio/Overview/constants'
+import {
+  HEADERLESS_MINI_TABLE_CONTENT_GAP,
+  HEADERLESS_MINI_TABLE_ROW_HEIGHT,
+  MAX_LIMITS_LOADING_ROWS,
+  MINI_TABLE_MOBILE_BLEED_PX,
+  MINI_TABLE_ROW_GAP,
+} from '~/pages/Portfolio/Overview/constants'
 import { TableSectionHeader } from '~/pages/Portfolio/Overview/TableSectionHeader'
 
 /**
@@ -200,7 +205,7 @@ export const OpenLimitsTable = memo(function OpenLimitsTable({
         ),
         cell: (info) => {
           return (
-            <Cell loading={showLoadingSkeleton} justifyContent="flex-start" pl="$none">
+            <Cell loading={showLoadingSkeleton} justifyContent="flex-start" py="$spacing4" pl="$none">
               {hasRow<UniswapXOrderDetails>(info) && <LimitInfoCell order={info.row.original} />}
             </Cell>
           )
@@ -219,7 +224,7 @@ export const OpenLimitsTable = memo(function OpenLimitsTable({
         ),
         cell: (info) => {
           return (
-            <Cell loading={showLoadingSkeleton} justifyContent="flex-end" pr="$none">
+            <Cell loading={showLoadingSkeleton} justifyContent="flex-end" py="$spacing4" pr="$none">
               {hasRow<UniswapXOrderDetails>(info) && <LimitActionCell order={info.row.original} />}
             </Cell>
           )
@@ -261,7 +266,7 @@ export const OpenLimitsTable = memo(function OpenLimitsTable({
     <TableSectionHeader
       title={t('common.limits.open')}
       subtitle={t('portfolio.overview.limits.table.openLimits', { count: openLimitOrders.length })}
-      contentGap="$spacing2"
+      contentGap={HEADERLESS_MINI_TABLE_CONTENT_GAP}
     >
       <Flex $md={{ mx: -MINI_TABLE_MOBILE_BLEED_PX }}>
         <Table
@@ -273,8 +278,9 @@ export const OpenLimitsTable = memo(function OpenLimitsTable({
           error={false}
           rowWrapper={rowWrapper}
           loadingRowsCount={MAX_LIMITS_LOADING_ROWS}
-          rowHeight={PORTFOLIO_TABLE_ROW_HEIGHT}
-          compactRowHeight={PORTFOLIO_TABLE_ROW_HEIGHT}
+          rowHeight={HEADERLESS_MINI_TABLE_ROW_HEIGHT}
+          compactRowHeight={HEADERLESS_MINI_TABLE_ROW_HEIGHT}
+          rowGap={MINI_TABLE_ROW_GAP}
         />
       </Flex>
     </TableSectionHeader>

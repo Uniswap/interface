@@ -1,5 +1,5 @@
+import { ConfirmModalState } from '~/components/ConfirmModal/types'
 import { SwapHead } from '~/pages/Swap/Limit/ConfirmLimitOrderModal/Head'
-import { ConfirmModalState } from '~/pages/Swap/Limit/ConfirmLimitOrderModal/state'
 import { fireEvent, render, screen } from '~/test-utils/render'
 
 describe('ConfirmSwapModal/Head', () => {

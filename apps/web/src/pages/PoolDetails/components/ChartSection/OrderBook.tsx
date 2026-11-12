@@ -10,11 +10,11 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { NumberType } from 'utilities/src/format/types'
 import { SubscriptZeroPrice } from '~/components/SubscriptZeroPrice'
 import { useLiquidityBarData } from '~/features/Liquidity/charts/LiquidityChart'
+import { priceFromTick } from '~/features/Liquidity/utils/getTickToPrice'
 import { MIN_DEPTH_BARS_PER_SIDE } from '~/pages/PoolDetails/components/ChartSection/DepthChart'
 import {
   DEPTH_CHART_SUBSCRIPT_THRESHOLD,
   getDisplayPair,
-  priceFromTick,
   toDisplayPrice,
 } from '~/pages/PoolDetails/components/ChartSection/DepthChart.utils'
 import { usePdpPool } from '~/pages/PoolDetails/components/ChartSection/usePdpPool'

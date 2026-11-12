@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { getPoolName } from 'uniswap/src/features/pools/names'
+import { orderPoolDataByQuoteToken } from 'uniswap/src/features/pools/quoteToken'
 import { PositionInfo } from 'uniswap/src/features/positions/types'
 import { getFeeLabel, getProtocolVersionLabel } from 'uniswap/src/features/positions/utils'
 import { shortenAddress } from 'utilities/src/addresses'
@@ -28,7 +30,18 @@ export function PositionDetailsHero({
   onTogglePriceDirection,
 }: PositionDetailsHeroProps): JSX.Element {
   const { t } = useTranslation()
-  const { currency0Amount, currency1Amount, version, feeTier, v4hook, chainId } = positionInfo
+  const { currency0Amount, currency1Amount, version, feeTier, v4hook, chainId, isToken0Quote } = positionInfo
+  const [baseInfo, quoteInfo] = orderPoolDataByQuoteToken({
+    token0IsQuote: isToken0Quote,
+    data0: currency0Info,
+    data1: currency1Info,
+  })
+  const poolName = getPoolName({
+    symbol0: currency0Amount.currency.symbol,
+    symbol1: currency1Amount.currency.symbol,
+    token0IsQuote: isToken0Quote,
+    spaced: true,
+  })
 
   const protocolLabel = getProtocolVersionLabel(version)
   const feeLabel = getFeeLabel({ version, feeTier, dynamicLabel: t('common.dynamic') })
@@ -40,13 +53,13 @@ export function PositionDetailsHero({
       <Flex row alignItems="center" gap="$spacing16" width="100%">
         <SplitLogo
           chainId={chainId}
-          inputCurrencyInfo={currency0Info}
-          outputCurrencyInfo={currency1Info}
+          inputCurrencyInfo={baseInfo}
+          outputCurrencyInfo={quoteInfo}
           size={iconSizes.icon48}
         />
         <Flex shrink gap="$spacing2">
           <Text color="$neutral1" numberOfLines={1} variant="subheading1">
-            {currency0Amount.currency.symbol} / {currency1Amount.currency.symbol}
+            {poolName}
           </Text>
           <Flex row alignItems="center" gap="$spacing6">
             {subtitleParts.map((part, index) => (

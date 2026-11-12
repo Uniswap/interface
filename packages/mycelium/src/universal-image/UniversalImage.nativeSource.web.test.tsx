@@ -88,7 +88,9 @@ describe('SvgImage (native) WebView wrapper', () => {
   })
 
   it('wraps the WebView in a View carrying the explicit aspect ratio and height cap', () => {
-    const { container } = render(<SvgImage autoplay={false} size={{ height: 40, aspectRatio: 3 }} uri={SVG_URI} />)
+    const { container } = render(
+      <SvgImage alt="" autoplay={false} size={{ height: 40, aspectRatio: 3 }} uri={SVG_URI} />,
+    )
 
     const wrapper = container.querySelector('iframe')?.parentElement
     expect(wrapper).not.toBeNull()
@@ -97,7 +99,7 @@ describe('SvgImage (native) WebView wrapper', () => {
   })
 
   it('falls back to the svg intrinsic aspect ratio and an unbounded height', () => {
-    const { container } = render(<SvgImage autoplay={false} size={{}} uri={SVG_URI} />)
+    const { container } = render(<SvgImage alt="" autoplay={false} size={{}} uri={SVG_URI} />)
 
     const wrapper = container.querySelector('iframe')?.parentElement
     expect(renderedStyle(wrapper as Element, 'aspect-ratio'), 'aspect-ratio').toBe('2')
@@ -105,7 +107,7 @@ describe('SvgImage (native) WebView wrapper', () => {
   })
 
   it('sizes the WebView to fill the wrapper with a transparent background', () => {
-    const { container } = render(<SvgImage autoplay={false} size={{ height: 40 }} uri={SVG_URI} />)
+    const { container } = render(<SvgImage alt="" autoplay={false} size={{ height: 40 }} uri={SVG_URI} />)
 
     // The test setup mocks react-native-webview's WebView as an iframe that forwards props
     const webView = container.querySelector('iframe')
@@ -120,7 +122,13 @@ describe('SvgImage (native) WebView wrapper', () => {
     mockedUseSvgData.mockReturnValue(undefined)
 
     const { container, getByTestId } = render(
-      <SvgImage autoplay={false} fallback={<div data-testid="svg-fallback" />} size={{ height: 40 }} uri={SVG_URI} />,
+      <SvgImage
+        alt=""
+        autoplay={false}
+        fallback={<div data-testid="svg-fallback" />}
+        size={{ height: 40 }}
+        uri={SVG_URI}
+      />,
     )
 
     expect(getByTestId('svg-fallback')).toBeDefined()
@@ -132,6 +140,7 @@ describe('UniversalImage branches shared with native', () => {
   it('renders the loading container with the caller style and loading-prefixed testID', () => {
     const { getByTestId } = render(
       <UniversalImage
+        alt=""
         size={{}}
         style={{ loadingContainer: { width: 40, height: 40, borderRadius: 12, overflow: 'hidden' } }}
         testID="native"
@@ -146,13 +155,15 @@ describe('UniversalImage branches shared with native', () => {
   })
 
   it('renders the bare loader without a container when no loadingContainer style is given', () => {
-    const { queryByTestId } = render(<UniversalImage size={{}} testID="native" />)
+    const { queryByTestId } = render(<UniversalImage alt="" size={{}} testID="native" />)
 
     expect(queryByTestId('loading-native')).toBeNull()
   })
 
   it('renders a require-source uri through RequireImage (web leg: blank sized block) from the size prop', () => {
-    const { container } = render(<UniversalImage size={{ width: 20, height: 24 }} uri={137 as ImageRequireSource} />)
+    const { container } = render(
+      <UniversalImage alt="" size={{ width: 20, height: 24 }} uri={137 as ImageRequireSource} />,
+    )
 
     const image = container.firstElementChild
     expect(image).not.toBeNull()
@@ -163,6 +174,7 @@ describe('UniversalImage branches shared with native', () => {
   it('the web require-source leg renders the sized block forwarding the caller image style', () => {
     const { container } = render(
       <RequireImageWeb
+        alt=""
         size={{ width: 20, height: 24 }}
         style={{ borderRadius: 20, zIndex: 1 }}
         uri={137 as ImageRequireSource}
@@ -178,7 +190,7 @@ describe('UniversalImage branches shared with native', () => {
 
   it('renders the native require-source leg through ExpoImage with the numeric source sized from the size prop', () => {
     const { getByTestId } = render(
-      <RequireImageNative size={{ width: 20, height: 24 }} uri={137 as ImageRequireSource} />,
+      <RequireImageNative alt="" size={{ width: 20, height: 24 }} uri={137 as ImageRequireSource} />,
     )
 
     const image = getByTestId('expo-image')
@@ -192,6 +204,7 @@ describe('UniversalImage branches shared with native', () => {
     // (zIndex + borderRadius); dropping it left a blank white circle over the logo
     const { getByTestId } = render(
       <RequireImageNative
+        alt=""
         size={{ width: 20, height: 24 }}
         style={{ borderRadius: 20, zIndex: 1 }}
         uri={137 as ImageRequireSource}
@@ -207,6 +220,7 @@ describe('UniversalImage branches shared with native', () => {
     const onError = vi.fn()
     const { getByTestId, queryByTestId } = render(
       <RequireImageNative
+        alt=""
         fallback={<div data-testid="require-fallback" />}
         size={{ width: 20, height: 24 }}
         uri={137 as ImageRequireSource}

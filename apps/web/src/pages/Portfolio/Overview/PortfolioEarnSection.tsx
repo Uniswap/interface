@@ -27,6 +27,7 @@ import { useMultichainCurrencyInfosByCurrencyId } from 'uniswap/src/features/tok
 import { NumberType } from 'utilities/src/format/types'
 import { EarnVaultModal } from '~/features/earn/EarnVaultModal'
 import { useEarnVaultModalState } from '~/features/earn/hooks/useEarnVaultModalState'
+import { EARN_ROW_GAP, OVERVIEW_SECTION_CONTENT_GAP } from '~/pages/Portfolio/Overview/constants'
 import { PortfolioEarnVaultRow, PortfolioEarnVaultRowSkeleton } from '~/pages/Portfolio/Overview/PortfolioEarnVaultRow'
 
 const EARN_LOADING_ROWS = 3
@@ -172,7 +173,12 @@ export const PortfolioEarnSection = memo(function PortfolioEarnSection({
 
   return (
     <>
-      <Flex gap="$spacing16" px="$spacing8" $md={{ px: '$none' }} testID={TestID.PortfolioOverviewEarnSection}>
+      <Flex
+        gap={OVERVIEW_SECTION_CONTENT_GAP}
+        px="$spacing8"
+        $md={{ px: '$none' }}
+        testID={TestID.PortfolioOverviewEarnSection}
+      >
         <Flex gap="$spacing4">
           <Flex row alignItems="center" gap="$spacing4">
             <Text variant="subheading1" color="$neutral1">
@@ -311,7 +317,7 @@ function PortfolioEarnVaultRows({
 }): JSX.Element {
   if (shouldShowLoadingRows) {
     return (
-      <Flex gap="$spacing8">
+      <Flex gap={EARN_ROW_GAP}>
         {Array.from({ length: EARN_LOADING_ROWS }).map((_, index) => (
           <PortfolioEarnVaultRowSkeleton key={index} />
         ))}
@@ -324,7 +330,7 @@ function PortfolioEarnVaultRows({
     const loadingRows = Math.max(EARN_LOADING_ROWS - positionedVaults.length, 0)
 
     return (
-      <Flex gap="$spacing8">
+      <Flex gap={EARN_ROW_GAP}>
         {positionedVaults.map((vault) => {
           const position = positionsByVaultId.get(vault.id)
           return (
@@ -346,18 +352,23 @@ function PortfolioEarnVaultRows({
 
   return (
     <Flex gap="$spacing8">
-      {eligibleVaults.map((vault) => {
-        const position = positionsByVaultId.get(vault.id)
-        return (
-          <PortfolioEarnVaultRow
-            key={vault.id}
-            vault={vault}
-            position={position}
-            hasTokenBalance={hasTokenBalanceByVaultId.get(vault.id) ?? false}
-            onPress={isReadOnly ? undefined : () => onVaultPress(vault, position)}
-          />
-        )
-      })}
+      {/* Vault rows sit tighter than the divider and get-token rows to keep the mini tables' row pitch. */}
+      {eligibleVaults.length > 0 ? (
+        <Flex gap={EARN_ROW_GAP}>
+          {eligibleVaults.map((vault) => {
+            const position = positionsByVaultId.get(vault.id)
+            return (
+              <PortfolioEarnVaultRow
+                key={vault.id}
+                vault={vault}
+                position={position}
+                hasTokenBalance={hasTokenBalanceByVaultId.get(vault.id) ?? false}
+                onPress={isReadOnly ? undefined : () => onVaultPress(vault, position)}
+              />
+            )
+          })}
+        </Flex>
+      ) : null}
       {shouldShowVaultDivider ? (
         <Flex px="$spacing8" $md={{ px: '$none' }}>
           <Separator />
@@ -432,7 +443,7 @@ function PortfolioEarnVaultGetTokenRow({ vault, onPress }: { vault: EarnVaultInf
       width="100%"
       px="$spacing8"
       $md={{ px: '$none' }}
-      py="$spacing6"
+      py="$spacing8"
       borderRadius="$rounded12"
       cursor="pointer"
       onPress={onPress}

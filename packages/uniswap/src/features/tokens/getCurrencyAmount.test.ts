@@ -1,6 +1,7 @@
-import { CurrencyAmount } from '@uniswap/sdk-core'
-import { DAI } from 'uniswap/src/constants/tokens'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { DAI, USDC } from 'uniswap/src/constants/tokens'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { logger } from 'utilities/src/logger/logger'
 import { noOpFunction } from 'utilities/src/test/utils'
 
 const ZERO_DAI = CurrencyAmount.fromRawAmount(DAI, '0')
@@ -65,15 +66,49 @@ describe(getCurrencyAmount, () => {
     ).toEqual(HALF_DAI)
   })
 
-  it('handle over-precise float amount', () => {
-    vi.spyOn(console, 'error').mockImplementation(noOpFunction)
+  it('truncates an over-precise float amount to the token decimals', () => {
     expect(
       getCurrencyAmount({
         value: '0.00000000000000000000001',
         valueType: ValueType.Exact,
         currency: DAI,
       }),
-    ).toBeNull()
+    ).toEqual(ZERO_DAI)
+  })
+
+  it('keeps full string precision when truncating an 18-decimal amount', () => {
+    expect(
+      getCurrencyAmount({
+        value: '1.1234567890123456789',
+        valueType: ValueType.Exact,
+        currency: DAI,
+      }),
+    ).toEqual(CurrencyAmount.fromRawAmount(DAI, '1123456789012345678'))
+  })
+
+  it('truncates (does not round) extra decimals on a 6-decimal token', () => {
+    const errorSpy = vi.spyOn(logger, 'error')
+    expect(
+      getCurrencyAmount({
+        value: '8.406289655144948446',
+        valueType: ValueType.Exact,
+        currency: USDC,
+      }),
+    ).toEqual(CurrencyAmount.fromRawAmount(USDC, '8406289'))
+    expect(errorSpy).not.toHaveBeenCalled()
+  })
+
+  it('truncates an over-precise scientific notation amount', () => {
+    expect(getCurrencyAmount({ value: '1.23456789e-3', valueType: ValueType.Exact, currency: USDC })).toEqual(
+      CurrencyAmount.fromRawAmount(USDC, '1234'),
+    )
+  })
+
+  it('drops the fraction for a 0-decimal token', () => {
+    const zeroDecimalToken = new Token(1, '0x0000000000000000000000000000000000000001', 0, 'ZERO')
+    expect(getCurrencyAmount({ value: '5.7', valueType: ValueType.Exact, currency: zeroDecimalToken })).toEqual(
+      CurrencyAmount.fromRawAmount(zeroDecimalToken, '5'),
+    )
   })
 
   it('handle incorrect raw amount', () => {

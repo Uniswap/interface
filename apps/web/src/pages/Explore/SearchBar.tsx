@@ -10,7 +10,15 @@ import {
 } from '~/features/Explore/state/exploreTablesFilterStore'
 import { ExploreTab } from '~/types/explore'
 
-export function SearchBar({ tab }: { tab?: string }) {
+export function SearchBar({
+  tab,
+  alwaysExpandedWidth,
+  placeholder,
+}: {
+  tab?: string
+  alwaysExpandedWidth?: number
+  placeholder?: string
+}): JSX.Element {
   const { t } = useTranslation()
   const currentString = useExploreTablesFilterStore((s) => s.filterString)
   const [localFilterString, setLocalFilterString] = useState(currentString)
@@ -41,8 +49,9 @@ export function SearchBar({ tab }: { tab?: string }) {
         data-testid="explore-tokens-search-input"
         value={localFilterString}
         onChangeText={setLocalFilterString}
-        placeholder={placeholdersText[tab ?? ExploreTab.Tokens]}
+        placeholder={placeholder ?? placeholdersText[tab ?? ExploreTab.Tokens]}
         isOpen={isOpen}
+        alwaysExpandedWidth={alwaysExpandedWidth}
         onFocus={() => setIsOpen(true)}
         onBlur={() => {
           if (localFilterString === '') {

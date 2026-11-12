@@ -64,6 +64,7 @@ export function SmartWalletNudge({
             <Flex height={IMAGE_SIZE} width={IMAGE_SIZE}>
               {dappInfo.icon ? (
                 <UniversalImage
+                  alt=""
                   fallback={fallback}
                   size={{ height: IMAGE_SIZE, width: IMAGE_SIZE }}
                   style={{

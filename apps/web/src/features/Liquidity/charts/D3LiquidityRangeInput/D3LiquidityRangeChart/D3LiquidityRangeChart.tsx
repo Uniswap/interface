@@ -6,7 +6,6 @@ import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import * as d3 from 'd3'
 import { useEffect, useId, useMemo, useRef } from 'react'
 import type { PriceChartData } from '~/components/Charts/PriceChart'
-import type { ChartQueryResult, ChartType } from '~/components/Charts/utils'
 import { CHART_DIMENSIONS } from '~/features/Liquidity/charts/D3LiquidityChartShared/constants'
 import { createTickScale } from '~/features/Liquidity/charts/D3LiquidityChartShared/utils/createTickScale'
 import { LiquidityActiveTooltips } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/components/LiquidityActiveTooltips'
@@ -26,6 +25,7 @@ import type { ChartEntry } from '~/features/Liquidity/charts/LiquidityRangeInput
 import { useLiquidityUrlState } from '~/features/Liquidity/Create/hooks/useLiquidityUrlState'
 import type { MigratingPosition } from '~/features/Liquidity/Create/types'
 import type { TickData } from '~/features/Liquidity/types/ticks'
+import type { ChartQueryResult, ChartType } from '~/utils/charts'
 
 export const D3LiquidityRangeChart = ({
   priceData,

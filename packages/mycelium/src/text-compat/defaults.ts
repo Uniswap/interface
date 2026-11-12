@@ -1,3 +1,4 @@
+import { getKeys } from 'utilities/src/primitives/objects'
 /**
  * The legacy Text defaults, platformless so both legs resolve them identically
  * (and so the export-parity pin can hold without the native leg importing the
@@ -17,7 +18,7 @@ import type { TextCompatProps } from './props'
  */
 function mergeDefaults(defaults: TextCompatProps, props: TextCompatProps): TextCompatProps {
   const merged: Record<string, unknown> = {}
-  for (const key of Object.keys(defaults) as (keyof TextCompatProps)[]) {
+  for (const key of getKeys(defaults)) {
     if (props[key] === undefined) {
       merged[key] = defaults[key]
     }

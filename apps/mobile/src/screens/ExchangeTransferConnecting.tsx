@@ -114,6 +114,7 @@ export function ExchangeTransferConnecting({
             width={ServiceProviderLogoStyles.icon.width}
           >
             <UniversalImage
+              alt=""
               uri={logoUrl}
               size={{
                 height: ServiceProviderLogoStyles.icon.height,

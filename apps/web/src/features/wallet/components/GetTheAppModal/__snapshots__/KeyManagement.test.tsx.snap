@@ -15,8 +15,10 @@ exports[`KeyManagementModal > renders correctly 1`] = `
         tabindex="0"
       >
         <svg
+          aria-hidden="true"
           class="[color:var(--c-col)] hover:[color:var(--ch-col)] group-hover:[color:var(--cgh-col)]"
           fill="none"
+          focusable="false"
           stroke-width="8"
           style="width: 20px; height: 20px; --c-col: var(--neutral2); --ch-col: var(--neutral2-hovered); --cgh-col: var(--neutral2-hovered);"
           viewBox="0 0 24 24"
@@ -38,7 +40,9 @@ exports[`KeyManagementModal > renders correctly 1`] = `
           tabindex="0"
         >
           <svg
+            aria-hidden="true"
             fill="none"
+            focusable="false"
             stroke-width="8"
             style="color: rgba(19, 19, 19, 0.63); width: 20px; height: 20px;"
             viewBox="0 0 16 16"
@@ -61,7 +65,9 @@ exports[`KeyManagementModal > renders correctly 1`] = `
           class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 p-[12px] bg-surface3 rounded-[12px]"
         >
           <svg
+            aria-hidden="true"
             fill="none"
+            focusable="false"
             stroke-width="8"
             style="width: 24px; height: 24px;"
             viewBox="0 0 24 24"
@@ -131,7 +137,9 @@ exports[`KeyManagementModal > renders correctly 1`] = `
         style="--c-h: 14px;"
       >
         <svg
+          aria-hidden="true"
           fill="none"
+          focusable="false"
           stroke-width="8"
           style="width: 63px; height: 63px;"
           viewBox="0 0 63 14"

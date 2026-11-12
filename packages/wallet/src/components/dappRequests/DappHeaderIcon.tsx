@@ -23,6 +23,7 @@ export function DappHeaderIcon({
     <Flex height={size} width={size}>
       {dappInfo.icon ? (
         <UniversalImage
+          alt=""
           fallback={fallback}
           size={{ height: size, width: size }}
           style={{

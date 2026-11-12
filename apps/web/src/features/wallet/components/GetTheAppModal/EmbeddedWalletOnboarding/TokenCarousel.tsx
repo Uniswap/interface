@@ -2,7 +2,7 @@ import { Flex, LinearGradient } from '@universe/mycelium'
 import { useMemo } from 'react'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { shuffleArray } from 'uniswap/src/components/IconCloud/utils'
-import { approvedERC20, InteractiveToken } from '~/pages/Landing/assets/approvedTokens'
+import { approvedERC20, InteractiveToken } from '~/constants/approvedTokens'
 
 const TOKEN_SIZE = 40
 // Enough tokens that the duplicated strip is always wider than the modal, keeping the loop seamless.

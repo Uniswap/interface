@@ -29,11 +29,6 @@ import { isSafeNumber } from 'utilities/src/primitives/integer'
 import { useConnectionStatus } from '~/connection/accounts/hooks'
 import { useAccount } from '~/connection/hooks/useAccount'
 import { ZERO_PERCENT } from '~/constants/misc'
-import { LimitPriceInputPanel } from '~/features/Swap/CurrencyInputPanel/LimitPriceInputPanel/LimitPriceInputPanel'
-import {
-  LimitPriceErrorType,
-  useCurrentPriceAdjustment,
-} from '~/features/Swap/CurrencyInputPanel/LimitPriceInputPanel/useCurrentPriceAdjustment'
 import { SwapCurrencyInputPanel } from '~/features/Swap/CurrencyInputPanel/SwapCurrencyInputPanel'
 import { useOnSwitchTokens } from '~/features/Swap/state/hooks'
 import type { CurrencyState } from '~/features/Swap/state/types'
@@ -46,12 +41,18 @@ import { useLimitOrderCallback } from '~/pages/Swap/Limit/hooks/useLimitOrderCal
 import { LimitExpirySection } from '~/pages/Swap/Limit/LimitExpirySection'
 import { LimitOrdersNotSupportedBanner } from '~/pages/Swap/Limit/LimitOrdersNotSupportedBanner'
 import { LimitPriceError, shouldShowLimitPriceError } from '~/pages/Swap/Limit/LimitPriceError'
+import { LimitPriceInputPanel } from '~/pages/Swap/Limit/LimitPriceInputPanel/LimitPriceInputPanel'
+import {
+  LimitPriceErrorType,
+  useCurrentPriceAdjustment,
+} from '~/pages/Swap/Limit/LimitPriceInputPanel/useCurrentPriceAdjustment'
 import { OpenLimitOrdersButton } from '~/pages/Swap/Limit/OpenLimitOrdersButton'
 import { getDefaultPriceInverted } from '~/pages/Swap/Limit/state/hooks'
 import { LimitContextProvider, useLimitContext } from '~/pages/Swap/Limit/state/LimitContext'
 import { useAccountDrawer } from '~/state/accountDrawer/hooks'
 import { useMultichainContext } from '~/state/multichain/useMultichainContext'
-import { LimitOrderTrade, TradeFillType } from '~/state/routing/types'
+import { LimitOrderTrade } from '~/types/routing'
+import { TradeFillType } from '~/types/trade'
 import type { LimitOrderResult } from '~/types/trade'
 import { maxAmountSpend } from '~/utils/maxAmountSpend'
 import { SwitchNetworkAction } from '~/utils/popups/types'

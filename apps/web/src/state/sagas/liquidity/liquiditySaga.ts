@@ -137,6 +137,9 @@ function* handlePositionTransactionStep(params: HandlePositionStepParams) {
       info,
       step: onChainStep,
       shouldWaitForConfirmation: false,
+      // A decrease's info is only its token amounts, so a second removal of the same amounts would otherwise
+      // resolve to the first, already-confirmed tx without prompting the wallet.
+      allowDuplicativeOfFinalizedTx: step.type === TransactionStepType.DecreasePositionTransaction,
       onModification,
     })
   } catch (e) {

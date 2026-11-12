@@ -3,7 +3,7 @@ import { useMemo } from 'react'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
-import { formatPriceWithSubscript } from '~/pages/PoolDetails/components/formatPriceWithSubscript'
+import { formatPriceWithSubscript } from '~/utils/formatPriceWithSubscript'
 
 const AXIS_SUBSCRIPT_THRESHOLD = 0.01
 

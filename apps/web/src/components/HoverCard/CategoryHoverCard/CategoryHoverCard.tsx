@@ -11,8 +11,8 @@ import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { CategoryDefinitionCard } from '~/components/CategoryDefinitionCard/CategoryDefinitionCard'
 import { useFireOncePerOpen } from '~/components/HoverCard/hooks/useFireOncePerOpen'
 import { HoverCard, type HoverCardPlacement, useHoverCardState } from '~/components/HoverCard/HoverCard'
-import type { CategoryDetailsNavState } from '~/pages/Explore/CategoryDetails/categoryDetailsEntryPoint'
-import { getCategoryDetailsURL } from '~/pages/Explore/CategoryDetails/getCategoryDetailsURL'
+import type { CategoryDetailsNavState } from '~/utils/categoryDetailsEntryPoint'
+import { getCategoryDetailsURL } from '~/utils/getCategoryDetailsURL'
 
 interface CategoryHoverCardProps {
   category: Category | undefined

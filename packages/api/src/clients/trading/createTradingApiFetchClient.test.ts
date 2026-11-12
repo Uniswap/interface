@@ -1,5 +1,5 @@
 import type { SessionService } from '@universe/sessions'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, type Mock, vi } from 'vitest'
 import type { FetchClient } from '../base/types'
 import { createTradingApiFetchClient } from './createTradingApiFetchClient'
 
@@ -16,7 +16,7 @@ describe('createTradingApiFetchClient', () => {
 
   const getSessionService = (): SessionService => ({ getSessionState: async () => null }) as unknown as SessionService
 
-  function setup(): { fetchMock: ReturnType<typeof vi.fn>; client: FetchClient } {
+  function setup(): { fetchMock: Mock; client: FetchClient } {
     const fetchMock = vi.fn(async () => new Response(JSON.stringify({}), { status: 200 }))
     vi.stubGlobal('fetch', fetchMock)
     const client = createTradingApiFetchClient({

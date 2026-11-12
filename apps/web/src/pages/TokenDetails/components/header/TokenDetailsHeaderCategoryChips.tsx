@@ -13,13 +13,10 @@ import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { CategoryHoverCard } from '~/components/HoverCard/CategoryHoverCard/CategoryHoverCard'
 import { LoadingBubble } from '~/components/Tokens/loading'
 import { edgeFadeMaskStyle, useHorizontalScrollFades } from '~/hooks/useHorizontalScrollFades'
-import {
-  type CategoryDetailsNavState,
-  createCategoryDetailsNavState,
-} from '~/pages/Explore/CategoryDetails/categoryDetailsEntryPoint'
-import { getCategoryDetailsURL } from '~/pages/Explore/CategoryDetails/getCategoryDetailsURL'
 import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
 import { useTDPTokenCategories } from '~/pages/TokenDetails/hooks/useTDPTokenCategories'
+import { type CategoryDetailsNavState, createCategoryDetailsNavState } from '~/utils/categoryDetailsEntryPoint'
+import { getCategoryDetailsURL } from '~/utils/getCategoryDetailsURL'
 
 // Fixed to the Figma frame (16px icon + 6px padding, border drawn inside) so the skeleton reserves the exact
 // rendered height and the chip doesn't grow by its border.

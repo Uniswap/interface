@@ -39,6 +39,8 @@ function mockFetchedPools(
     pools,
     rawPoolCount: pools.length,
     isLoading: false,
+    isFetching: false,
+    isPlaceholderData: false,
     isSuccess: true,
     isFetchedAfterMount: true,
     refetch: vi.fn(),
@@ -47,6 +49,7 @@ function mockFetchedPools(
     fetchNextPage: vi.fn(),
     hasNextPage: false,
     isFetchingNextPage: false,
+    isFetchNextPageError: false,
     ...overrides,
   })
 }

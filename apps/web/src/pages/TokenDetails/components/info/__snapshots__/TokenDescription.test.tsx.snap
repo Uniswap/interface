@@ -31,7 +31,9 @@ exports[`TokenDescription > no description or social buttons shown when not avai
         tabindex="0"
       >
         <svg
+          aria-hidden="true"
           fill="none"
+          focusable="false"
           stroke-width="8"
           style="width: 16px; height: 16px;"
           viewBox="0 0 16 16"
@@ -61,7 +63,9 @@ exports[`TokenDescription > no description or social buttons shown when not avai
         target="_blank"
       >
         <svg
+          aria-hidden="true"
           fill="none"
+          focusable="false"
           stroke-width="8"
           style="width: 16px; height: 16px;"
           viewBox="0 0 123 123"
@@ -133,7 +137,9 @@ exports[`TokenDescription > renders token information correctly with defaults 1`
         tabindex="0"
       >
         <svg
+          aria-hidden="true"
           fill="none"
+          focusable="false"
           stroke-width="8"
           style="width: 16px; height: 16px;"
           viewBox="0 0 16 16"
@@ -163,7 +169,9 @@ exports[`TokenDescription > renders token information correctly with defaults 1`
         target="_blank"
       >
         <svg
+          aria-hidden="true"
           fill="none"
+          focusable="false"
           stroke-width="8"
           style="width: 16px; height: 16px;"
           viewBox="0 0 123 123"
@@ -192,7 +200,9 @@ exports[`TokenDescription > renders token information correctly with defaults 1`
         target="_blank"
       >
         <svg
+          aria-hidden="true"
           fill="none"
+          focusable="false"
           stroke-width="8"
           style="width: 16px; height: 16px;"
           viewBox="0 0 16 16"
@@ -217,7 +227,9 @@ exports[`TokenDescription > renders token information correctly with defaults 1`
         target="_blank"
       >
         <svg
+          aria-hidden="true"
           fill="currentColor"
+          focusable="false"
           stroke-width="8"
           style="width: 16px; height: 16px;"
           viewBox="0 0 512 512"
@@ -284,7 +296,9 @@ exports[`TokenDescription > truncates description and shows more 1`] = `
         tabindex="0"
       >
         <svg
+          aria-hidden="true"
           fill="none"
+          focusable="false"
           stroke-width="8"
           style="width: 16px; height: 16px;"
           viewBox="0 0 16 16"
@@ -314,7 +328,9 @@ exports[`TokenDescription > truncates description and shows more 1`] = `
         target="_blank"
       >
         <svg
+          aria-hidden="true"
           fill="none"
+          focusable="false"
           stroke-width="8"
           style="width: 16px; height: 16px;"
           viewBox="0 0 123 123"
@@ -343,7 +359,9 @@ exports[`TokenDescription > truncates description and shows more 1`] = `
         target="_blank"
       >
         <svg
+          aria-hidden="true"
           fill="none"
+          focusable="false"
           stroke-width="8"
           style="width: 16px; height: 16px;"
           viewBox="0 0 16 16"
@@ -368,7 +386,9 @@ exports[`TokenDescription > truncates description and shows more 1`] = `
         target="_blank"
       >
         <svg
+          aria-hidden="true"
           fill="currentColor"
+          focusable="false"
           stroke-width="8"
           style="width: 16px; height: 16px;"
           viewBox="0 0 512 512"

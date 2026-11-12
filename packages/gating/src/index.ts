@@ -31,7 +31,6 @@ export {
   LiquidityApprovalSimulationConfigKey,
   LiquidityGasPreEstimationConfigKey,
   LPConfigKey,
-  LpIncentivesChainIdsConfigKey,
   MarginConfigKey,
   NetworkRequestsConfigKey,
   OnDeviceRecoveryConfigKey,
@@ -109,6 +108,7 @@ export {
   Storage,
   useClientAsyncInit,
   useExperiment,
+  useFeatureGate,
   useGateValue,
   useLayer,
 } from '@universe/gating/src/sdk/statsig'
@@ -120,4 +120,17 @@ export {
   waitForStatsigReady,
 } from '@universe/gating/src/utils'
 export type { GatingOverrideTarget, GatingUrlOverrides, GatingUrlParams } from '@universe/gating/src/urlOverrides'
-export { applyGatingUrlOverrides, GATING_URL_PARAMS, parseGatingUrlOverrides } from '@universe/gating/src/urlOverrides'
+export {
+  clearGatingUrlParams,
+  getUrlWithGateOverrides,
+  overrideGateWithUrlSync,
+} from '@universe/gating/src/urlOverrideSync'
+export type { GatingSearchWriter } from '@universe/gating/src/urlOverrideSync'
+export {
+  applyGatingUrlOverrides,
+  GATING_URL_PARAMS,
+  parseGatingUrlOverrides,
+  serializeGatingSearchParams,
+  withGateOverrideParams,
+  withoutGatingUrlParams,
+} from '@universe/gating/src/urlOverrides'

@@ -10,6 +10,7 @@ import { useSyncStatsigUserIdentifiers } from 'uniswap/src/features/gating/useSy
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { InterfaceUserPropertyName, setUserProperty } from 'uniswap/src/features/telemetry/user'
 import { Metric, onCLS, onFCP, onINP, onLCP } from 'web-vitals'
+import { readEntryChunkCacheStatus } from '~/app/bootstrap/entryChunkCacheStatus'
 import { getConfig } from '~/config'
 import { useActiveAddress } from '~/connection/accounts/hooks'
 import { useAppSelector } from '~/state/hooks'
@@ -62,20 +63,7 @@ export function UserPropertyUpdater() {
     const isServiceWorkerInstalled = Boolean(window.navigator.serviceWorker?.controller)
     const serviceWorkerProperty = isServiceWorkerInstalled ? 'installed' : 'uninstalled'
 
-    let cache = 'unknown'
-    try {
-      const timing = performance
-        .getEntriesByType('resource')
-        // oxlint-disable-next-line no-shadow
-        .find((timing) => timing.name.match(/\/static\/js\/main\.\w{8}\.js$/)) as PerformanceResourceTiming
-      if (timing.transferSize === 0) {
-        cache = 'hit'
-      } else {
-        cache = 'miss'
-      }
-    } catch {
-      // ignore
-    }
+    const cache = readEntryChunkCacheStatus()
 
     const pageLoadProperties = { service_worker: serviceWorkerProperty, cache }
     // User properties are last-write-wins on the profile; the event properties give a

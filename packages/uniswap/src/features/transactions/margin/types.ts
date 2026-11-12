@@ -3,7 +3,7 @@ import { TradingApi } from '@universe/api'
 // Shared margin primitives used by both the form store (uniswap) and the web trade surface.
 // Venue-free market identity: lowercased `${collateral}-${debt}` (see marginPairKey). Role-ordered,
 // so a pair's long and its short stay distinct keys. This is what the FORM speaks — a manage request
-// never names a venue, and `open.venues[]` is the only place venues ride a request.
+// never names a venue, and `open.marketId` is the only place a market rides a request.
 export type MarginPairKey = string
 
 // One venue's row under a pair — `${pairKey}-${venue}`. The markets registry is keyed by this; form

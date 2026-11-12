@@ -111,7 +111,7 @@ describe('usablePriceX18', () => {
 
   // The trap: `'0'` is a truthy STRING, so every `mark ? … : fallback` reads it as present and then
   // renders or divides by zero. The wire sends it for a venue whose oracle read failed.
-  it.each(['0', '-1', '', undefined, 'not-a-number'])('rejects the unusable mark %p', (value) => {
+  it.each(['0', '-1', '', undefined, 'not-a-number'])('rejects the unusable mark %o', (value) => {
     expect(usablePriceX18(value)).toBeUndefined()
   })
 })
@@ -124,7 +124,7 @@ describe('usableWireAmount', () => {
 
   // BigInt throws a SyntaxError on a non-integer string, which takes a whole block down mid-render
   // rather than hiding one row — and BigInt('') is 0n, so the zero sentinel arrives looking real.
-  it.each(['1.5', '', '1e18', 'nope', '0', '-1'])('rejects the unusable amount %p', (raw) => {
+  it.each(['1.5', '', '1e18', 'nope', '0', '-1'])('rejects the unusable amount %o', (raw) => {
     expect(usableWireAmount({ raw, decimals: 18 })).toBeUndefined()
   })
 })

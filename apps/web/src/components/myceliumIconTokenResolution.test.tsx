@@ -60,7 +60,7 @@ const REPRESENTATIVE_CASES: IconCase[] = [
     expectedColor: 'var(--neutral2)',
   },
   {
-    // ConnectedAccountBlocked.tsx
+    // CancelOrdersDialog.tsx
     name: 'Blocked color="$neutral2" size="$icon.24"',
     element: <Blocked color="$neutral2" size="$icon.24" />,
     expectedPx: 24,
@@ -81,7 +81,7 @@ const REPRESENTATIVE_CASES: IconCase[] = [
     expectedColor: 'var(--neutral1)',
   },
   {
-    // AccountDrawer/MiniPortfolio/PortfolioLogo.tsx:82 — numeric size, no token
+    // Logo/PortfolioLogo.tsx:82 — numeric size, no token
     name: 'ContractInteraction size={40} color="$neutral2"',
     element: <ContractInteraction size={40} color="$neutral2" />,
     expectedPx: 40,

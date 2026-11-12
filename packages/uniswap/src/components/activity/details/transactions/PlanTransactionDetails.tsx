@@ -19,6 +19,7 @@ import { useIsPriceChangeInterrupted } from 'uniswap/src/features/transactions/s
 import { PlanTransactionInfo, TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { currencyId } from 'uniswap/src/utils/currencyId'
+import { noop } from 'utilities/src/react/noop'
 
 /**
  * This component displays the details of a plan transaction. If partially executed,
@@ -38,7 +39,11 @@ export function PlanTransactionDetails({
   typeInfo: PlanTransactionInfo
   onClose?: () => void
   disableClick?: boolean
-}): JSX.Element {
+}): JSX.Element | null {
+  // The swap-shaped body (in/out legs, planSaga resume card) doesn't describe a margin position.
+  if (typeInfo.marginAction) {
+    return null
+  }
   const earnDisplayInfo = getEarnPlanDisplayInfo(typeInfo)
 
   if (earnDisplayInfo) {
@@ -137,8 +142,6 @@ function EarnPlanCurrencyTransferDetails({
     />
   )
 }
-
-function noop(): void {}
 
 function IntermediaryStateCardContainer({ children, ...rest }: FlexCompatProps): JSX.Element {
   return (

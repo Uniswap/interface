@@ -3,7 +3,7 @@ import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes
 import type { ListPoolsRequest } from '@uniswap/client-data-api/dist/data/v2/api_pb'
 import { PoolsOrderBy, PoolTokenLogicalOperator } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import type { Currency } from '@uniswap/sdk-core'
-import type { UniverseChainId } from '@universe/chains'
+import { AddressStringFormat, normalizeAddress, type UniverseChainId } from '@universe/chains'
 import type { PoolsFilterRequestParams } from '~/features/Liquidity/PoolsFilter/toRequest'
 import { getTokenOrZeroAddress } from '~/features/Liquidity/utils/currency'
 
@@ -46,6 +46,7 @@ export function getPoolsListParams({
   currencies,
   searchQuery,
   categoryIds,
+  hookAddress,
 }: {
   /** The single chain to scope to; when undefined the list spans `fallbackChainIds`. */
   chainId?: UniverseChainId
@@ -60,6 +61,8 @@ export function getPoolsListParams({
   searchQuery?: string
   /** Pool category ids (OR within the list); the backend rejects token category ids. */
   categoryIds?: string[]
+  /** Exact v4 hook match, normalized to lowercase; the zero address selects hookless pools. */
+  hookAddress?: string
 }): Omit<PartialMessage<ListPoolsRequest>, 'page'> {
   const [currency0, currency1] = currencies ?? []
   const tokens = [currency0, currency1]
@@ -90,6 +93,7 @@ export function getPoolsListParams({
       rewardsOnly: filterParams?.rewardsOnly,
       searchQuery,
       categoryIds,
+      ...(hookAddress === undefined ? {} : { hooks: normalizeAddress(hookAddress, AddressStringFormat.Lowercase) }),
     },
   }
 }

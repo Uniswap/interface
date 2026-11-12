@@ -1,5 +1,6 @@
 import { fireEvent } from '@testing-library/react'
 import { useState } from 'react'
+import type { Mock } from 'vitest'
 import { PoolFilterRangeInput } from '~/features/Liquidity/PoolsFilter/components'
 import { render, screen } from '~/test-utils/render'
 
@@ -19,7 +20,7 @@ function ControlledRangeInput({ onChangeText }: { onChangeText: (value: string) 
   )
 }
 
-function renderInput(): { input: HTMLInputElement; onChangeText: ReturnType<typeof vi.fn> } {
+function renderInput(): { input: HTMLInputElement; onChangeText: Mock } {
   const onChangeText = vi.fn()
   render(<ControlledRangeInput onChangeText={onChangeText} />)
   return { input: screen.getByTestId(TEST_ID) as HTMLInputElement, onChangeText }

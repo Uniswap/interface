@@ -97,6 +97,7 @@ export function SettingsManageConnectionsScreen(): JSX.Element {
 
         const DappIcon = (
           <UniversalImage
+            alt=""
             fallback={<DappIconPlaceholder iconSize={iconSizes.icon32} name={name.toUpperCase()} />}
             size={{
               height: iconSizes.icon32,

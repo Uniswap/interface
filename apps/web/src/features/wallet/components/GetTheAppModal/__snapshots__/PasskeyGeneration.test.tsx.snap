@@ -15,8 +15,10 @@ exports[`PasskeyGenerationModal > renders default state 1`] = `
         tabindex="0"
       >
         <svg
+          aria-hidden="true"
           class="[color:var(--c-col)] hover:[color:var(--ch-col)] group-hover:[color:var(--cgh-col)]"
           fill="none"
+          focusable="false"
           stroke-width="8"
           style="width: 20px; height: 20px; --c-col: var(--neutral2); --ch-col: var(--neutral2-hovered); --cgh-col: var(--neutral2-hovered);"
           viewBox="0 0 24 24"
@@ -38,7 +40,9 @@ exports[`PasskeyGenerationModal > renders default state 1`] = `
           tabindex="0"
         >
           <svg
+            aria-hidden="true"
             fill="none"
+            focusable="false"
             stroke-width="8"
             style="color: rgba(19, 19, 19, 0.63); width: 20px; height: 20px;"
             viewBox="0 0 16 16"
@@ -66,7 +70,9 @@ exports[`PasskeyGenerationModal > renders default state 1`] = `
             style="--c-tr: rotate(-15deg) translateY(-5px);"
           >
             <svg
+              aria-hidden="true"
               fill="currentColor"
+              focusable="false"
               stroke-width="8"
               style="width: 24px; height: 24px;"
               viewBox="0 0 60 60"
@@ -98,7 +104,9 @@ exports[`PasskeyGenerationModal > renders default state 1`] = `
             style="--c-tr: rotate(15deg);"
           >
             <svg
+              aria-hidden="true"
               fill="none"
+              focusable="false"
               stroke-width="8"
               style="width: 24px; height: 24px;"
               viewBox="0 0 24 24"
@@ -152,7 +160,9 @@ exports[`PasskeyGenerationModal > renders default state 1`] = `
             class="inline-flex shrink-0 items-center justify-center [&_svg]:shrink-0 [&_svg]:size-[20.7px] text-white"
           >
             <svg
+              aria-hidden="true"
               fill="none"
+              focusable="false"
               stroke-width="8"
               style="color: rgb(255, 255, 255); width: 20.7px; height: 20.7px;"
               viewBox="0 0 24 24"
@@ -200,8 +210,10 @@ exports[`PasskeyGenerationModal > renders loading state 1`] = `
         tabindex="0"
       >
         <svg
+          aria-hidden="true"
           class="[color:var(--c-col)] hover:[color:var(--ch-col)] group-hover:[color:var(--cgh-col)]"
           fill="none"
+          focusable="false"
           stroke-width="8"
           style="width: 20px; height: 20px; --c-col: var(--neutral2); --ch-col: var(--neutral2-hovered); --cgh-col: var(--neutral2-hovered);"
           viewBox="0 0 24 24"
@@ -223,7 +235,9 @@ exports[`PasskeyGenerationModal > renders loading state 1`] = `
           tabindex="0"
         >
           <svg
+            aria-hidden="true"
             fill="none"
+            focusable="false"
             stroke-width="8"
             style="color: rgba(19, 19, 19, 0.63); width: 20px; height: 20px;"
             viewBox="0 0 16 16"
@@ -251,7 +265,9 @@ exports[`PasskeyGenerationModal > renders loading state 1`] = `
             style="--c-tr: rotate(-15deg) translateY(-5px);"
           >
             <svg
+              aria-hidden="true"
               fill="currentColor"
+              focusable="false"
               stroke-width="8"
               style="width: 24px; height: 24px;"
               viewBox="0 0 60 60"
@@ -283,7 +299,9 @@ exports[`PasskeyGenerationModal > renders loading state 1`] = `
             style="--c-tr: rotate(15deg);"
           >
             <svg
+              aria-hidden="true"
               fill="none"
+              focusable="false"
               stroke-width="8"
               style="width: 24px; height: 24px;"
               viewBox="0 0 24 24"
@@ -343,6 +361,7 @@ exports[`PasskeyGenerationModal > renders loading state 1`] = `
               aria-hidden="true"
               class="sbtn-spin"
               fill="none"
+              focusable="false"
               stroke-width="8"
               style="color: currentColor; width: 20.7px; height: 20.7px;"
               viewBox="0 0 24 24"

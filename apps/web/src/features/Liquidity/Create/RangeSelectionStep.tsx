@@ -15,6 +15,7 @@ import { useEvent } from 'utilities/src/react/hooks'
 import { LPGeoRestrictionBanner } from '~/components/GeoRestriction/LPGeoRestrictionBanner'
 import type { TickRangeChange } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
 import { D3LiquidityRangeInput } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeInput'
+import { useCreateLiquidityContext } from '~/features/Liquidity/Create/CreateLiquidityContextProvider'
 import {
   formatDefaultInitialPrice,
   useDefaultInitialPrice,
@@ -32,7 +33,6 @@ import { clampMaxTick, clampMinTick, setMinMaxTickRange } from '~/features/Liqui
 import { getBaseAndQuoteCurrencies } from '~/features/Liquidity/utils/currency'
 import { getPriceDifference } from '~/features/Liquidity/utils/getPriceDifference'
 import { isInvalidPrice, isInvalidRange } from '~/features/Liquidity/utils/priceRangeInfo'
-import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 import { tryParsePrice } from '~/state/mint/v3/utils'
 import { PositionField } from '~/types/position'
 

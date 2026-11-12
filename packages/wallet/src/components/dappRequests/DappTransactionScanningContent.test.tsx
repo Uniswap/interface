@@ -1,6 +1,7 @@
 import type { BlockaidScanTransactionResponse } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
 import type { EthTransaction } from 'uniswap/src/types/walletConnect'
+import type { Mock } from 'vitest'
 import { DappTransactionScanningContent } from 'wallet/src/components/dappRequests/DappTransactionScanningContent'
 import {
   TransactionApprovalAction,
@@ -76,7 +77,7 @@ function renderContent(
   to: string | undefined,
   from = ACCOUNT,
   transactionOverrides: Partial<EthTransaction> = {},
-): { onRiskLevelChange: ReturnType<typeof vi.fn>; onCriticalRiskChange: ReturnType<typeof vi.fn> } {
+): { onRiskLevelChange: Mock; onCriticalRiskChange: Mock } {
   const onRiskLevelChange = vi.fn()
   const onCriticalRiskChange = vi.fn()
   const transaction: EthTransaction = { from, to, value: '0x0', data: '0x', ...transactionOverrides }

@@ -34,7 +34,7 @@
     "@types/node": "22.19.17",
     "@vitejs/plugin-react": "5.2.0",
     "tailwindcss": "4.3.2",
-    "vitest": "3.2.1",
+    "vitest": "5.0.5",
     "vitest-presets": "workspace:^"
   },
   "scripts": {

@@ -5,6 +5,7 @@ import {
 import { EmbeddedWalletApiClient } from '@universe/embedded-wallet/src/data/rest/embeddedWallet/requests'
 import { loadNeckMetadata } from '@universe/embedded-wallet/src/features/passkey/deviceSession'
 import { authenticatePasskey } from '@universe/embedded-wallet/src/features/passkey/passkey'
+import { logPasskeyRejection } from '@universe/embedded-wallet/src/features/passkey/passkeyRejection'
 import { isWebApp } from '@universe/environment'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -104,25 +105,14 @@ export async function authenticateWithPasskey(
     })
     return credential
   } catch (error: unknown) {
+    logPasskeyRejection(error, {
+      file: 'passkeySession.ts',
+      function: 'authenticateWithPasskey',
+      extra: { action: Action[action], walletId: options?.walletId },
+    })
     if (error instanceof Error && error.name === 'AbortError') {
-      logger.debug('passkeySession.ts', 'authenticateWithPasskey', 'User aborted the registration process')
       return undefined
-    } else {
-      const errName = error instanceof Error ? error.name : 'unknown'
-      const errMessage = error instanceof Error ? error.message : String(error)
-      logger.error(new Error('Error during authentication', { cause: error }), {
-        tags: {
-          file: 'passkeySession.ts',
-          function: 'authenticateWithPasskey',
-        },
-        extra: {
-          action: Action[action],
-          errName,
-          errMessage,
-          walletId: options?.walletId,
-        },
-      })
-      throw error
     }
+    throw error
   }
 }

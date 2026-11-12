@@ -1,9 +1,9 @@
 import { DynamicConfigs, SynchronizedHeartbeatsConfigKey, useDynamicConfigValue } from '@universe/gating'
 import { useCallback, useEffect, useRef } from 'react'
 import { PollingInterval } from 'uniswap/src/constants/misc'
+import { useIsWindowVisible } from 'utilities/src/react/useIsWindowVisible'
 import { ONE_SECOND_MS, SECONDS_IN_MINUTE } from 'utilities/src/time/time'
 import { useInterval } from '~/lib/hooks/useInterval'
-import { usePageVisibility } from '~/lib/hooks/usePageVisibility'
 
 const DEFAULT_POLL_INTERVAL_SECONDS = 15 * SECONDS_IN_MINUTE
 
@@ -43,7 +43,7 @@ interface UseHeartbeatTickParams {
 
 /** Shared tick machinery for the web page heartbeats, paused while the page is hidden. */
 function useHeartbeatTick({ refresh, priceRefresh, pollIntervalSeconds, enabled }: UseHeartbeatTickParams): void {
-  const isVisible = usePageVisibility()
+  const isVisible = useIsWindowVisible()
   const isActive = pollIntervalSeconds > 0 && enabled
   const hasPriceRefresh = priceRefresh !== undefined
 

@@ -85,7 +85,9 @@ env:
       ACTION: 'inputText'
       TARGET: 'cbbtc'
       PHASE: 'start'
-- inputText: cbbtc
+# The trailing chain name scopes the search to Base; an unscoped "cbbtc" lists
+# cbBTC on every chain and the Base row can land below the fold.
+- inputText: cbbtc base
 - runScript:
     file: ../../scripts/performance/dist/actions/track-action.js
     env:
@@ -99,13 +101,44 @@ env:
       ACTION: 'tapOn'
       TARGET: 'token-option-8453-cbBTC'
       PHASE: 'start'
+- extendedWaitUntil:
+    visible:
+      id: 'token-option-8453-cbBTC'
+    timeout: 10000
 - tapOn:
-    id: 'token-option-8453-cbBTC' # TODO: Replace with id for token
+    id: 'token-option-8453-cbBTC'
 - runScript:
     file: ../../scripts/performance/dist/actions/track-action.js
     env:
       ACTION: 'tapOn'
       TARGET: 'token-option-8453-cbBTC'
+      PHASE: 'end'
+
+# The selector keeps the sell token on mainnet, which makes the pair cross-chain: exact output is
+# unavailable for a cross-chain pair (getExactOutputWillFail) and the e2e wallet funds swaps on
+# Base, so pick ETH on Base as the sell token too
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'ChooseInputToken'
+      PHASE: 'start'
+- tapOn:
+    id: ${output.testIds.ChooseInputToken}
+- tapOn:
+    id: ${output.testIds.ExploreSearchInput}
+- inputText: eth base
+- extendedWaitUntil:
+    visible:
+      id: 'token-option-8453-ETH'
+    timeout: 10000
+- tapOn:
+    id: 'token-option-8453-ETH'
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'ChooseInputToken'
       PHASE: 'end'
 
 # Amount input tracking
@@ -176,12 +209,34 @@ env:
       TARGET: 'ReviewSwap'
       PHASE: 'end'
 
+# When the quoted sell amount is most of the wallet's ETH on Base, Review first shows the
+# low-network-token-balance sheet; its Continue button (the only element with the confirm
+# testID here) proceeds to the review screen. Matched by id, not copy: the
+# language-agnostic batch runs in pt_BR.
+- extendedWaitUntil:
+    visible:
+      id: ${output.testIds.Confirm}
+    timeout: 5000
+    optional: true
+- runFlow:
+    when:
+      visible:
+        id: ${output.testIds.Confirm}
+    commands:
+      - tapOn:
+          id: ${output.testIds.Confirm}
+
 - runScript:
     file: ../../scripts/performance/dist/actions/track-action.js
     env:
       ACTION: 'tapOn'
       TARGET: 'ListSeparatorToggle'
       PHASE: 'start'
+# The review screen shows its details once the quote and simulation are in
+- extendedWaitUntil:
+    visible:
+      id: ${output.testIds.ListSeparatorToggle}
+    timeout: 30000
 - tapOn:
     id: ${output.testIds.ListSeparatorToggle}
 - runScript:

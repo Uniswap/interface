@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ActionTileWithIconAnimation } from '~/components/ActionTiles/ActionTileWithIconAnimation'
-import { useOpenReceiveCryptoModal } from '~/components/ReceiveCryptoModal/useOpenReceiveCryptoModal'
+import { useOpenReceiveCryptoModal } from '~/hooks/useOpenReceiveCryptoModal'
 import { ReceiveModalState } from '~/types/receiveCryptoModal'
 
 export function ReceiveActionTile({

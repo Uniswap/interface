@@ -75,6 +75,19 @@
     "check": {},
     "check:fast": {},
     "check:deps:usage": {},
+    "storybook:run": {
+      "command": "NODE_ENV=development storybook dev -p 6006",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "storybook:test": {
+      "command": "NODE_ENV=test vitest run --config .storybook/vitest.config.mts",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "dependsOn": ["^prepare", "prepare"]
+    },
     "test": {
       "command": "vitest run",
       "options": {

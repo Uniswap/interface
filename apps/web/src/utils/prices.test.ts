@@ -4,7 +4,6 @@ import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { Route as V3Route } from '@uniswap/v3-sdk'
 import JSBI from 'jsbi'
 import { UTCTimestamp } from 'lightweight-charts'
-import { PriceChartData } from '~/components/Charts/PriceChart'
 import {
   TEST_POOL_12,
   TEST_POOL_13,
@@ -13,6 +12,7 @@ import {
   TEST_TOKEN_3,
   toCurrencyAmount,
 } from '~/test-utils/constants'
+import { PriceChartData } from '~/utils/charts'
 import { computeRealizedLPFeeAmount, removeOutliers, warningSeverity } from '~/utils/prices'
 
 const pair12 = new Pair(

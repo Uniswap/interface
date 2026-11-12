@@ -5,12 +5,15 @@ import { PoolTableSortState } from '~/data/pools/poolStats'
 import { OrderDirection } from '~/data/util'
 import { useInfiniteLoadMore } from '~/features/Explore/hooks/useInfiniteLoadMore'
 import { poolSortFieldToOrderBy } from '~/features/Liquidity/utils/convertPoolToPoolStat'
-import { getTokenListPoolsParams } from '~/features/Liquidity/utils/getTokenListPoolsParams'
 import { type ListPoolsAsPoolStatsResult, useListPoolsAsPoolStats } from '~/pages/Explore/hooks/useListPoolsAsPoolStats'
+import { getTokenListPoolsParams } from '~/utils/getTokenListPoolsParams'
 
 const TOKEN_LIST_POOLS_PAGE_SIZE = 20
 
-type V2ListTokenPoolsResult = Omit<ListPoolsAsPoolStatsResult, 'error' | 'fetchNextPage'> & {
+type V2ListTokenPoolsResult = Omit<
+  ListPoolsAsPoolStatsResult,
+  'error' | 'fetchNextPage' | 'isFetchNextPageError' | 'isFetching' | 'isPlaceholderData'
+> & {
   loadMore: ({ onComplete }: { onComplete?: () => void }) => void
 }
 

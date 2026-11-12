@@ -215,7 +215,7 @@ priority: urgent
 severity: urgent
 # provenance
 source: existing-unit
-sourceNote: "Derived from existing unit tests. Mobile/extension screening lives in packages/wallet compliance hooks (useIsBlockedActiveAddress, consumed by the mobile and extension send flows); web screening lives in apps/web/src/hooks/useAccountRiskCheck.ts, which dispatches the BlockedAccount modal — both are cited at unit level so each listed platform's implementation is covered."
+sourceNote: "Derived from existing unit tests. Mobile/extension screening lives in packages/wallet compliance hooks (useIsBlockedActiveAddress, consumed by the mobile and extension send flows); web screens the active address when the user presses Review or Send rather than on page load, via useScreenActiveAddressOnPress — both are cited at unit level so each listed platform's implementation is covered."
 # scope
 platforms:
   - web
@@ -233,23 +233,23 @@ runFrequency: pr-check
 # coverage
 code_paths:
   - packages/wallet/src/features/compliance/hooks.ts
-  - apps/web/src/hooks/useAccountRiskCheck.ts
+  - packages/uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useScreenActiveAddressOnPress.ts
 automationRefs:
   - path: packages/wallet/src/features/compliance/hooks.test.ts
     testName: useIsBlockedActiveAddress > passes through a blocked result
   - path: packages/wallet/src/features/compliance/hooks.test.ts
     testName: useIsBlockedActiveAddress > screens a signer account by its address
-  - path: apps/web/src/hooks/useAccountRiskCheck.test.ts
-    testName: useAccountRiskCheck > should handle blocked EVM account
-  - path: apps/web/src/hooks/useAccountRiskCheck.test.ts
-    testName: useAccountRiskCheck > should handle non-blocked accounts
+  - path: packages/uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useScreenActiveAddressOnPress.test.ts
+    testName: useScreenActiveAddressOnPress > opens the blocked modal and does not continue when the address is blocked
+  - path: packages/uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useScreenActiveAddressOnPress.test.ts
+    testName: useScreenActiveAddressOnPress > continues when the address is clean
 ---
 
 > **urgent · unit · pr-check · automated** · platforms: web, extension, mobile
 
 **Given** an active signer account whose address is on the sanctions/blocklist
-**When** the active account is screened (`useIsBlockedActiveAddress` on mobile/extension, `useAccountRiskCheck` on web)
-**Then** the wallet hook screens by the signer address, passes through a blocked result, skips screening for view-only (readonly) accounts and when there is no active account or no address, and reports the loading state while the check is in flight; on web a blocked EVM or SVM address dispatches the BlockedAccount modal naming the blocked address, and non-blocked accounts dispatch nothing
+**When** the active account is screened (`useIsBlockedActiveAddress` at render on mobile/extension, `useScreenActiveAddressOnPress` on the Review or Send press on web)
+**Then** the wallet hook screens by the signer address, passes through a blocked result, skips screening for view-only (readonly) accounts and when there is no active account or no address, and reports the loading state while the check is in flight; on web a blocked address opens the blocked-address modal naming it and the action does not proceed, and a clean address continues
 
 ---
 id: token-protection-token-kyc-status-unit

@@ -26,7 +26,9 @@ exports[`NotSupportedNetworkNotification > renders without error 1`] = `
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
             >
               <svg
+                aria-hidden="true"
                 fill="currentColor"
+                focusable="false"
                 stroke-width="8"
                 style="width: 20px; height: 20px;"
                 viewBox="0 0 24 24"

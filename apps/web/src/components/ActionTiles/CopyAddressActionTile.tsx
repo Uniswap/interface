@@ -8,7 +8,7 @@ import { useEvent } from 'utilities/src/react/hooks'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { useCopyClipboard } from 'utilities/src/react/useCopyClipboard'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { ActionTile } from '~/components/AccountDrawer/ActionTile'
+import { ActionTile } from '~/components/ActionTiles/ActionTile'
 import { Wiggle } from '~/components/animations/Wiggle'
 
 interface CopyAddressActionTileProps {

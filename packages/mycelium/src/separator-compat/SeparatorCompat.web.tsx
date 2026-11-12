@@ -112,6 +112,7 @@ function useIsMdBreakpoint(hasMediaOverride: boolean): boolean {
  */
 export function SeparatorCompat({
   vertical,
+  decorative = true,
   my,
   mx,
   mt,
@@ -167,7 +168,13 @@ export function SeparatorCompat({
   }
   return (
     // oxlint-disable-next-line react/forbid-elements -- deliberately Tamagui-free: this compat must emit exactly the legacy cascade output via inline styles (INFRA-3644)
-    <div data-testid={dataTestId ?? testID} style={webStyle}>
+    <div
+      {...(decorative
+        ? { 'aria-hidden': true }
+        : { role: 'separator', 'aria-orientation': vertical ? 'vertical' : undefined })}
+      data-testid={dataTestId ?? testID}
+      style={webStyle}
+    >
       {children}
     </div>
   )

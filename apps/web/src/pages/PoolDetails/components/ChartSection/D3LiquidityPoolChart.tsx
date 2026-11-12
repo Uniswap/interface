@@ -8,7 +8,6 @@ import { useTranslation } from 'react-i18next'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { ChartHeader } from '~/components/Charts/ChartHeader'
 import { ChartSkeleton } from '~/components/Charts/LoadingState'
-import { ChartType } from '~/components/Charts/utils'
 import { SubscriptZeroPrice } from '~/components/SubscriptZeroPrice'
 import { D3HorizontalLiquidityChart } from '~/features/Liquidity/charts/D3HorizontalLiquidityChart/D3HorizontalLiquidityChart'
 import { HorizontalLiquidityChartStoreProvider } from '~/features/Liquidity/charts/D3HorizontalLiquidityChart/HorizontalLiquidityChartStoreProvider'
@@ -20,6 +19,7 @@ import { buildV2SyntheticPool, V2Reserves } from '~/features/Liquidity/utils/v2S
 import { useColor } from '~/hooks/useColor'
 import { DEPTH_CHART_SUBSCRIPT_THRESHOLD } from '~/pages/PoolDetails/components/ChartSection/DepthChart.utils'
 import { usePdpPool } from '~/pages/PoolDetails/components/ChartSection/usePdpPool'
+import { ChartType } from '~/utils/charts'
 import { unwrappedToken } from '~/utils/unwrappedToken'
 
 const PDP_CHART_HEIGHT_PX = 356

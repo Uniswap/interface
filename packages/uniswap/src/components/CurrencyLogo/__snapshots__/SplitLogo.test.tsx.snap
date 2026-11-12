@@ -24,6 +24,7 @@ exports[`SplitLogo > renders without error 1`] = `
           style="box-sizing: border-box; display: flex; flex-direction: column; flex-shrink: 0; min-width: 0;"
         >
           <img
+            alt=""
             height="10"
             src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
             style="object-fit: cover; width: 10px; height: 10px; border-radius: 10px; z-index: 1;"
@@ -50,6 +51,7 @@ exports[`SplitLogo > renders without error 1`] = `
           style="box-sizing: border-box; display: flex; flex-direction: column; flex-shrink: 0; min-width: 0;"
         >
           <img
+            alt=""
             height="10"
             src="https://token-icons.s3.amazonaws.com/eth.png"
             style="object-fit: cover; width: 10px; height: 10px; border-radius: 10px; z-index: 1;"
@@ -113,6 +115,7 @@ exports[`SplitLogo > stacked orientation > renders without error 1`] = `
           style="box-sizing: border-box; display: flex; flex-direction: column; flex-shrink: 0; min-width: 0;"
         >
           <img
+            alt=""
             height="10"
             src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
             style="object-fit: cover; width: 10px; height: 10px; border-radius: 10px; z-index: 1;"
@@ -140,6 +143,7 @@ exports[`SplitLogo > stacked orientation > renders without error 1`] = `
           style="box-sizing: border-box; display: flex; flex-direction: column; flex-shrink: 0; min-width: 0;"
         >
           <img
+            alt=""
             height="10"
             src="https://token-icons.s3.amazonaws.com/eth.png"
             style="object-fit: cover; width: 10px; height: 10px; border-radius: 10px; z-index: 1;"

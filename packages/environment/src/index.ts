@@ -27,6 +27,7 @@ export {
   isSafari,
   isTouchable,
   isWebAndroid,
+  isDevPortalApp,
   isWebApp,
   isWebAppDesktop,
   isWebIOS,

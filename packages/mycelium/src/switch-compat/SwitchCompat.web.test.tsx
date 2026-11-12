@@ -197,13 +197,20 @@ describe('SwitchCompat (web) behavior', () => {
     expect(getParts(container).track.style.pointerEvents).toBe('none')
   })
 
-  it('forwards id, testID and aria-label to the switch element', () => {
+  it('forwards id, testID, accessible name and description to the switch element', () => {
     const { getByTestId } = renderLight(
-      <Switch aria-label="Lock leverage" id="switch-id" variant="default" testID="switch-test-id" />,
+      <Switch
+        aria-label="Lock leverage"
+        aria-describedby="switch-description"
+        id="switch-id"
+        variant="default"
+        testID="switch-test-id"
+      />,
     )
     const track = getByTestId('switch-test-id')
     expect(track.getAttribute('id')).toBe('switch-id')
     expect(track.getAttribute('aria-label')).toBe('Lock leverage')
+    expect(track.getAttribute('aria-describedby')).toBe('switch-description')
     expect(track.getAttribute('role')).toBe('switch')
     expect((track as HTMLButtonElement).type, 'type=button so it never submits forms').toBe('button')
   })

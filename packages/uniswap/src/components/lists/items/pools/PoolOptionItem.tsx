@@ -12,11 +12,14 @@ import {
 import { hasPoolSearchStats, PoolOptionItemStats } from 'uniswap/src/components/lists/items/pools/PoolOptionItemStats'
 import { usePoolIdentityLabels } from 'uniswap/src/components/lists/items/pools/usePoolIdentityLabels'
 import { CurrencyInfo, PoolSearchStats } from 'uniswap/src/features/dataApi/types'
+import { getPoolName } from 'uniswap/src/features/pools/names'
+import { orderPoolDataByQuoteToken } from 'uniswap/src/features/pools/quoteToken'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
 interface PoolOptionItemProps extends ModifierPressProps {
   token0CurrencyInfo: CurrencyInfo
   token1CurrencyInfo: CurrencyInfo
+  isToken0Quote?: boolean
   poolId: string
   chainId: UniverseChainId
   onPress: () => void
@@ -43,6 +46,7 @@ function SeparatorDot(): JSX.Element {
 function PoolOptionItemInner({
   token0CurrencyInfo,
   token1CurrencyInfo,
+  isToken0Quote,
   poolId,
   chainId,
   onPress,
@@ -54,7 +58,17 @@ function PoolOptionItemInner({
   modifierPressHref,
   onModifierPress,
 }: PoolOptionItemProps): JSX.Element {
-  const poolName = `${token0CurrencyInfo.currency.symbol}/${token1CurrencyInfo.currency.symbol}`
+  const [baseCurrencyInfo, quoteCurrencyInfo] = orderPoolDataByQuoteToken({
+    token0IsQuote: isToken0Quote,
+    data0: token0CurrencyInfo,
+    data1: token1CurrencyInfo,
+  })
+  const poolName =
+    getPoolName({
+      symbol0: token0CurrencyInfo.currency.symbol,
+      symbol1: token1CurrencyInfo.currency.symbol,
+      token0IsQuote: isToken0Quote,
+    }) ?? ''
   const { versionLabel, feeLabel, hookLabel, hookMark } = usePoolIdentityLabels({
     chainId,
     protocolVersion,
@@ -93,8 +107,8 @@ function PoolOptionItemInner({
       image={
         <SplitLogo
           size={iconSizes.icon40}
-          inputCurrencyInfo={token0CurrencyInfo}
-          outputCurrencyInfo={token1CurrencyInfo}
+          inputCurrencyInfo={baseCurrencyInfo}
+          outputCurrencyInfo={quoteCurrencyInfo}
           chainId={chainId}
         />
       }

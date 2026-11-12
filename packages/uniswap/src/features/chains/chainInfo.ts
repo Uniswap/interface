@@ -5,6 +5,7 @@ import { AVALANCHE_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/avala
 import { BASE_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/base'
 import { BNB_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/bnb'
 import { CELO_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/celo'
+import { ELYSIUM_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/elysium'
 import { INK_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/ink'
 import { LINEA_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/linea'
 import { MAINNET_CHAIN_INFO, SEPOLIA_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/mainnet'
@@ -46,6 +47,7 @@ export const ORDERED_CHAINS = [
   ROBINHOOD_CHAIN_INFO,
   ARC_CHAIN_INFO,
   INK_CHAIN_INFO,
+  ELYSIUM_CHAIN_INFO,
   SONEIUM_CHAIN_INFO,
   TEMPO_CHAIN_INFO,
   XLAYER_CHAIN_INFO,
@@ -102,6 +104,7 @@ export const UNIVERSE_CHAIN_INFO = {
   [UniverseChainId.Robinhood]: ROBINHOOD_CHAIN_INFO,
   [UniverseChainId.Arc]: ARC_CHAIN_INFO,
   [UniverseChainId.Ink]: INK_CHAIN_INFO,
+  [UniverseChainId.Elysium]: ELYSIUM_CHAIN_INFO,
 
   // TESTNET
   [UniverseChainId.Sepolia]: SEPOLIA_CHAIN_INFO,

@@ -22,7 +22,7 @@ export type { PoolTableTransaction }
 const TRANSACTIONS_PAGE_SIZE = 25
 
 /** A native leg arrives with an absent or zero-address `address` (see `ParsedToken`); resolve it to the
- * wrapped-native address so it can be matched against `token0Address`, which uses the same wrapped convention. */
+ * wrapped-native address so it can be matched against `baseTokenAddress`, which uses the same wrapped convention. */
 function resolvePoolTransactionLegAddress(token: ParsedToken): string | undefined {
   return isNativeParsedToken(token) ? WRAPPED_NATIVE_CURRENCY[token.chainId]?.address : token.address
 }
@@ -43,16 +43,16 @@ export function usePoolTransactions({
     PoolTableTransactionType.REMOVE,
     PoolTableTransactionType.ADD,
   ],
-  token0Address,
+  baseTokenAddress,
   isPoolDataLoading = false,
 }: {
   address: string
   chainId?: UniverseChainId
   // sortState: PoolTxTableSortState, TODO(WEB-3706): Implement sorting when BE supports
   filter?: PoolTableTransactionType[]
-  /** The pool's token0 address (NATIVE_CHAIN_ID sentinel allowed) — used to derive Buy/Sell. */
-  token0Address?: string
-  /** Whether the pool query that supplies `token0Address` is still in flight. See `isAwaitingPoolToken0`. */
+  /** The pair's display base (NATIVE_CHAIN_ID sentinel allowed); Buy/Sell are from its perspective. */
+  baseTokenAddress?: string
+  /** Whether the pool query that supplies `baseTokenAddress` is still in flight. See `isAwaitingBaseToken`. */
   isPoolDataLoading?: boolean
 }): UsePoolTransactionsResult {
   const { defaultChainId } = useEnabledChains()
@@ -83,29 +83,29 @@ export function usePoolTransactions({
   })
 
   // Transactions are marked as loading until we have enough info to classify them as Buy/Sell
-  const isPoolToken0Resolved = token0Address !== undefined
+  const isBaseTokenResolved = baseTokenAddress !== undefined
 
   // Ensure we don't show infinite loading if the pool data is never coming
-  const isAwaitingPoolToken0 = !isPoolToken0Resolved && isPoolDataLoading
+  const isAwaitingBaseToken = !isBaseTokenResolved && isPoolDataLoading
 
   const filteredTransactions = useMemo(() => {
-    if (!isPoolToken0Resolved) {
+    if (!isBaseTokenResolved) {
       return []
     }
-    const resolvedToken0Address =
-      token0Address === NATIVE_CHAIN_ID || token0Address === ZERO_ADDRESS
+    const resolvedBaseTokenAddress =
+      baseTokenAddress === NATIVE_CHAIN_ID || baseTokenAddress === ZERO_ADDRESS
         ? WRAPPED_NATIVE_CURRENCY[chainId ?? UniverseChainId.Mainnet]?.address
-        : token0Address
+        : baseTokenAddress
 
     return transactions
       .map((tx) => {
         const tokenIn = parseFloat(tx.token0Quantity) > 0 ? tx.token0 : tx.token1
         // tokenIn.address is undefined for a native leg (see ParsedToken), so it needs the
-        // same wrapped-native resolution as token0Address above or a native-token0 swap never matches.
+        // same wrapped-native resolution as baseTokenAddress above or a native-base swap never matches.
         const resolvedTokenInAddress = resolvePoolTransactionLegAddress(tokenIn)
         const isSell = areAddressesEqual({
           addressInput1: { address: resolvedTokenInAddress, chainId: tokenIn.chainId },
-          addressInput2: { address: resolvedToken0Address, chainId: chainId ?? UniverseChainId.Mainnet },
+          addressInput2: { address: resolvedBaseTokenAddress, chainId: chainId ?? UniverseChainId.Mainnet },
         })
         const type =
           tx.eventType === TransactionEventType.SWAP
@@ -139,14 +139,14 @@ export function usePoolTransactions({
         }
       })
       .filter((value: PoolTableTransaction | undefined): value is PoolTableTransaction => value !== undefined)
-  }, [transactions, token0Address, chainId, filter, isPoolToken0Resolved])
+  }, [transactions, baseTokenAddress, chainId, filter, isBaseTokenResolved])
 
   return useMemo(() => {
     return {
       transactions: filteredTransactions,
-      loading: isAwaitingPoolToken0 || isLoading,
+      loading: isAwaitingBaseToken || isLoading,
       loadMore,
       error,
     }
-  }, [filteredTransactions, isAwaitingPoolToken0, error, isLoading, loadMore])
+  }, [filteredTransactions, isAwaitingBaseToken, error, isLoading, loadMore])
 }

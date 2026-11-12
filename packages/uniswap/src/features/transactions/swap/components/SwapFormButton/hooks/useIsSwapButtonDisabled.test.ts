@@ -245,3 +245,40 @@ describe('useIsSwapButtonDisabled — isInAppPermissionedPool branch', () => {
     })
   })
 })
+
+describe('useIsSwapButtonDisabled — where the address is screened', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    Object.assign(platform, { isExtensionApp: false, isMobileApp: false, isWebApp: true })
+    setupDefaults()
+  })
+
+  // Web moved screening to the Review press. The observer stays mounted and disabled so it
+  // still reads the verdict that press writes; it just doesn't fetch on every render.
+  it('does not screen at render on web', () => {
+    renderHook(() => useIsSwapButtonDisabled())
+
+    expect(mockUseIsBlockedAddress).toHaveBeenCalledWith({ address: '0xWallet', chainId: 1 }, { enabled: false })
+  })
+
+  it.each([
+    ['the extension', { isExtensionApp: true, isMobileApp: false, isWebApp: false }],
+    ['mobile', { isExtensionApp: false, isMobileApp: true, isWebApp: false }],
+  ])('still screens at render on %s', (_label, platformFlags) => {
+    Object.assign(platform, platformFlags)
+
+    renderHook(() => useIsSwapButtonDisabled())
+
+    expect(mockUseIsBlockedAddress).toHaveBeenCalledWith({ address: '0xWallet', chainId: 1 }, { enabled: true })
+  })
+
+  // The press-time screen writes to this same entry, so a blocked verdict still disables
+  // the button on web even though nothing screened at render.
+  it('still disables the button on web once the press-time screen reports blocked', () => {
+    mockUseIsBlockedAddress.mockReturnValue({ isBlocked: true, isBlockedLoading: false })
+
+    const { result } = renderHook(() => useIsSwapButtonDisabled())
+
+    expect(result.current).toBe(true)
+  })
+})

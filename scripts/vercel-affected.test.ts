@@ -6,13 +6,7 @@
  * Run with `bun test scripts/vercel-affected`.
  */
 import { describe, expect, test } from 'bun:test'
-import {
-  DEPLOYABLE_PROJECTS,
-  type DeployableProject,
-  deployableForTarget,
-  selectRequestedProjects,
-  toMatrix,
-} from './vercel-affected'
+import { type DeployableProject, deployableForTarget, selectRequestedProjects, toMatrix } from './vercel-affected'
 
 const PROJECTS: DeployableProject[] = [
   { name: '@universe/workbench', vercelProject: 'workbench', projectId: 'prj_workbench' },
@@ -78,22 +72,6 @@ describe('deployableForTarget', () => {
 
   test('keeps them for a preview run', () => {
     expect(deployableForTarget(withPreviewOnly, false)).toEqual(withPreviewOnly)
-  })
-})
-
-describe('the universe-rh-cca registry entry', () => {
-  // The fixtures above prove the mechanisms; this pins the real entry, the
-  // one an edit to its block (a rename or path move) could silently drop
-  // flags from.
-  const rhCca = DEPLOYABLE_PROJECTS.find((project) => project.vercelProject === 'universe-rh-cca')
-
-  test('never deploys to production', () => {
-    expect(rhCca?.previewOnly).toBe(true)
-    expect(deployableForTarget(DEPLOYABLE_PROJECTS, true).map((p) => p.vercelProject)).not.toContain('universe-rh-cca')
-  })
-
-  test('builds from the directory the repo keeps it in', () => {
-    expect(rhCca?.rootDirectory).toBe('apps/pools-xyz')
   })
 })
 

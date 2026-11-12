@@ -1,4 +1,4 @@
-import { isEmbedPath } from '~/pages/embedPaths'
+import { isEmbedPath } from '~/utils/embedPaths'
 
 // ── Frame protection ─────────────────────────────────────────────────
 // frame-ancestors cannot be enforced via <meta> CSP tags (W3C spec) — it

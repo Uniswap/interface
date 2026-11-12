@@ -22,15 +22,15 @@ const StyledLink = styled(Link, {
 })
 
 export function PoolDetailsTitle({
-  token0,
-  token1,
+  baseToken,
+  quoteToken,
   chainId,
   toggleReversed,
   isCompact,
   poolAddress,
 }: {
-  token0?: ParsedToken
-  token1?: ParsedToken
+  baseToken?: ParsedToken
+  quoteToken?: ParsedToken
   chainId?: UniverseChainId
   toggleReversed: React.DispatchWithoutAction
   isCompact: boolean
@@ -45,7 +45,7 @@ export function PoolDetailsTitle({
       <Flex row minWidth={0} shrink>
         <StyledLink
           to={getTokenDetailsURL({
-            address: token0?.address,
+            address: baseToken?.address,
             chainId: chainId ?? defaultChainId,
           })}
         >
@@ -56,12 +56,12 @@ export function PoolDetailsTitle({
             flexShrink={1}
             {...EllipsisTamaguiStyle}
           >
-            {token0?.symbol} /{' '}
+            {baseToken?.symbol} /{' '}
           </Text>
         </StyledLink>
         <StyledLink
           to={getTokenDetailsURL({
-            address: token1?.address,
+            address: quoteToken?.address,
             chainId: chainId ?? defaultChainId,
           })}
         >
@@ -72,7 +72,7 @@ export function PoolDetailsTitle({
             flexShrink={1}
             {...EllipsisTamaguiStyle}
           >
-            {token1?.symbol}
+            {quoteToken?.symbol}
           </Text>
         </StyledLink>
       </Flex>

@@ -5,7 +5,7 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
-import { InterfaceTrade } from '~/state/routing/types'
+import { InterfaceTrade } from '~/types/routing'
 export function TradeSummary({ trade }: { trade: Pick<InterfaceTrade, 'inputAmount' | 'outputAmount'> }) {
   const { formatCurrencyAmount } = useLocalizationContext()
   const inputCurrencyInfo = useCurrencyInfo(currencyId(trade.inputAmount.currency))

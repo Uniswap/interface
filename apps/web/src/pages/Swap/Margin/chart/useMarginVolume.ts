@@ -141,18 +141,11 @@ export function alignVolumeToCandles({
   return aligned
 }
 
-// Minimal volume data hook (spec F15) for the optional volume pane. Prefs-agnostic by design: the pane
-// passes `enabled` (from prefs.volume) so the query is skipped while the overlay is off. Tracks the
-// volatile leg + selected time window, on the same ranged request as the candles.
-export function useMarginVolume({
-  market,
-  timeWindow,
-  enabled,
-}: {
-  market: MarginMarket
-  timeWindow: MarginTimeWindow
-  enabled: boolean
-}): { volumeBars: MarginVolumeBar[] } {
+// Minimal volume data hook (spec F15) for the volume pane. Tracks the volatile leg + selected time
+// window, on the same ranged request as the candles.
+export function useMarginVolume({ market, timeWindow }: { market: MarginMarket; timeWindow: MarginTimeWindow }): {
+  volumeBars: MarginVolumeBar[]
+} {
   const { address } = volatileLeg({ market })
   const { duration, candleSeconds } = MARGIN_TIME_WINDOWS[timeWindow]
   const variables: TokenPriceChartQueryVariables = {
@@ -169,7 +162,7 @@ export function useMarginVolume({
       target: restTarget,
       timeWindow,
       nowSeconds: Date.now() / 1000,
-      enabled,
+      enabled: true,
       select: selectVolumeBars,
     }),
   )

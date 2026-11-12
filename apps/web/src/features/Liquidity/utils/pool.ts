@@ -45,6 +45,9 @@ export type Pool = {
   token1Metadata?: PoolTokenMetadata
   feeTier?: number
   isDynamicFee: boolean
+  // The LP fee the pool charges right now (pips). Equals `feeTier` except on a v4 dynamic-fee pool,
+  // where it's the most recent swap's fee; unset when that can't be established yet.
+  currentLpFee?: number
   tickSpacing?: number
   hookAddress?: string
   liquidity: bigint
@@ -57,6 +60,8 @@ export type Pool = {
   protocolFee?: number
   /** BE-ranked pool category ids; the first resolvable one is the row tag. Ranked sources only. */
   categoryIds?: string[]
+  /** The pool's quote token, always token0Address or token1Address; unset until the backend resolves one. */
+  quoteTokenAddress?: string
   // The tokens `rewardApr` is paid in, one entry per token, and the normalized replacement for
   // `PoolRankStats.tokenBoosts` (omitted below) — the wire shape carries a served `Token` this
   // flattens to what the badges actually render.

@@ -6,6 +6,7 @@ import type { SignRequest } from 'src/features/walletConnect/walletConnectSlice'
 import { renderWithProviders } from 'src/test/render'
 import { EthMethod } from 'uniswap/src/features/dappRequests/types'
 import { DappRequestType } from 'uniswap/src/types/walletConnect'
+import { noop } from 'utilities/src/react/noop'
 import type { DappSignTypedDataContent } from 'wallet/src/components/dappRequests/DappSignTypedDataContent'
 
 // Capture the params handed to the Blockaid typed-data scanner so we can assert the
@@ -69,8 +70,6 @@ function createSignRequest(type: EthMethod.SignTypedData | EthMethod.SignTypedDa
 }
 
 const gasFee: GasFeeResult = { isLoading: false, error: null }
-const noop = (): void => {}
-
 describe('WalletConnectRequestModalContent typed-data Blockaid scan params', () => {
   beforeEach(() => {
     capturedProps.current = undefined

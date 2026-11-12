@@ -1,7 +1,7 @@
 export { AppId } from './AppId'
 export { BaseEnvFieldRules, BaseConfigSchema, BaseConfigValues } from './BaseConfig'
 export type { BaseConfig } from './BaseConfig'
-export { boolIfDefined, boolFromOne, boolFromString, optionalString } from './commonSchemas'
+export { boolIfDefined, boolFromString, optionalString } from './commonSchemas'
 export type { EnvFieldRules } from './envFieldRules'
 export { Environment, NodeEnv } from './Environment'
 export { getConfig } from './getConfig'

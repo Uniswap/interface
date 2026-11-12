@@ -103,7 +103,7 @@ export const ChooseNftModal = ({
             </Flex>
             {/* position/left and onPress belong on the wrapper: mycelium icons don't carry
             layout-positioning or press-handler props on the SVG itself (INFRA-3320 style surface). */}
-            <TouchableArea position="absolute" left={0} onPress={onClose}>
+            <TouchableArea position="absolute" left={0} aria-label={t('common.button.close')} onPress={onClose}>
               <X size="$icon.24" color="$neutral2" />
             </TouchableArea>
           </Flex>

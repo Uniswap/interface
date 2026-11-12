@@ -25,7 +25,6 @@ import { config } from 'uniswap/src/config'
 import { getUniswapServiceUrls } from 'uniswap/src/constants/urls'
 import { BASE_UNISWAP_HEADERS } from 'uniswap/src/data/apiClients/createUniswapFetchClient'
 import { getIsPermissionedTokenFromCache } from 'uniswap/src/data/apiClients/tradingApi/getIsPermissionedTokenFromCache'
-import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { filterChainIdsByPlatform } from 'uniswap/src/features/chains/utils'
 import { tradingApiToUniverseChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 
@@ -72,23 +71,17 @@ export enum TradingApiHeaders {
   DisableUniswapInterfaceFees = 'x-disable-uniswap-interface-fees',
 }
 
-// Universal Router 2.2.0 is required to route through permissioned pools; 2.1.1/2.0 don't work
-// with them, so for a permissioned token 2.2.0 is a correctness requirement, not a rollout
-// choice. No separate feature flag gates this: permissioned-pool support (the backend and this)
-// launches as a unit, so "a permissioned token is involved" is itself the gate.
+// Every other request omits `x-universal-router-version`, so the Trading API picks the router
+// and can move these apps to a new one without a release. Universal Router 2.2.0 is the
+// exception: permissioned pools only work with it, so for a permissioned token it is a
+// correctness requirement, not a rollout choice. No separate feature flag gates this:
+// permissioned-pool support (the backend and this) launches as a unit, so "a permissioned
+// token is involved" is itself the gate.
 function getUniversalRouterVersionHeader(params: {
   chainId: UniverseChainId | undefined
   options?: GetFeatureFlagHeadersOptions
-}): string {
-  if (isPermissionedTokenRequest(params)) {
-    return TradingApi.UniversalRouterVersion._2_2_0
-  }
-
-  const { chainId } = params
-  const chainSupports211 =
-    !!chainId && getChainInfo(chainId).supportedURVersions.includes(TradingApi.UniversalRouterVersion._2_1_1)
-  const useUR211 = getFeatureFlag(FeatureFlags.UseUniversalRouterVersion211) && chainSupports211
-  return useUR211 ? TradingApi.UniversalRouterVersion._2_1_1 : TradingApi.UniversalRouterVersion._2_0
+}): string | undefined {
+  return isPermissionedTokenRequest(params) ? TradingApi.UniversalRouterVersion._2_2_0 : undefined
 }
 
 // Quote requests carry the underlying token addresses, so permissioned status is resolved from
@@ -126,8 +119,10 @@ export const getFeatureFlaggedHeaders = async (
 ): Promise<HeadersInit> => {
   await waitForStatsigReady()
   const chainId = tradingApiToUniverseChainId(options?.chainId)
-  const headers: Record<string, string> = {
-    [TradingApiHeaders.UniversalRouterVersion]: getUniversalRouterVersionHeader({ chainId, options }),
+  const headers: Record<string, string> = {}
+  const universalRouterVersion = getUniversalRouterVersionHeader({ chainId, options })
+  if (universalRouterVersion) {
+    headers[TradingApiHeaders.UniversalRouterVersion] = universalRouterVersion
   }
   const uniquoteEnabled = getFeatureFlag(FeatureFlags.UniquoteEnabled)
   const viemProviderEnabled = getFeatureFlag(FeatureFlags.ViemProviderEnabled)

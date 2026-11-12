@@ -202,7 +202,7 @@ const TooltipCompatTrigger = React.forwardRef<HTMLDivElement, TooltipCompatTrigg
     } else {
       const emission = flexCompatEmission(styleAndDomProps)
       renderElement = (
-        // oxlint-disable-next-line react/forbid-elements -- the compat trigger IS the raw DOM boundary (no Tamagui Flex here)
+        // oxlint-disable-next-line react/forbid-elements, jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions -- the compat trigger IS the raw DOM boundary (no Tamagui Flex here); the click is the touch tap-to-open, keyboard opens on focus via Base UI
         <div
           ref={composeTriggerRef({ ref, childRef: undefined, triggerNodeRef })}
           {...forwardedDomProps}
@@ -237,6 +237,10 @@ const TooltipCompatTrigger = React.forwardRef<HTMLDivElement, TooltipCompatTrigg
   },
 )
 
+// Base UI mounts a nested portal inside its parent overlay's portal, so inside a popover hosted by a
+// modal this <div> would be a new flex item in the modal's gapped column and resize it on every open.
+const PORTAL_WRAPPER_STYLE: React.CSSProperties = { display: 'contents' }
+
 const TooltipCompatContent = React.forwardRef<HTMLDivElement, TooltipContentCompatProps>(
   function TooltipCompatContent(props, ref) {
     const { children, animationDirection, zIndex, ...styleAndInertProps } = props
@@ -247,7 +251,7 @@ const TooltipCompatContent = React.forwardRef<HTMLDivElement, TooltipContentComp
     const { sideOffset, alignOffset } = mapOffsetToAnchorPosition({ offset: position.offset, align })
     const contentEmission = tooltipContentCompatEmission({ ...styleAndInertProps, animationDirection })
     return (
-      <TooltipPrimitive.Portal>
+      <TooltipPrimitive.Portal style={PORTAL_WRAPPER_STYLE}>
         <TooltipPrimitive.Positioner
           data-slot="tooltip-compat-positioner"
           className="isolate outline-none"

@@ -218,6 +218,7 @@ const CONFIG_CHAIN_TO_CHAIN_ID = {
   BASE: UniverseChainId.Base,
   BNB: UniverseChainId.Bnb,
   CELO: UniverseChainId.Celo,
+  ELYSIUM: UniverseChainId.Elysium,
   ETHEREUM: UniverseChainId.Mainnet,
   ETHEREUM_SEPOLIA: UniverseChainId.Sepolia,
   INK: UniverseChainId.Ink,
@@ -324,5 +325,6 @@ function multichainTokenToTokenItemData({
     price: multichainToken.price?.spotUsd,
     pricePercentChange24h: multichainToken.price?.percentChange1d,
     networkCount: networkCount || undefined,
+    categoryIds: multichainToken.categoryIds,
   } satisfies TokenItemData
 }

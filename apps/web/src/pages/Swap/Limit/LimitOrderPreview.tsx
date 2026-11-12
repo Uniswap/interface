@@ -5,8 +5,8 @@ import { Trans } from 'ui/src'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { AmountHeader } from '~/components/AmountHeader'
-import { InterfaceTrade } from '~/state/routing/types'
-import { isPreviewTrade } from '~/state/routing/utils'
+import { InterfaceTrade } from '~/types/routing'
+import { isPreviewTrade } from '~/utils/routing/routing'
 
 export function LimitOrderPreview({
   trade,

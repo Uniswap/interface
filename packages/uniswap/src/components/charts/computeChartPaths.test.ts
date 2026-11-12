@@ -91,6 +91,57 @@ describe('computeChartPaths', () => {
     expect(result.lastPoint).toBeTruthy()
   })
 
+  describe('isStablecoin', () => {
+    // A $0.9998-$1.0002 day. As a stablecoin the range fills the middle 2%: y-domain [0.99, 1.01].
+    const wobble = makeData([
+      [0, 1.0002],
+      [25, 0.9998],
+      [50, 1.0001],
+      [75, 0.9999],
+      [100, 0.9999],
+    ])
+
+    it('stretches the wobble edge to edge for a non-stablecoin', () => {
+      const result = computeChartPaths({ data: wobble, dataWidth: 100, height: 40, yGutter: 2 })
+
+      // 0.9999 sits 3/4 of the way down the [0.9998, 1.0002] domain: 2 + 0.75 * 36
+      expect(result.lastPoint?.y).toBeCloseTo(29, 6)
+      expect(computeChartPaths({ data: wobble, dataWidth: 100, height: 40, yGutter: 2, isStablecoin: false })).toEqual(
+        result,
+      )
+    })
+
+    it('keeps the wobble near the vertical centre for a stablecoin', () => {
+      const result = computeChartPaths({ data: wobble, dataWidth: 100, height: 40, yGutter: 2, isStablecoin: true })
+
+      // (1.01 - 0.9999) / 0.02 * 36 + 2
+      expect(result.lastPoint?.y).toBeCloseTo(20.18, 6)
+    })
+
+    it('centres a constant stablecoin series instead of pinning it to the top', () => {
+      const flat = makeData([
+        [0, 1],
+        [100, 1],
+      ])
+
+      expect(computeChartPaths({ data: flat, dataWidth: 100, height: 40, yGutter: 2 }).lastPoint?.y).toBe(2)
+      expect(
+        computeChartPaths({ data: flat, dataWidth: 100, height: 40, yGutter: 2, isStablecoin: true }).lastPoint?.y,
+      ).toBeCloseTo(20, 6)
+    })
+
+    it('leaves a stablecoin depeg at full scale', () => {
+      const depeg = makeData([
+        [0, 1],
+        [50, 0.95],
+        [100, 0.98],
+      ])
+      const params = { data: depeg, dataWidth: 100, height: 40, yGutter: 2 }
+
+      expect(computeChartPaths({ ...params, isStablecoin: true })).toEqual(computeChartPaths(params))
+    })
+  })
+
   it('preserves unsampled output when the data fits within the geometry budget', () => {
     const data = makeData([
       [0, 10],

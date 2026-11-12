@@ -4,7 +4,7 @@ import { logger } from 'utilities/src/logger/logger'
 import { useImageLoadError } from '../hooks/useImageLoadError'
 import type { RequireImageProps } from '../types'
 
-export function RequireImage({ uri, size, style, fallback, onError }: RequireImageProps): JSX.Element {
+export function RequireImage({ alt, uri, size, style, fallback, onError }: RequireImageProps): JSX.Element {
   const { hasError, handleError } = useImageLoadError(uri, onError)
 
   if (hasError && fallback) {
@@ -18,6 +18,8 @@ export function RequireImage({ uri, size, style, fallback, onError }: RequireIma
       key={String(uri)}
       // recyclingKey lets expo-image dispose the previous bitmap if this component is reused
       recyclingKey={String(uri)}
+      accessible={alt !== ''}
+      alt={alt || undefined}
       source={uri}
       // The caller's image style must flow through: TokenLogo layers a white background circle
       // (explicit zIndex background, 96% size) under the logo and raises the image above it with

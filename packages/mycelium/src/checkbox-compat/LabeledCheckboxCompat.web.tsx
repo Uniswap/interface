@@ -106,11 +106,14 @@ export const LabeledCheckboxCompat = React.forwardRef<HTMLDivElement, LabeledChe
     const checkbox = <CheckboxCompat checked={checked} size={size} variant={variant} onPress={handlePress} />
 
     return (
+      // oxlint-disable-next-line jsx-a11y/click-events-have-key-events -- legacy parity, see the a11y note in the file header
       <div
         ref={ref}
         className={containerClasses}
         // Legacy's nested interactive container, tab stop included — see the
         // a11y note in the file header before flattening either.
+        // TODO(INFRA-4589): the label text never names the inner checkbox, which is unnamed inside this button
+        // (button-name, nested-interactive). Name the checkbox with the text and drop this role.
         role="button"
         style={mergedContainerStyle}
         tabIndex={0}

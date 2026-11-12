@@ -64,6 +64,7 @@ export function SwitchCompat({
   testID,
   pointerEvents,
   'aria-label': ariaLabel,
+  'aria-describedby': ariaDescribedBy,
 }: SwitchCompatProps): JSX.Element {
   const [checked, setChecked] = useState<boolean>(checkedProp ?? defaultChecked ?? false)
   const [hovered, setHovered] = useState(false)
@@ -258,8 +259,7 @@ export function SwitchCompat({
       aria-checked={checked}
       aria-disabled={disabled}
       aria-label={ariaLabel}
-      // Transcribed from the legacy implementation, which set aria-selected alongside aria-checked.
-      aria-selected={checked}
+      aria-describedby={ariaDescribedBy}
       data-testid={testID}
       id={id}
       role="switch"

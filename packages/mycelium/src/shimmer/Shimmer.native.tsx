@@ -9,6 +9,7 @@ import Reanimated, {
   withTiming,
 } from 'react-native-reanimated'
 import { useEvent } from 'utilities/src/react/hooks'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useThemeVariable } from '../theme/useThemeVariable.native'
 import { FALLBACK_GLARE_COLOR, opacifyGlareColor, resolveGlareColor } from './glare-color'
 import type { ShimmerProps } from './ShimmerProps'
@@ -17,7 +18,6 @@ const LINEAR_GRADIENT_START = { x: 0, y: 0 }
 const LINEAR_GRADIENT_END = { x: 1, y: 0 }
 
 const NATIVE_SHIMMER_DURATION_SECONDS = 2
-const ONE_SECOND_MS = 1000
 
 /**
  * Native `Shimmer`: a Reanimated glare sweep overlaid on the content and

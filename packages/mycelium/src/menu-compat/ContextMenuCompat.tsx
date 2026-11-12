@@ -278,7 +278,7 @@ export const ContextMenuCompat = React.forwardRef<ContextMenuCompatHandle, Conte
           The trigger handlers mirror the legacy split: primary uses mousedown
           so left-click behavior stays intact; secondary uses contextmenu.
         */}
-        {/* oxlint-disable-next-line react/forbid-elements -- verbatim port of the legacy trigger container div */}
+        {/* oxlint-disable-next-line react/forbid-elements, jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions -- verbatim port of the legacy trigger container div; a pointer-only wrapper around interactive children that doesn't open from the keyboard yet */}
         <div
           ref={triggerContainerRef}
           data-slot="context-menu-compat-trigger"

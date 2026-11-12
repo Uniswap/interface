@@ -33,15 +33,12 @@ vi.mock('~/pages/AddLiquidity/useCreatePoolHrefFromSelection', async (importOrig
   return { ...actual, useResolvedBrowserSelection: vi.fn(), useCreatePoolHrefFromSelection: () => '/positions/add/new' }
 })
 
+const listPools = vi.hoisted(() => ({
+  result: { pools: [] as unknown[], isLoading: false, isError: false, hasNextPage: false },
+}))
+
 vi.mock('~/pages/Explore/hooks/useV2ListPools', () => ({
-  useV2ListPools: () => ({
-    pools: [],
-    isLoading: false,
-    isError: false,
-    loadMore: vi.fn(),
-    hasNextPage: false,
-    chainId: undefined,
-  }),
+  useV2ListPools: () => ({ ...listPools.result, loadMore: vi.fn(), chainId: undefined }),
 }))
 
 vi.mock('~/pages/Explore/tables/Pools/PoolTable', () => ({ PoolsTable: () => null }))
@@ -172,5 +169,40 @@ describe('PoolBrowser handleCurrencySelect', () => {
       filterChain: UniverseChainId.Base,
       filterTokenChain: UniverseChainId.Base,
     })
+  })
+})
+
+describe('PoolBrowser create-pool CTA', () => {
+  beforeEach(() => {
+    listPools.result = { pools: [], isLoading: false, isError: false, hasNextPage: false }
+  })
+
+  it('shows the CTA when the list comes back empty', () => {
+    setup({ filterTokenChain: UniverseChainId.Mainnet })
+    expect(screen.getByText('addLiquidity.createNewPool')).toBeTruthy()
+  })
+
+  it('hides the CTA while loading', () => {
+    listPools.result = { ...listPools.result, isLoading: true }
+    setup({ filterTokenChain: UniverseChainId.Mainnet })
+    expect(screen.queryByText('addLiquidity.createNewPool')).toBeNull()
+  })
+
+  it('hides the CTA when the list errored', () => {
+    listPools.result = { ...listPools.result, isError: true }
+    setup({ filterTokenChain: UniverseChainId.Mainnet })
+    expect(screen.queryByText('addLiquidity.createNewPool')).toBeNull()
+  })
+
+  it('keeps the CTA when a refetch fails over rows still on screen', () => {
+    listPools.result = { ...listPools.result, pools: [{}], isError: true }
+    setup({ filterTokenChain: UniverseChainId.Mainnet })
+    expect(screen.getByText('addLiquidity.createNewPool')).toBeTruthy()
+  })
+
+  it('hides the CTA when more pages remain', () => {
+    listPools.result = { ...listPools.result, pools: [{}], hasNextPage: true }
+    setup({ filterTokenChain: UniverseChainId.Mainnet })
+    expect(screen.queryByText('addLiquidity.createNewPool')).toBeNull()
   })
 })

@@ -11,6 +11,7 @@ const RESIZE_MODE_TO_CONTENT_FIT: Record<UniversalImageResizeMode, ImageContentF
 }
 
 export function PlainImage({
+  alt,
   autoplay,
   cacheInMemory,
   fallback,
@@ -39,6 +40,8 @@ export function PlainImage({
       key={uri}
       // recyclingKey lets expo-image dispose the previous bitmap if this component is reused
       recyclingKey={uri}
+      accessible={alt !== ''}
+      alt={alt || undefined}
       autoplay={autoplay}
       cachePolicy={cacheInMemory ? 'memory-disk' : 'disk'}
       contentFit={contentFit}

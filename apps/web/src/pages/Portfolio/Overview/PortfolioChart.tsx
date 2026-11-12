@@ -23,7 +23,6 @@ import { NumberType } from 'utilities/src/format/types'
 import { useChartAnimatedColor } from '~/components/Charts/hooks/useChartAnimatedColor'
 import { ChartSkeleton } from '~/components/Charts/LoadingState'
 import { PriceChart, PriceChartBody, PriceChartData } from '~/components/Charts/PriceChart'
-import { ChartType, PriceChartType } from '~/components/Charts/utils'
 import {
   DropdownSelector,
   type SelectOption,
@@ -37,6 +36,7 @@ import { createPortfolioYAxisFormatters } from '~/pages/Portfolio/Overview/creat
 import { PortfolioChartCategory } from '~/pages/Portfolio/Overview/hooks/usePortfolioChartSeries'
 import { PortfolioBalanceHeader } from '~/pages/Portfolio/Overview/PortfolioBalanceHeader'
 import { PortfolioChartCategorySelector } from '~/pages/Portfolio/Overview/PortfolioChartCategorySelector'
+import { ChartType, PriceChartType } from '~/utils/charts'
 
 type ChartPercentChange = ReturnType<typeof getPortfolioChartPercentChange>
 

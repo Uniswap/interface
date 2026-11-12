@@ -8,9 +8,8 @@ import { NumberType } from 'utilities/src/format/types'
 import { ChartHeader } from '~/components/Charts/ChartHeader'
 import { PriceChartBody } from '~/components/Charts/PriceChart/PriceChartBody'
 import { PriceChartDelta } from '~/components/Charts/PriceChart/PriceChartDelta'
-import { PriceChartData } from '~/components/Charts/PriceChart/PriceChartModel'
 import { getCandlestickPriceBounds } from '~/components/Charts/PriceChart/utils'
-import { PriceChartType } from '~/components/Charts/utils'
+import { PriceChartData, PriceChartType } from '~/utils/charts'
 
 interface PriceChartProps {
   type: PriceChartType

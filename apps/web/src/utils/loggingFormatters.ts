@@ -8,10 +8,10 @@ import {
   getDurationUntilTimestampSeconds,
   getTokenAddress,
 } from '~/lib/utils/analytics'
-import type { InterfaceTrade } from '~/state/routing/types'
-import { isClassicTrade, isUniswapXTradeType } from '~/state/routing/utils'
+import type { InterfaceTrade } from '~/types/routing'
 import type { LimitOrderResult } from '~/types/trade'
 import { computeRealizedPriceImpact } from '~/utils/prices'
+import { isClassicTrade, isUniswapXTradeType } from '~/utils/routing/routing'
 
 export function formatSwapPriceUpdatedEventProperties({
   trade,

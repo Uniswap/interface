@@ -3,6 +3,7 @@ import { Currency } from '@uniswap/sdk-core'
 import { UseSporeColorsReturn } from '@universe/mycelium/theme-hooks-compat'
 import * as d3 from 'd3'
 import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
+import type { PriceRangeDragTarget } from 'uniswap/src/features/telemetry/types'
 import { PriceChartData } from '~/components/Charts/PriceChart'
 import type { AnimateParams } from '~/features/Liquidity/charts/D3LiquidityChartShared/store/createChartActions'
 import type { LinearTickScale, Renderer } from '~/features/Liquidity/charts/D3LiquidityChartShared/types'
@@ -157,6 +158,8 @@ export type ChartActions = {
   updateDimensions: (dimensions: { width: number; height: number }) => void
   handleTickChange: ({ changeType, tick }: { changeType: 'min' | 'max'; tick?: number }) => void
   handleTickRangeChange: (range: TickRangeChange) => void
+  /** Call once a drag has committed its range; reports it only if the range moved from `startRange`. */
+  handleRangeDragEnd: (params: { target: PriceRangeDragTarget; startRange: TickRangeChange }) => void
   initializeView: () => void
   initializeRenderers: ({
     g,
@@ -176,10 +179,11 @@ export type ChartActions = {
   reset: (params?: { animate?: boolean; minTick?: number; maxTick?: number }) => void
   drawAll: () => void
   animateToState: (params: AnimateParams) => void
-  incrementMax: (params: TickNavigationParams) => void
-  decrementMax: (params: TickNavigationParams) => void
-  incrementMin: (params: TickNavigationParams) => void
-  decrementMin: (params: TickNavigationParams) => void
+  /** The +/- steppers return whether they moved the edge; false at a tick limit or with no edge set yet. */
+  incrementMax: (params: TickNavigationParams) => boolean
+  decrementMax: (params: TickNavigationParams) => boolean
+  incrementMin: (params: TickNavigationParams) => boolean
+  decrementMin: (params: TickNavigationParams) => boolean
   toggleInputMode: () => void
 }
 

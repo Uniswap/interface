@@ -4,12 +4,13 @@ import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { memo } from 'react'
 import { useLocation } from 'react-router'
 import { GRID_AREAS } from '~/app/layout/gridAreas'
-import { Navbar } from '~/components/NavBar/index'
+import { Navbar } from '~/app/layout/NavBar/index'
 import {
   MobileAppPromoBanner,
   useMobileAppPromoBannerEligible,
 } from '~/components/TopLevelBanners/MobileAppPromoBanner'
 import { UkBanner, useRenderUkBanner } from '~/components/TopLevelBanners/UkBanner'
+import { isPoolDiscoveryListRoute } from '~/features/Explore/poolArea/utils/poolAreaUrls'
 import { PageType, useIsPage } from '~/hooks/useIsPage'
 import { useScroll } from '~/hooks/useScroll'
 
@@ -20,10 +21,13 @@ export const Header = memo(function Header() {
   const location = useLocation()
   const media = useMedia()
   const isMarginEnabled = useFeatureFlag(FeatureFlags.Margin)
+  const isHooksExploreEnabled = useFeatureFlag(FeatureFlags.HooksExplore)
+  const hasPoolAreaBackground = isHooksExploreEnabled && isPoolDiscoveryListRoute(location.pathname)
   // Full-bleed margin terminal scrolls under the fixed nav — keep the nav opaque over it
   // (mirrors SwapPage's isTerminalRoute).
   const isMarginTerminalRoute = isMarginEnabled && location.pathname === '/margin' && !media.xl
-  const isHeaderTransparent = !isScrolledDown && !isPortfolioPage && !isExplorePage && !isMarginTerminalRoute
+  const isHeaderTransparent =
+    !isScrolledDown && !isPortfolioPage && (!isExplorePage || hasPoolAreaBackground) && !isMarginTerminalRoute
   const navHasBottomBorder = isScrolledDown
   const renderUkBanner = useRenderUkBanner()
   const extensionEligible = useMobileAppPromoBannerEligible()

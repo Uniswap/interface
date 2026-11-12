@@ -125,3 +125,12 @@ export function removeDuplicatesBy<T, K extends keyof T>(array: T[], key: K): T[
     return true
   })
 }
+
+/** Splits `items` into consecutive runs of at most `size`, order kept (e.g. to batch API requests). */
+export function chunkArray<T>(items: readonly T[], size: number): T[][] {
+  const chunks: T[][] = []
+  for (let i = 0; i < items.length; i += size) {
+    chunks.push(items.slice(i, i + size))
+  }
+  return chunks
+}

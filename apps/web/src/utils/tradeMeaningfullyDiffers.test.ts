@@ -1,6 +1,5 @@
 import { Percent, TradeType } from '@uniswap/sdk-core'
 import { Route } from '@uniswap/v3-sdk'
-import { ClassicTrade, QuoteMethod } from '~/state/routing/types'
 import {
   TEST_POOL_13,
   TEST_TOKEN_1,
@@ -9,6 +8,7 @@ import {
   TEST_TRADE_EXACT_OUTPUT,
   toCurrencyAmount,
 } from '~/test-utils/constants'
+import { ClassicTrade, QuoteMethod } from '~/types/routing'
 import { tradeMeaningfullyDiffers } from '~/utils/tradeMeaningFullyDiffer'
 
 describe('tradeMeaningfullyDiffers', () => {

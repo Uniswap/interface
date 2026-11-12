@@ -1,4 +1,5 @@
 export {}
+import { sleep } from 'utilities/src/time/timing'
 import type { Mock } from 'vitest'
 
 const mockNavigate = vi.fn()
@@ -426,7 +427,7 @@ describe('handleNotificationNavigation', () => {
       handleNotificationNavigation('https://example.com')
 
       // Wait for the promise rejection to be handled
-      await new Promise((resolve) => setTimeout(resolve, 0))
+      await sleep(0)
 
       expect(mockLoggerError).toHaveBeenCalledWith(error, {
         tags: { file: 'handleNotificationNavigation', function: 'handleNotificationNavigation' },

@@ -8,6 +8,9 @@ export enum InterfacePageName {
   ExplorePage = 'explore-page',
   ExtensionPasskeySignInPage = 'extension-passkey-sign-in-page',
   ExtensionUninstall = 'extension-uninstall',
+  // The product-metrics contract requires this identifier instead of the usual kebab case.
+  HookDetailsPage = 'hook_detail',
+  HooksListPage = 'hooks_list',
   LandingPage = 'landing-page',
   LaunchAuctionAuctionDetails = 'launch-auction-auction-details',
   LaunchAuctionPage = 'launch-auction-page',

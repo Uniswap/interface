@@ -18,7 +18,9 @@ exports[`OpenLimitOrdersButton > should render if there are open limit orders 1`
           class="flex items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row gap-[8px]"
         >
           <svg
+            aria-hidden="true"
             fill="none"
+            focusable="false"
             stroke-width="8"
             style="width: 20px; height: 20px;"
             viewBox="0 0 18 18"
@@ -41,7 +43,9 @@ exports[`OpenLimitOrdersButton > should render if there are open limit orders 1`
           </div>
         </div>
         <svg
+          aria-hidden="true"
           fill="none"
+          focusable="false"
           stroke-width="2"
           style="width: 20px; height: 20px; transform: rotate(270deg);"
           viewBox="0 0 24 24"

@@ -5,15 +5,11 @@ import { useAppSelector } from '~/state/hooks'
 import { mocked } from '~/test-utils/mocked'
 import { render } from '~/test-utils/render'
 
-vi.mock('~/features/claim/AddressClaimModal', () => ({
+vi.mock('~/features/wallet/claim/AddressClaimModal', () => ({
   default: () => <div data-testid="mock-address-claim-modal">Address Claim Modal</div>,
 }))
 
-vi.mock('~/components/ConnectedAccountBlocked', () => ({
-  default: () => <div data-testid="mock-connected-account-blocked">Connected Account Blocked</div>,
-}))
-
-vi.mock('~/components/AccountDrawer/UniwalletModal', () => ({
+vi.mock('~/features/wallet/components/AccountDrawer/UniwalletModal', () => ({
   default: () => <div data-testid="mock-uniwallet-modal">Uniwallet Modal</div>,
 }))
 
@@ -47,14 +43,6 @@ describe('ModalRegistry', () => {
         render(<ModalRenderer modalName={ModalName.AddressClaim} />)
       })
       expect(screen.getByTestId('mock-address-claim-modal')).toBeInTheDocument()
-    })
-
-    it('renders ConnectedAccountBlocked when modal is open', async () => {
-      mocked(useAppSelector).mockReturnValue({ application: { openModal: { name: ModalName.BlockedAccount } } })
-      await act(async () => {
-        render(<ModalRenderer modalName={ModalName.BlockedAccount} />)
-      })
-      expect(screen.getByTestId('mock-connected-account-blocked')).toBeInTheDocument()
     })
 
     it('does not render modal when shouldMount returns false', async () => {
@@ -94,7 +82,6 @@ describe('ModalRegistry', () => {
     it('has all required modal configurations', () => {
       const requiredModals = [
         ModalName.AddressClaim,
-        ModalName.BlockedAccount,
         ModalName.UniWalletConnect,
         ModalName.OffchainActivity,
         ModalName.UkDisclaimer,

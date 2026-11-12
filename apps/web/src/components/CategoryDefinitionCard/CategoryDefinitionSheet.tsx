@@ -11,7 +11,7 @@ import { useEvent } from 'utilities/src/react/hooks'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { CategoryDefinitionCard } from '~/components/CategoryDefinitionCard/CategoryDefinitionCard'
 import { useFireOncePerOpen } from '~/components/HoverCard/hooks/useFireOncePerOpen'
-import { getCategoryDetailsURL } from '~/pages/Explore/CategoryDetails/getCategoryDetailsURL'
+import { getCategoryDetailsURL } from '~/utils/getCategoryDetailsURL'
 
 interface CategoryDefinitionSheetProps {
   category: Category

@@ -71,9 +71,6 @@
         "e2e": {
           "command": "SKIP_CSP=1 IS_E2E_TEST=true DISABLE_SOURCEMAP=true NODE_OPTIONS=\"--max-old-space-size=$([ -n \\\"$GITHUB_ACTIONS\\\" ] && echo 32768 || echo 16384)\" vite build"
         },
-        "vercel": {
-          "command": "ENABLE_ENTRY_GATEWAY_PROXY=true NODE_OPTIONS=\"--max-old-space-size=$([ -n \\\"$GITHUB_ACTIONS\\\" ] && echo 32768 || echo 16384)\" DISABLE_SOURCEMAP=true DEPLOY_TARGET=vercel vite build --mode staging && DEPLOY_TARGET=vercel vite build -c vite.server.config.mts && bun scripts/build-vercel.ts"
-        },
         "ecs": {
           "command": "NODE_OPTIONS=\"--max-old-space-size=$([ -n \\\"$GITHUB_ACTIONS\\\" ] && echo 32768 || echo 16384)\" DEPLOY_TARGET=ecs vite build --mode ${VITE_MODE:-staging} && DEPLOY_TARGET=ecs vite build -c vite.server.config.mts"
         },
@@ -100,7 +97,6 @@
         "staging": { "env": { "CONFIG_ENV": "staging" } },
         "production": { "env": { "CONFIG_ENV": "production" } },
         "e2e": { "env": { "CONFIG_ENV": "staging" } },
-        "vercel": { "env": { "CONFIG_ENV": "staging" } },
         "ecs": { "env": { "SKIP_CONFIG_PULL": "true" } },
         "ipfs": { "env": { "CONFIG_ENV": "production" } }
       }
@@ -249,7 +245,7 @@
       "continuous": true
     },
     "storybook:build": {
-      "command": "storybook build",
+      "command": "storybook build --stats-json",
       "options": {
         "cwd": "{projectRoot}"
       },
@@ -259,30 +255,24 @@
       "outputs": ["{projectRoot}/storybook-static"]
     },
     "storybook:run": {
-      "command": "storybook dev -p 6006",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
-    "storybook:run:with-tests": {
-      "command": "concurrently -s second -n \"SB RUN,SB TEST WATCH\" -c \"magenta,blue\" \"bun run storybook:run --quiet\" \"wait-on tcp:127.0.0.1:6006 -t 600000 && bun run storybook:test --watch\"",
+      "command": "NODE_ENV=development storybook dev -p 6006",
       "options": {
         "cwd": "{projectRoot}"
       }
     },
     "storybook:test": {
-      "command": "test-storybook --excludeTags=\"no-tests\" --testTimeout 60000",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
-    "storybook:test:standalone": {
-      "command": "concurrently -k -s first -n \"SB BUILD,SB TEST\" -c \"magenta,blue\" \"bun run storybook:build && http-server storybook-static --port 6006 --silent\" \"wait-on --timeout 600000 tcp:127.0.0.1:6006 && bun run storybook:test --maxWorkers=2\"",
+      "command": "NODE_ENV=test vitest run --config .storybook/vitest.config.mts",
       "options": {
         "cwd": "{projectRoot}"
       },
-      "dependsOn": ["^prepare", "prepare"],
-      "cache": false
+      "dependsOn": ["^prepare", "prepare"]
+    },
+    "storybook:test:watch": {
+      "command": "NODE_ENV=test vitest --config .storybook/vitest.config.mts",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "dependsOn": ["^prepare", "prepare"]
     },
     "test": {
       "command": "NODE_OPTIONS='--no-deprecation' vitest run",

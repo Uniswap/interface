@@ -1,5 +1,6 @@
 import { cleanup, fireEvent, render } from '@testing-library/react'
 import { renderToStaticMarkup } from 'react-dom/server'
+import { noop } from 'utilities/src/react/noop'
 import { afterEach, beforeEach, describe, expect, it, type MockInstance, vi } from 'vitest'
 import { resetBoundedReportBudgets } from '../compat/diagnostics'
 import type { ColorValue, RadiusValue, SpaceValue } from '../compat/props'
@@ -135,8 +136,6 @@ describe('ButtonCompat — testID (INFRA-3222)', () => {
 // button shows cursor: default — legacy keeps cursor: pointer when onDisabledPress
 // makes a disabled button interactive.
 describe('ButtonCompat — disabled cursor', () => {
-  const noop = (): void => undefined
-
   it('shows a pointer cursor when enabled', () => {
     const markup = renderToStaticMarkup(<ButtonCompat onPress={noop}>Swap</ButtonCompat>)
     const classes = frameClassesOf(markup)

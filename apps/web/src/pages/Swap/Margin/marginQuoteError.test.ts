@@ -106,6 +106,14 @@ describe('getMarginQuoteErrorMessage', () => {
     })
   })
 
+  // A 400 BadRequest: the code rides `detail` under the coarse class name, with no hint suffix.
+  it('maps a mirrored-reading refusal to the unsupported-market copy, not drift', () => {
+    const error = fetchErrorWith({ status: 400, errorCode: 'BadRequest', detail: 'MARGIN_MIRRORED_READING' })
+    expect(getMarginQuoteErrorMessage({ error, t: mockT })).toEqual({
+      message: 'margin.error.adjust.marketNotSupported',
+    })
+  })
+
   // The wire shape trading actually sends: TradingAPIHttpError puts the thrown HttpError's name in
   // errorCode and its message, the MARGIN_ code, in detail.
   it('maps a refusal whose MARGIN_ code arrives in detail under a coarse errorCode', () => {

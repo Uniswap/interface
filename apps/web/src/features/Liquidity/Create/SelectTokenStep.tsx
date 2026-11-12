@@ -3,7 +3,13 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import type { Currency } from '@uniswap/sdk-core'
 import { UniverseChainId, Platform } from '@universe/chains'
-import { AllowedV4WethHookAddressesConfigKey, DynamicConfigs, useDynamicConfigValue } from '@universe/gating'
+import {
+  AllowedV4WethHookAddressesConfigKey,
+  DynamicConfigs,
+  FeatureFlags,
+  useDynamicConfigValue,
+  useFeatureFlag,
+} from '@universe/gating'
 import type { FlexCompatProps as FlexProps } from '@universe/mycelium'
 import { Button, Flex, Text } from '@universe/mycelium'
 import { InfoCircleFilled } from '@universe/mycelium/icons/InfoCircleFilled'
@@ -19,6 +25,8 @@ import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { getPoolName } from 'uniswap/src/features/pools/names'
+import { orderPoolDataByQuoteToken } from 'uniswap/src/features/pools/quoteToken'
 import type { FeeData } from 'uniswap/src/features/positions/types'
 import { LiquidityEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -36,6 +44,7 @@ import { useActiveAddresses } from '~/connection/accounts/hooks'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { AddHook } from '~/features/Liquidity/Create/AddHook'
 import { AdvancedButton } from '~/features/Liquidity/Create/AdvancedButton'
+import { useCreateLiquidityContext } from '~/features/Liquidity/Create/CreateLiquidityContextProvider'
 import { CreatingPoolInfo, PoolAlreadyCreatedInfo } from '~/features/Liquidity/Create/CreatingPoolInfo'
 import { useBlockedTokens } from '~/features/Liquidity/Create/hooks/useBlockedTokens'
 import { useLiquidityUrlState } from '~/features/Liquidity/Create/hooks/useLiquidityUrlState'
@@ -57,13 +66,13 @@ import { needsHookReview } from '~/features/Liquidity/utils/hookReview'
 import { isUnsupportedLPChain } from '~/features/Liquidity/utils/isUnsupportedLPChain'
 import { getProtocolVersionLabel } from '~/features/Liquidity/utils/protocolVersion'
 import { PageType, useIsPage } from '~/hooks/useIsPage'
-import { buildPoolSearchParams, CREATE_POOL_PATH } from '~/pages/AddLiquidity/poolLinkParams'
-import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
-import { serializeSwapStateToURLParameters } from '~/pages/Swap/Swap/state/tradeQueryParams'
 import { useMultichainContext } from '~/state/multichain/useMultichainContext'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
+import { EntryPointKind, resolveEntryPoint } from '~/utils/createPositionEntryPoint'
 import { isV4UnsupportedChain } from '~/utils/networkSupportsV4'
 import { getChainUrlParam } from '~/utils/params/chainParams'
+import { buildPoolSearchParams, CREATE_POOL_PATH } from '~/utils/params/poolLinkParams'
+import { serializeSwapStateToURLParameters } from '~/utils/params/tradeQueryParams'
 import { SwitchNetworkAction } from '~/utils/popups/types'
 
 interface WrappedNativeWarning {
@@ -80,9 +89,11 @@ export function SelectTokensStep({
   setCurrencyInputs,
   onContinue,
   isMigration,
+  token0IsQuote,
   ...rest
 }: {
   isMigration?: boolean
+  token0IsQuote?: boolean
   onContinue: () => void
   currencyInputs: { tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }
   setCurrencyInputs: Dispatch<SetStateAction<{ tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }>>
@@ -91,7 +102,8 @@ export function SelectTokensStep({
   const { t } = useTranslation()
   const { formatPercent } = useLocalizationContext()
   const navigate = useNavigate()
-  const { pathname, search: currentSearch } = useLocation()
+  const { pathname, search: currentSearch, state: locationState } = useLocation()
+  const isHooksExploreEnabled = useFeatureFlag(FeatureFlags.HooksExplore)
   const { setSelectedChainId, setIsUserSelectedToken } = useMultichainContext()
   const trace = useTrace()
   const [hookModalOpen, setHookModalOpen] = useState(false)
@@ -267,6 +279,7 @@ export function SelectTokensStep({
   const handleOnContinue = () => {
     if (poolAlreadyExists && poolId && token0.chainId) {
       const base = `/positions/add/${getChainUrlParam(token0.chainId)}/${poolId}`
+      const entryPoint = resolveEntryPoint({ search: currentSearch, state: locationState })
       const params = buildPoolSearchParams({
         currencyA: token0.isNative ? NATIVE_CHAIN_ID : token0.address,
         currencyB: token1.isNative ? NATIVE_CHAIN_ID : token1.address,
@@ -274,6 +287,7 @@ export function SelectTokensStep({
         fee,
         hookAddress: hook,
         protocolVersion: getProtocolVersionLabel(protocolVersion),
+        entryPoint: isHooksExploreEnabled && entryPoint.kind === EntryPointKind.HookDetails ? entryPoint.to : undefined,
       })
       // Deliberately no `step`: the destination derives its first form step from the pool it loads.
       // Writing one here would land in the URL while this page is still mounted, animating it into
@@ -432,6 +446,7 @@ export function SelectTokensStep({
     }
     toggleShowMoreFeeTiersEnabled()
   }, [bestBoostedFeeTier, handleFeeTierSelect, protocolVersion, setFeeTierSearchModalOpen])
+  const poolName = getPoolName({ symbol0: token0?.symbol, symbol1: token1?.symbol, token0IsQuote, spaced: true })
 
   return (
     <>
@@ -462,11 +477,12 @@ export function SelectTokensStep({
             </Flex>
             {isMigration && token0 && token1 ? (
               <Flex row gap="$gap16" py="$spacing4" alignItems="center">
-                <DoubleCurrencyLogo currencies={[token0, token1]} size={44} />
+                <DoubleCurrencyLogo
+                  currencies={orderPoolDataByQuoteToken({ token0IsQuote, data0: token0, data1: token1 })}
+                  size={44}
+                />
                 <Flex grow>
-                  <Text variant="heading3">
-                    {token0.symbol} / {token1.symbol}
-                  </Text>
+                  <Text variant="heading3">{poolName}</Text>
                 </Flex>
               </Flex>
             ) : (

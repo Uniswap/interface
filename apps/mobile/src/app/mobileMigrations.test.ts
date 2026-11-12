@@ -49,6 +49,7 @@ import {
   migrateAndRemoveCloudBackupSlice,
   migrateBiometricSettings,
   migrateDappRequestInfoTypes,
+  migrateExploreMarketCapSortToFdv,
   migrateFiatPurchaseTransactionInfo,
   moveSettingStateToGlobal,
   OLD_DEMO_ACCOUNT_ADDRESS,
@@ -1298,5 +1299,24 @@ describe('addPriceAlertsEnabledToPushNotifications', () => {
 
   it('handles missing persisted state', () => {
     expect(addPriceAlertsEnabledToPushNotifications(undefined)).toBeUndefined()
+  })
+})
+
+describe('migrateExploreMarketCapSortToFdv', () => {
+  it('moves a persisted market cap sort to FDV', () => {
+    const state = { wallet: { settings: { swapProtection: 'on', tokensOrderBy: 'MARKET_CAP' } } }
+    expect(migrateExploreMarketCapSortToFdv(state)).toEqual({
+      wallet: { settings: { swapProtection: 'on', tokensOrderBy: 'FDV' } },
+    })
+  })
+
+  it('leaves other sorts untouched', () => {
+    const state = { wallet: { settings: { tokensOrderBy: 'VOLUME' } } }
+    expect(migrateExploreMarketCapSortToFdv(state)).toBe(state)
+  })
+
+  it('handles missing wallet state', () => {
+    expect(migrateExploreMarketCapSortToFdv({})).toEqual({})
+    expect(migrateExploreMarketCapSortToFdv(undefined)).toBeUndefined()
   })
 })

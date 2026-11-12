@@ -8,8 +8,8 @@ import { ClickableHeaderRow, HeaderArrow, HeaderSortText } from '~/components/Ta
 import { getHeaderDescription, TokenSortMethod } from '~/components/Tokens/constants'
 import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
 import { OrderDirection } from '~/data/util'
+import { useExploreParams } from '~/features/Explore/hooks/useExploreParams'
 import { scrollToExploreTokenSection } from '~/pages/Explore/categories/useExploreCategory'
-import { useExploreParams } from '~/pages/Explore/redirects'
 import { useTokenTableSortStoreActions } from '~/pages/Explore/tables/Tokens/tokenTableSortStore'
 import { getChainIdFromChainUrlParam } from '~/utils/params/chainParams'
 

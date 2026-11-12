@@ -53,6 +53,7 @@ describe(usePortfolioTotalValue, () => {
       data: undefined,
       loading: false,
       isPending: true,
+      isPlaceholderData: false,
       isError: false,
       refetch: expect.any(Function),
       error: undefined,

@@ -2,6 +2,7 @@ import { isBetaEnv, isDevEnv } from '@universe/environment'
 import {
   getOverrideAdapter,
   getOverrides,
+  getUrlWithGateOverrides,
   LayerProperties,
   Layers,
   StatsigContext,
@@ -9,24 +10,30 @@ import {
   useLayer,
 } from '@universe/gating'
 import { Button, Flex, Separator, Switch, Text, TouchableArea } from '@universe/mycelium'
+import { Check } from '@universe/mycelium/icons/Check'
+import { CopySheets } from '@universe/mycelium/icons/CopySheets'
 import { Flag } from '@universe/mycelium/icons/Flag'
-import { Settings } from '@universe/mycelium/icons/Settings'
 import { X } from '@universe/mycelium/icons/X'
 import { useShadowPropsShort } from '@universe/mycelium/theme-hooks-compat'
+import { TooltipCompat as Tooltip } from '@universe/mycelium/tooltip-compat'
 import { TestID } from '@universe/test'
-import { memo, useContext, useEffect, useState } from 'react'
+import { memo, useContext, useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { resetUniswapBehaviorHistory } from 'uniswap/src/features/behaviorHistory/slice'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useAnalyticsDebugStore } from 'uniswap/src/features/telemetry/debug/useAnalyticsDebugStore'
 import { useEvent } from 'utilities/src/react/hooks'
+import { useCopyClipboard } from 'utilities/src/react/useCopyClipboard'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { GatingRowContent, GatingSwitch } from '~/components/FeatureFlagModal/FeatureFlagModal'
-import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
+import { useGatingUrlSync } from '~/dev/useGatingUrlSync'
 import { usePinnedExperiments, usePinnedFeatureFlags } from '~/dev/usePinnedFeatureFlags'
 import { useModalState } from '~/hooks/useModalState'
+import { useOnClickOutside } from '~/hooks/useOnClickOutside'
 import { EllipsisTamaguiStyle } from '~/theme/components/styles'
 
 const FLAG_BOX_MAX_WIDTH = 300
+const COPY_URL_TOOLTIP_MAX_WIDTH = 180
 
 function findLayerForParam(paramKey: string): { layerName: Layers; experimentName: string } | null {
   for (const layerName of Object.values(Layers)) {
@@ -53,21 +60,14 @@ const PinnedFlagRow = memo(function PinnedFlagRow({
   onUnpin: () => void
 }): JSX.Element {
   const checked = useGateValue(gateName, { disableExposureLog: true })
+  const { overrideGate } = useGatingUrlSync()
 
   const onCheckedChange = useEvent((value: boolean): void => {
-    getOverrideAdapter().overrideGate(gateName, value)
+    overrideGate(gateName, value)
   })
 
   return (
-    <Flex
-      key={gateName}
-      row
-      alignItems="center"
-      justifyContent="space-between"
-      gap="$spacing8"
-      py="$spacing4"
-      onPress={(e: { stopPropagation: () => void }) => e.stopPropagation()}
-    >
+    <Flex key={gateName} row alignItems="center" justifyContent="space-between" gap="$spacing8" py="$spacing4">
       <Text {...EllipsisTamaguiStyle}>{gateName}</Text>
       <Flex row alignItems="center" gap="$spacing4">
         <Switch checked={checked} onCheckedChange={onCheckedChange} variant="branded" />
@@ -95,13 +95,11 @@ const PinnedExperimentRow = memo(function PinnedExperimentRow({
   })
 
   return (
-    <Flex onPress={(e: { stopPropagation: () => void }) => e.stopPropagation()}>
-      <GatingRowContent
-        title={experimentName}
-        label={layerName}
-        rightContent={<GatingSwitch checked={checked} onCheckedChange={onCheckedChange} />}
-      />
-    </Flex>
+    <GatingRowContent
+      title={experimentName}
+      label={layerName}
+      rightContent={<GatingSwitch checked={checked} onCheckedChange={onCheckedChange} />}
+    />
   )
 })
 
@@ -139,12 +137,31 @@ export function DevFlagsBox() {
   const hasPinnedExperiments = pinnedExperiments.length > 0
 
   const [isOpen, setIsOpen] = useState(false)
-  const { toggleModal: toggleFeatureFlagsModal } = useModalState(ModalName.FeatureFlags)
+  const panelRef = useRef<HTMLDivElement>(null)
+  const { isOpen: isFeatureFlagsModalOpen, toggleModal: toggleFeatureFlagsModal } = useModalState(
+    ModalName.FeatureFlags,
+  )
+
+  const openPanel = useEvent((): void => {
+    setIsOpen(true)
+  })
+
+  const collapsePanel = useEvent((): void => {
+    setIsOpen(false)
+  })
+
+  // The feature flags modal is portaled outside the panel, so clicks in it must not count as outside.
+  useOnClickOutside({ node: panelRef, handler: isOpen && !isFeatureFlagsModalOpen ? collapsePanel : undefined })
 
   const dispatch = useDispatch()
 
   const analyticsDebugEnabled = useAnalyticsDebugStore((s) => s.enabled)
   const toggleAnalyticsDebugger = useAnalyticsDebugStore((s) => s.actions.toggleEnabled)
+
+  const [isUrlCopied, copyToClipboard] = useCopyClipboard(ONE_SECOND_MS)
+  const onPressCopyUrl = useEvent((): void => {
+    copyToClipboard(getUrlWithGateOverrides()).catch(() => undefined)
+  })
 
   const onPressReset = (): void => {
     dispatch(resetUniswapBehaviorHistory())
@@ -166,15 +183,11 @@ export function DevFlagsBox() {
       borderWidth="$spacing1"
       borderColor="$surface3"
       borderRadius="$rounded8"
-      cursor="pointer"
+      cursor={isOpen ? 'auto' : 'pointer'}
       backgroundColor="$surface1"
-      hoverStyle={{
-        backgroundColor: '$surface1Hovered',
-      }}
+      ref={panelRef}
       testID={TestID.DevFlagsBox}
-      onPress={() => {
-        setIsOpen((prev) => !prev)
-      }}
+      onPress={isOpen ? undefined : openPanel}
       maxWidth={FLAG_BOX_MAX_WIDTH}
     >
       {isOpen ? (
@@ -184,27 +197,22 @@ export function DevFlagsBox() {
               {isDevEnv() && 'Local Overrides'}
               {isBetaEnv() && 'Staging Overrides'}
             </Text>
-            <MouseoverTooltip
-              size={TooltipSize.Small}
-              text="Protip: Set feature flags by adding '?featureFlagOverride={flag_name}' to the URL"
+            <TouchableArea
+              tag="button"
+              aria-label="Close dev tools"
+              centered
+              width={30}
+              height={30}
+              borderRadius="$rounded8"
+              cursor="pointer"
+              testID={TestID.DevFlagsClose}
+              hoverStyle={{
+                backgroundColor: '$surface1Hovered',
+              }}
+              onPress={collapsePanel}
             >
-              <Flex
-                centered
-                width={30}
-                height={30}
-                borderRadius="$rounded8"
-                testID={TestID.DevFlagsSettingsToggle}
-                hoverStyle={{
-                  backgroundColor: '$surface1Hovered',
-                }}
-                onPress={(e) => {
-                  e.stopPropagation()
-                  toggleFeatureFlagsModal()
-                }}
-              >
-                <Settings size="$icon.16" />
-              </Flex>
-            </MouseoverTooltip>
+              <X size="$icon.16" />
+            </TouchableArea>
           </Flex>
           {hasFilteredOverrides && overrides}
           {allOverrides.length === 0 && (
@@ -233,6 +241,40 @@ export function DevFlagsBox() {
                 ))}
             </Flex>
           )}
+
+          <Flex row>
+            <Button
+              variant="default"
+              emphasis="primary"
+              size="xsmall"
+              mt="$spacing8"
+              testID={TestID.DevFlagsFeatureFlagsButton}
+              onPress={toggleFeatureFlagsModal}
+            >
+              Feature flags
+            </Button>
+          </Flex>
+          <Flex row>
+            <Tooltip placement="right" delay={{ open: 500, close: 0 }}>
+              <Tooltip.Trigger row flex={1}>
+                <Button
+                  variant="default"
+                  emphasis="tertiary"
+                  size="xsmall"
+                  mt="$spacing8"
+                  icon={isUrlCopied ? <Check size="$icon.16" color="$statusSuccess" /> : <CopySheets size="$icon.16" />}
+                  testID={TestID.DevFlagsCopyUrlButton}
+                  onPress={onPressCopyUrl}
+                >
+                  {isUrlCopied ? 'Copied' : 'Copy URL'}
+                </Button>
+              </Tooltip.Trigger>
+              <Tooltip.Content maxWidth={COPY_URL_TOOLTIP_MAX_WIDTH}>
+                <Text variant="body4">Copy current URL with all active feature flags</Text>
+                <Tooltip.Arrow />
+              </Tooltip.Content>
+            </Tooltip>
+          </Flex>
 
           <Separator my="$spacing16" />
 

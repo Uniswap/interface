@@ -1,15 +1,20 @@
 import userEvent from '@testing-library/user-event'
 import { HookEntry, HookFlags } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/types_pb'
-import { UniswapBuiltHookAddressesConfigKey, useDynamicConfigValue } from '@universe/gating'
+import {
+  FeatureFlags,
+  UniswapBuiltHookAddressesConfigKey,
+  useDynamicConfigValue,
+  useFeatureFlag,
+} from '@universe/gating'
 import { TestID } from '@universe/test'
 import { Link } from 'react-router'
 import { shortenAddress } from 'utilities/src/addresses'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { HookDetailsModal } from '~/features/Liquidity/HookDetailsModal'
-import { render, screen } from '~/test-utils/render'
+import { fireEvent, render, screen, within } from '~/test-utils/render'
 
 const BASE_HOOK = new HookEntry({
-  address: '0x1234567890abcdef1234567890abcdef12345678',
+  address: '0x1234567890abcdef1234567890abcdef123440c0',
   chain: 'Base',
   chainId: 8453,
   name: 'TestHook',
@@ -116,6 +121,63 @@ describe('HookDetailsModal', () => {
     })
     renderModal(hookNoFlags)
     expect(screen.queryByText('beforeSwap')).toBeNull()
+  })
+
+  describe('Hooks Explore permissions', () => {
+    function enableHooksExplore(): void {
+      vi.mocked(useFeatureFlag).mockImplementation((flag) => flag === FeatureFlags.HooksExplore)
+    }
+
+    it('uses the shared Permissions presentation while preserving other modal fields', () => {
+      enableHooksExplore()
+      renderModal(BASE_HOOK)
+
+      const permissions = within(screen.getByRole('group', { name: 'Permissions' }))
+      expect(permissions.getByRole('button', { name: 'beforeSwap: Active' })).toBeInTheDocument()
+      expect(permissions.getByRole('button', { name: 'beforeInitialize: Inactive' })).toBeInTheDocument()
+      expect(permissions.getAllByRole('button')).toHaveLength(15)
+      expect(screen.queryByText('Flags')).not.toBeInTheDocument()
+      expect(screen.getByText('Base')).toBeInTheDocument()
+      expect(screen.getByText('Adjusts LP fees dynamically')).toBeInTheDocument()
+    })
+
+    it('shows all inactive permissions when the address has no permission bits', () => {
+      enableHooksExplore()
+      renderModal(new HookEntry({ ...BASE_HOOK, address: '0x1234567890abcdef1234567890abcdef12344000' }))
+
+      expect(screen.getAllByRole('button', { name: /: Inactive$/ })).toHaveLength(14)
+      expect(screen.queryByText('Permissions information is unavailable.')).not.toBeInTheDocument()
+    })
+
+    it('decodes permissions from the address when API flags are absent', () => {
+      enableHooksExplore()
+      renderModal(new HookEntry({ address: BASE_HOOK.address, name: BASE_HOOK.name }))
+
+      expect(screen.getByRole('button', { name: 'beforeSwap: Active' })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'afterSwap: Active' })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'beforeInitialize: Inactive' })).toBeInTheDocument()
+    })
+
+    it('does not navigate the underlying row when permission help opens or its popup is clicked', async () => {
+      enableHooksExplore()
+      renderModalInsideRowLink(BASE_HOOK)
+      const button = screen.getByRole('button', { name: 'beforeSwap: Active' })
+      for (const type of ['pointerdown', 'pointerup'] as const) {
+        const event = new Event(type, { bubbles: true, cancelable: true })
+        Object.defineProperty(event, 'pointerType', { value: 'touch' })
+        fireEvent(button, event)
+      }
+      fireEvent.click(button)
+
+      const tooltip = await screen.findByText('Runs before a swap in a pool using this hook.', {
+        selector: '[data-slot="tooltip-compat-popup"][data-open] span',
+      })
+      expect(tooltip).toHaveTextContent('Runs before a swap in a pool using this hook.')
+      await userEvent.click(tooltip)
+
+      expect(window.location.pathname).toBe('/')
+      expect(screen.getByRole('group', { name: 'Permissions' })).toBeInTheDocument()
+    })
   })
 
   describe('Uniswap provenance badge', () => {

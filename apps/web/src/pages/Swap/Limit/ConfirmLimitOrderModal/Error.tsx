@@ -4,16 +4,9 @@ import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
+import { PendingModalError } from '~/components/ConfirmModal/types'
 import { TradeSummary } from '~/pages/Swap/Limit/ConfirmLimitOrderModal/TradeSummary'
-import { InterfaceTrade } from '~/state/routing/types'
-
-export enum PendingModalError {
-  TOKEN_APPROVAL_ERROR = 0,
-  PERMIT_ERROR = 1,
-  XV2_HARD_QUOTE_ERROR = 2,
-  CONFIRMATION_ERROR = 3,
-  WRAP_ERROR = 4,
-}
+import { InterfaceTrade } from '~/types/routing'
 
 interface ErrorModalContentProps {
   /** When omitted, renders nothing (stable subtree when the panel is always mounted). */

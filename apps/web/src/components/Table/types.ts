@@ -55,6 +55,7 @@ export type TableBodyProps<T extends RowData = unknown> = {
   rowHeight?: number
   compactRowHeight?: number
   subRowHeight?: number
+  rowGap?: number
   hasPinnedColumns?: boolean
   dimmed?: boolean
   /** Draw one pinned-column guide from the header instead of per-row borders (mWeb). */
@@ -102,6 +103,7 @@ export type TableProps<T extends RowData = unknown> = {
   compactRowHeight?: number
   /** When set, sub-rows (expanded children) use this height. E.g. 40 for token table child rows. */
   subRowHeight?: number
+  rowGap?: number
   /** When true, only one row can be expanded at a time (accordion behavior). */
   singleExpandedRow?: boolean
   /** Every change to this value collapses all expanded rows. Use it for sort/filter changes that reorder rows. */

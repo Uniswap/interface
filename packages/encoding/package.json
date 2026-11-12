@@ -4,7 +4,7 @@
   "dependencies": {},
   "devDependencies": {
     "@types/node": "22.19.17",
-    "vitest": "3.2.1"
+    "vitest": "5.0.5"
   },
   "scripts": {
     "test": "nx test encoding",

@@ -11,12 +11,12 @@ import { LimitDisclaimer } from '~/components/LimitDisclaimer'
 import { Allowance, AllowanceState } from '~/hooks/permit2/usePermit2Allowance'
 import { LimitOrderCallbackError } from '~/pages/Swap/Limit/LimitOrderCallbackError'
 import { LimitOrderLineItem, LimitOrderLineItemType } from '~/pages/Swap/Limit/LimitOrderLineItem'
-import { InterfaceTrade, LimitOrderTrade, RouterPreference } from '~/state/routing/types'
-import { isLimitTrade } from '~/state/routing/utils'
 import { useRouterPreference, useUserSlippageTolerance } from '~/state/user/hooks'
 import { ExternalLink } from '~/theme/components/Links'
+import { InterfaceTrade, LimitOrderTrade, RouterPreference } from '~/types/routing'
 import type { LimitOrderResult } from '~/types/trade'
 import { formatSwapButtonClickEventProperties } from '~/utils/loggingFormatters'
+import { isLimitTrade } from '~/utils/routing/routing'
 
 interface CallToAction {
   buttonText: string

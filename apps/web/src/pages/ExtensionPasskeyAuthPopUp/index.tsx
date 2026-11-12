@@ -28,8 +28,8 @@ import { getPrivyConfig } from '~/config'
 import { GetHelpButton } from '~/features/wallet/components/Passkey/GetHelpButton'
 import { OAuthRedirectProvider } from '~/features/wallet/components/Passkey/OAuthRedirectContext'
 import { useRecoveryPrivyAuth } from '~/features/wallet/components/Passkey/useRecoveryPrivyAuth'
+import { useExternallyConnectableExtensionId } from '~/hooks/useExternallyConnectableExtensionId'
 import { useExtensionRecoveryBridge } from '~/pages/ExtensionPasskeyAuthPopUp/useExtensionRecoveryBridge'
-import { useExternallyConnectableExtensionId } from '~/pages/ExtensionPasskeyAuthPopUp/useExternallyConnectableExtensionId'
 import { DeniedView, ExportStep, LoginView } from '~/pages/ExtensionPasskeyAuthPopUp/views'
 
 // Passkey Auth Flow: Extension <> Web App

@@ -447,24 +447,30 @@ describe('ButtonCompat platform legs export the same TYPE names (INFRA-3230)', (
   })
 
   it(
-    'ButtonPressHandler keeps rejecting the crash path: inferred-event preventDefault (tsc)',
+    'ButtonPressHandler keeps rejecting web-only members on an inferred event (tsc)',
     () => {
       // The probes above only prove both legs reference the same
       // `ButtonPressHandler` SYMBOL — if that symbol itself regressed to a
       // plain DOM handler they would all stay green while the on-device crash
-      // path (INFRA-3261) returned. So the invariant is pinned directly: an
+      // class (INFRA-3261) returned. So the invariant is pinned directly: an
       // INFERRED event parameter may only touch members present on both legs'
-      // events, and RNGH's PressableEvent has no `preventDefault`, so the call
-      // below must be a compile error. On a regression the `@ts-expect-error`
-      // flips to TS2578 (unused directive) and this probe fails naming it.
-      // The two positive pins guard the other half of the contract: bivariance
-      // keeps the existing call-site idioms assignable.
+      // events. The native leg now dispatches RN's GestureResponderEvent,
+      // which has `preventDefault`/`stopPropagation` (pinned below as shared),
+      // but no DOM-only member like `clientX` — so that access must be a
+      // compile error. On a regression the `@ts-expect-error` flips to TS2578
+      // (unused directive) and this probe fails naming it. The positive pins
+      // guard the other half of the contract: bivariance keeps the existing
+      // call-site idioms assignable.
       const result = typecheck(
         [
           `import type { ButtonPressHandler, WebButtonPressEvent } from ${specifier(LEGS.base)}`,
           '',
-          '// @ts-expect-error — preventDefault is web-only; an inferred event param must not reach it',
-          'export const inferredCrashPath: ButtonPressHandler = (event) => event.preventDefault()',
+          '// @ts-expect-error — clientX is web-only; an inferred event param must not reach it',
+          'export const inferredWebOnly: ButtonPressHandler = (event) => void event.clientX',
+          'export const inferredShared: ButtonPressHandler = (event) => {',
+          '  event.preventDefault()',
+          '  event.stopPropagation()',
+          '}',
           '',
           'export const webAnnotated: ButtonPressHandler = (event: WebButtonPressEvent) => event.preventDefault()',
           'export const noArg: ButtonPressHandler = () => {}',

@@ -1,5 +1,5 @@
 import type { RecoveryMethod } from '@universe/embedded-wallet'
-import { useListAuthenticatorsQuery } from '~/components/AccountDrawer/PasskeyMenu/hooks/useListAuthenticatorsQuery'
+import { useListAuthenticatorsQuery } from '~/features/wallet/components/AccountDrawer/PasskeyMenu/hooks/useListAuthenticatorsQuery'
 import { ReconnectBackupLoginModal } from '~/features/wallet/components/Passkey/ReconnectBackupLoginModal'
 import { Step, useBackupLoginFlow } from '~/features/wallet/components/Passkey/useBackupLoginFlow'
 import { render, screen } from '~/test-utils/render'
@@ -9,7 +9,7 @@ vi.mock('~/features/wallet/components/Passkey/useBackupLoginFlow', async (import
   return { ...actual, useBackupLoginFlow: vi.fn() }
 })
 
-vi.mock('~/components/AccountDrawer/PasskeyMenu/hooks/useListAuthenticatorsQuery', () => ({
+vi.mock('~/features/wallet/components/AccountDrawer/PasskeyMenu/hooks/useListAuthenticatorsQuery', () => ({
   useListAuthenticatorsQuery: vi.fn(),
 }))
 

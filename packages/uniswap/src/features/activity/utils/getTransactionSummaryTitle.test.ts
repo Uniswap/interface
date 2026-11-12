@@ -121,3 +121,20 @@ describe('getTransactionSummaryTitle - Earn plans', () => {
     ).toBe('transaction.status.deposit.interrupted')
   })
 })
+
+describe('getTransactionSummaryTitle - Margin plans', () => {
+  it.each([
+    ['open', TransactionStatus.Success, 'transaction.status.margin.success'],
+    ['close', TransactionStatus.AwaitingAction, 'transaction.status.marginClose.interrupted'],
+    ['increaseLeverage', TransactionStatus.Pending, 'transaction.status.marginUpdate.pending'],
+  ] as const)('maps a %s plan at %s to %s', (action, status, expectedKey) => {
+    const currencyId = buildCurrencyId(UniverseChainId.Mainnet, DAI.address)
+    const marginAction = { action, collateralCurrencyId: currencyId, debtCurrencyId: currencyId }
+    expect(
+      getTitle({
+        status,
+        typeInfo: { ...createPlanTypeInfo(TradingApi.EarnAction.DEPOSIT), earnAction: undefined, marginAction },
+      }),
+    ).toBe(expectedKey)
+  })
+})

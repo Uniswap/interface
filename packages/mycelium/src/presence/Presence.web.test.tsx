@@ -1,7 +1,7 @@
 import { act, render } from '@testing-library/react'
 import { isTestEnv } from '@universe/environment'
 import { forwardRef, StrictMode, useLayoutEffect, type CSSProperties, type JSX, type Ref } from 'react'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, type MockInstance, vi } from 'vitest'
 import { ENTER_EXIT_PRESET_CLASSES, ENTER_PRESET_CLASSES, EXIT_PRESET_CLASSES } from '../compat/animations'
 import { PRESENCE_EXIT_DEFECT_WARNING_PREFIX, resetPresenceExitDefectReports } from './exit-diagnostics'
 import { PRESENCE_EXIT_TIMEOUT_MS, PRESENCE_SKIP_ENTER_ATTR, Presence } from './Presence.web'
@@ -108,12 +108,12 @@ function queryItem(container: HTMLElement, id: string): HTMLElement | null {
 }
 
 /** The exit-lane helper would escalate this warning into a throw and pre-empt the assertion, so collect it. */
-function captureExitDefectWarnings(): ReturnType<typeof vi.spyOn> {
+function captureExitDefectWarnings(): MockInstance {
   resetPresenceExitDefectReports()
   return vi.spyOn(console, 'warn').mockImplementation(() => undefined)
 }
 
-function exitDefectWarnings(warn: ReturnType<typeof vi.spyOn>): string[] {
+function exitDefectWarnings(warn: MockInstance): string[] {
   const messages: string[] = []
   for (const [message] of warn.mock.calls) {
     if (typeof message === 'string' && message.startsWith(PRESENCE_EXIT_DEFECT_WARNING_PREFIX)) {

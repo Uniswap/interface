@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next'
 import { ChartUnavailableOverlay } from '~/components/Charts/ChartUnavailableOverlay'
 import { ChartSkeleton } from '~/components/Charts/LoadingState'
 import { MAX_PLOTTABLE_VALUE, PriceChartBody, type PriceChartData } from '~/components/Charts/PriceChart'
-import { ChartType, PriceChartType } from '~/components/Charts/utils'
+import { ChartType, PriceChartType } from '~/utils/charts'
 
 export const HOVER_CARD_CHART_HEIGHT = 104
 export const HOVER_CARD_CONTENT_WIDTH = 240

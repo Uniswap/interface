@@ -7,6 +7,7 @@ import { UniverseChainId, mainnet, normalizeTokenAddressForCache } from '@univer
 import PERMIT2_ABI from 'uniswap/src/abis/permit2'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { DAI, USDC, USDC_BNB, USDT } from 'uniswap/src/constants/tokens'
+import { currentTimeInSeconds } from 'utilities/src/time/time'
 import { type Address, assume0xAddress, erc20Abi } from '~/chains'
 import { resolvePinnedForkBlock } from '~/playwright/anvil/anvil-args'
 import type { AnvilClient as BaseAnvilClient } from '~/playwright/anvil/anvil-manager'
@@ -157,7 +158,7 @@ const createAnvilClient = (chainId: number = UniverseChainId.Mainnet) => {
       token,
       spender,
       amount = MaxUint160.toBigInt(), // MaxUint160
-      expiration = Math.floor(Date.now() / 1000) + 30 * 24 * 60 * 60, // 30 days from now
+      expiration = currentTimeInSeconds() + 30 * 24 * 60 * 60, // 30 days from now
     }: {
       owner?: Address
       token: Address
@@ -183,7 +184,7 @@ const createAnvilClient = (chainId: number = UniverseChainId.Mainnet) => {
       reserve0: bigint
       reserve1: bigint
     }) {
-      const blockTimestampLast = Math.floor(Date.now() / 1000)
+      const blockTimestampLast = currentTimeInSeconds()
       // V2 pairs store reserves in slot 8: reserve0 (112 bits) | reserve1 (112 bits) | blockTimestampLast (32 bits)
       const maxUint112 = (1n << 112n) - 1n
 

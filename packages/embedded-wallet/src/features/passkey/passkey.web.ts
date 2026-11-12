@@ -1,7 +1,11 @@
-import { startAuthentication, startRegistration } from '@simplewebauthn/browser'
+import { browserSupportsWebAuthn, startAuthentication, startRegistration } from '@simplewebauthn/browser'
+import { WebAuthnUnsupportedError } from '@universe/embedded-wallet/src/features/passkey/passkeyRejection'
 import { UnsupportedPasskeyRegistrationError } from '@universe/embedded-wallet/src/features/passkey/unsupportedPasskeyError'
 
 export async function registerPasskey(_challenge: string): Promise<string> {
+  if (!browserSupportsWebAuthn()) {
+    throw new WebAuthnUnsupportedError()
+  }
   const registration = await startRegistration({
     optionsJSON: JSON.parse(_challenge),
   })
@@ -15,11 +19,15 @@ export async function registerPasskey(_challenge: string): Promise<string> {
 
 export async function authenticatePasskey(_challenge: string): Promise<string> {
   // an empty challenge signifies the user is sessioned and no authentication is needed
-  return _challenge.length
-    ? JSON.stringify(
-        await startAuthentication({
-          optionsJSON: JSON.parse(_challenge),
-        }),
-      )
-    : ''
+  if (!_challenge.length) {
+    return ''
+  }
+  if (!browserSupportsWebAuthn()) {
+    throw new WebAuthnUnsupportedError()
+  }
+  return JSON.stringify(
+    await startAuthentication({
+      optionsJSON: JSON.parse(_challenge),
+    }),
+  )
 }

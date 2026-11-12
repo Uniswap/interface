@@ -25,6 +25,7 @@ exports[`LimitOrderDetails.tsx > renders a preview trade while disabling submiss
           aria-hidden="true"
           class="sbtn-spin"
           fill="none"
+          focusable="false"
           stroke-width="8"
           style="color: currentColor; width: 20.7px; height: 20.7px;"
           viewBox="0 0 24 24"

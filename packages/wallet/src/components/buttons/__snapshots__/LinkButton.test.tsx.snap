@@ -16,7 +16,9 @@ exports[`LinkButton > renders without error 1`] = `
         link text
       </span>
       <svg
+        aria-hidden="true"
         fill="none"
+        focusable="false"
         stroke-width="1.5"
         style="width: 20px; height: 20px;"
         viewBox="0 0 24 24"

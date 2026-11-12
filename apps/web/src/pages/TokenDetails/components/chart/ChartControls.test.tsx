@@ -1,13 +1,13 @@
 import { TestID } from '@universe/test'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { ChartType } from '~/components/Charts/utils'
 import { TimePeriod } from '~/data/util'
 import { ChartControls } from '~/pages/TokenDetails/components/chart/ChartControls'
 import type { TDPChartQueryVariables } from '~/pages/TokenDetails/components/chart/TDPChartState'
 import { TDPChartStateProvider } from '~/pages/TokenDetails/components/chart/TDPChartStateContext'
 import { mockMediaSize } from '~/test-utils/mockMediaSize'
 import { fireEvent, render, screen } from '~/test-utils/render'
+import { ChartType } from '~/utils/charts'
 
 vi.mock('@universe/mycelium/theme-hooks-compat', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@universe/mycelium/theme-hooks-compat')>()

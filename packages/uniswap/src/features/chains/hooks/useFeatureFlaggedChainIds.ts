@@ -19,6 +19,7 @@ export const getFeatureFlaggedChainIds = createGetFeatureFlaggedChainIds((flag) 
 // Used to feature flag chains. If a chain is not included in the object, it is considered enabled by default.
 export function useFeatureFlaggedChainIds(): UniverseChainId[] {
   const arcStatus = useFeatureFlag(FeatureFlags.Arc)
+  const elysiumStatus = useFeatureFlag(FeatureFlags.Elysium)
   const inkStatus = useFeatureFlag(FeatureFlags.Ink)
   const lineaStatus = useFeatureFlag(FeatureFlags.Linea)
   const megaETHStatus = useFeatureFlag(FeatureFlags.MegaETH)
@@ -32,6 +33,8 @@ export function useFeatureFlaggedChainIds(): UniverseChainId[] {
         switch (flag) {
           case FeatureFlags.Arc:
             return arcStatus
+          case FeatureFlags.Elysium:
+            return elysiumStatus
           case FeatureFlags.Ink:
             return inkStatus
           case FeatureFlags.Linea:
@@ -48,7 +51,7 @@ export function useFeatureFlaggedChainIds(): UniverseChainId[] {
             return false
         }
       })(),
-    [arcStatus, inkStatus, lineaStatus, megaETHStatus, robinhoodStatus, tempoStatus, xLayerStatus],
+    [arcStatus, elysiumStatus, inkStatus, lineaStatus, megaETHStatus, robinhoodStatus, tempoStatus, xLayerStatus],
   )
 }
 

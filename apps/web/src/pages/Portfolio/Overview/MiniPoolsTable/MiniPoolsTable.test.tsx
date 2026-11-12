@@ -4,12 +4,12 @@ import { TestID } from '@universe/test'
 import type { PositionInfo } from 'uniswap/src/features/positions/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { SAMPLE_SEED_ADDRESS_1 } from 'uniswap/src/test/fixtures/assets/constants'
-import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
+import { PortfolioTab } from '~/hooks/usePortfolioRoutes/types'
+import { usePortfolioRoutes } from '~/hooks/usePortfolioRoutes/usePortfolioRoutes'
 import { usePortfolioSectionTotalValue } from '~/pages/Portfolio/Overview/hooks/usePortfolioSectionTotalValue'
 import { useMiniPoolsTableColumns } from '~/pages/Portfolio/Overview/MiniPoolsTable/hooks/useMiniPoolsTableColumns'
 import { useMiniPoolsTableData } from '~/pages/Portfolio/Overview/MiniPoolsTable/hooks/useMiniPoolsTableData'
 import { MiniPoolsTable } from '~/pages/Portfolio/Overview/MiniPoolsTable/MiniPoolsTable'
-import { PortfolioTab } from '~/pages/Portfolio/types'
 import { mocked } from '~/test-utils/mocked'
 import { render, screen } from '~/test-utils/render'
 
@@ -18,7 +18,7 @@ vi.mock('@universe/gating', async (importOriginal) => ({
   useFeatureFlag: vi.fn(),
 }))
 
-vi.mock('~/pages/Portfolio/Header/hooks/usePortfolioRoutes', () => ({
+vi.mock('~/hooks/usePortfolioRoutes/usePortfolioRoutes', () => ({
   usePortfolioRoutes: vi.fn(),
 }))
 
@@ -51,7 +51,7 @@ vi.mock('~/pages/Portfolio/Overview/TableSectionHeader', () => ({
   TableSectionHeader: tableSectionHeaderMock,
 }))
 
-vi.mock('~/pages/Portfolio/Overview/ViewAllButton', () => ({
+vi.mock('~/components/ViewAllButton', () => ({
   ViewAllButton: ({
     href,
     label,

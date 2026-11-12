@@ -25,6 +25,7 @@ export function RWAIssuerHeaderDetails({ issuer }: RWAIssuerHeaderDetailsProps):
       <Flex row alignItems="center" gap="$gap8">
         {issuerLogoUrl ? (
           <UniversalImage
+            alt=""
             allowLocalUri
             size={{ height: logoSize, width: logoSize }}
             style={{ image: { borderRadius: logoSize } }}

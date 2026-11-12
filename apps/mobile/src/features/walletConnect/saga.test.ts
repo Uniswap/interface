@@ -18,6 +18,7 @@ import { EthMethod } from 'uniswap/src/features/dappRequests/types'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { DappRequestInfo, DappRequestType, EthEvent } from 'uniswap/src/types/walletConnect'
+import { currentTimeInSeconds } from 'utilities/src/time/time'
 import type { Mock } from 'vitest'
 import { DappVerificationStatus } from 'wallet/src/features/dappRequests/types'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
@@ -378,7 +379,7 @@ describe('WalletConnect Saga', () => {
     it('restores valid sessions to store', async () => {
       const validSession = {
         topic: 'valid-topic',
-        expiry: Math.floor(Date.now() / 1000) + 3600, // expires in 1 hour
+        expiry: currentTimeInSeconds() + 3600, // expires in 1 hour
         namespaces: {
           eip155: {
             accounts: [`eip155:1:${mockAccount}`],
@@ -418,7 +419,7 @@ describe('WalletConnect Saga', () => {
     it('disconnects expired sessions instead of restoring them', async () => {
       const expiredSession = {
         topic: 'expired-topic',
-        expiry: Math.floor(Date.now() / 1000) - 3600, // expired 1 hour ago
+        expiry: currentTimeInSeconds() - 3600, // expired 1 hour ago
         namespaces: {
           eip155: {
             accounts: [`eip155:1:${mockAccount}`],
@@ -450,7 +451,7 @@ describe('WalletConnect Saga', () => {
     it('disconnects orphaned sessions whose accounts no longer exist', async () => {
       const orphanedSession = {
         topic: 'orphaned-topic',
-        expiry: Math.floor(Date.now() / 1000) + 3600,
+        expiry: currentTimeInSeconds() + 3600,
         namespaces: {
           eip155: {
             accounts: ['eip155:1:0xremoved_account'],
@@ -482,7 +483,7 @@ describe('WalletConnect Saga', () => {
     it('continues restoring other sessions if one disconnect fails', async () => {
       const expiredSession = {
         topic: 'expired-topic',
-        expiry: Math.floor(Date.now() / 1000) - 3600,
+        expiry: currentTimeInSeconds() - 3600,
         namespaces: {
           eip155: { accounts: [`eip155:1:${mockAccount}`], chains: ['eip155:1'], methods: [], events: [] },
         },
@@ -490,7 +491,7 @@ describe('WalletConnect Saga', () => {
       }
       const validSession = {
         topic: 'valid-topic',
-        expiry: Math.floor(Date.now() / 1000) + 3600,
+        expiry: currentTimeInSeconds() + 3600,
         namespaces: {
           eip155: { accounts: [`eip155:1:${mockAccount}`], chains: ['eip155:1'], methods: [], events: [] },
         },

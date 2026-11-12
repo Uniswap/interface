@@ -1,11 +1,11 @@
 import { TestID } from '@universe/test'
-import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
+import { PortfolioTab } from '~/hooks/usePortfolioRoutes/types'
+import { usePortfolioRoutes } from '~/hooks/usePortfolioRoutes/usePortfolioRoutes'
 import { PortfolioTabs } from '~/pages/Portfolio/Header/Tabs'
-import { PortfolioTab } from '~/pages/Portfolio/types'
 import { mocked } from '~/test-utils/mocked'
 import { render, screen } from '~/test-utils/render'
 
-vi.mock('~/pages/Portfolio/Header/hooks/usePortfolioRoutes', () => ({
+vi.mock('~/hooks/usePortfolioRoutes/usePortfolioRoutes', () => ({
   usePortfolioRoutes: vi.fn(),
 }))
 

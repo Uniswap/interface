@@ -1,6 +1,8 @@
 import {
   DEV_ENTRY_GATEWAY_API_BASE_URL,
   PROD_ENTRY_GATEWAY_API_BASE_URL,
+  PROD_RPC_API_BASE_URL,
+  resolveEntryGatewayEnvFromPath,
   STAGING_ENTRY_GATEWAY_API_BASE_URL,
 } from '@universe/api'
 import { Environment } from '@universe/config'
@@ -16,21 +18,6 @@ import { proxy } from 'hono/proxy'
 
 type Bindings = {
   ASSETS?: { fetch: typeof fetch } // Static-file reader supplied by the Node entry points
-}
-
-/**
- * URL segment -> upstream env. The segment values match
- * `ENTRY_GATEWAY_PROXY_ENV_SEGMENT` exported from @universe/api.
- *
- * The mapping is the proxy's only piece of "knowledge" about envs — there is
- * no feature registry, just a path-segment match. Callers that need to pin
- * a request to a specific env declare it at their call site (e.g.
- * `getEntryGatewayUrl({ env: Environment.Production })` produces `/entry-gateway/prod`).
- */
-const ENTRY_GATEWAY_ENV_BY_SEGMENT: Record<string, Environment> = {
-  dev: Environment.Development,
-  staging: Environment.Staging,
-  prod: Environment.Production,
 }
 
 /** Platform-specific dependencies injected by each entry point. */
@@ -59,9 +46,8 @@ export const ENTRY_GATEWAY_URLS = {
   production: PROD_ENTRY_GATEWAY_API_BASE_URL,
 } as const
 
-// Statsig proxy via Cloudflare gateway — the URL is constant for the web app
-// (platform prefix "interface", service prefix "gating")
-const STATSIG_PROXY_TARGET = 'https://gating.interface.gateway.uniswap.org'
+// Statsig always goes to the prod gateway, whatever env this deploy serves (same as the native clients).
+const STATSIG_PROXY_TARGET = PROD_RPC_API_BASE_URL
 
 // Drops edge hop headers before re-proxying: a CloudFront-backed upstream 403s requests
 // that already carry a CloudFront `Via`, and x-origin-verify is our edge secret.
@@ -85,20 +71,6 @@ function cacheControl(maxAge: number) {
       c.res.headers.set('Cache-Control', `public, max-age=${maxAge}`)
     }
   }
-}
-
-/**
- * If the path starts with an env segment (`/prod`, `/staging`, `/dev`),
- * returns the matching upstream env and the remaining path; otherwise
- * returns `undefined` env and the original path so the deployment default
- * is used.
- */
-function resolveEnvFromPath(path: string): { env: Environment | undefined; remainingPath: string } {
-  const match = path.match(/^\/(prod|staging|dev)(?=\/|$)(.*)$/)
-  if (!match) {
-    return { env: undefined, remainingPath: path }
-  }
-  return { env: ENTRY_GATEWAY_ENV_BY_SEGMENT[match[1]], remainingPath: match[2] || '/' }
 }
 
 export function createApp({ fetchSpaHtml, getEntryGatewayUrl, getTrustedClientIp, getEmbedFrameAncestors }: AppConfig) {
@@ -127,7 +99,7 @@ export function createApp({ fetchSpaHtml, getEntryGatewayUrl, getTrustedClientIp
     // the request onto a specific backend env regardless of the deployment.
     // Used by services that have a fixed env requirement (see
     // `getEntryGatewayUrl({ env })` in @universe/api).
-    const { env, remainingPath } = resolveEnvFromPath(initialPath)
+    const { env, remainingPath } = resolveEntryGatewayEnvFromPath(initialPath)
     const backendUrl = getEntryGatewayUrl(c, env)
     const query = new URL(c.req.url).search
 
@@ -146,8 +118,7 @@ export function createApp({ fetchSpaHtml, getEntryGatewayUrl, getTrustedClientIp
       redirect: 'manual',
     })
 
-    // Rewrite Set-Cookie headers so cookies work on non-.uniswap.org domains
-    // (Vercel previews, staging, etc.)
+    // Rewrite Set-Cookie headers so cookies work on non-.uniswap.org domains (e.g. localhost).
     return rewriteProxiedCookies(response)
   })
 

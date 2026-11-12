@@ -63,6 +63,8 @@ export interface PoolSearchHistoryResult extends SearchResultBase {
   feeTier: number
   token0CurrencyId: CurrencyId
   token1CurrencyId: CurrencyId
+  /** The pool's backend-served quote token is token0, so the pair displays as token1 / token0. Unset on older history entries. */
+  isToken0Quote?: boolean
 }
 
 export function isPoolSearchHistoryResult(x: SearchHistoryResult): x is PoolSearchHistoryResult {

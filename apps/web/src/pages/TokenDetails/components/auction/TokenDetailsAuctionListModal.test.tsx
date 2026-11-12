@@ -5,6 +5,7 @@ import { TestID } from '@universe/test'
 import { AuctionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { logger } from 'utilities/src/logger/logger'
+import { currentTimeInSeconds } from 'utilities/src/time/time'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import type { CurrencyRaisedState } from '~/features/Toucan/Auction/utils/resolveAuctionDisplayState'
 import { TokenDetailsAuctionListModal } from '~/pages/TokenDetails/components/auction/TokenDetailsAuctionListModal'
@@ -43,7 +44,7 @@ vi.mock('~/features/Toucan/Auction/hooks/useAuctionDisplayDataSources', () => ({
   }),
 }))
 
-const NOW_SECONDS = Math.floor(Date.now() / 1000)
+const NOW_SECONDS = currentTimeInSeconds()
 const ONE_HOUR = 60 * 60
 
 function auction({

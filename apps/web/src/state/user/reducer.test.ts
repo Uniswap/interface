@@ -1,6 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { Store } from 'redux'
-import { RouterPreference } from '~/state/routing/types'
 import reducer, {
   initialState,
   UserState,
@@ -10,6 +9,7 @@ import reducer, {
   updateUserRouterPreference,
   updateUserSlippageTolerance,
 } from '~/state/user/reducer'
+import { RouterPreference } from '~/types/routing'
 
 describe('swap reducer', () => {
   let store: Store<UserState>

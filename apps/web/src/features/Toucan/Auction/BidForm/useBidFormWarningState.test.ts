@@ -6,7 +6,7 @@ import { zeroAddress } from '~/chains'
 import { useBidFormWarningState } from '~/features/Toucan/Auction/BidForm/useBidFormWarningState'
 import { AuctionProgressState } from '~/features/Toucan/Auction/store/types'
 import { useToucanAuctionSupportedChains } from '~/features/Toucan/supportedChains'
-import { getPrimaryStablecoin } from '~/pages/Liquidity/CreateAuction/raiseCurrency'
+import { getPrimaryStablecoin } from '~/features/Toucan/utils/raiseCurrency'
 
 const ARBITRARY_TOKEN = '0x1234567890123456789012345678901234567890'
 

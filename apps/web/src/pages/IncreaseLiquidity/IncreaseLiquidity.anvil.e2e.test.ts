@@ -2,6 +2,7 @@ import { LiquidityService } from '@uniswap/client-liquidity/dist/uniswap/liquidi
 import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
 import { TestID } from '@universe/test'
 import { USDT } from 'uniswap/src/constants/tokens'
+import { sleep } from 'utilities/src/time/timing'
 import { assume0xAddress } from '~/chains'
 import { ONE_MILLION_USDT } from '~/playwright/anvil/utils'
 import { expect, getTest } from '~/playwright/fixtures'
@@ -124,7 +125,7 @@ test.describe(
           if (requestData.signature) {
             // Hold the error response briefly so the completed approval step stays
             // visible long enough for the 'Approved' assertion below.
-            await new Promise((resolve) => setTimeout(resolve, 1500))
+            await sleep(1500)
             await route.fulfill({
               status: 500,
               contentType: 'application/json',

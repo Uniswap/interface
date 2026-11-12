@@ -260,6 +260,8 @@ export function HeightAnimator({
     <div
       ref={outerRef}
       id={id}
+      // TODO(INFRA-4589): collapsing only sets height 0, so focusable children stay in the tab order and the
+      // accessibility tree; make the collapsed content inert unless unmountChildrenWhenCollapsed is set.
       className={cn(VIEW_CLASSES, 'overflow-hidden', enterClass)}
       // Height only, never `all` — a broader transition would flash color tokens on theme toggle (repo CLAUDE.md rule).
       style={{

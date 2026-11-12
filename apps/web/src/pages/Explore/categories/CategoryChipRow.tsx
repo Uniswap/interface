@@ -1,6 +1,8 @@
 import { Flex } from '@universe/mycelium'
+import { startTransition, useOptimistic } from 'react'
 import type { Category, CategoryKind } from 'uniswap/src/features/tokenCategories/types'
-import { edgeFadeMaskStyle, useHorizontalScrollFades } from '~/hooks/useHorizontalScrollFades'
+import { useEvent } from 'utilities/src/react/hooks'
+import { HorizontalFadeScroller } from '~/components/HorizontalFadeScroller/HorizontalFadeScroller'
 import type { ExploreCategoryChipOption } from '~/pages/Explore/categories/exploreCategoryChipOptions'
 import { ExploreCategoryChips } from '~/pages/Explore/categories/ExploreCategoryChips'
 import { ExploreCategoryChipsSkeleton } from '~/pages/Explore/categories/ExploreCategoryChipsSkeleton'
@@ -27,26 +29,26 @@ export function CategoryChipRow<K extends CategoryKind>({
   /** Ordered backend list behind the More dropdown; undefined renders the static chip set alone. */
   moreCategories?: Extract<Category, { kind: K }>[]
 }): JSX.Element {
-  const { scrollerRef, edgeFades } = useHorizontalScrollFades()
+  // The router applies `?category=` in a transition that also renders the new table; select the chip first.
+  const [optimisticValue, setOptimisticValue] = useOptimistic(value)
+  const onSelect = useEvent((category: string): void => {
+    startTransition(() => {
+      setOptimisticValue(category)
+      onChange(category)
+    })
+  })
 
   return (
     // Chips can exceed small viewports — scroll them in place instead of widening the page.
-    <Flex
-      ref={scrollerRef}
-      maxWidth="100%"
-      flexShrink={1}
-      minWidth={0}
-      className="scrollbar-hidden"
-      $platform-web={{ overflowX: 'auto', overscrollBehaviorX: 'none', ...edgeFadeMaskStyle(edgeFades) }}
-    >
+    <HorizontalFadeScroller maxWidth="100%" flexShrink={1} minWidth={0} gap="$spacing4">
       {loading ? (
         <ExploreCategoryChipsSkeleton />
       ) : (
-        <Flex row alignItems="center" gap="$spacing4">
+        <>
           <ExploreCategoryChips
             options={options}
-            value={value}
-            onChange={onChange}
+            value={optimisticValue}
+            onChange={onSelect}
             fadeSwapLastOption={moreCategories !== undefined}
           />
           {moreCategories && (
@@ -55,14 +57,14 @@ export function CategoryChipRow<K extends CategoryKind>({
               <MoreCategoriesDropdown
                 kind={kind}
                 categories={moreCategories}
-                selectedCategoryId={value}
+                selectedCategoryId={optimisticValue}
                 position={options.length}
-                onSelectCategory={onChange}
+                onSelectCategory={onSelect}
               />
             </>
           )}
-        </Flex>
+        </>
       )}
-    </Flex>
+    </HorizontalFadeScroller>
   )
 }

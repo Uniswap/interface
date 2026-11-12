@@ -357,6 +357,7 @@ export const InputCompat = forwardRef<RNTextInput, InputCompatProps>(function In
     spellCheck: spellCheck ?? autoCorrect,
     // Legacy contract: disabled → readOnly (never the DOM disabled attribute), and a
     // consumer-passed DOM readOnly in the passthrough is not clobbered.
+    // TODO(INFRA-4589): assistive tech hears a read-only field, not a disabled one; add aria-disabled when disabled.
     readOnly: !isEditable || domRest['readOnly'] === true,
     'data-testid': dataTestId,
     'data-uds-placeholder': placeholderColor === undefined ? undefined : '',

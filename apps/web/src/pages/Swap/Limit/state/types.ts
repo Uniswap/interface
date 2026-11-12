@@ -2,7 +2,7 @@ import { Currency, CurrencyAmount, Price } from '@uniswap/sdk-core'
 import { Dispatch, SetStateAction } from 'react'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { LimitsExpiry } from 'uniswap/src/types/limits'
-import { LimitOrderTrade, SwapFeeInfo } from '~/state/routing/types'
+import { LimitOrderTrade, SwapFeeInfo } from '~/types/routing'
 
 export type LimitInfo = {
   currencyBalances: { [field in CurrencyField]?: CurrencyAmount<Currency> }

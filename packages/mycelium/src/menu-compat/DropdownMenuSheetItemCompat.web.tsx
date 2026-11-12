@@ -89,11 +89,12 @@ export const DropdownMenuSheetItemCompat = React.forwardRef<
   })
 
   return (
-    // oxlint-disable-next-line react/forbid-elements -- the compat item IS the raw DOM boundary (no Tamagui TouchableArea here)
+    // oxlint-disable-next-line react/forbid-elements jsx-a11y/no-static-element-interactions jsx-a11y/click-events-have-key-events -- the compat item IS the raw DOM boundary (no Tamagui TouchableArea here); `role` defaults to button and the rule cannot read a dynamic role; TODO: drop once compat buttons get Enter/Space activation
     <div
       ref={ref}
       {...rest}
       data-slot="dropdown-menu-sheet-item-compat"
+      // TODO(INFRA-4589): no tabIndex, so Tab never reaches the item and keyboard users can't select it.
       role={role}
       aria-disabled={disabled === true ? true : undefined}
       className={cn(frameEmission.className, className)}

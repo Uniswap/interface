@@ -496,6 +496,7 @@ describe(isHttpsUri, () => {
 
   it('returns false for malformed URI', () => {
     expect(isHttpsUri('not a url')).toBe(false)
+    expect(isHttpsUri('//evil.example/form')).toBe(false)
   })
 
   it('returns true for uppercase HTTPS', () => {

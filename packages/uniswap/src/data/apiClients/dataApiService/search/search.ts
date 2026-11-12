@@ -10,6 +10,7 @@ import { normalizeBackendNativeAddress } from 'uniswap/src/data/apiClients/dataA
 import { entryGatewayProdPostTransport } from 'uniswap/src/data/transport'
 import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import { PoolSearchResult, PoolSearchStats } from 'uniswap/src/features/dataApi/types'
+import { isToken0Quote } from 'uniswap/src/features/pools/quoteToken'
 import { SearchHistoryResultType } from 'uniswap/src/features/search/SearchHistoryResult'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 
@@ -86,6 +87,7 @@ export function rankedPoolToPoolSearchResult(
     feeTier,
     token0CurrencyId: buildCurrencyId(pool.chainId, token0Address),
     token1CurrencyId: buildCurrencyId(pool.chainId, token1Address),
+    isToken0Quote: isToken0Quote({ token0Address: pool.token0.address, quoteTokenAddress: pool.quoteTokenAddress }),
     ...(stats && { stats }),
   }
 }

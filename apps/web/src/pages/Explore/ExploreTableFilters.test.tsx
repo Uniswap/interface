@@ -1,6 +1,8 @@
 import { act, render, screen } from '@testing-library/react'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { UniverseChainId } from '@universe/chains'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import { TestID } from '@universe/test'
 import type { ComponentProps } from 'react'
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router'
 import {
@@ -19,7 +21,7 @@ let filterProps: ComponentProps<typeof PoolsFilter> | undefined
 vi.mock('~/features/Liquidity/PoolsFilter/PoolsFilter', () => ({
   PoolsFilter: (props: ComponentProps<typeof PoolsFilter>) => {
     filterProps = props
-    return <div data-testid="pools-filter" />
+    return <div data-testid="pools-filter">{props.periodSelector}</div>
   },
 }))
 
@@ -47,7 +49,7 @@ function Harness(): JSX.Element {
 }
 
 // Mirrors the app's `/explore` route in Body.tsx: the nested paths are children of the parent route and
-// render the same element, but the parent's element (RedirectExplore) has no <Outlet />, so for every nested
+// render the same element, but the parent's element (ExploreRoute) has no <Outlet />, so for every nested
 // path it is the parent element that renders — never swapped, which is what lets the page and its filter
 // store survive a chain-segment change. `useParams` still reports the deepest match's `:tab`/`:chainName`.
 function renderAt(path: string) {
@@ -75,6 +77,22 @@ function storedFilter(): unknown {
 describe('ExploreTableFilters (pools tab)', () => {
   beforeEach(() => {
     filterProps = undefined
+    vi.mocked(useFeatureFlag).mockReturnValue(false)
+  })
+
+  it('renders the live period control in the Pools slot only while Hooks Explore is enabled', () => {
+    vi.mocked(useFeatureFlag).mockImplementation((flag) => flag === FeatureFlags.HooksExplore)
+    renderAt('/explore/pools/base')
+
+    expect(screen.getByTestId(TestID.TimeSelector)).toHaveTextContent('1D')
+    expect(filterProps?.periodSelector).toBeDefined()
+  })
+
+  it('keeps the legacy Pools toolbar without the period control when the flag is off', () => {
+    renderAt('/explore/pools/base')
+
+    expect(screen.queryByTestId(TestID.TimeSelector)).not.toBeInTheDocument()
+    expect(filterProps?.periodSelector).toBeUndefined()
   })
 
   it('reads the filter chain from the URL chain segment', () => {

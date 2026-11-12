@@ -2,8 +2,8 @@ import { Navigate, useParams } from 'react-router'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { areCurrencyIdsEqual } from 'uniswap/src/utils/currencyId'
 import { useAccount } from '~/connection/hooks/useAccount'
-import { CREATE_POOL_PATH } from '~/pages/AddLiquidity/poolLinkParams'
 import { getChainUrlParam } from '~/utils/params/chainParams'
+import { CREATE_POOL_PATH } from '~/utils/params/poolLinkParams'
 
 export function AddLiquidityV3WithTokenRedirects() {
   const { currencyIdA, currencyIdB, tokenId } = useParams<{

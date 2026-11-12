@@ -41,7 +41,8 @@ export function useRealTokenMarketInfo({
 }: UseRealTokenMarketInfoParams): RealTokenMarketInfo {
   const currencyId = !skip && chainId && tokenAddress ? buildCurrencyId(chainId, tokenAddress) : undefined
 
-  const { name, isLoading: metadataLoading } = useTokenMetadata(currencyId)
+  const { data: metadata, isLoading: metadataLoading } = useTokenMetadata(currencyId)
+  const name = metadata?.name
 
   // Same params as useTokenMarketStats so the request shares the TDP's cache entry.
   const marketsParams = useMemo(

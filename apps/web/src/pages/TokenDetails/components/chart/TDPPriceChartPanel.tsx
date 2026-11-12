@@ -7,13 +7,13 @@ import { LowPriceConfidenceTag } from 'uniswap/src/features/prices/LowPriceConfi
 import { isLowPriceConfidence } from 'uniswap/src/features/prices/priceConfidence'
 import { ChartSkeleton } from '~/components/Charts/LoadingState'
 import { PriceChart } from '~/components/Charts/PriceChart'
-import { ChartType, PriceChartType } from '~/components/Charts/utils'
 import { TimePeriod, toHistoryDuration } from '~/data/util'
 import { EXPLORE_CHART_HEIGHT_PX } from '~/features/Explore/constants'
 import { AuctionDisplayPhase } from '~/features/Toucan/Auction/utils/resolveAuctionDisplayState'
 import { useTokenPriceChartPanel } from '~/hooks/useTokenPriceChartPanel'
 import { useIsSynchronizedHeartbeatEnabled } from '~/lib/hooks/useHeartbeatCoordinator'
 import type { TDPChartQueryVariables } from '~/pages/TokenDetails/components/chart/TDPChartState'
+import { ChartType, PriceChartType } from '~/utils/charts'
 
 interface TDPPriceChartPanelProps {
   variables: TDPChartQueryVariables

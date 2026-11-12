@@ -110,6 +110,8 @@ export interface MarginMarket {
   // client max() over the allowed venues' values — deriving one from lltv is forbidden, so a market
   // built off-registry (a position whose venue the wire no longer lists) simply has none.
   maxLeverage?: number
+  // What `open.marketId` names on POST /margin/quote. Absent off-registry, like maxLeverage.
+  marketId?: string
   shouldUseNativeEquity: boolean
 }
 

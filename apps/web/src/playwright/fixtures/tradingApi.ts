@@ -2,6 +2,7 @@
 // oxlint-disable-next-line no-restricted-imports -- Trading API fixtures need direct Playwright imports
 import { test as base, type Page, type Route } from '@playwright/test'
 import { TRADING_API_PATHS, V1_TRADING_API_PATHS } from '@universe/api'
+import { sleep } from 'utilities/src/time/timing'
 import { getUniswapServiceUrls } from '~/config'
 import { Mocks } from '~/playwright/mocks/mocks'
 
@@ -16,7 +17,7 @@ export async function fetchRetryingRateLimit(route: Route, options: Parameters<R
     if (response.status() !== 429) {
       break
     }
-    await new Promise((resolve) => setTimeout(resolve, delayMs))
+    await sleep(delayMs)
     response = await route.fetch(options)
   }
   return response

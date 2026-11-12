@@ -17,6 +17,7 @@ import {
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { type TokenApprovalInfo, type TradeWithStatus } from 'uniswap/src/features/transactions/swap/types/trade'
 import { ApprovalAction } from 'uniswap/src/features/transactions/swap/types/trade'
+import { SUPPORTED_BRIDGE_PROVIDERS } from 'uniswap/src/features/transactions/swap/utils/bridgeProviders'
 import { DEFAULT_PROTOCOL_OPTIONS } from 'uniswap/src/features/transactions/swap/utils/protocols'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -43,6 +44,7 @@ describe('createPrepareSwapRequestParams', () => {
   const transactionSettings: TransactionSettingsState = {
     customDeadline: 1800,
     selectedProtocols: DEFAULT_PROTOCOL_OPTIONS,
+    selectedBridgeProviders: SUPPORTED_BRIDGE_PROVIDERS,
     slippageWarningModalSeen: false,
     isV4HookPoolsEnabled: false,
     isSlippageDirty: false,

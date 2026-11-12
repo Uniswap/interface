@@ -304,7 +304,7 @@ function AppOuter(): JSX.Element | null {
         // Datadog has a limited set of accepted symbols in feature flags
         // https://docs.datadoghq.com/real_user_monitoring/guide/setup-feature-flag-data-collection/?tab=reactnative#feature-flag-naming
         flagKey.replaceAll('-', '_'),
-        getStatsigClient().checkGate(flagKey),
+        getStatsigClient().checkGate(flagKey, { disableExposureLog: true }),
       ).catch(() => undefined)
     }
 
@@ -313,7 +313,7 @@ function AppOuter(): JSX.Element | null {
         // Datadog has a limited set of accepted symbols in feature flags
         // https://docs.datadoghq.com/real_user_monitoring/guide/setup-feature-flag-data-collection/?tab=reactnative#feature-flag-naming
         `experiment_${experiment.replaceAll('-', '_')}`,
-        getStatsigClient().getExperiment(experiment).groupName,
+        getStatsigClient().getExperiment(experiment, { disableExposureLog: true }).groupName,
       ).catch(() => undefined)
     }
 

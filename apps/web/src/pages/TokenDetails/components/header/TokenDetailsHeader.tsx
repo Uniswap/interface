@@ -27,10 +27,10 @@ import { DetailsHeaderSubtitleMobile } from '~/components/StickyCollapsibleHeade
 import { DetailsHeaderTitle, useMetadataRowHidden } from '~/components/StickyCollapsibleHeader/DetailsHeaderTitle'
 import { DesktopHeaderActions } from '~/components/StickyCollapsibleHeader/HeaderActions/DesktopHeaderActions'
 import { MobileHeaderActions } from '~/components/StickyCollapsibleHeader/HeaderActions/MobileHeaderActions'
+import { TokenAddressCopyMobile } from '~/components/TokenAddressCopyMobile/TokenAddressCopyMobile'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { useModalState } from '~/hooks/useModalState'
 import { RWAIssuerHeaderDetails } from '~/pages/TokenDetails/components/header/RWAIssuerHeaderDetails'
-import { TokenDetailsHeaderAddressCopyMobile } from '~/pages/TokenDetails/components/header/TokenDetailsHeaderAddressCopyMobile'
 import { TokenDetailsHeaderCategoryChips } from '~/pages/TokenDetails/components/header/TokenDetailsHeaderCategoryChips'
 import {
   TokenDetailsHeaderLaunchpad,
@@ -99,7 +99,7 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
   const heldRwaIssuer = isRwaMatchLoading ? undefined : rwaIssuer
   const plainTokenNames = useIsTokenCategoriesEnabled()
 
-  const metadata = useTokenMetadata(currencyId(effectiveCurrency))
+  const { data: metadata } = useTokenMetadata(currencyId(effectiveCurrency))
 
   const displayAddress = effectiveCurrency.isNative ? NATIVE_CHAIN_ID : effectiveCurrency.address
   const isNative = effectiveCurrency.isNative
@@ -110,7 +110,7 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
     void setModalProps({
       source: 'token-details',
       currency,
-      isMarkedSpam: metadata.isSpam,
+      isMarkedSpam: metadata?.isSpam,
       isMultichainAsset: isMultiChainAsset,
       shouldReportMultichainAsset: isMultiChainAsset && selectedChainId === undefined,
     })
@@ -133,18 +133,18 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
 
   const { desktopHeaderActions, mobileHeaderActionSections } = useTokenDetailsHeaderActions({
     currency: effectiveCurrency,
-    project: { homepageUrl: metadata.homepageUrl, twitterName: metadata.twitterName },
+    project: { homepageUrl: metadata?.homepageUrl, twitterName: metadata?.twitterName },
     openReportTokenModal,
     openReportDataIssueModal,
     isMobileScreen,
   })
 
-  const tokenSymbol = metadata.symbol ?? effectiveCurrency.symbol ?? t('tdp.symbolNotFound')
-  const fallbackTokenName = metadata.name ?? effectiveCurrency.name ?? t('tdp.nameNotFound')
+  const tokenSymbol = metadata?.symbol ?? effectiveCurrency.symbol ?? t('tdp.symbolNotFound')
+  const fallbackTokenName = metadata?.name ?? effectiveCurrency.name ?? t('tdp.nameNotFound')
   const { name: tokenName, logoUrl: tokenLogoUrl } = getRWAHeaderIdentity({
     rwaMatch,
     fallbackName: fallbackTokenName,
-    logoUrl: metadata.logoUrl,
+    logoUrl: metadata?.logoUrl,
     plainTokenNames,
   })
   const showAddressCopy = getShowAddressCopy({ isNative, isMultiChainAsset, selectedChainId })
@@ -175,7 +175,7 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
         titleTooltip={isMobileScreen ? tokenName : undefined}
         titleAdornments={
           <>
-            <TokenDetailsHeaderAddressCopyMobile
+            <TokenAddressCopyMobile
               displayAddress={displayAddress}
               isNative={isNative}
               chainId={effectiveCurrency.chainId}
@@ -244,7 +244,7 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
       >
         <ReportTokenDataModal
           currency={currency}
-          isMarkedSpam={metadata.isSpam}
+          isMarkedSpam={metadata?.isSpam}
           shouldReportMultichainAsset={isMultiChainAsset && selectedChainId === undefined}
           onReportSuccess={onReportSuccess}
           isOpen={isReportDataIssueModalOpen}

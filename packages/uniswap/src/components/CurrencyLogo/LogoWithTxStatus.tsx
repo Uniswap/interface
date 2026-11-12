@@ -232,6 +232,7 @@ export function DappLogoWithTxStatus({
 
   const dappImage = dappImageUrl ? (
     <UniversalImage
+      alt=""
       fallback={fallback}
       uri={dappImageUrl}
       size={{ height: dappImageSize, width: dappImageSize }}
@@ -285,6 +286,7 @@ export function DappLogoWithWCBadge({
   const totalSize = dappImageSize + statusSize * (1 / 4)
   const dappImage = dappImageUrl ? (
     <UniversalImage
+      alt=""
       size={{
         height: dappImageSize,
         width: dappImageSize,

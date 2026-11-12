@@ -15,6 +15,7 @@ import { useIsSwapButtonDisabled } from 'uniswap/src/features/transactions/swap/
 import { useIsTradeIndicative } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsTradeIndicative'
 import { useOnReviewPress } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useOnReviewPress'
 import { usePromptWebFORNudge } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/usePromptWebFORNudge'
+import { useScreenActiveAddressOnPress } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useScreenActiveAddressOnPress'
 import { useSwapFormButtonColors } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useSwapFormButtonColors'
 import { useSwapFormButtonText } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useSwapFormButtonText'
 import { SwapFormButtonTrace } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/SwapFormButtonTrace'
@@ -45,6 +46,7 @@ export const SwapFormButton = memo(function SwapFormButton({ tokenColor }: { tok
   const buttonText = useSwapFormButtonText()
   const { swapRedirectCallback } = useTransactionModalContext()
   const { handleShowVerifyIdentityModal } = useSwapFormWarningStoreActions()
+  const screenActiveAddress = useScreenActiveAddressOnPress()
   const {
     backgroundColor: buttonBackgroundColor,
     variant: buttonVariant,
@@ -87,7 +89,9 @@ export const SwapFormButton = memo(function SwapFormButton({ tokenColor }: { tok
   const onPress = useEvent(() => {
     switch (action) {
       case SwapFormButtonAction.VerifyIdentity:
-        handleShowVerifyIdentityModal()
+        // Screened here too: this branch returns before `handleOnReviewPress`, so it is
+        // the one press that never reaches `useOnReviewPress`.
+        screenActiveAddress(handleShowVerifyIdentityModal)
         return
       case SwapFormButtonAction.GeoAcknowledgment:
         openGeoRestrictionModal()

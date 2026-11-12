@@ -62,7 +62,7 @@ vi.mock('uniswap/src/components/MultichainTokenDetails/MultichainAddressSheet', 
 }))
 
 vi.mock('uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData', () => ({
-  useTokenMetadata: () => ({ homepageUrl: undefined, twitterName: undefined }),
+  useTokenMetadata: () => ({ data: { homepageUrl: undefined, twitterName: undefined } }),
 }))
 
 vi.mock('src/components/TokenDetails/TokenDetailsContext', () => ({

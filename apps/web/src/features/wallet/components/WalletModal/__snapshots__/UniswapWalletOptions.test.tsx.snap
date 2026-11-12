@@ -64,7 +64,9 @@ exports[`UniswapWalletOptions > Download wallet option should be visible if exte
           class="flex flex-col basis-auto box-border min-h-[0px] shrink-0 items-center justify-center w-[32px] h-[32px] min-w-[32px] bg-accent2 rounded-[8px] relative"
         >
           <svg
+            aria-hidden="true"
             fill="none"
+            focusable="false"
             stroke-width="8"
             style="width: 22.4px; height: 22.4px;"
             viewBox="0 0 96 96"
@@ -136,7 +138,9 @@ exports[`UniswapWalletOptions > Extension connecter should be shown if detected 
               class="flex flex-col basis-auto box-border min-h-[0px] shrink-0 items-center justify-center w-[32px] h-[32px] min-w-[32px] bg-accent2 rounded-[8px] relative"
             >
               <svg
+                aria-hidden="true"
                 fill="none"
+                focusable="false"
                 stroke-width="8"
                 style="width: 22.4px; height: 22.4px;"
                 viewBox="0 0 96 96"
@@ -165,6 +169,8 @@ exports[`UniswapWalletOptions > Extension connecter should be shown if detected 
                 style="--c-right: -4px; --c-bottom: -3px;"
               >
                 <svg
+                  aria-hidden="true"
+                  focusable="false"
                   stroke-width="8"
                   style="color: rgb(255, 255, 255); width: 10px; height: 10px;"
                   viewBox="0 0 48 48"
@@ -295,7 +301,9 @@ exports[`UniswapWalletOptions > Extension connecter should be shown if detected 
           class="flex flex-col basis-auto box-border min-h-[0px] shrink-0 items-center justify-center w-[32px] h-[32px] min-w-[32px] bg-accent2 rounded-[8px] relative"
         >
           <svg
+            aria-hidden="true"
             fill="none"
+            focusable="false"
             stroke-width="8"
             style="width: 22.4px; height: 22.4px;"
             viewBox="0 0 96 96"

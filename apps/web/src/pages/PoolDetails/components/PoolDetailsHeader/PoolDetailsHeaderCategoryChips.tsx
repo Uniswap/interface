@@ -15,11 +15,8 @@ import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { CategoryHoverCard } from '~/components/HoverCard/CategoryHoverCard/CategoryHoverCard'
 import { LoadingBubble } from '~/components/Tokens/loading'
 import { edgeFadeMaskStyle, useHorizontalScrollFades } from '~/hooks/useHorizontalScrollFades'
-import {
-  type CategoryDetailsNavState,
-  createCategoryDetailsNavState,
-} from '~/pages/Explore/CategoryDetails/categoryDetailsEntryPoint'
-import { getCategoryDetailsURL } from '~/pages/Explore/CategoryDetails/getCategoryDetailsURL'
+import { type CategoryDetailsNavState, createCategoryDetailsNavState } from '~/utils/categoryDetailsEntryPoint'
+import { getCategoryDetailsURL } from '~/utils/getCategoryDetailsURL'
 
 // Same chip geometry as the TDP collections row so the two detail pages line up.
 const CHIP_HEIGHT = iconSizes.icon16 + 2 * spacing.spacing6

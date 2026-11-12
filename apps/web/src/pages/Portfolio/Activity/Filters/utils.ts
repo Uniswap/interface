@@ -9,37 +9,12 @@ import { Plus } from '@universe/mycelium/icons/Plus'
 import { Pools } from '@universe/mycelium/icons/Pools'
 import { ReceiveAlt } from '@universe/mycelium/icons/ReceiveAlt'
 import { SendAction } from '@universe/mycelium/icons/SendAction'
-import type { ActivityItem } from 'uniswap/src/components/activity/generateActivityItemRenderer'
-import { isLoadingItem, isSectionHeader } from 'uniswap/src/components/activity/utils'
 import { getEarnPlanTransactionType } from 'uniswap/src/features/earn/planActivityTitles'
 import { NFTTradeType, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import type { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import type { AppTFunction } from 'utilities/src/i18n/types'
 import type { SelectOption } from '~/components/Dropdowns/DropdownSelector'
 import { ActivityFilterType } from '~/pages/Portfolio/Activity/Filters/activityFilterTypes'
-
-/**
- * Type guard to check if an ActivityItem is a TransactionDetails
- * @param item ActivityItem to check
- * @returns true if the item is a TransactionDetails
- */
-function isTransactionDetails(item: ActivityItem): item is TransactionDetails {
-  // Validate that the item has required TransactionDetails properties
-  return (
-    'typeInfo' in item && 'addedTime' in item && typeof item.typeInfo === 'object' && typeof item.addedTime === 'number'
-  )
-}
-
-/**
- * Filters out loading items and section headers, leaving only TransactionDetails
- * @param transactions ActivityItems to filter
- * @returns only TransactionDetails items
- */
-export function filterTransactionDetailsFromActivityItems(transactions: ActivityItem[]): TransactionDetails[] {
-  return transactions.filter(
-    (item): item is TransactionDetails => !isLoadingItem(item) && !isSectionHeader(item) && isTransactionDetails(item),
-  )
-}
 
 export function getTransactionTypeForActivityFilter({
   transaction,
@@ -48,6 +23,11 @@ export function getTransactionTypeForActivityFilter({
 }): TransactionType {
   if (transaction.typeInfo.type === TransactionType.Plan && transaction.typeInfo.earnAction) {
     return getEarnPlanTransactionType(transaction.typeInfo.earnAction)
+  }
+
+  // A margin plan isn't a swap; Unknown is in no filter group, so it only shows under All.
+  if (transaction.typeInfo.type === TransactionType.Plan && transaction.typeInfo.marginAction) {
+    return TransactionType.Unknown
   }
 
   // NFT purchases are grouped under receives, sales under sends

@@ -9,9 +9,10 @@ export type TokenItemData = {
   address: Address | null
   symbol: string
   price?: number
-  marketCap?: number
+  fdv?: number
   pricePercentChange24h?: number
   volume24h?: number
   totalValueLocked?: number
   networkCount?: number
+  categoryIds?: string[]
 }

@@ -6,6 +6,7 @@ import type { TokenDetailsEarnData } from 'uniswap/src/features/earn/hooks/useTo
 import type { EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import type { Mock } from 'vitest'
 
 const mockNavigate = vi.fn()
 const mockNavigateToEarnVault = vi.fn()
@@ -65,7 +66,7 @@ vi.mock('wallet/src/features/wallet/hooks', () => ({
   useIsViewOnlyWallet: (): boolean => accountMock.isViewOnly,
 }))
 
-vi.mock('uniswap/src/features/telemetry/send', (): { sendAnalyticsEvent: ReturnType<typeof vi.fn> } => ({
+vi.mock('uniswap/src/features/telemetry/send', (): { sendAnalyticsEvent: Mock } => ({
   sendAnalyticsEvent: vi.fn(),
 }))
 

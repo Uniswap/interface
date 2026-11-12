@@ -1,5 +1,6 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import type { Currency } from '@uniswap/sdk-core'
+import type { PriceRangeDragTarget } from 'uniswap/src/features/telemetry/types'
 import { createLiquidityChartStore } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/createLiquidityChartStore'
 import type {
   RenderingContext,
@@ -51,6 +52,7 @@ export function createStore({
   baseCurrency,
   quoteCurrency,
   parent,
+  onRangeDragEnd,
 }: {
   currentTick: number
   currentPrice?: number
@@ -62,6 +64,7 @@ export function createStore({
   baseCurrency?: Maybe<Currency>
   quoteCurrency?: Maybe<Currency>
   parent: ReturnType<typeof createParent>
+  onRangeDragEnd?: (target: PriceRangeDragTarget) => void
 }) {
   return createLiquidityChartStore({
     currentTick,
@@ -80,6 +83,7 @@ export function createStore({
     onMinTickChange: parent.onMinTickChange,
     onMaxTickChange: parent.onMaxTickChange,
     onMinMaxTickChange: parent.onMinMaxTickChange,
+    onRangeDragEnd,
     setIsFullRange: () => {},
   })
 }

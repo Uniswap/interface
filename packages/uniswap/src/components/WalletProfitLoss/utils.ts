@@ -1,3 +1,4 @@
+import { currentTimeInSeconds } from 'utilities/src/time/time'
 export enum ProfitLossPeriod {
   DAY = '1D',
   WEEK = '1W',
@@ -58,6 +59,6 @@ export function getProfitLossSince(period: ProfitLossPeriod): bigint | undefined
   if (period === ProfitLossPeriod.ALL) {
     return undefined
   }
-  const now = Math.floor(Date.now() / 1000)
+  const now = currentTimeInSeconds()
   return BigInt(now - PERIOD_OFFSETS[period])
 }

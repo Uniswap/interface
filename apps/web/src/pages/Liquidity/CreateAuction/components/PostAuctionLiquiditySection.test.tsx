@@ -1,7 +1,8 @@
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
+import { RaiseCurrency } from '~/features/Toucan/utils/raiseCurrency'
 import { PostAuctionLiquiditySection } from '~/pages/Liquidity/CreateAuction/components/PostAuctionLiquiditySection'
-import { PostAuctionLiquidityAllocationType, RaiseCurrency } from '~/pages/Liquidity/CreateAuction/types'
+import { PostAuctionLiquidityAllocationType } from '~/pages/Liquidity/CreateAuction/types'
 import { getRaiseCurrencyAsCurrency } from '~/pages/Liquidity/CreateAuction/utils'
 import { render, screen } from '~/test-utils/render'
 

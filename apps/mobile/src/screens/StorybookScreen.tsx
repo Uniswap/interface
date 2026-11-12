@@ -26,12 +26,12 @@ export function StorybookScreen(): JSX.Element {
   const hideSplashScreen = useHideSplashScreen()
   let storybook: JSX.Element | null = null
   // This gate must be spelled out from the inlinable atoms (process.env.*, __DEV__): metro's
-  // constant folding then deletes the whole branch — the .storybook require and every story it
+  // constant folding then deletes the whole branch — the .rnstorybook require and every story it
   // pulls in, ~2MB — from product bundles. Testing the exported storybookScreenEnabled instead
   // does not fold (the export transform keeps its binding from evaluating statically).
   // oxlint-disable-next-line eslint-js/no-restricted-syntax
   if (process.env.STORYBOOK_ENABLED === 'true' || __DEV__) {
-    const StorybookUIRoot = require('src/../.storybook').default
+    const StorybookUIRoot = require('src/../.rnstorybook').default
     storybook = <StorybookUIRoot />
   }
   return (

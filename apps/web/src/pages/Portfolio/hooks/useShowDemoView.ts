@@ -1,5 +1,5 @@
 import { useActiveAddresses } from 'uniswap/src/features/accounts/store/hooks'
-import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
+import { usePortfolioRoutes } from '~/hooks/usePortfolioRoutes/usePortfolioRoutes'
 
 /**
  * Returns true when the user should see the demo/disconnected portfolio view.

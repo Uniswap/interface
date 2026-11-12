@@ -60,6 +60,7 @@ export function getMappedMarginErrorMessage({
     case 'MARGIN_WITHDRAW_OVER_MAX':
       return t('margin.error.adjust.withdrawOverMax')
     case 'MARGIN_MARKET_NOT_SUPPORTED':
+    case 'MARGIN_MIRRORED_READING':
       return t('margin.error.adjust.marketNotSupported')
     case 'MARGIN_ADJUST_NO_POSITION':
       return t('margin.error.adjust.noPosition')

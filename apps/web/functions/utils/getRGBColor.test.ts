@@ -1,4 +1,5 @@
 import { getRGBColor } from 'functions/utils/getRGBColor'
+import type { Mock } from 'vitest'
 
 const DEFAULT_COLOR = { red: 35, green: 43, blue: 43 }
 
@@ -10,7 +11,7 @@ const DEFAULT_COLOR = { red: 35, green: 43, blue: 43 }
  */
 describe('getRGBColor — input validation', () => {
   const originalFetch = globalThis.fetch
-  let fetchSpy: ReturnType<typeof vi.fn>
+  let fetchSpy: Mock
 
   beforeEach(() => {
     fetchSpy = vi.fn().mockRejectedValue(new Error('test guard: fetch should not be called'))

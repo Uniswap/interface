@@ -6,6 +6,7 @@ describe('DEFAULT_CHAINED_ACTIONS_UNSUPPORTED_CHAIN_IDS', () => {
   it('includes chains that do not support chained actions', () => {
     expect(DEFAULT_CHAINED_ACTIONS_UNSUPPORTED_CHAIN_IDS).toContain(UniverseChainId.Solana)
     expect(DEFAULT_CHAINED_ACTIONS_UNSUPPORTED_CHAIN_IDS).toContain(UniverseChainId.Polygon)
+    expect(DEFAULT_CHAINED_ACTIONS_UNSUPPORTED_CHAIN_IDS).toContain(UniverseChainId.Elysium)
   })
 
   it('excludes chains that support chained actions', () => {

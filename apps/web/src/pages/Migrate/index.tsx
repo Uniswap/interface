@@ -9,6 +9,7 @@ import type { Dispatch, ReactNode, SetStateAction } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { useLocation, useNavigate, useParams } from 'react-router'
+import { getPoolName } from 'uniswap/src/features/pools/names'
 import { useGetPositionInfo } from 'uniswap/src/features/positions/hooks/useGetPositionInfo'
 import type { PositionInfo } from 'uniswap/src/features/positions/types'
 import { InterfacePageName, ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
@@ -28,22 +29,22 @@ import { LoadingRows } from '~/components/Loader/styled'
 import { useAccount } from '~/connection/hooks/useAccount'
 import { useSelectChain } from '~/connection/hooks/useSelectChain'
 import { getLPBaseAnalyticsProperties } from '~/features/Liquidity/analytics'
-import { FormStepsWrapper, FormWrapper } from '~/features/Liquidity/Create/FormWrapper'
-import { useInitialPriceAcceptance } from '~/features/Liquidity/Create/hooks/useInitialPriceAcceptance'
-import { useLiquidityUrlState } from '~/features/Liquidity/Create/hooks/useLiquidityUrlState'
-import { useLPSlippageValue } from '~/features/Liquidity/Create/hooks/useLPSlippageValues'
-import { DEFAULT_POSITION_STATE, MigratingPosition, PositionFlowStep } from '~/features/Liquidity/Create/types'
-import { LiquidityPositionCard } from '~/features/Liquidity/LiquidityPositionCard'
-import { LoadingRow } from '~/features/Liquidity/Loader'
-import { ReviewModal } from '~/features/Liquidity/ReviewModal'
-import { getCurrencyForProtocol } from '~/features/Liquidity/utils/currency'
 import {
   CreateLiquidityContextProvider,
   DEFAULT_DEPOSIT_STATE,
   DEFAULT_PRICE_RANGE_STATE,
   useCreateLiquidityContext,
-} from '~/pages/CreatePosition/CreateLiquidityContextProvider'
-import { SharedCreateModals } from '~/pages/CreatePosition/SharedCreateModals'
+} from '~/features/Liquidity/Create/CreateLiquidityContextProvider'
+import { FormStepsWrapper, FormWrapper } from '~/features/Liquidity/Create/FormWrapper'
+import { useInitialPriceAcceptance } from '~/features/Liquidity/Create/hooks/useInitialPriceAcceptance'
+import { useLiquidityUrlState } from '~/features/Liquidity/Create/hooks/useLiquidityUrlState'
+import { useLPSlippageValue } from '~/features/Liquidity/Create/hooks/useLPSlippageValues'
+import { SharedCreateModals } from '~/features/Liquidity/Create/SharedCreateModals'
+import { DEFAULT_POSITION_STATE, MigratingPosition, PositionFlowStep } from '~/features/Liquidity/Create/types'
+import { LiquidityPositionCard } from '~/features/Liquidity/LiquidityPositionCard'
+import { LoadingRow } from '~/features/Liquidity/Loader'
+import { ReviewModal } from '~/features/Liquidity/ReviewModal'
+import { getCurrencyForProtocol } from '~/features/Liquidity/utils/currency'
 import { useMigrateReviewModal } from '~/pages/Migrate/hooks/useMigrateReviewModal'
 import { useMigratingPosition } from '~/pages/Migrate/hooks/useMigratingPosition'
 import { useRedirectIfNotPositionOwner } from '~/pages/Migrate/hooks/useRedirectIfNotPositionOwner'
@@ -213,6 +214,7 @@ function MigrateInner({
         </Flex>
         <FormStepsWrapper
           isMigration
+          token0IsQuote={positionInfo.isToken0Quote}
           currencyInputs={currencyInputs}
           setCurrencyInputs={setCurrencyInputs}
           selectSectionName={SectionName.MigrateSelectTokensStep}
@@ -400,6 +402,12 @@ export function MigrateV3() {
   }
 
   const { currency0Amount, currency1Amount, feeTier } = positionInfo
+  const poolName = getPoolName({
+    symbol0: currency0Amount.currency.symbol,
+    symbol1: currency1Amount.currency.symbol,
+    token0IsQuote: positionInfo.isToken0Quote,
+    spaced: true,
+  })
 
   return (
     <Trace
@@ -408,7 +416,7 @@ export function MigrateV3() {
       properties={{
         pool_address: positionInfo.poolId,
         chain_id: chainId ?? account.chainId,
-        label: [currency0Amount.currency.symbol, currency1Amount.currency.symbol].join('/'),
+        label: getPoolName({ symbol0: currency0Amount.currency.symbol, symbol1: currency1Amount.currency.symbol }),
         fee_tier: feeTier,
         token0Address: currencyIdToAddress(currencyId(currency0Amount.currency)),
         token1Address: currencyIdToAddress(currencyId(currency1Amount.currency)),
@@ -438,8 +446,7 @@ export function MigrateV3() {
                         : `/positions/v3/${chainName}/${tokenId}`
                     }
                   >
-                    {currency0Amount.currency.symbol} / {currency1Amount.currency.symbol}{' '}
-                    <RotatableChevron direction="right" size="$icon.16" />
+                    {poolName} <RotatableChevron direction="right" size="$icon.16" />
                   </BreadcrumbNavLink>
                 }
                 toolbar={

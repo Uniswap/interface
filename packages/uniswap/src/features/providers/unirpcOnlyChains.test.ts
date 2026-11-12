@@ -4,6 +4,7 @@ import { isUniRpcOnlyChain } from 'uniswap/src/features/providers/unirpcOnlyChai
 describe('isUniRpcOnlyChain', () => {
   it('is true for private/unlaunched UniRPC-only chains', () => {
     expect(isUniRpcOnlyChain(UniverseChainId.Arc)).toBe(true)
+    expect(isUniRpcOnlyChain(UniverseChainId.Elysium)).toBe(true)
     expect(isUniRpcOnlyChain(UniverseChainId.Robinhood)).toBe(true)
   })
 

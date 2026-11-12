@@ -1,10 +1,5 @@
 import type { TFunction } from 'i18next'
-
-export const MS_PER_DAY = 24 * 60 * 60 * 1000
-
-export const MS_PER_HOUR = 60 * 60 * 1000
-
-const MS_PER_MINUTE = 60 * 1000
+import { ONE_DAY_MS, ONE_HOUR_MS, ONE_MINUTE_MS } from 'utilities/src/time/time'
 
 /** Minimum lead before auction start when choosing dates/times (picker clamps to this). */
 export const CREATE_AUCTION_MIN_START_LEAD_TIME_MINUTES = 5
@@ -29,16 +24,16 @@ export function getMinAuctionStartTimeToProceed(): Date {
 }
 
 export function computeDurationDays({ startTime, endTime }: { startTime: Date; endTime: Date }): number {
-  return Math.round((endTime.getTime() - startTime.getTime()) / MS_PER_DAY)
+  return Math.round((endTime.getTime() - startTime.getTime()) / ONE_DAY_MS)
 }
 
 export function computeDurationHoursCeil({ startTime, endTime }: { startTime: Date; endTime: Date }): number {
   const ms = endTime.getTime() - startTime.getTime()
-  return Math.max(1, Math.ceil(ms / MS_PER_HOUR))
+  return Math.max(1, Math.ceil(ms / ONE_HOUR_MS))
 }
 
 export function defaultEndTimeFor(startTime: Date): Date {
-  return new Date(startTime.getTime() + DEFAULT_AUCTION_DURATION_DAYS * MS_PER_DAY)
+  return new Date(startTime.getTime() + DEFAULT_AUCTION_DURATION_DAYS * ONE_DAY_MS)
 }
 
 /**
@@ -154,7 +149,7 @@ export function getMinEmissionStartTime(preBidStartTime: Date | undefined): Date
   if (!preBidStartTime) {
     return leadFloor
   }
-  return new Date(Math.max(preBidStartTime.getTime() + MS_PER_MINUTE, leadFloor.getTime()))
+  return new Date(Math.max(preBidStartTime.getTime() + ONE_MINUTE_MS, leadFloor.getTime()))
 }
 
 /** Length of the pre-bid window seeded when the creator first adds the module. */
@@ -176,7 +171,7 @@ export const DEFAULT_PRE_BID_DURATION_MINUTES = 15
  */
 export function seedPreBidWindow(startTime: Date | undefined): { preBidStartTime: Date; startTime: Date | undefined } {
   const earliest = getMinStartTime()
-  const windowMs = DEFAULT_PRE_BID_DURATION_MINUTES * MS_PER_MINUTE
+  const windowMs = DEFAULT_PRE_BID_DURATION_MINUTES * ONE_MINUTE_MS
 
   if (!startTime) {
     return { preBidStartTime: earliest, startTime: undefined }
@@ -226,7 +221,7 @@ export function formatReviewAuctionDuration(
   t: TFunction,
 ): string {
   const durationMs = endTime.getTime() - startTime.getTime()
-  if (durationMs < MS_PER_DAY) {
+  if (durationMs < ONE_DAY_MS) {
     return t('common.hour.count', {
       count: computeDurationHoursCeil({ startTime, endTime }),
     })
@@ -238,16 +233,16 @@ export function formatReviewAuctionDuration(
 
 /** Localized length for a lead time given in whole minutes (reuses `common.minutes` / `common.hour` / `common.day`). */
 export function formatLeadMinutesLabel(minutes: number, t: TFunction): string {
-  const durationMs = minutes * MS_PER_MINUTE
-  if (durationMs < MS_PER_HOUR) {
+  const durationMs = minutes * ONE_MINUTE_MS
+  if (durationMs < ONE_HOUR_MS) {
     return t('common.minutes.withCount', { count: Math.max(1, minutes) })
   }
-  if (durationMs < MS_PER_DAY) {
+  if (durationMs < ONE_DAY_MS) {
     return t('common.hour.count', {
-      count: Math.max(1, Math.ceil(durationMs / MS_PER_HOUR)),
+      count: Math.max(1, Math.ceil(durationMs / ONE_HOUR_MS)),
     })
   }
   return t('common.day.count', {
-    count: Math.max(1, Math.ceil(durationMs / MS_PER_DAY)),
+    count: Math.max(1, Math.ceil(durationMs / ONE_DAY_MS)),
   })
 }

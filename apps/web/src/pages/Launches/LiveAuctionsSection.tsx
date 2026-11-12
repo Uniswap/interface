@@ -15,10 +15,10 @@ import {
   useExploreTablesFilterStoreActions,
 } from '~/features/Explore/state/exploreTablesFilterStore'
 import { useToucanAuctionSupportedChains } from '~/features/Toucan/supportedChains'
+import { getLaunchpadDisplay, UNISWAP_CCA_LAUNCHPAD_ID } from '~/features/Toucan/utils/launchesModel'
 import { ExploreFilterChip } from '~/pages/Explore/categories/ExploreCategoryChips'
 import { ToucanTable } from '~/pages/Explore/tables/Auctions/TopAuctionsTable'
 import { useLaunchpads } from '~/pages/Launches/data/useLaunchpads'
-import { getLaunchpadDisplay, UNISWAP_CCA_LAUNCHPAD_ID } from '~/pages/Launches/launchesModel'
 
 /** All / Verified quick-select chips for Live auctions, driving the shared auction filter store. */
 function LiveAuctionsQuickSelects(): JSX.Element {

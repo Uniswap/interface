@@ -6,7 +6,7 @@ import { InfoCircleFilled } from '@universe/mycelium/icons/InfoCircleFilled'
 import type { ComponentType } from 'react'
 import { useTranslation } from 'react-i18next'
 import { usePrevious } from 'utilities/src/react/hooks'
-import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
+import { useCreateLiquidityContext } from '~/features/Liquidity/Create/CreateLiquidityContextProvider'
 
 // Shared standalone-icon info banner used across the create flow (creating-pool, pool-already-created,
 // permissioned-block). iconColor/titleColor default to the neutral info treatment; pass $statusCritical

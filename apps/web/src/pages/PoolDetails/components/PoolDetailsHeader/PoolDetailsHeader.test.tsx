@@ -10,7 +10,6 @@ import { getFeeBreakdown } from 'uniswap/src/features/fees/getFeeBreakdown'
 import { dismissTokenWarning } from 'uniswap/src/features/tokens/warnings/slice/slice'
 import { TokenProtectionWarning } from 'uniswap/src/features/tokens/warnings/types'
 import { shortenHash } from 'utilities/src/addresses'
-import { ChartType, PriceChartType } from '~/components/Charts/utils'
 import { PoolsDetailsChartType } from '~/pages/PoolDetails/components/ChartSection'
 import { PoolDetailsBreadcrumb } from '~/pages/PoolDetails/components/PoolDetailsHeader/PoolDetailsBreadcrumb'
 import { PoolDetailsHeader } from '~/pages/PoolDetails/components/PoolDetailsHeader/PoolDetailsHeader'
@@ -19,6 +18,7 @@ import { mocked } from '~/test-utils/mocked'
 import { mockMediaSize } from '~/test-utils/mockMediaSize'
 import { usdcWethPoolAddress, validParsedPoolToken0, validParsedPoolToken1 } from '~/test-utils/pools/fixtures'
 import { render, screen } from '~/test-utils/render'
+import { ChartType, PriceChartType } from '~/utils/charts'
 
 vi.mock('@universe/mycelium/theme-hooks-compat', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@universe/mycelium/theme-hooks-compat')>()
@@ -127,14 +127,16 @@ describe('PoolDetailsHeader', () => {
   })
 
   const mockBreadcrumbProps = {
-    token0: validParsedPoolToken0,
-    token1: validParsedPoolToken1,
+    baseToken: validParsedPoolToken0,
+    quoteToken: validParsedPoolToken1,
     poolAddress: usdcWethPoolAddress,
   }
 
   const mockHeaderProps = {
     chainId: 1,
     poolAddress: usdcWethPoolAddress,
+    baseToken: validParsedPoolToken0,
+    quoteToken: validParsedPoolToken1,
     token0: validParsedPoolToken0,
     token1: validParsedPoolToken1,
     chartType: ChartType.PRICE as PoolsDetailsChartType,

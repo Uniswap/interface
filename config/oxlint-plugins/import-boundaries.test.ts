@@ -38,6 +38,8 @@ function lintFixture({
   fileDir,
   fileName = 'Fixture.tsx',
   messagePattern = /Swap views/,
+  boundariesConfig,
+  extraFiles = [],
 }: {
   source: string
   /** Repo-relative directory the fixture pretends to live in (becomes part of the physical path). */
@@ -45,11 +47,27 @@ function lintFixture({
   fileName?: string
   /** Keeps only the diagnostics of the boundary under test. */
   messagePattern?: RegExp
+  /** Boundaries to lint with instead of the real import-boundaries.json. */
+  boundariesConfig?: unknown[]
+  /** Repo-relative files to create next to the fixture (e.g. a layer-root file an import resolves to). */
+  extraFiles?: string[]
 }): Diagnostic[] {
   const dir = mkdtempSync(join(fixtureRoot, 'case-'))
   const filePath = join(dir, fileDir, fileName)
   mkdirSync(dirname(filePath), { recursive: true })
   writeFileSync(filePath, source)
+  for (const extraFile of extraFiles) {
+    const extraPath = join(dir, extraFile)
+    mkdirSync(dirname(extraPath), { recursive: true })
+    writeFileSync(extraPath, 'export {}\n')
+  }
+
+  const env: Record<string, string | undefined> = { ...process.env }
+  if (boundariesConfig) {
+    const boundariesPath = join(dir, 'import-boundaries.json')
+    writeFileSync(boundariesPath, JSON.stringify({ boundaries: boundariesConfig }))
+    env.UNIVERSE_IMPORT_BOUNDARIES_CONFIG = boundariesPath
+  }
 
   const configPath = join(dir, '.oxlintrc.json')
   writeFileSync(
@@ -64,6 +82,7 @@ function lintFixture({
 
   const result = Bun.spawnSync([OXLINT_BIN, '-c', configPath, '--format', 'json', filePath], {
     cwd: dir,
+    env,
     stdout: 'pipe',
     stderr: 'pipe',
   })
@@ -183,9 +202,9 @@ export function PortfolioView(): JSX.Element {
   })
 })
 
-describe('wallet-no-feature-imports boundary', () => {
+describe('web-features-sibling-isolation boundary (real config)', () => {
   const WALLET_DIR = 'apps/web/src/features/wallet/components'
-  const WALLET_MESSAGE = /features\/wallet` may not import other features/
+  const FEATURES_MESSAGE = /A feature may only import from its own folder/
 
   test('MUST FIRE: the wallet feature importing another feature', () => {
     for (const importLine of [
@@ -196,7 +215,7 @@ describe('wallet-no-feature-imports boundary', () => {
       const diagnostics = lintFixture({
         fileDir: WALLET_DIR,
         source: `${importLine}\nexport const x = 1\n`,
-        messagePattern: WALLET_MESSAGE,
+        messagePattern: FEATURES_MESSAGE,
       })
       expect(`${importLine}: ${diagnostics.length}`).toBe(`${importLine}: 1`)
     }
@@ -210,12 +229,12 @@ export async function load(): Promise<unknown> {
   return import('~/features/claim/hooks')
 }
 `,
-      messagePattern: WALLET_MESSAGE,
+      messagePattern: FEATURES_MESSAGE,
     })
     expect(diagnostics).toHaveLength(1)
   })
 
-  test('must NOT fire: the wallet feature importing itself (exemptImportPrefixes)', () => {
+  test('must NOT fire: the wallet feature importing itself', () => {
     for (const importLine of [
       `import { useConnectWallet } from '~/features/wallet/hooks/useConnectWallet'`,
       `import { x } from 'features/wallet/components/WalletModal/WalletModal'`,
@@ -224,32 +243,31 @@ export async function load(): Promise<unknown> {
       const diagnostics = lintFixture({
         fileDir: WALLET_DIR,
         source: `${importLine}\nexport const x = 1\n`,
-        messagePattern: WALLET_MESSAGE,
+        messagePattern: FEATURES_MESSAGE,
       })
       expect(`${importLine}: ${diagnostics.length}`).toBe(`${importLine}: 0`)
     }
   })
 
-  test('must NOT fire: other features importing the wallet feature', () => {
+  test('must NOT fire: other features importing the wallet feature (allowedSiblings)', () => {
     const diagnostics = lintFixture({
       fileDir: 'apps/web/src/features/earn',
       source: `
 import { useConnectWallet } from '~/features/wallet/hooks/useConnectWallet'
-import { useUserHasAvailableClaim } from '~/features/claim/hooks'
-export const x = [useConnectWallet, useUserHasAvailableClaim]
+export const x = [useConnectWallet]
 `,
-      messagePattern: WALLET_MESSAGE,
+      messagePattern: FEATURES_MESSAGE,
     })
     expect(diagnostics).toHaveLength(0)
   })
 
-  test('must NOT fire: a folder whose name only starts with "wallet"', () => {
+  test('MUST FIRE: a feature other than wallet importing a sibling feature', () => {
     const diagnostics = lintFixture({
-      fileDir: 'apps/web/src/features/walletConnect',
+      fileDir: 'apps/web/src/features/earn',
       source: `import { useUserHasAvailableClaim } from '~/features/claim/hooks'\nexport const x = 1\n`,
-      messagePattern: WALLET_MESSAGE,
+      messagePattern: FEATURES_MESSAGE,
     })
-    expect(diagnostics).toHaveLength(0)
+    expect(diagnostics).toHaveLength(1)
   })
 })
 
@@ -359,5 +377,148 @@ export const parts = [DetailRow, useSwapFormStore]
 `,
     })
     expect(diagnostics).toHaveLength(0)
+  })
+})
+
+describe('siblingIsolation mode', () => {
+  const PAGES_MESSAGE = 'pages sibling isolation'
+  const FEATURES_MESSAGE = 'features sibling isolation'
+  const SIBLING_BOUNDARIES = [
+    {
+      id: 'pages-sibling-isolation',
+      mode: 'siblingIsolation',
+      importerRootMarker: '/apps/web/src/pages/',
+      importPrefixes: ['~/pages/', 'pages/'],
+      bareModuleSources: ['~/pages', 'pages'],
+      allowRootFiles: true,
+      allowedSiblings: ['NotFound'],
+      message: PAGES_MESSAGE,
+    },
+    {
+      id: 'features-sibling-isolation',
+      mode: 'siblingIsolation',
+      importerRootMarker: '/apps/web/src/features/',
+      importPrefixes: ['~/features/', 'features/'],
+      bareModuleSources: [],
+      allowedSiblings: ['wallet', 'balances'],
+      message: FEATURES_MESSAGE,
+    },
+  ]
+  const SWAP_PAGE_DIR = 'apps/web/src/pages/Swap/Limit'
+  const PATHS_ROOT_FILE = 'apps/web/src/pages/paths.ts'
+
+  function countFor({
+    importLine,
+    fileDir,
+    fileName,
+    messagePattern,
+  }: {
+    importLine: string
+    fileDir: string
+    fileName?: string
+    messagePattern: RegExp
+  }): string {
+    const diagnostics = lintFixture({
+      fileDir,
+      fileName,
+      source: `${importLine}\nexport const x = 1\n`,
+      messagePattern,
+      boundariesConfig: SIBLING_BOUNDARIES,
+      extraFiles: [PATHS_ROOT_FILE],
+    })
+    return `${importLine}: ${diagnostics.length}`
+  }
+
+  test('MUST FIRE: a page importing a sibling page, including a bare folder import', () => {
+    for (const importLine of [
+      `import { Chart } from '~/pages/TokenDetails/components/chart/Chart'`,
+      `import { Thing } from 'pages/Explore/tables/Table'`,
+      `import { Explore } from '~/pages/Explore'`,
+    ]) {
+      expect(countFor({ importLine, fileDir: SWAP_PAGE_DIR, messagePattern: /pages sibling isolation/ })).toBe(
+        `${importLine}: 1`,
+      )
+    }
+  })
+
+  test('MUST FIRE: a dynamic import of a sibling page', () => {
+    const importLine = `export const load = () => import('~/pages/Portfolio/Portfolio')`
+    expect(countFor({ importLine, fileDir: SWAP_PAGE_DIR, messagePattern: /pages sibling isolation/ })).toBe(
+      `${importLine}: 1`,
+    )
+  })
+
+  test('must NOT fire: own folder, pages/ root files, allowed siblings, non-page imports', () => {
+    for (const importLine of [
+      `import { LimitForm } from '~/pages/Swap/Limit/LimitForm'`,
+      `import { SwapPage } from '~/pages/Swap'`,
+      `import { paths } from '~/pages/paths'`,
+      `import { NotFound } from '~/pages/NotFound'`,
+      `import { useSwap } from '~/features/Swap/hooks/useSwap'`,
+    ]) {
+      expect(countFor({ importLine, fileDir: SWAP_PAGE_DIR, messagePattern: /pages sibling isolation/ })).toBe(
+        `${importLine}: 0`,
+      )
+    }
+  })
+
+  test('must NOT fire: a file at the pages/ root (the route table imports every page)', () => {
+    const importLine = `import { Explore } from '~/pages/Explore'`
+    expect(
+      countFor({
+        importLine,
+        fileDir: 'apps/web/src/pages',
+        fileName: 'RouteDefinitions.tsx',
+        messagePattern: /pages sibling isolation/,
+      }),
+    ).toBe(`${importLine}: 0`)
+  })
+
+  test('MUST FIRE: a feature importing a sibling feature', () => {
+    const importLine = `import { AuctionCard } from '~/features/Toucan/AuctionCard'`
+    expect(
+      countFor({
+        importLine,
+        fileDir: 'apps/web/src/features/Liquidity',
+        messagePattern: /features sibling isolation/,
+      }),
+    ).toBe(`${importLine}: 1`)
+  })
+
+  test('MUST FIRE once: an allowlist listed first that permits the importer does not hide a sibling import', () => {
+    const importLine = `import { AuctionCard } from '~/features/Toucan/AuctionCard'`
+    const diagnostics = lintFixture({
+      fileDir: 'apps/web/src/features/Liquidity',
+      source: `${importLine}\nexport const x = 1\n`,
+      messagePattern: /sibling isolation|Toucan allowlist/,
+      boundariesConfig: [
+        {
+          id: 'toucan-feature',
+          importerInternalPathMarkers: ['/features/Toucan/'],
+          allowedImporterPathMarkers: ['/features/Liquidity/'],
+          importPrefixes: ['~/features/Toucan/', 'features/Toucan/'],
+          bareModuleSources: ['~/features/Toucan', 'features/Toucan'],
+          message: 'Toucan allowlist',
+        },
+        ...SIBLING_BOUNDARIES,
+      ],
+    })
+    expect(diagnostics.map((d) => d.message)).toEqual([FEATURES_MESSAGE])
+  })
+
+  test('must NOT fire: a feature importing itself or an allowed sibling', () => {
+    for (const importLine of [
+      `import { Range } from '~/features/Liquidity/charts/Range'`,
+      `import { useConnectWallet } from '~/features/wallet/hooks/useConnectWallet'`,
+      `import { Balances } from '~/features/balances/Balances'`,
+    ]) {
+      expect(
+        countFor({
+          importLine,
+          fileDir: 'apps/web/src/features/Liquidity',
+          messagePattern: /features sibling isolation/,
+        }),
+      ).toBe(`${importLine}: 0`)
+    }
   })
 })

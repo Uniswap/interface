@@ -33,6 +33,7 @@ import {
 import { useMarginPlanExecution } from '~/pages/Swap/Margin/hooks/marginPlanExecutionStore'
 import { planHasProofForSteps, readStepProof } from '~/pages/Swap/Margin/hooks/marginStepProofCache'
 import { useExecuteMarginPlan } from '~/pages/Swap/Margin/hooks/useExecuteMarginPlan'
+import { useResumeMarginPlanFromUrl } from '~/pages/Swap/Margin/hooks/useResumeMarginPlanFromUrl'
 import { marginPlanProgress } from '~/pages/Swap/Margin/marginPlanProgress'
 
 // Static literal per intent — a template-interpolated key would get stripped by i18n:extract.
@@ -371,7 +372,8 @@ export function MarginPlanReviewModal(): JSX.Element | null {
   const lastCreateRequest = useMarginPlanExecution((s) => s.lastCreateRequest)
   const lastManageAction = useMarginPlanExecution((s) => s.lastManageAction)
   const setModalOpen = useMarginPlanExecution((s) => s.actions.setModalOpen)
-  const { executePlan, retryCurrentStep, restartPlan } = useExecuteMarginPlan()
+  const { executePlan, retryCurrentStep, restartPlan, resumePlan } = useExecuteMarginPlan()
+  useResumeMarginPlanFromUrl(resumePlan)
   const { getMarketByTokens } = useMarginMarkets()
   const account = useAccount()
   const queryClient = useQueryClient()

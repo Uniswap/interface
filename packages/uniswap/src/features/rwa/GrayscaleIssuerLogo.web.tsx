@@ -6,6 +6,7 @@ export function GrayscaleIssuerLogo({ uri, size }: GrayscaleIssuerLogoProps): JS
     <Flex filter="grayscale(1)">
       <UniversalImage
         allowLocalUri
+        alt=""
         size={{ height: size, width: size }}
         style={{ image: { borderRadius: size } }}
         uri={uri}

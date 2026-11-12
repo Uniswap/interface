@@ -1,6 +1,7 @@
 import { isWebApp } from '@universe/environment'
 import i18n from 'i18next'
 import { Locale } from 'uniswap/src/features/language/constants'
+import { sleep } from 'utilities/src/time/timing'
 
 let changingTo = ''
 export async function changeLanguage(locale: Locale): Promise<void> {
@@ -10,7 +11,7 @@ export async function changeLanguage(locale: Locale): Promise<void> {
     let currentAttempts = 0
     // while language change is locked, wait up to a max of 3 attempts
     while (changingTo && currentAttempts < maxAttempts) {
-      await new Promise((resolve) => setTimeout(resolve, 100))
+      await sleep(100)
       currentAttempts++
     }
   }

@@ -1,4 +1,4 @@
-import { QueryClient } from '@tanstack/react-query'
+import { type DefaultOptions, QueryClient } from '@tanstack/react-query'
 
 export interface QueryClientConfig {
   /** How long data is "fresh" before refetching (default: 30_000ms) */
@@ -11,6 +11,8 @@ export interface QueryClientConfig {
   refetchOnMount?: boolean
   /** Refetch when network reconnects (default: true) */
   refetchOnReconnect?: boolean
+  /** Default for `useQuery`'s `throwOnError`; unset keeps TanStack's default (never throw). */
+  throwOnError?: NonNullable<DefaultOptions['queries']>['throwOnError']
   /** Optional logger for retry warnings */
   logger?: {
     warn: (message: string, context?: Record<string, unknown>) => void
@@ -27,6 +29,7 @@ export function createQueryClient(config?: QueryClientConfig): QueryClient {
     refetchOnWindowFocus = true,
     refetchOnMount = true,
     refetchOnReconnect = true,
+    throwOnError,
     logger,
   } = config ?? {}
 
@@ -38,6 +41,7 @@ export function createQueryClient(config?: QueryClientConfig): QueryClient {
         refetchOnWindowFocus,
         refetchOnMount,
         refetchOnReconnect,
+        ...(throwOnError === undefined ? {} : { throwOnError }),
         retry: (failureCount, error): boolean => {
           if (failureCount >= 2) {
             return false

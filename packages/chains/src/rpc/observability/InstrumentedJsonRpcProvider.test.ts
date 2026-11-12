@@ -1,5 +1,5 @@
 import { StaticJsonRpcProvider } from '@ethersproject/providers'
-import { afterEach, describe, expect, test, vi } from 'vitest'
+import { afterEach, describe, expect, type Mock, test, vi } from 'vitest'
 import { InstrumentedJsonRpcProvider } from './InstrumentedJsonRpcProvider'
 import type { RpcObserver } from './rpcObserver'
 
@@ -103,7 +103,7 @@ describe('InstrumentedJsonRpcProvider', () => {
     await expect(provider.perform('eth_blockNumber', {})).rejects.toBe(ethersErr)
 
     expect(observer.onError).toHaveBeenCalledTimes(1)
-    const observed = (observer.onError as ReturnType<typeof vi.fn>).mock.calls[0]?.[0]
+    const observed = (observer.onError as Mock).mock.calls[0]?.[0]
     expect(observed).toBeDefined()
     const normalized = observed!.error as Error
     // Normalized message should be ethers' short `reason`, not the verbose

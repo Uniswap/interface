@@ -25,9 +25,9 @@ import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { useSrcColor } from '~/hooks/useColor'
 import type { LoadedTDPContext, MultiChainMap, PendingTDPContext } from '~/pages/TokenDetails/context/TDPContext'
 import { useTokenDetailsAuction } from '~/pages/TokenDetails/hooks/useTokenDetailsAuction'
-import { getTdpTokenMultiChainQueryOptions } from '~/pages/TokenDetails/tdpTokenQueryOptions'
 import { getNativeTokenDBAddress } from '~/utils/nativeTokens'
 import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
+import { getTokenMultiChainQueryOptions } from '~/utils/tokenQueryOptions'
 
 /** React Query names refetched by the TDP heartbeat's full tick. Price-bearing queries are owned by the price tick instead (see useTDPHeartbeatCoordinator). */
 const TDP_DATA_API_QUERY_NAMES = [
@@ -54,9 +54,9 @@ export function useCreateTDPContext(): {
 
   const tokenDBAddress = isNative ? getNativeTokenDBAddress(currencyChainInfo.id) : tokenAddress
 
-  // getTdpTokenMultiChainQueryOptions cache-normalizes the address, so this query key matches the ones
+  // getTokenMultiChainQueryOptions cache-normalizes the address, so this query key matches the ones
   // the shared token hooks (and the Launches hover-prefetch) build — GetTokenMultiChain never double-fetches.
-  const tokenMultiChainQueryOptions = getTdpTokenMultiChainQueryOptions({
+  const tokenMultiChainQueryOptions = getTokenMultiChainQueryOptions({
     chainId: currencyChainInfo.id,
     address: tokenAddress,
     isNative,

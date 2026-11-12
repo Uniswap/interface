@@ -16,6 +16,7 @@ import {
 import type { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { DAI_CURRENCY_INFO, UNI_CURRENCY_INFO } from 'uniswap/src/test/fixtures'
 import { renderHookWithProviders } from 'uniswap/src/test/render'
+import { sleep } from 'utilities/src/time/timing'
 
 const { mockUseEnabledChains, mockUseRestPortfolioValueModifier, mockPoolsFlagEnabled } = vi.hoisted(() => ({
   mockUseEnabledChains: vi.fn(),
@@ -284,7 +285,7 @@ describe(usePortfolioCacheUpdater, () => {
   })
 
   // The updater's cache writes land after it awaits query cancellation; flush one tick to observe them.
-  const flushUpdater = async (): Promise<void> => new Promise((resolve) => setTimeout(resolve, 0))
+  const flushUpdater = async (): Promise<void> => sleep(0)
 
   // The wallet-balances entry the header reads is keyed by `includeCategories`, so the optimistic
   // token-side write must carry the same categories the rendered query used. Prime that exact key.
@@ -409,7 +410,7 @@ describe(usePortfolioCacheUpdater, () => {
   it('cancels in-flight balance queries first, then defers a reconciling invalidation to the next frame', async () => {
     primeCaches()
     // Drain deferred invalidations scheduled by earlier tests so the spy only sees this test's.
-    await new Promise((resolve) => setTimeout(resolve, 0))
+    await sleep(0)
     const cancelSpy = vi.spyOn(SharedQueryClient, 'cancelQueries')
     const invalidateSpy = vi.spyOn(SharedQueryClient, 'invalidateQueries')
 
@@ -423,7 +424,7 @@ describe(usePortfolioCacheUpdater, () => {
     expect(requestAnimationFrame).toHaveBeenCalledTimes(1)
     // Deferred past the visibility re-render, so it hasn't fired within this tick.
     expect(invalidateSpy).not.toHaveBeenCalled()
-    await new Promise((resolve) => setTimeout(resolve, 0))
+    await sleep(0)
     expect(invalidateSpy).toHaveBeenCalledTimes(1)
 
     cancelSpy.mockRestore()

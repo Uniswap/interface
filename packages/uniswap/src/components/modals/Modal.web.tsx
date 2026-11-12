@@ -18,6 +18,7 @@ export function Modal({
   fullScreen,
   backgroundColor,
   isModalOpen = true,
+  'aria-labelledby': labelledBy,
   alignment = 'center',
   maxWidth,
   maxHeight,
@@ -77,6 +78,7 @@ export function Modal({
           position={position}
           bottomAttachment={bottomAttachment}
           data-testid={testID}
+          aria-labelledby={labelledBy}
           shadowOpacity={isExtensionApp ? 0 : undefined}
           borderWidth={borderWidth !== undefined ? borderWidth : isExtensionApp ? 1 : undefined}
           borderColor={borderColor !== undefined ? borderColor : isExtensionApp ? '$surface2' : undefined}

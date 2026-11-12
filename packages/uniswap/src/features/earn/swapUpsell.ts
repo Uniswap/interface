@@ -1,5 +1,6 @@
 import { EARN_SWAP_UPSELL_ELIGIBLE_CURRENCY_IDS } from 'uniswap/src/features/earn/launchAssets'
 import {
+  type PlanTransactionInfo,
   TransactionStatus,
   TransactionType,
   type TransactionTypeInfo,
@@ -27,10 +28,7 @@ export function getEarnSwapUpsellOutputCurrencyId({
       return getValidEarnSwapUpsellCurrencyId(typeInfo.outputCurrencyId)
     }
     case TransactionType.Plan: {
-      // TAPI marks Earn plans explicitly. DAPI currently does not, but vault plan steps
-      // are extracted as opaque CHAINED/Unknown steps, so skip those instead of showing
-      // an "earn on this token" upsell after an Earn action.
-      if (typeInfo.earnAction || typeInfo.stepDetails.some((step) => step.typeInfo.type === TransactionType.Unknown)) {
+      if (isEarnPlan(typeInfo)) {
         return undefined
       }
 
@@ -40,6 +38,14 @@ export function getEarnSwapUpsellOutputCurrencyId({
       return undefined
     }
   }
+}
+
+/**
+ * TAPI marks Earn plans explicitly. DAPI currently does not, but vault plan steps are extracted as
+ * opaque CHAINED/Unknown steps, so those count as Earn too.
+ */
+export function isEarnPlan(typeInfo: PlanTransactionInfo): boolean {
+  return !!typeInfo.earnAction || typeInfo.stepDetails.some((step) => step.typeInfo.type === TransactionType.Unknown)
 }
 
 export function getValidEarnSwapUpsellCurrencyId(outputCurrencyId: string | undefined): string | undefined {

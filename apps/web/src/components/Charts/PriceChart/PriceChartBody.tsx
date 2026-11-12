@@ -2,8 +2,8 @@ import { ReactElement, useMemo } from 'react'
 import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import { Chart, ChartHoverCoordinates } from '~/components/Charts/ChartModel'
 import { CandlestickTooltip } from '~/components/Charts/PriceChart/CandlestickTooltip'
-import { PriceChartData, PriceChartModel } from '~/components/Charts/PriceChart/PriceChartModel'
-import { PriceChartType } from '~/components/Charts/utils'
+import { PriceChartModel } from '~/components/Charts/PriceChart/PriceChartModel'
+import { PriceChartData, PriceChartType } from '~/utils/charts'
 
 export interface PriceChartBodyProps {
   type: PriceChartType

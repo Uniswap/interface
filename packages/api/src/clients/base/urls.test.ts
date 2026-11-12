@@ -80,36 +80,6 @@ describe('urls', () => {
     vi.clearAllMocks()
   })
 
-  describe('getCloudflareApiBaseUrl', () => {
-    describe('DataApi', () => {
-      it.each([
-        // Web
-        { expectedUrl: 'https://entry-gateway.backend-staging.api.uniswap.org', env: envConfigs.webDev },
-        { expectedUrl: 'https://interface.gateway.uniswap.org', env: envConfigs.webBeta },
-        { expectedUrl: 'https://interface.gateway.uniswap.org', env: envConfigs.webProd },
-        // Mobile iOS
-        { expectedUrl: 'https://entry-gateway.backend-staging.api.uniswap.org', env: envConfigs.mobileIosDev },
-        { expectedUrl: 'https://ios.wallet.gateway.uniswap.org', env: envConfigs.mobileIosBeta },
-        { expectedUrl: 'https://ios.wallet.gateway.uniswap.org', env: envConfigs.mobileIosProd },
-        // Mobile Android
-        { expectedUrl: 'https://entry-gateway.backend-staging.api.uniswap.org', env: envConfigs.mobileAndroidDev },
-        { expectedUrl: 'https://android.wallet.gateway.uniswap.org', env: envConfigs.mobileAndroidBeta },
-        { expectedUrl: 'https://android.wallet.gateway.uniswap.org', env: envConfigs.mobileAndroidProd },
-        // Extension
-        { expectedUrl: 'https://entry-gateway.backend-staging.api.uniswap.org', env: envConfigs.extensionDev },
-        { expectedUrl: 'https://extension.gateway.uniswap.org', env: envConfigs.extensionBeta },
-        { expectedUrl: 'https://extension.gateway.uniswap.org', env: envConfigs.extensionProd },
-        // Playwright
-        { expectedUrl: 'https://interface.gateway.uniswap.org', env: envConfigs.playwrightDev },
-        { expectedUrl: 'https://interface.gateway.uniswap.org', env: envConfigs.playwrightProd },
-      ])('generates correct URL for $env', async ({ expectedUrl, env }) => {
-        mockEnvironmentAndPlatform(env)
-        const { getCloudflareApiBaseUrl } = await import('./urls')
-        expect(getCloudflareApiBaseUrl({ flow: TrafficFlows.DataApi })).toBe(expectedUrl)
-      })
-    })
-  })
-
   describe('Default Flow', () => {
     it.each([
       // Web
@@ -166,9 +136,9 @@ describe('urls', () => {
     }))
 
     const { getCloudflareApiBaseUrl } = await import('./urls')
-    const result = getCloudflareApiBaseUrl({ flow: TrafficFlows.Metrics })
+    const result = getCloudflareApiBaseUrl({ flow: TrafficFlows.Scantastic })
 
-    expect(result).toBe('https://metrics.interface.gateway.uniswap.org')
+    expect(result).toBe('https://scantastic.interface.gateway.uniswap.org')
   })
 
   describe('createHelpArticleUrl', () => {

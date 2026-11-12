@@ -20,6 +20,7 @@ import { BreadcrumbNavContainer, BreadcrumbNavLink, CurrentPageBreadcrumb } from
 import { DetailsHeaderSubtitleMobile } from '~/components/StickyCollapsibleHeader/DetailsHeaderSubtitleMobile'
 import { DetailsHeaderTitle } from '~/components/StickyCollapsibleHeader/DetailsHeaderTitle'
 import { HeaderDivider } from '~/components/StickyCollapsibleHeader/HeaderDivider'
+import { TokenAddressCopyMobile } from '~/components/TokenAddressCopyMobile/TokenAddressCopyMobile'
 import { CarouselEdgeFade } from '~/components/TokenCardCarousel/CarouselEdgeFade'
 import { CAROUSEL_FADE_WIDTH_SMALL } from '~/components/TokenCardCarousel/constants'
 import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
@@ -28,6 +29,7 @@ import { useAuctionLiquidityLock } from '~/features/Toucan/Auction/hooks/useAuct
 import { useAuctionRedemption } from '~/features/Toucan/Auction/hooks/useAuctionRedemption'
 import { useIsQuickLaunchAuction } from '~/features/Toucan/Auction/hooks/useIsQuickLaunchAuction'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
+import { usePrefetchTokenDetailsAuction } from '~/features/Toucan/hooks/usePrefetchTokenDetailsAuction'
 import { PoolsTradeBadge } from '~/features/Toucan/Shared/PoolsTradeBadge'
 import {
   getAuctionTokenWarningSeverity,
@@ -35,8 +37,6 @@ import {
 } from '~/features/Toucan/utils/auctionTokenProtection'
 import { isPoolsSupportedChain } from '~/features/Toucan/utils/quickLaunchLinks'
 import { useHorizontalScrollFades } from '~/hooks/useHorizontalScrollFades'
-import { TokenDetailsHeaderAddressCopyMobile } from '~/pages/TokenDetails/components/header/TokenDetailsHeaderAddressCopyMobile'
-import { usePrefetchTokenDetailsAuction } from '~/pages/TokenDetails/hooks/usePrefetchTokenDetailsAuction'
 
 /** Auction tokens are single-chain, so the shared mobile copy affordance never shows a per-network list. */
 const NO_MULTICHAIN_ENTRIES: MultichainTokenEntry[] = []
@@ -378,7 +378,7 @@ const AuctionTokenInfo = ({
       titleAdornments={
         <>
           {/* Mirrors TDP's mweb header: the address copy affordance sits inline after the name. */}
-          <TokenDetailsHeaderAddressCopyMobile
+          <TokenAddressCopyMobile
             displayAddress={tokenAddress}
             isNative={false}
             chainId={chainId}

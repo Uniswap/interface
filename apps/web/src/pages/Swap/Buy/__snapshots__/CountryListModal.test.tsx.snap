@@ -67,7 +67,9 @@ exports[`CountryListModal > should render options and call select callback 1`] =
                 tabindex="0"
               >
                 <svg
+                  aria-hidden="true"
                   fill="none"
+                  focusable="false"
                   stroke-width="8"
                   style="color: rgba(19, 19, 19, 0.63); width: 24px; height: 24px;"
                   viewBox="0 0 16 16"
@@ -86,7 +88,9 @@ exports[`CountryListModal > should render options and call select callback 1`] =
                 class="flex flex-col basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 items-center justify-center absolute top-[0px] bottom-[0px] left-[12px] [pointer-events:none]"
               >
                 <svg
+                  aria-hidden="true"
                   fill="none"
+                  focusable="false"
                   stroke-width="8"
                   style="width: 20px; height: 20px;"
                   viewBox="0 0 26 26"
@@ -145,7 +149,9 @@ exports[`CountryListModal > should render options and call select callback 1`] =
                     </span>
                   </div>
                   <svg
+                    aria-hidden="true"
                     fill="none"
+                    focusable="false"
                     stroke="currentColor"
                     stroke-linecap="round"
                     stroke-width="8"

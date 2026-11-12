@@ -12,6 +12,7 @@ import { useParentSize } from '@visx/responsive'
 import { type ReactNode, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
+import type { MarginActivePosition } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useMarginFormStore } from 'uniswap/src/features/transactions/margin/stores/marginFormStore/useMarginFormStore'
@@ -21,36 +22,26 @@ import { useEvent } from 'utilities/src/react/hooks'
 import { Chart } from '~/components/Charts/ChartModel'
 import { ChartErrorView } from '~/components/Charts/LoadingState'
 import type { PriceChartData } from '~/components/Charts/PriceChart'
-import { DataQuality, PriceChartType } from '~/components/Charts/utils'
 import { MouseoverTooltip } from '~/components/Tooltip'
 import { MARGIN_CHAIN_ID, type MarginMarket } from '~/constants/margin'
 import { getMarginPairLogoProps, useMarginCurrencyInfos } from '~/features/margin/hooks/useMarginCurrencyInfos'
 import { useMarginMarkets } from '~/features/margin/hooks/useMarginMarkets'
 import {
-  accruedUsd,
   bpsToPercent,
   formatMarginDebtUnits,
   formatMaxLeverage,
-  formatSignedFiat,
   lltvToPercent,
   marginVenueLabel,
   scaledE18ToNumber,
 } from '~/features/margin/utils/marginFormat'
-import {
-  marginMarketDirection,
-  marginPairLabel,
-  marginPairLegs,
-  marginUnwrapSymbol,
-} from '~/features/margin/utils/marginTokenDisplay'
-import { extrapolateAccrued } from '~/pages/Swap/Margin/chart/marginChartMath'
+import { marginPairLabel, marginPairLegs, marginUnwrapSymbol } from '~/features/margin/utils/marginTokenDisplay'
 import { MarginChartOhlcLegend } from '~/pages/Swap/Margin/chart/MarginChartOhlcLegend'
 import { type MarginChartPrefs, useMarginChartPrefs } from '~/pages/Swap/Margin/chart/marginChartPrefsStore'
-import { MarginChartSettings } from '~/pages/Swap/Margin/chart/MarginChartSettings'
 import { MarginChartTooltip, type MarginTooltipData } from '~/pages/Swap/Margin/chart/MarginChartTooltip'
 import { MarginChartZoomButtons } from '~/pages/Swap/Margin/chart/MarginChartZoomButtons'
 import { MARGIN_TIME_WINDOW_OPTIONS, type MarginTimeWindow } from '~/pages/Swap/Margin/chart/marginTimeWindows'
 import { useMarginChartData, volatileLeg, type MarginChartData } from '~/pages/Swap/Margin/chart/useMarginChartData'
-import { useMarginChartOverlays, type MarginChartOverlays } from '~/pages/Swap/Margin/chart/useMarginChartOverlays'
+import { useMarginChartOverlays } from '~/pages/Swap/Margin/chart/useMarginChartOverlays'
 import { useMarginVolume } from '~/pages/Swap/Margin/chart/useMarginVolume'
 import { MAX_VERTICAL_ZOOM_STEP } from '~/pages/Swap/Margin/chart/verticalZoom'
 import { MarginFormMarketsState } from '~/pages/Swap/Margin/components/MarginFormMarketsState'
@@ -62,6 +53,7 @@ import { MarginChartSkeleton } from '~/pages/Swap/Margin/MarginChartSkeleton'
 import { useMarginMorph } from '~/pages/Swap/Margin/MarginMorphContext'
 import { getMarginLeverageCap } from '~/pages/Swap/Margin/marginOpenButtonGate'
 import { MarginPriceChartModel } from '~/pages/Swap/Margin/MarginPriceChartModel'
+import { DataQuality, PriceChartType } from '~/utils/charts'
 
 const TIME_WINDOW_OPTIONS = MARGIN_TIME_WINDOW_OPTIONS.map((timeWindow) => ({
   value: timeWindow,
@@ -75,7 +67,7 @@ const MARGIN_CHART_FALLBACK_HEIGHT = 480
 // Hold the chart behind the skeleton this long after mount, then cross-fade in — enough to clear the
 // model's first-frame setup (the height-ease and volume-pane shifts are fixed at the source).
 const CHART_REVEAL_DELAY_MS = 220
-// Chart overlays (volume title, legend chip) mount with the chart but fade in with it on reveal.
+// The volume title mounts with the chart but fades in with it on reveal.
 const OVERLAY_REVEAL_STYLE = { transition: `opacity ${SPORE_ANIMATION_CURVE_CSS.fast}` }
 
 /**
@@ -85,16 +77,18 @@ const OVERLAY_REVEAL_STYLE = { transition: `opacity ${SPORE_ANIMATION_CURVE_CSS.
  * `pinnedMarket` charts that market instead of the form's, for a surface about one position (the mobile
  * position sheet). The pair header and OHLC legend are dropped there: the header is the form's market
  * picker, and the surface carries its own identity.
+ *
+ * `focusedPosition` draws that one position's lines (entry, liquidation, break-even); the chart never
+ * fetches positions itself.
  */
 export function MarginChartPane({
   compact = false,
   pinnedMarket,
-  focusPositionId,
+  focusedPosition,
 }: {
   compact?: boolean
   pinnedMarket?: MarginMarket
-  // Draws only this position's overlays, always shown (see useMarginChartOverlays).
-  focusPositionId?: string
+  focusedPosition?: MarginActivePosition
 } = {}): JSX.Element {
   const pairKey = useMarginFormStore((s) => s.pairKey)
   const { getPairMarket, markets, isLoading, isFetching, error, refetch } = useMarginMarkets()
@@ -123,7 +117,7 @@ export function MarginChartPane({
       pairKey={pairKey}
       compact={compact}
       showHeader={!pinnedMarket}
-      focusPositionId={focusPositionId}
+      focusedPosition={focusedPosition}
     />
   )
 }
@@ -136,20 +130,17 @@ function MarginChartPaneBody({
   pairKey,
   compact,
   showHeader,
-  focusPositionId,
+  focusedPosition,
 }: {
   market: MarginMarket
   previewMarket: MarginMarket
   pairKey: MarginPairKey | undefined
   compact: boolean
   showHeader: boolean
-  focusPositionId: string | undefined
+  focusedPosition: MarginActivePosition | undefined
 }): JSX.Element {
   const { t } = useTranslation()
   const [timeWindow, setTimeWindow] = useState<MarginTimeWindow>('1D')
-  // Chart-settings popover open state, lifted so the chart suppresses its crosshair/tooltip while the
-  // panel is open (spec F16) — on short viewports the panel overlays the chart.
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   // No debounce: the block is already at its final size (gated in MarginTerminalLayout), so the chart
   // measures it once and fits its content once.
   const { parentRef, width, height } = useParentSize({ debounceTime: 0 })
@@ -165,15 +156,9 @@ function MarginChartPaneBody({
   // no real OHLC, so the effective type is forced to line there regardless of the pref.
   const chartStyle = useMarginChartPrefs((s) => s.chartStyle)
   const setChartPrefs = useMarginChartPrefs((s) => s.setChartPrefs)
-  // Optional volume histogram (spec F15), default OFF. The data hook stays prefs-agnostic — the pane
-  // gates it via `enabled` so the query is skipped while the overlay is off.
-  const volumeEnabled = useMarginChartPrefs((s) => s.volume)
-  const { volumeBars } = useMarginVolume({
-    market,
-    timeWindow,
-    enabled: volumeEnabled,
-  })
-  const showVolumePane = volumeEnabled && volumeBars.length > 0
+  // Volume histogram (spec F15).
+  const { volumeBars } = useMarginVolume({ market, timeWindow })
+  const showVolumePane = volumeBars.length > 0
   const effectiveStyle: MarginChartPrefs['chartStyle'] = candlesUnavailable ? 'line' : chartStyle
   const effectiveChartType = effectiveStyle === 'line' ? PriceChartType.LINE : PriceChartType.CANDLESTICK
   const onSelectStyle = useEvent((style: MarginChartPrefs['chartStyle']): void => {
@@ -193,16 +178,14 @@ function MarginChartPaneBody({
   const onCrosshairChange = useEvent((candle?: PriceChartData): void => setMarginChartHoveredCandle(candle))
   // The legend must not keep reading a candle from a chart that is gone.
   useEffect(() => () => setMarginChartHoveredCandle(undefined), [])
-  // Ascending candle times (the data hook sorts) fed to the composer for event-marker snapping.
-  const candleTimes = useMemo(() => candles.map((c) => c.time), [candles])
   const overlays = useMarginChartOverlays({
     market,
     previewMarket,
-    focusPositionId,
-    candleTimes,
+    focusedPosition,
     // Fallback mark for the preview estimate when the live market mark is absent (e.g. a venue that
     // can't quote) — keeps Entry/Liq on the chart instead of blanking them.
     markFallback: candles.at(-1)?.close,
+    latestCandleOpen: candles.at(-1)?.open,
     visiblePriceRange: visibleRange,
     // The price pane only: the volume pane, when shown, is carved out of the same box.
     paneHeightPx: (height || MARGIN_CHART_FALLBACK_HEIGHT) - (showVolumePane ? marginVolumePaneHeight(height) : 0),
@@ -229,7 +212,6 @@ function MarginChartPaneBody({
       onVisibleRangeChange,
       volumeBars: showVolumePane ? volumeBars : undefined,
       boxHeight: height,
-      suppressCrosshair: isSettingsOpen,
       verticalZoomStep,
     }),
     [
@@ -241,34 +223,9 @@ function MarginChartPaneBody({
       showVolumePane,
       volumeBars,
       height,
-      isSettingsOpen,
       verticalZoomStep,
     ],
   )
-
-  // Chart's TooltipBody receives only `data`, so bind the margin extras (econ, leverage, privacy)
-  // here. The crosshair item is the model's augmented payload — cast to the margin data type
-  // (Chart's TDataType is pinned to PriceChartData by the Model generic, so the extension can't
-  // flow through the prop types).
-  const direction =
-    market.direction ??
-    marginMarketDirection({ collateralToken: market.collateral.address, debtToken: market.debt.address })
-  const collateralSymbol = market.displaySymbol
-  const { econ, usdBasis, primaryLeverage, hasPosition, figuresStale } = overlays
-  const TooltipBody = useMemo(() => {
-    return function MarginPaneTooltip({ data }: { data: PriceChartData }): JSX.Element {
-      return (
-        <MarginChartTooltip
-          data={data as MarginTooltipData}
-          econ={econ}
-          usdBasis={usdBasis}
-          direction={direction}
-          leverage={primaryLeverage}
-          collateralSymbol={collateralSymbol}
-        />
-      )
-    }
-  }, [econ, usdBasis, primaryLeverage, direction, collateralSymbol])
 
   // Mount once it has a box + data, but keep it hidden behind the skeleton for a beat then cross-fade in,
   // so the model's first-frame setup never shows as a "resize".
@@ -347,7 +304,7 @@ function MarginChartPaneBody({
                   height="100%"
                   // The cross-fade owns the entry; a height ease here would read as a resize.
                   animateHeight={false}
-                  TooltipBody={TooltipBody}
+                  TooltipBody={MarginPaneTooltip}
                   onCrosshairChange={onCrosshairChange}
                 />
               </Flex>
@@ -362,7 +319,7 @@ function MarginChartPaneBody({
                 left={0}
                 className={EXIT_PRESET_CLASSES.fadeOut}
               >
-                <MarginChartSkeleton height={height} testID={TestID.MarginChartSkeleton} />
+                <MarginChartSkeleton timeWindow={timeWindow} testID={TestID.MarginChartSkeleton} />
               </Flex>
             ) : null}
           </Presence>
@@ -385,15 +342,6 @@ function MarginChartPaneBody({
                 {t('margin.chart.settings.volume')}
               </Text>
             </Flex>
-          </Flex>
-        ) : null}
-        {chartMounted && overlays.legend ? (
-          <Flex opacity={chartRevealed ? 1 : 0} style={OVERLAY_REVEAL_STYLE}>
-            <MarginChartLegendChip
-              legend={overlays.legend}
-              positionsDataUpdatedAt={overlays.positionsDataUpdatedAt}
-              figuresStale={figuresStale ?? false}
-            />
           </Flex>
         ) : null}
       </Flex>
@@ -420,18 +368,16 @@ function MarginChartPaneBody({
             candlesUnavailable={candlesUnavailable}
             onSelectStyle={onSelectStyle}
           />
-          <MarginChartSettings
-            hasPosition={hasPosition ?? false}
-            // Volume-tooltip symbol: the histogram plots the volatile leg's volume (debt on shorts), unwrapped WETH→ETH for display.
-            symbol={marginUnwrapSymbol(volatileLeg({ market }))}
-            leverage={primaryLeverage}
-            open={isSettingsOpen}
-            onOpenChange={setIsSettingsOpen}
-          />
         </Flex>
       </Flex>
     </Flex>
   )
+}
+
+// The crosshair item is the model's augmented payload; Chart's TDataType is pinned to PriceChartData by
+// the Model generic, so the extension can't flow through the prop types.
+function MarginPaneTooltip({ data }: { data: PriceChartData }): JSX.Element | null {
+  return <MarginChartTooltip data={data as MarginTooltipData} />
 }
 
 const STYLE_TOGGLE_ICON_SIZE = '$icon.16'
@@ -485,160 +431,6 @@ function MarginChartStyleToggle({
       selectedOption={selectedStyle}
       onSelectOption={onSelectStyle}
     />
-  )
-}
-
-const CHIP_TICK_MS = 1000
-
-// Top-left overlay chip: `{pair} {leverage} · PnL ±$X (±Y%) · Interest $Z · {venue}`. The interest
-// figure ticks live between positions polls by re-extrapolating from the fetch anchor (never
-// accumulating), so a backgrounded tab shows the correct value the moment it foregrounds.
-function MarginChartLegendChip({
-  legend,
-  positionsDataUpdatedAt,
-  figuresStale,
-}: {
-  legend: NonNullable<MarginChartOverlays['legend']>
-  positionsDataUpdatedAt: number | undefined
-  // The chip's figures come off the positions poll, so its cue does too.
-  figuresStale: boolean
-}): JSX.Element {
-  const { t } = useTranslation()
-  const { convertFiatAmountFormatted, formatPercent } = useLocalizationContext()
-
-  const ticker = legend.ticker
-  const canTick = ticker !== undefined && positionsDataUpdatedAt !== undefined
-
-  const computeAccruedUsd = useEvent((): number | undefined => {
-    if (!ticker || positionsDataUpdatedAt === undefined) {
-      return legend.accruedUsd
-    }
-    const dtSeconds = (Date.now() - positionsDataUpdatedAt) / 1000
-    const accrued = extrapolateAccrued({
-      accruedWire: ticker.normalizedAccrued,
-      debt: ticker.normalizedDebt,
-      apyBps: ticker.apyBps,
-      dtSeconds,
-    })
-    return accruedUsd({ accrued, direction: ticker.direction, mark: ticker.mark })
-  })
-
-  const [liveAccruedUsd, setLiveAccruedUsd] = useState<number | undefined>(legend.accruedUsd)
-
-  useEffect(() => {
-    // Re-anchor on mount and whenever the fetch changes, then tick every second while data allows.
-    setLiveAccruedUsd(computeAccruedUsd())
-    if (!canTick) {
-      return undefined
-    }
-    const id = setInterval(() => setLiveAccruedUsd(computeAccruedUsd()), CHIP_TICK_MS)
-    return () => clearInterval(id)
-  }, [canTick, positionsDataUpdatedAt, computeAccruedUsd])
-
-  const segments: Array<{ key: string; text: string; tooltip?: string }> = [
-    { key: 'identity', text: legend.leverage ? `${legend.pair} ${legend.leverage}` : legend.pair },
-  ]
-
-  const pnlText =
-    legend.pnlUsd !== undefined && legend.pnlPct !== undefined
-      ? t('margin.chart.legend.pnl', {
-          value: formatSignedFiat({
-            value: legend.pnlUsd,
-            format: (n) => convertFiatAmountFormatted(n, NumberType.FiatTokenPrice),
-          }),
-          // "≤" on the floor: past the liquidation price the loss is at least all of the margin.
-          pct: `${legend.pnlFloored ? '≤' : ''}${legend.pnlPct >= 0 ? '+' : ''}${formatPercent(legend.pnlPct, 2)}`,
-        })
-      : undefined
-  const pnlSegment = pnlText
-  if (pnlSegment !== undefined) {
-    segments.push({ key: 'pnl', text: pnlSegment, tooltip: t('margin.chart.explain.chipPnl') })
-  }
-
-  // FiatTokenPrice gives the accrued figure enough precision to tick visibly between polls. When not
-  // ticking, read the live prop directly so a fresh legend.accruedUsd isn't trapped behind the seed.
-  const displayedAccruedUsd = canTick ? liveAccruedUsd : legend.accruedUsd
-  const interestText =
-    displayedAccruedUsd !== undefined
-      ? t('margin.chart.legend.interest', {
-          value: convertFiatAmountFormatted(displayedAccruedUsd, NumberType.FiatTokenPrice),
-        })
-      : undefined
-  const interestSegment = interestText
-  if (interestSegment !== undefined) {
-    // Tooltip only when the (unmasked) ticker exposes the APY the copy interpolates.
-    const apy = legend.ticker ? bpsToPercent(legend.ticker.apyBps).toFixed(2) : undefined
-    segments.push({
-      key: 'interest',
-      text: interestSegment,
-      tooltip: apy !== undefined ? t('margin.chart.explain.chipInterest', { apy }) : undefined,
-    })
-  }
-
-  segments.push({ key: 'venue', text: marginVenueLabel(legend.venue) })
-
-  return (
-    <Flex position="absolute" top="$spacing8" left="$spacing8" pointerEvents="none" zIndex="$default">
-      {/* Box stays hover-transparent so the crosshair reads through; only tooltip triggers capture. */}
-      <Flex
-        row
-        alignItems="center"
-        gap="$spacing8"
-        backgroundColor="$surface2"
-        borderColor="$surface3"
-        borderWidth={1}
-        borderRadius="$rounded12"
-        px="$spacing8"
-        py="$spacing4"
-        pointerEvents="none"
-        testID={TestID.MarginChartLegendChip}
-      >
-        {figuresStale ? (
-          <Tooltip placement="top" delay={{ open: 200, close: 0 }}>
-            <Tooltip.Trigger>
-              <Flex
-                width={6}
-                height={6}
-                borderRadius="$roundedFull"
-                backgroundColor="$statusWarning"
-                pointerEvents="auto"
-                testID={TestID.MarginChartLegendStaleDot}
-              />
-            </Tooltip.Trigger>
-            <Tooltip.Content>
-              <Tooltip.Arrow />
-              <Text variant="body4">{t('margin.chart.stale.tooltip')}</Text>
-            </Tooltip.Content>
-          </Tooltip>
-        ) : null}
-        {segments.map((seg, i) => (
-          <Flex key={seg.key} row alignItems="center" gap="$spacing8">
-            {i > 0 ? (
-              <Text variant="body4" color="$neutral3">
-                ·
-              </Text>
-            ) : null}
-            {seg.tooltip ? (
-              <Tooltip placement="top" delay={{ open: 200, close: 0 }}>
-                <Tooltip.Trigger>
-                  <Text variant="body4" color="$neutral2" pointerEvents="auto">
-                    {seg.text}
-                  </Text>
-                </Tooltip.Trigger>
-                <Tooltip.Content>
-                  <Tooltip.Arrow />
-                  <Text variant="body4">{seg.tooltip}</Text>
-                </Tooltip.Content>
-              </Tooltip>
-            ) : (
-              <Text variant="body4" color="$neutral2">
-                {seg.text}
-              </Text>
-            )}
-          </Flex>
-        ))}
-      </Flex>
-    </Flex>
   )
 }
 

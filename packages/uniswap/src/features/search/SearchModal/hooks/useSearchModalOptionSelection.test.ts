@@ -103,13 +103,16 @@ const walletOption: WalletByAddressOption = { type: OnchainItemListOptionType.Wa
 
 const noFilters: SearchFilterContext = { searchChainFilter: null, searchTabFilter: SearchTab.All }
 
-function selectionFor(item: SearchModalOption): {
+function selectionFor(
+  item: SearchModalOption,
+  sectionKey = OnchainItemSectionName.SearchResults,
+): {
   item: SearchModalOption
   section: OnchainItemSection<SearchModalListOption>
   index: number
   rowIndex: number
 } {
-  return { item, section: { sectionKey: OnchainItemSectionName.RecentSearches, data: [item] }, index: 0, rowIndex: 1 }
+  return { item, section: { sectionKey, data: [item] }, index: 0, rowIndex: 1 }
 }
 
 describe('useSearchModalOptionSelection', () => {
@@ -210,6 +213,75 @@ describe('useSearchModalOptionSelection', () => {
     expect(mockContext.navigateToTokenDetails).toHaveBeenCalledWith(option.primaryCurrencyInfo.currencyId, {
       type: TdpChainSelectionType.Chain,
       chainId: UniverseChainId.Base,
+    })
+  })
+
+  it('keeps an all-networks recent token unfiltered in history while navigating to the selected network', () => {
+    const option = multichainOption([
+      deployment(UniverseChainId.Mainnet, SHARED_ADDRESS),
+      deployment(UniverseChainId.Base, OTHER_ADDRESS),
+    ])
+    const searchFilters: SearchFilterContext = { ...noFilters, searchChainFilter: UniverseChainId.Mainnet }
+    const { result } = renderHook(() => useSearchModalOptionSelection({ searchFilters }))
+
+    result.current.selectOption(selectionFor(option, OnchainItemSectionName.RecentSearches))
+
+    expect(mockRegisterSearchItem).toHaveBeenCalledWith(option, { tdpChainFilter: null })
+    expect(mockContext.navigateToTokenDetails).toHaveBeenCalledWith(option.primaryCurrencyInfo.currencyId, {
+      type: TdpChainSelectionType.Chain,
+      chainId: UniverseChainId.Mainnet,
+    })
+  })
+
+  it("keeps a recent token's saved network when the search network changes", () => {
+    const option: MultichainTokenOption = {
+      ...multichainOption([
+        deployment(UniverseChainId.Mainnet, SHARED_ADDRESS),
+        deployment(UniverseChainId.Base, OTHER_ADDRESS),
+      ]),
+      tdpChainFilter: UniverseChainId.Base,
+    }
+    const searchFilters: SearchFilterContext = { ...noFilters, searchChainFilter: UniverseChainId.Mainnet }
+    const { result } = renderHook(() => useSearchModalOptionSelection({ searchFilters }))
+
+    result.current.selectOption(selectionFor(option, OnchainItemSectionName.RecentSearches))
+
+    expect(mockRegisterSearchItem).toHaveBeenCalledWith(option, { tdpChainFilter: UniverseChainId.Base })
+    expect(mockContext.navigateToTokenDetails).toHaveBeenCalledWith(option.primaryCurrencyInfo.currencyId, {
+      type: TdpChainSelectionType.Chain,
+      chainId: UniverseChainId.Base,
+    })
+  })
+
+  it('stores the selected network for a new multichain search result', () => {
+    const option = multichainOption([
+      deployment(UniverseChainId.Mainnet, SHARED_ADDRESS),
+      deployment(UniverseChainId.Base, OTHER_ADDRESS),
+    ])
+    const searchFilters: SearchFilterContext = { ...noFilters, searchChainFilter: UniverseChainId.Mainnet }
+    const { result } = renderHook(() => useSearchModalOptionSelection({ searchFilters }))
+
+    result.current.selectOption(selectionFor(option))
+
+    expect(mockRegisterSearchItem).toHaveBeenCalledWith(option, { tdpChainFilter: UniverseChainId.Mainnet })
+  })
+
+  it('preserves all-networks recent history on a modifier press without navigating', () => {
+    const option = multichainOption([
+      deployment(UniverseChainId.Mainnet, SHARED_ADDRESS),
+      deployment(UniverseChainId.Base, OTHER_ADDRESS),
+    ])
+    const searchFilters: SearchFilterContext = { ...noFilters, searchChainFilter: UniverseChainId.Mainnet }
+    const { result } = renderHook(() => useSearchModalOptionSelection({ searchFilters }))
+
+    result.current.recordSelection(selectionFor(option, OnchainItemSectionName.RecentSearches))
+
+    expect(mockRegisterSearchItem).toHaveBeenCalledWith(option, { tdpChainFilter: null })
+    expect(mockContext.navigateToTokenDetails).not.toHaveBeenCalled()
+    result.current.getModifierPressHref(option)
+    expect(mockContext.getTokenDetailsUrl).toHaveBeenCalledWith(option.primaryCurrencyInfo.currencyId, {
+      type: TdpChainSelectionType.Chain,
+      chainId: UniverseChainId.Mainnet,
     })
   })
 

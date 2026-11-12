@@ -1,6 +1,14 @@
 {
   "extends": "../../config/tsconfig/app.json",
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.json", "src/global.d.ts"],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.json",
+    "src/global.d.ts",
+    ".storybook/*.ts",
+    ".storybook/*.tsx",
+    ".storybook/*.mts"
+  ],
   "compilerOptions": {
     "noEmit": false,
     "emitDeclarationOnly": true,
@@ -29,6 +37,9 @@
     },
     {
       "path": "../../config/vitest-presets"
+    },
+    {
+      "path": "../../config/storybook"
     }
   ]
 }

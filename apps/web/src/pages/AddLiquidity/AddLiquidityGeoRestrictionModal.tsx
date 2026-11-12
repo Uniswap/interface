@@ -7,8 +7,8 @@ import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { openUri } from 'uniswap/src/utils/linking'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
+import { useCreateLiquidityContext } from '~/features/Liquidity/Create/CreateLiquidityContextProvider'
 import { useLPGeoRestriction } from '~/features/Liquidity/useLPGeoRestriction'
-import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 
 /**
  * LP counterpart of swap's restricted `GeoRestrictionModal` (same layout, LP copy). Opens when the pool

@@ -1,6 +1,7 @@
 import { BridgedAssetModal } from 'uniswap/src/components/BridgedAsset/BridgedAssetModal'
 import { VerifyIdentityBottomSheet } from 'uniswap/src/features/permissionedTokens/VerifyIdentityBottomSheet'
 import TokenWarningModal from 'uniswap/src/features/tokens/warnings/TokenWarningModal'
+import { BlockedAddressModal } from 'uniswap/src/features/transactions/modals/BlockedAddressModal'
 import { LowNativeBalanceModal } from 'uniswap/src/features/transactions/modals/LowNativeBalanceModal'
 import { ViewOnlyModal } from 'uniswap/src/features/transactions/modals/ViewOnlyModal'
 import { useBridgingModalActions } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useBridgingModalActions'
@@ -108,6 +109,22 @@ const LocalVerifyIdentityModal = (): JSX.Element | null => {
   return <VerifyIdentityBottomSheet isOpen={isVerifyIdentityModalVisible} onClose={handleHideVerifyIdentityModal} />
 }
 
+const LocalBlockedAddressModal = (): JSX.Element => {
+  const isBlockedAddressModalVisible = useSwapFormWarningStore((s) => s.isBlockedAddressModalVisible)
+  // The screened address, not the active one: a wallet switch must not change the
+  // address an already-open modal names.
+  const blockedAddress = useSwapFormWarningStore((s) => s.blockedAddress)
+  const { handleHideBlockedAddressModal } = useSwapFormWarningStoreActions()
+
+  return (
+    <BlockedAddressModal
+      isOpen={isBlockedAddressModalVisible}
+      address={blockedAddress}
+      onClose={handleHideBlockedAddressModal}
+    />
+  )
+}
+
 export const SwapFormWarningModals = (): JSX.Element => {
   return (
     <>
@@ -117,6 +134,7 @@ export const SwapFormWarningModals = (): JSX.Element => {
       <LocalTokenWarningModal />
       <LocalBridgedAssetModal />
       <LocalVerifyIdentityModal />
+      <LocalBlockedAddressModal />
     </>
   )
 }

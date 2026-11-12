@@ -38,7 +38,7 @@ describe('SortButton', () => {
       orderBy: RankingType.TotalValueLocked,
       label: 'explore.tokens.sort.label.totalValueLocked',
     },
-    { test: 'market cap', orderBy: RankingType.MarketCap, label: 'explore.tokens.sort.label.marketCap' },
+    { test: 'fdv', orderBy: CustomRankingType.FullyDilutedValuation, label: 'explore.tokens.sort.label.fdv' },
     {
       test: 'price increase',
       orderBy: CustomRankingType.PricePercentChange1DayDesc,

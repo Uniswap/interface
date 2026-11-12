@@ -63,23 +63,23 @@ export function TokenDetailsScreen({ route, navigation }: AppStackScreenProp<Mob
 
 function TokenDetailsWrapper(): JSX.Element {
   const { chainId, address, currencyId, initialIsMultichainAsset } = useTokenDetailsContext()
-  const metadata = useTokenMetadata(currencyId)
+  const { data: metadata } = useTokenMetadata(currencyId)
 
   const traceProperties = useMemo(
     () => ({
       chain: chainId,
       address,
-      currencyName: metadata.name,
+      currencyName: metadata?.name,
       multichain: initialIsMultichainAsset,
     }),
-    [address, chainId, initialIsMultichainAsset, metadata.name],
+    [address, chainId, initialIsMultichainAsset, metadata?.name],
   )
 
   const rwaMatch = useTokenDetailsRWAMatch()
   useLogRWATokenDetailsViewed({
     rwaMatch,
     tokenAddress: address,
-    tokenSymbol: metadata.symbol,
+    tokenSymbol: metadata?.symbol,
     chainId,
   })
 

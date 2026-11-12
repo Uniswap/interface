@@ -41,7 +41,9 @@ exports[`SwapSkeleton.tsx > renders a skeleton 1`] = `
           class="flex-col basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 items-center justify-center inline-flex w-[100%] h-[100%]"
         >
           <svg
+            aria-hidden="true"
             fill="none"
+            focusable="false"
             stroke-width="8"
             style="width: 16px; height: 16px;"
             viewBox="0 0 24 24"

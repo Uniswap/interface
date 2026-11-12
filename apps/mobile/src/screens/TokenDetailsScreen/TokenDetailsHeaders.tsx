@@ -28,11 +28,11 @@ export const HeaderTitleElement = memo(function HeaderTitleElement(): JSX.Elemen
 
   const { currencyId, isPermissioned, isAllowlisted, chainId, hasMultichainAddresses, initialIsMultichainAsset } =
     useTokenDetailsContext()
-  const metadata = useTokenMetadata(currencyId)
+  const { data: metadata } = useTokenMetadata(currencyId)
 
-  const logo = metadata.logoUrl ?? undefined
-  const symbol = metadata.symbol
-  const name = metadata.name
+  const logo = metadata?.logoUrl ?? undefined
+  const symbol = metadata?.symbol
+  const name = metadata?.name
   // Mirror the top-of-page ticker lock in the sticky header: allowlisted-only.
   const showPermissionedLock = isPermissioned && isAllowlisted
 

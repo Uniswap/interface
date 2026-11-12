@@ -6,6 +6,7 @@ import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { noop } from 'utilities/src/react/noop'
 import {
   formatPresetLabel,
   normalizeSignedInput,
@@ -28,8 +29,6 @@ import {
 } from '~/pages/Liquidity/CreateAuction/utils'
 
 /** The disabled remainder fields never fire; their handlers are required by the shared inputs. */
-const noop = (): void => {}
-
 /** Dot width — must match histogram bullet on each range row */
 export const RANGE_ROW_LEADING_SIZE = 6
 

@@ -4,6 +4,8 @@ import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { V2_DEFAULT_FEE_TIER } from 'uniswap/src/constants/pools'
+import { getPoolName } from 'uniswap/src/features/pools/names'
+import { orderPoolDataByQuoteToken } from 'uniswap/src/features/pools/quoteToken'
 import { PositionInfo } from 'uniswap/src/features/positions/types'
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { currencyId } from 'uniswap/src/utils/currencyId'
@@ -32,8 +34,19 @@ export const PoolInfoCell = memo(function PoolInfoCell({ position }: { position:
     currencyId(position.currency0Amount.currency),
     currencyId(position.currency1Amount.currency),
   ])
+  const [baseInfo, quoteInfo] = orderPoolDataByQuoteToken({
+    token0IsQuote: position.isToken0Quote,
+    data0: currency0Info,
+    data1: currency1Info,
+  })
+  const poolName = getPoolName({
+    symbol0: position.currency0Amount.currency.symbol,
+    symbol1: position.currency1Amount.currency.symbol,
+    token0IsQuote: position.isToken0Quote,
+    spaced: true,
+  })
 
-  if (!currency0Info || !currency1Info) {
+  if (!baseInfo || !quoteInfo) {
     return null
   }
 
@@ -46,15 +59,15 @@ export const PoolInfoCell = memo(function PoolInfoCell({ position }: { position:
       gapPx={8}
       logo={
         <SplitLogo
-          inputCurrencyInfo={currency0Info}
-          outputCurrencyInfo={currency1Info}
+          inputCurrencyInfo={baseInfo}
+          outputCurrencyInfo={quoteInfo}
           size={iconSizes.icon32}
           chainId={position.chainId}
         />
       }
     >
       <Text variant="body3" color="$neutral1" numberOfLines={1}>
-        {currency0Info.currency.symbol} / {currency1Info.currency.symbol}
+        {poolName}
       </Text>
       <Text variant="body4" color="$neutral2" numberOfLines={1}>
         {getFeeLabel(position, t)} • {getVersionText()}

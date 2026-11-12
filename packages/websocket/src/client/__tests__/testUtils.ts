@@ -3,7 +3,8 @@ import { createWebSocketClient } from '@universe/websocket/src/client/createWebS
 import { createZustandConnectionStore } from '@universe/websocket/src/store/createZustandConnectionStore'
 import type { ConnectionStore } from '@universe/websocket/src/store/types'
 import type { CreateWebSocketClientOptions, WebSocketClient } from '@universe/websocket/src/types'
-import { vi } from 'vitest'
+import { sleep } from 'utilities/src/time/timing'
+import { type Mock, vi } from 'vitest'
 
 export interface TestParams {
   channel: string
@@ -16,11 +17,11 @@ export interface TestMessage {
 }
 
 interface TestHandler {
-  subscribe: ReturnType<typeof vi.fn>
-  unsubscribe: ReturnType<typeof vi.fn>
-  subscribeBatch: ReturnType<typeof vi.fn>
-  unsubscribeBatch: ReturnType<typeof vi.fn>
-  refreshSession: ReturnType<typeof vi.fn>
+  subscribe: Mock
+  unsubscribe: Mock
+  subscribeBatch: Mock
+  unsubscribeBatch: Mock
+  refreshSession: Mock
 }
 
 interface TestClientResult {
@@ -102,12 +103,12 @@ export function connectViaSubscribe(options: ConnectViaSubscribeOptions): () => 
 export async function flushMicrotasks(): Promise<void> {
   // queueMicrotask runs before setTimeout, but we need to also flush
   // any promises that are scheduled from within those microtasks
-  await new Promise((resolve) => setTimeout(resolve, 0))
+  await sleep(0)
 }
 
 /**
  * Flush all pending promises in the microtask queue.
  */
 export function flushPromises(): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, 0))
+  return sleep(0)
 }

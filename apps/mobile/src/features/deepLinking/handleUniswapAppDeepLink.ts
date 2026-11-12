@@ -57,8 +57,8 @@ export function* handleUniswapAppDeepLink({
   }
 
   // Handle Top Tokens page with or without explore and chain path:
-  // ex. https://app.uniswap.org/tokens/unichain?metric=volume or https://app.uniswap.org/explore/tokens/base?metric=market_cap
-  // or https://app.uniswap.org/tokens?metric=volume or https://app.uniswap.org/explore/tokens?metric=market_cap
+  // ex. https://app.uniswap.org/tokens/unichain?metric=volume or https://app.uniswap.org/explore/tokens/base?metric=fdv
+  // or https://app.uniswap.org/tokens?metric=volume or https://app.uniswap.org/explore/tokens?metric=fdv
   if (TOP_TOKENS_LINK_CHAIN_REGEX.test(path) || TOP_TOKENS_LINK_REGEX.test(path)) {
     const [, network] = path.match(TOP_TOKENS_LINK_CHAIN_REGEX) || []
     const chainId = network ? fromUniswapWebAppLink(network) : undefined

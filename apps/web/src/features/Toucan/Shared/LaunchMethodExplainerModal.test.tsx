@@ -3,6 +3,8 @@ import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { LaunchProvenanceMethod } from 'uniswap/src/features/dataApi/launchProvenance'
 import { AuctionEventName } from 'uniswap/src/features/telemetry/constants'
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
+import { sleep } from 'utilities/src/time/timing'
+import type { MockInstance } from 'vitest'
 import { LaunchMethodExplainerModal } from '~/features/Toucan/Shared/LaunchMethodExplainerModal'
 import { act, fireEvent, render, screen } from '~/test-utils/render'
 
@@ -18,7 +20,7 @@ vi.mock('react-router', async (importOriginal) => ({
 
 const AUCTION_ADDRESS = '0x1111111111111111111111111111111111111111'
 
-function explainerOpenedPayloads(sendEvent: ReturnType<typeof vi.spyOn>): unknown[] {
+function explainerOpenedPayloads(sendEvent: MockInstance): unknown[] {
   return sendEvent.mock.calls
     .filter(([event]) => event === AuctionEventName.AuctionTypeExplainerOpened)
     .map(([, properties]) => properties)
@@ -106,7 +108,7 @@ describe('LaunchMethodExplainerModal', () => {
     ])
 
     // Let Trace's 50ms development dedupe expire so a re-render would be free to send again.
-    await act(() => new Promise<void>((resolve) => setTimeout(resolve, 51)))
+    await act(() => sleep(51))
     rerender(<LaunchMethodExplainerModal method={method} isOpen onClose={vi.fn()} />)
     expect(explainerOpenedPayloads(sendEvent)).toHaveLength(1)
 

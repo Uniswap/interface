@@ -3,7 +3,7 @@ import { CustomRankingType, RankingType } from '@universe/api'
 import type { TokenCategoryDefaultSort } from 'uniswap/src/features/tokenCategories/types'
 import { AppTFunction } from 'utilities/src/i18n/types'
 import { logger } from 'utilities/src/logger/logger'
-import { ExploreOrderBy, TokenMetadataDisplayType } from 'wallet/src/features/wallet/types'
+import { EXPLORE_ORDER_BYS, ExploreOrderBy, TokenMetadataDisplayType } from 'wallet/src/features/wallet/types'
 
 export interface V2TokensSort {
   orderBy: TokensOrderBy
@@ -18,8 +18,8 @@ export function exploreOrderByToV2Sort(orderBy: ExploreOrderBy): V2TokensSort {
   switch (orderBy) {
     case RankingType.TotalValueLocked:
       return { orderBy: TokensOrderBy.TVL, ascending: false }
-    case RankingType.MarketCap:
-      return { orderBy: TokensOrderBy.MARKET_CAP, ascending: false }
+    case CustomRankingType.FullyDilutedValuation:
+      return { orderBy: TokensOrderBy.FDV, ascending: false }
     case RankingType.Volume:
       return { orderBy: TokensOrderBy.VOLUME_1D, ascending: false }
     case CustomRankingType.PricePercentChange1DayDesc:
@@ -30,14 +30,6 @@ export function exploreOrderByToV2Sort(orderBy: ExploreOrderBy): V2TokensSort {
       throw new Error('Unexpected order by value ' + orderBy)
   }
 }
-
-const EXPLORE_ORDER_BYS: ExploreOrderBy[] = [
-  RankingType.Volume,
-  RankingType.MarketCap,
-  RankingType.TotalValueLocked,
-  CustomRankingType.PricePercentChange1DayDesc,
-  CustomRankingType.PricePercentChange1DayAsc,
-]
 
 export function exploreOrderByFromCategoryDefaultSort(
   defaultSort: TokenCategoryDefaultSort | undefined,
@@ -54,8 +46,8 @@ export function exploreOrderByFromCategoryDefaultSort(
 
 export function getTokenMetadataDisplayType(orderBy: ExploreOrderBy): TokenMetadataDisplayType | null {
   switch (orderBy) {
-    case RankingType.MarketCap:
-      return TokenMetadataDisplayType.MarketCap
+    case CustomRankingType.FullyDilutedValuation:
+      return TokenMetadataDisplayType.Fdv
     case RankingType.Volume:
       return TokenMetadataDisplayType.Volume
     case RankingType.TotalValueLocked:
@@ -76,8 +68,8 @@ export function getTokenMetadataDisplayType(orderBy: ExploreOrderBy): TokenMetad
 // Label shown in the popover context menu.
 export function getTokensOrderByMenuLabel(orderBy: ExploreOrderBy, t: AppTFunction): string {
   switch (orderBy) {
-    case RankingType.MarketCap:
-      return t('explore.tokens.sort.option.marketCap')
+    case CustomRankingType.FullyDilutedValuation:
+      return t('explore.tokens.sort.option.fdv')
     case RankingType.Volume:
       return t('explore.tokens.sort.option.volume')
     case RankingType.TotalValueLocked:
@@ -94,8 +86,8 @@ export function getTokensOrderByMenuLabel(orderBy: ExploreOrderBy, t: AppTFuncti
 // Label shown when option is selected in dropdown.
 export function getTokensOrderBySelectedLabel(orderBy: ExploreOrderBy, t: AppTFunction): string {
   switch (orderBy) {
-    case RankingType.MarketCap:
-      return t('explore.tokens.sort.label.marketCap')
+    case CustomRankingType.FullyDilutedValuation:
+      return t('explore.tokens.sort.label.fdv')
     case RankingType.Volume:
       return t('explore.tokens.sort.label.volume')
     case RankingType.TotalValueLocked:

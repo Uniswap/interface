@@ -6,6 +6,7 @@ import type { PoolsListRenderData } from 'src/screens/HomeScreen/portfolio/tabs/
 import { fireEvent, render, screen } from 'src/test/test-utils'
 import { PositionStatusFilterValue } from 'uniswap/src/features/positions/components/PositionStatusFilter'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
+import { noop } from 'utilities/src/react/noop'
 
 const mockNavigate = vi.fn()
 vi.mock('src/app/navigation/types', async () => ({
@@ -23,8 +24,6 @@ vi.mock('uniswap/src/components/portfolio/PositionItem/PositionItem', async () =
     ),
   }
 })
-
-const noop = (): void => undefined
 
 const baseData: PoolsListRenderData = {
   positions: [],

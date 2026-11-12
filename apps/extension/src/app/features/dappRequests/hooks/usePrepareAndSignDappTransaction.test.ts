@@ -10,6 +10,7 @@ import {
   ValidatedTransactionRequest,
 } from 'uniswap/src/features/transactions/types/transactionRequests'
 import { logger } from 'utilities/src/logger/logger'
+import { sleep } from 'utilities/src/time/timing'
 import type { Mocked, MockedFunction } from 'vitest'
 import { SignedTransactionRequest } from 'wallet/src/features/transactions/executeTransaction/types'
 import { Account, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
@@ -372,7 +373,7 @@ describe('usePrepareAndSignDappTransaction', () => {
       callback?.()
 
       // Wait for async error handling
-      await new Promise((resolve) => setTimeout(resolve, 10))
+      await sleep(10)
 
       expect(result.current.preSignedTransaction).toBeUndefined()
       expect(mockLogger.error).toHaveBeenCalledWith(mockError, {
@@ -402,7 +403,7 @@ describe('usePrepareAndSignDappTransaction', () => {
       callback?.()
 
       // Wait for async error handling
-      await new Promise((resolve) => setTimeout(resolve, 10))
+      await sleep(10)
 
       expect(mockLogger.error).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -437,7 +438,7 @@ describe('usePrepareAndSignDappTransaction', () => {
       expect(mockDispatch).toHaveBeenCalledTimes(1)
 
       // Wait for cleanup
-      await new Promise((resolve) => setTimeout(resolve, 10))
+      await sleep(10)
 
       // Second preparation should also work (not blocked by previous state)
       callback?.()
@@ -468,7 +469,7 @@ describe('usePrepareAndSignDappTransaction', () => {
       expect(mockDispatch).toHaveBeenCalledTimes(1)
 
       // Wait for error handling and cleanup
-      await new Promise((resolve) => setTimeout(resolve, 10))
+      await sleep(10)
 
       // Second preparation should also work (not blocked by previous state)
       callback?.()

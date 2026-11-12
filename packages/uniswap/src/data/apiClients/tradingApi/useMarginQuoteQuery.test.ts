@@ -15,6 +15,9 @@ import {
 const fetchErrorWithStatus = (status: number): FetchError =>
   new FetchError({ response: new Response(null, { status }) })
 
+const MORPHO_MARKET_ID = '0x1cc83f2e3e44cd44fadedc9ee43109ffafc5609a46097183de1f53abcfc91733'
+const AAVE_V3_MARKET_ID = '0x7d25d9a4127437970c901ef507e7593c79e5c3d329b5504fbe4f1d6c293855b2'
+
 const BASE_REQUEST = {
   positionChainId: 1,
   exposureToken: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
@@ -32,9 +35,9 @@ function req(partial: object): MarginQuoteRequest {
 
 describe('marginRequestActionKey', () => {
   it('names the single key a request carries', () => {
-    expect(marginRequestActionKey(req({ ...BASE_REQUEST, open: { leverageTarget: '2', venues: ['MORPHO'] } }))).toBe(
-      'open',
-    )
+    expect(
+      marginRequestActionKey(req({ ...BASE_REQUEST, open: { leverageTarget: '2', marketId: MORPHO_MARKET_ID } })),
+    ).toBe('open')
     expect(marginRequestActionKey(req({ ...BASE_REQUEST, close: { positionId: '3' } }))).toBe('close')
     expect(
       marginRequestActionKey(
@@ -66,7 +69,7 @@ describe('marginRequestPositionId', () => {
 
   it('reports absent for an open, which has no position yet, and for a keyless request', () => {
     expect(
-      marginRequestPositionId(req({ ...BASE_REQUEST, open: { leverageTarget: '2', venues: ['MORPHO'] } })),
+      marginRequestPositionId(req({ ...BASE_REQUEST, open: { leverageTarget: '2', marketId: MORPHO_MARKET_ID } })),
     ).toBeUndefined()
     expect(marginRequestPositionId(req(BASE_REQUEST))).toBeUndefined()
   })
@@ -223,21 +226,23 @@ describe('isSameMarginQuoteSubject', () => {
     expect(isSameMarginQuoteSubject({ previous: base, next })).toBe(false)
   })
 
-  // The venue allowlist rides inside the `open` action, so it needs an open-shaped pair rather than the
-  // position-shaped `base` the table above uses. Toggling a venue re-keys the query, and bridging would
-  // keep the excluded venue's LLTV-derived rows on screen until the new fetch lands.
-  it('refuses a bridge across a venue-allowlist change', () => {
-    const previous = req({ ...BASE_REQUEST, open: { leverageTarget: '2', venues: ['MORPHO', 'AAVE_V3'] } })
-    const next = req({ ...BASE_REQUEST, open: { leverageTarget: '2', venues: ['MORPHO'] } })
-    expect(isSameMarginQuoteSubject({ previous, next })).toBe(false)
+  // The market rides inside the `open` action, so it needs an open-shaped pair rather than the
+  // position-shaped `base` the table above uses. A leverage move across one market's ceiling re-picks
+  // the market, and blanking there would unmount the leverage popover mid-drag.
+  it('bridges a leverage move that switches the market on the same pair', () => {
+    const previous = req({ ...BASE_REQUEST, open: { leverageTarget: '4', marketId: MORPHO_MARKET_ID } })
+    const next = req({ ...BASE_REQUEST, open: { leverageTarget: '6', marketId: AAVE_V3_MARKET_ID } })
+    expect(isSameMarginQuoteSubject({ previous, next })).toBe(true)
   })
 
-  // The allowlist is a SET: the same venues in a different order are the same subject, and blanking the
-  // form for a re-ordering would be a regression rather than the protection above.
-  it('still bridges when the same venues arrive in a different order', () => {
-    const previous = req({ ...BASE_REQUEST, open: { leverageTarget: '2', venues: ['MORPHO', 'AAVE_V3'] } })
-    const next = req({ ...BASE_REQUEST, open: { leverageTarget: '2', venues: ['AAVE_V3', 'MORPHO'] } })
-    expect(isSameMarginQuoteSubject({ previous, next })).toBe(true)
+  it('still refuses a market switch onto another pair', () => {
+    const previous = req({ ...BASE_REQUEST, open: { leverageTarget: '2', marketId: MORPHO_MARKET_ID } })
+    const next = req({
+      ...BASE_REQUEST,
+      counterToken: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
+      open: { leverageTarget: '2', marketId: AAVE_V3_MARKET_ID },
+    })
+    expect(isSameMarginQuoteSubject({ previous, next })).toBe(false)
   })
 
   it('refuses when either side has no params to compare', () => {

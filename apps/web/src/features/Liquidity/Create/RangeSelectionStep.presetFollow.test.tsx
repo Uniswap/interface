@@ -5,13 +5,13 @@ import { UniverseChainId } from '@universe/chains'
 import { nativeOnChain, USDT } from 'uniswap/src/constants/tokens'
 import { DefaultPriceStrategy } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
 import type { D3LiquidityRangeInput } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeInput'
-import { useDerivedPositionInfo } from '~/features/Liquidity/Create/hooks/useDerivedPositionInfo'
-import { SelectPriceRangeStep } from '~/features/Liquidity/Create/RangeSelectionStep'
-import { type CreatePositionInfo, PositionFlowStep } from '~/features/Liquidity/Create/types'
 import {
   CreateLiquidityContextProvider,
   useCreateLiquidityContext,
-} from '~/pages/CreatePosition/CreateLiquidityContextProvider'
+} from '~/features/Liquidity/Create/CreateLiquidityContextProvider'
+import { useDerivedPositionInfo } from '~/features/Liquidity/Create/hooks/useDerivedPositionInfo'
+import { SelectPriceRangeStep } from '~/features/Liquidity/Create/RangeSelectionStep'
+import { type CreatePositionInfo, PositionFlowStep } from '~/features/Liquidity/Create/types'
 import { render } from '~/test-utils/render'
 
 type RangeInputProps = Parameters<typeof D3LiquidityRangeInput>[0]

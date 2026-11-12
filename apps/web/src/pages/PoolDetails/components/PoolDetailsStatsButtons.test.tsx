@@ -41,16 +41,16 @@ describe('PoolDetailsStatsButton', () => {
   const mockProps = {
     chainId: UniverseChainId.Mainnet,
     poolIdOrAddress: '0xpool',
-    token0: validParsedPoolToken0,
-    token1: validParsedPoolToken1,
+    baseToken: validParsedPoolToken0,
+    quoteToken: validParsedPoolToken1,
     feeTier: 500,
     protocolVersion: ProtocolVersion.V3,
   } as const
 
   const mockPropsTokensReversed = {
     ...mockProps,
-    token0: validParsedPoolToken1,
-    token1: validParsedPoolToken0,
+    baseToken: validParsedPoolToken1,
+    quoteToken: validParsedPoolToken0,
   }
 
   const useUniswapContextReturnValue = {

@@ -12,7 +12,6 @@ import {
   deriveMarginVenues,
   isDefaultMarginVenues,
 } from 'uniswap/src/features/transactions/margin/stores/marginFormStore/marginVenuePreferences'
-import type { MarginVenue } from 'uniswap/src/features/transactions/margin/types'
 import { describe, expect, it } from 'vitest'
 
 const WETH = '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'
@@ -30,6 +29,8 @@ const BASE = {
 // amount, and the pay-in swap's tolerance.
 const RAIL: MarginQuoteSwapConfig = { token: USDC, chainId: 1, amount: '1', slippageTolerance: 0.5 }
 
+const MARKET_ID = '0x1cc83f2e3e44cd44fadedc9ee43109ffafc5609a46097183de1f53abcfc91733'
+
 const OPEN_INPUT = {
   ...BASE,
   leverage: 2,
@@ -37,16 +38,12 @@ const OPEN_INPUT = {
   paymentToken: USDC,
   paymentChainId: 1,
   slippageToleranceBps: 50,
-  pairVenues: ['MORPHO', 'AAVE_V3'] as MarginVenue[],
-  excludedVenues: [] as MarginVenue[],
+  marketId: MARKET_ID,
 }
 
 // The request is a discriminated union over the ten action keys; these read a member's fields through
 // the `in` narrowing the consumers use, so a wire shape change surfaces here rather than needing a cast.
 type AnyRequest = TradingApi.MarginQuoteRequest | undefined
-function openVenues(request: AnyRequest): string[] | undefined {
-  return request && 'open' in request ? request.open.venues : undefined
-}
 function openLeverageTarget(request: AnyRequest): string | undefined {
   return request && 'open' in request ? request.open.leverageTarget : undefined
 }
@@ -94,7 +91,7 @@ describe('isDefaultMarginVenues', () => {
 })
 
 describe('buildMarginOpenQuoteRequest', () => {
-  it('fans the rail across the envelope, the action, and swapConfig, and carries both allowlist + slippage', () => {
+  it('fans the rail across the envelope, the action, and swapConfig, and carries both market + slippage', () => {
     // The wire splits what the FE models as one rail: walletToken/walletChainId ride the envelope, the
     // equity amount rides open.amount, and only the pay-in swap's slippage stays on swapConfig.
     expect(buildMarginOpenQuoteRequest(OPEN_INPUT)).toEqual({
@@ -107,34 +104,14 @@ describe('buildMarginOpenQuoteRequest', () => {
       walletChainId: 1,
       slippageTolerance: 0.5,
       swapConfig: { slippageTolerance: 0.5 },
-      open: { leverageTarget: '2.00', venues: ['AAVE_V3', 'MORPHO'], amount: '1000000000' },
+      open: { leverageTarget: '2.00', amount: '1000000000', marketId: MARKET_ID },
     })
   })
 
-  it('drops the excluded venues from the allowlist', () => {
-    expect(openVenues(buildMarginOpenQuoteRequest({ ...OPEN_INPUT, excludedVenues: ['MORPHO'] }))).toEqual(['AAVE_V3'])
-  })
-
-  // COMPOUND_V3 exists in the FE venue union but has no wire enum member (the BE admits only
-  // MORPHO/AAVE_V3/AAVE_V4), so the builder drops it rather than sending a venue the server would 400.
-  it('drops COMPOUND_V3, which has no wire venue', () => {
-    expect(openVenues(buildMarginOpenQuoteRequest({ ...OPEN_INPUT, pairVenues: ['MORPHO', 'COMPOUND_V3'] }))).toEqual([
-      'MORPHO',
-    ])
-    // Excluding every WIRE venue leaves nothing quotable even though COMPOUND_V3 was "selected".
-    expect(
-      buildMarginOpenQuoteRequest({ ...OPEN_INPUT, pairVenues: ['MORPHO', 'COMPOUND_V3'], excludedVenues: ['MORPHO'] }),
-    ).toBeUndefined()
-  })
-
-  // An empty `venues` must never reach the wire: `open` requires >= 1, so the absent request is what
-  // leaves the quote query disabled.
-  it('builds nothing when every venue for the pair is excluded', () => {
-    expect(buildMarginOpenQuoteRequest({ ...OPEN_INPUT, excludedVenues: ['MORPHO', 'AAVE_V3'] })).toBeUndefined()
-  })
-
-  it('builds nothing when the pair has no venues at all', () => {
-    expect(buildMarginOpenQuoteRequest({ ...OPEN_INPUT, pairVenues: [] })).toBeUndefined()
+  // `open.marketId` is required, so the absent request is what leaves the quote query disabled.
+  it('builds nothing without a market', () => {
+    expect(buildMarginOpenQuoteRequest({ ...OPEN_INPUT, marketId: undefined })).toBeUndefined()
+    expect(buildMarginOpenQuoteRequest({ ...OPEN_INPUT, marketId: '' })).toBeUndefined()
   })
 
   it('builds nothing without an amount, a zero amount, or a swapper', () => {
@@ -270,7 +247,7 @@ describe('buildMarginQuoteRequest', () => {
           actionKey,
           positionId: '3',
           leverageTarget: '3',
-          venues: ['MORPHO'],
+          marketId: MARKET_ID,
           swapConfig: RAIL,
         }),
       ).toBeUndefined()
@@ -418,16 +395,16 @@ describe('buildMarginQuoteRequest', () => {
     ).toEqual({ positionId: '7', leverageTarget: '4', amount: '1' })
   })
 
-  it('never lets a manage key name a venue', () => {
+  it('never lets a manage key name a market', () => {
     const request = buildMarginQuoteRequest({
       ...BASE,
       actionKey: 'close',
       positionId: '3',
       slippageTolerance: 0.5,
       swapConfig: RAIL,
-      venues: ['MORPHO'],
+      marketId: MARKET_ID,
     })
     expect(request).toBeDefined()
-    expect(JSON.stringify(request)).not.toContain('MORPHO')
+    expect(JSON.stringify(request)).not.toContain(MARKET_ID)
   })
 })

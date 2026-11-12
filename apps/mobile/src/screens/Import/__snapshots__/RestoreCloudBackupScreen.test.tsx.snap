@@ -45,6 +45,7 @@ exports[`RestoreCloudBackupScreen > renders correctly 1`] = `
                 style="gap: 8px;"
               >
                 <button
+                  accessibilityactions="[object Object]"
                   android_ripple="[object Object]"
                   role="button"
                   style="padding: 16px; border-radius: 20px; border-width: 1px;"
@@ -137,6 +138,7 @@ exports[`RestoreCloudBackupScreen > renders correctly 1`] = `
                   </div>
                 </button>
                 <button
+                  accessibilityactions="[object Object]"
                   android_ripple="[object Object]"
                   role="button"
                   style="padding: 16px; border-radius: 20px; border-width: 1px;"
@@ -245,6 +247,7 @@ exports[`RestoreCloudBackupScreen > renders correctly 1`] = `
       style="padding-right: 16px; padding-left: 16px; top: 0px; right: 0px; left: 0px; z-index: 1020; pointer-events: box-none;"
     >
       <button
+        accessibilityactions="[object Object]"
         android_ripple="[object Object]"
         data-testid="onboarding-header-back"
         hitslop="24"

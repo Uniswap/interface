@@ -6,6 +6,7 @@ import { UniverseChainId } from '@universe/chains'
 import { nativeOnChain, UNI, WBTC } from 'uniswap/src/constants/tokens'
 import { dataApiServiceClientV2 } from 'uniswap/src/data/apiClients/dataApiService/clients/DataApiClientV2'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
+import { currentTimeInSeconds } from 'utilities/src/time/time'
 import { SlideoutChartCard } from '~/pages/Swap/Swap/SlideoutChartCard/SlideoutChartCard'
 import { act, fireEvent, render, screen, waitFor } from '~/test-utils/render'
 
@@ -54,7 +55,7 @@ const BTC_SERIES = [81000, 81100, 81200]
 const ETH_SPOT = 3030
 const BTC_SPOT = 81442.78
 
-const NOW_SECONDS = Math.floor(Date.now() / 1000)
+const NOW_SECONDS = currentTimeInSeconds()
 const T = [NOW_SECONDS - 3000, NOW_SECONDS - 2000, NOW_SECONDS - 1000]
 
 function isWbtcRequest(params: unknown): boolean {

@@ -55,7 +55,9 @@ exports[`AddPasskeyModal > renders snapshot at verify step 1`] = `
               class="flex flex-col basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 items-center justify-center p-[12px] bg-surface2 rounded-[12px]"
             >
               <svg
+                aria-hidden="true"
                 fill="none"
+                focusable="false"
                 stroke-width="8"
                 style="width: 24px; height: 24px;"
                 viewBox="0 0 24 24"

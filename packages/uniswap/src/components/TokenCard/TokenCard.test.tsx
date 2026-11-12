@@ -7,6 +7,13 @@ import { fireEvent, render } from 'uniswap/src/test/test-utils'
 
 const mockLocale = Locale.EnglishUnitedStates
 
+const { mockIsTokenCategoriesEnabled } = vi.hoisted(() => ({ mockIsTokenCategoriesEnabled: vi.fn(() => false) }))
+
+vi.mock('@universe/gating', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@universe/gating')>()),
+  useIsTokenCategoriesEnabled: () => mockIsTokenCategoriesEnabled(),
+}))
+
 vi.mock('uniswap/src/features/language/hooks', async (importOriginal) => {
   const actual = await importOriginal<typeof import('uniswap/src/features/language/hooks')>()
   return {
@@ -146,5 +153,62 @@ describe('TokenCard', () => {
     )
     fireEvent.press(tree.getByTestId('token-card'))
     expect(onPress).toHaveBeenCalledTimes(1)
+  })
+
+  describe('sparkline scaling by stablecoin category', () => {
+    const wobble: ChartPoint[] = [
+      { timestamp: 0, value: 1.0002 },
+      { timestamp: 100, value: 0.9998 },
+      { timestamp: 200, value: 1.0001 },
+      { timestamp: 300, value: 0.9999 },
+    ]
+
+    const lineMinMaxY = (categoryIds?: string[]): [number, number] => {
+      render(
+        <TokenCard
+          categoryIds={categoryIds}
+          layout="horizontal"
+          name="Tether USD"
+          pricePercentChange1d={-0.02}
+          sparkline={wobble}
+          symbol="USDT"
+          width={280}
+        />,
+      )
+      const line = document.querySelector('[d][fill="none"]')
+      // d3 paths are `M x,y` / `C x1,y1,x2,y2,x,y`: every second number in a command is a y
+      const ys = [...String(line?.getAttribute('d')).matchAll(/[MLC]([^MLCZ]+)/g)].flatMap((match) =>
+        (match[1] ?? '')
+          .split(',')
+          .filter((_, i) => i % 2 === 1)
+          .map(Number),
+      )
+      expect(ys.length).toBeGreaterThan(1)
+      return [Math.min(...ys), Math.max(...ys)]
+    }
+
+    it('flattens a stablecoin-tagged token around the middle of the 40px chart', () => {
+      mockIsTokenCategoriesEnabled.mockReturnValue(true)
+      const [minY, maxY] = lineMinMaxY(['majors', 'stablecoins'])
+
+      expect(minY).toBeGreaterThan(18)
+      expect(maxY).toBeLessThan(22)
+    })
+
+    it('keeps full-height scaling for a non-stablecoin with the same tiny move', () => {
+      mockIsTokenCategoriesEnabled.mockReturnValue(true)
+      const [minY, maxY] = lineMinMaxY(['majors'])
+
+      expect(minY).toBeLessThan(3)
+      expect(maxY).toBeGreaterThan(37)
+    })
+
+    it('keeps full-height scaling while Token Categories is off', () => {
+      mockIsTokenCategoriesEnabled.mockReturnValue(false)
+      const [minY, maxY] = lineMinMaxY(['stablecoins'])
+
+      expect(minY).toBeLessThan(3)
+      expect(maxY).toBeGreaterThan(37)
+    })
   })
 })

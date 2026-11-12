@@ -1,4 +1,4 @@
-import { isEmbedPath } from '~/pages/embedPaths'
+import { isEmbedPath } from '~/utils/embedPaths'
 
 // Frame-busting (anti-clickjacking) must land the user on the full top-level app,
 // preserving query params and hash:

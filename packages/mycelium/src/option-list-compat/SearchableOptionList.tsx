@@ -14,6 +14,7 @@
  */
 // oxlint-disable react/forbid-elements -- the compat components ARE the raw DOM boundary (no Tamagui Flex here)
 import * as React from 'react'
+import { noop } from 'utilities/src/react/noop'
 import { cn } from '../cn'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '../shadcn/command'
 import {
@@ -29,8 +30,6 @@ import {
 import { optionMatchesSearchQuery } from './filter'
 import { OptionRowCompat } from './OptionRow'
 import type { SearchableOptionListCompatProps } from './types'
-
-const noop = (): void => undefined
 
 /** Scrolled-to-end detection tolerance (fractional scroll positions on zoomed displays). */
 const SCROLL_END_EPSILON_PX = 1

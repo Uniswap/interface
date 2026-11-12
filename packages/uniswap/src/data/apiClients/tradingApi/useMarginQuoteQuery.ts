@@ -4,7 +4,6 @@ import {
   MarginApiClient,
   marginRequestActionKey,
   marginRequestPositionId,
-  marginRequestVenueKey,
   marginRequestWalletChainId,
   marginRequestWalletToken,
   type MarginActionKey,
@@ -100,12 +99,8 @@ export function isSameMarginQuoteSubject({
     // blank frame when a retarget crosses 1:1 and flips between the increase and decrease keys.
     marginRequestActionKey(previous) === marginRequestActionKey(next) &&
     marginRequestPositionId(previous) === marginRequestPositionId(next) &&
-    // The venue allowlist an `open` was quoted against. Toggling a venue in the preferences sheet
-    // re-keys the query, and bridging across that keeps the excluded venue's LLTV-derived rows —
-    // liquidation price, borrow rate — on screen until the new fetch lands. Unlike the axes above
-    // these figures are re-SOURCED rather than re-denominated, so it is a staleness window rather
-    // than wrong units; it belongs in the list all the same.
-    marginRequestVenueKey(previous) === marginRequestVenueKey(next) &&
+    // Not `open.marketId`: the client re-picks it as leverage crosses a market's ceiling, and every
+    // market on a pair shares its denomination. The routed-venue rows gate on `isPlaceholderData`.
     previous.exposureToken === next.exposureToken &&
     previous.counterToken === next.counterToken &&
     previous.direction === next.direction &&

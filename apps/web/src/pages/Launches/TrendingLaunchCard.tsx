@@ -13,10 +13,10 @@ import { NumberType } from 'utilities/src/format/types'
 import { SparklineChart } from '~/components/Charts/SparklineChart'
 import { DeltaArrow, getDeltaTextColor } from '~/components/DeltaArrow/DeltaArrow'
 import type { SparklineMap } from '~/data/types'
+import { LaunchpadLogo } from '~/features/Toucan/Shared/LaunchpadLogo'
+import { LaunchItem } from '~/features/Toucan/utils/launchesModel'
 import { useSrcColor } from '~/hooks/useColor'
 import { usePoolsBrandGreen } from '~/hooks/usePoolsBrandGreen'
-import { LaunchItem } from '~/pages/Launches/launchesModel'
-import { LaunchpadLogo } from '~/pages/Launches/LaunchpadLogo'
 import { usePrefetchLaunchTokenDetails } from '~/pages/Launches/usePrefetchLaunchTokenDetails'
 
 const THUMBNAIL_SIZE = 48

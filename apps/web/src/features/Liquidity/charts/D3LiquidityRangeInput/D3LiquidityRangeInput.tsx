@@ -8,9 +8,13 @@ import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
+import { LiquidityEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { PriceRangeDragTarget } from 'uniswap/src/features/telemetry/types'
+import { useEvent } from 'utilities/src/react/hooks'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { ChartSkeleton } from '~/components/Charts/LoadingState'
 import { PriceChartData } from '~/components/Charts/PriceChart'
-import { ChartType } from '~/components/Charts/utils'
 import { CHART_DIMENSIONS } from '~/features/Liquidity/charts/D3LiquidityChartShared/constants'
 import {
   mayBorrowSiblingPriceLine,
@@ -38,6 +42,7 @@ import { useSiblingPoolId } from '~/features/Liquidity/hooks/useSiblingPoolId'
 import { TickData } from '~/features/Liquidity/types/ticks'
 import { getBaseAndQuoteCurrencies } from '~/features/Liquidity/utils/currency'
 import { useColor } from '~/hooks/useColor'
+import { ChartType } from '~/utils/charts'
 
 const MIN_DATA_POINTS = 1
 
@@ -126,7 +131,13 @@ export function D3LiquidityRangeInput({
   handleSelectToken: (option: string) => void
 }) {
   const { t } = useTranslation()
+  const trace = useTrace()
   const [internalChartError, setInternalChartError] = useState<string | undefined>(undefined)
+
+  // The chart store captures its callbacks once at creation; useEvent keeps this one reading the latest trace.
+  const handleRangeDragEnd = useEvent((target: PriceRangeDragTarget) => {
+    sendAnalyticsEvent(LiquidityEventName.PriceRangeDragged, { drag_target: target, ...trace })
+  })
 
   // TODO: consider moving this to the store - requires rearranging loading and error states
   const [selectedHistoryDuration, setSelectedHistoryDuration] = useState<HistoryDuration>(HistoryDuration.Month)
@@ -365,6 +376,7 @@ export function D3LiquidityRangeInput({
         onMaxTickChange={setMaxTick}
         onMinMaxTickChange={setMinMaxTick}
         onTimePeriodChange={setSelectedHistoryDuration}
+        onRangeDragEnd={handleRangeDragEnd}
         setIsFullRange={setIsFullRange}
       >
         <Flex

@@ -33,6 +33,8 @@ export function CloseIconFrame({
     <Flex
       justifyContent="flex-start"
       flexDirection="column"
+      // TODO(INFRA-4589): no prop names this role="button", so it's announced as an unnamed button
+      // (aria-command-name). Accept an aria-label, defaulting to "Close".
       role={role}
       tabIndex={0}
       data-testid={testId}

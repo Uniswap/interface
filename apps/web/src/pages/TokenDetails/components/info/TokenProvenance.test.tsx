@@ -17,7 +17,7 @@ import {
   type AuctionDisplayDataSources,
   useAuctionDisplayDataSources,
 } from '~/features/Toucan/Auction/hooks/useAuctionDisplayDataSources'
-import { UNISWAP_CCA_LAUNCHPAD_ID } from '~/pages/Launches/launchesModel'
+import { UNISWAP_CCA_LAUNCHPAD_ID } from '~/features/Toucan/utils/launchesModel'
 import { TokenProvenance, TokenProvenanceContent } from '~/pages/TokenDetails/components/info/TokenProvenance'
 import type { TDPState } from '~/pages/TokenDetails/context/createTDPStore'
 import { TokenDetailsAuctionDisplayProvider } from '~/pages/TokenDetails/context/TokenDetailsAuctionDisplayProvider'

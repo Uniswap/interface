@@ -40,6 +40,7 @@ const SHIMMER_STYLE: CSSProperties = {
 export function Shimmer({
   children,
   disabled = false,
+  decorative = false,
   shimmerDurationSeconds = WEB_SHIMMER_DURATION_SECONDS,
   animationDelay,
   className,
@@ -67,6 +68,8 @@ export function Shimmer({
   return (
     // oxlint-disable-next-line react/forbid-elements -- the shimmer wrapper is a bare container (mycelium's layout primitives are out of scope here)
     <div
+      aria-busy={decorative || disabled ? undefined : true}
+      aria-hidden={decorative || undefined}
       className={cn(SHIMMER_WRAPPER_CLASSES, className)}
       data-testid={testID}
       style={

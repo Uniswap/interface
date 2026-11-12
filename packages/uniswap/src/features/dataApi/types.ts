@@ -40,6 +40,7 @@ export interface BaseResult<T> {
   error?: Error
   /** Epoch ms when the underlying query last successfully fetched data. */
   dataUpdatedAt?: number
+  errorUpdatedAt?: number
 }
 
 /** Outage state from data-fetching hooks — pairs an error with the last-known data timestamp. */
@@ -104,8 +105,9 @@ export type CurrencyInfo = {
    * survives chain-filtered flattens. Absent on the v1 path.
    */
   searchStats?: SearchTokenStats
-  /** Backend category ids in BE ranking order, from v2 data-api token payloads; absent on v1-built
-   *  CurrencyInfo. Hydrate via ListCategories. */
+  /** Backend category ids in BE ranking order, from v2 data-api token payloads and single-chain v1 GetPortfolio
+   *  balances; absent on multichain portfolio balances and other v1-built CurrencyInfo. Hydrate via
+   *  ListCategories. */
   categoryIds?: string[]
   /** Backend issuer branding of a tokenized RWA, from v2 data-api token payloads; absent on v1-built
    *  CurrencyInfo and on ordinary tokens. */

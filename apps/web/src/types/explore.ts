@@ -5,6 +5,7 @@ import type { FeeData as CreatePositionFeeData, PositionRewardApr } from 'uniswa
 export enum ExploreTab {
   Tokens = 'tokens',
   Pools = 'pools',
+  Hooks = 'hooks',
   Transactions = 'transactions',
   Toucan = 'auctions',
 }
@@ -107,6 +108,9 @@ export interface PoolStat extends PoolStatBase {
   feeTier?: CreatePositionFeeData
   /** Backend-served per-pool protocol fee (integer pips); shared with the fee-display column. */
   protocolFeePips?: number
+  /** Backend-served fee the pool charges right now (integer pips); the live rate behind a dynamic tier. */
+  currentLpFeePips?: number
   /** BE-ranked pool category ids; the first resolvable one is the row tag. */
   categoryIds?: string[]
+  isToken0Quote?: boolean
 }

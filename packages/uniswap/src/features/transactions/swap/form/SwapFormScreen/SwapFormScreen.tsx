@@ -7,6 +7,7 @@ import { PermissionedSwapBanner } from 'uniswap/src/features/permissionedTokens/
 import type { TransactionSettingConfig } from 'uniswap/src/features/transactions/components/settings/types'
 import { TransactionModalInnerContainer } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModal'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
+import { BridgingOptions } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/BridgingOptions/BridgingOptions'
 import { Slippage } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/slippage/Slippage/Slippage'
 import { TradeRoutingPreference } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/TradeRoutingPreference/TradeRoutingPreference'
 import { SwapFormSettings } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/SwapFormSettings'
@@ -40,7 +41,7 @@ interface SwapFormScreenProps {
 export function SwapFormScreen({
   hideContent,
   // oxlint-disable-next-line typescript/no-useless-default-assignment -- defensive default
-  settings = [Slippage, TradeRoutingPreference],
+  settings = [Slippage, TradeRoutingPreference, BridgingOptions],
   tokenColor,
   focusHook,
   onCurrencyPanelsLayout,

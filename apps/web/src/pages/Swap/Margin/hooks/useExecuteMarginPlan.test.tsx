@@ -2,8 +2,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { act, renderHook } from '@testing-library/react'
 import { permit2Address } from '@uniswap/permit2-sdk'
 import { UNIVERSAL_ROUTER_ADDRESS, UniversalRouterVersion } from '@uniswap/universal-router-sdk'
-import { FetchError } from '@universe/api'
-import { UniverseChainId } from '@universe/chains'
+import { FetchError, TradingApi } from '@universe/api'
+import { UniverseChainId, UserRejectedRequestError } from '@universe/chains'
 import type { PropsWithChildren } from 'react'
 import { Provider } from 'react-redux'
 import { getWrappedNativeAddress } from 'uniswap/src/constants/addresses'
@@ -18,6 +18,7 @@ import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { MarginFormStoreContextProvider } from 'uniswap/src/features/transactions/margin/stores/marginFormStore/MarginFormStoreContextProvider'
 import { useMarginFormStore } from 'uniswap/src/features/transactions/margin/stores/marginFormStore/useMarginFormStore'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -27,6 +28,7 @@ import {
   decideOpenAction,
   decideProofReplay,
   decideReplayStall,
+  heldPlan,
   isBridgePollExitStatus,
   isTerminalPatchError,
   isPlanForAccount,
@@ -50,7 +52,12 @@ import {
   readStepProof,
   writeStepProof,
 } from '~/pages/Swap/Margin/hooks/marginStepProofCache'
-import { buildStepActivityInfo, useExecuteMarginPlan } from '~/pages/Swap/Margin/hooks/useExecuteMarginPlan'
+import {
+  buildMarginPlanStepDetails,
+  buildStepActivityInfo,
+  getMarginPlanAssets,
+  useExecuteMarginPlan,
+} from '~/pages/Swap/Margin/hooks/useExecuteMarginPlan'
 import reduxStore from '~/state'
 
 // Mocked wallet/network seam for the runLoop (mocked wallet/network) suite below — everything
@@ -61,12 +68,16 @@ import reduxStore from '~/state'
 const mocks = vi.hoisted(() => ({
   analytics: [] as Array<{ event: string; payload: Record<string, unknown> }>,
   reactAddress: undefined as string | undefined,
+  // wagmi only yields the margin-chain walletProvider while the wallet sits on that chain.
+  walletOnMarginChain: true,
   liveAddress: undefined as string | undefined,
+  // wagmi's live chain (getAccount). Unset = never on the step chain, so every step switches.
+  liveChainId: undefined as number | undefined,
   getMarginPlan: vi.fn(),
   updateMarginPlan: vi.fn(),
   createMarginPlan: vi.fn(),
   signTypedData: vi.fn(),
-  selectChain: vi.fn(),
+  switchChain: vi.fn(),
   getClient: vi.fn(),
   getConnectorClient: vi.fn(),
   balanceOf: vi.fn(),
@@ -102,13 +113,10 @@ vi.mock('~/connection/hooks/useAccount', () => ({
   }),
 }))
 
-vi.mock('~/connection/hooks/useSelectChain', () => ({
-  useSelectChain: () => mocks.selectChain,
-}))
-
 vi.mock('~/connection/hooks/useEthersProvider', () => ({
   useEthersProvider: () => ({}),
-  useEthersWeb3Provider: () => ({ getSigner: () => ({ sendTransaction: mocks.sendTransaction }) }),
+  useEthersWeb3Provider: () =>
+    mocks.walletOnMarginChain ? { getSigner: () => ({ sendTransaction: mocks.sendTransaction }) } : undefined,
   // Also the source-chain signer seam (getSignerForChain): a bridge/pre-swap on Base derives its
   // signer from the connector client, not the margin-chain walletProvider above.
   clientToProvider: (client: unknown) =>
@@ -139,7 +147,8 @@ vi.mock('wagmi/actions', async (importOriginal) => {
     ...actual,
     getClient: (...args: unknown[]) => mocks.getClient(...args),
     getConnectorClient: (...args: unknown[]) => mocks.getConnectorClient(...args),
-    getAccount: () => ({ address: mocks.liveAddress }),
+    getAccount: () => ({ address: mocks.liveAddress, chainId: mocks.liveChainId }),
+    switchChain: (...args: unknown[]) => mocks.switchChain(...args),
   }
 })
 
@@ -177,7 +186,7 @@ function fakeCreateRequest(overrides: Record<string, unknown> = {}): MarginCreat
 }
 
 // Full provider stack useExecuteMarginPlan needs to render: Redux (useTransactionAdderFromHash), React
-// Query (invalidateQueries), wagmi (useAccount / useSelectChain / useEthers*Provider), and the margin
+// Query (invalidateQueries), wagmi (useAccount / useEthers*Provider), and the margin
 // form's own zustand context (setMarginFormState).
 function renderExecuteMarginPlanHook(
   initialFormState: { activePlanId?: string; marginAmount: string } = { activePlanId: 'plan-1', marginAmount: '100' },
@@ -195,10 +204,10 @@ function renderExecuteMarginPlanHook(
       </Provider>
     )
   }
-  const { result } = renderHook(() => ({ exec: useExecuteMarginPlan(), form: useMarginFormStore((s) => s) }), {
+  const { result, unmount } = renderHook(() => ({ exec: useExecuteMarginPlan(), form: useMarginFormStore((s) => s) }), {
     wrapper,
   })
-  return { result, invalidateSpy }
+  return { result, invalidateSpy, unmount }
 }
 
 function state(): ReturnType<(typeof marginPlanExecutionStore)['getState']> {
@@ -557,6 +566,62 @@ describe('marginExecutionGuards', () => {
     })
   })
 
+  describe('heldPlan', () => {
+    const plan = fakePlan({ planId: 'plan-held', status: 'IN_PROGRESS' })
+    const stepError = { stepIndex: 0, code: 'CLIENT_ERROR', message: 'Internal JSON-RPC error.' }
+
+    beforeEach(() => {
+      clearPlanProofs({ swapper: plan.swapper, planId: plan.planId })
+    })
+
+    it('holds a non-terminal plan with no error', () => {
+      expect(heldPlan({ plan, isExecuting: false })).toBe(plan)
+    })
+
+    it('holds a failed plan while its loop is still running', () => {
+      expect(heldPlan({ plan, isExecuting: true, stepError })).toBe(plan)
+    })
+
+    it('releases a failed plan without a cached proof once its loop has exited, so Open creates a replacement', () => {
+      expect(heldPlan({ plan, isExecuting: false, stepError })).toBeUndefined()
+      expect(decideOpenAction({ existing: heldPlan({ plan, isExecuting: false, stepError }) })).toEqual({
+        kind: 'create',
+      })
+    })
+
+    it('keeps holding a failed plan whose failing step has a cached proof, so Open resumes it', () => {
+      writeStepProof({
+        swapper: plan.swapper,
+        planId: plan.planId,
+        stepIndex: stepError.stepIndex,
+        txHash: '0xdead',
+        to: '0x0000000000000000000000000000000000000001',
+        data: '0x',
+      })
+      expect(heldPlan({ plan, isExecuting: false, stepError })).toBe(plan)
+      expect(decideOpenAction({ existing: heldPlan({ plan, isExecuting: false, stepError }) })).toEqual({
+        kind: 'resume',
+        planId: plan.planId,
+      })
+    })
+
+    it('releases a failed plan whose cached proof is for a different step', () => {
+      writeStepProof({
+        swapper: plan.swapper,
+        planId: plan.planId,
+        stepIndex: stepError.stepIndex + 1,
+        txHash: '0xdead',
+        to: '0x0000000000000000000000000000000000000001',
+        data: '0x',
+      })
+      expect(heldPlan({ plan, isExecuting: false, stepError })).toBeUndefined()
+    })
+
+    it('releases a terminal plan', () => {
+      expect(heldPlan({ plan: { ...plan, status: 'COMPLETED' }, isExecuting: false })).toBeUndefined()
+    })
+  })
+
   describe('decideOpenAction', () => {
     it('resumes an in-flight OPEN held in the store', () => {
       expect(decideOpenAction({ existing: { planId: 'p1', intent: 'OPEN', status: 'AWAITING_ACTION' } })).toEqual({
@@ -633,7 +698,7 @@ describe('marginExecutionGuards', () => {
 
     // A network failure is not a FetchError at all and must stay retryable.
     it.each([new Error('network down'), undefined, null, 'not-an-error'])(
-      'treats a non-FetchError (%p) as retryable',
+      'treats a non-FetchError (%o) as retryable',
       (error) => {
         expect(isTerminalPatchError(error)).toBe(false)
       },
@@ -982,10 +1047,12 @@ describe('runLoop (mocked wallet/network)', () => {
     mocks.analytics.length = 0
     mocks.reactAddress = SWAPPER_A
     mocks.liveAddress = SWAPPER_A
+    mocks.liveChainId = undefined
+    mocks.walletOnMarginChain = true
     mocks.getClient.mockReturnValue({})
     mocks.getConnectorClient.mockResolvedValue({})
     mocks.signTypedData.mockResolvedValue('0xsignature')
-    mocks.selectChain.mockResolvedValue(true)
+    mocks.switchChain.mockResolvedValue({})
     mocks.symbol.mockResolvedValue('USDC')
     mocks.sendTransaction.mockResolvedValue({ hash: '0xtxhash' })
   })
@@ -1200,7 +1267,7 @@ describe('runLoop (mocked wallet/network)', () => {
         await result.current.exec.resumePlan({ planId: 'plan-permit-chain' })
       })
 
-      expect(mocks.selectChain).toHaveBeenCalledWith(MARGIN_CHAIN_ID)
+      expect(mocks.switchChain).toHaveBeenCalledWith(expect.anything(), { chainId: MARGIN_CHAIN_ID })
       expect(mocks.signTypedData).toHaveBeenCalled()
     })
 
@@ -1212,7 +1279,7 @@ describe('runLoop (mocked wallet/network)', () => {
         steps: [permitStep({ stepIndex: 0 })],
       })
       mocks.getMarginPlan.mockResolvedValue(plan)
-      mocks.selectChain.mockResolvedValue(false)
+      mocks.switchChain.mockRejectedValue(new UserRejectedRequestError(new Error('rejected')))
 
       const { result } = renderExecuteMarginPlanHook()
       await act(async () => {
@@ -1220,6 +1287,91 @@ describe('runLoop (mocked wallet/network)', () => {
       })
 
       expect(mocks.signTypedData).not.toHaveBeenCalled()
+    })
+
+    // A bridge-funded open starts with the wallet on the source chain, where wagmi has no margin-chain
+    // walletProvider. The source-chain leg must still switch and prompt via the per-chain signer seam.
+    it('drives a source-chain bridge step while the wallet is off the margin chain', async () => {
+      mocks.walletOnMarginChain = false
+      let currentPlan = marginPlan({
+        planId: 'plan-bridge-off-chain',
+        status: 'AWAITING_ACTION',
+        steps: [
+          {
+            stepIndex: 0,
+            stepType: 'MARGIN_BRIDGE',
+            method: 'SEND_TX',
+            payloadType: 'TX',
+            payload: { to: '0x000000000000000000000000000000000000dEaD', data: '0x', chainId: UniverseChainId.Base },
+            status: 'AWAITING_ACTION',
+          },
+        ],
+      })
+      mocks.getMarginPlan.mockImplementation(async () => currentPlan)
+      mocks.updateMarginPlan.mockImplementation(async () => {
+        currentPlan = {
+          ...currentPlan,
+          status: 'COMPLETED',
+          steps: currentPlan.steps.map((step) => ({ ...step, status: 'COMPLETE' })),
+        }
+        return currentPlan
+      })
+
+      const { result } = renderExecuteMarginPlanHook()
+      await act(async () => {
+        await result.current.exec.resumePlan({ planId: 'plan-bridge-off-chain' })
+      })
+
+      expect(mocks.switchChain).toHaveBeenCalledWith(expect.anything(), { chainId: UniverseChainId.Base })
+      expect(mocks.getConnectorClient).toHaveBeenCalledWith(expect.anything(), { chainId: UniverseChainId.Base })
+      expect(mocks.sendTransaction).toHaveBeenCalledTimes(1)
+      expect(state().stepError).toBeUndefined()
+    })
+
+    // SWAP-3758: the review sheet closes right after executePlan, so the loop runs on in an UNMOUNTED
+    // hook. A hook-bound switch never settles there — the wallet moved to Base but the approval never came.
+    it('still prompts the source-chain step after the hook unmounts mid-switch', async () => {
+      mocks.walletOnMarginChain = false
+      mocks.liveChainId = UniverseChainId.Mainnet
+      let currentPlan = marginPlan({
+        planId: 'plan-bridge-unmounted',
+        status: 'AWAITING_ACTION',
+        steps: [
+          {
+            stepIndex: 0,
+            stepType: 'MARGIN_BRIDGE',
+            method: 'SEND_TX',
+            payloadType: 'TX',
+            payload: { to: '0x000000000000000000000000000000000000dEaD', data: '0x', chainId: UniverseChainId.Base },
+            status: 'AWAITING_ACTION',
+          },
+        ],
+      })
+      mocks.createMarginPlan.mockResolvedValue(currentPlan)
+      mocks.getMarginPlan.mockImplementation(async () => currentPlan)
+      mocks.updateMarginPlan.mockImplementation(async () => {
+        currentPlan = {
+          ...currentPlan,
+          status: 'COMPLETED',
+          steps: currentPlan.steps.map((step) => ({ ...step, status: 'COMPLETE' })),
+        }
+        return currentPlan
+      })
+      mocks.switchChain.mockImplementation(async (_config: unknown, { chainId }: { chainId: number }) => {
+        mocks.liveChainId = chainId
+        return {}
+      })
+
+      const { result, unmount } = renderExecuteMarginPlanHook()
+      await act(async () => {
+        const run = result.current.exec.executePlan({ request: fakeCreateRequest() })
+        unmount()
+        await run
+      })
+
+      expect(mocks.switchChain).toHaveBeenCalledWith(expect.anything(), { chainId: UniverseChainId.Base })
+      expect(mocks.sendTransaction).toHaveBeenCalledTimes(1)
+      expect(state().stepError).toBeUndefined()
     })
 
     // A create that FAILED never minted anything, so its request MUST stay stashed — that is the whole
@@ -1466,6 +1618,21 @@ describe('runLoop (mocked wallet/network)', () => {
       expect(state().stepError?.code).toBe('WRONG_ACCOUNT')
     })
 
+    it('closes without loading a plan another wallet minted', async () => {
+      mocks.getMarginPlan.mockResolvedValue(
+        marginPlan({ planId: 'plan-foreign', swapper: SWAPPER_B, status: 'AWAITING_ACTION', steps: [] }),
+      )
+
+      const { result } = renderExecuteMarginPlanHook()
+      await act(async () => {
+        await result.current.exec.resumePlan({ planId: 'plan-foreign' })
+      })
+
+      expect(state().isModalOpen).toBe(false)
+      expect(state().plan).toBeUndefined()
+      expect(state().stepError).toBeUndefined()
+    })
+
     // The expired-plan branch must clear the PLAN, not just its pointer: useIsPlanInFlight is
     // `plan !== undefined && !isTerminalPlanStatus(status)`, and every management CTA gates on it — so
     // leaving a TTL-expired plan in the store locks close/add/withdraw for a live position with no exit
@@ -1651,7 +1818,7 @@ describe('runLoop (mocked wallet/network)', () => {
       expect(mocks.updateMarginPlan).not.toHaveBeenCalled()
       expect(marginPlanExecutionStore.getState().stepError?.code).toBe('INSUFFICIENT_SOURCE_FUNDS')
       // Blocked BEFORE the chain switch, so the failure surfaces with no wallet network prompt.
-      expect(mocks.selectChain).not.toHaveBeenCalled()
+      expect(mocks.switchChain).not.toHaveBeenCalled()
     })
 
     it('broadcasts the open when the wallet exactly covers the permitted collateral', async () => {
@@ -1739,7 +1906,7 @@ describe('runLoop (mocked wallet/network)', () => {
   // Modal-closed park gate: closing the steps modal backgrounds the run only until the NEXT wallet
   // prompt — the loop finishes watching in-flight work, then parks (step stays AWAITING_ACTION, lock
   // released) instead of popping a prompt with no modal context. Both entry points force the modal
-  // open, so the tests flip it mid-loop via the PATCH / selectChain mocks (the FIX-1 pattern).
+  // open, so the tests flip it mid-loop via the PATCH / switchChain mocks (the FIX-1 pattern).
   describe('modal-closed park gate', () => {
     it('parks before the next prompt when the modal closes mid-run: no second sign, lock released, positions invalidated', async () => {
       let currentPlan = marginPlan({
@@ -1776,7 +1943,7 @@ describe('runLoop (mocked wallet/network)', () => {
       expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: [ReactQueryCacheKey.TradingApi, 'margin/positions'] })
     })
 
-    it('re-checks the gate after the chain-switch window: closing during selectChain parks before the tx prompt', async () => {
+    it('re-checks the gate after the chain-switch window: closing during the chain switch parks before the tx prompt', async () => {
       const plan = marginPlan({
         planId: 'plan-park-switch',
         status: 'AWAITING_ACTION',
@@ -1794,9 +1961,9 @@ describe('runLoop (mocked wallet/network)', () => {
       mocks.getMarginPlan.mockResolvedValue(plan)
       // Dismissal is NOT blocked during the network-switch prompt — the user closes there, then the
       // switch resolves approved.
-      mocks.selectChain.mockImplementation(async () => {
+      mocks.switchChain.mockImplementation(async () => {
         marginPlanExecutionStore.getState().actions.setModalOpen(false)
-        return true
+        return {}
       })
 
       const { result } = renderExecuteMarginPlanHook()
@@ -1837,6 +2004,40 @@ describe('runLoop (mocked wallet/network)', () => {
 
       expect(mocks.signTypedData).toHaveBeenCalledTimes(2)
       expect(state().plan?.status).toBe('COMPLETED')
+    })
+  })
+
+  describe('error after a broadcast', () => {
+    it('attributes a poll failure to the step whose proof was submitted, so the plan stays held', async () => {
+      const planId = 'plan-poll-throw'
+      const logError = vi.spyOn(logger, 'error').mockImplementation(() => undefined)
+      let currentPlan = marginPlan({
+        planId,
+        status: 'AWAITING_ACTION',
+        steps: [marginAdjustStep({ stepIndex: 0 }), marginAdjustStep({ stepIndex: 1 })],
+      })
+      mocks.getMarginPlan.mockResolvedValueOnce(currentPlan).mockRejectedValue(new Error('network down'))
+      // The PATCH moves step 0 to IN_PROGRESS, so the patched plan's first actionable step is step 1.
+      mocks.updateMarginPlan.mockImplementation(async () => {
+        currentPlan = {
+          ...currentPlan,
+          steps: currentPlan.steps.map((s) => (s.stepIndex === 0 ? { ...s, status: 'IN_PROGRESS' as const } : s)),
+        }
+        return currentPlan
+      })
+
+      const { result } = renderExecuteMarginPlanHook()
+      await act(async () => {
+        await result.current.exec.resumePlan({ planId })
+      })
+
+      expect(mocks.sendTransaction).toHaveBeenCalledTimes(1)
+      expect(mocks.updateMarginPlan).toHaveBeenCalledTimes(1)
+      expect(state().stepError).toMatchObject({ stepIndex: 0, code: 'CLIENT_ERROR' })
+      expect(readStepProof({ swapper: SWAPPER_A, planId, stepIndex: 0 })).toBeDefined()
+      expect(state().isExecuting).toBe(false)
+      expect(heldPlan(state())).toBe(state().plan)
+      expect(logError).toHaveBeenCalledTimes(1)
     })
   })
 })
@@ -1939,6 +2140,164 @@ describe('buildStepActivityInfo — MARGIN_OPEN', () => {
       createRequest: fakeCreateRequest({ marginQuote: { legs: [], swapConfig: { token: '0xpay', amount: '500' } } }),
     })
     expect(info).toMatchObject({ marginAmount: '500' })
+  })
+})
+
+describe('buildMarginPlanStepDetails', () => {
+  const BASE_UNI = '0xc3De830EA07524a0761646a6a4e4be0e114a3C83'
+  const ROUTER_TX = { to: '0xrouter', data: '0x', chainId: MARGIN_CHAIN_ID }
+
+  function txStep(overrides: Partial<MarginPlanStep>): MarginPlanStep {
+    return {
+      stepIndex: 0,
+      stepType: 'MARGIN_OPEN',
+      method: 'SEND_TX',
+      payloadType: 'TX',
+      payload: ROUTER_TX,
+      status: 'COMPLETE',
+      ...overrides,
+    }
+  }
+
+  // Shaped like a UNI-funded open: approve UNI, sign its permit, pre-swap UNI → WETH, then open.
+  function uniFundedOpen(): MarginPlanResponse {
+    return fakePlan({
+      action: 'open',
+      collateralToken: WETH,
+      debtToken: BASE_USDC,
+      steps: [
+        txStep({
+          stepIndex: 0,
+          stepType: 'APPROVAL_TXN',
+          wireStepType: TradingApi.PlanStepType.APPROVAL_TXN,
+          tokenIn: BASE_UNI,
+          tokenInAmount: '54900000000000000',
+          proof: { txHash: '0xapprove' },
+        }),
+        permitStep({ stepIndex: 1, status: 'COMPLETE', proof: { signature: '0xsig' } }),
+        txStep({
+          stepIndex: 2,
+          stepType: 'MARGIN_PRE_SWAP',
+          wireStepType: TradingApi.PlanStepType.CLASSIC,
+          tokenIn: BASE_UNI,
+          tokenInAmount: '54900000000000000',
+          tokenOut: WETH,
+          tokenOutAmount: '171000000000000',
+          proof: { txHash: '0xswap' },
+        }),
+        txStep({ stepIndex: 3, tokenIn: WETH, tokenInAmount: '0', proof: { txHash: '0xopen' } }),
+      ],
+    })
+  }
+
+  it('types the funding steps as data-api does and the position step by its action', () => {
+    const steps = buildMarginPlanStepDetails({ plan: uniFundedOpen(), from: SWAPPER_A })
+
+    expect(steps.map((step) => step.hash)).toEqual(['0xapprove', '0xswap', '0xopen'])
+    expect(steps[0]?.typeInfo).toMatchObject({ type: TransactionType.Approve, approvalAmount: '54900000000000000' })
+    expect(steps[1]?.typeInfo).toMatchObject({
+      type: TransactionType.Swap,
+      inputCurrencyId: buildCurrencyId(MARGIN_CHAIN_ID, BASE_UNI),
+      outputCurrencyId: buildCurrencyId(MARGIN_CHAIN_ID, WETH),
+      inputCurrencyAmountRaw: '54900000000000000',
+      outputCurrencyAmountRaw: '171000000000000',
+    })
+    expect(steps[2]?.typeInfo.type).toBe(TransactionType.MarginOpenPosition)
+  })
+
+  it('types a wrap funding step as a wrap', () => {
+    const plan = fakePlan({
+      steps: [
+        txStep({
+          stepType: 'MARGIN_PRE_SWAP',
+          wireStepType: TradingApi.PlanStepType.WRAP,
+          tokenIn: MARGIN_NATIVE_TOKEN_ADDRESS,
+          tokenInAmount: '5',
+          tokenOut: WETH,
+          tokenOutAmount: '5',
+          proof: { txHash: '0xwrap' },
+        }),
+      ],
+    })
+
+    expect(buildMarginPlanStepDetails({ plan, from: SWAPPER_A })[0]?.typeInfo).toMatchObject({
+      type: TransactionType.Wrap,
+      unwrapped: false,
+      currencyAmountRaw: '5',
+    })
+  })
+
+  it('puts each step on the chain its transaction was sent on', () => {
+    const plan = fakePlan({
+      steps: [
+        txStep({
+          stepType: 'APPROVAL_TXN',
+          wireStepType: TradingApi.PlanStepType.APPROVAL_TXN,
+          payload: { ...ROUTER_TX, chainId: UniverseChainId.ArbitrumOne },
+          tokenIn: BASE_USDC,
+          proof: { txHash: '0xsource' },
+        }),
+        txStep({ stepIndex: 1, proof: { txHash: '0xopen' } }),
+      ],
+    })
+
+    expect(buildMarginPlanStepDetails({ plan, from: SWAPPER_A }).map((step) => step.chainId)).toEqual([
+      UniverseChainId.ArbitrumOne,
+      MARGIN_CHAIN_ID,
+    ])
+  })
+})
+
+describe('getMarginPlanAssets', () => {
+  it('reads what the plan paid in and the margin its funding swap deposited', () => {
+    const BASE_UNI = '0xc3De830EA07524a0761646a6a4e4be0e114a3C83'
+    const plan = fakePlan({
+      steps: [
+        {
+          stepIndex: 0,
+          stepType: 'APPROVAL_TXN',
+          method: 'SEND_TX',
+          payloadType: 'TX',
+          payload: { to: BASE_UNI, data: '0x', chainId: MARGIN_CHAIN_ID },
+          status: 'COMPLETE',
+          tokenIn: BASE_UNI,
+          tokenInAmount: '1000000000000000000000',
+        },
+        {
+          stepIndex: 1,
+          stepType: 'MARGIN_PRE_SWAP',
+          method: 'SEND_TX',
+          payloadType: 'TX',
+          payload: { to: '0xrouter', data: '0x', chainId: MARGIN_CHAIN_ID },
+          status: 'COMPLETE',
+          tokenIn: BASE_UNI,
+          tokenInAmount: '54900000000000000',
+          tokenOut: WETH,
+          tokenOutAmount: '171000000000000',
+        },
+      ],
+    })
+
+    expect(getMarginPlanAssets(plan)).toEqual({
+      inputCurrencyId: buildCurrencyId(MARGIN_CHAIN_ID, BASE_UNI),
+      outputCurrencyId: buildCurrencyId(MARGIN_CHAIN_ID, WETH),
+      inputCurrencyAmountRaw: '54900000000000000',
+      outputCurrencyAmountRaw: '171000000000000',
+    })
+  })
+
+  it('falls back to the market with no amounts when the steps state none', () => {
+    const plan = fakePlan({
+      intent: 'CLOSE',
+      steps: [marginAdjustStep({ stepType: 'MARGIN_CLOSE', tokenInAmount: '0' })],
+    })
+
+    expect(getMarginPlanAssets(plan)).toEqual({
+      inputCurrencyId: buildCurrencyId(MARGIN_CHAIN_ID, '0xdebt'),
+      outputCurrencyId: buildCurrencyId(MARGIN_CHAIN_ID, '0xcollateral'),
+      inputCurrencyAmountRaw: '0',
+      outputCurrencyAmountRaw: '0',
+    })
   })
 })
 

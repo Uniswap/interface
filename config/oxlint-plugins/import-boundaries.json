@@ -1,96 +1,6 @@
 {
   "boundaries": [
     {
-      "id": "toucan-feature",
-      "mode": "importerAllowlist",
-      "importerInternalPathMarkers": ["/features/Toucan/"],
-      "allowedImporterPathMarkers": [
-        "/pages/Explore/",
-        "/features/Explore/state",
-        "/pages/Launches/",
-        "/pages/Liquidity/CreateAuction/",
-        "/pages/TokenDetails/"
-      ],
-      "importPrefixes": ["~/features/Toucan/", "features/Toucan/"],
-      "bareModuleSources": ["~/features/Toucan", "features/Toucan"],
-      "message": "Toucan feature code may only be imported from pages/Explore/, features/explore/state, pages/Launches/, pages/Liquidity/CreateAuction/, pages/TokenDetails/, or from within features/Toucan/."
-    },
-    {
-      "id": "margin-feature",
-      "mode": "importerAllowlist",
-      "importerInternalPathMarkers": ["/features/margin/"],
-      "allowedImporterPathMarkers": ["/pages/Swap/", "/pages/Portfolio/", "/constants/margin.test.ts"],
-      "importPrefixes": ["~/features/margin/", "features/margin/"],
-      "bareModuleSources": ["~/features/margin", "features/margin"],
-      "message": "Margin feature code may only be imported from pages/Swap/, pages/Portfolio/, or from within features/margin/."
-    },
-    {
-      "id": "liquidity-feature",
-      "mode": "importerAllowlist",
-      "importerInternalPathMarkers": ["/features/Liquidity/"],
-      "allowedImporterPathMarkers": [
-        "/pages/AddLiquidity/",
-        "/pages/CreatePosition/",
-        "/pages/Explore/",
-        "/pages/HookDetails/",
-        "/pages/IncreaseLiquidity/",
-        "/pages/LegacyPool/",
-        "/pages/Liquidity/",
-        "/pages/Migrate/",
-        "/pages/PoolDetails/",
-        "/pages/Portfolio/",
-        "/pages/Positions/",
-        "/pages/RemoveLiquidity/",
-        "/app/layout/TopLevelModals/"
-      ],
-      "importPrefixes": ["~/features/Liquidity/", "features/Liquidity/"],
-      "bareModuleSources": ["~/features/Liquidity", "features/Liquidity"],
-      "message": "Liquidity feature code may only be imported from the allowlisted page routes (including pages/HookDetails/), D3LiquidityChartShared, TopLevelModals, or from within features/Liquidity/"
-    },
-    {
-      "id": "swap-feature",
-      "mode": "importerAllowlist",
-      "importerInternalPathMarkers": ["/features/Swap/"],
-      "allowedImporterPathMarkers": [
-        "/pages/Swap/",
-        "/pages/TokenDetails/",
-        "/pages/Landing/",
-        "/app/WebUniswapContext",
-        "/features/Liquidity/Create/"
-      ],
-      "importPrefixes": ["~/features/Swap/", "features/Swap/"],
-      "bareModuleSources": ["~/features/Swap", "features/Swap"],
-      "message": "The Swap feature may only be imported from pages/Swap/, pages/TokenDetails/, pages/Landing/, app/WebUniswapContext, features/Liquidity/Create/, or from within features/Swap/."
-    },
-    {
-      "id": "explore-feature",
-      "mode": "importerAllowlist",
-      "importerInternalPathMarkers": ["/features/Explore/"],
-      "allowedImporterPathMarkers": [
-        "/pages/AddLiquidity/",
-        "/pages/Explore/",
-        "/pages/HookDetails/",
-        "/pages/Landing/",
-        "/pages/Launches/",
-        "/pages/PoolDetails/",
-        "/pages/Positions/",
-        "/pages/TokenDetails/",
-        "/features/Toucan/"
-      ],
-      "importPrefixes": ["~/features/Explore/", "features/Explore/"],
-      "bareModuleSources": ["~/features/Explore", "features/Explore"],
-      "message": "The Explore feature may only be imported from pages/AddLiquidity/, pages/Explore/, pages/HookDetails/, pages/Landing/, pages/Launches/, pages/PoolDetails/, pages/Positions/, pages/TokenDetails/, features/Toucan/ or from within features/Explore/."
-    },
-    {
-      "id": "hooks-feature",
-      "mode": "importerAllowlist",
-      "importerInternalPathMarkers": ["/features/Hooks/"],
-      "allowedImporterPathMarkers": ["/pages/Explore/", "/pages/HookDetails/"],
-      "importPrefixes": ["~/features/Hooks/", "features/Hooks/"],
-      "bareModuleSources": ["~/features/Hooks", "features/Hooks"],
-      "message": "The Hooks feature may only be imported from pages/Explore/, pages/HookDetails/, or from within features/Hooks/."
-    },
-    {
       "id": "swap-ui-views",
       "mode": "importerDenylist",
       "deniedImporterPathMarkers": [["/features/transactions/swap/", "/views/"]],
@@ -193,15 +103,6 @@
       "message": "apps/web `src/state` must not import from `~/pages/`, `~/features/`, `~/components/`, `~/hooks/` or `~/app/`. React hooks that state code needs belong in `state/` or `connection/`."
     },
     {
-      "id": "wallet-no-feature-imports",
-      "mode": "importerDenylist",
-      "deniedImporterPathMarkers": ["/apps/web/src/features/wallet/"],
-      "importPrefixes": ["~/features/", "features/"],
-      "bareModuleSources": [],
-      "exemptImportPrefixes": ["~/features/wallet/", "features/wallet/"],
-      "message": "apps/web `features/wallet` may not import other features: every surface depends on the wallet, so its dependencies must point one way. Move the shared piece down to `state/`, `connection/`, `hooks/` or `utils/`, or pass it in from the caller."
-    },
-    {
       "id": "web-connection-import-denylist",
       "mode": "importerDenylist",
       "deniedImporterPathMarkers": ["/apps/web/src/connection/"],
@@ -234,6 +135,166 @@
         "app"
       ],
       "message": "apps/web `src/connection` is the wallet and chain plumbing layer: it may import `utils`, `constants`, `types` and packages, but not `~/pages/`, `~/features/`, `~/components/`, `~/hooks/`, `~/state/` or `~/app/`."
+    },
+    {
+      "id": "web-types-constants-import-denylist",
+      "mode": "importerDenylist",
+      "deniedImporterPathMarkers": ["/apps/web/src/types/", "/apps/web/src/constants/"],
+      "importPrefixes": [
+        "~/pages/",
+        "pages/",
+        "~/features/",
+        "features/",
+        "~/components/",
+        "components/",
+        "~/state/",
+        "state/",
+        "~/hooks/",
+        "hooks/",
+        "~/utils/",
+        "utils/",
+        "~/app/",
+        "app/",
+        "~/lib/",
+        "lib/",
+        "~/data/",
+        "data/",
+        "~/connection/",
+        "connection/",
+        "~/theme/",
+        "theme/"
+      ],
+      "bareModuleSources": [
+        "~/pages",
+        "pages",
+        "~/features",
+        "features",
+        "~/components",
+        "components",
+        "~/state",
+        "state",
+        "~/hooks",
+        "hooks",
+        "~/utils",
+        "utils",
+        "~/app",
+        "app",
+        "~/lib",
+        "lib",
+        "~/data",
+        "data",
+        "~/connection",
+        "connection",
+        "~/theme",
+        "theme"
+      ],
+      "message": "apps/web `src/types` and `src/constants` are the bottom layer: they may import each other and packages, but not `~/pages/`, `~/features/`, `~/components/`, `~/state/`, `~/hooks/`, `~/utils/`, `~/app/`, `~/lib/`, `~/data/`, `~/connection/` or `~/theme/`."
+    },
+    {
+      "id": "web-utils-import-denylist",
+      "mode": "importerDenylist",
+      "deniedImporterPathMarkers": ["/apps/web/src/utils/"],
+      "importPrefixes": [
+        "~/pages/",
+        "pages/",
+        "~/features/",
+        "features/",
+        "~/components/",
+        "components/",
+        "~/state/",
+        "state/",
+        "~/hooks/",
+        "hooks/",
+        "~/app/",
+        "app/"
+      ],
+      "bareModuleSources": [
+        "~/pages",
+        "pages",
+        "~/features",
+        "features",
+        "~/components",
+        "components",
+        "~/state",
+        "state",
+        "~/hooks",
+        "hooks",
+        "~/app",
+        "app"
+      ],
+      "message": "apps/web `src/utils` may import `utils`, `constants`, `types`, `lib` and packages, but not `~/pages/`, `~/features/`, `~/components/`, `~/state/`, `~/hooks/` or `~/app/`. Move the shared piece down rather than importing up."
+    },
+    {
+      "id": "web-hooks-import-denylist",
+      "mode": "importerDenylist",
+      "deniedImporterPathMarkers": ["/apps/web/src/hooks/"],
+      "importPrefixes": [
+        "~/pages/",
+        "pages/",
+        "~/features/",
+        "features/",
+        "~/components/",
+        "components/",
+        "~/app/",
+        "app/"
+      ],
+      "bareModuleSources": ["~/pages", "pages", "~/features", "features", "~/components", "components", "~/app", "app"],
+      "message": "apps/web `src/hooks` may import `state`, `connection`, `utils`, `constants`, `types` and packages, but not `~/pages/`, `~/features/`, `~/components/` or `~/app/`. A hook that needs those belongs next to its consumer."
+    },
+    {
+      "id": "web-components-import-denylist",
+      "mode": "importerDenylist",
+      "deniedImporterPathMarkers": ["/apps/web/src/components/"],
+      "importPrefixes": ["~/pages/", "pages/", "~/features/", "features/", "~/app/", "app/"],
+      "bareModuleSources": ["~/pages", "pages", "~/features", "features", "~/app", "app"],
+      "message": "apps/web `src/components` is shared UI: it may not import `~/pages/`, `~/features/` or `~/app/`. Move the component into the page or feature that uses it, or move the piece it needs down to a base layer."
+    },
+    {
+      "id": "web-features-import-denylist",
+      "mode": "importerDenylist",
+      "deniedImporterPathMarkers": ["/apps/web/src/features/"],
+      "importPrefixes": ["~/pages/", "pages/", "~/app/", "app/"],
+      "bareModuleSources": ["~/pages", "pages", "~/app", "app"],
+      "message": "apps/web `src/features` is shared domain code: it may not import `~/pages/` or `~/app/`. Move the piece the feature needs out of the page into the feature or a base layer, or move the code that needs the page into that page."
+    },
+    {
+      "id": "web-app-import-denylist",
+      "mode": "importerDenylist",
+      "deniedImporterPathMarkers": [
+        "/apps/web/src/pages/",
+        "/apps/web/src/features/",
+        "/apps/web/src/components/",
+        "/apps/web/src/state/",
+        "/apps/web/src/hooks/",
+        "/apps/web/src/utils/",
+        "/apps/web/src/types/",
+        "/apps/web/src/constants/",
+        "/apps/web/src/connection/",
+        "/apps/web/src/lib/",
+        "/apps/web/src/data/",
+        "/apps/web/src/theme/",
+        "/apps/web/src/chains/",
+        "/apps/web/src/rpc/",
+        "/apps/web/src/sessions/",
+        "/apps/web/src/shared-cloud/",
+        "/apps/web/src/notification-service/",
+        "/apps/web/src/tracing/",
+        "/apps/web/src/featureFlags/",
+        "/apps/web/src/dev/",
+        "/apps/web/src/i18n/"
+      ],
+      "importPrefixes": ["~/app/", "app/"],
+      "bareModuleSources": ["~/app", "app"],
+      "message": "`~/app/` is the app shell and only `App.tsx`, `index.tsx` and `app/` itself may import it. Move shared constants or components down to `constants/` or `components/`."
+    },
+    {
+      "id": "web-features-sibling-isolation",
+      "mode": "siblingIsolation",
+      "importerRootMarker": "/apps/web/src/features/",
+      "importPrefixes": ["~/features/", "features/"],
+      "bareModuleSources": [],
+      "allowedSiblings": ["wallet"],
+      "message": "A feature may only import from its own folder or from `features/wallet/`. Move shared code down to `components/`, `hooks/`, `utils/` or `state/`, or pass it in from the page."
     }
   ]
 }

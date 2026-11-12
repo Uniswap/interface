@@ -1,7 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { TradeType } from '@uniswap/sdk-core'
 import { FetchError, TradingApi, is404Error } from '@universe/api'
-import { UniverseChainId } from '@universe/chains'
+import { type EVMUniverseChainId, UniverseChainId } from '@universe/chains'
 import type { TFunction } from 'i18next'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -18,7 +18,12 @@ import type {
 import { MARGIN_ADD_EQUITY_ACTION_KEYS, MarginApiClient } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
 import { MARGIN_MARKETS_QUERY_KEY } from 'uniswap/src/data/apiClients/tradingApi/useMarginMarketsQuery'
 import { MARGIN_POSITIONS_QUERY_KEY } from 'uniswap/src/data/apiClients/tradingApi/useMarginPositionsQuery'
-import { mapTAPIPlanStatusToTXStatus } from 'uniswap/src/features/activity/extract/statusMappers'
+import { createTransactionDetails } from 'uniswap/src/features/activity/extract/extractPlanUtils'
+import {
+  mapTAPIPlanStatusToTXStatus,
+  mapTAPIPlanStepStatusToTXStatus,
+} from 'uniswap/src/features/activity/extract/statusMappers'
+import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useMarginFormStoreActions } from 'uniswap/src/features/transactions/margin/stores/marginFormStore/useMarginFormStore'
@@ -28,8 +33,10 @@ import {
   addTransaction as addTransactionAction,
   updateTransaction as updateTransactionAction,
 } from 'uniswap/src/features/transactions/slice'
+import { planStepTypeToTradingRoute } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
   TransactionOriginType,
+  TransactionStatus,
   TransactionType,
   type PlanTransactionInfo,
   type TransactionDetails,
@@ -39,11 +46,11 @@ import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { BackoffStrategy, retryWithBackoff } from 'utilities/src/async/retryWithBackoff'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
-import { getAccount, getClient, getConnectorClient } from 'wagmi/actions'
+import { promiseTimeout, sleep } from 'utilities/src/time/timing'
+import { getAccount, getClient, getConnectorClient, switchChain } from 'wagmi/actions'
 import { createContract, erc20Abi, getAddress, parseUnits } from '~/chains'
 import { useAccount } from '~/connection/hooks/useAccount'
-import { clientToProvider, useEthersProvider, useEthersWeb3Provider } from '~/connection/hooks/useEthersProvider'
-import { useSelectChain } from '~/connection/hooks/useSelectChain'
+import { clientToProvider, useEthersWeb3Provider } from '~/connection/hooks/useEthersProvider'
 import { wagmiConfig } from '~/connection/wagmiConfig'
 import { MARGIN_CHAIN_ID } from '~/constants/margin'
 import {
@@ -112,8 +119,39 @@ function isMarginUserRejection(error: unknown): boolean {
   return code === 4001
 }
 
-async function sleep(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms))
+// Same never-settling-wallet guard as useSelectChain: some wallets never answer a dismissed switch.
+const SWITCH_CHAIN_TIMEOUT_MS = 60 * 1000
+
+// The run loop outlives the review sheet (it closes right after executePlan), so it can't await a
+// hook-bound switch (useSelectChain → wagmi mutation onSettled never fires once unmounted) or trust a
+// render-time chainId. Switch imperatively against wagmi's live state instead.
+async function switchToStepChain(chainId: UniverseChainId): Promise<boolean> {
+  if (getAccount(wagmiConfig).chainId === chainId) {
+    return true
+  }
+  try {
+    const switched = await promiseTimeout(
+      switchChain(wagmiConfig, { chainId: chainId as EVMUniverseChainId }),
+      SWITCH_CHAIN_TIMEOUT_MS,
+    )
+    if (switched === null) {
+      throw new Error(`Timed out switching to chain ${chainId}`)
+    }
+    return true
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    if (
+      !isMarginUserRejection(error) &&
+      !message.includes("Request of type 'wallet_switchEthereumChain' already pending")
+    ) {
+      logger.warn('useExecuteMarginPlan', 'switchToStepChain', message)
+      popupRegistry.addPopup(
+        { failedSwitchNetwork: chainId, type: PopupType.FailedSwitchNetwork },
+        'failed-network-switch',
+      )
+    }
+    return false
+  }
 }
 
 // The `open` allowlist behind a create, for analytics. Only the open form has one — a manage request
@@ -259,6 +297,134 @@ function marginPlanStatusToTAPIPlanStatus(status: MarginPlanStatus): TradingApi.
   }
 }
 
+const FUNDING_WIRE_STEP_TYPES: ReadonlySet<TradingApi.PlanStepType> = new Set([
+  TradingApi.PlanStepType.APPROVAL_TXN,
+  TradingApi.PlanStepType.RESET_APPROVAL_TXN,
+  TradingApi.PlanStepType.APPROVAL_PERMIT,
+  TradingApi.PlanStepType.CLASSIC,
+  TradingApi.PlanStepType.WRAP,
+  TradingApi.PlanStepType.UNWRAP,
+  TradingApi.PlanStepType.BRIDGE,
+])
+
+function marginStepChainId(step: MarginPlanStep): UniverseChainId {
+  const payloadChainId = 'chainId' in step.payload ? toSupportedChainId(step.payload.chainId) : null
+  return payloadChainId ?? toSupportedChainId(step.tokenInChainId) ?? MARGIN_CHAIN_ID
+}
+
+function buildFundingStepActivityInfo({
+  step,
+  chainId,
+  from,
+}: {
+  step: MarginPlanStep
+  chainId: UniverseChainId
+  from: Address
+}): TransactionTypeInfo | undefined {
+  const planStepType = step.wireStepType
+  if (!planStepType || !FUNDING_WIRE_STEP_TYPES.has(planStepType)) {
+    return undefined
+  }
+  return createTransactionDetails({
+    routing: planStepTypeToTradingRoute(planStepType),
+    planId: '',
+    status: TransactionStatus.Success,
+    planStepType,
+    inputCurrencyAmountRaw: step.tokenInAmount ?? '0',
+    outputCurrencyAmountRaw: step.tokenOutAmount ?? '0',
+    addedTime: 0,
+    from,
+    hash: undefined,
+    stepIndex: step.stepIndex,
+    tokenInChainId: step.tokenInChainId ?? chainId,
+    tokenInAddress: step.tokenIn,
+    tokenOutChainId: step.tokenOutChainId ?? chainId,
+    tokenOutAddress: step.tokenOut,
+  })?.typeInfo
+}
+
+// Each broadcast step's hash lets activity merging hide that step's own row behind the plan row.
+export function buildMarginPlanStepDetails({
+  plan,
+  from,
+}: {
+  plan: MarginPlanResponse
+  from: Address
+}): TransactionDetails[] {
+  return plan.steps.flatMap((step) => {
+    const hash = step.proof?.txHash
+    if (!hash) {
+      return []
+    }
+    const chainId = marginStepChainId(step)
+    return [
+      {
+        routing: TradingApi.Routing.CLASSIC,
+        id: hash,
+        hash,
+        chainId,
+        from,
+        typeInfo: buildStepActivityInfo({ plan, step }) ??
+          buildFundingStepActivityInfo({ step, chainId, from }) ?? { type: TransactionType.Unknown },
+        status: mapTAPIPlanStepStatusToTXStatus(step.status as unknown as TradingApi.PlanStepStatus),
+        addedTime: Date.now(),
+        transactionOriginType: TransactionOriginType.Internal,
+        options: { request: {} },
+      },
+    ]
+  })
+}
+
+const APPROVAL_STEP_TYPES: ReadonlySet<MarginPlanStep['stepType']> = new Set([
+  'APPROVAL_TXN',
+  'RESET_APPROVAL_TXN',
+  'APPROVAL_PERMIT',
+])
+
+// The wire sends '0' for an absent amount.
+function isMarginAmount(amount: string | undefined): amount is string {
+  return !!amount && amount !== '0'
+}
+
+// What the plan paid in and what reached the position, as data-api's assetsIn/assetsOut report them.
+export function getMarginPlanAssets(
+  plan: MarginPlanResponse,
+): Pick<
+  PlanTransactionInfo,
+  'inputCurrencyId' | 'outputCurrencyId' | 'inputCurrencyAmountRaw' | 'outputCurrencyAmountRaw'
+> {
+  const valueSteps = plan.steps.filter((step) => !APPROVAL_STEP_TYPES.has(step.stepType))
+  const payStep = valueSteps.at(0)
+  const fundingSteps = valueSteps.filter(
+    (step) => step.stepType === 'MARGIN_PRE_SWAP' || step.stepType === 'MARGIN_BRIDGE',
+  )
+  const lastFundingStep = fundingSteps.at(-1)
+  const input = payStep?.tokenIn
+    ? { chainId: marginStepChainId(payStep), token: payStep.tokenIn, amount: payStep.tokenInAmount }
+    : undefined
+  const output = lastFundingStep?.tokenOut
+    ? {
+        chainId: toSupportedChainId(lastFundingStep.tokenOutChainId) ?? MARGIN_CHAIN_ID,
+        token: lastFundingStep.tokenOut,
+        amount: lastFundingStep.tokenOutAmount,
+      }
+    : input
+  if (!input || !output || !isMarginAmount(input.amount) || !isMarginAmount(output.amount)) {
+    return {
+      inputCurrencyId: buildCurrencyId(MARGIN_CHAIN_ID, plan.debtToken),
+      outputCurrencyId: buildCurrencyId(MARGIN_CHAIN_ID, plan.collateralToken),
+      inputCurrencyAmountRaw: '0',
+      outputCurrencyAmountRaw: '0',
+    }
+  }
+  return {
+    inputCurrencyId: buildCurrencyId(input.chainId, input.token),
+    outputCurrencyId: buildCurrencyId(output.chainId, output.token),
+    inputCurrencyAmountRaw: input.amount,
+    outputCurrencyAmountRaw: output.amount,
+  }
+}
+
 // The plan-level activity row: one TransactionType.Plan row per margin plan, alongside the four
 // per-step TransactionType.Margin* rows from buildStepActivityInfo above. Modeled on the real
 // chained-plan row (extractPlanResponseDetails.ts) — same shape, but keyed by planId with no hash
@@ -275,14 +441,15 @@ function buildMarginPlanTransactionDetails({
     type: TransactionType.Plan,
     planId: plan.planId,
     planStatus: marginPlanStatusToTAPIPlanStatus(plan.status),
-    stepDetails: [],
+    stepDetails: buildMarginPlanStepDetails({ plan, from }),
     tokenOutChainId: MARGIN_CHAIN_ID,
-    inputCurrencyId: buildCurrencyId(MARGIN_CHAIN_ID, plan.debtToken),
-    outputCurrencyId: buildCurrencyId(MARGIN_CHAIN_ID, plan.collateralToken),
-    inputCurrencyAmountRaw: '0',
-    outputCurrencyAmountRaw: '0',
+    ...getMarginPlanAssets(plan),
     tradeType: TradeType.EXACT_INPUT,
-    isMarginPlan: true,
+    marginAction: {
+      action: plan.action,
+      collateralCurrencyId: buildCurrencyId(MARGIN_CHAIN_ID, plan.collateralToken),
+      debtCurrencyId: buildCurrencyId(MARGIN_CHAIN_ID, plan.debtToken),
+    },
   }
   return {
     routing: TradingApi.Routing.CHAINED,
@@ -329,8 +496,6 @@ export function useExecuteMarginPlan(): {
 } {
   const { t } = useTranslation()
   const account = useAccount()
-  const selectChain = useSelectChain()
-  const readProvider = useEthersProvider({ chainId: MARGIN_CHAIN_ID })
   const walletProvider = useEthersWeb3Provider({ chainId: MARGIN_CHAIN_ID })
   const queryClient = useQueryClient()
   const addTransaction = useTransactionAdderFromHash()
@@ -825,8 +990,10 @@ export function useExecuteMarginPlan(): {
       if (epoch === undefined) {
         return
       }
+      // The catch attributes to this, not the patched plan's next step, so heldPlan finds a landing tx's proof.
+      let inFlightStepIndex: number | undefined
       try {
-        if (!walletProvider || !readProvider || !account.address) {
+        if (!account.address) {
           // Same invariant as the create-time supersession exit: this throws BEFORE `setPlan`, so a
           // create that already succeeded lands in the catch with no plan in the store — and a stashed
           // request arms `canRetryCreate`, whose Retry would re-POST and mint a second plan and subId
@@ -877,9 +1044,10 @@ export function useExecuteMarginPlan(): {
         // Per-step chain switch + signer derivation happen inside the loop — the network can differ
         // per SEND_TX (a bridge deposit is signed on its source chain).
         while (!isTerminalPlanStatus(plan.status)) {
+          inFlightStepIndex = undefined
           // Re-checked at the TOP of EVERY iteration, not just loop entry: resetForAccount bumps the
           // epoch synchronously on a confirmed account switch, but THIS already-running async frame
-          // doesn't see it until it next asks — before selectChain / signOrBroadcastStep / any wallet
+          // doesn't see it until it next asks — before the chain switch / signOrBroadcastStep / any wallet
           // prompt. getAccount(wagmiConfig) reads wagmi's LIVE imperative state, never this closure's
           // captured `account`, so a zombie loop from wallet A can't sign/broadcast a step composed
           // for A's plan under wallet B.
@@ -931,6 +1099,7 @@ export function useExecuteMarginPlan(): {
             store.getState().actions.setPlan({ plan, epoch })
             continue
           }
+          inFlightStepIndex = step.stepIndex
           // Dup guard: if this step already broadcast, reconcile its persisted proof
           // instead of re-prompting a second on-chain tx (double depositV3). Runs BEFORE the stall
           // reset so a non-advancing reconcile (terminal PATCH that didn't move the plan) counts
@@ -979,14 +1148,14 @@ export function useExecuteMarginPlan(): {
           // `domain.chainId` against the ACTIVE chain, so on a bridge-funded open the source-chain legs
           // leave the wallet elsewhere and the margin-chain permit is rejected outright — a CLIENT_ERROR
           // that Retry re-enters, because retrying does not move the wallet either.
-          const switched = await selectChain(stepChainId as UniverseChainId)
+          const switched = await switchToStepChain(stepChainId as UniverseChainId)
           if (!switched) {
             // Refusal → step stays AWAITING_ACTION (mirrors a 4001 rejection).
             return
           }
           const signer = await getSignerForChain(stepChainId)
           // Re-check right before prompting. Four awaits sit between the top-of-iteration gate and
-          // here — proof replay, the balance read, the selectChain network-switch prompt (which can
+          // here — proof replay, the balance read, the network-switch prompt (which can
           // stay open for seconds) and the signer derivation — and neither the modal nor the account
           // is blocked during them. A mid-window account switch would otherwise resolve the signer to
           // B while `step`/`plan` are still A's, and a MARGIN_PRE_SWAP pins its recipient to A. Nothing
@@ -1031,7 +1200,9 @@ export function useExecuteMarginPlan(): {
         const current = store.getState().plan
         store.getState().actions.setStepError({
           error: {
-            stepIndex: current ? (firstActionableStep(current)?.stepIndex ?? current.currentStepIndex) : 0,
+            stepIndex:
+              inFlightStepIndex ??
+              (current ? (firstActionableStep(current)?.stepIndex ?? current.currentStepIndex) : 0),
             code: 'CLIENT_ERROR',
             message,
           },
@@ -1246,6 +1417,13 @@ export function useExecuteMarginPlan(): {
         },
         epoch,
       })
+      return
+    }
+    // A `?resumePlan=` link can name anyone's plan: close before any of a foreign plan reaches the UI.
+    if (!isPlanForAccount({ planSwapper: plan.swapper, accountAddress: account.address })) {
+      if (mayWrite()) {
+        store.getState().actions.setModalOpen(false)
+      }
       return
     }
     // Same window the create path guards on the far side of ITS long await: both writes below are

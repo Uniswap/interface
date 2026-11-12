@@ -39,7 +39,13 @@ export type UniversalImageSize = SharedImageSizeProps & {
 
 // Top level props
 
-export interface UniversalImageProps {
+export type UniversalImageProps = {
+  /**
+   * Text alternative: what the image conveys, e.g. the token symbol for a logo.
+   * Required so a missing description is a type error rather than a silent gap;
+   * pass `""` when the image is purely visual and its meaning is in adjacent text.
+   */
+  alt: string
   uri?: string | ImageRequireSource
   size: UniversalImageSize
   fallback?: JSX.Element
@@ -58,6 +64,8 @@ export interface UniversalImageProps {
 
 export interface PlainImageProps {
   uri: string
+  /** Resolved text alternative; empty for a decorative image. */
+  alt: string
   size: SharedImageSizeProps
   fallback?: JSX.Element
   style?: UniversalImageStyle
@@ -79,6 +87,8 @@ export type PlainImageExpoProps = PlainImageProps & {
 
 export interface RequireImageProps {
   uri: ImageRequireSource
+  /** Resolved text alternative; empty for a decorative image. */
+  alt: string
   size: SharedImageSizeProps
   fallback?: JSX.Element
   style?: UniversalImageStyle
@@ -87,6 +97,8 @@ export interface RequireImageProps {
 
 export type SvgImageProps = {
   uri: string
+  /** Resolved text alternative; empty for a decorative image. */
+  alt: string
   size: SharedImageSizeProps
   autoplay: boolean
   fallback?: JSX.Element

@@ -27,8 +27,8 @@ const BANNER_GENERIC_HEADING = 'This token is unavailable in your region'
 const PROPS = {
   chainId: UniverseChainId.Mainnet,
   poolIdOrAddress: '0xpool',
-  token0: validParsedPoolToken0,
-  token1: validParsedPoolToken1,
+  baseToken: validParsedPoolToken0,
+  quoteToken: validParsedPoolToken1,
   feeTier: 500,
   protocolVersion: ProtocolVersion.V3,
 } as const

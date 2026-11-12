@@ -6,8 +6,11 @@ import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
+import { getPoolName } from 'uniswap/src/features/pools/names'
+import { orderPoolDataByQuoteToken } from 'uniswap/src/features/pools/quoteToken'
 import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
 import type { PoolData } from '~/data/pools/poolData'
+import { useCreateLiquidityContext } from '~/features/Liquidity/Create/CreateLiquidityContextProvider'
 import { CreatingPoolInfo } from '~/features/Liquidity/Create/CreatingPoolInfo'
 import { useDefaultInitialPrice } from '~/features/Liquidity/Create/hooks/useDefaultInitialPrice'
 import { usePoolDisplayCurrencies } from '~/features/Liquidity/Create/hooks/usePoolDisplayCurrencies'
@@ -15,16 +18,14 @@ import { PositionFlowStep } from '~/features/Liquidity/Create/types'
 import { DisplayCurrentPrice } from '~/features/Liquidity/DisplayCurrentPrice'
 import { LiquidityPositionInfoBadges } from '~/features/Liquidity/LiquidityPositionInfoBadges'
 import { ExpandablePoolInfo } from '~/features/Liquidity/PoolInfoCard/PoolInfoCard'
-import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 import { PositionField } from '~/types/position'
 
-export const EditSelectTokensStep = ({ poolData }: { poolData?: PoolData }) => {
+export const EditSelectTokensStep = ({ poolData, token0IsQuote }: { poolData?: PoolData; token0IsQuote?: boolean }) => {
   const { t } = useTranslation()
   const {
     setStep,
     protocolVersion,
     creatingPoolOrPair,
-    currencies: { display },
     positionState,
     selectedFeeBreakdown: feeBreakdown,
     resetDeposit: resetDepositState,
@@ -32,8 +33,6 @@ export const EditSelectTokensStep = ({ poolData }: { poolData?: PoolData }) => {
   } = useCreateLiquidityContext()
 
   const { fee, hook } = positionState
-  const { TOKEN0, TOKEN1 } = display
-  const chainId = (TOKEN0?.chainId ?? TOKEN1?.chainId) as UniverseChainId | undefined
   const media = useMedia()
 
   const handleEdit = useCallback(() => {
@@ -42,11 +41,15 @@ export const EditSelectTokensStep = ({ poolData }: { poolData?: PoolData }) => {
     setStep(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
   }, [resetDepositState, resetPriceRangeState, setStep])
 
+  // Both layouts present the pool, not the deposit, so neither follows the "Add as ETH" toggle.
   const poolCurrencies = usePoolDisplayCurrencies()
+  const { TOKEN0, TOKEN1 } = poolCurrencies
+  const chainId = (TOKEN0?.chainId ?? TOKEN1?.chainId) as UniverseChainId | undefined
+  const [baseCurrency, quoteCurrency] = orderPoolDataByQuoteToken({ token0IsQuote, data0: TOKEN0, data1: TOKEN1 })
   const { price: defaultInitialPrice } = useDefaultInitialPrice({
     currencies: {
-      [PositionField.TOKEN0]: poolCurrencies.TOKEN0,
-      [PositionField.TOKEN1]: poolCurrencies.TOKEN1,
+      [PositionField.TOKEN0]: TOKEN0,
+      [PositionField.TOKEN1]: TOKEN1,
     },
     skip: creatingPoolOrPair,
   })
@@ -54,8 +57,10 @@ export const EditSelectTokensStep = ({ poolData }: { poolData?: PoolData }) => {
   if (poolData && media.xl) {
     return (
       <ExpandablePoolInfo
-        currency0={TOKEN0 ?? undefined}
-        currency1={TOKEN1 ?? undefined}
+        currency0={TOKEN0}
+        currency1={TOKEN1}
+        baseCurrency={baseCurrency}
+        quoteCurrency={quoteCurrency}
         version={protocolVersion}
         v4hook={hook}
         feeTier={fee}
@@ -64,19 +69,19 @@ export const EditSelectTokensStep = ({ poolData }: { poolData?: PoolData }) => {
     )
   }
 
+  const poolName = getPoolName({ symbol0: baseCurrency?.symbol, symbol1: quoteCurrency?.symbol, spaced: true })
+
   return (
     <Flex gap="$gap12">
       <Flex row gap="$gap12" alignItems="center">
         <DoubleCurrencyLogo
-          currencies={[TOKEN0 ?? undefined, TOKEN1 ?? undefined]}
+          currencies={[baseCurrency ?? undefined, quoteCurrency ?? undefined]}
           size={media.md ? iconSizes.icon44 : iconSizes.icon32}
         />
         <Flex row grow gap="$gap12" $md={{ flexDirection: 'column', gap: '$gap4' }}>
-          <Flex row gap="$gap8" alignItems="center" testID={TestID.PoolPairLabel}>
-            <Text variant="subheading1">{TOKEN0?.symbol}</Text>
-            <Text variant="subheading1">/</Text>
-            <Text variant="subheading1">{TOKEN1?.symbol}</Text>
-          </Flex>
+          <Text variant="subheading1" testID={TestID.PoolPairLabel}>
+            {poolName}
+          </Text>
           <Flex row gap={2} alignItems="center">
             <LiquidityPositionInfoBadges
               size="small"

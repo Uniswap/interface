@@ -59,7 +59,7 @@ describe('useCurrencyInfo', () => {
 
       expect(useUniswapCurrencyInfo).toHaveBeenCalledWith(
         `${UniverseChainId.Mainnet}-${getChainInfo(UniverseChainId.Mainnet).nativeCurrency.address}`,
-        { skip: undefined },
+        { skip: true },
       )
     })
 

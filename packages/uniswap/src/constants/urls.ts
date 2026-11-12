@@ -6,10 +6,13 @@ import {
   getForApiUrl,
   helpUrl,
   PROD_ENTRY_GATEWAY_API_BASE_URL,
+  PROD_RPC_API_BASE_URL,
+  RPC_API_BASE_URLS,
   STAGING_ENTRY_GATEWAY_API_BASE_URL,
   TrafficFlows,
 } from '@universe/api'
-import { isWebApp, isBetaEnv, isDevEnv, isE2eTestEnv } from '@universe/environment'
+import { Environment } from '@universe/config'
+import { getCurrentEnv, isWebApp, isBetaEnv, isDevEnv, isE2eTestEnv } from '@universe/environment'
 
 export const UNISWAP_WEB_HOSTNAME = 'app.uniswap.org'
 export const UNISWAP_STAGING_WEB_HOSTNAME = 'staging.app.uniswap.org'
@@ -29,6 +32,7 @@ export const UniswapHelpUrls = {
   articles: {
     bridgedAssets: createHelpArticleUrl('39264728322317'),
     acrossRoutingInfo: createHelpArticleUrl('30677918339341'),
+    addressScreening: createHelpArticleUrl('8671777747597-Address-Screening-Guide'),
     approvalsExplainer: createHelpArticleUrl('8120520483085-What-is-an-approval-transaction'),
     batchedSwaps: createHelpArticleUrl('36393697148045'),
     batchedSwapsFailure: `${createHelpArticleUrl('36393697148045')}#error-messages-and-troubleshooting`,
@@ -247,13 +251,18 @@ export function getUniswapServiceUrls(overrides: UniswapUrlOverrides): UniswapSe
         : UNISWAP_WEB_HOSTNAME
 
   return {
-    amplitudeProxyUrl:
-      overrides.amplitudeProxyUrlOverride ||
-      getCloudflareApiBaseUrl({ flow: TrafficFlows.Metrics, postfix: 'v1/amplitude-proxy' }),
+    // Analytics always goes to the prod gateway: it picks the test Amplitude project from the
+    // client's x-application-build header, not from which gateway env serves the request.
+    amplitudeProxyUrl: overrides.amplitudeProxyUrlOverride || `${PROD_RPC_API_BASE_URL}/v1/amplitude-proxy`,
 
     apiBaseUrl: overrides.apiBaseUrlOverride || getCloudflareApiBaseUrl(),
 
-    apiBaseUrlV2: overrides.apiBaseUrlV2Override || getCloudflareApiBaseUrl({ postfix: 'v2' }),
+    // The Entry Gateway's front door. It routes data-api and session services unversioned
+    // (`/data.v1.DataApiService/...`), so there is no `/v2`; the field name predates the move.
+    // Same environment choice as getEntryGatewayUrl, so the session these clients recover
+    // lives on the same backend as the app-wide one.
+    apiBaseUrlV2:
+      overrides.apiBaseUrlV2Override || RPC_API_BASE_URLS[isE2eTestEnv() ? Environment.Production : getCurrentEnv()],
 
     embeddedWalletHostname,
 
@@ -291,10 +300,9 @@ export function getUniswapServiceUrls(overrides: UniswapUrlOverrides): UniswapSe
       overrides.scantasticApiUrlOverride ||
       getCloudflareApiBaseUrl({ flow: TrafficFlows.Scantastic, postfix: 'v2/scantastic' }),
 
-    // On web, proxy through same-origin "/config" — the BFF (Hono) rewrites to the real Cloudflare URL.
+    // On web, proxy through same-origin "/config" — the BFF (Hono) rewrites to the prod gateway.
     statsigProxyUrl:
-      overrides.statsigProxyUrlOverride ||
-      (isWebApp ? '/config' : getCloudflareApiBaseUrl({ flow: TrafficFlows.Gating, postfix: 'v1/statsig-proxy' })),
+      overrides.statsigProxyUrlOverride || (isWebApp ? '/config' : `${PROD_RPC_API_BASE_URL}/v1/statsig-proxy`),
 
     // Trading traffic routes through the entry gateway (same as sessions/FOR/compliance); x-api-key
     // still applies and is forwarded through. Replaces the legacy trading-api-labs cloudflare host.

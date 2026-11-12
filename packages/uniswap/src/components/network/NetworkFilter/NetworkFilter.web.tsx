@@ -8,7 +8,7 @@ import { iconSizes } from '@universe/mycelium/tokens'
 import { TriggerButtonCompat, type TriggerButtonCompatSize } from '@universe/mycelium/trigger-button-compat'
 import { TestID } from '@universe/test'
 import isEqual from 'lodash/isEqual'
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import type { NetworkFilterProps } from 'uniswap/src/components/network/NetworkFilter/NetworkFilter'
@@ -64,6 +64,7 @@ function NetworkFilterPillTrigger({
   size = 'medium',
   showLabel = false,
   transition,
+  singleTabStop,
 }: {
   displayedChainId: UniverseChainId | null
   label: string
@@ -72,9 +73,17 @@ function NetworkFilterPillTrigger({
   size?: TriggerButtonCompatSize
   showLabel?: boolean
   transition?: string
+  singleTabStop?: boolean
 }): JSX.Element {
   return (
-    <TriggerButtonCompat isExpanded={isOpen} size={size} testID={TestID.TokensNetworkFilterTrigger} onPress={onPress}>
+    <TriggerButtonCompat
+      role={singleTabStop ? 'presentation' : undefined}
+      tabIndex={singleTabStop ? -1 : undefined}
+      isExpanded={isOpen}
+      size={size}
+      testID={TestID.TokensNetworkFilterTrigger}
+      onPress={onPress}
+    >
       <NetworkLogo chainId={displayedChainId} size={PILL_LOGO_SIZES[size]} transition={transition} />
       {showLabel && (
         <Text variant={PILL_LABEL_VARIANTS[size]} color="$neutral1" transition={transition}>
@@ -97,12 +106,14 @@ export function NetworkFilter({
   footer,
   showSearchInput = true,
   trigger = { variant: 'icon' },
+  triggerLabel,
   placement = 'bottom-end',
   contentMaxHeight,
   selectionAnalytics,
   dropdownOnMobile = false,
 }: NetworkFilterProps): JSX.Element {
   const { t } = useTranslation()
+  const networkTitleId = useId()
   const { defaultChainId } = useEnabledChains()
   const parentTrace = useTrace()
   const [isOpen, setIsOpen] = useState(false)
@@ -145,7 +156,7 @@ export function NetworkFilter({
       const allNetworksChainName = t('transaction.network.all')
       sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
         ...parentTrace,
-        ...selectionAnalytics,
+        ...(typeof selectionAnalytics === 'function' ? selectionAnalytics(chainId) : selectionAnalytics),
         modal: ModalName.NetworkSelector,
         chain: (nextChainInfo?.urlParam ?? allNetworksChainName).toUpperCase(),
         chain_id: nextChainInfo?.id ?? ALL_NETWORKS_LABEL,
@@ -234,7 +245,7 @@ export function NetworkFilter({
       offset={{ mainAxis: DROPDOWN_OFFSET }}
       onOpenChange={handleOpenChange}
     >
-      <PopoverCompat.Trigger ref={triggerRef}>
+      <PopoverCompat.Trigger ref={triggerRef} aria-label={triggerLabel}>
         {trigger.variant === 'pill' ? (
           <NetworkFilterPillTrigger
             displayedChainId={displayedChainId}
@@ -242,6 +253,7 @@ export function NetworkFilter({
             isOpen={isOpen}
             size={trigger.size}
             showLabel={trigger.showLabel}
+            singleTabStop={triggerLabel !== undefined}
             transition={trigger.transition}
             onPress={handleToggleOpen}
           />
@@ -249,15 +261,18 @@ export function NetworkFilter({
           <NetworkFilterTrigger
             displayedChainId={displayedChainId}
             isOpen={isOpen}
+            focusable={triggerLabel === undefined ? undefined : false}
             tooltipLabel={isTouchable ? undefined : displayedLabel}
             content={trigger.variant === 'custom' ? trigger.content : undefined}
             outlined={trigger.variant === 'icon' && trigger.outlined}
+            chevronSize={trigger.variant === 'icon' ? trigger.chevronSize : undefined}
             onPress={handleToggleOpen}
           />
         )}
       </PopoverCompat.Trigger>
 
       <AdaptiveWebPopoverContentCompat
+        aria-labelledby={networkTitleId}
         adaptWhen={isMobileSheet}
         backgroundColor="$surface1"
         borderColor="$surface3"
@@ -270,7 +285,12 @@ export function NetworkFilter({
         px="$spacing4"
         pb="$none"
         overflow="hidden"
-        webBottomSheetProps={{ onClose: handleClose, snapPoints: [60], snapPointsMode: 'percent' }}
+        webBottomSheetProps={{
+          onClose: handleClose,
+          snapPoints: [60],
+          snapPointsMode: 'percent',
+          'aria-labelledby': networkTitleId,
+        }}
       >
         <Flex
           ref={listContainerRef}
@@ -282,6 +302,9 @@ export function NetworkFilter({
           minHeight={0}
           overflow="hidden"
         >
+          <Text tag="h2" id={networkTitleId} className="sr-only">
+            {t('common.network')}
+          </Text>
           <NetworkFilterDropdownContent
             chainIds={chainIds}
             includeAllNetworks={showAllNetworks}

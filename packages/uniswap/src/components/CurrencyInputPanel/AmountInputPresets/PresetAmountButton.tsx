@@ -19,8 +19,7 @@ import { TransactionType } from 'uniswap/src/features/transactions/types/transac
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { useEvent } from 'utilities/src/react/hooks'
 
-// Only the web click event has `stopPropagation`; RNGH's native press event doesn't.
-type ButtonPressEvent = Parameters<NonNullable<ButtonProps['onPress']>>[0] & { stopPropagation?: () => void }
+type ButtonPressEvent = Parameters<NonNullable<ButtonProps['onPress']>>[0]
 
 /**
  * Returns the currency amount for the specified percentage of the passed in raw value.
@@ -110,7 +109,7 @@ export function PresetAmountButton({
   presetValueAmountRef.current = presetValueAmount
 
   const onPress = useEvent((event: ButtonPressEvent): void => {
-    event.stopPropagation?.()
+    event.stopPropagation()
 
     if (presetValueAmountRef.current) {
       // We use `maxPresetAmountRef` instead of `maxPresetAmount` so that we can get the latest value
@@ -121,7 +120,7 @@ export function PresetAmountButton({
   })
 
   const onDisabledPress = useEvent((event: ButtonPressEvent): void => {
-    event.stopPropagation?.()
+    event.stopPropagation()
     if (isNativeAsset) {
       setIsShowingMaxNativeBalanceModal(true)
     }

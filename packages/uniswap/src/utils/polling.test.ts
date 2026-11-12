@@ -1,5 +1,6 @@
 import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { POLLING_CONSTANTS, shouldCheckTransaction, withTimeout } from 'uniswap/src/utils/polling'
+import { sleep } from 'utilities/src/time/timing'
 
 describe('polling utilities', () => {
   describe('shouldCheckTransaction', () => {
@@ -94,9 +95,7 @@ describe('polling utilities', () => {
     })
 
     it('rejects with timeout error when promise takes too long', async () => {
-      const promise = new Promise<string>((resolve) => {
-        setTimeout(() => resolve('success'), 100)
-      })
+      const promise = sleep(100).then(() => 'success')
       await expect(
         withTimeout(promise, {
           timeoutMs: 50,

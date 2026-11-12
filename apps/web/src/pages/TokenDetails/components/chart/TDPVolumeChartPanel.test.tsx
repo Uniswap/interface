@@ -2,11 +2,11 @@ import { UniverseChainId } from '@universe/chains'
 import { UTCTimestamp } from 'lightweight-charts'
 import type { ReactNode } from 'react'
 import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
-import { ChartType, DataQuality } from '~/components/Charts/utils'
 import { TimePeriod } from '~/data/util'
 import { useTDPVolumeChartData } from '~/pages/TokenDetails/components/chart/hooks/useTDPVolumeChartData'
 import { TDPVolumeChartPanel } from '~/pages/TokenDetails/components/chart/TDPVolumeChartPanel'
 import { render, screen } from '~/test-utils/render'
+import { ChartType, DataQuality } from '~/utils/charts'
 
 vi.mock('~/components/Charts/LoadingState', () => ({
   ChartSkeleton: function MockChartSkeleton({

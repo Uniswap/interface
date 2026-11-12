@@ -1,4 +1,5 @@
 import { toScreenInput, useIsBlockedAddress } from '@universe/compliance'
+import { isWebApp } from '@universe/environment'
 import { WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
 import { useActiveAddress, useActiveWallet } from 'uniswap/src/features/accounts/store/hooks'
 import { SigningCapability } from 'uniswap/src/features/accounts/store/types/Wallet'
@@ -25,8 +26,12 @@ const useIsReviewButtonDisabled = (): boolean => {
   const isMissingPlatformWallet = useIsMissingPlatformWallet(chainId)
 
   const { blockingWarning } = useParsedSwapWarnings()
+  // Web screens on the Review press instead; this observer stays mounted and reads the
+  // verdict that press writes to the same cache entry. Not a `.web.tsx` split — the
+  // extension resolves those too, and it still screens at render.
   const { isBlocked: isBlockedAccount, isBlockedLoading: isBlockedAccountLoading } = useIsBlockedAddress(
     toScreenInput(activeAccountAddress, chainId),
+    { enabled: !isWebApp },
   )
   const { walletNeedsRestore } = useTransactionModalContext()
 

@@ -9,17 +9,18 @@ import { useGetWalletTokensProfitLossQuery } from 'uniswap/src/data/apiClients/d
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useRestPortfolioValueModifier } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
-import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
+import { STICKY_TABLE_HEAD_SPACER_PX } from '~/components/Table/constants'
+import { ViewAllButton } from '~/components/ViewAllButton'
+import { PortfolioTab } from '~/hooks/usePortfolioRoutes/types'
+import { usePortfolioRoutes } from '~/hooks/usePortfolioRoutes/usePortfolioRoutes'
+import { buildPortfolioUrl } from '~/hooks/usePortfolioRoutes/utils'
 import { usePortfolioAddresses } from '~/pages/Portfolio/hooks/usePortfolioAddresses'
-import { MAX_TOKENS_ROWS } from '~/pages/Portfolio/Overview/constants'
+import { MAX_TOKENS_ROWS, MINI_TABLE_HEADER_GAP, MINI_TABLE_ROW_GAP } from '~/pages/Portfolio/Overview/constants'
 import { usePortfolioSectionTotalValue } from '~/pages/Portfolio/Overview/hooks/usePortfolioSectionTotalValue'
 import { TableSectionHeader } from '~/pages/Portfolio/Overview/TableSectionHeader'
-import { ViewAllButton } from '~/pages/Portfolio/Overview/ViewAllButton'
 import { useTransformTokenTableData } from '~/pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
 import { TokenColumns } from '~/pages/Portfolio/Tokens/Table/columns/useTokenColumns'
 import { TokensTableInner } from '~/pages/Portfolio/Tokens/Table/TokensTableInner'
-import { PortfolioTab } from '~/pages/Portfolio/types'
-import { buildPortfolioUrl } from '~/pages/Portfolio/utils/portfolioUrls'
 
 const MINI_TOKENS_HIDDEN_COLUMNS = [TokenColumns.Change1d, TokenColumns.Allocation, TokenColumns.AvgCost]
 const MINI_TOKENS_ANALYTICS_CONTEXT = {
@@ -85,6 +86,8 @@ export const MiniTokensTable = memo(function MiniTokensTable({ maxTokens = 8, ch
         subtitle={t('portfolio.tokens.balance.totalTokens', { count: totalCount ?? tableData.length })}
         loading={tableLoading}
         testId={TestID.PortfolioOverviewTokensSection}
+        // No maxHeight below, so the header is sticky and opens with the head's spacer.
+        contentGap={MINI_TABLE_HEADER_GAP - STICKY_TABLE_HEAD_SPACER_PX}
         {...sectionTotalValue}
       >
         <TokensTableInner
@@ -98,6 +101,7 @@ export const MiniTokensTable = memo(function MiniTokensTable({ maxTokens = 8, ch
           externalScrollSync={false}
           showUnrealizedPnlPercent
           analyticsContext={MINI_TOKENS_ANALYTICS_CONTEXT}
+          rowGap={MINI_TABLE_ROW_GAP}
         />
       </TableSectionHeader>
       <ViewAllButton

@@ -1,3 +1,4 @@
+import { CustomRankingType, RankingType } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
 import { exploreNavigationRef } from 'src/app/navigation/navigationRef'
 import { navigate } from 'src/app/navigation/rootNavigation'
@@ -14,6 +15,10 @@ const getValidRankingType = (metric: string | null): ExploreOrderBy | undefined 
     return undefined
   }
   const upperMetric = metric.toUpperCase()
+  // Links shared before Explore switched to FDV still carry `metric=market_cap`
+  if (upperMetric === RankingType.MarketCap) {
+    return CustomRankingType.FullyDilutedValuation
+  }
   return isSupportedExploreOrderBy(upperMetric) ? upperMetric : undefined
 }
 

@@ -22,8 +22,8 @@ import { SwapTab } from 'uniswap/src/types/screens/interface'
 import useResizeObserver from 'use-resize-observer'
 import { NumberType } from 'utilities/src/format/types'
 import { isSafeNumber } from 'utilities/src/primitives/integer'
-import { PortfolioLogo } from '~/components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { AlternateCurrencyDisplay } from '~/components/AlternateCurrencyDisplay/AlternateCurrencyDisplay'
+import { PortfolioLogo } from '~/components/Logo/PortfolioLogo'
 import {
   NumericalInputMimic,
   NumericalInputSymbolContainer,

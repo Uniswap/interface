@@ -7,13 +7,13 @@ import {
   type LaunchProvenance,
   LaunchProvenanceMethod,
 } from 'uniswap/src/features/dataApi/launchProvenance'
-import { POOLS_BASE_URL, POOLS_HOSTNAME } from '~/features/Toucan/utils/quickLaunchLinks'
 import {
   POOLS_LAUNCHPAD_GROUP_ID,
   UNISWAP_BONDING_CURVE_LAUNCHPAD_ID,
   UNISWAP_CCA_LAUNCHPAD_ID,
   UNISWAP_LAUNCHPAD_NAME,
-} from '~/pages/Launches/launchesModel'
+} from '~/features/Toucan/utils/launchesModel'
+import { POOLS_BASE_URL, POOLS_HOSTNAME } from '~/features/Toucan/utils/quickLaunchLinks'
 
 const UNISWAP_CCA_LAUNCHPAD: LaunchProvenance['launchpad'] = {
   id: UNISWAP_CCA_LAUNCHPAD_ID,

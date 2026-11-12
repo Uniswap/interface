@@ -10,7 +10,7 @@ import { useEvent } from 'utilities/src/react/hooks'
 import { ActionTileWithIconAnimation } from '~/components/ActionTiles/ActionTileWithIconAnimation'
 import { SendButtonTooltip } from '~/components/ActionTiles/SendActionTile/SendButtonTooltip'
 import { useActiveAddresses } from '~/connection/accounts/hooks'
-import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
+import { usePortfolioRoutes } from '~/hooks/usePortfolioRoutes/usePortfolioRoutes'
 
 export function SendActionTile({
   onPress,

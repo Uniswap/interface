@@ -20,7 +20,9 @@ exports[`ReceiveScreen > renders without error 1`] = `
               tabindex="0"
             >
               <svg
+                aria-hidden="true"
                 fill="none"
+                focusable="false"
                 stroke-width="8"
                 style="width: 24px; height: 24px;"
                 viewBox="0 0 16 16"
@@ -6003,7 +6005,9 @@ exports[`ReceiveScreen > renders without error 1`] = `
                       Wallet address
                     </span>
                     <svg
+                      aria-hidden="true"
                       fill="none"
+                      focusable="false"
                       stroke-width="8"
                       style="width: 16px; height: 16px;"
                       viewBox="0 0 24 24"
@@ -6062,7 +6066,9 @@ exports[`ReceiveScreen > renders without error 1`] = `
                   networks
                 </span>
                 <svg
+                  aria-hidden="true"
                   fill="none"
+                  focusable="false"
                   stroke-width="8"
                   style="width: 12px; height: 12px;"
                   viewBox="0 0 16 16"
@@ -6095,7 +6101,9 @@ exports[`ReceiveScreen > renders without error 1`] = `
             tabindex="0"
           >
             <svg
+              aria-hidden="true"
               fill="none"
+              focusable="false"
               stroke-width="8"
               style="width: 24px; height: 24px;"
               viewBox="0 0 16 16"
@@ -12078,7 +12086,9 @@ exports[`ReceiveScreen > renders without error 1`] = `
                     Wallet address
                   </span>
                   <svg
+                    aria-hidden="true"
                     fill="none"
+                    focusable="false"
                     stroke-width="8"
                     style="width: 16px; height: 16px;"
                     viewBox="0 0 24 24"
@@ -12137,7 +12147,9 @@ exports[`ReceiveScreen > renders without error 1`] = `
                 networks
               </span>
               <svg
+                aria-hidden="true"
                 fill="none"
+                focusable="false"
                 stroke-width="8"
                 style="width: 12px; height: 12px;"
                 viewBox="0 0 16 16"

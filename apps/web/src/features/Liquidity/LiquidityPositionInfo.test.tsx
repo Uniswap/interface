@@ -98,20 +98,21 @@ describe('LiquidityPositionInfo', () => {
       // PositionInfo is a union discriminated on `version`; keep the literal narrow through the spread.
     } as const
 
-    it('quotes in the stablecoin when token0 is the stablecoin, matching the positions table', () => {
-      // USDC sorts below WETH by address, so the pool's token0 is USDC; the label should still read WETH / USDC.
+    it('shows token0 second when the backend serves it as the quote', () => {
+      // USDC sorts below WETH by address, so the pool's token0 is USDC; served as the quote, the label reads WETH / USDC.
       const positionInfo: PositionInfo = {
         ...basePosition,
         chainId: USDC_INFO.currency.chainId,
         currency0Amount: CurrencyAmount.fromRawAmount(USDC_INFO.currency, 1),
         currency1Amount: CurrencyAmount.fromRawAmount(WETH_INFO.currency, 1),
+        isToken0Quote: true,
       }
       const { getByText, queryByText } = render(<LiquidityPositionInfo positionInfo={positionInfo} />)
       expect(getByText('WETH / USDC')).toBeInTheDocument()
       expect(queryByText('USDC / WETH')).not.toBeInTheDocument()
     })
 
-    it('keeps token0 / token1 order when both tokens share a waterfall tier', () => {
+    it('keeps token0 / token1 order when the quote is token1 or unresolved', () => {
       const positionInfo: PositionInfo = {
         ...basePosition,
         chainId: TEST_TOKEN_1.chainId,

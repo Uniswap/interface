@@ -17,6 +17,7 @@ export function DappDisconnectedNotification({
       icon={
         dappIconUrl ? (
           <UniversalImage
+            alt=""
             uri={dappIconUrl}
             style={{ image: { borderRadius: borderRadii.rounded8 } }}
             size={{

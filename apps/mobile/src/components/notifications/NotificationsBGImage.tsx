@@ -1,7 +1,6 @@
 import { Flex, useIsDarkMode } from '@universe/mycelium'
 import { ONBOARDING_NOTIFICATIONS_DARK, ONBOARDING_NOTIFICATIONS_LIGHT } from '@universe/mycelium/assets'
 import { BREAKPOINT_PX } from '@universe/mycelium/theme-hooks-compat'
-import { useLayoutEffect, useState } from 'react'
 import { Dimensions, Image, Platform } from 'react-native'
 
 /**
@@ -13,28 +12,19 @@ import { Dimensions, Image, Platform } from 'react-native'
  */
 export const NotificationsBackgroundImage = (): JSX.Element => {
   const isDarkMode = useIsDarkMode()
-  const [imageHeight, setImageHeight] = useState(0)
-  const [imageWidth, setImageWidth] = useState(0)
   const imageSource = isDarkMode
     ? Platform.select(ONBOARDING_NOTIFICATIONS_DARK)
     : Platform.select(ONBOARDING_NOTIFICATIONS_LIGHT)
 
-  const imageUri = Image.resolveAssetSource(imageSource).uri
-
-  useLayoutEffect(() => {
-    Image.getSize(imageUri, (width, height) => {
-      setImageWidth(width)
-      setImageHeight(height)
-    })
-  }, [imageUri])
+  // Read dimensions from the bundled asset metadata instead of `Image.getSize`: on Android release
+  // builds the asset is a drawable resource, which `Image.getSize` can't load (RN >= 0.86).
+  const { width: imageWidth, height: imageHeight } = Image.resolveAssetSource(imageSource)
+  const hasDimensions = imageWidth > 0 && imageHeight > 0
 
   // Cap at phone width so foldables don't stretch; unchanged on normal devices.
   const screenWidth = Math.min(Dimensions.get('window').width, BREAKPOINT_PX.sm)
 
-  // Since this image is dynamically loaded in a BSM, the initial BSM height
-  // does not account for the image. This variable is so that we can put
-  // a placeholder view immediately to smooth out the BSM animation.
-  const containerHeight = imageWidth > 0 && imageHeight > 0 ? (imageHeight * (0.9 * screenWidth)) / imageWidth : 0
+  const containerHeight = hasDimensions ? (imageHeight * (0.9 * screenWidth)) / imageWidth : 0
 
   return (
     <Flex
@@ -45,10 +35,11 @@ export const NotificationsBackgroundImage = (): JSX.Element => {
         maxWidth: '100%',
       }}
     >
-      {imageWidth > 0 && imageHeight > 0 && (
+      {hasDimensions && (
         <Image
           resizeMode="contain"
           source={imageSource}
+          testID="notifications-background-image"
           style={{
             aspectRatio: imageWidth / imageHeight,
             // Due to drop shadows and padding being hard to align,

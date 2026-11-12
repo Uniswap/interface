@@ -13,7 +13,11 @@ import {
   PriceLineOptions,
   UTCTimestamp,
 } from 'lightweight-charts'
-import { getLowVarianceAxisDecimals, isLowVarianceRange } from 'uniswap/src/components/charts/utils'
+import {
+  FLAT_STABLECOIN_HEIGHT_FRACTION,
+  getLowVarianceAxisDecimals,
+  isLowVarianceRange,
+} from 'uniswap/src/components/charts/utils'
 import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import {
   ChartHoverData,
@@ -27,9 +31,7 @@ import {
   RoundedCandleSeriesOptions,
 } from '~/components/Charts/PriceChart/RoundedCandlestickSeries/rounded-candles-series'
 import { formatPriceAxisLabel, getCandlestickPriceBounds } from '~/components/Charts/PriceChart/utils'
-import { PriceChartType } from '~/components/Charts/utils'
-
-export type PriceChartData = CandlestickData<UTCTimestamp> & AreaData<UTCTimestamp>
+import { PriceChartData, PriceChartType } from '~/utils/charts'
 
 interface PriceChartModelParams extends ChartModelParams<PriceChartData> {
   type: PriceChartType
@@ -226,8 +228,8 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
     // Zoom out y-axis for low-variance assets
     const scaleMargins = shouldZoomOut
       ? {
-          top: 0.49,
-          bottom: 0.49,
+          top: (1 - FLAT_STABLECOIN_HEIGHT_FRACTION) / 2,
+          bottom: (1 - FLAT_STABLECOIN_HEIGHT_FRACTION) / 2,
         }
       : {
           top: DEFAULT_TOP_PRICE_SCALE_MARGIN,

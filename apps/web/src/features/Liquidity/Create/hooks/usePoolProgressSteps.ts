@@ -1,11 +1,11 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { PositionFlowStep } from '~/features/Liquidity/Create/types'
 import {
   DEFAULT_PRICE_RANGE_STATE,
   useCreateLiquidityContext,
-} from '~/pages/CreatePosition/CreateLiquidityContextProvider'
+} from '~/features/Liquidity/Create/CreateLiquidityContextProvider'
+import { PositionFlowStep } from '~/features/Liquidity/Create/types'
 
 export interface PoolProgressStep {
   label: string

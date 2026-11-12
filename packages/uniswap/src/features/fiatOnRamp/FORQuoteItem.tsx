@@ -104,6 +104,7 @@ export function FORQuoteItem({
             >
               {logoUrl ? (
                 <UniversalImage
+                  alt=""
                   fallback={<LogoLoader />}
                   size={{
                     height: iconSizes.icon32,

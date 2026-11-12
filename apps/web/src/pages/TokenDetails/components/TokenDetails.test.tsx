@@ -7,6 +7,7 @@ import { TestID } from '@universe/test'
 import type { ComponentProps, ReactNode } from 'react'
 import type { LaunchProvenance } from 'uniswap/src/features/dataApi/launchProvenance'
 import { logger } from 'utilities/src/logger/logger'
+import { currentTimeInSeconds } from 'utilities/src/time/time'
 import type { CurrentBlockState } from '~/features/Toucan/Auction/utils/resolveAuctionDisplayState'
 import { TokenDetailsContent } from '~/pages/TokenDetails/components/TokenDetails'
 import { TokenDetailsAuctionDisplayProvider } from '~/pages/TokenDetails/context/TokenDetailsAuctionDisplayProvider'
@@ -248,8 +249,10 @@ vi.mock('~/pages/TokenDetails/components/rwa/MoreWaysToTrade', () => ({ MoreWays
 vi.mock('~/pages/TokenDetails/components/rwa/RelatedTokens', () => ({ RelatedTokens: () => null }))
 vi.mock('~/pages/TokenDetails/components/earn/TokenDetailsEarnSection', () => ({ TokenDetailsEarnSection: () => null }))
 vi.mock('~/pages/TokenDetails/components/performance/TokenPerformance', () => ({ TokenPerformance: () => null }))
-vi.mock('~/components/NavBar/MobileBottomBar', () => ({
+vi.mock('~/components/MobileBottomBar/MobileBottomBar', () => ({
   MobileBottomBar: ({ children }: { children: ReactNode }) => <>{children}</>,
+}))
+vi.mock('~/pages/TokenDetails/components/TDPActionTabs', () => ({
   TDPActionTabs: () => <div>Buy or sell token</div>,
 }))
 
@@ -442,7 +445,7 @@ describe('TokenDetailsContent', () => {
     'keeps other active custom auctions accessible at %s when the primary is %s with type %s',
     (mediaSize, phase, auctionType) => {
       mockMediaSize(mediaSize)
-      const nowSeconds = BigInt(Math.floor(Date.now() / 1000))
+      const nowSeconds = BigInt(currentTimeInSeconds())
       const primary = {
         ...mockAuction,
         auctionId: 'primary',
@@ -519,7 +522,7 @@ describe('TokenDetailsContent', () => {
     'shows the upcoming banner with other active auctions behind its chip at %s',
     (mediaSize) => {
       mockMediaSize(mediaSize)
-      const nowSeconds = BigInt(Math.floor(Date.now() / 1000))
+      const nowSeconds = BigInt(currentTimeInSeconds())
       const upcoming = {
         ...mockAuction,
         auctionId: 'upcoming',

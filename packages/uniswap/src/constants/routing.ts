@@ -28,6 +28,7 @@ import {
   USDC_BSC,
   USDC_CELO,
   USDC_E_TEMPO,
+  USDC_ELYSIUM,
   USDC_INK,
   USDC_LINEA,
   USDC_MAINNET,
@@ -181,6 +182,12 @@ export const COMMON_BASES: ChainCurrencyList = {
     WRAPPED_NATIVE_CURRENCY[UniverseChainId.Ink] as Token,
     USDT0_INK,
     USDC_INK,
+  ].map(buildPartialCurrencyInfo),
+
+  [UniverseChainId.Elysium]: [
+    nativeOnChain(UniverseChainId.Elysium),
+    WRAPPED_NATIVE_CURRENCY[UniverseChainId.Elysium] as Token,
+    USDC_ELYSIUM,
   ].map(buildPartialCurrencyInfo),
 
   [UniverseChainId.Soneium]: [

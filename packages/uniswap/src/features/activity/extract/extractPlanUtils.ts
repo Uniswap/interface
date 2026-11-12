@@ -28,6 +28,8 @@ export function createTransactionDetails(params: {
   tokenOutChainId?: MaybeChainId
   tokenInAddress?: Address
   tokenOutAddress?: Address
+  /** The vendor of a bridge step, when the source names it. */
+  bridgeProvider?: TradingApi.BridgeProvider
 }): TransactionDetails | null {
   const {
     routing,
@@ -44,6 +46,7 @@ export function createTransactionDetails(params: {
     from,
     hash,
     stepIndex,
+    bridgeProvider,
   } = params
 
   const validatedTokenIn = validateAndBuildCurrencyId({
@@ -159,6 +162,7 @@ export function createTransactionDetails(params: {
           outputCurrencyAmountRaw,
           stepIndex,
           stepType: planStepType,
+          bridgeProvider,
         },
       }
     }

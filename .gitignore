@@ -143,3 +143,6 @@ packages/casebook/*/exports/testlio_*_manual_import.csv
 packages/casebook/*/updates/
 # Casebook's local git-churn cache (--precompute-fragility); rebuilt on demand
 .casebook-fragility-cache.json
+
+# SwiftPM / build caches
+.build/

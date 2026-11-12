@@ -7,6 +7,7 @@ import {
 } from 'uniswap/src/features/tokenCategories/types'
 import { poolCategory, poolCategoryTopPool } from 'uniswap/src/test/fixtures/poolCategory'
 import { tokenCategory } from 'uniswap/src/test/fixtures/tokenCategory'
+import { noop } from 'utilities/src/react/noop'
 import {
   CategoryDefinitionCard,
   type CategoryDefinitionCardLayout,
@@ -41,8 +42,6 @@ const stocks = tokenCategory({
   topTokens: [makeToken('TSLA'), makeToken('AAPL'), makeToken('NVDA')],
   topGroups: [],
 })
-
-const noop = (): void => {}
 
 describe.each<CategoryDefinitionCardLayout>(['popover', 'sheet'])('CategoryDefinitionCard (%s)', (layout) => {
   it('renders name, 24H change, description and the top-token logo pile', () => {

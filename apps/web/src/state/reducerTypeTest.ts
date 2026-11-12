@@ -23,11 +23,11 @@ import { type SagaState } from 'uniswap/src/utils/saga'
 import { type ApplicationState, type OpenModalParams } from '~/state/application/reducer'
 import { type FiatOnRampTransactionsState } from '~/state/fiatOnRampTransactions/reducer'
 import { type ListsState } from '~/state/lists/types'
-import { type RouterPreference } from '~/state/routing/types'
 import { type UserState } from '~/state/user/reducer'
 import { type SlippageTolerance } from '~/state/user/types'
 import { type WalletCapabilitiesState } from '~/state/walletCapabilities/types'
 import { type InterfaceState } from '~/state/webReducer'
+import { type RouterPreference } from '~/types/routing'
 import { type PopupType } from '~/utils/popups/types'
 
 /**

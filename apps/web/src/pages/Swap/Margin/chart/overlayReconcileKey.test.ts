@@ -1,11 +1,11 @@
-import { LineStyle, type UTCTimestamp } from 'lightweight-charts'
+import { LineStyle } from 'lightweight-charts'
 import { describe, expect, it } from 'vitest'
 import { computeOverlaysReconcileKey } from '~/pages/Swap/Margin/chart/overlayReconcileKey'
 import type { MarginChartOverlays, MarginOverlayLine } from '~/pages/Swap/Margin/chart/useMarginChartOverlays'
 
 const line = (overrides?: Partial<MarginOverlayLine>): MarginOverlayLine => ({
-  id: 'entry',
-  role: 'entry',
+  id: 'previewEntry',
+  role: 'previewEntry',
   priority: 1,
   price: 100,
   color: '#ffffff',
@@ -18,7 +18,6 @@ const line = (overrides?: Partial<MarginOverlayLine>): MarginOverlayLine => ({
 
 const overlays = (overrides?: Partial<MarginChartOverlays>): MarginChartOverlays => ({
   priceLines: [line()],
-  markers: [],
   autoscaleBounds: { min: 90, max: 110 },
   ...overrides,
 })
@@ -47,16 +46,5 @@ describe('computeOverlaysReconcileKey', () => {
   it('changes when autoscale bounds shift or drop', () => {
     expect(keyOf(overlays({ autoscaleBounds: { min: 90, max: 111 } }))).not.toBe(keyOf(overlays()))
     expect(keyOf(overlays({ autoscaleBounds: undefined }))).not.toBe(keyOf(overlays()))
-  })
-
-  it('changes when a marker is added', () => {
-    const markers: MarginChartOverlays['markers'] = [{ time: 100 as UTCTimestamp, price: 100, kind: 'open' }]
-    expect(keyOf(overlays({ markers }))).not.toBe(keyOf(overlays()))
-  })
-
-  it('changes when zone.emphasis changes', () => {
-    const withEmphasis = (emphasis: number): MarginChartOverlays =>
-      overlays({ zone: { edgePrice: 80, side: 'below', emphasis } })
-    expect(keyOf(withEmphasis(0.5))).not.toBe(keyOf(withEmphasis(0.9)))
   })
 })

@@ -1,5 +1,6 @@
 import { SubscriptionManager } from '@universe/websocket/src/subscriptions/SubscriptionManager'
-import { describe, expect, it, vi } from 'vitest'
+import { sleep } from 'utilities/src/time/timing'
+import { describe, expect, it, type Mock, vi } from 'vitest'
 
 interface TestParams {
   channel: string
@@ -11,17 +12,17 @@ interface TestMessage {
 }
 
 function flushMicrotasks(): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, 0))
+  return sleep(0)
 }
 
 function createTestManager(options?: { onSubscriptionCountChange?: (count: number) => void }): {
   manager: SubscriptionManager<TestParams, TestMessage>
   handler: {
-    subscribe: ReturnType<typeof vi.fn>
-    unsubscribe: ReturnType<typeof vi.fn>
-    subscribeBatch: ReturnType<typeof vi.fn>
-    unsubscribeBatch: ReturnType<typeof vi.fn>
-    refreshSession: ReturnType<typeof vi.fn>
+    subscribe: Mock
+    unsubscribe: Mock
+    subscribeBatch: Mock
+    unsubscribeBatch: Mock
+    refreshSession: Mock
   }
 } {
   const handler = {

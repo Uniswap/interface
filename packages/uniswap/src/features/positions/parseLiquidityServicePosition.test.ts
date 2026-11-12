@@ -116,6 +116,17 @@ describe('parseLiquidityServicePosition', () => {
     vi.clearAllMocks()
   })
 
+  describe('quote token', () => {
+    it('flags token0 as the quote when the backend serves it as the quote token', () => {
+      expect(parseLiquidityServicePosition(enrichedV3Position({ quoteTokenAddress: USDC }))?.isToken0Quote).toBe(true)
+    })
+
+    it('keeps token0 / token1 order when token1 is the quote or the quote is unresolved', () => {
+      expect(parseLiquidityServicePosition(enrichedV3Position({ quoteTokenAddress: WETH }))?.isToken0Quote).toBe(false)
+      expect(parseLiquidityServicePosition(enrichedV3Position())?.isToken0Quote).toBe(false)
+    })
+  })
+
   describe('enriched happy path', () => {
     it('maps an in-range V3 position with SDK pool/position, currencies from metadata, and USD value', () => {
       const parsed = parseLiquidityServicePosition(enrichedV3Position())

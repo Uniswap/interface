@@ -5,7 +5,7 @@ const SCROLL_EDGE_TOLERANCE_PX = 1
 /** Approximate px per line when `WheelEvent.deltaMode` is `DOM_DELTA_LINE` (common on Windows). */
 const WHEEL_LINE_HEIGHT_PX = 40
 
-const EDGE_FADE_WIDTH_PX = 24
+export const EDGE_FADE_WIDTH_PX = 24
 
 export interface EdgeFades {
   left: boolean

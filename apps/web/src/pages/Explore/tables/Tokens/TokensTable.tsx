@@ -9,6 +9,7 @@ import { TestID } from '@universe/test'
 import { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber.web'
+import { getIsStablecoin } from 'uniswap/src/components/charts/utils'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useFeatureFlaggedChainIds } from 'uniswap/src/features/chains/hooks/useFeatureFlaggedChainIds'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -40,6 +41,7 @@ import {
 import { TokenSortMethod } from '~/components/Tokens/constants'
 import { SparklineMap } from '~/data/types'
 import { getTokenDetailsURL, OrderDirection, unwrapToken } from '~/data/util'
+import { useExploreParams } from '~/features/Explore/hooks/useExploreParams'
 import { useExploreTablesFilterStore } from '~/features/Explore/state/exploreTablesFilterStore'
 import { getExploreMultichainExpandRowMetrics } from '~/features/Explore/state/listTokens/utils/getExploreMultichainExpandRowMetrics'
 import { multichainTokenKey } from '~/features/Explore/state/listTokens/utils/multichainTokenKey'
@@ -48,7 +50,6 @@ import {
   getVolumeForTimePeriod,
   pickAllowedPrimaryDeployment,
 } from '~/features/Explore/state/listTokens/utils/multichainVolume'
-import { useExploreParams } from '~/pages/Explore/redirects'
 import { LivePriceCell } from '~/pages/Explore/tables/Tokens/LivePriceCell'
 import { getNativeBrandingChainId } from '~/pages/Explore/tables/Tokens/nativeBrandingChainId'
 import { resolveRankedTokenIssuer } from '~/pages/Explore/tables/Tokens/rankedTokenIssuer'
@@ -100,7 +101,7 @@ export function TokenTable({
   const exploreChainId = chainFilter ? getChainIdFromChainUrlParam(chainFilter) : undefined
   const featureFlaggedChainIds = useFeatureFlaggedChainIds()
   const rwaWhitelist = useRWAWhitelist()
-  const plainTokenNames = useIsTokenCategoriesEnabled()
+  const tokenCategoriesEnabled = useIsTokenCategoriesEnabled()
 
   const { lg: isLg } = useMedia()
   const textVariant = isLg ? '$body3' : '$body2'
@@ -143,7 +144,11 @@ export function TokenTable({
         const chainIdsByVolume =
           getChainIdsByVolume({ rankedToken, timePeriod, allowedChainIds: featureFlaggedChainIds }) ?? []
         const { rwaMatch, issuer } = resolveRankedTokenIssuer({ multichainToken: mc, rwaWhitelist })
-        const { name } = getRWAHeaderIdentity({ rwaMatch, fallbackName: unwrappedToken.name, plainTokenNames })
+        const { name } = getRWAHeaderIdentity({
+          rwaMatch,
+          fallbackName: unwrappedToken.name,
+          plainTokenNames: tokenCategoriesEnabled,
+        })
         // Count and TDP link mode derive from the same filtered set as the "N networks" label,
         // or a flag-disabled leg desyncs them. The volume cell's info affordance gates separately
         // on the visible breakdown (hasVolumeBreakdown), matching the popover's own condition.
@@ -202,6 +207,7 @@ export function TokenTable({
                 multichainId={rowKey}
                 pricePercentChange={delta1d}
                 sparklineMap={sparklines}
+                isStablecoin={getIsStablecoin({ tokenCategoriesEnabled, categoryIds: mc.categoryIds }) === true}
               />
             ),
             link: getTokenDetailsURL({
@@ -237,7 +243,7 @@ export function TokenTable({
       filterString,
       formatPercent,
       rwaWhitelist,
-      plainTokenNames,
+      tokenCategoriesEnabled,
       sparklines,
       timePeriod,
       tokenSortRank,

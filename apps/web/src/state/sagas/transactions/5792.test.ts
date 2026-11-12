@@ -7,6 +7,7 @@ import {
   type InterfaceTransactionDetails,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import type { Mock } from 'vitest'
 import { handleAtomicSendCalls, parseCaip345TransactionHash } from '~/state/sagas/transactions/5792'
 import { popupRegistry } from '~/utils/popups/registry'
 import { PopupType } from '~/utils/popups/types'
@@ -22,7 +23,7 @@ vi.mock('~/state/activity/utils', () => ({ getRoutingForTransaction: () => 'CLAS
 vi.mock('~/utils/popups/registry', () => ({ popupRegistry: { addPopup: vi.fn() } }))
 vi.mock('~/state/sagas/transactions/utils', () => ({
   getSigner: () => ({ provider: { send: (...args: unknown[]) => mockProviderSend(...args) } }),
-  *watchForInterruption(): Generator<undefined, { throwIfInterrupted: ReturnType<typeof vi.fn> }, unknown> {
+  *watchForInterruption(): Generator<undefined, { throwIfInterrupted: Mock }, unknown> {
     yield undefined
     return { throwIfInterrupted: vi.fn() }
   },

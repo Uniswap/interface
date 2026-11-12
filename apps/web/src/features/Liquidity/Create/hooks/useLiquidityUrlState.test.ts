@@ -4,7 +4,7 @@ import { UniverseChainId } from '@universe/chains'
 import { useQueryState, useQueryStates } from 'nuqs'
 import { DYNAMIC_FEE_AMOUNT } from 'uniswap/src/constants/pools'
 import { nativeOnChain, USDC, USDC_UNICHAIN } from 'uniswap/src/constants/tokens'
-import { vi } from 'vitest'
+import { type Mock, vi } from 'vitest'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { useLiquidityUrlState } from '~/features/Liquidity/Create/hooks/useLiquidityUrlState'
 import { DEFAULT_FEE_DATA, PositionFlowStep } from '~/features/Liquidity/Create/types'
@@ -530,11 +530,11 @@ describe('useLiquidityUrlState', () => {
     // `?protocolVersion` is the version's only carrier — there is no path segment for it — so a
     // switch that isn't written back leaves the URL naming the old version beside the new version's
     // fee data, and a reload or shared link re-seeds that mix.
-    function syncedVersions(setReplaceState: ReturnType<typeof vi.fn>): unknown[] {
+    function syncedVersions(setReplaceState: Mock): unknown[] {
       return setReplaceState.mock.calls.map((call) => call[0]?.protocolVersion)
     }
 
-    function renderWithSetter(): { setReplaceState: ReturnType<typeof vi.fn> } {
+    function renderWithSetter(): { setReplaceState: Mock } {
       const setReplaceState = vi.fn()
       useQueryStatesMock.mockReturnValue([
         {

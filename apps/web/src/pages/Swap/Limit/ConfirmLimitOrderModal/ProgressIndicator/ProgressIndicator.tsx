@@ -11,18 +11,19 @@ import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { currencyId } from 'uniswap/src/utils/currencyId'
+import { currentTimeInSeconds } from 'utilities/src/time/time'
+import { ICON_SIZE, Step, StepDetails } from '~/components/ConfirmModal/ProgressIndicator/Step'
+import { ConfirmModalState } from '~/components/ConfirmModal/types'
 import { useAccount } from '~/connection/hooks/useAccount'
 import { useColor } from '~/hooks/useColor'
 import { useNativeCurrency } from '~/lib/hooks/useNativeCurrency'
-import { ICON_SIZE, Step, StepDetails } from '~/pages/Swap/Limit/ConfirmLimitOrderModal/ProgressIndicator/Step'
 import { useBlockConfirmationTime } from '~/pages/Swap/Limit/ConfirmLimitOrderModal/ProgressIndicator/useBlockConfirmationTime'
-import { ConfirmModalState } from '~/pages/Swap/Limit/ConfirmLimitOrderModal/state'
-import { InterfaceTrade } from '~/state/routing/types'
-import { isLimitTrade, isUniswapXSwapTrade, isUniswapXTradeType } from '~/state/routing/utils'
 import { useIsTransactionConfirmed, useUniswapXOrderByOrderHash } from '~/state/transactions/hooks'
 import { Divider } from '~/theme/components/Dividers'
+import { InterfaceTrade } from '~/types/routing'
 import type { LimitOrderResult } from '~/types/trade'
 import { SignatureExpiredError } from '~/utils/errors'
+import { isLimitTrade, isUniswapXSwapTrade, isUniswapXTradeType } from '~/utils/routing/routing'
 
 /** Single source of truth for progress-indicator modal states (excludes {@link ConfirmModalState.REVIEWING}). */
 export const PROGRESS_INDICATOR_STEPS = [
@@ -179,7 +180,7 @@ export function ProgressIndicator({
         actionRequiredTitle: isLimitTrade(trade) ? t('common.confirmWallet') : t('common.confirmSwap'),
         inProgressTitle: isLimitTrade(trade) ? t('common.pendingEllipsis') : t('common.swapPending'),
         ...(isUniswapXSwapTrade(trade) && {
-          timeToStart: trade.order.info.deadline - Math.floor(Date.now() / 1000),
+          timeToStart: trade.order.info.deadline - currentTimeInSeconds(),
           delayedStartTitle: t('common.confirmTimedOut'),
         }),
         learnMoreLinkText: isLimitTrade(trade) ? t('limits.learnMore') : t('common.learnMoreSwap'),

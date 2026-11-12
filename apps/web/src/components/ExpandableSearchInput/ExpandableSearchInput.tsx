@@ -1,7 +1,8 @@
 import { Flex, IconButton, Input, zIndexes } from '@universe/mycelium'
 import { Search } from '@universe/mycelium/icons/Search'
 import { X } from '@universe/mycelium/icons/X'
-import { useState } from 'react'
+import { type Ref, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { transitions } from '~/theme/styles'
 
 // Left padding that clears the absolutely-positioned search glyph.
@@ -16,6 +17,7 @@ const SEARCH_BORDER_WIDTH = 1
  * exactly that sum. Exported so sibling toolbar icon buttons can match this footprint.
  */
 export const COLLAPSED_SEARCH_WIDTH = SEARCH_GLYPH_INSET + SEARCH_COLLAPSED_RIGHT_PAD + SEARCH_BORDER_WIDTH * 2
+export const WIDE_SEARCH_WIDTH = 344
 
 interface ExpandableSearchInputProps {
   value: string
@@ -28,7 +30,11 @@ interface ExpandableSearchInputProps {
   isOpen?: boolean
   /** Responsive props for medium breakpoint */
   responsive?: boolean
+  /** Keeps the input expanded at this width outside responsive mobile mode, without forcing focus. */
+  alwaysExpandedWidth?: number
   'data-testid'?: string
+  'aria-label'?: string
+  inputRef?: Ref<Input>
 }
 
 export function ExpandableSearchInput({
@@ -40,8 +46,12 @@ export function ExpandableSearchInput({
   onClose,
   isOpen: isOpenProp,
   responsive,
+  alwaysExpandedWidth,
   'data-testid': dataTestId,
+  'aria-label': ariaLabel,
+  inputRef,
 }: ExpandableSearchInputProps) {
+  const { t } = useTranslation()
   const [isOpenInternal, setIsOpenInternal] = useState(false)
   const isOpen = isOpenProp ?? isOpenInternal
 
@@ -92,9 +102,11 @@ export function ExpandableSearchInput({
         <Search size="$icon.20" color="$neutral1" />
       </Flex>
       <Input
+        ref={inputRef}
         data-testid={dataTestId}
+        aria-label={ariaLabel}
         placeholder={placeholder}
-        placeholderTextColor="$neutral3"
+        placeholderTextColor="$neutral2"
         autoComplete="off"
         value={value}
         onChangeText={onChangeText}
@@ -103,7 +115,7 @@ export function ExpandableSearchInput({
         borderWidth={SEARCH_BORDER_WIDTH}
         borderColor={isOpen ? '$accent1' : '$surface3'}
         height="100%"
-        width={isOpen ? 200 : 0}
+        width={alwaysExpandedWidth ?? (isOpen ? 200 : 0)}
         pl={SEARCH_GLYPH_INSET}
         pr={isOpen ? 30 : SEARCH_COLLAPSED_RIGHT_PAD}
         color="$neutral2"
@@ -136,7 +148,15 @@ export function ExpandableSearchInput({
       />
       {isOpen && (
         <Flex row centered position="absolute" right={6} zIndex={zIndexes.mask}>
-          <IconButton size="xxsmall" emphasis="secondary" onPress={handleClose} icon={<X />} p={3} scale={0.8} />
+          <IconButton
+            size="xxsmall"
+            emphasis="secondary"
+            onPress={handleClose}
+            icon={<X />}
+            aria-label={t('common.clear')}
+            p={3}
+            scale={0.8}
+          />
         </Flex>
       )}
     </Flex>

@@ -1,9 +1,17 @@
 import { Environment } from '@universe/environment'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { isRpcNotFound, rpcConnectCode, rpcHttpStatus, rpcPost } from './connectrpcClient'
+import { afterEach, beforeEach, describe, expect, it, type Mock, vi } from 'vitest'
+import {
+  RpcHttpError,
+  isRpcNotFound,
+  rpcConnectCode,
+  rpcHttpStatus,
+  rpcPost,
+  rpcUpstreamFromPath,
+  upstreamErrorFields,
+} from './connectrpcClient'
 import { createConfigServerClient } from './createConfigServerClient'
 
-function mockFetch(response: { status: number; body: string }): ReturnType<typeof vi.fn> {
+function mockFetch(response: { status: number; body: string }): Mock {
   const fetchMock = vi.fn(async () => ({
     ok: response.status >= 200 && response.status < 300,
     status: response.status,
@@ -267,5 +275,50 @@ describe('isRpcNotFound', () => {
   it('is false for an error that never came from an RPC', () => {
     expect(isRpcNotFound(new Error('boom'))).toBe(false)
     expect(isRpcNotFound('not an error')).toBe(false)
+  })
+})
+
+describe('rpcUpstreamFromPath', () => {
+  it('splits a Connect path into service and rpc', () => {
+    expect(rpcUpstreamFromPath('/configservice.v1.ConfigService/GetParameterValue')).toEqual({
+      service: 'configservice.v1.ConfigService',
+      rpc: 'GetParameterValue',
+    })
+  })
+})
+
+describe('upstreamErrorFields', () => {
+  beforeEach(() => {
+    vi.stubGlobal('AbortSignal', { timeout: vi.fn(() => 'mock-signal') })
+  })
+
+  afterEach(() => {
+    vi.unstubAllGlobals()
+    vi.restoreAllMocks()
+  })
+
+  it('reports status, code and rpc for a Connect error, through a re-wrap', async () => {
+    mockFetch({ status: 400, body: JSON.stringify({ code: 'invalid_argument', message: 'BadRequest: key' }) })
+
+    const rpcError = await rpcPost('example.com', '/svc.v1.Svc/Method', {}, {}).catch((e: unknown) => e)
+    const wrapped = new Error('Method failed', { cause: rpcError })
+
+    expect(upstreamErrorFields(wrapped)).toEqual({
+      upstream_status: 400,
+      upstream_code: 'invalid_argument',
+      upstream_service: 'svc.v1.Svc',
+      upstream_rpc: 'Method',
+    })
+  })
+
+  it('omits the code for a code-less gateway 404 so it stays distinguishable from absence', () => {
+    const error = new RpcHttpError('Route POST:/x not found', 404, undefined, { service: 's', rpc: 'r' })
+
+    expect(upstreamErrorFields(error)).toEqual({ upstream_status: 404, upstream_service: 's', upstream_rpc: 'r' })
+    expect(isRpcNotFound(error)).toBe(false)
+  })
+
+  it('is empty for an error that never came from an RPC', () => {
+    expect(upstreamErrorFields(new Error('boom'))).toEqual({})
   })
 })

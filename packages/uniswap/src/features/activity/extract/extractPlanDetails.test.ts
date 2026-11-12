@@ -1,4 +1,10 @@
-import { EarnPlanAction, PlanStatus, PlanStepStatus, SwapType } from '@uniswap/client-data-api/dist/data/v1/plan_pb'
+import {
+  EarnPlanAction,
+  MarginPlanAction,
+  PlanStatus,
+  PlanStepStatus,
+  SwapType,
+} from '@uniswap/client-data-api/dist/data/v1/plan_pb'
 import type { PlanActivity, PlanTransaction, TokenAmount } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import { TradingApi } from '@universe/api'
 import { EarnAction } from '@universe/api/src/clients/trading/__generated__/models/EarnAction'
@@ -192,5 +198,25 @@ describe(extractPlanDetails, () => {
     )
 
     expect(details?.typeInfo.stepDetails[0]?.routing).toBe(TradingApi.Routing.CHAINED)
+  })
+
+  it.each([
+    ['keys margin tokens to the out chain on a bridge-funded plan', VAULT_ADDRESS, `1-${VAULT_ADDRESS}`],
+    ['leaves marginAction unset when a margin token is empty', '', undefined],
+  ])('%s', (_, debtToken, expectedDebtCurrencyId) => {
+    const bridgedIn = {
+      ...tokenAmount(DAI.address, '1'),
+      token: { address: DAI.address, chainId: UniverseChainId.Base },
+    }
+    const details = extractPlanDetails({
+      ...planTransaction({
+        assetsIn: [bridgedIn as TokenAmount],
+        assetsOut: [tokenAmount(DAI.address, '1')],
+        activities: [],
+      }),
+      marginMetadata: { action: MarginPlanAction.OPEN, collateralToken: DAI.address, debtToken },
+    } as PlanTransaction)
+
+    expect(details?.typeInfo.marginAction?.debtCurrencyId).toBe(expectedDebtCurrencyId)
   })
 })

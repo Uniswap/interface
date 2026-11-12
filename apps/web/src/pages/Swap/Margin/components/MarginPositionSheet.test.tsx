@@ -20,17 +20,17 @@ vi.mock('~/pages/Swap/Margin/MarginChartPane', () => ({
   MarginChartPane: ({
     compact,
     pinnedMarket,
-    focusPositionId,
+    focusedPosition,
   }: {
     compact?: boolean
     pinnedMarket?: MarginMarket
-    focusPositionId?: string
+    focusedPosition?: MarginActivePosition
   }) => (
     <div
       data-testid="margin-chart-pane-stub"
       data-compact={String(compact)}
       data-market={pinnedMarket?.key}
-      data-focus={focusPositionId}
+      data-focus={focusedPosition?.positionId}
     />
   ),
 }))

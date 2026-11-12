@@ -1,13 +1,14 @@
 import { useWeb3React } from '@web3-react/core'
 import { parse } from 'qs'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router'
+import { useLocation } from 'react-router'
 import { useConversionTracking } from 'uniswap/src/data/apiClients/conversionTracking/useConversionTracking'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { usePrevious } from 'utilities/src/react/hooks'
 import { usePrivacySharingStore } from '~/components/PrivacyChoices/privacySharingStore'
 import { useAccount } from '~/connection/hooks/useAccount'
-import { usePrevious } from '~/hooks/usePrevious'
+import { useRedirectAfterConnect } from '~/features/wallet/hooks/useRedirectAfterConnect'
 import { Landing as LandingContent } from '~/pages/Landing/Landing'
 import { useAccountDrawer } from '~/state/accountDrawer/hooks'
 
@@ -22,7 +23,7 @@ export function Landing() {
   const [transition, setTransition] = useState(false)
   const location = useLocation()
   const queryParams = useMemo(() => parse(location.search, { ignoreQueryPrefix: true }), [location])
-  const navigate = useNavigate()
+  const redirectAfterConnect = useRedirectAfterConnect()
   const accountDrawer = useAccountDrawer()
   const prevAccount = usePrevious(account.address)
   const redirectOnConnect = useRef(false)
@@ -40,7 +41,7 @@ export function Landing() {
     }
   }, [initConversionTracking, privacySharingOptOut])
 
-  // Smoothly redirect to swap page if user connects while on landing page
+  // Smoothly redirect to swap (or Portfolio, for an unfunded wallet) if user connects while on landing page
   useEffect(() => {
     // Skip logic on the first render because prevAccount will always be undefined on the first render
     // and we don't want to redirect on the first render because that mean's we're possibly coming from
@@ -57,13 +58,21 @@ export function Landing() {
     }
     const timeoutId = setTimeout(() => {
       if (redirectOnConnect.current) {
-        navigate('/swap')
+        redirectAfterConnect('/swap')
       } else if (account.address && queryParams.intro) {
         disconnect()
       }
     }, 125)
     return () => clearTimeout(timeoutId)
-  }, [account.address, prevAccount, accountDrawer.isOpen, navigate, queryParams.intro, connector, disconnect])
+  }, [
+    account.address,
+    prevAccount,
+    accountDrawer.isOpen,
+    redirectAfterConnect,
+    queryParams.intro,
+    connector,
+    disconnect,
+  ])
 
   return (
     <Trace logImpression page={InterfacePageName.LandingPage}>

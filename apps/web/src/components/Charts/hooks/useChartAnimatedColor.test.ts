@@ -1,5 +1,5 @@
 import { act, renderHook } from '@testing-library/react'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, type Mock, vi } from 'vitest'
 import { useChartAnimatedColor } from '~/components/Charts/hooks/useChartAnimatedColor'
 
 function parseHex(hex: string): [number, number, number] | null {
@@ -32,8 +32,8 @@ describe('useChartAnimatedColor', () => {
   let currentTime = 0
   let pendingRafCallback: FrameRequestCallback | null = null
   let nextRafId = 0
-  let requestAnimationFrameMock: ReturnType<typeof vi.fn>
-  let cancelAnimationFrameMock: ReturnType<typeof vi.fn>
+  let requestAnimationFrameMock: Mock
+  let cancelAnimationFrameMock: Mock
 
   const flushRaf = (now = currentTime): void => {
     if (pendingRafCallback) {

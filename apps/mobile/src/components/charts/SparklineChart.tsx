@@ -37,6 +37,7 @@ interface SparklineChartProps {
   height: number
   color: string
   yGutter?: number
+  isStablecoin?: boolean
   showDot?: boolean
   dotStrokeColor?: string
   interactive?: boolean
@@ -53,6 +54,7 @@ export const SparklineChart = memo(function SparklineChart({
   height,
   color,
   yGutter = 0,
+  isStablecoin = false,
   showDot = false,
   dotStrokeColor,
   interactive = false,
@@ -75,8 +77,16 @@ export const SparklineChart = memo(function SparklineChart({
   // Preserve the min/max envelope per horizontal point, plus the endpoints.
   // Scrub indices still address the full-resolution history.
   const { linePath, areaPath, lastPoint, timestamps } = useMemo(
-    () => computeChartPaths({ data, dataWidth, height, yGutter, maxPoints: 2 * Math.ceil(dataWidth) + 2 }),
-    [data, dataWidth, height, yGutter],
+    () =>
+      computeChartPaths({
+        data,
+        dataWidth,
+        height,
+        yGutter,
+        maxPoints: 2 * Math.ceil(dataWidth) + 2,
+        isStablecoin,
+      }),
+    [data, dataWidth, height, yGutter, isStablecoin],
   )
 
   const parsedSegments = useMemo(() => (linePath ? parseSvgPath(linePath) : null), [linePath])

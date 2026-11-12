@@ -1,14 +1,19 @@
 import { UniverseChainId } from '@universe/chains'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import { useMedia } from '@universe/mycelium'
 import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useNavigate, useSearchParams } from 'react-router'
 import { useEvent } from 'utilities/src/react/hooks'
+import { WIDE_SEARCH_WIDTH } from '~/components/ExpandableSearchInput/ExpandableSearchInput'
 import {
   useExploreTablesFilterStore,
   useExploreTablesFilterStoreActions,
 } from '~/features/Explore/state/exploreTablesFilterStore'
+import { LIVE_POOL_VOLUME_PERIODS } from '~/features/Explore/timeLabels'
 import { buildExploreUrl } from '~/features/Explore/utils/buildExploreUrl'
 import { VolumeTimeFrameSelector } from '~/features/Explore/VolumeTimeFrameSelector'
-import { PoolsFilter } from '~/features/Liquidity/PoolsFilter/PoolsFilter'
+import { PoolsFilter, type PoolsFilterLayout } from '~/features/Liquidity/PoolsFilter/PoolsFilter'
 import { TableNetworkFilter } from '~/pages/Explore/NetworkFilter'
 import { SearchBar } from '~/pages/Explore/SearchBar'
 import { ExploreTab } from '~/types/explore'
@@ -22,17 +27,23 @@ import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
 export function ExploreTableFilters({
   currentKey,
   tabSupportedNetworks,
+  layout = 'inline',
 }: {
   currentKey: ExploreTab
   tabSupportedNetworks: UniverseChainId[]
+  layout?: PoolsFilterLayout
 }): JSX.Element {
   const navigate = useNavigate()
+  const media = useMedia()
+  const { t } = useTranslation()
+  const isHooksExploreEnabled = useFeatureFlag(FeatureFlags.HooksExplore)
   const [searchParams] = useSearchParams()
   const urlChainId = useChainIdFromUrlParam()
   const poolsFilter = useExploreTablesFilterStore((s) => s.poolsFilter)
   // Published by the Pools table from its loaded rows (see ExploreTopPoolTableContent).
   const poolsAprRange = useExploreTablesFilterStore((s) => s.poolsAprRange)
   const { setPoolsFilter } = useExploreTablesFilterStoreActions()
+  const isPoolArea = layout === 'poolArea'
 
   // The chain lives in the URL path (`/explore/pools/<chain>`), where the other tabs' TableNetworkFilter
   // keeps it too, so a chain-filtered Pools view is linkable and the page title / stats header
@@ -48,11 +59,21 @@ export function ExploreTableFilters({
   if (currentKey === ExploreTab.Pools) {
     return (
       <PoolsFilter
-        search={<SearchBar tab={currentKey} />}
+        search={
+          <SearchBar
+            tab={currentKey}
+            alwaysExpandedWidth={isPoolArea && !media.md ? WIDE_SEARCH_WIDTH : undefined}
+            placeholder={isPoolArea ? t('tokens.table.search.placeholder.pools') : undefined}
+          />
+        }
         value={poolsFilterValue}
         onApply={applyPoolsFilter}
         aprRange={poolsAprRange}
         networks={tabSupportedNetworks}
+        layout={layout}
+        periodSelector={
+          isHooksExploreEnabled ? <VolumeTimeFrameSelector supportedPeriods={LIVE_POOL_VOLUME_PERIODS} /> : undefined
+        }
       />
     )
   }

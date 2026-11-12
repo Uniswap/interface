@@ -41,6 +41,7 @@ export function FiatOnRampCountryPicker({
               <img alt={countryCode} height={ICON_SIZE} src={countryFlagUrl} width={ICON_SIZE} />
             ) : (
               <UniversalImage
+                alt={countryCode}
                 size={{
                   height: ICON_SIZE,
                   width: ICON_SIZE,

@@ -22,6 +22,7 @@ export function RWAIssuerHeaderDetails({ issuer }: RWAIssuerHeaderDetailsProps):
       {issuerLogoUrl ? (
         <UniversalImage
           allowLocalUri
+          alt=""
           size={{ height: logoSize, width: logoSize }}
           style={{ image: { borderRadius: logoSize } }}
           uri={issuerLogoUrl}

@@ -208,6 +208,7 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
                 width={ServiceProviderLogoStyles.icon.width}
               >
                 <UniversalImage
+                  alt=""
                   uri={logoUrl}
                   size={{
                     height: ServiceProviderLogoStyles.icon.height,

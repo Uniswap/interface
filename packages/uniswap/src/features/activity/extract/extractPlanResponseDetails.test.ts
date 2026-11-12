@@ -61,4 +61,33 @@ describe(extractPlanResponseDetails, () => {
     // unhandled chained step type (mirrors VAULT_DEPOSIT/VAULT_WITHDRAW's non-swap handling).
     expect(plan?.typeInfo.stepDetails[0]?.typeInfo.type).not.toBe(TransactionType.Swap)
   })
+
+  it.each([TradingApi.BridgeProvider.RELAY, undefined])(
+    'keeps the vendor a bridge step names (bridgeProvider %s)',
+    (bridgeProvider) => {
+      const plan = extractPlanResponseDetails({
+        planId: 'plan-1',
+        swapper: '0x0000000000000000000000000000000000000001',
+        status: TradingApi.PlanStatus.ACTIVE,
+        createdAt: '2026-06-01T00:00:00.000Z',
+        steps: [
+          {
+            stepType: TradingApi.PlanStepType.BRIDGE,
+            status: TradingApi.PlanStepStatus.AWAITING_ACTION,
+            tokenIn: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
+            tokenInChainId: TradingApi.ChainId._8453,
+            tokenInAmount: '100000000',
+            tokenOut: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+            tokenOutChainId: TradingApi.ChainId._1,
+            tokenOutAmount: '99900000',
+            bridgeProvider,
+          },
+        ],
+      } as TradingApi.PlanResponse)
+
+      expect(plan?.typeInfo.stepDetails[0]?.typeInfo).toEqual(
+        expect.objectContaining({ type: TransactionType.Bridge, bridgeProvider }),
+      )
+    },
+  )
 })

@@ -10,6 +10,7 @@ import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { SubscriptZeroPrice } from '~/components/SubscriptZeroPrice'
+import { RaiseCurrency } from '~/features/Toucan/utils/raiseCurrency'
 import {
   commitDraftToFloorPrice,
   draftMirrorsPersisted,
@@ -27,7 +28,7 @@ import {
   FLOOR_PRICE_SELECTOR_SUBSCRIPT_THRESHOLD,
   useFloorPriceSelectorDisplay,
 } from '~/pages/Liquidity/CreateAuction/components/useFloorPriceSelectorDisplay'
-import { type FloorPriceInputState, RaiseCurrency } from '~/pages/Liquidity/CreateAuction/types'
+import { type FloorPriceInputState } from '~/pages/Liquidity/CreateAuction/types'
 import { getRaiseCurrencyAsCurrency } from '~/pages/Liquidity/CreateAuction/utils'
 import { useLocalizedNumberInput } from '~/pages/Liquidity/CreateAuction/utils/localizedNumberInput'
 

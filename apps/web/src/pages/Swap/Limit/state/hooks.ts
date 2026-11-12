@@ -22,9 +22,9 @@ import {
   useLogMarketPriceReferenceChecks,
 } from '~/pages/Swap/Limit/state/limitMarketPrice'
 import { LimitInfo, LimitState } from '~/pages/Swap/Limit/state/types'
-import { getWrapInfo } from '~/state/routing/gas'
-import { LimitOrderTrade, SwapFeeInfo, WrapInfo } from '~/state/routing/types'
-import { getUSDCostPerGas } from '~/state/routing/utils'
+import { LimitOrderTrade, SwapFeeInfo, WrapInfo } from '~/types/routing'
+import { getWrapInfo } from '~/utils/routing/gas'
+import { getUSDCostPerGas } from '~/utils/routing/routing'
 
 function isStablecoin(currency?: Currency): boolean {
   return (

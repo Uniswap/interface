@@ -5,7 +5,7 @@ import { MockWebSocket } from '@universe/websocket/src/client/__tests__/MockWebS
 import { createWebSocketClient } from '@universe/websocket/src/client/createWebSocketClient'
 import { createZustandConnectionStore } from '@universe/websocket/src/store/createZustandConnectionStore'
 import type { WebSocketClient } from '@universe/websocket/src/types'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, type Mock, vi } from 'vitest'
 
 /**
  * The lifetime contract across an app switch.
@@ -25,10 +25,10 @@ interface Harness {
   client: WebSocketClient<{ channel: string; id: string }, { data: string }>
   sockets: MockWebSocket[]
   handler: {
-    subscribe: ReturnType<typeof vi.fn>
-    unsubscribe: ReturnType<typeof vi.fn>
-    subscribeBatch: ReturnType<typeof vi.fn>
-    unsubscribeBatch: ReturnType<typeof vi.fn>
+    subscribe: Mock
+    unsubscribe: Mock
+    subscribeBatch: Mock
+    unsubscribeBatch: Mock
   }
 }
 

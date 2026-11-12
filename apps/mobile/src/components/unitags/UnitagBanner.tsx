@@ -151,6 +151,7 @@ export function UnitagBanner({
         <Flex alignSelf="center" position="absolute" top={compact ? -(imageHeight * 0.19) : -(imageHeight * 0.22)}>
           {/* Require-source lane ignores size.resizeMode; expo-image's default cover matches the legacy resizeMode="cover". */}
           <UniversalImage
+            alt=""
             size={{ width: imageWidth, height: imageHeight }}
             uri={isDarkMode ? UNITAGS_BANNER_VERTICAL_DARK : UNITAGS_BANNER_VERTICAL_LIGHT}
           />

@@ -23,7 +23,9 @@ exports[`ProviderConnectionError > should render the component and call callback
       tabindex="0"
     >
       <svg
+        aria-hidden="true"
         fill="none"
+        focusable="false"
         stroke-width="8"
         style="color: rgba(19, 19, 19, 0.63); width: 24px; height: 24px;"
         viewBox="0 0 16 16"
@@ -41,8 +43,10 @@ exports[`ProviderConnectionError > should render the component and call callback
       tabindex="0"
     >
       <svg
+        aria-hidden="true"
         class="[color:var(--c-col)] hover:[color:var(--ch-col)]"
         fill="none"
+        focusable="false"
         stroke-width="8"
         style="width: 24px; height: 24px; --c-col: var(--neutral2); --ch-col: var(--neutral2-hovered);"
         viewBox="0 0 24 24"

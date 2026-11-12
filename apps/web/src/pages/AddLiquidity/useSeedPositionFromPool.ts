@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import type { FeeData } from 'uniswap/src/features/positions/types'
 import type { PoolData } from '~/data/pools/poolData'
+import { useCreateLiquidityContext } from '~/features/Liquidity/Create/CreateLiquidityContextProvider'
 import { normalizeHookForMatch } from '~/features/Liquidity/utils/normalizeHookForMatch'
-import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 
 function isSameFee(a: FeeData | undefined, b: FeeData | undefined): boolean {
   return (

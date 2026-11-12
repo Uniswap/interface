@@ -30,12 +30,13 @@ import type { UniversalImageProps } from '../types'
  * container and the `<img>` beneath it are contractual here.
  */
 export function UniversalImage({
+  alt,
   uri,
   style,
   fallback,
   testID,
   allowLocalUri = false,
-}: Pick<UniversalImageProps, 'uri' | 'style' | 'fallback' | 'testID' | 'allowLocalUri'>): JSX.Element | null {
+}: Pick<UniversalImageProps, 'alt' | 'uri' | 'style' | 'fallback' | 'testID' | 'allowLocalUri'>): JSX.Element | null {
   // Numeric ids are require-source assets; the real component routes them to
   // RequireImage, whose web leg paints a blank sized block and stamps no testID.
   // It ignores `fallback` entirely (it performs no load, so the error path cannot
@@ -66,7 +67,7 @@ export function UniversalImage({
   return (
     // oxlint-disable-next-line react/forbid-elements -- jsdom test double; stays a plain div
     <div data-testid={testID ? `${prefix}-${testID}` : undefined}>
-      <img src={imageHttpUrl} />
+      <img alt={alt} src={imageHttpUrl} />
     </div>
   )
 }

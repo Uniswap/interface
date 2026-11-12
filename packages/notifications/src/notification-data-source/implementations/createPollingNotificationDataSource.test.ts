@@ -11,6 +11,7 @@ import { ContentStyle } from '@universe/api'
 import { getNotificationQueryOptions } from '@universe/notifications/src/notification-data-source/getNotificationQueryOptions'
 import { createPollingNotificationDataSource } from '@universe/notifications/src/notification-data-source/implementations/createPollingNotificationDataSource'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+import { sleep } from 'utilities/src/time/timing'
 import { afterEach, beforeEach, describe, expect, it, type Mock, vi } from 'vitest'
 
 function createMockNotification(id: string): InAppNotification {
@@ -220,7 +221,7 @@ describe('createPollingNotificationDataSource', () => {
     await dataSource.stop()
 
     // Wait a bit longer than poll interval
-    await new Promise((resolve) => setTimeout(resolve, 200))
+    await sleep(200)
 
     // Should not have made additional API calls after stop
     expect((mockApiClient.getNotifications as Mock).mock.calls.length).toBe(callCountBeforeStop)
@@ -249,7 +250,7 @@ describe('createPollingNotificationDataSource', () => {
     await dataSource.stop()
 
     // Wait a bit for cleanup to complete
-    await new Promise((resolve) => setTimeout(resolve, 50))
+    await sleep(50)
 
     // Clear the query cache completely
     testQueryClient.clear()

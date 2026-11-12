@@ -4,7 +4,7 @@ import { isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { zeroAddress } from '~/chains'
 import { AuctionProgressState, type UserBid } from '~/features/Toucan/Auction/store/types'
 import { useToucanAuctionSupportedChains } from '~/features/Toucan/supportedChains'
-import { getSupportedAuctionCurrencyAddresses } from '~/pages/Liquidity/CreateAuction/raiseCurrency'
+import { getSupportedAuctionCurrencyAddresses } from '~/features/Toucan/utils/raiseCurrency'
 
 interface UseBidFormWarningStateParams {
   chainId?: UniverseChainId

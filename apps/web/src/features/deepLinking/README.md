@@ -273,7 +273,7 @@ This section provides technical details for developers integrating these URLs in
 
 **Query Parameter Processing:**
 
-1. **Swap / trade URL query helpers** (`pages/Swap/Swap/state/tradeQueryParams.ts`):
+1. **Swap / trade URL query helpers** (`utils/params/tradeQueryParams.ts`):
    - `queryParametersToCurrencyState()` - Parses currency addresses, chain IDs, amounts, and field
    - `parseCurrencyFromURLParameter()` - Validates and normalizes currency addresses
    - `serializeSwapStateToURLParameters()` / `serializeSwapAddressesToURLParameters()` - Build swap query strings

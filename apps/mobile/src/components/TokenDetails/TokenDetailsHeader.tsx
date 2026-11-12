@@ -42,16 +42,16 @@ export const TokenDetailsHeader = memo(function TokenDetailsHeaderInner(): JSX.E
   const isRwaMatchLoading = useIsTokenDetailsRWAMatchLoading()
   const { issuer: rwaIssuer } = useRwaIssuer({ rwaMatch, currencyId })
   const plainTokenNames = useIsTokenCategoriesEnabled()
-  const metadata = useTokenMetadata(currencyId)
+  const { data: metadata, isLoading: isMetadataLoading } = useTokenMetadata(currencyId)
   // The group match resolves after the token metadata; hold the title rather than paint the plain
   // token name and then flip it.
-  const isIdentityLoading = metadata.isLoading || isRwaMatchLoading
+  const isIdentityLoading = isMetadataLoading || isRwaMatchLoading
 
   const isMultichainToken = initialIsMultichainAsset || hasMultichainAddresses
   const { name: tokenName, logoUrl } = getRWAHeaderIdentity({
     rwaMatch,
-    fallbackName: metadata.name ?? undefined,
-    logoUrl: metadata.logoUrl ?? undefined,
+    fallbackName: metadata?.name ?? undefined,
+    logoUrl: metadata?.logoUrl ?? undefined,
     plainTokenNames,
   })
 
@@ -77,7 +77,7 @@ export const TokenDetailsHeader = memo(function TokenDetailsHeaderInner(): JSX.E
         chainId={chainId}
         hideNetworkLogo={isMultichainToken}
         name={tokenName ?? undefined}
-        symbol={rwaMatch?.asset.symbol ?? metadata.symbol ?? undefined}
+        symbol={rwaMatch?.asset.symbol ?? metadata?.symbol ?? undefined}
         url={logoUrl}
         size={iconSizes.icon48}
       />
@@ -123,7 +123,7 @@ export const TokenDetailsHeader = memo(function TokenDetailsHeaderInner(): JSX.E
                   testID={TestID.TokenDetailsHeaderText}
                   variant="body3"
                 >
-                  {metadata.symbol?.toUpperCase() || EM_DASH}
+                  {metadata?.symbol?.toUpperCase() || EM_DASH}
                 </Text>
                 {showPermissionedLock && <Lock color="$neutral2" size="$icon.16" alignSelf="center" flexShrink={0} />}
                 {hasNonNativeAddress && <CopyAlt color="$neutral3" size="$icon.16" alignSelf="center" />}

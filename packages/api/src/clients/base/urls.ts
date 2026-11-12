@@ -1,46 +1,32 @@
 import { Environment } from '@universe/config'
 import {
   isAndroid,
+  isDevPortalApp,
   isExtensionApp,
   isMobileApp,
   isWebApp,
-  isBetaEnv,
-  isDevEnv,
   isE2eTestEnv,
   isTestEnv,
 } from '@universe/environment'
 import {
   DEV_ENTRY_GATEWAY_API_BASE_URL,
   DEV_ENTRY_GATEWAY_HOST,
+  DEV_RPC_API_BASE_URL,
   PROD_ENTRY_GATEWAY_API_BASE_URL,
   PROD_ENTRY_GATEWAY_HOST,
+  PROD_RPC_API_BASE_URL,
   STAGING_ENTRY_GATEWAY_API_BASE_URL,
   STAGING_ENTRY_GATEWAY_HOST,
+  STAGING_RPC_API_BASE_URL,
 } from './entryGatewayUrls'
 
 export enum TrafficFlows {
-  Metrics = 'metrics',
-  Gating = 'gating',
-  Unitags = 'unitags',
-  FOR = 'for',
   Scantastic = 'scantastic',
-  DataApi = 'data-api',
 }
 
 export const helpUrl = 'https://support.uniswap.org/hc/en-us'
 
-const FLOWS_USING_BETA = [TrafficFlows.FOR]
-
-// Lazy: module-scope evaluation crashes non-web/extension servers (isBetaEnv throws).
-function isDevOrBetaEnv(): boolean {
-  return isE2eTestEnv() ? false : isDevEnv() || isBetaEnv()
-}
-
-export function getCloudflarePrefix(flow?: TrafficFlows): string {
-  if (flow && isDevOrBetaEnv() && FLOWS_USING_BETA.includes(flow)) {
-    return `beta`
-  }
-
+export function getCloudflarePrefix(): string {
   if (isMobileApp) {
     return `${isAndroid ? 'android' : 'ios'}.wallet`
   }
@@ -49,7 +35,7 @@ export function getCloudflarePrefix(flow?: TrafficFlows): string {
     return 'extension'
   }
 
-  if (isE2eTestEnv() || isWebApp) {
+  if (isE2eTestEnv() || isWebApp || isDevPortalApp) {
     return 'interface'
   }
 
@@ -61,29 +47,13 @@ export function getCloudflarePrefix(flow?: TrafficFlows): string {
 }
 
 export function getServicePrefix(flow?: TrafficFlows): string {
-  if (flow && (isE2eTestEnv() || !(isDevOrBetaEnv() && FLOWS_USING_BETA.includes(flow)))) {
-    return flow + '.'
-  } else {
-    return ''
-  }
+  return flow ? `${flow}.` : ''
 }
 
 export function getCloudflareApiBaseUrl(params?: { flow?: TrafficFlows; postfix?: string }): string {
   const { flow, postfix } = params ?? {}
-  let baseUrl
-  // DataApi: use staging entry gateway in dev to avoid CORS issues with beta.gateway.
-  // Entry gateway doesn't use the /v2 path prefix, so postfix is intentionally ignored here.
-  if (flow === TrafficFlows.DataApi && isDevEnv() && !isE2eTestEnv()) {
-    return STAGING_ENTRY_GATEWAY_API_BASE_URL
-  } else if (flow === TrafficFlows.DataApi) {
-    baseUrl = `https://${getCloudflarePrefix(flow)}.gateway.uniswap.org`
-  } else {
-    baseUrl = `https://${getServicePrefix(flow)}${getCloudflarePrefix(flow)}.gateway.uniswap.org`
-  }
-  if (postfix) {
-    baseUrl += `/${postfix}`
-  }
-  return baseUrl
+  const baseUrl = `https://${getServicePrefix(flow)}${getCloudflarePrefix()}.gateway.uniswap.org`
+  return postfix ? `${baseUrl}/${postfix}` : baseUrl
 }
 
 export function createHelpArticleUrl(resourceId: string, options?: { path?: string; section?: string }): string {
@@ -98,10 +68,16 @@ export function createHelpArticleUrl(resourceId: string, options?: { path?: stri
 export {
   DEV_ENTRY_GATEWAY_API_BASE_URL,
   DEV_ENTRY_GATEWAY_HOST,
+  DEV_RPC_API_BASE_URL,
+  DEV_RPC_HOST,
   PROD_ENTRY_GATEWAY_API_BASE_URL,
   PROD_ENTRY_GATEWAY_HOST,
+  PROD_RPC_API_BASE_URL,
+  PROD_RPC_HOST,
   STAGING_ENTRY_GATEWAY_API_BASE_URL,
   STAGING_ENTRY_GATEWAY_HOST,
+  STAGING_RPC_API_BASE_URL,
+  STAGING_RPC_HOST,
 } from './entryGatewayUrls'
 
 /** Entry Gateway base URL (with scheme) per backend environment. */
@@ -116,4 +92,11 @@ export const ENTRY_GATEWAY_HOSTS: Record<Environment, string> = {
   [Environment.Development]: DEV_ENTRY_GATEWAY_HOST,
   [Environment.Staging]: STAGING_ENTRY_GATEWAY_HOST,
   [Environment.Production]: PROD_ENTRY_GATEWAY_HOST,
+}
+
+/** Entry Gateway public front-door base URL (with scheme) per backend environment. */
+export const RPC_API_BASE_URLS: Record<Environment, string> = {
+  [Environment.Development]: DEV_RPC_API_BASE_URL,
+  [Environment.Staging]: STAGING_RPC_API_BASE_URL,
+  [Environment.Production]: PROD_RPC_API_BASE_URL,
 }

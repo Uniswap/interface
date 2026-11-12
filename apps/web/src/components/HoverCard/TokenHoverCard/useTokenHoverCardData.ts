@@ -9,9 +9,9 @@ import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { getPortfolioChartPercentChange } from 'uniswap/src/features/portfolio/portfolioChartPercentChange'
 import { useCurrencyInfoWithLoading } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import type { PriceChartData } from '~/components/Charts/PriceChart'
-import { PriceChartType } from '~/components/Charts/utils'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { useTokenPriceChartData } from '~/hooks/useTokenPriceChartData'
+import { PriceChartType } from '~/utils/charts'
 import { getNativeTokenDBAddress } from '~/utils/nativeTokens'
 
 /**

@@ -113,7 +113,9 @@ exports[`PoolTable > renders data filled state 1`] = `
                         class="flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 inline-flex transition-opacity duration-[80ms] ease-in-out hover:opacity-50"
                       >
                         <svg
+                          aria-hidden="true"
                           fill="none"
+                          focusable="false"
                           stroke-width="8"
                           style="width: 16px; height: 16px;"
                           viewBox="0 0 24 24"
@@ -244,8 +246,8 @@ exports[`PoolTable > renders data filled state 1`] = `
           style="height: 132px;"
         >
           <div
-            class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 w-[100%] absolute top-[0px] left-[0px]"
-            style="height: 66px; transform: translateY(0px); will-change: transform;"
+            class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 w-[100%] absolute left-[0px]"
+            style="height: 66px; top: 0px;"
           >
             <div
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 group group"
@@ -311,6 +313,7 @@ exports[`PoolTable > renders data filled state 1`] = `
                                   style="box-sizing: border-box; display: flex; flex-direction: column; flex-shrink: 0; min-width: 0;"
                                 >
                                   <img
+                                    alt=""
                                     height="32"
                                     src="eth-logo.png"
                                     style="object-fit: cover; width: 32px; height: 32px; border-radius: 32px; z-index: 1;"
@@ -337,6 +340,7 @@ exports[`PoolTable > renders data filled state 1`] = `
                                   style="box-sizing: border-box; display: flex; flex-direction: column; flex-shrink: 0; min-width: 0;"
                                 >
                                   <img
+                                    alt=""
                                     height="32"
                                     src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
                                     style="object-fit: cover; width: 32px; height: 32px; border-radius: 32px; z-index: 1;"
@@ -489,8 +493,8 @@ exports[`PoolTable > renders data filled state 1`] = `
             </div>
           </div>
           <div
-            class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 w-[100%] absolute top-[0px] left-[0px]"
-            style="height: 66px; transform: translateY(66px); will-change: transform;"
+            class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 w-[100%] absolute left-[0px]"
+            style="height: 66px; top: 66px;"
           >
             <div
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 group group"
@@ -556,6 +560,7 @@ exports[`PoolTable > renders data filled state 1`] = `
                                   style="box-sizing: border-box; display: flex; flex-direction: column; flex-shrink: 0; min-width: 0;"
                                 >
                                   <img
+                                    alt=""
                                     height="32"
                                     src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
                                     style="object-fit: cover; width: 32px; height: 32px; border-radius: 32px; z-index: 1;"
@@ -582,6 +587,7 @@ exports[`PoolTable > renders data filled state 1`] = `
                                   style="box-sizing: border-box; display: flex; flex-direction: column; flex-shrink: 0; min-width: 0;"
                                 >
                                   <img
+                                    alt=""
                                     height="32"
                                     src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
                                     style="object-fit: cover; width: 32px; height: 32px; border-radius: 32px; z-index: 1;"
@@ -765,10 +771,13 @@ exports[`PoolTable > renders data filled state 1`] = `
         >
           <div
             class="RotateElement"
+            role="status"
             style="align-items: stretch; box-sizing: border-box; display: flex; flex-basis: auto; flex-direction: column; flex-shrink: 0; min-height: 0; min-width: 0; position: relative;"
           >
             <svg
+              aria-hidden="true"
               fill="none"
+              focusable="false"
               stroke-width="8"
               style="width: 16px; height: 16px;"
               viewBox="0 0 24 24"
@@ -913,7 +922,9 @@ exports[`PoolTable > renders error state 1`] = `
                         class="flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 inline-flex transition-opacity duration-[80ms] ease-in-out hover:opacity-50"
                       >
                         <svg
+                          aria-hidden="true"
                           fill="none"
+                          focusable="false"
                           stroke-width="8"
                           style="width: 16px; height: 16px;"
                           viewBox="0 0 24 24"
@@ -2439,7 +2450,9 @@ exports[`PoolTable > renders error state 1`] = `
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 p-[8px] bg-surface3 rounded-[12px]"
             >
               <svg
+                aria-hidden="true"
                 fill="none"
+                focusable="false"
                 stroke-width="8"
                 style="width: 20px; height: 20px;"
                 viewBox="0 0 16 16"
@@ -2596,7 +2609,9 @@ exports[`PoolTable > renders loading state 1`] = `
                         class="flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 inline-flex transition-opacity duration-[80ms] ease-in-out hover:opacity-50"
                       >
                         <svg
+                          aria-hidden="true"
                           fill="none"
+                          focusable="false"
                           stroke-width="8"
                           style="width: 16px; height: 16px;"
                           viewBox="0 0 24 24"
@@ -2742,6 +2757,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -2766,6 +2782,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -2790,6 +2807,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -2814,6 +2832,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -2838,6 +2857,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -2862,6 +2882,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -2886,6 +2907,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -2915,6 +2937,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -2939,6 +2962,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -2963,6 +2987,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -2987,6 +3012,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -3011,6 +3037,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -3035,6 +3062,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -3059,6 +3087,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -3088,6 +3117,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -3112,6 +3142,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -3136,6 +3167,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -3160,6 +3192,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -3184,6 +3217,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -3208,6 +3242,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -3232,6 +3267,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -3261,6 +3297,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -3285,6 +3322,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -3309,6 +3347,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -3333,6 +3372,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -3357,6 +3397,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -3381,6 +3422,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -3405,6 +3447,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -3434,6 +3477,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -3458,6 +3502,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -3482,6 +3527,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -3506,6 +3552,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -3530,6 +3577,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -3554,6 +3602,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -3578,6 +3627,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -3607,6 +3657,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -3631,6 +3682,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -3655,6 +3707,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -3679,6 +3732,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -3703,6 +3757,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -3727,6 +3782,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -3751,6 +3807,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -3780,6 +3837,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -3804,6 +3862,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -3828,6 +3887,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -3852,6 +3912,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -3876,6 +3937,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -3900,6 +3962,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -3924,6 +3987,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -3953,6 +4017,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -3977,6 +4042,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -4001,6 +4067,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -4025,6 +4092,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -4049,6 +4117,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -4073,6 +4142,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -4097,6 +4167,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -4126,6 +4197,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -4150,6 +4222,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -4174,6 +4247,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -4198,6 +4272,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -4222,6 +4297,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -4246,6 +4322,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -4270,6 +4347,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -4299,6 +4377,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -4323,6 +4402,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -4347,6 +4427,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -4371,6 +4452,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -4395,6 +4477,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -4419,6 +4502,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -4443,6 +4527,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -4472,6 +4557,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -4496,6 +4582,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -4520,6 +4607,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -4544,6 +4632,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -4568,6 +4657,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -4592,6 +4682,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -4616,6 +4707,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -4645,6 +4737,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -4669,6 +4762,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -4693,6 +4787,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -4717,6 +4812,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -4741,6 +4837,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -4765,6 +4862,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -4789,6 +4887,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -4818,6 +4917,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -4842,6 +4942,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -4866,6 +4967,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -4890,6 +4992,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -4914,6 +5017,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -4938,6 +5042,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -4962,6 +5067,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -4991,6 +5097,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -5015,6 +5122,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -5039,6 +5147,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -5063,6 +5172,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -5087,6 +5197,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -5111,6 +5222,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -5135,6 +5247,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -5164,6 +5277,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -5188,6 +5302,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -5212,6 +5327,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -5236,6 +5352,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -5260,6 +5377,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -5284,6 +5402,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -5308,6 +5427,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -5337,6 +5457,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -5361,6 +5482,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -5385,6 +5507,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -5409,6 +5532,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -5433,6 +5557,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -5457,6 +5582,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -5481,6 +5607,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -5510,6 +5637,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -5534,6 +5662,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -5558,6 +5687,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -5582,6 +5712,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -5606,6 +5737,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -5630,6 +5762,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -5654,6 +5787,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -5683,6 +5817,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -5707,6 +5842,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -5731,6 +5867,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -5755,6 +5892,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -5779,6 +5917,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -5803,6 +5942,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -5827,6 +5967,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -5856,6 +5997,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -5880,6 +6022,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -5904,6 +6047,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -5928,6 +6072,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -5952,6 +6097,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -5976,6 +6122,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -6000,6 +6147,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -6029,6 +6177,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -6053,6 +6202,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -6077,6 +6227,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -6101,6 +6252,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -6125,6 +6277,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -6149,6 +6302,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -6173,6 +6327,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   data-testid="cell-loading-bubble"
                 >
                   <div
+                    aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
                     style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
@@ -6305,7 +6460,9 @@ exports[`PoolTable > with LP incentives enabled > renders the boosted APR as a s
                         class="flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 inline-flex transition-opacity duration-[80ms] ease-in-out hover:opacity-50"
                       >
                         <svg
+                          aria-hidden="true"
                           fill="none"
+                          focusable="false"
                           stroke-width="8"
                           style="width: 16px; height: 16px;"
                           viewBox="0 0 24 24"
@@ -6436,8 +6593,8 @@ exports[`PoolTable > with LP incentives enabled > renders the boosted APR as a s
           style="height: 66px;"
         >
           <div
-            class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 w-[100%] absolute top-[0px] left-[0px]"
-            style="height: 66px; transform: translateY(0px); will-change: transform;"
+            class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 w-[100%] absolute left-[0px]"
+            style="height: 66px; top: 0px;"
           >
             <div
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 group group"
@@ -6503,6 +6660,7 @@ exports[`PoolTable > with LP incentives enabled > renders the boosted APR as a s
                                   style="box-sizing: border-box; display: flex; flex-direction: column; flex-shrink: 0; min-width: 0;"
                                 >
                                   <img
+                                    alt=""
                                     height="32"
                                     src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
                                     style="object-fit: cover; width: 32px; height: 32px; border-radius: 32px; z-index: 1;"
@@ -6529,6 +6687,7 @@ exports[`PoolTable > with LP incentives enabled > renders the boosted APR as a s
                                   style="box-sizing: border-box; display: flex; flex-direction: column; flex-shrink: 0; min-width: 0;"
                                 >
                                   <img
+                                    alt=""
                                     height="32"
                                     src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
                                     style="object-fit: cover; width: 32px; height: 32px; border-radius: 32px; z-index: 1;"
@@ -6699,6 +6858,7 @@ exports[`PoolTable > with LP incentives enabled > renders the boosted APR as a s
                                   style="box-sizing: border-box; display: flex; flex-direction: column; flex-shrink: 0; min-width: 0;"
                                 >
                                   <img
+                                    alt=""
                                     height="12"
                                     src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
                                     style="object-fit: cover; width: 12px; height: 12px; border-radius: 12px; z-index: 1;"
@@ -6733,10 +6893,13 @@ exports[`PoolTable > with LP incentives enabled > renders the boosted APR as a s
         >
           <div
             class="RotateElement"
+            role="status"
             style="align-items: stretch; box-sizing: border-box; display: flex; flex-basis: auto; flex-direction: column; flex-shrink: 0; min-height: 0; min-width: 0; position: relative;"
           >
             <svg
+              aria-hidden="true"
               fill="none"
+              focusable="false"
               stroke-width="8"
               style="width: 16px; height: 16px;"
               viewBox="0 0 24 24"

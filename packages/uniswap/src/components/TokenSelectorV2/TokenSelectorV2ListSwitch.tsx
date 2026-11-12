@@ -87,6 +87,7 @@ export const TokenSelectorV2ListSwitch = memo(function TokenSelectorV2ListSwitch
     case TokenSelectorVariation.BalancesOnly:
       return (
         <SendListV2
+          addresses={addresses}
           chainFilter={chainFilter}
           chainIds={chainIds}
           portfolioData={portfolioData}

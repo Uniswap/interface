@@ -21,6 +21,8 @@ const NFT_IMAGE_LOAD_TIMEOUT_MS = 10 * ONE_SECOND_MS
 
 type Props = {
   uri: string | undefined
+  /** Text alternative for the image; empty (decorative) by default, for NFTs a caller already names. */
+  alt?: string
   autoplay?: boolean
   maxHeight?: number
   limitGIFSize?: number // for certain Opensea assets, reduce the GIF size to boost animation grid layout performance
@@ -33,6 +35,7 @@ type Props = {
 export function NFTViewer(props: Props): JSX.Element {
   const {
     uri,
+    alt = '',
     thumbnailUrl,
     autoplay = false,
     maxHeight,
@@ -113,6 +116,7 @@ export function NFTViewer(props: Props): JSX.Element {
 
   return (
     <UniversalImage
+      alt={alt}
       // Skip the cross-fade so we don't hold both old + new bitmaps in memory during
       // Legend List recycling on the NFT grid.
       transitionMs={0}

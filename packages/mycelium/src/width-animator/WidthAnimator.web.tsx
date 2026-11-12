@@ -174,6 +174,8 @@ export function WidthAnimator({
     // oxlint-disable-next-line react/forbid-elements -- the animator is a bare container driven by transitioned style values (mycelium's layout primitives are out of scope here)
     <div
       ref={outerRef}
+      // TODO(INFRA-4589): collapsing only sets width 0, so focusable children stay in the tab order and the
+      // accessibility tree; make the collapsed content inert.
       className={cn(VIEW_CLASSES, enterClass)}
       // Explicit property list, never `all` — a broader transition would flash
       // color tokens on theme toggle (repo CLAUDE.md rule). height and

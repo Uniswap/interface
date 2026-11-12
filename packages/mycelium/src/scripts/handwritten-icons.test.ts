@@ -28,6 +28,7 @@ describe('generator hand-written guard', () => {
       .filter((name) => name.endsWith('.tsx'))
       .map((name) => path.basename(name, '.tsx'))
       .filter((name) => !generated.has(name) && name !== 'index' && name !== 'exported')
+      .filter((name) => !name.endsWith('.stories'))
       .sort()
 
     expect(handwritten).toEqual([...HANDWRITTEN_ICON_COMPONENTS].sort())

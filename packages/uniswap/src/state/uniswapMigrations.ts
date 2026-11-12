@@ -1,4 +1,8 @@
 import { Platform, getValidAddress } from '@universe/chains'
+import {
+  getNewUserOnboardingWalletKey,
+  isNewUserOnboardingSwap,
+} from 'uniswap/src/features/behaviorHistory/newUserOnboarding'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import {
   SearchHistoryResultType,
@@ -360,5 +364,52 @@ export const removeBlastChainData = createSafeMigration({
     ...state,
     transactions: {},
     searchHistory: { ...state?.searchHistory, results: [] },
+  }),
+})
+
+// Mobile: 106
+// Extension: 38
+// Web: 66
+// Seeds has-swapped from local transactions so existing installs don't count their wallets as new.
+// A malformed persisted tx would otherwise throw and send every wallet to `onError`'s empty `byWallet`
+function isPersistedNewUserOnboardingSwap(tx: any): boolean {
+  try {
+    return isNewUserOnboardingSwap(tx)
+  } catch {
+    return false
+  }
+}
+
+export const addNewUserOnboardingHistory = createSafeMigration({
+  name: 'addNewUserOnboardingHistory',
+  migrate: (state: any) => {
+    if (!state) {
+      return state
+    }
+
+    const byWallet: Record<string, { hasCompletedSwap: true }> = {}
+    for (const [address, txsByChain] of Object.entries(state.transactions ?? {})) {
+      const hasSwap = Object.values((txsByChain ?? {}) as Record<string, Record<string, any> | undefined>).some(
+        (txsById) => Object.values(txsById ?? {}).some(isPersistedNewUserOnboardingSwap),
+      )
+      if (hasSwap) {
+        byWallet[getNewUserOnboardingWalletKey(address)] = { hasCompletedSwap: true }
+      }
+    }
+
+    return {
+      ...state,
+      uniswapBehaviorHistory: {
+        ...state.uniswapBehaviorHistory,
+        newUserOnboarding: { byWallet },
+      },
+    }
+  },
+  onError: (state: any) => ({
+    ...state,
+    uniswapBehaviorHistory: {
+      ...state?.uniswapBehaviorHistory,
+      newUserOnboarding: { byWallet: {} },
+    },
   }),
 })

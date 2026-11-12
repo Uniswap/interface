@@ -9,12 +9,11 @@
     "typecheck": "tsc -b"
   },
   "devDependencies": {
-    "@vitest/browser": "3.2.1",
     "identity-obj-proxy": "3.0.0",
     "jsdom": "20.0.3",
     "mem-storage-area": "1.0.3",
     "react": "19.2.3",
-    "vitest": "3.2.1"
+    "vitest": "5.0.5"
   },
   "license": "MIT",
   "private": true

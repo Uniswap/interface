@@ -20,6 +20,43 @@ export const ENTRY_GATEWAY_PROXY_ENV_SEGMENT: Record<Environment, string> = {
 }
 
 /**
+ * Reverse of {@link ENTRY_GATEWAY_PROXY_ENV_SEGMENT}.
+ *
+ * Null-prototype: the key comes from a URL, and a plain object would resolve
+ * `constructor`, `__proto__` and friends to inherited values.
+ */
+const ENTRY_GATEWAY_ENV_BY_SEGMENT: Record<string, Environment | undefined> = Object.assign(
+  Object.create(null) as Record<string, Environment | undefined>,
+  Object.fromEntries(
+    Object.entries(ENTRY_GATEWAY_PROXY_ENV_SEGMENT).map(([env, segment]) => [segment, env as Environment]),
+  ),
+)
+
+export interface EntryGatewayPathEnv {
+  /** The pinned environment, or undefined when the path carries no env segment. */
+  env?: Environment
+  /** The path to forward upstream, with any env segment removed. */
+  remainingPath: string
+}
+
+/**
+ * Decoder for the paths {@link getEntryGatewayUrl} encodes. Lives beside the
+ * encoder so the two cannot drift.
+ *
+ * Matches a WHOLE segment, so `production.v1.Service` is not read as a pin.
+ */
+export function resolveEntryGatewayEnvFromPath(path: string): EntryGatewayPathEnv {
+  const normalized = path.startsWith('/') ? path : `/${path}`
+  const match = /^\/([^/]+)(?=\/|$)(.*)$/.exec(normalized)
+  const segment = match?.[1]
+  const env = segment === undefined ? undefined : ENTRY_GATEWAY_ENV_BY_SEGMENT[segment]
+  if (env === undefined) {
+    return { remainingPath: normalized }
+  }
+  return { env, remainingPath: match?.[2] || '/' }
+}
+
+/**
  * Get the FOR API URL routed through the Entry Gateway.
  * Delegates to getEntryGatewayUrl() and appends the FOR service path.
  */
@@ -74,7 +111,7 @@ export function getEntryGatewayUrl(options?: GetEntryGatewayUrlOptions): string 
     }
   }
 
-  const environment = options?.env ?? getCurrentEnv({ isVercelEnvironment: config.isVercelEnvironment })
+  const environment = options?.env ?? getCurrentEnv()
   switch (environment) {
     case Environment.Development:
       return DEV_ENTRY_GATEWAY_API_BASE_URL

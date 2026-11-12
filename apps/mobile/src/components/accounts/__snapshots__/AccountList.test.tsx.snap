@@ -11,6 +11,7 @@ exports[`AccountList > renders without error 1`] = `
         class="css-view-175oi2r"
       >
         <button
+          accessibilityactions="[object Object]"
           android_ripple="[object Object]"
           role="button"
           style="background-color: transparent; padding-top: 8px; padding-bottom: 12px;"

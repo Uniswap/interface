@@ -21,7 +21,6 @@ export function TableScrollButton({ onPress, direction }: TableScrollButtonProps
         borderWidth="$spacing1"
         borderStyle="solid"
         borderColor="$surface3"
-        $platform-web={{ backdropFilter: 'blur(2px)' }}
       >
         <ArrowRight color="$neutral1" size="$icon.12" transform={direction === 'left' ? 'rotate(180deg)' : undefined} />
       </Flex>

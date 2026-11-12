@@ -44,6 +44,7 @@ export function DetailsHeaderSubtitleMobile({
     <Flex row alignItems="center" gap="$gap4" mt="$spacing1">
       {issuerLogoUrl ? (
         <UniversalImage
+          alt=""
           allowLocalUri
           size={{ height: logoSize, width: logoSize }}
           style={{ image: { borderRadius: logoSize } }}

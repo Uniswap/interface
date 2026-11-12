@@ -23,11 +23,6 @@ type ClaimFeeModalParams = {
   initialState: LiquidityModalInitialState
 }
 
-type BlockedAccountModalParams = {
-  name: typeof ModalName.BlockedAccount
-  initialState: { blockedAddress?: string }
-}
-
 type ReceiveCryptoModalParams = {
   name: typeof ModalName.ReceiveCryptoModal
   initialState: ReceiveCryptoModalInitialState
@@ -109,7 +104,6 @@ export type OpenModalParams =
   | AddLiquidityModalParams
   | RemoveLiquidityModalParams
   | ClaimFeeModalParams
-  | BlockedAccountModalParams
   | ReceiveCryptoModalParams
   | DeletePasskeyModalParams
   | RemoveBackupLoginModalParams

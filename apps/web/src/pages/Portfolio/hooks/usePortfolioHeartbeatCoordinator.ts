@@ -2,10 +2,10 @@ import { useQueryClient } from '@tanstack/react-query'
 import { SynchronizedHeartbeatsConfigKey } from '@universe/gating'
 import { WALLET_POSITIONS_QUERY_KEY_PREFIX } from 'uniswap/src/data/apiClients/liquidityService/queryKeys'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+import { PortfolioTab } from '~/hooks/usePortfolioRoutes/types'
 import { useHeartbeatCoordinator } from '~/lib/hooks/useHeartbeatCoordinator'
 import { usePortfolioAddresses } from '~/pages/Portfolio/hooks/usePortfolioAddresses'
 import { useShowDemoView } from '~/pages/Portfolio/hooks/useShowDemoView'
-import { PortfolioTab } from '~/pages/Portfolio/types'
 
 type UsePortfolioHeartbeatEnabledParams = {
   tab: PortfolioTab

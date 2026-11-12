@@ -5,6 +5,7 @@ import { usePriceChart } from 'src/components/charts/PriceChartContext'
 import { useLineChartPrice, useLineChartRelativeChange } from 'src/components/PriceExplorer/usePrice'
 import { renderHookWithProviders } from 'src/test/render'
 import type { ChartPoint } from 'uniswap/src/components/charts/computeChartPaths'
+import type { Mock } from 'vitest'
 
 vi.mock('src/components/charts/PriceChartContext')
 
@@ -15,7 +16,7 @@ const mockData = (args: { data?: ChartPoint[]; currentIndex?: number; isActive?:
   currentIndex.value = args.currentIndex ?? -1
   isActive.value = args.isActive ?? false
   // PriceChartContext is mocked so we can mock the return of usePriceChart
-  const mockedFunction = usePriceChart as ReturnType<typeof vi.fn>
+  const mockedFunction = usePriceChart as Mock
   mockedFunction.mockReturnValue({
     data: args.data ?? [],
     currentIndex,

@@ -12,7 +12,11 @@ import { UniverseChainId } from '@universe/chains'
  *
  * Removable once these chains launch and have public RPC endpoints.
  */
-const UNIRPC_ONLY_CHAINS: ReadonlySet<UniverseChainId> = new Set([UniverseChainId.Arc, UniverseChainId.Robinhood])
+const UNIRPC_ONLY_CHAINS: ReadonlySet<UniverseChainId> = new Set([
+  UniverseChainId.Arc,
+  UniverseChainId.Elysium,
+  UniverseChainId.Robinhood,
+])
 
 export function isUniRpcOnlyChain(chainId: UniverseChainId): boolean {
   return UNIRPC_ONLY_CHAINS.has(chainId)

@@ -702,6 +702,11 @@ export const fiatStandardFormatter: Formatter = {
   defaultFormat: StandardCurrency,
 }
 
+const fiatStandardNoDecimalsFormatter: Formatter = {
+  rules: [{ upperBound: Infinity, formatter: NoDecimalsCurrency }],
+  defaultFormat: NoDecimalsCurrency,
+}
+
 export const fiatTokenQuantityFormatter = {
   rules: [
     {
@@ -781,6 +786,7 @@ export const TYPE_TO_FORMATTER_RULES = {
   [NumberType.SwapPriceFull]: swapPriceFullFormatter,
   [NumberType.SwapTradeAmount]: swapTradeAmountFormatter,
   [NumberType.FiatStandard]: fiatStandardFormatter,
+  [NumberType.FiatStandardNoDecimals]: fiatStandardNoDecimalsFormatter,
   [NumberType.FiatTokenQuantity]: fiatTokenQuantityFormatter,
   [NumberType.FiatTokenDetails]: fiatTokenDetailsFormatter,
   [NumberType.FiatTokenPrice]: fiatTokenPricesFormatter,

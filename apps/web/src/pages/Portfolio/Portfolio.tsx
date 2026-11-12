@@ -1,7 +1,7 @@
 import { InterfacePageName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { usePortfolioRoutes } from '~/hooks/usePortfolioRoutes/usePortfolioRoutes'
 import { CONNECT_WALLET_FIXED_BOTTOM_SECTION_HEIGHT } from '~/pages/Portfolio/constants'
-import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
 import { useShowDemoView } from '~/pages/Portfolio/hooks/useShowDemoView'
 import { PortfolioPageInner } from '~/pages/Portfolio/PortfolioPageInner'
 

@@ -1,13 +1,10 @@
 import { act, renderHook } from '@testing-library/react'
 import { UniverseChainId } from '@universe/chains'
 import { useFeatureFlag, useStatsigClientStatus } from '@universe/gating'
-import { type LaunchItem, UNISWAP_CCA_LAUNCHPAD_ID } from '~/pages/Launches/launchesModel'
+import { type LaunchItem, UNISWAP_CCA_LAUNCHPAD_ID } from '~/features/Toucan/utils/launchesModel'
 import { usePrefetchLaunchTokenDetails } from '~/pages/Launches/usePrefetchLaunchTokenDetails'
-import {
-  getTdpInitialPriceHistoryQueryOptions,
-  getTdpTokenMultiChainQueryOptions,
-} from '~/pages/TokenDetails/tdpTokenQueryOptions'
 import { mocked } from '~/test-utils/mocked'
+import { getInitialTokenPriceHistoryQueryOptions, getTokenMultiChainQueryOptions } from '~/utils/tokenQueryOptions'
 
 const mockPrefetchQuery = vi.fn().mockResolvedValue(undefined)
 
@@ -71,10 +68,17 @@ describe('usePrefetchLaunchTokenDetails', () => {
     // Assert against the TDP's own key builders (shared with useCreateTDPContext / useTokenPriceChartData),
     // so this fails if the prefetch ever warms a key the page doesn't actually request.
     expect(prefetchedQueryKey('getTokenMultiChain')).toEqual(
-      getTdpTokenMultiChainQueryOptions({ chainId: CHAIN_ID, address: ADDRESS, isNative: false }).queryKey,
+      getTokenMultiChainQueryOptions({ chainId: CHAIN_ID, address: ADDRESS, isNative: false }).queryKey,
+    )
+    expect(prefetchedQueryKey('getTokenMultiChain')).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          chainIds: expect.arrayContaining([UniverseChainId.Mainnet, UniverseChainId.Sepolia]),
+        }),
+      ]),
     )
     expect(prefetchedQueryKey('getTokenHistoryPrice')).toEqual(
-      getTdpInitialPriceHistoryQueryOptions({ chainId: CHAIN_ID, address: ADDRESS }).queryKey,
+      getInitialTokenPriceHistoryQueryOptions({ chainId: CHAIN_ID, address: ADDRESS }).queryKey,
     )
   })
 
@@ -99,7 +103,7 @@ describe('usePrefetchLaunchTokenDetails', () => {
 
     expect(mockPrefetchQuery).toHaveBeenCalledTimes(2)
     expect(prefetchedQueryKey('getTokenMultiChain')).toEqual(
-      getTdpTokenMultiChainQueryOptions({ chainId: CHAIN_ID, address: ADDRESS, isNative: false }).queryKey,
+      getTokenMultiChainQueryOptions({ chainId: CHAIN_ID, address: ADDRESS, isNative: false }).queryKey,
     )
   })
 

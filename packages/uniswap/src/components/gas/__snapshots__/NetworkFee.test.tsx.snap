@@ -26,7 +26,9 @@ exports[`NetworkFee > renders a NetworkFee in a loading state 1`] = `
             id="base-ui-_r_3_"
           >
             <svg
+              aria-hidden="true"
               fill="none"
+              focusable="false"
               stroke-width="8"
               style="width: 12px; height: 12px;"
               viewBox="0 0 16 16"
@@ -40,6 +42,7 @@ exports[`NetworkFee > renders a NetworkFee in a loading state 1`] = `
         </div>
       </div>
       <div
+        aria-busy="true"
         class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
         style="animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
       >
@@ -78,7 +81,9 @@ exports[`NetworkFee > renders a NetworkFee in an error state 1`] = `
             id="base-ui-_r_5_"
           >
             <svg
+              aria-hidden="true"
               fill="none"
+              focusable="false"
               stroke-width="8"
               style="width: 12px; height: 12px;"
               viewBox="0 0 16 16"
@@ -152,7 +157,9 @@ exports[`NetworkFee > renders a NetworkFee normally 1`] = `
             id="base-ui-_r_1_"
           >
             <svg
+              aria-hidden="true"
               fill="none"
+              focusable="false"
               stroke-width="8"
               style="width: 12px; height: 12px;"
               viewBox="0 0 16 16"

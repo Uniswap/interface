@@ -97,14 +97,6 @@ export function marginRequestPositionId(request: MarginQuoteRequest): string | u
   return undefined
 }
 
-// The venue allowlist an `open` request was quoted against, as a stable string. Only `open` carries
-// one — a position action prices at the venue its position already sits in. Sorted before joining
-// because the allowlist is a SET: two requests naming the same venues in a different order are the
-// same subject, and treating them as different would blank the form for no reason.
-export function marginRequestVenueKey(request: MarginQuoteRequest): string | undefined {
-  return 'open' in request ? [...request.open.venues].sort().join(',') : undefined
-}
-
 // The wallet-side pay/receive token and its chain. Present on every key but the two pure leverage
 // moves, so read through these rather than off the envelope — the subject comparison keys on them.
 export function marginRequestWalletToken(request: MarginQuoteRequest): string | undefined {
@@ -187,9 +179,8 @@ export interface MarginSwapConfig {
 export interface MarginOpenAction {
   // Decimal string, > 1.
   leverageTarget: string
-  // LENDING allowlist, >= 1 entry, no duplicates. Derived from GET /margin/markets
-  // (never an FE constant) minus the user's exclusions.
-  venues: MarginVenue[]
+  // 32-byte hex id of one GET /margin/markets venue entry. The quote prices that market alone.
+  marketId: string
 }
 // close · addEquity · withdrawEquity — the axis moves, its magnitude does not come
 // from a leverage number.
@@ -401,6 +392,11 @@ export type MarginErrorCode =
   | 'MARGIN_POSITION_NOT_FOUND'
   // venue selection admitted nobody
   | 'MARGIN_NO_ELIGIBLE_VENUE'
+  // a SHORT on a market the listing gives only as LONG, or the reverse
+  | 'MARGIN_MIRRORED_READING'
+  // `open.marketId` names no served market, or one that is not the request's pair
+  | 'MARGIN_MARKET_NOT_FOUND'
+  | 'MARGIN_MARKET_MISMATCH'
   // pricing / sizing
   | 'MARGIN_ADJUST_HEALTH_FLOOR'
   | 'MARGIN_INVALID_LEVERAGE'
@@ -601,8 +597,10 @@ export interface MarginMarketVenue {
   availableBorrowLiquidity: string
   // LP pool fee, bps (500 millionths → 5).
   feeBps: number
+  // What `open.marketId` names to quote on exactly this market.
+  marketId?: string
 }
-// The scalars beside venues[] are the HEADLINE venue's — read `headlineVenue`,
+// The scalars beside venueMarkets[] are the HEADLINE venue's — read `headlineVenue`,
 // never infer it by matching them back.
 export interface MarginMarketRow {
   exposureToken: MarginTokenMetadata
@@ -616,7 +614,8 @@ export interface MarginMarketRow {
   borrowRate?: string
   // Pair-level mark, 18-dec fixed-point.
   oraclePrice: string
-  venues: MarginMarketVenue[]
+  // One entry per market: a venue with several markets on the pair appears once for each.
+  venueMarkets: MarginMarketVenue[]
 }
 export interface MarginMarketsRequest {
   chainId: number
@@ -794,7 +793,7 @@ export interface MarginPositionsResponse {
   // Only rows in the requested statuses.
   positions: MarginPosition[]
   pendingPlans: MarginPendingPlan[]
-  // Present iff more TERMINAL rows remain; ACTIVE never pages.
+  // Present iff more rows remain in the requested statuses.
   nextCursor?: string
 }
 
@@ -930,7 +929,10 @@ function isWirePlanIntent(value: string | undefined): value is MarginWirePlanInt
   return value !== undefined && Object.keys(WIRE_PLAN_INTENTS).includes(value)
 }
 
-function resolveWirePlanIntent(wireIntent: string | undefined): { intent: MarginPlanIntent; action?: MarginActionKey } {
+export function resolveWirePlanIntent(wireIntent: string | undefined): {
+  intent: MarginPlanIntent
+  action?: MarginActionKey
+} {
   if (isWirePlanIntent(wireIntent)) {
     return WIRE_PLAN_INTENTS[wireIntent]
   }

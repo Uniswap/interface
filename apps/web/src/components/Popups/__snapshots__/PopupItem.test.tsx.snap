@@ -13,7 +13,9 @@ exports[`PopupItem > renders the transient "Try again" cancel-broadcast-failure 
         class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
       >
         <svg
+          aria-hidden="true"
           fill="currentColor"
+          focusable="false"
           stroke-width="8"
           style="width: 24px; height: 24px;"
           viewBox="0 0 24 24"
@@ -36,7 +38,9 @@ exports[`PopupItem > renders the transient "Try again" cancel-broadcast-failure 
       tabindex="0"
     >
       <svg
+        aria-hidden="true"
         fill="none"
+        focusable="false"
         stroke-width="8"
         style="width: 16px; height: 16px;"
         viewBox="0 0 16 16"

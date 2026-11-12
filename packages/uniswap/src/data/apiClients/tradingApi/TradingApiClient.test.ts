@@ -506,7 +506,6 @@ describe('getFeatureFlaggedHeaders', () => {
         (flag) => flag === FeatureFlags.ViemProviderEnabled || flag === FeatureFlags.UniquoteEnabled,
       )
       const expectedHeaders: Record<string, string> = {
-        [TradingApiHeaders.UniversalRouterVersion]: TradingApi.UniversalRouterVersion._2_0,
         [TradingApiHeaders.ViemProviderEnabled]: 'true',
         [TradingApiHeaders.UniquoteEnabled]: 'true',
       }
@@ -517,21 +516,13 @@ describe('getFeatureFlaggedHeaders', () => {
       expect(headers).toEqual(expectedHeaders)
     })
 
-    it(`Endpoint: ${path} should use UniversalRouterVersion 2.1.1 when UseUniversalRouterVersion211 flag is enabled`, async () => {
-      mockGetFeatureFlag.mockImplementation((flag) => flag === FeatureFlags.UseUniversalRouterVersion211)
-      const headers = await getFeatureFlaggedHeaders(path, {
-        chainId: toTradingApiSupportedChainId(UniverseChainId.Mainnet),
-      })
-      expect(headers).toHaveProperty(TradingApiHeaders.UniversalRouterVersion, TradingApi.UniversalRouterVersion._2_1_1)
-    })
-
-    it(`Endpoint: ${path} should fall back to UniversalRouterVersion 2.0 on ZkSync even when flag is enabled`, async () => {
-      mockGetFeatureFlag.mockImplementation((flag) => flag === FeatureFlags.UseUniversalRouterVersion211)
-      const headers = await getFeatureFlaggedHeaders(path, {
-        chainId: toTradingApiSupportedChainId(UniverseChainId.Zksync),
-      })
-      expect(headers).toHaveProperty(TradingApiHeaders.UniversalRouterVersion, TradingApi.UniversalRouterVersion._2_0)
-    })
+    it.each([UniverseChainId.Mainnet, UniverseChainId.Zksync])(
+      `Endpoint: ${path} sends no UniversalRouterVersion on chain %s, so the Trading API picks the router`,
+      async (chainId) => {
+        const headers = await getFeatureFlaggedHeaders(path, { chainId: toTradingApiSupportedChainId(chainId) })
+        expect(headers).not.toHaveProperty(TradingApiHeaders.UniversalRouterVersion)
+      },
+    )
 
     it(`Endpoint: ${path} should/should not UnirouteEnabled header when feature flag is enabled`, async () => {
       mockGetFeatureFlag.mockImplementation((flag) => flag === FeatureFlags.UnirouteEnabled)
@@ -596,6 +587,33 @@ describe('getFeatureFlaggedHeaders', () => {
           break
       }
     })
+  })
+})
+
+describe('getFeatureFlaggedHeaders universal router version without a chain id', () => {
+  const mockGetFeatureFlag = getFeatureFlag as MockedFunction<typeof getFeatureFlag>
+  const mockGetExperimentValueFromLayer = getExperimentValueFromLayer as MockedFunction<
+    typeof getExperimentValueFromLayer
+  >
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockGetFeatureFlag.mockReturnValue(false)
+    mockGetExperimentValueFromLayer.mockReturnValue(false)
+  })
+
+  it('sends no version when the request carries no chain id', async () => {
+    const headers = await getFeatureFlaggedHeaders(TRADING_API_PATHS.quote, { chainId: undefined })
+
+    expect(headers).not.toHaveProperty(TradingApiHeaders.UniversalRouterVersion)
+  })
+
+  it('sends no version for Solana, which the trading API has no chain id for', async () => {
+    const headers = await getFeatureFlaggedHeaders(TRADING_API_PATHS.quote, {
+      chainId: toTradingApiSupportedChainId(UniverseChainId.Solana),
+    })
+
+    expect(headers).not.toHaveProperty(TradingApiHeaders.UniversalRouterVersion)
   })
 })
 
@@ -752,37 +770,23 @@ describe('getFeatureFlaggedHeaders permissioned Universal Router 2.2.0 override'
     expect(mockGetIsPermissionedTokenFromCache).not.toHaveBeenCalled()
   })
 
-  it('uses 2.2.0 for a permissioned token even when the 2.1.1 flag is enabled', async () => {
-    mockGetFeatureFlag.mockImplementation((flag) => flag === FeatureFlags.UseUniversalRouterVersion211)
-
-    const headers = await getFeatureFlaggedHeaders(TRADING_API_PATHS.swap5792, {
+  it('sends no version when no token is permissioned', async () => {
+    const headers = await getFeatureFlaggedHeaders(TRADING_API_PATHS.quote, {
       chainId: mainnetChainId,
+      permissionCheckTokenAddresses: tokenAddresses,
+    })
+
+    expect(headers).not.toHaveProperty(TradingApiHeaders.UniversalRouterVersion)
+    expect(mockGetIsPermissionedTokenFromCache).toHaveBeenCalled()
+  })
+
+  it('uses 2.2.0 for a permissioned token on any chain, including zkSync', async () => {
+    const headers = await getFeatureFlaggedHeaders(TRADING_API_PATHS.swap5792, {
+      chainId: toTradingApiSupportedChainId(UniverseChainId.Zksync),
       isPermissionedToken: true,
     })
 
     expect(headers).toHaveProperty(TradingApiHeaders.UniversalRouterVersion, PERMISSIONED_VERSION)
-  })
-
-  it('keeps the existing version selection when no token is permissioned', async () => {
-    const headers = await getFeatureFlaggedHeaders(TRADING_API_PATHS.quote, {
-      chainId: mainnetChainId,
-      permissionCheckTokenAddresses: tokenAddresses,
-    })
-
-    expect(headers).toHaveProperty(TradingApiHeaders.UniversalRouterVersion, TradingApi.UniversalRouterVersion._2_0)
-    expect(mockGetIsPermissionedTokenFromCache).toHaveBeenCalled()
-  })
-
-  it('uses the existing 2.1.1 selection for a non-permissioned quote when the 2.1.1 flag is enabled', async () => {
-    mockGetFeatureFlag.mockImplementation((flag) => flag === FeatureFlags.UseUniversalRouterVersion211)
-
-    const headers = await getFeatureFlaggedHeaders(TRADING_API_PATHS.quote, {
-      chainId: mainnetChainId,
-      permissionCheckTokenAddresses: tokenAddresses,
-    })
-
-    // Load-bearing version assertion: a regression that fired the override here would yield 2.2.0.
-    expect(headers).toHaveProperty(TradingApiHeaders.UniversalRouterVersion, TradingApi.UniversalRouterVersion._2_1_1)
   })
 })
 

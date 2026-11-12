@@ -10,7 +10,8 @@ import {
   orderCancelFailed,
 } from 'uniswap/src/features/transactions/slice'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
-import type { Mock } from 'vitest'
+import { sleep } from 'utilities/src/time/timing'
+import type { Mock, MockInstance } from 'vitest'
 import { cancelOrderSaga } from '~/state/sagas/transactions/cancelOrderSaga'
 import { popupRegistry } from '~/utils/popups/registry'
 
@@ -105,12 +106,12 @@ function dispatchCancel(
   )
 }
 
-const flush = () => new Promise((resolve) => setTimeout(resolve, 10))
+const flush = () => sleep(10)
 
 describe('cancelOrderSaga', () => {
   const mockSendUncheckedTransaction = vi.fn()
   const mockSigner = { sendUncheckedTransaction: mockSendUncheckedTransaction }
-  let addPopupSpy: ReturnType<typeof vi.spyOn>
+  let addPopupSpy: MockInstance
 
   beforeEach(() => {
     vi.clearAllMocks()

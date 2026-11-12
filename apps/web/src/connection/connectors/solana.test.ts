@@ -1,6 +1,6 @@
 import { WalletContextState } from '@solana/wallet-adapter-react'
 import { renderHook } from '@testing-library/react'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, type Mock, vi } from 'vitest'
 import { useSolanaConnectionService } from '~/connection/connectors/solana'
 
 // Mock dependencies
@@ -69,9 +69,9 @@ const mockGetConnectorWithSolflare = createMockGetConnector({ SolanaAdapter_Solf
 interface MockAdapterOptions {
   name: string
   icon: string
-  connect?: ReturnType<typeof vi.fn>
-  addListener?: ReturnType<typeof vi.fn>
-  removeListener?: ReturnType<typeof vi.fn>
+  connect?: Mock
+  addListener?: Mock
+  removeListener?: Mock
 }
 
 const createMockAdapter = (options: MockAdapterOptions) => ({
@@ -84,7 +84,7 @@ const createMockAdapter = (options: MockAdapterOptions) => ({
 
 // Mock wallet context setup
 const createMockWalletContext = (
-  wallets: Array<{ name: string; icon: string; connect?: ReturnType<typeof vi.fn>; readyState: WalletReadyState }> = [],
+  wallets: Array<{ name: string; icon: string; connect?: Mock; readyState: WalletReadyState }> = [],
 ): WalletContextState => {
   const mockSelect = vi.fn()
 
@@ -104,7 +104,7 @@ const createMockWalletContext = (
 describe('Solana connectors', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    mockSleep.mockResolvedValue(true)
+    mockSleep.mockResolvedValue(undefined)
   })
 
   describe('useConnectSolanaWallet', () => {

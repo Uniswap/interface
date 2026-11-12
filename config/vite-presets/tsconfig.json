@@ -1,0 +1,10 @@
+{
+  "extends": "../tsconfig/app.json",
+  "include": ["src/**/*.ts"],
+  "compilerOptions": {
+    "noEmit": false,
+    "emitDeclarationOnly": true,
+    "types": ["node"],
+    "paths": {}
+  }
+}

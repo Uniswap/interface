@@ -1,4 +1,6 @@
 import { ConnectError } from '@connectrpc/connect'
+import { isAccountBlockedError } from '@universe/compliance'
+import i18next from 'uniswap/src/i18n'
 
 // Takes the two potential errors from calls to the trading api and returns:
 //   - false if there is no error
@@ -12,6 +14,12 @@ export function getErrorMessageToDisplay({
   calldataError: unknown
   approvalError?: unknown
 }): string | boolean {
+  // Handled ahead of parsing so every liquidity surface shows the same wording the swap
+  // flow uses, rather than the upstream string plus a request id.
+  if (isAccountBlockedError(calldataError) || isAccountBlockedError(approvalError)) {
+    return i18next.t('swap.error.accountBlocked')
+  }
+
   if (calldataError) {
     return parseErrorMessageTitle(calldataError, { includeRequestId: true }) || true
   }

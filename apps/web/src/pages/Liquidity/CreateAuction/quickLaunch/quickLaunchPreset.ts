@@ -19,9 +19,6 @@ export { QUICK_LAUNCH_FLOOR_FDV_USD }
 /** The canonical 1h window, in milliseconds. */
 const QUICK_LAUNCH_DURATION_MS = QUICK_LAUNCH_DURATION_SECONDS * 1000
 
-/** The window in whole hours, for the locked-preset copy ("1 hour", "1-hour auction"). */
-export const QUICK_LAUNCH_DURATION_HOURS = QUICK_LAUNCH_DURATION_SECONDS / 3600
-
 /** ETH/USD assumed by the price fallbacks when the oracle hasn't resolved yet (~$2.5k ETH). */
 const QUICK_LAUNCH_FALLBACK_ETH_USD_PRICE = 2500
 

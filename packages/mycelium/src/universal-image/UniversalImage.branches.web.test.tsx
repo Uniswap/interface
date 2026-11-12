@@ -1,5 +1,6 @@
 import { render } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
+import { runAxe } from '../testing/axe'
 import { UniversalImage } from './UniversalImage'
 
 const SVG_URI = 'https://example.com/image.svg'
@@ -24,14 +25,16 @@ const PNG_URI = 'https://example.com/image.png'
 describe('UniversalImage web branches', () => {
   it('renders the fallback when there is no uri', () => {
     const { getByTestId } = render(
-      <UniversalImage fallback={<div data-testid="fallback" />} size={{ width: 20, height: 20 }} />,
+      <UniversalImage alt="" fallback={<div data-testid="fallback" />} size={{ width: 20, height: 20 }} />,
     )
 
     expect(getByTestId('fallback')).toBeDefined()
   })
 
   it('renders a plain image with the img-prefixed testID', () => {
-    const { getByTestId } = render(<UniversalImage size={{ width: 20, height: 20 }} testID="plain" uri={PNG_URI} />)
+    const { getByTestId } = render(
+      <UniversalImage alt="" size={{ width: 20, height: 20 }} testID="plain" uri={PNG_URI} />,
+    )
 
     const wrapper = getByTestId('img-plain')
     const img = wrapper.querySelector('img')
@@ -43,7 +46,7 @@ describe('UniversalImage web branches', () => {
     ['an ipfs:// uri', 'ipfs://bafkreicr5qh6v5b2lrn7734xkx7hy7vxgho4fqffahii5xy6bob36uvss4'],
     ['a url baked against ipfs.io', 'https://ipfs.io/ipfs/bafkreicr5qh6v5b2lrn7734xkx7hy7vxgho4fqffahii5xy6bob36uvss4'],
   ])('renders %s from the dedicated ipfs gateway', (_label, uri) => {
-    const { getByTestId } = render(<UniversalImage size={{ width: 20, height: 20 }} testID="ipfs" uri={uri} />)
+    const { getByTestId } = render(<UniversalImage alt="" size={{ width: 20, height: 20 }} testID="ipfs" uri={uri} />)
 
     const img = getByTestId('img-ipfs').querySelector('img')
     expect(img?.getAttribute('src')).toBe(
@@ -54,16 +57,40 @@ describe('UniversalImage web branches', () => {
   it('renders a link on a working gateway as given', () => {
     const uri =
       'https://turquoise-blank-swallow-685.mypinata.cloud/ipfs/bafybeid677sswggwrqg6cwpbe3p42ywfxk25muowjh7nzzd7jtvfzh7zlm'
-    const { getByTestId } = render(<UniversalImage size={{ width: 20, height: 20 }} testID="pinata" uri={uri} />)
+    const { getByTestId } = render(<UniversalImage alt="" size={{ width: 20, height: 20 }} testID="pinata" uri={uri} />)
 
     expect(getByTestId('img-pinata').querySelector('img')?.getAttribute('src')).toBe(uri)
   })
 
   it('renders an svg uri inside the svg-prefixed container', () => {
-    const { getByTestId } = render(<UniversalImage size={{ width: 20, height: 20 }} testID="vector" uri={SVG_URI} />)
+    const { getByTestId } = render(
+      <UniversalImage alt="" size={{ width: 20, height: 20 }} testID="vector" uri={SVG_URI} />,
+    )
 
     const svgContainer = getByTestId('svg-vector')
     const img = svgContainer.querySelector('img')
     expect(img?.getAttribute('src')).toBe(SVG_URI)
+  })
+})
+
+describe('UniversalImage alt contract', () => {
+  it.each([
+    ['plain', PNG_URI],
+    ['svg', SVG_URI],
+  ])('puts the text alternative on the %s img', async (_branch, uri) => {
+    const { container, getByRole } = render(<UniversalImage alt="ETH" size={{ width: 20, height: 20 }} uri={uri} />)
+    expect(getByRole('img', { name: 'ETH' })).toBeDefined()
+    expect(await runAxe(container)).toHaveNoAxeViolations()
+  })
+
+  it('renders an empty alt for a decorative image', async () => {
+    const { container } = render(<UniversalImage alt="" size={{ width: 20, height: 20 }} uri={PNG_URI} />)
+    expect(container.querySelector('img')?.getAttribute('alt')).toBe('')
+    expect(await runAxe(container)).toHaveNoAxeViolations()
+  })
+
+  it('requires alt', () => {
+    // @ts-expect-error alt is required
+    expect(() => render(<UniversalImage size={{}} uri={PNG_URI} />)).not.toThrow()
   })
 })

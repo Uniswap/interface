@@ -59,6 +59,7 @@ export function buildFlagGroups(extras: {
       name: 'New Chains',
       flags: [
         { flag: FeatureFlags.Arc, label: 'Enable Arc' },
+        { flag: FeatureFlags.Elysium, label: 'Enable Elysium' },
         { flag: FeatureFlags.Ink, label: 'Enable Ink' },
         { flag: FeatureFlags.Linea, label: 'Enable Linea' },
         { flag: FeatureFlags.MegaETH, label: 'Enable MegaETH' },
@@ -80,7 +81,6 @@ export function buildFlagGroups(extras: {
         { flag: FeatureFlags.UnirouteEnabled, label: 'Enable Uniroute' },
         { flag: FeatureFlags.RequestSwapSteps, label: 'Request SwapSteps in classic quotes' },
         { flag: FeatureFlags.ComplexRouteDiagram, label: 'Show the complex route diagram on the Route row' },
-        { flag: FeatureFlags.UseUniversalRouterVersion211, label: 'Use Universal Router v2.1.1' },
         { flag: FeatureFlags.ViemProviderEnabled, label: 'Enable Viem Provider' },
         { flag: FeatureFlags.LimitsFees, label: 'Enable Limits fees' },
         { flag: FeatureFlags.LimitCancelTimeout, label: 'Enable limit order cancellation timeout + revert flow' },
@@ -112,6 +112,7 @@ export function buildFlagGroups(extras: {
         { flag: FeatureFlags.AuctionSearch, label: 'Enable Auction Search' },
         { flag: FeatureFlags.SelfReportSpamNFTs, label: 'Report spam NFTs' },
         { flag: FeatureFlags.PortfolioDefiTab, label: 'Enable Portfolio DeFi Tab' },
+        { flag: FeatureFlags.TdpBuySellCounts, label: 'Enable TDP Buy/Sell Counts' },
       ],
     },
     {

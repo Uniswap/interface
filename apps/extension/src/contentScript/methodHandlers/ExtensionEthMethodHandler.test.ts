@@ -7,6 +7,7 @@ import {
   WalletSendCallsRequestSchema,
 } from 'src/contentScript/WindowEthereumRequestTypes'
 import { DappRequestType } from 'uniswap/src/features/dappRequests/types'
+import type { Mock } from 'vitest'
 
 vi.mock('src/background/messagePassing/messageChannels', () => ({
   contentScriptToBackgroundMessageChannel: { sendMessage: vi.fn() },
@@ -31,7 +32,7 @@ function createHandler(): ExtensionEthMethodHandler {
   })
 }
 
-function createSource(): { postMessage: ReturnType<typeof vi.fn>; asSource: MessageEventSource } {
+function createSource(): { postMessage: Mock; asSource: MessageEventSource } {
   const postMessage = vi.fn()
   return { postMessage, asSource: { postMessage } as unknown as MessageEventSource }
 }
@@ -58,7 +59,7 @@ function sendCallsRequest({
   })
 }
 
-function expectRejectedAsSelfCall(postMessage: ReturnType<typeof vi.fn>): void {
+function expectRejectedAsSelfCall(postMessage: Mock): void {
   expect(postMessage).toHaveBeenCalledWith(
     expect.objectContaining({ error: expect.objectContaining({ code: UNSUPPORTED_METHOD_CODE }) }),
   )

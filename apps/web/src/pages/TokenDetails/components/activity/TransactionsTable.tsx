@@ -27,7 +27,7 @@ import { TokenLinkCell } from '~/components/Table/shared/TokenLinkCell'
 import { FilterHeaderRow, HeaderCell } from '~/components/Table/styled'
 import { unwrapToken } from '~/data/util'
 import { TokenTransactionType, useTokenTransactions } from '~/features/Explore/state/transactions/useTokenTransactions'
-import { buildPortfolioUrl } from '~/pages/Portfolio/utils/portfolioUrls'
+import { buildPortfolioUrl } from '~/hooks/usePortfolioRoutes/utils'
 import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
 
 interface SwapTransaction {

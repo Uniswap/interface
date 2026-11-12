@@ -1,8 +1,5 @@
 import { RetryOptions } from 'uniswap/src/features/chains/types'
-
-function wait(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms))
-}
+import { sleep } from 'utilities/src/time/timing'
 
 /** Thrown if the function is canceled before resolving. */
 export class CanceledError extends Error {
@@ -74,7 +71,7 @@ export function retry<T>(
       const jitter = baseDelay * 0.25 * (Math.random() - 0.5)
       const finalDelay = Math.max(0, baseDelay + jitter)
 
-      await wait(finalDelay)
+      await sleep(finalDelay)
     }
   })
   return {

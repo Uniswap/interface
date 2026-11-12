@@ -28,7 +28,7 @@ export function BalanceSummary(): JSX.Element | null {
     balanceError: s.balanceError,
   }))
   const effectiveCurrency = useTDPEffectiveCurrency()
-  const metadata = useTokenMetadata(currencyId(effectiveCurrency))
+  const { data: metadata } = useTokenMetadata(currencyId(effectiveCurrency))
 
   const pageChainBalance = multiChainMap[currencyChainId]?.balance
   const otherChainBalances: PortfolioBalance[] = []
@@ -54,7 +54,7 @@ export function BalanceSummary(): JSX.Element | null {
   if (isDisconnected || !hasBalances) {
     return null
   }
-  const projectName = metadata.name ?? undefined
+  const projectName = metadata?.name ?? undefined
 
   return (
     <Flex gap="$gap24" height="fit-content" width="100%">

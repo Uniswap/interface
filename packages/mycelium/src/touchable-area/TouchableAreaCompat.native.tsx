@@ -11,7 +11,7 @@ import {
 import { Pressable } from 'react-native-gesture-handler'
 import { useResolveClassNames, useUniwind } from 'uniwind'
 import { warnUnsupportedNativeProps } from '../compat/native-diagnostics'
-import { useNativePressResponder } from '../compat/native-pressability'
+import { useNativeActivateAction, useNativePressResponder } from '../compat/native-pressability'
 import { nativeCompatProps } from '../compat/native-props'
 import { compatLayoutNativeStyle, type CompatLayoutProps } from '../compat/native-style'
 import { markMyceliumPrimitive } from '../compat/primitive-marker'
@@ -146,12 +146,18 @@ export const TouchableAreaCompat = React.forwardRef<View, TouchableAreaCompatPro
     // while the shared prop contract types handlers with DOM events (the
     // documented cast precedent in compat/native-props.ts); the object shape
     // itself stays checked against the hook's param type.
+    const gatedOnPress = gated(onPress ?? undefined)
     const responderProps = useNativePressResponder({
-      onPress: gated(onPress ?? undefined) as never,
+      onPress: gatedOnPress as never,
       onPressIn: gated(onPressIn ?? undefined) as never,
       onPressOut: gated(onPressOut ?? undefined) as never,
       onLongPress: (onLongPress ?? undefined) as never,
       disabled,
+    })
+    const activateProps = useNativeActivateAction({
+      onPress: disabled ? undefined : gatedOnPress,
+      accessibilityActions: props.accessibilityActions,
+      onAccessibilityAction: props.onAccessibilityAction,
     })
 
     // An explicit call-site null disables touch expansion entirely (in the
@@ -279,6 +285,8 @@ export const TouchableAreaCompat = React.forwardRef<View, TouchableAreaCompatPro
         // Test harnesses drive this same pipeline (the shared RNGH Pressable
         // mock synthesizes its click from these responder props).
         {...responderProps}
+        // After the pass-through: merges the caller's actions/handler (see useNativeActivateAction).
+        {...activateProps}
         style={composedStyle}
       >
         {children}

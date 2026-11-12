@@ -5,6 +5,7 @@ import { type DialogPreferencesService } from 'uniswap/src/dialog-preferences'
 import { DialogVisibilityId } from 'uniswap/src/dialog-preferences/types'
 import { renderHook } from 'uniswap/src/test/test-utils'
 import { mockLogger } from 'utilities/src/logger/mocks'
+import { sleep } from 'utilities/src/time/timing'
 import type { Mocked } from 'vitest'
 
 describe('useDialogVisibility', () => {
@@ -202,7 +203,7 @@ describe('useDialogVisibility', () => {
       ])
 
       // Wait a bit to ensure no call is made
-      await new Promise((resolve) => setTimeout(resolve, 50))
+      await sleep(50)
 
       expect(mockService.markDialogHidden).not.toHaveBeenCalled()
     })

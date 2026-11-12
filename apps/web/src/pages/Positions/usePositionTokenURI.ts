@@ -38,9 +38,10 @@ function getPositionManagerAddress(version: ProtocolVersion, chainId?: EVMUniver
   if (!chainId) {
     return undefined
   }
+  const v4AddressesByChain = CHAIN_TO_ADDRESSES_MAP as Partial<Record<number, { v4PositionManagerAddress?: string }>>
   return version === ProtocolVersion.V3
     ? NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId]
-    : CHAIN_TO_ADDRESSES_MAP[chainId]?.v4PositionManagerAddress
+    : v4AddressesByChain[chainId]?.v4PositionManagerAddress
 }
 
 export function usePositionTokenURI({

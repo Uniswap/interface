@@ -1,6 +1,4 @@
 import { getConfig } from '@universe/config'
-import { getCurrentEnv } from '@universe/environment'
-import { ENTRY_GATEWAY_API_BASE_URLS } from './clients/base/urls'
 import { getEntryGatewayUrl } from './getEntryGatewayUrl'
 
 function toWebSocketUrl(httpBaseUrl: string): string {
@@ -15,11 +13,7 @@ export function getWebSocketUrl(): string {
   const config = getConfig()
 
   if (config.enableEntryGatewayProxy) {
-    if (!config.isVercelEnvironment) {
-      return '/ws'
-    }
-    // Vercel can't proxy WS, so previews connect directly and fall back to REST pricing.
-    return toWebSocketUrl(ENTRY_GATEWAY_API_BASE_URLS[getCurrentEnv({ isVercelEnvironment: true })])
+    return '/ws'
   }
 
   return toWebSocketUrl(getEntryGatewayUrl())

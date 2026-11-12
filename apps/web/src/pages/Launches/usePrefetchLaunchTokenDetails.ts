@@ -1,12 +1,9 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { useCallback, useEffect, useRef } from 'react'
 import { noop } from 'utilities/src/react/noop'
-import { type LaunchItem, UNISWAP_CCA_LAUNCHPAD_ID } from '~/pages/Launches/launchesModel'
-import { usePrefetchTokenDetailsAuction } from '~/pages/TokenDetails/hooks/usePrefetchTokenDetailsAuction'
-import {
-  getTdpInitialPriceHistoryQueryOptions,
-  getTdpTokenMultiChainQueryOptions,
-} from '~/pages/TokenDetails/tdpTokenQueryOptions'
+import { usePrefetchTokenDetailsAuction } from '~/features/Toucan/hooks/usePrefetchTokenDetailsAuction'
+import { type LaunchItem, UNISWAP_CCA_LAUNCHPAD_ID } from '~/features/Toucan/utils/launchesModel'
+import { getInitialTokenPriceHistoryQueryOptions, getTokenMultiChainQueryOptions } from '~/utils/tokenQueryOptions'
 
 // Only the token detail page shares these query keys — live CCA quick launches route to
 // /explore/auctions and load different data, so warming the token queries there is wasted.
@@ -59,12 +56,10 @@ export function usePrefetchLaunchTokenDetails(): {
 
       // Launch tokens are never native, so isNative is always false here.
       queryClient
-        .prefetchQuery(
-          getTdpTokenMultiChainQueryOptions({ chainId: logoChainId, address: tokenAddress, isNative: false }),
-        )
+        .prefetchQuery(getTokenMultiChainQueryOptions({ chainId: logoChainId, address: tokenAddress, isNative: false }))
         .catch(() => {})
       queryClient
-        .prefetchQuery(getTdpInitialPriceHistoryQueryOptions({ chainId: logoChainId, address: tokenAddress }))
+        .prefetchQuery(getInitialTokenPriceHistoryQueryOptions({ chainId: logoChainId, address: tokenAddress }))
         .catch(() => {})
       if (launch.launchpadId === UNISWAP_CCA_LAUNCHPAD_ID) {
         prefetchAuction({ chainId: logoChainId, tokenAddress })

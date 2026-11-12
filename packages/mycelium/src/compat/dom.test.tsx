@@ -92,6 +92,13 @@ describe('aria forwarding allow-list', () => {
     expect(allowListCoversTypeSurface).toBe(true)
   })
 
+  it.each([false, true, 'mixed'] as const)('forwards the %s toggle-button state', (pressed) => {
+    const Probe = createCompatComponent<CompatDomProps>(() => ({ className: '' }), 'Probe')
+    const { container } = render(<Probe tag="button" aria-pressed={pressed} />)
+
+    expect(container.firstElementChild?.getAttribute('aria-pressed')).toBe(String(pressed))
+  })
+
   it('forwards the relationship and validation aria props the shadcn wrappers pass through', () => {
     const Probe = createCompatComponent<CompatDomProps>(() => ({ className: '' }), 'Probe')
     const { container } = render(

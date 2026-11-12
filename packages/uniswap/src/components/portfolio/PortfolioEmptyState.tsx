@@ -132,6 +132,7 @@ function ServiceProviderLogo({ uri }: { uri: string }): JSX.Element {
       style={iconContainerStyle}
     >
       <UniversalImage
+        alt=""
         uri={uri}
         size={{
           height: ICON_SIZE - 3,

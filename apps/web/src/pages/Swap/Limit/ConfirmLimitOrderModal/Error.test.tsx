@@ -1,5 +1,6 @@
 import '~/test-utils/tokens/mocks'
-import { Error, PendingModalError } from '~/pages/Swap/Limit/ConfirmLimitOrderModal/Error'
+import { PendingModalError } from '~/components/ConfirmModal/types'
+import { Error } from '~/pages/Swap/Limit/ConfirmLimitOrderModal/Error'
 import { LIMIT_ORDER_TRADE } from '~/test-utils/constants'
 import { render, screen } from '~/test-utils/render'
 
@@ -15,7 +16,7 @@ describe('ConfirmLimitOrderModal/Error', () => {
     ['limit order', PendingModalError.CONFIRMATION_ERROR, LIMIT_ORDER_TRADE, 'Limit failed'],
     ['limit order', PendingModalError.XV2_HARD_QUOTE_ERROR, LIMIT_ORDER_TRADE, 'Limit failed'],
     ['limit order', PendingModalError.WRAP_ERROR, LIMIT_ORDER_TRADE, 'Wrap failed'],
-  ])('renders %p correctly, with error= %p', async (_, errorType, trade, expectedError) => {
+  ])('renders %o correctly, with error= %o', async (_, errorType, trade, expectedError) => {
     render(<Error errorType={errorType} trade={trade} onRetry={vi.fn()} showTrade={true} />)
     expect(screen.getByText(expectedError)).toBeInTheDocument()
   })

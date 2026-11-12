@@ -40,6 +40,7 @@ import {
   migrateAndRemoveCloudBackupSlice,
   migrateBiometricSettings,
   migrateDappRequestInfoTypes,
+  migrateExploreMarketCapSortToFdv,
   migrateFiatPurchaseTransactionInfo,
   moveSettingStateToGlobal,
   removeCoingeckoApiAndTokenLists,
@@ -80,6 +81,7 @@ import {
   migrateDismissedTokenWarnings,
   migrateSearchHistory,
   removeBlastChainData,
+  addNewUserOnboardingHistory,
   removeThaiBahtFromFiatCurrency,
   removeUniswapWrapped2025BehaviorHistory,
   unchecksumDismissedTokenWarningKeys,
@@ -216,6 +218,8 @@ export const migrations = {
   102: removePersistedApolloCache,
   103: addPriceAlertsEnabledToPushNotifications,
   104: removeBlastChainData,
+  105: migrateExploreMarketCapSortToFdv,
+  106: addNewUserOnboardingHistory,
 }
 
-export const MOBILE_STATE_VERSION = 104
+export const MOBILE_STATE_VERSION = 106

@@ -87,6 +87,8 @@ export type CheckboxCompatHoverStyle = Readonly<Record<string, string | number |
  * The bare-checkbox contract. `checked` is required exactly like legacy
  * — not optional, and never Radix's `'indeterminate'`.
  */
+// TODO(INFRA-4589): there's no aria-label or aria-labelledby prop, so the checkbox can only be named by a web
+// <label htmlFor>, and not at all on native.
 export interface CheckboxCompatProps {
   /** Required, like legacy. */
   checked: boolean

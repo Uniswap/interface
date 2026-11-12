@@ -1,7 +1,7 @@
 import { Navigate, useLocation } from 'react-router'
-import { EMBED_BASE_PATH } from '~/pages/embedPaths'
 import { createRouteDefinition, StaticTitlesAndDescriptions, type RouteDefinition } from '~/pages/routeDefinition'
 import { SwapPage } from '~/pages/Swap'
+import { EMBED_BASE_PATH } from '~/utils/embedPaths'
 
 // Redirect /embed/* deep links back to the entry, preserving the swap query params (and hash).
 function EmbedCatchAllRedirect(): JSX.Element {

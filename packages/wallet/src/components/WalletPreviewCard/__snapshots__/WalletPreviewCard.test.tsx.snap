@@ -94,7 +94,9 @@ exports[`renders wallet preview card 1`] = `
         class="flex items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row gap-[8px] px-[4px] pl-[12px]"
       >
         <svg
+          aria-hidden="true"
           fill="none"
+          focusable="false"
           stroke="currentColor"
           stroke-linecap="round"
           stroke-width="6"

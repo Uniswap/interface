@@ -15,6 +15,12 @@ export const initialNotificationsState: NotificationState = {
   lastTxNotificationUpdate: {},
 }
 
+// Same predicate as makeSelectAddressNotifications: no address means the active account.
+const isVisibleTo =
+  (address: Address) =>
+  (notification: AppNotification): boolean =>
+    !notification.address || notification.address === address
+
 const slice = createSlice({
   name: 'notifications',
   initialState: initialNotificationsState,
@@ -27,7 +33,7 @@ const slice = createSlice({
       if (!address) {
         state.notificationQueue.shift()
       } else {
-        const indexToRemove = state.notificationQueue.findIndex((notif) => notif.address === address)
+        const indexToRemove = state.notificationQueue.findIndex(isVisibleTo(address))
         if (indexToRemove !== -1) {
           state.notificationQueue.splice(indexToRemove, 1)
         }
@@ -40,7 +46,7 @@ const slice = createSlice({
           state.notificationQueue[0].shown = true
         }
       } else {
-        const indexToChange = state.notificationQueue.findIndex((notif) => notif.address === address)
+        const indexToChange = state.notificationQueue.findIndex(isVisibleTo(address))
         if (indexToChange !== -1) {
           const itemToChange = state.notificationQueue[indexToChange]
           if (itemToChange) {

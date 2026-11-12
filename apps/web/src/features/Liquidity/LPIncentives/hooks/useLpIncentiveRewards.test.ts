@@ -11,11 +11,6 @@ vi.mock('uniswap/src/data/apiClients/dataApiService/pools/getPoolsRewards', () =
   useGetPoolsRewards: vi.fn(),
 }))
 
-// The chain set comes from enabled-chains state, which this provider-less renderHook can't supply.
-vi.mock('~/features/Liquidity/LPIncentives/hooks/useLpIncentivesChainIds', () => ({
-  useLpIncentivesChainIds: () => [UniverseChainId.Mainnet, UniverseChainId.Base],
-}))
-
 const UNI = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984'
 const UNSUPPORTED_CHAIN_ID = 999_999
 
@@ -57,6 +52,18 @@ describe('useLpIncentiveRewards', () => {
     expect(result.current.hasRewards).toBe(true)
     expect(result.current.totalUsd).toBeCloseTo(12.5)
     expect(result.current.groups).toHaveLength(1)
+  })
+
+  // The backend picks the chains when none are sent; a client-side list would hide rewards on any
+  // chain it left out.
+  it('requests rewards without a chain list and surfaces a reward on any supported chain', () => {
+    mockRewardBalances([{ chainId: UniverseChainId.Robinhood, address: UNI, unclaimedAmountUsd: 150.23 }])
+
+    const { result } = renderHook(() => useLpIncentiveRewards(SAMPLE_SEED_ADDRESS_1))
+
+    expect(useGetPoolsRewards).toHaveBeenCalledWith({ walletAddress: SAMPLE_SEED_ADDRESS_1 }, true)
+    expect(result.current.hasRewards).toBe(true)
+    expect(result.current.totalUsd).toBeCloseTo(150.23)
   })
 
   it('drops rewards on chains the app does not support', () => {

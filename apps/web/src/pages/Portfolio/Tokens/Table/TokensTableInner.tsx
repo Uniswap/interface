@@ -48,6 +48,7 @@ export function TokensTableInner({
   columnSortEnabled = true,
   virtualized = false,
   loadMore,
+  rowGap,
 }: {
   tokenData: TokenData[]
   hideHeader?: boolean
@@ -65,6 +66,7 @@ export function TokensTableInner({
   columnSortEnabled?: boolean
   virtualized?: boolean
   loadMore?: ({ onComplete }: { onComplete?: () => void }) => void
+  rowGap?: number
 }) {
   const { t } = useTranslation()
   const media = useMedia()
@@ -224,6 +226,7 @@ export function TokensTableInner({
         rowHeight={PORTFOLIO_TABLE_ROW_HEIGHT}
         compactRowHeight={PORTFOLIO_TABLE_ROW_HEIGHT}
         subRowHeight={allowMultichainExpandRows ? PORTFOLIO_MULTICHAIN_CHAIN_ROW_HEIGHT : undefined}
+        rowGap={rowGap}
         defaultPinnedColumns={['currencyInfo']}
         maxWidth={maxWidth}
         maxHeight={maxHeight}

@@ -16,10 +16,11 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { getCurrencyAddressForAnalytics } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
+import { currentTimeInSeconds } from 'utilities/src/time/time'
 import { getConfig } from '~/config'
 import { useAccount } from '~/connection/hooks/useAccount'
 import { useEthersWeb3Provider } from '~/connection/hooks/useEthersProvider'
-import { useTotalBalancesUsdForAnalytics } from '~/features/balances/useTotalBalancesUsdForAnalytics'
+import { useTotalBalancesUsdForAnalytics } from '~/features/Swap/hooks/useTotalBalancesUsdForAnalytics'
 import { formatSwapSignedAnalyticsEventProperties } from '~/lib/utils/analytics'
 import { useMultichainContext } from '~/state/multichain/useMultichainContext'
 import {
@@ -27,10 +28,10 @@ import {
   LimitOrderTrade,
   OffchainOrderType,
   PriorityOrderTrade,
-  TradeFillType,
   V2DutchOrderTrade,
   V3DutchOrderTrade,
-} from '~/state/routing/types'
+} from '~/types/routing'
+import { TradeFillType } from '~/types/trade'
 import {
   SignatureExpiredError,
   UniswapXv2HardQuoteError,
@@ -217,7 +218,7 @@ export function useUniswapXSwapCallback({
       // TODO(limits): WEB-3434 - add error state for missing nonce
       const updatedNonce = await getUpdatedNonce(account.address, trade.inputAmount.currency.chainId)
 
-      const now = Math.floor(Date.now() / 1000)
+      const now = currentTimeInSeconds()
       const { deadline, updatedOrder, domain, types, values } = buildUniswapXSignableOrder({
         trade,
         swapperAddress: account.address,
@@ -243,7 +244,7 @@ export function useUniswapXSwapCallback({
           }
         }
       })()
-      const resultTime = Math.floor(Date.now() / 1000)
+      const resultTime = currentTimeInSeconds()
       if (deadline < resultTime) {
         sendAnalyticsEvent(InterfaceEventName.UniswapXSignatureDeadlineExpired, {
           ...formatSwapSignedAnalyticsEventProperties({

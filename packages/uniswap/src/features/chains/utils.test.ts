@@ -134,6 +134,7 @@ describe('getEnabledChains', () => {
         UniverseChainId.Robinhood,
         UniverseChainId.Arc,
         UniverseChainId.Ink,
+        UniverseChainId.Elysium,
         UniverseChainId.Soneium,
         UniverseChainId.Tempo,
         UniverseChainId.XLayer,

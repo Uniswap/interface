@@ -313,7 +313,7 @@ function makePortfolioData({
   data: Record<string, never> | undefined
   error: Error | null
   isLoading: boolean
-  refetch: ReturnType<typeof vi.fn>
+  refetch: Mock
 } {
   return {
     data: portfolioError ? undefined : {},
@@ -428,6 +428,7 @@ import { UniverseChainId } from '@universe/chains'
 // --- Import the hook under test AFTER mocks are set up ---
 // (Dynamic import isn't needed since vi.mock hoists automatically)
 import { useCommonTokensOptions } from 'uniswap/src/components/TokenSelector/hooks/useCommonTokensOptions'
+import type { Mock } from 'vitest'
 
 describe(useCommonTokensOptions, () => {
   beforeEach(() => {

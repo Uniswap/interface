@@ -55,6 +55,7 @@ export type ModalProps = PropsWithChildren<{
   extendOnKeyboardVisible?: boolean
   // defaults to `true`
   isModalOpen?: boolean
+  'aria-labelledby'?: string
   analyticsProperties?: Record<string, unknown>
   skipLogImpression?: boolean
   // web-only: skips Tamagui's built-in scroll lock for callers that already manage their own

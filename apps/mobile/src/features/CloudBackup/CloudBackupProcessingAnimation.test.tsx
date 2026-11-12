@@ -4,6 +4,7 @@ import { Alert } from 'react-native'
 import { CloudBackupProcessingAnimation } from 'src/features/CloudBackup/CloudBackupProcessingAnimation'
 import { backupMnemonicToCloudStorage } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { CloudBackupErrorCode } from 'src/features/CloudBackup/types'
+import type { Mock } from 'vitest'
 import { useSignerAccount } from 'wallet/src/features/wallet/hooks'
 import { ACCOUNT } from 'wallet/src/test/fixtures/wallet/accounts'
 
@@ -18,7 +19,7 @@ vi.mock('@universe/mycelium', () => ({
 }))
 
 vi.mock('@universe/mycelium/icons/CheckmarkCircle', () => ({ CheckmarkCircle: (): null => null }))
-vi.mock('react-redux', () => ({ useDispatch: (): ReturnType<typeof vi.fn> => vi.fn() }))
+vi.mock('react-redux', () => ({ useDispatch: (): Mock => vi.fn() }))
 vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string): string => key }) }))
 vi.mock('utilities/src/logger/logger', () => ({ logger: { error: vi.fn() } }))
 vi.mock('wallet/src/features/wallet/hooks', () => ({ useSignerAccount: vi.fn() }))

@@ -11,6 +11,7 @@ export function BridgeProviderLogo({ provider }: { provider: TradingApi.BridgePr
 
   return (
     <UniversalImage
+      alt=""
       uri={getBridgeDappInfo(provider).icon}
       size={{ width: iconSizes.icon16, height: iconSizes.icon16, resizeMode: UniversalImageResizeMode.Contain }}
       style={{ image: { borderRadius: borderRadii.roundedFull } }}

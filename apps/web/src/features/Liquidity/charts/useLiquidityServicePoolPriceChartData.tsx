@@ -7,12 +7,12 @@ import { appendLiveSpotPriceEntry } from 'uniswap/src/components/charts/utils'
 import { liquidityQueries } from 'uniswap/src/data/apiClients/liquidityService/liquidityQueries'
 import { hashKey } from 'utilities/src/reactQuery/hashKey'
 import { PriceChartData } from '~/components/Charts/PriceChart'
-import { ChartQueryResult, ChartType, DataQuality, getCurrentUTCTimestamp } from '~/components/Charts/utils'
 import {
   toLiquidityHistoryDuration,
   versionFromVars,
   type PDPChartQueryVars,
 } from '~/features/Liquidity/charts/liquidityServiceHistoryVars'
+import { ChartQueryResult, ChartType, DataQuality, getCurrentUTCTimestamp } from '~/utils/charts'
 import { removeOutliers } from '~/utils/prices'
 
 /** Pool price entries are single-valued, not real candles: every OHLC field carries the same price. */

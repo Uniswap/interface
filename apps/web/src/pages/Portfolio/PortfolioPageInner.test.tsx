@@ -1,8 +1,8 @@
 import { useActiveAddresses } from 'uniswap/src/features/accounts/store/hooks'
 import { SAMPLE_SEED_ADDRESS_1 } from 'uniswap/src/test/fixtures/assets/constants'
-import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
+import { PortfolioTab } from '~/hooks/usePortfolioRoutes/types'
+import { usePortfolioRoutes } from '~/hooks/usePortfolioRoutes/usePortfolioRoutes'
 import { PortfolioPageInner } from '~/pages/Portfolio/PortfolioPageInner'
-import { PortfolioTab } from '~/pages/Portfolio/types'
 import { mocked } from '~/test-utils/mocked'
 import { render } from '~/test-utils/render'
 
@@ -14,7 +14,7 @@ vi.mock('uniswap/src/features/accounts/store/hooks', async (importOriginal) => {
   }
 })
 
-vi.mock('~/pages/Portfolio/Header/hooks/usePortfolioRoutes', () => ({
+vi.mock('~/hooks/usePortfolioRoutes/usePortfolioRoutes', () => ({
   usePortfolioRoutes: vi.fn(),
 }))
 

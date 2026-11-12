@@ -63,8 +63,9 @@ export function mergeCurrencyInfosWithBalances({
     if (!portfolioBalance) {
       return createEmptyBalanceOption(currencyInfo)
     }
-    // The balance's currencyInfo wins, but only search results carry categoryIds and issuer branding, so keep
-    // those. Lookups always send categoryIds (often empty), so only a non-empty list is worth carrying over.
+    // The balance's currencyInfo wins, but a search result can carry categoryIds or issuer branding the balance
+    // lacks, so keep those. Lookups always send categoryIds (often empty), so only a non-empty list is worth
+    // carrying over.
     const categoryIds =
       currencyInfo.categoryIds?.length && !portfolioBalance.currencyInfo.categoryIds?.length
         ? currencyInfo.categoryIds

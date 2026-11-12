@@ -1,5 +1,6 @@
 import { DEFAULT_FLASHBOTS_ENABLED, RPCType, UniverseChainId } from '@universe/chains'
 import { defaultResolveRpcConfig } from 'uniswap/src/features/providers/resolveRpcConfig'
+import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers/utils'
 import type {
   PrivateRpcProviderType,
@@ -11,7 +12,6 @@ import type {
  * from feature flags and dynamic configuration sources.
  */
 export function createTransactionConfigService(): TransactionConfigService {
-  const ONE_MINUTE_MS = 60 * 1000
   const TEN_MINUTES_MS = 10 * ONE_MINUTE_MS
 
   // Default timeouts by chain

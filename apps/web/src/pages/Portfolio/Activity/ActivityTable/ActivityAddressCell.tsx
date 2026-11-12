@@ -12,10 +12,10 @@ import { isPlanTransactionInfo } from 'uniswap/src/features/transactions/types/u
 import { shortenHash } from 'utilities/src/addresses'
 import { useShowsWalletHoverCard, WalletHoverCard } from '~/components/HoverCard/WalletHoverCard/WalletHoverCard'
 import { InternalLink } from '~/components/InternalLink'
+import { buildPortfolioUrl } from '~/hooks/usePortfolioRoutes/utils'
 import type { ActivityProtocolInfo } from '~/pages/Portfolio/Activity/ActivityTable/activityTableModels'
 import { AddressWithAvatar } from '~/pages/Portfolio/Activity/ActivityTable/AddressWithAvatar'
 import { buildActivityRowFragments } from '~/pages/Portfolio/Activity/ActivityTable/registry'
-import { buildPortfolioUrl } from '~/pages/Portfolio/utils/portfolioUrls'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
 
 interface ActivityAddressCellProps {

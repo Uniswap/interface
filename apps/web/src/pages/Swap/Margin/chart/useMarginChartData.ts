@@ -13,9 +13,9 @@ import {
 import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { useEvent } from 'utilities/src/react/hooks'
+import { useIsWindowVisible } from 'utilities/src/react/useIsWindowVisible'
 import { isQueryLoading } from 'utilities/src/reactQuery/isQueryLoading'
 import { PriceChartData } from '~/components/Charts/PriceChart'
-import { ChartType, checkDataQuality, DataQuality } from '~/components/Charts/utils'
 import { MarginMarket, MarginTokenInfo } from '~/constants/margin'
 import { marginPairLegs } from '~/features/margin/utils/marginTokenDisplay'
 import { useRestHistoryTarget } from '~/hooks/useRestHistoryTarget'
@@ -28,13 +28,13 @@ import {
   type TokenPriceChartQueryVariables,
   toStrictlyAscendingByTime,
 } from '~/hooks/useTokenPriceChartData'
-import { usePageVisibility } from '~/lib/hooks/usePageVisibility'
 import {
   getMarginHistoryQueryOptions,
   MARGIN_TIME_WINDOWS,
   type MarginTimeWindow,
 } from '~/pages/Swap/Margin/chart/marginTimeWindows'
-import { getTdpTokenPriceHistoryQueryOptions } from '~/pages/TokenDetails/tdpTokenQueryOptions'
+import { ChartType, checkDataQuality, DataQuality } from '~/utils/charts'
+import { getTokenPriceHistoryQueryOptions } from '~/utils/tokenQueryOptions'
 
 export interface TimestampedOhlcLike {
   timestamp: number
@@ -156,7 +156,7 @@ export function useMarginStats24h({ market }: { market: MarginMarket }): {
   stats24h: MarginChartData['stats24h']
   markPrice?: number
 } {
-  const isVisible = usePageVisibility()
+  const isVisible = useIsWindowVisible()
   const { address } = volatileLeg({ market })
   const refetchInterval = isVisible ? PollingInterval.KindaFast : undefined
   const restTarget = useRestHistoryTarget({
@@ -182,7 +182,7 @@ export function useMarginChartData({
   timeWindow: MarginTimeWindow
 }): MarginChartData {
   const { duration, candleSeconds } = MARGIN_TIME_WINDOWS[timeWindow]
-  const isVisible = usePageVisibility()
+  const isVisible = useIsWindowVisible()
   const { address } = volatileLeg({ market })
   const refetchInterval = isVisible ? PollingInterval.KindaFast : undefined
 
@@ -224,7 +224,7 @@ export function useMarginChartData({
 
   // Hook C (fallback): only fires once Hook A's OHLC looks bad; price history renders line-only.
   const fallbackQuery = useQuery(
-    getTdpTokenPriceHistoryQueryOptions({
+    getTokenPriceHistoryQueryOptions({
       target: restTarget,
       duration,
       enabled: commonEnabled && needsFallback,

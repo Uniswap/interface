@@ -58,14 +58,14 @@ function mockListTransactions(transactions: UniswapTransaction[]) {
   } as never)
 }
 
-function renderWithTransactions(transactions: UniswapTransaction[], token0Address: string = USDC) {
+function renderWithTransactions(transactions: UniswapTransaction[], baseTokenAddress: string = USDC) {
   mockListTransactions(transactions)
 
   return renderHook(() =>
     usePoolTransactions({
       address: POOL,
       chainId: UniverseChainId.Mainnet,
-      token0Address,
+      baseTokenAddress,
     }),
   )
 }
@@ -96,7 +96,7 @@ describe('usePoolTransactions buy/sell derivation', () => {
     expect(result.current.transactions[0]?.type).toBe(PoolTableTransactionType.BUY)
   })
 
-  // token0Address arrives as the NATIVE_CHAIN_ID sentinel for a native-token0 pool, and the parser
+  // baseTokenAddress arrives as the NATIVE_CHAIN_ID sentinel for a native base token, and the parser
   // represents a native leg as an absent address (see ParsedToken) — the two must still
   // resolve to the same wrapped-native address or every swap on the pool mislabels as BUY.
   it('labels a sold native token0 as SELL (native leg matches the wrapped-native token0 address)', () => {
@@ -157,17 +157,17 @@ describe('usePoolTransactions buy/sell derivation', () => {
 })
 
 function renderPoolTransactions({
-  token0Address,
+  baseTokenAddress,
   isPoolDataLoading,
 }: {
-  token0Address?: string
+  baseTokenAddress?: string
   isPoolDataLoading?: boolean
 }) {
   return renderHook(() =>
     usePoolTransactions({
       address: POOL,
       chainId: UniverseChainId.Mainnet,
-      token0Address,
+      baseTokenAddress,
       isPoolDataLoading,
     }),
   )
@@ -183,7 +183,7 @@ describe('usePoolTransactions labelling while pool data is unresolved', () => {
     mockListTransactions([makeSwap(soldToken0)])
 
     const { result } = renderPoolTransactions({
-      token0Address: undefined,
+      baseTokenAddress: undefined,
       isPoolDataLoading: true,
     })
 
@@ -198,7 +198,7 @@ describe('usePoolTransactions labelling while pool data is unresolved', () => {
     mockListTransactions([makeSwap(soldToken0)])
 
     const { result } = renderPoolTransactions({
-      token0Address: undefined,
+      baseTokenAddress: undefined,
       isPoolDataLoading: false,
     })
 

@@ -62,7 +62,9 @@ exports[`TokenCard > renders a spacer instead of a sparkline for fewer than 2 po
           data-testid="relative-change"
         >
           <svg
+            aria-hidden="true"
             fill="none"
+            focusable="false"
             stroke-width="2"
             style="width: 12px; height: 12px; transform: rotate(180deg);"
             viewBox="0 0 24 24"
@@ -138,7 +140,9 @@ exports[`TokenCard > renders the horizontal layout without a price 1`] = `
           data-testid="relative-change"
         >
           <svg
+            aria-hidden="true"
             fill="none"
+            focusable="false"
             stroke-width="2"
             style="width: 12px; height: 12px; transform: rotate(180deg);"
             viewBox="0 0 24 24"
@@ -296,7 +300,9 @@ exports[`TokenCard > renders the vertical layout with a negative delta and no is
           data-testid="relative-change"
         >
           <svg
+            aria-hidden="true"
             fill="none"
+            focusable="false"
             stroke-width="2"
             style="width: 12px; height: 12px; transform: rotate(0deg);"
             viewBox="0 0 24 24"
@@ -347,6 +353,7 @@ exports[`TokenCard > renders the vertical layout with price, issuer label and po
           style="box-sizing: border-box; display: flex; flex-direction: column; flex-shrink: 0; min-width: 0;"
         >
           <img
+            alt=""
             height="32"
             src="https://example.com/logo.png"
             style="object-fit: cover; width: 32px; height: 32px; border-radius: 32px; z-index: 1;"
@@ -422,7 +429,9 @@ exports[`TokenCard > renders the vertical layout with price, issuer label and po
           data-testid="relative-change"
         >
           <svg
+            aria-hidden="true"
             fill="none"
+            focusable="false"
             stroke-width="2"
             style="width: 12px; height: 12px; transform: rotate(180deg);"
             viewBox="0 0 24 24"

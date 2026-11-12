@@ -6,15 +6,17 @@ import { TestID } from '@universe/test'
 import { ReactNode, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
-import { getChainLabel } from 'uniswap/src/features/chains/utils'
+import {
+  getTokenTvlBreakdown,
+  type TokenTvlBreakdown,
+} from 'uniswap/src/features/dataApi/tokenDetails/tokenMarketStatsUtils'
 import { useTokenMarketStats, useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { FiatNumberType, NumberType } from 'utilities/src/format/types'
 import { getHeaderDescription, TokenSortMethod } from '~/components/Tokens/constants'
 import { LoadingBubble } from '~/components/Tokens/loading'
-import { MouseoverTooltip } from '~/components/Tooltip'
-import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
+import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
 import { useTDPEffectiveCurrency } from '~/pages/TokenDetails/hooks/useTDPEffectiveCurrency'
 import { useTDPMultichainAggregate } from '~/pages/TokenDetails/hooks/useTDPMultichainAggregate'
 
@@ -94,17 +96,50 @@ export function LoadingStats() {
 
 type NumericStat = number | undefined | null
 
+function TvlBreakdownRow({ label, value }: { label: string; value: number }) {
+  const { convertFiatAmountFormatted } = useLocalizationContext()
+
+  return (
+    <Flex row justifyContent="space-between" gap="$spacing36">
+      <Text variant="body3" color="$neutral2">
+        {label}
+      </Text>
+      <Text variant="body3" color="$neutral1" textAlign="right">
+        {convertFiatAmountFormatted(value, NumberType.FiatStandardNoDecimals)}
+      </Text>
+    </Flex>
+  )
+}
+
+function TvlBreakdownTooltipContent({ breakdown, symbol }: { breakdown: TokenTvlBreakdown; symbol: string }) {
+  const { t } = useTranslation()
+
+  return (
+    <Flex gap="$spacing8" data-testid={TestID.TokenDetailsStatsTvlBreakdown}>
+      <Flex gap="$spacing4">
+        <TvlBreakdownRow label={t('token.stats.tvl.tokenInPools', { symbol })} value={breakdown.tokenTvl} />
+        <TvlBreakdownRow label={t('token.stats.tvl.pairedTokens')} value={breakdown.pairedTvl} />
+      </Flex>
+      <Flex borderTopWidth="$spacing1" borderColor="$surface3" pt="$spacing8" pb="$spacing4">
+        <TvlBreakdownRow label={t('token.stats.tvl.allPools', { symbol })} value={breakdown.poolsTvl} />
+      </Flex>
+    </Flex>
+  )
+}
+
 function Stat({
   testID,
   value,
   title,
   description,
+  valueTooltip,
   numberType = NumberType.FiatTokenStats,
 }: {
   testID: string
   value: NumericStat
   title: ReactNode
   description?: ReactNode
+  valueTooltip?: ReactNode
   numberType?: FiatNumberType
 }) {
   const { convertFiatAmountFormatted } = useLocalizationContext()
@@ -120,8 +155,22 @@ function Stat({
           </Text>
         </MouseoverTooltip>
       </Text>
-      <Flex tag="td" mt="$spacing8" data-testid={`${testID}-value`} $platform-web={{ overflowWrap: 'break-word' }}>
-        <AnimatedNumber numericValue={value ?? undefined} textVariant="$heading3" value={formattedValue} />
+      <Flex
+        tag="td"
+        mt="$spacing8"
+        alignItems="flex-start"
+        data-testid={`${testID}-value`}
+        $platform-web={{ overflowWrap: 'break-word' }}
+      >
+        <MouseoverTooltip
+          disabled={!valueTooltip}
+          text={valueTooltip}
+          size={TooltipSize.Small}
+          fitContent
+          placement="top"
+        >
+          <AnimatedNumber numericValue={value ?? undefined} textVariant="$heading3" value={formattedValue} />
+        </MouseoverTooltip>
       </Flex>
     </StatWrapper>
   )
@@ -131,10 +180,7 @@ export function StatsSection() {
   const { t } = useTranslation()
   const effectiveCurrency = useTDPEffectiveCurrency()
 
-  const selectedMultichainChainId = useTDPStore((s) => s.selectedMultichainChainId)
   const { isMultichainAggregateView } = useTDPMultichainAggregate()
-
-  const networkFilterName = selectedMultichainChainId !== undefined ? getChainLabel(selectedMultichainChainId) : ''
 
   const currencyIdValue = useMemo(() => currencyId(effectiveCurrency), [effectiveCurrency])
   // Same call shape as the chart header's currentPriceOverride so both surfaces always agree.
@@ -147,8 +193,10 @@ export function StatsSection() {
     isMultichainAggregateView,
   })
 
-  const { volume, tvl, high52w, low52w, marketCap, fdv } = stats
+  const { volume, tvl, poolsTvl, high52w, low52w, marketCap, fdv } = stats
   const hasStats = tvl || fdv || marketCap || volume || high52w || low52w
+  const tvlBreakdown = getTokenTvlBreakdown({ tvl, poolsTvl })
+  const symbol = effectiveCurrency.symbol ?? t('common.token')
 
   if (stats.isLoading) {
     return <LoadingStats />
@@ -162,14 +210,8 @@ export function StatsSection() {
           <Stat
             testID={TestID.TokenDetailsStatsTvl}
             value={tvl}
-            description={
-              networkFilterName
-                ? t('stats.tvl.description.network', {
-                    symbol: effectiveCurrency.symbol ?? t('common.token'),
-                    network: networkFilterName,
-                  })
-                : t('stats.tvl.description', { symbol: effectiveCurrency.symbol ?? t('common.token') })
-            }
+            description={t('stats.tvl.description', { symbol })}
+            valueTooltip={tvlBreakdown && <TvlBreakdownTooltipContent breakdown={tvlBreakdown} symbol={symbol} />}
             title={t('common.totalValueLocked')}
           />
           <Stat
@@ -187,7 +229,7 @@ export function StatsSection() {
           <Stat
             testID={TestID.TokenDetailsStatsVolume24h}
             value={volume}
-            description={t('stats.volume.1d.description')}
+            description={t('token.stats.volume.1d.description')}
             title={t('stats.volume.1d')}
           />
           <Stat

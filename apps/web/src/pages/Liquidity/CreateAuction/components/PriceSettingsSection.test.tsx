@@ -1,8 +1,8 @@
 import { CurrencyAmount, Ether } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
+import { RaiseCurrency } from '~/features/Toucan/utils/raiseCurrency'
 import { PriceSettingsSection } from '~/pages/Liquidity/CreateAuction/components/PriceSettingsSection'
-import { RaiseCurrency } from '~/pages/Liquidity/CreateAuction/types'
 import { render, screen } from '~/test-utils/render'
 
 const NATIVE_OPTION_DESCRIPTION = 'Offers native exposure to crypto markets.'

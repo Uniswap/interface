@@ -7,7 +7,7 @@ import { useShallow } from 'zustand/react/shallow'
 import { PoolSortFields } from '~/data/pools/poolStats'
 
 interface PoolTableActions {
-  setSort: (category: PoolSortFields) => boolean
+  setSort: (category: PoolSortFields, ascending: boolean) => void
   resetSort: () => void
 }
 
@@ -29,14 +29,7 @@ export function createPoolTableStore(): PoolTableStore {
         sortMethod: INITIAL_SORT_METHOD,
         sortAscending: INITIAL_SORT_ASCENDING,
         actions: {
-          setSort: (category) => {
-            let newSortAscending = false
-            set((state) => {
-              newSortAscending = state.sortMethod === category ? !state.sortAscending : false
-              return { sortMethod: category, sortAscending: newSortAscending }
-            })
-            return newSortAscending
-          },
+          setSort: (category, ascending) => set({ sortMethod: category, sortAscending: ascending }),
           resetSort: () =>
             set({
               sortMethod: INITIAL_SORT_METHOD,

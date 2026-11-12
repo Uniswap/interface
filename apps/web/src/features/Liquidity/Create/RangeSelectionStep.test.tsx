@@ -1,10 +1,10 @@
 import { fireEvent } from '@testing-library/react'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import { useCreateLiquidityContext } from '~/features/Liquidity/Create/CreateLiquidityContextProvider'
 import { SelectPriceRangeStep } from '~/features/Liquidity/Create/RangeSelectionStep'
-import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 import { render, screen } from '~/test-utils/render'
 
-vi.mock('~/pages/CreatePosition/CreateLiquidityContextProvider', () => ({
+vi.mock('~/features/Liquidity/Create/CreateLiquidityContextProvider', () => ({
   useCreateLiquidityContext: vi.fn(),
 }))
 vi.mock('~/features/Liquidity/Create/hooks/useTokenControlOptions', () => ({

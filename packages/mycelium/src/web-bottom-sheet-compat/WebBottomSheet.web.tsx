@@ -264,6 +264,7 @@ export function WebBottomSheet({
     <DialogPrimitive.Root modal={false} open={isOpen} onOpenChange={handleClose}>
       <DialogPrimitive.Portal forceMount>
         <div
+          aria-hidden="true" // visual backdrop; click-to-dismiss is a pointer shortcut, not the dismiss control
           className={cn('mc-sheet-overlay', overlayEmission.className)}
           style={overlayEmission.style}
           data-state={state}
@@ -283,6 +284,8 @@ export function WebBottomSheet({
           onPointerDownOutside={preventOutsideDismiss}
           onFocusOutside={preventOutsideDismiss}
         >
+          {/* TODO(INFRA-4589): always empty, so the dialog's aria-labelledby points at nothing and it has no
+              accessible name (aria-dialog-name, empty-heading). Take a title prop for it. */}
           <DialogPrimitive.Title style={VISUALLY_HIDDEN_STYLE} />
           {!hideHandlebar && (
             <div data-sheet-handle className={handleEmission.className} style={handleEmission.style}>
@@ -291,6 +294,7 @@ export function WebBottomSheet({
           )}
           <div
             data-sheet-content
+            role="presentation" // a propagation guard, not a control
             className={contentEmission.className}
             style={contentEmission.style}
             onClick={stopPropagation}

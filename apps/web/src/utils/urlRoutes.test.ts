@@ -34,6 +34,24 @@ describe('getCurrentPageFromLocation', () => {
     expect(getCurrentPageFromLocation('/pools/category/stable-pools')).toBe(InterfacePageName.CategoryDetailsPage)
   })
 
+  it.each([
+    '/explore/hooks/base/0x000000000000000000000000000000000000abcd',
+    '/explore/hooks/ethereum/0x000000000000000000000000000000000000abcd/',
+    '/explore/hooks/base/not-an-address',
+  ])('classifies the exact Hook detail route shape at %s', (pathname) => {
+    expect(getCurrentPageFromLocation(pathname)).toBe(InterfacePageName.HookDetailsPage)
+  })
+
+  it.each([
+    '/explore/hooks',
+    '/explore/hooks/base',
+    '/explore/hooks/0x000000000000000000000000000000000000abcd',
+    '/explore/hooks/base/0x000000000000000000000000000000000000abcd/extra',
+    '/explore/hooks-other/base/0x000000000000000000000000000000000000abcd',
+  ])('keeps lists and other Explore paths out of the Hook detail page at %s', (pathname) => {
+    expect(getCurrentPageFromLocation(pathname)).toBe(InterfacePageName.ExplorePage)
+  })
+
   it('should return EXPLORE_PAGE when location pathname starts with "/explore" but does not match detail-page routes', () => {
     let result = getCurrentPageFromLocation('/explore/tokens/ethereum')
     expect(result).toBe(InterfacePageName.ExplorePage)

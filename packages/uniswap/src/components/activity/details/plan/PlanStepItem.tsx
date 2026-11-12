@@ -1,3 +1,4 @@
+import { TradingApi } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
 import { AnimatedFlex, getTokenValue, SpinningLoader, Text, TouchableArea } from '@universe/mycelium'
 import { CheckCircleFilled } from '@universe/mycelium/icons/CheckCircleFilled'
@@ -10,11 +11,14 @@ import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { getMarginPlanStepLabel } from 'uniswap/src/features/transactions/margin/planActivityTitles'
+import { getBridgeProviderName } from 'uniswap/src/features/transactions/swap/utils/bridgeProviders'
 import { getAmountsFromTrade } from 'uniswap/src/features/transactions/swap/utils/getAmountsFromTrade'
 import {
   ApproveTransactionInfo,
   BridgeTransactionInfo,
   DepositTransactionInfo,
+  PlanTransactionInfo,
   TransactionDetails,
   TransactionStatus,
   TransactionType,
@@ -33,7 +37,13 @@ import { NumberType } from 'utilities/src/format/types'
 
 export const PLAN_STEP_ITEM_WIDTH = '$icon.20'
 
-export function PlanStepItem({ transactionDetails }: { transactionDetails: TransactionDetails }): JSX.Element | null {
+export function PlanStepItem({
+  transactionDetails,
+  marginAction,
+}: {
+  transactionDetails: TransactionDetails
+  marginAction?: PlanTransactionInfo['marginAction']
+}): JSX.Element | null {
   const { typeInfo } = transactionDetails
 
   return (
@@ -44,7 +54,7 @@ export function PlanStepItem({ transactionDetails }: { transactionDetails: Trans
         </AnimatedFlex>
       ) : null}
       <AnimatedFlex row grow flexShrink={1} minWidth={0} alignItems="center" gap="$spacing8">
-        <StepDescriptor info={typeInfo} chainId={transactionDetails.chainId} />
+        <StepDescriptor info={typeInfo} chainId={transactionDetails.chainId} marginAction={marginAction} />
         <StepStatusBadge status={transactionDetails.status} />
       </AnimatedFlex>
       {transactionDetails.hash && (
@@ -138,7 +148,15 @@ function useFormattedAmountsFromTypeInfo(info: SwapTypeTransactionInfo | BridgeT
   }, [info, inputCurrencyInfo, outputCurrencyInfo, formatCurrencyAmount])
 }
 
-function StepDescriptor({ info, chainId }: { info: TransactionTypeInfo; chainId: UniverseChainId }): JSX.Element {
+function StepDescriptor({
+  info,
+  chainId,
+  marginAction,
+}: {
+  info: TransactionTypeInfo
+  chainId: UniverseChainId
+  marginAction?: PlanTransactionInfo['marginAction']
+}): JSX.Element {
   switch (info.type) {
     case TransactionType.Approve:
       return <ApproveStepDescriptor info={info} chainId={chainId} />
@@ -151,9 +169,29 @@ function StepDescriptor({ info, chainId }: { info: TransactionTypeInfo; chainId:
       return <EarnVaultStepDescriptor info={info} chainId={chainId} />
     case TransactionType.Wrap:
       return <WrapStepDescriptor info={info} chainId={chainId} />
+    case TransactionType.Unknown:
+    case TransactionType.MarginOpenPosition:
+    case TransactionType.MarginClosePosition:
+    case TransactionType.MarginDecreasePosition:
+    case TransactionType.MarginAddCollateral:
+      return marginAction ? <MarginStepDescriptor action={marginAction.action} /> : <></>
     default:
       return <></>
   }
+}
+
+function MarginStepDescriptor({
+  action,
+}: {
+  action: NonNullable<PlanTransactionInfo['marginAction']>['action']
+}): JSX.Element {
+  const { t } = useTranslation()
+
+  return (
+    <Text variant="body3" flexShrink={1} numberOfLines={1}>
+      {getMarginPlanStepLabel(action, t)}
+    </Text>
+  )
 }
 
 function ApproveStepDescriptor({
@@ -235,14 +273,19 @@ function BridgeStepDescriptor({ info }: { info: BridgeTransactionInfo }): JSX.El
 
   const outputChainId = currencyIdToChain(info.outputCurrencyId)
   const chainLabel = outputChainId ? getChainInfo(outputChainId).label : ''
+  const params = { tokenInAmount, tokenInSymbol, destinationChain: chainLabel }
+
+  // Across-won steps keep their text; a step another vendor serves is named, unless this client can't name it.
+  const otherVendorName =
+    info.bridgeProvider && info.bridgeProvider !== TradingApi.BridgeProvider.ACROSS
+      ? getBridgeProviderName(info.bridgeProvider)
+      : undefined
 
   return (
     <Text variant="body3" flexShrink={1} numberOfLines={1}>
-      {t('transaction.status.plan.step.bridge', {
-        tokenInAmount,
-        tokenInSymbol,
-        destinationChain: chainLabel,
-      })}
+      {otherVendorName
+        ? t('transaction.status.plan.step.bridge.via', { ...params, bridgeName: otherVendorName })
+        : t('transaction.status.plan.step.bridge', params)}
     </Text>
   )
 }

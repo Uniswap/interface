@@ -1,6 +1,6 @@
 import { PersistState } from 'redux-persist'
 import { PreV16UserState } from '~/state/migrations/oldTypes'
-import { RouterPreference } from '~/state/routing/types'
+import { RouterPreference } from '~/types/routing'
 
 export type PersistAppStateV5 = {
   _persist: PersistState

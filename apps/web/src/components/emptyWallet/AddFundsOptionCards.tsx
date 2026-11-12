@@ -1,3 +1,4 @@
+import '~/components/emptyWallet/AddFundsOptionCards.css'
 import {
   borderRadii,
   Flex,
@@ -20,7 +21,7 @@ import type { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useAddFundsActions } from '~/components/emptyWallet/AddFundsOptions'
-import { useCexTransferProviderPress } from '~/components/ReceiveCryptoModal/useCexTransferProviderPress'
+import { useCexTransferProviderPress } from '~/hooks/useCexTransferProviderPress'
 
 const PROVIDER_CARD_MIN_WIDTH = 160
 
@@ -36,6 +37,7 @@ function AddFundsCard({
   elementName,
   testID,
   disabled,
+  shimmerBorder,
   onPress,
 }: {
   icon: JSX.Element
@@ -43,6 +45,7 @@ function AddFundsCard({
   elementName: ElementName
   testID?: string
   disabled?: boolean
+  shimmerBorder?: boolean
   onPress: () => void
 }): JSX.Element {
   const shadowProps = useShadowPropsShort()
@@ -51,6 +54,8 @@ function AddFundsCard({
     <Trace logPress element={elementName}>
       <TouchableArea
         width="100%"
+        position="relative"
+        className={shimmerBorder ? 'add-funds-shimmer-border' : undefined}
         backgroundColor="$surface1"
         borderColor="$surface3"
         borderRadius="$rounded20"
@@ -91,6 +96,7 @@ function ProviderCard({
     <AddFundsCard
       icon={
         <UniversalImage
+          alt=""
           fallback={
             <Flex
               width={iconSizes.icon32}
@@ -137,6 +143,7 @@ export function AddFundsOptionCards({
         title={t('addFunds.option.buy')}
         elementName={elementNames.buy}
         testID={TestID.AddFundsBuy}
+        shimmerBorder
         onPress={handleBuy}
       />
       <AddFundsCard

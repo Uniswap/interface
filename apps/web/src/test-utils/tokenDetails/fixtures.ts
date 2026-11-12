@@ -1,8 +1,8 @@
 import { type LaunchProvenance, LaunchProvenanceMethod } from 'uniswap/src/features/dataApi/launchProvenance'
-import { ChartType, PriceChartType } from '~/components/Charts/utils'
 import { TimePeriod } from '~/data/util'
-import { UNISWAP_CCA_LAUNCHPAD_ID } from '~/pages/Launches/launchesModel'
+import { UNISWAP_CCA_LAUNCHPAD_ID } from '~/features/Toucan/utils/launchesModel'
 import type { TDPChartState } from '~/pages/TokenDetails/components/chart/TDPChartState'
+import { ChartType, PriceChartType } from '~/utils/charts'
 
 /** GetToken's attribution for a Custom CCA launch, named by mechanism as the registry serves it. */
 export const SERVED_CUSTOM_CCA_PROVENANCE: LaunchProvenance = {

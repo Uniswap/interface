@@ -1,10 +1,8 @@
 import { useMemo, useState } from 'react'
-import { ChartType, PriceChartType } from '~/components/Charts/utils'
 import { TimePeriod } from '~/data/util'
 import type { TokenPriceChartQueryVariables } from '~/hooks/useTokenPriceChartData'
-
-/** Time period the TDP chart opens on. Prefetchers warm this period's key (see tdpTokenQueryOptions). */
-export const TDP_DEFAULT_TIME_PERIOD = TimePeriod.DAY
+import { ChartType, PriceChartType } from '~/utils/charts'
+import { DEFAULT_TOKEN_CHART_TIME_PERIOD } from '~/utils/tokenQueryOptions'
 
 export type TokenDetailsChartType = ChartType.PRICE | ChartType.VOLUME | ChartType.TVL
 
@@ -31,7 +29,7 @@ export function getDisplayPriceChartType(
 
 /** Chart UI state only; data hooks run in `TDP*ChartPanel` components. Access via `useTDPStore`. */
 export function useCreateTDPChartState(): TDPChartState {
-  const [timePeriod, setTimePeriod] = useState<TimePeriod>(TDP_DEFAULT_TIME_PERIOD)
+  const [timePeriod, setTimePeriod] = useState<TimePeriod>(DEFAULT_TOKEN_CHART_TIME_PERIOD)
   const [chartType, setChartType] = useState<TokenDetailsChartType>(ChartType.PRICE)
   const [priceChartType, setPriceChartType] = useState<PriceChartType>(PriceChartType.LINE)
   const [disableCandlestickUI, setDisableCandlestickUI] = useState(false)

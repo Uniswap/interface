@@ -81,7 +81,7 @@ type ProcessedRow = { key: string } & (
   | { type: 'footer'; data: SectionInfo }
 )
 
-function processSections(
+export function processSections(
   sections: SettingsSection[],
   { hasSectionHeader, hasSectionFooter }: { hasSectionHeader: boolean; hasSectionFooter: boolean },
 ): ProcessedRow[] {
@@ -121,12 +121,15 @@ function processSections(
  * Row id that survives siblings being hidden: `index` is the position in the section's source `data`
  * array, which hidden rows stay in, so hiding one doesn't re-key the others. The identifier half
  * keeps rows distinct where a section swaps one row for another at the same index; the index half
- * rules out collisions between two rows with the same text and no `testID`.
+ * rules out collisions between two rows with the same identifier.
+ *
+ * Never key on `text`: it's translated, so a locale switch would remount the row, and on Android a
+ * remounted row's value stays a skeleton until a navigation transition that never comes.
  */
 function rowKey(data: SectionData, index: number): string {
   if ('component' in data) {
     // Component rows carry no identifier, but they're a fixed dev-only set so their position is stable.
     return `component-${index}`
   }
-  return `${data.testID ?? data.text}-${index}`
+  return `${data.testID ?? data.navigationModal ?? data.screen ?? 'row'}-${index}`
 }

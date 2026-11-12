@@ -1,0 +1,68 @@
+diff --git a/dist/data/v2/api_pb.d.ts b/dist/data/v2/api_pb.d.ts
+index b1c49975463a155f634f2466ee7aa29ffa075c8a..ee6843e2c4f969e9a68f8931745fedcd7045394f 100644
+--- a/dist/data/v2/api_pb.d.ts
++++ b/dist/data/v2/api_pb.d.ts
+@@ -860,6 +860,10 @@ export declare class GetTokenMultiChainRequest extends Message<GetTokenMultiChai
+      * @generated from field: bool external = 4;
+      */
+     external: boolean;
++    /**
++     * @generated from field: repeated uint32 chain_ids = 5;
++     */
++    chainIds: number[];
+     constructor(data?: PartialMessage<GetTokenMultiChainRequest>);
+     static readonly runtime: typeof proto3;
+     static readonly typeName = "data.v2.GetTokenMultiChainRequest";
+@@ -920,6 +924,10 @@ export declare class GetTokensMultiChainRequest extends Message<GetTokensMultiCh
+      * @generated from field: bool external = 4;
+      */
+     external: boolean;
++    /**
++     * @generated from field: repeated uint32 chain_ids = 5;
++     */
++    chainIds: number[];
+     constructor(data?: PartialMessage<GetTokensMultiChainRequest>);
+     static readonly runtime: typeof proto3;
+     static readonly typeName = "data.v2.GetTokensMultiChainRequest";
+diff --git a/dist/data/v2/api_pb.js b/dist/data/v2/api_pb.js
+index 2a682613d1a2a928d0c2b2a4aef01e1bceda7619..f0a7f100902f03fe2f4d0c8673beda74a9091164 100644
+--- a/dist/data/v2/api_pb.js
++++ b/dist/data/v2/api_pb.js
+@@ -1017,6 +1017,10 @@ export class GetTokenMultiChainRequest extends Message {
+          * @generated from field: bool external = 4;
+          */
+         this.external = false;
++        /**
++         * @generated from field: repeated uint32 chain_ids = 5;
++         */
++        this.chainIds = [];
+         proto3.util.initPartial(data, this);
+     }
+     static fromBinary(bytes, options) {
+@@ -1039,6 +1043,7 @@ GetTokenMultiChainRequest.fields = proto3.util.newFieldList(() => [
+     { no: 2, name: "token", kind: "message", T: TokenIdentifier, oneof: "identifier" },
+     { no: 3, name: "canonical_chain_id", kind: "scalar", T: 13 /* ScalarType.UINT32 */, opt: true },
+     { no: 4, name: "external", kind: "scalar", T: 8 /* ScalarType.BOOL */ },
++    { no: 5, name: "chain_ids", kind: "scalar", T: 13 /* ScalarType.UINT32 */, repeated: true },
+ ]);
+ /**
+  * @generated from message data.v2.GetTokenMultiChainResponse
+@@ -1083,6 +1088,10 @@ export class GetTokensMultiChainRequest extends Message {
+          * @generated from field: bool external = 4;
+          */
+         this.external = false;
++        /**
++         * @generated from field: repeated uint32 chain_ids = 5;
++         */
++        this.chainIds = [];
+         proto3.util.initPartial(data, this);
+     }
+     static fromBinary(bytes, options) {
+@@ -1105,6 +1114,7 @@ GetTokensMultiChainRequest.fields = proto3.util.newFieldList(() => [
+     { no: 2, name: "tokens", kind: "message", T: TokenIdentifierList, oneof: "identifier" },
+     { no: 3, name: "canonical_chain_id", kind: "scalar", T: 13 /* ScalarType.UINT32 */, opt: true },
+     { no: 4, name: "external", kind: "scalar", T: 8 /* ScalarType.BOOL */ },
++    { no: 5, name: "chain_ids", kind: "scalar", T: 13 /* ScalarType.UINT32 */, repeated: true },
+ ]);
+ /**
+  * @generated from message data.v2.MultichainIdList

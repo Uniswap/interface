@@ -31,7 +31,9 @@ exports[`SwapTransactionDetails Component > renders SwapTransactionDetails witho
       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
     >
       <svg
+        aria-hidden="true"
         fill="none"
+        focusable="false"
         stroke-width="2"
         style="color: rgba(255, 255, 255, 0.38); width: 20px; height: 20px; transform: rotate(0deg);"
         viewBox="0 0 24 24"

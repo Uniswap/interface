@@ -8,6 +8,7 @@ import { BIPS_BASE, ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { getListPoolsInfiniteQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/pools/queries'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import type { FeeData } from 'uniswap/src/features/positions/types'
+import { NEW_TOKEN_PLACEHOLDER_ADDRESS } from '~/constants/tokenLaunch'
 import { usePoolLookupTokenAddresses } from '~/features/Liquidity/hooks/usePoolLookupTokenAddresses'
 import { useV4PoolsInitializedOnChain } from '~/features/Liquidity/hooks/useV4PoolsInitializedOnChain'
 import {
@@ -20,7 +21,6 @@ import {
 import { getPairListPoolsParams } from '~/features/Liquidity/utils/getPairListPoolsParams'
 import { normalizeHookForMatch } from '~/features/Liquidity/utils/normalizeHookForMatch'
 import { normalizeRankedPool } from '~/features/Liquidity/utils/normalizeRankedPool'
-import { NEW_TOKEN_PLACEHOLDER_ADDRESS } from '~/pages/Liquidity/CreateAuction/types'
 import { FeeTierData } from '~/types/liquidity'
 
 // One TVL-sorted page covers a pair's fee-tier distribution in practice; see the pair-filter

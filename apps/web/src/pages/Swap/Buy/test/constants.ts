@@ -1,5 +1,6 @@
 import { RampDirection } from 'uniswap/src/features/fiatOnRamp/types'
 import { getFiatCurrencyComponents } from 'utilities/src/format/localeBased'
+import type { Mock } from 'vitest'
 import { ethCurrencyInfo } from '~/pages/Swap/Buy/BuyFormContext'
 
 export const mockServiceProvider = {
@@ -42,6 +43,6 @@ export const mockBuyFormContext = {
     notAvailableInThisRegion: false,
     fetchingQuotes: false,
   },
-  setBuyFormState: vi.fn(),
+  setBuyFormState: vi.fn() as Mock,
   externalTransactionIdSuffix: 'test-transaction-id-suffix',
 }

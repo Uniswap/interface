@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import { TestID } from '@universe/test'
 import React from 'react'
+import type { Mock, MockInstance } from 'vitest'
 import { VerifyIdentityModal } from '~/components/PermissionedPool/VerifyIdentityModal'
 import { useModalState } from '~/hooks/useModalState'
 
@@ -57,7 +58,7 @@ vi.mock('uniswap/src/components/modals/Modal', () => ({
 
 const renderWithTheme = (ui: React.ReactElement) => render(ui)
 
-const mockUseModalState = useModalState as ReturnType<typeof vi.fn>
+const mockUseModalState = useModalState as Mock
 
 const REGISTRATION_URL = 'https://superstate.com/register'
 
@@ -120,8 +121,7 @@ describe('VerifyIdentityModal', () => {
 
   // The missing-config path intentionally logs a BE-contract-violation warning; spy on
   // console.warn so jest-fail-on-console doesn't fail the test, and pin that it fired.
-  const expectMissingConfigWarning = (): ReturnType<typeof vi.spyOn> =>
-    vi.spyOn(console, 'warn').mockImplementation(() => {})
+  const expectMissingConfigWarning = (): MockInstance => vi.spyOn(console, 'warn').mockImplementation(() => {})
 
   it('renders the unavailable fallback (not blank provider copy) when issuer is empty', () => {
     const warnSpy = expectMissingConfigWarning()

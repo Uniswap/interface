@@ -1,6 +1,6 @@
 import { useQueries } from '@tanstack/react-query'
 import { AddressStringFormat, normalizeAddress } from '@universe/chains'
-import { Anchor, Flex, Text, TouchableArea, UniversalImage, iconSizes } from '@universe/mycelium'
+import { Anchor, Flex, iconSizes, Text, TouchableArea, UniversalImage } from '@universe/mycelium'
 import { CheckmarkCircle } from '@universe/mycelium/icons/CheckmarkCircle'
 import { Person } from '@universe/mycelium/icons/Person'
 import { TestID } from '@universe/test'
@@ -72,6 +72,7 @@ function CreatorAvatar({ avatarUrl }: { avatarUrl: string | undefined }): JSX.El
     >
       {avatarUrl ? (
         <UniversalImage
+          alt=""
           uri={avatarUrl}
           size={{ width: 20, height: 20 }}
           // X avatar URLs go stale when the creator changes their picture.

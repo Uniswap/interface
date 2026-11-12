@@ -2310,7 +2310,7 @@
               "examples": {
                 "longOpenMorpho": {
                   "summary": "3x long WETH against USDC, 1 WETH of equity, held at Morpho",
-                  "description": "Equity is paid in WETH, which is also the collateral token for a long, so no funding swap is needed. `open` carries the whole action; the wallet block and the leverage leg's `slippageTolerance` are both required for this key.",
+                  "description": "Equity is paid in WETH, which is also the collateral token for a long, so no funding swap is needed. `open` carries the whole action, naming Morpho's WETH/USDC market by the `marketId` `GET /margin/markets` lists it under; the wallet block and the leverage leg's `slippageTolerance` are both required for this key.",
                   "value": {
                     "positionChainId": 1,
                     "exposureToken": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
@@ -2325,16 +2325,14 @@
                     },
                     "open": {
                       "leverageTarget": "3",
-                      "venues": [
-                        "MORPHO"
-                      ],
-                      "amount": "1000000000000000000"
+                      "amount": "1000000000000000000",
+                      "marketId": "0x1cc83f2e3e44cd44fadedc9ee43109ffafc5609a46097183de1f53abcfc91733"
                     }
                   }
                 },
                 "shortOpenAaveV3": {
                   "summary": "2x short WETH against USDC, 2000 USDC of equity, held at Aave v3",
-                  "description": "Equity is paid in USDC, which is the collateral token for a short, so again no funding swap. Only `direction` and the action key differ from the long request.",
+                  "description": "Equity is paid in USDC, which is the collateral token for a short, so again no funding swap. Only `direction` and the action key differ from the long request, the action key naming Aave v3's USDC/WETH market, whose collateral is the short's counter token.",
                   "value": {
                     "positionChainId": 1,
                     "exposureToken": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
@@ -2349,10 +2347,8 @@
                     },
                     "open": {
                       "leverageTarget": "2",
-                      "venues": [
-                        "AAVE_V3"
-                      ],
-                      "amount": "2000000000"
+                      "amount": "2000000000",
+                      "marketId": "0x001a706a9dffcd1725570d785fdb9cdc6539e8a1b1087d86ec1b8c0b64702acb"
                     }
                   }
                 }
@@ -9712,6 +9708,10 @@
               "$ref": "#/components/schemas/MarginOperation"
             },
             "description": "Ordered, in the sequence they execute. One on the simple keys. A composite populates more than one, with the equity side on opposite ends depending on which way it moves: a supply (`ADD_COLLATERAL`) goes FIRST, because it strictly lowers LTV, and a withdrawal (`WITHDRAW`) goes LAST, matching what the router does. `close` is a `DECREASE_POSITION` followed by a `SWEEP`."
+          },
+          "marketId": {
+            "$ref": "#/components/schemas/marginMarketId",
+            "description": "On `open` only: the market the quote priced, `open.marketId` in lowercase, which `POST /plan` opens on. Absent on the manage keys, whose market is the position's."
           }
         },
         "required": [
@@ -9813,22 +9813,28 @@
             "$ref": "#/components/schemas/MarginDirection"
           },
           "headlineVenue": {
-            "$ref": "#/components/schemas/MarginVenue"
+            "$ref": "#/components/schemas/MarginVenue",
+            "description": "The venue of the headline market, the one behind `maxLeverage`. Several `venueMarkets` entries can share it, so it does not name the market."
+          },
+          "headlineMarketId": {
+            "$ref": "#/components/schemas/marginMarketId",
+            "description": "The `marketId` of the headline market, the one behind `maxLeverage`: always the `marketId` of one of the row's `venueMarkets` entries. A quote opens on the market its `open.marketId` names, which need not be this one."
           },
           "maxLeverage": {
             "type": "string"
           },
-          "venues": {
+          "venueMarkets": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/MarginMarketVenue"
-            }
+              "$ref": "#/components/schemas/MarginVenueMarket"
+            },
+            "description": "Every market serving the pair that is open to new positions, one entry per market, each under its own `marketId`: a venue with several markets on the pair appears once for each."
           }
         }
       },
-      "MarginMarketVenue": {
+      "MarginVenueMarket": {
         "type": "object",
-        "description": "What one venue offers for a pair, for the advanced breakdown. The scalars beside `venues` on the row are the HEADLINE venue's; read `headlineVenue` rather than matching them back.",
+        "description": "One market serving the pair, for the advanced breakdown. A venue can list several, each its own entry under its own `marketId`. The row's `maxLeverage` is the HEADLINE market's: the `venueMarkets` entry with the greatest `maxLeverage`, the first listed on a tie. `headlineMarketId` names it, and `headlineVenue` names only its venue, which several entries can share.",
         "properties": {
           "venue": {
             "$ref": "#/components/schemas/MarginVenue"
@@ -9838,7 +9844,7 @@
           },
           "venueMarketId": {
             "type": "string",
-            "description": "Morpho's market id. Absent where the (adapter, pair) IS the market."
+            "description": "Morpho's own market id, for display and links. Absent where the (adapter, pair) IS the market. Never an input: an `open` names its market by `marketId`."
           },
           "maxLeverage": {
             "type": "string",
@@ -9850,11 +9856,15 @@
           },
           "borrowRate": {
             "type": "string",
-            "description": "Annual borrow rate, 18-decimal fixed point. Read from chain through the same function `POST /margin/quote` reads it through, so the venue a picker recommends is the venue a quote would pick for the same reason. Absent when the venue's rate read failed, which is not a rate of zero."
+            "description": "Annual borrow rate, 18-decimal fixed point. Read from chain through the same function `POST /margin/quote` reads it through. Absent when the venue's rate read failed, which is not a rate of zero."
           },
           "availableBorrowLiquidity": {
             "type": "string",
             "description": "What the venue can actually lend, in raw debt-token units. On Aave this is `min(virtual balance, borrow cap - debt)`: the cap usually binds first, so the balance alone overstates it. Absent when the read failed, and always absent on `AAVE_V4`, whose liquidity is not read."
+          },
+          "marketId": {
+            "$ref": "#/components/schemas/marginMarketId",
+            "description": "The market's id: what `open.marketId` names on `POST /margin/quote` to open on exactly this market."
           }
         }
       },
@@ -9884,18 +9894,19 @@
           "leverageTarget": {
             "$ref": "#/components/schemas/marginLeverage"
           },
-          "venues": {
-            "$ref": "#/components/schemas/MarginVenues"
-          },
           "amount": {
             "$ref": "#/components/schemas/tokenAmount",
             "description": "The equity magnitude, in `walletToken`'s native decimals."
+          },
+          "marketId": {
+            "$ref": "#/components/schemas/marginMarketId",
+            "description": "The market to open on, as `GET /margin/markets` lists it in `venueMarkets[].marketId`. The quote prices this market alone and never moves the open to another market or venue. A missing or malformed id is a 400 `RequestValidationError`; one that names no market `GET /margin/markets` lists on `positionChainId` is a 422 `MARGIN_MARKET_NOT_FOUND`; one whose market is not the request's pair on the side `direction` puts it is a 400 `MARGIN_MARKET_MISMATCH`; one whose market `direction` reads in a way `GET /margin/markets` does not list it, a USD stablecoin as the exposure against a volatile token or the `SHORT` of a stablecoin against a stablecoin, is a 400 `MARGIN_MIRRORED_READING`; and one on a market closed to new positions is a 422 `MARGIN_NO_ELIGIBLE_VENUE`."
           }
         },
         "required": [
           "leverageTarget",
-          "venues",
-          "amount"
+          "amount",
+          "marketId"
         ]
       },
       "MarginOperation": {
@@ -11122,14 +11133,6 @@
         ],
         "description": "A lending venue the position can be held at."
       },
-      "MarginVenues": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/MarginVenue"
-        },
-        "minItems": 1,
-        "description": "The LENDING allowlist for the position, distinct from `protocols`, which is the AMM allowlist for the swap legs. At least one venue must be named; the server ranks the allowed venues and serves the best one."
-      },
       "MarginWalletBlock": {
         "type": "object",
         "description": "The wallet-side block: the token crossing the wallet boundary, where it sits, and how its swap should execute. Required in full on every action that moves equity, and forbidden in full on `increaseLeverage` and `decreaseLeverage`, which hold equity. It is never genuinely optional: whether it applies follows from the action key alone.",
@@ -11161,6 +11164,11 @@
         "type": "string",
         "description": "Leverage as a decimal string (`\"3\"`, `\"2.55\"`), never a number. Leverage is money-adjacent, so it is carried as a string to keep it out of float rounding. Must be greater than 1: leverage buys collateral with borrowed funds, so 1x buys nothing and opens no position. Rejected at the boundary rather than deep in sizing.",
         "pattern": "^[0-9]+(\\.[0-9]+)?$"
+      },
+      "marginMarketId": {
+        "type": "string",
+        "description": "A margin market's id, 0x-prefixed 32-byte hex, as `GET /margin/markets` lists it in lowercase: `0x` followed by the sha256 of the UTF-8 string `<chainId>:<venue>:<venueMarketId>`, where `venue` is `morpho_blue`, `aave_v3` or `aave_v4` and `venueMarketId` is the venue's own id for the market in lowercase: Morpho's market id on Morpho, the one the listing serves as `venueMarkets[].venueMarketId`, `<collateral>:<debt>` on Aave v3, and `<spoke>:<collateralReserveId>:<debtReserveId>` on Aave v4. It names one market exactly. Take it from the listing rather than building it.",
+        "pattern": "^0x[0-9a-fA-F]{64}$"
       },
       "marginPositionId": {
         "type": "string",

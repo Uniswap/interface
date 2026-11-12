@@ -9,6 +9,7 @@ import { act, fireEvent, render } from 'src/test/test-utils'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import { logger } from 'utilities/src/logger/logger'
+import type { Mock } from 'vitest'
 
 vi.mock('src/screens/Onboarding/resolveUnitagEligibility', async (importOriginal) => ({
   ...(await importOriginal<typeof import('src/screens/Onboarding/resolveUnitagEligibility')>()),
@@ -62,7 +63,7 @@ function createDeferred<T>(): { promise: Promise<T>; resolve: (value: T) => void
 function renderLandingScreen(): {
   blur: () => void
   getBlurListenerCount: () => number
-  navigate: ReturnType<typeof vi.fn>
+  navigate: Mock
   pressCreateWallet: () => Promise<void>
 } {
   const navigate = vi.fn()

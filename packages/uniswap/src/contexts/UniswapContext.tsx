@@ -55,6 +55,8 @@ interface UniswapContextValue {
   // Opens the earn vault destination for a vault share token (underlying TDP + earn modal on web, earn vault
   // modal on mobile/extension). Optional: not all platforms/environments wire earn navigation.
   navigateToEarnVault?: (args: NavigateToEarnVaultArgs) => void
+  // Optional: only web wires margin.
+  navigateToMarginPlan?: (args: { planId: string }) => void
   navigateToAuction?: (args: { auctionAddress: string; chainId: UniverseChainId }) => void
   navigateToCategoryDetails?: (args: NavigateToCategoryDetailsArgs) => void
   handleShareToken: (args: { currencyId: string }) => void
@@ -111,6 +113,7 @@ export function UniswapProvider({
   navigateToNftDetails,
   navigateToPoolDetails,
   navigateToEarnVault,
+  navigateToMarginPlan,
   navigateToAuction,
   navigateToCategoryDetails,
   handleShareToken,
@@ -152,6 +155,7 @@ export function UniswapProvider({
       navigateToNftDetails,
       navigateToPoolDetails,
       navigateToEarnVault,
+      navigateToMarginPlan,
       navigateToAuction,
       navigateToCategoryDetails,
       handleShareToken,
@@ -203,6 +207,7 @@ export function UniswapProvider({
       navigateToNftDetails,
       navigateToPoolDetails,
       navigateToEarnVault,
+      navigateToMarginPlan,
       navigateToAuction,
       navigateToCategoryDetails,
       handleShareToken,

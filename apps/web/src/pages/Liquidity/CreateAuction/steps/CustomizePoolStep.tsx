@@ -19,7 +19,9 @@ import { FeePoolSelectAction } from 'uniswap/src/features/telemetry/types'
 import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
+import { ONE_DAY_MS } from 'utilities/src/time/time'
 import { useActiveAddress } from '~/connection/accounts/hooks'
+import { NEW_TOKEN_PLACEHOLDER_ADDRESS } from '~/constants/tokenLaunch'
 import { AdvancedButton } from '~/features/Liquidity/Create/AdvancedButton'
 import { getSortedCurrenciesForProtocol } from '~/features/Liquidity/Create/hooks/useDerivedPositionInfo'
 import { FeeTierSearchModal } from '~/features/Liquidity/FeeTierSearchModal'
@@ -54,16 +56,11 @@ import {
   CreateAuctionStep,
   type CustomPriceRangePreset,
   NEW_TOKEN_DECIMALS,
-  NEW_TOKEN_PLACEHOLDER_ADDRESS,
   PriceRangeStrategy,
   TokenMode,
 } from '~/pages/Liquidity/CreateAuction/types'
 import { getRaiseCurrencyAsCurrency } from '~/pages/Liquidity/CreateAuction/utils'
-import {
-  MS_PER_DAY,
-  defaultEndTimeFor,
-  formatReviewAuctionDuration,
-} from '~/pages/Liquidity/CreateAuction/utils/duration'
+import { defaultEndTimeFor, formatReviewAuctionDuration } from '~/pages/Liquidity/CreateAuction/utils/duration'
 
 /** Wide-layout width for the address field / control column in advanced settings rows (must match across sections). */
 const ADVANCED_SETTINGS_CONTROL_COLUMN_WIDTH_PX = 280
@@ -201,10 +198,10 @@ export function CustomizePoolStep() {
     return defaultEndTimeFor(startTime ?? new Date())
   }, [startTime, endTime])
 
-  const minUnlockDate = useMemo(() => new Date(auctionEndDate.getTime() + MS_PER_DAY), [auctionEndDate])
+  const minUnlockDate = useMemo(() => new Date(auctionEndDate.getTime() + ONE_DAY_MS), [auctionEndDate])
 
   const unlockDate = useMemo(
-    () => new Date(auctionEndDate.getTime() + timeLockDurationDays * MS_PER_DAY),
+    () => new Date(auctionEndDate.getTime() + timeLockDurationDays * ONE_DAY_MS),
     [auctionEndDate, timeLockDurationDays],
   )
 
@@ -213,7 +210,7 @@ export function CustomizePoolStep() {
       if (!date) {
         return
       }
-      const days = Math.ceil((date.getTime() - auctionEndDate.getTime()) / MS_PER_DAY)
+      const days = Math.ceil((date.getTime() - auctionEndDate.getTime()) / ONE_DAY_MS)
       setTimeLockDurationDays(Math.max(MIN_LOCK_DURATION_DAYS, days))
     },
     [auctionEndDate, setTimeLockDurationDays],

@@ -24,8 +24,7 @@ Currently, there are 2 types of functions developed
 
 Each entry point supplies the platform-specific pieces `createApp` needs (SPA HTML, upstream URLs, trusted client IP):
 
-- `ecs-entry.ts` — production (AWS ECS, Node), bundled to `build/server/index.mjs` by `vite.server.config.mts`
-- `vercel-entry.ts` — Vercel previews, bundled by the same config
+- `ecs-entry.ts` — deployed stacks and PR previews (AWS ECS, Node), bundled to `build/server/index.mjs` by `vite.server.config.mts`
 - `dev-entry.ts` — `bun run dev`: `vite/honoDevServerPlugin.ts` mounts it behind the Vite dev server, serving `index.html` through Vite's HTML transform. Vite's own proxy answers `/config`, `/ws` and (with `ENABLE_ENTRY_GATEWAY_PROXY=true`) `/entry-gateway` before the Hono app sees them.
 
 ## Testing

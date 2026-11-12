@@ -1,3 +1,4 @@
+import { hexToRGB } from 'utilities/src/theme/colors'
 import { HEX_RGB_PATTERN } from '~/pages/Liquidity/CreateAuction/tokenAccentHex'
 
 export const pad = (n: number): string => String(n).padStart(2, '0')
@@ -127,13 +128,8 @@ export function formatTimeForDisplay({ date, locale }: { date: Date; locale: str
 
 /** Returns `rgba(...)` for a `#RRGGBB` string at the given alpha (0..1), or `undefined` for unsupported inputs. */
 export function hexToRgba({ hex, alpha }: { hex: string; alpha: number }): string | undefined {
-  if (!HEX_RGB_PATTERN.test(hex)) {
-    return undefined
-  }
-  const r = Number.parseInt(hex.slice(1, 3), 16)
-  const g = Number.parseInt(hex.slice(3, 5), 16)
-  const b = Number.parseInt(hex.slice(5, 7), 16)
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`
+  const rgb = HEX_RGB_PATTERN.test(hex) ? hexToRGB(hex) : null
+  return rgb ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${alpha})` : undefined
 }
 
 /** Returns a hex string darkened by `amount` (0..1). For example `0.12` ≈ 12% closer to black. */

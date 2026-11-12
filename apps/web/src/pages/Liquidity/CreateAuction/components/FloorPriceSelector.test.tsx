@@ -1,12 +1,13 @@
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
 import { useRef, useState } from 'react'
+import { RaiseCurrency } from '~/features/Toucan/utils/raiseCurrency'
 import {
   FloorPriceSelector,
   type FloorPriceSelectorHandle,
 } from '~/pages/Liquidity/CreateAuction/components/FloorPriceSelector'
 import type { InputCurrency } from '~/pages/Liquidity/CreateAuction/components/floorPriceSelectorDraft'
-import { type FloorPriceInputState, RaiseCurrency } from '~/pages/Liquidity/CreateAuction/types'
+import { type FloorPriceInputState } from '~/pages/Liquidity/CreateAuction/types'
 import { act, fireEvent, render, screen } from '~/test-utils/render'
 
 const auctionToken = new Token(UniverseChainId.Mainnet, `0x${'1'.padStart(40, '0')}`, 18, 'NEW')

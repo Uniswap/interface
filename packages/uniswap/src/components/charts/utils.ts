@@ -13,12 +13,29 @@ const STABLECOIN_VARIANCE_THRESHOLDS: Record<HistoryDuration, number> = {
   [HistoryDuration.Max]: 0.5,
 }
 
+const STABLECOIN_FLAT_RANGE_THRESHOLD = 0.015
+
+export const FLAT_STABLECOIN_HEIGHT_FRACTION = 0.02
+
+function isFlatStablecoinRange({
+  min,
+  max,
+  isStablecoin,
+}: {
+  min: number
+  max: number
+  isStablecoin: boolean
+}): boolean {
+  return isStablecoin && min > 0 && (max - min) / min < STABLECOIN_FLAT_RANGE_THRESHOLD
+}
+
 /**
  * Determines if a price range has low variance (typically indicating a stablecoin).
  * @param min - The minimum price value
  * @param max - The maximum price value
  * @param duration - The time period for the chart data (optional)
- * @param isStablecoin - False rules the chart out however flat its range; leave undefined when unknown
+ * @param isStablecoin - Token charts pass it and get the shared 1.5% stablecoin rule; omit it for charts with no token
+ * category (e.g. portfolio balance), which judge on the range alone
  * @returns true if the price variance is below the threshold
  */
 export function isLowVarianceRange({
@@ -32,11 +49,11 @@ export function isLowVarianceRange({
   duration?: HistoryDuration
   isStablecoin?: boolean
 }): boolean {
-  if (isStablecoin === false || min <= 0) {
-    return false
+  if (isStablecoin !== undefined) {
+    return isFlatStablecoinRange({ min, max, isStablecoin })
   }
 
-  if (!duration) {
+  if (min <= 0 || !duration) {
     return false
   }
 
@@ -44,6 +61,24 @@ export function isLowVarianceRange({
   const priceVariancePercent = (priceRange / min) * 100
 
   return priceVariancePercent < STABLECOIN_VARIANCE_THRESHOLDS[duration]
+}
+
+export function getSparklineValueDomain({
+  min,
+  max,
+  isStablecoin,
+}: {
+  min: number
+  max: number
+  isStablecoin: boolean
+}): [number, number] {
+  if (!isFlatStablecoinRange({ min, max, isStablecoin })) {
+    return [min, max]
+  }
+  const mid = (min + max) / 2
+  // A constant series has no range to scale; any span centres it
+  const span = (max - min) / FLAT_STABLECOIN_HEIGHT_FRACTION || mid
+  return [mid - span / 2, mid + span / 2]
 }
 
 /** Undefined with Token Categories off or until the token's category tags are known. */

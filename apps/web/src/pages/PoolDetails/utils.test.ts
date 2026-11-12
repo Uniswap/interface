@@ -17,8 +17,17 @@ describe('getPoolDetailPageTitle', () => {
     expect(result).toBe('Buy and sell on Uniswap')
   })
 
-  it('should order the symbols by waterfall priority (stablecoin as quote)', () => {
+  it('should keep token0/token1 order when token1 is the quote', () => {
     const result = getPoolDetailPageTitle(i18n.t, { token0: validParsedPoolToken0, token1: validParsedPoolToken1 })
-    expect(result).toBe('WETH/USDC: Buy and sell on Uniswap')
+    expect(result).toBe(`${validParsedPoolToken0.symbol}/${validParsedPoolToken1.symbol}: Buy and sell on Uniswap`)
+  })
+
+  it('should show token0 second when it is the quote', () => {
+    const result = getPoolDetailPageTitle(i18n.t, {
+      token0: validParsedPoolToken0,
+      token1: validParsedPoolToken1,
+      isToken0Quote: true,
+    })
+    expect(result).toBe(`${validParsedPoolToken1.symbol}/${validParsedPoolToken0.symbol}: Buy and sell on Uniswap`)
   })
 })

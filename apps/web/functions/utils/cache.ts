@@ -13,12 +13,12 @@ interface AuctionData {
 export type PoolProtocolVersion = 'V2' | 'V3' | 'V4'
 
 interface PoolData {
-  token0Symbol?: string
-  token1Symbol?: string
+  baseSymbol?: string
+  quoteSymbol?: string
   feeTier?: string
   protocolVersion: PoolProtocolVersion
-  token0Image?: string
-  token1Image?: string
+  baseImage?: string
+  quoteImage?: string
 }
 
 export type PositionStatus = 'in_range' | 'out_of_range' | 'closed'

@@ -1,8 +1,10 @@
+import { TradingApi } from '@universe/api'
 import {
   createTransactionSettingsStore,
   initialTransactionSettingsState,
 } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/createTransactionSettingsStore'
 import { isDefaultTradeRouteOptions } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/TradeRoutingPreference/isDefaultTradeRouteOptions'
+import { SUPPORTED_BRIDGE_PROVIDERS } from 'uniswap/src/features/transactions/swap/utils/bridgeProviders'
 
 describe('createTransactionSettingsStore', () => {
   describe('initialTransactionSettingsState', () => {
@@ -39,5 +41,22 @@ describe('createTransactionSettingsStore', () => {
     })
     store.getState().actions.clearGasOverrides()
     expect(store.getState().gasOverrides).toBeUndefined()
+  })
+
+  it('starts with every supported bridge and toggles one off and back on', () => {
+    const { store } = createTransactionSettingsStore()
+    expect(store.getState().selectedBridgeProviders).toEqual(SUPPORTED_BRIDGE_PROVIDERS)
+
+    store.getState().actions.toggleBridgeProvider(TradingApi.BridgeProvider.RELAY)
+    expect(store.getState().selectedBridgeProviders).toEqual([TradingApi.BridgeProvider.ACROSS])
+
+    store.getState().actions.toggleBridgeProvider(TradingApi.BridgeProvider.RELAY)
+    expect(store.getState().selectedBridgeProviders).toEqual([
+      TradingApi.BridgeProvider.ACROSS,
+      TradingApi.BridgeProvider.RELAY,
+    ])
+
+    store.getState().actions.setSelectedBridgeProviders([TradingApi.BridgeProvider.RELAY])
+    expect(store.getState().selectedBridgeProviders).toEqual([TradingApi.BridgeProvider.RELAY])
   })
 })

@@ -2,7 +2,8 @@ import { ChallengeType } from '@uniswap/client-platform-service/dist/uniswap/pla
 import { createWorkerHashcashSolver } from '@universe/sessions/src/challenge-solvers/hashcash/createWorkerHashcashSolver'
 import type { HashcashWorkerChannelFactory } from '@universe/sessions/src/challenge-solvers/hashcash/worker/types'
 import type { ChallengeData } from '@universe/sessions/src/challenge-solvers/types'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { sleep } from 'utilities/src/time/timing'
+import { beforeEach, describe, expect, it, type Mock, vi } from 'vitest'
 
 describe('createWorkerHashcashSolver', () => {
   // Real backend example data
@@ -25,9 +26,9 @@ describe('createWorkerHashcashSolver', () => {
   ): {
     factory: HashcashWorkerChannelFactory
     mocks: {
-      findProof: ReturnType<typeof vi.fn>
-      cancel: ReturnType<typeof vi.fn>
-      terminate: ReturnType<typeof vi.fn>
+      findProof: Mock
+      cancel: Mock
+      terminate: Mock
     }
   } {
     const findProof = vi.fn().mockResolvedValue(findProofResult)
@@ -140,7 +141,7 @@ describe('createWorkerHashcashSolver', () => {
       // Make findProof take a while and check abort during it
       mocks.findProof.mockImplementation(async () => {
         // Simulate work, then check if cancelled
-        await new Promise((resolve) => setTimeout(resolve, 50))
+        await sleep(50)
         return null // Simulates cancelled result
       })
 

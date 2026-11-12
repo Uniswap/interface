@@ -33,6 +33,10 @@ vi.mock('@universe/mycelium/icons/Plus', () => ({
   Plus: () => <span data-testid="liquidity-pair-plus-separator" />,
 }))
 
+vi.mock('@universe/mycelium/icons/Receipt', () => ({
+  Receipt: () => <span data-testid="compact-thumbnail-placeholder" />,
+}))
+
 const UNI_ADDRESS = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984'
 const USDC_ADDRESS = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
 const DAI_ADDRESS = '0x6B175474E89094C44Da98b954EedeAC495271d0F'
@@ -314,5 +318,79 @@ describe('ActivityAmountCell — pair, wrap, liquidity-pair, single', () => {
 
     expect(screen.getByText(/1\.00 PEPEC…/)).toBeInTheDocument()
     expect(screen.queryByText(/PEPECOIN/)).not.toBeInTheDocument()
+  })
+})
+
+describe('ActivityAmountCell — compact thumbnails', () => {
+  function nftMint(id: string, imageURL: string): TransactionDetails {
+    return baseTransaction(id, {
+      type: TransactionType.NFTMint,
+      nftSummaryInfo: {
+        tokenId: '5350',
+        name: '#5350',
+        collectionName: 'Flaunch',
+        imageURL,
+        address: FROM,
+      },
+    })
+  }
+
+  function uniToUsdcSwap(): TransactionDetails {
+    return baseTransaction('swap', {
+      type: TransactionType.Swap,
+      tradeType: TradeType.EXACT_INPUT,
+      inputCurrencyId: `${UniverseChainId.Mainnet}-${UNI_ADDRESS}`,
+      outputCurrencyId: `${UniverseChainId.Mainnet}-${USDC_ADDRESS}`,
+      inputCurrencyAmountRaw: ONE_TOKEN,
+      expectedOutputCurrencyAmountRaw: ONE_TOKEN,
+      minimumOutputCurrencyAmountRaw: ONE_TOKEN,
+    })
+  }
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockCurrencyInfos([])
+  })
+
+  it('renders a compact NFT row with the type label and NFT name, like the token rows', () => {
+    render(<ActivityAmountCell transaction={nftMint('nft', 'https://example.com/5350.png')} variant="compact" />)
+
+    expect(screen.getByText('Minted')).toBeInTheDocument()
+    expect(screen.getByText('#5350')).toBeInTheDocument()
+    expect(screen.queryByText('Flaunch')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('compact-thumbnail-placeholder')).not.toBeInTheDocument()
+  })
+
+  it('keeps the thumbnail slot on a compact NFT row without an image', () => {
+    render(<ActivityAmountCell transaction={nftMint('nft-no-image', '')} variant="compact" />)
+
+    expect(screen.getByText('#5350')).toBeInTheDocument()
+    expect(screen.getByTestId('compact-thumbnail-placeholder')).toBeInTheDocument()
+  })
+
+  it('leaves the full NFT row unchanged', () => {
+    render(<ActivityAmountCell transaction={nftMint('nft-full', 'https://example.com/5350.png')} />)
+
+    expect(screen.getByText('#5350')).toBeInTheDocument()
+    expect(screen.getByText('Flaunch')).toBeInTheDocument()
+    expect(screen.queryByText('Minted')).not.toBeInTheDocument()
+  })
+
+  it('keeps the thumbnail slot on a compact pair row with only one currency resolved', () => {
+    mockCurrencyInfos([currencyInfoFixture('UNI', UNI_ADDRESS)])
+
+    render(<ActivityAmountCell transaction={uniToUsdcSwap()} variant="compact" />)
+
+    expect(screen.getByText('Swapped')).toBeInTheDocument()
+    expect(screen.getByTestId('compact-thumbnail-placeholder')).toBeInTheDocument()
+  })
+
+  it('shows no placeholder on a compact token row whose currencies resolve', () => {
+    mockCurrencyInfos([currencyInfoFixture('UNI', UNI_ADDRESS), currencyInfoFixture('USDC', USDC_ADDRESS)])
+
+    render(<ActivityAmountCell transaction={uniToUsdcSwap()} variant="compact" />)
+
+    expect(screen.getByText(/1\.00 UNI → ~1\.00 USDC/)).toBeInTheDocument()
+    expect(screen.queryByTestId('compact-thumbnail-placeholder')).not.toBeInTheDocument()
   })
 })

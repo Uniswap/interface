@@ -14,8 +14,8 @@ import type { AddFundsPressParams } from 'uniswap/src/features/providers/webForN
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { getFiatOnRampURL } from 'uniswap/src/utils/linking'
 import { useEvent } from 'utilities/src/react/hooks'
-import { useCexTransferProviderPress } from '~/components/ReceiveCryptoModal/useCexTransferProviderPress'
-import { useOpenReceiveCryptoModal } from '~/components/ReceiveCryptoModal/useOpenReceiveCryptoModal'
+import { useCexTransferProviderPress } from '~/hooks/useCexTransferProviderPress'
+import { useOpenReceiveCryptoModal } from '~/hooks/useOpenReceiveCryptoModal'
 import { useAccountDrawer } from '~/state/accountDrawer/hooks'
 import { ReceiveModalState } from '~/types/receiveCryptoModal'
 
