@@ -8,8 +8,14 @@ import { useSectionsForSearchResults } from 'uniswap/src/features/search/SearchM
 import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
 import { renderHookWithProviders } from 'uniswap/src/test/render'
 
-const { mockUseSearchQuery } = vi.hoisted(() => ({
+const { mockUseSearchQuery, mockUseAddressFromEns } = vi.hoisted(() => ({
   mockUseSearchQuery: vi.fn(),
+  mockUseAddressFromEns: vi.fn(),
+}))
+
+vi.mock('uniswap/src/features/ens/api', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('uniswap/src/features/ens/api')>()),
+  useAddressFromEns: mockUseAddressFromEns,
 }))
 
 vi.mock('uniswap/src/data/apiClients/dataApiService/search/search', async (importOriginal) => ({
@@ -73,12 +79,53 @@ describe(useSectionsForSearchResults, () => {
   beforeEach(() => {
     vi.clearAllMocks()
     SharedQueryClient.clear()
+    mockUseAddressFromEns.mockReturnValue({ data: null, isLoading: false })
     mockUseSearchQuery.mockImplementation(({ select }: { select: (response: SearchResponse) => unknown }) => ({
       data: select(new SearchResponse({ auctions: [ENDED_AUCTION] })),
       error: null,
       isLoading: false,
       refetch: vi.fn(),
     }))
+  })
+
+  it('uses a resolved ENS address for web token searches', async () => {
+    const address = '0x00000000000000000000000000000000000000a1'
+    mockUseAddressFromEns.mockImplementation((name: string | null) => ({
+      data: name === 'token.example.eth' ? address : null,
+      isLoading: false,
+    }))
+    renderHookWithProviders(() =>
+      useSectionsForSearchResults({
+        chainFilter: UniverseChainId.Mainnet,
+        searchFilter: 'token.example.eth',
+        activeTab: SearchTab.Tokens,
+        shouldPrioritizePools: false,
+        shouldPrioritizeWallets: false,
+      }),
+    )
+    await waitFor(() =>
+      expect(mockUseSearchQuery).toHaveBeenCalledWith(
+        expect.objectContaining({ input: expect.objectContaining({ searchQuery: address }) }),
+      ),
+    )
+  })
+
+  it('does not resolve ENS as a token search on another selected chain', async () => {
+    renderHookWithProviders(() =>
+      useSectionsForSearchResults({
+        chainFilter: UniverseChainId.Base,
+        searchFilter: 'token.example.eth',
+        activeTab: SearchTab.Tokens,
+        shouldPrioritizePools: false,
+        shouldPrioritizeWallets: false,
+      }),
+    )
+    await waitFor(() =>
+      expect(mockUseSearchQuery).toHaveBeenCalledWith(
+        expect.objectContaining({ input: expect.objectContaining({ searchQuery: 'token.example.eth' }) }),
+      ),
+    )
+    expect(mockUseAddressFromEns).toHaveBeenCalledWith(null)
   })
 
   it('lists an ended auction on the Auctions tab', async () => {

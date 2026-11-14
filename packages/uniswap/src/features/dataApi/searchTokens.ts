@@ -2,10 +2,13 @@ import type { ConnectError } from '@connectrpc/connect'
 import type { UseQueryResult } from '@tanstack/react-query'
 import { SearchResponse, SearchType } from '@uniswap/client-data-api/dist/data/v2/search_pb'
 import { UniverseChainId } from '@universe/chains'
+import { isWebApp } from '@universe/environment'
 import { useMemo } from 'react'
 import { useSearchQuery } from 'uniswap/src/data/apiClients/dataApiService/search/search'
 import { dataApiMultichainTokenToSearchResult } from 'uniswap/src/data/apiClients/dataApiService/utils/dataApiMultichainToken'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useAddressFromEns } from 'uniswap/src/features/ens/api'
+import { getExplicitEnsTokenSearchName, isAddressTokenSearchQuery } from 'uniswap/src/features/search/utils'
 import { MultichainSearchResult } from 'uniswap/src/features/dataApi/types'
 import { NUMBER_OF_RESULTS_LONG } from 'uniswap/src/features/search/SearchModal/constants'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -58,14 +61,24 @@ export function useMultichainSearchTokens({
 }): UseQueryResult<MultichainSearchResult[], ConnectError> {
   const { chains: enabledChainIds } = useEnabledChains()
 
+  // The ENS forward lookup uses Ethereum mainnet records. Only resolve explicit
+  // .eth names on web when Ethereum is available, never on a different pinned chain.
+  const searchedChains = chainFilter ? [chainFilter] : (chainIds ?? enabledChainIds)
+  const ensSearchName =
+    !skip && isWebApp && searchedChains.includes(UniverseChainId.Mainnet)
+      ? getExplicitEnsTokenSearchName(searchQuery)
+      : null
+  const { data: ensTokenAddress } = useAddressFromEns(ensSearchName)
+  const resolvedTokenSearchQuery = isAddressTokenSearchQuery(ensTokenAddress) ? ensTokenAddress : searchQuery
+
   const variables = useMemo(
     () => ({
-      searchQuery: searchQuery ?? undefined,
+      searchQuery: resolvedTokenSearchQuery ?? undefined,
       chainIds: chainFilter ? [chainFilter] : (chainIds ?? enabledChainIds),
       types: [SearchType.TOKEN],
       maxResults: size,
     }),
-    [searchQuery, chainFilter, chainIds, size, enabledChainIds],
+    [resolvedTokenSearchQuery, chainFilter, chainIds, size, enabledChainIds],
   )
 
   const select = useEvent((response: SearchResponse): MultichainSearchResult[] =>
