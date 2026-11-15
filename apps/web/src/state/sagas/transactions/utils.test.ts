@@ -6,6 +6,7 @@ import { runSaga } from 'redux-saga'
 import { USDC, WBTC } from 'uniswap/src/constants/tokens'
 import { TransactionStepFailedError } from 'uniswap/src/features/transactions/errors'
 import { addTransaction } from 'uniswap/src/features/transactions/slice'
+import { getRequiredApprovalAmount } from '~/state/sagas/transactions/approvalAmount'
 import type { HandleOnChainStepParams, OnChainTransactionStep } from 'uniswap/src/features/transactions/steps/types'
 import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { createBridgeTrade } from 'uniswap/src/features/transactions/swap/types/trade'
@@ -14,6 +15,14 @@ import { TransactionStatus, TransactionType } from 'uniswap/src/features/transac
 const mockSendTransaction = vi.fn()
 const mockSendUncheckedTransaction = vi.fn()
 const mockGetTransaction = vi.fn()
+
+describe('getRequiredApprovalAmount', () => {
+  it('preserves large decimal approval amounts exactly', () => {
+    const amount = '10000000000000000000000000000000000000000000000001'
+
+    expect(getRequiredApprovalAmount(amount)).toBe(BigInt(amount))
+  })
+})
 
 vi.mock('wagmi/actions', () => ({
   getConnectorClient: vi.fn().mockResolvedValue({}),
