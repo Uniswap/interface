@@ -4,6 +4,12 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { NumberType } from 'utilities/src/format/types'
 import { PricePoint } from '~/data/util'
 
+const MAX_INTL_FRACTION_DIGITS = 100
+
+function isValidFractionDigits(decimals: number): boolean {
+  return Number.isInteger(decimals) && decimals >= 0 && decimals <= MAX_INTL_FRACTION_DIGITS
+}
+
 /**
  * Returns the minimum and maximum values in the given array of PricePoints.
  */
@@ -80,7 +86,7 @@ export function formatPriceAxisLabel({
   if (tokenFormatType) {
     return format.formatNumberOrString({ value: price, type: tokenFormatType })
   }
-  if (decimals !== undefined) {
+  if (decimals !== undefined && isValidFractionDigits(decimals)) {
     const { amount, currency } = format.convertFiatAmount(price)
     return new Intl.NumberFormat(locale, {
       style: 'currency',
