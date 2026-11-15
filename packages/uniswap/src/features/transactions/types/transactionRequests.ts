@@ -13,6 +13,24 @@ export function isValidTransactionRequest(request: TransactionRequest): request 
   )
 }
 
+
+/**
+ * EIP-1474 QUANTITY encoding: hex with no leading zeros (except `0x0`).
+ * Some RPCs (e.g. Go hexutil.Big on Robinhood Chain) reject padded values like
+ * `0x033f…` from the Trading API, which blocks gas estimation and signing.
+ */
+function canonicalizeQuantityHex(value: TransactionRequest['value']): TransactionRequest['value'] {
+  if (typeof value !== 'string') {
+    return value
+  }
+  const trimmed = value.trim()
+  if (!/^0x[0-9a-fA-F]*$/i.test(trimmed)) {
+    return value
+  }
+  const body = trimmed.slice(2).replace(/^0+/, '')
+  return `0x${body.length === 0 ? '0' : body.toLowerCase()}`
+}
+
 export function sanitizeTransactionRequest(
   request?: TransactionRequest | null,
 ): ValidatedTransactionRequest | undefined {
@@ -51,6 +69,6 @@ export function sanitizeTransactionRequest(
     ...(maxPriorityFeePerGas !== undefined ? { maxPriorityFeePerGas } : {}),
     ...(nonce !== undefined ? { nonce } : {}),
     ...(type !== undefined ? { type } : {}),
-    ...(value !== undefined ? { value } : {}),
+    ...(value !== undefined ? { value: canonicalizeQuantityHex(value) } : {}),
   }
 }
