@@ -33,7 +33,7 @@
     "@uniswap/client-data-api": "0.0.288",
     "@uniswap/permit2-sdk": "1.4.0",
     "@uniswap/router-sdk": "2.10.3",
-    "@uniswap/sdk-core": "7.19.4",
+    "@uniswap/sdk-core": "7.22.0",
     "@uniswap/uniswapx-sdk": "3.0.6",
     "@universe/api": "workspace:^",
     "@universe/chains": "workspace:^",

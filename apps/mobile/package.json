@@ -113,7 +113,7 @@
     "@uniswap/client-data-api": "0.0.288",
     "@uniswap/client-notification-service": "0.0.11",
     "@uniswap/ethers-rs-mobile": "0.0.5",
-    "@uniswap/sdk-core": "7.19.4",
+    "@uniswap/sdk-core": "7.22.0",
     "@universe/api": "workspace:^",
     "@universe/chains": "workspace:^",
     "@universe/compliance": "workspace:^",

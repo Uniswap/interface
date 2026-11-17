@@ -1,6 +1,8 @@
 import {
+  type ChainId,
+  Domain,
   type NFTPermitData,
-  type PermitBatchData,
+  PermitBatchData,
   type TransactionRequest,
 } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/types_pb'
 import { type LPApprovalResponse } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/api_pb'
@@ -46,6 +48,25 @@ export interface TokenAddresses {
   token0Address?: string
   token1Address?: string
   positionTokenAddress?: string
+}
+
+// The v1 client drops enum names it doesn't know (the backend sends "ELYSIUM"), leaving the permit domain without a
+// chainId; fill it from the request. Remove once this branch is on client-liquidity >= 1.4.61.
+export function backfillPermitDomainChainId(
+  permit: PermitBatchData | undefined,
+  requestChainId: ChainId | undefined,
+): PermitBatchData | undefined {
+  if (!permit?.domain || permit.domain.chainId || !requestChainId) {
+    return permit
+  }
+  // Not clone(): it sets unset fields (version, salt) as undefined keys, and ethers' typed-data encoder throws on them.
+  // The constructor skips undefined fields.
+  const { name, version, verifyingContract, salt } = permit.domain
+  return new PermitBatchData({
+    domain: new Domain({ name, version, chainId: requestChainId, verifyingContract, salt }),
+    types: permit.types,
+    values: permit.values,
+  })
 }
 
 export function normalizeApprovalResponse(

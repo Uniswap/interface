@@ -8,7 +8,13 @@ import type { FeeData, PositionInfo } from 'uniswap/src/features/positions/types
 // The liquidity service's `ChainId` enum carries the same numeric values as UniverseChainId (and the
 // data-api chainId) but is a distinct nominal type. Validate membership and narrow once — a chain the
 // liquidity service doesn't model is dropped rather than reinterpreted into a bogus enum value.
+// client-liquidity 1.4.51's `ChainId` enum has no ELYSIUM; drop once this branch is on client-liquidity >= 1.4.61.
+const LIQUIDITY_CHAIN_ID_ELYSIUM = 99901 as ChainId
+
 export function toLiquidityChainId(chainId: number | undefined): ChainId | undefined {
+  if (chainId === LIQUIDITY_CHAIN_ID_ELYSIUM) {
+    return LIQUIDITY_CHAIN_ID_ELYSIUM
+  }
   return chainId !== undefined && chainId in ChainId ? (chainId as ChainId) : undefined
 }
 

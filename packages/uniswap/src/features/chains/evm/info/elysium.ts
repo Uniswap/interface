@@ -35,7 +35,7 @@ export const ELYSIUM_CHAIN_INFO = {
   },
   blockPerMainnetEpochForChainId: 1,
   blockWaitMsBeforeWarning: DEFAULT_MS_BEFORE_WARNING,
-  bridge: 'https://elysium.kinetiq.xyz/bridge',
+  bridge: 'https://relay.link/bridge/elysium',
   docs: 'https://elysium.kinetiq.xyz/docs/connecting-to-elysium',
   elementName: ElementName.ChainElysium,
   explorer: { name: 'Elysium Explorer', url: 'https://elysium.kinetiq.xyz/explorer/' },
@@ -58,7 +58,6 @@ export const ELYSIUM_CHAIN_INFO = {
     [RPCType.Default]: { http: ['https://rpc.elysium.kinetiq.xyz'] },
     [RPCType.Interface]: { http: [getUniRpcEndpointUrl(UniverseChainId.Elysium)] },
   },
-  // TODO(CONS-4055): confirm against universal-router#534 before enabling swaps
   supportedURVersions: [TradingApi.UniversalRouterVersion._2_1_2, TradingApi.UniversalRouterVersion._2_2_0],
   supportsV4: true,
   supportsNFTs: false,

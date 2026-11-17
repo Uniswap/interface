@@ -22,7 +22,7 @@
     "@tanstack/react-query": "5.90.20",
     "@uniswap/analytics": "1.7.2",
     "@uniswap/analytics-events": "2.43.0",
-    "@uniswap/sdk-core": "7.19.4",
+    "@uniswap/sdk-core": "7.22.0",
     "@universe/encoding": "workspace:^",
     "@universe/environment": "workspace:^",
     "@universe/privacy": "workspace:*",

@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { type LPApprovalRequest } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/api_pb'
 import { liquidityQueries } from 'uniswap/src/data/apiClients/liquidityService/liquidityQueries'
 import {
+  backfillPermitDomainChainId,
   type NormalizedApprovalData,
   normalizeApprovalResponse,
 } from 'uniswap/src/data/apiClients/liquidityService/normalizeApprovalResponse'
@@ -41,8 +42,16 @@ export function useCheckLPApprovalQuery({
     positionTokenAddress,
   }
 
+  const normalizedApprovalData = approvalData ? normalizeApprovalResponse(approvalData, tokenAddresses) : undefined
+
   return {
-    approvalData: approvalData ? normalizeApprovalResponse(approvalData, tokenAddresses) : undefined,
+    approvalData: normalizedApprovalData && {
+      ...normalizedApprovalData,
+      v4BatchPermitData: backfillPermitDomainChainId(
+        normalizedApprovalData.v4BatchPermitData,
+        approvalQueryParams?.chainId,
+      ),
+    },
     approvalLoading,
     approvalError,
     approvalRefetch,

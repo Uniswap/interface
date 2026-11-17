@@ -14,6 +14,7 @@ import {
   getPositionKey,
   getProtocolVersionLabel,
   sortPositionsByStatusClosedLast,
+  toLiquidityChainId,
 } from 'uniswap/src/features/positions/utils'
 import { describe, expect, it } from 'vitest'
 
@@ -242,5 +243,20 @@ describe('getExactSharePercent', () => {
   it('returns undefined for a negative total', () => {
     const negative = CurrencyAmount.fromRawAmount(usdcBase, '1000000').multiply(-1)
     expect(getExactSharePercent(CurrencyAmount.fromRawAmount(usdcBase, '1000000'), negative)).toBeUndefined()
+  })
+})
+
+describe('toLiquidityChainId', () => {
+  it('maps a chain the liquidity enum models', () => {
+    expect(toLiquidityChainId(UniverseChainId.Mainnet)).toBe(UniverseChainId.Mainnet)
+  })
+
+  it('maps Elysium even though the liquidity enum lacks it', () => {
+    expect(toLiquidityChainId(UniverseChainId.Elysium)).toBe(99901)
+  })
+
+  it('drops undefined and chains the liquidity service does not model', () => {
+    expect(toLiquidityChainId(undefined)).toBeUndefined()
+    expect(toLiquidityChainId(123456789)).toBeUndefined()
   })
 })
