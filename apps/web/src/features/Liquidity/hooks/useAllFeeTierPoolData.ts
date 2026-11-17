@@ -193,10 +193,11 @@ export function useAllFeeTierPoolData({
             totalLiquidityUsd: totalLiquidityUsdTruncated,
             percentage,
             // Not String(pool.tvl): that switches to exponential notation below 1e-6 or at/above 1e21,
-            // unlike the plain-decimal wire string this replaced. maximumFractionDigits: 100 (the
-            // ECMA-402 ceiling) keeps every representable digit down to ~1e-100, well past any real
-            // dust TVL.
-            tvl: pool.tvl.toLocaleString('en-US', { useGrouping: false, maximumFractionDigits: 100 }),
+            // unlike the plain-decimal wire string this replaced. Cap at 20 (ECMA-402 / engine
+            // minimum maximumFractionDigits ceiling): values above 20 throw RangeError in older
+            // WebViews (e.g. TokenPocket Android), which crashed FeeTierSearchModal. 20 digits
+            // still keep dust TVL as a plain decimal well past any real pool TVL.
+            tvl: pool.tvl.toLocaleString('en-US', { useGrouping: false, maximumFractionDigits: 20 }),
             created: true,
             boostedApr: pool.rewardApr,
             rewards: pool.rewards,
