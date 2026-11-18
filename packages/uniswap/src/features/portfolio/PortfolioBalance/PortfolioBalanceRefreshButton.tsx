@@ -17,7 +17,7 @@ export interface PortfolioBalanceRefreshButtonProps {
   onPress: () => void
   /** Whether a refresh is in progress: blocks presses and freezes the icon's hover color. */
   isLoading: boolean
-  /** Blocks both the press handler and the `R` keyboard shortcut, and hides the button entirely. */
+  /** Blocks the press handler and hides the button entirely. */
   disabled?: boolean
 }
 

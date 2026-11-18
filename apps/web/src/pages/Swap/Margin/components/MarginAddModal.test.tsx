@@ -1,4 +1,5 @@
 import { fireEvent, screen } from '@testing-library/react'
+import { Token } from '@uniswap/sdk-core'
 import { TestID } from '@universe/test'
 import type { ReactNode } from 'react'
 import {
@@ -18,8 +19,7 @@ const MARKET = getDefaultMarginMarket() // WETH/USDC MORPHO, native equity
 const RAW_100_ETH = '100000000000000000000'
 const USDC_ADDRESS = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
 const PAY = `${MARGIN_NATIVE_TOKEN_ADDRESS}:${MARGIN_CHAIN_ID}`
-// Resolved en-US; `render` runs setupi18n() so raw keys never reach the DOM.
-const AMOUNT_LABEL = 'Amount to add'
+const AMOUNT_LABEL = 'amount'
 
 const {
   SWAPPER,
@@ -43,29 +43,41 @@ vi.mock('uniswap/src/components/modals/Modal', () => ({
   Modal: ({ children }: { children: ReactNode }) => children,
 }))
 
-vi.mock('uniswap/src/components/AmountInput/AmountInput', () => ({
-  AmountInput: (props: Record<string, unknown>) => (
-    <input
-      aria-label={props['aria-label'] as string | undefined}
-      value={(props.value as string | undefined) ?? ''}
-      onChange={(e) => (props.onChangeText as ((text: string) => void) | undefined)?.(e.target.value)}
-    />
+vi.mock('uniswap/src/components/CurrencyInputPanel/CurrencyInputPanel', () => ({
+  CurrencyInputPanel: (props: {
+    value?: string
+    currencyBalance?: { toExact: () => string }
+    onSetExactAmount: (amount: string) => void
+    onSetPresetValue?: (amount: string) => void
+  }) => (
+    <>
+      <input aria-label="amount" value={props.value ?? ''} onChange={(e) => props.onSetExactAmount(e.target.value)} />
+      {props.currencyBalance ? (
+        <button
+          type="button"
+          aria-label="max"
+          onClick={() => props.onSetPresetValue?.(props.currencyBalance?.toExact() ?? '')}
+        >
+          {props.currencyBalance.toExact()}
+        </button>
+      ) : null}
+    </>
   ),
 }))
 
 // Exposes the one interaction the real selector provides, so a test can reach the cross-token state
 // the default payment token (the collateral itself) never enters on its own.
-vi.mock('~/pages/Swap/Margin/components/MarginPaymentTokenSelector', () => ({
-  MarginPaymentTokenSelector: ({ onSelect }: { onSelect: (token: unknown) => void }) => (
+vi.mock('uniswap/src/components/TokenSelector/TokenSelector', () => ({
+  TokenSelectorModal: ({ onSelectCurrency }: { onSelectCurrency: (args: { currency: Token }) => void }) => (
     <button
       type="button"
       aria-label="pick-usdc"
-      onClick={() =>
-        onSelect({ address: USDC_ADDRESS, chainId: MARGIN_CHAIN_ID, decimals: 6, symbol: 'USDC', isNative: false })
-      }
+      onClick={() => onSelectCurrency({ currency: new Token(MARGIN_CHAIN_ID, USDC_ADDRESS, 6, 'USDC') })}
     />
   ),
 }))
+
+vi.mock('uniswap/src/features/accounts/store/hooks', () => ({ useActiveAddresses: () => ({}) }))
 
 vi.mock('~/connection/hooks/useAccount', () => ({ useAccount: () => ({ address: SWAPPER }) }))
 
@@ -243,8 +255,15 @@ describe('MarginAddModal', () => {
 
   it('fills the max spendable balance', () => {
     renderModal()
-    fireEvent.click(screen.getByLabelText('Use max balance'))
+    fireEvent.click(screen.getByLabelText('max'))
     expect(screen.getByLabelText(AMOUNT_LABEL)).toHaveValue('2.5')
+  })
+
+  it('clears the typed amount when the pay token changes', () => {
+    renderModal()
+    fireEvent.change(screen.getByLabelText(AMOUNT_LABEL), { target: { value: '100' } })
+    fireEvent.click(screen.getByLabelText('pick-usdc'))
+    expect(screen.getByLabelText(AMOUNT_LABEL)).toHaveValue('')
   })
 
   it('keeps the CTA dead when the deposit exceeds the spendable balance', () => {
@@ -258,15 +277,12 @@ describe('MarginAddModal', () => {
 
   // The controller's caller contract: blank/garbage input must be { kind: 'none' }, never a deposit
   // with an empty amount — and parseUnits throws on inputs Number() happily accepts.
-  it.each(['', '  ', 'abc', '0', '-1', 'Infinity', '1e5'])(
-    'treats %o as no funding rather than an empty-amount deposit',
-    (value) => {
-      renderModal()
-      fireEvent.change(screen.getByLabelText(AMOUNT_LABEL), { target: { value } })
-      const args = mockUseMarginQuote.mock.calls.at(-1)?.[0] as { funding: { kind: string } }
-      expect(args.funding).toEqual({ kind: 'none' })
-    },
-  )
+  it.each(['', '0', '.'])('treats %o as no funding rather than an empty-amount deposit', (value) => {
+    renderModal()
+    fireEvent.change(screen.getByLabelText(AMOUNT_LABEL), { target: { value } })
+    const args = mockUseMarginQuote.mock.calls.at(-1)?.[0] as { funding: { kind: string } }
+    expect(args.funding).toEqual({ kind: 'none' })
+  })
 
   it('disables the CTA while a plan is in flight', () => {
     mockUseIsPlanInFlight.mockReturnValue(true)

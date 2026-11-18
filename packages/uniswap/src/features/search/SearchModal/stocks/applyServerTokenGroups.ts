@@ -4,10 +4,8 @@ import {
   normalizeWords,
   startsAWordOf,
 } from 'uniswap/src/features/search/SearchModal/hooks/useSectionsForSearchResultsUtils'
-import {
-  optionChainAddresses,
-  optionSearchStats,
-} from 'uniswap/src/features/search/SearchModal/stocks/applyRwaGrouping'
+import { optionChainAddresses } from 'uniswap/src/features/search/SearchModal/stocks/optionChainAddresses'
+import { optionSearchStats } from 'uniswap/src/features/search/SearchModal/stocks/optionSearchStats'
 import {
   buildRwaCollectionOption,
   buildRwaSearchIndexFromRwas,
@@ -78,13 +76,11 @@ export function applyServerTokenGroupsToSearchOptions({
   groups,
   searchQuery,
   isAddressSearch,
-  plainTokenNames,
 }: {
   options: SearchModalOption[]
   groups: Rwa[]
   searchQuery: string
   isAddressSearch: boolean
-  plainTokenNames: boolean
 }): SearchModalOption[] {
   if (groups.length === 0) {
     return options
@@ -93,7 +89,7 @@ export function applyServerTokenGroupsToSearchOptions({
   const index = buildRwaSearchIndexFromRwas(groups)
   const taggedOptions = options.map((option) => {
     const match = findGroupForOption(index, option)
-    return { option: match ? tagOptionAsRwa({ option, match, plainTokenNames }) : option, match }
+    return { option: match ? tagOptionAsRwa({ option, match }) : option, match }
   })
 
   if (isAddressSearch) {

@@ -10,7 +10,7 @@ exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
     >
       <div
         class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-        style="position: absolute; width: 1px; height: 1px; margin: -1px; z-index: -10000; overflow: hidden; pointer-events: none;"
+        style="position: absolute; width: 1px; height: 1px; margin: -1px; z-index: -10000; overflow: hidden; opacity: 1e-8; pointer-events: none;"
       >
         <div
           class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
@@ -18,7 +18,7 @@ exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
         >
           <div
             class="items-stretch basis-auto box-border relative min-h-[0px] shrink-0 flex-col flex p-[0px] w-[100%] min-w-[var(--c-min-w)] max-h-[var(--c-max-h)] bg-surface1 border-surface3 border-[1px] rounded-[20px] overflow-auto top-[var(--c-top)] bottom-[var(--c-bottom)] z-[var(--c-z)] [border-style:solid] [box-shadow:var(--c-bosh)]"
-            style="--c-min-w: 150px; --c-max-h: calc(100vh - 88px); --c-top: calc(100% + 10px); --c-bottom: unset; --c-z: 970; --c-bosh: 0px 6px 12px -3px #1313130a, 0px 2px 5px -2px #13131308;"
+            style="--c-min-w: 150px; --c-max-h: calc(100vh - 88px); --c-top: calc(100% + 10px); --c-bottom: unset; --c-z: 970; --c-bosh: 0px 6px 12px -3px #1313130a, 0px 2px 5px -2px #13131308; scrollbar-width: thin; scrollbar-color: rgba(19, 19, 19, 0.08) transparent; overscroll-behavior: contain;"
           >
             <div
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[100%] h-[100%]"
@@ -57,7 +57,7 @@ exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
                         >
                           <div
                             class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 w-[100%] h-[100%] max-h-[var(--c-max-h)] rounded-[16px] opacity-[1] absolute top-[0px] left-[0px] z-[var(--c-z)]"
-                            style="--c-max-h: 72px; --c-z: 0; background: url(/images/extension_promo/background_connector.png); background-repeat: no-repeat; background-size: cover; transition: opacity 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+                            style="--c-max-h: 72px; --c-z: 0; background: url("/images/extension_promo/background_connector.png"); transition: opacity 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
                           />
                           <div
                             class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center gap-[12px] p-[16px] max-h-[var(--c-max-h)] bg-transparent border-accent2 border-[0px] rounded-[16px] overflow-hidden z-[var(--c-z)] [cursor:pointer] hover:bg-[color:var(--ch-bg)]"
@@ -69,7 +69,7 @@ exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
                             >
                               <div
                                 class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
-                                style="background-image: url(/src/assets/wallets/uniswap-wallet-icon.png);"
+                                style="background-image: url("/src/assets/wallets/uniswap-wallet-icon.png");"
                               />
                               <img
                                 alt=""
@@ -110,7 +110,7 @@ exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
                               fill="none"
                               focusable="false"
                               stroke-width="8"
-                              style="width: 22.4px; height: 22.4px;"
+                              style="color: var(--accent1); width: 22.4px; height: 22.4px;"
                               viewBox="0 0 96 96"
                             >
                               <path
@@ -160,7 +160,7 @@ exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
                     >
                       <div
                         aria-hidden="true"
-                        style="display: flex; align-items: stretch; flex-direction: column; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0; min-width: 0; flex-grow: 1; flex-shrink: 1; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 0; border-right-width: 0; border-left-width: 0; border-top-color: rgba(19, 19, 19, 0.08); border-right-color: rgba(19, 19, 19, 0.08); border-bottom-color: rgba(19, 19, 19, 0.08); border-left-color: rgba(19, 19, 19, 0.08); height: 0px; max-height: 0; border-bottom-width: 1px;"
+                        style="display: flex; align-items: stretch; flex-direction: column; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex: 1 1 auto; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 0px; border-right-width: 0px; border-left-width: 0px; border-top-color: rgba(19, 19, 19, 0.08); border-right-color: rgba(19, 19, 19, 0.08); border-bottom-color: rgba(19, 19, 19, 0.08); border-left-color: rgba(19, 19, 19, 0.08); height: 0px; max-height: 0px; border-bottom-width: 1px;"
                       />
                       <div
                         class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center mx-[18px]"
@@ -175,7 +175,7 @@ exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
                           fill="none"
                           focusable="false"
                           stroke-width="8"
-                          style="width: 20px; height: 20px;"
+                          style="color: var(--neutral3); width: 20px; height: 20px;"
                           viewBox="0 0 17 16"
                         >
                           <path
@@ -188,7 +188,7 @@ exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
                       </div>
                       <div
                         aria-hidden="true"
-                        style="display: flex; align-items: stretch; flex-direction: column; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0; min-width: 0; flex-grow: 1; flex-shrink: 1; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 0; border-right-width: 0; border-left-width: 0; border-top-color: rgba(19, 19, 19, 0.08); border-right-color: rgba(19, 19, 19, 0.08); border-bottom-color: rgba(19, 19, 19, 0.08); border-left-color: rgba(19, 19, 19, 0.08); height: 0px; max-height: 0; border-bottom-width: 1px;"
+                        style="display: flex; align-items: stretch; flex-direction: column; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex: 1 1 auto; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 0px; border-right-width: 0px; border-left-width: 0px; border-top-color: rgba(19, 19, 19, 0.08); border-right-color: rgba(19, 19, 19, 0.08); border-bottom-color: rgba(19, 19, 19, 0.08); border-left-color: rgba(19, 19, 19, 0.08); height: 0px; max-height: 0px; border-bottom-width: 1px;"
                       />
                     </div>
                   </div>
@@ -233,7 +233,7 @@ exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
                         </div>
                         <div
                           aria-hidden="true"
-                          style="display: flex; align-items: stretch; flex-direction: column; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0; min-width: 0; flex-grow: 1; flex-shrink: 1; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 0; border-right-width: 0; border-left-width: 0; border-top-color: rgba(19, 19, 19, 0.08); border-right-color: rgba(19, 19, 19, 0.08); border-bottom-color: rgba(19, 19, 19, 0.08); border-left-color: rgba(19, 19, 19, 0.08); height: 0px; max-height: 0; border-bottom-width: 1px;"
+                          style="display: flex; align-items: stretch; flex-direction: column; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex: 1 1 auto; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 0px; border-right-width: 0px; border-left-width: 0px; border-top-color: rgba(19, 19, 19, 0.08); border-right-color: rgba(19, 19, 19, 0.08); border-bottom-color: rgba(19, 19, 19, 0.08); border-left-color: rgba(19, 19, 19, 0.08); height: 0px; max-height: 0px; border-bottom-width: 1px;"
                         />
                         <div
                           class="flex basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 flex-row items-center justify-between px-[12px] py-[18px] w-[100%] bg-surface2 opacity-[1] relative [cursor:pointer] hover:bg-[color:var(--ch-bg)]"
@@ -256,7 +256,7 @@ exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
                         </div>
                         <div
                           aria-hidden="true"
-                          style="display: flex; align-items: stretch; flex-direction: column; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0; min-width: 0; flex-grow: 1; flex-shrink: 1; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 0; border-right-width: 0; border-left-width: 0; border-top-color: rgba(19, 19, 19, 0.08); border-right-color: rgba(19, 19, 19, 0.08); border-bottom-color: rgba(19, 19, 19, 0.08); border-left-color: rgba(19, 19, 19, 0.08); height: 0px; max-height: 0; border-bottom-width: 1px;"
+                          style="display: flex; align-items: stretch; flex-direction: column; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex: 1 1 auto; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 0px; border-right-width: 0px; border-left-width: 0px; border-top-color: rgba(19, 19, 19, 0.08); border-right-color: rgba(19, 19, 19, 0.08); border-bottom-color: rgba(19, 19, 19, 0.08); border-left-color: rgba(19, 19, 19, 0.08); height: 0px; max-height: 0px; border-bottom-width: 1px;"
                         />
                         <div
                           class="flex basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 flex-row items-center justify-between px-[12px] py-[18px] w-[100%] bg-surface2 opacity-[1] relative [cursor:pointer] hover:bg-[color:var(--ch-bg)]"
@@ -271,7 +271,7 @@ exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
                             >
                               <div
                                 class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
-                                style="background-image: url(binance-wallet-icon.png);"
+                                style="background-image: url("binance-wallet-icon.png");"
                               />
                               <img
                                 alt=""
@@ -304,7 +304,7 @@ exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
                             href="https://uniswap.org/terms-of-service"
                             rel="noopener noreferrer"
                             role="link"
-                            style="--ch-opacity: 0.6; --ca-opacity: 0.4; transition: opacity 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+                            style="--ch-opacity: 0.6; --ca-opacity: 0.4; color: var(--stext-neutral3); transition: opacity 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
                             target="_blank"
                           >
                             Terms of Service
@@ -315,7 +315,7 @@ exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
                             href="https://uniswap.org/privacy-policy"
                             rel="noopener noreferrer"
                             role="link"
-                            style="--ch-opacity: 0.6; --ca-opacity: 0.4; transition: opacity 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+                            style="--ch-opacity: 0.6; --ca-opacity: 0.4; color: var(--stext-neutral3); transition: opacity 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
                             target="_blank"
                           >
                             Privacy Policy
@@ -338,9 +338,11 @@ exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
           class="flex-col basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 items-center justify-center inline-flex w-[100%] border-[0px] relative"
         >
           <div
+            aria-label="Wallet"
             class="items-stretch basis-auto box-border min-h-[0px] shrink-0 flex-col flex p-[0px] w-[100%] min-w-[var(--c-min-w)] max-h-[var(--c-max-h)] bg-surface1 border-surface3 border-[1px] rounded-[20px] overflow-auto relative top-[var(--c-top)] bottom-[var(--c-bottom)] z-[var(--c-z)] [border-style:solid] [box-shadow:var(--c-bosh)] animate-spore-enter-presence data-exiting:animate-spore-exit-presence opacity-[1]"
             data-testid="account-drawer"
-            style="--c-min-w: 150px; --c-max-h: calc(100vh - 88px); --c-top: calc(100% + 10px); --c-bottom: unset; --c-z: 970; --c-bosh: 0px 6px 12px -3px #1313130a, 0px 2px 5px -2px #13131308; animation-duration: 120ms; animation-timing-function: cubic-bezier(0.17, 0.67, 0.45, 1); --spore-presence-enter-y: -20px; --spore-presence-exit-y: -20px;"
+            role="group"
+            style="--c-min-w: 150px; --c-max-h: calc(100vh - 88px); --c-top: calc(100% + 10px); --c-bottom: unset; --c-z: 970; --c-bosh: 0px 6px 12px -3px #1313130a, 0px 2px 5px -2px #13131308; scrollbar-width: thin; scrollbar-color: rgba(19, 19, 19, 0.08) transparent; overscroll-behavior: contain; animation-duration: 120ms; animation-timing-function: cubic-bezier(0.17, 0.67, 0.45, 1); --spore-presence-enter-y: -20px; --spore-presence-exit-y: -20px;"
           >
             <div
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[100%] h-[100%]"
@@ -379,7 +381,7 @@ exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
                         >
                           <div
                             class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 w-[100%] h-[100%] max-h-[var(--c-max-h)] rounded-[16px] opacity-[1] absolute top-[0px] left-[0px] z-[var(--c-z)]"
-                            style="--c-max-h: 72px; --c-z: 0; background: url(/images/extension_promo/background_connector.png); background-repeat: no-repeat; background-size: cover; transition: opacity 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+                            style="--c-max-h: 72px; --c-z: 0; background: url("/images/extension_promo/background_connector.png"); transition: opacity 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
                           />
                           <div
                             class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center gap-[12px] p-[16px] max-h-[var(--c-max-h)] bg-transparent border-accent2 border-[0px] rounded-[16px] overflow-hidden z-[var(--c-z)] [cursor:pointer] hover:bg-[color:var(--ch-bg)]"
@@ -391,7 +393,7 @@ exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
                             >
                               <div
                                 class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
-                                style="background-image: url(/src/assets/wallets/uniswap-wallet-icon.png);"
+                                style="background-image: url("/src/assets/wallets/uniswap-wallet-icon.png");"
                               />
                               <img
                                 alt=""
@@ -432,7 +434,7 @@ exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
                               fill="none"
                               focusable="false"
                               stroke-width="8"
-                              style="width: 22.4px; height: 22.4px;"
+                              style="color: var(--accent1); width: 22.4px; height: 22.4px;"
                               viewBox="0 0 96 96"
                             >
                               <path
@@ -482,7 +484,7 @@ exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
                     >
                       <div
                         aria-hidden="true"
-                        style="display: flex; align-items: stretch; flex-direction: column; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0; min-width: 0; flex-grow: 1; flex-shrink: 1; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 0; border-right-width: 0; border-left-width: 0; border-top-color: rgba(19, 19, 19, 0.08); border-right-color: rgba(19, 19, 19, 0.08); border-bottom-color: rgba(19, 19, 19, 0.08); border-left-color: rgba(19, 19, 19, 0.08); height: 0px; max-height: 0; border-bottom-width: 1px;"
+                        style="display: flex; align-items: stretch; flex-direction: column; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex: 1 1 auto; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 0px; border-right-width: 0px; border-left-width: 0px; border-top-color: rgba(19, 19, 19, 0.08); border-right-color: rgba(19, 19, 19, 0.08); border-bottom-color: rgba(19, 19, 19, 0.08); border-left-color: rgba(19, 19, 19, 0.08); height: 0px; max-height: 0px; border-bottom-width: 1px;"
                       />
                       <div
                         class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row items-center mx-[18px]"
@@ -497,7 +499,7 @@ exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
                           fill="none"
                           focusable="false"
                           stroke-width="8"
-                          style="width: 20px; height: 20px;"
+                          style="color: var(--neutral3); width: 20px; height: 20px;"
                           viewBox="0 0 17 16"
                         >
                           <path
@@ -510,7 +512,7 @@ exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
                       </div>
                       <div
                         aria-hidden="true"
-                        style="display: flex; align-items: stretch; flex-direction: column; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0; min-width: 0; flex-grow: 1; flex-shrink: 1; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 0; border-right-width: 0; border-left-width: 0; border-top-color: rgba(19, 19, 19, 0.08); border-right-color: rgba(19, 19, 19, 0.08); border-bottom-color: rgba(19, 19, 19, 0.08); border-left-color: rgba(19, 19, 19, 0.08); height: 0px; max-height: 0; border-bottom-width: 1px;"
+                        style="display: flex; align-items: stretch; flex-direction: column; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex: 1 1 auto; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 0px; border-right-width: 0px; border-left-width: 0px; border-top-color: rgba(19, 19, 19, 0.08); border-right-color: rgba(19, 19, 19, 0.08); border-bottom-color: rgba(19, 19, 19, 0.08); border-left-color: rgba(19, 19, 19, 0.08); height: 0px; max-height: 0px; border-bottom-width: 1px;"
                       />
                     </div>
                   </div>
@@ -555,7 +557,7 @@ exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
                         </div>
                         <div
                           aria-hidden="true"
-                          style="display: flex; align-items: stretch; flex-direction: column; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0; min-width: 0; flex-grow: 1; flex-shrink: 1; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 0; border-right-width: 0; border-left-width: 0; border-top-color: rgba(19, 19, 19, 0.08); border-right-color: rgba(19, 19, 19, 0.08); border-bottom-color: rgba(19, 19, 19, 0.08); border-left-color: rgba(19, 19, 19, 0.08); height: 0px; max-height: 0; border-bottom-width: 1px;"
+                          style="display: flex; align-items: stretch; flex-direction: column; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex: 1 1 auto; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 0px; border-right-width: 0px; border-left-width: 0px; border-top-color: rgba(19, 19, 19, 0.08); border-right-color: rgba(19, 19, 19, 0.08); border-bottom-color: rgba(19, 19, 19, 0.08); border-left-color: rgba(19, 19, 19, 0.08); height: 0px; max-height: 0px; border-bottom-width: 1px;"
                         />
                         <div
                           class="flex basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 flex-row items-center justify-between px-[12px] py-[18px] w-[100%] bg-surface2 opacity-[1] relative [cursor:pointer] hover:bg-[color:var(--ch-bg)]"
@@ -578,7 +580,7 @@ exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
                         </div>
                         <div
                           aria-hidden="true"
-                          style="display: flex; align-items: stretch; flex-direction: column; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0; min-width: 0; flex-grow: 1; flex-shrink: 1; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 0; border-right-width: 0; border-left-width: 0; border-top-color: rgba(19, 19, 19, 0.08); border-right-color: rgba(19, 19, 19, 0.08); border-bottom-color: rgba(19, 19, 19, 0.08); border-left-color: rgba(19, 19, 19, 0.08); height: 0px; max-height: 0; border-bottom-width: 1px;"
+                          style="display: flex; align-items: stretch; flex-direction: column; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex: 1 1 auto; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-width: 0px; border-right-width: 0px; border-left-width: 0px; border-top-color: rgba(19, 19, 19, 0.08); border-right-color: rgba(19, 19, 19, 0.08); border-bottom-color: rgba(19, 19, 19, 0.08); border-left-color: rgba(19, 19, 19, 0.08); height: 0px; max-height: 0px; border-bottom-width: 1px;"
                         />
                         <div
                           class="flex basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 flex-row items-center justify-between px-[12px] py-[18px] w-[100%] bg-surface2 opacity-[1] relative [cursor:pointer] hover:bg-[color:var(--ch-bg)]"
@@ -593,7 +595,7 @@ exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
                             >
                               <div
                                 class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
-                                style="background-image: url(binance-wallet-icon.png);"
+                                style="background-image: url("binance-wallet-icon.png");"
                               />
                               <img
                                 alt=""
@@ -626,7 +628,7 @@ exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
                             href="https://uniswap.org/terms-of-service"
                             rel="noopener noreferrer"
                             role="link"
-                            style="--ch-opacity: 0.6; --ca-opacity: 0.4; transition: opacity 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+                            style="--ch-opacity: 0.6; --ca-opacity: 0.4; color: var(--stext-neutral3); transition: opacity 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
                             target="_blank"
                           >
                             Terms of Service
@@ -637,7 +639,7 @@ exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
                             href="https://uniswap.org/privacy-policy"
                             rel="noopener noreferrer"
                             role="link"
-                            style="--ch-opacity: 0.6; --ca-opacity: 0.4; transition: opacity 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+                            style="--ch-opacity: 0.6; --ca-opacity: 0.4; color: var(--stext-neutral3); transition: opacity 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
                             target="_blank"
                           >
                             Privacy Policy

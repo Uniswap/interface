@@ -135,8 +135,8 @@ export function stripConsumerHeightForFit<T extends { height?: unknown; $md?: ob
 // mycelium compat sheet (`@universe/mycelium/web-bottom-sheet-compat`) arbitrate through ONE
 // stack of open instances while both coexist — a closed force-mounted sheet from either family
 // must never swallow Escape for an open sheet from the other. Full rationale on the web leg of
-// `utilities/src/react/useSheetEscapeToClose`.
-export { markRadixEscapePreventedBySheet, useSheetEscapeToClose } from 'utilities/src/react/useSheetEscapeToClose'
+// `utilities/src/react/useDismissLayer`.
+export { markRadixEscapePreventedBySheet, useDismissLayer } from 'utilities/src/react/useDismissLayer'
 
 /**
  * Fit-mode frame height max-ratchet, replicating Tamagui Sheet's measured height behavior

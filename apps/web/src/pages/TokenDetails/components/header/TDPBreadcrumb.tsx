@@ -2,7 +2,7 @@ import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router'
 import { BreadcrumbNavContainer, BreadcrumbNavLink, CurrentPageBreadcrumb } from '~/components/BreadcrumbNav'
-import { getExploreStocksTableURL, getExploreTokensURL } from '~/pages/Explore/categories/useExploreCategory'
+import { getExploreStocksTableURL, getExploreTokensURL } from '~/features/Explore/categories/useExploreCategory'
 import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
 import { useTDPRWAMatch } from '~/pages/TokenDetails/hooks/useTDPRWAMatch'
 

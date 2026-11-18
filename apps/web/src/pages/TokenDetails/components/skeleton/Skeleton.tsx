@@ -2,7 +2,7 @@ import { Currency } from '@uniswap/sdk-core'
 import { UniverseChainId } from '@universe/chains'
 import { Anchor, type AnchorProps, Flex, Text, TextProps, useMedia, zIndexes } from '@universe/mycelium'
 import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
-import { styled, type StyledComponent } from '@universe/mycelium/styled'
+import { styled } from '@universe/mycelium/styled'
 import { ComponentProps, forwardRef, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
@@ -17,50 +17,12 @@ import { StickyCollapsibleHeader } from '~/components/StickyCollapsibleHeader/St
 import { LoadingBubble } from '~/components/Tokens/loading'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { LoadingChart } from '~/features/Explore/chart/LoadingChart'
+import { LeftPanel, RightPanel, TwoPanelLayout } from '~/features/Explore/layout/TwoPanelLayout'
 import { SwapSkeleton } from '~/features/Swap/SwapSkeleton'
 import { useCurrency } from '~/hooks/currency/useCurrency'
 import { LoadingStats } from '~/pages/TokenDetails/components/info/StatsSection'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
 import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
-
-const TOKEN_DETAILS_LAYOUT_VARIANTS = {
-  // The Toucan auction page's shape: it provides its own gutters (no horizontal padding at any
-  // width), left-justifies, and tightens the panel gap.
-  toucan: { true: 'justify-start gap-[46px] px-[0px] media-xxl:px-[0px] media-lg:px-[0px]', false: '' },
-  topSpacing: { '16': 'mt-[16px]', '24': 'mt-[24px]' },
-} as const
-
-// No horizontal padding above $xxl — AppBody's 1200px cap provides the page margins there,
-// so the TDP body gets the full expected content width
-export const TokenDetailsLayout: StyledComponent<typeof Flex, typeof TOKEN_DETAILS_LAYOUT_VARIANTS> = styled(Flex, {
-  platform: 'web',
-  base: 'flex-row justify-center gap-[80px] mt-[32px] pb-[48px] w-[100%] media-xxl:px-[40px] media-xl:flex-col media-xl:items-center media-xl:gap-[0px] media-lg:px-[20px] media-lg:pt-[0px] media-lg:pb-[52px] media-md:px-[0px]',
-  variants: TOKEN_DETAILS_LAYOUT_VARIANTS,
-})
-
-const LEFT_PANEL_VARIANTS = {
-  // The Toucan auction page clamps the panel (full-width again below $lg).
-  clamped: { true: 'max-w-[744px] media-lg:max-w-[100%]', false: '' },
-} as const
-
-export const LeftPanel: StyledComponent<typeof Flex, typeof LEFT_PANEL_VARIANTS> = styled(Flex, {
-  platform: 'web',
-  base: 'grow-[1] shrink-[1] gap-[40px] w-[100%] media-lg:gap-[32px]',
-  variants: LEFT_PANEL_VARIANTS,
-})
-
-const RIGHT_PANEL_VARIANTS = {
-  // The Toucan auction page's aside: narrower (390px), top-aligned, hidden below $xl (its content
-  // renders inline in the left column there).
-  toucan: { true: 'self-start gap-[24px] w-[390px] media-xl:hidden', false: '' },
-} as const
-
-// 360px = the swap component width.
-export const RightPanel: StyledComponent<typeof Flex, typeof RIGHT_PANEL_VARIANTS> = styled(Flex, {
-  platform: 'web',
-  base: 'gap-[40px] w-[360px] media-xl:py-[40px] media-xl:w-[100%] media-xl:max-w-[780px]',
-  variants: RIGHT_PANEL_VARIANTS,
-})
 
 // The legacy animation:'quick' never animated anything (no style on this row ever changes), so no
 // transition is carried over.
@@ -287,14 +249,14 @@ export function TokenDetailsPageSkeleton({ isCompact }: { isCompact: boolean }) 
           </Flex>
         </TokenInfoRow>
       </StickyCollapsibleHeader>
-      <TokenDetailsLayout>
+      <TwoPanelLayout>
         <LeftPanel>
           <TokenDetailsSkeleton />
         </LeftPanel>
         <RightPanel>
           <SwapSkeleton />
         </RightPanel>
-      </TokenDetailsLayout>
+      </TwoPanelLayout>
     </>
   )
 }

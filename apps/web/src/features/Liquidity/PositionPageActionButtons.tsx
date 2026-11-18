@@ -225,6 +225,7 @@ export function PositionPageActionButtons({
 }
 
 function MWebActionButtons({ actionItems }: { actionItems: MenuOptionItem[] }): JSX.Element | null {
+  const { t } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
   const onOpenChange = (open: boolean) => {
     setIsOpen(open)
@@ -243,10 +244,11 @@ function MWebActionButtons({ actionItems }: { actionItems: MenuOptionItem[] }): 
       <Button onPress={ctaButton.onPress}>{ctaButton.label}</Button>
       {menuItems.length > 0 && (
         <Popover placement="top-end" offset={10} open={isOpen} onOpenChange={onOpenChange}>
-          <Popover.Trigger>
+          <Popover.Trigger nativeButton>
             <IconButton emphasis="secondary" icon={isOpen ? <X color="$neutral1" /> : <GridView color="$neutral1" />} />
           </Popover.Trigger>
           <AdaptiveWebPopoverContentCompat
+            aria-label={t('common.moreOptions')}
             isOpen={isOpen}
             // Legacy rendered a plain popover even at mWeb widths — never the small-screen sheet.
             adaptWhen={false}

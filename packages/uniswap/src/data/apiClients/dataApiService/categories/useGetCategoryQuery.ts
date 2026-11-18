@@ -1,5 +1,4 @@
 import { useQuery, type UseQueryResult } from '@tanstack/react-query'
-import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { useCallback } from 'react'
 import {
   localizeCategory,
@@ -14,7 +13,6 @@ import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 
 export function useGetCategoryQuery(categoryId: string | undefined): UseQueryResult<TokenCategoryDetail | null> {
-  const tokenCategoriesEnabled = useIsTokenCategoriesEnabled()
   const { chains: chainIds } = useEnabledChains()
   const language = useCurrentLanguage()
 
@@ -41,7 +39,7 @@ export function useGetCategoryQuery(categoryId: string | undefined): UseQueryRes
         detail && { ...detail, category: localizeCategory(detail.category, language) },
       [language],
     ),
-    enabled: tokenCategoriesEnabled && !!categoryId,
+    enabled: !!categoryId,
     staleTime: 5 * ONE_MINUTE_MS,
     gcTime: 30 * ONE_MINUTE_MS,
   })

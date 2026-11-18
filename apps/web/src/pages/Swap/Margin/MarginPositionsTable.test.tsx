@@ -301,9 +301,9 @@ describe('MarginPositionsTable', () => {
     render(<MarginPositionsTable />)
     expect(screen.getAllByText(/^Long /).map((node) => node.textContent)).toEqual([
       'Long 2.1x',
+      'Long 2x',
       'Long 1.1x',
       'Long 2.1x',
-      'Long 2x',
     ])
   })
 
@@ -549,7 +549,7 @@ describe('MarginPositionsTable', () => {
     expect(getDeclaredColorToken(screen.getByText('-$0.05'))).toBe('var(--stext-statusCritical)')
     expect(screen.getByText('0.001 ETH')).toBeInTheDocument()
     expect(screen.getByText('0.004 ETH')).toBeInTheDocument()
-    expect(screen.getAllByText('10/16/2026')).toHaveLength(2)
+    expect(screen.getAllByText(/^10\/16\/26, /)).toHaveLength(2)
   })
 
   // A closed short's size is the WETH it borrowed, so scaling it by the stable collateral's decimals
@@ -723,7 +723,7 @@ describe('MarginPositionsTable cards layout', () => {
     mockPositions.current = [OPEN_LONG_VALUED, { ...OPEN_SHORT_VALUED, positionId: 'pos-open-short' }]
     render(<MarginPositionsTable layout="cards" renderPositionSheet={renderSheetStub} />)
     expect(screen.getAllByTestId(TestID.MarginPositionCard)).toHaveLength(2)
-    const [longCard] = screen.getAllByTestId(TestID.MarginPositionCard)
+    const longCard = screen.getAllByTestId(TestID.MarginPositionCard).find((card) => card.textContent.includes('Long'))
     expect(longCard).toHaveTextContent('Long 3.3x')
     expect(longCard).toHaveTextContent('PnL')
     expect(longCard).not.toHaveTextContent('PnL/RoE')

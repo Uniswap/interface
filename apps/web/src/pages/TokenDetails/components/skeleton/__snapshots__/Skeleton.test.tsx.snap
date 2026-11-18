@@ -47,7 +47,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
         <div
           aria-busy="true"
           class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-          style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+          style="flex-direction: row; width: 100%; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
         >
           <div
             class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -78,7 +78,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
             <div
               aria-busy="true"
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-              style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+              style="flex-direction: row; width: 100%; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
             >
               <div
                 class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[var(--c-h)] rounded-[999999px] [background:var(--c-b)]"
@@ -99,7 +99,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
                 <div
                   aria-busy="true"
                   class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                  style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                  style="flex-direction: row; width: 100%; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                 >
                   <div
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[28px] rounded-[12px] [background:var(--c-b)]"
@@ -114,7 +114,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
               <div
                 aria-busy="true"
                 class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                style="flex-direction: row; width: 100%; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
               >
                 <div
                   class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -134,7 +134,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
             <div
               aria-busy="true"
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-              style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+              style="flex-direction: row; width: 100%; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
             >
               <div
                 class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[var(--c-h)] rounded-[999999px] [background:var(--c-b)]"
@@ -149,7 +149,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
             <div
               aria-busy="true"
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-              style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+              style="flex-direction: row; width: 100%; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
             >
               <div
                 class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[var(--c-h)] rounded-[999999px] [background:var(--c-b)]"
@@ -173,7 +173,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
         <div
           aria-busy="true"
           class="flex flex-col items-stretch box-border relative min-h-[0px] min-w-[0px] flex-1"
-          style="animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+          style="-webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
         >
           <div
             class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
@@ -378,7 +378,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
           <div
             aria-busy="true"
             class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-            style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+            style="flex-direction: row; width: 100%; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
           >
             <div
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[32px] rounded-[8px] [background:var(--c-b)]"
@@ -399,7 +399,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
               <div
                 aria-busy="true"
                 class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                style="flex-direction: row; width: 100%; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
               >
                 <div
                   class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -413,7 +413,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
               <div
                 aria-busy="true"
                 class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                style="flex-direction: row; width: 100%; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
               >
                 <div
                   class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[32px] rounded-[8px] [background:var(--c-b)]"
@@ -432,7 +432,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
               <div
                 aria-busy="true"
                 class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                style="flex-direction: row; width: 100%; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
               >
                 <div
                   class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -446,7 +446,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
               <div
                 aria-busy="true"
                 class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                style="flex-direction: row; width: 100%; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
               >
                 <div
                   class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[32px] rounded-[8px] [background:var(--c-b)]"
@@ -465,7 +465,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
               <div
                 aria-busy="true"
                 class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                style="flex-direction: row; width: 100%; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
               >
                 <div
                   class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -479,7 +479,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
               <div
                 aria-busy="true"
                 class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                style="flex-direction: row; width: 100%; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
               >
                 <div
                   class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[32px] rounded-[8px] [background:var(--c-b)]"
@@ -498,7 +498,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
               <div
                 aria-busy="true"
                 class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                style="flex-direction: row; width: 100%; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
               >
                 <div
                   class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -512,7 +512,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
               <div
                 aria-busy="true"
                 class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                style="flex-direction: row; width: 100%; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
               >
                 <div
                   class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[32px] rounded-[8px] [background:var(--c-b)]"
@@ -531,7 +531,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
               <div
                 aria-busy="true"
                 class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                style="flex-direction: row; width: 100%; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
               >
                 <div
                   class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -545,7 +545,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
               <div
                 aria-busy="true"
                 class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                style="flex-direction: row; width: 100%; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
               >
                 <div
                   class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[32px] rounded-[8px] [background:var(--c-b)]"
@@ -564,7 +564,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
               <div
                 aria-busy="true"
                 class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                style="flex-direction: row; width: 100%; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
               >
                 <div
                   class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -578,7 +578,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
               <div
                 aria-busy="true"
                 class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                style="flex-direction: row; width: 100%; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
               >
                 <div
                   class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[32px] rounded-[8px] [background:var(--c-b)]"
@@ -604,7 +604,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
             <div
               aria-busy="true"
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-              style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+              style="flex-direction: row; width: 100%; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
             >
               <div
                 class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[32px] rounded-[8px] [background:var(--c-b)]"
@@ -620,7 +620,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
         <div
           aria-busy="true"
           class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-          style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+          style="flex-direction: row; width: 100%; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
         >
           <div
             class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[100%] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -634,7 +634,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
         <div
           aria-busy="true"
           class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-          style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+          style="flex-direction: row; width: 100%; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
         >
           <div
             class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[100%] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -648,7 +648,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
         <div
           aria-busy="true"
           class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-          style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+          style="flex-direction: row; width: 100%; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
         >
           <div
             class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -665,7 +665,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
           <div
             aria-busy="true"
             class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-            style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+            style="flex-direction: row; width: 100%; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
           >
             <div
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -679,7 +679,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
           <div
             aria-busy="true"
             class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-            style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+            style="flex-direction: row; width: 100%; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
           >
             <div
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -697,7 +697,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
           <div
             aria-busy="true"
             class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-            style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+            style="flex-direction: row; width: 100%; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
           >
             <div
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -711,7 +711,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
           <div
             aria-busy="true"
             class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-            style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+            style="flex-direction: row; width: 100%; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
           >
             <div
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -767,7 +767,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
                 fill="none"
                 focusable="false"
                 stroke-width="8"
-                style="width: 16px; height: 16px;"
+                style="color: var(--neutral3); width: 16px; height: 16px;"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -822,7 +822,7 @@ exports[`getLoadingTitle > should return correct title 1`] = `
     href="https://etherscan.io/token/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
     rel="noopener noreferrer"
     role="link"
-    style="--c-fowe: 500; --ch-opacity: 0.8; --ca-opacity: 0.6; transition: 100ms;"
+    style="--c-fowe: 500; --ch-opacity: 0.8; --ca-opacity: 0.6; color: var(--stext-neutral3); transition: 100ms;"
     target="_blank"
   >
     USD Coin (USDC)

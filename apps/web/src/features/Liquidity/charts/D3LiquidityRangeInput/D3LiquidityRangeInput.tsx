@@ -33,15 +33,18 @@ import { D3LiquidityRangeChart } from '~/features/Liquidity/charts/D3LiquidityRa
 import { LiquidityChartStoreProvider } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/LiquidityChartStoreProvider'
 import type { TickRangeChange } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
 import { toDisplayCurrentPrice } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/toDisplayCurrentPrice'
-import { useDensityChartData } from '~/features/Liquidity/charts/LiquidityRangeInput/hooks'
+import {
+  useRangeChartLiquidity,
+  useRangeChartTokenColors,
+} from '~/features/Liquidity/charts/D3LiquidityRangeInput/useRangeChartLiquidity'
 import { ChartEntry } from '~/features/Liquidity/charts/LiquidityRangeInput/types'
+import { getPoolHistoryQueryVars } from '~/features/Liquidity/charts/liquidityServiceHistoryVars'
 import { useLiquidityServicePoolPriceChartData } from '~/features/Liquidity/charts/useLiquidityServicePoolPriceChartData'
 import { MigratingPosition, RangeAmountInputPriceMode } from '~/features/Liquidity/Create/types'
-import { useAllPoolTicks } from '~/features/Liquidity/hooks/usePoolTickData'
 import { useSiblingPoolId } from '~/features/Liquidity/hooks/useSiblingPoolId'
 import { TickData } from '~/features/Liquidity/types/ticks'
 import { getBaseAndQuoteCurrencies } from '~/features/Liquidity/utils/currency'
-import { useColor } from '~/hooks/useColor'
+import { toDisplayTick } from '~/features/Liquidity/utils/displayTicks'
 import { ChartType } from '~/utils/charts'
 
 const MIN_DATA_POINTS = 1
@@ -144,29 +147,23 @@ export function D3LiquidityRangeInput({
 
   const hooks = hook ?? ZERO_ADDRESS
 
-  // Fetch liquidity data for the chart. Both fetches derive a pool id from the pair + fee when none is
-  // given, so they'd otherwise query a pool that doesn't exist yet.
-  const { formattedData: liquidityData, isLoading: liquidityDataLoading } = useDensityChartData({
+  // Both fetches derive a pool id from the pair + fee when none is given, so they'd otherwise query a pool
+  // that doesn't exist yet.
+  const {
+    rawTicks: finalTickData,
+    liquidityData: sortedLiquidityData,
+    rawTicksLoading,
+    liquidityDataLoading,
+  } = useRangeChartLiquidity({
     poolId,
-    sdkCurrencies,
-    priceInverted,
-    version: protocolVersion,
-    feeAmount: Number(feeTier),
-    tickSpacing,
-    hooks,
-    skip: creatingPoolOrPair,
-  })
-
-  // Fetch raw tick data when feature flag is enabled
-  // This bypasses the processing in useDensityChartData that loses some tick boundaries
-  const { ticks: rawTicks, isLoading: rawTicksLoading } = useAllPoolTicks({
     sdkCurrencies,
     feeAmount: Number(feeTier),
     chainId: quoteCurrency.chainId as UniverseChainId,
     version: protocolVersion,
     tickSpacing,
-    hooks,
-    precalculatedPoolId: poolId,
+    hook: hooks,
+    priceInverted,
+    currentTick,
     skip: creatingPoolOrPair,
   })
 
@@ -184,7 +181,7 @@ export function D3LiquidityRangeInput({
     skip: !mayBorrowSibling,
   })
 
-  const hasOwnPositions = Boolean(rawTicks?.length)
+  const hasOwnPositions = Boolean(finalTickData?.length)
   const { priceHistoryPoolId, priceSourceLoading } = getPriceLineSource({
     creatingPoolOrPair,
     poolHasNoActiveLiquidity,
@@ -216,14 +213,12 @@ export function D3LiquidityRangeInput({
   // Skipped when the fallback pool's token order can't be matched to this one's.
   const fallbackPool = fallbackPriceInverted === undefined ? undefined : fallbackPriceHistoryPool
   const fallbackPriceData = useLiquidityServicePoolPriceChartData({
-    variables: fallbackPool && {
-      addressOrId: fallbackPool.poolId,
+    variables: getPoolHistoryQueryVars({
+      addressOrId: fallbackPool?.poolId,
       chainId: quoteCurrency.chainId as UniverseChainId,
+      protocolVersion: fallbackPool?.protocolVersion,
       duration: selectedHistoryDuration,
-      isV4: fallbackPool.protocolVersion === ProtocolVersion.V4,
-      isV3: fallbackPool.protocolVersion === ProtocolVersion.V3,
-      isV2: fallbackPool.protocolVersion === ProtocolVersion.V2,
-    },
+    }),
     priceInverted: Boolean(fallbackPriceInverted),
   })
 
@@ -263,34 +258,6 @@ export function D3LiquidityRangeInput({
     }
   }, [priceData, currentPriceData])
 
-  const sortedLiquidityData = useMemo(() => {
-    if (!liquidityData) {
-      return undefined
-    }
-    const activeTick = Math.floor(currentTick / tickSpacing) * tickSpacing
-    const uniqueTicksMap = new Map<number, ChartEntry>()
-    let prevAmounts: Pick<ChartEntry, 'amount0Locked' | 'amount1Locked'> | undefined
-    liquidityData.forEach((entry) => {
-      // Negate ticks when priceInverted to match the visual tick scale
-      const visualTick = priceInverted ? -entry.tick : entry.tick
-      // When inverted, tick negation shifts locked amounts off by one position.
-      // Use the previous canonical entry's amounts to realign with the visual tick range.
-      // Skip the shift for the active tick so its partial amounts (both tokens) are preserved.
-      uniqueTicksMap.set(visualTick, {
-        ...entry,
-        tick: visualTick,
-        ...(priceInverted &&
-          entry.tick !== activeTick && {
-            amount0Locked: prevAmounts?.amount0Locked ?? 0,
-            amount1Locked: prevAmounts?.amount1Locked ?? 0,
-          }),
-      })
-      prevAmounts = entry
-    })
-
-    return Array.from(uniqueTicksMap.values()).sort((a, b) => a.price0 - b.price0)
-  }, [liquidityData, priceInverted, currentTick, tickSpacing])
-
   const { showChartErrorView, isLoading } = getChartDataState({
     creatingPoolOrPair,
     poolHasNoActiveLiquidity,
@@ -317,34 +284,15 @@ export function D3LiquidityRangeInput({
     chartLoading: isLoading,
   })
 
-  // Ticks in the chart store and chart are in visual space: negated when priceInverted
-  const visualCurrentTick = priceInverted ? -currentTick : currentTick
-
   const { baseCurrency: sdkBaseCurrency, quoteCurrency: sdkQuoteCurrency } = getBaseAndQuoteCurrencies(
     sdkCurrencies,
     priceInverted,
   )
 
-  // Token colors: token0Color for ticks above currentTick, token1Color for below
-  // When priceInverted, the visual base/quote are swapped relative to SDK token0/token1
-  const sdkToken0Color = useColor(sdkCurrencies.TOKEN0 ?? undefined)
-  const sdkToken1Color = useColor(sdkCurrencies.TOKEN1 ?? undefined)
-  const token0Color = priceInverted ? sdkToken1Color : sdkToken0Color
-  const token1Color = priceInverted ? sdkToken0Color : sdkToken1Color
+  // Ticks in the chart store and chart are in visual space: negated when priceInverted
+  const visualCurrentTick = toDisplayTick(currentTick, priceInverted)
 
-  const finalTickData = useMemo(() => {
-    if (!priceInverted) {
-      return rawTicks
-    }
-    // Negate ticks and liquidityNet, then reverse to restore ascending order.
-    return rawTicks
-      ?.map((rawTick) => ({
-        ...rawTick,
-        tick: rawTick.tick !== undefined ? -rawTick.tick : undefined,
-        liquidityNet: rawTick.liquidityNet ? String(-BigInt(rawTick.liquidityNet)) : rawTick.liquidityNet,
-      }))
-      .reverse()
-  }, [rawTicks, priceInverted])
+  const { token0Color, token1Color } = useRangeChartTokenColors(sdkCurrencies, priceInverted)
 
   // With no liquidity of its own the chart renders the borrowed price line over an empty distribution.
   // An empty pool can still have real ticks (positions parked outside the current tick), so only fall

@@ -1,4 +1,4 @@
-import { RateRatio } from '@universe/transactions-ui'
+import { ExchangeRate } from '@universe/transactions-ui'
 import {
   type SwapRateInputs,
   useSwapRateDisplay,
@@ -11,7 +11,7 @@ type SwapRateRatioProps = SwapRateInputs & {
 }
 
 /**
- * Adapter: derives both rate orientations from the trade and renders the swap-ui view.
+ * Adapter: derives both rate directions from the trade and renders ExchangeRate.
  * Same export and props as before, so callers are unchanged.
  */
 export function SwapRateRatio({
@@ -27,5 +27,12 @@ export function SwapRateRatio({
     return null
   }
 
-  return <RateRatio rate={rate} styling={styling} initialInverse={initialInverse} justifyContent={justifyContent} />
+  return (
+    <ExchangeRate
+      align={justifyContent === 'flex-end' ? 'end' : 'start'}
+      defaultInverted={initialInverse}
+      rate={rate}
+      styling={styling}
+    />
+  )
 }

@@ -609,6 +609,8 @@ export interface MarginMarketRow {
   direction: MarginDirection
   // The venue the selection policy routes to at zero size.
   headlineVenue: MarginVenue
+  // The `marketId` of the venueMarkets entry behind maxLeverage: the market an Auto open quotes on.
+  headlineMarketId?: string
   maxLeverage: string
   lltv: string
   borrowRate?: string

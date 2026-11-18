@@ -1,10 +1,12 @@
 import vitestPreset from 'vitest-presets/vitest/vitest-preset.js'
 import { defineConfig } from 'vitest/config'
 
+// Web-first run. vitest.native.config.ts runs the same suite native-first.
 export default defineConfig({
   ...vitestPreset,
   test: {
     ...vitestPreset.test,
+    exclude: [...(vitestPreset.test?.exclude ?? []), '**/*.native.test.*'],
     setupFiles: [...(vitestPreset.test?.setupFiles ?? []), './vitest-setup.ts'],
     coverage: {
       ...vitestPreset.test?.coverage,

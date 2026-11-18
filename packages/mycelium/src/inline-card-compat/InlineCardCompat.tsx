@@ -30,6 +30,8 @@ type InlineCardProps = {
   CtaButtonIcon?: GeneratedIcon | ((props: IconProps) => JSX.Element)
   CtaButtonIconColor?: IconProps['color']
   onPressCtaButton?: () => void
+  /** Names the call-to-action button; pass it with `onPressCtaButton`. */
+  ctaButtonLabel?: string
 }
 
 /**
@@ -51,6 +53,7 @@ export function InlineCardCompat({
   CtaButtonIcon,
   CtaButtonIconColor = '$neutral3',
   onPressCtaButton,
+  ctaButtonLabel,
 }: InlineCardProps): JSX.Element {
   const icon = <Icon color={iconColor ?? color} size={iconSize} />
   const iconElement = iconBackgroundColor ? (
@@ -87,13 +90,15 @@ export function InlineCardCompat({
           {headingElement}
           {descriptionElement}
         </FlexCompat>
-        {/* TODO(INFRA-4589): the icon-only call-to-action has no name and no prop to give it one
-            (button-name). Add a label prop for it. */}
-        {CtaButtonIcon && (
-          <TouchableAreaCompat onPress={onPressCtaButton}>
+        {/* Without a handler the icon is decoration, not a button. */}
+        {CtaButtonIcon &&
+          (onPressCtaButton ? (
+            <TouchableAreaCompat aria-label={ctaButtonLabel} onPress={onPressCtaButton}>
+              <CtaButtonIcon color={CtaButtonIconColor} size={iconSize} />
+            </TouchableAreaCompat>
+          ) : (
             <CtaButtonIcon color={CtaButtonIconColor} size={iconSize} />
-          </TouchableAreaCompat>
-        )}
+          ))}
       </FlexCompat>
     </FlexCompat>
   )

@@ -1,5 +1,6 @@
+import { PopupRenderer } from '~/app/layout/Popups/PopupRenderer'
 import { TopLevelModals } from '~/app/layout/TopLevelModals'
-import { PopupRenderer } from '~/components/Popups/PopupRenderer'
+import { OnboardingChecklist } from '~/features/newUserOnboarding/checklist/OnboardingChecklist'
 import { ClaimPopup } from '~/features/wallet/claim/ClaimPopup'
 import { RedirectAfterConnect } from '~/features/wallet/components/RedirectAfterConnect'
 
@@ -9,6 +10,7 @@ export default function AppChrome() {
       <PopupRenderer />
       <ClaimPopup />
       <RedirectAfterConnect />
+      <OnboardingChecklist />
       <TopLevelModals />
     </>
   )

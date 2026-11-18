@@ -1,6 +1,6 @@
 import { Platform, areAddressesEqual } from '@universe/chains'
 import { useEffect, useMemo, useState } from 'react'
-import { useWalletBalancesIncludeCategories } from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances'
+import { WALLET_BALANCES_INCLUDE_CATEGORIES } from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances'
 import {
   selectTotalsByRequestedAddress,
   toEvmWallets,
@@ -100,12 +100,11 @@ export function useOnDeviceRecoveryData(mnemonicId: string | undefined): {
   const { chains: chainIds } = useEnabledChains()
 
   const modifiers = useRestPortfolioValueModifiers(addresses)
-  const includeCategories = useWalletBalancesIncludeCategories()
   const wallets = useMemo(() => toEvmWallets(addresses), [addresses])
   const select = useMemo(() => selectTotalsByRequestedAddress(addresses), [addresses])
 
   const { data: balancesByAddress, isLoading: balancesLoading } = useGetWalletsBalancesQuery({
-    input: { wallets, chainIds, modifiers, includeCategories },
+    input: { wallets, chainIds, modifiers, includeCategories: WALLET_BALANCES_INCLUDE_CATEGORIES },
     enabled: addresses.length > 0,
     select,
   })

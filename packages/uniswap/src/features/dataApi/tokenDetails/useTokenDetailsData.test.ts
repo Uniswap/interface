@@ -269,7 +269,7 @@ describe(useTokenMetadata, () => {
 
 describe(useTokenMarketStats, () => {
   const GET_TOKEN_MARKETS_RAW_RESPONSE = {
-    markets: [{ stats: { volumeUsd: 188_800, totalValueLockedUsd: 2_300_000 } }],
+    markets: [{ stats: { volumeUsd: 188_800, totalValueLockedUsd: 2_300_000, priceAllTimeHighUsd: 4_878.26 } }],
   }
 
   beforeEach(() => {
@@ -293,9 +293,31 @@ describe(useTokenMarketStats, () => {
 
     await waitFor(() => expect(result.current.volume).toBe(188_800))
     expect(result.current.tvl).toBe(2_300_000)
+    expect(result.current.priceAllTimeHighUsd).toBe(4_878.26)
     expect(mockGetGetTokenMarketsMultiChainQueryOptions).toHaveBeenCalledWith(
       expect.objectContaining({ enabled: false }),
     )
+  })
+
+  it('returns the all-time high from GetTokenMarketsMultiChain in the multichain aggregate view', async () => {
+    const { result } = renderHookWithProviders(() =>
+      useTokenMarketStats(CURRENCY_ID, { isMultichainAggregateView: true }),
+    )
+
+    await waitFor(() => expect(result.current.priceAllTimeHighUsd).toBe(4_878.26))
+  })
+
+  it('leaves the all-time high undefined when the market has none', async () => {
+    mockGetGetTokenMarketsQueryOptions.mockImplementation(({ enabled, select }) => ({
+      queryKey: [ReactQueryCacheKey.DataApiService, 'getTokenMarkets', 'noAth'],
+      queryFn: () => Promise.resolve({ markets: [{ stats: { volumeUsd: 188_800 } }] }),
+      enabled,
+      select,
+    }))
+    const { result } = renderHookWithProviders(() => useTokenMarketStats(CURRENCY_ID))
+
+    await waitFor(() => expect(result.current.volume).toBe(188_800))
+    expect(result.current.priceAllTimeHighUsd).toBeUndefined()
   })
 
   it('disables both REST queries and reports not-loading when skip is set', () => {

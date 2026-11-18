@@ -16,7 +16,7 @@ import {
 import { useEvent } from 'utilities/src/react/hooks'
 import { getDropdownAvailableSpace, getDropdownVerticalLayout } from '~/components/Dropdowns/dropdownLayoutUtils'
 import { useFixedDropdownLayout } from '~/components/Dropdowns/useFixedDropdownLayout'
-import { Portal } from '~/components/Popups/Portal'
+import { Portal } from '~/components/Portal/Portal'
 import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
 import { useAppHeaderHeight } from '~/hooks/useAppHeaderHeight'
 import { useOnClickOutside } from '~/hooks/useOnClickOutside'
@@ -90,7 +90,13 @@ function DropdownContainer({ children }: PropsWithChildren): JSX.Element {
   )
 }
 
-export interface SharedDropdownProps {
+/**
+ * `title` names the open dropdown: its panel on large screens and its sheet's dialog on small ones. A dropdown that
+ * becomes a sheet must pass one.
+ */
+type DropdownTitleProps = { adaptToSheet: true; title: string } | { adaptToSheet?: false; title?: string }
+
+export type SharedDropdownProps = DropdownTitleProps & {
   isOpen: boolean
   /**
    * Must apply the argument, not flip. The sheet's `onClose` requests `false` directly, and two
@@ -98,7 +104,6 @@ export interface SharedDropdownProps {
    */
   toggleOpen: (open: boolean) => void
   dropdownTestId?: string
-  adaptToSheet?: boolean
   tooltipText?: string
   dropdownStyle?: FlexCompatProps
   containerStyle?: CSSProperties
@@ -153,6 +158,7 @@ export function AdaptiveDropdown({
   trigger,
   dropdownTestId,
   tooltipText,
+  title,
   adaptToSheet,
   dropdownStyle,
   containerStyle,
@@ -264,6 +270,7 @@ export function AdaptiveDropdown({
     <DropdownContent
       ref={shouldUseFixedLayout ? fixedDropdown.dropdownRef : undefined}
       data-testid={dropdownTestId}
+      {...panelNameProps(title)}
       className={DROPDOWN_PRESENCE_CLASSES}
       {...dropdownStyle}
       {...shadowProps}
@@ -343,15 +350,41 @@ export function AdaptiveDropdown({
         </Portal>
       )}
       {isSheet && (
-        <WebBottomSheet
-          isOpen={isOpen}
-          onClose={() => toggleOpen(false)}
-          maxHeight={`calc(100dvh - ${heights['interface-nav']}px)`}
-          testID={dropdownTestId}
-        >
+        <DropdownSheet isOpen={isOpen} title={title} testID={dropdownTestId} onClose={() => toggleOpen(false)}>
           {children}
-        </WebBottomSheet>
+        </DropdownSheet>
       )}
     </>
   )
+}
+
+function DropdownSheet({
+  isOpen,
+  title,
+  testID,
+  onClose,
+  children,
+}: {
+  isOpen: boolean
+  title: string
+  testID?: string
+  onClose: () => void
+  children: JSX.Element | JSX.Element[]
+}): JSX.Element {
+  return (
+    <WebBottomSheet
+      isOpen={isOpen}
+      title={title}
+      maxHeight={`calc(100dvh - ${heights['interface-nav']}px)`}
+      testID={testID}
+      onClose={onClose}
+    >
+      {children}
+    </WebBottomSheet>
+  )
+}
+
+/** Names the large-screen panel with the dropdown's title; a bare div can't carry a name without a role. */
+function panelNameProps(title: string | undefined): { role?: 'group'; 'aria-label'?: string } {
+  return title === undefined ? {} : { role: 'group', 'aria-label': title }
 }

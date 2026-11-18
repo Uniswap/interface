@@ -191,7 +191,7 @@ exports[`DappRequestContent - Stale Request Rendering > should match snapshot fo
           fill="currentColor"
           focusable="false"
           stroke-width="8"
-          style="width: 24px; height: 24px;"
+          style="color: var(--warning); width: 24px; height: 24px;"
           viewBox="0 0 24 24"
         >
           <path

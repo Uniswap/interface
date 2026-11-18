@@ -7,16 +7,9 @@ import { TokenCategoryClass, type TokenCategory } from 'uniswap/src/features/tok
 import { createRankedMultichainToken } from 'uniswap/src/test/fixtures/dataApi/rankedMultichainToken'
 import { renderHookWithProviders } from 'uniswap/src/test/render'
 
-const {
-  mockUseEnabledChains,
-  mockV2ListTokens,
-  mockUseIsTokenCategoriesEnabled,
-  mockUseDynamicConfigValue,
-  mockUseIsFeatureGated,
-} = vi.hoisted(() => ({
+const { mockUseEnabledChains, mockV2ListTokens, mockUseDynamicConfigValue, mockUseIsFeatureGated } = vi.hoisted(() => ({
   mockUseEnabledChains: vi.fn(),
   mockV2ListTokens: vi.fn(),
-  mockUseIsTokenCategoriesEnabled: vi.fn(),
   mockUseDynamicConfigValue: vi.fn(),
   mockUseIsFeatureGated: vi.fn(),
 }))
@@ -32,7 +25,6 @@ vi.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
 
 vi.mock('@universe/gating', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@universe/gating')>()),
-  useIsTokenCategoriesEnabled: mockUseIsTokenCategoriesEnabled,
   useDynamicConfigValue: mockUseDynamicConfigValue,
 }))
 
@@ -74,21 +66,8 @@ describe('useSpotlitCategorySections', () => {
     vi.clearAllMocks()
     SharedQueryClient.clear()
     mockUseEnabledChains.mockReturnValue({ chains: [1, 137] })
-    mockUseIsTokenCategoriesEnabled.mockReturnValue(true)
     mockUseIsFeatureGated.mockReturnValue(false)
     mockUseDynamicConfigValue.mockReturnValue(['trending', 'stocks'])
-  })
-
-  it('is disabled and fetches nothing when the flag is off', () => {
-    mockUseIsTokenCategoriesEnabled.mockReturnValue(false)
-
-    const { result } = renderHookWithProviders(() =>
-      useSpotlitCategorySections({ chainFilter: null, tokenCount: 5, skip: false }),
-    )
-
-    expect(result.current.enabled).toBe(false)
-    expect(result.current.sections).toEqual([])
-    expect(mockV2ListTokens).not.toHaveBeenCalled()
   })
 
   it('is disabled when the spotlight config is empty', () => {
@@ -154,7 +133,6 @@ describe('useSpotlitCategorySections resilience', () => {
     vi.clearAllMocks()
     SharedQueryClient.clear()
     mockUseEnabledChains.mockReturnValue({ chains: [1, 137] })
-    mockUseIsTokenCategoriesEnabled.mockReturnValue(true)
     mockUseIsFeatureGated.mockReturnValue(false)
   })
 

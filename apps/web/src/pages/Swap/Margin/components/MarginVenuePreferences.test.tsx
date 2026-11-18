@@ -5,7 +5,10 @@ import { deriveMarginVenues } from 'uniswap/src/features/transactions/margin/sto
 import { MarginDirection, type MarginVenue } from 'uniswap/src/features/transactions/margin/types'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { MarginPair, MarginPairGroup, MarginTokenInfo } from '~/constants/margin'
-import { MarginVenuePreferencesModal } from '~/pages/Swap/Margin/components/MarginVenuePreferences'
+import {
+  MarginMarketOptionsScreen,
+  MarginVenuePreferencesModal,
+} from '~/pages/Swap/Margin/components/MarginVenuePreferences'
 import { render } from '~/test-utils/render'
 
 // Inline the modal body, as every other margin modal test does.
@@ -19,8 +22,9 @@ vi.mock('~/features/margin/components/MarginVenueLogo', () => ({
 
 // The real store action, spied: the assertions are about what the sheet does to `excludedVenues`,
 // and the analytics wrapper has its own test.
-const { excluded, toggleVenue, resetVenues } = vi.hoisted(() => ({
+const { excluded, toggleVenue, resetVenues, groups } = vi.hoisted(() => ({
   excluded: { current: [] as string[] },
+  groups: { current: [] as unknown[] },
   toggleVenue: vi.fn(),
   resetVenues: vi.fn(),
 }))
@@ -29,6 +33,7 @@ vi.mock('uniswap/src/features/transactions/margin/stores/marginFormStore/useMarg
   useMarginFormStore: (selector: (s: { excludedVenues: string[]; pairKey: string }) => unknown) =>
     selector({ excludedVenues: excluded.current, pairKey: 'weth-usdc' }),
 }))
+vi.mock('~/features/margin/hooks/useMarginMarkets', () => ({ useMarginMarkets: () => ({ groups: groups.current }) }))
 vi.mock('uniswap/src/features/transactions/margin/stores/marginFormStore/useToggleMarginVenue', () => ({
   useToggleMarginVenue: () => toggleVenue,
 }))
@@ -205,5 +210,19 @@ describe('MarginVenuePreferencesModal', () => {
     excluded.current = ['AAVE_V3']
     const { queryByTestId } = renderSheet()
     expect(queryByTestId(TestID.MarginVenuesEmpty)).toBeNull()
+  })
+})
+
+// Trade options' shape: All hides the venue switches; turning it off reveals them, back on clears exclusions.
+describe(MarginMarketOptionsScreen, () => {
+  it('reveals the venue switches once All is off, and All back on resets them', () => {
+    groups.current = [GROUP]
+    excluded.current = []
+    const { getAllByRole, queryAllByTestId } = render(<MarginMarketOptionsScreen />)
+    expect(queryAllByTestId(TestID.MarginVenueRow)).toHaveLength(0)
+    fireEvent.click(getAllByRole('switch')[0]!)
+    expect(queryAllByTestId(TestID.MarginVenueRow)).toHaveLength(GROUP.pairs.length)
+    fireEvent.click(getAllByRole('switch')[0]!)
+    expect(resetVenues).toHaveBeenCalledTimes(1)
   })
 })

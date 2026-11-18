@@ -24,7 +24,7 @@ import {
 import {
   hasMarginPositionBasis,
   isMarginActivePosition,
-  marginOpenedLeverage,
+  marginLeverageAtOpen,
   marginPositionTokens,
   marginPositionVenue,
 } from '~/features/margin/utils/marginPositionRow'
@@ -71,17 +71,21 @@ export function shouldForceOverlayRebuild({
 // Positions belonging to this exact market: same venue (absent ⇒ MORPHO), collateral/debt roles
 // matched by address (case-insensitive), and an attributable cost basis. Reversed-role positions
 // (the mirror pair) are excluded so a Morpho position never draws its lines on the Aave chart.
+// `anyVenue` keeps every venue's position on the pair and side: the chart's candles are the pair's, and
+// the form's routed venue says nothing about where an open position sits.
 export function positionsForMarket({
   positions,
   market,
+  anyVenue = false,
 }: {
   positions: MarginPosition[]
-  market: MarginMarket
+  market: Pick<MarginMarket, 'venue'> & Record<'collateral' | 'debt', { address: string }>
+  anyVenue?: boolean
 }): MarginPosition[] {
   return positions.filter((p) => {
     const tokens = marginPositionTokens(p)
     return (
-      (marginPositionVenue(p) ?? 'MORPHO') === market.venue &&
+      (anyVenue || (marginPositionVenue(p) ?? 'MORPHO') === market.venue) &&
       sameToken({ a: tokens.collateralToken, b: market.collateral.address }) &&
       sameToken({ a: tokens.debtToken, b: market.debt.address }) &&
       hasMarginPositionBasis(p)
@@ -103,6 +107,22 @@ export function showsMarginOpenPreview({
   focusedPosition: MarginPosition | undefined
 }): boolean {
   return previewMarket.key === market.key && focusedPosition === undefined
+}
+
+/**
+ * The position whose levels (entry, liquidation, break-even, zone) the chart draws: the focused one, else
+ * the one whose avatar is hovered. At rest positions show only their avatars, even a lone one.
+ */
+export function marginChartLeadPosition({
+  focusedPosition,
+  positions,
+  emphasizedPositionId,
+}: {
+  focusedPosition: MarginPosition | undefined
+  positions: MarginPosition[]
+  emphasizedPositionId: string | undefined
+}): MarginPosition | undefined {
+  return focusedPosition ?? positions.find((p) => p.positionId === emphasizedPositionId)
 }
 
 export type OverlayRole = 'mark' | 'entry' | 'liq' | 'breakEven' | 'previewEntry' | 'previewLiq'
@@ -175,6 +195,10 @@ export interface ComposeInput {
   markFallback?: number
   // Latest candle open; with markFallback (its close) it colors the mark line by the candle's direction.
   latestCandleOpen?: number
+  // An avatar is hovered: the form's preview lines step aside (still fitted, see the bounds below).
+  hidePreview?: boolean
+  // Several positions show as avatars: their entries are fitted in place of the lead's levels.
+  avatarPrices?: number[]
 }
 
 const PRIORITY: Record<OverlayRole, number> = {
@@ -185,6 +209,7 @@ const PRIORITY: Record<OverlayRole, number> = {
   breakEven: 4,
   mark: 5,
 }
+const POSITION_ROLES: ReadonlySet<OverlayRole> = new Set(['entry', 'liq', 'breakEven'])
 const LABEL_COLLISION_PX = 14
 const FROZEN_PREVIEW_OPACITY = 0.6
 const STALE_MARK_OPACITY = 0.5
@@ -336,7 +361,7 @@ const formatLegendLeverage = (leverage: number): string => `${Math.round(leverag
 // Undefined where the indexer never recorded a ratio, so the entry line states no leverage rather
 // than a fabricated "0x".
 function openedLeverageLabel(position: MarginActivePosition): string | undefined {
-  const leverage = marginOpenedLeverage(position)
+  const leverage = marginLeverageAtOpen(position)
   return leverage === undefined ? undefined : formatLegendLeverage(leverage)
 }
 
@@ -406,29 +431,31 @@ function buildPositionLines({
       role: 'entry',
       priority: PRIORITY.entry,
       price: entryPrice,
-      color: colors.statusSuccess,
+      color: colors.neutral1,
       title: t('margin.chart.line.entry', { leverage: openedLeverageLabel(position) ?? '—' }),
       lineStyle: LineStyle.Dashed,
-      axisLabelColor: colors.statusSuccess,
-      axisLabelTextColor: colors.white,
-      lineWidth: 2,
+      axisLabelColor: colors.neutral1,
+      axisLabelTextColor: colors.surface1,
+      lineWidth: 1,
     })
   }
   if (liqPrice > 0) {
+    // The position's own health tier, as its row's health reads.
+    const liqColor = healthTierColor({ healthFactor: scaledE18ToNumber(position.healthFactor), colors })
     lines.push({
       id: 'liq',
       role: 'liq',
       priority: PRIORITY.liq,
       price: liqPrice,
-      color: colors.statusCritical,
+      color: liqColor,
       title:
         liqDistance !== undefined && !Number.isNaN(liqDistance)
           ? t('margin.chart.line.liqDistance', { distance: formatSignedPct(liqDistance) })
           : t('margin.chart.line.liq'),
-      lineStyle: LineStyle.Dashed,
-      axisLabelColor: colors.statusCritical,
-      axisLabelTextColor: colors.white,
-      lineWidth: 2,
+      lineStyle: LineStyle.Solid,
+      axisLabelColor: liqColor,
+      axisLabelTextColor: readableTextColor({ background: liqColor, colors }),
+      lineWidth: 1,
       ...(liqDistance !== undefined ? { distanceSignedPct: liqDistance } : {}),
     })
   }
@@ -532,9 +559,12 @@ export function leverageTierColor({
   colors: MarginChartColors
 }): string {
   const healthFactor = marginHealthFromLeverage({ leverage, lltvWad, direction })
-  if (healthFactor === undefined) {
-    return colors.neutral2
-  }
+  return healthFactor === undefined ? colors.neutral2 : healthTierColor({ healthFactor, colors })
+}
+
+// A health factor's tier (healthy / caution / at risk) as a canvas color: the steps the leverage readout
+// and slider wear.
+function healthTierColor({ healthFactor, colors }: { healthFactor: number; colors: MarginChartColors }): string {
   const { key } = getMarginHealthStatus(healthFactor)
   return key === 'healthy' ? colors.statusSuccess : key === 'caution' ? colors.statusWarning : colors.statusCritical
 }
@@ -580,7 +610,9 @@ function contrastRatio({ lighter, darker }: { lighter: number; darker: number })
   return (lighter + CONTRAST_FLARE) / (darker + CONTRAST_FLARE)
 }
 
-// Black or white, whichever contrasts more with `background`.
+// White when it clears the large-text contrast bar, else whichever of black/white contrasts more. Mid
+// tones like light mode's success green sit near a black/white tie, and design wants white there.
+const MIN_WHITE_LABEL_CONTRAST = 3
 export function readableTextColor({ background, colors }: { background: string; colors: MarginChartColors }): string {
   const luminance = relativeLuminance(background)
   if (luminance === undefined) {
@@ -588,7 +620,9 @@ export function readableTextColor({ background, colors }: { background: string; 
   }
   const contrastWithBlack = contrastRatio({ lighter: luminance, darker: BLACK_LUMINANCE })
   const contrastWithWhite = contrastRatio({ lighter: WHITE_LUMINANCE, darker: luminance })
-  return contrastWithBlack > contrastWithWhite ? colors.black : colors.white
+  return contrastWithWhite >= MIN_WHITE_LABEL_CONTRAST || contrastWithWhite > contrastWithBlack
+    ? colors.white
+    : colors.black
 }
 
 // The quoted values when the quote prices a liquidation. Otherwise — no quote yet, a failed one, or
@@ -786,20 +820,23 @@ export function composeMarginChartOverlays(input: ComposeInput): MarginChartOver
     }),
     ...buildPositionLines({ position, colors, t }),
     ...buildBreakEvenLine({ usdBasis, colors, t }),
-    ...buildPreviewLines({
-      quote,
-      mark: previewMark,
-      planInFlight,
-      colors,
-      t,
-      market,
-      direction,
-      formLeverage,
-      previewLeverage: planInFlight ? undefined : previewLeverage,
-      hasEnteredAmount: input.hasEnteredAmount ?? false,
-      isQuoteBridged: !planInFlight && (input.isQuoteBridged ?? false),
-    }),
   ]
+  const previewLines = buildPreviewLines({
+    quote,
+    mark: previewMark,
+    planInFlight,
+    colors,
+    t,
+    market,
+    direction,
+    formLeverage,
+    previewLeverage: planInFlight ? undefined : previewLeverage,
+    hasEnteredAmount: input.hasEnteredAmount ?? false,
+    isQuoteBridged: !planInFlight && (input.isQuoteBridged ?? false),
+  })
+  if (!input.hidePreview) {
+    lines.push(...previewLines)
+  }
 
   const zone = buildZone({ primary: position, direction })
 
@@ -808,8 +845,15 @@ export function composeMarginChartOverlays(input: ComposeInput): MarginChartOver
   // through the visible-range feedback. Preview lines count too, including mid-drag: a leverage change
   // can push the preview liq well past the candles' range, so the chart rescales to keep it in view as
   // the thumb moves. On release the quote replaces the estimate and the chart re-fits once more.
-  const boundPrices = lines.map((l) => l.price)
-  if (zone) {
+  // Nothing that comes and goes with an avatar hover may move the bounds: a rescale would slide the avatar
+  // out from under the pointer, ending the hover. So a hidden preview still counts, and with several
+  // positions their entries stand in for the hovered one's levels.
+  const { avatarPrices } = input
+  const boundPrices = [...lines, ...(input.hidePreview ? previewLines : [])]
+    .filter((line) => !avatarPrices || !POSITION_ROLES.has(line.role))
+    .map((line) => line.price)
+    .concat(avatarPrices ?? [])
+  if (zone && !avatarPrices) {
     boundPrices.push(zone.edgePrice)
   }
   const autoscaleBounds =
@@ -824,13 +868,17 @@ export function composeMarginChartOverlays(input: ComposeInput): MarginChartOver
   return { priceLines, zone, autoscaleBounds }
 }
 
+const NO_POSITIONS: MarginPosition[] = []
+
 // Wiring hook: gathers live market data, the OPEN quote and plan state, and feeds the pure composer.
 // The pane owns the visible-range state + height and passes them in (T9). The focused position comes
-// in from the surface that holds it; the chart never fetches positions.
+// in from the surface that holds it, the charted ones from the pane.
 export function useMarginChartOverlays({
   market,
   previewMarket = market,
   focusedPosition,
+  positions = NO_POSITIONS,
+  emphasizedPositionId,
   markFallback,
   latestCandleOpen,
   visiblePriceRange,
@@ -839,6 +887,10 @@ export function useMarginChartOverlays({
   market: MarginMarket
   previewMarket?: MarginMarket
   focusedPosition?: MarginPosition
+  // The charted market's positions while "Show positions on chart" is on.
+  positions?: MarginPosition[]
+  // The position whose avatar is hovered: its levels draw and the form's preview steps aside.
+  emphasizedPositionId?: string
   // Latest candle close, the preview estimate's fallback mark when the live market mark is absent.
   markFallback?: number
   latestCandleOpen?: number
@@ -850,6 +902,13 @@ export function useMarginChartOverlays({
   const { getLive, dataUpdatedAt: marketsUpdatedAt } = useMarginMarkets()
   const previewInfo = useDerivedMarginInfo({ market: previewMarket })
   const showsPreview = showsMarginOpenPreview({ previewMarket, market, focusedPosition })
+  const hidePreview = positions.some((p) => p.positionId === emphasizedPositionId)
+  const showsAvatarsOnly = !focusedPosition && positions.length > 0
+  const avatarPrices = useMemo(
+    () =>
+      showsAvatarsOnly ? positions.map((p) => scaledE18ToNumber(p.entryPrice)).filter((price) => price > 0) : undefined,
+    [showsAvatarsOnly, positions],
+  )
   const quote = showsPreview ? previewInfo.quote : undefined
   const isPlaceholderData = showsPreview && previewInfo.isPlaceholderData
   const isDebouncing = showsPreview && previewInfo.isDebouncing
@@ -880,9 +939,11 @@ export function useMarginChartOverlays({
     [colors],
   )
   const live = getLive(market.key)
+  const lead = marginChartLeadPosition({ focusedPosition, positions, emphasizedPositionId })
   const position = useMemo(
-    () => (focusedPosition ? positionsForMarket({ positions: [focusedPosition], market }).at(0) : undefined),
-    [focusedPosition, market],
+    () =>
+      lead ? positionsForMarket({ positions: [lead], market, anyVenue: lead !== focusedPosition }).at(0) : undefined,
+    [lead, market, focusedPosition],
   )
   // Time-derived, computed each render (the boolean is a stable memo dep). The overlays memo already
   // re-runs on every markets poll, so a dim lands within ~one poll of its threshold.
@@ -906,6 +967,8 @@ export function useMarginChartOverlays({
         isQuoteBridged: isPlaceholderData,
         markFallback,
         latestCandleOpen,
+        hidePreview,
+        avatarPrices,
       }),
       markStale,
       routedVenue,
@@ -928,6 +991,8 @@ export function useMarginChartOverlays({
       markFallback,
       latestCandleOpen,
       markStale,
+      hidePreview,
+      avatarPrices,
     ],
   )
 }

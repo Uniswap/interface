@@ -129,6 +129,9 @@
     },
     {
       "path": "config/vite-presets"
+    },
+    {
+      "path": "packages/data-api"
     }
   ]
 }

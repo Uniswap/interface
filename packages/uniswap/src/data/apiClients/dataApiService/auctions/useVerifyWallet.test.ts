@@ -5,9 +5,14 @@ import {
   KycVerificationStatus,
   PredicateKycVerificationData,
   ValidationType,
+  ZkPassportVerificationData,
 } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/types_pb'
 import {
   getMaxBidPriceQ96,
+  isZkPassportValidation,
+  KycProvider,
+  needsZkPassportCredential,
+  shouldPollForZkPassportCredential,
   toLegacyVerifyWalletResponse,
 } from 'uniswap/src/data/apiClients/dataApiService/auctions/useVerifyWallet'
 import { logger } from 'utilities/src/logger/logger'
@@ -240,5 +245,85 @@ describe('toLegacyVerifyWalletResponse canBid', () => {
   it('still blocks a wallet that fails KYC alongside a ceiling', () => {
     const legacy = toLegacyVerifyWalletResponse([maxBidPriceValidation(CEILING_Q96), kycValidation(false)])
     expect(legacy.canBid).toBe(false)
+  })
+})
+
+describe('ZKPassport validations', () => {
+  const POLICY_ID = `0x${'1'.padStart(64, '0')}`
+
+  function zkPassportValidation({ passed, policyId = POLICY_ID }: { passed: boolean; policyId?: string }) {
+    return new AuctionValidation({
+      validationType: ValidationType.ZKPASSPORT_VERIFICATION,
+      validationPassed: passed,
+      data: { case: 'zkPassportVerificationData', value: new ZkPassportVerificationData({ policyId }) },
+    })
+  }
+
+  it('recognises a ZKPassport entry only with its own payload', () => {
+    expect(isZkPassportValidation(zkPassportValidation({ passed: false }))).toBe(true)
+    expect(isZkPassportValidation(kycValidation(false))).toBe(false)
+    expect(
+      isZkPassportValidation(
+        new AuctionValidation({
+          validationType: ValidationType.ZKPASSPORT_VERIFICATION,
+          data: { case: 'kycVerificationData', value: new PredicateKycVerificationData({}) },
+        }),
+      ),
+    ).toBe(false)
+  })
+
+  it('needs a credential only when the wallet fails a registered gate', () => {
+    const failing = zkPassportValidation({ passed: false })
+    const passing = zkPassportValidation({ passed: true })
+    const unregistered = zkPassportValidation({ passed: false, policyId: '' })
+    expect(isZkPassportValidation(failing) && needsZkPassportCredential(failing)).toBe(true)
+    expect(isZkPassportValidation(passing) && needsZkPassportCredential(passing)).toBe(false)
+    expect(isZkPassportValidation(unregistered) && needsZkPassportCredential(unregistered)).toBe(false)
+  })
+
+  it('blocks bidding until the wallet passes the gate', () => {
+    expect(toLegacyVerifyWalletResponse([zkPassportValidation({ passed: false })]).canBid).toBe(false)
+    expect(toLegacyVerifyWalletResponse([zkPassportValidation({ passed: true })]).canBid).toBe(true)
+  })
+
+  it('polls for a credential only while a registered gate still fails', () => {
+    expect(shouldPollForZkPassportCredential([zkPassportValidation({ passed: false })])).toBe(true)
+    expect(shouldPollForZkPassportCredential([zkPassportValidation({ passed: true })])).toBe(false)
+    expect(shouldPollForZkPassportCredential([zkPassportValidation({ passed: false, policyId: '' })])).toBe(false)
+    expect(shouldPollForZkPassportCredential([kycValidation(false)])).toBe(false)
+    expect(shouldPollForZkPassportCredential(undefined)).toBe(false)
+  })
+
+  it('reports the gate as identity verification by ZKPassport', () => {
+    const legacy = toLegacyVerifyWalletResponse([zkPassportValidation({ passed: false })])
+    expect(legacy.hasKycVerification).toBe(true)
+    expect(legacy.kycProvider).toBe(KycProvider.ZkPassport)
+    expect(legacy.status).toBe(KycVerificationStatus.VERIFICATION_STATUS_NOT_STARTED)
+    expect(legacy.zkPassportPolicyId).toBe(POLICY_ID)
+  })
+
+  it('reads a held credential as completed verification', () => {
+    const legacy = toLegacyVerifyWalletResponse([zkPassportValidation({ passed: true })])
+    expect(legacy.status).toBe(KycVerificationStatus.VERIFICATION_STATUS_COMPLETED)
+    expect(legacy.zkPassportPolicyId).toBeUndefined()
+  })
+
+  it('leaves a Predicate status alone, even alongside a passing ZKPassport entry', () => {
+    const legacy = toLegacyVerifyWalletResponse([kycValidation(false), zkPassportValidation({ passed: true })])
+    expect(legacy.kycProvider).toBe(KycProvider.Predicate)
+    expect(legacy.status).not.toBe(KycVerificationStatus.VERIFICATION_STATUS_COMPLETED)
+    expect(legacy.canBid).toBe(false)
+  })
+
+  it('offers no policy to mint for an auction never registered with the hook', () => {
+    expect(
+      toLegacyVerifyWalletResponse([zkPassportValidation({ passed: false, policyId: '' })]).zkPassportPolicyId,
+    ).toBe(undefined)
+  })
+
+  it('never reads a ZKPassport gate as the bid price ceiling', () => {
+    expect(getMaxBidPriceQ96([zkPassportValidation({ passed: true }), maxBidPriceValidation(CEILING_Q96)])).toBe(
+      CEILING_BIG,
+    )
   })
 })

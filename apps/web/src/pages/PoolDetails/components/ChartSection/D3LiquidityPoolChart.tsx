@@ -2,6 +2,7 @@ import { ProtocolVersion as RestProtocolVersion } from '@uniswap/client-data-api
 import { Currency } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { UniverseChainId } from '@universe/chains'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Flex, Shine, Text } from '@universe/mycelium'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -12,12 +13,17 @@ import { SubscriptZeroPrice } from '~/components/SubscriptZeroPrice'
 import { D3HorizontalLiquidityChart } from '~/features/Liquidity/charts/D3HorizontalLiquidityChart/D3HorizontalLiquidityChart'
 import { HorizontalLiquidityChartStoreProvider } from '~/features/Liquidity/charts/D3HorizontalLiquidityChart/HorizontalLiquidityChartStoreProvider'
 import { useHorizontalLiquidityChartSelector } from '~/features/Liquidity/charts/D3HorizontalLiquidityChart/useHorizontalLiquidityChartStore'
+import {
+  toVisualLiquidityEntries,
+  toVisualTicks,
+} from '~/features/Liquidity/charts/D3LiquidityRangeInput/visualTickData'
 import { useDensityChartData } from '~/features/Liquidity/charts/LiquidityRangeInput/hooks'
 import { ChartEntry } from '~/features/Liquidity/charts/LiquidityRangeInput/types'
 import { useAllPoolTicks } from '~/features/Liquidity/hooks/usePoolTickData'
 import { buildV2SyntheticPool, V2Reserves } from '~/features/Liquidity/utils/v2SyntheticTicks'
 import { useColor } from '~/hooks/useColor'
 import { DEPTH_CHART_SUBSCRIPT_THRESHOLD } from '~/pages/PoolDetails/components/ChartSection/DepthChart.utils'
+import { usePdpChartDisplayStore } from '~/pages/PoolDetails/components/ChartSection/pdpChartDisplayStore'
 import { usePdpPool } from '~/pages/PoolDetails/components/ChartSection/usePdpPool'
 import { ChartType } from '~/utils/charts'
 import { unwrappedToken } from '~/utils/unwrappedToken'
@@ -35,56 +41,6 @@ export type D3LiquidityPoolChartZoomActions = {
   zoomIn: () => void
   zoomOut: () => void
   resetView: () => void
-}
-
-function buildSortedLiquidityData({
-  liquidityData,
-  tickSpacing,
-  currentTick,
-  isReversed,
-}: {
-  liquidityData: ChartEntry[] | undefined
-  tickSpacing: number | undefined
-  currentTick: number | undefined
-  isReversed: boolean
-}): ChartEntry[] | undefined {
-  if (!liquidityData || !tickSpacing || currentTick === undefined) {
-    return undefined
-  }
-  const activeTick = Math.floor(currentTick / tickSpacing) * tickSpacing
-  const uniqueTicksMap = new Map<number, ChartEntry>()
-  let prevAmounts: Pick<ChartEntry, 'amount0Locked' | 'amount1Locked'> | undefined
-  liquidityData.forEach((entry) => {
-    const visualTick = isReversed ? -entry.tick : entry.tick
-    uniqueTicksMap.set(visualTick, {
-      ...entry,
-      tick: visualTick,
-      ...(isReversed &&
-        entry.tick !== activeTick && {
-          amount0Locked: prevAmounts?.amount0Locked ?? 0,
-          amount1Locked: prevAmounts?.amount1Locked ?? 0,
-        }),
-    })
-    prevAmounts = entry
-  })
-
-  return Array.from(uniqueTicksMap.values()).sort((a, b) => a.price0 - b.price0)
-}
-
-function invertRawTicks<T extends { tick?: number; liquidityNet?: string } | undefined>(
-  rawTicks: T[] | undefined,
-): T[] | undefined {
-  return rawTicks
-    ?.map((t) =>
-      t
-        ? ({
-            ...t,
-            tick: t.tick !== undefined ? -t.tick : undefined,
-            liquidityNet: t.liquidityNet ? String(-BigInt(t.liquidityNet)) : t.liquidityNet,
-          } as T)
-        : t,
-    )
-    .reverse()
 }
 
 function PriceHeader({
@@ -281,11 +237,14 @@ function useD3LiquidityPoolChartData({
   })
 
   const sortedLiquidityData = useMemo(
-    () => buildSortedLiquidityData({ liquidityData, tickSpacing, currentTick, isReversed }),
+    () =>
+      liquidityData && tickSpacing && currentTick !== undefined
+        ? toVisualLiquidityEntries({ entries: liquidityData, currentTick, tickSpacing, priceInverted: isReversed })
+        : undefined,
     [liquidityData, isReversed, currentTick, tickSpacing],
   )
 
-  const finalTickData = useMemo(() => (isReversed ? invertRawTicks(rawTicks) : rawTicks), [rawTicks, isReversed])
+  const finalTickData = useMemo(() => rawTicks && toVisualTicks(rawTicks, isReversed), [rawTicks, isReversed])
 
   const isLoading = poolDataLoading || liquidityDataLoading || rawTicksLoading
 
@@ -329,6 +288,10 @@ export function D3LiquidityPoolChart({
 
   const token0Color = useColor(tokenA)
   const token1Color = useColor(tokenB)
+  // The full-granularity bars and the bucket-scoped tooltip are the PDP revamp's; with it off the chart is as it was.
+  const isPdpRevampEnabled = useFeatureFlag(FeatureFlags.PdpRevamp)
+  const storeGroupTicks = usePdpChartDisplayStore((state) => state.groupTicks)
+  const groupTicks = !isPdpRevampEnabled || storeGroupTicks
 
   const { t } = useTranslation()
   const [baseCurrency, quoteCurrency] = isReversed ? [tokenB, tokenA] : [tokenA, tokenB]
@@ -403,6 +366,9 @@ export function D3LiquidityPoolChart({
           protocolVersion={version}
           height={PDP_CHART_HEIGHT_PX}
           topInset={LIQUIDITY_CHART_HEADER_INSET_PX}
+          groupTicks={groupTicks}
+          bucketScopedBars={isPdpRevampEnabled}
+          detailedTooltip={isPdpRevampEnabled}
           onActionsReady={onZoomActionsReady}
         />
       </Flex>

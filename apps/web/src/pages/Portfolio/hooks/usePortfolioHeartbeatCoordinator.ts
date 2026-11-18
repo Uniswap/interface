@@ -7,37 +7,28 @@ import { useHeartbeatCoordinator } from '~/lib/hooks/useHeartbeatCoordinator'
 import { usePortfolioAddresses } from '~/pages/Portfolio/hooks/usePortfolioAddresses'
 import { useShowDemoView } from '~/pages/Portfolio/hooks/useShowDemoView'
 
-type UsePortfolioHeartbeatEnabledParams = {
-  tab: PortfolioTab
-  poolsEnabled?: boolean
-}
-
 /**
- * Whether the portfolio heartbeat will actually refresh `tab`'s data. Shared by the coordinator
- * itself and by pages that must disable their own overlapping self-poll, so the two can't drift
- * apart the way separately-derived `enabled` conditions can.
+ * Whether the portfolio heartbeat is running. Shared by the coordinator itself and by pages that must
+ * disable their own overlapping self-poll, so the two can't drift apart the way separately-derived
+ * `enabled` conditions can.
  */
-export function usePortfolioHeartbeatEnabled({ tab, poolsEnabled }: UsePortfolioHeartbeatEnabledParams): boolean {
+export function usePortfolioHeartbeatEnabled(): boolean {
   const showDemoView = useShowDemoView()
   const portfolioAddresses = usePortfolioAddresses()
-  const isConnected = !showDemoView && !!(portfolioAddresses.evmAddress || portfolioAddresses.svmAddress)
-  // The Pools tab's refresh is a no-op unless poolsEnabled; every other tab always has data to refresh.
-  const tabHasData = tab !== PortfolioTab.Pools || Boolean(poolsEnabled)
-  return isConnected && tabHasData
+  return !showDemoView && !!(portfolioAddresses.evmAddress || portfolioAddresses.svmAddress)
 }
 
 type UsePortfolioHeartbeatCoordinatorParams = {
   tab: PortfolioTab
-  poolsEnabled?: boolean
 }
 
 /**
  * Drives the portfolio refresh loop at the configured cadence, refetching only the queries
  * rendered by the active tab. When disabled, the standalone PortfolioBalance poll takes over.
  */
-export function usePortfolioHeartbeatCoordinator({ tab, poolsEnabled }: UsePortfolioHeartbeatCoordinatorParams): void {
+export function usePortfolioHeartbeatCoordinator({ tab }: UsePortfolioHeartbeatCoordinatorParams): void {
   const queryClient = useQueryClient()
-  const enabled = usePortfolioHeartbeatEnabled({ tab, poolsEnabled })
+  const enabled = usePortfolioHeartbeatEnabled()
 
   const refresh = async (): Promise<void> => {
     const tasks: Promise<unknown>[] = []
@@ -50,10 +41,8 @@ export function usePortfolioHeartbeatCoordinator({ tab, poolsEnabled }: UsePortf
           queryClient.refetchQueries({ queryKey: [ReactQueryCacheKey.GetPortfolioChart], type: 'active' }),
           queryClient.refetchQueries({ queryKey: [ReactQueryCacheKey.GetWalletTokensProfitLoss], type: 'active' }),
           queryClient.refetchQueries({ queryKey: [ReactQueryCacheKey.ListTransactions], type: 'active' }),
+          queryClient.refetchQueries({ queryKey: WALLET_POSITIONS_QUERY_KEY_PREFIX, type: 'active' }),
         )
-        if (poolsEnabled) {
-          tasks.push(queryClient.refetchQueries({ queryKey: WALLET_POSITIONS_QUERY_KEY_PREFIX, type: 'active' }))
-        }
         break
       case PortfolioTab.Tokens:
         tasks.push(
@@ -63,12 +52,10 @@ export function usePortfolioHeartbeatCoordinator({ tab, poolsEnabled }: UsePortf
         )
         break
       case PortfolioTab.Pools:
-        if (poolsEnabled) {
-          tasks.push(
-            queryClient.refetchQueries({ queryKey: [ReactQueryCacheKey.GetWalletBalances], type: 'active' }),
-            queryClient.refetchQueries({ queryKey: WALLET_POSITIONS_QUERY_KEY_PREFIX, type: 'active' }),
-          )
-        }
+        tasks.push(
+          queryClient.refetchQueries({ queryKey: [ReactQueryCacheKey.GetWalletBalances], type: 'active' }),
+          queryClient.refetchQueries({ queryKey: WALLET_POSITIONS_QUERY_KEY_PREFIX, type: 'active' }),
+        )
         break
       case PortfolioTab.Activity:
         tasks.push(queryClient.refetchQueries({ queryKey: [ReactQueryCacheKey.ListTransactions], type: 'active' }))

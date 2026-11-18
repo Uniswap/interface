@@ -1,5 +1,5 @@
+import { getRwaTagCategory } from '@universe/data-api'
 import { useMemo } from 'react'
-import { getRwaTagCategory } from 'uniswap/src/data/apiClients/dataApiService/rwa/getRwaTagCategory'
 import { useListRwasQuery } from 'uniswap/src/data/apiClients/dataApiService/rwa/listRwas'
 import { resolveRwaIssuerDisplay } from 'uniswap/src/data/apiClients/dataApiService/rwa/resolveRwaIssuerDisplay'
 import {

@@ -215,13 +215,21 @@ describe('repo ci-checks.json', () => {
 
   test('the only ci-passed needs outside main’s requiredChecks are the known ungated ones', () => {
     // `affected` is the gate job — not gated here because ci-passed asserts it
-    // directly, independently of the base ref. The other four are deliberately
+    // directly, independently of the base ref. The others are deliberately
     // advisory (per repo owner): they are in `needs` but gate no base, and
     // before `defaultTarget` they incidentally gated unmatched bases and
     // nothing else. Anything new in `needs` must be gated or added here, so a
     // job cannot slip in without someone making that call.
     expect(needs.filter((job) => !resolve('main').requiredChecks.includes(job)).sort()).toEqual(
-      ['affected', 'casebook', 'dev-portal', 'dev-portal-e2e', 'sessions'].sort(),
+      [
+        'affected',
+        'casebook',
+        'dev-portal',
+        'dev-portal-e2e',
+        'mobile-e2e-affected',
+        'sessions',
+        'web-e2e-affected',
+      ].sort(),
     )
   })
 

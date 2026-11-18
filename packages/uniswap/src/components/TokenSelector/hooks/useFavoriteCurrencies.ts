@@ -1,18 +1,15 @@
-import { UseQueryResult } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { selectFavoriteTokens } from 'uniswap/src/features/favorites/selectors'
-import { useCurrencyInfosWithLoading } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { type RestTokensQueryResult, useCurrencyInfosWithLoading } from 'uniswap/src/features/tokens/useCurrencyInfo'
 
-export function useFavoriteCurrencies(): Pick<
-  UseQueryResult<CurrencyInfo[]>,
-  'data' | 'isLoading' | 'error' | 'refetch'
-> {
+export function useFavoriteCurrencies(): RestTokensQueryResult<CurrencyInfo[]> {
   const favoriteCurrencyIds = useSelector(selectFavoriteTokens)
   const {
     data: favoriteTokensOnAllChains,
     isLoading,
+    isPlaceholderData,
     error,
     refetch,
   } = useCurrencyInfosWithLoading(favoriteCurrencyIds)
@@ -28,5 +25,5 @@ export function useFavoriteCurrencies(): Pick<
       .filter((token): token is CurrencyInfo => !!token)
   }, [favoriteCurrencyIds, favoriteTokensOnAllChains])
 
-  return { data: favoriteTokens, isLoading, error, refetch }
+  return { data: favoriteTokens, isLoading, isPlaceholderData, error, refetch }
 }

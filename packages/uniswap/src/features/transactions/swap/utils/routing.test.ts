@@ -8,6 +8,7 @@ import type { ClassicTrade, UniswapXTrade } from 'uniswap/src/features/transacti
 import {
   ACROSS_DAPP_INFO,
   getBridgeDappInfo,
+  getDisplayableSponsorshipInfo,
   isGasSponsoredExecution,
   isGasSponsoredTradeExecution,
   isSwapRouting,
@@ -155,6 +156,25 @@ describe(isGasSponsoredTradeExecution, () => {
       quote: { ...uniswapXTrade.quote, sponsorshipInfo: { sponsored: true } },
     } as UniswapXTrade
     expect(isGasSponsoredTradeExecution({ trade, executesViaPaymaster: true })).toBe(false)
+  })
+})
+
+describe(getDisplayableSponsorshipInfo, () => {
+  it('returns the sponsorship info for a sponsored quote', () => {
+    const info = { sponsored: true, sponsorMetadata: { name: 'Uniswap' } }
+    expect(getDisplayableSponsorshipInfo(info)).toBe(info)
+  })
+
+  it('returns undefined for an unsponsored quote that still carries sponsor branding', () => {
+    expect(getDisplayableSponsorshipInfo({ sponsored: false, sponsorMetadata: { name: 'Uniswap' } })).toBeUndefined()
+  })
+
+  it('returns undefined when sponsored is missing', () => {
+    expect(getDisplayableSponsorshipInfo({ sponsorMetadata: { name: 'Uniswap' } })).toBeUndefined()
+  })
+
+  it('returns undefined when there is no sponsorship info', () => {
+    expect(getDisplayableSponsorshipInfo(undefined)).toBeUndefined()
   })
 })
 

@@ -95,7 +95,8 @@ export function LiveDotRenderer({
         resizeObserver.disconnect()
       }
     }
-  }, [chartModel, chartContainer, dataKey])
+    // Re-measured when a zoom ends: the price may have moved while the dot was hidden.
+  }, [chartModel, chartContainer, dataKey, isZoomed])
 
   if (isResizing || isZoomed) {
     return null

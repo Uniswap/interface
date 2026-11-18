@@ -23,17 +23,19 @@ vi.mock('uniswap/src/components/modals/Modal', () => ({
   Modal: ({ children }: { children: ReactNode }) => children,
 }))
 
-vi.mock('uniswap/src/components/AmountInput/AmountInput', () => ({
-  AmountInput: (props: Record<string, unknown>) => <input aria-label={props['aria-label'] as string | undefined} />,
+vi.mock('uniswap/src/components/CurrencyInputPanel/CurrencyInputPanel', () => ({
+  CurrencyInputPanel: () => null,
 }))
 
-vi.mock('~/pages/Swap/Margin/components/MarginPaymentTokenSelector', () => ({
-  MarginPaymentTokenSelector: () => null,
+vi.mock('uniswap/src/components/TokenSelector/TokenSelector', () => ({
+  TokenSelectorModal: () => null,
 }))
 
 vi.mock('~/pages/Swap/Margin/components/shared/MarginLeverageSlider', () => ({
   MarginLeverageSlider: () => null,
 }))
+
+vi.mock('uniswap/src/features/accounts/store/hooks', () => ({ useActiveAddresses: () => ({}) }))
 
 vi.mock('~/connection/hooks/useAccount', () => ({ useAccount: () => ({ address: SWAPPER }) }))
 
@@ -110,7 +112,7 @@ describe('MarginActionModals', () => {
   it.each([
     ['add', 'Add margin'],
     ['withdraw', 'Withdraw margin'],
-    ['leverage', 'Change leverage'],
+    ['leverage', 'Change position size'],
     ['close', 'Close position'],
   ] as const)('routes %s to its own modal', (action, expectedTitle) => {
     render(

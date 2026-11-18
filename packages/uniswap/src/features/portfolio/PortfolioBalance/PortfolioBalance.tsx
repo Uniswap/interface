@@ -49,7 +49,7 @@ interface PortfolioBalanceProps {
   part?: PortfolioBalancePart
   /** When true, skips the internal poll — use when a parent coordinator already refreshes this data on its own cadence. */
   disablePolling?: boolean
-  /** When true, disables the refresh button and its `R` keyboard shortcut. */
+  /** When true, disables the refresh button. */
   disableRefresh?: boolean
 }
 

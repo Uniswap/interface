@@ -131,6 +131,8 @@ const FORWARDED_EVENT_PROPS = [
   // plain raw DOM handlers a caller wires directly to the rendered element.
   'onScroll',
   'onKeyDown',
+  // Space activates a button on keyup (native, Base UI and TouchableArea alike).
+  'onKeyUp',
   'onAnimationEnd',
   'onTransitionEnd',
 ] as const
@@ -333,6 +335,11 @@ export function domProps(props: CompatDomProps): Record<string, unknown> {
   const rawProps = props as Record<string, unknown>
   for (const key of FORWARDED_EVENT_PROPS) {
     forwardRaw({ out, key, raw: rawProps[key] })
+  }
+  // Declared only on TouchableArea's own props (a `<button>` type); other compat components reuse
+  // `type` for their own meaning and never reach the DOM with it.
+  if (props.tag === 'button' && typeof rawProps['type'] === 'string') {
+    out['type'] = rawProps['type']
   }
   return out
 }

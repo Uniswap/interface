@@ -1,5 +1,5 @@
 import { UniverseChainId } from '@universe/chains'
-import { getWalletBalancesIncludeCategories } from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances'
+import { WALLET_BALANCES_INCLUDE_CATEGORIES } from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances'
 import {
   fetchWalletsBalances,
   selectTotalsByRequestedAddress,
@@ -34,7 +34,7 @@ export async function fetchBalancesAndUnitags({
       wallets: toEvmWallets(addresses),
       chainIds,
       modifiers,
-      includeCategories: getWalletBalancesIncludeCategories(),
+      includeCategories: WALLET_BALANCES_INCLUDE_CATEGORIES,
     }),
     unitagsApiClient.fetchUnitagsByAddresses({ addresses }),
   ])

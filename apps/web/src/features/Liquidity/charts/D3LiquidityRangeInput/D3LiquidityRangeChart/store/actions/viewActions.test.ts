@@ -1,6 +1,7 @@
 import { nearestUsableTick, TickMath } from '@uniswap/v3-sdk'
 import type { UTCTimestamp } from 'lightweight-charts'
 import type { PriceChartData } from '~/components/Charts/PriceChart'
+import { calculateRangeViewport } from '~/features/Liquidity/charts/D3LiquidityChartShared/utils/viewportUtils'
 import {
   createParent,
   createRenderingContext,
@@ -63,5 +64,38 @@ describe('reset for a pool being created (price line, no liquidity data)', () =>
       minTick: nearestUsableTick(TickMath.MIN_TICK, TICK_SPACING),
       maxTick: nearestUsableTick(TickMath.MAX_TICK, TICK_SPACING),
     })
+  })
+})
+
+describe('reset without emitting', () => {
+  beforeEach(() => {
+    vi.useFakeTimers()
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
+  it('recentres on the given range without sending it back to the parent', () => {
+    const parent = createParent({})
+    const onMinMaxTickChange = vi.spyOn(parent, 'onMinMaxTickChange')
+    const store = createStore({
+      currentTick: 0,
+      currentPrice: 1,
+      baseCurrency: TEST_TOKEN_1,
+      quoteCurrency: TEST_TOKEN_2,
+      parent,
+    })
+    store.setState({ renderingContext: createNewPoolContext() })
+    vi.runAllTimers()
+    onMinMaxTickChange.mockClear()
+
+    const range = { minTick: -1200, maxTick: 1200 }
+    store.getState().actions.reset({ animate: false, emit: false, ...range })
+    vi.runAllTimers()
+
+    const { targetZoom, targetPanY } = calculateRangeViewport({ ...range, tickSpacing: TICK_SPACING })
+    expect(store.getState()).toMatchObject({ ...range, zoomLevel: targetZoom, panY: targetPanY })
+    expect(onMinMaxTickChange).not.toHaveBeenCalled()
   })
 })

@@ -1,6 +1,6 @@
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { Q96 } from '~/features/Toucan/Auction/BidDistributionChart/utils/q96'
-import type { EnrichedAuction } from '~/features/Toucan/hooks/useTopAuctions/useTopAuctions'
+import type { EnrichedAuction } from '~/features/Toucan/hooks/useTopAuctions/useEnrichedAuctions'
 import {
   computeCompletedAuctionMarketFdvUsd,
   computeProjectedFdvTableValue,

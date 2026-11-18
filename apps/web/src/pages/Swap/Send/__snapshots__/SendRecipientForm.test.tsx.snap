@@ -3,7 +3,7 @@
 exports[`SendRecipientForm > should render correctly with no verified recipient 1`] = `
 <div
   data-slot="ui-popover-anchor"
-  style="align-items: stretch; box-sizing: border-box; display: flex; flex-basis: auto; flex-direction: column; flex-shrink: 0; margin: 0px; min-height: 0; min-width: 0; padding: 0px; position: relative;"
+  style="align-items: stretch; box-sizing: border-box; display: flex; flex-basis: auto; flex-direction: column; flex-shrink: 0; margin: 0px; min-height: 0px; min-width: 0px; padding: 0px; position: relative;"
 >
   <div
     class="[container-name:true] flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 [container-type:normal] gap-[4px] p-[16px] bg-surface2 border-transparent border-[1px] rounded-[16px] opacity-[1] [cursor:text] [transition:transform_80ms_ease-in-out,_opacity_80ms_ease-in-out] active:opacity-[0.75] active:[transform:scale(0.98)] focus-visible:[transform:scaleX(0.98)_scaleY(0.98)] focus-visible:[outline-offset:1px] focus-visible:[outline-style:solid] focus-visible:[outline-width:1px] focus-visible:[outline-color:var(--neutral3)] group"
@@ -27,7 +27,7 @@ exports[`SendRecipientForm > should render correctly with no verified recipient 
         enterkeyhint="done"
         placeholder="Wallet address or ENS name"
         spellcheck="false"
-        style="box-sizing: border-box; margin: 0px; padding: 0px 0px 0px 0px; border-width: 0px; border-style: solid; appearance: none; resize: none; outline-width: 0; background-color: transparent; color: rgb(19, 19, 19); width: 100%; font-size: 16px; font-weight: 500; line-height: 24px; outline-style: none; --uds-input-placeholder: rgba(19, 19, 19, 0.35);"
+        style="box-sizing: border-box; margin: 0px; padding: 0px; border-width: 0px; border-style: solid; appearance: none; resize: none; outline-width: 0px; background-color: transparent; color: rgb(19, 19, 19); width: 100%; font-size: 16px; font-weight: 500; line-height: 24px; outline-style: none; --uds-input-placeholder: rgba(19, 19, 19, 0.35);"
         value="hayden.eth"
         virtualkeyboardpolicy="auto"
       />
@@ -39,7 +39,7 @@ exports[`SendRecipientForm > should render correctly with no verified recipient 
 exports[`SendRecipientForm > should render correctly with verified recipient 1`] = `
 <div
   data-slot="ui-popover-anchor"
-  style="align-items: stretch; box-sizing: border-box; display: flex; flex-basis: auto; flex-direction: column; flex-shrink: 0; margin: 0px; min-height: 0; min-width: 0; padding: 0px; position: relative;"
+  style="align-items: stretch; box-sizing: border-box; display: flex; flex-basis: auto; flex-direction: column; flex-shrink: 0; margin: 0px; min-height: 0px; min-width: 0px; padding: 0px; position: relative;"
 >
   <div
     class="[container-name:true] flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 [container-type:normal] [cursor:pointer] gap-[4px] p-[16px] bg-surface2 border-transparent border-[1px] rounded-[16px] opacity-[1] [transition:transform_80ms_ease-in-out,_opacity_80ms_ease-in-out] active:opacity-[0.75] active:[transform:scale(0.98)] focus-visible:[transform:scaleX(0.98)_scaleY(0.98)] focus-visible:[outline-offset:1px] focus-visible:[outline-style:solid] focus-visible:[outline-width:1px] focus-visible:[outline-color:var(--neutral3)] group"
@@ -99,7 +99,7 @@ exports[`SendRecipientForm > should render correctly with verified recipient 1`]
           fill="none"
           focusable="false"
           stroke-width="8"
-          style="width: 20px; height: 20px;"
+          style="color: var(--neutral3); width: 20px; height: 20px;"
           viewBox="0 0 16 16"
         >
           <path
@@ -116,7 +116,7 @@ exports[`SendRecipientForm > should render correctly with verified recipient 1`]
 exports[`SendRecipientForm > should render placeholder values 1`] = `
 <div
   data-slot="ui-popover-anchor"
-  style="align-items: stretch; box-sizing: border-box; display: flex; flex-basis: auto; flex-direction: column; flex-shrink: 0; margin: 0px; min-height: 0; min-width: 0; padding: 0px; position: relative;"
+  style="align-items: stretch; box-sizing: border-box; display: flex; flex-basis: auto; flex-direction: column; flex-shrink: 0; margin: 0px; min-height: 0px; min-width: 0px; padding: 0px; position: relative;"
 >
   <div
     class="[container-name:true] flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 [container-type:normal] gap-[4px] p-[16px] bg-surface2 border-transparent border-[1px] rounded-[16px] opacity-[1] [cursor:text] [transition:transform_80ms_ease-in-out,_opacity_80ms_ease-in-out] active:opacity-[0.75] active:[transform:scale(0.98)] focus-visible:[transform:scaleX(0.98)_scaleY(0.98)] focus-visible:[outline-offset:1px] focus-visible:[outline-style:solid] focus-visible:[outline-width:1px] focus-visible:[outline-color:var(--neutral3)] group"
@@ -140,7 +140,7 @@ exports[`SendRecipientForm > should render placeholder values 1`] = `
         enterkeyhint="done"
         placeholder="Wallet address or ENS name"
         spellcheck="false"
-        style="box-sizing: border-box; margin: 0px; padding: 0px 0px 0px 0px; border-width: 0px; border-style: solid; appearance: none; resize: none; outline-width: 0; background-color: transparent; color: rgb(19, 19, 19); width: 100%; font-size: 16px; font-weight: 500; line-height: 24px; outline-style: none; --uds-input-placeholder: rgba(19, 19, 19, 0.35);"
+        style="box-sizing: border-box; margin: 0px; padding: 0px; border-width: 0px; border-style: solid; appearance: none; resize: none; outline-width: 0px; background-color: transparent; color: rgb(19, 19, 19); width: 100%; font-size: 16px; font-weight: 500; line-height: 24px; outline-style: none; --uds-input-placeholder: rgba(19, 19, 19, 0.35);"
         value=""
         virtualkeyboardpolicy="auto"
       />

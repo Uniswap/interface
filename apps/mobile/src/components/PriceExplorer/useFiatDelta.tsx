@@ -12,6 +12,7 @@ interface UseFiatDeltaParams {
 
 interface FiatDeltaResult {
   formatted: SharedValue<string>
+  idleFormatted: string
   idleNumericDelta: number | undefined
 }
 
@@ -110,5 +111,5 @@ export function useLineChartFiatDelta({
     // oxlint-disable-next-line react-hooks/exhaustive-deps -- isActive and scrubbingDeltaSharedValue are Reanimated shared values tracked automatically
   }, [lastPointDelta, data])
 
-  return { formatted, idleNumericDelta: lastPointDelta.numericDelta }
+  return { formatted, idleFormatted: lastPointDelta.formatted, idleNumericDelta: lastPointDelta.numericDelta }
 }

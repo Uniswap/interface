@@ -34,26 +34,23 @@ export function getSearchTypes({
   activeTab,
   auctionSearchEnabled,
   categorySearchEnabled,
-  tokenGroupSearchEnabled,
 }: {
   activeTab: SearchTab
   auctionSearchEnabled: boolean
   categorySearchEnabled: boolean
-  tokenGroupSearchEnabled: boolean
 }): SearchType[] {
   const categoryTypes = categorySearchEnabled ? [SearchType.CATEGORY] : []
-  const tokenGroupTypes = tokenGroupSearchEnabled ? [SearchType.TOKEN_GROUP] : []
   if (!isWebApp || !auctionSearchEnabled) {
     // One request shared by every tab, so a tab switch is served from cache.
-    return [SearchType.TOKEN, ...(isWebApp ? [SearchType.POOL] : []), ...categoryTypes, ...tokenGroupTypes]
+    return [SearchType.TOKEN, ...(isWebApp ? [SearchType.POOL] : []), ...categoryTypes, SearchType.TOKEN_GROUP]
   }
   switch (activeTab) {
     case SearchTab.Auctions:
       return [SearchType.AUCTION]
     case SearchTab.All:
-      return [SearchType.TOKEN, SearchType.POOL, SearchType.AUCTION, ...categoryTypes, ...tokenGroupTypes]
+      return [SearchType.TOKEN, SearchType.POOL, SearchType.AUCTION, ...categoryTypes, SearchType.TOKEN_GROUP]
     default:
-      return [SearchType.TOKEN, SearchType.POOL, ...tokenGroupTypes]
+      return [SearchType.TOKEN, SearchType.POOL, SearchType.TOKEN_GROUP]
   }
 }
 

@@ -7,12 +7,12 @@ import { appendLiveSpotPriceEntry } from 'uniswap/src/components/charts/utils'
 import { getGetTokenHistoryTVLQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/tokens/queries'
 import { useTokenMarketStats } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { toRestHistoryDuration } from 'uniswap/src/features/dataApi/tokenDetails/useTokenPriceHistoryRest'
-import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { isQueryLoading } from 'utilities/src/reactQuery/isQueryLoading'
 import { StackedLineData } from '~/components/Charts/StackedLineChart'
 import { useRestHistoryTarget } from '~/hooks/useRestHistoryTarget'
 import type { TDPChartQueryVariables } from '~/pages/TokenDetails/components/chart/TDPChartState'
 import { ChartQueryResult, ChartType, checkDataQuality, getCurrentUTCTimestamp } from '~/utils/charts'
+import { getChartCurrencyId } from '~/utils/tokenQueryOptions'
 
 function selectTvlEntries(data: PlainMessage<GetTokenHistoryTVLResponse> | undefined): StackedLineData[] {
   return (
@@ -47,14 +47,13 @@ export function useTDPTVLChartData({
   // target uses, mirroring useTokenPriceChartPanel's spotCurrencyId) rather than a separate
   // `currency` prop, so the live point can never disagree with the curve on a multichain token
   // whose selected chain differs from the path token's chain.
-  const currencyIdValue = useMemo(() => {
-    if (!variables.address) {
-      return undefined
-    }
-    return buildCurrencyId(variables.chainId, variables.address)
-  }, [variables.chainId, variables.address])
+  const currencyIdValue = useMemo(
+    () => getChartCurrencyId({ chainId: variables.chainId, address: variables.address }),
+    [variables.chainId, variables.address],
+  )
   const { tvl: currentTvlV2 } = useTokenMarketStats(currencyIdValue, {
     isMultichainAggregateView: variables.multichain,
+    keepPreviousData: false,
   })
 
   return useMemo(() => {

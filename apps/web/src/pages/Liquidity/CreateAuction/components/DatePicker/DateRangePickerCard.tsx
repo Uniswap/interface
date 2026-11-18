@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { useDismissLayer } from 'utilities/src/react/useDismissLayer'
 import { CalendarModalTimeRow } from '~/pages/Liquidity/CreateAuction/components/DatePicker/CalendarModalTimeRow'
 import { CreateAuctionDayPicker } from '~/pages/Liquidity/CreateAuction/components/DatePicker/CreateAuctionDayPicker'
 import { SegmentedLocalDate } from '~/pages/Liquidity/CreateAuction/components/DatePicker/DatePickerCard'
@@ -159,6 +160,7 @@ export const DateRangePickerCard = forwardRef<DateRangePickerCardHandle, DateRan
     const utcOffset = useMemo(() => formatUtcOffset(), [])
 
     const [calendarOpen, setCalendarOpen] = useState(false)
+    const closeCalendar = useCallback(() => setCalendarOpen(false), [])
     const [activeMode, setActiveMode] = useState<ActiveMode>('start')
 
     // Pending hour/minute used when the corresponding date isn't set yet — so editing the time row
@@ -307,18 +309,14 @@ export const DateRangePickerCard = forwardRef<DateRangePickerCardHandle, DateRan
           setCalendarOpen(false)
         }
       }
-      const handleKeyDown = (event: KeyboardEvent) => {
-        if (event.key === 'Escape') {
-          setCalendarOpen(false)
-        }
-      }
       document.addEventListener('mousedown', handlePointerDown)
-      document.addEventListener('keydown', handleKeyDown)
       return () => {
         document.removeEventListener('mousedown', handlePointerDown)
-        document.removeEventListener('keydown', handleKeyDown)
       }
     }, [calendarOpen])
+
+    // Escape closes the calendar only while it is the top open layer.
+    useDismissLayer({ isOpen: calendarOpen, onClose: closeCalendar })
 
     // When the popover opens, ensure its bottom is visible — scroll the page if needed so the user
     // doesn't have to manually scroll to see the calendar.

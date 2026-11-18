@@ -1,76 +1,20 @@
-import { Flex, ScrollView, Text } from '@universe/mycelium'
-import type { GeneratedIcon } from '@universe/mycelium/icons'
+import { Flex, Text } from '@universe/mycelium'
 import { Check } from '@universe/mycelium/icons/Check'
 import { Filter } from '@universe/mycelium/icons/Filter'
 import { GridView } from '@universe/mycelium/icons/GridView'
+import { SegmentedControl } from '@universe/mycelium/segmented-control-compat'
 import { TestID } from '@universe/test'
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
-import { FilterChip, type FilterChipColor } from 'uniswap/src/components/FilterChip/FilterChip'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { getCategoryIcon } from 'uniswap/src/features/tokenCategories/categoryIcons'
-import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
+import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { useEvent } from 'utilities/src/react/hooks'
 import { Dropdown, InternalMenuItem } from '~/components/Dropdowns/Dropdown'
 import { getMarginCurrencyInfo } from '~/features/margin/hooks/useMarginCurrencyInfos'
 import { marginTokenCurrencyId } from '~/features/margin/utils/marginCurrencies'
 import { marginUnwrapSymbol } from '~/features/margin/utils/marginTokenDisplay'
 import type { MarginTokenFilterOption } from '~/pages/Swap/Margin/marginPairVenueList'
-
-function iconRenderer(Icon: GeneratedIcon): (color: FilterChipColor) => JSX.Element {
-  return (color) => <Icon size="$icon.16" color={color} />
-}
-
-const ALL_ICON = iconRenderer(GridView)
-
-function CategoryChip({
-  category,
-  active,
-  onSelect,
-}: {
-  category: TokenCategory
-  active: boolean
-  onSelect: (categoryId: string) => void
-}): JSX.Element {
-  const onPress = useEvent(() => onSelect(category.id))
-  const renderIcon = useMemo(() => iconRenderer(getCategoryIcon(category)), [category])
-  return <FilterChip active={active} label={category.name} renderIcon={renderIcon} onPress={onPress} />
-}
-
-// "All" plus the backend token categories the listed pairs' traded tokens belong to. Tapping the active
-// category again also returns to All.
-export function MarginCategoryChips({
-  categories,
-  categoryId,
-  onSelectCategory,
-}: {
-  categories: TokenCategory[]
-  categoryId: string | undefined
-  onSelectCategory: (categoryId: string | undefined) => void
-}): JSX.Element | null {
-  const { t } = useTranslation()
-  const onSelect = useEvent((next: string) => onSelectCategory(categoryId === next ? undefined : next))
-  const onSelectAll = useEvent(() => onSelectCategory(undefined))
-  if (categories.length === 0) {
-    return null
-  }
-  return (
-    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-      <Flex row alignItems="center" testID={TestID.MarginCategoryFilters}>
-        <FilterChip
-          active={categoryId === undefined}
-          label={t('common.all')}
-          renderIcon={ALL_ICON}
-          onPress={onSelectAll}
-        />
-        {categories.map((category) => (
-          <CategoryChip key={category.id} category={category} active={categoryId === category.id} onSelect={onSelect} />
-        ))}
-      </Flex>
-    </ScrollView>
-  )
-}
 
 const FILTER_LOGO_SIZE = 20
 
@@ -171,8 +115,9 @@ export function MarginTokenFilter({
       }
       buttonStyle={{
         minWidth: 0,
-        height: 36,
-        borderRadius: '$roundedFull',
+        // The search field's height and radius, which it sits beside.
+        height: 48,
+        borderRadius: '$rounded16',
         borderWidth: '$spacing1',
         borderColor: '$surface3',
       }}
@@ -200,5 +145,35 @@ export function MarginTokenFilter({
         ))}
       </>
     </Dropdown>
+  )
+}
+
+type SideOption = 'all' | MarginDirection
+
+// All / Long / Short; the large outlined control lands on the search field's 48px. No gap: the options'
+// own padding spaces the labels, and the preset's 12px gap made the control too wide.
+export function MarginSideFilter({
+  selected,
+  onSelect,
+}: {
+  selected: MarginDirection | undefined
+  onSelect: (side: MarginDirection | undefined) => void
+}): JSX.Element {
+  const { t } = useTranslation()
+  const onSelectOption = useEvent((side: SideOption) => onSelect(side === 'all' ? undefined : side))
+  return (
+    <Flex testID={TestID.MarginSideFilter}>
+      <SegmentedControl<SideOption>
+        size="large"
+        gap="$none"
+        options={[
+          { value: 'all', displayText: t('common.all') },
+          { value: MarginDirection.LONG, displayText: t('margin.side.long') },
+          { value: MarginDirection.SHORT, displayText: t('margin.side.short') },
+        ]}
+        selectedOption={selected ?? 'all'}
+        onSelectOption={onSelectOption}
+      />
+    </Flex>
   )
 }

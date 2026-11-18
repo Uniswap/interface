@@ -5,14 +5,11 @@ import type {
   HorizontalLiquidityChartState,
   HorizontalLiquidityRenderingContext,
 } from '~/features/Liquidity/charts/D3HorizontalLiquidityChart/types'
-import { CHART_BEHAVIOR, CHART_DIMENSIONS } from '~/features/Liquidity/charts/D3LiquidityChartShared/constants'
+import { CHART_DIMENSIONS } from '~/features/Liquidity/charts/D3LiquidityChartShared/constants'
 import type { Renderer } from '~/features/Liquidity/charts/D3LiquidityChartShared/types'
+import { buildBarPathsByOpacity } from '~/features/Liquidity/charts/D3LiquidityChartShared/utils/barPaths'
+import { createBucketEntriesBuilder } from '~/features/Liquidity/charts/D3LiquidityChartShared/utils/liquidityBucketing/createBucketEntriesBuilder'
 import type { BucketChartEntry } from '~/features/Liquidity/charts/D3LiquidityChartShared/utils/liquidityBucketing/liquidityBucketing'
-import {
-  buildBucketChartEntries,
-  buildBuckets,
-  buildSegmentsFromRawTicks,
-} from '~/features/Liquidity/charts/D3LiquidityChartShared/utils/liquidityBucketing/liquidityBucketing'
 
 type HorizontalBarsState = Pick<
   HorizontalLiquidityChartState,
@@ -42,6 +39,14 @@ export function createHorizontalLiquidityBarsRenderer({
 
   // Persisted across the per-frame renderer re-init via the shared rendering context.
   const smoothing = context.liquidityScaleSmoothing
+  const buildEntries = createBucketEntriesBuilder({
+    rawTicks: context.rawTicks,
+    liquidityData: context.liquidityData,
+    tickSpacing: context.tickSpacing,
+    groupTicks: context.groupTicks,
+    // The tooltip describes the hovered bar as drawn: with bucket-scoped bars, a grouped bar's whole bucket.
+    groupedAmountScope: context.bucketScopedBars ? 'bucket' : 'segment',
+  })
 
   const cancelSettleFrame = (): void => {
     if (smoothing.settleFrameId !== undefined) {
@@ -100,22 +105,17 @@ export function createHorizontalLiquidityBarsRenderer({
       token0Color,
       token1Color,
       tickSpacing,
-      rawTicks,
       baseCurrency,
       quoteCurrency,
       priceInverted,
       protocolVersion,
       topInset,
+      groupTicks,
+      bucketScopedBars,
     } = context
     const { dimensions, hoveredSegment, isChartHovered, tickScale } = getState()
 
     if (!tickScale || liquidityData.length === 0) {
-      return
-    }
-
-    // Build segments from raw tick data
-    const segments = buildSegmentsFromRawTicks(rawTicks)
-    if (segments.length === 0) {
       return
     }
 
@@ -125,28 +125,22 @@ export function createHorizontalLiquidityBarsRenderer({
     const visibleMinTick = Math.max(tickScale.axisToTick(0), nearestUsableTick(TickMath.MIN_TICK, tickSpacing))
     const visibleMaxTick = Math.min(tickScale.axisToTick(chartWidth), nearestUsableTick(TickMath.MAX_TICK, tickSpacing))
 
-    // Build buckets for the VISIBLE range on a fixed grid, so each bar keeps the same tick range
-    // as you scroll and translates smoothly with the pan instead of jittering horizontally. Without
-    // this, boundaries are anchored to the snapped viewport min and the step is derived from the
-    // snapped range, so both shift frame-to-frame while panning and every bar's x/width pops.
-    const buckets = buildBuckets({
-      segments,
+    // Buckets for the VISIBLE range on a fixed grid, so each bar keeps the same tick range as you scroll and
+    // translates smoothly with the pan instead of jittering horizontally. Without it, boundaries anchored to the
+    // snapped viewport min and a step from the snapped range both shift frame-to-frame, so every bar pops.
+    const renderedBuckets = buildEntries({
       visibleMinTick,
       visibleMaxTick,
-      desiredBars: CHART_BEHAVIOR.DESIRED_BUCKETS,
-      tickSpacing,
-      fixedGrid: true,
-    })
-
-    // Convert to chart data with segment tracking
-    const renderedBuckets: BucketChartEntry[] = buildBucketChartEntries({
-      buckets,
-      liquidityData,
+      ticksPerPixel:
+        chartWidth > 0 ? Math.abs(tickScale.axisToTick(chartWidth) - tickScale.axisToTick(0)) / chartWidth : 1,
       baseCurrency,
       quoteCurrency,
       priceInverted,
       protocolVersion,
     })
+    if (!renderedBuckets) {
+      return
+    }
 
     // Store rendered buckets in state
     getActions().setChartState({ renderedBuckets })
@@ -168,14 +162,19 @@ export function createHorizontalLiquidityBarsRenderer({
     // Compute the X position where the current tick falls
     const currentTickX = tickScale.tickToAxis(currentTick)
 
+    // The hovered bar's span (see D3HorizontalLiquidityChart): a bucket-scoped grouped bar's bucket, else its segment.
     const isInHoveredSegment = (d: BucketChartEntry): boolean =>
       !!(
         hoveredSegment &&
-        d.segmentStartTick === hoveredSegment.startTick &&
-        d.segmentEndTick === hoveredSegment.endTick
+        (groupTicks && bucketScopedBars ? d.startTick : d.segmentStartTick) === hoveredSegment.startTick &&
+        (groupTicks && bucketScopedBars ? d.endTick : d.segmentEndTick) === hoveredSegment.endTick
       )
 
-    const isActiveBucket = (d: BucketChartEntry): boolean => currentTick >= d.startTick && currentTick < d.endTick
+    // A full-granularity bar is a pixel wide, so the current price's whole segment stands in for its bar.
+    const isActiveBucket = (d: BucketChartEntry): boolean =>
+      groupTicks
+        ? currentTick >= d.startTick && currentTick < d.endTick
+        : currentTick >= d.segmentStartTick && currentTick < d.segmentEndTick
 
     const isHighlighted = (d: BucketChartEntry): boolean => {
       if (isChartHovered) {
@@ -222,6 +221,33 @@ export function createHorizontalLiquidityBarsRenderer({
       .attr('y', 0)
       .attr('width', Math.max(0, chartWidth - currentTickX))
       .attr('height', chartHeight)
+
+    if (!groupTicks) {
+      // Full granularity: bars abut with no gap or rounding, one path per opacity, so the profile reads as a
+      // smooth shape.
+      const getRect = (d: BucketChartEntry) => {
+        const x = tickScale.tickToAxis(d.startTick)
+        const width = tickScale.tickToAxis(d.endTick) - x
+        return x > chartWidth || x + width < 0 ? undefined : { x, y: getBarY(d), width, height: getBarHeight(d) }
+      }
+      const paths = buildBarPathsByOpacity({ bars: renderedBuckets, getOpacity: getBarOpacity, getRect })
+      for (const [side, color] of [
+        ['left', token1Color],
+        ['right', token0Color],
+      ] as const) {
+        barsGroup
+          .append('g')
+          .attr('clip-path', `url(#${chartId}-bars-clip-${side})`)
+          .selectAll('path')
+          .data(paths)
+          .join('path')
+          .attr('class', `liquidity-bar liquidity-bar-${side}`)
+          .attr('d', (p) => p.d)
+          .attr('opacity', (p) => p.opacity)
+          .attr('fill', color)
+      }
+      return
+    }
 
     // Draw bars left of current tick (token1 zone)
     barsGroup

@@ -58,8 +58,6 @@ export interface TokenOption extends BaseOption {
   networkCount?: number
   /** Displayed category of a tokenized RWA (via `getRwaTagCategory`), set by RWA grouping; absent on non-RWA tokens. */
   rwaCategory?: RwaCategory
-  /** Clean RWA asset name (e.g. "Tesla"), set by RWA grouping so the row matches the TDP; absent on non-RWA tokens. */
-  rwaName?: string
   /** Issuer branding (slug plus BE display name/logo when served), set by RWA grouping. Absent on non-RWA. */
   rwaIssuer?: RWAIssuerDisplay
 }
@@ -89,8 +87,6 @@ export interface MultichainTokenOption extends BaseOption {
   tdpChainFilter?: UniverseChainId
   /** Displayed category of a tokenized RWA (via `getRwaTagCategory`), set by RWA grouping; absent on non-RWA tokens. */
   rwaCategory?: RwaCategory
-  /** Clean RWA asset name (e.g. "Tesla"), set by RWA grouping so the row matches the TDP; absent on non-RWA tokens. */
-  rwaName?: string
   /** Issuer branding (slug plus BE display name/logo when served), set by RWA grouping. Absent on non-RWA. */
   rwaIssuer?: RWAIssuerDisplay
 }

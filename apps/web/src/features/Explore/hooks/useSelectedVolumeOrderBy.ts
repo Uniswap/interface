@@ -1,4 +1,4 @@
-import type { VolumeOrderBy } from 'uniswap/src/data/apiClients/dataApiService/utils/tokenRankStatsVolume'
+import type { VolumeOrderBy } from '@universe/data-api'
 import { useExploreTablesFilterStore } from '~/features/Explore/state/exploreTablesFilterStore'
 import { timePeriodToVolumeOrderBy } from '~/features/Explore/state/listTokens/utils/topTokensOrderByMappings'
 

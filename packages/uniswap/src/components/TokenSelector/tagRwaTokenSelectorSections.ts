@@ -8,15 +8,13 @@ import { currencyAddress } from 'uniswap/src/utils/currencyId'
  *  token-selector row renders its category tag. Array rows (token pills / stocks shelf) and non-matches pass
  *  through by reference; an unchanged section keeps its object identity and, if nothing matched anywhere, the
  *  original `sections` array is returned — so the virtualized list skips needless re-renders. No-op when the
- *  index is empty, so it is safe to call with the flag off (the index is empty unless the gating flag is on). */
+ *  index is empty. */
 export function tagRwaTokenSelectorSections({
   sections,
   rwaIndex,
-  plainTokenNames,
 }: {
   sections?: OnchainItemSection<TokenSelectorListOption>[]
   rwaIndex: RwaSearchIndex
-  plainTokenNames: boolean
 }): OnchainItemSection<TokenSelectorListOption>[] | undefined {
   if (!sections || rwaIndex.byChainAddress.size === 0) {
     return sections
@@ -35,7 +33,7 @@ export function tagRwaTokenSelectorSections({
       if (!match) {
         return item
       }
-      return tagOptionAsRwa({ option: item, match, plainTokenNames })
+      return tagOptionAsRwa({ option: item, match })
     })
     // A row was tagged iff `.map` produced a new object for it — unchanged rows keep their reference.
     const sectionChanged = data.some((item, index) => item !== sectionItem.data[index])

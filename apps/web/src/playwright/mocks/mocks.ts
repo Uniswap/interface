@@ -18,11 +18,16 @@ export const Mocks = {
   },
   Search: {
     search_token_uni: path.resolve(__dirname, '../mocks/rest/search/search_token_uni.json'),
+    search_tokens_with_categories: path.resolve(__dirname, '../mocks/rest/search/search_tokens_with_categories.json'),
   },
   DataApiService: {
     get_portfolio: path.resolve(__dirname, '../mocks/dataApiService/get_portfolio.json'),
     get_wallet_nfts: path.resolve(__dirname, '../mocks/dataApiService/get_wallet_nfts.json'),
     get_wallet_nfts_empty: path.resolve(__dirname, '../mocks/dataApiService/get_wallet_nfts_empty.json'),
+    list_categories_token_selector: path.resolve(
+      __dirname,
+      '../mocks/dataApiService/list_categories_token_selector.json',
+    ),
     get_portfolio_empty: path.resolve(__dirname, '../mocks/dataApiService/get_portfolio_empty.json'),
     get_wallet_balances_empty: path.resolve(__dirname, '../mocks/dataApiService/get_wallet_balances_empty.json'),
     get_wallet_balances_with_pools: path.resolve(

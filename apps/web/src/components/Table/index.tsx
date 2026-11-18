@@ -1,3 +1,4 @@
+/* oxlint-disable max-lines */
 import { flexRender, getCoreRowModel, getExpandedRowModel, RowData, useReactTable } from '@tanstack/react-table'
 import { Flex, type FlexCompatProps, Separator, Text, TouchableArea, zIndexes } from '@universe/mycelium'
 import { HeightAnimator } from '@universe/mycelium/height-animator'
@@ -10,7 +11,11 @@ import { useTranslation } from 'react-i18next'
 import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync'
 import { useComposedRefs } from 'utilities/src/react/composeRefs'
 import { useEvent } from 'utilities/src/react/hooks'
-import { STICKY_TABLE_HEAD_SPACER_PX, TABLE_ROW_GAP_TOKEN } from '~/components/Table/constants'
+import {
+  STICKY_TABLE_HEAD_SPACER_PX,
+  TABLE_ROW_GAP_TOKEN,
+  TABLE_STICKY_TOP_OFFSET_VAR,
+} from '~/components/Table/constants'
 import { useTableBodyRenderMode, TableBodyRenderMode } from '~/components/Table/hooks/useTableBodyRenderMode'
 import { useTableBottomFade } from '~/components/Table/hooks/useTableBottomFade'
 import { useTableExpandedState } from '~/components/Table/hooks/useTableExpandedState'
@@ -119,7 +124,7 @@ const HiddenTableScrollContainer = forwardRef<HTMLDivElement, HiddenTableScrollC
 const TableHead = (
   props: PropsWithChildren<{
     $isSticky: boolean
-    $top: number
+    $top: `calc(${string})`
     /** Clearance between the app header and the header row; the head paints across it. */
     $topGap: number
     mb?: FlexCompatProps['mb']
@@ -165,8 +170,9 @@ const HeaderRow = forwardRef<HTMLDivElement, HeaderRowProps>(function HeaderRow(
       backgroundColor="$surface2"
       borderRadius="$rounded12"
       $platform-web={{
-        overscrollBehavior: 'none',
-        overflow: 'auto',
+        overscrollBehaviorX: 'none',
+        overflowX: 'auto',
+        overflowY: 'hidden',
       }}
       {...(dimmed ? { opacity: 0.4 } : {})}
       {...rest}
@@ -216,6 +222,7 @@ export function Table<T extends RowData>({
   // default; still overridable by an explicit prop.
   windowScrollY = virtualized && !maxHeight,
   stickyTopOffset = 0,
+  stickyToScrollContainer = false,
   collapsiblePinnedColumnId,
 }: TableProps<T>) {
   const colors = useSporeColors()
@@ -255,7 +262,7 @@ export function Table<T extends RowData>({
     tableBodyRef,
     maxHeight,
     loadMore,
-    dataLength: data.length,
+    dataLength: data.length + (areHiddenRowsShown ? (hiddenRows?.length ?? 0) : 0),
     loading,
     error,
   })
@@ -373,7 +380,12 @@ export function Table<T extends RowData>({
         />
       ) : null}
       <>
-        <TableHead $isSticky={isSticky} $top={headerHeight + stickyTopOffset} $topGap={stickyTopOffset} mb={rowGap}>
+        <TableHead
+          $isSticky={isSticky}
+          $top={`calc(${(stickyToScrollContainer ? 0 : headerHeight) + stickyTopOffset}px + var(${TABLE_STICKY_TOP_OFFSET_VAR}, 0px))`}
+          $topGap={stickyTopOffset}
+          mb={rowGap}
+        >
           {hasPinnedColumns && (
             <TableSideScrollButtons
               {...sideScrollButtons}

@@ -37,12 +37,12 @@ const listPools = vi.hoisted(() => ({
   result: { pools: [] as unknown[], isLoading: false, isError: false, hasNextPage: false },
 }))
 
-vi.mock('~/pages/Explore/hooks/useV2ListPools', () => ({
+vi.mock('~/features/Liquidity/hooks/useV2ListPools', () => ({
   useV2ListPools: () => ({ ...listPools.result, loadMore: vi.fn(), chainId: undefined }),
 }))
 
-vi.mock('~/pages/Explore/tables/Pools/PoolTable', () => ({ PoolsTable: () => null }))
-vi.mock('~/pages/Explore/tables/Pools/poolTableStore', () => ({
+vi.mock('~/features/Liquidity/PoolsTable/PoolsTable', () => ({ PoolsTable: () => null }))
+vi.mock('~/features/Liquidity/PoolsTable/state/poolTableStore', () => ({
   usePoolTableStore: (selector: (state: { sortMethod: string; sortAscending: boolean }) => unknown) =>
     selector({ sortMethod: 'TVL', sortAscending: false }),
 }))

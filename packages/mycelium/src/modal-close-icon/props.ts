@@ -27,6 +27,8 @@ export interface ModalCloseIconProps {
   hoverColor?: ModalCloseIconColor
   testId?: string
   role?: 'button' | 'none'
+  /** Names the icon-only button; defaults to a translated "Close". Ignored with `role="none"`. */
+  'aria-label'?: string
 }
 
 /** Legacy defaults (`CloseIconWithHover.tsx`). */

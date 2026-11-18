@@ -7,21 +7,8 @@ import { create, useStore } from 'zustand'
 import { devtools } from 'zustand/middleware'
 import { useShallow } from 'zustand/react/shallow'
 import { TimePeriod } from '~/data/util'
+import { AuctionQuickFilter, AuctionStatus } from '~/types/auctionFilters'
 import type { PoolsAprRange, PoolsFilterState } from '~/types/poolsFilter'
-
-/**
- * Single-select auction filter shared by the quick-filter pills and the Status dropdown.
- * Pills expose All/Verified/New/Completed; the dropdown exposes All/Active/Completed.
- */
-export enum AuctionQuickFilter {
-  All = 'all',
-  Verified = 'verified',
-  New = 'new',
-  Active = 'active',
-  Completed = 'completed',
-  /** QuickLaunch (flag-gated chip): auctions matching the quick-launch preset fingerprint. */
-  QuickLaunch = 'quick_launch',
-}
 
 /**
  * The advanced pools filter minus its chain: on Explore the chain lives in the URL path (see
@@ -42,6 +29,7 @@ interface ExploreTablesFilterActions {
   setFilterString: (value: string) => void
   setTimePeriod: (period: TimePeriod) => void
   setQuickFilter: (filter: AuctionQuickFilter) => void
+  setStatusFilter: (status: AuctionStatus) => void
   setPoolsFilter: (filter: ExplorePoolsFilterState) => void
   setPoolsAprRange: (range: PoolsAprRange | undefined) => void
   setFlexSlotCategoryId: (args: { kind: CategoryKind; categoryId: string }) => void
@@ -54,6 +42,7 @@ interface ExploreTablesFilterState {
   filterString: string
   timePeriod: TimePeriod
   quickFilter: AuctionQuickFilter
+  statusFilter: AuctionStatus
   /** Advanced pools filter, committed by the modal's Apply button. */
   poolsFilter: ExplorePoolsFilterState
   /** APR range of the Pools table's loaded rows; the table publishes it so the filter modal can hint it. */
@@ -73,14 +62,24 @@ type ExploreTablesFilterStore = UseBoundStore<StoreApi<ExploreTablesFilterState>
 const INITIAL_FILTER_STRING = ''
 const INITIAL_TIME_PERIOD = TimePeriod.DAY
 const INITIAL_QUICK_FILTER = AuctionQuickFilter.All
+const INITIAL_STATUS_FILTER = AuctionStatus.All
 
-export function createExploreTablesFilterStore(initialQuickFilter?: AuctionQuickFilter): ExploreTablesFilterStore {
+export interface InitialAuctionFilters {
+  quickFilter?: AuctionQuickFilter
+  statusFilter?: AuctionStatus
+}
+
+export function createExploreTablesFilterStore({
+  quickFilter,
+  statusFilter,
+}: InitialAuctionFilters = {}): ExploreTablesFilterStore {
   return create<ExploreTablesFilterState>()(
     devtools(
       (set) => ({
         filterString: INITIAL_FILTER_STRING,
         timePeriod: INITIAL_TIME_PERIOD,
-        quickFilter: initialQuickFilter ?? INITIAL_QUICK_FILTER,
+        quickFilter: quickFilter ?? INITIAL_QUICK_FILTER,
+        statusFilter: statusFilter ?? INITIAL_STATUS_FILTER,
         poolsFilter: EMPTY_EXPLORE_POOLS_FILTER_STATE,
         poolsAprRange: undefined,
         flexSlotCategoryIds: {},
@@ -89,6 +88,7 @@ export function createExploreTablesFilterStore(initialQuickFilter?: AuctionQuick
           setFilterString: (value) => set({ filterString: value }),
           setTimePeriod: (period) => set({ timePeriod: period }),
           setQuickFilter: (filter) => set({ quickFilter: filter }),
+          setStatusFilter: (status) => set({ statusFilter: status }),
           setPoolsFilter: (filter) => set({ poolsFilter: filter }),
           setPoolsAprRange: (range) => set({ poolsAprRange: range }),
           setFlexSlotCategoryId: ({ kind, categoryId }) =>
@@ -112,13 +112,12 @@ const ExploreTablesFilterStoreContext = createContext<ExploreTablesFilterStore |
 
 export function ExploreTablesFilterStoreContextProvider({
   children,
-  initialQuickFilter,
+  initialAuctionFilters,
 }: {
   children: React.ReactNode
-  /** Seeds the auction quick filter (e.g. from the URL) at store creation. */
-  initialQuickFilter?: AuctionQuickFilter
+  initialAuctionFilters?: InitialAuctionFilters
 }): JSX.Element {
-  const [store] = useState(() => createExploreTablesFilterStore(initialQuickFilter))
+  const [store] = useState(() => createExploreTablesFilterStore(initialAuctionFilters))
 
   return <ExploreTablesFilterStoreContext.Provider value={store}>{children}</ExploreTablesFilterStoreContext.Provider>
 }

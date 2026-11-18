@@ -30,7 +30,7 @@ exports[`NotSupportedNetworkNotification > renders without error 1`] = `
                 fill="currentColor"
                 focusable="false"
                 stroke-width="8"
-                style="width: 20px; height: 20px;"
+                style="color: var(--neutral2); width: 20px; height: 20px;"
                 viewBox="0 0 24 24"
               >
                 <path

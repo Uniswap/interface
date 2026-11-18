@@ -4,16 +4,15 @@ import { useMemo } from 'react'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useFeatureFlaggedChainIds } from 'uniswap/src/features/chains/hooks/useFeatureFlaggedChainIds'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+import { useInfiniteLoadMore } from '~/components/Table/hooks/useInfiniteLoadMore'
 import type { PricePoint } from '~/data/util'
-import { useInfiniteLoadMore } from '~/features/Explore/hooks/useInfiniteLoadMore'
-import { EXPLORE_API_PAGE_SIZE } from '~/features/Explore/state/constants'
 import { getListTokens } from '~/features/Explore/state/listTokens/getListTokens'
 import { type UseListTokensOptions, type UseListTokensResult } from '~/features/Explore/state/listTokens/types'
 import { getEffectiveListTokensOptions } from '~/features/Explore/state/listTokens/types'
 import { buildSparklinesFromMultichain } from '~/features/Explore/state/listTokens/utils/buildSparklinesFromMultichain'
 import { processMultichainTokensForDisplay } from '~/features/Explore/state/listTokens/utils/processMultichainTokensForDisplay'
 import { useExploreQueryLatencyTracking } from '~/features/Explore/state/useExploreQueryLatencyTracking'
-import { toSearchQueryParam } from '~/features/Explore/utils/toSearchQueryParam'
+import { LIST_API_PAGE_SIZE, toSearchQueryParam } from '~/utils/listRequestParams'
 
 /**
  * Hook that returns top tokens data for the Explore page. Adds explore-specific sparklines and latency tracking.
@@ -66,7 +65,7 @@ export function useListTokens(
       getListTokens({
         chainIds,
         options: effectiveOptions,
-        pageSize: EXPLORE_API_PAGE_SIZE,
+        pageSize: LIST_API_PAGE_SIZE,
         pageToken: pageParam,
       }),
     // An empty page ends the list even if it carries a token: the tokens feed has no budget-walk

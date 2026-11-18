@@ -166,8 +166,7 @@ describe('WidthAnimator (web)', () => {
     )
     const outer = getOuter(container)
     expect(outer.style.flexShrink).toBe('1')
-    // jsdom normalizes the zero length to unitless '0'.
-    expect(outer.style.minWidth).toBe('0')
+    expect(outer.style.minWidth).toBe('0px')
   })
 
   describe('overflow release timer', () => {

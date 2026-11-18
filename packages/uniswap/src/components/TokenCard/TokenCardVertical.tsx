@@ -1,4 +1,3 @@
-import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { Flex, iconSizes, Text } from '@universe/mycelium'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
@@ -25,7 +24,6 @@ export function TokenCardVertical({
   hideNetworkLogo,
 }: TokenCardVerticalProps): JSX.Element {
   const { convertFiatAmountFormatted } = useLocalizationContext()
-  const showIssuerLogo = useIsTokenCategoriesEnabled()
   const priceLabel =
     priceUsd !== undefined ? convertFiatAmountFormatted(priceUsd, NumberType.FiatTokenPrice) : undefined
 
@@ -53,7 +51,7 @@ export function TokenCardVertical({
           <Text color="$neutral1" flexShrink={1} numberOfLines={1} variant="body2">
             {name}
           </Text>
-          {issuer && <RWAIssuerTag issuer={issuer} showLogo={showIssuerLogo} size={iconSizes.icon12} />}
+          {issuer && <RWAIssuerTag issuer={issuer} size={iconSizes.icon12} />}
         </Flex>
         <Flex row alignItems="center" gap="$spacing4">
           {priceLabel !== undefined && (

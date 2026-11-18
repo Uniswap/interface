@@ -19,7 +19,7 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { NumberType } from 'utilities/src/format/types'
 import { usePendingActivity } from '~/components/Activity/hooks'
-import { Portal } from '~/components/Popups/Portal'
+import { Portal } from '~/components/Portal/Portal'
 import { useHasInjectedWallets } from '~/connection/hooks/useOrderedWalletConnectors'
 import { NAV_CONTROL_HEIGHT } from '~/constants/layout'
 import { AccountDrawer as PortfolioDrawer } from '~/features/wallet/components/AccountDrawer'
@@ -233,8 +233,8 @@ function Web3StatusInner() {
       eventOnTrigger={InterfaceEventName.ConnectWalletButtonClicked}
       element={ElementName.ConnectWalletButton}
     >
-      {/* oxlint-disable-next-line react/forbid-elements -- needed here */}
-      <div onKeyDown={(e) => e.key === 'Enter' && handleWalletDropdownClick()}>
+      {/* oxlint-disable-next-line react/forbid-elements -- Trace injects its click handler onto this element */}
+      <div>
         <ExistingUserCTAButton ref={ref} onPress={handleWalletDropdownClick} />
       </div>
     </Trace>

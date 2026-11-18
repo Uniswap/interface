@@ -1,4 +1,4 @@
-import { parseRestProtocolVersion } from '@universe/api'
+import { parseRestProtocolVersion } from '@universe/data-api'
 import { Navigate, useParams, useSearchParams } from 'react-router'
 import { getProtocolVersionLabel } from '~/features/Liquidity/utils/protocolVersion'
 import { CREATE_POOL_PATH } from '~/utils/params/poolLinkParams'

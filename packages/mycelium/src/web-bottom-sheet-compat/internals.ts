@@ -6,7 +6,7 @@
  * is deleted when the last `ui/src` sheet consumer converts. Imported
  * exclusively from the `.web` leg — never resolved by native bundles.
  * (Escape handling is NOT duplicated here: both sheet families share the one
- * stack in `utilities/src/react/useSheetEscapeToClose`. Likewise the body
+ * stack in `utilities/src/react/useDismissLayer`. Likewise the body
  * scroll lock: both families share the one refcount in
  * `utilities/src/react/useDisableBodyScroll`.)
  */

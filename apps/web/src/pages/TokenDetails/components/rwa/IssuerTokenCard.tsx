@@ -1,5 +1,4 @@
 import { SharedEventName } from '@uniswap/analytics-events'
-import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { Flex, Text, iconSizes, Separator } from '@universe/mycelium'
 import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
@@ -37,7 +36,6 @@ function IssuerTokenCardStat({ label, value }: { label: string; value: string })
 export function IssuerTokenCard({ token, primaryName, marketData }: IssuerTokenCardProps): JSX.Element {
   const { t } = useTranslation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
-  const showIssuerLogo = useIsTokenCategoriesEnabled()
   const { priceUsd, marketCapUsd, volume24hUsd } = marketData
   // Logo + symbol come from the token's own per-issuer RWA branding, not the shared RWA asset branding.
   const tokenSymbol = token.symbol
@@ -81,7 +79,7 @@ export function IssuerTokenCard({ token, primaryName, marketData }: IssuerTokenC
                 <Text variant="body2" color="$neutral1" numberOfLines={1}>
                   {primaryName}
                 </Text>
-                <RWAIssuerTag issuer={token} showLogo={showIssuerLogo} />
+                <RWAIssuerTag issuer={token} />
               </Flex>
               {tokenSymbol ? (
                 <Text variant="body3" color="$neutral2" numberOfLines={1}>

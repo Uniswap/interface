@@ -1,7 +1,5 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { isSVMChain } from '@universe/chains'
-import { GatedFeature, useIsFeatureGated } from '@universe/compliance'
-import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { Button, Flex, Text, useMedia } from '@universe/mycelium'
 import { Plus } from '@universe/mycelium/icons/Plus'
 import { styled } from '@universe/mycelium/styled'
@@ -17,28 +15,25 @@ import { PoolNotFoundModal } from '~/components/NotFoundModal/PoolNotFoundModal'
 import { TokenNotFoundModal } from '~/components/NotFoundModal/TokenNotFoundModal'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '~/constants/breakpoints'
 import { getTokenExploreURL } from '~/data/util'
+import {
+  EXPLORE_STICKY_SCROLL_OFFSET_PX,
+  EXPLORE_TOKEN_SECTION_ID,
+} from '~/features/Explore/categories/useExploreCategory'
 import { useExploreParams } from '~/features/Explore/hooks/useExploreParams'
 import { useToucanAuctionSupportedChains } from '~/features/Toucan/supportedChains'
 import { edgeFadeMaskStyle, useHorizontalScrollFades } from '~/hooks/useHorizontalScrollFades'
 import { AuctionQuickFilters } from '~/pages/Explore/AuctionQuickFilters'
 import { AuctionStatusFilter as AuctionStatusFilterComponent } from '~/pages/Explore/AuctionStatusFilter'
 import { ExplorePoolsTab } from '~/pages/Explore/categories/ExplorePoolsTab'
-import {
-  EXPLORE_STICKY_SCROLL_OFFSET_PX,
-  EXPLORE_TOKEN_SECTION_ID,
-} from '~/pages/Explore/categories/useExploreCategory'
 import { EarnVaultsSection } from '~/pages/Explore/EarnVaultsSection'
-import {
-  ExploreAssetShelfSection,
-  ExploreCategoryTablesOrPage,
-  ExploreTrendingShelfSection,
-} from '~/pages/Explore/ExploreAssetsIntegration'
+import { ExploreCategoryTablesOrPage, ExploreTrendingShelfSection } from '~/pages/Explore/ExploreAssetsIntegration'
+import { EXPLORE_HEADING_SIZE_CLASSES } from '~/pages/Explore/exploreHeadingStyles'
 import { ExploreStatsSection } from '~/pages/Explore/ExploreStatsSection'
 import { ExploreTableFilters } from '~/pages/Explore/ExploreTableFilters'
 import { useExploreHeartbeatCoordinator } from '~/pages/Explore/hooks/useExploreHeartbeatCoordinator'
 import { TableNetworkFilter } from '~/pages/Explore/NetworkFilter'
 import { SearchBar } from '~/pages/Explore/SearchBar'
-import { ToucanTable } from '~/pages/Explore/tables/Auctions/TopAuctionsTable'
+import { ExploreToucanTable } from '~/pages/Explore/tables/Auctions/ExploreToucanTable'
 import { TopVerifiedAuctionsSection } from '~/pages/Explore/tables/Auctions/TopVerifiedAuctionsSection'
 import { RecentTransactionsTable } from '~/pages/Explore/tables/RecentTransactions/RecentTransactions'
 import { TopTokensTable } from '~/pages/Explore/tables/Tokens/TopTokensTable'
@@ -55,7 +50,6 @@ interface Page {
 }
 
 const SOLANA_TAB_NAV_MARGIN_TOP = 36
-const DEFAULT_TAB_NAV_MARGIN_TOP = 80
 
 function usePages(): Array<Page> {
   const { t } = useTranslation()
@@ -70,7 +64,7 @@ function usePages(): Array<Page> {
     {
       title: t('common.auctions'),
       key: ExploreTab.Toucan,
-      component: ToucanTable,
+      component: ExploreToucanTable,
       loggingElementName: ElementName.ExploreAuctionsTab,
     },
     {
@@ -103,7 +97,7 @@ const HEADER_TAB_VARIANTS = {
 // check-client-build's at-rule parser for every rule after it.
 const HeaderTab = styled('h3', {
   platform: 'web',
-  base: '[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap cursor-pointer [text-decoration-line:none] [text-decoration:none] duration-[0.2s] select-none text-neutral2 text-[24px] leading-[28.8px] [font-weight:485] [font-family:var(--stext-font-book)] active:opacity-[0.6] media-md:text-[20px] media-sm:text-subheading-1 media-sm:leading-[24px]',
+  base: '[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap cursor-pointer [text-decoration-line:none] [text-decoration:none] duration-[0.2s] select-none text-neutral2 [font-weight:485] [font-family:var(--stext-font-book)] active:opacity-[0.6]',
   variants: HEADER_TAB_VARIANTS,
   // The ClickableTamaguiStyle base hover (opacity 0.8) + the variant overrides (opacity 1) —
   // later rules win via the house tailwind-merge.
@@ -139,16 +133,10 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
 
   const auctionSupportedChains = useToucanAuctionSupportedChains()
 
-  // Featured RWA carousel renders unless the caller's region blocks RWA.
-  const isExploreCarouselEnabled = !useIsFeatureGated(GatedFeature.ISSUER_SPECIFIC_RWA, { pendingValue: true })
-  const showTrendingShelf = useIsTokenCategoriesEnabled()
-  const showAssetShelf = !showTrendingShelf && isExploreCarouselEnabled
-  const showHeroShelf = showTrendingShelf || showAssetShelf
-
   // scroll to tab navbar on initial page mount only
-  // skip when a hero shelf is shown — the shelf is the hero content and shouldn't be scrolled past
+  // skip on the Tokens tab — the trending shelf is the hero content and shouldn't be scrolled past
   useEffect(() => {
-    if (tabNavRef.current && initialTab && !(showHeroShelf && initialTab === ExploreTab.Tokens)) {
+    if (tabNavRef.current && initialTab && initialTab !== ExploreTab.Tokens) {
       const offsetTop = tabNavRef.current.getBoundingClientRect().top + window.scrollY
       window.scrollTo({ top: offsetTop - EXPLORE_STICKY_SCROLL_OFFSET_PX, behavior: 'smooth' })
     }
@@ -172,14 +160,7 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   const { isTestnetModeEnabled } = useEnabledChains()
   const showEarnSection = !isTestnetModeEnabled
   const showExploreCategoryTables = currentKey === ExploreTab.Tokens
-  const tabNavMarginTop =
-    showHeroShelf && !showEarnSection
-      ? '$none'
-      : isSolanaChain
-        ? SOLANA_TAB_NAV_MARGIN_TOP
-        : showEarnSection
-          ? '$spacing40'
-          : DEFAULT_TAB_NAV_MARGIN_TOP
+  const tabNavMarginTop = !showEarnSection ? '$none' : isSolanaChain ? SOLANA_TAB_NAV_MARGIN_TOP : '$spacing40'
 
   useEffect(() => {
     // We only support the Tokens tab on Solana; redirect if the current tab is not the Tokens tab on Solana.
@@ -227,13 +208,8 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
         $md={{ py: '$spacing16', px: '$none' }}
       >
         <ExploreStatsSection shouldHideStats={isSolanaChain} />
-        {showTrendingShelf && <ExploreTrendingShelfSection />}
-        {showAssetShelf && <ExploreAssetShelfSection />}
-        {showEarnSection && (
-          <Flex mt={showHeroShelf ? '$none' : '$spacing32'} $md={{ mt: showHeroShelf ? '$none' : '$spacing20' }}>
-            <EarnVaultsSection />
-          </Flex>
-        )}
+        <ExploreTrendingShelfSection />
+        {showEarnSection && <EarnVaultsSection />}
         <Flex
           ref={tabNavRef}
           id={EXPLORE_TOKEN_SECTION_ID}
@@ -292,6 +268,7 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
               return (
                 <Trace key={key} logPress eventOnTrigger={SharedEventName.NAVBAR_CLICKED} element={loggingElementName}>
                   <HeaderTab
+                    className={EXPLORE_HEADING_SIZE_CLASSES}
                     // Replace the not-found entry so browser back cannot land on it and reopen the modal.
                     onClick={() => navigate(url, { replace: isNotFoundModalOpen })}
                     active={currentTab === index}

@@ -2,26 +2,31 @@ import { fireEvent, screen } from '@testing-library/react'
 import { TestID } from '@universe/test'
 import type { MarginQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
 import { MarginDirection, type MarginVenue } from 'uniswap/src/features/transactions/margin/types'
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { marginMarketKey, type MarginMarket } from '~/constants/margin'
 import { MarginRateRows } from '~/pages/Swap/Margin/components/MarginRateRows'
 import type { DerivedMarginInfo } from '~/pages/Swap/Margin/hooks/useDerivedMarginInfo'
 import { render } from '~/test-utils/render'
 
+const mocks = vi.hoisted(() => ({
+  setMarginFormState: vi.fn(),
+  groups: [] as unknown[],
+}))
+
 vi.mock('uniswap/src/features/transactions/margin/stores/marginFormStore/useMarginFormStore', () => ({
   useMarginFormStore: (
     selector: (s: { slippageToleranceBps: number; excludedVenues: string[]; pairKey: string }) => unknown,
   ) => selector({ slippageToleranceBps: 50, excludedVenues: [], pairKey: 'usdc-weth' }),
-  useMarginFormStoreActions: () => ({ setMarginFormState: vi.fn() }),
+  useMarginFormStoreActions: () => ({ setMarginFormState: mocks.setMarginFormState }),
 }))
 
 // The fixture quote below carries no paymentSwap route, so the route-symbol resolver never gets
 // invoked — an empty registry avoids hitting the live markets query. The receipt's figures take their
-// mark off the quote; the registry stays empty to prove it.
+// mark off the quote; the registry stays empty to prove it. The Market row's pin tests add a pair group.
 vi.mock('~/features/margin/hooks/useMarginMarkets', () => ({
   useMarginMarkets: () => ({
     markets: [],
-    groups: [],
+    groups: mocks.groups,
     getMarketByTokens: () => undefined,
     getLive: () => undefined,
     dataUpdatedAt: Date.now(),
@@ -69,6 +74,11 @@ function derivedMarginInfoFixture(): DerivedMarginInfo {
 }
 
 describe('MarginRateRows', () => {
+  beforeEach(() => {
+    mocks.setMarginFormState.mockClear()
+    mocks.groups = []
+  })
+
   // The receipt quotes the entry as a fiat price (the quote leg is the USD-stable one).
   it('shows the entry price as a fiat figure', () => {
     render(<MarginRateRows derivedMarginInfo={derivedMarginInfoFixture()} />)
@@ -148,8 +158,8 @@ describe('MarginRateRows', () => {
   })
 
   // (−10.0%) is the $3,000 fill against the $3,300 mark.
-  it('suffixes the Entry price with the impact against the oracle mark', () => {
-    expect(renderWithDisplay({ oraclePrice: ORACLE_X18 }).textContent).toContain('(−10.0%)')
+  it('suffixes the Entry price with the impact against the oracle mark, net of the pool fee', () => {
+    expect(renderWithDisplay({ oraclePrice: ORACLE_X18 }).textContent).toContain('(−9.09%)')
   })
 
   // A bridged quote's venue is provisional, so the receipt must not name it, or quote its rate, until
@@ -167,14 +177,42 @@ describe('MarginRateRows', () => {
   it('names the routed venue and its rate on a settled quote', () => {
     const container = renderMarketRow({ isPlaceholderData: false })
     expect(container.textContent).toContain('Aave v3')
-    expect(container.textContent).toContain('4.0%')
+    expect(container.textContent).toContain('4.00%')
   })
 
   it('withholds the venue and its rate while the quote is placeholder data', () => {
     const container = renderMarketRow({ isPlaceholderData: true })
     expect(container.textContent).not.toContain('Aave v3')
-    expect(container.textContent).not.toContain('4.0%')
-    expect(container.textContent).toContain('Auto · best available')
+    expect(container.textContent).not.toContain('4.00%')
+  })
+
+  describe('market pin', () => {
+    beforeEach(() => {
+      mocks.groups = [
+        {
+          key: 'usdc-weth',
+          pairKey: 'usdc-weth',
+          pairs: [
+            { ...SHORT_MARKET, key: keyFor('AAVE_V3'), venue: 'AAVE_V3' },
+            { ...SHORT_MARKET, key: keyFor('MORPHO'), venue: 'MORPHO', isHeadline: true },
+          ],
+        },
+      ]
+    })
+
+    it('names the headline market under Auto before the quote settles, and never pins it', () => {
+      const container = renderMarketRow({ isPlaceholderData: true })
+      expect(container.textContent).toContain('Auto')
+      expect(container.textContent).toContain('Morpho')
+      expect(mocks.setMarginFormState).not.toHaveBeenCalled()
+    })
+  })
+
+  // A short owes its whole size, so its leveraged rate is the borrow rate itself (the maths: marginReceiptDetails.test).
+  it('reads the leveraged rate the trader pays', () => {
+    const quote = { ...QUOTE, display: { ...QUOTE.display, borrowRate: `${4n * 10n ** 16n}` } } as MarginQuoteResponse
+    const info = { ...derivedMarginInfoFixture(), quote, leverage: 2 }
+    expect(render(<MarginRateRows derivedMarginInfo={info} />).container.textContent).toContain('You pay 4.00%')
   })
 
   it('keeps the detail rows behind an arrow-only toggle that still has an accessible name', () => {

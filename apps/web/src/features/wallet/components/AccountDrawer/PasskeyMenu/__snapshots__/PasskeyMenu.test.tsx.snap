@@ -25,7 +25,7 @@ exports[`PasskeyMenu > shows 3 skeleton rows while loading 1`] = `
             <div
               aria-hidden="true"
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-              style="animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+              style="-webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
             >
               <div
                 class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 FlexLoader"
@@ -41,7 +41,7 @@ exports[`PasskeyMenu > shows 3 skeleton rows while loading 1`] = `
               <div
                 aria-hidden="true"
                 class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                style="animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                style="-webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
               >
                 <div
                   class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 FlexLoader"
@@ -55,7 +55,7 @@ exports[`PasskeyMenu > shows 3 skeleton rows while loading 1`] = `
               <div
                 aria-hidden="true"
                 class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                style="animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                style="-webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
               >
                 <div
                   class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 FlexLoader"
@@ -75,7 +75,7 @@ exports[`PasskeyMenu > shows 3 skeleton rows while loading 1`] = `
             <div
               aria-hidden="true"
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-              style="animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+              style="-webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
             >
               <div
                 class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 FlexLoader"
@@ -91,7 +91,7 @@ exports[`PasskeyMenu > shows 3 skeleton rows while loading 1`] = `
               <div
                 aria-hidden="true"
                 class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                style="animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                style="-webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
               >
                 <div
                   class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 FlexLoader"
@@ -105,7 +105,7 @@ exports[`PasskeyMenu > shows 3 skeleton rows while loading 1`] = `
               <div
                 aria-hidden="true"
                 class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                style="animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                style="-webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
               >
                 <div
                   class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 FlexLoader"
@@ -125,7 +125,7 @@ exports[`PasskeyMenu > shows 3 skeleton rows while loading 1`] = `
             <div
               aria-hidden="true"
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-              style="animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+              style="-webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
             >
               <div
                 class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 FlexLoader"
@@ -141,7 +141,7 @@ exports[`PasskeyMenu > shows 3 skeleton rows while loading 1`] = `
               <div
                 aria-hidden="true"
                 class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                style="animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                style="-webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
               >
                 <div
                   class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 FlexLoader"
@@ -155,7 +155,7 @@ exports[`PasskeyMenu > shows 3 skeleton rows while loading 1`] = `
               <div
                 aria-hidden="true"
                 class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                style="animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                style="-webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
               >
                 <div
                   class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 FlexLoader"
@@ -244,37 +244,33 @@ exports[`PasskeyMenu > shows authenticators and Add passkey button after loading
             <div
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 ml-[auto]"
             >
-              <div
+              <button
                 aria-expanded="false"
                 aria-haspopup="dialog"
-                class="shrink-0"
+                aria-label="More options"
+                class="[container-name:true] flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 [container-type:normal] rounded-[12px] [cursor:pointer] bg-transparent [transition:transform_80ms_ease-in-out,_opacity_80ms_ease-in-out] active:opacity-[0.75] active:[transform:scale(0.98)] focus-visible:[transform:scaleX(0.98)_scaleY(0.98)] focus-visible:[outline-offset:1px] focus-visible:[outline-style:solid] focus-visible:[outline-width:1px] focus-visible:[outline-color:var(--neutral3)] group"
                 data-base-ui-click-trigger=""
                 data-slot="popover-compat-trigger"
+                data-testid="delete-passkey"
                 id="base-ui-_r_1_"
                 role="button"
                 tabindex="0"
+                type="button"
               >
-                <div
-                  class="[container-name:true] flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 [container-type:normal] rounded-[12px] [cursor:pointer] bg-transparent [transition:transform_80ms_ease-in-out,_opacity_80ms_ease-in-out] active:opacity-[0.75] active:[transform:scale(0.98)] focus-visible:[transform:scaleX(0.98)_scaleY(0.98)] focus-visible:[outline-offset:1px] focus-visible:[outline-style:solid] focus-visible:[outline-width:1px] focus-visible:[outline-color:var(--neutral3)] group"
-                  data-testid="delete-passkey"
-                  role="button"
-                  tabindex="0"
+                <svg
+                  aria-hidden="true"
+                  fill="none"
+                  focusable="false"
+                  stroke-width="8"
+                  style="color: var(--neutral2); width: 20px; height: 20px;"
+                  viewBox="0 0 24 24"
                 >
-                  <svg
-                    aria-hidden="true"
-                    fill="none"
-                    focusable="false"
-                    stroke-width="8"
-                    style="width: 20px; height: 20px;"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M4.02002 14C2.91602 14 2.01501 13.104 2.01501 12C2.01501 10.896 2.90501 10 4.01001 10H4.02002C5.12402 10 6.02002 10.896 6.02002 12C6.02002 13.104 5.12502 14 4.02002 14ZM14.02 12C14.02 10.896 13.124 10 12.02 10H12.01C10.906 10 10.015 10.896 10.015 12C10.015 13.104 10.915 14 12.02 14C13.125 14 14.02 13.104 14.02 12ZM22.02 12C22.02 10.896 21.124 10 20.02 10H20.01C18.906 10 18.015 10.896 18.015 12C18.015 13.104 18.915 14 20.02 14C21.125 14 22.02 13.104 22.02 12Z"
-                      fill="currentColor"
-                    />
-                  </svg>
-                </div>
-              </div>
+                  <path
+                    d="M4.02002 14C2.91602 14 2.01501 13.104 2.01501 12C2.01501 10.896 2.90501 10 4.01001 10H4.02002C5.12402 10 6.02002 10.896 6.02002 12C6.02002 13.104 5.12502 14 4.02002 14ZM14.02 12C14.02 10.896 13.124 10 12.02 10H12.01C10.906 10 10.015 10.896 10.015 12C10.015 13.104 10.915 14 12.02 14C13.125 14 14.02 13.104 14.02 12ZM22.02 12C22.02 10.896 21.124 10 20.02 10H20.01C18.906 10 18.015 10.896 18.015 12C18.015 13.104 18.915 14 20.02 14C21.125 14 22.02 13.104 22.02 12Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </button>
             </div>
           </div>
           <div
@@ -289,7 +285,7 @@ exports[`PasskeyMenu > shows authenticators and Add passkey button after loading
                 fill="none"
                 focusable="false"
                 stroke-width="8"
-                style="color: currentColor; width: 20px; height: 20px;"
+                style="color: currentcolor; width: 20px; height: 20px;"
                 viewBox="0 0 20 20"
               >
                 <g
@@ -342,37 +338,33 @@ exports[`PasskeyMenu > shows authenticators and Add passkey button after loading
             <div
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 ml-[auto]"
             >
-              <div
+              <button
                 aria-expanded="false"
                 aria-haspopup="dialog"
-                class="shrink-0"
+                aria-label="More options"
+                class="[container-name:true] flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 [container-type:normal] rounded-[12px] [cursor:pointer] bg-transparent [transition:transform_80ms_ease-in-out,_opacity_80ms_ease-in-out] active:opacity-[0.75] active:[transform:scale(0.98)] focus-visible:[transform:scaleX(0.98)_scaleY(0.98)] focus-visible:[outline-offset:1px] focus-visible:[outline-style:solid] focus-visible:[outline-width:1px] focus-visible:[outline-color:var(--neutral3)] group"
                 data-base-ui-click-trigger=""
                 data-slot="popover-compat-trigger"
+                data-testid="delete-passkey"
                 id="base-ui-_r_3_"
                 role="button"
                 tabindex="0"
+                type="button"
               >
-                <div
-                  class="[container-name:true] flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 [container-type:normal] rounded-[12px] [cursor:pointer] bg-transparent [transition:transform_80ms_ease-in-out,_opacity_80ms_ease-in-out] active:opacity-[0.75] active:[transform:scale(0.98)] focus-visible:[transform:scaleX(0.98)_scaleY(0.98)] focus-visible:[outline-offset:1px] focus-visible:[outline-style:solid] focus-visible:[outline-width:1px] focus-visible:[outline-color:var(--neutral3)] group"
-                  data-testid="delete-passkey"
-                  role="button"
-                  tabindex="0"
+                <svg
+                  aria-hidden="true"
+                  fill="none"
+                  focusable="false"
+                  stroke-width="8"
+                  style="color: var(--neutral2); width: 20px; height: 20px;"
+                  viewBox="0 0 24 24"
                 >
-                  <svg
-                    aria-hidden="true"
-                    fill="none"
-                    focusable="false"
-                    stroke-width="8"
-                    style="width: 20px; height: 20px;"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M4.02002 14C2.91602 14 2.01501 13.104 2.01501 12C2.01501 10.896 2.90501 10 4.01001 10H4.02002C5.12402 10 6.02002 10.896 6.02002 12C6.02002 13.104 5.12502 14 4.02002 14ZM14.02 12C14.02 10.896 13.124 10 12.02 10H12.01C10.906 10 10.015 10.896 10.015 12C10.015 13.104 10.915 14 12.02 14C13.125 14 14.02 13.104 14.02 12ZM22.02 12C22.02 10.896 21.124 10 20.02 10H20.01C18.906 10 18.015 10.896 18.015 12C18.015 13.104 18.915 14 20.02 14C21.125 14 22.02 13.104 22.02 12Z"
-                      fill="currentColor"
-                    />
-                  </svg>
-                </div>
-              </div>
+                  <path
+                    d="M4.02002 14C2.91602 14 2.01501 13.104 2.01501 12C2.01501 10.896 2.90501 10 4.01001 10H4.02002C5.12402 10 6.02002 10.896 6.02002 12C6.02002 13.104 5.12502 14 4.02002 14ZM14.02 12C14.02 10.896 13.124 10 12.02 10H12.01C10.906 10 10.015 10.896 10.015 12C10.015 13.104 10.915 14 12.02 14C13.125 14 14.02 13.104 14.02 12ZM22.02 12C22.02 10.896 21.124 10 20.02 10H20.01C18.906 10 18.015 10.896 18.015 12C18.015 13.104 18.915 14 20.02 14C21.125 14 22.02 13.104 22.02 12Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </button>
             </div>
           </div>
           <div

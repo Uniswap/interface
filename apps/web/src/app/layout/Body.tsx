@@ -1,7 +1,7 @@
 import { SpinningLoader } from '@universe/mycelium'
 import { memo, Suspense } from 'react'
 import { Route, Routes } from 'react-router'
-import { EMBED_ENTRY_ROUTES, RouteDefinition, routes, useRouterConfig } from '~/pages/RouteDefinitions'
+import { EMBED_ENTRY_ROUTES, RouteDefinition, routes, useRouterConfig } from '~/pages/routes/RouteDefinitions'
 import { EmbedProvider, type EmbedView } from '~/pages/Swap/embedContext'
 import { createLazyNoReload } from '~/utils/lazyWithRetry'
 

@@ -110,7 +110,7 @@ exports[`SmartWalletSettingsContent > renders correctly with active and inactive
                     fill="none"
                     focusable="false"
                     stroke-width="8"
-                    style="width: 20px; height: 20px;"
+                    style="color: var(--neutral3); width: 20px; height: 20px;"
                     viewBox="0 0 24 24"
                   >
                     <path
@@ -214,7 +214,7 @@ exports[`SmartWalletSettingsContent > renders correctly with active and inactive
                     fill="none"
                     focusable="false"
                     stroke-width="8"
-                    style="width: 20px; height: 20px;"
+                    style="color: var(--neutral3); width: 20px; height: 20px;"
                     viewBox="0 0 24 24"
                   >
                     <path

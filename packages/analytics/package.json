@@ -2,7 +2,8 @@
   "name": "@universe/analytics",
   "version": "0.0.0",
   "dependencies": {
-    "@amplitude/analytics-node": "1.5.36"
+    "@amplitude/analytics-node": "1.5.36",
+    "utilities": "workspace:^"
   },
   "devDependencies": {
     "@types/node": "22.19.17"

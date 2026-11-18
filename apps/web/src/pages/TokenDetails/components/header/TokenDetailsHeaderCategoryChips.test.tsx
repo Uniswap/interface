@@ -1,6 +1,5 @@
 import userEvent from '@testing-library/user-event'
 import { UniverseChainId } from '@universe/chains'
-import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { TestID } from '@universe/test'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -11,11 +10,6 @@ import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
 import { useTDPTokenCategories } from '~/pages/TokenDetails/hooks/useTDPTokenCategories'
 import { mocked } from '~/test-utils/mocked'
 import { render, screen } from '~/test-utils/render'
-
-vi.mock('@universe/gating', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('@universe/gating')>()),
-  useIsTokenCategoriesEnabled: vi.fn(),
-}))
 
 vi.mock('~/pages/TokenDetails/hooks/useTDPTokenCategories', () => ({
   useTDPTokenCategories: vi.fn(),
@@ -66,7 +60,6 @@ function renderInHost(): HTMLElement {
 
 describe('TokenDetailsHeaderCategoryChips', () => {
   beforeEach(() => {
-    mocked(useIsTokenCategoriesEnabled).mockReturnValue(true)
     mocked(useTDPTokenCategories).mockReturnValue({ categories: CATEGORIES, isLoading: false })
     mockTokenSymbol('WBTC')
     window.history.pushState({}, '', `${TDP_PATHNAME}${TDP_SEARCH}`)
@@ -123,12 +116,6 @@ describe('TokenDetailsHeaderCategoryChips', () => {
     await userEvent.click(screen.getByText(SECOND.name))
 
     expect(mockNavigate).toHaveBeenCalledWith(`/explore/category/${SECOND.id}`, { state: undefined })
-  })
-
-  it('renders nothing when the token categories flag is off', () => {
-    mocked(useIsTokenCategoriesEnabled).mockReturnValue(false)
-
-    expect(renderInHost()).toBeEmptyDOMElement()
   })
 
   it('renders nothing for a token with no categories', () => {

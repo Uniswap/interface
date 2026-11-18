@@ -45,9 +45,8 @@ const DropdownButtonComponent = forwardRef<HTMLElement, DropdownButtonCompatProp
       iconPosition="before"
       emphasis={emphasis}
       isDisabled={Boolean(disabled)}
-      // TODO(INFRA-4589): isExpanded only flips the chevron; the button never sets aria-expanded, so assistive
-      // tech isn't told whether its menu is open.
       isExpanded={isExpanded}
+      aria-expanded={isExpanded}
       {...props}
     >
       <LeftContainer grouped={elementPositioning === 'grouped' && Boolean(icon) && Boolean(children)}>

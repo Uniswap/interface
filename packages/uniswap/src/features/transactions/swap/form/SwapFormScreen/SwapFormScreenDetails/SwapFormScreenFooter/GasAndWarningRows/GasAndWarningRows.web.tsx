@@ -7,13 +7,17 @@ import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
 import { InsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
 import { BlockedAddressWarning } from 'uniswap/src/features/transactions/modals/BlockedAddressWarning'
 import { TradeInfoRow } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/TradeInfoRow/TradeInfoRow'
+import type { DetailsExpandedProps } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/types'
 import { useCanonicalBridgeChainId } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/useCanonicalBridgeChainId'
 import { useDebouncedGasInfo } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/useDebouncedGasInfo'
 import { useResetGasCta } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/useResetGasCta'
 import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/useSwapWarnings'
 import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 
-export const GasAndWarningRows = memo(function GasAndWarningRows(): JSX.Element {
+export const GasAndWarningRows = memo(function GasAndWarningRows({
+  detailsExpanded,
+  onDetailsExpandedChange,
+}: DetailsExpandedProps): JSX.Element {
   const { t } = useTranslation()
   const chainId = useSwapFormStoreDerivedSwapInfo((s) => s.chainId)
   const address = useActiveAddress(chainId)
@@ -54,7 +58,13 @@ export const GasAndWarningRows = memo(function GasAndWarningRows(): JSX.Element 
         )}
 
         <Flex gap="$spacing8" px="$spacing8" py="$spacing4">
-          <TradeInfoRow bridgeChainId={bridgeChainId} gasInfo={debouncedGasInfo} warning={inlineWarning} />
+          <TradeInfoRow
+            bridgeChainId={bridgeChainId}
+            gasInfo={debouncedGasInfo}
+            warning={inlineWarning}
+            detailsExpanded={detailsExpanded}
+            onDetailsExpandedChange={onDetailsExpandedChange}
+          />
           {showResetGas && (
             <TouchableArea testID="gas-info-row-reset-gas" onPress={onResetGas}>
               <Text color="$accent1" variant="body3">

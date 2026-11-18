@@ -1,6 +1,4 @@
 import { Platform } from '@universe/chains'
-import { FeatureFlags, getFeatureFlag, useFeatureFlagWithExposureLoggingDisabled } from '@universe/gating'
-import { useEffect } from 'react'
 import { PortfolioBalancePart } from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { usePortfolioBalancePart } from 'uniswap/src/features/dataApi/balances/balancesRest'
@@ -22,8 +20,6 @@ export function usePoolsTabVisibility(address: Address): {
 } {
   const { chains } = useEnabledChains()
   const { chains: evmChains } = useEnabledChains({ platform: Platform.EVM })
-  // Read the flag without logging an exposure; the exposure is logged below. See the effect.
-  const isPoolsBalancesEnabled = useFeatureFlagWithExposureLoggingDisabled(FeatureFlags.PortfolioPoolsBalances)
 
   const { data: poolsBalance } = usePortfolioBalancePart({
     part: PortfolioBalancePart.Pools,
@@ -43,26 +39,13 @@ export function usePoolsTabVisibility(address: Address): {
     autoFetchAllPages: false,
     // Sort params are part of the query key; must match the Pools tab queries to share their cache entry.
     ...SORT_BY_USD_VALUE_DESC,
-    disabled: !isPoolsBalancesEnabled,
   })
 
   const shouldShowPoolsTab =
-    isPoolsBalancesEnabled &&
-    ((poolsBalance?.count ?? 0) > 0 || poolPositions.length > 0 || hiddenPoolPositions.length > 0 || !!poolsError)
+    (poolsBalance?.count ?? 0) > 0 || poolPositions.length > 0 || hiddenPoolPositions.length > 0 || !!poolsError
   const openPoolPositionsCount = poolPositions.filter((position) =>
     POSITION_STATUS_FILTER_TO_STATUSES[PositionStatusFilterValue.Open].includes(position.status),
   ).length
-
-  // Pools-balances exposure policy: log only where the user actually sees Pools. On wallet (mobile +
-  // extension) the tab renders only for users with positions, so we log the exposure here exactly when
-  // it becomes visible — users who never see it aren't counted. Web never reaches this hook; it logs
-  // every visitor via its own nav/portfolio flag reads. Statsig dedupes per session, so repeat runs
-  // collapse to one exposure.
-  useEffect(() => {
-    if (shouldShowPoolsTab) {
-      getFeatureFlag(FeatureFlags.PortfolioPoolsBalances)
-    }
-  }, [shouldShowPoolsTab])
 
   return { shouldShowPoolsTab, openPoolPositionsCount }
 }

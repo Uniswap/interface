@@ -1,4 +1,3 @@
-import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { Flex } from '@universe/mycelium'
 import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import { memo, useId, useMemo } from 'react'
@@ -24,8 +23,7 @@ export const TokenCardSparkline = memo(function TokenCardSparkline({
   categoryIds?: readonly string[]
 }): JSX.Element {
   const colors = useSporeColors()
-  const tokenCategoriesEnabled = useIsTokenCategoriesEnabled()
-  const isStablecoin = getIsStablecoin({ tokenCategoriesEnabled, categoryIds }) === true
+  const isStablecoin = getIsStablecoin(categoryIds) === true
   const id = useId()
   // useId can emit colons, which are invalid inside SVG url() references
   const gradientId = useMemo(() => `token-card-sparkline-${id.replace(/:/g, '')}`, [id])

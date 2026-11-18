@@ -24,7 +24,7 @@ exports[`[object Object] > default size > caps at 4 logos when more than 4 chain
           <div
             class="flex flex-col basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 items-center justify-center overflow-hidden z-[var(--c-z)]"
             data-testid="network-logo-1"
-            style="--c-z: 10; width: 14px; height: 14px; border-radius: 4.2px; border-width: 0px;"
+            style="--c-z: 10; width: 14px; height: 14px; border-radius: 4.2px; border-width: 0px; border-color: var(--surface1);"
           >
             <div
               class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -32,7 +32,7 @@ exports[`[object Object] > default size > caps at 4 logos when more than 4 chain
             >
               <div
                 class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
-                style="background-image: url(mock-asset-ETHEREUM_LOGO.png);"
+                style="background-image: url("mock-asset-ETHEREUM_LOGO.png");"
               />
               <img
                 alt=""
@@ -59,7 +59,7 @@ exports[`[object Object] > default size > caps at 4 logos when more than 4 chain
           <div
             class="flex flex-col basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 items-center justify-center overflow-hidden z-[var(--c-z)]"
             data-testid="network-logo-42161"
-            style="--c-z: 10; width: 14px; height: 14px; border-radius: 4.2px; border-width: 0px;"
+            style="--c-z: 10; width: 14px; height: 14px; border-radius: 4.2px; border-width: 0px; border-color: var(--surface1);"
           >
             <div
               class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -67,7 +67,7 @@ exports[`[object Object] > default size > caps at 4 logos when more than 4 chain
             >
               <div
                 class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
-                style="background-image: url(mock-asset-ARBITRUM_LOGO.png);"
+                style="background-image: url("mock-asset-ARBITRUM_LOGO.png");"
               />
               <img
                 alt=""
@@ -94,7 +94,7 @@ exports[`[object Object] > default size > caps at 4 logos when more than 4 chain
           <div
             class="flex flex-col basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 items-center justify-center overflow-hidden z-[var(--c-z)]"
             data-testid="network-logo-10"
-            style="--c-z: 10; width: 14px; height: 14px; border-radius: 4.2px; border-width: 0px;"
+            style="--c-z: 10; width: 14px; height: 14px; border-radius: 4.2px; border-width: 0px; border-color: var(--surface1);"
           >
             <div
               class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -102,7 +102,7 @@ exports[`[object Object] > default size > caps at 4 logos when more than 4 chain
             >
               <div
                 class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
-                style="background-image: url(mock-asset-OPTIMISM_LOGO.png);"
+                style="background-image: url("mock-asset-OPTIMISM_LOGO.png");"
               />
               <img
                 alt=""
@@ -129,7 +129,7 @@ exports[`[object Object] > default size > caps at 4 logos when more than 4 chain
           <div
             class="flex flex-col basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 items-center justify-center overflow-hidden z-[var(--c-z)]"
             data-testid="network-logo-8453"
-            style="--c-z: 10; width: 14px; height: 14px; border-radius: 4.2px; border-width: 0px;"
+            style="--c-z: 10; width: 14px; height: 14px; border-radius: 4.2px; border-width: 0px; border-color: var(--surface1);"
           >
             <div
               class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -137,7 +137,7 @@ exports[`[object Object] > default size > caps at 4 logos when more than 4 chain
             >
               <div
                 class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
-                style="background-image: url(mock-asset-BASE_LOGO.png);"
+                style="background-image: url("mock-asset-BASE_LOGO.png");"
               />
               <img
                 alt=""
@@ -178,7 +178,7 @@ exports[`[object Object] > default size > renders double logos 1`] = `
           <div
             class="flex flex-col basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 items-center justify-center overflow-hidden z-[var(--c-z)]"
             data-testid="network-logo-1"
-            style="--c-z: 10; width: 18px; height: 18px; border-radius: 5.3999999999999995px; border-width: 0px;"
+            style="--c-z: 10; width: 18px; height: 18px; border-radius: 5.3999999999999995px; border-width: 0px; border-color: var(--surface1);"
           >
             <div
               class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -186,7 +186,7 @@ exports[`[object Object] > default size > renders double logos 1`] = `
             >
               <div
                 class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
-                style="background-image: url(mock-asset-ETHEREUM_LOGO.png);"
+                style="background-image: url("mock-asset-ETHEREUM_LOGO.png");"
               />
               <img
                 alt=""
@@ -213,7 +213,7 @@ exports[`[object Object] > default size > renders double logos 1`] = `
           <div
             class="flex flex-col basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 items-center justify-center overflow-hidden z-[var(--c-z)]"
             data-testid="network-logo-42161"
-            style="--c-z: 10; width: 18px; height: 18px; border-radius: 5.3999999999999995px; border-width: 0px;"
+            style="--c-z: 10; width: 18px; height: 18px; border-radius: 5.3999999999999995px; border-width: 0px; border-color: var(--surface1);"
           >
             <div
               class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -221,7 +221,7 @@ exports[`[object Object] > default size > renders double logos 1`] = `
             >
               <div
                 class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
-                style="background-image: url(mock-asset-ARBITRUM_LOGO.png);"
+                style="background-image: url("mock-asset-ARBITRUM_LOGO.png");"
               />
               <img
                 alt=""
@@ -275,7 +275,7 @@ exports[`[object Object] > default size > renders quad logos 1`] = `
           <div
             class="flex flex-col basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 items-center justify-center overflow-hidden z-[var(--c-z)]"
             data-testid="network-logo-1"
-            style="--c-z: 10; width: 14px; height: 14px; border-radius: 4.2px; border-width: 0px;"
+            style="--c-z: 10; width: 14px; height: 14px; border-radius: 4.2px; border-width: 0px; border-color: var(--surface1);"
           >
             <div
               class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -283,7 +283,7 @@ exports[`[object Object] > default size > renders quad logos 1`] = `
             >
               <div
                 class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
-                style="background-image: url(mock-asset-ETHEREUM_LOGO.png);"
+                style="background-image: url("mock-asset-ETHEREUM_LOGO.png");"
               />
               <img
                 alt=""
@@ -310,7 +310,7 @@ exports[`[object Object] > default size > renders quad logos 1`] = `
           <div
             class="flex flex-col basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 items-center justify-center overflow-hidden z-[var(--c-z)]"
             data-testid="network-logo-42161"
-            style="--c-z: 10; width: 14px; height: 14px; border-radius: 4.2px; border-width: 0px;"
+            style="--c-z: 10; width: 14px; height: 14px; border-radius: 4.2px; border-width: 0px; border-color: var(--surface1);"
           >
             <div
               class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -318,7 +318,7 @@ exports[`[object Object] > default size > renders quad logos 1`] = `
             >
               <div
                 class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
-                style="background-image: url(mock-asset-ARBITRUM_LOGO.png);"
+                style="background-image: url("mock-asset-ARBITRUM_LOGO.png");"
               />
               <img
                 alt=""
@@ -345,7 +345,7 @@ exports[`[object Object] > default size > renders quad logos 1`] = `
           <div
             class="flex flex-col basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 items-center justify-center overflow-hidden z-[var(--c-z)]"
             data-testid="network-logo-10"
-            style="--c-z: 10; width: 14px; height: 14px; border-radius: 4.2px; border-width: 0px;"
+            style="--c-z: 10; width: 14px; height: 14px; border-radius: 4.2px; border-width: 0px; border-color: var(--surface1);"
           >
             <div
               class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -353,7 +353,7 @@ exports[`[object Object] > default size > renders quad logos 1`] = `
             >
               <div
                 class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
-                style="background-image: url(mock-asset-OPTIMISM_LOGO.png);"
+                style="background-image: url("mock-asset-OPTIMISM_LOGO.png");"
               />
               <img
                 alt=""
@@ -380,7 +380,7 @@ exports[`[object Object] > default size > renders quad logos 1`] = `
           <div
             class="flex flex-col basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 items-center justify-center overflow-hidden z-[var(--c-z)]"
             data-testid="network-logo-8453"
-            style="--c-z: 10; width: 14px; height: 14px; border-radius: 4.2px; border-width: 0px;"
+            style="--c-z: 10; width: 14px; height: 14px; border-radius: 4.2px; border-width: 0px; border-color: var(--surface1);"
           >
             <div
               class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -388,7 +388,7 @@ exports[`[object Object] > default size > renders quad logos 1`] = `
             >
               <div
                 class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
-                style="background-image: url(mock-asset-BASE_LOGO.png);"
+                style="background-image: url("mock-asset-BASE_LOGO.png");"
               />
               <img
                 alt=""
@@ -421,7 +421,7 @@ exports[`[object Object] > default size > renders single logo 1`] = `
         <div
           class="flex flex-col basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 items-center justify-center overflow-hidden z-[var(--c-z)]"
           data-testid="network-logo-1"
-          style="--c-z: 10; width: 24px; height: 24px; border-radius: 7.199999999999999px; border-width: 0px;"
+          style="--c-z: 10; width: 24px; height: 24px; border-radius: 7.199999999999999px; border-width: 0px; border-color: var(--surface1);"
         >
           <div
             class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -429,7 +429,7 @@ exports[`[object Object] > default size > renders single logo 1`] = `
           >
             <div
               class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
-              style="background-image: url(mock-asset-ETHEREUM_LOGO.png);"
+              style="background-image: url("mock-asset-ETHEREUM_LOGO.png");"
             />
             <img
               alt=""
@@ -469,7 +469,7 @@ exports[`[object Object] > default size > renders triple logos 1`] = `
           <div
             class="flex flex-col basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 items-center justify-center overflow-hidden z-[var(--c-z)]"
             data-testid="network-logo-1"
-            style="--c-z: 10; width: 14px; height: 14px; border-radius: 4.2px; border-width: 0px;"
+            style="--c-z: 10; width: 14px; height: 14px; border-radius: 4.2px; border-width: 0px; border-color: var(--surface1);"
           >
             <div
               class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -477,7 +477,7 @@ exports[`[object Object] > default size > renders triple logos 1`] = `
             >
               <div
                 class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
-                style="background-image: url(mock-asset-ETHEREUM_LOGO.png);"
+                style="background-image: url("mock-asset-ETHEREUM_LOGO.png");"
               />
               <img
                 alt=""
@@ -504,7 +504,7 @@ exports[`[object Object] > default size > renders triple logos 1`] = `
           <div
             class="flex flex-col basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 items-center justify-center overflow-hidden z-[var(--c-z)]"
             data-testid="network-logo-10"
-            style="--c-z: 10; width: 14px; height: 14px; border-radius: 4.2px; border-width: 0px;"
+            style="--c-z: 10; width: 14px; height: 14px; border-radius: 4.2px; border-width: 0px; border-color: var(--surface1);"
           >
             <div
               class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -512,7 +512,7 @@ exports[`[object Object] > default size > renders triple logos 1`] = `
             >
               <div
                 class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
-                style="background-image: url(mock-asset-OPTIMISM_LOGO.png);"
+                style="background-image: url("mock-asset-OPTIMISM_LOGO.png");"
               />
               <img
                 alt=""
@@ -539,7 +539,7 @@ exports[`[object Object] > default size > renders triple logos 1`] = `
           <div
             class="flex flex-col basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 items-center justify-center overflow-hidden z-[var(--c-z)]"
             data-testid="network-logo-42161"
-            style="--c-z: 10; width: 14px; height: 14px; border-radius: 4.2px; border-width: 0px;"
+            style="--c-z: 10; width: 14px; height: 14px; border-radius: 4.2px; border-width: 0px; border-color: var(--surface1);"
           >
             <div
               class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -547,7 +547,7 @@ exports[`[object Object] > default size > renders triple logos 1`] = `
             >
               <div
                 class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
-                style="background-image: url(mock-asset-ARBITRUM_LOGO.png);"
+                style="background-image: url("mock-asset-ARBITRUM_LOGO.png");"
               />
               <img
                 alt=""
@@ -584,7 +584,7 @@ exports[`[object Object] > small size > renders double logos 1`] = `
           <div
             class="flex flex-col basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 items-center justify-center overflow-hidden z-[var(--c-z)]"
             data-testid="network-logo-1"
-            style="--c-z: 10; width: 11px; height: 11px; border-radius: 3.3px; border-width: 0px;"
+            style="--c-z: 10; width: 11px; height: 11px; border-radius: 3.3px; border-width: 0px; border-color: var(--surface1);"
           >
             <div
               class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -592,7 +592,7 @@ exports[`[object Object] > small size > renders double logos 1`] = `
             >
               <div
                 class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
-                style="background-image: url(mock-asset-ETHEREUM_LOGO.png);"
+                style="background-image: url("mock-asset-ETHEREUM_LOGO.png");"
               />
               <img
                 alt=""
@@ -615,7 +615,7 @@ exports[`[object Object] > small size > renders double logos 1`] = `
           <div
             class="flex flex-col basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 items-center justify-center overflow-hidden z-[var(--c-z)]"
             data-testid="network-logo-42161"
-            style="--c-z: 10; width: 11px; height: 11px; border-radius: 3.3px; border-width: 0px;"
+            style="--c-z: 10; width: 11px; height: 11px; border-radius: 3.3px; border-width: 0px; border-color: var(--surface1);"
           >
             <div
               class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -623,7 +623,7 @@ exports[`[object Object] > small size > renders double logos 1`] = `
             >
               <div
                 class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
-                style="background-image: url(mock-asset-ARBITRUM_LOGO.png);"
+                style="background-image: url("mock-asset-ARBITRUM_LOGO.png");"
               />
               <img
                 alt=""
@@ -660,7 +660,7 @@ exports[`[object Object] > small size > renders quad logos 1`] = `
           <div
             class="flex flex-col basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 items-center justify-center overflow-hidden z-[var(--c-z)]"
             data-testid="network-logo-1"
-            style="--c-z: 10; width: 9px; height: 9px; border-radius: 2.6999999999999997px; border-width: 0px;"
+            style="--c-z: 10; width: 9px; height: 9px; border-radius: 2.6999999999999997px; border-width: 0px; border-color: var(--surface1);"
           >
             <div
               class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -668,7 +668,7 @@ exports[`[object Object] > small size > renders quad logos 1`] = `
             >
               <div
                 class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
-                style="background-image: url(mock-asset-ETHEREUM_LOGO.png);"
+                style="background-image: url("mock-asset-ETHEREUM_LOGO.png");"
               />
               <img
                 alt=""
@@ -691,7 +691,7 @@ exports[`[object Object] > small size > renders quad logos 1`] = `
           <div
             class="flex flex-col basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 items-center justify-center overflow-hidden z-[var(--c-z)]"
             data-testid="network-logo-42161"
-            style="--c-z: 10; width: 9px; height: 9px; border-radius: 2.6999999999999997px; border-width: 0px;"
+            style="--c-z: 10; width: 9px; height: 9px; border-radius: 2.6999999999999997px; border-width: 0px; border-color: var(--surface1);"
           >
             <div
               class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -699,7 +699,7 @@ exports[`[object Object] > small size > renders quad logos 1`] = `
             >
               <div
                 class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
-                style="background-image: url(mock-asset-ARBITRUM_LOGO.png);"
+                style="background-image: url("mock-asset-ARBITRUM_LOGO.png");"
               />
               <img
                 alt=""
@@ -722,7 +722,7 @@ exports[`[object Object] > small size > renders quad logos 1`] = `
           <div
             class="flex flex-col basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 items-center justify-center overflow-hidden z-[var(--c-z)]"
             data-testid="network-logo-10"
-            style="--c-z: 10; width: 9px; height: 9px; border-radius: 2.6999999999999997px; border-width: 0px;"
+            style="--c-z: 10; width: 9px; height: 9px; border-radius: 2.6999999999999997px; border-width: 0px; border-color: var(--surface1);"
           >
             <div
               class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -730,7 +730,7 @@ exports[`[object Object] > small size > renders quad logos 1`] = `
             >
               <div
                 class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
-                style="background-image: url(mock-asset-OPTIMISM_LOGO.png);"
+                style="background-image: url("mock-asset-OPTIMISM_LOGO.png");"
               />
               <img
                 alt=""
@@ -753,7 +753,7 @@ exports[`[object Object] > small size > renders quad logos 1`] = `
           <div
             class="flex flex-col basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 items-center justify-center overflow-hidden z-[var(--c-z)]"
             data-testid="network-logo-8453"
-            style="--c-z: 10; width: 9px; height: 9px; border-radius: 2.6999999999999997px; border-width: 0px;"
+            style="--c-z: 10; width: 9px; height: 9px; border-radius: 2.6999999999999997px; border-width: 0px; border-color: var(--surface1);"
           >
             <div
               class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -761,7 +761,7 @@ exports[`[object Object] > small size > renders quad logos 1`] = `
             >
               <div
                 class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
-                style="background-image: url(mock-asset-BASE_LOGO.png);"
+                style="background-image: url("mock-asset-BASE_LOGO.png");"
               />
               <img
                 alt=""
@@ -794,7 +794,7 @@ exports[`[object Object] > small size > renders single logo 1`] = `
         <div
           class="flex flex-col basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 items-center justify-center overflow-hidden z-[var(--c-z)]"
           data-testid="network-logo-1"
-          style="--c-z: 10; width: 20px; height: 20px; border-radius: 6px; border-width: 0px;"
+          style="--c-z: 10; width: 20px; height: 20px; border-radius: 6px; border-width: 0px; border-color: var(--surface1);"
         >
           <div
             class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -802,7 +802,7 @@ exports[`[object Object] > small size > renders single logo 1`] = `
           >
             <div
               class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
-              style="background-image: url(mock-asset-ETHEREUM_LOGO.png);"
+              style="background-image: url("mock-asset-ETHEREUM_LOGO.png");"
             />
             <img
               alt=""
@@ -838,7 +838,7 @@ exports[`[object Object] > small size > renders triple logos 1`] = `
           <div
             class="flex flex-col basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 items-center justify-center overflow-hidden z-[var(--c-z)]"
             data-testid="network-logo-1"
-            style="--c-z: 10; width: 9px; height: 9px; border-radius: 2.6999999999999997px; border-width: 0px;"
+            style="--c-z: 10; width: 9px; height: 9px; border-radius: 2.6999999999999997px; border-width: 0px; border-color: var(--surface1);"
           >
             <div
               class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -846,7 +846,7 @@ exports[`[object Object] > small size > renders triple logos 1`] = `
             >
               <div
                 class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
-                style="background-image: url(mock-asset-ETHEREUM_LOGO.png);"
+                style="background-image: url("mock-asset-ETHEREUM_LOGO.png");"
               />
               <img
                 alt=""
@@ -869,7 +869,7 @@ exports[`[object Object] > small size > renders triple logos 1`] = `
           <div
             class="flex flex-col basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 items-center justify-center overflow-hidden z-[var(--c-z)]"
             data-testid="network-logo-10"
-            style="--c-z: 10; width: 9px; height: 9px; border-radius: 2.6999999999999997px; border-width: 0px;"
+            style="--c-z: 10; width: 9px; height: 9px; border-radius: 2.6999999999999997px; border-width: 0px; border-color: var(--surface1);"
           >
             <div
               class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -877,7 +877,7 @@ exports[`[object Object] > small size > renders triple logos 1`] = `
             >
               <div
                 class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
-                style="background-image: url(mock-asset-OPTIMISM_LOGO.png);"
+                style="background-image: url("mock-asset-OPTIMISM_LOGO.png");"
               />
               <img
                 alt=""
@@ -900,7 +900,7 @@ exports[`[object Object] > small size > renders triple logos 1`] = `
           <div
             class="flex flex-col basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 items-center justify-center overflow-hidden z-[var(--c-z)]"
             data-testid="network-logo-42161"
-            style="--c-z: 10; width: 9px; height: 9px; border-radius: 2.6999999999999997px; border-width: 0px;"
+            style="--c-z: 10; width: 9px; height: 9px; border-radius: 2.6999999999999997px; border-width: 0px; border-color: var(--surface1);"
           >
             <div
               class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -908,7 +908,7 @@ exports[`[object Object] > small size > renders triple logos 1`] = `
             >
               <div
                 class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
-                style="background-image: url(mock-asset-ARBITRUM_LOGO.png);"
+                style="background-image: url("mock-asset-ARBITRUM_LOGO.png");"
               />
               <img
                 alt=""

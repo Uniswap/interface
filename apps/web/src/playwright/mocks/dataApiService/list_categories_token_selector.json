@@ -1,0 +1,28 @@
+{
+  "categories": [
+    {
+      "category": {
+        "id": "stablecoins",
+        "name": "Stablecoins",
+        "description": "Tokens designed to hold a stable value.",
+        "class": "CATEGORY_CLASS_ASSET",
+        "kind": "CATEGORY_KIND_TOKEN",
+        "grouped": false
+      },
+      "topTokens": [],
+      "topGroups": []
+    },
+    {
+      "category": {
+        "id": "defi",
+        "name": "DeFi",
+        "description": "Tokens of decentralized finance protocols.",
+        "class": "CATEGORY_CLASS_SECTOR",
+        "kind": "CATEGORY_KIND_TOKEN",
+        "grouped": false
+      },
+      "topTokens": [],
+      "topGroups": []
+    }
+  ]
+}

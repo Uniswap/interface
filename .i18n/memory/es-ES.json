@@ -14,8 +14,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "Apple",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -31,8 +31,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "Google",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -116,8 +116,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "Token 1",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -133,8 +133,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "Token 2",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -316,6 +316,23 @@
       }
     ],
     [
+      "es-ES:i18next-json:chart.groupTicks",
+      {
+        "unitId": "chart.groupTicks",
+        "providerId": "i18next-json",
+        "locale": "es-ES",
+        "domain": "product-ui",
+        "sourceHash": "c83686ea75e475eab9db64992d4d19d306eeee24cdf5856747f14e5630867393",
+        "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
+        "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
+        "translation": "Agrupar ticks",
+        "status": "clean",
+        "agentRunId": "es-ES-2026-11-10T21-05-05Z",
+        "approvedAt": "2026-11-10T21:05:05.579Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "es-ES:i18next-json:chart.noData.price.title",
       {
         "unitId": "chart.noData.price.title",
@@ -395,8 +412,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "App",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -412,8 +429,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "Beta",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -429,8 +446,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "Blog",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -452,6 +469,40 @@
       }
     ],
     [
+      "es-ES:i18next-json:common.chart.candlestick",
+      {
+        "unitId": "common.chart.candlestick",
+        "providerId": "i18next-json",
+        "locale": "es-ES",
+        "domain": "product-ui",
+        "sourceHash": "516cc7a4f340017f478080879747fb79bdf76a3161ef9300f08b89ca822c6cfc",
+        "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
+        "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
+        "translation": "Gráfico de velas",
+        "status": "clean",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "es-ES:i18next-json:common.chart.line",
+      {
+        "unitId": "common.chart.line",
+        "providerId": "i18next-json",
+        "locale": "es-ES",
+        "domain": "product-ui",
+        "sourceHash": "22089151613fba5e5af6d9452f5ba47f12317e2b063ac66fce634fff2adbee04",
+        "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
+        "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
+        "translation": "Gráfico de líneas",
+        "status": "clean",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "es-ES:i18next-json:common.error.label",
       {
         "unitId": "common.error.label",
@@ -463,8 +514,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "Error",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -486,6 +537,23 @@
       }
     ],
     [
+      "es-ES:i18next-json:common.moreOptions",
+      {
+        "unitId": "common.moreOptions",
+        "providerId": "i18next-json",
+        "locale": "es-ES",
+        "domain": "product-ui",
+        "sourceHash": "bc79cdffbaa8df096f0ea0dbdf03575b6d4fa3f90f783d3795d01aa9a7a1c926",
+        "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
+        "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
+        "translation": "Más opciones",
+        "status": "clean",
+        "agentRunId": "es-ES-2026-11-06T18-36-02Z",
+        "approvedAt": "2026-11-06T18:36:02.891Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "es-ES:i18next-json:common.permit",
       {
         "unitId": "common.permit",
@@ -497,8 +565,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "Permit",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -514,8 +582,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "Pools",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -594,8 +662,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "Error",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -628,8 +696,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "Tokens",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -645,8 +713,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "Total",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -662,8 +730,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "Euro",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -1095,8 +1163,42 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "Earn",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "es-ES:i18next-json:explore.pools.empty",
+      {
+        "unitId": "explore.pools.empty",
+        "providerId": "i18next-json",
+        "locale": "es-ES",
+        "domain": "product-ui",
+        "sourceHash": "d6ea3d16d649cbb99185342ab556a2cc5299ccb91e798cb0d2e9472a411419c9",
+        "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
+        "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
+        "translation": "No se encontraron pools",
+        "status": "clean",
+        "agentRunId": "es-ES-2026-11-10T20-57-39Z",
+        "approvedAt": "2026-11-10T20:57:39.822Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "es-ES:i18next-json:explore.pools.error",
+      {
+        "unitId": "explore.pools.error",
+        "providerId": "i18next-json",
+        "locale": "es-ES",
+        "domain": "product-ui",
+        "sourceHash": "cee34f8e5ad4c3c1d4a24ff86214a1b2f49fe0c22cc0f8b4a65b004946303244",
+        "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
+        "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
+        "translation": "No se pudieron cargar los pools",
+        "status": "clean",
+        "agentRunId": "es-ES-2026-11-10T20-57-39Z",
+        "approvedAt": "2026-11-10T20:57:39.822Z",
         "approvedBy": "agent"
       }
     ],
@@ -1112,8 +1214,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "Wallets",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -1163,8 +1265,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "Venmo",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -1180,8 +1282,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "Tokens",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -1639,8 +1741,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "Pools",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -2252,8 +2354,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "afterAddLiquidity",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -2286,8 +2388,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "afterAddLiquidityReturnDelta",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -2320,8 +2422,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "afterDonate",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -2354,8 +2456,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "afterInitialize",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -2388,8 +2490,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "afterRemoveLiquidity",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -2422,8 +2524,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "afterRemoveLiquidityReturnDelta",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -2456,8 +2558,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "afterSwap",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -2490,8 +2592,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "afterSwapReturnDelta",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -2524,8 +2626,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "beforeAddLiquidity",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -2558,8 +2660,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "beforeDonate",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -2592,8 +2694,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "beforeInitialize",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -2626,8 +2728,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "beforeRemoveLiquidity",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -2660,8 +2762,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "beforeSwap",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -2694,8 +2796,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "beforeSwapReturnDelta",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -3119,8 +3221,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "Hooks",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -3136,8 +3238,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "API",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -3187,8 +3289,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "Launchpad",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -3255,8 +3357,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "APR",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -3573,13 +3675,25 @@
         "providerId": "i18next-json",
         "locale": "es-ES",
         "domain": "product-ui",
-        "sourceHash": "d782c587907119c4c3bd3a171ee092446b7b4c766069b28e84475a1a7e382eaa",
+        "sourceHash": "1c1731364b533eb1b136b41e36c6d3bd4f2f7b2d6621c9635f5c11328443af87",
         "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
-        "translation": "Actualizar apalancamiento",
-        "status": "clean",
-        "agentRunId": "es-ES-2026-10-13T21-26-07Z",
-        "approvedAt": "2026-10-13T21:26:07.338Z",
+        "translation": "Actualizar tamaño de posición",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "accuracy",
+            "severity": "major",
+            "detail": "'position size' is translated as 'apalancamiento' (leverage). Position size and leverage are distinct, separately-surfaced concepts in this margin UI (cf. i=1676 'Leverage', i=1681 'Resize without adding funds', i=1863 'Leverage updated'); conflating them tells the user they are changing a different risk parameter than they actually are. Note: this defective rendering also exists in the shipped TM — flag the TM entry for human review.",
+            "evidence": {
+              "sourceSpan": "Update position size",
+              "targetSpan": "Actualizar apalancamiento"
+            },
+            "alternative": "Actualizar tamaño de posición"
+          }
+        ],
+        "agentRunId": "es-ES-2026-11-10T21-05-05Z",
+        "approvedAt": "2026-11-10T21:05:05.579Z",
         "approvedBy": "agent"
       }
     ],
@@ -3590,13 +3704,25 @@
         "providerId": "i18next-json",
         "locale": "es-ES",
         "domain": "product-ui",
-        "sourceHash": "c4c9b26473b38936b30ce0e9bda428157e2df3dff810b648cb3c42c75cd6dd20",
+        "sourceHash": "8f35893d766d2eea1c3124329ae6af1abaf83f9995f7cc576c5d00469db5b16b",
         "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
-        "translation": "Cambiar apalancamiento",
-        "status": "clean",
-        "agentRunId": "es-ES-2026-10-13T21-26-07Z",
-        "approvedAt": "2026-10-13T21:26:07.338Z",
+        "translation": "Cambiar tamaño de posición",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "accuracy",
+            "severity": "major",
+            "detail": "'position size' rendered as 'apalancamiento' (leverage) — a different financial parameter; in a leveraged-trading UI this can lead the user to take a wrong action. Shipped TM contains the same defect; flag for human review.",
+            "evidence": {
+              "sourceSpan": "Change position size",
+              "targetSpan": "Cambiar apalancamiento"
+            },
+            "alternative": "Cambiar tamaño de posición"
+          }
+        ],
+        "agentRunId": "es-ES-2026-11-10T21-05-05Z",
+        "approvedAt": "2026-11-10T21:05:05.579Z",
         "approvedBy": "agent"
       }
     ],
@@ -4003,8 +4129,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "Liq.",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -4020,8 +4146,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "Liq. {{distance}}",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -4118,8 +4244,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "C",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -4135,8 +4261,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "H",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -4152,8 +4278,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "L",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -4169,8 +4295,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "O",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -4895,13 +5021,25 @@
         "providerId": "i18next-json",
         "locale": "es-ES",
         "domain": "product-ui",
-        "sourceHash": "3fd105e03769f69152b8f041096f198f1df4884a75ef4fcdfd8b20d2acc83c72",
+        "sourceHash": "1a7f13a741752236cb2d0131cbf484c25f9eb379d3813502f3e3f494d18bf287",
         "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
-        "translation": "Este apalancamiento acercaría demasiado la posición a la liquidación — baja el apalancamiento o añade margen.",
-        "status": "clean",
-        "agentRunId": "es-ES-2026-10-13T21-26-07Z",
-        "approvedAt": "2026-10-13T21:26:07.338Z",
+        "translation": "Esto acercaría demasiado la posición a la liquidación. Prueba con un cambio menor.",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "accuracy",
+            "severity": "major",
+            "detail": "Addition/mistranslation: the source says the attempted change (any adjustment — margin, size, or leverage) would move the position too close to liquidation and advises 'Try a smaller change'. The translation assumes the change is leverage ('Este apalancamiento') and invents different advice ('baja el apalancamiento o añade margen') not present in the source; the message is also shown for margin withdrawals, where that advice is wrong. Shipped TM has the same defect; flag for human review.",
+            "evidence": {
+              "sourceSpan": "This would move the position too close to liquidation. Try a smaller change.",
+              "targetSpan": "Este apalancamiento acercaría demasiado la posición a la liquidación — baja el apalancamiento o añade margen."
+            },
+            "alternative": "Esto acercaría demasiado la posición a la liquidación. Prueba con un cambio menor."
+          }
+        ],
+        "agentRunId": "es-ES-2026-11-10T21-05-05Z",
+        "approvedAt": "2026-11-10T21:05:05.579Z",
         "approvedBy": "agent"
       }
     ],
@@ -5008,6 +5146,23 @@
       }
     ],
     [
+      "es-ES:i18next-json:margin.error.adjust.priceImpact",
+      {
+        "unitId": "margin.error.adjust.priceImpact",
+        "providerId": "i18next-json",
+        "locale": "es-ES",
+        "domain": "product-ui",
+        "sourceHash": "44d8c245bce97cc2fc9694c08ad0c3737c555e25bf112576afbc44a575e23bd4",
+        "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
+        "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
+        "translation": "El impacto en el precio es demasiado alto para este tamaño. Prueba con un importe menor.",
+        "status": "clean",
+        "agentRunId": "es-ES-2026-11-10T21-05-05Z",
+        "approvedAt": "2026-11-10T21:05:05.579Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "es-ES:i18next-json:margin.error.adjust.priceMoved",
       {
         "unitId": "margin.error.adjust.priceMoved",
@@ -5021,6 +5176,23 @@
         "status": "clean",
         "agentRunId": "es-ES-2026-10-13T21-26-07Z",
         "approvedAt": "2026-10-13T21:26:07.338Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "es-ES:i18next-json:margin.error.adjust.underwater",
+      {
+        "unitId": "margin.error.adjust.underwater",
+        "providerId": "i18next-json",
+        "locale": "es-ES",
+        "domain": "product-ui",
+        "sourceHash": "ae510b3b398570ed062c307e0db1ac269c4f0e1357f0f1e03c59eb785976e893",
+        "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
+        "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
+        "translation": "Esta posición no tiene margen restante para ajustar.",
+        "status": "clean",
+        "agentRunId": "es-ES-2026-11-10T21-05-05Z",
+        "approvedAt": "2026-11-10T21:05:05.579Z",
         "approvedBy": "agent"
       }
     ],
@@ -5452,13 +5624,25 @@
         "providerId": "i18next-json",
         "locale": "es-ES",
         "domain": "product-ui",
-        "sourceHash": "c4c9b26473b38936b30ce0e9bda428157e2df3dff810b648cb3c42c75cd6dd20",
+        "sourceHash": "8f35893d766d2eea1c3124329ae6af1abaf83f9995f7cc576c5d00469db5b16b",
         "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
-        "translation": "Cambiar apalancamiento",
-        "status": "clean",
-        "agentRunId": "es-ES-2026-10-13T21-26-07Z",
-        "approvedAt": "2026-10-13T21:26:07.338Z",
+        "translation": "Cambiar tamaño de posición",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "accuracy",
+            "severity": "major",
+            "detail": "'position size' rendered as 'apalancamiento' (leverage); the UI distinguishes these actions (sibling description i=1681 'Resize without adding funds'). Shipped TM contains the same defect; flag for human review.",
+            "evidence": {
+              "sourceSpan": "Change position size",
+              "targetSpan": "Cambiar apalancamiento"
+            },
+            "alternative": "Cambiar tamaño de posición"
+          }
+        ],
+        "agentRunId": "es-ES-2026-11-10T21-05-05Z",
+        "approvedAt": "2026-11-10T21:05:05.579Z",
         "approvedBy": "agent"
       }
     ],
@@ -5578,6 +5762,23 @@
         "status": "clean",
         "agentRunId": "es-ES-2026-10-13T21-26-07Z",
         "approvedAt": "2026-10-13T21:26:07.338Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "es-ES:i18next-json:margin.manage.resumePending",
+      {
+        "unitId": "margin.manage.resumePending",
+        "providerId": "i18next-json",
+        "locale": "es-ES",
+        "domain": "product-ui",
+        "sourceHash": "f6fdf0540f738bb20bd2e4869eacf23e12ba6ea0a1fde28ffafeb2cded0633e1",
+        "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
+        "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
+        "translation": "Toca para finalizar tu acción pendiente",
+        "status": "clean",
+        "agentRunId": "es-ES-2026-11-10T21-05-05Z",
+        "approvedAt": "2026-11-10T21:05:05.579Z",
         "approvedBy": "agent"
       }
     ],
@@ -5765,6 +5966,23 @@
         "status": "clean",
         "agentRunId": "es-ES-2026-10-27T20-02-23Z",
         "approvedAt": "2026-10-27T20:02:23.560Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "es-ES:i18next-json:margin.mobile.positionDetails",
+      {
+        "unitId": "margin.mobile.positionDetails",
+        "providerId": "i18next-json",
+        "locale": "es-ES",
+        "domain": "product-ui",
+        "sourceHash": "bd979f4a69c7c3e1f17621eef8f3de808319a926743a7d5e0be63cc4927d9db4",
+        "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
+        "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
+        "translation": "Detalles de la posición",
+        "status": "clean",
+        "agentRunId": "es-ES-2026-11-06T18-36-02Z",
+        "approvedAt": "2026-11-06T18:36:02.891Z",
         "approvedBy": "agent"
       }
     ],
@@ -6717,13 +6935,25 @@
         "providerId": "i18next-json",
         "locale": "es-ES",
         "domain": "product-ui",
-        "sourceHash": "a1a4f24aad89fe7c7c419c46458dc108c59dd2f804d5887e24c604000e048378",
+        "sourceHash": "bdc31208641dc8a834cf2a1f3ea554e25dbaba6ffdff22c7979ba8cf474d186b",
         "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
-        "translation": "Reducir apalancamiento",
-        "status": "clean",
-        "agentRunId": "es-ES-2026-10-27T20-02-23Z",
-        "approvedAt": "2026-10-27T20:02:23.560Z",
+        "translation": "Reducir tamaño de posición",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "accuracy",
+            "severity": "major",
+            "detail": "'Decrease position size' rendered as 'Reducir apalancamiento' (reduce leverage) — a different action with different risk consequences in a margin UI. Shipped TM contains the same defect; flag for human review.",
+            "evidence": {
+              "sourceSpan": "Decrease position size",
+              "targetSpan": "Reducir apalancamiento"
+            },
+            "alternative": "Reducir tamaño de posición"
+          }
+        ],
+        "agentRunId": "es-ES-2026-11-10T21-05-05Z",
+        "approvedAt": "2026-11-10T21:05:05.579Z",
         "approvedBy": "agent"
       }
     ],
@@ -6734,13 +6964,25 @@
         "providerId": "i18next-json",
         "locale": "es-ES",
         "domain": "product-ui",
-        "sourceHash": "a9d8c8a3b24b084830d7162805a1e5d8f5a418bb1101b7628ae3f49b2fa9d0db",
+        "sourceHash": "a518c0b8e0196758dc0558c83b4e25a51474d018cbd46f3879aa8bf57165ae6a",
         "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
-        "translation": "Aumentar apalancamiento",
-        "status": "clean",
-        "agentRunId": "es-ES-2026-10-27T20-02-23Z",
-        "approvedAt": "2026-10-27T20:02:23.560Z",
+        "translation": "Aumentar tamaño de posición",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "accuracy",
+            "severity": "major",
+            "detail": "'Increase position size' rendered as 'Aumentar apalancamiento' (increase leverage) — telling the user they are raising leverage rather than resizing the position could cause an unintended risk-increasing action. Shipped TM contains the same defect; flag for human review.",
+            "evidence": {
+              "sourceSpan": "Increase position size",
+              "targetSpan": "Aumentar apalancamiento"
+            },
+            "alternative": "Aumentar tamaño de posición"
+          }
+        ],
+        "agentRunId": "es-ES-2026-11-10T21-05-05Z",
+        "approvedAt": "2026-11-10T21:05:05.579Z",
         "approvedBy": "agent"
       }
     ],
@@ -8049,6 +8291,23 @@
       }
     ],
     [
+      "es-ES:i18next-json:margin.review.borrowingTooltip",
+      {
+        "unitId": "margin.review.borrowingTooltip",
+        "providerId": "i18next-json",
+        "locale": "es-ES",
+        "domain": "product-ui",
+        "sourceHash": "b36e08921511589860e18027add23d759be9a643058eaaa808c88c800fdcdd8c",
+        "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
+        "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
+        "translation": "Lo que pides prestado para alcanzar tu apalancamiento. Genera intereses mientras la posición está abierta.",
+        "status": "clean",
+        "agentRunId": "es-ES-2026-11-05T22-18-05Z",
+        "approvedAt": "2026-11-05T22:18:05.070Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "es-ES:i18next-json:margin.review.leverageInline",
       {
         "unitId": "margin.review.leverageInline",
@@ -8062,6 +8321,23 @@
         "status": "clean",
         "agentRunId": "es-ES-2026-10-13T21-26-07Z",
         "approvedAt": "2026-10-13T21:26:07.338Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "es-ES:i18next-json:margin.review.liqExplainer",
+      {
+        "unitId": "margin.review.liqExplainer",
+        "providerId": "i18next-json",
+        "locale": "es-ES",
+        "domain": "product-ui",
+        "sourceHash": "85ba49c80722148e07e7fcb115dc83d36fe0a992525c671df0aab0d55a542d5f",
+        "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
+        "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
+        "translation": "Si el precio de {{symbol}} alcanza el precio de liquidación, se te liquidará por completo y tu capital final será {{equity}}.",
+        "status": "clean",
+        "agentRunId": "es-ES-2026-11-05T22-18-05Z",
+        "approvedAt": "2026-11-05T22:18:05.070Z",
         "approvedBy": "agent"
       }
     ],
@@ -8147,6 +8423,23 @@
         "status": "clean",
         "agentRunId": "es-ES-2026-10-13T21-26-07Z",
         "approvedAt": "2026-10-13T21:26:07.338Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "es-ES:i18next-json:margin.review.yourPosition",
+      {
+        "unitId": "margin.review.yourPosition",
+        "providerId": "i18next-json",
+        "locale": "es-ES",
+        "domain": "product-ui",
+        "sourceHash": "85897f2a011a6d403f696f5bb1d8efd2f97da9bea5b5ddba3561de87571ef8d9",
+        "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
+        "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
+        "translation": "Tu posición",
+        "status": "clean",
+        "agentRunId": "es-ES-2026-11-05T22-18-05Z",
+        "approvedAt": "2026-11-05T22:18:05.070Z",
         "approvedBy": "agent"
       }
     ],
@@ -8298,8 +8591,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "Manual",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -8526,13 +8819,13 @@
         "providerId": "i18next-json",
         "locale": "es-ES",
         "domain": "product-ui",
-        "sourceHash": "18f80225d5a4ab19d1f0c922d3fc7f56f8f2fa956c4325e637fcd41177c2055b",
+        "sourceHash": "93c91c851e7acc17d881c9b89ea954be1183070254014be03a93d169cf52dbbd",
         "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
-        "translation": "Precio mark",
+        "translation": "Precio",
         "status": "clean",
-        "agentRunId": "es-ES-2026-10-27T20-02-23Z",
-        "approvedAt": "2026-10-27T20:02:23.560Z",
+        "agentRunId": "es-ES-2026-11-10T21-05-05Z",
+        "approvedAt": "2026-11-10T21:05:05.579Z",
         "approvedBy": "agent"
       }
     ],
@@ -9117,8 +9410,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "Mark",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -9459,8 +9752,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "ID",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -9595,8 +9888,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "PnL",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -10310,6 +10603,278 @@
       }
     ],
     [
+      "es-ES:i18next-json:onboarding.checklist.card.addFunds.description",
+      {
+        "unitId": "onboarding.checklist.card.addFunds.description",
+        "providerId": "i18next-json",
+        "locale": "es-ES",
+        "domain": "product-ui",
+        "sourceHash": "6c037a5e61cc823e7d8a1087721da1147daaaacd966202daa50baf2ec474065d",
+        "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
+        "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
+        "translation": "Deposita o compra con efectivo",
+        "status": "clean",
+        "agentRunId": "es-ES-2026-11-06T22-26-13Z",
+        "approvedAt": "2026-11-06T22:26:13.448Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "es-ES:i18next-json:onboarding.checklist.card.backupWallet.description",
+      {
+        "unitId": "onboarding.checklist.card.backupWallet.description",
+        "providerId": "i18next-json",
+        "locale": "es-ES",
+        "domain": "product-ui",
+        "sourceHash": "d5cefb0d3fca85c5a48e0d3e27533495a8f3bd99faedab68a833d18a5f946ca0",
+        "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
+        "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
+        "translation": "Configura un plan de recuperación",
+        "status": "clean",
+        "agentRunId": "es-ES-2026-11-06T22-26-13Z",
+        "approvedAt": "2026-11-06T22:26:13.448Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "es-ES:i18next-json:onboarding.checklist.card.claimUsername.description",
+      {
+        "unitId": "onboarding.checklist.card.claimUsername.description",
+        "providerId": "i18next-json",
+        "locale": "es-ES",
+        "domain": "product-ui",
+        "sourceHash": "16cb2f7f964e65d26f64e8b177bd19c696192c4f9cc492ecc4f6df62c1aaedda",
+        "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
+        "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
+        "translation": "Personaliza tu wallet",
+        "status": "clean",
+        "agentRunId": "es-ES-2026-11-06T22-26-13Z",
+        "approvedAt": "2026-11-06T22:26:13.448Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "es-ES:i18next-json:onboarding.checklist.card.completeSwap.description",
+      {
+        "unitId": "onboarding.checklist.card.completeSwap.description",
+        "providerId": "i18next-json",
+        "locale": "es-ES",
+        "domain": "product-ui",
+        "sourceHash": "e36d0335638981152d16ebed1b7e9caaa66c7e860b72b807a428257c9b828845",
+        "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
+        "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
+        "translation": "Cambia un token por otro",
+        "status": "clean",
+        "agentRunId": "es-ES-2026-11-06T22-26-13Z",
+        "approvedAt": "2026-11-06T22:26:13.448Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "es-ES:i18next-json:onboarding.checklist.collapse",
+      {
+        "unitId": "onboarding.checklist.collapse",
+        "providerId": "i18next-json",
+        "locale": "es-ES",
+        "domain": "product-ui",
+        "sourceHash": "0ea7a361701c49367f14add3b23f6eee6f93c16f5791791a9cffa2cabc27be13",
+        "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
+        "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
+        "translation": "Ocultar lista de tareas",
+        "status": "clean",
+        "agentRunId": "es-ES-2026-11-06T22-26-13Z",
+        "approvedAt": "2026-11-06T22:26:13.448Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "es-ES:i18next-json:onboarding.checklist.expand",
+      {
+        "unitId": "onboarding.checklist.expand",
+        "providerId": "i18next-json",
+        "locale": "es-ES",
+        "domain": "product-ui",
+        "sourceHash": "312fb80eb782ff8fd26406c688230e0fc583bb0fafda95ab65ed0e5ea1ced98b",
+        "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
+        "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
+        "translation": "Mostrar lista de tareas",
+        "status": "clean",
+        "agentRunId": "es-ES-2026-11-06T22-26-13Z",
+        "approvedAt": "2026-11-06T22:26:13.448Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "es-ES:i18next-json:onboarding.checklist.step.addBackupLogin",
+      {
+        "unitId": "onboarding.checklist.step.addBackupLogin",
+        "providerId": "i18next-json",
+        "locale": "es-ES",
+        "domain": "product-ui",
+        "sourceHash": "c85db9119c6b96c6242a0ff05801dee6ffbb01fa8e76387175be4689568ee54c",
+        "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
+        "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
+        "translation": "Añadir un inicio de sesión de respaldo",
+        "status": "clean",
+        "agentRunId": "es-ES-2026-11-06T22-26-13Z",
+        "approvedAt": "2026-11-06T22:26:13.448Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "es-ES:i18next-json:onboarding.checklist.step.addFunds",
+      {
+        "unitId": "onboarding.checklist.step.addFunds",
+        "providerId": "i18next-json",
+        "locale": "es-ES",
+        "domain": "product-ui",
+        "sourceHash": "e826c600400e4b183d06a8b88fad3d230da756e923193479b7cf07ba77c8f4ec",
+        "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
+        "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
+        "translation": "Añadir fondos",
+        "status": "clean",
+        "agentRunId": "es-ES-2026-11-06T22-26-13Z",
+        "approvedAt": "2026-11-06T22:26:13.448Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "es-ES:i18next-json:onboarding.checklist.step.backupWallet",
+      {
+        "unitId": "onboarding.checklist.step.backupWallet",
+        "providerId": "i18next-json",
+        "locale": "es-ES",
+        "domain": "product-ui",
+        "sourceHash": "52a7a389ef84accfe66ee131f8d15314f46f275266f4358be528a0a570a50423",
+        "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
+        "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
+        "translation": "Respalda tu wallet",
+        "status": "clean",
+        "agentRunId": "es-ES-2026-11-06T22-26-13Z",
+        "approvedAt": "2026-11-06T22:26:13.448Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "es-ES:i18next-json:onboarding.checklist.step.claimUsername",
+      {
+        "unitId": "onboarding.checklist.step.claimUsername",
+        "providerId": "i18next-json",
+        "locale": "es-ES",
+        "domain": "product-ui",
+        "sourceHash": "2e2b46f0aa11af164e1c1a84410cff1194f47bcedfb61253aec624df723f9ee2",
+        "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
+        "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
+        "translation": "Reclama tu nombre de usuario",
+        "status": "clean",
+        "agentRunId": "es-ES-2026-11-06T22-26-13Z",
+        "approvedAt": "2026-11-06T22:26:13.448Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "es-ES:i18next-json:onboarding.checklist.step.completeSwap",
+      {
+        "unitId": "onboarding.checklist.step.completeSwap",
+        "providerId": "i18next-json",
+        "locale": "es-ES",
+        "domain": "product-ui",
+        "sourceHash": "63e84bbb2fb21ca379a6c68f7d76023dda485a0fe134863a261a1493aa519584",
+        "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
+        "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
+        "translation": "Completa un intercambio",
+        "status": "clean",
+        "agentRunId": "es-ES-2026-11-06T22-26-13Z",
+        "approvedAt": "2026-11-06T22:26:13.448Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "es-ES:i18next-json:onboarding.checklist.step.createAccount",
+      {
+        "unitId": "onboarding.checklist.step.createAccount",
+        "providerId": "i18next-json",
+        "locale": "es-ES",
+        "domain": "product-ui",
+        "sourceHash": "798ca2ce18bf2038bc13aaa33ebfe6db7020df5b4bba40f68e21462a9207db3d",
+        "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
+        "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
+        "translation": "Crear cuenta",
+        "status": "clean",
+        "agentRunId": "es-ES-2026-11-06T22-26-13Z",
+        "approvedAt": "2026-11-06T22:26:13.448Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "es-ES:i18next-json:onboarding.checklist.step.fundWallet",
+      {
+        "unitId": "onboarding.checklist.step.fundWallet",
+        "providerId": "i18next-json",
+        "locale": "es-ES",
+        "domain": "product-ui",
+        "sourceHash": "7fe393b30a23c9b79a7404573840fdb7cb48bdc7830c2c51811e8aa814f6493e",
+        "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
+        "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
+        "translation": "Financia tu wallet",
+        "status": "clean",
+        "agentRunId": "es-ES-2026-11-06T22-26-13Z",
+        "approvedAt": "2026-11-06T22:26:13.448Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "es-ES:i18next-json:onboarding.checklist.title",
+      {
+        "unitId": "onboarding.checklist.title",
+        "providerId": "i18next-json",
+        "locale": "es-ES",
+        "domain": "product-ui",
+        "sourceHash": "831d0f72d242b7d12d4ef15123d43145e97e95be5aba57cd150e434159aae202",
+        "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
+        "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
+        "translation": "Primeros pasos",
+        "status": "clean",
+        "agentRunId": "es-ES-2026-11-06T22-26-13Z",
+        "approvedAt": "2026-11-06T22:26:13.448Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "es-ES:i18next-json:pdp.relatedPools.header",
+      {
+        "unitId": "pdp.relatedPools.header",
+        "providerId": "i18next-json",
+        "locale": "es-ES",
+        "domain": "product-ui",
+        "sourceHash": "cb2087738281aab988ffe101cdcef29fb139eede88ca7322628be2a51c25251c",
+        "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
+        "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
+        "translation": "Pools relacionados",
+        "status": "clean",
+        "agentRunId": "es-ES-2026-11-10T20-57-39Z",
+        "approvedAt": "2026-11-10T20:57:39.822Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "es-ES:i18next-json:pdp.relatedPools.single",
+      {
+        "unitId": "pdp.relatedPools.single",
+        "providerId": "i18next-json",
+        "locale": "es-ES",
+        "domain": "product-ui",
+        "sourceHash": "f08a8e68bc1590701e708d74657b153b7244a6448f3f20aec469db3bd7b6106c",
+        "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
+        "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
+        "translation": "Más pools de {{category}}",
+        "status": "clean",
+        "agentRunId": "es-ES-2026-11-10T20-57-39Z",
+        "approvedAt": "2026-11-10T20:57:39.822Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "es-ES:i18next-json:pool.apr",
       {
         "unitId": "pool.apr",
@@ -10321,8 +10886,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "APR",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -10338,8 +10903,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "$100k – $1M",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -10355,8 +10920,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "$10M+",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -10372,8 +10937,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "<$100k",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -10391,6 +10956,210 @@
         "status": "clean",
         "agentRunId": "es-ES-2026-10-15T16-27-19Z",
         "approvedAt": "2026-10-15T16:27:19.438Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "es-ES:i18next-json:pool.liquidityPanel.preset.full",
+      {
+        "unitId": "pool.liquidityPanel.preset.full",
+        "providerId": "i18next-json",
+        "locale": "es-ES",
+        "domain": "product-ui",
+        "sourceHash": "008dacb6d1e85bd8c0ae9661c4472810ef75537f690dd75d77fc74ca62f78fec",
+        "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
+        "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
+        "translation": "Completo",
+        "status": "clean",
+        "agentRunId": "es-ES-2026-11-10T18-35-35Z",
+        "approvedAt": "2026-11-10T18:35:35.144Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "es-ES:i18next-json:pool.liquidityPanel.preset.full.description",
+      {
+        "unitId": "pool.liquidityPanel.preset.full.description",
+        "providerId": "i18next-json",
+        "locale": "es-ES",
+        "domain": "product-ui",
+        "sourceHash": "cdcfe5f4e44924cf9f468f72af9d51cb110d4806479cb4fc785567e364045970",
+        "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
+        "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
+        "translation": "Genera tarifas a cualquier precio",
+        "status": "clean",
+        "agentRunId": "es-ES-2026-11-10T18-35-35Z",
+        "approvedAt": "2026-11-10T18:35:35.144Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "es-ES:i18next-json:pool.liquidityPanel.preset.sellOnDrop",
+      {
+        "unitId": "pool.liquidityPanel.preset.sellOnDrop",
+        "providerId": "i18next-json",
+        "locale": "es-ES",
+        "domain": "product-ui",
+        "sourceHash": "b7f0b55ace377b3a582b2b6177e5ecf8af5d98e30c27440728bde9dbe703e3d6",
+        "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
+        "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
+        "translation": "Vender si el precio baja",
+        "status": "clean",
+        "agentRunId": "es-ES-2026-11-10T18-35-35Z",
+        "approvedAt": "2026-11-10T18:35:35.144Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "es-ES:i18next-json:pool.liquidityPanel.preset.sellOnDrop.description",
+      {
+        "unitId": "pool.liquidityPanel.preset.sellOnDrop.description",
+        "providerId": "i18next-json",
+        "locale": "es-ES",
+        "domain": "product-ui",
+        "sourceHash": "2afc167b196144c3f94f1e894f43cf00c0249b7c1800480a82d77d185298992f",
+        "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
+        "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
+        "translation": "Deposita solo {{sell}}. Se vende por {{buy}} a medida que el precio baja a través de tu rango.",
+        "status": "clean",
+        "agentRunId": "es-ES-2026-11-10T18-35-35Z",
+        "approvedAt": "2026-11-10T18:35:35.144Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "es-ES:i18next-json:pool.liquidityPanel.preset.sellOnRise",
+      {
+        "unitId": "pool.liquidityPanel.preset.sellOnRise",
+        "providerId": "i18next-json",
+        "locale": "es-ES",
+        "domain": "product-ui",
+        "sourceHash": "4113385842ecc621b7bd60b3bbb1babfa3edd989980ee2e0fba8d27b09323c28",
+        "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
+        "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
+        "translation": "Vender si el precio sube",
+        "status": "clean",
+        "agentRunId": "es-ES-2026-11-10T18-35-35Z",
+        "approvedAt": "2026-11-10T18:35:35.144Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "es-ES:i18next-json:pool.liquidityPanel.preset.sellOnRise.description",
+      {
+        "unitId": "pool.liquidityPanel.preset.sellOnRise.description",
+        "providerId": "i18next-json",
+        "locale": "es-ES",
+        "domain": "product-ui",
+        "sourceHash": "53a50bbc2154b7e5efd1955d713af50ddbbf44e2bcdb4f4e55776c7077c8ea50",
+        "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
+        "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
+        "translation": "Deposita solo {{sell}}. Se vende por {{buy}} a medida que el precio sube a través de tu rango.",
+        "status": "clean",
+        "agentRunId": "es-ES-2026-11-10T18-35-35Z",
+        "approvedAt": "2026-11-10T18:35:35.144Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "es-ES:i18next-json:pool.liquidityPanel.preset.suggested",
+      {
+        "unitId": "pool.liquidityPanel.preset.suggested",
+        "providerId": "i18next-json",
+        "locale": "es-ES",
+        "domain": "product-ui",
+        "sourceHash": "93b63bab4c3a28d73a8bb83bcdfdcc5f6ddecfc8fc702296ca159d94c5dc6e53",
+        "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
+        "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
+        "translation": "Sugeridos",
+        "status": "clean",
+        "agentRunId": "es-ES-2026-11-10T18-35-35Z",
+        "approvedAt": "2026-11-10T18:35:35.144Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "es-ES:i18next-json:pool.liquidityPanel.preset.suggested.description",
+      {
+        "unitId": "pool.liquidityPanel.preset.suggested.description",
+        "providerId": "i18next-json",
+        "locale": "es-ES",
+        "domain": "product-ui",
+        "sourceHash": "774fd3448e90a8d84cbfea4dfbdab8f471d10a3a92c7852ddeee49d1f17aab19",
+        "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
+        "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
+        "translation": "Basado en el precio del pool durante los últimos 30 días",
+        "status": "clean",
+        "agentRunId": "es-ES-2026-11-10T18-35-35Z",
+        "approvedAt": "2026-11-10T18:35:35.144Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "es-ES:i18next-json:pool.liquidityPanel.priceRange",
+      {
+        "unitId": "pool.liquidityPanel.priceRange",
+        "providerId": "i18next-json",
+        "locale": "es-ES",
+        "domain": "product-ui",
+        "sourceHash": "24f01895dde5938da068bae40798172026d53cf0575bba88f5b04921098cba17",
+        "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
+        "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
+        "translation": "Rango de precios",
+        "status": "clean",
+        "agentRunId": "es-ES-2026-11-09T22-34-59Z",
+        "approvedAt": "2026-11-09T22:34:59.836Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "es-ES:i18next-json:pool.liquidityPanel.rangeEdge.decrease",
+      {
+        "unitId": "pool.liquidityPanel.rangeEdge.decrease",
+        "providerId": "i18next-json",
+        "locale": "es-ES",
+        "domain": "product-ui",
+        "sourceHash": "e206baf0905859f00f73d24638abcca41d70d1f23a062f8db85058e24885d059",
+        "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
+        "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
+        "translation": "Reducir {{edge}}",
+        "status": "clean",
+        "agentRunId": "es-ES-2026-11-10T18-35-35Z",
+        "approvedAt": "2026-11-10T18:35:35.144Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "es-ES:i18next-json:pool.liquidityPanel.rangeEdge.increase",
+      {
+        "unitId": "pool.liquidityPanel.rangeEdge.increase",
+        "providerId": "i18next-json",
+        "locale": "es-ES",
+        "domain": "product-ui",
+        "sourceHash": "89cabe5ebc25ae3046a7b93f7328996ff6462e43ca2cd5bed20308f4051d1c64",
+        "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
+        "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
+        "translation": "Aumentar {{edge}}",
+        "status": "clean",
+        "agentRunId": "es-ES-2026-11-10T18-35-35Z",
+        "approvedAt": "2026-11-10T18:35:35.144Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "es-ES:i18next-json:pool.liquidityPanel.timeInRange",
+      {
+        "unitId": "pool.liquidityPanel.timeInRange",
+        "providerId": "i18next-json",
+        "locale": "es-ES",
+        "domain": "product-ui",
+        "sourceHash": "31c1fa145ef2c83c741ddb8a74b82091f5cb0a75638b3fb6b6fdf1d3d1da3b7d",
+        "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
+        "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
+        "translation": "{{percent}} en rango en los últimos 30 d",
+        "status": "clean",
+        "agentRunId": "es-ES-2026-11-09T22-34-59Z",
+        "approvedAt": "2026-11-09T22:34:59.836Z",
         "approvedBy": "agent"
       }
     ],
@@ -10440,8 +11209,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "liq.",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -10474,8 +11243,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "DeFi",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -10627,8 +11396,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "Airdrop / spam",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -10644,8 +11413,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "Tokens",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -10712,8 +11481,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "Top",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -10797,8 +11566,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "$TICKER",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -10882,8 +11651,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "demo",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -11035,8 +11804,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "Crowd Launch",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -11052,8 +11821,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "Instant Launch",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -11086,8 +11855,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "Crowd",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -11103,8 +11872,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "Instant",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -11120,8 +11889,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "Tokens",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -11166,8 +11935,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "Trader",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -11280,8 +12049,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "ENS",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -11399,8 +12168,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "Smart Wallets",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -12160,8 +12929,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "Launchpad",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -12328,6 +13097,23 @@
         "status": "clean",
         "agentRunId": "es-ES-2026-11-02T21-30-25Z",
         "approvedAt": "2026-11-02T21:30:25.631Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "es-ES:i18next-json:token.stats.volume.1d.description",
+      {
+        "unitId": "token.stats.volume.1d.description",
+        "providerId": "i18next-json",
+        "locale": "es-ES",
+        "domain": "product-ui",
+        "sourceHash": "aff27f796482b0401f5b7652b9255e3e6feb8387bb9b686e49611980a129a38a",
+        "glossaryHash": "fbb2123878c129b04e5079ee7180a12b9a5ca0515d05ddd1a45d1bb03c49958e",
+        "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
+        "translation": "El volumen de 1 día es la cantidad del activo que se ha operado en Uniswap o dentro del ecosistema de Solana durante las últimas 24 horas.",
+        "status": "clean",
+        "agentRunId": "es-ES-2026-11-09T19-12-48Z",
+        "approvedAt": "2026-11-09T19:12:48.249Z",
         "approvedBy": "agent"
       }
     ],
@@ -12700,8 +13486,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "Error",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -13016,8 +13802,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "$TICKER",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -13050,8 +13836,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "No",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -13084,8 +13870,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "Crowd Launch",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -13118,8 +13904,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "Crowd Launches",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -13203,8 +13989,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "Instant Launch",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -13237,8 +14023,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "Instant Launches",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -13254,8 +14040,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "Pools.xyz",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -13322,8 +14108,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "App",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -13759,8 +14545,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "<icon /> <gradient>UniswapX</gradient> <info />",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ],
@@ -13776,8 +14562,8 @@
         "styleHash": "a59753f70fb76d03e5145a7686821aac25cc5598d8592b110cb02ed981f1a1dc",
         "translation": "Tokens",
         "status": "clean",
-        "agentRunId": "es-ES-2026-11-05T22-02-22Z",
-        "approvedAt": "2026-11-05T22:02:22.031Z",
+        "agentRunId": "es-ES-2026-11-10T23-45-09Z",
+        "approvedAt": "2026-11-10T23:45:09.286Z",
         "approvedBy": "agent"
       }
     ]

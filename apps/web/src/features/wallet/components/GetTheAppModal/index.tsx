@@ -8,6 +8,7 @@ import { heights } from '@universe/mycelium/tokens'
 import { TestID } from '@universe/test'
 import { atom, useAtom } from 'jotai'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { ChooseUnitagModal } from '~/features/wallet/components/GetTheAppModal/ChooseUnitag'
@@ -28,6 +29,7 @@ import { useAppSelector } from '~/state/hooks'
 export const downloadAppModalPageAtom = atom<Page>(Page.DownloadApp)
 
 export function GetTheAppModal() {
+  const { t } = useTranslation()
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
   const isNewOnboardingFlow = useIsEmbeddedWalletOnboardingNewFlow()
   const initialInnerPage = useAppSelector((state) => {
@@ -111,6 +113,7 @@ export function GetTheAppModal() {
     return (
       <WebBottomSheet
         isOpen={isOpen}
+        title={t('common.getTheApp')}
         onClose={isDismissible ? close : undefined}
         maxHeight={`calc(100dvh - ${heights['interface-nav']}px)`}
         px="$spacing24"

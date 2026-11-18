@@ -7,7 +7,7 @@ import {
   type TextCompatProps as TextProps,
 } from '@universe/mycelium'
 import { memo, ReactNode, useCallback } from 'react'
-import { useIsRowFocused } from 'uniswap/src/components/lists/focusedRowStore'
+import { isListNavKeyEvent, useIsRowFocused } from 'uniswap/src/components/lists/focusedRowStore'
 import { OptionItemPressableArea } from 'uniswap/src/components/lists/items/OptionItemPressableArea'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { KeyAction } from 'utilities/src/device/keyboard/types'
@@ -94,13 +94,21 @@ function OptionItemInner({
   const { rowIndex, setFocusedRowIndex } = focusedRowControl ?? {}
   const keyboardNavEnabled = isWebPlatform && focusedRowControl && setFocusedRowIndex
   const isFocused = useIsRowFocused(rowIndex)
+  const onListNavEnter = useCallback(
+    (event: KeyboardEvent): void => {
+      if (isListNavKeyEvent(event)) {
+        onPressOption()
+      }
+    },
+    [onPressOption],
+  )
   // Only the focused row listens: a listener per mounted row cost a document subscription each and
   // re-subscribed on every focus change.
   useKeyDown({
     keys: ['Enter'],
     keyAction: KeyAction.UP,
     disabled: !keyboardNavEnabled || !isFocused,
-    callback: onPressOption,
+    callback: onListNavEnter,
     shouldTriggerInInput: true,
   })
   const focusedStyleProps: FlexProps = keyboardNavEnabled

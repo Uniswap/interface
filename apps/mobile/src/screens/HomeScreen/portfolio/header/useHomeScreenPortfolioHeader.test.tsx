@@ -1,6 +1,7 @@
 import { useHomeScreenPortfolioHeader } from 'src/screens/HomeScreen/portfolio/header/useHomeScreenPortfolioHeader'
-import { render, screen } from 'src/test/test-utils'
+import { act, render, screen } from 'src/test/test-utils'
 import { AccountType } from 'uniswap/src/features/accounts/types'
+import { useOnboardingChecklistStore } from 'uniswap/src/features/onboarding/checklist/onboardingChecklistStore'
 
 const NOTIF_TEST_ID = 'notif-marker'
 const EARNING_TEST_ID = 'earning-marker'
@@ -20,6 +21,9 @@ vi.mock('src/components/accounts/AccountHeader', () => ({ AccountHeader: (): nul
 vi.mock('src/components/home/PortfolioChart/PortfolioOverview', () => ({ PortfolioOverview: (): null => null }))
 vi.mock('src/components/home/introCards/OnboardingIntroCardStack', () => ({
   OnboardingIntroCardStack: (): null => null,
+}))
+vi.mock('src/components/home/onboardingChecklist/OnboardingChecklist', () => ({
+  OnboardingChecklist: (): null => null,
 }))
 vi.mock('src/screens/HomeScreen/HomeScreenQuickActions', () => ({ HomeScreenQuickActions: (): null => null }))
 vi.mock('src/screens/HomeScreen/useHomeScreenState', () => ({
@@ -46,11 +50,19 @@ vi.mock('wallet/src/features/wallet/hooks', async () => ({
 
 vi.mock('src/notification-service/MobileNotificationServiceManager', async () => {
   const { useEffect } = await vi.importActual<typeof import('react')>('react')
-  const { Flex } = await vi.importActual<typeof import('@universe/mycelium')>('@universe/mycelium')
+  const { Text } = await vi.importActual<typeof import('@universe/mycelium')>('@universe/mycelium')
   return {
-    MobileNotificationServiceManager: ({ onCardsChange }: { onCardsChange: (hasCards: boolean) => void }) => {
-      useEffect(() => onCardsChange(true), [onCardsChange])
-      return <Flex testID={NOTIF_TEST_ID} />
+    MobileNotificationServiceManager: ({
+      isLoading,
+      onCardsChange,
+      suppressIntroCards,
+    }: {
+      isLoading?: boolean
+      onCardsChange: (hasCards: boolean) => void
+      suppressIntroCards?: boolean
+    }) => {
+      useEffect(() => onCardsChange(!suppressIntroCards), [onCardsChange, suppressIntroCards])
+      return <Text testID={NOTIF_TEST_ID}>{isLoading ? 'loading' : 'loaded'}</Text>
     },
   }
 })
@@ -104,5 +116,28 @@ describe('useHomeScreenPortfolioHeader', () => {
     render(<TestHost earnCardExpansionRequestId={42} onEarnCardExpansionRequestHandled={vi.fn()} />)
 
     expect((screen.getByTestId(EARNING_TEST_ID) as unknown as HTMLElement).textContent).toBe('$spacing8|true|42|true')
+  })
+
+  it('holds back intro cards and drops their margin while the onboarding checklist is up', () => {
+    render(<TestHost />)
+    act(() => useOnboardingChecklistStore.getState().setIsVisible(true))
+
+    expect(screen.getByTestId(NOTIF_TEST_ID)).toBeTruthy()
+    expect((screen.getByTestId(EARNING_TEST_ID) as unknown as HTMLElement).textContent).toBe(
+      'undefined|true|undefined|false',
+    )
+
+    act(() => useOnboardingChecklistStore.getState().setIsVisible(false))
+  })
+
+  it('keeps the intro cards loading until the checklist knows whether it will show', () => {
+    render(<TestHost />)
+    expect((screen.getByTestId(NOTIF_TEST_ID) as unknown as HTMLElement).textContent).toBe('loaded')
+
+    act(() => useOnboardingChecklistStore.getState().setIsLoading(true))
+    expect((screen.getByTestId(NOTIF_TEST_ID) as unknown as HTMLElement).textContent).toBe('loading')
+
+    act(() => useOnboardingChecklistStore.getState().setIsLoading(false))
+    expect((screen.getByTestId(NOTIF_TEST_ID) as unknown as HTMLElement).textContent).toBe('loaded')
   })
 })

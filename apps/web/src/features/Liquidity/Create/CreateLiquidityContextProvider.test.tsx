@@ -13,6 +13,7 @@ import {
   useCreateLiquidityContext,
 } from '~/features/Liquidity/Create/CreateLiquidityContextProvider'
 import { useDerivedPositionInfo } from '~/features/Liquidity/Create/hooks/useDerivedPositionInfo'
+import { useLiquidityUrlState } from '~/features/Liquidity/Create/hooks/useLiquidityUrlState'
 import { type CreatePositionInfo, PositionFlowStep } from '~/features/Liquidity/Create/types'
 import { getPriceRangeInfo } from '~/features/Liquidity/utils/priceRangeInfo'
 
@@ -49,12 +50,17 @@ const HOOK_ADDRESS = '0x0000000000000000000000000000000000000001'
 function renderProvider({
   tokenA,
   flowStep = PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER,
+  onStepChange,
+  priceInverted,
 }: {
   tokenA: Maybe<Currency>
   flowStep?: PositionFlowStep
+  onStepChange?: (step: PositionFlowStep | null) => void
+  priceInverted?: boolean
 }) {
   let currentTokenA = tokenA
   let currentFlowStep = flowStep
+  let currentPriceInverted = priceInverted
   const utils = renderHook(() => useCreateLiquidityContext(), {
     wrapper: ({ children }: { children?: React.ReactNode }) => (
       <CreateLiquidityContextProvider
@@ -62,6 +68,8 @@ function renderProvider({
         setCurrencyInputs={vi.fn()}
         initialPositionState={{ hook: HOOK_ADDRESS, userApprovedHook: HOOK_ADDRESS }}
         initialFlowStep={currentFlowStep}
+        onStepChange={onStepChange}
+        priceInverted={currentPriceInverted}
       >
         {children}
       </CreateLiquidityContextProvider>
@@ -77,10 +85,30 @@ function renderProvider({
       currentFlowStep = newFlowStep
       utils.rerender()
     },
+    setPriceInverted: (newPriceInverted: boolean) => {
+      currentPriceInverted = newPriceInverted
+      utils.rerender()
+    },
   }
 }
 
 describe('CreateLiquidityContextProvider', () => {
+  it('follows a host-held price orientation, carrying the range over', () => {
+    const { result, setPriceInverted } = renderProvider({ tokenA: DAI, priceInverted: false })
+    act(() => {
+      result.current.setPriceRangeState((prev) => ({ ...prev, minTick: -120, maxTick: 60 }))
+    })
+
+    setPriceInverted(true)
+
+    expect(result.current.priceRangeState).toMatchObject({ priceInverted: true, minTick: -60, maxTick: 120 })
+  })
+
+  it('starts in the host-held price orientation', () => {
+    const { result } = renderProvider({ tokenA: DAI, priceInverted: true })
+    expect(result.current.priceRangeState.priceInverted).toBe(true)
+  })
+
   it('clears the selected hook when the token chain changes', () => {
     const { result, setTokenA } = renderProvider({ tokenA: DAI })
 
@@ -95,6 +123,44 @@ describe('CreateLiquidityContextProvider', () => {
     expect(result.current.positionState.hook).toBeUndefined()
     expect(result.current.positionState.userApprovedHook).toBeUndefined()
     expect(result.current.selectedHookEntry).toBeUndefined()
+  })
+
+  it('sends step changes to onStepChange instead of the URL when given', () => {
+    const setHistoryState = vi.fn()
+    vi.mocked(useLiquidityUrlState).mockReturnValue({ setHistoryState, syncToUrl: vi.fn() } as unknown as ReturnType<
+      typeof useLiquidityUrlState
+    >)
+    const onStepChange = vi.fn()
+    const { result } = renderProvider({ tokenA: DAI, onStepChange })
+
+    act(() => {
+      result.current.setStep(PositionFlowStep.DEPOSIT)
+    })
+    act(() => {
+      result.current.reset()
+    })
+
+    expect(onStepChange).toHaveBeenNthCalledWith(1, PositionFlowStep.DEPOSIT)
+    expect(onStepChange).toHaveBeenNthCalledWith(2, PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
+    expect(setHistoryState).not.toHaveBeenCalled()
+  })
+
+  it('writes step changes to the URL by default', () => {
+    const setHistoryState = vi.fn()
+    vi.mocked(useLiquidityUrlState).mockReturnValue({ setHistoryState, syncToUrl: vi.fn() } as unknown as ReturnType<
+      typeof useLiquidityUrlState
+    >)
+    const { result } = renderProvider({ tokenA: DAI })
+
+    act(() => {
+      result.current.setStep(PositionFlowStep.DEPOSIT)
+    })
+    act(() => {
+      result.current.reset()
+    })
+
+    expect(setHistoryState).toHaveBeenNthCalledWith(1, PositionFlowStep.DEPOSIT)
+    expect(setHistoryState).toHaveBeenNthCalledWith(2, PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
   })
 
   it('keeps the selected hook when the token changes on the same chain', () => {

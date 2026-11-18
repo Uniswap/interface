@@ -63,7 +63,7 @@ describe('ChartControls', () => {
     expect(screen.queryByText('Volume')).not.toBeInTheDocument()
     expect(screen.queryByText('TVL')).not.toBeInTheDocument()
     // The ranges stay on screen as the chart's frame, but every one of them draws the same placeholder.
-    expect(screen.getByRole('button', { name: '1D' })).toBeDisabled()
+    expect(screen.getByRole('tab', { name: '1D' })).toBeDisabled()
   })
 
   it('renders no controls during price discovery on mobile', () => {

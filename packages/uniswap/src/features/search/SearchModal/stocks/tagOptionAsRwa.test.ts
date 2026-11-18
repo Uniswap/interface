@@ -49,14 +49,13 @@ function multichainToken(chainId: number, address: string): MultichainTokenOptio
 }
 
 describe('tagOptionAsRwa', () => {
-  it('stamps category, clean name, and issuer slug from the match', () => {
+  it('stamps category and issuer slug from the match', () => {
     const match = findRwaForToken(index, { chainId: MAINNET, address: '0xa' })
     if (!match) {
       throw new Error('fixture match missing')
     }
-    const out = tagOptionAsRwa({ option: token(MAINNET, '0xa'), match, plainTokenNames: false })
+    const out = tagOptionAsRwa({ option: token(MAINNET, '0xa'), match })
     expect(out.rwaCategory).toBe(RwaCategory.STOCKS)
-    expect(out.rwaName).toBe('Tesla')
     expect(out.rwaIssuer?.issuer).toBe('ondo')
   })
 
@@ -66,7 +65,7 @@ describe('tagOptionAsRwa', () => {
       throw new Error('fixture match missing')
     }
     const option = token(MAINNET, '0xa')
-    const out = tagOptionAsRwa({ option, match, plainTokenNames: false })
+    const out = tagOptionAsRwa({ option, match })
     expect(out).not.toBe(option)
     expect(out.type).toBe(OnchainItemListOptionType.Token)
     expect(out.currencyInfo).toBe(option.currencyInfo)
@@ -78,30 +77,18 @@ describe('tagOptionAsRwa', () => {
       throw new Error('fixture match missing')
     }
     const option = multichainToken(MAINNET, '0xa')
-    const out = tagOptionAsRwa({ option, match, plainTokenNames: false })
+    const out = tagOptionAsRwa({ option, match })
     expect(out.type).toBe(OnchainItemListOptionType.MultichainToken)
     expect(out.multichainResult).toBe(option.multichainResult)
     expect(out.rwaCategory).toBe(RwaCategory.STOCKS)
-    expect(out.rwaName).toBe('Tesla')
     expect(out.rwaIssuer?.issuer).toBe('ondo')
   })
 
-  it('leaves the clean name unset with plainTokenNames so the row keeps the token name', () => {
-    const match = findRwaForToken(index, { chainId: MAINNET, address: '0xa' })
-    if (!match) {
-      throw new Error('fixture match missing')
-    }
-    const out = tagOptionAsRwa({ option: token(MAINNET, '0xa'), match, plainTokenNames: true })
-    expect(out.rwaName).toBeUndefined()
-    expect(out.rwaCategory).toBe(RwaCategory.STOCKS)
-    expect(out.rwaIssuer?.issuer).toBe('ondo')
-  })
-
-  it('coalesces an empty asset name / issuer slug to undefined (so the title falls back, not blanks)', () => {
+  it('coalesces an empty issuer slug to undefined', () => {
     const emptyIndex = buildRwaSearchIndex([
       {
         symbol: 'TSLA',
-        name: '', // proto3 scalar default — must not blank the row title
+        name: '',
         logoUrl: '',
         categories: [RwaCategory.STOCKS],
         issuerTokens: [{ chainId: MAINNET, address: '0xa', issuer: '' }],
@@ -112,8 +99,7 @@ describe('tagOptionAsRwa', () => {
     if (!match) {
       throw new Error('fixture match missing')
     }
-    const out = tagOptionAsRwa({ option: token(MAINNET, '0xa'), match, plainTokenNames: false })
-    expect(out.rwaName).toBeUndefined()
+    const out = tagOptionAsRwa({ option: token(MAINNET, '0xa'), match })
     expect(out.rwaIssuer).toBeUndefined()
   })
 
@@ -127,7 +113,7 @@ describe('tagOptionAsRwa', () => {
       ...option.currencyInfo,
       issuer: { issuer: 'ondo', issuerDisplayName: 'Ondo Finance', issuerLogoUrl: 'https://logo/ondo.svg' },
     }
-    const out = tagOptionAsRwa({ option, match, plainTokenNames: true })
+    const out = tagOptionAsRwa({ option, match })
     expect(out.rwaIssuer).toEqual({
       issuer: 'ondo',
       issuerDisplayName: 'Ondo Finance',

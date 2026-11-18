@@ -6,7 +6,6 @@ import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { PortfolioOverview } from '~/pages/Portfolio/Overview/Overview'
 import { fireEvent, render, screen } from '~/test-utils/render'
 
-const mockPortfolioPoolsBalancesEnabled = vi.hoisted(() => ({ value: true }))
 const mockShowDemoView = vi.hoisted(() => ({ value: false }))
 const mockNewUserUxEnabled = vi.hoisted(() => ({ value: false }))
 const mockIsPortfolioZero = vi.hoisted(() => ({ value: false }))
@@ -17,22 +16,11 @@ const mockPortfolioBreakdown = vi.hoisted(
   } => ({ value: undefined }),
 )
 
-vi.mock('@universe/gating', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@universe/gating')>()
-
-  const readFlag = (flag: FeatureFlags): boolean => {
-    if (flag === FeatureFlags.PortfolioPoolsBalances) {
-      return mockPortfolioPoolsBalancesEnabled.value
-    }
-    return flag === FeatureFlags.NewUserUx ? mockNewUserUxEnabled.value : false
-  }
-  return {
-    ...actual,
-    useFeatureFlag: readFlag,
-    // useWalletBalancesIncludeCategories reads the pools flag via the exposure-disabled variant.
-    useFeatureFlagWithExposureLoggingDisabled: readFlag,
-  }
-})
+vi.mock('@universe/gating', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@universe/gating')>()),
+  useFeatureFlag: (flag: FeatureFlags): boolean =>
+    flag === FeatureFlags.NewUserUx ? mockNewUserUxEnabled.value : false,
+}))
 
 const defaultChartData = {
   points: [
@@ -169,7 +157,6 @@ vi.mock('~/pages/Portfolio/Overview/PortfolioPerformance', () => ({
 
 describe('PortfolioOverview', () => {
   beforeEach(() => {
-    mockPortfolioPoolsBalancesEnabled.value = true
     mockShowDemoView.value = false
     mockNewUserUxEnabled.value = false
     mockIsPortfolioZero.value = false
@@ -271,23 +258,6 @@ describe('PortfolioOverview', () => {
     render(<PortfolioOverview />)
 
     expect(screen.getByTestId(TestID.PortfolioTotalBalance)).toBeInTheDocument()
-  })
-
-  it('passes earn breakdown values without exposing pool values when the pools flag is disabled', () => {
-    mockPortfolioPoolsBalancesEnabled.value = false
-    mockPortfolioBreakdown.value = {
-      total: { balanceUSD: 11627.95, percentChange: 1, absoluteChangeUSD: 100 },
-      tokens: { balanceUSD: 8368.94, percentChange: -6.09, absoluteChangeUSD: -510 },
-      pools: { balanceUSD: 7373.05, percentChange: 1.02, absoluteChangeUSD: 75 },
-      earn: { balanceUSD: 3259.01, percentChange: 2.2, absoluteChangeUSD: 70 },
-      failedChainIds: [],
-    }
-
-    render(<PortfolioOverview />)
-
-    const chart = screen.getByTestId(TestID.PortfolioTotalBalance)
-    expect(chart).toHaveAttribute('data-earn-balance-usd', '3259.01')
-    expect(chart).not.toHaveAttribute('data-pool-balance-usd')
   })
 
   it('passes token, pool, and earn breakdown values to the portfolio chart', () => {

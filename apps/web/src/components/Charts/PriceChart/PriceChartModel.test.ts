@@ -1,6 +1,8 @@
 import type { IChartApi, UTCTimestamp } from 'lightweight-charts'
 import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
-import { getLowPriceRangeScaleFactor, PriceChartModel } from '~/components/Charts/PriceChart/PriceChartModel'
+import { getLowPriceRangeScaleFactor } from '~/components/Charts/PriceChart/lowPriceScale'
+import { widenAutoscaleToRange } from '~/components/Charts/PriceChart/priceAxisFit'
+import { PriceChartModel } from '~/components/Charts/PriceChart/PriceChartModel'
 import { PriceChartType } from '~/utils/charts'
 
 const { mockApplyOptions } = vi.hoisted(() => ({ mockApplyOptions: vi.fn() }))
@@ -118,5 +120,29 @@ describe('PriceChartModel.updateOptions', () => {
       createModel({})
       expect(lastTickmarksFormatter()).toBeUndefined()
     })
+  })
+})
+
+describe(widenAutoscaleToRange, () => {
+  const info = { priceRange: { minValue: 2_300, maxValue: 2_800 } }
+
+  it('takes in edges past the series', () => {
+    expect(widenAutoscaleToRange(info, { lower: 2_000, upper: 3_000 })).toEqual({
+      priceRange: { minValue: 2_000, maxValue: 3_000 },
+    })
+  })
+
+  it('never narrows to edges inside the series', () => {
+    expect(widenAutoscaleToRange(info, { lower: 2_400, upper: 2_600 })).toEqual(info)
+  })
+
+  it('ignores an open edge', () => {
+    expect(widenAutoscaleToRange(info, { lower: 2_000, upper: undefined })).toEqual({
+      priceRange: { minValue: 2_000, maxValue: 2_800 },
+    })
+  })
+
+  it('passes through a scale with no price range', () => {
+    expect(widenAutoscaleToRange(null, { lower: 2_000, upper: 3_000 })).toBeNull()
   })
 })

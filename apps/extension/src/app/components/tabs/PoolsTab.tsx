@@ -1,5 +1,4 @@
 import { Platform } from '@universe/chains'
-import { FeatureFlags, useFeatureFlagWithExposureLoggingDisabled } from '@universe/gating'
 import { Flex, Loader, UniversalList, type UniversalListRenderItemInfo } from '@universe/mycelium'
 import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFilled'
 import { memo, useCallback, useMemo, useState } from 'react'
@@ -80,8 +79,7 @@ export const PoolsTab = memo(function PoolsTabInner({
 }): JSX.Element {
   const { t } = useTranslation()
   const { chains } = useEnabledChains({ platform: Platform.EVM })
-  const portfolioPoolsBalancesEnabled = useFeatureFlagWithExposureLoggingDisabled(FeatureFlags.PortfolioPoolsBalances)
-  const outageBanner = usePoolsOutageBanner({ evmAddress: address, enabled: portfolioPoolsBalancesEnabled })
+  const outageBanner = usePoolsOutageBanner({ evmAddress: address })
 
   const { value: hiddenExpanded, toggle: toggleHidden } = useBooleanState(false)
   const [statusFilter, setStatusFilter] = useState<PositionStatusFilterValue>(PositionStatusFilterValue.Open)

@@ -62,7 +62,7 @@ exports[`CountryListRow > should render selected country 1`] = `
     stroke="currentColor"
     stroke-linecap="round"
     stroke-width="8"
-    style="width: 24px; height: 24px;"
+    style="color: var(--neutral1); width: 24px; height: 24px;"
     viewBox="0 0 48 48"
   >
     <line

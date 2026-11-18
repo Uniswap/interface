@@ -1,4 +1,3 @@
-import { useIsTokenCategoriesEnabledWithLoading } from '@universe/gating'
 import { Flex } from '@universe/mycelium'
 import type { ReactNode } from 'react'
 import { Navigate, useParams } from 'react-router'
@@ -7,7 +6,7 @@ import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import type { Category, CategoryKind } from 'uniswap/src/features/tokenCategories/types'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '~/constants/breakpoints'
-import { getExplorePoolsURL, getExploreTokensURL } from '~/pages/Explore/categories/useExploreCategory'
+import { getExplorePoolsURL, getExploreTokensURL } from '~/features/Explore/categories/useExploreCategory'
 import { CategoryDetailsBreadcrumb } from '~/pages/Explore/CategoryDetails/CategoryDetailsBreadcrumb'
 import {
   CategoryDetailsHeader,
@@ -53,14 +52,14 @@ function PageShell({
 export function CategoryDetailsContent({
   kind,
   category,
-  isFlagLoading,
-  isFlagEnabled,
+  isFlagLoading = false,
+  isFlagEnabled = true,
   isCategoryLoading,
 }: {
   kind: CategoryKind
   category: Category | undefined
-  isFlagLoading: boolean
-  isFlagEnabled: boolean
+  isFlagLoading?: boolean
+  isFlagEnabled?: boolean
   isCategoryLoading: boolean
 }): JSX.Element {
   // Flag-off and unknown-slug loads land on the kind's list instead of a dead page.
@@ -114,16 +113,7 @@ export function CategoryDetailsContent({
 
 export default function CategoryDetailsPage(): JSX.Element {
   const { categorySlug } = useParams<{ categorySlug: string }>()
-  const { value: isFlagEnabled, isLoading: isFlagLoading } = useIsTokenCategoriesEnabledWithLoading()
   const { category, isLoading: isCategoryLoading } = useTokenCategoryBySlug(categorySlug)
 
-  return (
-    <CategoryDetailsContent
-      kind="token"
-      category={category}
-      isFlagLoading={isFlagLoading}
-      isFlagEnabled={isFlagEnabled}
-      isCategoryLoading={isCategoryLoading}
-    />
-  )
+  return <CategoryDetailsContent kind="token" category={category} isCategoryLoading={isCategoryLoading} />
 }

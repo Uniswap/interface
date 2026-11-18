@@ -102,6 +102,18 @@ export function isGasSponsoredExecution(swapTxContext: SwapTxAndGasInfo): boolea
   return isGasSponsoredTradeExecution({ trade, executesViaPaymaster })
 }
 
+/**
+ * The quote's sponsorship info for display, or undefined unless the quote is `sponsored`. A quote can
+ * carry a campaign or `sponsorMetadata` with `sponsored: false` (e.g. once the wallet's campaign
+ * allowance is used up), and execution only uses the paymaster for sponsored quotes, so anything else
+ * pays gas and must not be shown as "Free".
+ */
+export function getDisplayableSponsorshipInfo(
+  sponsorshipInfo: TradingApi.SponsorshipInfo | undefined,
+): TradingApi.SponsorshipInfo | undefined {
+  return sponsorshipInfo?.sponsored === true ? sponsorshipInfo : undefined
+}
+
 export function isChained<T extends { routing: TradingApi.Routing }>(
   obj: T,
 ): obj is Extract<T, { routing: TradingApi.Routing.CHAINED }> {

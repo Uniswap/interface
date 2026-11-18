@@ -4,9 +4,16 @@ import { TouchableAreaCompat as TouchableArea } from '../../../touchable-area/To
 import type { CloseIconProps } from '../CloseIconWithHover'
 import { X } from '../X'
 
-export function CloseIconFrame({ onClose, size, color = '$neutral2', testId, role }: CloseIconProps): ReactElement {
+export function CloseIconFrame({
+  onClose,
+  size,
+  color = '$neutral2',
+  testId,
+  role,
+  'aria-label': ariaLabel,
+}: CloseIconProps): ReactElement {
   return (
-    <TouchableArea role={role} testID={testId} onPress={onClose}>
+    <TouchableArea role={role} aria-label={ariaLabel} testID={testId} onPress={onClose}>
       <X size={size} color={color} />
     </TouchableArea>
   )

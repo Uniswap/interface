@@ -130,6 +130,8 @@ export interface TouchableAreaSpecificProps extends TouchableAreaPressProps, Mod
   hoverable?: boolean
   /** When false: `tabindex=-1`, no focus outline, and the focus-visible pool is neutralized. */
   focusable?: boolean
+  /** Web, with `tag="button"`: the button type, `button` by default so it never submits an enclosing form. */
+  type?: 'button' | 'submit' | 'reset'
   /** Scale applied while pressed (merged into the press pool). */
   scaleTo?: number
   /** Opacity applied while pressed; 0.75 by default, falsy disables the opacity press state. */

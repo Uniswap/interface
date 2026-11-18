@@ -175,7 +175,7 @@ export type ExpandableAssetRowMetrics = {
   priceUsd: number
   priceChange1hPct?: number
   priceChange24hPct?: number
-  marketCapUsd?: number
+  fdvUsd?: number
   volume24hUsd: number
   sparkline: Rwa['sparkline1d']
 }
@@ -194,7 +194,7 @@ export function getExpandableAssetRowMetrics(row: ExpandableAssetTableRow): Expa
       priceUsd: aggregates.priceUsd,
       priceChange1hPct: aggregates.priceChange1hPct,
       priceChange24hPct: aggregates.priceChange24hPct,
-      marketCapUsd: aggregates.marketCapUsd,
+      fdvUsd: aggregates.fdvUsd,
       volume24hUsd: aggregates.volume24hUsd,
       sparkline: aggregates.sparkline1d,
     }
@@ -203,7 +203,7 @@ export function getExpandableAssetRowMetrics(row: ExpandableAssetTableRow): Expa
     priceUsd: row.issuer.priceUsd,
     priceChange1hPct: row.issuer.priceChange1hPct,
     priceChange24hPct: row.issuer.priceChange24hPct,
-    marketCapUsd: row.issuer.marketCapUsd,
+    fdvUsd: row.issuer.fdvUsd,
     volume24hUsd: row.issuer.volume24hUsd,
     sparkline: row.issuer.sparkline1d,
   }

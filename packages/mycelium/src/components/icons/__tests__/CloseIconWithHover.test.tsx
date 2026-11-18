@@ -26,7 +26,9 @@ describe('CloseIconWithHover (web)', () => {
 
     fireEvent.click(frame)
     fireEvent.keyDown(frame, { key: 'Enter' })
+    // Space activates on keyup, like a native button.
     fireEvent.keyDown(frame, { key: ' ' })
+    fireEvent.keyUp(frame, { key: ' ' })
     fireEvent.keyDown(frame, { key: 'Escape' })
 
     expect(onClose).toHaveBeenCalledTimes(3)
@@ -45,10 +47,11 @@ describe('CloseIconWithHover (web)', () => {
     const { container, getByTestId } = render(<CloseIconWithHover testId="close" onClose={vi.fn()} />)
     const frame = getByTestId('close')
 
+    // Hover rides the pointer pair (TouchableArea's one hover seam), which ignores touch pointers.
     expect(iconColor(container)).toBe('var(--neutral2)')
-    fireEvent.mouseEnter(frame)
+    fireEvent.pointerEnter(frame, { pointerType: 'mouse' })
     expect(iconColor(container)).toBe('var(--neutral2-hovered, var(--neutral2))')
-    fireEvent.mouseLeave(frame)
+    fireEvent.pointerLeave(frame, { pointerType: 'mouse' })
     expect(iconColor(container)).toBe('var(--neutral2)')
   })
 
@@ -57,7 +60,7 @@ describe('CloseIconWithHover (web)', () => {
       <CloseIconWithHover color="red" hoverColor="blue" testId="close" onClose={vi.fn()} />,
     )
     expect(iconColor(container)).toBe('red')
-    fireEvent.mouseEnter(getByTestId('close'))
+    fireEvent.pointerEnter(getByTestId('close'), { pointerType: 'mouse' })
     expect(iconColor(container)).toBe('blue')
   })
 })

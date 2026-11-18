@@ -3,7 +3,6 @@ import { TestID } from '@universe/test'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, StyleSheet } from 'react-native'
-import { useExploreSectionTitleProps } from 'src/components/explore/ExploreSections/useExploreSectionTitleProps'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { EarnAnalyticsSurface, EarnEntryPoint } from 'uniswap/src/features/earn/analytics'
 import { EarnVaultChip, EarnVaultChipSkeleton } from 'uniswap/src/features/earn/EarnVaultChip'
@@ -17,9 +16,8 @@ const MOBILE_EARN_VAULT_CHIP_WIDTH = 224
 const SKELETON_CHIP_COUNT = 3
 
 function SectionTitle({ title }: { title: string }): JSX.Element {
-  const titleProps = useExploreSectionTitleProps()
   return (
-    <Text {...titleProps} mx="$spacing16">
+    <Text color="$neutral1" mx="$spacing16" variant="subheading1">
       {title}
     </Text>
   )

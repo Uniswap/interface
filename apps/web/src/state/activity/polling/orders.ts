@@ -15,8 +15,8 @@ import {
 import { isFinalizedTxStatus } from 'uniswap/src/features/transactions/types/utils'
 import { convertOrderStatusToTransactionStatus } from 'uniswap/src/features/transactions/utils/uniswapX.utils'
 import { logger } from 'utilities/src/logger/logger'
-import { getConfig } from '~/config'
 import { useAccount } from '~/connection/hooks/useAccount'
+import { UNISWAPX_API_URL } from '~/constants/uniswapx'
 import { evaluateCancelTimeouts } from '~/state/activity/polling/cancelTimeouts'
 import { ActivityUpdateTransactionType, OnActivityUpdate } from '~/state/activity/types'
 import { getRwaSwapAnalyticsFromTypeInfo } from '~/state/activity/utils'
@@ -33,8 +33,6 @@ export const QUICK_POLL_MEDIUM_INTERVAL = ms('2s')
 export const QUICK_POLL_MAX_INTERVAL = ms('30s')
 export const QUICK_POLL_INITIAL_PHASE = ms('10s')
 export const QUICK_POLL_MEDIUM_PHASE = ms('200s')
-
-const UNISWAP_GATEWAY_DNS_URL = getConfig().uniswapGatewayDns
 
 export function getQuickPollingInterval(orderStartTime: number) {
   const elapsedTime = Date.now() - orderStartTime
@@ -60,7 +58,7 @@ async function fetchStatuses({
     return []
   }
 
-  const result = await global.fetch(`${UNISWAP_GATEWAY_DNS_URL}/${endpoint}?swapper=${swapper}&orderHashes=${hashes}`)
+  const result = await global.fetch(`${UNISWAPX_API_URL}/${endpoint}?swapper=${swapper}&orderHashes=${hashes}`)
   const statuses = (await result.json()) as OrderQueryResponse
   return statuses.orders
 }

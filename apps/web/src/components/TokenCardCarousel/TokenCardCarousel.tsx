@@ -1,11 +1,13 @@
 import { Flex } from '@universe/mycelium'
 import { useIsTouchDevice, useSporeColors } from '@universe/mycelium/theme-hooks-compat'
+import { TestID } from '@universe/test'
 import type { ReactNode } from 'react'
 import { CarouselEdgeFade } from '~/components/TokenCardCarousel/CarouselEdgeFade'
 import { CarouselScrollButtonOverlay } from '~/components/TokenCardCarousel/CarouselScrollButtonOverlay'
 import { CAROUSEL_CARD_GAP } from '~/components/TokenCardCarousel/constants'
 import { TokenCardSkeletonRow, type TokenCardSkeletonLayout } from '~/components/TokenCardCarousel/TokenCardSkeleton'
 import type { useHorizontalSnapCarousel } from '~/components/TokenCardCarousel/useHorizontalSnapCarousel'
+import { edgeFadeMaskStyle } from '~/hooks/useHorizontalScrollFades'
 
 export function TokenCardCarousel<T>({
   items,
@@ -21,6 +23,8 @@ export function TokenCardCarousel<T>({
   disableScrollSnap = false,
   forceLeftFade = false,
   fadeOnHoverOnly = true,
+  edgeInset = 0,
+  edgeFade = 'overlay',
 }: {
   items: T[]
   getItemKey: (item: T) => string
@@ -39,6 +43,10 @@ export function TokenCardCarousel<T>({
   forceLeftFade?: boolean
   /** Rests the edge fades hidden, showing them only while hovered alongside the arrow buttons. Set false for strips whose fades must stay up at rest (e.g. an active marquee). */
   fadeOnHoverOnly?: boolean
+  /** Padding at both scroll ends, for a carousel that bleeds past its column; snapping honors it too. */
+  edgeInset?: number
+  /** `mask` fades the scroller's clipped edges like the Explore chip rows instead of painting overlays. */
+  edgeFade?: 'overlay' | 'mask'
 }): JSX.Element {
   const colors = useSporeColors()
   const isTouchDevice = useIsTouchDevice()
@@ -51,11 +59,24 @@ export function TokenCardCarousel<T>({
   const leftFadeShown =
     forceLeftFade || (hoverFadeMode ? isHovered && !isAtStart : !isAtStart && (isAtEnd || !isScrollSettled))
   const rightFadeShown = !hoverFadeMode || isHovered
+  const showOverlayFades = edgeFade === 'overlay'
+  const edgeMaskStyle =
+    edgeFade === 'mask'
+      ? edgeFadeMaskStyle({ left: !isLoading && !isAtStart, right: isLoading || !isAtEnd })
+      : undefined
 
   return (
     <Flex position="relative" width="100%" pointerEvents="auto" onMouseEnter={showButton} onMouseLeave={hideButton}>
       {isLoading ? (
-        <Flex row gap={CAROUSEL_CARD_GAP} flexWrap="nowrap" overflow="hidden" width="100%">
+        <Flex
+          row
+          gap={CAROUSEL_CARD_GAP}
+          flexWrap="nowrap"
+          overflow="hidden"
+          width="100%"
+          px={edgeInset}
+          $platform-web={edgeMaskStyle}
+        >
           <TokenCardSkeletonRow cardWidth={cardWidth} count={skeletonCount} layout={skeletonLayout} />
         </Flex>
       ) : (
@@ -71,18 +92,21 @@ export function TokenCardCarousel<T>({
             width: '100%',
             overflowX: 'scroll',
             overscrollBehaviorX: 'none',
+            paddingInline: edgeInset,
+            scrollPaddingInline: edgeInset,
             ...(disableScrollSnap ? {} : { scrollSnapType: 'x mandatory' as const }),
             scrollbarWidth: 'none',
+            ...edgeMaskStyle,
           }}
         >
           {items.map((item) => (
-            <Flex key={getItemKey(item)} flexShrink={0} className="snap-start">
+            <Flex key={getItemKey(item)} flexShrink={0} className="snap-start" testID={TestID.TokenCardCarouselItem}>
               {renderItem(item)}
             </Flex>
           ))}
         </div>
       )}
-      {!isLoading && (
+      {showOverlayFades && !isLoading && (
         <CarouselEdgeFade
           side="left"
           fadeWidth={fadeWidth}
@@ -90,7 +114,7 @@ export function TokenCardCarousel<T>({
           opacity={leftFadeShown ? 1 : 0}
         />
       )}
-      {(isLoading || !isAtEnd) && (
+      {showOverlayFades && (isLoading || !isAtEnd) && (
         <CarouselEdgeFade
           side="right"
           fadeWidth={fadeWidth}

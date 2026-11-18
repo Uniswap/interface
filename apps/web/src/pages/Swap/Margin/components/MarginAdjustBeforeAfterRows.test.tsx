@@ -117,15 +117,7 @@ describe('MarginAdjustBeforeAfterRows', () => {
     expect(screen.getByLabelText(/^Liquidates at: \$1,162\.79 to \$1,550\.00 \(−22\.5%\)$/)).toBeInTheDocument()
   })
 
-  // Health is the one row whose before/after are tier LABELS, and the tier moves here.
-  it('moves the health tier from the position to the projection', () => {
-    render(<MarginAdjustBeforeAfterRows {...BASE} />)
-    expect(screen.getByLabelText('Health factor: Healthy to Caution')).toBeInTheDocument()
-  })
-
-  // Add/Withdraw margin report no size, so the debt projection is undefined rather than 0 — the "0"
-  // health sentinel still has to be read as debt-free, or a de-risked position reads as endangered.
-  describe('the debt-free "0" health sentinel', () => {
+  describe('the debt-free "0" sentinel', () => {
     const DEBT_FREE_POSITION: MarginActivePosition = {
       ...POSITION,
       legs: [{ ...POSITION.legs[0]!, debt: '0' }],
@@ -139,26 +131,8 @@ describe('MarginAdjustBeforeAfterRows', () => {
       display: { healthFactor: '0' },
     }
 
-    // Both sides land on the same tier, which collapses to one label rather than a transition.
-    it('reads it as debt-free when the position carries no debt', () => {
-      render(<MarginAdjustBeforeAfterRows {...BASE} position={DEBT_FREE_POSITION} quote={EQUITY_ONLY_QUOTE} />)
-      expect(screen.queryByLabelText(/^Health factor:/)).not.toBeInTheDocument()
-      expect(screen.getByText('Healthy')).toBeInTheDocument()
-    })
-
-    // The other inversion: on a position that DOES carry debt, an undefined projection means "debt
-    // unchanged", so a "0" health must be reported as-is rather than substituted to ∞.
-    it('does not read it as debt-free when the position still carries debt', () => {
-      render(<MarginAdjustBeforeAfterRows {...BASE} quote={EQUITY_ONLY_QUOTE} />)
-      expect(screen.getByLabelText(/^Health factor: Healthy to /)).toBeInTheDocument()
-    })
-
-    // The SAME wire state carries a liquidationPrice of '0' — the backend derives it from the LTV, so
-    // debt-free yields 0 on both fields. Rendering that as "$0.00" puts a liquidation an inch above
-    // zero one row above the "Healthy" the case above asserts: two contradictory risk figures on one
-    // card. The fixture above deliberately leaves the inherited non-zero price, which is why this
-    // needs its own.
-    it('withholds the liquidation price on the same debt-free sentinel it reads as Healthy', () => {
+    // A debt-free position carries a liquidationPrice of '0' — the backend derives it from the LTV.
+    it('withholds the liquidation price on the debt-free sentinel', () => {
       render(
         <MarginAdjustBeforeAfterRows
           {...BASE}
@@ -166,7 +140,6 @@ describe('MarginAdjustBeforeAfterRows', () => {
           quote={EQUITY_ONLY_QUOTE}
         />,
       )
-      expect(screen.getByText('Healthy')).toBeInTheDocument()
       // FiatTokenPrice renders a zero as "$0", NOT "$0.00" — the longer string never matches and the
       // assertion would pass with the sentinel right there on screen.
       expect(screen.queryByText('$0')).not.toBeInTheDocument()
@@ -231,9 +204,9 @@ describe('MarginAdjustBeforeAfterRows', () => {
   // Adjust and Change leverage put the target on a slider and the current figure in the pair heading,
   // so a third rendering of it in the summary was the drifted one nobody could place. Add and Withdraw
   // have no leverage control — there the move IS the payoff those modals advertise.
-  it('drops the Leverage row where a leverage control already shows it', () => {
+  it('drops the Leverage and Size rows where a leverage control and Size box already show them', () => {
     render(<MarginAdjustBeforeAfterRows {...BASE} hasLeverageControl />)
-    expect(labelOrder()).toEqual(['Size', 'Liquidates at'])
+    expect(labelOrder()).toEqual(['Liquidates at'])
   })
 
   it('never renders Borrowing inline — it lives behind Show more now', () => {

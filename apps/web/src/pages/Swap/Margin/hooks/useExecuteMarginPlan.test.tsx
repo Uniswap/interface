@@ -22,7 +22,6 @@ import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { TestWeb3Provider } from '~/components/Web3Provider/TestWeb3Provider'
 import { MARGIN_CHAIN_ID, MARGIN_ROUTER_ADDRESS } from '~/constants/margin'
 import {
   decideOpenAction,
@@ -59,6 +58,7 @@ import {
   useExecuteMarginPlan,
 } from '~/pages/Swap/Margin/hooks/useExecuteMarginPlan'
 import reduxStore from '~/state'
+import { TestWeb3Provider } from '~/test-utils/TestWeb3Provider'
 
 // Mocked wallet/network seam for the runLoop (mocked wallet/network) suite below — everything
 // runLoop touches outside the pure guards/checks it composes (wagmi hooks, the Trading API, on-chain
@@ -574,8 +574,27 @@ describe('marginExecutionGuards', () => {
       clearPlanProofs({ swapper: plan.swapper, planId: plan.planId })
     })
 
-    it('holds a non-terminal plan with no error', () => {
-      expect(heldPlan({ plan, isExecuting: false })).toBe(plan)
+    it('releases a plan that has sent nothing, so Open creates from the form', () => {
+      expect(heldPlan({ plan, isExecuting: false })).toBeUndefined()
+    })
+
+    it('holds a plan once a step has started', () => {
+      const started = { ...plan, steps: [permitStep({ status: 'COMPLETE' })] }
+      expect(heldPlan({ plan: started, isExecuting: false })).toBe(started)
+    })
+
+    it('holds a plan with no started step once a step has a cached proof, keyed on stepIndex', () => {
+      const broadcast = { ...plan, steps: [permitStep({ stepIndex: 1 })] }
+      const proof = { swapper: plan.swapper, planId: plan.planId, txHash: '0xdead', to: '0x01', data: '0x' }
+      writeStepProof({ ...proof, stepIndex: 0 })
+      expect(heldPlan({ plan: broadcast, isExecuting: false })).toBeUndefined()
+      writeStepProof({ ...proof, stepIndex: 1 })
+      expect(heldPlan({ plan: broadcast, isExecuting: false })).toBe(broadcast)
+      clearPlanProofs({ swapper: plan.swapper, planId: plan.planId })
+    })
+
+    it('holds a plan while its loop is running', () => {
+      expect(heldPlan({ plan, isExecuting: true })).toBe(plan)
     })
 
     it('holds a failed plan while its loop is still running', () => {
@@ -623,6 +642,12 @@ describe('marginExecutionGuards', () => {
   })
 
   describe('decideOpenAction', () => {
+    it('blocks a held OPEN quoted for a different form', () => {
+      expect(
+        decideOpenAction({ existing: { planId: 'p1', intent: 'OPEN', status: 'IN_PROGRESS' }, matchesForm: false }),
+      ).toEqual({ kind: 'block' })
+    })
+
     it('resumes an in-flight OPEN held in the store', () => {
       expect(decideOpenAction({ existing: { planId: 'p1', intent: 'OPEN', status: 'AWAITING_ACTION' } })).toEqual({
         kind: 'resume',

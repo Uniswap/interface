@@ -1,11 +1,10 @@
 # Explore scenarios — Token categories
 
-Token categories (`token_categories` flag): the Trending carousel and category
+Token categories: the Trending carousel and category
 chip row on web Explore, category tags and definition cards, the Category
 Detail Page, category chips and related-token carousels on the TDP, spotlit
 category sections in search, and the mobile Explore sections, Collections
-page and Category Details screen. Shared defaults: `_defaults.yaml`. Every
-case assumes the `token_categories` flag is ON unless it says otherwise.
+page and Category Details screen. Shared defaults: `_defaults.yaml`.
 Token-selector category tags and filter chips are here too (the selector is
 shared by swap, limit, send and swap-and-add); issuer-grouped Stocks/ETFs
 behavior lives in the rwa catalog.
@@ -41,7 +40,7 @@ automationRefs: []
 
 > **medium · e2e · release · gap** · chains: ethereum
 
-**Given** the user opens web Explore with the `token_categories` flag on
+**Given** the user opens web Explore
 **When** the page renders above the tokens table
 **Then** a Trending carousel of 12 tokens replaces the former Stocks carousel, each card carrying a network badge only when the Explore network filter is set to a single network
 **And** clicking a card opens that token's TDP, the info icon shows the Trending definition tooltip with a "View all" link, and the "View all" button selects the Trending category in the table below
@@ -80,7 +79,7 @@ automationRefs: []
 
 > **high · e2e · release · gap** · chains: ethereum
 
-**Given** the user opens web Explore with the `token_categories` flag on
+**Given** the user opens web Explore
 **When** the category chip row above the tokens table loads
 **Then** a skeleton shows while categories load, "All" is the default chip, and the chips follow the Statsig dynamic-config order (expected today: All, Trending, Stocks, Top Gainers, Memes)
 **And** the "More" dropdown lists every other category bucketed by Market / Assets / Sectors, each row showing its token count and 1D % change
@@ -121,7 +120,7 @@ automationRefs: []
 
 > **high · e2e · release · gap** · chains: ethereum
 
-**Given** web Explore with the `token_categories` flag on
+**Given** web Explore
 **When** the user selects a category chip, including one picked from "More"
 **Then** the table filters to that category and the URL gains the category param, so reloading or sharing the URL (for example `/explore?category=top-gainers`) restores the same selection
 **And** legacy `?category=stocks` links still land on the Stocks view
@@ -160,7 +159,7 @@ automationRefs: []
 
 > **medium · e2e · release · gap** · chains: ethereum
 
-**Given** web Explore on the "All" category with the `token_categories` flag on
+**Given** web Explore on the "All" category
 **When** the tokens table renders
 **Then** each row shows its primary category tag when it has one (ETH is tagged "Majors"), and rows without categories show no tag
 **And** clicking a tag opens that category's Category Detail Page
@@ -197,7 +196,7 @@ automationRefs: []
 
 > **medium · e2e · release · gap** · chains: ethereum
 
-**Given** web Explore with the `token_categories` flag on
+**Given** web Explore
 **When** the user hovers a category chip with a pointer
 **Then** a definition card shows with a "Learn more" link to the general categories help article, clicking the card opens the Category Detail Page, and the "All" chip shows no card
 **And** on mWeb tapping a chip selects it and shows an info icon on the selected chip only; tapping the icon opens the definition bottom sheet, whose body opens the Category Detail Page and whose "Learn more" link works as on web
@@ -236,7 +235,7 @@ automationRefs: []
 
 > **medium · e2e · release · gap** · chains: solana, ethereum
 
-**Given** web Explore with a category selected and the `token_categories` flag on
+**Given** web Explore with a category selected
 **When** the user selects the Solana network in the network filter
 **Then** the selected category resets to "All" and the "More" dropdown counts keep reflecting "All networks"
 **And** selecting any other category chip afterwards switches the network selector back to "All networks"
@@ -273,7 +272,7 @@ automationRefs: []
 
 > **high · e2e · release · gap** · chains: ethereum, solana
 
-**Given** the `token_categories` flag is on
+**Given** a token category with a Category Detail Page
 **When** the user reaches a Category Detail Page from a TDP chip, an Explore "All" row tag, or a direct link such as `/explore/category/stablecoins`
 **Then** the header, description and stats (token count, 1D volume, FDV with sparklines) render, and the breadcrumb returns to the TDP it was entered from or to the Tokens tab otherwise
 **And** the token table lists only tokens in the category, and the network filter, timeframe selector, sorting and load-more all work; selecting Solana shows no data
@@ -312,7 +311,7 @@ automationRefs: []
 
 > **high · e2e · release · gap** · chains: ethereum
 
-**Given** the user opens a web TDP for a token with categories and the `token_categories` flag on
+**Given** the user opens a web TDP for a token with categories
 **When** the header renders
 **Then** category chips appear under the token name in Statsig config order; clicking a chip opens its Category Detail Page and hovering shows the definition card, whose click also navigates there
 **And** tokens without categories show no chips
@@ -350,7 +349,7 @@ automationRefs: []
 
 > **medium · e2e · release · gap** · chains: ethereum
 
-**Given** a web TDP for a token with the `token_categories` flag on
+**Given** a web TDP for a token
 **When** the Related tokens section renders
 **Then** a multi-category token shows one chip per category and selecting a chip reloads the carousel for that category
 **And** a single-category token shows no chips and a singular title (for example "More stock tokens", "More defi tokens")
@@ -388,7 +387,7 @@ automationRefs: []
 
 > **high · e2e · release · gap** · chains: ethereum
 
-**Given** the `token_categories` flag is on
+**Given** the web search modal with spotlit categories configured
 **When** the user opens web search with no query
 **Then** recent searches come first, followed by three spotlit category sections (New / Trending / Top Gainers) with 3 tokens each on the All tab and 5 on the Tokens tab
 **And** hovering a spotlit header's info icon shows the description with a "View all" link, and clicking the header or the link opens that Category Detail Page
@@ -428,7 +427,7 @@ automationRefs: []
 
 > **high · e2e · release · gap** · chains: ethereum
 
-**Given** the mobile Explore tab with the `token_categories` flag on
+**Given** the mobile Explore tab
 **When** the sections render
 **Then** they appear in the order Favorites, Earn, Trending, Collections, Top tokens
 **And** Trending shows 3 trending tokens (not the unfiltered top tokens) and tapping its header opens the Trending Category Details screen
@@ -503,7 +502,7 @@ automationRefs: []
 
 > **high · e2e · release · gap** · chains: ethereum
 
-**Given** a mobile TDP for a token with categories and the `token_categories` flag on
+**Given** a mobile TDP for a token with categories
 **When** the screen renders
 **Then** a Collections chip row sits under the balance and tapping a chip opens that Category Details screen
 **And** the sections run Collections, Performance, About, Related tokens, Stats, Links, then More <Asset> tokens, and non-grouped tokens skip the More <Asset> tokens carousel
@@ -540,7 +539,7 @@ automationRefs: []
 
 > **medium · e2e · release · gap** · chains: ethereum
 
-**Given** the mobile Explore search with the `token_categories` flag on
+**Given** the mobile Explore search
 **When** the user opens search with no query
 **Then** the resting state shows the spotlit category sections; tapping a header opens that category page and back returns to search
 **And** searching a category name and a token shows category rows as on web, token rows show one tag each with the section's own tag hidden, and no tooltip appears on mobile
@@ -576,7 +575,7 @@ automationRefs: []
 
 > **high · e2e · release · gap** · chains: ethereum
 
-**Given** the `token_categories` flag is on, on iOS and Android
+**Given** the mobile app on iOS and Android
 **When** the user reaches a Category Details screen from a TDP chip, a search row, or Explore
 **Then** the header collapses into the sticky toolbar on scroll, "Learn" opens the category definition, and stats and the token list load behind skeletons
 **And** the network pills, pagination, pull-to-refresh and row tap to the TDP all work
@@ -669,8 +668,6 @@ automationRefs:
   - path: apps/web/src/pages/TokenDetails/components/header/TokenDetailsHeaderCategoryChips.test.tsx
     testName: renders one chip per category in the given order
   - path: apps/web/src/pages/TokenDetails/components/header/TokenDetailsHeaderCategoryChips.test.tsx
-    testName: renders nothing when the token categories flag is off
-  - path: apps/web/src/pages/TokenDetails/components/header/TokenDetailsHeaderCategoryChips.test.tsx
     testName: renders nothing for a token with no categories
   - path: apps/web/src/pages/TokenDetails/components/relatedTokens/relatedTokensSectionState.test.ts
     testName: shows chips and the generic header for multi-category tokens
@@ -684,7 +681,7 @@ automationRefs:
 
 **Given** the TDP category chip component and the related-tokens section state under test
 **When** the unit suites run
-**Then** chips render one per category in order and not at all with the flag off or without categories, multi-category tokens get chips with the generic header while single-category tokens get no chips and a singular title, and every known category has a singular title key
+**Then** chips render one per category in order and not at all without categories, multi-category tokens get chips with the generic header while single-category tokens get no chips and a singular title, and every known category has a singular title key
 
 ---
 id: explore-categories-unit-search-logic
@@ -719,8 +716,6 @@ automationRefs:
   - path: packages/uniswap/src/features/search/SearchModal/categories/toCategoryOptions.test.ts
     testName: drops ids unknown to ListCategories
   - path: packages/uniswap/src/features/search/SearchModal/hooks/useSpotlitCategorySections.test.tsx
-    testName: is disabled and fetches nothing when the flag is off
-  - path: packages/uniswap/src/features/search/SearchModal/hooks/useSpotlitCategorySections.test.tsx
     testName: builds category-scoped sections in config order and omits empty categories
   - path: packages/uniswap/src/features/search/SearchModal/hooks/useSpotlitCategorySections.test.tsx
     testName: drops RWA categories for RWA-blocked regions
@@ -730,7 +725,7 @@ automationRefs:
 
 **Given** the search-modal category helpers under test
 **When** the unit suites run
-**Then** spotlit categories keep config order and drop unknown or duplicate ids, category options drop ids unknown to ListCategories, and the spotlit sections hook fetches nothing with the flag off, builds sections in config order omitting empty ones, and drops RWA categories in RWA-blocked regions
+**Then** spotlit categories keep config order and drop unknown or duplicate ids, category options drop ids unknown to ListCategories, and the spotlit sections hook builds sections in config order omitting empty ones, and drops RWA categories in RWA-blocked regions
 
 ---
 id: explore-categories-unit-shared-logic
@@ -811,7 +806,7 @@ automationRefs: []
 
 > **high · e2e · release · gap** · chains: ethereum
 
-**Given** the token selector with the `token_categories` flag on
+**Given** the token selector
 **When** it opens with no query
 **Then** the resting state is unchanged: no filter chips and no category tags
 **And** once the user searches, rows with a balance show the balance and never a category tag, unowned rows show exactly one tag, tokens with no categories show none, quick-select tiles never show tags, and RWA rows keep the issuer label alongside the tag
@@ -851,7 +846,7 @@ automationRefs: []
 
 > **high · e2e · release · gap** · chains: ethereum
 
-**Given** the token selector in the swap, limit, send and swap-and-add flows with the `token_categories` flag on
+**Given** the token selector in the swap, limit, send and swap-and-add flows
 **When** the user types a query
 **Then** a chip row appears with "My tokens" first (only when at least one result has a balance), then one chip per category present in the results in canonical order
 **And** chips reflect the current results only: retyping adds or drops chips, and a selected chip that disappears clears itself
@@ -891,7 +886,7 @@ automationRefs: []
 
 > **medium · e2e · release · gap** · chains: ethereum
 
-**Given** the token selector with a query typed and the `token_categories` flag on
+**Given** the token selector with a query typed
 **When** the query itself returns nothing
 **Then** the existing empty state shows with no clear-filters link
 **And** when the query has results but the active chips remove them all, the selector shows "No results found for <query>" with a "Clear active filter(s)" action that resets the chips and keeps the query
@@ -939,7 +934,7 @@ automationRefs:
   - path: packages/uniswap/src/components/TokenSelector/categoryFilters/CategoryFilterEmptyState.test.tsx
     testName: renders the clear action and fires the handler
   - path: packages/uniswap/src/components/TokenSelector/tagRwaTokenSelectorSections.test.ts
-    testName: tags a matching single token row with its category, clean name, and issuer slug
+    testName: tags a matching single token row with its category and issuer slug
   - path: packages/uniswap/src/components/TokenSelector/tagRwaTokenSelectorSections.test.ts
     testName: marks a matched RWA with no classified category as UNSPECIFIED (no tag)
 ---

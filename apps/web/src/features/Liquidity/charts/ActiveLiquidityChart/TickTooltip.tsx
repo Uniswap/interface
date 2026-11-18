@@ -12,6 +12,7 @@ import { ChartEntry } from '~/features/Liquidity/charts/LiquidityRangeInput/type
 import { getDisplayPriceFromTick } from '~/features/Liquidity/utils/getTickToPrice'
 import { tryParseCurrencyAmount } from '~/lib/utils/tryParseCurrencyAmount'
 import { formatPriceWithSubscript } from '~/utils/formatPriceWithSubscript'
+import { unwrappedToken } from '~/utils/unwrappedToken'
 
 export function shouldShowSinglePrice(params: {
   showSingleTick: boolean | undefined
@@ -84,12 +85,15 @@ function CurrencyAmountRow({
   currency,
   lockedUSD,
   lockedPercent,
+  lockedAmount,
 }: {
   currency: Currency
   lockedUSD: CurrencyAmount<Currency>
   lockedPercent: number | string
+  /** The token amount behind `lockedUSD`, shown beside it when given. */
+  lockedAmount?: number
 }) {
-  const { formatPercent, convertFiatAmountFormatted } = useLocalizationContext()
+  const { formatPercent, convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
 
   return (
     <Flex justifyContent="space-between" row alignItems="center" gap="$gap8">
@@ -98,7 +102,12 @@ function CurrencyAmountRow({
         <Text variant="body4">{currency.symbol}</Text>
       </Flex>
       <Flex row alignItems="center" gap="$gap4">
-        <Text variant="body4">{convertFiatAmountFormatted(lockedUSD.toExact(), NumberType.FiatTokenStats)}</Text>
+        {lockedAmount !== undefined && (
+          <Text variant="body4">{formatNumberOrString({ value: lockedAmount, type: NumberType.TokenNonTx })}</Text>
+        )}
+        <Text variant="body4" color={lockedAmount !== undefined ? '$neutral2' : undefined}>
+          {convertFiatAmountFormatted(lockedUSD.toExact(), NumberType.FiatTokenStats)}
+        </Text>
         <Text variant="body4" color="$neutral2">
           {formatPercent(lockedPercent)}
         </Text>
@@ -118,6 +127,9 @@ export function TickTooltipContent({
   showQuoteCurrencyFirst = true,
   priceInverted,
   protocolVersion,
+  showTokenAmounts = false,
+  priceSpan,
+  unwrapSymbols = false,
   ...props
 }: {
   currentPrice: number
@@ -129,6 +141,16 @@ export function TickTooltipContent({
   showQuoteCurrencyFirst?: boolean
   priceInverted: boolean
   protocolVersion: ProtocolVersion
+  /** Shows each token's locked amount beside its USD value. */
+  showTokenAmounts?: boolean
+  /**
+   * The hovered bar's span the price range and $/bps describe, which the entry's amounts must cover too: unset is
+   * its max-liquidity segment, shown as one price when that's a single tick spacing; set, the span is always a
+   * low – high range.
+   */
+  priceSpan?: 'bucket' | 'segment'
+  /** Names the wrapped native token by the native symbol (ETH, not WETH); prices and values are unchanged. */
+  unwrapSymbols?: boolean
 } & FlexCompatProps) {
   const { t } = useTranslation()
   const { formatNumberOrString, convertFiatAmountFormatted } = useLocalizationContext()
@@ -151,22 +173,30 @@ export function TickTooltipContent({
     return null
   }
 
-  // Check if current tick falls within this bucket's range
+  // Segment is the natural "bin" of constant active liquidity — use it for the
+  // displayed price range and per-bps density, unless the caller names the bar's span. 1 tick = 1 bps in v3/v4.
+  const segment =
+    priceSpan === 'bucket'
+      ? 'bucket' in hoveredTick
+        ? hoveredTick.bucket
+        : undefined
+      : 'segment' in hoveredTick
+        ? hoveredTick.segment
+        : undefined
+  const segmentBps = segment ? Math.abs(segment.endTick - segment.startTick) : 0
+
+  // Check if current tick falls within the bar: its span when named, else its bucket
+  const currentSpan = priceSpan ? segment : 'bucket' in hoveredTick ? hoveredTick.bucket : undefined
   const isCurrentTick =
     'bucket' in hoveredTick
       ? currentTick !== undefined &&
-        hoveredTick.bucket?.startTick !== undefined &&
-        currentTick >= hoveredTick.bucket.startTick &&
-        currentTick < hoveredTick.bucket.endTick
+        currentSpan !== undefined &&
+        currentTick >= currentSpan.startTick &&
+        currentTick < currentSpan.endTick
       : hoveredTick.tick === currentTick
 
-  // Segment is the natural "bin" of constant active liquidity — use it for the
-  // displayed price range and per-bps density. 1 tick = 1 bps in v3/v4.
-  const segment = 'segment' in hoveredTick ? hoveredTick.segment : undefined
-  const segmentBps = segment ? Math.abs(segment.endTick - segment.startTick) : 0
-
   // Only show a single tick when the segment collapses to one tickSpacing
-  const showSingleTick = segment && segmentBps / tickSpacing === 1
+  const showSingleTick = !priceSpan && segment && segmentBps / tickSpacing === 1
 
   const segmentPriceA = segment
     ? getDisplayPriceFromTick({
@@ -221,9 +251,11 @@ export function TickTooltipContent({
     formattedPriceHigh,
   })
 
+  const quoteDisplay = unwrapSymbols ? unwrappedToken(quoteCurrency) : quoteCurrency
+  const baseDisplay = unwrapSymbols ? unwrappedToken(baseCurrency) : baseCurrency
   const pricePairLabel = getPricePairLabel({
-    quoteSymbol: quoteCurrency.symbol,
-    baseSymbol: baseCurrency.symbol,
+    quoteSymbol: quoteDisplay.symbol,
+    baseSymbol: baseDisplay.symbol,
   })
 
   const priceSuffix = pricePairLabel ? (
@@ -274,7 +306,7 @@ export function TickTooltipContent({
             <Flex row alignItems="center" gap="$gap4">
               <Text variant="body4">{formattedPriceLow}</Text>
               <Text variant="body4" color="$neutral2">
-                {t('common.to')}
+                {priceSpan ? '–' : t('common.to')}
               </Text>
               <Text variant="body4">{formattedPriceHigh}</Text>
               <Text variant="body4" color="$neutral2">
@@ -293,8 +325,9 @@ export function TickTooltipContent({
       )}
       {(showQuoteCurrency || isCurrentTick) && amountQuoteLockedUSD && (
         <CurrencyAmountRow
-          currency={quoteCurrency}
+          currency={quoteDisplay}
           lockedUSD={amountQuoteLockedUSD}
+          lockedAmount={showTokenAmounts ? hoveredTick.amount0Locked : undefined}
           lockedPercent={
             isCurrentTick && amountBaseLockedUSD
               ? new Percent(
@@ -307,8 +340,9 @@ export function TickTooltipContent({
       )}
       {(!showQuoteCurrency || isCurrentTick) && amountBaseLockedUSD && (
         <CurrencyAmountRow
-          currency={baseCurrency}
+          currency={baseDisplay}
           lockedUSD={amountBaseLockedUSD}
+          lockedAmount={showTokenAmounts ? hoveredTick.amount1Locked : undefined}
           lockedPercent={
             isCurrentTick && amountQuoteLockedUSD
               ? new Percent(

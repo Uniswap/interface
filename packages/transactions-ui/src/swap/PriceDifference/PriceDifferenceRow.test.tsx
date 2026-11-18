@@ -8,7 +8,7 @@ import { describe, expect, it } from 'vitest'
 
 describe('PriceDifferenceRow', () => {
   it('renders the value and the label slot', () => {
-    render(<PriceDifferenceRow value="3.21%" warning={{ severity: 'medium' }} label={<span>label slot</span>} />)
+    render(<PriceDifferenceRow value="3.21%" level="warning" label={<span>label slot</span>} />)
     expect(screen.getByText('3.21%')).toBeTruthy()
     expect(screen.getByText('label slot')).toBeTruthy()
   })

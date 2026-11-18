@@ -1,6 +1,5 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import type { UniverseChainId } from '@universe/chains'
-import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { Flex, iconSizes, Text, TouchableArea } from '@universe/mycelium'
 import { TestID } from '@universe/test'
 import { useState } from 'react'
@@ -29,7 +28,6 @@ export function MoreRwaTokens(): JSX.Element | null {
   const rwaMatch = useTokenDetailsRWAMatch()
   const subject = useTokenDetailsRWASubject()
   const { otherIssuerTokens, getMarketData } = useMoreRwaTokens({ rwaMatch, subject })
-  const plainTokenNames = useIsTokenCategoriesEnabled()
   const onToggleExpanded = useExpandRWASiblingHandler({
     rwaMatch,
     variantCount: otherIssuerTokens.length,
@@ -60,7 +58,6 @@ export function MoreRwaTokens(): JSX.Element | null {
             primaryName={getIssuerTokenPrimaryName({
               tokenName: token.name,
               fallbackName: companyName,
-              plainTokenNames,
             })}
             marketData={getMarketData(token)}
           />
@@ -91,7 +88,6 @@ function IssuerTokenCard({
   const { t } = useTranslation()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
-  const showIssuerLogo = useIsTokenCategoriesEnabled()
   const priceLabel = convertFiatAmountFormatted(marketData.priceUsd, NumberType.FiatTokenDetails)
   const marketCapLabel = convertFiatAmountFormatted(marketData.marketCapUsd, NumberType.FiatTokenStats)
   const volumeLabel = convertFiatAmountFormatted(marketData.volume24hUsd, NumberType.FiatTokenStats)
@@ -137,7 +133,7 @@ function IssuerTokenCard({
               <Text color="$neutral1" flexShrink={1} numberOfLines={1} variant="body2">
                 {primaryName}
               </Text>
-              <RWAIssuerTag issuer={token} showLogo={showIssuerLogo} size={iconSizes.icon12} />
+              <RWAIssuerTag issuer={token} size={iconSizes.icon12} />
             </Flex>
             <Text color="$neutral2" numberOfLines={1} variant="body3">
               {token.symbol.toUpperCase()}

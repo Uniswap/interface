@@ -1,4 +1,4 @@
-import { FeatureFlags, useFeatureFlag, useIsTokenCategoriesEnabled } from '@universe/gating'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Flex, useIsTouchDevice } from '@universe/mycelium'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
@@ -12,6 +12,7 @@ import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { MobileBottomBar } from '~/components/MobileBottomBar/MobileBottomBar'
 import { StickyCollapsibleHeader } from '~/components/StickyCollapsibleHeader/StickyCollapsibleHeader'
+import { LeftPanel, RightPanel, TwoPanelLayout } from '~/features/Explore/layout/TwoPanelLayout'
 import { shouldShowAuctionOnlyLayout } from '~/features/Toucan/Auction/utils/auctionDisplayVisibility'
 import { ScrollDirection, useScroll } from '~/hooks/useScroll'
 import { ActivitySection } from '~/pages/TokenDetails/components/activity/ActivitySection'
@@ -42,8 +43,6 @@ import { TokenPerformance } from '~/pages/TokenDetails/components/performance/To
 import { RelatedTokensSection } from '~/pages/TokenDetails/components/relatedTokens/RelatedTokensSection'
 import { MoreWaysToTrade } from '~/pages/TokenDetails/components/rwa/MoreWaysToTrade'
 import { OffHoursLiquidityBanner } from '~/pages/TokenDetails/components/rwa/OffHoursLiquidityBanner'
-import { RelatedTokens } from '~/pages/TokenDetails/components/rwa/RelatedTokens'
-import { LeftPanel, RightPanel, TokenDetailsLayout } from '~/pages/TokenDetails/components/skeleton/Skeleton'
 import { TDPSwapComponent } from '~/pages/TokenDetails/components/swap/TDPSwapComponent'
 import { TDPActionTabs } from '~/pages/TokenDetails/components/TDPActionTabs'
 import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
@@ -86,7 +85,6 @@ function TokenDescriptionWithoutLaunchInfo(): JSX.Element {
 /** Stats and the left-panel sections under it. With provenance on, launch info joins About as one Info module right under Stats; off, About keeps its old slot. */
 function TokenDetailsLowerSections(): JSX.Element {
   const auctionDisplay = useTokenDetailsAuctionDisplay()
-  const tokenCategoriesEnabled = useIsTokenCategoriesEnabled()
   const isTokenProvenanceEnabled = useFeatureFlag(FeatureFlags.TokenProvenance)
   const { categories, isLoading: isCategoriesLoading } = useTDPTokenCategories()
 
@@ -102,22 +100,11 @@ function TokenDetailsLowerSections(): JSX.Element {
   return (
     <>
       <StatsSection />
-      {tokenCategoriesEnabled ? (
-        <>
-          {isTokenProvenanceEnabled && tokenDescription}
-          <MoreWaysToTrade />
-          {!isTokenProvenanceEnabled && tokenDescription}
-          <RelatedTokensSection categories={categories} isLoading={isCategoriesLoading} />
-          <ActivitySection />
-        </>
-      ) : (
-        <>
-          {tokenDescription}
-          <ActivitySection />
-          <MoreWaysToTrade />
-          <RelatedTokens />
-        </>
-      )}
+      {isTokenProvenanceEnabled && tokenDescription}
+      <MoreWaysToTrade />
+      {!isTokenProvenanceEnabled && tokenDescription}
+      <RelatedTokensSection categories={categories} isLoading={isCategoriesLoading} />
+      <ActivitySection />
     </>
   )
 }
@@ -204,7 +191,7 @@ export function TokenDetailsContent({ isCompact }: { isCompact: boolean }) {
         <TokenDetailsAuctionBanner />
       </TokenDetailsAuctionErrorBoundary>
       <TokenDetailsClaimProvider>
-        <TokenDetailsLayout topSpacing={showAuctionBanner ? '24' : undefined}>
+        <TwoPanelLayout topSpacing={showAuctionBanner ? '24' : undefined}>
           <LeftPanel>
             <ChartSection />
             {/* Preserve the warning when Swap is hidden or replaced by the auction card. */}
@@ -258,7 +245,7 @@ export function TokenDetailsContent({ isCompact }: { isCompact: boolean }) {
           </RightPanel>
 
           <TokenDetailsMobileActions hideSwap={hideSwap} />
-        </TokenDetailsLayout>
+        </TwoPanelLayout>
       </TokenDetailsClaimProvider>
     </Trace>
   )

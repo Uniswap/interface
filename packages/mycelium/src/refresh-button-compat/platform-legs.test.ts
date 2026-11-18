@@ -57,7 +57,6 @@ describe('the subpath barrel resolves every symbol', () => {
     // The barrel imports the base specifier; vitest resolves `.web` first.
     expect(barrel.RefreshButtonCompat).toBe(web.RefreshButtonCompat)
     expect(barrel.REFRESH_ICON_SIZE).toBe(16)
-    expect(barrel.REFRESH_SHORTCUT_KEYS).toEqual(['r', 'R'])
     expect(barrel.REFRESH_BUTTON_COMPAT_CLASS_UNIVERSE.length).toBeGreaterThan(0)
   })
 })

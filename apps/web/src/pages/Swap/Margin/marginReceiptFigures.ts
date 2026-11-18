@@ -11,7 +11,6 @@ import {
 import { MarginSwapSide, marginPriceImpactBps } from '~/pages/Swap/Margin/marginPriceImpact'
 
 const DAYS_PER_YEAR = 365
-const BPS_PER_PERCENT = 100
 
 export interface MarginReceiptFigures {
   entryPrice?: number
@@ -19,11 +18,11 @@ export interface MarginReceiptFigures {
   oraclePrice?: number
   // Execution vs mark, adverse-only (marginPriceImpactBps clamps a favourable fill to 0).
   priceImpactBps?: number
-  // Signed, negative when the fill is worse than the mark. Undefined when there is no mark to compare.
-  entryImpactPct?: number
   liquidationPrice?: number
   liqDistancePct?: number
   healthFactor?: number
+  // Exposure-token units: a long's collateral leg, a short's debt leg.
+  size?: number
   // Debt-token units.
   borrowing?: number
   borrowApyPct?: number
@@ -70,6 +69,10 @@ export function deriveMarginReceiptFigures({
   const usableHealth = usablePriceX18(quote.display.healthFactor)
   const healthFactor = usableHealth ? scaledE18ToNumber(usableHealth) : undefined
 
+  const size =
+    quote.display.size === undefined
+      ? undefined
+      : usableWireAmount({ raw: quote.display.size, decimals: quote.exposureToken.decimals })
   const borrowing = projectedDebtAmount({ quote })
   const borrowApyPct = quote.display.borrowRate ? scaledE18ToNumber(quote.display.borrowRate) * 100 : undefined
   // A LONG borrows the stable leg (≈USD as-is); a SHORT borrows the volatile leg, valued at the mark —
@@ -112,10 +115,10 @@ export function deriveMarginReceiptFigures({
     entryPrice,
     oraclePrice: markPrice,
     priceImpactBps,
-    entryImpactPct: priceImpactBps === undefined || priceImpactBps <= 0 ? undefined : -priceImpactBps / BPS_PER_PERCENT,
     liquidationPrice,
     liqDistancePct,
     healthFactor,
+    size,
     borrowing,
     borrowApyPct,
     borrowPerDayUsd,

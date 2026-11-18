@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
 import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
+import { ExploreCategory } from '~/features/Explore/categories/useExploreCategory'
 import {
   useExploreTablesFilterStore,
   useExploreTablesFilterStoreActions,
 } from '~/features/Explore/state/exploreTablesFilterStore'
-import { ExploreCategory } from '~/pages/Explore/categories/useExploreCategory'
 import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
 
 /**

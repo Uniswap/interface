@@ -1,6 +1,5 @@
 import { ReactNavigationPerformanceView } from '@shopify/react-native-performance-navigation'
 import { AddressStringFormat, normalizeAddress } from '@universe/chains'
-import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
 import { Lock } from '@universe/mycelium/icons/Lock'
 import React, { memo, useMemo } from 'react'
@@ -106,11 +105,10 @@ const TokenDetails = memo(function TokenDetailsInner(): JSX.Element {
 
   const { enabled: showEarn, activeAddress, earnData } = useMobileTokenDetailsEarnData()
   const { enabled: showVaultShare, vaultShareData } = useMobileTokenDetailsVaultShareData()
-  const tokenCategoriesEnabled = useIsTokenCategoriesEnabled()
   const { categories, isLoading: isCategoriesLoading } = useTokenCategories(currencyId)
   // Tags aren't served for RWA tokens yet, so an untagged stock keeps its shelf in place instead of
-  // losing both sections. OtherStocks goes at flag cleanup.
-  const showOtherStocks = !tokenCategoriesEnabled || (!isCategoriesLoading && categories.length === 0)
+  // losing both sections.
+  const showOtherStocks = !isCategoriesLoading && categories.length === 0
 
   return (
     <>
@@ -140,11 +138,11 @@ const TokenDetails = memo(function TokenDetailsInner(): JSX.Element {
 
             {showEarn && <TokenDetailsEarnBanner activeAddress={activeAddress} earnData={earnData} />}
           </Flex>
-          {tokenCategoriesEnabled && <TokenDetailsCollections />}
+          <TokenDetailsCollections />
           <TokenPerformance />
           <PermissionedPillRow />
           <TokenDetailsAbout />
-          {tokenCategoriesEnabled && <RelatedTokens />}
+          <RelatedTokens />
           <TokenDetailsStats />
           <TokenDetailsLinks />
           <MoreRwaTokens />

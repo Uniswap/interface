@@ -66,7 +66,6 @@ export function FilterSelectMultiCompat({
   return (
     <DropdownMenu open={isOpen} onOpenChange={handleOpenChange} modal={false}>
       <DropdownMenuTrigger
-        nativeButton={false}
         render={<TriggerButtonCompat isExpanded={isOpen} hideChevron={hideChevron} testID={dataTestId} />}
       >
         <span className="flex w-max flex-row items-center gap-[8px]">

@@ -76,6 +76,27 @@ describe('MarginOpenButton venue gate', () => {
     expect(onRequestReview).toHaveBeenCalledTimes(1)
   })
 
+  it('keeps the CTA enabled while a background poll refetches the same quote', () => {
+    const { container } = render(
+      <MarginOpenButton
+        derivedMarginInfo={{ ...derived({ allowedVenues: ['MORPHO'] }), isFetching: true }}
+        onRequestReview={onRequestReview}
+      />,
+    )
+    expect(ctaLabel(container)).toBe('Open long position')
+    expect(container.querySelector('button')).toBeEnabled()
+  })
+
+  it('gates the CTA while a placeholder-bridged quote is refetching', () => {
+    const { container } = render(
+      <MarginOpenButton
+        derivedMarginInfo={{ ...derived({ allowedVenues: ['MORPHO'] }), isFetching: true, isPlaceholderData: true }}
+        onRequestReview={onRequestReview}
+      />,
+    )
+    expect(container.querySelector('button')).toBeDisabled()
+  })
+
   // An empty allowlist builds no quote request at all, so there is nothing for the amount or the
   // leverage to fix — the CTA has to say so rather than sit on a generic disabled state.
   it('blocks the CTA and shows the notice when every venue is excluded', () => {

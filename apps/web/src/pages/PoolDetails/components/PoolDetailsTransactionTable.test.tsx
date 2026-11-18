@@ -10,7 +10,7 @@ import {
 import { PoolDetailsTransactionsTable } from '~/pages/PoolDetails/components/PoolDetailsTransactionsTable'
 import { mocked } from '~/test-utils/mocked'
 import { usdcWethPoolAddress, validParams } from '~/test-utils/pools/fixtures'
-import { render, screen } from '~/test-utils/render'
+import { fireEvent, render, screen } from '~/test-utils/render'
 
 vi.mock('~/features/Explore/state/transactions/usePoolTransactions')
 vi.mock('~/components/Table/utils/useAbbreviatedTimeString', async () => {
@@ -32,6 +32,7 @@ vi.mock('react-router', async () => {
 describe('PoolDetailsTransactionsTable', () => {
   beforeEach(() => {
     mocked(useParams).mockReturnValue(validParams)
+    window.history.pushState({}, '', '/')
   })
 
   it('renders loading state', () => {
@@ -93,6 +94,38 @@ describe('PoolDetailsTransactionsTable', () => {
     const { asFragment } = render(<PoolDetailsTransactionsTable poolAddress={usdcWethPoolAddress} />)
     expect(screen.getByTestId('pool-details-transactions-table')).not.toBeNull()
     expect(asFragment()).toMatchSnapshot()
+  })
+
+  it('links the wallet cell to the maker portfolio instead of the block explorer', () => {
+    const maker = '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045'
+    mocked(usePoolTransactions).mockReturnValue({
+      transactions: [
+        {
+          timestamp: 1000000,
+          transaction: '0x123',
+          pool: {
+            token0: { id: 'Token0', symbol: 'Token0' },
+            token1: { id: 'Token1', symbol: 'Token1' },
+          },
+          maker,
+          amount0: 200,
+          amount1: 300,
+          amountUSD: 400,
+          type: PoolTableTransactionType.BUY,
+        },
+      ],
+      loading: false,
+      error: null,
+      loadMore: vi.fn(),
+    })
+    mocked(useAbbreviatedTimeString).mockReturnValue('1mo ago')
+
+    const { container } = render(<PoolDetailsTransactionsTable poolAddress={usdcWethPoolAddress} />)
+
+    expect(container.querySelector('a[href*="/address/"]')).toBeNull()
+
+    fireEvent.click(screen.getByText('0xd8dA...6045'))
+    expect(window.location.pathname).toBe(`/portfolio/${maker}`)
   })
 
   it.each([

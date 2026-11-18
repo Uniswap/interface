@@ -16,8 +16,8 @@
  * The parity suite in `packages/tailwind/src/parity/popover` pins the
  * behavior contract.
  */
+import type { BaseUIEvent } from '@base-ui/react/types'
 import * as React from 'react'
-import { cn } from '../cn'
 import { Popover as PopoverRecipe, PopoverTrigger as PopoverRecipeTrigger } from '../shadcn/popover'
 import { mapHoverableToDelays, type PopoverCompatHoverDelays } from './hover'
 import type {
@@ -188,14 +188,18 @@ function PopoverCompatRoot({
 }
 
 /**
- * Renders a plain `div` wrapper like the Tamagui trigger stack (not a native
- * button) so arbitrary trigger content keeps its own semantics; Base UI wires
- * the open interaction and aria attributes onto it. A caller `ref` receives
- * that div, like the legacy trigger forwards its element (consumers measure
- * it — the compat contract types it as the wider legacy `HTMLElement`).
- * `shrink-0`: Chrome under-measures a block wrapper around nested flex content and shrinks it.
+ * Makes its single child element the trigger: Base UI wires the open interaction and aria attributes onto it, so
+ * a button child is the trigger itself rather than a button nested in a wrapper. The child must forward its ref
+ * and props to its root element (mycelium's Flex, TouchableArea and buttons do). A caller `ref` receives that
+ * element, like the legacy trigger forwards its own (consumers measure it — the compat contract types it as the
+ * wider legacy `HTMLElement`).
  */
-function PopoverCompatTrigger({ children, className, ref, ...handlers }: PopoverCompatTriggerProps): React.JSX.Element {
+function PopoverCompatTrigger({
+  children,
+  nativeButton = true,
+  openOnClick = true,
+  ref,
+}: PopoverCompatTriggerProps): React.JSX.Element {
   const internals = React.useContext(PopoverCompatInternalsContext)
   const hover = internals?.hover
   // Setter identity is stable across trigger-element updates, keeping the
@@ -207,12 +211,9 @@ function PopoverCompatTrigger({ children, className, ref, ...handlers }: Popover
   const hoverProps = hover?.openOnHover
     ? { openOnHover: true, delay: hover.openDelayMs, closeDelay: hover.closeDelayMs }
     : undefined
-  // Adapter between the contract's `Ref<HTMLElement>` and the div's
-  // `Ref<HTMLDivElement>` (a RefObject of the wider type is not directly
-  // assignable) — same callback-ref shape as the recipe's `PopoverAnchor`.
-  // Base UI merges the render element's ref with its own trigger wiring.
+  // Base UI merges this callback ref with its own trigger wiring onto the child.
   const forwardTriggerRef = React.useCallback(
-    (element: HTMLDivElement | null): void => {
+    (element: HTMLElement | null): void => {
       setTriggerElement?.(element)
       if (typeof ref === 'function') {
         ref(element)
@@ -224,17 +225,31 @@ function PopoverCompatTrigger({ children, className, ref, ...handlers }: Popover
   )
   return (
     <PopoverRecipeTrigger
+      ref={forwardTriggerRef}
       data-slot="popover-compat-trigger"
-      nativeButton={false}
+      nativeButton={openOnClick ? nativeButton : false}
       {...hoverProps}
-      // oxlint-disable-next-line react/forbid-elements -- the compat trigger IS the raw DOM boundary (no Tamagui Flex here)
-      render={<div ref={forwardTriggerRef} className={cn('shrink-0', className)} {...handlers} />}
-    >
-      {children}
-    </PopoverRecipeTrigger>
+      {...(openOnClick ? undefined : HOVER_REGION_PROPS)}
+      // Handlers passed here run before Base UI's own, so this skips its click toggle and leaves hover alone.
+      onClick={openOnClick ? undefined : preventBaseUIClick}
+      render={children}
+    />
   )
 }
 
 export const PopoverCompat = Object.assign(PopoverCompatRoot, {
   Trigger: PopoverCompatTrigger,
 })
+
+// A trigger nothing can activate isn't a button: no role, no tab stop, no expanded state. Base UI's own
+// trigger attributes yield to these.
+const HOVER_REGION_PROPS = {
+  role: undefined,
+  tabIndex: undefined,
+  'aria-expanded': undefined,
+  'aria-haspopup': undefined,
+} as const
+
+function preventBaseUIClick(event: BaseUIEvent<React.MouseEvent>): void {
+  event.preventBaseUIHandler()
+}

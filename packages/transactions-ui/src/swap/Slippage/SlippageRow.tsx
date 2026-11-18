@@ -1,6 +1,7 @@
 import { Flex, Text } from '@universe/mycelium'
-import { IndicativeLoadingWrapper } from '@universe/transactions-ui/src/swap/IndicativeLoadingWrapper/IndicativeLoadingWrapper'
-import type { SlippageDisplay } from '@universe/transactions-ui/src/swap/types'
+import { AutoPill } from '@universe/transactions-ui/src/common/AutoPill/AutoPill'
+import { DetailRow } from '@universe/transactions-ui/src/common/DetailRow/DetailRow'
+import type { SlippageDisplay } from '@universe/transactions-ui/src/common/types'
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -22,6 +23,20 @@ export function SlippageRowLabel({ isChained }: SlippageRowLabelProps): JSX.Elem
   )
 }
 
+function SlippageValue({ slippage }: { slippage: SlippageDisplay }): JSX.Element {
+  const { t } = useTranslation()
+
+  // Own container: the pill sits 8 from the tolerance, wider than DetailRow's value gap.
+  return (
+    <Flex centered row gap="$spacing8">
+      {!slippage.isCustom ? <AutoPill label={t('swap.settings.slippage.control.auto')} /> : null}
+      <Text color={slippage.exceedsAuto ? '$statusWarning' : '$neutral1'} variant="body3">
+        {slippage.isZero ? t('common.none') : slippage.tolerance}
+      </Text>
+    </Flex>
+  )
+}
+
 export interface SlippageRowProps {
   /** Slot: a `SlippageRowLabel`, normally wrapped by the adapter in the slippage info shell. */
   label: ReactNode
@@ -31,25 +46,5 @@ export interface SlippageRowProps {
 }
 
 export function SlippageRow({ label, slippage, isLoading }: SlippageRowProps): JSX.Element {
-  const { t } = useTranslation()
-
-  return (
-    <Flex row alignItems="center" gap="$spacing12" justifyContent="space-between">
-      {label}
-      <IndicativeLoadingWrapper loading={isLoading}>
-        <Flex centered row gap="$spacing8">
-          {!slippage.isCustom ? (
-            <Flex centered backgroundColor="$surface3" borderRadius="$rounded6" height={20} px="$spacing8">
-              <Text color="$neutral1" variant="buttonLabel4" lineHeight={16}>
-                {t('swap.settings.slippage.control.auto')}
-              </Text>
-            </Flex>
-          ) : null}
-          <Text color={slippage.exceedsAuto ? '$statusWarning' : '$neutral1'} variant="body3">
-            {slippage.isZero ? t('common.none') : slippage.tolerance}
-          </Text>
-        </Flex>
-      </IndicativeLoadingWrapper>
-    </Flex>
-  )
+  return <DetailRow isLoading={isLoading} label={label} value={<SlippageValue slippage={slippage} />} />
 }

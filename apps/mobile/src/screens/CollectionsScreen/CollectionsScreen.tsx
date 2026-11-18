@@ -1,5 +1,5 @@
 import { SharedEventName } from '@uniswap/analytics-events'
-import { DynamicConfigs, useIsTokenCategoriesEnabled } from '@universe/gating'
+import { DynamicConfigs } from '@universe/gating'
 import {
   Flex,
   Loader,
@@ -120,7 +120,6 @@ function CategoryRowSkeleton(): JSX.Element {
 }
 
 export function CollectionsScreen(): JSX.Element {
-  const tokenCategoriesEnabled = useIsTokenCategoriesEnabled()
   const { data: categories, isFetching, error, refetch } = useListCategoriesQuery()
   const orderedCategories = useCategoryOrder({
     categories: categories ?? EMPTY_CATEGORIES,
@@ -132,9 +131,9 @@ export function CollectionsScreen(): JSX.Element {
       <CollectionsContent
         // isFetching (not isLoading) so the Retry tap swaps the error card back to the
         // skeleton — a failed query isn't pending, so isLoading stays false on refetch.
-        {...(tokenCategoriesEnabled
-          ? { error: error !== null && !isFetching, isLoading: isFetching && !categories?.length, orderedCategories }
-          : { error: false, isLoading: false, orderedCategories: EMPTY_CATEGORIES })}
+        error={error !== null && !isFetching}
+        isLoading={isFetching && !categories?.length}
+        orderedCategories={orderedCategories}
         onRetry={refetch}
       />
     </Trace>

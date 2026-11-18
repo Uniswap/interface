@@ -153,8 +153,9 @@ export const OPTION_CHECKED_MARKER_CLASS_NAME = 'flex h-[24px] w-[24px] flex-shr
 
 export const SELECT_ALL_CLEAR_HEADER_CLASS_NAMES = {
   frame: 'flex shrink-0 flex-row items-center justify-between px-[12px] pt-[12px] pb-[4px]',
-  selectAll: 'cursor-pointer text-[12px] font-medium text-accent1 disabled:cursor-default disabled:opacity-30',
-  clear: 'cursor-pointer text-[12px] font-medium text-neutral1',
+  selectAll:
+    'cursor-pointer text-[12px] font-medium text-accent1 data-disabled:cursor-default data-disabled:opacity-30 data-highlighted:underline',
+  clear: 'cursor-pointer text-[12px] font-medium text-neutral1 data-highlighted:underline',
 } as const
 
 /**

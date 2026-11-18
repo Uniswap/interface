@@ -11,7 +11,7 @@ exports[`AnimatedText > renders without error 1`] = `
     readonly=""
     rows="1"
     spellcheck="true"
-    style="color: rgb(19, 19, 19); font-family: Basel Grotesk; font-size: 17px; font-weight: 400; line-height: 22px;"
+    style="color: rgb(19, 19, 19); font-family: "Basel Grotesk"; font-size: 17px; font-weight: 400; line-height: 22px;"
     value="Rendered"
     virtualkeyboardpolicy="auto"
   />

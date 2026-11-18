@@ -23,3 +23,9 @@ export const STICKY_TABLE_HEAD_SPACER_PX = 12
  * it out of the box entirely, leaving the row flush against the app header.
  */
 export const STICKY_HEADER_TOP_GAP = 12
+
+/**
+ * Height of a sticky element the page keeps pinned under the app header (e.g. Portfolio's header).
+ * A page sets it on an ancestor so sticky table heads pin below that element instead of behind it.
+ */
+export const TABLE_STICKY_TOP_OFFSET_VAR = '--table-sticky-top-offset'

@@ -6,6 +6,7 @@ import type {
   MarginPlanStatus,
   MarginPlanStep,
   MarginPlanStepStatus,
+  MarginQuoteResponse,
   MarginTxStepPayload,
 } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
 import { MARGIN_NATIVE_TOKEN_ADDRESS } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
@@ -365,6 +366,16 @@ export function heldPlan(
   if (!plan || isTerminalPlanStatus(plan.status)) {
     return undefined
   }
+  // A cached proof means the step was broadcast even if its status never advanced; releasing would re-OPEN.
+  const started = plan.steps.some(
+    (step) =>
+      step.status === 'COMPLETE' ||
+      step.status === 'IN_PROGRESS' ||
+      !!readStepProof({ swapper: plan.swapper, planId: plan.planId, stepIndex: step.stepIndex }),
+  )
+  if (!started && !stepError && !state.isExecuting) {
+    return undefined
+  }
   // Released so Open doesn't re-send a dead step (e.g. DeadlinePassed) forever; held while its tx may land.
   if (
     stepError &&
@@ -385,12 +396,14 @@ export type OpenCtaAction = { kind: 'resume'; planId: string } | { kind: 'block'
 // reload is not in memory, so it never reaches here; Activity's Continue resumes it instead.
 export function decideOpenAction({
   existing,
+  matchesForm = true,
 }: {
   existing?: Pick<MarginPlanResponse, 'planId' | 'intent' | 'status'>
+  matchesForm?: boolean
 }): OpenCtaAction {
   // Terminal covers FAILED and CANCELLED as well as COMPLETED: a plan that ended is not in flight, and
   // testing COMPLETED alone would leave the Open CTA resuming a dead run or blocked behind one.
-  if (existing && existing.intent === 'OPEN' && !isTerminalPlanStatus(existing.status)) {
+  if (existing && existing.intent === 'OPEN' && matchesForm && !isTerminalPlanStatus(existing.status)) {
     return { kind: 'resume', planId: existing.planId }
   }
   const heldByStore = !!existing && !isTerminalPlanStatus(existing.status)
@@ -398,4 +411,24 @@ export function decideOpenAction({
     return { kind: 'block' }
   }
   return { kind: 'create' }
+}
+
+export function openQuoteKey(quote: MarginQuoteResponse | undefined): string | undefined {
+  return quote?.action === 'open'
+    ? [
+        quote.direction,
+        quote.exposureToken.address,
+        quote.counterToken.address,
+        quote.leverageTarget,
+        // Input echoes, not prices, so the 15s refresh keeps them stable.
+        quote.legs[0]?.venue,
+        quote.execution?.legs[0]?.marketId,
+        quote.slippageTolerance,
+        quote.swapConfig?.token,
+        quote.swapConfig?.chainId,
+        quote.swapConfig?.amount,
+      ]
+        .join(':')
+        .toLowerCase()
+    : undefined
 }

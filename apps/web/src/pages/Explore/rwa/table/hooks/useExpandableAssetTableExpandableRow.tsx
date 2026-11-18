@@ -1,4 +1,4 @@
-import { useUnifiedExpandableTableRow } from '~/pages/Explore/rwa/expandable/useUnifiedExpandableTableRow'
+import { useUnifiedExpandableTableRow } from '~/features/Explore/rwa/expandable/useUnifiedExpandableTableRow'
 import type { ExpandableAssetTableRow } from '~/pages/Explore/rwa/table/expandableAssetTableRowUtils'
 
 export function useExpandableAssetTableExpandableRow({

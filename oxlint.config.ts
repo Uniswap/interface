@@ -293,11 +293,24 @@ export function restrictedImportPatternsForUniversePackage(packageName: string) 
 // When a project override redefines no-restricted-syntax, oxlint replaces the
 // root definition entirely — so the override must spread these selectors.
 // sharedRestrictedSyntaxSelectors applies everywhere the rule is enabled.
+const zAnyRestrictedSyntaxSelector = {
+  selector: "CallExpression[callee.object.name='z'][callee.property.name='any']",
+  message: 'Avoid using z.any() in favor of more precise custom types.',
+} as const
+
+// A page-wide key listener has no owner: it fires whatever control has focus. The keyboard
+// owners in utilities (useGlobalShortcut, useDismissLayer, the search list's useKeyDown) are the
+// only files allowed to attach one (a file-wide disable where the rule fires).
+const pageKeyListenerRestrictedSyntaxSelector = {
+  selector:
+    "CallExpression[callee.object.name=/^(document|window)$/][callee.property.name='addEventListener'][arguments.0.value=/^key(down|up|press)$/]",
+  message:
+    'Do not listen for keys on document or window. Use useGlobalShortcut for a page shortcut or useDismissLayer for Escape (utilities), or handle the key on the focused element.',
+} as const
+
 export const sharedRestrictedSyntaxSelectors = [
-  {
-    selector: "CallExpression[callee.object.name='z'][callee.property.name='any']",
-    message: 'Avoid using z.any() in favor of more precise custom types.',
-  },
+  zAnyRestrictedSyntaxSelector,
+  pageKeyListenerRestrictedSyntaxSelector,
 ] as const
 
 // Kept separate so apps that legitimately read `process.env` (e.g. mission-control,
@@ -1408,7 +1421,7 @@ export default defineConfig({
                 name: '@privy-io/react-auth',
                 importNames: ['usePrivy', 'useLoginWithOAuth', 'useLoginWithEmail', 'useAuthorizationSignature'],
                 message:
-                  'Use the gated `useMaybe*` hooks from `~/features/wallet/hooks/useMaybePrivy` instead. `MaybePrivyProvider` only mounts <PrivyProvider> when Privy is configured (PRIVY_APP_ID / PRIVY_CLIENT_ID); Privy hooks read provider-backed contexts at render and crash the page when it is not.',
+                  'Use the `useMaybe*` hooks from `~/features/wallet/hooks/useMaybePrivy` instead. The Privy SDK loads in a lazy chunk (`~/features/wallet/privy/PrivyRuntime`) that publishes its hook results to a store; importing the hooks elsewhere pulls the SDK into the initial bundle and crashes when the provider is not mounted.',
               },
               {
                 name: 'i18next',

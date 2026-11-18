@@ -104,11 +104,11 @@ describe('HookDetailsNetworkSelector', () => {
         deployments={DEPLOYMENTS}
       />,
     )
-    const trigger = screen.getByTestId(TestID.TokensNetworkFilterTrigger)
-    const control = trigger.closest<HTMLElement>('[data-slot="popover-compat-trigger"]')!
+    // The trigger is the popover's control itself, not a button inside a wrapper.
+    const control = screen.getByTestId(TestID.TokensNetworkFilterTrigger)
+    expect(control).toHaveAttribute('data-slot', 'popover-compat-trigger')
     expect(control).toHaveAccessibleName('Ethereum')
     expect(control).toHaveAttribute('tabindex', '0')
-    expect(trigger).toHaveAttribute('tabindex', '-1')
 
     control.focus()
     expect(control).toHaveFocus()
@@ -150,9 +150,7 @@ describe('HookDetailsNetworkSelector', () => {
       </Routes>,
     )
 
-    const trigger = screen
-      .getByTestId(TestID.TokensNetworkFilterTrigger)
-      .closest<HTMLElement>('[data-slot="popover-compat-trigger"]')!
+    const trigger = screen.getByTestId(TestID.TokensNetworkFilterTrigger)
     trigger.focus()
     await userEvent.keyboard('{Enter}')
     expect(await screen.findByTestId(`${ElementName.NetworkButton}-${UniverseChainId.Base}`)).toBeInTheDocument()

@@ -47,7 +47,7 @@ import { EffectiveOverlayZIndexContext, OVERLAY_Z_INDEXES, useStackingLayerAbove
  * including ones inside the portaled sheet (its search input, its rows) —
  * reads as an outside press and closes the popover (SWAP-3309, mobile web).
  * The sheet owns dismissal in this mode (scrim press, drag-down, its own
- * Escape stack via useSheetEscapeToClose), so the root's requests are all
+ * Escape stack via useDismissLayer), so the root's requests are all
  * spurious: swallow them. This also matches the sheet-branch contract below —
  * the caller's Popover.Content-specific dismiss interceptors never apply here.
  */
@@ -175,7 +175,14 @@ export const AdaptiveWebPopoverContentCompat = React.forwardRef<HTMLDivElement, 
     // {...webBottomSheetProps}`).
     if (isSheetAdapted) {
       return (
-        <WebBottomSheet isOpen={isOpen} zIndex={stackingLayerNumber} {...webBottomSheetProps}>
+        <WebBottomSheet
+          isOpen={isOpen}
+          zIndex={stackingLayerNumber}
+          // On a small screen the sheet replaces the popup, so it takes the popup's name.
+          title={styleAndInertProps['aria-label'] ?? ''}
+          aria-labelledby={styleAndInertProps['aria-labelledby']}
+          {...webBottomSheetProps}
+        >
           {children}
         </WebBottomSheet>
       )

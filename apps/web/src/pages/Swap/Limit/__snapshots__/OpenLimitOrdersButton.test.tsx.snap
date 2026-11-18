@@ -22,7 +22,7 @@ exports[`OpenLimitOrdersButton > should render if there are open limit orders 1`
             fill="none"
             focusable="false"
             stroke-width="8"
-            style="width: 20px; height: 20px;"
+            style="color: var(--neutral2); width: 20px; height: 20px;"
             viewBox="0 0 18 18"
           >
             <path
@@ -47,7 +47,7 @@ exports[`OpenLimitOrdersButton > should render if there are open limit orders 1`
           fill="none"
           focusable="false"
           stroke-width="2"
-          style="width: 20px; height: 20px; transform: rotate(270deg);"
+          style="color: var(--neutral2); width: 20px; height: 20px; transform: rotate(270deg);"
           viewBox="0 0 24 24"
         >
           <path

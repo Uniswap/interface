@@ -50,7 +50,7 @@ export function useMarginPositionActions({
       onSelect({ action, positionId })
     }
     // Only in-flight gets an explanation; a missing subId keeps the action's own description.
-    const blockedNote = canManage && isPlanInFlight ? t('margin.error.planInFlight') : undefined
+    const blockedNote = canManage && isPlanInFlight ? t('margin.manage.resumePending') : undefined
 
     const items: MarginActionItem[] = [
       {
@@ -87,7 +87,7 @@ export function useMarginPositionActions({
 
     // Uniform gate: every ceiling (maxWithdrawable, leverage cap) needs a quote the menu hasn't
     // fetched, so no action can be pre-disabled for its own reason.
-    const disabled = !canManage || isPlanInFlight
+    const disabled = !canManage
     return items.map((item) => ({
       ...item,
       disabled,

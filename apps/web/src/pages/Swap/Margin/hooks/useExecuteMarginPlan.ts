@@ -81,7 +81,7 @@ import {
   readStepProof,
   writeStepProof,
 } from '~/pages/Swap/Margin/hooks/marginStepProofCache'
-import { getMappedMarginErrorMessage } from '~/pages/Swap/Margin/marginQuoteError'
+import { getMappedMarginErrorMessage, marginErrorCode } from '~/pages/Swap/Margin/marginQuoteError'
 import { useAppDispatch } from '~/state/hooks'
 import reduxStore from '~/state/index'
 import { useTransactionAdderFromHash } from '~/state/transactions/adder'
@@ -1310,9 +1310,8 @@ export function useExecuteMarginPlan(): {
           error instanceof FetchError ? (error.data as { errorCode?: string; detail?: string } | undefined) : undefined
         // Shared reasons (health-floor, etc.) get the same localized copy as the adjust preview;
         // create-only codes (not yet in the map) keep the existing detail/message fallback.
-        const mappedMessage = body?.errorCode
-          ? getMappedMarginErrorMessage({ errorCode: body.errorCode, detail: body.detail, t })
-          : undefined
+        const errorCode = body && (marginErrorCode(body) ?? body.errorCode)
+        const mappedMessage = errorCode ? getMappedMarginErrorMessage({ errorCode, detail: body.detail, t }) : undefined
         actions.setStepError({
           error: {
             // Plan-level: the create never returned a plan, so the 0 names no step.
@@ -1396,7 +1395,8 @@ export function useExecuteMarginPlan(): {
       }
       const body =
         error instanceof FetchError ? (error.data as { errorCode?: string; detail?: string } | undefined) : undefined
-      const mappedMessage = body?.errorCode ? getMappedMarginErrorMessage({ errorCode: body.errorCode, t }) : undefined
+      const errorCode = body && (marginErrorCode(body) ?? body.errorCode)
+      const mappedMessage = errorCode ? getMappedMarginErrorMessage({ errorCode, detail: body.detail, t }) : undefined
       if (!mayWrite()) {
         return
       }

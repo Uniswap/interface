@@ -10,6 +10,9 @@ import { SwapTabsDropdown } from '~/pages/Swap/SwapTabsDropdown'
 // Mirrors the `large` minHeight of the SegmentedControl compat primitive, which exports
 // no constant for it. Keep in sync.
 const SEGMENTED_CONTROL_LARGE_HEIGHT = 44
+// Mirrors the `large` SegmentedControl's inset before the first label (1px border, 4px container padding,
+// 12px option padding), which exports no constant for it. Keep in sync.
+const SEGMENTED_CONTROL_LARGE_LABEL_INSET = 17
 
 /**
  * Swap header row: the tab bar plus the right-side icons.
@@ -27,6 +30,7 @@ export function SwapHeaderTabRow({
   trailingContent,
   onHeightChange,
   animateIndicator,
+  alignLabelsToEdge,
 }: {
   options: readonly SegmentedControlOption<SwapTab>[]
   currentTab: SwapTab
@@ -36,6 +40,7 @@ export function SwapHeaderTabRow({
   trailingContent?: JSX.Element
   onHeightChange: (height: number) => void
   animateIndicator?: boolean
+  alignLabelsToEdge?: boolean
 }): JSX.Element {
   const { i18n } = useTranslation()
   const { collapsed, containerRef, tabsRef, rightContentRef } = useTabBarOverflow({ measureKey: i18n.language })
@@ -59,7 +64,7 @@ export function SwapHeaderTabRow({
           onSelectTab={onTabClick}
         />
       ) : (
-        <Flex ref={tabsRef}>
+        <Flex ref={tabsRef} ml={alignLabelsToEdge ? -SEGMENTED_CONTROL_LARGE_LABEL_INSET : undefined}>
           <SegmentedControl
             outlined={false}
             size="large"

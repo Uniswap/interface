@@ -1,8 +1,8 @@
 import { renderHook } from '@testing-library/react'
+import { NFT_QUERY_KEY_PREFIX } from '@universe/data-api'
 import { useHomeScreenHeartbeatCoordinator } from 'src/screens/HomeScreen/portfolio/hooks/useHomeScreenHeartbeatCoordinator'
 import { HomeTab } from 'src/screens/HomeScreen/portfolio/types'
 import { useHeartbeatCoordinator } from 'src/utils/useHeartbeatCoordinator'
-import { NFT_QUERY_KEY_PREFIX } from 'uniswap/src/data/apiClients/dataApiService/nfts/queries'
 import { WALLET_POSITIONS_QUERY_KEY_PREFIX } from 'uniswap/src/data/apiClients/liquidityService/queryKeys'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 

@@ -184,7 +184,7 @@ exports[`AccountDetails > renders without error with chevron 1`] = `
           fill="none"
           focusable="false"
           stroke-width="8"
-          style="width: 24px; height: 24px;"
+          style="color: var(--neutral2); width: 24px; height: 24px;"
           viewBox="0 0 24 24"
         >
           <path

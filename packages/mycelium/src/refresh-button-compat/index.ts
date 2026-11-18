@@ -13,7 +13,7 @@ export {
   REFRESH_FRAME_BASE_CLASSES,
   REFRESH_FRAME_CURSOR_ACTIVE_CLASS,
   REFRESH_FRAME_CURSOR_INERT_CLASS,
-  REFRESH_FRAME_HIDDEN_CLASS,
+  REFRESH_FRAME_DISABLED_REVEAL_CLASSES,
   REFRESH_FRAME_REVEAL_CLASSES,
   REFRESH_ICON_FRAME_BASE_CLASSES,
   REFRESH_ICON_HOVER_CLASSES,
@@ -22,5 +22,5 @@ export {
   refreshIconFrameClassName,
   type RefreshButtonFrameState,
 } from './compile'
-export { REFRESH_ICON_SIZE, REFRESH_SHORTCUT_KEYS, type RefreshButtonCompatProps } from './props'
+export { REFRESH_ICON_SIZE, type RefreshButtonCompatProps } from './props'
 export { RefreshButtonCompat } from './RefreshButtonCompat'

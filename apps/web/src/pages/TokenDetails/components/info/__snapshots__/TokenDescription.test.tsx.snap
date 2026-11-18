@@ -35,7 +35,7 @@ exports[`TokenDescription > no description or social buttons shown when not avai
           fill="none"
           focusable="false"
           stroke-width="8"
-          style="width: 16px; height: 16px;"
+          style="color: var(--neutral1); width: 16px; height: 16px;"
           viewBox="0 0 16 16"
         >
           <g
@@ -67,7 +67,7 @@ exports[`TokenDescription > no description or social buttons shown when not avai
           fill="none"
           focusable="false"
           stroke-width="8"
-          style="width: 16px; height: 16px;"
+          style="color: var(--neutral1); width: 16px; height: 16px;"
           viewBox="0 0 123 123"
         >
           <path
@@ -141,7 +141,7 @@ exports[`TokenDescription > renders token information correctly with defaults 1`
           fill="none"
           focusable="false"
           stroke-width="8"
-          style="width: 16px; height: 16px;"
+          style="color: var(--neutral1); width: 16px; height: 16px;"
           viewBox="0 0 16 16"
         >
           <g
@@ -173,7 +173,7 @@ exports[`TokenDescription > renders token information correctly with defaults 1`
           fill="none"
           focusable="false"
           stroke-width="8"
-          style="width: 16px; height: 16px;"
+          style="color: var(--neutral1); width: 16px; height: 16px;"
           viewBox="0 0 123 123"
         >
           <path
@@ -204,7 +204,7 @@ exports[`TokenDescription > renders token information correctly with defaults 1`
           fill="none"
           focusable="false"
           stroke-width="8"
-          style="width: 16px; height: 16px;"
+          style="color: var(--neutral1); width: 16px; height: 16px;"
           viewBox="0 0 16 16"
         >
           <path
@@ -231,7 +231,7 @@ exports[`TokenDescription > renders token information correctly with defaults 1`
           fill="currentColor"
           focusable="false"
           stroke-width="8"
-          style="width: 16px; height: 16px;"
+          style="color: var(--neutral1); width: 16px; height: 16px;"
           viewBox="0 0 512 512"
         >
           <path
@@ -300,7 +300,7 @@ exports[`TokenDescription > truncates description and shows more 1`] = `
           fill="none"
           focusable="false"
           stroke-width="8"
-          style="width: 16px; height: 16px;"
+          style="color: var(--neutral1); width: 16px; height: 16px;"
           viewBox="0 0 16 16"
         >
           <g
@@ -332,7 +332,7 @@ exports[`TokenDescription > truncates description and shows more 1`] = `
           fill="none"
           focusable="false"
           stroke-width="8"
-          style="width: 16px; height: 16px;"
+          style="color: var(--neutral1); width: 16px; height: 16px;"
           viewBox="0 0 123 123"
         >
           <path
@@ -363,7 +363,7 @@ exports[`TokenDescription > truncates description and shows more 1`] = `
           fill="none"
           focusable="false"
           stroke-width="8"
-          style="width: 16px; height: 16px;"
+          style="color: var(--neutral1); width: 16px; height: 16px;"
           viewBox="0 0 16 16"
         >
           <path
@@ -390,7 +390,7 @@ exports[`TokenDescription > truncates description and shows more 1`] = `
           fill="currentColor"
           focusable="false"
           stroke-width="8"
-          style="width: 16px; height: 16px;"
+          style="color: var(--neutral1); width: 16px; height: 16px;"
           viewBox="0 0 512 512"
         >
           <path

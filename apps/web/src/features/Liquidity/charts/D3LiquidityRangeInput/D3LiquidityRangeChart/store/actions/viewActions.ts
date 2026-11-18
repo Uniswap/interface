@@ -10,11 +10,10 @@ import {
   type ChartStoreState,
   DefaultPriceStrategy,
 } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
-import { calculateDefaultPriceRange } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/defaultPriceRange'
+import { getDefaultRangeTicks } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/defaultPriceRange'
 import { calculateStrategyTicks } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/priceStrategies'
 import { snapTickToSpacing } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/tickUtils'
 import { RangeAmountInputPriceMode } from '~/features/Liquidity/Create/types'
-import { tryParseV4Tick } from '~/features/Liquidity/utils/priceRangeInfo'
 
 interface ViewActionCallbacks {
   onInputModeChange: (inputMode: RangeAmountInputPriceMode) => void
@@ -68,8 +67,8 @@ export const createViewActions = ({
       })
     },
 
-    reset: (params?: { animate?: boolean; minTick?: number | null; maxTick?: number | null }) => {
-      const { animate = true, minTick: providedMinTick, maxTick: providedMaxTick } = params ?? {}
+    reset: (params?: { animate?: boolean; emit?: boolean; minTick?: number | null; maxTick?: number | null }) => {
+      const { animate = true, emit = true, minTick: providedMinTick, maxTick: providedMaxTick } = params ?? {}
       const {
         actions,
         isFullRange,
@@ -94,29 +93,11 @@ export const createViewActions = ({
       // Calculate price data bounds (historical price range)
       const { min: priceDataMin, max: priceDataMax } = getCandlestickPriceBounds(priceData)
 
-      // Get current price (most recent price point)
-      const currentPrice = priceData[priceData.length - 1]?.value || 0
-
-      // Default the range to the middle 60% of a viewport centered on the current price. Computed in
-      // log/ratio space so the lower bound can't collapse to MIN_TICK for volatile pairs — see
-      // calculateDefaultPriceRange. When there is no usable price history the prices fall back to the
-      // current price, leaving the range degenerate (min === max) so the stable strategy takes over.
-      const defaultPriceRange = calculateDefaultPriceRange({ priceDataMin, priceDataMax, currentPrice })
-      const calculatedDefaultMinPrice = defaultPriceRange?.minPrice ?? currentPrice
-      const calculatedDefaultMaxPrice = defaultPriceRange?.maxPrice ?? currentPrice
-
-      // Convert display prices to ticks using the SDK
-      const defaultMinTick = tryParseV4Tick({
-        baseToken: baseCurrency,
-        quoteToken: quoteCurrency,
-        value: String(calculatedDefaultMinPrice),
+      const { defaultMinTick, defaultMaxTick } = getDefaultRangeTicks({
+        priceData,
         tickSpacing,
-      })
-      const defaultMaxTick = tryParseV4Tick({
-        baseToken: baseCurrency,
-        quoteToken: quoteCurrency,
-        value: String(calculatedDefaultMaxPrice),
-        tickSpacing,
+        baseCurrency,
+        quoteCurrency,
       })
 
       if (defaultMinTick === undefined || defaultMaxTick === undefined) {
@@ -203,6 +184,10 @@ export const createViewActions = ({
           minTick,
           maxTick,
         })
+      }
+
+      if (!emit) {
+        return
       }
 
       // Wait until animation is complete before emitting the range

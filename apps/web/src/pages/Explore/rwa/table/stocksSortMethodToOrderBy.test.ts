@@ -8,7 +8,7 @@ describe('stocksSortMethodToOrderBy', () => {
     [StocksSortMethod.PRICE, TokensOrderBy.PRICE],
     [StocksSortMethod.HOUR_CHANGE, TokensOrderBy.PRICE_CHANGE_1H],
     [StocksSortMethod.DAY_CHANGE, TokensOrderBy.PRICE_CHANGE_1D],
-    [StocksSortMethod.MARKET_CAP, TokensOrderBy.MARKET_CAP],
+    [StocksSortMethod.FDV, TokensOrderBy.FDV],
   ])('maps %s to a fixed ranking', (sortMethod, expected) => {
     expect(stocksSortMethodToOrderBy({ sortMethod, volumeOrderBy: TokensOrderBy.VOLUME_7D })).toBe(expected)
   })

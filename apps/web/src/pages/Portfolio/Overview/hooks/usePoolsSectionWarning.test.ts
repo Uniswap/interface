@@ -36,7 +36,7 @@ describe('usePoolsSectionWarning', () => {
   it('returns the outage message when chains have failed', () => {
     mockFailedNetworks({ failedChainIds: [UniverseChainId.Base] })
 
-    const { result } = renderHook(() => usePoolsSectionWarning({ enabled: true }))
+    const { result } = renderHook(() => usePoolsSectionWarning({}))
 
     expect(result.current.warningMessage).toBeTruthy()
   })
@@ -44,21 +44,20 @@ describe('usePoolsSectionWarning', () => {
   it('returns no warning message when no chains have failed', () => {
     mockFailedNetworks({ failedChainIds: [] })
 
-    const { result } = renderHook(() => usePoolsSectionWarning({ enabled: true }))
+    const { result } = renderHook(() => usePoolsSectionWarning({}))
 
     expect(result.current.warningMessage).toBeUndefined()
   })
 
-  it('forwards the resolved addresses, chain, and enabled flag to usePoolsFailedNetworks', () => {
+  it('forwards the resolved addresses and chain to usePoolsFailedNetworks', () => {
     mockFailedNetworks({ failedChainIds: [] })
 
-    renderHook(() => usePoolsSectionWarning({ chainId: UniverseChainId.Base, enabled: false }))
+    renderHook(() => usePoolsSectionWarning({ chainId: UniverseChainId.Base }))
 
     expect(usePoolsFailedNetworks).toHaveBeenCalledWith({
       evmAddress: EVM_ADDRESS,
       svmAddress: undefined,
       chainId: UniverseChainId.Base,
-      enabled: false,
     })
   })
 })

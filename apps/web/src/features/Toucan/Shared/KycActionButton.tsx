@@ -16,7 +16,7 @@ export function KycActionButton({ kycStatus, onPress }: { kycStatus: AuctionKycS
       {kycStatus.kycButtonLabel && (
         <Button
           icon={<UserLock size="$icon.16" />}
-          flex={1}
+          fill={false}
           onPress={onPress}
           disabled={kycStatus.kycButtonDisabled}
           group

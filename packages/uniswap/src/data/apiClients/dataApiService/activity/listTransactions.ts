@@ -1,20 +1,16 @@
-import { PartialMessage, PlainMessage, toPlainMessage } from '@bufbuild/protobuf'
-import { InfiniteData, UseInfiniteQueryResult, useInfiniteQuery } from '@tanstack/react-query'
+import { PartialMessage, PlainMessage } from '@bufbuild/protobuf'
+import { InfiniteData, queryOptions, UseInfiniteQueryResult, useInfiniteQuery } from '@tanstack/react-query'
 import { ListTransactionsRequest, ListTransactionsResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
-import { transformInput, WithoutWalletAccount } from '@universe/api'
-import { FeatureFlags, getFeatureFlag } from '@universe/gating'
-import { dataApiServiceClientV1 } from 'uniswap/src/data/apiClients/dataApiService/clients/DataApiClient'
 import {
   AccountAddressesByPlatform,
-  buildAccountAddressesByPlatform,
-} from 'uniswap/src/data/apiClients/dataApiService/utils/buildAccountAddressesByPlatform'
+  getListWalletTransactionsInfiniteQueryOptions,
+  getListWalletTransactionsQueryOptions,
+  WithoutWalletAccount,
+} from '@universe/data-api'
+import { FeatureFlags, getFeatureFlag } from '@universe/gating'
+import { dataApiServiceClientV1 } from 'uniswap/src/data/apiClients/dataApiService/clients/DataApiClient'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
-import {
-  persistableInfiniteQueryOptions,
-  persistableQueryOptions,
-} from 'utilities/src/reactQuery/persistableQueryOptions'
-import type { InfiniteQueryOptionsResult, QueryOptionsResult } from 'utilities/src/reactQuery/queryOptions'
-import { ONE_MINUTE_MS } from 'utilities/src/time/time'
+import type { QueryOptionsResult } from 'utilities/src/reactQuery/queryOptions'
 
 type GetListTransactionsInput<TSelectData = PlainMessage<ListTransactionsResponse>> = {
   input?: WithoutWalletAccount<PartialMessage<ListTransactionsRequest>> & {
@@ -32,13 +28,6 @@ type GetListTransactionsInfiniteInput = {
   refetchInterval?: number
 }
 
-const EMPTY_LIST_RESPONSE: PlainMessage<ListTransactionsResponse> = toPlainMessage(
-  new ListTransactionsResponse({
-    transactions: [],
-    nextPageToken: undefined,
-  }),
-)
-
 /**
  * Wrapper around infinite query for DataApiService/ListTransactions
  * This fetches data for user transactions with infinite scrolling support
@@ -53,70 +42,27 @@ type GetListTransactionsQuery<TSelectData = PlainMessage<ListTransactionsRespons
   PlainMessage<ListTransactionsResponse> | undefined,
   Error,
   TSelectData,
-  readonly [
-    ReactQueryCacheKey.ListTransactions,
-    AccountAddressesByPlatform | undefined,
-    PartialMessage<ListTransactionsRequest> | undefined,
-  ]
+  readonly [ReactQueryCacheKey.ListTransactions, AccountAddressesByPlatform | undefined, Record<string, unknown>]
 >
 
-type ListTransactionsInfiniteQueryKey = readonly [
-  ReactQueryCacheKey.ListTransactions,
-  string | undefined,
-  Record<string, unknown>,
-  boolean,
-]
-
-type GetListTransactionsInfiniteQuery = InfiniteQueryOptionsResult<
-  PlainMessage<ListTransactionsResponse>,
-  Error,
-  InfiniteData<PlainMessage<ListTransactionsResponse>>,
-  ListTransactionsInfiniteQueryKey,
-  string | undefined
->
+type GetListTransactionsInfiniteQuery = ReturnType<typeof getListWalletTransactionsInfiniteQueryOptions>
 
 export const getListTransactionsInfiniteQuery = ({
   input,
   enabled,
   refetchInterval,
 }: GetListTransactionsInfiniteInput): GetListTransactionsInfiniteQuery => {
-  const transformedInput = transformInput(input)
-  const includePlans = getFeatureFlag(FeatureFlags.ChainedActions)
-
-  const { walletAccount, ...inputWithoutAddress } = transformedInput ?? {}
-  const address = walletAccount?.platformAddresses[0]?.address
-
-  return persistableInfiniteQueryOptions({
-    queryKey: [
-      ReactQueryCacheKey.ListTransactions,
-      address,
-      inputWithoutAddress as Record<string, unknown>,
-      includePlans,
-    ] as const,
-    queryFn: async ({ pageParam }: { pageParam?: string }) => {
-      if (!transformedInput) {
-        return EMPTY_LIST_RESPONSE
-      }
-
-      const requestWithPageToken = {
-        ...transformedInput,
-        pageToken: pageParam,
-        includePlans,
-        useSubstreamData: true,
-      }
-
-      return toPlainMessage(await dataApiServiceClientV1.listTransactions(requestWithPageToken))
-    },
-    initialPageParam: undefined,
-    getNextPageParam: (lastPage) => {
-      // oxlint-disable-next-line typescript/no-unnecessary-condition
-      return lastPage?.nextPageToken || undefined
-    },
-    placeholderData: (prev) => prev, // this prevents the loading skeleton from appearing when refetching
-    refetchInterval,
-    staleTime: ONE_MINUTE_MS,
-    enabled: !!input && enabled,
+  const baseOptions = getListWalletTransactionsInfiniteQueryOptions(dataApiServiceClientV1, {
+    input,
+    includePlans: getFeatureFlag(FeatureFlags.ChainedActions),
   })
+
+  // `meta.persist: true` propagates from `baseOptions`.
+  return {
+    ...baseOptions,
+    refetchInterval,
+    enabled: !!input && enabled,
+  }
 }
 
 export const getListTransactionsQuery = <TSelectData = ListTransactionsResponse>({
@@ -125,23 +71,15 @@ export const getListTransactionsQuery = <TSelectData = ListTransactionsResponse>
   refetchInterval,
   select,
 }: GetListTransactionsInput<TSelectData>): GetListTransactionsQuery<TSelectData> => {
-  const accountAddressesByPlatform = buildAccountAddressesByPlatform(input)
-  const includePlans = getFeatureFlag(FeatureFlags.ChainedActions)
-  const transformedInput = transformInput({
-    ...input,
-    includePlans,
-    useSubstreamData: true,
+  const baseOptions = getListWalletTransactionsQueryOptions(dataApiServiceClientV1, {
+    input,
+    includePlans: getFeatureFlag(FeatureFlags.ChainedActions),
   })
 
-  const { walletAccount: _walletAccount, ...inputWithoutWalletAccount } = transformedInput ?? {}
-
-  return persistableQueryOptions({
-    queryKey: [ReactQueryCacheKey.ListTransactions, accountAddressesByPlatform, inputWithoutWalletAccount],
-    queryFn: async () =>
-      transformedInput ? toPlainMessage(await dataApiServiceClientV1.listTransactions(transformedInput)) : undefined,
-    placeholderData: (prev) => prev, // this prevents the loading skeleton from appearing when refetching
+  // `meta.persist: true` propagates from `baseOptions`.
+  return queryOptions({
+    ...baseOptions,
     refetchInterval,
-    staleTime: ONE_MINUTE_MS,
     enabled: !!input && enabled,
     subscribed: !!enabled,
     select,

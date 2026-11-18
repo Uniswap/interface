@@ -1,7 +1,7 @@
 import userEvent from '@testing-library/user-event'
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { UniverseChainId } from '@universe/chains'
-import { FeatureFlags, useFeatureFlag, useFeatureFlagWithExposureLoggingDisabled } from '@universe/gating'
+import { useFeatureFlag, useFeatureFlagWithExposureLoggingDisabled } from '@universe/gating'
 import type { ReactNode } from 'react'
 import { PortfolioBalancePart } from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances'
 import { usePortfolioBalancePart } from 'uniswap/src/features/dataApi/balances/usePortfolioBalancePart'
@@ -165,12 +165,6 @@ function mockBalanceLoadedWithoutCount(): void {
   } as ReturnType<typeof usePortfolioBalancePart>)
 }
 
-function enablePoolsBalances(): void {
-  mocked(useFeatureFlagWithExposureLoggingDisabled).mockImplementation(
-    (flag) => flag === FeatureFlags.PortfolioPoolsBalances,
-  )
-}
-
 function createWalletPositionsResult(
   overrides: Partial<UseWalletPositionsWebResult> = {},
 ): UseWalletPositionsWebResult {
@@ -182,6 +176,8 @@ function createWalletPositionsResult(
     hasNextPage: false,
     isLoadingPositions: false,
     hasErrorWithoutData: false,
+    isLoadingHiddenPositions: false,
+    hasHiddenErrorWithoutData: false,
     refetch: vi.fn(),
     loadMorePositions: vi.fn(),
     pagesLoaded: 1,
@@ -269,7 +265,6 @@ describe('PortfolioPools', () => {
   })
 
   it('should render the table loader with the balance header while positions load', () => {
-    enablePoolsBalances()
     mocked(useWalletPositionsWeb).mockReturnValue(createWalletPositionsResult({ isLoadingPositions: true }))
     mockTotalPoolsCount(undefined)
 
@@ -330,7 +325,6 @@ describe('PortfolioPools', () => {
   })
 
   it('should pass the selected chain to the balance header when positions are present', () => {
-    enablePoolsBalances()
     mocked(usePortfolioRoutes).mockReturnValue({
       tab: PortfolioTab.Pools,
       chainId: UniverseChainId.Base,
@@ -393,25 +387,165 @@ describe('PortfolioPools', () => {
       expect(screen.queryByTestId('positions-table')).not.toBeInTheDocument()
     })
 
-    it('keeps the table mounted and marks the route chain as an active filter when it empties the list', () => {
+    function mockDefaultViewResult(overrides: Partial<UseWalletPositionsWebResult>): void {
+      mocked(useWalletPositionsWeb).mockImplementation(({ enabled }) =>
+        createWalletPositionsResult(enabled === undefined ? {} : overrides),
+      )
+    }
+
+    it('checks the default view: all networks, default filters, no search', () => {
       mocked(usePortfolioRoutes).mockReturnValue({
         tab: PortfolioTab.Pools,
         chainId: UniverseChainId.Base,
         externalAddress: undefined,
         isExternalWallet: false,
       })
-      mocked(useWalletPositionsWeb).mockReturnValue(
-        createWalletPositionsResult({ visiblePositions: [], hiddenPositions: [] }),
-      )
-      mockTotalPoolsCount(0)
 
       render(<PortfolioPools />)
 
-      expect(screen.queryByText('No positions')).not.toBeInTheDocument()
-      expect(screen.getByTestId('positions-table')).toBeInTheDocument()
-      expect(mocked(PositionsTable).mock.calls[0]?.[0]).toEqual(
-        expect.objectContaining({ chainFilter: UniverseChainId.Base }),
+      expect(useWalletPositionsWeb).toHaveBeenCalledWith({
+        address: SAMPLE_SEED_ADDRESS_1,
+        chainFilter: null,
+        versionFilter: LP_POSITION_PROTOCOL_VERSIONS,
+        statusFilter: DEFAULT_LP_POSITION_STATUS_FILTER,
+        v2StatusFilter: DEFAULT_V2_POSITION_STATUS_FILTER,
+        searchText: '',
+        sort: { field: 'liquidity', direction: 'desc' },
+        enabled: true,
+      })
+    })
+
+    it('adds the selected Closed lifecycle to the default view check', () => {
+      mockV2StatusFilter(['closed'])
+
+      render(<PortfolioPools />)
+
+      expect(useWalletPositionsWeb).toHaveBeenCalledWith(
+        expect.objectContaining({
+          chainFilter: null,
+          searchText: '',
+          v2StatusFilter: ['open', 'closed'],
+          enabled: true,
+        }),
       )
+    })
+
+    it('does not check the default view without an active filter', () => {
+      render(<PortfolioPools />)
+
+      expect(useWalletPositionsWeb).toHaveBeenCalledWith(expect.objectContaining({ enabled: false }))
+    })
+
+    describe('when the route chain empties the list', () => {
+      beforeEach(() => {
+        mocked(usePortfolioRoutes).mockReturnValue({
+          tab: PortfolioTab.Pools,
+          chainId: UniverseChainId.Base,
+          externalAddress: undefined,
+          isExternalWallet: false,
+        })
+        mockTotalPoolsCount(0)
+      })
+
+      it('shows the empty state when the default view is empty', () => {
+        mockDefaultViewResult({ visiblePositions: [], hiddenPositions: [] })
+
+        render(<PortfolioPools />)
+
+        expect(screen.getByText('No positions')).toBeInTheDocument()
+        expect(screen.queryByTestId('positions-table')).not.toBeInTheDocument()
+      })
+
+      it('keeps the table mounted with the route chain as an active filter when other networks have positions', () => {
+        mockDefaultViewResult({ visiblePositions: [MOCK_POSITION] })
+
+        render(<PortfolioPools />)
+
+        expect(screen.queryByText('No positions')).not.toBeInTheDocument()
+        expect(screen.getByTestId('positions-table')).toBeInTheDocument()
+        expect(mocked(PositionsTable).mock.calls[0]?.[0]).toEqual(
+          expect.objectContaining({ chainFilter: UniverseChainId.Base }),
+        )
+      })
+
+      it('keeps the table mounted when other networks only have hidden positions', () => {
+        mockDefaultViewResult({ hiddenPositions: [MOCK_POSITION] })
+
+        render(<PortfolioPools />)
+
+        expect(screen.queryByText('No positions')).not.toBeInTheDocument()
+        expect(screen.getByTestId('positions-table')).toBeInTheDocument()
+      })
+
+      it('renders the table loader while the default view check is in flight', () => {
+        mockDefaultViewResult({ isLoadingPositions: true })
+
+        render(<PortfolioPools />)
+
+        expect(screen.getByTestId('positions-table-loader')).toBeInTheDocument()
+        expect(screen.queryByText('No positions')).not.toBeInTheDocument()
+      })
+
+      it('keeps the table mounted when the default view check fails', () => {
+        mockDefaultViewResult({ hasErrorWithoutData: true })
+
+        render(<PortfolioPools />)
+
+        expect(screen.queryByText('No positions')).not.toBeInTheDocument()
+        expect(screen.getByTestId('positions-table')).toBeInTheDocument()
+      })
+
+      it('renders the table loader while the default view hidden positions are loading', () => {
+        mockDefaultViewResult({ isLoadingHiddenPositions: true })
+
+        render(<PortfolioPools />)
+
+        expect(screen.getByTestId('positions-table-loader')).toBeInTheDocument()
+        expect(screen.queryByText('No positions')).not.toBeInTheDocument()
+      })
+
+      it('keeps the table mounted when the default view hidden positions fail to load', () => {
+        mockDefaultViewResult({ hasHiddenErrorWithoutData: true })
+
+        render(<PortfolioPools />)
+
+        expect(screen.queryByText('No positions')).not.toBeInTheDocument()
+        expect(screen.getByTestId('positions-table')).toBeInTheDocument()
+      })
+
+      it('shows the empty state when another filter is also active and the default view is empty', () => {
+        mockV2StatusFilter(['closed'])
+        mockDefaultViewResult({ visiblePositions: [], hiddenPositions: [] })
+
+        render(<PortfolioPools />)
+
+        expect(screen.getByText('No positions')).toBeInTheDocument()
+        expect(screen.queryByTestId('positions-table')).not.toBeInTheDocument()
+      })
+    })
+
+    describe('when the lifecycle filter empties the list', () => {
+      beforeEach(() => {
+        mockV2StatusFilter(['closed'])
+      })
+
+      it('shows the empty state when the default view is empty', () => {
+        mockDefaultViewResult({ visiblePositions: [], hiddenPositions: [] })
+
+        render(<PortfolioPools />)
+
+        expect(screen.getByText('No positions')).toBeInTheDocument()
+        expect(screen.queryByTestId('positions-table')).not.toBeInTheDocument()
+      })
+
+      it('keeps the table mounted when the filter hides positions from the default view', () => {
+        mockDefaultViewResult({ visiblePositions: [MOCK_POSITION] })
+
+        render(<PortfolioPools />)
+
+        expect(screen.queryByText('No positions')).not.toBeInTheDocument()
+        expect(screen.getByTestId('positions-table')).toBeInTheDocument()
+      })
     })
 
     it('wires onClearFilters into the table so the empty-state clear action can recover the list', () => {
@@ -428,7 +562,6 @@ describe('PortfolioPools', () => {
 
   describe('position count', () => {
     it('renders the balance header above the summary chips with the backend open count', () => {
-      enablePoolsBalances()
       mocked(useWalletPositionsWeb).mockReturnValue(
         createWalletPositionsResult({
           visiblePositions: [
@@ -453,18 +586,7 @@ describe('PortfolioPools', () => {
       expect(screen.queryByText('2 positions')).not.toBeInTheDocument()
     })
 
-    it('keeps the chips-only layout when portfolio pools balances is off', () => {
-      mocked(useWalletPositionsWeb).mockReturnValue(createWalletPositionsResult({ visiblePositions: [MOCK_POSITION] }))
-      mockTotalPoolsCount(1)
-
-      render(<PortfolioPools />)
-
-      expect(PortfolioBalance).not.toHaveBeenCalled()
-      expect(screen.getByTestId('positions-summary-chips')).toBeInTheDocument()
-    })
-
     it('adds the loaded closed rows to the backend open count once the Closed lifecycle is selected', () => {
-      enablePoolsBalances()
       mockV2StatusFilter([...V2_POSITION_STATUS_OPTIONS])
       mocked(useWalletPositionsWeb).mockReturnValue(
         createWalletPositionsResult({
@@ -483,7 +605,6 @@ describe('PortfolioPools', () => {
     })
 
     it('keeps the backend open base and adds loaded closed rows under a closed-only filter', () => {
-      enablePoolsBalances()
       mockV2StatusFilter(['closed'])
       mocked(useWalletPositionsWeb).mockReturnValue(
         createWalletPositionsResult({
@@ -499,7 +620,6 @@ describe('PortfolioPools', () => {
     })
 
     it('keeps the count unchanged when the Hidden toggle switches the table to hidden rows', async () => {
-      enablePoolsBalances()
       mocked(useWalletPositionsWeb).mockReturnValue(
         createWalletPositionsResult({
           visiblePositions: [
@@ -530,7 +650,6 @@ describe('PortfolioPools', () => {
     })
 
     it('shows the backend open count immediately while more pages remain under the open-only filter', () => {
-      enablePoolsBalances()
       mocked(useWalletPositionsWeb).mockReturnValue(
         createWalletPositionsResult({ visiblePositions: [MOCK_POSITION], hasNextPage: true }),
       )
@@ -543,7 +662,6 @@ describe('PortfolioPools', () => {
     })
 
     it('renders a "-" placeholder while closed pages remain after selecting the Closed lifecycle', () => {
-      enablePoolsBalances()
       mockV2StatusFilter([...V2_POSITION_STATUS_OPTIONS])
       mocked(useWalletPositionsWeb).mockReturnValue(
         createWalletPositionsResult({ visiblePositions: [MOCK_POSITION], hasNextPage: true }),
@@ -557,7 +675,6 @@ describe('PortfolioPools', () => {
     })
 
     it('renders a "-" placeholder when the balance loads but the count is missing', () => {
-      enablePoolsBalances()
       mocked(useWalletPositionsWeb).mockReturnValue(createWalletPositionsResult({ visiblePositions: [MOCK_POSITION] }))
       mockBalanceLoadedWithoutCount()
 

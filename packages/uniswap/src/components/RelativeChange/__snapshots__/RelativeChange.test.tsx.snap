@@ -11,7 +11,7 @@ exports[`renders a relative change 1`] = `
       fill="none"
       focusable="false"
       stroke-width="2"
-      style="width: 16px; height: 16px; transform: rotate(180deg);"
+      style="color: var(--success); width: 16px; height: 16px; transform: rotate(180deg);"
       viewBox="0 0 24 24"
     >
       <path
@@ -44,7 +44,7 @@ exports[`renders placeholders with absolute change 1`] = `
       fill="none"
       focusable="false"
       stroke-width="2"
-      style="width: 16px; height: 16px; transform: rotate(180deg);"
+      style="color: var(--success); width: 16px; height: 16px; transform: rotate(180deg);"
       viewBox="0 0 24 24"
     >
       <path

@@ -1,5 +1,5 @@
 import type { Auction } from '@uniswap/client-launches/dist/data/v1/auction_pb'
-import type { EnrichedAuction } from '~/features/Toucan/hooks/useTopAuctions/useTopAuctions'
+import type { EnrichedAuction } from '~/features/Toucan/hooks/useTopAuctions/useEnrichedAuctions'
 
 /**
  * Backend quick-launch classification. Replaces the old client-side fingerprint heuristic: whether

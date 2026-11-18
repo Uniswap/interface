@@ -288,7 +288,7 @@ exports[`LimitOrderLineItem.tsx > exact input 1`] = `
                       fill="none"
                       focusable="false"
                       stroke-width="8"
-                      style="width: 16px; height: 16px;"
+                      style="color: var(--neutral3); width: 16px; height: 16px;"
                       viewBox="0 0 17 16"
                     >
                       <path
@@ -390,7 +390,7 @@ exports[`LimitOrderLineItem.tsx > exact input api 1`] = `
                       fill="none"
                       focusable="false"
                       stroke-width="8"
-                      style="width: 16px; height: 16px;"
+                      style="color: var(--neutral3); width: 16px; height: 16px;"
                       viewBox="0 0 17 16"
                     >
                       <path
@@ -492,7 +492,7 @@ exports[`LimitOrderLineItem.tsx > exact output 1`] = `
                       fill="none"
                       focusable="false"
                       stroke-width="8"
-                      style="width: 16px; height: 16px;"
+                      style="color: var(--neutral3); width: 16px; height: 16px;"
                       viewBox="0 0 17 16"
                     >
                       <path
@@ -594,7 +594,7 @@ exports[`LimitOrderLineItem.tsx > fee on buy 1`] = `
                       fill="none"
                       focusable="false"
                       stroke-width="8"
-                      style="width: 16px; height: 16px;"
+                      style="color: var(--neutral3); width: 16px; height: 16px;"
                       viewBox="0 0 17 16"
                     >
                       <path
@@ -696,7 +696,7 @@ exports[`LimitOrderLineItem.tsx > fee on sell 1`] = `
                       fill="none"
                       focusable="false"
                       stroke-width="8"
-                      style="width: 16px; height: 16px;"
+                      style="color: var(--neutral3); width: 16px; height: 16px;"
                       viewBox="0 0 17 16"
                     >
                       <path

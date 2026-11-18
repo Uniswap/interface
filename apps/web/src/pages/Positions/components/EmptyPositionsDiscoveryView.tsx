@@ -6,8 +6,8 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useAccount } from '~/connection/hooks/useAccount'
 import { ExploreTablesFilterStoreContextProvider } from '~/features/Explore/state/exploreTablesFilterStore'
 import { NoPositionsBanner } from '~/features/Liquidity/components/emptyStates/NoPositionsBanner'
-import { TopVerifiedAuctionsDiscoverySection } from '~/pages/Explore/tables/Auctions/TopVerifiedAuctionsDiscoverySection'
-import { ExploreTopPoolTable } from '~/pages/Explore/tables/Pools/PoolTable'
+import { TopVerifiedAuctionsDiscoverySection } from '~/features/Toucan/AuctionDiscovery/TopVerifiedAuctionsDiscoverySection'
+import { TopPoolsDiscoveryTable } from '~/pages/Positions/components/TopPoolsDiscoveryTable'
 import { useAccountDrawer } from '~/state/accountDrawer/hooks'
 
 const EXPLORE_POOLS_HREF = '/explore/pools'
@@ -44,7 +44,7 @@ export function EmptyPositionsDiscoveryView(): JSX.Element {
           {t('pool.top.title')}
         </Text>
         <ExploreTablesFilterStoreContextProvider>
-          <ExploreTopPoolTable staticSize pageSize={TOP_POOLS_ROW_COUNT} surface="positions-discovery" />
+          <TopPoolsDiscoveryTable rowCount={TOP_POOLS_ROW_COUNT} />
         </ExploreTablesFilterStoreContextProvider>
         <Trace logPress element={ElementName.PositionsEmptyStateExplorePools}>
           <Button

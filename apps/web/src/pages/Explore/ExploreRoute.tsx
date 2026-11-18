@@ -3,7 +3,7 @@ import { lazy, type ReactNode, Suspense, useState } from 'react'
 import { Navigate, useLocation, useSearchParams } from 'react-router'
 import { useExploreParams } from '~/features/Explore/hooks/useExploreParams'
 import { ExploreTablesFilterStoreContextProvider } from '~/features/Explore/state/exploreTablesFilterStore'
-import { AUCTION_FILTER_PARAM, auctionQuickFilterFromParam } from '~/pages/Explore/hooks/useAuctionQuickFilterParam'
+import { auctionFiltersFromParams } from '~/pages/Explore/hooks/useAuctionFilterParams'
 import { ExploreTab } from '~/types/explore'
 
 const Explore = lazy(() => import('~/pages/Explore'))
@@ -13,8 +13,8 @@ export function ExploreRoute({ children }: { children?: ReactNode }): JSX.Elemen
   const isLegacyUrl = !useLocation().pathname.includes('explore')
   const [params] = useSearchParams()
   // Seed auction deep links before the filter store's first render.
-  const [initialQuickFilter] = useState(() =>
-    tab === ExploreTab.Toucan ? auctionQuickFilterFromParam(params.get(AUCTION_FILTER_PARAM)) : undefined,
+  const [initialAuctionFilters] = useState(() =>
+    tab === ExploreTab.Toucan ? auctionFiltersFromParams(params) : undefined,
   )
 
   if (isLegacyUrl) {
@@ -29,7 +29,7 @@ export function ExploreRoute({ children }: { children?: ReactNode }): JSX.Elemen
 
   // Every discovery route shares this outer owner so React retains the filter store between tabs.
   return (
-    <ExploreTablesFilterStoreContextProvider initialQuickFilter={initialQuickFilter}>
+    <ExploreTablesFilterStoreContextProvider initialAuctionFilters={initialAuctionFilters}>
       <Suspense fallback={<Loader.Box />}>{children ?? <Explore initialTab={tab} />}</Suspense>
     </ExploreTablesFilterStoreContextProvider>
   )

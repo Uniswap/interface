@@ -13470,4 +13470,54 @@
     <lastmod>2026-11-05T20:06:20.964Z</lastmod>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/tokens/ethereum/0x92d6c1e31e14520e676a687f0a93788b716beff5</loc>
+    <lastmod>2026-11-12T20:05:56.237Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/tokens/arbitrum/0x1009c5c11cdd44bffeac3c70db7eb143df2faad1</loc>
+    <lastmod>2026-11-12T20:05:56.237Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/tokens/arbitrum/0x93b346b6bc2548da6a1e7d98e9a421b42541425b</loc>
+    <lastmod>2026-11-12T20:05:56.237Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/tokens/polygon/0x99a57e6c8558bc6689f894e068733adf83c19725</loc>
+    <lastmod>2026-11-12T20:05:56.237Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/tokens/polygon/0xf2b028ed5977f136982fdfa429814cf19f09693f</loc>
+    <lastmod>2026-11-12T20:05:56.237Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/tokens/polygon/0x43c73b90e0c2a355784dcf0da12f477729b31e77</loc>
+    <lastmod>2026-11-12T20:05:56.237Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/tokens/bnb/0xa9ee28c80f960b889dfbd1902055218cba016f75</loc>
+    <lastmod>2026-11-12T20:05:56.237Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/tokens/celo/0xfecb3f7c54e2caae9dc6ac9060a822d47e053760</loc>
+    <lastmod>2026-11-12T20:05:56.237Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/tokens/unichain/0x926dc7b96bb2f4a91c2a67e291faf482691a3001</loc>
+    <lastmod>2026-11-12T20:05:56.237Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/tokens/avalanche/0xf14f4ce569cb3679e99d5059909e23b07bd2f387</loc>
+    <lastmod>2026-11-12T20:05:56.237Z</lastmod>
+    <priority>0.8</priority>
+  </url>
 </urlset>

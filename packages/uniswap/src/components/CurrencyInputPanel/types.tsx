@@ -48,6 +48,12 @@ export type CurrencyInputPanelProps = {
   customPanelStyle?: FlexProps
   /** Hide all preset buttons (both standard percentage presets and max button) */
   hidePresets?: boolean
+  /** Hide the token balance at the bottom right, independent of the presets. */
+  hideBalance?: boolean
+  /** A ⇅ glyph before the converted value, cueing that tapping it flips token ⇄ fiat entry. */
+  showFiatToggleIcon?: boolean
+  /** Rendered at the header's right edge in place of the percentage presets (e.g. fiat quick-selects). */
+  headerAccessory?: ReactNode
   panelAccessory?: ReactNode
   disablePressAnimation?: boolean
   fontSizeOptions?: Partial<FontSizeOptions>

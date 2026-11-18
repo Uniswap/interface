@@ -6,17 +6,6 @@ import type { ChainToken, IssuerToken, Rwa } from 'uniswap/src/data/apiClients/d
 import { ExpandableIssuerIdentity } from 'uniswap/src/features/expandableAsset/ExpandableIssuerIdentity'
 import { render } from 'uniswap/src/test/test-utils'
 
-const { mockUseIsTokenCategoriesEnabled } = vi.hoisted(() => ({ mockUseIsTokenCategoriesEnabled: vi.fn() }))
-
-vi.mock('@universe/gating', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('@universe/gating')>()),
-  useIsTokenCategoriesEnabled: mockUseIsTokenCategoriesEnabled,
-}))
-
-beforeEach(() => {
-  mockUseIsTokenCategoriesEnabled.mockReturnValue(false)
-})
-
 const ENABLED_CHAINS = [UniverseChainId.Mainnet, UniverseChainId.Base, UniverseChainId.ArbitrumOne]
 
 // Single-issuer Rwa whose sole issuer spans the given chains (non-mainnet, so assertions don't depend on the
@@ -132,28 +121,7 @@ describe('ExpandableIssuerIdentity network badge', () => {
     expect(queryByText(rwa.name)).toBeNull()
   })
 
-  it('strips the issuer brand suffix from the primary text of flat single-issuer table rows', () => {
-    const rwa = rwaWithIssuerChains([{ chainId: UniverseChainId.Base, address: '0xbase' }], {
-      symbol: 'NVDAR',
-      name: 'NVIDIA • Robinhood Token',
-      issuer: 'robinhood',
-    })
-    const { getByText, queryByText } = render(
-      <ExpandableIssuerIdentity
-        asset={rwa}
-        issuer={rwa.issuerTokens[0]!}
-        enabledChainIds={ENABLED_CHAINS}
-        variant="table"
-        useIssuerNameAsPrimary
-      />,
-    )
-    expect(getByText('NVIDIA')).toBeTruthy()
-    expect(getByText('Robinhood')).toBeTruthy()
-    expect(queryByText('NVIDIA • Robinhood Token')).toBeNull()
-  })
-
-  it('shows the issuer token name unmodified on flat rows when token categories are on', () => {
-    mockUseIsTokenCategoriesEnabled.mockReturnValue(true)
+  it('shows the issuer token name unmodified on flat rows', () => {
     const rwa = rwaWithIssuerChains([{ chainId: UniverseChainId.Base, address: '0xbase' }], {
       name: 'NVIDIA • Robinhood Token',
       issuer: 'robinhood',
@@ -172,8 +140,7 @@ describe('ExpandableIssuerIdentity network badge', () => {
     expect(queryByText(rwa.name)).toBeNull()
   })
 
-  it('shows the issuer token name instead of the group name on expanded rows when token categories are on', () => {
-    mockUseIsTokenCategoriesEnabled.mockReturnValue(true)
+  it('shows the issuer token name instead of the group name on expanded rows', () => {
     const rwa = rwaWithIssuerChains([{ chainId: UniverseChainId.Base, address: '0xbase' }], {
       name: 'Tesla (Ondo)',
       issuer: 'ondo',
@@ -193,18 +160,6 @@ describe('ExpandableIssuerIdentity network badge', () => {
     )
     expect(getByText('xStocks (Backed Finance)')).toBeTruthy()
     expect(queryByText('xStocks')).toBeNull()
-  })
-
-  it('keeps the grouped asset name when the issuer name is not primary', () => {
-    const rwa = rwaWithIssuerChains([{ chainId: UniverseChainId.Base, address: '0xbase' }], {
-      name: 'NVIDIA • Robinhood Token',
-      issuer: 'robinhood',
-    })
-    const { getByText, queryByText } = render(
-      <ExpandableIssuerIdentity asset={rwa} issuer={rwa.issuerTokens[0]!} enabledChainIds={ENABLED_CHAINS} />,
-    )
-    expect(getByText(rwa.name)).toBeTruthy()
-    expect(queryByText('NVIDIA')).toBeNull()
   })
 
   it('shows the network badge for a multi-network issuer in the Explore table when a network filter is active', () => {

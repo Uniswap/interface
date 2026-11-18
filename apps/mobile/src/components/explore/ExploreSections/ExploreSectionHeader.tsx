@@ -1,6 +1,5 @@
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
 import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
-import { useExploreSectionTitleProps } from 'src/components/explore/ExploreSections/useExploreSectionTitleProps'
 
 /**
  * Standardized Explore section header: subheading1 title with an optional trailing chevron when
@@ -15,10 +14,11 @@ export function ExploreSectionHeader({
   onPress?: () => void
   rightElement?: JSX.Element
 }): JSX.Element {
-  const titleProps = useExploreSectionTitleProps()
   const titleContent = (
     <Flex row alignItems="center" gap="$spacing8">
-      <Text {...titleProps}>{title}</Text>
+      <Text color="$neutral1" variant="subheading1">
+        {title}
+      </Text>
       {onPress && <RotatableChevron color="$neutral2" direction="end" size="$icon.20" />}
     </Flex>
   )

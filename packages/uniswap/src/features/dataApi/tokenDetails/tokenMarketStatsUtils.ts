@@ -1,5 +1,5 @@
 /**
- * Pure helpers for token market stats (52w clamp, TVL breakdown, stat resolution).
+ * Pure helpers for token market stats (52w and ATH clamps, TVL breakdown, stat resolution).
  * Used by useTokenMarketStats and aggregated TDP data.
  */
 
@@ -9,6 +9,7 @@ export interface TokenMarketStats {
   volume: number | undefined
   high52w: number | undefined
   low52w: number | undefined
+  priceAllTimeHighUsd: number | undefined
   tvl: number | undefined
   poolsTvl: number | undefined
 }
@@ -19,10 +20,16 @@ export interface MarketStatsData {
   volumeUsd?: number
   priceHigh52wUsd?: number
   priceLow52wUsd?: number
+  priceAllTimeHighUsd?: number
   marketCapUsd?: number
   fullyDilutedValuationUsd?: number
   totalValueLockedUsd?: number
   poolsTotalValueLockedUsd?: number
+}
+
+/** Backend highs can lag a fresh high, so never report one below the live price. */
+function clampHighToCurrentPrice(currentPrice: number | undefined, rawHigh: number | undefined): number | undefined {
+  return currentPrice !== undefined && rawHigh !== undefined ? Math.max(currentPrice, rawHigh) : rawHigh
 }
 
 export function clamp52wWithCurrentPrice(params: {
@@ -31,7 +38,7 @@ export function clamp52wWithCurrentPrice(params: {
   rawLow: number | undefined
 }): { high52w: number | undefined; low52w: number | undefined } {
   const { currentPrice, rawHigh, rawLow } = params
-  const high52w = currentPrice !== undefined && rawHigh !== undefined ? Math.max(currentPrice, rawHigh) : rawHigh
+  const high52w = clampHighToCurrentPrice(currentPrice, rawHigh)
   const low52w = currentPrice !== undefined && rawLow !== undefined ? Math.min(currentPrice, rawLow) : rawLow
   return { high52w, low52w }
 }
@@ -72,5 +79,6 @@ export function computeTokenMarketStats(params: { market?: MarketStatsData; curr
     rawHigh: rawHigh52w,
     rawLow: rawLow52w,
   })
-  return { marketCap, fdv, volume, high52w, low52w, tvl, poolsTvl }
+  const priceAllTimeHighUsd = clampHighToCurrentPrice(resolvedPrice, market?.priceAllTimeHighUsd)
+  return { marketCap, fdv, volume, high52w, low52w, priceAllTimeHighUsd, tvl, poolsTvl }
 }

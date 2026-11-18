@@ -13,7 +13,6 @@ import { useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/use
 import { toRestHistoryDuration } from 'uniswap/src/features/dataApi/tokenDetails/useTokenPriceHistoryRest'
 import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import { isRefreshingAgedPrice } from 'uniswap/src/features/prices/isRefreshingAgedPrice'
-import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { useIsWindowVisible } from 'utilities/src/react/useIsWindowVisible'
 import { isQueryLoading } from 'utilities/src/reactQuery/isQueryLoading'
 import { TimePeriod } from '~/data/util'
@@ -27,7 +26,7 @@ import {
   PriceChartData,
   PriceChartType,
 } from '~/utils/charts'
-import { getTokenPriceHistoryQueryOptions } from '~/utils/tokenQueryOptions'
+import { getChartCurrencyId, getTokenPriceHistoryQueryOptions } from '~/utils/tokenQueryOptions'
 
 export type TokenPriceChartQueryVariables = {
   chainId: UniverseChainId
@@ -174,14 +173,10 @@ export function useTokenPriceChartData({
   const [fallback, enablePriceHistoryFallback] = useReducer(() => true, false)
   const isVisible = useIsWindowVisible()
 
-  // Fetch CoinGecko data for line charts to prefer its priceHistory
-  // Construct currencyId from chain and address for the CoinGecko query
-  const currencyIdValue = useMemo(() => {
-    if (!variables.address) {
-      return undefined
-    }
-    return buildCurrencyId(variables.chainId, variables.address)
-  }, [variables.chainId, variables.address])
+  const currencyIdValue = useMemo(
+    () => getChartCurrencyId({ chainId: variables.chainId, address: variables.address }),
+    [variables.chainId, variables.address],
+  )
 
   // The V2 branch skips the subgraph/CoinGecko queries, so unlike legacy it has no market price to
   // fall back to when the caller supplies no override (e.g. TokenHoverCard) — without one the live

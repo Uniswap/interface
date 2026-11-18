@@ -239,7 +239,6 @@ export const SearchModalList = memo(function SearchModalListInner({
               showIssuerTag
               hideContextMenu
               option={item}
-              displayName={item.rwaName}
               issuer={item.rwaIssuer}
               categoryTag={
                 hideTokenCategoryTag || section.categoryId
@@ -275,7 +274,7 @@ export const SearchModalList = memo(function SearchModalListInner({
                 quantity: null,
                 balanceUSD: undefined,
               }}
-              displayName={item.rwaName ?? item.multichainResult.name}
+              displayName={item.multichainResult.name}
               issuer={item.rwaIssuer}
               networkCount={item.multichainResult.tokens.length}
               categoryTag={

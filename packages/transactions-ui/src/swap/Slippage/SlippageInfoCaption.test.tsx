@@ -39,19 +39,6 @@ describe('SlippageInfoCaption', () => {
     expect(screen.getByText('0.50%')).toBeTruthy()
   })
 
-  it('lays the body out for the shell it renders in', () => {
-    const { unmount } = render(<SlippageInfoCaption {...base} />)
-    const inTooltip = screen.getByText('swap.settings.slippage.input.message', { exact: false }).className
-    unmount()
-    render(<SlippageInfoCaption {...base} container="modal" />)
-    const inModal = screen.getByText('swap.settings.slippage.input.message', { exact: false }).className
-
-    expect(inTooltip).toContain('text-left')
-    expect(inTooltip).toContain('text-[12px]')
-    expect(inModal).toContain('text-center')
-    expect(inModal).toContain('text-[16px]')
-  })
-
   it('puts the exceeds-auto warning above the amount in the tooltip and below it in the modal', () => {
     const exceeds = { ...slippage, exceedsAuto: true }
     const warningComesFirst = (container: 'tooltip' | 'modal'): boolean => {

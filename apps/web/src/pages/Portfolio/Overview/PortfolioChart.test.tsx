@@ -358,17 +358,23 @@ describe('PortfolioChart', () => {
       expect(setSelectedPeriod).toHaveBeenCalledWith(ChartPeriod.WEEK)
     })
 
-    it('keeps the pill category trigger on desktop and uses the dropdown trigger on mobile', () => {
+    it('keeps the pill category trigger on desktop and uses the dropdown trigger on mobile', async () => {
       const { unmount } = render(<PortfolioChart {...defaultProps} hasCategoryBreakdown />)
-      expect(screen.getByTestId(TestID.PortfolioChartCategorySelector)).not.toHaveAttribute('aria-label')
+      expect(screen.getByTestId(TestID.PortfolioChartCategorySelector)).toBeInTheDocument()
+      // Only the mobile dropdowns mount AdaptiveDropdown's hidden measuring menu.
+      expect(document.querySelector('[data-testid-ignore]')).toBeNull()
       unmount()
 
       mockMediaSize('md')
-      render(<PortfolioChart {...defaultProps} hasCategoryBreakdown />)
-      expect(screen.getByTestId(TestID.PortfolioChartCategorySelector)).toHaveAttribute(
-        'aria-label',
-        TestID.PortfolioChartCategorySelector,
-      )
+      const setSelectedCategory = vi.fn()
+      render(<PortfolioChart {...defaultProps} hasCategoryBreakdown setSelectedCategory={setSelectedCategory} />)
+
+      fireEvent.click(screen.getByTestId(TestID.PortfolioChartCategorySelector))
+      const options = await screen.findAllByText('Tokens')
+      const visibleOption = options.find((option) => !option.closest('[data-testid-ignore]'))
+      fireEvent.click(visibleOption!)
+
+      expect(setSelectedCategory).toHaveBeenCalledWith(PortfolioChartCategory.Tokens)
     })
 
     it('puts the category selector before the timeframe dropdown on mobile', () => {

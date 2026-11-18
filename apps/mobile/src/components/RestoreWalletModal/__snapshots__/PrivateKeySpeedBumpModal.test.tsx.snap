@@ -17,7 +17,7 @@ exports[`PrivateKeySpeedBumpModal > renders correctly 1`] = `
           accessibilitystate="[object Object]"
           class="relative box-border flex min-h-0 min-w-0 cursor-pointer items-center justify-center border border-solid border-transparent gap-2 flex-row shrink-0 bg-surface3 p-[12px] rounded-[16px]"
           role="button"
-          style="padding: 12px; border-radius: 16px; transform: [object Object];"
+          style="padding: 12px; border-radius: 16px;"
         >
           <div
             class="css-view-175oi2r"
@@ -40,19 +40,19 @@ exports[`PrivateKeySpeedBumpModal > renders correctly 1`] = `
       <div
         class="css-text-146c3p1"
         dir="auto"
-        style="padding-top: 24px; font-size: 19px; line-height: 24px; font-family: Basel Grotesk; font-weight: 400;"
+        style="padding-top: 24px; font-size: 19px; line-height: 24px; font-family: "Basel Grotesk"; font-weight: 400;"
       >
         privateKeys.export.modal.title
       </div>
       <div
         class="css-text-146c3p1"
         dir="auto"
-        style="padding-top: 8px; font-size: 15px; line-height: 18px; font-family: Basel Grotesk; font-weight: 400;"
+        style="padding-top: 8px; font-size: 15px; line-height: 18px; font-family: "Basel Grotesk"; font-weight: 400;"
       >
         privateKeys.export.modal.subtitle
         <span
           class="css-textHasAncestor-1jxf684 r-cursor-1loqt21"
-          style="margin-left: 4px; font-size: 15px; line-height: 17.25px; font-family: Basel Grotesk; font-weight: 500;"
+          style="margin-left: 4px; font-size: 15px; line-height: 17.25px; font-family: "Basel Grotesk"; font-weight: 500;"
         >
            Learn more
         </span>
@@ -63,7 +63,7 @@ exports[`PrivateKeySpeedBumpModal > renders correctly 1`] = `
       >
         <div
           class="css-view-175oi2r"
-          style="gap: 12px; padding: 12px 12px 12px 12px; border-top-left-radius: 16px; border-top-right-radius: 16px; border-bottom-right-radius: 16px; border-bottom-left-radius: 16px;"
+          style="gap: 12px; padding: 12px; border-top-left-radius: 16px; border-top-right-radius: 16px; border-bottom-right-radius: 16px; border-bottom-left-radius: 16px;"
         >
           <div
             class="css-view-175oi2r"
@@ -91,7 +91,7 @@ exports[`PrivateKeySpeedBumpModal > renders correctly 1`] = `
               <div
                 class="css-text-146c3p1"
                 dir="auto"
-                style="font-size: 13px; line-height: 16px; font-family: Basel Grotesk; font-weight: 400;"
+                style="font-size: 13px; line-height: 16px; font-family: "Basel Grotesk"; font-weight: 400;"
               >
                 privateKeys.export.modal.warning
               </div>
@@ -110,12 +110,11 @@ exports[`PrivateKeySpeedBumpModal > renders correctly 1`] = `
           data-testid="continue"
           dd-action-name="common.button.continue"
           role="button"
-          style="transform: [object Object];"
         >
           <div
             class="css-text-146c3p1 r-maxWidth-dnmrzs r-overflow-1udh08x r-textOverflow-1udbk01 r-whiteSpace-3s2u2q r-wordWrap-1iln25a"
             dir="auto"
-            style="font-family: Basel Grotesk; font-weight: 500;"
+            style="font-family: "Basel Grotesk"; font-weight: 500;"
           >
             common.button.continue
           </div>

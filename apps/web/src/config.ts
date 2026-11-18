@@ -24,9 +24,6 @@ const webConfigValues = {
 
   // #region Endpoint URLs
 
-  /** UNISWAP_GATEWAY_DNS — gateway v2 (routing, order status, UniswapX) */
-  uniswapGatewayDns: process.env.UNISWAP_GATEWAY_DNS ?? process.env.REACT_APP_UNISWAP_GATEWAY_DNS,
-
   /** ENTRY_GATEWAY_API_URL — BFF proxy target; falls back to staging URL */
   // TODO(apps-infra): Clarify difference between entryGatewayApiUrl (server-side) and entryGatewayApiUrlOverride (BaseConfig)
   entryGatewayApiUrl: process.env.ENTRY_GATEWAY_API_URL,
@@ -100,7 +97,6 @@ export const webConfigSchema = z.object({
   walletConnectProjectId: z.string().min(1).describe('Project ID for WalletConnect'),
 
   // Endpoint URLs
-  uniswapGatewayDns: z.string().min(1).describe('URL for Uniswap gateway v2'),
   entryGatewayApiUrl: z.string().optional().describe('URL for entry gateway BFF proxy'),
   websocketUrl: z.string().optional().describe('URL for WebSocket proxy'),
   viteBackendUrl: z.string().optional().describe('Override URL for Vite dev proxy target'),

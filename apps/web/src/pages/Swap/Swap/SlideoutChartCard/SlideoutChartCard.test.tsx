@@ -26,7 +26,7 @@ vi.mock('~/features/Swap/state/useSwapContext', () => ({
 vi.mock('uniswap/src/features/tokens/useCurrencyInfo', () => ({ useCurrencyInfo: () => undefined }))
 vi.mock('~/hooks/useColor', () => ({ useColor: () => '#000000' }))
 vi.mock('~/components/Charts/hooks/useChartAnimatedColor', () => ({ useChartAnimatedColor: (color: string) => color }))
-vi.mock('~/pages/Portfolio/Tokens/hooks/useNavigateToTokenDetails', () => ({
+vi.mock('~/hooks/useNavigateToTokenDetails', () => ({
   useNavigateToTokenDetails: () => vi.fn(),
 }))
 vi.mock('uniswap/src/data/apiClients/dataApiService/categories/useTokenCategories', () => ({

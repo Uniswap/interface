@@ -11,13 +11,6 @@ import type { RWAToken } from 'uniswap/src/features/rwa/types'
 import { renderHook, waitFor } from 'uniswap/src/test/test-utils'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 
-const { mockUseIsTokenCategoriesEnabled } = vi.hoisted(() => ({ mockUseIsTokenCategoriesEnabled: vi.fn() }))
-
-vi.mock('@universe/gating', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('@universe/gating')>()),
-  useIsTokenCategoriesEnabled: mockUseIsTokenCategoriesEnabled,
-}))
-
 vi.mock('uniswap/src/data/apiClients/dataApiService/clients/DataApiClientV2', () => ({
   dataApiServiceClientV2: { getToken: vi.fn() },
 }))
@@ -49,7 +42,6 @@ const GROUP_MATCH: RWAMatch = {
 describe(useRwaIssuer, () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    mockUseIsTokenCategoriesEnabled.mockReturnValue(true)
     mockGetToken.mockResolvedValue(new GetTokenResponse({ token: { issuer: MATRIXDOCK } }))
   })
 
@@ -60,7 +52,7 @@ describe(useRwaIssuer, () => {
     expect(mockGetToken).not.toHaveBeenCalled()
   })
 
-  it('falls back to the GetToken issuer for an ungrouped token when token categories are on', async () => {
+  it('falls back to the GetToken issuer for an ungrouped token', async () => {
     const { result } = renderHook(() => useRwaIssuer({ rwaMatch: undefined, currencyId: XAGM_ID }))
 
     expect(result.current.isLoading).toBe(true)
@@ -84,28 +76,18 @@ describe(useRwaIssuer, () => {
     expect(result.current.issuer).toBeUndefined()
   })
 
-  it('does not fetch when token categories are off', () => {
-    mockUseIsTokenCategoriesEnabled.mockReturnValue(false)
-
-    const { result } = renderHook(() => useRwaIssuer({ rwaMatch: undefined, currencyId: XAGM_ID }))
-
-    expect(result.current).toEqual({ issuer: undefined, isLoading: false })
-    expect(mockGetToken).not.toHaveBeenCalled()
-  })
-
-  it('does not report the page token read as loading while disabled', async () => {
-    mockUseIsTokenCategoriesEnabled.mockReturnValue(false)
+  it('does not report the page token read as loading for a grouped token', async () => {
     const pendingId = buildCurrencyId(UniverseChainId.Mainnet, '0x45804880de22913dafe09f4980848ece6ecbaf78')
     const params = currencyIdToRestContractInput(pendingId)
     mockGetToken.mockReturnValue(new Promise<GetTokenResponse>(() => {}))
 
     const { result } = renderHook(() => ({
       page: useQuery(getGetTokenQueryOptions({ params })),
-      rwaIssuer: useRwaIssuer({ rwaMatch: undefined, currencyId: pendingId }),
+      rwaIssuer: useRwaIssuer({ rwaMatch: GROUP_MATCH, currencyId: pendingId }),
     }))
 
     await waitFor(() => expect(mockGetToken).toHaveBeenCalledTimes(1))
     expect(result.current.page.isLoading).toBe(true)
-    expect(result.current.rwaIssuer).toEqual({ issuer: undefined, isLoading: false })
+    expect(result.current.rwaIssuer).toEqual({ issuer: GROUP_TOKEN, isLoading: false })
   })
 })

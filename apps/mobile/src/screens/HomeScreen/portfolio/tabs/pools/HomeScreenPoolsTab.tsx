@@ -1,4 +1,3 @@
-import { FeatureFlags, useFeatureFlagWithExposureLoggingDisabled } from '@universe/gating'
 import { Flex, Loader } from '@universe/mycelium'
 import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFilled'
 import { memo, useMemo } from 'react'
@@ -62,11 +61,7 @@ export const HomeScreenPoolsTab = memo(function HomeScreenPoolsTabInner({
   bodyOffsetY,
 }: HomeScreenPoolsTabProps): JSX.Element {
   const { t } = useTranslation()
-  const portfolioPoolsBalancesEnabled = useFeatureFlagWithExposureLoggingDisabled(FeatureFlags.PortfolioPoolsBalances)
-  const outageBanner = usePoolsOutageBanner({
-    evmAddress: owner,
-    enabled: portfolioPoolsBalancesEnabled,
-  })
+  const outageBanner = usePoolsOutageBanner({ evmAddress: owner })
   const {
     positions,
     hiddenPositions,

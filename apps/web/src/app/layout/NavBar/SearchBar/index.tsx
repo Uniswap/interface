@@ -6,8 +6,7 @@ import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
 import { ElementName, InterfaceEventName, ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { KeyAction } from 'utilities/src/device/keyboard/types'
-import { useKeyDown } from 'utilities/src/device/keyboard/useKeyDown'
+import { useGlobalShortcut } from 'utilities/src/device/keyboard/useGlobalShortcut'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { NavIcon } from '~/app/layout/NavBar/NavIcon'
 import { SearchModal } from '~/app/layout/NavBar/SearchBar/SearchModal'
@@ -47,28 +46,10 @@ export const SearchBar = ({ variant }: { variant: NavSearchVariant }) => {
   const inputStyle = SEARCH_INPUT_STYLES[variant]
   const isAuctionSearchEnabled = useFeatureFlag(FeatureFlags.AuctionSearch)
 
-  const {
-    isOpen: isModalOpen,
-    closeModal: closeSearchModal,
-    openModal: openSearchModal,
-  } = useModalState(ModalName.Search)
+  const { isOpen: isModalOpen, openModal: openSearchModal } = useModalState(ModalName.Search)
 
-  useKeyDown({
-    callback: openSearchModal,
-    keys: ['/'],
-    disabled: isModalOpen,
-    preventDefault: !isModalOpen,
-    keyAction: KeyAction.UP,
-    shouldTriggerInInput: false,
-  })
-  useKeyDown({
-    callback: closeSearchModal,
-    keys: ['Escape'],
-    keyAction: KeyAction.UP,
-    disabled: !isModalOpen,
-    preventDefault: true,
-    shouldTriggerInInput: true,
-  })
+  // Escape is the modal's own: its Radix dialog (or the sheet stack on small screens) closes it.
+  useGlobalShortcut({ key: '/', onTrigger: openSearchModal, disabled: isModalOpen, preventDefault: true })
 
   const trace = useTrace({ section: SectionName.NavbarSearch })
 

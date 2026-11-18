@@ -16,7 +16,7 @@ exports[`PoolDetailsTransactionsTable > renders data filled state 1`] = `
         style="--c-top: unset; --c-z: 968;"
       >
         <div
-          class="flex basis-auto box-border relative min-h-[0px] shrink-0 flex-row items-center w-[var(--c-w)] h-[100%] min-w-[100%] bg-surface2 rounded-[12px] [scrollbar-width:none] [transition:var(--c-t)] overflow-auto [overscroll-behavior:none] scrollbar-hidden"
+          class="flex basis-auto box-border relative min-h-[0px] shrink-0 flex-row items-center w-[var(--c-w)] h-[100%] min-w-[100%] bg-surface2 rounded-[12px] [scrollbar-width:none] [transition:var(--c-t)] [overflow-x:auto] [overflow-y:hidden] [overscroll-behavior-x:none] scrollbar-hidden"
           style="--c-w: unset; --c-t: unset;"
         >
           <div
@@ -55,7 +55,7 @@ exports[`PoolDetailsTransactionsTable > renders data filled state 1`] = `
                   fill="none"
                   focusable="false"
                   stroke-width="8"
-                  style="width: 16px; height: 16px;"
+                  style="color: var(--neutral3); width: 16px; height: 16px;"
                   viewBox="0 0 17 16"
                 >
                   <path
@@ -114,7 +114,7 @@ exports[`PoolDetailsTransactionsTable > renders data filled state 1`] = `
           </div>
           <div
             class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 grow first-child-flex-grow-0 last-child-justify-end"
-            style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center;"
+            style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; margin-right: var(--table-trailing-gutter, 0px); height: 100%; display: flex; justify-content: center;"
           >
             <div
               class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row grow items-center justify-end px-[12px] py-[16px] overflow-hidden"
@@ -131,7 +131,7 @@ exports[`PoolDetailsTransactionsTable > renders data filled state 1`] = `
       </div>
       <div
         class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 justify-start w-[100%] max-h-[var(--c-max-h)] border-[0px] relative [border-bottom-left-radius:var(--c-bblr)] [border-bottom-right-radius:var(--c-bbrr)] [border-style:solid] [overflow-x:auto] [overflow-y:auto] [overscroll-behavior-x:none] scrollbar-hidden"
-        style="--c-max-h: 528px; --c-bblr: 12px; --c-bbrr: 12px;"
+        style="--c-max-h: 528px; --c-bblr: 12px; --c-bbrr: 12px; overflow-anchor: none;"
       >
         <div
           class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 gap-[2px] relative"
@@ -159,7 +159,7 @@ exports[`PoolDetailsTransactionsTable > renders data filled state 1`] = `
                       href="https://etherscan.io/tx/0x123"
                       rel="noopener noreferrer"
                       role="link"
-                      style="--ch-opacity: 1; --ca-opacity: 0.6; transition: opacity 100ms;"
+                      style="--ch-opacity: 1; --ca-opacity: 0.6; color: var(--stext-neutral1); transition: opacity 100ms;"
                       target="_blank"
                     >
                       <div
@@ -226,7 +226,7 @@ exports[`PoolDetailsTransactionsTable > renders data filled state 1`] = `
                                 </span>
                                 <span
                                   aria-hidden="true"
-                                  style="display: flex; position: absolute; top: 0px; inset-inline-start: 0; visibility: hidden; pointer-events: none; user-select: none;"
+                                  style="display: flex; position: absolute; top: 0px; inset-inline-start: 0px; visibility: hidden; pointer-events: none; user-select: none; -webkit-user-select: none;"
                                 >
                                   <span
                                     style="display: inline-block; height: 22px; overflow: hidden; vertical-align: top;"
@@ -352,24 +352,28 @@ exports[`PoolDetailsTransactionsTable > renders data filled state 1`] = `
                 </div>
                 <div
                   class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 grow bg-[transparent] overflow-hidden group-hover:bg-[color:var(--cgh-bg)] first-child-flex-grow-0 last-child-justify-end"
-                  style="--cgh-bg: unset; width: 125px; left: 0px; position: relative; z-index: 0; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center;"
+                  style="--cgh-bg: unset; width: 125px; left: 0px; position: relative; z-index: 0; padding-left: 0px; padding-right: 8px; margin-right: var(--table-trailing-gutter, 0px); height: 100%; display: flex; justify-content: center;"
                 >
                   <div
                     class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row grow items-center justify-end px-[12px] py-[16px] overflow-hidden"
                     style="font-variant-numeric: lining-nums tabular-nums;"
                   >
-                    <a
-                      class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:22px] [font-weight:535] [color:var(--stext-neutral2)] no-underline [cursor:pointer] hover:opacity-[var(--ch-opacity)] active:opacity-[var(--ca-opacity)] [stroke:var(--neutral2)]"
-                      href="https://etherscan.io/address/0xabc"
-                      rel="noopener noreferrer"
-                      role="link"
-                      style="--ch-opacity: 0.6; --ca-opacity: 0.4; transition: opacity 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
-                      target="_blank"
+                    <div
+                      class="[container-name:true] flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 [container-type:normal] rounded-[12px] [cursor:pointer] bg-transparent [transition:transform_80ms_ease-in-out,_opacity_80ms_ease-in-out] active:opacity-[var(--ca-opacity)] active:[transform:scale(0.98)] focus-visible:[transform:scaleX(0.98)_scaleY(0.98)] focus-visible:[outline-offset:1px] focus-visible:[outline-style:solid] focus-visible:[outline-width:1px] focus-visible:[outline-color:var(--neutral3)] group"
+                      role="none"
+                      style="--ca-opacity: 1;"
                     >
-                      <span
-                        class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:22px] [font-weight:485] [color:var(--stext-neutral1)]"
-                      />
-                    </a>
+                      <a
+                        class="[container-name:true] flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 [container-type:normal] rounded-[12px] [cursor:pointer] bg-transparent [transition:transform_80ms_ease-in-out,_opacity_80ms_ease-in-out] active:opacity-[0.75] active:[transform:scale(0.98)] focus-visible:[transform:scaleX(0.98)_scaleY(0.98)] focus-visible:[outline-offset:1px] focus-visible:[outline-style:solid] focus-visible:[outline-width:1px] focus-visible:[outline-color:var(--neutral3)] group"
+                        role="button"
+                        tabindex="0"
+                      >
+                        <span
+                          class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:22px] [font-weight:485] [color:var(--stext-neutral1)] group-hover:[color:var(--cgh-col)]"
+                          style="--cgh-col: var(--stext-neutral1Hovered);"
+                        />
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -388,14 +392,14 @@ exports[`PoolDetailsTransactionsTable > renders data filled state 1`] = `
           <div
             class="RotateElement"
             role="status"
-            style="align-items: stretch; box-sizing: border-box; display: flex; flex-basis: auto; flex-direction: column; flex-shrink: 0; min-height: 0; min-width: 0; position: relative;"
+            style="align-items: stretch; box-sizing: border-box; display: flex; flex-basis: auto; flex-direction: column; flex-shrink: 0; min-height: 0px; min-width: 0px; position: relative;"
           >
             <svg
               aria-hidden="true"
               fill="none"
               focusable="false"
               stroke-width="8"
-              style="width: 16px; height: 16px;"
+              style="color: var(--accent1); width: 16px; height: 16px;"
               viewBox="0 0 24 24"
             >
               <path
@@ -441,7 +445,7 @@ exports[`PoolDetailsTransactionsTable > renders error state 1`] = `
         style="--c-top: unset; --c-z: 968;"
       >
         <div
-          class="flex basis-auto box-border relative min-h-[0px] shrink-0 flex-row items-center w-[var(--c-w)] h-[100%] min-w-[100%] bg-surface2 rounded-[12px] opacity-[0.4] [scrollbar-width:none] [transition:var(--c-t)] overflow-auto [overscroll-behavior:none] scrollbar-hidden"
+          class="flex basis-auto box-border relative min-h-[0px] shrink-0 flex-row items-center w-[var(--c-w)] h-[100%] min-w-[100%] bg-surface2 rounded-[12px] opacity-[0.4] [scrollbar-width:none] [transition:var(--c-t)] [overflow-x:auto] [overflow-y:hidden] [overscroll-behavior-x:none] scrollbar-hidden"
           style="--c-w: unset; --c-t: unset;"
         >
           <div
@@ -480,7 +484,7 @@ exports[`PoolDetailsTransactionsTable > renders error state 1`] = `
                   fill="none"
                   focusable="false"
                   stroke-width="8"
-                  style="width: 16px; height: 16px;"
+                  style="color: var(--neutral3); width: 16px; height: 16px;"
                   viewBox="0 0 17 16"
                 >
                   <path
@@ -526,7 +530,7 @@ exports[`PoolDetailsTransactionsTable > renders error state 1`] = `
                 <div
                   aria-busy="true"
                   class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                  style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                  style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                 >
                   <div
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -551,7 +555,7 @@ exports[`PoolDetailsTransactionsTable > renders error state 1`] = `
                 <div
                   aria-busy="true"
                   class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                  style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                  style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                 >
                   <div
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -563,7 +567,7 @@ exports[`PoolDetailsTransactionsTable > renders error state 1`] = `
           </div>
           <div
             class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 grow first-child-flex-grow-0 last-child-justify-end"
-            style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center;"
+            style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; margin-right: var(--table-trailing-gutter, 0px); height: 100%; display: flex; justify-content: center;"
           >
             <div
               class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row grow items-center justify-end px-[12px] py-[16px] overflow-hidden"
@@ -580,7 +584,7 @@ exports[`PoolDetailsTransactionsTable > renders error state 1`] = `
       </div>
       <div
         class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 justify-start w-[100%] max-h-[var(--c-max-h)] border-[0px] relative [border-bottom-left-radius:var(--c-bblr)] [border-bottom-right-radius:var(--c-bbrr)] [border-style:solid] [overflow-x:auto] [overflow-y:auto] [overscroll-behavior-x:none] scrollbar-hidden"
-        style="--c-max-h: 528px; --c-bblr: 12px; --c-bbrr: 12px;"
+        style="--c-max-h: 528px; --c-bblr: 12px; --c-bbrr: 12px; overflow-anchor: none;"
       >
         <div
           class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 gap-[2px]"
@@ -711,7 +715,7 @@ exports[`PoolDetailsTransactionsTable > renders error state 1`] = `
             </div>
             <div
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 grow first-child-flex-grow-0 last-child-justify-end"
-              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center;"
+              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; margin-right: var(--table-trailing-gutter, 0px); height: 100%; display: flex; justify-content: center;"
             >
               <div
                 class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row grow items-center justify-end px-[12px] py-[16px] overflow-hidden"
@@ -860,7 +864,7 @@ exports[`PoolDetailsTransactionsTable > renders error state 1`] = `
             </div>
             <div
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 grow first-child-flex-grow-0 last-child-justify-end"
-              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center;"
+              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; margin-right: var(--table-trailing-gutter, 0px); height: 100%; display: flex; justify-content: center;"
             >
               <div
                 class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row grow items-center justify-end px-[12px] py-[16px] overflow-hidden"
@@ -1009,7 +1013,7 @@ exports[`PoolDetailsTransactionsTable > renders error state 1`] = `
             </div>
             <div
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 grow first-child-flex-grow-0 last-child-justify-end"
-              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center;"
+              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; margin-right: var(--table-trailing-gutter, 0px); height: 100%; display: flex; justify-content: center;"
             >
               <div
                 class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row grow items-center justify-end px-[12px] py-[16px] overflow-hidden"
@@ -1158,7 +1162,7 @@ exports[`PoolDetailsTransactionsTable > renders error state 1`] = `
             </div>
             <div
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 grow first-child-flex-grow-0 last-child-justify-end"
-              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center;"
+              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; margin-right: var(--table-trailing-gutter, 0px); height: 100%; display: flex; justify-content: center;"
             >
               <div
                 class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row grow items-center justify-end px-[12px] py-[16px] overflow-hidden"
@@ -1307,7 +1311,7 @@ exports[`PoolDetailsTransactionsTable > renders error state 1`] = `
             </div>
             <div
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 grow first-child-flex-grow-0 last-child-justify-end"
-              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center;"
+              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; margin-right: var(--table-trailing-gutter, 0px); height: 100%; display: flex; justify-content: center;"
             >
               <div
                 class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row grow items-center justify-end px-[12px] py-[16px] overflow-hidden"
@@ -1456,7 +1460,7 @@ exports[`PoolDetailsTransactionsTable > renders error state 1`] = `
             </div>
             <div
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 grow first-child-flex-grow-0 last-child-justify-end"
-              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center;"
+              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; margin-right: var(--table-trailing-gutter, 0px); height: 100%; display: flex; justify-content: center;"
             >
               <div
                 class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row grow items-center justify-end px-[12px] py-[16px] overflow-hidden"
@@ -1605,7 +1609,7 @@ exports[`PoolDetailsTransactionsTable > renders error state 1`] = `
             </div>
             <div
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 grow first-child-flex-grow-0 last-child-justify-end"
-              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center;"
+              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; margin-right: var(--table-trailing-gutter, 0px); height: 100%; display: flex; justify-content: center;"
             >
               <div
                 class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row grow items-center justify-end px-[12px] py-[16px] overflow-hidden"
@@ -1754,7 +1758,7 @@ exports[`PoolDetailsTransactionsTable > renders error state 1`] = `
             </div>
             <div
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 grow first-child-flex-grow-0 last-child-justify-end"
-              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center;"
+              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; margin-right: var(--table-trailing-gutter, 0px); height: 100%; display: flex; justify-content: center;"
             >
               <div
                 class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row grow items-center justify-end px-[12px] py-[16px] overflow-hidden"
@@ -1794,7 +1798,7 @@ exports[`PoolDetailsTransactionsTable > renders error state 1`] = `
                 fill="none"
                 focusable="false"
                 stroke-width="8"
-                style="width: 20px; height: 20px;"
+                style="color: var(--neutral2); width: 20px; height: 20px;"
                 viewBox="0 0 16 16"
               >
                 <path
@@ -1852,7 +1856,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
         style="--c-top: unset; --c-z: 968;"
       >
         <div
-          class="flex basis-auto box-border relative min-h-[0px] shrink-0 flex-row items-center w-[var(--c-w)] h-[100%] min-w-[100%] bg-surface2 rounded-[12px] [scrollbar-width:none] [transition:var(--c-t)] overflow-auto [overscroll-behavior:none] scrollbar-hidden"
+          class="flex basis-auto box-border relative min-h-[0px] shrink-0 flex-row items-center w-[var(--c-w)] h-[100%] min-w-[100%] bg-surface2 rounded-[12px] [scrollbar-width:none] [transition:var(--c-t)] [overflow-x:auto] [overflow-y:hidden] [overscroll-behavior-x:none] scrollbar-hidden"
           style="--c-w: unset; --c-t: unset;"
         >
           <div
@@ -1891,7 +1895,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   fill="none"
                   focusable="false"
                   stroke-width="8"
-                  style="width: 16px; height: 16px;"
+                  style="color: var(--neutral3); width: 16px; height: 16px;"
                   viewBox="0 0 17 16"
                 >
                   <path
@@ -1937,7 +1941,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                 <div
                   aria-busy="true"
                   class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                  style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                  style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                 >
                   <div
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -1962,7 +1966,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                 <div
                   aria-busy="true"
                   class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                  style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                  style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                 >
                   <div
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -1974,7 +1978,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
           </div>
           <div
             class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 grow first-child-flex-grow-0 last-child-justify-end"
-            style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center;"
+            style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; margin-right: var(--table-trailing-gutter, 0px); height: 100%; display: flex; justify-content: center;"
           >
             <div
               class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row grow items-center justify-end px-[12px] py-[16px] overflow-hidden"
@@ -1991,7 +1995,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
       </div>
       <div
         class="flex flex-col items-stretch basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 justify-start w-[100%] max-h-[var(--c-max-h)] border-[0px] relative [border-bottom-left-radius:var(--c-bblr)] [border-bottom-right-radius:var(--c-bbrr)] [border-style:solid] [overflow-x:auto] [overflow-y:auto] [overscroll-behavior-x:none] scrollbar-hidden"
-        style="--c-max-h: 528px; --c-bblr: 12px; --c-bbrr: 12px;"
+        style="--c-max-h: 528px; --c-bblr: 12px; --c-bbrr: 12px; overflow-anchor: none;"
       >
         <div
           class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 gap-[2px]"
@@ -2015,7 +2019,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-start; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -2040,7 +2044,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-start; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -2065,7 +2069,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -2090,7 +2094,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -2115,7 +2119,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -2127,7 +2131,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
             </div>
             <div
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 grow first-child-flex-grow-0 last-child-justify-end"
-              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center;"
+              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; margin-right: var(--table-trailing-gutter, 0px); height: 100%; display: flex; justify-content: center;"
             >
               <div
                 class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row grow items-center justify-end px-[12px] py-[16px] overflow-hidden"
@@ -2140,7 +2144,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -2170,7 +2174,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-start; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -2195,7 +2199,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-start; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -2220,7 +2224,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -2245,7 +2249,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -2270,7 +2274,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -2282,7 +2286,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
             </div>
             <div
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 grow first-child-flex-grow-0 last-child-justify-end"
-              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center;"
+              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; margin-right: var(--table-trailing-gutter, 0px); height: 100%; display: flex; justify-content: center;"
             >
               <div
                 class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row grow items-center justify-end px-[12px] py-[16px] overflow-hidden"
@@ -2295,7 +2299,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -2325,7 +2329,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-start; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -2350,7 +2354,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-start; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -2375,7 +2379,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -2400,7 +2404,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -2425,7 +2429,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -2437,7 +2441,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
             </div>
             <div
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 grow first-child-flex-grow-0 last-child-justify-end"
-              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center;"
+              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; margin-right: var(--table-trailing-gutter, 0px); height: 100%; display: flex; justify-content: center;"
             >
               <div
                 class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row grow items-center justify-end px-[12px] py-[16px] overflow-hidden"
@@ -2450,7 +2454,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -2480,7 +2484,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-start; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -2505,7 +2509,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-start; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -2530,7 +2534,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -2555,7 +2559,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -2580,7 +2584,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -2592,7 +2596,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
             </div>
             <div
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 grow first-child-flex-grow-0 last-child-justify-end"
-              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center;"
+              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; margin-right: var(--table-trailing-gutter, 0px); height: 100%; display: flex; justify-content: center;"
             >
               <div
                 class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row grow items-center justify-end px-[12px] py-[16px] overflow-hidden"
@@ -2605,7 +2609,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -2635,7 +2639,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-start; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -2660,7 +2664,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-start; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -2685,7 +2689,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -2710,7 +2714,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -2735,7 +2739,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -2747,7 +2751,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
             </div>
             <div
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 grow first-child-flex-grow-0 last-child-justify-end"
-              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center;"
+              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; margin-right: var(--table-trailing-gutter, 0px); height: 100%; display: flex; justify-content: center;"
             >
               <div
                 class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row grow items-center justify-end px-[12px] py-[16px] overflow-hidden"
@@ -2760,7 +2764,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -2790,7 +2794,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-start; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -2815,7 +2819,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-start; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -2840,7 +2844,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -2865,7 +2869,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -2890,7 +2894,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -2902,7 +2906,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
             </div>
             <div
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 grow first-child-flex-grow-0 last-child-justify-end"
-              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center;"
+              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; margin-right: var(--table-trailing-gutter, 0px); height: 100%; display: flex; justify-content: center;"
             >
               <div
                 class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row grow items-center justify-end px-[12px] py-[16px] overflow-hidden"
@@ -2915,7 +2919,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -2945,7 +2949,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-start; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -2970,7 +2974,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-start; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -2995,7 +2999,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -3020,7 +3024,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -3045,7 +3049,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -3057,7 +3061,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
             </div>
             <div
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 grow first-child-flex-grow-0 last-child-justify-end"
-              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center;"
+              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; margin-right: var(--table-trailing-gutter, 0px); height: 100%; display: flex; justify-content: center;"
             >
               <div
                 class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row grow items-center justify-end px-[12px] py-[16px] overflow-hidden"
@@ -3070,7 +3074,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -3100,7 +3104,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-start; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -3125,7 +3129,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-start; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -3150,7 +3154,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -3175,7 +3179,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -3200,7 +3204,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -3212,7 +3216,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
             </div>
             <div
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 grow first-child-flex-grow-0 last-child-justify-end"
-              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center;"
+              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; margin-right: var(--table-trailing-gutter, 0px); height: 100%; display: flex; justify-content: center;"
             >
               <div
                 class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row grow items-center justify-end px-[12px] py-[16px] overflow-hidden"
@@ -3225,7 +3229,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -3255,7 +3259,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-start; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -3280,7 +3284,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-start; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -3305,7 +3309,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -3330,7 +3334,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -3355,7 +3359,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -3367,7 +3371,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
             </div>
             <div
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 grow first-child-flex-grow-0 last-child-justify-end"
-              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center;"
+              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; margin-right: var(--table-trailing-gutter, 0px); height: 100%; display: flex; justify-content: center;"
             >
               <div
                 class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row grow items-center justify-end px-[12px] py-[16px] overflow-hidden"
@@ -3380,7 +3384,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -3410,7 +3414,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-start; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -3435,7 +3439,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-start; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -3460,7 +3464,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -3485,7 +3489,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -3510,7 +3514,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -3522,7 +3526,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
             </div>
             <div
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 grow first-child-flex-grow-0 last-child-justify-end"
-              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center;"
+              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; margin-right: var(--table-trailing-gutter, 0px); height: 100%; display: flex; justify-content: center;"
             >
               <div
                 class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row grow items-center justify-end px-[12px] py-[16px] overflow-hidden"
@@ -3535,7 +3539,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -3565,7 +3569,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-start; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -3590,7 +3594,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-start; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -3615,7 +3619,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -3640,7 +3644,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -3665,7 +3669,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -3677,7 +3681,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
             </div>
             <div
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 grow first-child-flex-grow-0 last-child-justify-end"
-              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center;"
+              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; margin-right: var(--table-trailing-gutter, 0px); height: 100%; display: flex; justify-content: center;"
             >
               <div
                 class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row grow items-center justify-end px-[12px] py-[16px] overflow-hidden"
@@ -3690,7 +3694,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -3720,7 +3724,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-start; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -3745,7 +3749,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-start; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -3770,7 +3774,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -3795,7 +3799,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -3820,7 +3824,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -3832,7 +3836,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
             </div>
             <div
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 grow first-child-flex-grow-0 last-child-justify-end"
-              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center;"
+              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; margin-right: var(--table-trailing-gutter, 0px); height: 100%; display: flex; justify-content: center;"
             >
               <div
                 class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row grow items-center justify-end px-[12px] py-[16px] overflow-hidden"
@@ -3845,7 +3849,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -3875,7 +3879,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-start; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -3900,7 +3904,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-start; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -3925,7 +3929,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -3950,7 +3954,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -3975,7 +3979,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -3987,7 +3991,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
             </div>
             <div
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 grow first-child-flex-grow-0 last-child-justify-end"
-              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center;"
+              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; margin-right: var(--table-trailing-gutter, 0px); height: 100%; display: flex; justify-content: center;"
             >
               <div
                 class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row grow items-center justify-end px-[12px] py-[16px] overflow-hidden"
@@ -4000,7 +4004,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -4030,7 +4034,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-start; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -4055,7 +4059,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-start; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -4080,7 +4084,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -4105,7 +4109,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -4130,7 +4134,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -4142,7 +4146,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
             </div>
             <div
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 grow first-child-flex-grow-0 last-child-justify-end"
-              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center;"
+              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; margin-right: var(--table-trailing-gutter, 0px); height: 100%; display: flex; justify-content: center;"
             >
               <div
                 class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row grow items-center justify-end px-[12px] py-[16px] overflow-hidden"
@@ -4155,7 +4159,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -4185,7 +4189,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-start; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -4210,7 +4214,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-start; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -4235,7 +4239,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -4260,7 +4264,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -4285,7 +4289,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -4297,7 +4301,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
             </div>
             <div
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 grow first-child-flex-grow-0 last-child-justify-end"
-              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center;"
+              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; margin-right: var(--table-trailing-gutter, 0px); height: 100%; display: flex; justify-content: center;"
             >
               <div
                 class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row grow items-center justify-end px-[12px] py-[16px] overflow-hidden"
@@ -4310,7 +4314,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -4340,7 +4344,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-start; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -4365,7 +4369,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-start; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -4390,7 +4394,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -4415,7 +4419,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -4440,7 +4444,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -4452,7 +4456,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
             </div>
             <div
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 grow first-child-flex-grow-0 last-child-justify-end"
-              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center;"
+              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; margin-right: var(--table-trailing-gutter, 0px); height: 100%; display: flex; justify-content: center;"
             >
               <div
                 class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row grow items-center justify-end px-[12px] py-[16px] overflow-hidden"
@@ -4465,7 +4469,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -4495,7 +4499,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-start; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -4520,7 +4524,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-start; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -4545,7 +4549,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -4570,7 +4574,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -4595,7 +4599,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -4607,7 +4611,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
             </div>
             <div
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 grow first-child-flex-grow-0 last-child-justify-end"
-              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center;"
+              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; margin-right: var(--table-trailing-gutter, 0px); height: 100%; display: flex; justify-content: center;"
             >
               <div
                 class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row grow items-center justify-end px-[12px] py-[16px] overflow-hidden"
@@ -4620,7 +4624,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -4650,7 +4654,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-start; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -4675,7 +4679,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-start; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -4700,7 +4704,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -4725,7 +4729,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -4750,7 +4754,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -4762,7 +4766,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
             </div>
             <div
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 grow first-child-flex-grow-0 last-child-justify-end"
-              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center;"
+              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; margin-right: var(--table-trailing-gutter, 0px); height: 100%; display: flex; justify-content: center;"
             >
               <div
                 class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row grow items-center justify-end px-[12px] py-[16px] overflow-hidden"
@@ -4775,7 +4779,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -4805,7 +4809,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-start; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -4830,7 +4834,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-start; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -4855,7 +4859,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -4880,7 +4884,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -4905,7 +4909,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -4917,7 +4921,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
             </div>
             <div
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 grow first-child-flex-grow-0 last-child-justify-end"
-              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center;"
+              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; margin-right: var(--table-trailing-gutter, 0px); height: 100%; display: flex; justify-content: center;"
             >
               <div
                 class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row grow items-center justify-end px-[12px] py-[16px] overflow-hidden"
@@ -4930,7 +4934,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -4960,7 +4964,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-start; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -4985,7 +4989,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-start; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-start; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -5010,7 +5014,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -5035,7 +5039,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -5060,7 +5064,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"
@@ -5072,7 +5076,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
             </div>
             <div
               class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 grow first-child-flex-grow-0 last-child-justify-end"
-              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; height: 100%; display: flex; justify-content: center;"
+              style="width: 125px; left: 0px; position: relative; z-index: 0; background: transparent; padding-left: 0px; padding-right: 8px; margin-right: var(--table-trailing-gutter, 0px); height: 100%; display: flex; justify-content: center;"
             >
               <div
                 class="flex basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 flex-row grow items-center justify-end px-[12px] py-[16px] overflow-hidden"
@@ -5085,7 +5089,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   <div
                     aria-busy="true"
                     class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-                    style="flex-direction: row; width: 100%; justify-content: flex-end; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+                    style="flex-direction: row; width: 100%; justify-content: flex-end; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
                   >
                     <div
                       class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[16px] rounded-[12px] [background:var(--c-b)]"

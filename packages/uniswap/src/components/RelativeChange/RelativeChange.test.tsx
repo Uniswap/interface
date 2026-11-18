@@ -42,3 +42,23 @@ it('renders placeholders with absolute change', () => {
   const tree = renderWithProviders(<RelativeChange absoluteChange={100} change={12} />)
   expect(tree).toMatchSnapshot()
 })
+
+it('shows a preformatted absolute change in place of the balance formatting', () => {
+  const { getByText } = renderWithProviders(
+    <RelativeChange change={23} absoluteChange={0.000023} formattedAbsoluteChange="$0.000023" />,
+  )
+  expect(getByText('$0.000023 (23%)')).toBeTruthy()
+})
+
+it('formats the absolute change as a balance without a preformatted one', () => {
+  const { getByText } = renderWithProviders(<RelativeChange change={23} absoluteChange={0.000023} />)
+  expect(getByText('$0.00 (23%)')).toBeTruthy()
+})
+
+it('shows only the percent when the absolute change is zero, even with a preformatted one', () => {
+  const { getByText, queryByText } = renderWithProviders(
+    <RelativeChange change={0} absoluteChange={0} formattedAbsoluteChange="$0.00" />,
+  )
+  expect(getByText('0%')).toBeTruthy()
+  expect(queryByText(/\$/)).toBeNull()
+})

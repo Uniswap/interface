@@ -69,6 +69,7 @@ export interface MarginPair {
   borrowRateBps?: number
   // Borrowable depth at this venue, RAW debt units. Absent until the live registry overlays it.
   availableBorrowLiquidity?: string
+  isHeadline?: boolean
 }
 
 // An asset the user can go long, grouping every debt market that shares its collateral token.
@@ -112,6 +113,8 @@ export interface MarginMarket {
   maxLeverage?: number
   // What `open.marketId` names on POST /margin/quote. Absent off-registry, like maxLeverage.
   marketId?: string
+  // The pair's headline market (GET /margin/markets `headlineMarketId`), which Auto opens on.
+  isHeadline?: boolean
   shouldUseNativeEquity: boolean
 }
 

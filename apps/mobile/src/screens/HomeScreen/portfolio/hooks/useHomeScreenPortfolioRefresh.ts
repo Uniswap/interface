@@ -1,9 +1,9 @@
 import { SharedQueryClient } from '@universe/api'
+import { NFT_QUERY_KEY_PREFIX } from '@universe/data-api'
 import { useCallback, useState } from 'react'
 import { getListTransactionsQuery } from 'uniswap/src/data/apiClients/dataApiService/activity/listTransactions'
 import { getPortfolioQuery } from 'uniswap/src/data/apiClients/dataApiService/balances/getPortfolio'
 import { getWalletBalancesQuery } from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances'
-import { NFT_QUERY_KEY_PREFIX } from 'uniswap/src/data/apiClients/dataApiService/nfts/queries'
 import { WALLET_POSITIONS_QUERY_KEY_PREFIX } from 'uniswap/src/data/apiClients/liquidityService/queryKeys'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 

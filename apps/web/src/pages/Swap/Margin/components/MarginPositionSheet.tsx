@@ -1,9 +1,10 @@
 import { Flex, getMenuItemColor, Text, TouchableArea, WebBottomSheet } from '@universe/mycelium'
-import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
 import { X } from '@universe/mycelium/icons/X'
+import { EffectiveOverlayZIndexContext } from '@universe/mycelium/popover-compat'
 import { TestID } from '@universe/test'
-import { type ReactNode, useState } from 'react'
+import { type ReactNode, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { EffectiveModalOrSheetZIndexContext } from 'ui/src'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import type { MarginActivePosition } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -38,6 +39,8 @@ export type MarginPositionSheetArgs = {
   market: MarginMarket | undefined
   figures: { pnl: ReactNode; markEntry: ReactNode; liqPrice: ReactNode; size: ReactNode; margin: ReactNode }
   onRequestModal: (request: MarginModalRequest) => void
+  // The table's action modal for the requested action, rendered inside the actions sheet so it stacks on it.
+  actionModal: ReactNode
 }
 
 /** One position, opened from its card: its market's chart with its lines, its figures, and its actions. */
@@ -48,11 +51,18 @@ export function MarginPositionSheet({
   market,
   figures,
   onRequestModal,
+  actionModal,
 }: MarginPositionSheetArgs): JSX.Element {
   const { t } = useTranslation()
   return (
     <Trace logImpression={isOpen} modal={ModalName.MarginPositionSheet}>
-      <WebBottomSheet isOpen={isOpen} onClose={onClose} px="$spacing12" pb="$spacing16">
+      <WebBottomSheet
+        isOpen={isOpen}
+        title={t('margin.mobile.positionDetails')}
+        onClose={onClose}
+        px="$spacing12"
+        pb="$spacing16"
+      >
         {/* WebBottomSheet keeps its children mounted while closed; the chart runs only while open. */}
         {isOpen ? (
           <Flex width="100%" gap="$spacing16" testID={TestID.MarginPositionSheet}>
@@ -76,7 +86,11 @@ export function MarginPositionSheet({
             {/* Same rule as the table's row menu: with no market every action would mount a modal that
                 immediately unmounts itself. */}
             {market ? (
-              <MarginPositionSheetActions position={position} onClose={onClose} onRequestModal={onRequestModal} />
+              <MarginPositionSheetActions
+                position={position}
+                onRequestModal={onRequestModal}
+                actionModal={actionModal}
+              />
             ) : null}
           </Flex>
         ) : null}
@@ -142,28 +156,25 @@ function SheetFigure({ label, value }: { label: string; value: ReactNode }): JSX
   )
 }
 
-// "Modify" opens the position's actions in place: the same four the table's row menu offers, with the
-// same gating. Picking one closes the sheet and hands the action to the table's action modals,
-// so the modal never stacks on top of this sheet.
+// "Modify" opens the position's actions in a sheet stacked on this one: the same four the table's row menu
+// offers, with the same gating. A picked action's modal stacks on the actions sheet in turn, and closing it
+// returns to the actions.
 function MarginPositionSheetActions({
   position,
-  onClose,
   onRequestModal,
+  actionModal,
 }: {
   position: MarginActivePosition
-  onClose: () => void
   onRequestModal: (request: MarginModalRequest) => void
+  actionModal: ReactNode
 }): JSX.Element {
   const { t } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
-  const toggle = useEvent(() => setIsOpen((open) => !open))
-  const onSelect = useEvent((request: MarginModalRequest) => {
-    onClose()
-    onRequestModal(request)
-  })
-  const actions = useMarginPositionActions({ position, onSelect })
+  const open = useEvent(() => setIsOpen(true))
+  const close = useEvent(() => setIsOpen(false))
+  const actions = useMarginPositionActions({ position, onSelect: onRequestModal })
   return (
-    <Flex gap="$spacing8">
+    <>
       <TouchableArea
         row
         alignItems="center"
@@ -174,23 +185,34 @@ function MarginPositionSheetActions({
         backgroundColor="$surface3"
         aria-expanded={isOpen}
         testID={TestID.MarginPositionSheetModify}
-        onPress={toggle}
+        onPress={open}
       >
         <Text variant="buttonLabel2" color="$neutral1">
           {t('margin.mobile.modify')}
         </Text>
-        <Flex position="absolute" right="$spacing16">
-          <RotatableChevron direction={isOpen ? 'up' : 'down'} size="$icon.20" color="$neutral2" />
-        </Flex>
       </TouchableArea>
-      {isOpen ? (
-        <Flex borderRadius="$rounded16" borderWidth={1} borderColor="$surface3" overflow="hidden">
-          {actions.map((item) => (
-            <MarginPositionSheetActionRow key={item.action} item={item} />
-          ))}
-        </Flex>
-      ) : null}
-    </Flex>
+      <WebBottomSheet isOpen={isOpen} title={t('margin.mobile.modify')} onClose={close} px="$spacing12" pb="$spacing16">
+        {isOpen ? (
+          <Flex width="100%">
+            {actions.map((item) => (
+              <MarginPositionSheetActionRow key={item.action} item={item} />
+            ))}
+            <StackAboveSheet>{actionModal}</StackAboveSheet>
+          </Flex>
+        ) : null}
+      </WebBottomSheet>
+    </>
+  )
+}
+
+// The action modals are the legacy Modal, which reads only the legacy z-index context; the mycelium sheet
+// provides only its own, so without this the modal's sheet would open underneath the actions sheet.
+function StackAboveSheet({ children }: { children: ReactNode }): JSX.Element {
+  const sheetZIndex = useContext(EffectiveOverlayZIndexContext)
+  return (
+    <EffectiveModalOrSheetZIndexContext.Provider value={sheetZIndex}>
+      {children}
+    </EffectiveModalOrSheetZIndexContext.Provider>
   )
 }
 

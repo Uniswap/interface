@@ -35,7 +35,9 @@
  * onDisabledPress makes a disabled button interactive; here the disabled look
  * never advertises a pointer, even though the click still fires.
  */
-import { createElement, forwardRef, type ButtonHTMLAttributes, type JSX, type KeyboardEvent } from 'react'
+import { useButton } from '@base-ui/react/internals/use-button'
+import { createElement, forwardRef, type ButtonHTMLAttributes, type HTMLAttributes, type JSX, type Ref } from 'react'
+import { useComposedRefs } from 'utilities/src/react/composeRefs'
 import { getMaybeHexOrRgbColor } from '../button-frame-compat/custom-color'
 import { domTestId } from '../compat/dom-test-id'
 import {
@@ -75,18 +77,6 @@ interface FrameElement {
   kind: Record<string, unknown>
   /** Overrides the default disabled `-1` tab stop when set: the disabled-interactive anchor needs `0` — with `href` withheld it has no native one. */
   tabIndex?: number
-}
-
-/**
- * Keyboard activation for the disabled-interactive anchor (`href` withheld, so the
- * browser provides none): Enter — the link activation key — synthesizes the click a
- * native button fires itself, landing on the same detached `onDisabledPress` click
- * handler. Space deliberately unmapped: links scroll on Space; buttons fire.
- */
-function activateOnEnter(event: KeyboardEvent<HTMLAnchorElement>): void {
-  if (event.key === 'Enter') {
-    event.currentTarget.click()
-  }
 }
 
 /**
@@ -136,12 +126,12 @@ function getFrameElement({
       // link role, making `onDisabledPress` mouse-only — while the disabled
       // button (no `disabled` attribute when interactive) keeps its role,
       // tab stop, and native keyboard activation. Restore all three: the
-      // role always; the tab stop and Enter-to-click synthesis only while
-      // `onDisabledPress` keeps the element interactive.
+      // role always; the tab stop only while `onDisabledPress` keeps the element
+      // interactive (its Enter/Space activation comes from the button hook below).
       return {
         element: 'a',
         lead: {},
-        kind: { role: 'link', ...(interactiveWhileDisabled ? { onKeyDown: activateOnEnter } : undefined) },
+        kind: { role: 'link' },
         tabIndex: interactiveWhileDisabled ? 0 : undefined,
       }
     }
@@ -243,14 +233,25 @@ const ButtonComponent = forwardRef<HTMLButtonElement | HTMLAnchorElement, Button
   // carrying element-kind props.
   const frameElement: string = frame.element
 
+  // The browser activates the native <button> and the enabled link; only the disabled-interactive
+  // anchor (no href, so no native activation) takes Base UI's emulated Enter/Space handlers.
+  const { getButtonProps, buttonRef } = useButton({ disabled: false, native: frame.element === 'button' })
+  const composedRef = useComposedRefs<HTMLButtonElement | HTMLAnchorElement>(
+    ref,
+    buttonRef as Ref<HTMLButtonElement | HTMLAnchorElement>,
+  )
+  const { onKeyDown, onKeyUp }: Pick<HTMLAttributes<HTMLElement>, 'onKeyDown' | 'onKeyUp'> = getButtonProps()
+  const emulatedActivation = frame.element === 'a' && interactiveWhileDisabled ? { onKeyDown, onKeyUp } : undefined
+
   // Key order below reproduces the pre-INFRA-3478 JSX attribute order, which the app snapshots record.
   return (
     <ButtonContext.Provider value={ctx}>
       {createElement(
         frameElement,
         {
-          ref,
+          ref: composedRef,
           ...frame.lead,
+          ...emulatedActivation,
           className: buttonCompatFrameClassName({
             size,
             iconPosition,

@@ -1,6 +1,5 @@
 import { act, render, screen } from '@testing-library/react'
 import { UniverseChainId } from '@universe/chains'
-import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import type { ComponentProps } from 'react'
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router'
 import type { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter/NetworkFilter'
@@ -9,13 +8,7 @@ import {
   useExploreTablesFilterStore,
 } from '~/features/Explore/state/exploreTablesFilterStore'
 import { TableNetworkFilter } from '~/pages/Explore/NetworkFilter'
-import { mocked } from '~/test-utils/mocked'
 import { getChainUrlParam } from '~/utils/params/chainParams'
-
-vi.mock('@universe/gating', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('@universe/gating')>()),
-  useIsTokenCategoriesEnabled: vi.fn(),
-}))
 
 vi.mock('~/components/NetworkFilter/useFilteredChains', () => ({
   useNetworkFilterChainIds: () => ({ chainIds: [], allNetworksChainIds: undefined }),
@@ -81,7 +74,6 @@ function pickNetwork(chainId: UniverseChainId): void {
 describe('TableNetworkFilter', () => {
   beforeEach(() => {
     filterProps = undefined
-    mocked(useIsTokenCategoriesEnabled).mockReturnValue(true)
   })
 
   it('keeps the category when picking an EVM network', () => {
@@ -110,17 +102,6 @@ describe('TableNetworkFilter', () => {
     pickNetwork(UniverseChainId.Base)
 
     expect(screen.getByTestId('location').textContent).toBe(`/explore/tokens/${getChainUrlParam(UniverseChainId.Base)}`)
-  })
-
-  it('keeps the category on Solana with token categories off', () => {
-    mocked(useIsTokenCategoriesEnabled).mockReturnValue(false)
-    renderAt('/explore/tokens?category=stocks')
-
-    pickNetwork(UniverseChainId.Solana)
-
-    expect(screen.getByTestId('location').textContent).toBe(
-      `/explore/tokens/${getChainUrlParam(UniverseChainId.Solana)}?category=stocks`,
-    )
   })
 
   it.each([

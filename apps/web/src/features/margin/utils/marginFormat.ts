@@ -406,8 +406,8 @@ export function formatLiqDistanceSuffix(pct: number): string {
 
 // Long/Short badge styling — shared by the positions table and the drawer header.
 export function getMarginDirectionStyle(direction: MarginDirection | undefined): {
-  color: string
-  backgroundColor: string
+  color: ColorTokens
+  backgroundColor: ColorTokens
 } {
   const isShort = direction === MarginDirection.SHORT
   return {

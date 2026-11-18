@@ -19,7 +19,7 @@ const { ACROSS, RELAY } = TradingApi.BridgeProvider
 
 describe(BridgingOptionsControl, () => {
   it.each([
-    { selected: [ACROSS, RELAY], label: 'common.all' },
+    { selected: [ACROSS, RELAY], label: 'common.default' },
     { selected: [ACROSS], label: 'common.custom' },
     { selected: [RELAY], label: 'common.custom' },
   ])('reads $label for $selected', ({ selected, label }) => {

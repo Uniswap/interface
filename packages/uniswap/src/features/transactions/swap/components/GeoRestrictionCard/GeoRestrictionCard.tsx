@@ -52,6 +52,7 @@ export function GeoRestrictionCard(): JSX.Element | null {
               {description}
             </Text>
           }
+          ctaButtonLabel={t('common.button.learn')}
           onPressCtaButton={open}
         />
       </TouchableArea>

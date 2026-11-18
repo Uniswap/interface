@@ -21,7 +21,7 @@ export interface SelectOption {
   traceElement?: ElementName
 }
 
-type DropdownSelectorProps = Omit<DropdownProps, 'children' | 'menuLabel'> & {
+type DropdownSelectorProps = Omit<DropdownProps, 'children' | 'menuLabel' | 'adaptToSheet' | 'title'> & {
   options: Record<string, SelectOption>
   selectedValue: string
   onSelect: (value: string) => void
@@ -43,7 +43,6 @@ export function DropdownSelector({
   dataTestId,
   dropdownTestId,
   optionTestIdPrefix,
-  adaptToSheet,
   tooltipText,
   dropdownStyle,
   containerStyle,
@@ -83,7 +82,6 @@ export function DropdownSelector({
       }}
       alignRight={alignRight}
       dropdownTestId={dropdownTestId}
-      adaptToSheet={adaptToSheet}
       tooltipText={tooltipText}
       containerStyle={containerStyle}
       allowFlip={allowFlip}

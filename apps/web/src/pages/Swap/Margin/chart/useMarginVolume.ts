@@ -145,6 +145,7 @@ export function alignVolumeToCandles({
 // window, on the same ranged request as the candles.
 export function useMarginVolume({ market, timeWindow }: { market: MarginMarket; timeWindow: MarginTimeWindow }): {
   volumeBars: MarginVolumeBar[]
+  isPlaceholderData: boolean
 } {
   const { address } = volatileLeg({ market })
   const { duration, candleSeconds } = MARGIN_TIME_WINDOWS[timeWindow]
@@ -155,7 +156,7 @@ export function useMarginVolume({ market, timeWindow }: { market: MarginMarket; 
     multichain: false,
   }
   const restTarget = useRestHistoryTarget(variables)
-  const { data } = useQuery(
+  const { data, isPlaceholderData } = useQuery(
     getMarginHistoryQueryOptions({
       name: 'getTokenHistoryVolume',
       fetch: (params) => dataApiServiceClientV2.getTokenHistoryVolume(params),
@@ -166,5 +167,8 @@ export function useMarginVolume({ market, timeWindow }: { market: MarginMarket; 
       select: selectVolumeBars,
     }),
   )
-  return useMemo(() => ({ volumeBars: mergeVolumeToGrid({ bars: data ?? [], candleSeconds }) }), [data, candleSeconds])
+  return useMemo(
+    () => ({ volumeBars: mergeVolumeToGrid({ bars: data ?? [], candleSeconds }), isPlaceholderData }),
+    [data, candleSeconds, isPlaceholderData],
+  )
 }

@@ -40,9 +40,10 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 import type { AppTFunction } from 'utilities/src/i18n/types'
 import { TokenHoverCard } from '~/components/HoverCard/TokenHoverCard/TokenHoverCard'
-import { Portal } from '~/components/Popups/Portal'
+import { Portal } from '~/components/Portal/Portal'
 import { useAccount } from '~/connection/hooks/useAccount'
 import { useHasInjectedWallets } from '~/connection/hooks/useOrderedWalletConnectors'
+import { APP_BODY_MOBILE_GUTTER_PX } from '~/constants/layout'
 import { useMarginMarkets } from '~/features/margin/hooks/useMarginMarkets'
 import { SwapAndLimitContextProvider } from '~/features/Swap/state/SwapContext'
 import type { CurrencyState } from '~/features/Swap/state/types'
@@ -295,6 +296,7 @@ const PATHNAME_TO_TAB: { [key: string]: SwapTab } = {
 
 const CHART_CARD_HEIGHT = 288
 const CHART_CARD_GAP = 24
+const MARGIN_MOBILE_FORM_WIDTH = `calc(100vw - ${2 * APP_BODY_MOBILE_GUTTER_PX}px)`
 
 const CHART_ELIGIBLE_TABS = new Set<SwapTab>([SwapTab.Swap, SwapTab.Limit])
 
@@ -439,20 +441,20 @@ function UniversalSwapFlow({
     enabled: isMarginEnabled,
     importFn: () => import('~/pages/Swap/Margin/MarginChartPane').then((m) => ({ default: m.MarginChartPane })),
   })
-  // Margin-scoped ⚙︎ popover (slippage only) — deliberately NOT the swap-wide settings UI.
+  // Margin's ⚙︎: the swap settings popover with margin's own settings (slippage, market options).
   const MarginSettingsPopover = useDeferredComponent({
     enabled: isMarginEnabled,
     importFn: () =>
-      import('~/pages/Swap/Margin/components/MarginRateRows').then((m) => ({ default: m.MarginSettingsPopover })),
+      import('~/pages/Swap/Margin/components/MarginSettings').then((m) => ({ default: m.MarginSettingsPopover })),
   })
   const MarginPositionsTable = useDeferredComponent({
     enabled: isMarginEnabled,
     importFn: () =>
       import('~/pages/Swap/Margin/MarginPositionsTable').then((m) => ({ default: m.MarginPositionsTable })),
   })
-  // Phone widths only: the tabbed layout (form / position cards, chart in a sheet) replaces the form
-  // with its inline table, whose columns do not fit.
-  const isMarginMobile = isMarginEnabled && media.lg
+  // Below the terminal breakpoint: the tabbed layout (form / position cards, chart in a sheet) replaces the
+  // form with its inline table, whose columns do not fit.
+  const isMarginMobile = isMarginEnabled && media.xl
   const MarginMobileLayout = useDeferredComponent({
     enabled: isMarginMobile,
     importFn: () => import('~/pages/Swap/Margin/MarginMobileLayout').then((m) => ({ default: m.MarginMobileLayout })),
@@ -572,7 +574,8 @@ function UniversalSwapFlow({
 
   // On wide screens, lift the margin positions panel into a right-side column (form on the left).
   // Gated on a connected wallet so we never reserve an empty column; narrow screens keep it inline.
-  const showMarginSidePanel = isMarginEnabled && displayTab === SwapTab.Margin && !media.lg && Boolean(account.address)
+  const showMarginSidePanel = isMarginEnabled && displayTab === SwapTab.Margin && !media.xl && Boolean(account.address)
+  const showMarginMobileLayout = displayTab === SwapTab.Margin && isMarginMobile
 
   if (headingToMarginTerminal && !marginTerminalReady) {
     return <Flex width="100%" minHeight="calc(100dvh - 120px)" />
@@ -586,7 +589,7 @@ function UniversalSwapFlow({
       chartPane={MarginChartPane ? <MarginChartPane /> : null}
       // No wallet, no positions pane: the table renders nothing then, and an empty pane would still take
       // its share of the column from the chart.
-      positionsTable={MarginPositionsTable && account.address ? <MarginPositionsTable /> : null}
+      positionsTable={MarginPositionsTable && account.address ? <MarginPositionsTable stickyToScrollContainer /> : null}
       nonTerminalChartAnimator={
         // Chart card animates in from the left.
         // Not mounted on pages that hide the header (e.g. landing page) since the chart
@@ -626,7 +629,13 @@ function UniversalSwapFlow({
     >
       <SwapModuleWrapper
         ref={formRef}
-        width={displayIsTerminal ? MARGIN_FORM_RAIL_WIDTH : PAGE_WRAPPER_MAX_WIDTH}
+        width={
+          displayIsTerminal
+            ? MARGIN_FORM_RAIL_WIDTH
+            : showMarginMobileLayout
+              ? MARGIN_MOBILE_FORM_WIDTH
+              : PAGE_WRAPPER_MAX_WIDTH
+        }
         // Terminal: pinned rail so only the chart flexes. Non-terminal: still
         // shrinks to make room for the slideout chart card in the narrow band.
         $platform-web={{
@@ -650,6 +659,7 @@ function UniversalSwapFlow({
             onHeightChange={setTabsRowHeight}
             // Snap only across the margin morph, which would otherwise show the pill sliding under the fade.
             animateIndicator={currentTab !== SwapTab.Margin && displayTab !== SwapTab.Margin}
+            alignLabelsToEdge={displayTab === SwapTab.Margin && isMarginMobile}
           />
         )}
         {displayTab === SwapTab.Swap && (
@@ -691,7 +701,7 @@ function UniversalSwapFlow({
             (shared `VerifyIdentityBottomSheet` renders as Dialog on web). */}
         {/* Inline table only when neither the terminal slot nor the side panel already shows it —
             it renders a Connect CTA when disconnected. */}
-        {displayTab === SwapTab.Margin && isMarginMobile && MarginMobileLayout && <MarginMobileLayout />}
+        {showMarginMobileLayout && MarginMobileLayout && <MarginMobileLayout />}
         {displayTab === SwapTab.Margin && !isMarginMobile && MarginForm && (
           <MarginForm
             showInlinePositions={!showMarginSidePanel && !displayIsTerminal}

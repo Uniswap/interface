@@ -12,6 +12,7 @@ import {
   MaxBidPriceData,
   PredicateKycVerificationData,
   ValidationType,
+  ZkPassportVerificationData,
 } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/types_pb'
 import { useEffect } from 'react'
 import { PollingInterval, ZERO_ADDRESS } from 'uniswap/src/constants/misc'
@@ -68,7 +69,18 @@ export function buildVerifyWalletParams({
  */
 export function useVerifyWalletQuery(
   params: PartialMessage<VerifyWalletRequest>,
-  currentBlockNumber?: number,
+  {
+    currentBlockNumber,
+    awaitingZkPassportCredential = false,
+  }: {
+    /** Refetches once the presale allowlist expires at this block */
+    currentBlockNumber?: number
+    /**
+     * The wallet opened ZKPassport to mint a credential. Polls until the credential shows up; without it nothing
+     * polls for a ZKPassport gate, since every wallet without the credential (the zero address too) fails it.
+     */
+    awaitingZkPassportCredential?: boolean
+  } = {},
 ): UseQueryResult<VerifyWalletResponse, Error> {
   const enabled = Boolean(params.walletAddress && params.auctionAddress && params.chainId)
 
@@ -88,7 +100,9 @@ export function useVerifyWalletQuery(
       if (status === KycVerificationStatus.VERIFICATION_STATUS_PENDING) {
         return PollingInterval.Fast
       }
-      return false
+      return awaitingZkPassportCredential && shouldPollForZkPassportCredential(query.state.data?.validations)
+        ? PollingInterval.Fast
+        : false
     },
   })
 
@@ -113,6 +127,29 @@ export function isKycValidation(v: AuctionValidation): v is AuctionValidation & 
   return v.validationType === ValidationType.KYC_VERIFICATION
 }
 
+/** Matched on the oneof case too, so a malformed entry can't pass for one carrying a policy id. */
+export function isZkPassportValidation(v: AuctionValidation): v is AuctionValidation & {
+  data: { case: 'zkPassportVerificationData'; value: ZkPassportVerificationData }
+} {
+  return v.validationType === ValidationType.ZKPASSPORT_VERIFICATION && v.data.case === 'zkPassportVerificationData'
+}
+
+/**
+ * The wallet must mint a ZKPassport credential before it can bid. An entry without a policy id is an auction
+ * never registered with the hook: no credential helps, every bid reverts.
+ */
+export function needsZkPassportCredential(
+  v: AuctionValidation & { data: { value: ZkPassportVerificationData } },
+): boolean {
+  return !v.validationPassed && v.data.value.policyId !== ''
+}
+
+/** A ZKPassport credential is minted client-side, so a wallet minting one keeps checking until it shows up. */
+export function shouldPollForZkPassportCredential(validations: AuctionValidation[] | undefined): boolean {
+  const zkPassportValidation = validations?.find(isZkPassportValidation)
+  return zkPassportValidation !== undefined && needsZkPassportCredential(zkPassportValidation)
+}
+
 export function isAllowlistedValidation(v: AuctionValidation): v is AuctionValidation & {
   data: { value: Erc1155GateData | undefined }
 } {
@@ -121,7 +158,11 @@ export function isAllowlistedValidation(v: AuctionValidation): v is AuctionValid
 
 /** A validation that gates the WALLET, as opposed to the bid amount. */
 function isDeclaredWalletGatingType(v: AuctionValidation): boolean {
-  return v.validationType === ValidationType.KYC_VERIFICATION || v.validationType === ValidationType.ERC_1155_GATEWAY
+  return (
+    v.validationType === ValidationType.KYC_VERIFICATION ||
+    v.validationType === ValidationType.ERC_1155_GATEWAY ||
+    v.validationType === ValidationType.ZKPASSPORT_VERIFICATION
+  )
 }
 
 /**
@@ -181,12 +222,24 @@ export function getMaxBidPriceQ96(validations: AuctionValidation[] | undefined):
   return parsed === 0n ? undefined : parsed
 }
 
+/** Who verifies a bidder's identity for an auction that requires it */
+export enum KycProvider {
+  /** Predicate: the bidder verifies on Predicate's site, which reports back through the backend */
+  Predicate = 'Predicate',
+  /** ZKPassport: the bidder mints a credential to their wallet from the ZKPassport app */
+  ZkPassport = 'ZkPassport',
+}
+
 /**
  * Legacy response shape for backwards compatibility with useAuctionKycStatus
  */
 export interface LegacyVerifyWalletResponse {
   status: KycVerificationStatus
+  /** Set whenever the auction requires identity verification */
+  kycProvider?: KycProvider
   redirectUrl?: string
+  /** The 32-byte hex ZKPassport policy a bidder mints a credential for; unset when the auction can't be verified */
+  zkPassportPolicyId?: string
   isAllowlisted: boolean
   hasPresale: boolean
   hasKycVerification: boolean
@@ -200,10 +253,12 @@ export interface LegacyVerifyWalletResponse {
  */
 export function toLegacyVerifyWalletResponse(validations: AuctionValidation[]): LegacyVerifyWalletResponse {
   const kycValidation = validations.find(isKycValidation)
+  const zkPassportValidation = validations.find(isZkPassportValidation)
   const presaleValidation = validations.find(isAllowlistedValidation)
 
-  const kycData = kycValidation?.data.value
-  const hasKycVerification = !!kycValidation
+  const kycData = kycValidation?.data.value ?? zkPassportValidation?.data.value
+  const kycProvider = kycValidation ? KycProvider.Predicate : zkPassportValidation ? KycProvider.ZkPassport : undefined
+  const hasKycVerification = kycProvider !== undefined
   const hasPresale = !!presaleValidation
 
   const expirationBlock = presaleValidation?.data.value?.expirationBlock
@@ -217,13 +272,22 @@ export function toLegacyVerifyWalletResponse(validations: AuctionValidation[]): 
   const canBid = walletGatingValidations.length > 0 && walletGatingValidations.every((v) => v.validationPassed)
 
   let status = kycData?.status
+  // A held ZKPassport credential is the whole verification, so it reads as completed whatever status rides along.
+  if (!kycValidation && zkPassportValidation?.validationPassed) {
+    status = KycVerificationStatus.VERIFICATION_STATUS_COMPLETED
+  }
   if (status === KycVerificationStatus.VERIFICATION_STATUS_UNSPECIFIED) {
     status = KycVerificationStatus.VERIFICATION_STATUS_NOT_STARTED
   }
 
   return {
     status: status ?? KycVerificationStatus.VERIFICATION_STATUS_UNSPECIFIED,
-    redirectUrl: kycData?.redirectUrl,
+    kycProvider,
+    redirectUrl: kycValidation?.data.value?.redirectUrl,
+    zkPassportPolicyId:
+      zkPassportValidation && needsZkPassportCredential(zkPassportValidation)
+        ? zkPassportValidation.data.value.policyId
+        : undefined,
     isAllowlisted: presaleValidation?.validationPassed ?? false,
     hasPresale,
     hasKycVerification,

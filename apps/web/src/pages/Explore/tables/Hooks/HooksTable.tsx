@@ -13,9 +13,8 @@ import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ALL_NETWORKS_LABEL } from 'uniswap/src/features/telemetry/types'
 import { Table } from '~/components/Table'
+import { useInfiniteLoadMore } from '~/components/Table/hooks/useInfiniteLoadMore'
 import { useEffectiveVolumeTimePeriod } from '~/features/Explore/hooks/useEffectiveVolumeTimePeriod'
-import { useInfiniteLoadMore } from '~/features/Explore/hooks/useInfiniteLoadMore'
-import { EXPLORE_API_PAGE_SIZE } from '~/features/Explore/state/constants'
 import { HookResultsPagination } from '~/features/Hooks/components/HookResultsPagination'
 import { getActiveHookFilters } from '~/features/Hooks/hookFilters'
 import { getUniqueHooks, hookListInfiniteQueryOptions, hookListSummaryQueryOptions } from '~/features/Hooks/queries'
@@ -29,6 +28,7 @@ import { HooksTableFilters } from '~/pages/Explore/tables/Hooks/HooksTableFilter
 import type { HookTableRow } from '~/pages/Explore/tables/Hooks/hooksTableTypes'
 import { getHookVolumePeriod, HOOK_VOLUME_PERIODS } from '~/pages/Explore/tables/Hooks/hooksVolumePeriods'
 import { useHooksTableUrlState } from '~/pages/Explore/tables/Hooks/useHooksTableUrlState'
+import { LIST_API_PAGE_SIZE } from '~/utils/listRequestParams'
 
 export function HooksTable({
   scenario,
@@ -60,7 +60,7 @@ export function HooksTable({
     refetch,
   } = useInfiniteQuery(
     hookListInfiniteQueryOptions({
-      pageSize: EXPLORE_API_PAGE_SIZE,
+      pageSize: LIST_API_PAGE_SIZE,
       scenario,
       chainId,
       search,
@@ -167,7 +167,7 @@ export function HooksTable({
               title: scenario === HooksFixtureScenario.NotFound ? t('hooks.preview.notFound') : t('hook.search.empty'),
             }}
             getRowId={(row) => row.id}
-            loadingRowsCount={EXPLORE_API_PAGE_SIZE}
+            loadingRowsCount={LIST_API_PAGE_SIZE}
             rowHeight={64}
             compactRowHeight={56}
             maxWidth={1200}

@@ -6,9 +6,11 @@ import { opacify, useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import { useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
+import { v2TokenToCurrency } from 'uniswap/src/features/dataApi/utils/parsedToken'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 import { SubscriptZeroPrice } from '~/components/SubscriptZeroPrice'
+import type { PoolData } from '~/data/pools/poolData'
 import { useLiquidityBarData } from '~/features/Liquidity/charts/LiquidityChart'
 import { priceFromTick } from '~/features/Liquidity/utils/getTickToPrice'
 import { MIN_DEPTH_BARS_PER_SIDE } from '~/pages/PoolDetails/components/ChartSection/DepthChart'
@@ -165,6 +167,39 @@ function BookRowItem({
         </Flex>
       </Flex>
     </Flex>
+  )
+}
+
+/** The pool details page's order book for a pool; v2 pairs have no ticks to book. */
+export function PoolOrderBook({
+  poolData,
+  isReversed,
+  chainId,
+}: {
+  poolData: PoolData
+  isReversed: boolean
+  chainId: UniverseChainId
+}): JSX.Element | null {
+  const [tokenA, tokenB] = useMemo(
+    () => [v2TokenToCurrency(poolData.token0), v2TokenToCurrency(poolData.token1)],
+    [poolData.token0, poolData.token1],
+  )
+  const { feeTier } = poolData
+  if (poolData.protocolVersion === RestProtocolVersion.V2 || !feeTier || !tokenA || !tokenB) {
+    return null
+  }
+  return (
+    <OrderBook
+      tokenA={tokenA}
+      tokenB={tokenB}
+      feeTier={Number(feeTier.feeAmount)}
+      isReversed={isReversed}
+      chainId={chainId}
+      version={poolData.protocolVersion ?? RestProtocolVersion.V3}
+      hooks={poolData.hookAddress}
+      poolId={poolData.idOrAddress}
+      height={356}
+    />
   )
 }
 

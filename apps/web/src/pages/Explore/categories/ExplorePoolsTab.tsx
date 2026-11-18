@@ -1,6 +1,6 @@
 import { memo } from 'react'
+import { ExploreCategory, useExploreCategory } from '~/features/Explore/categories/useExploreCategory'
 import { ExplorePoolCategoryChips } from '~/pages/Explore/categories/ExplorePoolCategoryChips'
-import { ExploreCategory, useExploreCategory } from '~/pages/Explore/categories/useExploreCategory'
 import { useExplorePoolCategories } from '~/pages/Explore/categories/useExplorePoolCategories'
 import { ExploreTopPoolTable } from '~/pages/Explore/tables/Pools/PoolTable'
 

@@ -1,6 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { ChartPeriod, WalletBalanceCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
-import { FeatureFlags, useFeatureFlagWithExposureLoggingDisabled } from '@universe/gating'
 import { Flex, iconSizes, ScrollView, Text } from '@universe/mycelium'
 import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFilled'
 import { TestID } from '@universe/test'
@@ -18,7 +17,7 @@ import { DisplayNameText } from 'uniswap/src/components/accounts/DisplayNameText
 import { getPortfolioHistoricalValueChartQuery } from 'uniswap/src/data/apiClients/dataApiService/balances/getPortfolioChart'
 import {
   getUnavailableCategories,
-  useWalletBalancesIncludeCategories,
+  WALLET_BALANCES_INCLUDE_CATEGORIES,
 } from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { AccountType } from 'uniswap/src/features/accounts/types'
@@ -43,9 +42,6 @@ export function PortfolioChartDetailsScreen(): JSX.Element {
   const { bottomScreenTotalGap } = useBottomScreenGap()
   const queryClient = useQueryClient()
   const [chartPeriod, setChartPeriod] = useState(ChartPeriod.DAY)
-  // Read without duplicate logging; each category records its exposure where the feature itself is surfaced.
-  const portfolioPoolsBalancesEnabled = useFeatureFlagWithExposureLoggingDisabled(FeatureFlags.PortfolioPoolsBalances)
-  const includeCategories = useWalletBalancesIncludeCategories()
   const portfolioValueModifier = useRestPortfolioValueModifier(activeAccount.address)
 
   const {
@@ -97,10 +93,7 @@ export function PortfolioChartDetailsScreen(): JSX.Element {
   const poolsUnavailable = unavailableCategories.includes(WalletBalanceCategory.POOLS)
   const unavailableBalancesText = useUnavailableBalancesText(unavailableCategories)
 
-  const outageBanner = usePoolsOutageBanner({
-    evmAddress: activeAccount.address,
-    enabled: portfolioPoolsBalancesEnabled,
-  })
+  const outageBanner = usePoolsOutageBanner({ evmAddress: activeAccount.address })
 
   const { isTotalValueMatch } = usePortfolioChartBalanceMismatch({
     lastChartValue,
@@ -114,7 +107,6 @@ export function PortfolioChartDetailsScreen(): JSX.Element {
   const breakdownCardProps = useMemo(
     () =>
       getBreakdownCardProps({
-        poolsEnabled: portfolioPoolsBalancesEnabled,
         poolsUnavailable,
         chartUnavailable: isChartUnavailable,
         breakdown,
@@ -130,7 +122,6 @@ export function PortfolioChartDetailsScreen(): JSX.Element {
         isAllTimePeriod,
       }),
     [
-      portfolioPoolsBalancesEnabled,
       poolsUnavailable,
       isChartUnavailable,
       breakdown,
@@ -162,20 +153,18 @@ export function PortfolioChartDetailsScreen(): JSX.Element {
               evmAddress: activeAccount.address,
               chartPeriod: period,
               chainIds: chains,
-              includeCategories,
+              includeCategories: WALLET_BALANCES_INCLUDE_CATEGORIES,
               includeOverrides: portfolioValueModifier?.includeOverrides,
               excludeOverrides: portfolioValueModifier?.excludeOverrides,
               includeSpamTokens: portfolioValueModifier?.includeSpamTokens,
-              ...(includeCategories.includes(WalletBalanceCategory.POOLS) && {
-                poolIncludeOverrides: portfolioValueModifier?.poolIncludeOverrides,
-                poolExcludeOverrides: portfolioValueModifier?.poolExcludeOverrides,
-              }),
+              poolIncludeOverrides: portfolioValueModifier?.poolIncludeOverrides,
+              poolExcludeOverrides: portfolioValueModifier?.poolExcludeOverrides,
             },
           }),
         )
         .catch(() => undefined)
     }
-  }, [activeAccount.address, chartPeriod, chains, includeCategories, portfolioValueModifier, queryClient])
+  }, [activeAccount.address, chartPeriod, chains, portfolioValueModifier, queryClient])
 
   const centerElement = useMemo(
     () => (

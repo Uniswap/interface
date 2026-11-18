@@ -1,4 +1,4 @@
-import { Text } from '@universe/mycelium'
+import { Flex, Text } from '@universe/mycelium'
 import { TestID } from '@universe/test'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -9,12 +9,14 @@ import { useEvent } from 'utilities/src/react/hooks'
 import { type MarginMarket } from '~/constants/margin'
 import { getMarginCurrencyInfo, useMarginCurrencyInfos } from '~/features/margin/hooks/useMarginCurrencyInfos'
 import { marginAssetCurrencyId, marginTokenCurrencyId } from '~/features/margin/utils/marginCurrencies'
+import { marginLeverageTrackColor, rawToNumber } from '~/features/margin/utils/marginFormat'
 import { marginPositionTokens } from '~/features/margin/utils/marginPositionRow'
 import { marginRowDirection, marginUnwrapSymbol } from '~/features/margin/utils/marginTokenDisplay'
 import { MarginAdjustBeforeAfterSection } from '~/pages/Swap/Margin/components/MarginAdjustBeforeAfterRows'
-import { MarginAdjustLeverageSection } from '~/pages/Swap/Margin/components/MarginAdjustLeverageSection'
 import { MarginAdjustQuoteRows } from '~/pages/Swap/Margin/components/MarginAdjustQuoteRows'
 import { MarginAdjustShowMoreSection } from '~/pages/Swap/Margin/components/MarginAdjustShowMoreSection'
+import { MarginSizeBox } from '~/pages/Swap/Margin/components/MarginSizeBlock'
+import { MarginLeverageControlView } from '~/pages/Swap/Margin/components/MarginSizeLeverageBox'
 import { MarginActionFooterMessage } from '~/pages/Swap/Margin/components/shared/MarginActionFooterMessage'
 import { MarginActionModalShell } from '~/pages/Swap/Margin/components/shared/MarginActionModalShell'
 import { MarginExcludedVenueNotice } from '~/pages/Swap/Margin/components/shared/MarginExcludedVenueNotice'
@@ -24,6 +26,7 @@ import { useMarginAdjustController } from '~/pages/Swap/Margin/hooks/useMarginAd
 import { useMarginPositionMarkIsStale } from '~/pages/Swap/Margin/hooks/useMarginPositionMarkIsStale'
 import { clampManageLeverage } from '~/pages/Swap/Margin/marginAdjustPositionModalHelpers'
 import { MANAGE_MIN_LEVERAGE } from '~/pages/Swap/Margin/marginOpenButtonGate'
+import { marginPositionMark } from '~/pages/Swap/Margin/marginUsdPnl'
 
 // Change leverage: no amount field, targetLeverageX18 only. Both directions go through the one
 // ADJUST intent — the deleted modal needed INCREASE for up and DECREASE (via close_quote, with a
@@ -85,6 +88,19 @@ export function MarginChangeLeverageModal({
         : clampManageLeverage({ leverage: draggedLeverage, venueCap: controller.venueCap })
 
   const toggleExpanded = useEvent(() => setIsExpanded((prev) => !prev))
+  const [seededDraft, setSeededDraft] = useState<string>()
+  const startEditing = useEvent(() => {
+    const seed = displayedLeverage === undefined ? undefined : String(Number(displayedLeverage.toFixed(2)))
+    setSeededDraft(seed)
+    setLeverageDraft(seed)
+  })
+  const commitEdit = useEvent(() => {
+    if (leverageDraft === seededDraft) {
+      setLeverageDraft(undefined)
+    } else {
+      commitLeverageDraft()
+    }
+  })
 
   const collateralLogoUrl = getMarginCurrencyInfo({ currencyInfos, currencyId: marginAssetCurrencyId(market) })?.logoUrl
   const debtLogoUrl = getMarginCurrencyInfo({ currencyInfos, currencyId: marginTokenCurrencyId(market.debt) })?.logoUrl
@@ -94,6 +110,13 @@ export function MarginChangeLeverageModal({
     position.direction === MarginDirection.SHORT
       ? debtLogos
       : { url: collateralLogoUrl ?? undefined, symbol: market.displaySymbol }
+
+  const quote = controller.displayQuote
+  const notional = rawToNumber({
+    raw: quote?.display.size ?? position.size,
+    decimals: (quote ?? position).exposureToken.decimals,
+  })
+  const mark = marginPositionMark({ position })
 
   return (
     <MarginActionModalShell
@@ -130,17 +153,31 @@ export function MarginChangeLeverageModal({
       <MarginPairHeading market={market} variant="direction" position={position} />
       <MarginExcludedVenueNotice venue={market.venue} />
       {displayedLeverage !== undefined ? (
-        <MarginAdjustLeverageSection
-          displayedLeverage={displayedLeverage}
-          leverageDraft={leverageDraft}
-          cap={controller.cap}
-          lltvWad={market.lltvWad}
-          direction={position.direction}
-          onLeverageDraftChange={setLeverageDraft}
-          onCommitLeverageDraft={commitLeverageDraft}
-          onSliderChange={onSliderChange}
-        />
+        <Flex backgroundColor="$surface2" borderRadius="$rounded20">
+          <MarginLeverageControlView
+            control={{
+              leverage: displayedLeverage,
+              cap: controller.cap,
+              trackColor: marginLeverageTrackColor({
+                leverage: displayedLeverage,
+                lltvWad: market.lltvWad,
+                direction: position.direction,
+              }),
+              editText: leverageDraft,
+              setLeverage: onSliderChange,
+              setEditText: setLeverageDraft,
+              startEditing,
+              commitEdit,
+            }}
+          />
+        </Flex>
       ) : null}
+      <MarginSizeBox
+        notional={notional}
+        notionalUsd={mark === undefined ? undefined : notional * mark}
+        exposureSymbol={sizeLogos.symbol}
+        className={controller.dimBeforeAfter ? 'opacity-50' : undefined}
+      />
       {controller.quoteErrorResult ? (
         <Text variant="body3" color="$statusCritical">
           {controller.quoteErrorResult.message}

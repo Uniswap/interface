@@ -19,18 +19,32 @@ import { WebBottomSheet as WebBottomSheetBase } from './WebBottomSheet.tsx'
 
 describe('WebBottomSheet platform legs', () => {
   it('the platformless base stub throws the platform-override contract', () => {
-    expect(() => WebBottomSheetBase({ isOpen: true })).toThrowError(PlatformSplitStubError)
-    expect(() => WebBottomSheetBase({ isOpen: true })).toThrowError(/Did you forget a platform override\?/)
+    expect(() => WebBottomSheetBase({ isOpen: true, title: 'Sheet' })).toThrowError(PlatformSplitStubError)
+    expect(() => WebBottomSheetBase({ isOpen: true, title: 'Sheet' })).toThrowError(
+      /Did you forget a platform override\?/,
+    )
   })
 
   it('the native leg renders nothing, open or closed, and never mounts its children', () => {
     let tree: ReactTestRenderer | undefined
     act(() => {
-      tree = create(createElement(WebBottomSheetNative, { isOpen: true }, createElement('span', null, 'native child')))
+      tree = create(
+        createElement(
+          WebBottomSheetNative,
+          { isOpen: true, title: 'Sheet' },
+          createElement('span', null, 'native child'),
+        ),
+      )
     })
     expect(tree?.toJSON()).toBeNull()
     act(() => {
-      tree?.update(createElement(WebBottomSheetNative, { isOpen: false }, createElement('span', null, 'native child')))
+      tree?.update(
+        createElement(
+          WebBottomSheetNative,
+          { isOpen: false, title: 'Sheet' },
+          createElement('span', null, 'native child'),
+        ),
+      )
     })
     expect(tree?.toJSON()).toBeNull()
     act(() => tree?.unmount())

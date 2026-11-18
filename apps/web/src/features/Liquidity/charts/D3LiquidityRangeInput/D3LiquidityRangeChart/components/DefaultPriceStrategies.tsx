@@ -1,4 +1,5 @@
 import { clickableStyle, cn, Flex, type FlexCompatProps, Shine, Text } from '@universe/mycelium'
+import { Check } from '@universe/mycelium/icons/Check'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import i18n from 'uniswap/src/i18n'
@@ -39,8 +40,8 @@ function Container({ $sm: sm, hoverStyle, pressStyle, className, style, ...props
   )
 }
 
-type PriceStrategy = {
-  key: DefaultPriceStrategy
+export type PriceStrategy<Key extends string = DefaultPriceStrategy> = {
+  key: Key
   title: string
   display: string
   description: string
@@ -54,7 +55,7 @@ const formatStableDisplay = (tickSpacing: number): string => {
   return `± ${pct.toFixed(2).replace(/\.?0+$/, '')}%`
 }
 
-const getPriceStrategies = (tickSpacing: number): PriceStrategy[] => [
+export const getPriceStrategies = (tickSpacing: number): PriceStrategy[] => [
   {
     key: DefaultPriceStrategy.STABLE,
     title: i18n.t('position.stable'),
@@ -82,15 +83,58 @@ const getPriceStrategies = (tickSpacing: number): PriceStrategy[] => [
   },
 ]
 
-const DefaultPriceStrategyComponent = ({
+/**
+ * One preset card; shared with surfaces that apply presets without the range chart (the PDP panel). `compact`
+ * is a tighter card for a narrow panel, with the description under the value. A surface with presets of its
+ * own passes its own keys.
+ */
+export const PriceStrategyCard = <Key extends string = DefaultPriceStrategy>({
   strategy,
   onSelect,
   selected,
+  compact = false,
 }: {
-  strategy: PriceStrategy
-  onSelect: (key: DefaultPriceStrategy) => void
+  strategy: PriceStrategy<Key>
+  onSelect: (key: Key) => void
   selected: boolean
+  compact?: boolean
 }) => {
+  if (compact) {
+    return (
+      <Trace logPress element={ElementName.LiquidityDefaultPriceStrategy} properties={{ strategy: strategy.key }}>
+        <Container
+          onPress={() => onSelect(strategy.key)}
+          // A filled tile with no outline, so it needs a $surface1 ground (the PDP panel), not a $surface2 card.
+          backgroundColor={selected ? '$surface3' : '$surface2'}
+          borderWidth={0}
+          borderRadius="$rounded16"
+          px="$spacing16"
+          py="$spacing12"
+          gap="$spacing8"
+          $sm={{ px: '$spacing16', py: '$spacing12', gap: '$spacing8' }}
+        >
+          <Text variant="buttonLabel3" color="$neutral2">
+            {strategy.title}
+          </Text>
+          <Text variant="subheading1" color="$neutral1">
+            {strategy.display}
+          </Text>
+          <Flex gap="$gap4">
+            <Flex height={1} width="100%" backgroundColor="$surface3" mb="$spacing2" />
+            <Text variant="body4" color="$neutral2">
+              {strategy.description}
+            </Text>
+          </Flex>
+          {/* Out of the flow, so selecting a card doesn't reflow its title. */}
+          {selected && (
+            <Flex position="absolute" top="$spacing12" right="$spacing12" pointerEvents="none">
+              <Check size="$icon.16" color="$neutral1" />
+            </Flex>
+          )}
+        </Container>
+      </Trace>
+    )
+  }
   return (
     <Trace logPress element={ElementName.LiquidityDefaultPriceStrategy} properties={{ strategy: strategy.key }}>
       <Container
@@ -178,7 +222,7 @@ export function DefaultPriceStrategies({ isLoading }: { isLoading: boolean }) {
               </Shine>
             ))
           : priceStrategies.map((strategy) => (
-              <DefaultPriceStrategyComponent
+              <PriceStrategyCard
                 key={strategy.key}
                 onSelect={handleSelect}
                 selected={strategy.key === selectedPriceStrategy}

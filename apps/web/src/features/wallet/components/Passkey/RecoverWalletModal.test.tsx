@@ -1,18 +1,23 @@
-import { useAuthorizationSignature, useLoginWithEmail, useLoginWithOAuth, usePrivy } from '@privy-io/react-auth'
 import { fireEvent, waitFor } from '@testing-library/react'
 import { attemptPinDecryption, EmbeddedWalletApiClient, executeRecovery } from '@universe/embedded-wallet'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { RecoverWalletModal } from '~/features/wallet/components/Passkey/RecoverWalletModal'
+import {
+  useMaybeAuthorizationSignature,
+  useMaybeLoginWithEmail,
+  useMaybeLoginWithOAuth,
+  useMaybePrivy,
+} from '~/features/wallet/hooks/useMaybePrivy'
 import { useModalState } from '~/hooks/useModalState'
 import store from '~/state'
 import { setCloseModal, setOpenModal } from '~/state/application/reducer'
 import { render, screen } from '~/test-utils/render'
 
-vi.mock('@privy-io/react-auth', () => ({
-  useAuthorizationSignature: vi.fn(),
-  useLoginWithEmail: vi.fn(),
-  useLoginWithOAuth: vi.fn(),
-  usePrivy: vi.fn(),
+vi.mock('~/features/wallet/hooks/useMaybePrivy', () => ({
+  useMaybeAuthorizationSignature: vi.fn(),
+  useMaybeLoginWithEmail: vi.fn(),
+  useMaybeLoginWithOAuth: vi.fn(),
+  useMaybePrivy: vi.fn(),
 }))
 
 vi.mock('@wagmi/core', () => ({
@@ -98,21 +103,21 @@ function setupMocks() {
   vi.mocked(useModalState).mockReturnValue({ isOpen: true, onClose: mockOnClose } as unknown as ReturnType<
     typeof useModalState
   >)
-  vi.mocked(useLoginWithEmail).mockReturnValue({
+  vi.mocked(useMaybeLoginWithEmail).mockReturnValue({
     sendCode: mockSendCode,
     loginWithCode: mockLoginWithCode,
-  } as unknown as ReturnType<typeof useLoginWithEmail>)
-  vi.mocked(useLoginWithOAuth).mockReturnValue({
+  } as unknown as ReturnType<typeof useMaybeLoginWithEmail>)
+  vi.mocked(useMaybeLoginWithOAuth).mockReturnValue({
     initOAuth: vi.fn(),
-  } as unknown as ReturnType<typeof useLoginWithOAuth>)
-  vi.mocked(usePrivy).mockReturnValue({
+  } as unknown as ReturnType<typeof useMaybeLoginWithOAuth>)
+  vi.mocked(useMaybePrivy).mockReturnValue({
     getAccessToken: mockGetAccessToken,
     ready: true,
     authenticated: false,
-  } as unknown as ReturnType<typeof usePrivy>)
-  vi.mocked(useAuthorizationSignature).mockReturnValue({
+  } as unknown as ReturnType<typeof useMaybePrivy>)
+  vi.mocked(useMaybeAuthorizationSignature).mockReturnValue({
     generateAuthorizationSignature: mockGenerateAuthorizationSignature,
-  } as unknown as ReturnType<typeof useAuthorizationSignature>)
+  } as unknown as ReturnType<typeof useMaybeAuthorizationSignature>)
 }
 
 function typeEmail(value: string) {
@@ -193,11 +198,11 @@ describe('RecoverWalletModal', () => {
     sessionStorage.setItem('recoverWallet:oauthProvider', 'google')
     setupMocks()
     // Privy not yet resolved — useOAuthResult stays in pending state
-    vi.mocked(usePrivy).mockReturnValue({
+    vi.mocked(useMaybePrivy).mockReturnValue({
       getAccessToken: mockGetAccessToken,
       ready: false,
       authenticated: false,
-    } as unknown as ReturnType<typeof usePrivy>)
+    } as unknown as ReturnType<typeof useMaybePrivy>)
     render(<RecoverWalletModal />)
     // Should show spinner, not email entry
     expect(screen.queryByPlaceholderText('Recovery email')).not.toBeInTheDocument()
@@ -397,12 +402,12 @@ describe('RecoverWalletModal', () => {
       sessionStorage.setItem('recoverWallet:oauthProvider', 'google')
 
       setupMocks()
-      vi.mocked(usePrivy).mockReturnValue({
+      vi.mocked(useMaybePrivy).mockReturnValue({
         getAccessToken: mockGetAccessToken,
         ready: true,
         authenticated: true,
         user: { google: { email: 'user@gmail.com' } },
-      } as unknown as ReturnType<typeof usePrivy>)
+      } as unknown as ReturnType<typeof useMaybePrivy>)
       mockGetAccessToken.mockResolvedValue('access-token')
       vi.mocked(EmbeddedWalletApiClient.fetchGetRecoveryConfig).mockResolvedValue({
         found: true,
@@ -423,12 +428,12 @@ describe('RecoverWalletModal', () => {
       sessionStorage.setItem('recoverWallet:oauthProvider', 'google')
 
       setupMocks()
-      vi.mocked(usePrivy).mockReturnValue({
+      vi.mocked(useMaybePrivy).mockReturnValue({
         getAccessToken: mockGetAccessToken,
         ready: true,
         authenticated: true,
         user: { google: { email: undefined } },
-      } as unknown as ReturnType<typeof usePrivy>)
+      } as unknown as ReturnType<typeof useMaybePrivy>)
 
       render(<RecoverWalletModal />)
 
@@ -441,12 +446,12 @@ describe('RecoverWalletModal', () => {
       sessionStorage.setItem('recoverWallet:oauthProvider', 'apple')
 
       setupMocks()
-      vi.mocked(usePrivy).mockReturnValue({
+      vi.mocked(useMaybePrivy).mockReturnValue({
         getAccessToken: mockGetAccessToken,
         ready: true,
         authenticated: true,
         user: { apple: { email: 'user@icloud.com' } },
-      } as unknown as ReturnType<typeof usePrivy>)
+      } as unknown as ReturnType<typeof useMaybePrivy>)
       mockGetAccessToken.mockResolvedValue('access-token')
       vi.mocked(EmbeddedWalletApiClient.fetchGetRecoveryConfig).mockResolvedValue({
         found: true,

@@ -10,9 +10,17 @@ interface PoolDetailsBreadcrumbProps {
   baseToken?: ParsedToken
   quoteToken?: ParsedToken
   loading?: boolean
+  /** Leads back to the add-liquidity pool browser instead of Explore, for a visit that started there. */
+  poolBrowserHref?: string
 }
 
-export function PoolDetailsBreadcrumb({ poolAddress, baseToken, quoteToken, loading }: PoolDetailsBreadcrumbProps) {
+export function PoolDetailsBreadcrumb({
+  poolAddress,
+  baseToken,
+  quoteToken,
+  loading,
+  poolBrowserHref,
+}: PoolDetailsBreadcrumbProps) {
   const { t } = useTranslation()
   const poolName = getPoolName({ symbol0: baseToken?.symbol, symbol1: quoteToken?.symbol, spaced: true })
 
@@ -26,8 +34,9 @@ export function PoolDetailsBreadcrumb({ poolAddress, baseToken, quoteToken, load
       $lg={{ px: '$padding20' }}
       $md={{ pt: '$none', px: '$none' }}
     >
-      <BreadcrumbNavLink to="/explore/pools">
-        {t('common.pools')} <RotatableChevron direction="right" size="$icon.16" />
+      <BreadcrumbNavLink to={poolBrowserHref ?? '/explore/pools'}>
+        {poolBrowserHref ? t('addLiquidity.choosePool') : t('common.pools')}{' '}
+        <RotatableChevron direction="right" size="$icon.16" />
       </BreadcrumbNavLink>
       {loading || !poolAddress ? (
         <Shine>

@@ -5,7 +5,7 @@ import {
   EXPANDABLE_ASSET_INNER_PADDING_Y_PX,
   EXPANDABLE_ASSET_ISSUER_GAP_PX,
 } from 'uniswap/src/features/expandableAsset/expandableAssetLayout'
-import { useUnifiedExpandableTableRow } from '~/pages/Explore/rwa/expandable/useUnifiedExpandableTableRow'
+import { useUnifiedExpandableTableRow } from '~/features/Explore/rwa/expandable/useUnifiedExpandableTableRow'
 import { PORTFOLIO_MULTICHAIN_CHAIN_ROW_HEIGHT } from '~/pages/Portfolio/constants'
 import type { TokenData } from '~/pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
 import { getTokenDataForRow, type TokenTableRow } from '~/pages/Portfolio/Tokens/Table/tokenTableRowUtils'

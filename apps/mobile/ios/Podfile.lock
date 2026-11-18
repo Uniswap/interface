@@ -3923,7 +3923,7 @@ PODS:
     - SocketRocket
     - Yoga
     - YttriumWrapper (= 0.10.50)
-  - react-native-context-menu-view (1.15.0):
+  - react-native-context-menu-view (1.17.0):
     - React
   - react-native-get-random-values (1.11.0):
     - React-Core
@@ -6168,7 +6168,7 @@ SPEC CHECKSUMS:
   React-mutationobservernativemodule: 148cbf225368f754e0c00418b408ea2f85f88c4c
   react-native-appsflyer: 2cc1f96348065fc23e976fc7a27e371789fb349e
   react-native-compat: b3f3e5e40c53f0d67ba19676900b17802e49933f
-  react-native-context-menu-view: dcec18eb8882e20596dbb75802e7d19cb87dac02
+  react-native-context-menu-view: 4a4de8bc59bc3fc4215f041881cbc6b2aeac31fe
   react-native-get-random-values: 21325b2244dfa6b58878f51f9aa42821e7ba3d06
   react-native-image-picker: b99d9c1f2ddbef491eb49e1103e5c2ce78b9ab37
   react-native-keyboard-controller: 5a84ea9ddf3e60b5db813e3a14b4619ce0b7497c

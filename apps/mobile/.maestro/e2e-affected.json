@@ -1,0 +1,137 @@
+{
+  "_readme": "Path \u2192 flow rules for scripts/e2e-affected.ts with TARGET=mobile (the mobile PR e2e tier, Maestro flows on Maestro Cloud). Flows live under .maestro/flows, apart from the code, so every narrowing is a rule here; mobile code no rule names runs every flow, which is honest because every flow but new-wallet starts by importing the test wallet through the onboarding screens (shared-flows/recover-fast.yaml), so onboarding, import and the shared flows reach everything. A rule with an empty `specs` list says the path cannot reach any flow: use it only for a feature no flow drives and no shared flow passes through. `exclude` lists flows outside .maestro/config.yaml's flow set, which Maestro Cloud never runs: a rule may still name them, and starts selecting them the day the config does. `ignore` lists paths that cannot reach the app bundle at all, plus the locale files, English included: a changed string can only break a flow that asserts on the old text, which is a flow to update, not a product regression, and the scheduled suite reports it the same day. `unstable` withholds flows that are flaky on the scheduled iOS record (bad in two or more of at least five runs and not broken; a flow Maestro Cloud canceled on its own infrastructure counts as not run). `broken` withholds flows that fail on every scheduled iOS run on main (missing test ids, a changed backup prompt), so they say nothing about a PR until someone fixes them; the selector names them in every summary as debt, and a PR that edits one still runs it. The [e2e] Tier lists refresh workflow rewrites both lists weekly from the scheduled runs' merged reports (the en_US pass); `pinned` names entries it must never remove because the reason is one the scheduled record cannot see, each with its reason stated here (none today). The selector, its tests and this file are never ignored: changing them runs every flow.",
+  "exclude": [
+    "send/"
+  ],
+  "broken": [
+    "deeplinks/deeplink-comprehensive.yaml",
+    "explore/filters-and-sorts.yaml",
+    "restore/restore-missing-seed.yaml",
+    "swap/swap-base.yaml"
+  ],
+  "pinned": [],
+  "unstable": [
+    "explore/favorite-token.yaml",
+    "explore/search.yaml",
+    "portfolio/portfolio-chart-happy-path.yaml",
+    "portfolio/view-token-details.yaml",
+    "restore/restore-new-device.yaml"
+  ],
+  "ignore": [
+    ".github/",
+    ".claude/",
+    ".agents/",
+    ".i18n/",
+    "docs/",
+    "labs/",
+    "scripts/",
+    "packages/casebook/",
+    "**/README.md",
+    "**/CLAUDE.md",
+    "**/AGENTS.md",
+    ".gitignore",
+    "dangerfile.ts",
+    "oxlint.config.ts",
+    "knip.json",
+    "packages/uniswap/src/i18n/locales/translations/",
+    "packages/uniswap/src/i18n/locales/source/en-US.json",
+    "packages/mycelium/platform-legs.json",
+    "packages/mycelium/src/assets/"
+  ],
+  "rules": [
+    {
+      "paths": [
+        "apps/mobile/src/screens/ExploreScreen.tsx",
+        "apps/mobile/src/components/explore/",
+        "apps/mobile/src/features/explore/",
+        "packages/uniswap/src/features/explore/",
+        "packages/uniswap/src/features/search/",
+        "packages/wallet/src/features/search/"
+      ],
+      "specs": [
+        "explore/"
+      ]
+    },
+    {
+      "paths": [
+        "apps/mobile/src/screens/TokenDetailsScreen/",
+        "apps/mobile/src/components/TokenDetails/",
+        "apps/mobile/src/components/PriceExplorer/",
+        "packages/uniswap/src/features/tokens/",
+        "packages/uniswap/src/components/tokenDetails/"
+      ],
+      "specs": [
+        "portfolio/view-token-details.yaml",
+        "explore/favorite-token.yaml"
+      ]
+    },
+    {
+      "paths": [
+        "apps/mobile/src/screens/HomeScreen/",
+        "apps/mobile/src/screens/PortfolioChartDetailsScreen/",
+        "apps/mobile/src/components/home/",
+        "apps/mobile/src/components/charts/",
+        "apps/mobile/src/components/TokenBalanceList/"
+      ],
+      "specs": [
+        "portfolio/"
+      ]
+    },
+    {
+      "paths": [
+        "packages/uniswap/src/features/transactions/swap/",
+        "packages/uniswap/src/features/transactions/steps/",
+        "packages/uniswap/src/components/CurrencyInputPanel/",
+        "packages/uniswap/src/components/TokenSelector/",
+        "packages/transactions-ui/"
+      ],
+      "specs": [
+        "swap/"
+      ]
+    },
+    {
+      "paths": [
+        "apps/mobile/src/features/send/",
+        "apps/mobile/src/components/RecipientSelect/",
+        "packages/uniswap/src/features/transactions/send/"
+      ],
+      "specs": [
+        "send/"
+      ]
+    },
+    {
+      "paths": [
+        "apps/mobile/src/features/deepLinking/"
+      ],
+      "specs": [
+        "deeplinks/"
+      ]
+    },
+    {
+      "paths": [
+        "apps/mobile/src/screens/SettingsScreen.tsx",
+        "apps/mobile/src/components/Settings/",
+        "apps/mobile/src/features/settings/"
+      ],
+      "specs": [
+        "restore/restore-missing-seed.yaml"
+      ]
+    },
+    {
+      "paths": [
+        "apps/mobile/src/features/appRating/",
+        "apps/mobile/src/features/widgets/",
+        "apps/mobile/src/features/fiatOnRamp/",
+        "apps/mobile/src/components/fiatOnRamp/",
+        "apps/mobile/src/screens/FiatOnRampScreen.tsx",
+        "apps/mobile/src/screens/FiatOnRampConnecting.tsx",
+        "apps/mobile/src/screens/FiatOnRampServiceProviders.tsx",
+        "apps/mobile/src/features/scantastic/",
+        "apps/mobile/src/components/QRCodeScanner/",
+        "apps/mobile/src/features/walletConnect/",
+        "apps/mobile/src/features/externalProfile/"
+      ],
+      "specs": []
+    }
+  ]
+}

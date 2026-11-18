@@ -1,5 +1,7 @@
 appId: com.uniswap.mobile.dev
 jsEngine: graaljs
+tags:
+  - flow-view-token-details
 env:
   E2E_RECOVERY_PHRASE: ${E2E_RECOVERY_PHRASE}
   DATADOG_API_KEY: ${DATADOG_API_KEY}

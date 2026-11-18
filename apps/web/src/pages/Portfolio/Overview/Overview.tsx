@@ -1,5 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query'
-import { ChartPeriod, WalletBalanceCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
+import { ChartPeriod } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Flex, Separator, useMedia } from '@universe/mycelium'
 import { styled } from '@universe/mycelium/styled'
@@ -10,7 +10,7 @@ import {
 } from 'uniswap/src/data/apiClients/dataApiService/balances/getPortfolioChart'
 import {
   getUnavailableCategories,
-  useWalletBalancesIncludeCategories,
+  WALLET_BALANCES_INCLUDE_CATEGORIES,
 } from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances'
 import { useActivityData } from 'uniswap/src/features/activity/hooks/useActivityData'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -58,7 +58,6 @@ const ACTIONS_TOP_OFFSET_WITH_BALANCE_HEADER = 92
 export const PortfolioOverview = memo(function PortfolioOverview() {
   const media = useMedia()
   const isFullWidth = media.xl
-  const portfolioPoolsBalancesEnabled = useFeatureFlag(FeatureFlags.PortfolioPoolsBalances)
   const { chainId, isExternalWallet } = usePortfolioRoutes()
   const portfolioAddresses = usePortfolioAddresses()
   const { chains: allChainIds } = useEnabledChains()
@@ -73,7 +72,6 @@ export const PortfolioOverview = memo(function PortfolioOverview() {
 
   const filterChainIds = useMemo(() => (chainId ? [chainId] : allChainIds), [chainId, allChainIds])
 
-  const includeCategories = useWalletBalancesIncludeCategories()
   const portfolioValueModifier = useRestPortfolioValueModifier(portfolioAddresses.evmAddress)
 
   const chartInput = useMemo(
@@ -81,22 +79,14 @@ export const PortfolioOverview = memo(function PortfolioOverview() {
       evmAddress: portfolioAddresses.evmAddress,
       svmAddress: portfolioAddresses.svmAddress,
       chainIds: filterChainIds,
-      includeCategories,
+      includeCategories: WALLET_BALANCES_INCLUDE_CATEGORIES,
       includeOverrides: portfolioValueModifier?.includeOverrides,
       excludeOverrides: portfolioValueModifier?.excludeOverrides,
       includeSpamTokens: portfolioValueModifier?.includeSpamTokens,
-      ...(includeCategories.includes(WalletBalanceCategory.POOLS) && {
-        poolIncludeOverrides: portfolioValueModifier?.poolIncludeOverrides,
-        poolExcludeOverrides: portfolioValueModifier?.poolExcludeOverrides,
-      }),
+      poolIncludeOverrides: portfolioValueModifier?.poolIncludeOverrides,
+      poolExcludeOverrides: portfolioValueModifier?.poolExcludeOverrides,
     }),
-    [
-      portfolioAddresses.evmAddress,
-      portfolioAddresses.svmAddress,
-      filterChainIds,
-      includeCategories,
-      portfolioValueModifier,
-    ],
+    [portfolioAddresses.evmAddress, portfolioAddresses.svmAddress, filterChainIds, portfolioValueModifier],
   )
 
   const { data: portfolioData, isPending: isBalancePending } = usePortfolioTotalValue({
@@ -146,7 +136,6 @@ export const PortfolioOverview = memo(function PortfolioOverview() {
     chartData: portfolioChartData,
     selectedPeriod,
     selectedCategory,
-    poolsEnabled: portfolioPoolsBalancesEnabled,
   })
 
   // Reset to total when the selected category is no longer available (selector hidden, or that
@@ -171,8 +160,12 @@ export const PortfolioOverview = memo(function PortfolioOverview() {
   }, [series])
 
   const unavailableChartCategories = useMemo(
-    () => getUnavailableChartCategories({ chartData: portfolioChartData, requestedCategories: includeCategories }),
-    [portfolioChartData, includeCategories],
+    () =>
+      getUnavailableChartCategories({
+        chartData: portfolioChartData,
+        requestedCategories: WALLET_BALANCES_INCLUDE_CATEGORIES,
+      }),
+    [portfolioChartData],
   )
 
   // Detects spam-token divergence. Compared per category, so a single-category view isn't flagged when another
@@ -239,7 +232,7 @@ export const PortfolioOverview = memo(function PortfolioOverview() {
             <PortfolioChart
               portfolioTotalBalanceUSD={portfolioData?.balanceUSD}
               tokensValue={portfolioBreakdown?.tokens}
-              poolsValue={portfolioPoolsBalancesEnabled ? portfolioBreakdown?.pools : undefined}
+              poolsValue={portfolioBreakdown?.pools}
               earnValue={portfolioBreakdown?.earn}
               unavailableCategories={unavailableCategories}
               unavailableChartCategories={unavailableChartCategories}

@@ -1,11 +1,14 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { UniverseChainId } from '@universe/chains'
 import { useMemo } from 'react'
+import { useInfiniteLoadMore } from '~/components/Table/hooks/useInfiniteLoadMore'
 import { PoolTableSortState } from '~/data/pools/poolStats'
 import { OrderDirection } from '~/data/util'
-import { useInfiniteLoadMore } from '~/features/Explore/hooks/useInfiniteLoadMore'
+import {
+  type ListPoolsAsPoolStatsResult,
+  useListPoolsAsPoolStats,
+} from '~/features/Liquidity/hooks/useListPoolsAsPoolStats'
 import { poolSortFieldToOrderBy } from '~/features/Liquidity/utils/convertPoolToPoolStat'
-import { type ListPoolsAsPoolStatsResult, useListPoolsAsPoolStats } from '~/pages/Explore/hooks/useListPoolsAsPoolStats'
 import { getTokenListPoolsParams } from '~/utils/getTokenListPoolsParams'
 
 const TOKEN_LIST_POOLS_PAGE_SIZE = 20

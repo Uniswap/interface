@@ -81,6 +81,11 @@ export type TableProps<T extends RowData = unknown> = {
    */
   stickyTopOffset?: number
   /**
+   * Stick the header row to the top of its own scroll container instead of below the app header. For a
+   * table inside an inner scroll box (the margin terminal's chart column), where the app header isn't overhead.
+   */
+  stickyToScrollContainer?: boolean
+  /**
    * Mobile: the named column — which must be the first pinned one, so it sits at the scroll edge —
    * collapses to its logo as the table scrolls horizontally (see `useCollapsiblePinnedColumn`). Its
    * `size` is the expanded width and `meta.collapsedWidth` the collapsed one; the cell renders with

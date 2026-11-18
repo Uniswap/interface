@@ -1,5 +1,4 @@
 import { UniverseChainId } from '@universe/chains'
-import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { Flex, iconSizes, Text } from '@universe/mycelium'
 import { useContext, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -56,12 +55,10 @@ export function ExpandableIssuerIdentity({
     baseSymbol: asset.symbol,
     apiSymbol: issuer.symbol,
   })
-  const plainTokenNames = useIsTokenCategoriesEnabled()
-  // Flag off: the legacy group name, or the affix-stripped on-chain name on flat rows.
-  const legacyName = useIssuerNameAsPrimary
+  const fallbackName = useIssuerNameAsPrimary
     ? getIssuerTokenDisplayName({ name: issuer.name, issuer: issuer.issuer })
     : asset.name
-  const primaryName = getIssuerTokenPrimaryName({ tokenName: issuer.name, fallbackName: legacyName, plainTokenNames })
+  const primaryName = getIssuerTokenPrimaryName({ tokenName: issuer.name, fallbackName })
   const chainIds = issuer.chainTokens
     .map((chain) => chain.chainId as UniverseChainId)
     .filter((id) => enabledChainIds.includes(id))

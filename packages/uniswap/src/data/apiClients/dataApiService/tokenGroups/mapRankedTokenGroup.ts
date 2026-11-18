@@ -6,6 +6,7 @@ import type {
   RankedMultichainToken,
   TokenRankStats,
 } from '@uniswap/client-data-api/dist/data/v2/types_pb'
+import { getVolumeForOrderBy, type VolumeOrderBy } from '@universe/data-api'
 import { mapAddressesToChainTokens } from 'uniswap/src/data/apiClients/dataApiService/rwa/rwaMappingUtils'
 import type {
   IssuerToken,
@@ -13,10 +14,6 @@ import type {
   RwaAggregatedMetrics,
   RwaSparkline,
 } from 'uniswap/src/data/apiClients/dataApiService/rwa/types'
-import {
-  getVolumeForOrderBy,
-  type VolumeOrderBy,
-} from 'uniswap/src/data/apiClients/dataApiService/utils/tokenRankStatsVolume'
 import { mapTokenIssuerLogos } from 'uniswap/src/features/rwa/issuers'
 
 function mapSparkline(points: RankedMultichainToken['sparkline']): RwaSparkline {

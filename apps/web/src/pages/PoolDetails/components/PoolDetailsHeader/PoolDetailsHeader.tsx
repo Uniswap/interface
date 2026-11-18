@@ -6,6 +6,7 @@ import { CopyHelper } from 'uniswap/src/components/CopyHelper/CopyHelper'
 import type { ParsedToken } from 'uniswap/src/features/dataApi/utils/parsedToken'
 import { getPoolName } from 'uniswap/src/features/pools/names'
 import type { FeeData } from 'uniswap/src/features/positions/types'
+import type { PoolCategory } from 'uniswap/src/features/tokenCategories/types'
 import { shortenHash } from 'utilities/src/addresses'
 import { getPoolHeaderColumnGapProps } from '~/components/StickyCollapsibleHeader/getHeaderLogoSize'
 import { HeaderNetworkPill } from '~/components/StickyCollapsibleHeader/HeaderNetworkPill'
@@ -15,6 +16,8 @@ import { PoolDetailsHeaderActions } from '~/pages/PoolDetails/components/PoolDet
 import { PoolDetailsHeaderCategoryChips } from '~/pages/PoolDetails/components/PoolDetailsHeader/PoolDetailsHeaderCategoryChips'
 import { PoolDetailsHeaderSkeleton } from '~/pages/PoolDetails/components/PoolDetailsHeader/PoolDetailsHeaderSkeleton'
 import { PoolDetailsTitle } from '~/pages/PoolDetails/components/PoolDetailsHeader/PoolDetailsTitle'
+
+const EMPTY_CATEGORIES: PoolCategory[] = []
 
 interface PoolDetailsHeaderProps {
   chainId?: number
@@ -35,8 +38,8 @@ interface PoolDetailsHeaderProps {
   toggleReversed: React.DispatchWithoutAction
   loading?: boolean
   hookAddress?: string
-  /** `PoolSummary.category_ids`; undefined until the pool loads. */
-  categoryIds?: string[]
+  categories?: PoolCategory[]
+  isCategoriesLoading?: boolean
   isCompact: boolean
 }
 
@@ -53,7 +56,8 @@ function PoolDetailsHeaderContent({
   currentLpFeePips,
   protocolVersion,
   hookAddress,
-  categoryIds,
+  categories = EMPTY_CATEGORIES,
+  isCategoriesLoading = false,
   toggleReversed,
   isCompact,
 }: Omit<PoolDetailsHeaderProps, 'loading'>): JSX.Element {
@@ -144,8 +148,8 @@ function PoolDetailsHeaderContent({
       {/* Third row mirrors the TDP collections chips; the compact (scrolled) header drops it. */}
       {!isCompact && (
         <PoolDetailsHeaderCategoryChips
-          categoryIds={categoryIds}
-          poolLoading={false}
+          categories={categories}
+          isLoading={isCategoriesLoading}
           chainId={poolChainId}
           poolAddress={poolAddress}
           poolName={poolName}

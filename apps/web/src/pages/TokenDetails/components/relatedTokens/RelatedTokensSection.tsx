@@ -172,7 +172,15 @@ const CategoryChip = memo(function CategoryChip({
   const onPress = useEvent(() => onSelect(category.id))
   const renderIcon = useCallback((color: FilterChipColor) => <Icon color={color} size="$icon.16" />, [Icon])
 
-  return <FilterChip active={selected} label={category.name} renderIcon={renderIcon} onPress={onPress} />
+  return (
+    <FilterChip
+      active={selected}
+      label={category.name}
+      renderIcon={renderIcon}
+      testID={`${TestID.TokenDetailsRelatedTokensChipPrefix}${category.id}`}
+      onPress={onPress}
+    />
+  )
 })
 
 const RelatedTokenCard = memo(function RelatedTokenCard({

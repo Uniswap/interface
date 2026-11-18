@@ -46,7 +46,7 @@ vi.mock('utilities/src/format/types', () => ({
   NumberType: { FiatTokenPrice: 'fiat-token-price' },
 }))
 vi.mock('~/hooks/useScrollCompact', () => ({ useScrollCompact: () => false }))
-vi.mock('~/pages/metatags', () => ({ useDynamicMetatags: () => [] }))
+vi.mock('~/pages/routes/metatags', () => ({ useDynamicMetatags: () => [] }))
 vi.mock('~/pages/TokenDetails/components/skeleton/Skeleton', () => ({
   TokenDetailsPageSkeleton: () => <div data-testid="token-details-page-skeleton" />,
 }))

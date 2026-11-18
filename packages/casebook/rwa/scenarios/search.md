@@ -14,7 +14,7 @@ priority: medium
 severity: medium
 # provenance
 source: existing-unit
-sourceNote: "Backed by packages/uniswap/src/features/search/SearchModal/stocks/ unit suites: useRwaIndex.test.ts, applyRwaGrouping.test.ts, noQueryStocks.test.ts, tagOptionAsRwa.test.ts (cited names verified verbatim, including tagOptionAsRwa.test.ts's 'leaves the clean name unset with plainTokenNames so the row keeps the token name'). The former RwaUxSearch flag was removed in #41845; the surface is always on. Added per review; code_paths extend beyond the blueprint's declared RWA roots because the search surface lives under features/search. Parent/child row content and label styling added from the Consumer Engagement search QA plan (Notion, 2026-10-08)."
+sourceNote: "Backed by packages/uniswap/src/features/search/SearchModal/stocks/ unit suites: useRwaIndex.test.ts, applyServerTokenGroups.test.ts, noQueryStocks.test.ts, tagOptionAsRwa.test.ts (cited names verified verbatim). The former RwaUxSearch flag was removed in #41845; the surface is always on. Added per review; code_paths extend beyond the blueprint's declared RWA roots because the search surface lives under features/search. Parent/child row content and label styling added from the Consumer Engagement search QA plan (Notion, 2026-10-08)."
 # scope
 chains:
   - ethereum
@@ -37,12 +37,12 @@ code_paths:
 automationRefs:
   - path: packages/uniswap/src/features/search/SearchModal/stocks/useRwaIndex.test.ts
     testName: useRwaIndex > requests commodities inline for the shared index
-  - path: packages/uniswap/src/features/search/SearchModal/stocks/applyRwaGrouping.test.ts
-    testName: applyRwaGroupingToSearchOptions > collapses a matched multi-issuer ticker into one collection
+  - path: packages/uniswap/src/features/search/SearchModal/stocks/applyServerTokenGroups.test.ts
+    testName: applyServerTokenGroupsToSearchOptions > leads with the collection of a multi-issuer group the query names and drops the member tokens it covers
   - path: packages/uniswap/src/features/search/SearchModal/stocks/noQueryStocks.test.ts
     testName: buildNoQueryRwaCollectionOptions > wraps the top N rwas as RwaCollection options preserving order
   - path: packages/uniswap/src/features/search/SearchModal/stocks/tagOptionAsRwa.test.ts
-    testName: tagOptionAsRwa > stamps category, clean name, and issuer slug from the match
+    testName: tagOptionAsRwa > stamps category and issuer slug from the match
 ---
 
 > **medium · unit · pr-check · automated** · chains: ethereum
@@ -50,7 +50,6 @@ automationRefs:
 **Given** the search modal has the RWA index available
 **When** the user opens search with no query, or searches a stock ticker
 **Then** the no-query state shows the top stocks as RwaCollection options preserving registry order, and a matched multi-issuer ticker collapses into one collection hoisted above generic token results
-**And** a matched single token row is tagged with its category, clean name, and issuer slug (direct contract-address search stays a single tagged token, no collection)
-**And** with the token-categories flag on, the clean name is left unset so the row keeps showing the token's own name instead
+**And** a matched single token row is tagged with its category and issuer slug and keeps showing the token's own name (direct contract-address search stays a single tagged token, no collection)
 **And** on web a collapsed Stocks parent row shows volume on the left and the "from" price with 24h change on the right; expanding it hides those from the parent and each child issuer row shows its own volume, price and 24h change (mobile keeps volume out of the parent row)
 **And** issuer labels use the updated style with grayscale issuer logos, and the "Stocks" label uses the updated style

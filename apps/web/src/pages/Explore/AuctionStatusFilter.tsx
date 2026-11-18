@@ -9,6 +9,7 @@ import {
 } from '@universe/mycelium/shadcn'
 import { useMedia, useScrollbarStyles, useShadowPropsMedium } from '@universe/mycelium/theme-hooks-compat'
 import { TriggerButtonCompat } from '@universe/mycelium/trigger-button-compat'
+import type { TFunction } from 'i18next'
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ModalName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
@@ -16,65 +17,67 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InternalMenuItem } from '~/components/Dropdowns/Dropdown'
 import {
-  AuctionQuickFilter,
   useExploreTablesFilterStore,
   useExploreTablesFilterStoreActions,
 } from '~/features/Explore/state/exploreTablesFilterStore'
 import { useAppHeaderHeight } from '~/hooks/useAppHeaderHeight'
+import { AuctionStatus } from '~/types/auctionFilters'
 
-/** Status options exposed by the dropdown; shares the AuctionQuickFilter dimension with the pills. */
-const STATUS_OPTIONS = [AuctionQuickFilter.All, AuctionQuickFilter.Active, AuctionQuickFilter.Completed] as const
+const STATUS_OPTIONS = [
+  AuctionStatus.All,
+  AuctionStatus.Active,
+  AuctionStatus.Upcoming,
+  AuctionStatus.Launched,
+  AuctionStatus.Failed,
+] as const
 
 const DROPDOWN_OFFSET = 10
+
+function getStatusLabel({ status, t }: { status: AuctionStatus; t: TFunction }): string {
+  switch (status) {
+    case AuctionStatus.Active:
+      return t('toucan.filter.active')
+    case AuctionStatus.Upcoming:
+      return t('toucan.filter.upcoming')
+    case AuctionStatus.Launched:
+      return t('toucan.auction.timeRemaining.completed')
+    case AuctionStatus.Failed:
+      return t('common.failed')
+    case AuctionStatus.All:
+    default:
+      return t('common.all')
+  }
+}
 
 export function AuctionStatusFilter() {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
-  const selectedFilter = useExploreTablesFilterStore((s) => s.quickFilter)
-  const { setQuickFilter: setSelectedFilter } = useExploreTablesFilterStoreActions()
+  const selectedStatus = useExploreTablesFilterStore((s) => s.statusFilter)
+  const { setStatusFilter } = useExploreTablesFilterStoreActions()
   const media = useMedia()
   const headerHeight = useAppHeaderHeight()
   const scrollbarStyles = useScrollbarStyles()
   const shadowProps = useShadowPropsMedium()
 
-  const onFilterChange = useCallback(
-    (filter: AuctionQuickFilter) => {
-      setSelectedFilter(filter)
+  const onStatusChange = useCallback(
+    (status: AuctionStatus) => {
+      setStatusFilter(status)
       sendAnalyticsEvent(UniswapEventName.AuctionFilterSelected, {
-        filter,
+        filter: status,
       })
     },
-    [setSelectedFilter],
+    [setStatusFilter],
   )
-
-  const getFilterLabel = useCallback(
-    (filter: AuctionQuickFilter) => {
-      switch (filter) {
-        case AuctionQuickFilter.Active:
-          return t('toucan.filter.active')
-        case AuctionQuickFilter.Completed:
-          return t('toucan.auction.timeRemaining.completed')
-        default:
-          return t('common.all')
-      }
-    },
-    [t],
-  )
-
-  // Pill-only selections (Verified / New) aren't statuses, so the trigger keeps its generic label for them.
-  const isStatusSelection =
-    selectedFilter === AuctionQuickFilter.Active || selectedFilter === AuctionQuickFilter.Completed
 
   return (
     <Flex>
       <Trace modal={ModalName.ExploreStatusFilter}>
         <DropdownMenu open={open} onOpenChange={setOpen} modal={false}>
-          <DropdownMenuTrigger
-            nativeButton={false}
-            render={<TriggerButtonCompat isExpanded={open} className="h-[40px] w-max pl-[14px]" />}
-          >
+          <DropdownMenuTrigger render={<TriggerButtonCompat isExpanded={open} className="h-[40px] w-max pl-[14px]" />}>
             <Text variant="buttonLabel3" width="max-content">
-              {isStatusSelection ? getFilterLabel(selectedFilter) : t('toucan.filter.status')}
+              {selectedStatus === AuctionStatus.All
+                ? t('toucan.filter.status')
+                : getStatusLabel({ status: selectedStatus, t })}
             </Text>
           </DropdownMenuTrigger>
           <DropdownMenuContent
@@ -105,7 +108,7 @@ export function AuctionStatusFilter() {
             }
           >
             {/* Radio semantics (menuitemradio + aria-checked) so the selected status is announced, not just drawn. */}
-            <DropdownMenuRadioGroup value={selectedFilter} onValueChange={onFilterChange}>
+            <DropdownMenuRadioGroup value={selectedStatus} onValueChange={onStatusChange}>
               {STATUS_OPTIONS.map((option) => (
                 <DropdownMenuRadioItem
                   key={option}
@@ -114,8 +117,8 @@ export function AuctionStatusFilter() {
                   closeOnClick
                   render={<InternalMenuItem className="outline-none data-highlighted:bg-surface3" />}
                 >
-                  {getFilterLabel(option)}
-                  {selectedFilter === option && <Check size="$icon.16" color="$accent1" />}
+                  {getStatusLabel({ status: option, t })}
+                  {selectedStatus === option && <Check size="$icon.16" color="$accent1" />}
                 </DropdownMenuRadioItem>
               ))}
             </DropdownMenuRadioGroup>

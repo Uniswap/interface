@@ -9,6 +9,8 @@
  * boundary and provides it for explicit forwarding to all outbound API calls.
  */
 
+import { stripCloudFrontViewerPort } from 'utilities/src/security/cloudFrontViewerAddress'
+
 /**
  * Headers that identify the real client behind SSR requests.
  * Uses cf-connecting-ip for backend compatibility (matches apps/web pattern).
@@ -18,28 +20,47 @@ export interface ClientIdentityHeaders {
   'User-Agent'?: string
 }
 
+// Shape check only, not IP parsing: the result keys rate limiters, so anything that is not a short
+// run of IPv4/IPv6 characters (e.g. a forged `victim@example.com:1`) must not become a key.
+const VIEWER_IP_SHAPE = /^[0-9a-fA-F:.]{2,45}$/
+
+/**
+ * The viewer IP from CloudFront's `cloudfront-viewer-address`, or undefined when the
+ * request did not come through a distribution that forwards it, or the value is not IP-shaped.
+ */
+export function getCloudFrontViewerIp(request: Request): string | undefined {
+  const viewerAddress = request.headers.get('cloudfront-viewer-address')
+  if (!viewerAddress) {
+    return undefined
+  }
+  const ip = stripCloudFrontViewerPort(viewerAddress)
+  return VIEWER_IP_SHAPE.test(ip) ? ip : undefined
+}
+
 /**
  * Extract the client's IP address from the request.
  *
  * A header is trustworthy only because the proxy in front of THIS deployment
  * sets it AND is the sole path to the origin — a header the front proxy does
- * NOT set is client-spoofable. So we check the front-proxy header first:
- * 1. cf-connecting-ip — set + overwritten by Cloudflare (the prod front door:
- *    ECS behind a Cloudflare-locked ALB). Always present there, so the branches
- *    below are never reached for real prod traffic.
- * 2. x-real-ip — set by Vercel at the TCP level (Vercel/preview deployments).
- * 3. x-forwarded-for — first entry, client-controllable; last resort only.
+ * NOT set is client-spoofable. So we check the front-proxy headers first:
+ * 1. cloudfront-viewer-address — set + overwritten by CloudFront, the prod front
+ *    door. Behind CloudFront cf-connecting-ip is caller input, so this must win.
+ * 2. cf-connecting-ip — set + overwritten by Cloudflare, the previous front door.
+ *    Only reached while a hostname is still Cloudflare-proxied.
+ * 3. x-real-ip — set by Vercel at the TCP level (Vercel/preview deployments).
+ * 4. x-forwarded-for — first entry, client-controllable; last resort only.
  *
- * cf-connecting-ip is deliberately FIRST: it was previously last, so behind
- * Cloudflare a client could send x-real-ip (which Cloudflare does not strip)
- * and have it trusted over Cloudflare's own header. This ordering is correct
- * for the Cloudflare-fronted prod path; it is not a full substitute for
+ * While a hostname is still Cloudflare-proxied, a client can send its own
+ * cloudfront-viewer-address through Cloudflare and have it trusted, so deploy
+ * this together with the DNS switch. This ordering is not a full substitute for
  * per-runtime header selection.
  *
  * Use for rate limiting, logging, and any context where you need just the IP string.
  */
 export function getClientIp(request: Request): string {
   return (
+    getCloudFrontViewerIp(request) ??
+    // TODO: drop once developers.uniswap.org is DNS-only to CloudFront and the ALB stops admitting Cloudflare (backend#16707).
     request.headers.get('cf-connecting-ip') ??
     request.headers.get('x-real-ip') ??
     request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ??

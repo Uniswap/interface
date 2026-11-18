@@ -74,7 +74,7 @@ export interface SearchableOptionListCompatProps {
   listTestID?: string
 }
 
-/** The multi-select Select all / Clear CTA row (sandbox network-selector spec). */
+/** The multi-select Select all / Clear CTA row (sandbox network-selector spec); menu hosts only. */
 export interface SelectAllClearHeaderCompatProps {
   onSelectAll: () => void
   onClear: () => void

@@ -1,5 +1,4 @@
 import { normalizeTokenAddressForCache } from '@universe/chains'
-import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { Flex } from '@universe/mycelium'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { getIsStablecoin } from 'uniswap/src/components/charts/utils'
@@ -36,7 +35,6 @@ function ChartSectionBody(): JSX.Element {
     }))
 
   const { isMultichainAggregateView } = useTDPMultichainAggregate()
-  const tokenCategoriesEnabled = useIsTokenCategoriesEnabled()
   const auctionDisplay = useTokenDetailsAuctionDisplay()
   const isAuctionOnly = shouldShowAuctionOnlyLayout(auctionDisplay)
   // The phases the price panel renders its price-discovery empty state for: no pool yet, so every chart
@@ -98,6 +96,8 @@ function ChartSectionBody(): JSX.Element {
     <Flex data-cy={`tdp-${displayedChartType}-chart-container`} testID={`tdp-${displayedChartType}-chart-container`}>
       {displayedChartType === ChartType.PRICE && (
         <TDPPriceChartPanel
+          // Remount per token so the spot and percent-change queries start with no keepPreviousData placeholder from the previous token
+          key={`${tokenChainId}:${tokenDBAddress ?? ''}`}
           variables={variables}
           priceChartType={priceChartType}
           displayPriceChartType={displayPriceChartType}
@@ -105,7 +105,7 @@ function ChartSectionBody(): JSX.Element {
           tokenColor={tokenColor}
           timePeriod={timePeriod}
           currency={currency}
-          isStablecoin={getIsStablecoin({ tokenCategoriesEnabled, categoryIds: multichainToken?.categoryIds }) === true}
+          isStablecoin={getIsStablecoin(multichainToken?.categoryIds) === true}
           auctionOnlyPhase={isAuctionOnly ? auctionDisplay.phase : undefined}
           isAuctionOnlyPending={auctionDisplay.isAuctionOnlyPending}
           onPriceDiscoveryViewed={onPriceDiscoveryViewed}

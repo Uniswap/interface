@@ -4,13 +4,11 @@ import type { ListTokensRequest } from '@uniswap/client-data-api/dist/data/v2/ap
 import { ListTokensResponse } from '@uniswap/client-data-api/dist/data/v2/api_pb'
 import { TokensOrderBy } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { UniverseChainId } from '@universe/chains'
-import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import type { PropsWithChildren } from 'react'
 import { getCategoryCardTokensQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/tokens/categoryCardTokens'
 import { tokenCategory } from 'uniswap/src/test/fixtures/tokenCategory'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { useExploreTokensModule } from '~/pages/Portfolio/Overview/ExploreTokensModule/useExploreTokensModule'
-import { mocked } from '~/test-utils/mocked'
 
 const ENABLED_CHAIN_IDS = [UniverseChainId.Mainnet, UniverseChainId.Base]
 const TRENDING = tokenCategory({ id: 'trending', name: 'Trending' })
@@ -59,7 +57,6 @@ describe(useExploreTokensModule, () => {
     listTokens.mockReset()
     listTokens.mockResolvedValue(new ListTokensResponse({ multichainTokens: [] }))
     useListCategoriesQuery.mockReturnValue({ data: [DEFI, TOP_GAINERS, STOCKS, TRENDING] })
-    mocked(useIsTokenCategoriesEnabled).mockReturnValue(true)
   })
 
   it('shows Trending, Stocks and Top Gainers chips in that order', () => {
@@ -112,14 +109,5 @@ describe(useExploreTokensModule, () => {
     await waitFor(() => expect(lastRequest().filter).toEqual({ categoryIds: ['stocks'] }))
     expect(result.current.activeCategoryId).toBe('stocks')
     expect(result.current.isLoading).toBe(true)
-  })
-
-  it('shows Trending without chips when token categories are off', async () => {
-    mocked(useIsTokenCategoriesEnabled).mockReturnValue(false)
-
-    const { result } = renderUseExploreTokensModule()
-
-    expect(result.current.categories).toEqual([])
-    await waitFor(() => expect(lastRequest().filter).toEqual({ categoryIds: ['trending'] }))
   })
 })

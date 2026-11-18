@@ -58,6 +58,9 @@
     },
     {
       "path": "../transactions-ui"
+    },
+    {
+      "path": "../data-api"
     }
   ],
   "compilerOptions": {

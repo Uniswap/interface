@@ -1,4 +1,5 @@
-import { RateRow } from '@universe/transactions-ui'
+import { DetailRow, ExchangeRate } from '@universe/transactions-ui'
+import { useTranslation } from 'react-i18next'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useSwapRateDisplay } from 'uniswap/src/features/transactions/swap/hooks/useSwapRateDisplay'
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
@@ -15,11 +16,12 @@ export function SwapRateRow({
   trade: Trade | IndicativeTrade
   derivedSwapInfo: DerivedSwapInfo<CurrencyInfo, CurrencyInfo>
 }): JSX.Element | null {
+  const { t } = useTranslation()
   const rate = useSwapRateDisplay({ trade, derivedSwapInfo })
 
   if (!rate) {
     return null
   }
 
-  return <RateRow rate={rate} />
+  return <DetailRow fillValue label={t('swap.details.rate')} value={<ExchangeRate align="end" rate={rate} />} />
 }

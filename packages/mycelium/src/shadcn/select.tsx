@@ -58,6 +58,10 @@ function SelectValue({ ...props }: SelectPrimitive.Value.Props): React.JSX.Eleme
   return <SelectPrimitive.Value data-slot="select-value" {...props} />
 }
 
+// Base UI mounts a nested portal inside its parent overlay's portal, and a host modal's portal target is
+// a gapped flex column: a boxed wrapper there would be a new flex item and resize the modal on every open.
+const PORTAL_WRAPPER_STYLE: React.CSSProperties = { display: 'contents' }
+
 function SelectContent({
   align = 'start',
   alignOffset = 0,
@@ -74,7 +78,7 @@ function SelectContent({
     positionerProps?: SelectPrimitive.Positioner.Props & { [key: `data-${string}`]: string | undefined }
   }): React.JSX.Element {
   return (
-    <SelectPrimitive.Portal>
+    <SelectPrimitive.Portal style={PORTAL_WRAPPER_STYLE}>
       <SelectPrimitive.Positioner
         data-slot="select-positioner"
         className={SELECT_RECIPE_CLASS_NAMES.positioner}
@@ -132,7 +136,8 @@ function SelectSeparator({ className, ...props }: React.ComponentProps<'div'>): 
     // oxlint-disable-next-line react/forbid-elements -- recipe separator is a raw presentational rule
     <div
       data-slot="select-separator"
-      role="separator"
+      // A listbox may only own options and groups, so the rule is decoration (aria-required-children).
+      aria-hidden="true"
       className={cn(SELECT_RECIPE_CLASS_NAMES.separator, className)}
       {...props}
     />

@@ -2,7 +2,9 @@ import type { IssuerToken, Rwa, RwaAggregatedMetrics } from 'uniswap/src/data/ap
 
 export function deriveRwaAggregates(rwa: Rwa): RwaAggregatedMetrics {
   const primaryIssuer = rwa.issuerTokens[0]
-  const marketCapUsd = rwa.issuerTokens.reduce((sum, issuer) => sum + (issuer.marketCapUsd ?? 0), 0)
+  const issuerFdvs = rwa.issuerTokens.flatMap((issuer) => (issuer.fdvUsd === undefined ? [] : [issuer.fdvUsd]))
+  // Undefined rather than 0 when no issuer reports one, so the row shows a dash instead of $0.
+  const fdvUsd = issuerFdvs.length > 0 ? issuerFdvs.reduce((sum, fdv) => sum + fdv, 0) : undefined
   const volume24hUsd = rwa.issuerTokens.reduce((sum, issuer) => sum + issuer.volume24hUsd, 0)
 
   if (!primaryIssuer) {
@@ -10,7 +12,7 @@ export function deriveRwaAggregates(rwa: Rwa): RwaAggregatedMetrics {
       priceUsd: rwa.priceUsd,
       priceChange1hPct: rwa.priceChange1hPct,
       priceChange24hPct: rwa.priceChange24hPct,
-      marketCapUsd: marketCapUsd || rwa.marketCapUsd,
+      fdvUsd: rwa.fdvUsd,
       volume24hUsd: volume24hUsd || rwa.volume24hUsd,
       sparkline1d: rwa.sparkline1d,
     }
@@ -20,7 +22,7 @@ export function deriveRwaAggregates(rwa: Rwa): RwaAggregatedMetrics {
     priceUsd: primaryIssuer.priceUsd,
     priceChange1hPct: primaryIssuer.priceChange1hPct,
     priceChange24hPct: primaryIssuer.priceChange24hPct,
-    marketCapUsd,
+    fdvUsd,
     volume24hUsd,
     sparkline1d: primaryIssuer.sparkline1d,
   }

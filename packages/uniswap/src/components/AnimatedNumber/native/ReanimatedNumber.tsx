@@ -52,6 +52,7 @@ export const ReanimatedNumber = ({
   isRightToLeft: isRightToLeftProp,
   forceDirection,
   suspendAnimations = false,
+  scaleToFit = false,
 }: ReanimatedNumberProps): JSX.Element => {
   const colors = useSporeColors()
   const { variantFont, digitHeight, maxDigitWidthScaled } = useMemo(
@@ -147,7 +148,7 @@ export const ReanimatedNumber = ({
     suspendAnimations,
   }
 
-  if (HEADING_TEXT_VARIANT_KEYS.has(textVariantKey)) {
+  if (useHeadingTypography || scaleToFit) {
     return (
       <HeadingReanimatedNumber
         {...renderProps}

@@ -1,4 +1,4 @@
-import { waitForFlashbotsProtectReceipt, Platform } from '@universe/chains'
+import { waitForFlashbotsProtectReceipt, Platform, UniverseChainId } from '@universe/chains'
 import { providers } from 'ethers'
 import { expectSaga } from 'redux-saga-test-plan'
 import * as matchers from 'redux-saga-test-plan/matchers'
@@ -59,7 +59,15 @@ const {
   ethersTxReceipt,
   txReceipt,
   txDetailsPending: originalTxDetailsPending,
-} = getTxFixtures(transactionDetailsFixture({ typeInfo: fiatPurchaseTransactionInfo(), from: ACTIVE_ACCOUNT_ADDRESS }))
+} = getTxFixtures(
+  transactionDetailsFixture({
+    typeInfo: fiatPurchaseTransactionInfo(),
+    from: ACTIVE_ACCOUNT_ADDRESS,
+    // Pinned: on a chain the Trading API doesn't support, waitForRemoteUpdate resolves synchronously and wins
+    // the watchTransaction race before the cancel/invalidate/backgrounded branches start
+    chainId: UniverseChainId.Mainnet,
+  }),
+)
 const txDetailsPending: TransactionDetails = { ...originalTxDetailsPending, from: ACTIVE_ACCOUNT_ADDRESS }
 
 describe(watchTransaction, () => {

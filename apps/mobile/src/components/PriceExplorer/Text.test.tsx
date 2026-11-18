@@ -20,8 +20,13 @@ vi.mock('@universe/gating', async (importOriginal) => ({
 // assert which branch `RelativeChangeText` picks and with which props, without depending on that
 // unrelated environment gap.
 vi.mock('uniswap/src/components/RelativeChange/RelativeChange', () => ({
-  RelativeChange: (props: { change?: number; absoluteChange?: number }) => (
-    <div data-change={props.change} data-testid="relative-change-idle-fast-path" />
+  RelativeChange: (props: { change?: number; absoluteChange?: number; formattedAbsoluteChange?: string }) => (
+    <div
+      data-change={props.change}
+      data-absolute-change={props.absoluteChange}
+      data-formatted-absolute-change={props.formattedAbsoluteChange}
+      data-testid="relative-change-idle-fast-path"
+    />
   ),
 }))
 
@@ -155,6 +160,40 @@ describe(RelativeChangeText, () => {
     const fastPathNode = await tree.findByTestId('relative-change-idle-fast-path')
     expect((fastPathNode as unknown as HTMLElement).getAttribute('data-change')).toBe('12.3')
     expect(tree.queryByTestId('relative-change-text')).toBeNull()
+  })
+
+  it('passes the chart-formatted fiat delta to the idle fast path so small deltas keep their significant figures', async () => {
+    mockedUsePriceChart.mockReturnValue({
+      isActive: { value: false },
+      data: [
+        { timestamp: 0, value: 0.0001 },
+        { timestamp: 1, value: 0.0001234 },
+      ],
+      currentIndex: { value: 1 },
+    })
+
+    const tree = render(<RelativeChangeText loading={false} spotRelativeChangeIdle={23.4} startingPrice={0.0001} />)
+
+    const fastPathNode = (await tree.findByTestId('relative-change-idle-fast-path')) as unknown as HTMLElement
+    expect(fastPathNode.getAttribute('data-formatted-absolute-change')).toBe('$0.000023')
+    expect(Number(fastPathNode.getAttribute('data-absolute-change'))).toBeCloseTo(0.0000234, 12)
+  })
+
+  it('passes no formatted fiat delta to the idle fast path without a starting price', async () => {
+    mockedUsePriceChart.mockReturnValue({
+      isActive: { value: false },
+      data: [
+        { timestamp: 0, value: 10 },
+        { timestamp: 1, value: 9 },
+      ],
+      currentIndex: { value: 1 },
+    })
+
+    const tree = render(<RelativeChangeText loading={false} spotRelativeChangeIdle={-10} />)
+
+    const fastPathNode = (await tree.findByTestId('relative-change-idle-fast-path')) as unknown as HTMLElement
+    expect(fastPathNode.getAttribute('data-formatted-absolute-change')).toBe('')
+    expect(fastPathNode.getAttribute('data-absolute-change')).toBeNull()
   })
 })
 

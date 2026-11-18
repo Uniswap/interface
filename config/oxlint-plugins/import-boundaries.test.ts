@@ -271,6 +271,52 @@ export const x = [useConnectWallet]
   })
 })
 
+describe('web-pages-sibling-isolation boundary (real config)', () => {
+  const PAGES_MESSAGE = /A page may only import from its own folder/
+
+  function countFor(importLine: string, fileDir: string, fileName?: string): string {
+    const diagnostics = lintFixture({
+      fileDir,
+      fileName,
+      source: `${importLine}\nexport const x = 1\n`,
+      messagePattern: PAGES_MESSAGE,
+    })
+    return `${importLine}: ${diagnostics.length}`
+  }
+
+  test('MUST FIRE: a page importing a sibling page, or reaching inside pages/Swap', () => {
+    for (const importLine of [
+      `import { Chart } from '~/pages/TokenDetails/components/chart/Chart'`,
+      `import { LimitForm } from '~/pages/Swap/Limit/LimitForm'`,
+      `import { SwapForm } from 'pages/Swap/Swap/SwapForm'`,
+      `export const load = () => import('~/pages/Portfolio/Portfolio')`,
+    ]) {
+      expect(countFor(importLine, 'apps/web/src/pages/Landing/sections')).toBe(`${importLine}: 1`)
+    }
+  })
+
+  test('must NOT fire: own folder, pages/routes, NotFound, and the Swap widget entry', () => {
+    for (const importLine of [
+      `import { Hero } from '~/pages/Landing/sections/Hero'`,
+      `import { paths } from '~/pages/routes/paths'`,
+      `import { NotFound } from '~/pages/NotFound'`,
+      `import { Swap } from '~/pages/Swap'`,
+      `import { Swap } from 'pages/Swap'`,
+    ]) {
+      expect(countFor(importLine, 'apps/web/src/pages/Landing/sections')).toBe(`${importLine}: 0`)
+    }
+  })
+
+  test('must NOT fire: pages/routes importing every page', () => {
+    for (const importLine of [
+      `import { Landing } from '~/pages/Landing'`,
+      `export const load = () => import('~/pages/Swap/Limit/LimitPage')`,
+    ]) {
+      expect(countFor(importLine, 'apps/web/src/pages/routes', 'RouteDefinitions.tsx')).toBe(`${importLine}: 0`)
+    }
+  })
+})
+
 describe('web-state-import-denylist boundary', () => {
   const STATE_DIR = 'apps/web/src/state/sagas/transactions'
   const STATE_MESSAGE = /src\/state` must not import from/
@@ -280,7 +326,7 @@ describe('web-state-import-denylist boundary', () => {
       `import { useOneClickSwapSetting } from '~/pages/Swap/Swap/settings/OneClickSwap'`,
       `import { paths } from '~/pages'`,
       `import { useConnectWallet } from '~/features/wallet/hooks/useConnectWallet'`,
-      `import { Portal } from '~/components/Popups/Portal'`,
+      `import { Portal } from '~/components/Portal/Portal'`,
       `import { usePrevious } from '~/hooks/usePrevious'`,
       `import { Body } from '~/app/layout/Body'`,
     ]) {
@@ -391,7 +437,9 @@ describe('siblingIsolation mode', () => {
       importPrefixes: ['~/pages/', 'pages/'],
       bareModuleSources: ['~/pages', 'pages'],
       allowRootFiles: true,
-      allowedSiblings: ['NotFound'],
+      allowedSiblings: ['NotFound', 'routes'],
+      allowedSiblingEntries: ['Swap'],
+      exemptImporterSiblings: ['routes'],
       message: PAGES_MESSAGE,
     },
     {
@@ -454,6 +502,7 @@ describe('siblingIsolation mode', () => {
       `import { SwapPage } from '~/pages/Swap'`,
       `import { paths } from '~/pages/paths'`,
       `import { NotFound } from '~/pages/NotFound'`,
+      `import { preloadTokenDetailsChunk } from '~/pages/routes/routeChunkPreloads'`,
       `import { useSwap } from '~/features/Swap/hooks/useSwap'`,
     ]) {
       expect(countFor({ importLine, fileDir: SWAP_PAGE_DIR, messagePattern: /pages sibling isolation/ })).toBe(
@@ -472,6 +521,45 @@ describe('siblingIsolation mode', () => {
         messagePattern: /pages sibling isolation/,
       }),
     ).toBe(`${importLine}: 0`)
+  })
+
+  test('allowedSiblingEntries: only the bare folder import is allowed', () => {
+    for (const [importLine, expected] of [
+      [`import { Swap } from '~/pages/Swap'`, 0],
+      [`import { SwapForm } from '~/pages/Swap/Swap/SwapForm'`, 1],
+      [`import { Swap } from '~/pages/Swap/index'`, 1],
+    ] as const) {
+      expect(
+        countFor({ importLine, fileDir: 'apps/web/src/pages/Landing', messagePattern: /pages sibling isolation/ }),
+      ).toBe(`${importLine}: ${expected}`)
+    }
+  })
+
+  test('must NOT fire: a file inside an exemptImporterSiblings folder (pages/routes/ imports every page)', () => {
+    for (const importLine of [
+      `import { Explore } from '~/pages/Explore'`,
+      `export const load = () => import('~/pages/TokenDetails/TokenDetailsPage')`,
+    ]) {
+      expect(
+        countFor({
+          importLine,
+          fileDir: 'apps/web/src/pages/routes',
+          fileName: 'RouteDefinitions.tsx',
+          messagePattern: /pages sibling isolation/,
+        }),
+      ).toBe(`${importLine}: 0`)
+    }
+  })
+
+  test('MUST FIRE: exemptImporterSiblings only widens the importer side, not the target side', () => {
+    const importLine = `import { Thing } from '~/pages/Explore/Thing'`
+    expect(
+      countFor({
+        importLine,
+        fileDir: 'apps/web/src/pages/NotFound',
+        messagePattern: /pages sibling isolation/,
+      }),
+    ).toBe(`${importLine}: 1`)
   })
 
   test('MUST FIRE: a feature importing a sibling feature', () => {

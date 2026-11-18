@@ -2,7 +2,6 @@ import userEvent from '@testing-library/user-event'
 import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import {
-  AuctionQuickFilter,
   ExploreTablesFilterStoreContextProvider,
   useExploreTablesFilterStore,
   useExploreTablesFilterStoreActions,
@@ -10,6 +9,7 @@ import {
 import { AuctionStatusFilter } from '~/pages/Explore/AuctionStatusFilter'
 import { mockMediaSize } from '~/test-utils/mockMediaSize'
 import { render, screen, waitFor } from '~/test-utils/render'
+import { AuctionQuickFilter, AuctionStatus } from '~/types/auctionFilters'
 
 vi.mock('@universe/mycelium/theme-hooks-compat', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@universe/mycelium/theme-hooks-compat')>()),
@@ -18,12 +18,16 @@ vi.mock('@universe/mycelium/theme-hooks-compat', async (importOriginal) => ({
 
 vi.mock('uniswap/src/features/telemetry/send', () => ({ sendAnalyticsEvent: vi.fn() }))
 
-function QuickFilterProbe(): JSX.Element {
+const ALL_LABELS = ['All', 'Active', 'Upcoming', 'Launched', 'Failed']
+
+function StoreProbe(): JSX.Element {
+  const statusFilter = useExploreTablesFilterStore((s) => s.statusFilter)
   const quickFilter = useExploreTablesFilterStore((s) => s.quickFilter)
   const { setQuickFilter } = useExploreTablesFilterStoreActions()
   return (
     <>
-      <output aria-label="Stored filter">{quickFilter}</output>
+      <output aria-label="Stored status">{statusFilter}</output>
+      <output aria-label="Stored quick filter">{quickFilter}</output>
       <button onClick={() => setQuickFilter(AuctionQuickFilter.Verified)}>Pick verified</button>
     </>
   )
@@ -33,7 +37,7 @@ function renderStatusFilter(): void {
   render(
     <ExploreTablesFilterStoreContextProvider>
       <AuctionStatusFilter />
-      <QuickFilterProbe />
+      <StoreProbe />
     </ExploreTablesFilterStoreContextProvider>,
   )
 }
@@ -56,9 +60,15 @@ describe('AuctionStatusFilter', () => {
 
     expect(trigger).toHaveAttribute('aria-expanded', 'true')
     const options = screen.getAllByRole('menuitemradio')
-    expect(options.map((item) => item.textContent)).toEqual(['All', 'Active', 'Launched'])
+    expect(options.map((item) => item.textContent)).toEqual(ALL_LABELS)
     // No pick yet: the store's default All is the checked radio.
-    expect(options.map((item) => item.getAttribute('aria-checked'))).toEqual(['true', 'false', 'false'])
+    expect(options.map((item) => item.getAttribute('aria-checked'))).toEqual([
+      'true',
+      'false',
+      'false',
+      'false',
+      'false',
+    ])
     await user.keyboard('{Escape}')
 
     await waitFor(() => expect(trigger).toHaveAttribute('aria-expanded', 'false'))
@@ -76,12 +86,12 @@ describe('AuctionStatusFilter', () => {
     await user.tab()
     await user.keyboard('{Enter}{ArrowDown}{Enter}')
 
-    await waitFor(() => expect(screen.getByLabelText('Stored filter')).toHaveTextContent(/^active$/))
+    await waitFor(() => expect(screen.getByLabelText('Stored status')).toHaveTextContent(/^active$/))
     expect(trigger).toHaveAccessibleName('Active')
     expect(trigger).toHaveAttribute('aria-expanded', 'false')
     expect(trigger).toHaveFocus()
     expect(sendAnalyticsEvent).toHaveBeenCalledExactlyOnceWith(UniswapEventName.AuctionFilterSelected, {
-      filter: AuctionQuickFilter.Active,
+      filter: AuctionStatus.Active,
     })
   })
 
@@ -92,20 +102,20 @@ describe('AuctionStatusFilter', () => {
     await user.tab()
     await user.keyboard(' {ArrowDown}{ArrowDown} ')
 
-    await waitFor(() => expect(screen.getByLabelText('Stored filter')).toHaveTextContent(/^completed$/))
-    const trigger = screen.getByRole('button', { name: 'Launched' })
+    await waitFor(() => expect(screen.getByLabelText('Stored status')).toHaveTextContent(/^upcoming$/))
+    const trigger = screen.getByRole('button', { name: 'Upcoming' })
     expect(sendAnalyticsEvent).toHaveBeenCalledExactlyOnceWith(UniswapEventName.AuctionFilterSelected, {
-      filter: AuctionQuickFilter.Completed,
+      filter: AuctionStatus.Upcoming,
     })
 
     await user.keyboard('{Enter}')
     expect(trigger).toHaveAttribute('aria-expanded', 'true')
-    expect(screen.getByRole('menuitemradio', { checked: true })).toHaveTextContent(/^Launched$/)
+    expect(screen.getByRole('menuitemradio', { checked: true })).toHaveTextContent(/^Upcoming$/)
     const unchecked = screen.getAllByRole('menuitemradio', { checked: false })
-    expect(unchecked.map((item) => item.textContent)).toEqual(['All', 'Active'])
+    expect(unchecked.map((item) => item.textContent)).toEqual(['All', 'Active', 'Launched', 'Failed'])
     // The visual check indicator stays in sync with aria-checked.
     const drawnChecks = screen.getAllByRole('menuitemradio').filter((item) => item.querySelector('svg'))
-    expect(drawnChecks.map((item) => item.textContent)).toEqual(['Launched'])
+    expect(drawnChecks.map((item) => item.textContent)).toEqual(['Upcoming'])
   })
 
   it('dismisses a pointer-opened menu with Escape and can reopen it from the keyboard', async () => {
@@ -121,7 +131,7 @@ describe('AuctionStatusFilter', () => {
     expect(trigger).toHaveFocus()
     await user.keyboard(' ')
     expect(trigger).toHaveAttribute('aria-expanded', 'true')
-    expect(screen.getAllByRole('menuitemradio')).toHaveLength(3)
+    expect(screen.getAllByRole('menuitemradio')).toHaveLength(ALL_LABELS.length)
   })
 
   it('does not pull focus from an outside control when the pointer dismisses the menu', async () => {
@@ -135,11 +145,11 @@ describe('AuctionStatusFilter', () => {
 
     await waitFor(() => expect(trigger).toHaveAttribute('aria-expanded', 'false'))
     expect(outsideButton).toHaveFocus()
-    expect(screen.getByLabelText('Stored filter')).toHaveTextContent(/^verified$/)
+    expect(screen.getByLabelText('Stored quick filter')).toHaveTextContent(/^verified$/)
     expect(sendAnalyticsEvent).not.toHaveBeenCalled()
   })
 
-  it('keeps the generic Status label for pill-only selections', async () => {
+  it('keeps the Status selection independent of the quick-filter pills', async () => {
     const user = userEvent.setup()
     renderStatusFilter()
 
@@ -147,8 +157,7 @@ describe('AuctionStatusFilter', () => {
     const trigger = screen.getByRole('button', { name: 'Status' })
     await user.click(trigger)
 
-    const options = screen.getAllByRole('menuitemradio')
-    expect(options.filter((item) => item.getAttribute('aria-checked') === 'true')).toHaveLength(0)
-    expect(options.filter((item) => item.querySelector('svg'))).toHaveLength(0)
+    expect(screen.getByRole('menuitemradio', { checked: true })).toHaveTextContent(/^All$/)
+    expect(screen.getByLabelText('Stored quick filter')).toHaveTextContent(/^verified$/)
   })
 })

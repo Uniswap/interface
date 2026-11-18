@@ -90,7 +90,7 @@ datadog {
 }
 
 // Marketing version shared by every flavor (dev/beta/prod). Bumped by the version-update and hotfix workflows.
-def appVersionName = "1.87"
+def appVersionName = "1.88"
 
 android {
     ndkVersion rootProject.ext.ndkVersion

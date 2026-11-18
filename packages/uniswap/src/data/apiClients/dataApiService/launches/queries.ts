@@ -1,97 +1,21 @@
-import { type PartialMessage, type PlainMessage, toPlainMessage } from '@bufbuild/protobuf'
-import { type InfiniteData, keepPreviousData } from '@tanstack/react-query'
-import type {
-  ListLaunchesRequest,
-  ListLaunchesResponse,
-  ListLaunchpadsRequest,
-  ListLaunchpadsResponse,
-} from '@uniswap/client-launches/dist/launches/v1/api_pb'
-import { launchServiceClient } from 'uniswap/src/data/apiClients/dataApiService/clients/LaunchServiceClient'
-import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+import type { PlainMessage } from '@bufbuild/protobuf'
+import type { ListLaunchpadsResponse } from '@uniswap/client-launches/dist/launches/v1/api_pb'
 import {
-  persistableInfiniteQueryOptions,
-  persistableQueryOptions,
-} from 'utilities/src/reactQuery/persistableQueryOptions'
-import { type QueryOptionsResult } from 'utilities/src/reactQuery/queryOptions'
+  getListLaunchesQueryOptions as getListLaunchesQueryOptionsWithClient,
+  getListLaunchpadsQueryOptions as getListLaunchpadsQueryOptionsWithClient,
+  type ListLaunchesInput,
+  type ListLaunchpadsInput,
+} from '@universe/data-api'
+import { launchServiceClient } from 'uniswap/src/data/apiClients/dataApiService/clients/LaunchServiceClient'
 
-// Both query keys below deliberately keep the ReactQueryCacheKey.DataApiService prefix even though
-// the reads now go through launches.v1.LaunchService: the launches.v1 messages are wire- and
-// JSON-identical to their data.v2 twins, so the persisted payload shape is unchanged and renaming
-// the key would only cold-start every user's persisted cache.
-
-export type ListLaunchpadsInput = {
-  params?: PartialMessage<ListLaunchpadsRequest>
-  enabled?: boolean
+export function getListLaunchpadsQueryOptions<TSelectData = PlainMessage<ListLaunchpadsResponse> | undefined>(
+  input: ListLaunchpadsInput<TSelectData>,
+): ReturnType<typeof getListLaunchpadsQueryOptionsWithClient<TSelectData>> {
+  return getListLaunchpadsQueryOptionsWithClient(launchServiceClient, input)
 }
 
-type ListLaunchpadsQueryKey = readonly [
-  ReactQueryCacheKey.DataApiService,
-  'listLaunchpads',
-  ListLaunchpadsInput['params'],
-]
-
-export function getListLaunchpadsQueryOptions({
-  params,
-  enabled = true,
-}: ListLaunchpadsInput): QueryOptionsResult<
-  PlainMessage<ListLaunchpadsResponse> | undefined,
-  Error,
-  PlainMessage<ListLaunchpadsResponse> | undefined,
-  ListLaunchpadsQueryKey
-> {
-  return persistableQueryOptions({
-    queryKey: [ReactQueryCacheKey.DataApiService, 'listLaunchpads', params] as const,
-    // toPlainMessage strips the Message prototype so the value survives disk persistence.
-    queryFn: async (): Promise<PlainMessage<ListLaunchpadsResponse> | undefined> => {
-      if (!params) {
-        return undefined
-      }
-      return toPlainMessage(await launchServiceClient.listLaunchpads(params))
-    },
-    enabled: enabled && !!params,
-    placeholderData: keepPreviousData,
-  })
-}
-
-/** Pagination is driven by the infinite query's page param, so callers can't set `page` themselves. */
-export type ListLaunchesParams = Omit<PartialMessage<ListLaunchesRequest>, 'page'> & { pageSize?: number }
-
-export type ListLaunchesInput = {
-  params?: ListLaunchesParams
-  enabled?: boolean
-}
-
-type ListLaunchesQueryKey = readonly [ReactQueryCacheKey.DataApiService, 'listLaunches', ListLaunchesInput['params']]
-
-export function getListLaunchesQueryOptions({
-  params,
-  enabled = true,
-}: ListLaunchesInput): ReturnType<
-  typeof persistableInfiniteQueryOptions<
-    PlainMessage<ListLaunchesResponse>,
-    Error,
-    InfiniteData<PlainMessage<ListLaunchesResponse>, string>,
-    ListLaunchesQueryKey,
-    string
-  >
-> {
-  return persistableInfiniteQueryOptions({
-    queryKey: [ReactQueryCacheKey.DataApiService, 'listLaunches', params] as const,
-    // toPlainMessage strips the Message prototype so the value survives disk persistence.
-    queryFn: async ({ pageParam }: { pageParam: string }): Promise<PlainMessage<ListLaunchesResponse>> => {
-      if (!params) {
-        throw new Error('params required')
-      }
-      const { pageSize, ...request } = params
-      return toPlainMessage(
-        await launchServiceClient.listLaunches({
-          ...request,
-          page: { pageSize, pageToken: pageParam || undefined },
-        }),
-      )
-    },
-    initialPageParam: '',
-    getNextPageParam: (lastPage: PlainMessage<ListLaunchesResponse>) => lastPage.page?.nextPageToken || undefined,
-    enabled: enabled && !!params,
-  })
+export function getListLaunchesQueryOptions(
+  input: ListLaunchesInput,
+): ReturnType<typeof getListLaunchesQueryOptionsWithClient> {
+  return getListLaunchesQueryOptionsWithClient(launchServiceClient, input)
 }

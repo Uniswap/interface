@@ -24,6 +24,7 @@ function makeMappedRwa() {
           priceUsd: 248.42,
           volume24hUsd: 8_000_000,
           marketCapUsd: 22_000_000,
+          fdvUsd: 30_000_000,
           chainTokens: [
             { chainId: UniverseChainId.Mainnet, address: '0xondo1' },
             { chainId: UniverseChainId.Base, address: '0xondo2' },
@@ -36,6 +37,7 @@ function makeMappedRwa() {
           priceUsd: 247.9,
           volume24hUsd: 3_000_000,
           marketCapUsd: 12_200_000,
+          fdvUsd: 15_000_000,
           chainTokens: [{ chainId: UniverseChainId.Mainnet, address: '0xbacked1' }],
         },
         {
@@ -68,12 +70,21 @@ describe('deriveRwaAggregates', () => {
     expect(aggregates.sparkline1d).toBe(rwa.issuerTokens[0]?.sparkline1d)
   })
 
-  it('sums market cap and volume across issuers', () => {
+  it('sums FDV and volume across issuers, skipping issuers with no FDV', () => {
     const rwa = makeMappedRwa()
     const aggregates = deriveRwaAggregates(rwa)
 
-    expect(aggregates.marketCapUsd).toBe(44_200_000)
+    expect(aggregates.fdvUsd).toBe(45_000_000)
     expect(aggregates.volume24hUsd).toBe(12_400_000)
+  })
+
+  it('leaves FDV undefined when no issuer reports one', () => {
+    const rwa = mapRankedRwa({ token: makeRankedRwa(), category: RwaCategory.STOCKS })
+    if (!rwa) {
+      throw new Error('expected mapped rwa')
+    }
+
+    expect(deriveRwaAggregates(rwa).fdvUsd).toBeUndefined()
   })
 })
 

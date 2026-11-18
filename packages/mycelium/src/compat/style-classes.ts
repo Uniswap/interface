@@ -236,7 +236,8 @@ const TRANSFORM_FUNCTION_NAME: Record<string, string> = {
   y: 'translateY',
 }
 
-const PX_TRANSFORMS = new Set(['x', 'y', 'perspective'])
+// RN-keyed translate entries are px like x/y: a unitless translateY(-8) voids the whole transform.
+const PX_TRANSFORMS = new Set(['x', 'y', 'translateX', 'translateY', 'translateZ', 'perspective'])
 
 function transformFunction(prop: string, value: string | number | readonly number[] | TamaguiVariable): string {
   const name = TRANSFORM_FUNCTION_NAME[prop] ?? prop

@@ -9,8 +9,8 @@ import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { LogoContainer } from '~/components/Activity/Logos'
-import { OrderContent } from '~/components/modals/OffchainActivityModal'
 import { useAccount } from '~/connection/hooks/useAccount'
+import { OrderContent } from '~/features/transactions/components/OffchainActivityModal/OffchainActivityModal'
 import {
   AnimatedEntranceConfirmationIcon,
   AnimatedEntranceSubmittedIcon,

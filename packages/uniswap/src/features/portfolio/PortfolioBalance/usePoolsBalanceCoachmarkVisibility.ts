@@ -1,5 +1,4 @@
 import { SharedEventName } from '@uniswap/analytics-events'
-import { FeatureFlags, useFeatureFlagWithExposureLoggingDisabled } from '@universe/gating'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { PortfolioBalancePart } from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances'
@@ -24,8 +23,8 @@ interface UsePoolsBalanceCoachmarkVisibilityResult {
  * Per-user visibility for the Portfolio pools-balance coachmark.
  * Reads pool balance from the cache populated by Portfolio Overview (no extra fetch).
  *
- * Eligibility requires the persisted flag to be exactly `false` (existing install, not dismissed);
- * `undefined` means startup state-init hasn't classified this fresh state yet, so nothing shows.
+ * Eligibility requires the persisted value to be exactly `false`: an install that predates the pools-balances
+ * launch (marked by migration) and hasn't dismissed it. `undefined` is state created after launch, never shown.
  * An eligible wallet evaluated with zero pool balance is dismissed permanently — no pools when the
  * feature reaches the user means they never see the coachmark, even if they open positions later.
  */
@@ -33,8 +32,6 @@ export function usePoolsBalanceCoachmarkVisibility({
   evmAddress,
   svmAddress,
 }: UsePoolsBalanceCoachmarkVisibilityParams): UsePoolsBalanceCoachmarkVisibilityResult {
-  // Read without logging; the pools exposure is logged only where the feature is actually shown (see usePoolsTabVisibility).
-  const portfolioPoolsBalancesEnabled = useFeatureFlagWithExposureLoggingDisabled(FeatureFlags.PortfolioPoolsBalances)
   const walletAddress = evmAddress ?? svmAddress
 
   const isEligible = useSelector(selectPoolsBalanceCoachmarkDismissed) === false
@@ -53,12 +50,12 @@ export function usePoolsBalanceCoachmarkVisibility({
   const dispatch = useDispatch()
 
   useEffect(() => {
-    if (portfolioPoolsBalancesEnabled && isEligible && !!walletAddress && isPoolsBalanceLoaded && !hasPoolsBalance) {
+    if (isEligible && !!walletAddress && isPoolsBalanceLoaded && !hasPoolsBalance) {
       dispatch(setPoolsBalanceCoachmarkDismissed())
     }
-  }, [portfolioPoolsBalancesEnabled, isEligible, walletAddress, isPoolsBalanceLoaded, hasPoolsBalance, dispatch])
+  }, [isEligible, walletAddress, isPoolsBalanceLoaded, hasPoolsBalance, dispatch])
 
-  const shouldShow = portfolioPoolsBalancesEnabled && isEligible && !!walletAddress && hasPoolsBalance
+  const shouldShow = isEligible && !!walletAddress && hasPoolsBalance
 
   const dismiss = useEvent(() => {
     sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, { element: ElementName.PoolsBalanceCoachmark })

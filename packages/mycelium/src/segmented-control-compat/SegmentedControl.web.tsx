@@ -30,11 +30,12 @@ const CONTAINER_WEB_CLASSES = `flex ${RESET_CLASSES} shrink-0 outline-0`
 /**
  * Web additions to the shared option table: explicit `flex`, the view resets,
  * no border (an option is a bare <button>, which Chrome paints with a 2px
- * outset border), no underline (options can render as anchors), and the legacy
- * transparent outline color — the UA focus ring paints invisibly, as in the
- * legacy render.
+ * outset border), no underline (options can render as anchors), and a
+ * keyboard-only focus ring. The legacy render painted the UA ring transparent,
+ * leaving keyboard focus invisible (WCAG 2.4.7); neutral1 keeps the ring above
+ * 3:1 in both themes (1.4.11).
  */
-const OPTION_WEB_CLASSES = `flex ${RESET_CLASSES} shrink-0 border-0 no-underline outline-transparent`
+const OPTION_WEB_CLASSES = `flex ${RESET_CLASSES} shrink-0 border-0 no-underline outline-transparent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-neutral1`
 
 /**
  * The roving indicator pill: absolute overlay above the option row (legacy
@@ -110,6 +111,7 @@ export function SegmentedControl<T extends string = string>({
   outlined = true,
   gap,
   animateIndicator = true,
+  indicatorColor,
 }: SegmentedControlProps<T>): React.JSX.Element {
   assert(options.length >= 2 && options.length <= 6, 'Segmented control must have between 2 and 6 options, inclusive.')
 
@@ -251,6 +253,12 @@ export function SegmentedControl<T extends string = string>({
     }
   }
 
+  // The selected option, or the first enabled one when the selection is disabled or missing.
+  const isEnabled = (option: { disabled?: boolean }): boolean => !(disabled || option.disabled)
+  const tabStopValue = (
+    options.find((option) => option.value === selectedOption && isEnabled(option)) ?? options.find(isEnabled)
+  )?.value
+
   const indicatorStyle: CSSProperties | undefined =
     indicatorRect === null
       ? undefined
@@ -263,8 +271,7 @@ export function SegmentedControl<T extends string = string>({
 
   return (
     <FlexCompat className={ROOT_CLASSES}>
-      {/* Legacy Tabs.List: tablist semantics (the options themselves override
-          role="tab" with button/link, exactly like the legacy render). */}
+      {/* Legacy Tabs.List: tablist semantics, with each option a tab. */}
       {/* oxlint-disable-next-line react/forbid-elements -- must carry aria-orientation, which mycelium Flex's compat surface (mirroring RN's aria props) does not */}
       <div
         ref={containerRef}
@@ -280,6 +287,7 @@ export function SegmentedControl<T extends string = string>({
           const Tag = href ? 'a' : 'button'
 
           const sharedProps = {
+            'aria-label': option['aria-label'],
             'aria-disabled': itemDisabled || undefined,
             'aria-selected': isSelected,
             className: cn(
@@ -300,11 +308,9 @@ export function SegmentedControl<T extends string = string>({
                 optionNodesRef.current.delete(value)
               }
             },
-            // TODO(INFRA-4589): role="button" with aria-selected inside a tablist is invalid ARIA (aria-allowed-attr,
-            // aria-required-children), and every option is a tab stop: use role="tab" with a roving tabindex.
-            role: !itemDisabled && href ? 'link' : 'button',
-            // Disabled options leave the tab sequence and the arrow-key path (legacy).
-            tabIndex: itemDisabled ? -1 : 0,
+            role: 'tab',
+            // Roving tabindex: one tab stop for the whole control; the arrow keys move between options.
+            tabIndex: value === tabStopValue ? 0 : -1,
             onClick: (event: React.MouseEvent<HTMLElement>): void => {
               if (href) {
                 event.preventDefault()
@@ -370,10 +376,11 @@ export function SegmentedControl<T extends string = string>({
               aria-hidden
               className={cn(
                 INDICATOR_BASE_CLASSES,
-                indicatorHovered ? 'bg-surface3-hovered' : 'bg-surface3',
+                !indicatorColor && (indicatorHovered ? 'bg-surface3-hovered' : 'bg-surface3'),
                 ENTER_PRESET_CLASSES.fadeIn,
                 EXIT_PRESET_CLASSES.fadeOut,
               )}
+              backgroundColor={indicatorColor}
               style={indicatorStyle}
               testID="segmented-control-indicator"
               onMouseEnter={() => setIndicatorHovered(true)}

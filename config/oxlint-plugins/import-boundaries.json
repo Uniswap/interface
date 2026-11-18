@@ -295,6 +295,18 @@
       "bareModuleSources": [],
       "allowedSiblings": ["wallet"],
       "message": "A feature may only import from its own folder or from `features/wallet/`. Move shared code down to `components/`, `hooks/`, `utils/` or `state/`, or pass it in from the page."
+    },
+    {
+      "id": "web-pages-sibling-isolation",
+      "mode": "siblingIsolation",
+      "importerRootMarker": "/apps/web/src/pages/",
+      "importPrefixes": ["~/pages/", "pages/"],
+      "bareModuleSources": ["~/pages", "pages"],
+      "allowRootFiles": false,
+      "allowedSiblings": ["NotFound", "routes"],
+      "allowedSiblingEntries": ["Swap"],
+      "exemptImporterSiblings": ["routes"],
+      "message": "A page may only import from its own folder, from pages/routes/ (the route table, paths, metatags, get*Title, chunk preloads), from NotFound/, or the embeddable Swap widget as `~/pages/Swap` (nothing deeper in pages/Swap/). Shared code moves down to features/ or components/."
     }
   ]
 }

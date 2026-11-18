@@ -1,7 +1,7 @@
 import { Flex, Text, TouchableArea, useMedia } from '@universe/mycelium'
 import { type KeyboardEvent, useId, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { LIVE_POOL_VOLUME_PERIODS } from '~/features/Explore/timeLabels'
+import { LIVE_POOL_VOLUME_PERIODS } from '~/components/Charts/timeLabels'
 import { VolumeTimeFrameSelector } from '~/features/Explore/VolumeTimeFrameSelector'
 import type { HookDeployment, HookDeploymentAddress } from '~/features/Hooks/types'
 import { HookPermissions } from '~/features/Liquidity/HookPermissions'

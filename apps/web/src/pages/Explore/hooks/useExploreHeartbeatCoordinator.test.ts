@@ -1,7 +1,7 @@
 import type { Query } from '@tanstack/react-query'
 import { renderHook, act } from '@testing-library/react'
+import { GET_PROTOCOL_STATS_QUERY_KEY_PREFIX } from '@universe/data-api'
 import { PollingInterval } from 'uniswap/src/constants/misc'
-import { GET_PROTOCOL_STATS_QUERY_KEY_PREFIX } from 'uniswap/src/data/apiClients/dataApiService/explore/useGetProtocolStatsQuery'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { useInterval } from '~/lib/hooks/useInterval'
 import {

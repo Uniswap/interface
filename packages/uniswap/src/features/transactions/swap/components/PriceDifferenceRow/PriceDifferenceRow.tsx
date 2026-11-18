@@ -1,11 +1,11 @@
 import { PriceDifferenceLabel, PriceDifferenceRow as PriceDifferenceRowView } from '@universe/transactions-ui'
-import { toSwapWarningDisplay } from 'uniswap/src/components/modals/WarningModal/utils'
+import { toWarningLevel } from 'uniswap/src/components/modals/WarningModal/utils'
 import { MarketPriceDifferenceWarningModal } from 'uniswap/src/features/transactions/swap/components/PriceDifferenceRow/MarketPriceDifferenceWarning'
 import { usePriceDifference } from 'uniswap/src/features/transactions/swap/components/PriceDifferenceRow/usePriceDifference'
 import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/useSwapWarnings'
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 
-/** Adapter: derives the price difference and warning, then renders the swap-ui row with the label in its info shell. */
+/** Adapter: derives the price difference and warning, then renders the transactions-ui row with the label in its info shell. */
 export function PriceDifferenceRow({
   hide,
   derivedSwapInfo,
@@ -25,7 +25,7 @@ export function PriceDifferenceRow({
   return (
     <PriceDifferenceRowView
       value={formattedPriceDifference}
-      warning={toSwapWarningDisplay(priceImpactWarning)}
+      level={toWarningLevel(priceImpactWarning.severity)}
       label={
         <MarketPriceDifferenceWarningModal routing={trade.routing}>
           <PriceDifferenceLabel />

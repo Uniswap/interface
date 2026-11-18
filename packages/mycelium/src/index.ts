@@ -284,6 +284,7 @@ export { validColor } from './compat/color-validation'
  * the compat Flex, so it is cross-platform without its own leg split.
  */
 export { ProgressCompat as Progress } from './progress-compat/ProgressCompat'
+export { ProgressRing, type ProgressRingProps } from './progress-ring'
 export type {
   ProgressCompatProps as ProgressProps,
   ProgressExtraProps,

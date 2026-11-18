@@ -27,7 +27,7 @@ exports[`LimitOrderDetails.tsx > renders a preview trade while disabling submiss
           fill="none"
           focusable="false"
           stroke-width="8"
-          style="color: currentColor; width: 20.7px; height: 20.7px;"
+          style="color: currentcolor; width: 20.7px; height: 20.7px;"
           viewBox="0 0 24 24"
         >
           <path
@@ -64,7 +64,7 @@ exports[`LimitOrderDetails.tsx > renders slippage tooltip 1`] = `
     href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
     rel="noopener noreferrer"
     role="link"
-    style="--ch-opacity: 0.6; --ca-opacity: 0.4; transition: opacity 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+    style="--ch-opacity: 0.6; --ca-opacity: 0.4; color: var(--stext-accent1); transition: opacity 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
     target="_blank"
   >
     Learn more

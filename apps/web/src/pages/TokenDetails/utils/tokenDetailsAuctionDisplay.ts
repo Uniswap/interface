@@ -1,13 +1,13 @@
-import type { PlainMessage, Timestamp } from '@bufbuild/protobuf'
+import type { PlainMessage } from '@bufbuild/protobuf'
 import type { Auction } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import type { EVMUniverseChainId } from '@universe/chains'
-import { timestampToMs } from 'uniswap/src/data/apiClients/dataApiService/utils/protoTimestamp'
 import {
   getAuctionLaunchMethod,
   type LaunchProvenance,
   LaunchProvenanceMethod,
 } from 'uniswap/src/features/dataApi/launchProvenance'
 import { parseFiniteNumber } from 'utilities/src/primitives/number'
+import { timestampToMs } from 'utilities/src/time/protoTimestamp'
 import { mergeLaunchProvenance } from '~/features/Toucan/Auction/utils/auctionLaunchMethod'
 import {
   AuctionDisplayPhase,
@@ -39,11 +39,6 @@ export interface TokenDetailsAuctionDisplay {
   currencyRaised: CurrencyRaisedState
   /** The chain head every phase on the page is resolved from, including sibling auctions'. */
   currentBlock: CurrentBlockState
-}
-
-export function toSeconds(timestamp: PlainMessage<Timestamp> | undefined): bigint | undefined {
-  const ms = timestampToMs(timestamp)
-  return ms === undefined ? undefined : BigInt(Math.floor(ms / 1000))
 }
 
 export function resolveTokenDetailsAuctionDisplay({

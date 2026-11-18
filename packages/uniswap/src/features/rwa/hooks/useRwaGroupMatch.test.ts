@@ -36,7 +36,6 @@ function renderGroupMatch(overrides: Partial<Parameters<typeof useRwaGroupMatch>
       subject: SUBJECT,
       categories: [STOCKS],
       isCategoriesLoading: false,
-      enabled: true,
       ...overrides,
     }),
   ).result.current
@@ -62,16 +61,6 @@ describe(useRwaGroupMatch, () => {
     mockUseRwaTokenGroup.mockReturnValue({ tokenGroup: undefined, isLoading: true })
 
     expect(renderGroupMatch({ categories: [COMMODITIES] })).toEqual({ rwaMatch: undefined, isLoading: false })
-    expect(mockUseRwaTokenGroup).toHaveBeenCalledWith({ subject: SUBJECT, enabled: false })
-  })
-
-  it('disables the lookup and never reports loading when disabled', () => {
-    mockUseRwaTokenGroup.mockReturnValue({ tokenGroup: undefined, isLoading: true })
-
-    expect(renderGroupMatch({ enabled: false, isCategoriesLoading: true })).toEqual({
-      rwaMatch: undefined,
-      isLoading: false,
-    })
     expect(mockUseRwaTokenGroup).toHaveBeenCalledWith({ subject: SUBJECT, enabled: false })
   })
 

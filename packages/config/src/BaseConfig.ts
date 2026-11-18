@@ -68,7 +68,6 @@ export const BaseConfigValues = {
 
   // URL Overrides
   amplitudeProxyUrlOverride: process.env.AMPLITUDE_PROXY_URL_OVERRIDE,
-  apiBaseUrlOverride: process.env.API_BASE_URL_OVERRIDE,
   apiBaseUrlV2Override: process.env.API_BASE_URL_V2_OVERRIDE,
   entryGatewayApiUrlOverride: process.env.ENTRY_GATEWAY_API_URL_OVERRIDE,
   forApiUrlOverride: process.env.FOR_API_URL_OVERRIDE,
@@ -140,7 +139,6 @@ export const BaseConfigSchema = z.object({
 
   // URL Overrides
   amplitudeProxyUrlOverride: optionalString.describe('Override URL for Amplitude proxy'),
-  apiBaseUrlOverride: optionalString.describe('Override URL for API base v1'),
   apiBaseUrlV2Override: optionalString.describe('Override URL for API base v2'),
   entryGatewayApiUrlOverride: optionalString.describe('Override URL for entry gateway API'),
   forApiUrlOverride: optionalString.describe('Override URL for FOR API'),
@@ -164,7 +162,6 @@ export const BaseEnvFieldRules: EnvFieldRules<BaseConfig> = {
   [Environment.Production]: {
     forbidden: [
       'amplitudeProxyUrlOverride',
-      'apiBaseUrlOverride',
       'apiBaseUrlV2Override',
       'entryGatewayApiUrlOverride',
       'forApiUrlOverride',

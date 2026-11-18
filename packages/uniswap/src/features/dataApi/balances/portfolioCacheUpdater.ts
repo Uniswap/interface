@@ -4,13 +4,13 @@ import type { GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1
 import type { Balance, MultichainBalance } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import type { Currency } from '@uniswap/sdk-core'
 import { Platform } from '@universe/chains'
+import { doesGetPortfolioQueryMatchAddress } from '@universe/data-api'
 import { useMemo } from 'react'
 import type { GetPortfolioInput } from 'uniswap/src/data/apiClients/dataApiService/balances/getPortfolio'
-import { doesGetPortfolioQueryMatchAddress } from 'uniswap/src/data/apiClients/dataApiService/balances/getPortfolioQueryUtils'
 import {
   doesGetWalletBalancesQueryMatchAddress,
   PortfolioBalancePart,
-  useWalletBalancesIncludeCategories,
+  WALLET_BALANCES_INCLUDE_CATEGORIES,
 } from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances'
 import { createWalletBalancesVisibilityUpdater } from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/walletBalancesVisibility'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -202,7 +202,6 @@ function matchesWalletBalanceQueries({
 export function usePortfolioCacheUpdater(evmAddress?: string, svmAddress?: string): PortfolioCacheUpdater {
   const { chains: chainIds } = useEnabledChains()
   const queryClient = useQueryClient()
-  const includeCategories = useWalletBalancesIncludeCategories()
 
   // TODO(CONS-1074): GetPortfolio REST endpoint does not yet support modifier array; it will take 1 evm/svm address, but will apply the modifications across the board
   const modifier = useRestPortfolioValueModifier(evmAddress ?? svmAddress)
@@ -230,13 +229,13 @@ export function usePortfolioCacheUpdater(evmAddress?: string, svmAddress?: strin
       // Broad-scan: rendered queries can be chain-filtered or category-keyed, which exact-key writes miss.
       updateWalletBalancesForDelta: ({ input, deltaUsd, chainId }) =>
         writeWalletBalancesDelta({
-          input: { ...input, includeCategories },
+          input: { ...input, includeCategories: WALLET_BALANCES_INCLUDE_CATEGORIES },
           deltaUsd,
           part: PortfolioBalancePart.Tokens,
           scanChainId: chainId,
         }),
     })
-  }, [queryClient, includeCategories])
+  }, [queryClient])
 
   const applyVisibilityUpdate = useEvent(async (hidden: boolean, portfolioBalance?: PortfolioBalance) => {
     const predicate = (query: Query): boolean =>

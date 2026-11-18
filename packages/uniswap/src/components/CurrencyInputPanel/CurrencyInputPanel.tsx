@@ -1,27 +1,78 @@
 import { isE2eTestEnv, isExtensionApp, isMobileWeb, isWebAppDesktop } from '@universe/environment'
-import { Flex, TouchableArea, useIsShortMobileDevice } from '@universe/mycelium'
-import { forwardRef, memo, useCallback } from 'react'
-import { useShakeAnimation } from 'ui/src'
+import type { FlexProps } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import {
-  AmountInputPresets,
-  PRESET_BUTTON_PROPS,
-} from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/AmountInputPresets'
-import { PresetAmountButton } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/PresetAmountButton'
-import type { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types'
-import { PRESET_PERCENTAGES } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/utils'
-import { CurrencyInputPanelBalance } from 'uniswap/src/components/CurrencyInputPanel/CurrencyInputPanelBalance'
-import { CurrencyInputPanelHeader } from 'uniswap/src/components/CurrencyInputPanel/CurrencyInputPanelHeader'
-import { CurrencyInputPanelInput } from 'uniswap/src/components/CurrencyInputPanel/CurrencyInputPanelInput'
-import { CurrencyInputPanelValue } from 'uniswap/src/components/CurrencyInputPanel/CurrencyInputPanelValue'
+  CurrencyInputPanel as CurrencyInputPanelView,
+  type CurrencyInputPanelPresetsPlacement,
+  type CurrencyInputPanelProps as CurrencyInputPanelViewProps,
+} from '@universe/transactions-ui'
+import { forwardRef, memo, useCallback, useImperativeHandle, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
+import type { TextInput } from 'react-native'
+import { useDispatch } from 'react-redux'
+import { useShakeAnimation } from 'ui/src'
+import { useAmountInputText } from 'uniswap/src/components/AmountInput/useAmountInputText'
+import { DefaultTokenOptions } from 'uniswap/src/components/CurrencyInputPanel/DefaultTokenOptions/DefaultTokenOptions'
+import { QuickSelectDefaultTokenOptions } from 'uniswap/src/components/CurrencyInputPanel/DefaultTokenOptions/QuickSelectDefaultTokenOptions'
+import { useCurrencyInputFontSize } from 'uniswap/src/components/CurrencyInputPanel/hooks/useCurrencyInputFontSize'
+import { useCurrencyInputPanelPresets } from 'uniswap/src/components/CurrencyInputPanel/hooks/useCurrencyInputPanelPresets'
+import { useDeferredCaret } from 'uniswap/src/components/CurrencyInputPanel/hooks/useDeferredCaret'
 import { useIndicativeQuoteTextDisplay } from 'uniswap/src/components/CurrencyInputPanel/hooks/useIndicativeQuoteTextDisplay'
+import { useInputFocusSync } from 'uniswap/src/components/CurrencyInputPanel/hooks/useInputFocusSync/useInputFocusSync'
+import { useRefetchAnimationStyle } from 'uniswap/src/components/CurrencyInputPanel/hooks/useRefetchAnimationStyle'
+import { getSelectTokenButtonProps } from 'uniswap/src/components/CurrencyInputPanel/SelectTokenButton'
 import type { CurrencyInputPanelProps, CurrencyInputPanelRef } from 'uniswap/src/components/CurrencyInputPanel/types'
+import { MAX_FIAT_INPUT_DECIMALS } from 'uniswap/src/constants/transactions'
+import { useConnectionStatus } from 'uniswap/src/features/accounts/store/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useMaxAmountSpend } from 'uniswap/src/features/gas/hooks/useMaxAmountSpend'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { useTokenAndFiatDisplayAmounts } from 'uniswap/src/features/transactions/hooks/useTokenAndFiatDisplayAmounts'
+import { useUSDCPrice } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import { MaxBalanceInfoModal } from 'uniswap/src/features/transactions/modals/MaxBalanceInfoModal'
 import { CurrencyField } from 'uniswap/src/types/currency'
+import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
+import { NumberType } from 'utilities/src/format/types'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
+
+/**
+ * The free-form layout props only ever arrive as the Toucan bid set (body4 lines, a 32px input row
+ * without padding, an 8px accessory gap), which is the view's compact variant. Any of them selects it.
+ */
+function getPanelVariant({
+  fiatValueVariant,
+  balanceVariant,
+  inputRowPaddingVertical,
+  inputRowMinHeight,
+  panelAccessoryPaddingTop,
+}: CurrencyInputPanelProps): CurrencyInputPanelViewProps['variant'] {
+  const hasCompactLayoutProps = [
+    fiatValueVariant,
+    balanceVariant,
+    inputRowPaddingVertical,
+    inputRowMinHeight,
+    panelAccessoryPaddingTop,
+  ].some((prop) => prop !== undefined)
+  return hasCompactLayoutProps ? 'compact' : 'default'
+}
+
+/**
+ * The free-form panel style only ever paints the $surface2 card, rounded all round (Toucan, LP
+ * deposit) or squared at the bottom over an attached card (LP deposit).
+ */
+function getPanelCard(customPanelStyle: FlexProps | undefined): CurrencyInputPanelViewProps['card'] {
+  if (!customPanelStyle?.backgroundColor) {
+    return undefined
+  }
+  return customPanelStyle.borderBottomLeftRadius === '$none' ? 'top' : 'full'
+}
 
 export const CurrencyInputPanel = memo(
   forwardRef<CurrencyInputPanelRef, CurrencyInputPanelProps>(
-    // oxlint-disable-next-line complexity -- long-lived component covering many input modes
+    // oxlint-disable-next-line complexity -- long-lived component covering many input modes, now one mapping onto the view
     function CurrencyInputPanelInner(props, forwardedRef): JSX.Element {
       const {
         autoFocus,
@@ -35,9 +86,6 @@ export const CurrencyInputPanel = memo(
         showSoftInputOnFocus = false,
         tokenColor,
         onPressIn,
-        isLoading,
-        valueIsIndicative,
-        isIndicativeLoading,
         onSelectionChange: selectionChange,
         onSetExactAmount,
         onSetPresetValue,
@@ -50,55 +98,71 @@ export const CurrencyInputPanel = memo(
         transactionType,
         customPanelStyle,
         hidePresets,
+        hideBalance,
+        showFiatToggleIcon,
+        headerAccessory,
         onBlur,
         panelAccessory,
-        disablePressAnimation,
         fontSizeOptions,
-        fiatValueVariant,
-        inputRowPaddingVertical,
-        panelAccessoryPaddingTop = '$spacing24',
-        inputRowMinHeight,
         inputSuffix,
-        allowOverflow,
-        balanceVariant,
         actualGasFee,
         isGasCovered,
       } = props
 
-      const isShortMobileDevice = useIsShortMobileDevice()
+      const { t } = useTranslation()
+      const dispatch = useDispatch()
+      const { isTestnetModeEnabled } = useEnabledChains()
+      const { isDisconnected } = useConnectionStatus()
+      const { formatCurrencyAmount } = useLocalizationContext()
+      const { code: fiatCurrencyCode, symbol: fiatCurrencySymbol } = useAppFiatCurrencyInfo()
+      const { price: usdPrice } = useUSDCPrice(currencyInfo?.currency)
 
       const display = useIndicativeQuoteTextDisplay(props)
       const { value, usdValue } = display
 
       const isOutput = currencyField === CurrencyField.OUTPUT
-
       const showDefaultTokenOptions = isOutput && !currencyInfo
-
       const showInsufficientBalanceWarning =
         !isOutput && !!currencyBalance && !!currencyAmount && currencyBalance.lessThan(currencyAmount)
 
-      const showMaxButton = showMaxButtonOnly && !isOutput && !hidePresets
-      const showPercentagePresetOptions = !showMaxButtonOnly && !hidePresets && currencyField === CurrencyField.INPUT
-
+      // Where the presets render, from the old header, footer and Max button conditions.
       const isDesktop = isWebAppDesktop || isExtensionApp
+      const showHeaderPresets =
+        isDesktop && !hidePresets && !headerAccessory && !isOutput && !!headerLabel && !!currencyBalance
+      const showFooterPresets =
+        !showMaxButtonOnly &&
+        !hidePresets &&
+        !headerAccessory &&
+        !isOutput &&
+        (isMobileWeb || (isDesktop && !headerLabel))
+      const showMaxButton = showMaxButtonOnly && !isOutput && !hidePresets && !!onSetPresetValue
+      const presetsPlacement: CurrencyInputPanelPresetsPlacement | undefined = showHeaderPresets
+        ? 'header'
+        : showFooterPresets
+          ? 'footer'
+          : showMaxButton
+            ? 'balance'
+            : undefined
 
-      const showPercentagePresetsOnBottom = showPercentagePresetOptions && (isMobileWeb || (isDesktop && !headerLabel))
+      const { presets, maxBalanceInfo } = useCurrencyInputPanelPresets({
+        placement: presetsPlacement,
+        currencyField,
+        currencyAmount,
+        currencyBalance,
+        transactionType,
+        actualGasFee,
+        isGasCovered,
+        onSetPresetValue,
+      })
 
-      const shakeAnimation = useShakeAnimation()
-      const { triggerShakeAnimation } = shakeAnimation
+      const { shakeStyle, triggerShakeAnimation } = useShakeAnimation()
 
       const onPressDisabledWithShakeAnimation = useCallback((): void => {
         onPressDisabled?.()
         triggerShakeAnimation()
       }, [onPressDisabled, triggerShakeAnimation])
 
-      const handleSetPresetValue = useCallback(
-        (amount: string, percentage: PresetPercentage) => {
-          onSetPresetValue?.(amount, percentage)
-        },
-        [onSetPresetValue],
-      )
-
+      // No actualGasFee here: the balance press always reserved the static gas amount.
       const maxInputAmount = useMaxAmountSpend({
         currencyAmount: currencyBalance,
         txType: transactionType,
@@ -114,164 +178,148 @@ export const CurrencyInputPanel = memo(
         } else {
           // For the input (Sell) panel, use max amount which accounts for gas reserves
           if (maxInputAmount && maxInputAmount.greaterThan(0)) {
-            handleSetPresetValue(maxInputAmount.toExact(), 'max')
+            onSetPresetValue?.(maxInputAmount.toExact(), 'max')
           }
         }
-      }, [isOutput, currencyBalance, maxInputAmount, onSetExactAmount, handleSetPresetValue])
+      }, [isOutput, currencyBalance, maxInputAmount, onSetExactAmount, onSetPresetValue])
 
-      const renderPreset = useCallback(
-        (preset: PresetPercentage) => (
-          <PresetAmountButton
-            percentage={preset}
-            currencyAmount={currencyAmount}
-            currencyBalance={currencyBalance}
-            currencyField={currencyField}
-            transactionType={transactionType}
-            elementName={ElementName.PresetPercentage}
-            buttonProps={PRESET_BUTTON_PROPS}
-            actualGasFee={actualGasFee}
-            isGasCovered={isGasCovered}
-            onSetPresetValue={handleSetPresetValue}
-          />
-        ),
-        [
-          currencyAmount,
-          currencyBalance,
-          currencyField,
-          handleSetPresetValue,
-          transactionType,
-          actualGasFee,
-          isGasCovered,
-        ],
+      const onToggleFiatMode = useCallback(() => {
+        if (!usdPrice) {
+          dispatch(
+            pushNotification({
+              type: AppNotificationType.Error,
+              errorMessage: t('swap.error.fiatInputUnavailable', { fiatCurrencyCode }),
+              hideDelay: ONE_SECOND_MS * 3,
+            }),
+          )
+        } else {
+          onToggleIsFiatMode(currencyField)
+        }
+      }, [currencyField, dispatch, fiatCurrencyCode, onToggleIsFiatMode, t, usdPrice])
+
+      // In fiat mode, show equivalent token amount. In token mode, show equivalent fiat amount
+      const fiatValue = useTokenAndFiatDisplayAmounts({ value, currencyInfo, currencyAmount, usdValue, isFiatMode })
+
+      // The amount field only mounts with a token, so its clearing and keyboard effects wait for one.
+      const { formattedValue, onChangeFormattedText } = useAmountInputText({
+        value,
+        onChangeText: onSetExactAmount,
+        showSoftInputOnFocus,
+        maxDecimals: isFiatMode ? MAX_FIAT_INPUT_DECIMALS : currencyInfo?.currency.decimals,
+        isFieldMounted: !!currencyInfo,
+      })
+
+      // Keeps the old stepped sizing, which the view's own fitting does not reproduce exactly.
+      const inputFontSize = useCurrencyInputFontSize({ value, focus, options: fontSizeOptions })
+
+      const inputRef = useRef<TextInput | null>(null)
+      const { selection, followNativeSelection, setCaret } = useDeferredCaret(value)
+
+      useImperativeHandle(forwardedRef, () => ({
+        textInputRef: inputRef,
+        triggerShakeAnimation,
+        setSelection: setCaret,
+      }))
+
+      useInputFocusSync({ inputRef, focus, value, currencyField, resetSelection })
+
+      const onSelectionChange = useCallback(
+        ({ start, end }: { start: number; end: number }) => {
+          // Follow the caret the user moved, or the controlled `selection` would push ours back.
+          followNativeSelection({ start, end })
+          selectionChange?.(start, end)
+        },
+        [selectionChange, followNativeSelection],
       )
 
+      const refetchAnimationStyle = useRefetchAnimationStyle(props)
+
+      // Hide balance if panel is output, and no balance, or disconnected or the token selector is hidden
+      const hideCurrencyBalance =
+        (isOutput && currencyBalance?.equalTo(0)) || isDisconnected || !!hidePresets || !!hideBalance
+      const canPressBalance = !disabled && (isOutput || !!onSetPresetValue) && !!currencyBalance?.greaterThan(0)
+      const balance =
+        currencyInfo && !hideCurrencyBalance
+          ? {
+              amount: formatCurrencyAmount({ value: currencyBalance, type: NumberType.TokenTx }),
+              symbol: getSymbolDisplayText(currencyInfo.currency.symbol) ?? undefined,
+              onPress: canPressBalance ? handlePressBalance : undefined,
+            }
+          : undefined
+
+      const { token, accent, showChevron } = getSelectTokenButtonProps({
+        selectedCurrencyInfo: currencyInfo,
+        tokenColor,
+      })
+
+      const tokenOptions = showDefaultTokenOptions ? (
+        isWebAppDesktop ? (
+          <QuickSelectDefaultTokenOptions />
+        ) : (
+          <DefaultTokenOptions currencyField={CurrencyField.OUTPUT} />
+        )
+      ) : undefined
+
       return (
-        <TouchableArea
-          group
-          // On iOS the pressable is one accessibility element, which hides the token button and
-          // the amount input from the e2e test tree; only e2e builds opt out of that
-          accessible={!isE2eTestEnv()}
-          scaleTo={disablePressAnimation ? 1 : undefined}
-          disabledStyle={{
-            cursor: 'default',
-          }}
-          onPress={disabled ? onPressDisabledWithShakeAnimation : currencyInfo ? onPressIn : onShowTokenSelector}
-        >
-          <Flex
-            {...customPanelStyle}
-            overflow={allowOverflow ? 'visible' : 'hidden'}
-            px="$spacing16"
-            py={isShortMobileDevice ? '$spacing8' : '$spacing16'}
-          >
-            <CurrencyInputPanelHeader
-              headerLabel={headerLabel}
-              currencyField={currencyField}
-              currencyBalance={currencyBalance}
-              currencyAmount={currencyAmount}
-              currencyInfo={currencyInfo}
-              showDefaultTokenOptions={showDefaultTokenOptions}
-              hidePresets={hidePresets}
-              actualGasFee={actualGasFee}
-              isGasCovered={isGasCovered}
-              onSetPresetValue={handleSetPresetValue}
+        <>
+          <CurrencyInputPanelView
+            // On iOS the pressable is one accessibility element, which hides the token button and
+            // the amount input from the e2e test tree; only e2e builds opt out of that
+            accessible={!isE2eTestEnv()}
+            accessory={panelAccessory}
+            amount={{
+              value: formattedValue,
+              onChangeValue: onChangeFormattedText,
+              state: display.color === '$neutral3' ? 'indicative' : 'default',
+              prefix: isFiatMode ? fiatCurrencySymbol : undefined,
+              suffix: inputSuffix || undefined,
+              fontSize: inputFontSize.fontSize,
+              onFieldLayout: inputFontSize.onLayout,
+              autoFocus: autoFocus ?? focus,
+              onBlur,
+              showSoftInputOnFocus,
+              selection,
+              onSelectionChange,
+              inputRef,
+              animatedStyle: refetchAnimationStyle,
+              testID: isOutput ? TestID.AmountInputOut : TestID.AmountInputIn,
+            }}
+            balance={balance}
+            card={getPanelCard(customPanelStyle)}
+            disabled={disabled}
+            fiatValue={isTestnetModeEnabled ? undefined : fiatValue}
+            hasAmount={!!currencyAmount}
+            headerAccessory={headerAccessory}
+            inputRowAnimatedStyle={shakeStyle}
+            isBalanceInsufficient={showInsufficientBalanceWarning}
+            label={headerLabel}
+            presets={presets}
+            showFiatToggleIcon={showFiatToggleIcon}
+            token={token}
+            tokenButton={{
+              hidden: !!hidePresets,
+              accent,
+              showChevron,
+              testID: isOutput ? TestID.ChooseOutputToken : TestID.ChooseInputToken,
+            }}
+            tokenOptions={tokenOptions}
+            tokenOptionsPlacement={isWebAppDesktop ? 'header' : 'input'}
+            variant={getPanelVariant(props)}
+            onPressDisabled={onPressDisabledWithShakeAnimation}
+            onPressFiatValue={isTestnetModeEnabled ? onPressDisabledWithShakeAnimation : onToggleFiatMode}
+            onPressIn={onPressIn}
+            onPressSelectToken={onShowTokenSelector}
+          />
+          {presets && (
+            <MaxBalanceInfoModal
+              currencySymbol={currencyBalance?.currency.symbol}
+              isMax={maxBalanceInfo.isMax}
+              isModalOpen={maxBalanceInfo.isOpen}
+              isTooltipEnabled={false}
+              onClose={maxBalanceInfo.onClose}
             />
-            <CurrencyInputPanelInput
-              ref={forwardedRef}
-              autoFocus={autoFocus}
-              currencyAmount={currencyAmount}
-              currencyBalance={currencyBalance}
-              currencyField={currencyField}
-              currencyInfo={currencyInfo}
-              shakeAnimation={shakeAnimation}
-              focus={focus}
-              isLoading={isLoading}
-              isFiatMode={isFiatMode}
-              isIndicativeLoading={isIndicativeLoading}
-              valueIsIndicative={valueIsIndicative}
-              showSoftInputOnFocus={showSoftInputOnFocus}
-              resetSelection={resetSelection}
-              disabled={disabled}
-              tokenColor={tokenColor}
-              indicativeQuoteTextDisplay={display}
-              showInsufficientBalanceWarning={showInsufficientBalanceWarning}
-              showDefaultTokenOptions={showDefaultTokenOptions}
-              fontSizeOptions={fontSizeOptions}
-              inputRowPaddingVertical={inputRowPaddingVertical}
-              minHeight={inputRowMinHeight}
-              inputSuffix={inputSuffix}
-              hidePresets={hidePresets}
-              onPressIn={onPressIn}
-              onSelectionChange={selectionChange}
-              onSetExactAmount={onSetExactAmount}
-              onShowTokenSelector={onShowTokenSelector}
-              onPressDisabledWithShakeAnimation={onPressDisabledWithShakeAnimation}
-              onBlur={onBlur}
-            />
-            <Flex
-              row
-              alignItems="center"
-              mb={showPercentagePresetsOnBottom ? '$spacing6' : undefined}
-              // maintain layout when balance is hidden
-              opacity={currencyInfo ? 1 : 0}
-              pointerEvents={currencyInfo ? 'auto' : 'none'}
-            >
-              {showPercentagePresetsOnBottom && currencyBalance && !currencyAmount ? (
-                <Flex position="absolute">
-                  <AmountInputPresets hoverLtr presets={PRESET_PERCENTAGES} renderPreset={renderPreset} />
-                </Flex>
-              ) : (
-                <Flex row flex={1} justifyContent="space-between" alignItems="center">
-                  <CurrencyInputPanelValue
-                    disabled={disabled}
-                    value={value}
-                    usdValue={usdValue}
-                    isFiatMode={isFiatMode}
-                    currencyInfo={currencyInfo}
-                    currencyAmount={currencyAmount}
-                    currencyField={currencyField}
-                    fiatValueVariant={fiatValueVariant}
-                    onPressDisabledWithShakeAnimation={onPressDisabledWithShakeAnimation}
-                    onToggleIsFiatMode={onToggleIsFiatMode}
-                  />
-                </Flex>
-              )}
-              {currencyInfo && (
-                <Flex row centered ml="auto" gap="$spacing4" justifyContent="flex-end">
-                  <CurrencyInputPanelBalance
-                    currencyField={currencyField}
-                    currencyBalance={currencyBalance}
-                    currencyInfo={currencyInfo}
-                    showInsufficientBalanceWarning={showInsufficientBalanceWarning}
-                    hideBalance={!!hidePresets}
-                    variant={balanceVariant}
-                    onPressBalance={
-                      !disabled && (isOutput || onSetPresetValue) && currencyBalance?.greaterThan(0)
-                        ? handlePressBalance
-                        : undefined
-                    }
-                  />
-                  {/* Max button */}
-                  {showMaxButton && onSetPresetValue && (
-                    <PresetAmountButton
-                      percentage="max"
-                      currencyAmount={currencyAmount}
-                      currencyBalance={currencyBalance}
-                      currencyField={currencyField}
-                      transactionType={transactionType}
-                      buttonProps={{
-                        className: 'border-0',
-                      }}
-                      actualGasFee={actualGasFee}
-                      isGasCovered={isGasCovered}
-                      onSetPresetValue={handleSetPresetValue}
-                    />
-                  )}
-                </Flex>
-              )}
-            </Flex>
-            {panelAccessory ? <Flex mt={panelAccessoryPaddingTop}>{panelAccessory}</Flex> : null}
-          </Flex>
-        </TouchableArea>
+          )}
+        </>
       )
     },
   ),

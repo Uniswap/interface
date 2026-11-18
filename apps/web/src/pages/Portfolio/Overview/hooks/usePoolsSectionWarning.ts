@@ -6,10 +6,9 @@ import { usePortfolioAddresses } from '~/pages/Portfolio/hooks/usePortfolioAddre
 
 interface UsePoolsSectionWarningParams {
   chainId?: UniverseChainId
-  enabled: boolean
 }
 
-export function usePoolsSectionWarning({ chainId, enabled }: UsePoolsSectionWarningParams): {
+export function usePoolsSectionWarning({ chainId }: UsePoolsSectionWarningParams): {
   warningMessage?: string
 } {
   const { t } = useTranslation()
@@ -18,7 +17,6 @@ export function usePoolsSectionWarning({ chainId, enabled }: UsePoolsSectionWarn
     evmAddress: portfolioAddresses.evmAddress,
     svmAddress: portfolioAddresses.svmAddress,
     chainId,
-    enabled,
   })
 
   return {

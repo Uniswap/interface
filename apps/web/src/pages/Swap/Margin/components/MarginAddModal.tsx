@@ -1,16 +1,19 @@
+import { CurrencyAmount } from '@uniswap/sdk-core'
 import { Text } from '@universe/mycelium'
 import { TestID } from '@universe/test'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { CurrencyInputPanel } from 'uniswap/src/components/CurrencyInputPanel/CurrencyInputPanel'
 import { type MarginActivePosition } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { MarginDirection, type MarginPaymentToken } from 'uniswap/src/features/transactions/margin/types'
+import { CurrencyField } from 'uniswap/src/types/currency'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
-import { formatUnits, parseUnits } from '~/chains'
+import { parseUnits } from '~/chains'
 import { type MarginMarket } from '~/constants/margin'
 import { getMarginCurrencyInfo, useMarginCurrencyInfos } from '~/features/margin/hooks/useMarginCurrencyInfos'
 import {
@@ -29,9 +32,9 @@ import { MarginAdjustShowMoreSection } from '~/pages/Swap/Margin/components/Marg
 import { MarginPaymentTokenSelector } from '~/pages/Swap/Margin/components/MarginPaymentTokenSelector'
 import { MarginActionFooterMessage } from '~/pages/Swap/Margin/components/shared/MarginActionFooterMessage'
 import { MarginActionModalShell } from '~/pages/Swap/Margin/components/shared/MarginActionModalShell'
-import { MarginAmountField } from '~/pages/Swap/Margin/components/shared/MarginAmountField'
 import { MarginExcludedVenueNotice } from '~/pages/Swap/Margin/components/shared/MarginExcludedVenueNotice'
 import { MarginPairHeading } from '~/pages/Swap/Margin/components/shared/MarginPairHeading'
+import { useMarginAdjustAmountInput } from '~/pages/Swap/Margin/hooks/useMarginAdjustAmountInput'
 import { useMarginAdjustController } from '~/pages/Swap/Margin/hooks/useMarginAdjustController'
 import { useMarginPositionMarkIsStale } from '~/pages/Swap/Margin/hooks/useMarginPositionMarkIsStale'
 import type { AdjustFunding } from '~/pages/Swap/Margin/hooks/useMarginQuote'
@@ -54,7 +57,6 @@ export function MarginAddModal({
   const { t } = useTranslation()
   const { formatNumberOrString } = useLocalizationContext()
   const currencyInfos = useMarginCurrencyInfos()
-  const [amount, setAmount] = useState('')
   const [selectedPaymentToken, setSelectedPaymentToken] = useState<MarginPaymentToken | undefined>(undefined)
   const [isSelectingPayment, setIsSelectingPayment] = useState(false)
   const paymentToken = useMemo(
@@ -73,7 +75,8 @@ export function MarginAddModal({
   const [expandedOverride, setExpandedOverride] = useState<boolean | undefined>(undefined)
   const isExpanded = expandedOverride ?? isPaymentTokenDifferentFromCollateral({ token: paymentToken, market })
 
-  const paymentLogoUrl = useCurrencyInfo(currencyId(paymentCurrency))?.logoUrl ?? undefined
+  const paymentCurrencyInfo = useCurrencyInfo(currencyId(paymentCurrency))
+  const { tokenAmount: amount, panelProps } = useMarginAdjustAmountInput(paymentCurrency)
 
   // The amount is already in payment-token units — the exact wire field. Blank input must be
   // 'none', never a deposit with an empty amount (see the controller's caller contract).
@@ -108,11 +111,6 @@ export function MarginAddModal({
     onClose,
   })
 
-  const onFillMax = useEvent(() => {
-    if (controller.spendableBalanceRaw !== undefined) {
-      setAmount(formatUnits(BigInt(controller.spendableBalanceRaw), paymentToken.decimals))
-    }
-  })
   const onOpenSelector = useEvent(() => setIsSelectingPayment(true))
   const onCloseSelector = useEvent(() => setIsSelectingPayment(false))
   const onSelectPaymentToken = useEvent((token: MarginPaymentToken | undefined) => {
@@ -172,32 +170,19 @@ export function MarginAddModal({
     >
       <MarginPairHeading market={market} variant="direction" position={position} />
       <MarginExcludedVenueNotice venue={market.venue} />
-      <MarginAmountField
-        inputAriaLabel={t('margin.add.amountLabel')}
-        value={amount}
-        onChangeText={setAmount}
-        maxDecimals={paymentToken.decimals}
-        chip={{
-          kind: 'select',
-          symbol: paymentToken.symbol,
-          logoUrl: paymentLogoUrl,
-          chainId: paymentToken.chainId,
-          ariaLabel: t('margin.payment.selector.title'),
-          onPress: onOpenSelector,
-        }}
-        trailing={
-          controller.spendableBalanceRaw !== undefined
-            ? {
-                kind: 'action',
-                label: `${formatNumberOrString({
-                  value: Number(formatUnits(BigInt(controller.spendableBalanceRaw), paymentToken.decimals)),
-                  type: NumberType.TokenNonTx,
-                })} ${paymentToken.symbol}`,
-                ariaLabel: t('margin.add.useMaxBalance'),
-                onPress: onFillMax,
-              }
-            : undefined
+      <CurrencyInputPanel
+        {...panelProps}
+        currencyField={CurrencyField.INPUT}
+        currencyInfo={paymentCurrencyInfo}
+        currencyBalance={
+          controller.spendableBalanceRaw === undefined
+            ? undefined
+            : CurrencyAmount.fromRawAmount(paymentCurrency, controller.spendableBalanceRaw)
         }
+        isGasCovered
+        showFiatToggleIcon
+        customPanelStyle={{ backgroundColor: '$surface2' }}
+        onShowTokenSelector={onOpenSelector}
       />
       {/* Cross-token deposits land a different amount of collateral than was paid. */}
       {equityInHuman !== undefined ? (

@@ -1,5 +1,4 @@
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet'
-import { FeatureFlags, useFeatureFlagWithExposureLoggingDisabled } from '@universe/gating'
 import {
   Flex,
   UniversalList,
@@ -52,8 +51,7 @@ export const ProfilePoolsTab = memo(function ProfilePoolsTabInner({
   openPositionsCount,
 }: ProfilePoolsTabProps): JSX.Element {
   const { t } = useTranslation()
-  const poolsBalancesEnabled = useFeatureFlagWithExposureLoggingDisabled(FeatureFlags.PortfolioPoolsBalances)
-  const outageBanner = usePoolsOutageBanner({ evmAddress: owner, enabled: poolsBalancesEnabled })
+  const outageBanner = usePoolsOutageBanner({ evmAddress: owner })
 
   const [statusFilter, setStatusFilter] = useState<PositionStatusFilterValue>(PositionStatusFilterValue.Open)
   const { value: hiddenExpanded, toggle: toggleHidden } = useBooleanState(false)

@@ -1,7 +1,7 @@
 import { type PlainMessage } from '@bufbuild/protobuf'
 import { queryOptions, type UseQueryResult, useQuery } from '@tanstack/react-query'
 import { type GetWalletTokensProfitLossResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
-import { getGetWalletTokensProfitLossQueryOptions, type GetWalletTokensProfitLossQueryParams } from '@universe/api'
+import { getGetWalletTokensProfitLossQueryOptions, type GetWalletTokensProfitLossQueryParams } from '@universe/data-api'
 import { dataApiServiceClientV1 } from 'uniswap/src/data/apiClients/dataApiService/clients/DataApiClient'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 

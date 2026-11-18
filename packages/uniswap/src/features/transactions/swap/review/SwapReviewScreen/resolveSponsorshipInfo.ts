@@ -1,40 +1,19 @@
 import type { TradingApi } from '@universe/api'
-import { isWebApp } from '@universe/environment'
-import { UNISWAP_LOGO } from '@universe/mycelium/assets'
 import { isSponsorableSwap } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import type { SwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
+import { getDisplayableSponsorshipInfo } from 'uniswap/src/features/transactions/swap/utils/routing'
 
 /**
  * Returns the sponsorship info to display on the Network cost row, if any.
- * - Wallet-initiated swaps: the Trading API's quote carries it on
- *   `trade.quote.sponsorshipInfo` when the swap is sponsored.
- * - Web-initiated swaps: Uniswap is the only sponsor today, so we fall back
- *   to the Uniswap logo + name whenever the context indicates sponsorship
- *   (paymasterService set, or requestUniswapGasSponsorship === true). No campaign.
+ *
+ * Only a quote the Trading API marked `sponsored` is shown as sponsored. A campaign, `sponsorMetadata`
+ * or a paymaster capability alone does not make the swap free: execution only uses the paymaster for a
+ * sponsored quote, so anything else would show "Free" for a swap that charges gas.
  */
 export function resolveSponsorshipInfo(swapTxContext: SwapTxAndGasInfo): TradingApi.SponsorshipInfo | undefined {
-  if (isSponsorableSwap(swapTxContext)) {
-    const sponsorshipInfo = swapTxContext.trade?.quote.sponsorshipInfo
-    const sponsor = sponsorshipInfo?.sponsorMetadata
-    const hasSponsorMetadata = sponsor && Object.keys(sponsor).length > 0
-    // The quote carries the sponsorship. Surface it whenever the swap is
-    // sponsored or a campaign is attached — `sponsorMetadata` can be empty when
-    // the campaign supplies the branding instead.
-    if (sponsorshipInfo?.sponsored || sponsorshipInfo?.campaign || hasSponsorMetadata) {
-      return sponsorshipInfo
-    }
-
-    if (isWebApp && (swapTxContext.paymasterService || swapTxContext.requestUniswapGasSponsorship)) {
-      // On the web app, Uniswap is the only sponsor today
-      return {
-        sponsored: true,
-        sponsorMetadata: {
-          name: 'Uniswap Labs',
-          icon: UNISWAP_LOGO,
-        },
-      }
-    }
+  if (!isSponsorableSwap(swapTxContext)) {
+    return undefined
   }
 
-  return undefined
+  return getDisplayableSponsorshipInfo(swapTxContext.trade?.quote.sponsorshipInfo)
 }

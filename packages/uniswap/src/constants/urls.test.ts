@@ -169,3 +169,27 @@ describe('getUniswapServiceUrls — analytics proxies', () => {
     expect(urls.statsigProxyUrl).toBe('https://statsig.test')
   })
 })
+
+describe('getUniswapServiceUrls — scantasticApiUrl', () => {
+  afterEach(() => {
+    mockEnvState.isBetaEnv = false
+    mockEnvState.isDevEnv = false
+  })
+
+  it.each([
+    { name: 'prod', isBetaEnv: false, isDevEnv: false },
+    { name: 'beta', isBetaEnv: true, isDevEnv: false },
+    { name: 'dev', isBetaEnv: false, isDevEnv: true },
+  ])('sends $name builds to the prod gateway', ({ isBetaEnv, isDevEnv }) => {
+    mockEnvState.isBetaEnv = isBetaEnv
+    mockEnvState.isDevEnv = isDevEnv
+
+    expect(getUniswapServiceUrls({}).scantasticApiUrl).toBe('https://rpc.uniswap.org/v2/scantastic')
+  })
+
+  it('lets an explicit override win', () => {
+    expect(getUniswapServiceUrls({ scantasticApiUrlOverride: 'https://scantastic.test' }).scantasticApiUrl).toBe(
+      'https://scantastic.test',
+    )
+  })
+})

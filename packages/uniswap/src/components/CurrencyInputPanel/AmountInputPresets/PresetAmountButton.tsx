@@ -1,56 +1,24 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { Button, ButtonProps } from '@universe/mycelium'
-import { cn } from '@universe/mycelium/cn'
+import { ButtonProps } from '@universe/mycelium'
 import { TestID } from '@universe/test'
-import JSBI from 'jsbi'
 import { memo, useCallback, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import type {
-  PresetPercentage,
-  PresetPercentageNumber,
-} from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types'
-import { isMaxPercentage } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/utils'
+import { PresetPill } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/PresetPill'
+import type { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types'
+import {
+  getPresetAmount,
+  isMaxPercentage,
+  isPresetAmountDisabled,
+} from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/utils'
 import { useMaxAmountSpend } from 'uniswap/src/features/gas/hooks/useMaxAmountSpend'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { MaxBalanceInfoModal } from 'uniswap/src/features/transactions/modals/MaxBalanceInfoModal'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { useEvent } from 'utilities/src/react/hooks'
 
 type ButtonPressEvent = Parameters<NonNullable<ButtonProps['onPress']>>[0]
-
-/**
- * Returns the currency amount for the specified percentage of the passed in raw value.
- * If the currency amount is less than the max amount the user has it returns 0.
- */
-function getPercentageOfCurrencyAmount({
-  currency,
-  rawBalanceAmount,
-  percent,
-  rawMaxAmount,
-}: {
-  currency: Maybe<Currency>
-  rawBalanceAmount: Maybe<JSBI>
-  percent: PresetPercentageNumber
-  rawMaxAmount?: JSBI
-}): Maybe<CurrencyAmount<Currency>> {
-  if (!rawBalanceAmount) {
-    return undefined
-  }
-
-  const rawPercentageValue = JSBI.divide(JSBI.multiply(rawBalanceAmount, JSBI.BigInt(percent)), JSBI.BigInt(100))
-
-  // return the minimum of the rawMaxAmount and the rawPercantageValue to account for gas
-  const amount = JSBI.GT(rawPercentageValue, rawMaxAmount) ? rawMaxAmount : rawPercentageValue
-
-  return getCurrencyAmount({
-    value: amount?.toString() ?? '0',
-    valueType: ValueType.Raw,
-    currency,
-  })
-}
 
 interface PresetAmountButtonProps {
   currencyAmount: CurrencyAmount<Currency> | null | undefined
@@ -86,24 +54,18 @@ export function PresetAmountButton({
     actualGasFee,
     isGasCovered,
   })
-  const presetValueAmount = useMemo(() => {
-    if (isMaxPercentage(percentage)) {
-      return maxInputAmount
-    }
+  const presetValueAmount = useMemo(
+    () =>
+      getPresetAmount({
+        percentage,
+        currency: currencyBalance?.currency,
+        rawBalanceAmount: currencyBalance?.quotient,
+        maxInputAmount,
+      }),
+    [currencyBalance?.currency, currencyBalance?.quotient, percentage, maxInputAmount],
+  )
 
-    return getPercentageOfCurrencyAmount({
-      currency: currencyBalance?.currency,
-      rawBalanceAmount: currencyBalance?.quotient,
-      percent: percentage,
-      rawMaxAmount: maxInputAmount?.quotient,
-    })
-  }, [currencyBalance?.currency, currencyBalance?.quotient, percentage, maxInputAmount])
-
-  // Disable max button if max already set or when balance is not sufficient
-  const disablePresetButton =
-    !presetValueAmount ||
-    !presetValueAmount.greaterThan(0) ||
-    (isMaxPercentage(percentage) && currencyAmount?.toExact() === presetValueAmount.toExact())
+  const disablePresetButton = isPresetAmountDisabled({ percentage, presetAmount: presetValueAmount, currencyAmount })
 
   const presetValueAmountRef = useRef(presetValueAmount)
   presetValueAmountRef.current = presetValueAmount
@@ -155,11 +117,6 @@ const PresetButtonContent = memo(function PresetButtonContentInner({
   currencySymbol,
   elementName,
   setIsShowingMaxNativeBalanceModal,
-  size = 'xxsmall',
-  variant = 'branded',
-  emphasis = 'secondary',
-  fill = false,
-  className,
   ...rest
 }: {
   percentage: PresetPercentage
@@ -199,21 +156,15 @@ const PresetButtonContent = memo(function PresetButtonContentInner({
         }
         properties={{ percentage }}
       >
-        <Button
-          fill={fill}
-          variant={variant}
-          emphasis={emphasis}
-          size={size}
+        <PresetPill
           disabled={disabled}
           testID={currencyField === CurrencyField.INPUT ? TestID.SetMaxInput : TestID.SetMaxOutput}
-          borderColor="$surface3"
-          className={cn('hover:scale-[1.02]', className)}
           onPress={onPress}
           onDisabledPress={onDisabledPress}
           {...rest}
         >
           {isMax ? t('swap.button.max') : `${percentage}%`}
-        </Button>
+        </PresetPill>
       </Trace>
     </MaxBalanceInfoModal>
   )

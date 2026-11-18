@@ -13,7 +13,7 @@ vi.mock('~/features/wallet/components/AccountDrawer/UniwalletModal', () => ({
   default: () => <div data-testid="mock-uniwallet-modal">Uniwallet Modal</div>,
 }))
 
-vi.mock('~/components/modals/OffchainActivityModal', () => ({
+vi.mock('~/features/transactions/components/OffchainActivityModal/OffchainActivityModal', () => ({
   __esModule: true,
   default: () => <div data-testid="mock-offchain-activity-modal">Offchain Activity Modal</div>,
 }))

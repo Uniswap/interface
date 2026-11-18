@@ -258,7 +258,6 @@ describe('useSectionsForSearchResultsUtils', () => {
             activeTab,
             auctionSearchEnabled: false,
             categorySearchEnabled: true,
-            tokenGroupSearchEnabled: true,
           }),
         ).toEqual([SearchType.TOKEN, SearchType.POOL, SearchType.CATEGORY, SearchType.TOKEN_GROUP])
       }
@@ -270,7 +269,6 @@ describe('useSectionsForSearchResultsUtils', () => {
           activeTab: SearchTab.All,
           auctionSearchEnabled: true,
           categorySearchEnabled: true,
-          tokenGroupSearchEnabled: true,
         }),
       ).toEqual([SearchType.TOKEN, SearchType.POOL, SearchType.AUCTION, SearchType.CATEGORY, SearchType.TOKEN_GROUP])
       expect(
@@ -278,7 +276,6 @@ describe('useSectionsForSearchResultsUtils', () => {
           activeTab: SearchTab.Auctions,
           auctionSearchEnabled: true,
           categorySearchEnabled: true,
-          tokenGroupSearchEnabled: true,
         }),
       ).toEqual([SearchType.AUCTION])
     })
@@ -290,7 +287,6 @@ describe('useSectionsForSearchResultsUtils', () => {
             activeTab,
             auctionSearchEnabled: true,
             categorySearchEnabled: true,
-            tokenGroupSearchEnabled: true,
           }),
         ).toEqual([SearchType.TOKEN, SearchType.POOL, SearchType.TOKEN_GROUP])
       }

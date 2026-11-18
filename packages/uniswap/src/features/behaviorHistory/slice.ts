@@ -44,11 +44,9 @@ export interface UniswapBehaviorHistoryState {
   hasDismissedCrosschainSwapsPromoBanner?: boolean
   /**
    * Per-user tri-state for the pools-balance coachmark on the Portfolio Overview.
-   * `undefined` = fresh state not yet classified; `false` = eligible (state existed before the
-   * pools-balances launch, not yet dismissed); `true` = never show (dismissed, had no pools when
-   * first evaluated, or state was created after launch).
-   * A migration marks existing installs `false`; `initializePoolsBalanceCoachmarkDismissed` classifies
-   * fresh state from the flag at startup.
+   * `false` = eligible (state existed before the pools-balances launch, not yet dismissed; set by a
+   * migration); `true` = dismissed, or had no pools when first evaluated; `undefined` = state created
+   * after launch. Only `false` shows the coachmark.
    */
   hasDismissedPoolsBalanceCoachmark?: boolean
   /** Per-user dismissal flag for the one-time Explore Earn deep-link coachmark. */
@@ -158,11 +156,6 @@ const slice = createSlice({
     setPoolsBalanceCoachmarkDismissed: (state, action: PayloadAction<boolean | undefined>) => {
       state.hasDismissedPoolsBalanceCoachmark = action.payload ?? true
     },
-    // Write-once startup init for fresh state: flag already on → suppressed forever; flag still off →
-    // eligible (pre-launch cohort). No-op once any value exists (migrated installs, dismissals).
-    initializePoolsBalanceCoachmarkDismissed: (state, action: PayloadAction<boolean>) => {
-      state.hasDismissedPoolsBalanceCoachmark ??= action.payload
-    },
     // Payload defaults to `true` (dismiss). Pass `false` to re-show the coachmark from a dev tool.
     setExploreEarnCoachmarkDismissed: (state, action: PayloadAction<boolean | undefined>) => {
       state.hasDismissedExploreEarnCoachmark = action.payload ?? true
@@ -211,6 +204,10 @@ const slice = createSlice({
     ) => {
       getOrCreateNewUserOnboardingWalletHistory(state, action.payload.address)[action.payload.flag] = true
     },
+    setNewUserOnboardingChecklistExpanded: (state, action: PayloadAction<{ address: string; isExpanded: boolean }>) => {
+      getOrCreateNewUserOnboardingWalletHistory(state, action.payload.address).checklistExpanded =
+        action.payload.isExpanded
+    },
   },
   extraReducers: (builder) => {
     // Every platform's finalize path (web updaters, wallet sagas) dispatches this action
@@ -242,7 +239,6 @@ export const {
   setHasDismissedBridgedAssetsBannerV2,
   setHasDismissedCrosschainSwapsPromoBanner,
   setPoolsBalanceCoachmarkDismissed,
-  initializePoolsBalanceCoachmarkDismissed,
   setExploreEarnCoachmarkDismissed,
   setHasDismissedPoolsOutageBanner,
   setHasAcknowledgedEarnHowItWorks,
@@ -250,6 +246,7 @@ export const {
   recordEarnSwapUpsellInteraction,
   permanentlyDismissEarnSwapUpsell,
   setNewUserOnboardingWalletFlag,
+  setNewUserOnboardingChecklistExpanded,
 } = slice.actions
 
 export const uniswapBehaviorHistoryReducer = slice.reducer

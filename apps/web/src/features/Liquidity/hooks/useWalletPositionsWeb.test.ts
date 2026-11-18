@@ -223,6 +223,29 @@ describe('useWalletPositionsWeb', () => {
     })
   })
 
+  describe('enabled', () => {
+    it('disables both queries and reports no loading when enabled is false', () => {
+      mockUseWalletPositions.mockReturnValue(walletPositionsResultFor([], { isLoading: false, hasData: false }))
+
+      const { result } = renderHook(() => useWalletPositionsWeb({ ...baseParams, enabled: false }))
+
+      const disabledFlags = mockUseWalletPositions.mock.calls.map(
+        (call) => (call[0] as { disabled?: boolean }).disabled,
+      )
+      expect(disabledFlags).toEqual([true, true])
+      expect(result.current.isLoadingPositions).toBe(false)
+    })
+
+    it('enables both queries by default', () => {
+      renderHook(() => useWalletPositionsWeb(baseParams))
+
+      const disabledFlags = mockUseWalletPositions.mock.calls.map(
+        (call) => (call[0] as { disabled?: boolean }).disabled,
+      )
+      expect(disabledFlags).toEqual([false, false])
+    })
+  })
+
   describe('derived flags', () => {
     it('isLoadingPositions is true when address + isLoading + !hasData + !error', () => {
       mockUseWalletPositions.mockReturnValue(
@@ -279,6 +302,47 @@ describe('useWalletPositionsWeb', () => {
 
       const { result } = renderHook(() => useWalletPositionsWeb(baseParams))
 
+      expect(result.current.hasErrorWithoutData).toBe(false)
+    })
+
+    function mockHiddenQuery(overrides: Partial<ReturnType<typeof mockUseWalletPositions>>): void {
+      mockUseWalletPositions.mockImplementation((args: { autoFetchAllPages?: boolean }) =>
+        walletPositionsResultFor([], args.autoFetchAllPages ? overrides : {}),
+      )
+    }
+
+    it('tracks the hidden query first page apart from isLoadingPositions', () => {
+      mockHiddenQuery({ isLoading: true, hasData: false })
+
+      const { result } = renderHook(() => useWalletPositionsWeb(baseParams))
+
+      expect(result.current.isLoadingHiddenPositions).toBe(true)
+      expect(result.current.isLoadingPositions).toBe(false)
+    })
+
+    it('isLoadingHiddenPositions is false once the hidden query has a page', () => {
+      mockHiddenQuery({ isLoading: false, hasData: true })
+
+      const { result } = renderHook(() => useWalletPositionsWeb(baseParams))
+
+      expect(result.current.isLoadingHiddenPositions).toBe(false)
+    })
+
+    it('isLoadingHiddenPositions is false when disabled', () => {
+      mockHiddenQuery({ isLoading: false, hasData: false })
+
+      const { result } = renderHook(() => useWalletPositionsWeb({ ...baseParams, enabled: false }))
+
+      expect(result.current.isLoadingHiddenPositions).toBe(false)
+    })
+
+    it('reports a hidden query failure without data and stops loading', () => {
+      mockHiddenQuery({ error: new ConnectError('boom'), hasData: false })
+
+      const { result } = renderHook(() => useWalletPositionsWeb(baseParams))
+
+      expect(result.current.hasHiddenErrorWithoutData).toBe(true)
+      expect(result.current.isLoadingHiddenPositions).toBe(false)
       expect(result.current.hasErrorWithoutData).toBe(false)
     })
   })
@@ -340,6 +404,15 @@ describe('useWalletPositionsWeb', () => {
       renderHook(() => useWalletPositionsWeb(baseParams))
 
       expect(mockUsePendingLPTransactionsChangeListener).toHaveBeenCalledWith(refetch)
+    })
+
+    it('does not subscribe the refetch when disabled', () => {
+      const refetch = vi.fn()
+      mockUseWalletPositions.mockReturnValue(walletPositionsResultFor([], { refetch }))
+
+      renderHook(() => useWalletPositionsWeb({ ...baseParams, enabled: false }))
+
+      expect(mockUsePendingLPTransactionsChangeListener).not.toHaveBeenCalledWith(refetch)
     })
   })
 })

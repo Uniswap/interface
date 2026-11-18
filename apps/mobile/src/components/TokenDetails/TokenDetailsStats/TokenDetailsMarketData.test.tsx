@@ -40,6 +40,7 @@ const EMPTY_STATS = {
   volume: undefined,
   high52w: undefined,
   low52w: undefined,
+  priceAllTimeHighUsd: undefined,
   tvl: undefined,
   poolsTvl: undefined,
   isLoading: false,

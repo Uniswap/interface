@@ -13,11 +13,7 @@ import {
   PriceLineOptions,
   UTCTimestamp,
 } from 'lightweight-charts'
-import {
-  FLAT_STABLECOIN_HEIGHT_FRACTION,
-  getLowVarianceAxisDecimals,
-  isLowVarianceRange,
-} from 'uniswap/src/components/charts/utils'
+import { FLAT_STABLECOIN_HEIGHT_FRACTION, isLowVarianceRange } from 'uniswap/src/components/charts/utils'
 import { HistoryDuration } from 'uniswap/src/features/dataApi/types'
 import {
   ChartHoverData,
@@ -26,12 +22,34 @@ import {
   DEFAULT_BOTTOM_PRICE_SCALE_MARGIN,
   DEFAULT_TOP_PRICE_SCALE_MARGIN,
 } from '~/components/Charts/ChartModel'
+import { LazyRangeBand } from '~/components/Charts/PriceChart/LazyRangeBand'
+import { getAdjustedPrices } from '~/components/Charts/PriceChart/lowPriceScale'
+import { getVisiblePriceWindow, PriceAxisFit } from '~/components/Charts/PriceChart/priceAxisFit'
+import type { PriceWindow } from '~/components/Charts/PriceChart/priceWindow'
 import {
   RoundedCandleSeries,
   RoundedCandleSeriesOptions,
 } from '~/components/Charts/PriceChart/RoundedCandlestickSeries/rounded-candles-series'
-import { formatPriceAxisLabel, getCandlestickPriceBounds } from '~/components/Charts/PriceChart/utils'
+import {
+  formatPriceAxisLabel,
+  formatPriceChartTickMark,
+  getCandlestickPriceBounds,
+} from '~/components/Charts/PriceChart/utils'
+import { VolumeBarsOverlay } from '~/components/Charts/PriceChart/VolumeBarsOverlay'
+import type { DraggableRange } from '~/components/Charts/rangeDrag'
+import type { SingleHistogramData } from '~/components/Charts/VolumeChart/utils'
 import { PriceChartData, PriceChartType } from '~/utils/charts'
+
+/**
+ * A price range highlighted across the chart, in the same units as the series. An undefined edge is open:
+ * the band runs off the chart that way, with no line and no pull on the autoscale.
+ */
+export type PriceChartRangeBand = {
+  lower?: number
+  upper?: number
+  lowerLabel: string
+  upperLabel: string
+}
 
 interface PriceChartModelParams extends ChartModelParams<PriceChartData> {
   type: PriceChartType
@@ -45,31 +63,21 @@ interface PriceChartModelParams extends ChartModelParams<PriceChartData> {
   hideMinMaxLines?: boolean
   v2HoverStyles?: boolean
   isStablecoin?: boolean
-}
-
-const LOW_PRICE_RANGE_THRESHOLD = 0.2
-const LOW_PRICE_RANGE_SCALE_FACTOR = 1000000000
-
-/**
- * Largest magnitude lightweight-charts accepts in a series point. Past it, `setData` fails an
- * internal assertion that throws from the chart's mount effect — there is no boundary between there
- * and the app shell, so one bad series blanks the whole page.
- */
-export const MAX_PLOTTABLE_VALUE = Number.MAX_SAFE_INTEGER / 100
-
-/**
- * The factor to multiply a series by before plotting. Lightweight-charts shows few price-axis points
- * for low-value/low-volatility tokens, so those are scaled up to earn more of them.
- *
- * A narrow range alone doesn't mean the values are small, though: a flat series of large numbers (a
- * steady FDV, a pegged price) passes the same test, and scaling those overflows what the chart can
- * plot. Such a series is left unscaled — it already gets plenty of axis points, which is all the
- * scaling was for.
- */
-export function getLowPriceRangeScaleFactor({ min, max }: { min: number; max: number }): number {
-  const largestMagnitude = Math.max(Math.abs(min), Math.abs(max))
-  const fitsAfterScaling = largestMagnitude * LOW_PRICE_RANGE_SCALE_FACTOR <= MAX_PLOTTABLE_VALUE
-  return max - min < LOW_PRICE_RANGE_THRESHOLD && fitsAfterScaling ? LOW_PRICE_RANGE_SCALE_FACTOR : 1
+  rangeBand?: PriceChartRangeBand
+  /** Makes the range band's edge lines draggable; called with the new range, in series units, on release. */
+  onRangeBandChange?: (range: { lower?: number; upper?: number }) => void
+  /** The range, in series units, as an edge line is dragged; undefined once the drag ends either way. */
+  onRangeBandPreview?: (range: { lower?: number; upper?: number } | undefined) => void
+  /** Pins the axis to these prices (series units) through range edits; undefined fits the data and band. */
+  priceWindow?: PriceWindow
+  /** Given a reader for the `priceWindow` that matches the axis now, so a first zoom starts from it. */
+  visiblePriceWindowRef?: { current: (() => PriceWindow | undefined) | null }
+  /** Changing it re-fits the axis to the data and the band as they stand, as setting new data does. */
+  refitKey?: number
+  /** Drawn as short bars along the bottom of the chart. */
+  volumeData?: SingleHistogramData[]
+  /** The hovered bar, as given in `volumeData`. */
+  onVolumeBarHover?: (bar: SingleHistogramData | undefined) => void
 }
 
 export class PriceChartModel extends ChartModel<PriceChartData> {
@@ -85,6 +93,18 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
   private min: number
   private max: number
   private hideMinMaxLines = false
+  private rangeBandOverlay: LazyRangeBand
+  // Created with the first volume data, so price charts that never get any (TDP, sparklines) attach nothing.
+  private volumeBars: VolumeBarsOverlay | undefined
+  // The band as drawn, in plotted units: a drag starts from it.
+  private plottedRangeBand: DraggableRange | undefined
+  private onRangeBandChange: PriceChartModelParams['onRangeBandChange']
+  private onRangeBandPreview: PriceChartModelParams['onRangeBandPreview']
+  private readonly axisFit = new PriceAxisFit(() => super.isZoomed())
+  private priceWindow: PriceWindow | undefined
+  // The chart's zoom watchers: a pinned price window is a zoom the time scale doesn't report.
+  private readonly zoomListeners = new Set<() => void>()
+  private visiblePriceWindowRef: PriceChartModelParams['visiblePriceWindowRef']
 
   /**
    * Gets the screen coordinates for the last data point
@@ -115,24 +135,20 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
   }
 
   /**
-   * Gets the screen coordinates for the hovered data point on the line
-   * Returns null if not hovering or for candlestick charts
+   * Gets the screen coordinates for the hovered data point (a candle's close), or null if not hovering.
+   * The custom hover marker only draws for line charts (`v2HoverStyles`), but overlays read the x for candles too.
    */
   override getHoverCoordinates(): { x: number; y: number } | null {
-    // Only show custom marker for line charts
-    if (this.type === PriceChartType.CANDLESTICK) {
+    const item = this._hoverData?.item
+    if (!item) {
       return null
     }
 
-    const hoverData = (this as any)._hoverData
-    if (!hoverData || !hoverData.item) {
-      return null
-    }
-
-    // Calculate x from time
-    const xCoordinate = this.api.timeScale().timeToCoordinate(hoverData.item.time)
-    // Calculate y from the data point's value (not mouse position)
-    const yCoordinate = this.series.priceToCoordinate((hoverData.item as AreaData<UTCTimestamp>).value)
+    const xCoordinate = this.api.timeScale().timeToCoordinate(item.time)
+    // From the data point's value (not the mouse position): a candle's close, or the line's value
+    const yCoordinate = this.series.priceToCoordinate(
+      this.type === PriceChartType.CANDLESTICK ? item.close : item.value,
+    )
 
     if (xCoordinate == null || yCoordinate == null) {
       return null
@@ -148,7 +164,7 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
     super(chartDiv, params)
     this.originalData = this.data
 
-    const { adjustedData, lowPriceRangeScaleFactor, min, max, priceAxisDecimals } = PriceChartModel.getAdjustedPrices(
+    const { adjustedData, lowPriceRangeScaleFactor, min, max, priceAxisDecimals } = getAdjustedPrices(
       params.data,
       params.disableLowPriceRangeScaling,
     )
@@ -165,36 +181,37 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
         ? this.api.addSeries(AreaSeries)
         : this.api.addCustomSeries(new RoundedCandleSeries())
     this.series.setData(this.data)
+    this.rangeBandOverlay = new LazyRangeBand({
+      chartDiv,
+      api: this.api,
+      getSeries: () => this.series,
+      getRange: () => (this.onRangeBandChange ? this.plottedRangeBand : undefined),
+      // The preview comes back snapped through the context, and that redraw is the only one per move.
+      onPreview: (range) => this.onRangeBandPreview?.(this.toSeriesUnits(range)),
+      onCommit: (range) => this.onRangeBandChange?.(this.toSeriesUnits(range)),
+      onEnd: () => this.onRangeBandPreview?.(undefined),
+    })
     this.updateOptions(params)
     this.fitContent()
   }
 
-  private static applyPriceScaleFactor(data: PriceChartData, scaleFactor: number): PriceChartData {
+  /** A plotted range back in the series' own units, undoing the low-price scale-up. */
+  private toSeriesUnits({ lower, upper }: DraggableRange): DraggableRange {
     return {
-      time: data.time,
-      value: (data.value || data.close) * scaleFactor,
-      open: data.open * scaleFactor,
-      close: data.close * scaleFactor,
-      high: data.high * scaleFactor,
-      low: data.low * scaleFactor,
+      lower: lower === undefined ? undefined : lower / this.lowPriceRangeScaleFactor,
+      upper: upper === undefined ? undefined : upper / this.lowPriceRangeScaleFactor,
     }
   }
 
-  private static getAdjustedPrices(data: PriceChartData[], disableLowPriceRangeScaling?: boolean) {
-    let adjustedData = data
-    let { min, max } = getCandlestickPriceBounds(data)
+  private readonly getVisiblePriceWindow = (): PriceWindow | undefined =>
+    getVisiblePriceWindow(this.series, this.lowPriceRangeScaleFactor)
 
-    // Derived from the original bounds — the axis formatter receives unscaled prices.
-    const priceAxisDecimals = getLowVarianceAxisDecimals(min, max)
-
-    const lowPriceRangeScaleFactor = disableLowPriceRangeScaling ? 1 : getLowPriceRangeScaleFactor({ min, max })
-    if (lowPriceRangeScaleFactor !== 1) {
-      adjustedData = data.map((point) => this.applyPriceScaleFactor(point, lowPriceRangeScaleFactor))
-      min = min * lowPriceRangeScaleFactor
-      max = max * lowPriceRangeScaleFactor
+  override remove(): void {
+    if (this.visiblePriceWindowRef?.current === this.getVisiblePriceWindow) {
+      this.visiblePriceWindowRef.current = null
     }
-
-    return { adjustedData, lowPriceRangeScaleFactor, min, max, priceAxisDecimals }
+    this.rangeBandOverlay.remove()
+    super.remove()
   }
 
   updateOptions(params: PriceChartModelParams) {
@@ -217,13 +234,19 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
     } = params
     this.hideMinMaxLines = hideMinMaxLines ?? false
     const { min, max } = getCandlestickPriceBounds(data)
+    this.visiblePriceWindowRef = params.visiblePriceWindowRef
+    if (this.visiblePriceWindowRef) {
+      this.visiblePriceWindowRef.current = this.getVisiblePriceWindow
+    }
 
     // Handles changes in time period
     if (this.timePeriod !== params.timePeriod) {
       this.timePeriod = params.timePeriod
     }
 
-    const shouldZoomOut = isLowVarianceRange({ min, max, duration: this.timePeriod, isStablecoin })
+    // A set window is the zoom, so it isn't squeezed into the middle as a flat series is.
+    const shouldZoomOut =
+      !params.priceWindow && isLowVarianceRange({ min, max, duration: this.timePeriod, isStablecoin })
 
     // Zoom out y-axis for low-variance assets
     const scaleMargins = shouldZoomOut
@@ -250,6 +273,7 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
     super.updateOptions(params, {
       timeScale: {
         visible: !sparkline && !hideXAxis,
+        tickMarkFormatter: formatPriceChartTickMark,
       },
       ...crosshairOverride,
       localization: {
@@ -280,19 +304,23 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
     // Handles changing between line/candlestick view
     if (this.type !== type) {
       this.type = params.type
-      this.api.removeSeries(this.series)
+      const previousSeries = this.series
       if (this.type === PriceChartType.CANDLESTICK) {
         this.series = this.api.addCustomSeries(new RoundedCandleSeries())
       } else {
         this.series = this.api.addSeries(AreaSeries)
       }
+      this.rangeBandOverlay.reattach(this.series)
+      this.api.removeSeries(previousSeries)
       this.series.setData(this.data)
+      // The new series has no autoscale provider yet.
+      this.axisFit.reset()
     }
     // Handles changes in data, e.g. time period selection
     if (this.originalData !== data) {
       this.originalData = data
       // oxlint-disable-next-line no-shadow
-      const { adjustedData, lowPriceRangeScaleFactor, min, max, priceAxisDecimals } = PriceChartModel.getAdjustedPrices(
+      const { adjustedData, lowPriceRangeScaleFactor, min, max, priceAxisDecimals } = getAdjustedPrices(
         data,
         disableLowPriceRangeScaling,
       )
@@ -304,7 +332,20 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
 
       this.series.setData(this.data)
       this.fitContent()
+      // The band and window are re-fitted along with the new data, in its new plotted units.
+      this.axisFit.reset()
     }
+
+    if (params.volumeData?.length && !this.volumeBars) {
+      this.volumeBars = new VolumeBarsOverlay(this.api)
+    }
+    this.volumeBars?.update({
+      bars: params.volumeData,
+      prices: this.data,
+      colors,
+      padEdges: this.type === PriceChartType.CANDLESTICK,
+      onHover: params.onVolumeBarHover,
+    })
 
     // Use colors.accent1 which will be the token color when inside TokenColorThemeProvider
     const lineColor = colors.accent1.val
@@ -339,6 +380,72 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
     }
     this.minPriceLine?.applyOptions({ price: this.min, ...this.priceLineOptions })
     this.maxPriceLine?.applyOptions({ price: this.max, ...this.priceLineOptions })
+
+    this.axisFit.setRefitKey(params.refitKey)
+    this.updateRangeBand(params)
+  }
+
+  /** Zoomed in time, or pinned to a price window: the live dot hides, as it would sit off the visible axis. */
+  override isZoomed(): boolean {
+    return super.isZoomed() || this.priceWindow !== undefined
+  }
+
+  override subscribeToVisibleRangeChange(callback: () => void): () => void {
+    const unsubscribe = super.subscribeToVisibleRangeChange(callback)
+    this.zoomListeners.add(callback)
+    return () => {
+      unsubscribe()
+      this.zoomListeners.delete(callback)
+    }
+  }
+
+  private updateRangeBand({
+    rangeBand,
+    colors,
+    onRangeBandChange,
+    onRangeBandPreview,
+    priceWindow,
+  }: PriceChartModelParams): void {
+    if (priceWindow !== this.priceWindow) {
+      this.priceWindow = priceWindow
+      this.zoomListeners.forEach((listener) => listener())
+    }
+    this.onRangeBandChange = onRangeBandChange
+    this.onRangeBandPreview = onRangeBandPreview
+    if (!rangeBand) {
+      this.plottedRangeBand = undefined
+      this.rangeBandOverlay.clear()
+      this.axisFit.update(this.series, { window: priceWindow, scale: this.lowPriceRangeScaleFactor })
+      return
+    }
+
+    // The series is plotted scaled up for low-value pairs (see getLowPriceRangeScaleFactor), so the band is too.
+    const lower = rangeBand.lower === undefined ? undefined : rangeBand.lower * this.lowPriceRangeScaleFactor
+    const upper = rangeBand.upper === undefined ? undefined : rangeBand.upper * this.lowPriceRangeScaleFactor
+    this.drawRangeBand({ range: { lower, upper }, colors, rangeBand })
+    // A full range has no edge to take in, so fitted fresh it keeps the series' own scale.
+    const scale = this.lowPriceRangeScaleFactor
+    this.axisFit.update(this.series, { window: priceWindow, band: { lower, upper }, scale })
+  }
+
+  /** Draws the band and its edge lines; the autoscale is left alone, so a dragged edge doesn't rescale under the pointer. */
+  private drawRangeBand({
+    range,
+    colors,
+    rangeBand: { lowerLabel, upperLabel },
+  }: {
+    range: DraggableRange
+    colors: PriceChartModelParams['colors']
+    rangeBand: PriceChartRangeBand
+  }): void {
+    this.plottedRangeBand = range
+    this.rangeBandOverlay.draw({
+      range,
+      color: colors.accent1.val,
+      labelTextColor: colors.white.val,
+      lowerLabel,
+      upperLabel,
+    })
   }
 
   override onSeriesHover(hoverData?: ChartHoverData<CandlestickData>) {

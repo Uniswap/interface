@@ -24,11 +24,10 @@ type ScrubValues = {
 /**
  * Resolves the breakdown card's props, or `undefined` when the card should be hidden.
  *
- * Hidden unless an eligible category flag is on and there is a useful breakdown to show. At rest, rows use
+ * Hidden unless there is a useful breakdown to show. At rest, rows use
  * wallet-balances values with period deltas from their chart series. While scrubbing, every row follows the crosshair.
  */
 export function getBreakdownCardProps({
-  poolsEnabled,
   poolsUnavailable,
   chartUnavailable,
   breakdown,
@@ -38,7 +37,6 @@ export function getBreakdownCardProps({
   earnData,
   isAllTimePeriod,
 }: {
-  poolsEnabled: boolean
   poolsUnavailable: boolean
   chartUnavailable: boolean
   breakdown: PortfolioBalanceBreakdown | undefined
@@ -49,7 +47,7 @@ export function getBreakdownCardProps({
   isAllTimePeriod: boolean
 }): BreakdownCardProps | undefined {
   const hasTokenBalance = (breakdown?.tokens.balanceUSD ?? 0) > 0
-  const hasPoolsBalance = poolsEnabled && !poolsUnavailable && (breakdown?.pools.balanceUSD ?? 0) > 0
+  const hasPoolsBalance = !poolsUnavailable && (breakdown?.pools.balanceUSD ?? 0) > 0
   const hasEarnBalance = (breakdown?.earn.balanceUSD ?? 0) > 0
   const shouldShowBreakdown = hasEarnBalance || (hasTokenBalance && hasPoolsBalance)
 

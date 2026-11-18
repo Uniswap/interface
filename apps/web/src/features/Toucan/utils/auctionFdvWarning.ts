@@ -3,7 +3,7 @@ import { useMemo } from 'react'
 import { formatCommittedUsd } from 'uniswap/src/features/toucan/formatCommittedUsd'
 import { FiatNumberType, NumberType } from 'utilities/src/format/types'
 import { approximateNumberFromRaw, formatCompactFromRaw } from '~/features/Toucan/Auction/utils/fixedPointFdv'
-import type { EnrichedAuction } from '~/features/Toucan/hooks/useTopAuctions/useTopAuctions'
+import type { EnrichedAuction } from '~/features/Toucan/hooks/useTopAuctions/useEnrichedAuctions'
 
 // Formats an auction's total committed volume in USD when available, otherwise in the currency token.
 export function getAuctionCommittedVolumeDisplay(

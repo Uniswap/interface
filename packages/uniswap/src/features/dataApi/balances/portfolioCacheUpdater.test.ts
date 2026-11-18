@@ -1,14 +1,12 @@
-import {
-  type GetPortfolioResponse,
-  type GetWalletBalancesResponse,
-  WalletBalanceCategory,
-} from '@uniswap/client-data-api/dist/data/v1/api_pb'
+import { type GetPortfolioResponse, type GetWalletBalancesResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { SharedQueryClient } from '@universe/api'
 import { UniverseChainId } from '@universe/chains'
-import { FeatureFlags } from '@universe/gating'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { getPortfolioQuery } from 'uniswap/src/data/apiClients/dataApiService/balances/getPortfolio'
-import { getWalletBalancesQuery } from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances'
+import {
+  getWalletBalancesQuery,
+  WALLET_BALANCES_INCLUDE_CATEGORIES,
+} from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances'
 import {
   createPortfolioCacheUpdater,
   usePortfolioCacheUpdater,
@@ -18,10 +16,9 @@ import { DAI_CURRENCY_INFO, UNI_CURRENCY_INFO } from 'uniswap/src/test/fixtures'
 import { renderHookWithProviders } from 'uniswap/src/test/render'
 import { sleep } from 'utilities/src/time/timing'
 
-const { mockUseEnabledChains, mockUseRestPortfolioValueModifier, mockPoolsFlagEnabled } = vi.hoisted(() => ({
+const { mockUseEnabledChains, mockUseRestPortfolioValueModifier } = vi.hoisted(() => ({
   mockUseEnabledChains: vi.fn(),
   mockUseRestPortfolioValueModifier: vi.fn(),
-  mockPoolsFlagEnabled: { value: false },
 }))
 
 vi.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
@@ -32,18 +29,6 @@ vi.mock('uniswap/src/features/dataApi/balances/balancesRest', async (importOrigi
   ...(await importOriginal<typeof import('uniswap/src/features/dataApi/balances/balancesRest')>()),
   useRestPortfolioValueModifier: mockUseRestPortfolioValueModifier,
 }))
-
-vi.mock('@universe/gating', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@universe/gating')>()
-  const readPoolsFlag = (flag: FeatureFlags): boolean =>
-    flag === FeatureFlags.PortfolioPoolsBalances ? mockPoolsFlagEnabled.value : false
-  return {
-    ...actual,
-    useFeatureFlag: readPoolsFlag,
-    // useWalletBalancesIncludeCategories reads the pools flag via the exposure-disabled variant.
-    useFeatureFlagWithExposureLoggingDisabled: readPoolsFlag,
-  }
-})
 
 const mainnetNativeAddress = getNativeAddress(UniverseChainId.Mainnet)
 
@@ -265,7 +250,6 @@ describe(usePortfolioCacheUpdater, () => {
   beforeEach(() => {
     vi.clearAllMocks()
     SharedQueryClient.clear()
-    mockPoolsFlagEnabled.value = false
     mockUseEnabledChains.mockReturnValue({ chains: [UniverseChainId.Mainnet] })
     mockUseRestPortfolioValueModifier.mockReturnValue(modifier)
     // Reconcile defers via requestAnimationFrame; stub it as a macrotask so the one-tick flush semantics hold, and
@@ -292,12 +276,14 @@ describe(usePortfolioCacheUpdater, () => {
   // The GetPortfolio entry is primed under a `multichain: true` key variant the updater never
   // builds itself — the rendered hooks key on inputs the updater doesn't know, so these tests
   // fail if the updater regresses to exact-key writes.
-  function primeCaches(includeCategories: WalletBalanceCategory[] = [WalletBalanceCategory.EARN_VAULTS]): {
+  function primeCaches(): {
     portfolioKey: readonly unknown[]
     walletBalancesKey: readonly unknown[]
   } {
     const portfolioKey = getPortfolioQuery({ input: { ...hookInput, multichain: true } }).queryKey
-    const walletBalancesKey = getWalletBalancesQuery({ input: { ...hookInput, includeCategories } }).queryKey
+    const walletBalancesKey = getWalletBalancesQuery({
+      input: { ...hookInput, includeCategories: WALLET_BALANCES_INCLUDE_CATEGORIES },
+    }).queryKey
     SharedQueryClient.setQueryData(portfolioKey, mockPortfolioData as unknown as GetPortfolioResponse)
     SharedQueryClient.setQueryData(walletBalancesKey, makeWalletBalances(1000, 600, 400))
     return { portfolioKey, walletBalancesKey }
@@ -322,25 +308,8 @@ describe(usePortfolioCacheUpdater, () => {
     expect(walletAfter?.balance.earn.valueUsd).toBe(75)
   })
 
-  it('targets the pools-and-earn wallet balances cache entry when the pools flag is on', async () => {
-    mockPoolsFlagEnabled.value = true
-    const { walletBalancesKey } = primeCaches([WalletBalanceCategory.POOLS, WalletBalanceCategory.EARN_VAULTS])
-
-    const { result } = renderHookWithProviders(() => usePortfolioCacheUpdater(EVM_ADDR))
-
-    result.current(true, mockPortfolioBalance1)
-    await flushUpdater()
-
-    const walletAfter = SharedQueryClient.getQueryData<WalletBalancesShape>(walletBalancesKey)
-    expect(walletAfter?.balance.total.valueUsd).toBe(900)
-    expect(walletAfter?.balance.tokens.valueUsd).toBe(500)
-    expect(walletAfter?.balance.pools.valueUsd).toBe(400)
-    expect(walletAfter?.balance.earn.valueUsd).toBe(75)
-  })
-
   it('applies the delta to every wallet balances entry covering the token chain, across categories', async () => {
-    mockPoolsFlagEnabled.value = true
-    const { walletBalancesKey } = primeCaches([WalletBalanceCategory.POOLS, WalletBalanceCategory.EARN_VAULTS])
+    const { walletBalancesKey } = primeCaches()
     const tokensOnlyKey = getWalletBalancesQuery({ input: { ...hookInput, includeCategories: [] } }).queryKey
     SharedQueryClient.setQueryData(tokensOnlyKey, makeWalletBalances(2000, 1500, 500))
 

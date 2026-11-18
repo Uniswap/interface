@@ -1,0 +1,18 @@
+/*
+ * Storybook only: the anchor colour rules in `text-compat.css` use real pseudo-classes, which the
+ * Tailwind variant overrides in `storybook-presets/pseudo-states.css` can't reach. These repeat the
+ * hover and focus ones for the pseudo-states addon's classes, at the same specificity, and restate
+ * the disabled rule so it still wins. Import after `text-compat.css`; keep in step with it.
+ */
+a[data-stext-anchor~='h']:is(.pseudo-hover, .pseudo-hover-all *) {
+  color: var(--stext-a-col-h);
+}
+a[data-stext-anchor~='f']:is(.pseudo-focus, .pseudo-focus-all *) {
+  color: var(--stext-a-col-f);
+}
+a[data-stext-anchor~='v']:is(.pseudo-focus-visible, .pseudo-focus-visible-all *) {
+  color: var(--stext-a-col-v);
+}
+a[data-stext-anchor~='d'][aria-disabled='true'] {
+  color: var(--stext-a-col-d);
+}

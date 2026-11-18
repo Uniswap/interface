@@ -7,8 +7,6 @@ export type {
   GasStrategies,
   GasStrategyType,
   GasStrategyWithConditions,
-  RWAIssuerLogo,
-  RWAIssuerLogosMap,
 } from '@universe/gating/src/configs'
 export {
   AllowedV4WethHookAddressesConfigKey,
@@ -34,7 +32,6 @@ export {
   MarginConfigKey,
   NetworkRequestsConfigKey,
   OnDeviceRecoveryConfigKey,
-  RWAIssuerLogosConfigKey,
   Permit2MismatchDelegatesConfigKey,
   SwapConfigKey,
   SynchronizedHeartbeatsConfigKey,
@@ -49,6 +46,7 @@ export {
   ArbitrumXV2SamplingProperties,
   EmbeddedWalletOnboardingProperties,
   EthAsErc20UniswapXProperties,
+  ExperimentPropertyNames,
   Experiments,
   LayerProperties,
   Layers,
@@ -69,10 +67,6 @@ export {
   useIsPoolCategoriesEnabled,
   useIsPoolCategoriesEnabledWithLoading,
 } from '@universe/gating/src/useIsPoolCategoriesEnabled'
-export {
-  useIsTokenCategoriesEnabled,
-  useIsTokenCategoriesEnabledWithLoading,
-} from '@universe/gating/src/useIsTokenCategoriesEnabled'
 export {
   getIsTurnstileSolverEnabled,
   useIsTurnstileSolverEnabled,
@@ -108,7 +102,6 @@ export {
   Storage,
   useClientAsyncInit,
   useExperiment,
-  useFeatureGate,
   useGateValue,
   useLayer,
 } from '@universe/gating/src/sdk/statsig'

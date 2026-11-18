@@ -1,16 +1,13 @@
 import { useQuery } from '@tanstack/react-query'
-import { HistoryDuration, TokensOrderBy } from '@uniswap/client-data-api/dist/data/v2/types_pb'
+import { getRelatedTokensQueryOptions } from '@universe/data-api'
 import { useMemo } from 'react'
 import { dataApiServiceClientV2 } from 'uniswap/src/data/apiClients/dataApiService/clients/DataApiClientV2'
 import {
-  RELATED_TOKENS_MAX_COUNT,
   type RelatedTokensSubject,
   toRelatedTokens,
 } from 'uniswap/src/data/apiClients/dataApiService/relatedTokens/relatedTokenMappers'
 import type { RankedTokenCardItem } from 'uniswap/src/data/apiClients/dataApiService/utils/rankedTokenCardItem'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
-import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 
 /**
  * Tokens in `categoryId` for the TDP related-tokens section, excluding the page's own token.
@@ -31,21 +28,9 @@ export function useRelatedTokensQuery({
 }): { tokens: RankedTokenCardItem[]; isLoading: boolean; isError: boolean; refetch: () => void } {
   const { chains: chainIds } = useEnabledChains()
 
-  const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: [ReactQueryCacheKey.DataApiService, 'listTokens', 'relatedTokens', categoryId, chainIds],
-    queryFn: () =>
-      dataApiServiceClientV2.listTokens({
-        chainIds,
-        // +1 so dropping the subject token can still fill the cap.
-        page: { pageSize: RELATED_TOKENS_MAX_COUNT + 1 },
-        sort: { orderBy: TokensOrderBy.VOLUME_1D, ascending: false },
-        sparklineDuration: HistoryDuration.DAY,
-        filter: { categoryIds: categoryId ? [categoryId] : [], applyTopLevelFilters: true },
-      }),
-    enabled: enabled && categoryId !== undefined,
-    staleTime: ONE_MINUTE_MS,
-    retry: 2,
-  })
+  const { data, isLoading, isError, refetch } = useQuery(
+    getRelatedTokensQueryOptions(dataApiServiceClientV2, { categoryId, chainIds, enabled }),
+  )
 
   const tokens = useMemo(
     () => toRelatedTokens({ tokens: data?.multichainTokens ?? [], subject }),

@@ -1,8 +1,18 @@
 import { Code, ConnectError } from '@connectrpc/connect'
-import { GetTokenMarketsMultiChainResponse, ListTokensResponse } from '@uniswap/client-data-api/dist/data/v2/api_pb'
-import { MultichainTokenMarket, TokensOrderBy } from '@uniswap/client-data-api/dist/data/v2/types_pb'
+import {
+  GetTokenBuySellStatsResponse,
+  GetTokenMarketsMultiChainResponse,
+  ListTokensResponse,
+} from '@uniswap/client-data-api/dist/data/v2/api_pb'
+import {
+  BuySellStatsWindow,
+  MultichainTokenMarket,
+  TokenBuySellStats,
+  TokensOrderBy,
+} from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { dataApiServiceClientV2 } from 'uniswap/src/data/apiClients/dataApiService/clients/DataApiClientV2'
 import {
+  getGetTokenBuySellStatsQueryOptions,
   getGetTokenMarketsMultiChainQueryOptions,
   getListTokensQueryOptions,
 } from 'uniswap/src/data/apiClients/dataApiService/tokens/queries'
@@ -10,6 +20,7 @@ import { createRankedMultichainToken } from 'uniswap/src/test/fixtures/dataApi/r
 
 vi.mock('uniswap/src/data/apiClients/dataApiService/clients/DataApiClientV2', () => ({
   dataApiServiceClientV2: {
+    getTokenBuySellStats: vi.fn(),
     getTokenMarketsMultiChain: vi.fn(),
     listTokens: vi.fn(),
   },
@@ -113,5 +124,35 @@ describe('getListTokensQueryOptions', () => {
 
   it('is disabled without params', () => {
     expect(getListTokensQueryOptions({}).enabled).toBe(false)
+  })
+})
+
+describe('getGetTokenBuySellStatsQueryOptions', () => {
+  const PARAMS = {
+    identifier: { case: 'token' as const, value: TOKEN_IDENTIFIER },
+    chainIds: [1],
+    window: BuySellStatsWindow.ONE_DAY,
+  }
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('fetches with the given params and keys on them', async () => {
+    mockClient.getTokenBuySellStats.mockResolvedValue(
+      new GetTokenBuySellStatsResponse({ stats: new TokenBuySellStats({ buyCount: 3, buyVolumeTokenAmount: '1.5' }) }),
+    )
+
+    const options = getGetTokenBuySellStatsQueryOptions({ params: PARAMS })
+    const data = await runQueryFn<{ stats?: { buyCount: number; buyVolumeTokenAmount: string } }>(options)
+
+    expect(mockClient.getTokenBuySellStats).toHaveBeenCalledWith(PARAMS)
+    expect(data.stats).toMatchObject({ buyCount: 3, buyVolumeTokenAmount: '1.5' })
+    expect(options.queryKey).toEqual([expect.anything(), 'getTokenBuySellStats', PARAMS])
+    expect(options.placeholderData).toBeDefined()
+  })
+
+  it('is disabled without params', () => {
+    expect(getGetTokenBuySellStatsQueryOptions({ params: undefined }).enabled).toBe(false)
   })
 })

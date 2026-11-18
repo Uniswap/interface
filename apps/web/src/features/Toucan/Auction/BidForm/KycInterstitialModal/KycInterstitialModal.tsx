@@ -5,27 +5,30 @@ import { X } from '@universe/mycelium/icons/X'
 import { useTranslation } from 'react-i18next'
 import { Trans } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { KycProvider } from 'uniswap/src/data/apiClients/dataApiService/auctions/useVerifyWallet'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
+import { KYC_PROVIDER_INFO } from '~/features/Toucan/Shared/kycProviders'
 
 interface KycInterstitialModalProps {
   isOpen: boolean
   onClose: () => void
   onContinue?: () => void
-  providerName?: string
-  providerTermsUrl?: string
-  providerPrivacyUrl?: string
+  kycProvider?: KycProvider
 }
 
 export function KycInterstitialModal({
   isOpen,
   onClose,
   onContinue,
-  providerName = 'Predicate',
-  providerTermsUrl = 'https://predicate.io/terms-of-service',
-  providerPrivacyUrl = 'https://predicate.io/privacy-policy',
+  kycProvider = KycProvider.Predicate,
 }: KycInterstitialModalProps): JSX.Element {
   const { t } = useTranslation()
+  const {
+    name: providerName,
+    termsUrl: providerTermsUrl,
+    privacyUrl: providerPrivacyUrl,
+  } = KYC_PROVIDER_INFO[kycProvider]
   const auctionDetails = useAuctionStore((state) => state.auctionDetails)
 
   return (
@@ -83,36 +86,34 @@ export function KycInterstitialModal({
               {t('toucan.kyc.interstitial.continue')}
             </Button>
           )}
-          {providerName && providerTermsUrl && providerPrivacyUrl && (
-            <Text variant="body4" color="$neutral2" textAlign="center">
-              <Trans
-                i18nKey="toucan.kyc.interstitial.disclaimer"
-                values={{ providerName }}
-                components={{
-                  termsLink: (
-                    <Anchor
-                      fontSize="$micro"
-                      lineHeight={12}
-                      textDecorationLine="none"
-                      color="$neutral2"
-                      href={providerTermsUrl}
-                      target="_blank"
-                    />
-                  ),
-                  privacyLink: (
-                    <Anchor
-                      fontSize="$micro"
-                      lineHeight={12}
-                      textDecorationLine="none"
-                      color="$neutral2"
-                      href={providerPrivacyUrl}
-                      target="_blank"
-                    />
-                  ),
-                }}
-              />
-            </Text>
-          )}
+          <Text variant="body4" color="$neutral2" textAlign="center">
+            <Trans
+              i18nKey="toucan.kyc.interstitial.disclaimer"
+              values={{ providerName }}
+              components={{
+                termsLink: (
+                  <Anchor
+                    fontSize="$micro"
+                    lineHeight={12}
+                    textDecorationLine="none"
+                    color="$neutral2"
+                    href={providerTermsUrl}
+                    target="_blank"
+                  />
+                ),
+                privacyLink: (
+                  <Anchor
+                    fontSize="$micro"
+                    lineHeight={12}
+                    textDecorationLine="none"
+                    color="$neutral2"
+                    href={providerPrivacyUrl}
+                    target="_blank"
+                  />
+                ),
+              }}
+            />
+          </Text>
         </Flex>
       </Flex>
     </Modal>

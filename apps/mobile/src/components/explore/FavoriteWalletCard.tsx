@@ -1,9 +1,9 @@
 import { isIOS } from '@universe/environment'
-import { borderRadii, Flex, iconSizes, TouchableArea } from '@universe/mycelium'
+import { borderRadii, Flex, iconSizes, spacing, TouchableArea } from '@universe/mycelium'
 import { useIsDarkMode, useShadowPropsShort } from '@universe/mycelium/theme-hooks-compat'
 import { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ViewProps } from 'react-native'
+import { StyleProp, ViewProps, ViewStyle } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
 import { useDispatch } from 'react-redux'
 import { useEagerExternalProfileNavigation } from 'src/app/navigation/hooks'
@@ -19,6 +19,12 @@ export type FavoriteWalletCardProps = {
   isEditing?: boolean
   setIsEditing: (update: boolean) => void
 } & ViewProps
+
+// iOS builds the long-press preview from the ContextMenu's bounds, so the margin must sit outside it
+const contextMenuStyle: StyleProp<ViewStyle> = {
+  borderRadius: borderRadii.rounded16,
+  margin: spacing.spacing4,
+}
 
 function FavoriteWalletCard({ address, isEditing, setIsEditing, ...rest }: FavoriteWalletCardProps): JSX.Element {
   const { t } = useTranslation()
@@ -53,7 +59,7 @@ function FavoriteWalletCard({ address, isEditing, setIsEditing, ...rest }: Favor
       activeOpacity={isEditing ? 1 : undefined}
       borderRadius="$rounded16"
       disabled={isEditing}
-      m="$spacing4"
+      m={isEditing ? '$spacing4' : undefined}
       testID="favorite-wallet-card"
       onPress={(): void => {
         navigate(address)
@@ -97,7 +103,7 @@ function FavoriteWalletCard({ address, isEditing, setIsEditing, ...rest }: Favor
   return (
     <ContextMenu
       actions={menuActions}
-      style={{ borderRadius: borderRadii.rounded16 }}
+      style={contextMenuStyle}
       onPress={(e): void => {
         // Emitted index based on order of menu action array
         // remove favorite action

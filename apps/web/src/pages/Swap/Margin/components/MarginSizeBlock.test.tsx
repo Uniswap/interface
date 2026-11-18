@@ -1,11 +1,11 @@
+import { renderHook } from '@testing-library/react'
 import type { MarginQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
 import { MarginDirection, type MarginVenue } from 'uniswap/src/features/transactions/margin/types'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import type { MarginMarket } from '~/constants/margin'
 import { getDefaultMarginMarket } from '~/pages/Swap/Margin/__fixtures__/marginCatalog'
-import { MarginSizeReceiptValue } from '~/pages/Swap/Margin/components/MarginSizeBlock'
+import { useMarginSizeFigures } from '~/pages/Swap/Margin/components/MarginSizeBlock'
 import type { DerivedMarginInfo } from '~/pages/Swap/Margin/hooks/useDerivedMarginInfo'
-import { render } from '~/test-utils/render'
 
 const MARKET = getDefaultMarginMarket() // WETH/USDC MORPHO
 
@@ -23,6 +23,9 @@ vi.mock('uniswap/src/features/transactions/margin/stores/marginFormStore/useMarg
   useMarginFormStore: (selector: (s: { leverage: number }) => unknown) => selector({ leverage: 2 }),
   useMarginFormStoreActions: () => ({ setMarginFormState: vi.fn() }),
 }))
+
+// The no-quote estimate has its own tests.
+vi.mock('~/pages/Swap/Margin/components/MarginReceiptEstimate', () => ({ useMarginReceiptEstimate: () => undefined }))
 
 vi.mock('~/features/margin/hooks/useMarginMarkets', () => ({
   useMarginMarkets: () => ({
@@ -62,19 +65,16 @@ const SHORT_MARKET = {
   debt: MARKET.collateral,
 } as MarginMarket
 
-// AnimatedNumber renders odometer reels with no accessible name, so read the combined text content.
-function renderBlock(
+function sizeOf(
   quote: MarginQuoteResponse,
   market: MarginMarket = MARKET,
   direction: MarginDirection = MarginDirection.LONG,
-): { textContent: string } {
+): ReturnType<typeof useMarginSizeFigures> {
   const info = { market, direction, maxLeverage: 5, quote } as unknown as DerivedMarginInfo
-  const { container } = render(<MarginSizeReceiptValue derivedMarginInfo={info} />)
-  const labels = Array.from(container.querySelectorAll('[aria-label]')).map((el) => el.getAttribute('aria-label'))
-  return { textContent: labels.length > 0 ? labels.join(' ') : container.textContent }
+  return renderHook(() => useMarginSizeFigures(info)).result.current
 }
 
-describe('MarginSizeReceiptValue', () => {
+describe(useMarginSizeFigures, () => {
   beforeEach(() => {
     registry.markPriceX18 = undefined
     registry.marketOverride = undefined
@@ -87,13 +87,11 @@ describe('MarginSizeReceiptValue', () => {
   it('falls back to the fill price once the markets poll has aged out', () => {
     registry.markPriceX18 = `${4000n * 10n ** 18n}`
     registry.marketsUpdatedAt = Date.now()
-    expect(renderBlock(quoteFixture()).textContent).toMatch(/\$8,000/)
+    expect(sizeOf(quoteFixture()).notionalUsd).toBe(8000)
 
     registry.marketsUpdatedAt = Date.now() - 10 * 60_000
-    const aged = renderBlock(quoteFixture()).textContent
     // 2 units at the $3,000 FILL, not the aged $4,000 mark.
-    expect(aged).toMatch(/\$6,000/)
-    expect(aged).not.toMatch(/\$8,000/)
+    expect(sizeOf(quoteFixture()).notionalUsd).toBe(6000)
   })
 
   // Direction picks the leg the size is denominated in and valued against: a SHORT's exposure is its
@@ -102,27 +100,25 @@ describe('MarginSizeReceiptValue', () => {
   it('values a SHORT against its debt leg, not the collateral one', () => {
     registry.marketOverride = SHORT_MARKET
     registry.markPriceX18 = `${4000n * 10n ** 18n}`
-    const container = renderBlock(quoteFixture(), SHORT_MARKET, MarginDirection.SHORT)
     // 2 units of the exposure (WETH, unwrapped to ETH) at the $4,000 registry mark.
-    expect(container.textContent).toContain('ETH')
-    expect(container.textContent).not.toContain('USDC')
-    expect(container.textContent).toMatch(/\$8,000/)
+    expect(sizeOf(quoteFixture(), SHORT_MARKET, MarginDirection.SHORT)).toEqual({
+      notional: 2,
+      notionalUsd: 8000,
+      exposureSymbol: 'ETH',
+    })
   })
 
   // `'0'` is a truthy STRING on both the mark and the fill-price fallback, so an unguarded read renders
   // a $0.00 valuation beside a real token amount.
   it('does not value the size at $0.00 when both the mark and the fill price are the zero sentinel', () => {
     registry.markPriceX18 = '0'
-    const container = renderBlock(quoteFixture({ effectivePrice: '0' }))
-    expect(container.textContent).not.toMatch(/\$0\.00/)
+    expect(sizeOf(quoteFixture({ effectivePrice: '0' })).notionalUsd).toBeUndefined()
   })
 
   // BigInt throws a SyntaxError on a non-integer wire string; unguarded, that takes the whole block
   // down mid-render (a blank terminal) instead of hiding one figure.
   it.each(['1.5', '', '1e18', 'nope'])('survives a non-integer size on the wire (%s)', (size) => {
-    const container = renderBlock(quoteFixture({ size }))
-    expect(container).toBeTruthy()
-    expect(container.textContent).not.toMatch(/\$0\.00/)
+    expect(sizeOf(quoteFixture({ size })).notionalUsd).toBeUndefined()
   })
 
   // Falls back to the quote's own fill price when the registry has no entry for the ROUTED venue. The miss
@@ -134,10 +130,13 @@ describe('MarginSizeReceiptValue', () => {
       ...quoteFixture(),
       legs: [{ venue: 'AAVE_V3' }],
     } as unknown as MarginQuoteResponse
-    const container = renderBlock(routedElsewhere)
     // $6,000 is 2 ETH at the $3,000 FILL. Valued at the $4,000 registry mark it would read $8,000, so
     // the two are distinguishable and the fallback is what produced this.
-    expect(container.textContent).toMatch(/\$6,000/)
-    expect(container.textContent).not.toMatch(/\$8,000/)
+    expect(sizeOf(routedElsewhere).notionalUsd).toBe(6000)
+  })
+
+  // The form is at 2x; a quote priced at 4x is restated to the leverage on screen until the requote lands.
+  it('restates a quote priced at another leverage to the form’s', () => {
+    expect(sizeOf(quoteFixture({ leverage: '4' }))).toMatchObject({ notional: 1, notionalUsd: 3000 })
   })
 })

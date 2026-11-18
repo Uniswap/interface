@@ -1,13 +1,10 @@
 import { type PlainMessage } from '@bufbuild/protobuf'
 import type { GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb.d'
 import { normalizeTokenAddressForCache } from '@universe/chains'
+import { shouldTransformToMultichain, transformPortfolioToMultichain } from '@universe/data-api'
 import type { PollingInterval } from 'uniswap/src/constants/misc'
 import { useGetPortfolioQuery } from 'uniswap/src/data/apiClients/dataApiService/balances/getPortfolio'
 import type { GetPortfolioInput } from 'uniswap/src/data/apiClients/dataApiService/balances/getPortfolio'
-import {
-  shouldTransformToMultichain,
-  transformPortfolioToMultichain,
-} from 'uniswap/src/data/apiClients/dataApiService/balances/transformPortfolioToMultichain'
 import { calculateTotalBalancesUsdPerChainRest } from 'uniswap/src/data/apiClients/dataApiService/balances/utils'
 import { normalizeBackendNativeAddress } from 'uniswap/src/data/apiClients/dataApiService/utils/dataApiMultichainToken'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'

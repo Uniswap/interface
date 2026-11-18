@@ -30,7 +30,6 @@ interface UsePortfolioChartSeriesInput {
   chartData: PlainMessage<GetPortfolioChartResponse> | undefined
   selectedPeriod: ChartPeriod
   selectedCategory: PortfolioChartCategory
-  poolsEnabled?: boolean
 }
 
 interface UsePortfolioChartSeriesResult {
@@ -84,7 +83,6 @@ export function usePortfolioChartSeries({
   chartData,
   selectedPeriod,
   selectedCategory,
-  poolsEnabled = true,
 }: UsePortfolioChartSeriesInput): UsePortfolioChartSeriesResult {
   const totalSeries = useMemo<PriceChartData[]>(
     () => (chartData?.points ? convertPortfolioChartDataToPriceChartData(chartData.points) : []),
@@ -97,8 +95,8 @@ export function usePortfolioChartSeries({
   )
 
   const poolsSeries = useMemo<PriceChartData[]>(
-    () => (poolsEnabled && chartData?.pools ? convertPortfolioChartDataToPriceChartData(chartData.pools) : []),
-    [chartData, poolsEnabled],
+    () => (chartData?.pools ? convertPortfolioChartDataToPriceChartData(chartData.pools) : []),
+    [chartData],
   )
 
   const earnSeries = useMemo<PriceChartData[]>(

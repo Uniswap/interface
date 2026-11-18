@@ -10,7 +10,7 @@ import type { LinearTickScale, Renderer } from '~/features/Liquidity/charts/D3Li
 import { BucketChartEntry } from '~/features/Liquidity/charts/D3LiquidityChartShared/utils/liquidityBucketing/liquidityBucketing'
 import { TickAlignment } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/priceToY'
 import { ChartEntry } from '~/features/Liquidity/charts/LiquidityRangeInput/types'
-import { RangeAmountInputPriceMode } from '~/features/Liquidity/Create/types'
+import { RangeAmountInputPriceMode, type TickRange } from '~/features/Liquidity/Create/types'
 import { TickData } from '~/features/Liquidity/types/ticks'
 
 export type { Renderer } from '~/features/Liquidity/charts/D3LiquidityChartShared/types'
@@ -63,7 +63,7 @@ export type ChartState = {
   selectedHistoryDuration: HistoryDuration
   selectedPriceStrategy?: DefaultPriceStrategy
   /** The range a preset last wrote via handleTickRangeChange. While min/max still equal it the user hasn't edited it. */
-  presetTicks?: { minTick: number; maxTick: number }
+  presetTicks?: TickRange
   /** Mirrors the parent's lock while a transaction is in flight; see syncCurrentTickFromParent. */
   isRangeLocked?: boolean
   tickSpacing: number
@@ -110,6 +110,8 @@ export type RenderingContext = {
   yToTick: (y: number) => number
   /** Ephemeral state for smoothing the liquidity width-scale during scroll (see LiquidityBarsRenderer). */
   liquidityScaleSmoothing: LiquidityScaleSmoothing
+  /** Groups ticks into `DESIRED_BUCKETS` bars; off draws one bar per tick spacing (full granularity). */
+  groupTicks: boolean
 }
 
 /** A whole range sent to the parent. `presetStrategy` is set only when a preset, not the user, wrote it. */
@@ -176,7 +178,8 @@ export type ChartActions = {
   zoom: (targetZoom: number) => void
   zoomIn: () => void
   zoomOut: () => void
-  reset: (params?: { animate?: boolean; minTick?: number; maxTick?: number }) => void
+  /** Recentres the view on a range. `emit: false` skips echoing that range to the parent. */
+  reset: (params?: { animate?: boolean; emit?: boolean; minTick?: number; maxTick?: number }) => void
   drawAll: () => void
   animateToState: (params: AnimateParams) => void
   /** The +/- steppers return whether they moved the edge; false at a tick limit or with no edge set yet. */

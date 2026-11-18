@@ -1,26 +1,20 @@
 import { RwaCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
-import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { Flex } from '@universe/mycelium'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { isGroupedRwaCategory } from 'uniswap/src/features/tokenCategories/groupedCategory'
 import type { TokenCategoryDefaultSort } from 'uniswap/src/features/tokenCategories/types'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '~/constants/breakpoints'
-import { VolumeTimeFrameSelector } from '~/features/Explore/VolumeTimeFrameSelector'
-import { CategoryChipRow } from '~/pages/Explore/categories/CategoryChipRow'
 import {
   deriveCategoryChipOptions,
   getAllChipOption,
   getStaticCategoryChipOptions,
   useFlexSlotCategoryId,
-} from '~/pages/Explore/categories/exploreCategoryChipOptions'
-import {
-  resolveGroupedRwaCategory,
-  resolveRwaDisclaimerCategory,
-  showsVolumeTimeFrameSelector,
-} from '~/pages/Explore/categories/exploreGroupedCategory'
-import { ExploreRwaDisclaimer } from '~/pages/Explore/categories/ExploreRwaDisclaimer'
-import { ExploreCategory, useExploreCategory } from '~/pages/Explore/categories/useExploreCategory'
+} from '~/features/Explore/categories/exploreCategoryChipOptions'
+import { ExploreCategory, useExploreCategory } from '~/features/Explore/categories/useExploreCategory'
+import { VolumeTimeFrameSelector } from '~/features/Explore/VolumeTimeFrameSelector'
+import { CategoryChipRow } from '~/pages/Explore/categories/CategoryChipRow'
+import { resolveGroupedRwaCategory } from '~/pages/Explore/categories/exploreGroupedCategory'
 import { useExploreTokenCategories } from '~/pages/Explore/categories/useExploreTokenCategories'
 import { useNetworkScopedCategoryStats } from '~/pages/Explore/categories/useNetworkScopedCategoryStats'
 import { useResetEmptyCategoryOnNetworkSwitch } from '~/pages/Explore/categories/useResetEmptyCategoryOnNetworkSwitch'
@@ -44,7 +38,7 @@ function ExploreCategoryTable({
   holdEmptyResult: boolean
   defaultSort?: TokenCategoryDefaultSort
 }): JSX.Element {
-  // Flag-off only: with token categories on, Commodities is `grouped: false` and renders the flat table below.
+  // Static fallback only: a fetched Commodities is `grouped: false` and renders the flat table below.
   if (rwaCategory === RwaCategory.COMMODITIES) {
     return <CommoditiesTable />
   }
@@ -127,8 +121,6 @@ export function ExploreCategoryTablesSection(): JSX.Element {
     categories: orderedCategories,
     categoriesPending,
   })
-  const tokenCategoriesEnabled = useIsTokenCategoriesEnabled()
-  const showVolumeTimeFrameSelector = showsVolumeTimeFrameSelector({ rwaCategory, tokenCategoriesEnabled })
   const flatCategoryId =
     rwaCategory === RwaCategory.UNSPECIFIED && category !== ExploreCategory.All ? category : undefined
   // An unverified deep link may be a bogus slug, and a network pick may be about to reset to All.
@@ -161,22 +153,17 @@ export function ExploreCategoryTablesSection(): JSX.Element {
           moreCategories={dynamicChipsEnabled ? orderedCategories : undefined}
         />
         <Flex row gap="$spacing8" alignItems="center" $md={{ width: '100%' }}>
-          {showVolumeTimeFrameSelector && <VolumeTimeFrameSelector />}
+          <VolumeTimeFrameSelector />
           <TableNetworkFilter />
           <SearchBar tab={ExploreTab.Tokens} />
         </Flex>
       </Flex>
-      {/* Wrapped so the section gap doesn't apply between the disclaimer and its table. */}
-      <Flex width="100%">
-        {/* With token categories on, the disclaimer moves to the category details header. */}
-        {!tokenCategoriesEnabled && <ExploreRwaDisclaimer category={resolveRwaDisclaimerCategory(category)} />}
-        <ExploreCategoryTable
-          rwaCategory={rwaCategory}
-          categoryId={flatCategoryId}
-          holdEmptyResult={holdEmptyResult}
-          defaultSort={defaultSort}
-        />
-      </Flex>
+      <ExploreCategoryTable
+        rwaCategory={rwaCategory}
+        categoryId={flatCategoryId}
+        holdEmptyResult={holdEmptyResult}
+        defaultSort={defaultSort}
+      />
     </Flex>
   )
 }

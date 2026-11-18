@@ -5,6 +5,7 @@ Presentational transaction views shared by every product. Each view gets its dat
 - `src/common/`: views rendered by two or more products.
 - `src/swap/`: swap-only views. Other products get their own folder when they start.
 - `src/index.ts`: the only public entry, generated with `bun transactions-ui generate:index`.
+- `catalog.json`: every view with its role, aliases and props, generated with `bun transactions-ui generate:catalog`. Check it before writing a new view.
 
 Apps and `packages/uniswap` import from `@universe/transactions-ui`. Adapters in `packages/uniswap` read stores, resolve flags, own modal shells and log analytics, then spread props onto these views. The `transactions-ui-*` lint fences in `config/oxlint-plugins/import-boundaries.json` keep the package free of all of that and keep product folders apart.
 

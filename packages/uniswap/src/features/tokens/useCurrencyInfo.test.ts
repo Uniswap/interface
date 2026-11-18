@@ -6,6 +6,7 @@ import { currencyIdToRestContractInput } from 'uniswap/src/features/dataApi/util
 import {
   useCurrencyInfo,
   useCurrencyInfos,
+  useCurrencyInfosWithLoading,
   useCurrencyInfoWithLoading,
 } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { renderHookWithProviders } from 'uniswap/src/test/render'
@@ -37,6 +38,27 @@ const REST_TOKEN = {
   project: { logoUrl: 'https://example.com/rest.png' },
   safety: { isSpam: false, isVerified: true, isBlocked: false },
   multichain: { id: 'usdc-multichain-id', addresses: { '1': ADDRESS } },
+}
+
+const OVER_LIMIT_ADDRESSES = Array.from({ length: 101 }, (_, i) => `0x${(i + 1).toString(16).padStart(40, '0')}`)
+const OVER_LIMIT_CURRENCY_IDS = OVER_LIMIT_ADDRESSES.map((address) => buildCurrencyId(UniverseChainId.Mainnet, address))
+
+function mockGetTokensEchoingAddresses(): void {
+  mockGetGetTokensQueryOptions.mockImplementation(({ params, enabled, select }) => ({
+    queryKey: [ReactQueryCacheKey.DataApiService, 'getTokens', params],
+    queryFn: () =>
+      params.tokens.length > 100
+        ? Promise.reject(new Error('Batch size exceeds maximum of 100 tokens'))
+        : Promise.resolve({
+            tokens: params.tokens.map(({ address }: { address: string }) => ({
+              ...REST_TOKEN,
+              address,
+              name: address,
+            })),
+          }),
+    enabled,
+    select,
+  }))
 }
 
 describe(useCurrencyInfo, () => {
@@ -136,6 +158,100 @@ describe(useCurrencyInfos, () => {
     const { result } = renderHookWithProviders(() => useCurrencyInfos([nativeCurrencyId]))
 
     await waitFor(() => expect(result.current[0]?.currency.name).toBe('Ethereum'))
+  })
+
+  it('splits requests over the GetTokens limit of 100 and keeps results in request order', async () => {
+    mockGetTokensEchoingAddresses()
+
+    const { result } = renderHookWithProviders(() => useCurrencyInfos(OVER_LIMIT_CURRENCY_IDS))
+
+    await waitFor(() => expect(result.current[100]?.currency.name).toBe(OVER_LIMIT_ADDRESSES[100]))
+    expect(result.current).toHaveLength(101)
+    expect(result.current[0]?.currency.name).toBe(OVER_LIMIT_ADDRESSES[0])
+  })
+})
+
+describe(useCurrencyInfosWithLoading, () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    SharedQueryClient.clear()
+  })
+
+  it('splits requests over the GetTokens limit of 100 and settles once every batch answered', async () => {
+    mockGetTokensEchoingAddresses()
+
+    const { result } = renderHookWithProviders(() => useCurrencyInfosWithLoading(OVER_LIMIT_CURRENCY_IDS))
+
+    expect(result.current.isLoading).toBe(true)
+    expect(result.current.data).toBeUndefined()
+
+    await waitFor(() => expect(result.current.data).toHaveLength(101))
+    expect(result.current.isLoading).toBe(false)
+    expect(result.current.data?.[0]?.currency.name).toBe(OVER_LIMIT_ADDRESSES[0])
+    expect(result.current.data?.[100]?.currency.name).toBe(OVER_LIMIT_ADDRESSES[100])
+  })
+
+  it('keeps the previous id set as placeholder data while a changed id set loads', async () => {
+    mockGetTokensEchoingAddresses()
+    const [first, second, third] = OVER_LIMIT_CURRENCY_IDS as [string, string, string]
+    const { result, rerender } = renderHookWithProviders((ids: string[]) => useCurrencyInfosWithLoading(ids), {
+      initialProps: [[first, second]],
+    })
+    await waitFor(() => expect(result.current.data).toHaveLength(2))
+
+    let resolveFetch: (response: { tokens: (typeof REST_TOKEN)[] }) => void = () => {}
+    mockGetGetTokensQueryOptions.mockImplementation(({ params, enabled, select }) => ({
+      queryKey: [ReactQueryCacheKey.DataApiService, 'getTokens', params],
+      queryFn: () =>
+        new Promise((resolve) => {
+          resolveFetch = resolve
+        }),
+      enabled,
+      select,
+    }))
+    act(() => rerender([[second, third]]))
+
+    expect(result.current.isPlaceholderData).toBe(true)
+    expect(result.current.isLoading).toBe(false)
+    expect(result.current.data?.map((currencyInfo) => currencyInfo.currency.name)).toEqual([OVER_LIMIT_ADDRESSES[1]])
+
+    act(() =>
+      resolveFetch({
+        tokens: [OVER_LIMIT_ADDRESSES[1], OVER_LIMIT_ADDRESSES[2]].map((address) => ({
+          ...REST_TOKEN,
+          address: address as string,
+          name: address as string,
+        })),
+      }),
+    )
+
+    await waitFor(() => expect(result.current.isPlaceholderData).toBe(false))
+    expect(result.current.data?.map((currencyInfo) => currencyInfo.currency.name)).toEqual([
+      OVER_LIMIT_ADDRESSES[1],
+      OVER_LIMIT_ADDRESSES[2],
+    ])
+  })
+
+  it('falls back to the last id set that answered when the set changes twice within one fetch', async () => {
+    mockGetTokensEchoingAddresses()
+    const [first, second, third] = OVER_LIMIT_CURRENCY_IDS as [string, string, string]
+    const { result, rerender } = renderHookWithProviders((ids: string[]) => useCurrencyInfosWithLoading(ids), {
+      initialProps: [[first, second]],
+    })
+    await waitFor(() => expect(result.current.data).toHaveLength(2))
+
+    mockGetGetTokensQueryOptions.mockImplementation(({ params, enabled, select }) => ({
+      queryKey: [ReactQueryCacheKey.DataApiService, 'getTokens', params],
+      queryFn: () => new Promise(() => {}),
+      enabled,
+      select,
+    }))
+    act(() => rerender([[second, third]]))
+    act(() => rerender([[first, third]]))
+
+    expect(result.current.data?.map((currencyInfo) => currencyInfo.currency.name)).toEqual([OVER_LIMIT_ADDRESSES[0]])
+    expect(result.current.isPlaceholderData).toBe(true)
+    expect(result.current.isLoading).toBe(false)
   })
 })
 

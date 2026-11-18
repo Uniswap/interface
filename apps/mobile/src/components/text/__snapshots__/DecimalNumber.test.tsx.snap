@@ -5,12 +5,12 @@ exports[`renders a DecimalNumber 1`] = `
   <div
     class="css-text-146c3p1"
     dir="auto"
-    style="font-size: 19px; line-height: 24px; font-family: Basel Grotesk; font-weight: 400;"
+    style="font-size: 19px; line-height: 24px; font-family: "Basel Grotesk"; font-weight: 400;"
   >
     14,123
     <span
       class="css-textHasAncestor-1jxf684"
-      style="font-size: 19px; line-height: 24px; font-family: Basel Grotesk; font-weight: 400;"
+      style="font-size: 19px; line-height: 24px; font-family: "Basel Grotesk"; font-weight: 400;"
     >
       .78
     </span>
@@ -27,12 +27,12 @@ exports[`renders a DecimalNumber without a comma separator 1`] = `
   <div
     class="css-text-146c3p1"
     dir="auto"
-    style="font-size: 19px; line-height: 24px; font-family: Basel Grotesk; font-weight: 400;"
+    style="font-size: 19px; line-height: 24px; font-family: "Basel Grotesk"; font-weight: 400;"
   >
     14
     <span
       class="css-textHasAncestor-1jxf684"
-      style="font-size: 19px; line-height: 24px; font-family: Basel Grotesk; font-weight: 400;"
+      style="font-size: 19px; line-height: 24px; font-family: "Basel Grotesk"; font-weight: 400;"
     >
       ,23
     </span>
@@ -49,7 +49,7 @@ exports[`renders a DecimalNumber without a decimal part 1`] = `
   <div
     class="css-text-146c3p1"
     dir="auto"
-    style="font-size: 19px; line-height: 24px; font-family: Basel Grotesk; font-weight: 400;"
+    style="font-size: 19px; line-height: 24px; font-family: "Basel Grotesk"; font-weight: 400;"
   >
     14,123
   </div>

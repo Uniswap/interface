@@ -26,20 +26,18 @@ import { MouseoverTooltip } from '~/components/Tooltip'
 import { MARGIN_CHAIN_ID, type MarginMarket } from '~/constants/margin'
 import { getMarginPairLogoProps, useMarginCurrencyInfos } from '~/features/margin/hooks/useMarginCurrencyInfos'
 import { useMarginMarkets } from '~/features/margin/hooks/useMarginMarkets'
-import {
-  bpsToPercent,
-  formatMarginDebtUnits,
-  formatMaxLeverage,
-  lltvToPercent,
-  marginVenueLabel,
-  scaledE18ToNumber,
-} from '~/features/margin/utils/marginFormat'
+import { formatMarginDebtUnits, marginVenueLabel, scaledE18ToNumber } from '~/features/margin/utils/marginFormat'
 import { marginPairLabel, marginPairLegs, marginUnwrapSymbol } from '~/features/margin/utils/marginTokenDisplay'
 import { MarginChartOhlcLegend } from '~/pages/Swap/Margin/chart/MarginChartOhlcLegend'
 import { type MarginChartPrefs, useMarginChartPrefs } from '~/pages/Swap/Margin/chart/marginChartPrefsStore'
 import { MarginChartTooltip, type MarginTooltipData } from '~/pages/Swap/Margin/chart/MarginChartTooltip'
 import { MarginChartZoomButtons } from '~/pages/Swap/Margin/chart/MarginChartZoomButtons'
-import { MARGIN_TIME_WINDOW_OPTIONS, type MarginTimeWindow } from '~/pages/Swap/Margin/chart/marginTimeWindows'
+import { MarginEntryAvatarOverlay, useMarginEntryAvatars } from '~/pages/Swap/Margin/chart/MarginEntryAvatarOverlay'
+import {
+  MARGIN_TIME_WINDOW_OPTIONS,
+  MARGIN_TIME_WINDOWS,
+  type MarginTimeWindow,
+} from '~/pages/Swap/Margin/chart/marginTimeWindows'
 import { useMarginChartData, volatileLeg, type MarginChartData } from '~/pages/Swap/Margin/chart/useMarginChartData'
 import { useMarginChartOverlays } from '~/pages/Swap/Margin/chart/useMarginChartOverlays'
 import { useMarginVolume } from '~/pages/Swap/Margin/chart/useMarginVolume'
@@ -47,11 +45,9 @@ import { MAX_VERTICAL_ZOOM_STEP } from '~/pages/Swap/Margin/chart/verticalZoom'
 import { MarginFormMarketsState } from '~/pages/Swap/Margin/components/MarginFormMarketsState'
 import { MarginMarketSelectorAnchor } from '~/pages/Swap/Margin/components/MarginMarketSelector'
 import { setMarginChartHoveredCandle } from '~/pages/Swap/Margin/hooks/useMarginChartHoveredCandle'
-import { useMarginVenueAllowlist } from '~/pages/Swap/Margin/hooks/useMarginVenueAllowlist'
 import { MARGIN_TIME_AXIS_HEIGHT, marginVolumePaneHeight } from '~/pages/Swap/Margin/marginChartLayout'
 import { MarginChartSkeleton } from '~/pages/Swap/Margin/MarginChartSkeleton'
 import { useMarginMorph } from '~/pages/Swap/Margin/MarginMorphContext'
-import { getMarginLeverageCap } from '~/pages/Swap/Margin/marginOpenButtonGate'
 import { MarginPriceChartModel } from '~/pages/Swap/Margin/MarginPriceChartModel'
 import { DataQuality, PriceChartType } from '~/utils/charts'
 
@@ -78,8 +74,8 @@ const OVERLAY_REVEAL_STYLE = { transition: `opacity ${SPORE_ANIMATION_CURVE_CSS.
  * position sheet). The pair header and OHLC legend are dropped there: the header is the form's market
  * picker, and the surface carries its own identity.
  *
- * `focusedPosition` draws that one position's lines (entry, liquidation, break-even); the chart never
- * fetches positions itself.
+ * `focusedPosition` draws that one position's lines (entry, liquidation, break-even). Without one, the
+ * market's open positions show as entry avatars while "Show positions on chart" is on.
  */
 export function MarginChartPane({
   compact = false,
@@ -147,17 +143,21 @@ function MarginChartPaneBody({
   // Mount lightweight-charts only once the layout morph settles; the skeleton bridges until then.
   const { morphSettled } = useMarginMorph()
 
-  const { candles, quality, loading, error, refetch, stats24h, candlesUnavailable } = useMarginChartData({
-    market,
-    timeWindow,
-  })
+  const { candles, quality, loading, error, refetch, stats24h, candlesUnavailable, isPlaceholderData } =
+    useMarginChartData({ market, timeWindow })
 
   // Chart style (spec F14): the persisted pref drives the toggle, but line-only fallback markets have
   // no real OHLC, so the effective type is forced to line there regardless of the pref.
   const chartStyle = useMarginChartPrefs((s) => s.chartStyle)
   const setChartPrefs = useMarginChartPrefs((s) => s.setChartPrefs)
   // Volume histogram (spec F15).
-  const { volumeBars } = useMarginVolume({ market, timeWindow })
+  const { volumeBars, isPlaceholderData: isVolumePlaceholder } = useMarginVolume({ market, timeWindow })
+  // A new range shows the skeleton until its candles and volume both land, not the last range's bars
+  // against it. Only a range change: the queries also hold data across a poll's candle roll-over.
+  const [settledWindow, setSettledWindow] = useState(timeWindow)
+  if (settledWindow !== timeWindow && !isPlaceholderData && !isVolumePlaceholder) {
+    setSettledWindow(timeWindow)
+  }
   const showVolumePane = volumeBars.length > 0
   const effectiveStyle: MarginChartPrefs['chartStyle'] = candlesUnavailable ? 'line' : chartStyle
   const effectiveChartType = effectiveStyle === 'line' ? PriceChartType.LINE : PriceChartType.CANDLESTICK
@@ -178,10 +178,19 @@ function MarginChartPaneBody({
   const onCrosshairChange = useEvent((candle?: PriceChartData): void => setMarginChartHoveredCandle(candle))
   // The legend must not keep reading a candle from a chart that is gone.
   useEffect(() => () => setMarginChartHoveredCandle(undefined), [])
+
+  const avatars = useMarginEntryAvatars({
+    market,
+    candles,
+    candleSeconds: MARGIN_TIME_WINDOWS[timeWindow].candleSeconds,
+    focusedPosition,
+  })
   const overlays = useMarginChartOverlays({
     market,
     previewMarket,
     focusedPosition,
+    positions: avatars.positions,
+    emphasizedPositionId: avatars.emphasizedPositionId,
     // Fallback mark for the preview estimate when the live market mark is absent (e.g. a venue that
     // can't quote) — keeps Entry/Liq on the chart instead of blanking them.
     markFallback: candles.at(-1)?.close,
@@ -210,6 +219,8 @@ function MarginChartPaneBody({
       hideTooltipBorder: true,
       overlays,
       onVisibleRangeChange,
+      avatarMarkers: avatars.markers,
+      onAvatarPointsChange: avatars.onPointsChange,
       volumeBars: showVolumePane ? volumeBars : undefined,
       boxHeight: height,
       verticalZoomStep,
@@ -220,6 +231,8 @@ function MarginChartPaneBody({
       quality,
       overlays,
       onVisibleRangeChange,
+      avatars.markers,
+      avatars.onPointsChange,
       showVolumePane,
       volumeBars,
       height,
@@ -229,7 +242,7 @@ function MarginChartPaneBody({
 
   // Mount once it has a box + data, but keep it hidden behind the skeleton for a beat then cross-fade in,
   // so the model's first-frame setup never shows as a "resize".
-  const chartMounted = morphSettled && candles.length > 0 && width > 0 && height > 0
+  const chartMounted = morphSettled && candles.length > 0 && width > 0 && height > 0 && settledWindow === timeWindow
   const [chartRevealed, setChartRevealed] = useState(false)
   useEffect(() => {
     if (!chartMounted) {
@@ -302,11 +315,13 @@ function MarginChartPaneBody({
                   Model={MarginPriceChartModel}
                   params={params}
                   height="100%"
+                  showDottedBackground
                   // The cross-fade owns the entry; a height ease here would read as a resize.
                   animateHeight={false}
                   TooltipBody={MarginPaneTooltip}
                   onCrosshairChange={onCrosshairChange}
                 />
+                <MarginEntryAvatarOverlay {...avatars} />
               </Flex>
             ) : null}
             {!chartRevealed ? (
@@ -398,6 +413,7 @@ function MarginChartStyleToggle({
   const options = [
     {
       value: 'line' as const,
+      'aria-label': t('common.chart.line'),
       display: (
         <Flex row centered testID={TestID.MarginChartStyleLine}>
           <LineChartDots color="$neutral1" size={STYLE_TOGGLE_ICON_SIZE} />
@@ -406,6 +422,7 @@ function MarginChartStyleToggle({
     },
     {
       value: 'candles' as const,
+      'aria-label': t('common.chart.candlestick'),
       disabled: candlesUnavailable,
       display: (
         <Flex
@@ -500,8 +517,6 @@ function MarginStatsStrip({
     (routedVenue ? pairMarkets.find((pairMarket) => pairMarket.venue === routedVenue) : undefined) ??
     pairMarkets.at(0) ??
     markets.at(0)
-  // The headline must agree with the form's slider, so it maxes over the same allowed venue set.
-  const { allowedMarkets } = useMarginVenueAllowlist({ market })
 
   if (!market) {
     return (
@@ -518,9 +533,6 @@ function MarginStatsStrip({
   // price for, which read as "$0".
   const liveMark = live ? scaledE18ToNumber(live.markPriceX18) : undefined
   const mark = markPrice !== undefined && markPrice > 0 ? markPrice : liveMark && liveMark > 0 ? liveMark : undefined
-  const lltvWad = live ? live.lltvWad : market.lltvWad
-  const lltv = lltvToPercent(lltvWad)
-  const maxLev = getMarginLeverageCap({ markets: allowedMarkets })
   const liquidity = live
     ? formatMarginDebtUnits({
         raw: live.availableBorrowLiquidity,
@@ -538,36 +550,13 @@ function MarginStatsStrip({
       ? { text: `${changePct >= 0 ? '+' : ''}${formatPercent(changePct, 1)}`, positive: changePct >= 0 }
       : undefined
 
-  // The venue terms the design's header has no column for (borrow APY, LLTV, max leverage) sit under
-  // the pair, "·"-joined, each with its hover explainer (spec F24 channel 2).
   const venueLabel = marginVenueLabel(market.venue)
-  const venueTerms: Array<{ key: string; text: string; tooltip?: string }> = []
-  if (live && live.borrowApyBps !== undefined) {
-    venueTerms.push({
-      key: 'apy',
-      text: t('margin.stats.borrowApy', { apy: bpsToPercent(live.borrowApyBps).toFixed(2) }),
-      tooltip: t('margin.stats.tooltip.apy', { venue: venueLabel }),
-    })
-  }
-  // Both variants quote a max, so neither can render before one is known — no cap is derivable from
-  // lltv any more.
-  if (maxLev !== undefined) {
-    venueTerms.push(
-      lltvWad !== '0'
-        ? {
-            key: 'lltvMax',
-            text: t('margin.stats.lltvMax', { lltv: lltv.toFixed(0), max: formatMaxLeverage(maxLev) }),
-            tooltip: t('margin.stats.tooltip.lltvMax', { lltv: lltv.toFixed(0) }),
-          }
-        : { key: 'maxLev', text: t('margin.stats.maxLeverage', { max: formatMaxLeverage(maxLev) }) },
-    )
-  }
   const volatileSymbol = marginUnwrapSymbol(volatileLeg({ market }))
   const dash = '—'
 
   return (
     <Flex row alignItems="center" justifyContent="space-between" gap="$spacing16" flexWrap="wrap">
-      {/* Identity: split logo, the pair, and the venue terms under it; opens the market picker, which
+      {/* Identity: split logo and the pair; opens the market picker, which
           drops down from here (a sheet in the compact layout). Shrinks before the stats do. */}
       <MarginMarketSelectorAnchor compact={compact}>
         {(isSelectorOpen) => (
@@ -580,42 +569,11 @@ function MarginStatsStrip({
               outputCurrencyInfo={null}
               {...getMarginPairLogoProps({ ...marginPairLegs(market), currencyInfos })}
             />
-            <Flex gap="$spacing2" minWidth={0}>
-              <Flex row alignItems="center" gap="$spacing4">
-                <Text variant="subheading1" color="$neutral1">
-                  {marginPairLabel({ market })}
-                </Text>
-                <RotatableChevron direction={isSelectorOpen ? 'up' : 'down'} size="$icon.16" color="$neutral2" />
-              </Flex>
-              <Flex row alignItems="center" gap="$spacing6" flexWrap="wrap">
-                {venueTerms.map((term, i) => (
-                  <Flex key={term.key} row alignItems="center" gap="$spacing6">
-                    {term.tooltip ? (
-                      <Tooltip placement="top" delay={{ open: 200, close: 0 }}>
-                        <Tooltip.Trigger>
-                          <Text variant="body4" color="$neutral2">
-                            {term.text}
-                          </Text>
-                        </Tooltip.Trigger>
-                        <Tooltip.Content>
-                          <Tooltip.Arrow />
-                          <Text variant="body4">{term.tooltip}</Text>
-                        </Tooltip.Content>
-                      </Tooltip>
-                    ) : (
-                      <Text variant="body4" color="$neutral2">
-                        {term.text}
-                      </Text>
-                    )}
-                    {/* Trailing separator: on wrap it dangles at a line end, never orphaned at a start. */}
-                    {i < venueTerms.length - 1 ? (
-                      <Text variant="body4" color="$neutral3">
-                        ·
-                      </Text>
-                    ) : null}
-                  </Flex>
-                ))}
-              </Flex>
+            <Flex row alignItems="center" gap="$spacing4" minWidth={0}>
+              <Text variant="subheading1" color="$neutral1">
+                {marginPairLabel({ market })}
+              </Text>
+              <RotatableChevron direction={isSelectorOpen ? 'up' : 'down'} size="$icon.16" color="$neutral2" />
             </Flex>
           </>
         )}

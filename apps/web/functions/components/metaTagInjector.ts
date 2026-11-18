@@ -9,7 +9,7 @@ import { Context, Next } from 'hono'
 import { encode } from 'html-entities'
 import type { ProtocolVersionLabel } from 'uniswap/src/features/positions/utils'
 import { withTimeout } from 'uniswap/src/utils/polling'
-import { paths } from '~/pages/paths'
+import { paths } from '~/pages/routes/paths'
 import { MetaTagInjectorInput } from '~/shared-cloud/metatags'
 
 // Shared links often carry trailing slashes (e.g. /launches/); normalize so they match their canonical path.

@@ -1,9 +1,10 @@
-import { nearestUsableTick, TickMath } from '@uniswap/v3-sdk'
 import { DefaultPriceStrategy } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
 import {
   floorTickToSpacing,
+  getUsableTickBounds,
   snapTickToSpacing,
 } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/tickUtils'
+import type { TickRange } from '~/features/Liquidity/Create/types'
 
 // Tick tolerance for detecting strategy matches (number of ticks)
 const TICK_TOLERANCE = 1
@@ -21,10 +22,9 @@ export function calculateStrategyTicks({
   tickSpacing: number
   defaultMinTick?: number
   defaultMaxTick?: number
-}): { minTick: number; maxTick: number } {
+}): TickRange {
   // Get usable min/max ticks aligned to tickSpacing
-  const usableMinTick = nearestUsableTick(TickMath.MIN_TICK, tickSpacing)
-  const usableMaxTick = nearestUsableTick(TickMath.MAX_TICK, tickSpacing)
+  const { minTick: usableMinTick, maxTick: usableMaxTick } = getUsableTickBounds(tickSpacing)
 
   switch (priceStrategy) {
     case DefaultPriceStrategy.STABLE: {
@@ -114,12 +114,12 @@ export function getFollowedPresetTicks({
   currentTick,
   tickSpacing,
 }: {
-  followedPreset?: { strategy: DefaultPriceStrategy; minTick: number; maxTick: number }
+  followedPreset?: { strategy: DefaultPriceStrategy } & TickRange
   minTick?: number
   maxTick?: number
   currentTick: number
   tickSpacing: number
-}): { minTick: number; maxTick: number } | undefined {
+}): TickRange | undefined {
   if (!followedPreset || followedPreset.minTick !== minTick || followedPreset.maxTick !== maxTick) {
     return undefined
   }

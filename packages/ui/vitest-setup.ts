@@ -2,6 +2,7 @@
 // webview, device-info, matchMedia) shared by every vitest suite that renders through
 // packages/ui: the ui package's own tests plus the uniswap/wallet/mobile/extension suites,
 // which all import this setup file
+import '../../config/vitest-presets/vitest/jsdom-shims'
 import '../../config/vitest-presets/vitest/react-native-mocks'
 import { vi } from 'vitest'
 

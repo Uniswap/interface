@@ -23,8 +23,9 @@ export interface TriggerButtonCompatProps {
   /** Chevron glyph size in px (legacy $icon.16 / $icon.20). Default: 20. */
   chevronSize?: 16 | 20
   /**
-   * GATED stand-in for the legacy tooltip-wrapped trigger: rendered as
-   * title + aria-label until the tooltip compat (#36951) lands (ledgered).
+   * GATED stand-in for the legacy tooltip-wrapped trigger: rendered as a
+   * title until the tooltip compat (#36951) lands (ledgered). The visible
+   * text stays the accessible name; the title only names an icon-only trigger.
    */
   tooltipLabel?: string
   disabled?: boolean

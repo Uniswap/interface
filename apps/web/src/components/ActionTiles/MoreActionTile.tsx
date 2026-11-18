@@ -68,6 +68,7 @@ export function MoreActionTile({ padding = '$spacing12' }: { padding?: FlexProps
       containerStyle={{ height: '100%' }}
       alignRight={false}
       adaptToSheet
+      title={t('common.moreOptions')}
     >
       <Trace logPress element={ElementName.PortfolioActionSwap}>
         <InternalMenuItem onPress={onPressSwap}>

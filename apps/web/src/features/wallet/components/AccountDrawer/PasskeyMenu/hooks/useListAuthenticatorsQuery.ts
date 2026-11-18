@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { queryOptions, useQuery } from '@tanstack/react-query'
 import {
   type Authenticator,
   AuthenticatorNameType,
@@ -50,17 +50,23 @@ type ListAuthenticatorsQueryResult = {
 
 export function useListAuthenticatorsQuery({ skip }: { skip?: boolean } = {}) {
   const { walletId } = useEmbeddedWalletState()
+  const options = getListAuthenticatorsQueryOptions(walletId)
+  const enabled = !!walletId && !skip
 
   // Mirror to sessionStorage so the cache survives the top-level OAuth redirect.
   // Without this, the post-redirect refetch loses the in-memory NECK and re-prompts
   // for the passkey to derive a fresh one.
   useSessionStoragePersistedQuery({
-    queryKey: [ReactQueryCacheKey.ListAuthenticators, walletId],
+    queryKey: options.queryKey,
     storageKey: getListAuthenticatorsStorageKey(walletId),
-    enabled: !!walletId && !skip,
+    enabled,
   })
 
-  return useQuery<ListAuthenticatorsQueryResult>({
+  return useQuery({ ...options, enabled })
+}
+
+export function getListAuthenticatorsQueryOptions(walletId: string | null | undefined) {
+  return queryOptions<ListAuthenticatorsQueryResult>({
     queryKey: [ReactQueryCacheKey.ListAuthenticators, walletId],
     queryFn: async () => {
       const result = await listAuthenticators(walletId ?? undefined)
@@ -76,7 +82,6 @@ export function useListAuthenticatorsQuery({ skip }: { skip?: boolean } = {}) {
         lastExportedMs: result.lastExportedMs,
       }
     },
-    enabled: !!walletId && !skip,
     staleTime: 20 * ONE_MINUTE_MS,
   })
 }

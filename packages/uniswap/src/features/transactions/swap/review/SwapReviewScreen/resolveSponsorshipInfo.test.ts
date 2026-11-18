@@ -43,4 +43,37 @@ describe('resolveSponsorshipInfo', () => {
   it('returns undefined when the quote is not sponsorable', () => {
     expect(resolveSponsorshipInfo(createContextWithSponsorship())).toBeUndefined()
   })
+
+  // SWAP-3728: a quote can carry campaign/sponsor branding with `sponsored: false` (e.g. the wallet used its
+  // campaign allowance). Execution then pays gas, so the Network cost row must show the real fee, not "Free".
+  describe('never shows an unsponsored quote as sponsored', () => {
+    it('returns undefined when sponsored is false even with sponsorMetadata and a campaign', () => {
+      const context = createContextWithSponsorship({
+        sponsored: false,
+        rejectionReason: 'campaign allowance exhausted',
+        sponsorMetadata: { name: 'Uniswap' },
+        campaign,
+      })
+      expect(resolveSponsorshipInfo(context)).toBeUndefined()
+    })
+
+    it('returns undefined when sponsored is false with only a campaign', () => {
+      expect(resolveSponsorshipInfo(createContextWithSponsorship({ sponsored: false, campaign }))).toBeUndefined()
+    })
+
+    it('returns undefined when sponsored is missing but sponsorMetadata is present', () => {
+      expect(
+        resolveSponsorshipInfo(createContextWithSponsorship({ sponsorMetadata: { name: 'Uniswap' } })),
+      ).toBeUndefined()
+    })
+
+    it('returns undefined when the swap response has a paymaster but the quote is not sponsored', () => {
+      const context = {
+        ...createContextWithSponsorship({ sponsored: false }),
+        paymasterService: { url: 'https://pm.example', context: {} },
+        requestUniswapGasSponsorship: true,
+      } as ClassicSwapTxAndGasInfo
+      expect(resolveSponsorshipInfo(context)).toBeUndefined()
+    })
+  })
 })

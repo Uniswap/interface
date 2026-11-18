@@ -1,5 +1,4 @@
 import { UniverseChainId } from '@universe/chains'
-import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { Flex } from '@universe/mycelium'
 import { memo, useCallback, useMemo, useState } from 'react'
 import { TokenOption, TokenSelectorListOption } from 'uniswap/src/components/lists/items/types'
@@ -109,11 +108,7 @@ export const TokenSelectorV2List = memo(function TokenSelectorV2List({
   const { handleTokenPress, pendingModal } = usePendingWarningSelection({ showTokenWarnings, onSelectCurrency })
 
   const rwaIndex = useRwaIndex()
-  const plainTokenNames = useIsTokenCategoriesEnabled()
-  const taggedSections = useMemo(
-    () => tagRwaTokenSelectorSections({ sections, rwaIndex, plainTokenNames }),
-    [sections, rwaIndex, plainTokenNames],
-  )
+  const taggedSections = useMemo(() => tagRwaTokenSelectorSections({ sections, rwaIndex }), [sections, rwaIndex])
   const { categories } = useAllTokenCategories()
 
   const [expandedItems, setExpandedItems] = useState<string[]>([])

@@ -37,7 +37,12 @@ import { getFieldsDisabled, isInvalidRange } from '~/features/Liquidity/utils/pr
 import { useModalState } from '~/hooks/useModalState'
 import { PositionField } from '~/types/position'
 
-export const DepositStep = () => {
+/**
+ * Everything the deposit step does, minus its layout: amounts, the CTA's state, the gate banners and
+ * the review/confirm/slippage/verify modals. Views render the pieces they need so the create flow and
+ * surfaces embedding it (e.g. the pool details panel) share one behavior.
+ */
+export function useDepositStepController() {
   const {
     priceRangeState: { initialPrice, priceInverted },
     protocolVersion,
@@ -52,7 +57,6 @@ export const DepositStep = () => {
     setIsReviewModalOpen,
   } = useCreateLiquidityContext()
 
-  const { t } = useTranslation()
   const { onConnectWallet } = useUniswapContext()
   const account = useAccount()
   const { TOKEN0: gatingToken0, TOKEN1: gatingToken1 } = currencies.display
@@ -212,11 +216,11 @@ export const DepositStep = () => {
     [showVerifyIdentity, permissionedConfig, permissionedTokenSymbol],
   )
 
-  if (!TOKEN0 || !TOKEN1) {
-    return null
-  }
-
-  const disabled = !!inputError || !txInfo?.txRequest || hasBlockedToken
+  // Everything that blocks the CTA before calldata exists. A host that holds the calldata query back (the PDP
+  // until a hook is approved) gates on this alone; an invalid range already leaves the query, and so the
+  // calldata, empty below.
+  const disabledBeforeCalldata = !!inputError || hasBlockedToken || invalidRange
+  const disabled = disabledBeforeCalldata || !txInfo?.txRequest
 
   const requestLoading = Boolean(
     !transactionError &&
@@ -226,6 +230,112 @@ export const DepositStep = () => {
     currencyAmounts.TOKEN1 &&
     !invalidRange,
   )
+
+  const depositInputFormProps: Omit<React.ComponentProps<typeof DepositInputForm>, 'autofocus'> = {
+    token0: TOKEN0 ?? undefined,
+    token1: TOKEN1 ?? undefined,
+    formattedAmounts: updatedFormattedAmounts ?? formattedAmounts,
+    currencyAmounts: updatedCurrencyAmounts ?? currencyAmounts,
+    currencyAmountsUSDValue: updatedUSDAmounts ?? currencyAmountsUSDValue,
+    currencyBalances,
+    onUserInput: handleUserInput,
+    onSetMax: handleOnSetMax,
+    deposit0Disabled: updatedDeposit0Disabled,
+    deposit1Disabled: updatedDeposit1Disabled,
+    amount0Loading: requestLoading && exactField === PositionField.TOKEN1,
+    amount1Loading: requestLoading && exactField === PositionField.TOKEN0,
+    actualGasFee: preEstimatedGasFee,
+    token0UnderCardComponent: unwrapNativeCurrencyToggles.TOKEN0,
+    token1UnderCardComponent: unwrapNativeCurrencyToggles.TOKEN1,
+  }
+
+  const ctaProps: DepositCtaProps = {
+    isConnected: !!account.isConnected,
+    isGeoRestricted,
+    geoUnavailableLabel: unavailableLabel,
+    showVerifyIdentity,
+    isPermissionCheckLoading,
+    onConnectWallet: handleConnectEvmWallet,
+    onVerifyIdentity: openVerifyIdentityModal,
+    onReview: handleReview,
+    disabled,
+    requestLoading,
+    inputError,
+  }
+
+  const gateBannersProps: DepositGateBannersProps = {
+    isGeoRestricted,
+    restrictedTokenSymbol,
+    blockedTokenSymbols,
+    showVerifyIdentity,
+    permissionedTokenSymbol,
+  }
+
+  const footerModalsProps: DepositFooterModalsProps = {
+    createPositionModalProps: {
+      formattedAmounts: updatedFormattedAmounts,
+      currencyAmounts: updatedCurrencyAmounts ?? currencyAmounts,
+      currencyAmountsUSDValue: updatedUSDAmounts,
+      gasFeeEstimateUSD,
+      txInfo,
+      isOpen: isReviewModalOpen,
+      transactionError,
+      setTransactionError,
+      onClose: () => setIsReviewModalOpen(false),
+    },
+    confirmModalProps:
+      priceDifference?.warning === WarningSeverity.High
+        ? {
+            isOpen: isConfirmModalOpen,
+            onClose: () => setIsConfirmModalOpen(false),
+            onContinue: () => {
+              setIsConfirmModalOpen(false)
+              openReviewModal()
+            },
+            priceDifference,
+          }
+        : undefined,
+    slippageWarningModalProps: {
+      isOpen: isSlippageWarningModalOpen,
+      onClose: () => setIsSlippageWarningModalOpen(false),
+      onContinue: () => {
+        setIsSlippageWarningModalOpen(false)
+        setSlippageWarningModalSeen(true)
+        setIsReviewModalOpen(true)
+      },
+    },
+    verifyIdentityModalProps,
+  }
+
+  return {
+    hasTokens: Boolean(TOKEN0 && TOKEN1),
+    disabledBeforeCalldata,
+    invalidRange,
+    isNativePool: Boolean(currencies.sdk.TOKEN0?.isNative || currencies.sdk.TOKEN1?.isNative),
+    errorCalloutProps: { onPress: refetch, suppressed: showVerifyIdentity || isGeoRestricted },
+    depositInputFormProps,
+    ctaProps,
+    gateBannersProps,
+    footerModalsProps,
+  }
+}
+
+export const DepositStep = () => {
+  const { t } = useTranslation()
+  const {
+    hasTokens,
+    invalidRange,
+    isNativePool,
+    errorCalloutProps,
+    depositInputFormProps,
+    ctaProps,
+    gateBannersProps,
+    footerModalsProps,
+  } = useDepositStepController()
+
+  if (!hasTokens) {
+    return null
+  }
 
   return (
     <>
@@ -239,86 +349,14 @@ export const DepositStep = () => {
           </Flex>
         </Flex>
       )}
-      <DepositInputForm
-        autofocus={false}
-        token0={TOKEN0}
-        token1={TOKEN1}
-        formattedAmounts={updatedFormattedAmounts ?? formattedAmounts}
-        currencyAmounts={updatedCurrencyAmounts ?? currencyAmounts}
-        currencyAmountsUSDValue={updatedUSDAmounts ?? currencyAmountsUSDValue}
-        currencyBalances={currencyBalances}
-        onUserInput={handleUserInput}
-        onSetMax={handleOnSetMax}
-        deposit0Disabled={updatedDeposit0Disabled}
-        deposit1Disabled={updatedDeposit1Disabled}
-        amount0Loading={requestLoading && exactField === PositionField.TOKEN1}
-        amount1Loading={requestLoading && exactField === PositionField.TOKEN0}
-        actualGasFee={preEstimatedGasFee}
-        token0UnderCardComponent={unwrapNativeCurrencyToggles.TOKEN0}
-        token1UnderCardComponent={unwrapNativeCurrencyToggles.TOKEN1}
-      />
-      <LowLPSlippageWarning
-        isNativePool={Boolean(currencies.sdk.TOKEN0?.isNative || currencies.sdk.TOKEN1?.isNative)}
-      />
-      <DepositGateBanners
-        isGeoRestricted={isGeoRestricted}
-        restrictedTokenSymbol={restrictedTokenSymbol}
-        blockedTokenSymbols={blockedTokenSymbols}
-        showVerifyIdentity={showVerifyIdentity}
-        permissionedTokenSymbol={permissionedTokenSymbol}
-      />
+      <DepositInputForm autofocus={false} {...depositInputFormProps} />
+      <LowLPSlippageWarning isNativePool={isNativePool} />
+      <DepositGateBanners {...gateBannersProps} />
       <Flex row>
-        <DepositCta
-          isConnected={!!account.isConnected}
-          isGeoRestricted={isGeoRestricted}
-          geoUnavailableLabel={unavailableLabel}
-          showVerifyIdentity={showVerifyIdentity}
-          isPermissionCheckLoading={isPermissionCheckLoading}
-          onConnectWallet={handleConnectEvmWallet}
-          onVerifyIdentity={openVerifyIdentityModal}
-          onReview={handleReview}
-          disabled={disabled}
-          requestLoading={requestLoading}
-          inputError={inputError}
-        />
+        <DepositCta {...ctaProps} />
       </Flex>
-      <CreatePositionErrorCallout onPress={refetch} suppressed={showVerifyIdentity || isGeoRestricted} />
-      <DepositFooterModals
-        createPositionModalProps={{
-          formattedAmounts: updatedFormattedAmounts,
-          currencyAmounts: updatedCurrencyAmounts ?? currencyAmounts,
-          currencyAmountsUSDValue: updatedUSDAmounts,
-          gasFeeEstimateUSD,
-          txInfo,
-          isOpen: isReviewModalOpen,
-          transactionError,
-          setTransactionError,
-          onClose: () => setIsReviewModalOpen(false),
-        }}
-        confirmModalProps={
-          priceDifference?.warning === WarningSeverity.High
-            ? {
-                isOpen: isConfirmModalOpen,
-                onClose: () => setIsConfirmModalOpen(false),
-                onContinue: () => {
-                  setIsConfirmModalOpen(false)
-                  openReviewModal()
-                },
-                priceDifference,
-              }
-            : undefined
-        }
-        slippageWarningModalProps={{
-          isOpen: isSlippageWarningModalOpen,
-          onClose: () => setIsSlippageWarningModalOpen(false),
-          onContinue: () => {
-            setIsSlippageWarningModalOpen(false)
-            setSlippageWarningModalSeen(true)
-            setIsReviewModalOpen(true)
-          },
-        }}
-        verifyIdentityModalProps={verifyIdentityModalProps}
-      />
+      <CreatePositionErrorCallout {...errorCalloutProps} />
+      <DepositFooterModals {...footerModalsProps} />
     </>
   )
 }
@@ -330,7 +368,7 @@ type DepositFooterModalsProps = {
   verifyIdentityModalProps: React.ComponentProps<typeof VerifyIdentityModal> | undefined
 }
 
-function DepositFooterModals({
+export function DepositFooterModals({
   createPositionModalProps,
   confirmModalProps,
   slippageWarningModalProps,
@@ -359,7 +397,7 @@ type DepositGateBannersProps = {
  * The geo block replaces the token-safety and Verify Identity banners rather than stacking with
  * them, since neither a safety warning nor identity verification changes a region block's outcome.
  */
-function DepositGateBanners({
+export function DepositGateBanners({
   isGeoRestricted,
   restrictedTokenSymbol,
   blockedTokenSymbols,
@@ -389,9 +427,11 @@ type DepositCtaProps = {
   disabled: boolean
   requestLoading: boolean
   inputError: React.ReactNode
+  /** The ready-to-submit label; defaults to "Review". */
+  submitLabel?: string
 }
 
-function DepositCta({
+export function DepositCta({
   isConnected,
   isGeoRestricted,
   geoUnavailableLabel,
@@ -403,6 +443,7 @@ function DepositCta({
   disabled,
   requestLoading,
   inputError,
+  submitLabel,
 }: DepositCtaProps): JSX.Element {
   const { t } = useTranslation()
   // Outranks the connect-wallet CTA: the block holds while disconnected, so don't repurpose the
@@ -445,7 +486,7 @@ function DepositCta({
       key="Position-Create-DepositButton"
       loading={requestLoading || isPermissionCheckLoading}
     >
-      {inputError ? inputError : t('swap.button.review')}
+      {inputError ? inputError : (submitLabel ?? t('swap.button.review'))}
     </Button>
   )
 }

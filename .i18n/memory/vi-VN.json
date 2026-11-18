@@ -14,8 +14,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Apple",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -31,8 +31,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Email",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -48,8 +48,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Google",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -133,8 +133,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Token 1",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -150,8 +150,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Token 2",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -167,8 +167,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "{{amount}} UNI",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -373,6 +373,23 @@
       }
     ],
     [
+      "vi-VN:i18next-json:chart.groupTicks",
+      {
+        "unitId": "chart.groupTicks",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "c83686ea75e475eab9db64992d4d19d306eeee24cdf5856747f14e5630867393",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Nhóm Tick",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-11-10T21-07-57Z",
+        "approvedAt": "2026-11-10T21:07:57.997Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "vi-VN:i18next-json:chart.noData.price.title",
       {
         "unitId": "chart.noData.price.title",
@@ -452,8 +469,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Beta",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -469,8 +486,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Blog",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -486,8 +503,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "OK",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -509,6 +526,40 @@
       }
     ],
     [
+      "vi-VN:i18next-json:common.chart.candlestick",
+      {
+        "unitId": "common.chart.candlestick",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "516cc7a4f340017f478080879747fb79bdf76a3161ef9300f08b89ca822c6cfc",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Biểu đồ nến",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:common.chart.line",
+      {
+        "unitId": "common.chart.line",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "22089151613fba5e5af6d9452f5ba47f12317e2b063ac66fce634fff2adbee04",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Biểu đồ đường",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "vi-VN:i18next-json:common.explorer",
       {
         "unitId": "common.explorer",
@@ -520,8 +571,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Explorer",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -539,6 +590,23 @@
         "status": "clean",
         "agentRunId": "vi-VN-2026-11-04T16-52-06Z",
         "approvedAt": "2026-11-04T16:52:06.973Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:common.moreOptions",
+      {
+        "unitId": "common.moreOptions",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "bc79cdffbaa8df096f0ea0dbdf03575b6d4fa3f90f783d3795d01aa9a7a1c926",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Tùy chọn khác",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-11-06T18-38-17Z",
+        "approvedAt": "2026-11-06T18:38:17.963Z",
         "approvedBy": "agent"
       }
     ],
@@ -588,8 +656,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Uniswap v2",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -605,8 +673,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Uniswap v3",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -622,8 +690,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Uniswap v4",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -639,8 +707,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "7D",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -656,8 +724,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "30D",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -673,8 +741,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Token A",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -690,8 +758,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Token B",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -707,8 +775,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Euro",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -1115,8 +1183,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "{{apy}} APY",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -1132,8 +1200,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Earn",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -1149,8 +1217,42 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "{{apy}} APY",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:explore.pools.empty",
+      {
+        "unitId": "explore.pools.empty",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "d6ea3d16d649cbb99185342ab556a2cc5299ccb91e798cb0d2e9472a411419c9",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Không tìm thấy pool",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-11-10T20-59-50Z",
+        "approvedAt": "2026-11-10T20:59:50.233Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:explore.pools.error",
+      {
+        "unitId": "explore.pools.error",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "cee34f8e5ad4c3c1d4a24ff86214a1b2f49fe0c22cc0f8b4a65b004946303244",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Không thể tải pool",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-11-10T20-59-50Z",
+        "approvedAt": "2026-11-10T20:59:50.233Z",
         "approvedBy": "agent"
       }
     ],
@@ -1213,8 +1315,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Venmo",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -2286,8 +2388,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "afterAddLiquidity",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -2320,8 +2422,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "afterAddLiquidityReturnDelta",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -2354,8 +2456,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "afterDonate",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -2388,8 +2490,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "afterInitialize",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -2422,8 +2524,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "afterRemoveLiquidity",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -2456,8 +2558,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "afterRemoveLiquidityReturnDelta",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -2490,8 +2592,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "afterSwap",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -2524,8 +2626,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "afterSwapReturnDelta",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -2558,8 +2660,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "beforeAddLiquidity",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -2592,8 +2694,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "beforeDonate",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -2626,8 +2728,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "beforeInitialize",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -2660,8 +2762,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "beforeRemoveLiquidity",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -2694,8 +2796,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "beforeSwap",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -2728,8 +2830,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "beforeSwapReturnDelta",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -3170,8 +3272,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "API",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -3221,8 +3323,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Launchpad",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -3289,8 +3391,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "APR",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -3607,13 +3709,26 @@
         "providerId": "i18next-json",
         "locale": "vi-VN",
         "domain": "product-ui",
-        "sourceHash": "d782c587907119c4c3bd3a171ee092446b7b4c766069b28e84475a1a7e382eaa",
+        "sourceHash": "1c1731364b533eb1b136b41e36c6d3bd4f2f7b2d6621c9635f5c11328443af87",
         "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
-        "translation": "Cập nhật đòn bẩy",
-        "status": "clean",
-        "agentRunId": "vi-VN-2026-10-13T21-30-42Z",
-        "approvedAt": "2026-10-13T21:30:42.386Z",
+        "translation": "Cập nhật kích thước vị thế",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "accuracy",
+            "severity": "major",
+            "detail": "Mistranslation: 'position size' rendered as 'đòn bẩy' (leverage). Size and leverage are distinct, separately-controlled parameters in this margin UI (see i=1678 'Leverage', i=1865 'Leverage updated'); labeling a size action as a leverage action can lead the user to the wrong adjustment. The shipped TM entry carries the same defect and should not be matched here.",
+            "evidence": {
+              "sourceSpan": "position size",
+              "targetSpan": "đòn bẩy"
+            },
+            "alternative": "Cập nhật kích thước vị thế",
+            "reviewDimension": "term-type-agreement"
+          }
+        ],
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -3624,13 +3739,26 @@
         "providerId": "i18next-json",
         "locale": "vi-VN",
         "domain": "product-ui",
-        "sourceHash": "c4c9b26473b38936b30ce0e9bda428157e2df3dff810b648cb3c42c75cd6dd20",
+        "sourceHash": "8f35893d766d2eea1c3124329ae6af1abaf83f9995f7cc576c5d00469db5b16b",
         "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
-        "translation": "Thay đổi đòn bẩy",
-        "status": "clean",
-        "agentRunId": "vi-VN-2026-10-13T21-30-42Z",
-        "approvedAt": "2026-10-13T21:30:42.386Z",
+        "translation": "Thay đổi kích thước vị thế",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "accuracy",
+            "severity": "major",
+            "detail": "Mistranslation: 'Change position size' rendered as 'Thay đổi đòn bẩy' (change leverage). This action label resizes the position, not its leverage setting; the app has a separate Leverage concept (i=1678). A user intending to resize could believe they are adjusting leverage.",
+            "evidence": {
+              "sourceSpan": "position size",
+              "targetSpan": "đòn bẩy"
+            },
+            "alternative": "Thay đổi kích thước vị thế",
+            "reviewDimension": "cta-affordance"
+          }
+        ],
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -4175,8 +4303,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "C",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -4192,8 +4320,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "H",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -4209,8 +4337,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "L",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -4226,8 +4354,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "O",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -4978,13 +5106,25 @@
         "providerId": "i18next-json",
         "locale": "vi-VN",
         "domain": "product-ui",
-        "sourceHash": "3fd105e03769f69152b8f041096f198f1df4884a75ef4fcdfd8b20d2acc83c72",
+        "sourceHash": "1a7f13a741752236cb2d0131cbf484c25f9eb379d3813502f3e3f494d18bf287",
         "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
-        "translation": "Mức đòn bẩy này sẽ đưa vị thế quá gần ngưỡng thanh lý — hãy hạ đòn bẩy hoặc thêm ký quỹ.",
-        "status": "clean",
-        "agentRunId": "vi-VN-2026-10-13T21-30-42Z",
-        "approvedAt": "2026-10-13T21:30:42.386Z",
+        "translation": "Thao tác này sẽ đưa vị thế quá gần ngưỡng thanh lý. Hãy thử thay đổi nhỏ hơn.",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "accuracy",
+            "severity": "major",
+            "detail": "Mistranslation + addition: the source says the attempted change would move the position too close to liquidation and advises 'Try a smaller change'. The translation attributes the cause to 'Mức đòn bẩy này' (this leverage level) — but the blocked change may be a margin withdrawal or resize — and replaces the advice with 'hạ đòn bẩy hoặc thêm ký quỹ' (lower leverage or add margin), guidance not in the source. Shipped TM carries the same defect.",
+            "evidence": {
+              "sourceSpan": "Try a smaller change.",
+              "targetSpan": "hãy hạ đòn bẩy hoặc thêm ký quỹ"
+            },
+            "alternative": "Thao tác này sẽ đưa vị thế quá gần ngưỡng thanh lý. Hãy thử thay đổi nhỏ hơn."
+          }
+        ],
+        "agentRunId": "vi-VN-2026-11-10T21-07-57Z",
+        "approvedAt": "2026-11-10T21:07:57.997Z",
         "approvedBy": "agent"
       }
     ],
@@ -5091,6 +5231,23 @@
       }
     ],
     [
+      "vi-VN:i18next-json:margin.error.adjust.priceImpact",
+      {
+        "unitId": "margin.error.adjust.priceImpact",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "44d8c245bce97cc2fc9694c08ad0c3737c555e25bf112576afbc44a575e23bd4",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Tác động giá quá cao với quy mô này. Hãy thử số lượng nhỏ hơn.",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-11-10T21-07-57Z",
+        "approvedAt": "2026-11-10T21:07:57.997Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "vi-VN:i18next-json:margin.error.adjust.priceMoved",
       {
         "unitId": "margin.error.adjust.priceMoved",
@@ -5104,6 +5261,23 @@
         "status": "clean",
         "agentRunId": "vi-VN-2026-10-13T21-30-42Z",
         "approvedAt": "2026-10-13T21:30:42.386Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:margin.error.adjust.underwater",
+      {
+        "unitId": "margin.error.adjust.underwater",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "ae510b3b398570ed062c307e0db1ac269c4f0e1357f0f1e03c59eb785976e893",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Vị thế này không còn ký quỹ để điều chỉnh.",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-11-10T21-07-57Z",
+        "approvedAt": "2026-11-10T21:07:57.997Z",
         "approvedBy": "agent"
       }
     ],
@@ -5547,13 +5721,26 @@
         "providerId": "i18next-json",
         "locale": "vi-VN",
         "domain": "product-ui",
-        "sourceHash": "c4c9b26473b38936b30ce0e9bda428157e2df3dff810b648cb3c42c75cd6dd20",
+        "sourceHash": "8f35893d766d2eea1c3124329ae6af1abaf83f9995f7cc576c5d00469db5b16b",
         "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
-        "translation": "Thay đổi đòn bẩy",
-        "status": "clean",
-        "agentRunId": "vi-VN-2026-10-13T21-30-42Z",
-        "approvedAt": "2026-10-13T21:30:42.386Z",
+        "translation": "Thay đổi kích thước vị thế",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "accuracy",
+            "severity": "major",
+            "detail": "Same defect as i=1616: 'position size' mistranslated as 'đòn bẩy' (leverage). This is the modify-position menu entry whose sibling i=1683 explains 'Resize without adding funds' — the leverage wording misstates the action.",
+            "evidence": {
+              "sourceSpan": "position size",
+              "targetSpan": "đòn bẩy"
+            },
+            "alternative": "Thay đổi kích thước vị thế",
+            "reviewDimension": "cta-affordance"
+          }
+        ],
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -5673,6 +5860,23 @@
         "status": "clean",
         "agentRunId": "vi-VN-2026-10-13T21-30-42Z",
         "approvedAt": "2026-10-13T21:30:42.386Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:margin.manage.resumePending",
+      {
+        "unitId": "margin.manage.resumePending",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "f6fdf0540f738bb20bd2e4869eacf23e12ba6ea0a1fde28ffafeb2cded0633e1",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Nhấn để hoàn tất thao tác đang chờ",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-11-10T21-07-57Z",
+        "approvedAt": "2026-11-10T21:07:57.997Z",
         "approvedBy": "agent"
       }
     ],
@@ -5836,8 +6040,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "{{venue}} · {{lltv}}% LLTV",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -5872,6 +6076,23 @@
         "status": "clean",
         "agentRunId": "vi-VN-2026-10-27T20-04-40Z",
         "approvedAt": "2026-10-27T20:04:40.019Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:margin.mobile.positionDetails",
+      {
+        "unitId": "margin.mobile.positionDetails",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "bd979f4a69c7c3e1f17621eef8f3de808319a926743a7d5e0be63cc4927d9db4",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Chi tiết vị thế",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-11-06T18-38-17Z",
+        "approvedAt": "2026-11-06T18:38:17.963Z",
         "approvedBy": "agent"
       }
     ],
@@ -6812,13 +7033,26 @@
         "providerId": "i18next-json",
         "locale": "vi-VN",
         "domain": "product-ui",
-        "sourceHash": "a1a4f24aad89fe7c7c419c46458dc108c59dd2f804d5887e24c604000e048378",
+        "sourceHash": "bdc31208641dc8a834cf2a1f3ea554e25dbaba6ffdff22c7979ba8cf474d186b",
         "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
-        "translation": "Giảm đòn bẩy",
-        "status": "clean",
-        "agentRunId": "vi-VN-2026-10-27T20-04-40Z",
-        "approvedAt": "2026-10-27T20:04:40.019Z",
+        "translation": "Giảm kích thước vị thế",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "accuracy",
+            "severity": "major",
+            "detail": "Mistranslation: 'Decrease position size' rendered as 'Giảm đòn bẩy' (decrease leverage). Decreasing leverage (e.g. by adding margin) and decreasing size (selling part of the position) are different financial actions; the label could prompt the wrong one.",
+            "evidence": {
+              "sourceSpan": "Decrease position size",
+              "targetSpan": "Giảm đòn bẩy"
+            },
+            "alternative": "Giảm kích thước vị thế",
+            "reviewDimension": "cta-affordance"
+          }
+        ],
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -6829,13 +7063,26 @@
         "providerId": "i18next-json",
         "locale": "vi-VN",
         "domain": "product-ui",
-        "sourceHash": "a9d8c8a3b24b084830d7162805a1e5d8f5a418bb1101b7628ae3f49b2fa9d0db",
+        "sourceHash": "a518c0b8e0196758dc0558c83b4e25a51474d018cbd46f3879aa8bf57165ae6a",
         "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
-        "translation": "Tăng đòn bẩy",
-        "status": "clean",
-        "agentRunId": "vi-VN-2026-10-27T20-04-40Z",
-        "approvedAt": "2026-10-27T20:04:40.019Z",
+        "translation": "Tăng kích thước vị thế",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "accuracy",
+            "severity": "major",
+            "detail": "Mistranslation: 'Increase position size' rendered as 'Tăng đòn bẩy' (increase leverage). Increasing leverage raises risk without buying more, while increasing size enlarges the position; conflating them misleads the user about the action taken.",
+            "evidence": {
+              "sourceSpan": "Increase position size",
+              "targetSpan": "Tăng đòn bẩy"
+            },
+            "alternative": "Tăng kích thước vị thế",
+            "reviewDimension": "cta-affordance"
+          }
+        ],
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -8132,6 +8379,23 @@
       }
     ],
     [
+      "vi-VN:i18next-json:margin.review.borrowingTooltip",
+      {
+        "unitId": "margin.review.borrowingTooltip",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "b36e08921511589860e18027add23d759be9a643058eaaa808c88c800fdcdd8c",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Số tiền bạn vay để đạt mức đòn bẩy. Lãi tích lũy trên khoản vay này trong khi vị thế đang mở.",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-11-05T22-20-28Z",
+        "approvedAt": "2026-11-05T22:20:28.484Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "vi-VN:i18next-json:margin.review.leverageInline",
       {
         "unitId": "margin.review.leverageInline",
@@ -8145,6 +8409,23 @@
         "status": "clean",
         "agentRunId": "vi-VN-2026-10-13T21-30-42Z",
         "approvedAt": "2026-10-13T21:30:42.386Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:margin.review.liqExplainer",
+      {
+        "unitId": "margin.review.liqExplainer",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "85ba49c80722148e07e7fcb115dc83d36fe0a992525c671df0aab0d55a542d5f",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Nếu giá của {{symbol}} chạm giá thanh lý, bạn sẽ bị thanh lý toàn bộ và vốn cuối cùng của bạn sẽ là {{equity}}.",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-11-05T22-20-28Z",
+        "approvedAt": "2026-11-05T22:20:28.484Z",
         "approvedBy": "agent"
       }
     ],
@@ -8230,6 +8511,23 @@
         "status": "clean",
         "agentRunId": "vi-VN-2026-10-13T21-30-42Z",
         "approvedAt": "2026-10-13T21:30:42.386Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:margin.review.yourPosition",
+      {
+        "unitId": "margin.review.yourPosition",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "85897f2a011a6d403f696f5bb1d8efd2f97da9bea5b5ddba3561de87571ef8d9",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Vị thế của bạn",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-11-05T22-20-28Z",
+        "approvedAt": "2026-11-05T22:20:28.484Z",
         "approvedBy": "agent"
       }
     ],
@@ -8608,13 +8906,13 @@
         "providerId": "i18next-json",
         "locale": "vi-VN",
         "domain": "product-ui",
-        "sourceHash": "18f80225d5a4ab19d1f0c922d3fc7f56f8f2fa956c4325e637fcd41177c2055b",
+        "sourceHash": "93c91c851e7acc17d881c9b89ea954be1183070254014be03a93d169cf52dbbd",
         "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
-        "translation": "Giá đánh dấu",
+        "translation": "Giá",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-10-27T20-04-40Z",
-        "approvedAt": "2026-10-27T20:04:40.019Z",
+        "agentRunId": "vi-VN-2026-11-10T21-07-57Z",
+        "approvedAt": "2026-11-10T21:07:57.997Z",
         "approvedBy": "agent"
       }
     ],
@@ -9000,8 +9298,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Long",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -9017,8 +9315,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Short",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -9493,8 +9791,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "ID",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -9641,8 +9939,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "PnL",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -10356,6 +10654,290 @@
       }
     ],
     [
+      "vi-VN:i18next-json:onboarding.checklist.card.addFunds.description",
+      {
+        "unitId": "onboarding.checklist.card.addFunds.description",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "6c037a5e61cc823e7d8a1087721da1147daaaacd966202daa50baf2ec474065d",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Nạp tiền hoặc mua bằng tiền mặt",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-11-06T22-28-37Z",
+        "approvedAt": "2026-11-06T22:28:37.124Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:onboarding.checklist.card.backupWallet.description",
+      {
+        "unitId": "onboarding.checklist.card.backupWallet.description",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "d5cefb0d3fca85c5a48e0d3e27533495a8f3bd99faedab68a833d18a5f946ca0",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Thiết lập phương án khôi phục",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-11-06T22-28-37Z",
+        "approvedAt": "2026-11-06T22:28:37.124Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:onboarding.checklist.card.claimUsername.description",
+      {
+        "unitId": "onboarding.checklist.card.claimUsername.description",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "16cb2f7f964e65d26f64e8b177bd19c696192c4f9cc492ecc4f6df62c1aaedda",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Cá nhân hóa ví của bạn",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-11-06T22-28-37Z",
+        "approvedAt": "2026-11-06T22:28:37.124Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:onboarding.checklist.card.completeSwap.description",
+      {
+        "unitId": "onboarding.checklist.card.completeSwap.description",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "e36d0335638981152d16ebed1b7e9caaa66c7e860b72b807a428257c9b828845",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Giao dịch một token lấy loại khác",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-11-06T22-28-37Z",
+        "approvedAt": "2026-11-06T22:28:37.124Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:onboarding.checklist.collapse",
+      {
+        "unitId": "onboarding.checklist.collapse",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "0ea7a361701c49367f14add3b23f6eee6f93c16f5791791a9cffa2cabc27be13",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Ẩn danh sách kiểm tra",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-11-06T22-28-37Z",
+        "approvedAt": "2026-11-06T22:28:37.124Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:onboarding.checklist.expand",
+      {
+        "unitId": "onboarding.checklist.expand",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "312fb80eb782ff8fd26406c688230e0fc583bb0fafda95ab65ed0e5ea1ced98b",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Hiện danh sách kiểm tra",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-11-06T22-28-37Z",
+        "approvedAt": "2026-11-06T22:28:37.124Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:onboarding.checklist.step.addBackupLogin",
+      {
+        "unitId": "onboarding.checklist.step.addBackupLogin",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "c85db9119c6b96c6242a0ff05801dee6ffbb01fa8e76387175be4689568ee54c",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Thêm đăng nhập dự phòng",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-11-06T22-28-37Z",
+        "approvedAt": "2026-11-06T22:28:37.124Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:onboarding.checklist.step.addFunds",
+      {
+        "unitId": "onboarding.checklist.step.addFunds",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "e826c600400e4b183d06a8b88fad3d230da756e923193479b7cf07ba77c8f4ec",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Nạp tiền",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "terminology",
+            "severity": "minor",
+            "detail": "'Thêm tiền' is literal; Vietnamese fintech convention and the shipped sibling strings use 'Nạp tiền' for funding a wallet (shipped i=2029 'Nạp tiền hoặc mua bằng tiền mặt', i=2041 'Nạp tiền vào ví của bạn'). Inconsistent rendering of the same funding concept within the run.",
+            "evidence": {
+              "sourceSpan": "Add funds",
+              "targetSpan": "Thêm tiền"
+            },
+            "alternative": "Nạp tiền"
+          }
+        ],
+        "agentRunId": "vi-VN-2026-11-06T22-28-37Z",
+        "approvedAt": "2026-11-06T22:28:37.124Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:onboarding.checklist.step.backupWallet",
+      {
+        "unitId": "onboarding.checklist.step.backupWallet",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "52a7a389ef84accfe66ee131f8d15314f46f275266f4358be528a0a570a50423",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Sao lưu ví của bạn",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-11-06T22-28-37Z",
+        "approvedAt": "2026-11-06T22:28:37.124Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:onboarding.checklist.step.claimUsername",
+      {
+        "unitId": "onboarding.checklist.step.claimUsername",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "2e2b46f0aa11af164e1c1a84410cff1194f47bcedfb61253aec624df723f9ee2",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Nhận tên người dùng của bạn",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-11-06T22-28-37Z",
+        "approvedAt": "2026-11-06T22:28:37.124Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:onboarding.checklist.step.completeSwap",
+      {
+        "unitId": "onboarding.checklist.step.completeSwap",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "63e84bbb2fb21ca379a6c68f7d76023dda485a0fe134863a261a1493aa519584",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Hoàn tất một giao dịch hoán đổi",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-11-06T22-28-37Z",
+        "approvedAt": "2026-11-06T22:28:37.124Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:onboarding.checklist.step.createAccount",
+      {
+        "unitId": "onboarding.checklist.step.createAccount",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "798ca2ce18bf2038bc13aaa33ebfe6db7020df5b4bba40f68e21462a9207db3d",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Tạo tài khoản",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-11-06T22-28-37Z",
+        "approvedAt": "2026-11-06T22:28:37.124Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:onboarding.checklist.step.fundWallet",
+      {
+        "unitId": "onboarding.checklist.step.fundWallet",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "7fe393b30a23c9b79a7404573840fdb7cb48bdc7830c2c51811e8aa814f6493e",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Nạp tiền vào ví của bạn",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-11-06T22-28-37Z",
+        "approvedAt": "2026-11-06T22:28:37.124Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:onboarding.checklist.title",
+      {
+        "unitId": "onboarding.checklist.title",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "831d0f72d242b7d12d4ef15123d43145e97e95be5aba57cd150e434159aae202",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Bắt đầu",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-11-06T22-28-37Z",
+        "approvedAt": "2026-11-06T22:28:37.124Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:pdp.relatedPools.header",
+      {
+        "unitId": "pdp.relatedPools.header",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "cb2087738281aab988ffe101cdcef29fb139eede88ca7322628be2a51c25251c",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Pool liên quan",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-11-10T20-59-50Z",
+        "approvedAt": "2026-11-10T20:59:50.233Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:pdp.relatedPools.single",
+      {
+        "unitId": "pdp.relatedPools.single",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "f08a8e68bc1590701e708d74657b153b7244a6448f3f20aec469db3bd7b6106c",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Thêm pool {{category}}",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-11-10T20-59-50Z",
+        "approvedAt": "2026-11-10T20:59:50.233Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "vi-VN:i18next-json:pool.apr",
       {
         "unitId": "pool.apr",
@@ -10367,8 +10949,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "APR",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -10437,6 +11019,210 @@
         "status": "clean",
         "agentRunId": "vi-VN-2026-10-15T16-29-44Z",
         "approvedAt": "2026-10-15T16:29:44.396Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:pool.liquidityPanel.preset.full",
+      {
+        "unitId": "pool.liquidityPanel.preset.full",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "008dacb6d1e85bd8c0ae9661c4472810ef75537f690dd75d77fc74ca62f78fec",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Toàn phạm vi",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-11-10T18-37-44Z",
+        "approvedAt": "2026-11-10T18:37:44.752Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:pool.liquidityPanel.preset.full.description",
+      {
+        "unitId": "pool.liquidityPanel.preset.full.description",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "cdcfe5f4e44924cf9f468f72af9d51cb110d4806479cb4fc785567e364045970",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Kiếm phí ở mọi mức giá",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-11-10T18-37-44Z",
+        "approvedAt": "2026-11-10T18:37:44.752Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:pool.liquidityPanel.preset.sellOnDrop",
+      {
+        "unitId": "pool.liquidityPanel.preset.sellOnDrop",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "b7f0b55ace377b3a582b2b6177e5ecf8af5d98e30c27440728bde9dbe703e3d6",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Bán khi giá giảm",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-11-10T18-37-44Z",
+        "approvedAt": "2026-11-10T18:37:44.752Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:pool.liquidityPanel.preset.sellOnDrop.description",
+      {
+        "unitId": "pool.liquidityPanel.preset.sellOnDrop.description",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "2afc167b196144c3f94f1e894f43cf00c0249b7c1800480a82d77d185298992f",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Chỉ nạp {{sell}}. Số này được bán lấy {{buy}} khi giá giảm qua phạm vi của bạn.",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-11-10T18-37-44Z",
+        "approvedAt": "2026-11-10T18:37:44.752Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:pool.liquidityPanel.preset.sellOnRise",
+      {
+        "unitId": "pool.liquidityPanel.preset.sellOnRise",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "4113385842ecc621b7bd60b3bbb1babfa3edd989980ee2e0fba8d27b09323c28",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Bán khi giá tăng",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-11-10T18-37-44Z",
+        "approvedAt": "2026-11-10T18:37:44.752Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:pool.liquidityPanel.preset.sellOnRise.description",
+      {
+        "unitId": "pool.liquidityPanel.preset.sellOnRise.description",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "53a50bbc2154b7e5efd1955d713af50ddbbf44e2bcdb4f4e55776c7077c8ea50",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Chỉ nạp {{sell}}. Số này được bán lấy {{buy}} khi giá tăng qua phạm vi của bạn.",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-11-10T18-37-44Z",
+        "approvedAt": "2026-11-10T18:37:44.752Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:pool.liquidityPanel.preset.suggested",
+      {
+        "unitId": "pool.liquidityPanel.preset.suggested",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "93b63bab4c3a28d73a8bb83bcdfdcc5f6ddecfc8fc702296ca159d94c5dc6e53",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Đề xuất",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-11-10T18-37-44Z",
+        "approvedAt": "2026-11-10T18:37:44.752Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:pool.liquidityPanel.preset.suggested.description",
+      {
+        "unitId": "pool.liquidityPanel.preset.suggested.description",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "774fd3448e90a8d84cbfea4dfbdab8f471d10a3a92c7852ddeee49d1f17aab19",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Dựa trên giá của pool trong 30 ngày qua",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-11-10T18-37-44Z",
+        "approvedAt": "2026-11-10T18:37:44.752Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:pool.liquidityPanel.priceRange",
+      {
+        "unitId": "pool.liquidityPanel.priceRange",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "24f01895dde5938da068bae40798172026d53cf0575bba88f5b04921098cba17",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Phạm vi giá",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-11-09T22-37-14Z",
+        "approvedAt": "2026-11-09T22:37:14.187Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:pool.liquidityPanel.rangeEdge.decrease",
+      {
+        "unitId": "pool.liquidityPanel.rangeEdge.decrease",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "e206baf0905859f00f73d24638abcca41d70d1f23a062f8db85058e24885d059",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Giảm {{edge}}",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-11-10T18-37-44Z",
+        "approvedAt": "2026-11-10T18:37:44.752Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:pool.liquidityPanel.rangeEdge.increase",
+      {
+        "unitId": "pool.liquidityPanel.rangeEdge.increase",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "89cabe5ebc25ae3046a7b93f7328996ff6462e43ca2cd5bed20308f4051d1c64",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Tăng {{edge}}",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-11-10T18-37-44Z",
+        "approvedAt": "2026-11-10T18:37:44.752Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:pool.liquidityPanel.timeInRange",
+      {
+        "unitId": "pool.liquidityPanel.timeInRange",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "31c1fa145ef2c83c741ddb8a74b82091f5cb0a75638b3fb6b6fdf1d3d1da3b7d",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "{{percent}} trong phạm vi 30 ngày qua",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-11-09T22-37-14Z",
+        "approvedAt": "2026-11-09T22:37:14.187Z",
         "approvedBy": "agent"
       }
     ],
@@ -10520,8 +11306,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "DeFi",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -10673,8 +11459,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Airdrop / spam",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -10690,8 +11476,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "The Badger",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -10809,8 +11595,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "$TICKER",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -10894,8 +11680,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "demo",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -11059,8 +11845,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Crowd Launch",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -11076,8 +11862,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Instant Launch",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -11110,8 +11896,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Crowd",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -11127,8 +11913,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Instant",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -11207,8 +11993,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "{{apr}} APR",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -11224,8 +12010,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "{{apy}} APY",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -11270,8 +12056,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "OK",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -11287,8 +12073,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "ENS",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -12191,8 +12977,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Launchpad",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -12360,6 +13146,23 @@
         "status": "clean",
         "agentRunId": "vi-VN-2026-11-02T21-32-44Z",
         "approvedAt": "2026-11-02T21:32:44.260Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "vi-VN:i18next-json:token.stats.volume.1d.description",
+      {
+        "unitId": "token.stats.volume.1d.description",
+        "providerId": "i18next-json",
+        "locale": "vi-VN",
+        "domain": "product-ui",
+        "sourceHash": "aff27f796482b0401f5b7652b9255e3e6feb8387bb9b686e49611980a129a38a",
+        "glossaryHash": "92d8aeb0e37472a33671c63b922aba23dc912bb29b6ffef5040913292a817ff3",
+        "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
+        "translation": "Khối lượng 1 ngày là lượng tài sản đã được giao dịch trên Uniswap hoặc trong hệ sinh thái Solana trong 24 giờ qua.",
+        "status": "clean",
+        "agentRunId": "vi-VN-2026-11-09T19-14-46Z",
+        "approvedAt": "2026-11-09T19:14:46.525Z",
         "approvedBy": "agent"
       }
     ],
@@ -12579,8 +13382,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "<value>{{fdv}}</value> FDV",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -13021,8 +13824,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "$TICKER",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -13085,8 +13888,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Crowd Launch",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -13215,8 +14018,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Instant Launch",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -13266,8 +14069,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "Pools.xyz",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ],
@@ -13742,8 +14545,8 @@
         "styleHash": "3fbc1de2e22d850d464a4ad65a9094e81a913f5ab8700feabbeadd7342d9b024",
         "translation": "<icon /> <gradient>UniswapX</gradient> <info />",
         "status": "clean",
-        "agentRunId": "vi-VN-2026-11-05T22-04-56Z",
-        "approvedAt": "2026-11-05T22:04:56.003Z",
+        "agentRunId": "vi-VN-2026-11-10T23-47-26Z",
+        "approvedAt": "2026-11-10T23:47:26.901Z",
         "approvedBy": "agent"
       }
     ]

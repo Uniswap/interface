@@ -1,5 +1,6 @@
 import { BREAKPOINT_PX } from '@universe/mycelium/theme-hooks-compat'
-import { useEffect, useState } from 'react'
+import { useLayoutEffect, useState } from 'react'
+import { flushSync } from 'react-dom'
 import {
   CAROUSEL_CARD_GAP,
   CAROUSEL_FADE_WIDTH,
@@ -30,28 +31,32 @@ function getCardWidth(containerWidth: number): number {
 }
 
 export function useCarouselLayout(containerRef: React.RefObject<HTMLElement | null>): {
+  /** Measured container width; 0 until the first measurement. */
+  containerWidth: number
   cardWidth: number
   fadeWidth: number
   showArrowButtons: boolean
 } {
   const [containerWidth, setContainerWidth] = useState(0)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const el = containerRef.current
     if (!el) {
       return undefined
     }
 
-    const updateWidth = (): void => {
-      setContainerWidth(el.clientWidth)
-    }
+    const measure = (): void => setContainerWidth(el.clientWidth)
+    // Window resizes commit synchronously before the frame's layout, so cards never paint a frame at the old width.
+    // Not from the ResizeObserver: a sync render during its delivery can resize observed ancestors (RO loop error).
+    const measureBeforePaint = (): void => flushSync(measure)
 
-    updateWidth()
-
-    const resizeObserver = new ResizeObserver(updateWidth)
+    measure()
+    window.addEventListener('resize', measureBeforePaint)
+    const resizeObserver = new ResizeObserver(measure)
     resizeObserver.observe(el)
 
     return () => {
+      window.removeEventListener('resize', measureBeforePaint)
       resizeObserver.disconnect()
     }
   }, [containerRef])
@@ -59,6 +64,7 @@ export function useCarouselLayout(containerRef: React.RefObject<HTMLElement | nu
   const isSmallViewport = containerWidth > 0 && containerWidth <= BREAKPOINT_PX.sm
 
   return {
+    containerWidth,
     cardWidth: containerWidth > 0 ? getCardWidth(containerWidth) : CAROUSEL_SMALL_CARD_MAX_WIDTH,
     fadeWidth: isSmallViewport ? CAROUSEL_FADE_WIDTH_SMALL : CAROUSEL_FADE_WIDTH,
     showArrowButtons: containerWidth === 0 || containerWidth > BREAKPOINT_PX.sm,

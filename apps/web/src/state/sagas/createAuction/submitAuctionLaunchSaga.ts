@@ -107,7 +107,8 @@ export function* submitAuctionLaunch(params: SubmitAuctionLaunchParams) {
       return
     }
 
-    // The launch multicall is always last; any earlier txs are ERC20 approval steps (existing-token path).
+    // The launch multicall is always last; any earlier txs are approvals of the existing launch token:
+    // ERC20.approve(Permit2) sent to the token and/or Permit2.approve(token, launcher) sent to Permit2.
     const launchStepIndex = transactions.length - 1
     let launchHash: string | undefined
 
@@ -123,7 +124,7 @@ export function* submitAuctionLaunch(params: SubmitAuctionLaunchParams) {
         const approvalStep = createApprovalTransactionStep({
           amount: decoded?.amount.toString(),
           txRequest: txWithGas,
-          tokenAddress: tx.to,
+          tokenAddress: info.predictedTokenAddress,
           chainId: tx.chainId,
           tokenSymbol,
         })

@@ -12,6 +12,7 @@ import { MarginModalHeader } from '~/pages/Swap/Margin/components/shared/MarginM
 export function MarginActionModalShell({
   modalName,
   title,
+  isTitleMuted,
   isOpen,
   onClose,
   bodyGap = '$spacing16',
@@ -26,6 +27,7 @@ export function MarginActionModalShell({
 }: {
   modalName: ModalNameType
   title: string
+  isTitleMuted?: boolean
   isOpen: boolean
   onClose: () => void
   // maxWidth={420} maxHeight="90vh" padding={0} are non-overridable constants inside the shell —
@@ -43,12 +45,21 @@ export function MarginActionModalShell({
   children: ReactNode
 }): JSX.Element {
   return (
-    <Modal name={modalName} isModalOpen={isOpen} maxWidth={420} maxHeight="90vh" padding={0} onClose={onClose}>
-      <Flex>
+    <Modal
+      name={modalName}
+      isModalOpen={isOpen}
+      maxWidth={420}
+      maxHeight="90vh"
+      padding={0}
+      // As a sheet, size to the content; the default ratchet holds the tallest height the body ever reached.
+      sheetFitHeight="content"
+      onClose={onClose}
+    >
+      <Flex flexShrink={1} minHeight={0}>
         <Flex p="$spacing16" pb="$spacing12">
-          <MarginModalHeader title={title} onClose={onClose} />
+          <MarginModalHeader title={title} isTitleMuted={isTitleMuted} onClose={onClose} />
         </Flex>
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView flexShrink={1} showsVerticalScrollIndicator={false}>
           <Flex px="$spacing16" pb="$spacing16" gap={bodyGap}>
             {children}
           </Flex>

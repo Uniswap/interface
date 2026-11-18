@@ -16,7 +16,7 @@ exports[`SettingsButton > renders with icon and current state 1`] = `
         fill="none"
         focusable="false"
         stroke-width="8"
-        style="width: 24px; height: 24px;"
+        style="color: var(--neutral2); width: 24px; height: 24px;"
         viewBox="0 0 24 24"
       >
         <path
@@ -47,7 +47,7 @@ exports[`SettingsButton > renders with icon and current state 1`] = `
           fill="none"
           focusable="false"
           stroke-width="8"
-          style="width: 20px; height: 20px;"
+          style="color: var(--neutral3); width: 20px; height: 20px;"
           viewBox="0 0 24 24"
         >
           <path
@@ -116,7 +116,7 @@ exports[`SettingsButton > renders without icon 1`] = `
           fill="none"
           focusable="false"
           stroke-width="8"
-          style="width: 20px; height: 20px;"
+          style="color: var(--neutral3); width: 20px; height: 20px;"
           viewBox="0 0 24 24"
         >
           <path

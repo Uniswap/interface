@@ -4,7 +4,7 @@ export { classifyTraffic, createAITrafficTracker } from './ai-traffic'
 
 // Client identity (HTTP header extraction)
 export type { ClientIdentityHeaders } from './client-identity'
-export { extractClientIdentity, getClientCountry, getClientIp } from './client-identity'
+export { extractClientIdentity, getClientCountry, getClientIp, getCloudFrontViewerIp } from './client-identity'
 
 // Context extraction
 export { createServerContextExtractor } from './context'

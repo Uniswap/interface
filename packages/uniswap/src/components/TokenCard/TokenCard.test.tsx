@@ -7,13 +7,6 @@ import { fireEvent, render } from 'uniswap/src/test/test-utils'
 
 const mockLocale = Locale.EnglishUnitedStates
 
-const { mockIsTokenCategoriesEnabled } = vi.hoisted(() => ({ mockIsTokenCategoriesEnabled: vi.fn(() => false) }))
-
-vi.mock('@universe/gating', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('@universe/gating')>()),
-  useIsTokenCategoriesEnabled: () => mockIsTokenCategoriesEnabled(),
-}))
-
 vi.mock('uniswap/src/features/language/hooks', async (importOriginal) => {
   const actual = await importOriginal<typeof import('uniswap/src/features/language/hooks')>()
   return {
@@ -188,7 +181,6 @@ describe('TokenCard', () => {
     }
 
     it('flattens a stablecoin-tagged token around the middle of the 40px chart', () => {
-      mockIsTokenCategoriesEnabled.mockReturnValue(true)
       const [minY, maxY] = lineMinMaxY(['majors', 'stablecoins'])
 
       expect(minY).toBeGreaterThan(18)
@@ -196,16 +188,7 @@ describe('TokenCard', () => {
     })
 
     it('keeps full-height scaling for a non-stablecoin with the same tiny move', () => {
-      mockIsTokenCategoriesEnabled.mockReturnValue(true)
       const [minY, maxY] = lineMinMaxY(['majors'])
-
-      expect(minY).toBeLessThan(3)
-      expect(maxY).toBeGreaterThan(37)
-    })
-
-    it('keeps full-height scaling while Token Categories is off', () => {
-      mockIsTokenCategoriesEnabled.mockReturnValue(false)
-      const [minY, maxY] = lineMinMaxY(['stablecoins'])
 
       expect(minY).toBeLessThan(3)
       expect(maxY).toBeGreaterThan(37)

@@ -2,7 +2,7 @@ import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes
 import { DEFAULT_LP_POSITION_STATUS_FILTER, DEFAULT_V2_POSITION_STATUS_FILTER } from '~/features/Liquidity/constants'
 import { ProtocolFilterDropdown, StatusFilterDropdown } from '~/features/Liquidity/positionsFilters'
 import { hasActiveControlBarFilter } from '~/features/Liquidity/PositionsTableControlBar'
-import { render } from '~/test-utils/render'
+import { fireEvent, render } from '~/test-utils/render'
 
 function renderStatus({
   selectedStatuses = DEFAULT_V2_POSITION_STATUS_FILTER,
@@ -49,6 +49,14 @@ describe('StatusFilterDropdown trigger', () => {
     expect(
       renderStatus({ selectedStatuses: [], showHiddenPositions: true }).getByText('Open, Closed · Hidden'),
     ).toBeInTheDocument()
+  })
+})
+
+describe('the open filter panel', () => {
+  it('is a group named after its filter', async () => {
+    const { getByText, findByRole } = renderStatus({})
+    fireEvent.click(getByText('Status'))
+    expect(await findByRole('group', { name: 'Status' })).toBeInTheDocument()
   })
 })
 

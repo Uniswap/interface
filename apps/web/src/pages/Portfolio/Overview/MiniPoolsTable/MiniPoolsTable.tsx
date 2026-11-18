@@ -1,7 +1,6 @@
 import { Row } from '@tanstack/react-table'
 import { SharedEventName } from '@uniswap/analytics-events'
 import { UniverseChainId } from '@universe/chains'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Flex, TouchableArea } from '@universe/mycelium'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
@@ -40,7 +39,6 @@ export const MiniPoolsTable = memo(function MiniPoolsTable({ account, maxPools, 
   const { t } = useTranslation()
   const navigate = useNavigate()
   const trace = useTrace()
-  const portfolioPoolsBalancesEnabled = useFeatureFlag(FeatureFlags.PortfolioPoolsBalances)
   const { chainId: routeChainId, externalAddress, isExternalWallet } = usePortfolioRoutes()
 
   const { positions, showLoading, hasNoData } = useMiniPoolsTableData({ account, maxPools, chainId })
@@ -48,20 +46,17 @@ export const MiniPoolsTable = memo(function MiniPoolsTable({ account, maxPools, 
   const { count: openPositionsCount, ...sectionTotalValue } = usePortfolioSectionTotalValue({
     part: PortfolioBalancePart.Pools,
     chainId,
-    enabled: portfolioPoolsBalancesEnabled,
   })
 
   const subtitleCount = openPositionsCount || positions.length
   const subtitleLoading = showLoading || sectionTotalValue.totalValueLoading
 
-  const { warningMessage } = usePoolsSectionWarning({ chainId, enabled: portfolioPoolsBalancesEnabled })
-  const viewAllHref = portfolioPoolsBalancesEnabled
-    ? buildPortfolioUrl({
-        tab: PortfolioTab.Pools,
-        chainId: routeChainId,
-        externalAddress: externalAddress?.address,
-      })
-    : '/positions'
+  const { warningMessage } = usePoolsSectionWarning({ chainId })
+  const viewAllHref = buildPortfolioUrl({
+    tab: PortfolioTab.Pools,
+    chainId: routeChainId,
+    externalAddress: externalAddress?.address,
+  })
 
   const media = useMedia()
   const columns = useMiniPoolsTableColumns({

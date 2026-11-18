@@ -1,0 +1,53 @@
+{
+  "_readme": "Path → spec rules for scripts/e2e-affected.ts with TARGET=extension (the extension PR e2e tier). The specs under e2e/tests are not co-located with the code, so every narrowing is a rule here: a changed extension path that matches no rule runs the whole suite, which is the honest default for nine files that all onboard a wallet through the same fixtures (e2e/fixtures, e2e/utils, the onboarding feature, packages/wallet). A rule with an empty `specs` list says the path cannot reach any spec: use it only for a feature no spec drives and no fixture passes through (the onboarding helper every spec uses walks the unitag claim and recovery-phrase screens, so those features are not on this list). `ignore` lists paths that cannot reach the extension bundle at all, plus the locale files, English included: a changed string can only break a spec that asserts on the old text, which is a test to update, not a product regression, and the scheduled suite reports it the same day. `unstable` withholds specs that are flaky on the scheduled record and `broken` withholds specs red on every run (none yet in either; the [e2e] Tier lists refresh workflow fills both weekly from the scheduled runs' merged reports, `pinned` names entries it must never remove, and a stale entry fails the selector). The selector, its tests and this file are never ignored: changing them runs the full suite.",
+  "exclude": [],
+  "unstable": ["web/extension-web-connect.test.ts"],
+  "broken": [],
+  "pinned": [],
+  "ignore": [
+    ".github/",
+    ".claude/",
+    ".agents/",
+    ".i18n/",
+    "docs/",
+    "labs/",
+    "scripts/",
+    "packages/casebook/",
+    "**/README.md",
+    "**/CLAUDE.md",
+    "**/AGENTS.md",
+    ".gitignore",
+    "dangerfile.ts",
+    "oxlint.config.ts",
+    "knip.json",
+    "packages/uniswap/src/i18n/locales/translations/",
+    "packages/uniswap/src/i18n/locales/source/en-US.json",
+    "packages/mycelium/platform-legs.json",
+    "packages/test/src/testIds.ts",
+    "packages/mycelium/src/assets/"
+  ],
+  "rules": [
+    {
+      "paths": [
+        "apps/extension/src/app/features/dapp/",
+        "apps/extension/src/app/features/dappRequests/",
+        "apps/extension/src/contentScript/",
+        "apps/extension/src/entrypoints/ethereum.content.ts",
+        "apps/extension/src/entrypoints/injected.content.ts",
+        "packages/wallet/src/features/dappRequests/"
+      ],
+      "specs": ["dapp/", "web/", "third-party/", "smoke/wallet-connection.test.ts"]
+    },
+    {
+      "paths": [
+        "apps/extension/src/app/features/swap/",
+        "packages/uniswap/src/features/transactions/swap/",
+        "packages/uniswap/src/features/transactions/steps/",
+        "packages/uniswap/src/components/CurrencyInputPanel/",
+        "packages/uniswap/src/components/TokenSelector/",
+        "packages/transactions-ui/"
+      ],
+      "specs": ["swap/", "web/extension-web-connect.test.ts", "smoke/wallet-connection.test.ts"]
+    }
+  ]
+}

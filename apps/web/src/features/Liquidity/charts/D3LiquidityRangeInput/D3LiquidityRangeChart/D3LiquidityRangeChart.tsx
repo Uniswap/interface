@@ -39,6 +39,9 @@ export const D3LiquidityRangeChart = ({
   protocolVersion,
   token0Color,
   token1Color,
+  resetRange,
+  bordered = true,
+  groupTicks = true,
 }: {
   priceData: ChartQueryResult<PriceChartData, ChartType.PRICE>
   liquidityData: ChartEntry[]
@@ -51,6 +54,12 @@ export const D3LiquidityRangeChart = ({
   protocolVersion: ProtocolVersion
   token0Color: string
   token1Color: string
+  /** The range a change of price data resets the chart to; the create flow's URL state by default. */
+  resetRange?: { minTick?: number; maxTick?: number }
+  /** Off drops the rules above and below the chart, for a surface that frames it itself. */
+  bordered?: boolean
+  /** Off draws a bar per tick spacing (full granularity) instead of grouping ticks into a few buckets. */
+  groupTicks?: boolean
 }) => {
   const colors = useSporeColors()
   const chartId = useId()
@@ -61,6 +70,9 @@ export const D3LiquidityRangeChart = ({
   const liquidityScaleSmoothingRef = useRef<LiquidityScaleSmoothing>({})
 
   const { priceRangeState } = useLiquidityUrlState()
+  // Read when the data changes, not watched: the range changes with every drag, and only the data resets.
+  const resetRangeRef = useRef(resetRange)
+  resetRangeRef.current = resetRange
 
   // Chart state
   const { zoomLevel, panY } = useChartViewState()
@@ -127,6 +139,7 @@ export const D3LiquidityRangeChart = ({
         tickToY({ tick, tickScale, tickSpacing, tickAlignment }),
       yToTick: (y: number) => yToTick({ y, tickScale }),
       liquidityScaleSmoothing: liquidityScaleSmoothingRef.current,
+      groupTicks,
     }
 
     // Initialize renderers with the g element and context, and separate timescale context
@@ -150,6 +163,7 @@ export const D3LiquidityRangeChart = ({
     token1Color,
     baseCurrency,
     quoteCurrency,
+    groupTicks,
   ])
 
   // Update renderers when state changes
@@ -168,16 +182,19 @@ export const D3LiquidityRangeChart = ({
       return
     }
 
-    if (priceRangeState.minTick !== undefined) {
-      minTick = priceRangeState.minTick
+    const rangeToReset = resetRangeRef.current ?? priceRangeState
+    if (rangeToReset.minTick !== undefined) {
+      minTick = rangeToReset.minTick
     }
-    if (priceRangeState.maxTick !== undefined) {
-      maxTick = priceRangeState.maxTick
+    if (rangeToReset.maxTick !== undefined) {
+      maxTick = rangeToReset.maxTick
     }
 
     reset({
       minTick,
       maxTick,
+      // A caller that supplies the range already has it; echoing it back can override a range that moved meanwhile.
+      emit: resetRangeRef.current === undefined,
     })
     // oxlint-disable-next-line react/exhaustive-deps -- biome-parity: oxlint is stricter here
   }, [priceData.dataHash, migratingPosition, reset])
@@ -201,8 +218,8 @@ export const D3LiquidityRangeChart = ({
     <Flex className={dimensions.isInitialized ? ENTER_PRESET_CLASSES.fadeIn : 'opacity-0'} flexDirection="column">
       <Flex
         py="$spacing12"
-        borderTopWidth="$spacing1"
-        borderBottomWidth="$spacing1"
+        borderTopWidth={bordered ? '$spacing1' : 0}
+        borderBottomWidth={bordered ? '$spacing1' : 0}
         borderColor="$surface3"
         position="relative"
         overflow="hidden"

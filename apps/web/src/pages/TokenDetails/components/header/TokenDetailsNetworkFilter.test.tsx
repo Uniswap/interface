@@ -72,7 +72,7 @@ describe('TokenDetailsNetworkFilter', () => {
     )
     const trigger = screen.getByTestId(TestID.TokensNetworkFilterTrigger)
     expect(trigger).toHaveAccessibleName('2 networks')
-    expect(trigger.closest('[data-slot="popover-compat-trigger"]')).not.toHaveAttribute('aria-label')
+    expect(trigger).not.toHaveAttribute('aria-label')
   })
 
   it('mounts the interactive filter for multiple chains', () => {

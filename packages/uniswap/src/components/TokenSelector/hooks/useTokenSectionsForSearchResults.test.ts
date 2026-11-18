@@ -57,10 +57,6 @@ const mocks = vi.hoisted(() => ({
 
 const idle = { error: undefined, refetch: vi.fn(), isLoading: false }
 
-vi.mock('@universe/gating', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('@universe/gating')>()),
-  useIsTokenCategoriesEnabled: (): boolean => true,
-}))
 vi.mock('uniswap/src/components/TokenSelector/hooks/usePortfolioBalancesForAddressById', () => ({
   usePortfolioBalancesForAddressById: () => ({ ...idle, data: mocks.balancesById }),
 }))

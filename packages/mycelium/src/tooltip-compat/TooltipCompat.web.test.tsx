@@ -544,11 +544,6 @@ function ZIndexProbe(): JSX.Element {
   return <div data-testid="z-probe">{String(layer)}</div>
 }
 
-/**
- * jsdom 20 has no PointerEvent, so fireEvent falls back to the bare Event
- * constructor and silently DROPS `pointerType` — attach it explicitly so the
- * trigger's mouse/non-mouse guard (and Base UI's own bookkeeping) sees it.
- */
 function firePointerEvent({
   target,
   type,
@@ -558,9 +553,7 @@ function firePointerEvent({
   type: 'pointerdown' | 'pointerup' | 'pointerleave'
   pointerType: 'mouse' | 'touch'
 }): void {
-  const event = new Event(type, { bubbles: type !== 'pointerleave', cancelable: true })
-  Object.defineProperty(event, 'pointerType', { value: pointerType })
-  fireEvent(target, event)
+  fireEvent(target, new PointerEvent(type, { bubbles: type !== 'pointerleave', cancelable: true, pointerType }))
 }
 
 function tap(target: Element): void {

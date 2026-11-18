@@ -45,7 +45,7 @@ exports[`SwapSkeleton.tsx > renders a skeleton 1`] = `
             fill="none"
             focusable="false"
             stroke-width="8"
-            style="width: 16px; height: 16px;"
+            style="color: var(--neutral3); width: 16px; height: 16px;"
             viewBox="0 0 24 24"
           >
             <path

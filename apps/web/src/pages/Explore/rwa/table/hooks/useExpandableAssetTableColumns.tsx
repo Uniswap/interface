@@ -210,10 +210,10 @@ export function useExpandableAssetTableColumns({
           )
         },
       }),
-      columnHelper.accessor((row) => getExpandableAssetRowMetrics(row).marketCapUsd, {
-        id: 'marketCap',
+      columnHelper.accessor((row) => getExpandableAssetRowMetrics(row).fdvUsd, {
+        id: 'fdv',
         ...getDataColumnSizing(DATA_COLUMN_CONTENT_WIDTH_PX.fiatStat),
-        header: createMetricHeader(StocksSortMethod.MARKET_CAP),
+        header: createMetricHeader(StocksSortMethod.FDV),
         cell: (info) => {
           const value = safeAccessorGetValue(info.getValue)
           return (

@@ -1,5 +1,4 @@
 import { UniverseChainId, Platform } from '@universe/chains'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { TestID } from '@universe/test'
 import type { PositionInfo } from 'uniswap/src/features/positions/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
@@ -12,11 +11,6 @@ import { useMiniPoolsTableData } from '~/pages/Portfolio/Overview/MiniPoolsTable
 import { MiniPoolsTable } from '~/pages/Portfolio/Overview/MiniPoolsTable/MiniPoolsTable'
 import { mocked } from '~/test-utils/mocked'
 import { render, screen } from '~/test-utils/render'
-
-vi.mock('@universe/gating', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('@universe/gating')>()),
-  useFeatureFlag: vi.fn(),
-}))
 
 vi.mock('~/hooks/usePortfolioRoutes/usePortfolioRoutes', () => ({
   usePortfolioRoutes: vi.fn(),
@@ -74,7 +68,6 @@ const MOCK_POSITION = {} as PositionInfo
 describe('MiniPoolsTable', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    mocked(useFeatureFlag).mockImplementation((flag) => flag === FeatureFlags.PortfolioPoolsBalances)
     mocked(usePortfolioRoutes).mockReturnValue({
       tab: PortfolioTab.Overview,
       chainId: undefined,
@@ -95,20 +88,12 @@ describe('MiniPoolsTable', () => {
     })
   })
 
-  it('should link View all pools to Portfolio Pools tab when portfolio pools balances flag is enabled', () => {
+  it('should link View all pools to Portfolio Pools tab', () => {
     render(<MiniPoolsTable account={SAMPLE_SEED_ADDRESS_1} />)
 
     const viewAllPoolsLink = screen.getByTestId(TestID.PortfolioOverviewViewAllPools)
     expect(viewAllPoolsLink).toHaveAttribute('href', '/portfolio/pools')
     expect(viewAllPoolsLink).toHaveAttribute('data-element-name', ElementName.PortfolioViewAllPools)
-  })
-
-  it('should link View all pools to legacy positions page when portfolio pools balances flag is disabled', () => {
-    mocked(useFeatureFlag).mockReturnValue(false)
-
-    render(<MiniPoolsTable account={SAMPLE_SEED_ADDRESS_1} />)
-
-    expect(screen.getByTestId(TestID.PortfolioOverviewViewAllPools)).toHaveAttribute('href', '/positions')
   })
 
   it('should preserve the selected chain when linking to Portfolio Pools tab', () => {

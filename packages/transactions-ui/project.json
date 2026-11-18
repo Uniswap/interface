@@ -7,11 +7,18 @@
   "targets": {
     "prepare": {
       "executor": "nx:noop",
-      "dependsOn": ["generate:index"],
+      "dependsOn": ["generate:index", "generate:catalog"],
       "cache": true
     },
     "generate:index": {
       "command": "bun src/scripts/generateIndex.ts",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "cache": false
+    },
+    "generate:catalog": {
+      "command": "bun src/scripts/generateCatalog.ts",
       "options": {
         "cwd": "{projectRoot}"
       },
@@ -32,7 +39,15 @@
       "command": "vitest run",
       "options": {
         "cwd": "{projectRoot}"
-      }
+      },
+      "dependsOn": ["^prepare", "prepare", { "target": "test:native", "params": "forward" }]
+    },
+    "test:native": {
+      "command": "vitest run --config vitest.native.config.ts",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "dependsOn": ["^prepare", "prepare"]
     }
   }
 }

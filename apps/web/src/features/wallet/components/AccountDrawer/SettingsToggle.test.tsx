@@ -41,4 +41,19 @@ describe('SettingsToggle', () => {
     )
     expect(container).toMatchSnapshot()
   })
+
+  it('sizes the title column from the space left beside the icon so long titles wrap instead of overflowing', () => {
+    const longTitle = 'Compartir identificadores de dispositivo'
+    const { getByText } = render(
+      <SettingsToggle
+        icon={<LineChartDots size="$icon.24" color="$neutral2" />}
+        title={longTitle}
+        isActive={true}
+        toggle={() => {}}
+      />,
+    )
+
+    const titleColumn = getByText(longTitle).parentElement
+    expect(titleColumn).toHaveClass('grow', 'basis-[0px]')
+  })
 })

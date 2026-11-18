@@ -69,7 +69,7 @@ describe('extension envFieldRules', () => {
         ...baseValues,
         buildEnv: 'dev',
         isE2ETest: 'true',
-        tradingApiUrlOverride: 'https://beta.trading-api-labs.interface.gateway.uniswap.org',
+        tradingApiUrlOverride: 'https://dev.rpc.uniswap.org',
       },
       /tradingApiUrlOverride {2}Forbidden/,
     )

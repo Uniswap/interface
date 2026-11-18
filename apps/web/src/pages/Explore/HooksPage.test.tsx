@@ -7,6 +7,7 @@ import { Route, Routes, useSearchParams } from 'react-router'
 import { getHookRegistryKey, useHookRegistryMap } from 'uniswap/src/features/poolHooks/hooks/useHookRegistryMap'
 import { useUniswapHookProvenance } from 'uniswap/src/features/poolHooks/hooks/useUniswapHookProvenance'
 import { InterfaceEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { sleep } from 'utilities/src/time/timing'
 import { OrderDirection } from '~/data/util'
 import { ExploreTablesFilterStoreContextProvider } from '~/features/Explore/state/exploreTablesFilterStore'
 import { HOOK_FIXTURES, HOOK_LIST_SUMMARY_FIXTURE } from '~/features/Hooks/fixtures'
@@ -624,6 +625,8 @@ describe('Hooks preview', () => {
     )
     vi.spyOn(window, 'scrollY', 'get').mockReturnValue(0)
     fireEvent.scroll(window)
+    // Outlast the Table's 125ms near-bottom debounce, or the new list context loads its next page.
+    await act(() => sleep(150))
     await user.click(screen.getByTestId(TestID.HooksFilterButton))
     const dialog = screen.getByRole('dialog', { name: 'Filters' })
     await user.click(within(dialog).getByRole('switch', { name: 'Routed in pools' }))

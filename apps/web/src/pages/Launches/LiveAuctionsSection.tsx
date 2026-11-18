@@ -8,17 +8,17 @@ import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter/Netw
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useNetworkFilterChainIds } from '~/components/NetworkFilter/useFilteredChains'
+import { ExploreFilterChip } from '~/features/Explore/categories/ExploreCategoryChips'
 import {
-  AuctionQuickFilter,
   ExploreTablesFilterStoreContextProvider,
   useExploreTablesFilterStore,
   useExploreTablesFilterStoreActions,
 } from '~/features/Explore/state/exploreTablesFilterStore'
+import { ToucanTable } from '~/features/Toucan/AuctionDiscovery/TopAuctionsTable/TopAuctionsTable'
 import { useToucanAuctionSupportedChains } from '~/features/Toucan/supportedChains'
 import { getLaunchpadDisplay, UNISWAP_CCA_LAUNCHPAD_ID } from '~/features/Toucan/utils/launchesModel'
-import { ExploreFilterChip } from '~/pages/Explore/categories/ExploreCategoryChips'
-import { ToucanTable } from '~/pages/Explore/tables/Auctions/TopAuctionsTable'
 import { useLaunchpads } from '~/pages/Launches/data/useLaunchpads'
+import { AuctionQuickFilter } from '~/types/auctionFilters'
 
 /** All / Verified quick-select chips for Live auctions, driving the shared auction filter store. */
 function LiveAuctionsQuickSelects(): JSX.Element {
@@ -59,6 +59,7 @@ function LiveAuctionsQuickSelects(): JSX.Element {
 
 /** Live-auctions controls + table (shares the Explore auctions store within this subtree). */
 function LiveAuctionsInner(): JSX.Element {
+  const quickFilter = useExploreTablesFilterStore((s) => s.quickFilter)
   const [chainId, setChainId] = useState<UniverseChainId | undefined>(undefined)
   const auctionSupportedChains = useToucanAuctionSupportedChains()
   const { chainIds, allNetworksChainIds } = useNetworkFilterChainIds(auctionSupportedChains)
@@ -104,7 +105,7 @@ function LiveAuctionsInner(): JSX.Element {
         </Flex>
       </Flex>
       {/* liveOnly keeps only in-progress + upcoming auctions (server-side); chainId drives the fetch off URL params. */}
-      <ToucanTable chainId={chainId} liveOnly pageSize={50} launchpad={ccaLaunchpad} />
+      <ToucanTable chainId={chainId} liveOnly pageSize={50} launchpad={ccaLaunchpad} quickFilter={quickFilter} />
     </Flex>
   )
 }

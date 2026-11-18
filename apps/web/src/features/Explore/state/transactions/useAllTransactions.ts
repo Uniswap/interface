@@ -4,12 +4,12 @@ import { UniverseChainId } from '@universe/chains'
 import { useMemo } from 'react'
 import { getListTransactionsQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/transactions/queries'
 import { useIsWindowVisible } from 'utilities/src/react/useIsWindowVisible'
+import { useInfiniteLoadMore } from '~/components/Table/hooks/useInfiniteLoadMore'
 import {
   parseUniswapTransaction,
   type PoolTransaction,
   type PoolTransactionEventType,
 } from '~/data/transactions/poolTransaction'
-import { useInfiniteLoadMore } from '~/features/Explore/hooks/useInfiniteLoadMore'
 
 export enum TransactionType {
   SWAP = 'Swap',

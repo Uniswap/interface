@@ -11,7 +11,7 @@ const test = getTest()
 
 const EW_ENABLED = `featureFlagOverride=${getFeatureFlagName(FeatureFlags.EmbeddedWallet)}`
 
-// `eagerlyConnect=embedded` (see setupWagmiAutoConnect, apps/web/src/components/Web3Provider/wagmiAutoConnect.ts)
+// `eagerlyConnect=embedded` (see setupWagmiAutoConnect, apps/web/src/connection/wagmiAutoConnect.ts)
 // tells the e2e bootstrap to `connect()` the embedded-wallet connector directly. Without it, the
 // default e2e auto-connect eagerly connects a generic mock connector on a 1ms timeout, which wins
 // the race against IntentionalEvmReconnect's recentConnectorId-gated reconnect and becomes the

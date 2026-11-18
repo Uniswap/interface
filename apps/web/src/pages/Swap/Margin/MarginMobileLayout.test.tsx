@@ -5,9 +5,15 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { MarginMobileLayout } from '~/pages/Swap/Margin/MarginMobileLayout'
 import { render } from '~/test-utils/render'
 
-const { mockAccount, mockOpenAccountDrawer } = vi.hoisted(() => ({
+const { mockAccount, mockOpenAccountDrawer, mockMedia } = vi.hoisted(() => ({
   mockAccount: { current: { address: '0x000000000000000000000000000000000000000A' as string | undefined } },
   mockOpenAccountDrawer: vi.fn(),
+  mockMedia: { lg: true },
+}))
+
+vi.mock('@universe/mycelium', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@universe/mycelium')>()),
+  useMedia: () => mockMedia,
 }))
 
 vi.mock('~/connection/hooks/useAccount', () => ({
@@ -55,6 +61,7 @@ vi.mock('~/pages/Swap/Margin/MarginChartPane', () => ({
 afterEach(() => {
   mockAccount.current = { address: '0x000000000000000000000000000000000000000A' }
   mockOpenAccountDrawer.mockClear()
+  mockMedia.lg = true
 })
 
 describe('MarginMobileLayout', () => {
@@ -100,6 +107,13 @@ describe('MarginMobileLayout', () => {
 
     fireEvent.click(screen.getByTestId(TestID.MarginChartSheetClose))
     expect(screen.queryByTestId('margin-chart-pane-stub')).not.toBeInTheDocument()
+  })
+
+  it('shows the chart above the tabs instead of "View chart" between the phone and terminal breakpoints', () => {
+    mockMedia.lg = false
+    render(<MarginMobileLayout />)
+    expect(screen.getByTestId('margin-chart-pane-stub')).toHaveAttribute('data-compact', 'undefined')
+    expect(screen.queryByTestId(TestID.MarginMobileViewChart)).not.toBeInTheDocument()
   })
 
   it('offers a wallet connection on the Positions tab when disconnected', () => {

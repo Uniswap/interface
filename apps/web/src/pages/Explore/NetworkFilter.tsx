@@ -1,5 +1,4 @@
 import { UniverseChainId } from '@universe/chains'
-import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { useNavigate, useSearchParams } from 'react-router'
 import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter/NetworkFilter'
@@ -8,10 +7,10 @@ import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useNetworkFilterChainIds } from '~/components/NetworkFilter/useFilteredChains'
 import { useActiveAddresses } from '~/connection/accounts/hooks'
+import { isCategoryUnsupportedChain, withoutCategoryParam } from '~/features/Explore/categories/useExploreCategory'
 import { useExploreParams } from '~/features/Explore/hooks/useExploreParams'
 import { useExploreTablesFilterStoreActions } from '~/features/Explore/state/exploreTablesFilterStore'
 import { buildExploreUrl } from '~/features/Explore/utils/buildExploreUrl'
-import { isCategoryUnsupportedChain, withoutCategoryParam } from '~/pages/Explore/categories/useExploreCategory'
 import { ExploreTab } from '~/types/explore'
 import { getChainIdFromChainUrlParam } from '~/utils/params/chainParams'
 
@@ -19,7 +18,6 @@ export function TableNetworkFilter({ networks }: { networks?: UniverseChainId[] 
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const media = useMedia()
-  const tokenCategoriesEnabled = useIsTokenCategoriesEnabled()
   const { tab: tabName, chainName } = useExploreParams()
   const currentChainId = chainName ? getChainIdFromChainUrlParam(chainName) : undefined
   const { chainIds, allNetworksChainIds } = useNetworkFilterChainIds(networks, { singleModeNetworks: true })
@@ -30,11 +28,10 @@ export function TableNetworkFilter({ networks }: { networks?: UniverseChainId[] 
   const onPressChain = useEvent((pressedChainId: UniverseChainId | null) => {
     const chainId = pressedChainId ?? undefined
     // Leaving an unsupported chain drops it too: there the category read as All, so a stale param would resurface.
-    const dropCategory =
-      tokenCategoriesEnabled && (isCategoryUnsupportedChain(chainId) || isCategoryUnsupportedChain(currentChainId))
+    const dropCategory = isCategoryUnsupportedChain(chainId) || isCategoryUnsupportedChain(currentChainId)
     // Bare `/explore` (the navbar link) has no tab param but renders the Tokens tab.
     const isTokensTab = (tabName ?? ExploreTab.Tokens) === ExploreTab.Tokens
-    if (tokenCategoriesEnabled && isTokensTab && chainId !== undefined && !dropCategory) {
+    if (isTokensTab && chainId !== undefined && !dropCategory) {
       setCategoryCheckChainId(chainId)
     }
     navigate(

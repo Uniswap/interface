@@ -84,14 +84,14 @@ describe('RemoveScroll (web) — html-overflow lock mode', () => {
       </RemoveScroll>,
     )
     const sheet = render(
-      <WebBottomSheet isOpen>
+      <WebBottomSheet title="Sheet" isOpen>
         <span>compat sheet</span>
       </WebBottomSheet>,
     )
     expect(document.documentElement.style.overflow).toBe('hidden')
     // Close the compat sheet first: the modal's lock must persist.
     sheet.rerender(
-      <WebBottomSheet isOpen={false}>
+      <WebBottomSheet title="Sheet" isOpen={false}>
         <span>compat sheet</span>
       </WebBottomSheet>,
     )

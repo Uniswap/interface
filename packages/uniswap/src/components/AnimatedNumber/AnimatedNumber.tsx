@@ -18,6 +18,8 @@ export type AnimatedNumberProps = {
    * every mounted row exhausted native memory. Unlike `disableAnimations` nothing remounts. Native-only.
    */
   suspendAnimations?: boolean
+  /** Scales the number down to fit its container width instead of overflowing. Heading variants always do. Native-only. */
+  scaleToFit?: boolean
   /** Overrides the computed up/down change direction (and its color) — e.g. for values like elapsed time that should always read as increasing. */
   forceDirection?: AnimatedNumberDirection
   /** Override text direction for digit stagger. Defaults to `i18next.dir() === 'rtl'`. */

@@ -1,5 +1,4 @@
 import { RankingType } from '@universe/api'
-import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { Flex, Loader } from '@universe/mycelium'
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -30,7 +29,6 @@ const TRENDING_SECTION_ROW_COUNT = 3
 export const TrendingSection = memo(function TrendingSection(): JSX.Element | null {
   const { t } = useTranslation()
   const navigation = useExploreStackNavigation()
-  const tokenCategoriesEnabled = useIsTokenCategoriesEnabled()
   const { data: categories, isLoading: isCategoriesLoading } = useListCategoriesQuery()
   const trendingCategory = findTrendingCategory(categories)
 
@@ -39,7 +37,7 @@ export const TrendingSection = memo(function TrendingSection(): JSX.Element | nu
     orderBy: RankingType.Volume,
     categoryId: trendingCategory?.id,
     pageSize: TRENDING_SECTION_ROW_COUNT,
-    skip: !tokenCategoriesEnabled || trendingCategory === undefined,
+    skip: trendingCategory === undefined,
   })
   const items = topTokenItems.slice(0, TRENDING_SECTION_ROW_COUNT)
 
@@ -49,10 +47,6 @@ export const TrendingSection = memo(function TrendingSection(): JSX.Element | nu
       navigation.navigate(MobileScreens.CategoryDetails, { categoryId: trendingCategory.id })
     }
   })
-
-  if (!tokenCategoriesEnabled) {
-    return null
-  }
 
   if (!trendingCategory && !isCategoriesLoading) {
     return null

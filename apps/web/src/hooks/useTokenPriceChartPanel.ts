@@ -6,11 +6,12 @@ import {
   useTokenPriceConfidenceScore,
   useTokenSpotPrice,
 } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
-import { buildCurrencyId, currencyId } from 'uniswap/src/utils/currencyId'
+import { currencyId } from 'uniswap/src/utils/currencyId'
 import { TimePeriod } from '~/data/util'
 import { useTokenPriceChartData } from '~/hooks/useTokenPriceChartData'
 import { getDisplayedPricePercentChange, type TokenPriceChartQueryVariables } from '~/hooks/useTokenPriceChartData'
 import { DataQuality, PriceChartType } from '~/utils/charts'
+import { getChartCurrencyId } from '~/utils/tokenQueryOptions'
 
 export interface UseTokenPriceChartPanelParams {
   variables: TokenPriceChartQueryVariables
@@ -42,12 +43,10 @@ export function useTokenPriceChartPanel({
   isError: boolean
   stale: boolean
 } {
-  const spotCurrencyId = useMemo(() => {
-    if (!variables.address) {
-      return undefined
-    }
-    return buildCurrencyId(variables.chainId, variables.address)
-  }, [variables.chainId, variables.address])
+  const spotCurrencyId = useMemo(
+    () => getChartCurrencyId({ chainId: variables.chainId, address: variables.address }),
+    [variables.chainId, variables.address],
+  )
   // Authoritative even on the all-networks view — isMultichainAggregateView makes it return
   // GetTokenMultiChain's canonical-chain price rather than an arbitrary per-chain one.
   const currentPriceOverride = useTokenSpotPrice(spotCurrencyId, {

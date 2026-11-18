@@ -24,6 +24,7 @@ function makeStock(
       issuer: string
       priceUsd: number
       volume24hUsd: number
+      fdvUsd?: number
       priceChange1hPct?: number
       chainTokens: Array<{ chainId: number; address: string }>
     }>
@@ -43,7 +44,6 @@ function makeStock(
           issuer: 'xstocks',
           priceUsd,
           volume24hUsd,
-          marketCapUsd: volume24hUsd,
           priceChange1hPct,
           chainTokens: [{ chainId: 8453, address: `0x${symbol}` }],
         },
@@ -92,6 +92,27 @@ describe('sortRankedRwaRows', () => {
     ]
     const sorted = sortRankedRwaRows(rows, { sortMethod: StocksSortMethod.HOUR_CHANGE, sortAscending: true })
     expect(sorted.map((row) => row.symbol)).toEqual(['AAPL', 'NVDA', 'TSLA'])
+  })
+
+  it('sorts parent rows by summed issuer FDV, with FDV-less rows last', () => {
+    const makeFdvStock = (symbol: string, fdvUsd: number | undefined): Rwa =>
+      makeStock(symbol, {
+        volume24hUsd: 100,
+        issuerTokens: [
+          {
+            symbol,
+            name: symbol,
+            issuer: 'xstocks',
+            priceUsd: 100,
+            volume24hUsd: 100,
+            fdvUsd,
+            chainTokens: [{ chainId: 8453, address: `0x${symbol}` }],
+          },
+        ],
+      })
+    const rows = [makeFdvStock('AAPL', 100), makeFdvStock('TSLA', undefined), makeFdvStock('NVDA', 300)]
+    const sorted = sortRankedRwaRows(rows, { sortMethod: StocksSortMethod.FDV, sortAscending: false })
+    expect(sorted.map((row) => row.symbol)).toEqual(['NVDA', 'AAPL', 'TSLA'])
   })
 
   it('sorts multi-issuer price ranges by the minimum issuer price', () => {

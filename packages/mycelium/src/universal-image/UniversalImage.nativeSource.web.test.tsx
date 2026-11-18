@@ -94,7 +94,7 @@ describe('SvgImage (native) WebView wrapper', () => {
 
     const wrapper = container.querySelector('iframe')?.parentElement
     expect(wrapper).not.toBeNull()
-    expect(renderedStyle(wrapper as Element, 'aspect-ratio'), 'aspect-ratio').toBe('3')
+    expect(renderedStyle(wrapper as Element, 'aspect-ratio'), 'aspect-ratio').toBe('3 / 1')
     expect(renderedStyle(wrapper as Element, 'max-height'), 'max-height').toBe('40px')
   })
 
@@ -102,7 +102,7 @@ describe('SvgImage (native) WebView wrapper', () => {
     const { container } = render(<SvgImage alt="" autoplay={false} size={{}} uri={SVG_URI} />)
 
     const wrapper = container.querySelector('iframe')?.parentElement
-    expect(renderedStyle(wrapper as Element, 'aspect-ratio'), 'aspect-ratio').toBe('2')
+    expect(renderedStyle(wrapper as Element, 'aspect-ratio'), 'aspect-ratio').toBe('2 / 1')
     expect(renderedStyle(wrapper as Element, 'max-height'), 'max-height').toBe('100%')
   })
 
@@ -112,7 +112,7 @@ describe('SvgImage (native) WebView wrapper', () => {
     // The test setup mocks react-native-webview's WebView as an iframe that forwards props
     const webView = container.querySelector('iframe')
     expect(webView).not.toBeNull()
-    expect(renderedStyle(webView as Element, 'aspect-ratio'), 'aspect-ratio').toBe('2')
+    expect(renderedStyle(webView as Element, 'aspect-ratio'), 'aspect-ratio').toBe('2 / 1')
     expect(renderedStyle(webView as Element, 'height'), 'height').toBe('100%')
     expect(renderedStyle(webView as Element, 'width'), 'width').toBe('100%')
     expect(renderedStyle(webView as Element, 'background-color'), 'background-color').toBe('transparent')

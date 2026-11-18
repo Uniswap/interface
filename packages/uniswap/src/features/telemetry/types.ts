@@ -1017,6 +1017,11 @@ export type SponsoredApprovalEventProperties = {
 export type EmbeddedWalletUnitagSource = 'prefilled' | 'shuffled' | 'edited'
 
 // Please sort new values by EventName type!
+type OnboardingChecklistEventProperties = ITraceContext & {
+  completed_steps: number
+  total_steps: number
+}
+
 export type UniverseEventProperties = {
   [ExtensionEventName.BackgroundAttemptedToOpenSidebar]: { hasError: boolean }
   [ExtensionEventName.OnboardingLoad]: undefined
@@ -1400,6 +1405,11 @@ export type UniverseEventProperties = {
     auction_address?: string
     token_address?: string
   }
+  [InterfaceEventName.OnboardingChecklistViewed]: OnboardingChecklistEventProperties
+  [InterfaceEventName.OnboardingChecklistExpanded]: OnboardingChecklistEventProperties
+  [InterfaceEventName.OnboardingChecklistCollapsed]: OnboardingChecklistEventProperties
+  [InterfaceEventName.OnboardingChecklistStepClicked]: OnboardingChecklistEventProperties & { step: string }
+  [InterfaceEventName.OnboardingChecklistCompleted]: OnboardingChecklistEventProperties
   /** Fired once per open of a category definition (hover card, search/trending tooltip, touch sheet); `section` is the surface. */
   [InterfaceEventName.CategoryDefinitionCardOpened]: ITraceContext & {
     category_id: string
@@ -1674,6 +1684,7 @@ export type UniverseEventProperties = {
     token_address?: string
     token_symbol?: string
     token_list_length?: number
+    pool_list_length?: number
     token_list_rank?: number
     /** ElementName.TDPRwaTokenVariant — issuer of the clicked tokenized-stock variant on the TDP (ondo/dinari/xstocks) */
     issuer?: string
@@ -1709,6 +1720,8 @@ export type UniverseEventProperties = {
     selected?: boolean
     /** ElementName.SwapReview — what the swap form CTA press does (e.g. `add_funds`, `connect_wallet`, `review`). */
     action?: SwapFormButtonAction
+    /** ElementName.PresetPercentage / SetPercentageInput / SetPercentageOutput: the amount preset pressed. */
+    percentage?: PresetPercentage
   }
   [SharedEventName.PAGE_VIEWED]: ITraceContext & {
     /** Hook detail property names follow the product metrics contract. */
@@ -2046,7 +2059,7 @@ export type UniverseEventProperties = {
     | { chain_id: number; token_addresses: string[] }
   [UniswapEventName.LpIncentiveLearnMoreCtaClicked]: undefined
   [UniswapEventName.AuctionFilterSelected]: {
-    filter: 'all' | 'verified' | 'unverified' | 'active' | 'complete' | 'new' | 'completed' | 'quick_launch'
+    filter: 'all' | 'verified' | 'new' | 'active' | 'upcoming' | 'launched' | 'failed'
   }
   [UniswapEventName.LaunchQuickFilterSelected]: {
     filter: 'all' | 'trending' | 'recentlyLaunched'

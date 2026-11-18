@@ -3,6 +3,14 @@ import axe, { type AxeResults, type Result, type RunOptions } from 'axe-core'
 /** WCAG 2.2 AA plus axe best practices; the Playwright and Storybook runners use the same set. */
 export const AXE_TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa', 'best-practice'] as const
 
+/**
+ * Elements axe skips in every runner. Base UI's focus guards are visually hidden `tabindex="0"` spans that are
+ * `aria-hidden` everywhere but VoiceOver on WebKit, which needs them to redirect focus into the popup. That trips
+ * `aria-hidden-focus`; the maintainers keep it on purpose and recommend excluding them
+ * (https://github.com/mui/base-ui/issues/5237).
+ */
+export const AXE_EXCLUDE = ['[data-base-ui-focus-guard]'] as const
+
 // jsdom has no layout engine, paint, or canvas text metrics (icon-ligature
 // detection), so these rules cannot be evaluated there; the browser layers
 // cover them. Page-level landmark rules are meaningless for a component fragment.
@@ -22,14 +30,17 @@ const JSDOM_DISABLED_RULES = [
  * `expect(await runAxe(container)).toHaveNoAxeViolations()`.
  */
 export async function runAxe(container: Element, options?: RunOptions): Promise<AxeResults> {
-  return axe.run(container, {
-    runOnly: { type: 'tag', values: [...AXE_TAGS] },
-    ...options,
-    rules: {
-      ...Object.fromEntries(JSDOM_DISABLED_RULES.map((id) => [id, { enabled: false }])),
-      ...options?.rules,
+  return axe.run(
+    { include: [container], exclude: [...AXE_EXCLUDE] },
+    {
+      runOnly: { type: 'tag', values: [...AXE_TAGS] },
+      ...options,
+      rules: {
+        ...Object.fromEntries(JSDOM_DISABLED_RULES.map((id) => [id, { enabled: false }])),
+        ...options?.rules,
+      },
     },
-  })
+  )
 }
 
 /** Matchers for `expect.extend`; registered in mycelium's `vitest-setup.ts`. */

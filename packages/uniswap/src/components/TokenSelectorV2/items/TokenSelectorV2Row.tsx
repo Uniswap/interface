@@ -1,4 +1,3 @@
-import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { Flex, iconSizes, Text, TouchableArea } from '@universe/mycelium'
 import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -40,7 +39,6 @@ export const TokenSelectorV2Row = memo(function TokenSelectorV2Row({
   const { t } = useTranslation()
   const { convertFiatAmountFormatted, formatNumberOrString, formatPercent } = useLocalizationContext()
   const { isTestnetModeEnabled } = useEnabledChains()
-  const showIssuerTag = useIsTokenCategoriesEnabled()
 
   const { currencyInfo, quantity, balanceUSD, priceUsd, pricePercentChange24h } = option
   const { currency } = currencyInfo
@@ -114,8 +112,6 @@ export const TokenSelectorV2Row = memo(function TokenSelectorV2Row({
     formatPercent,
   ])
 
-  const displayName = option.rwaName ?? currency.name
-
   return (
     <TouchableArea
       accessibilityRole="button"
@@ -137,9 +133,9 @@ export const TokenSelectorV2Row = memo(function TokenSelectorV2Row({
         <Flex fill>
           <Flex row alignItems="center" gap="$spacing4">
             <Text color="$neutral1" numberOfLines={1} variant="body2">
-              {displayName}
+              {currency.name}
             </Text>
-            {tokenOptionTitleSuffix({ issuer: option.rwaIssuer, showIssuerTag })}
+            {tokenOptionTitleSuffix({ issuer: option.rwaIssuer, showIssuerTag: true })}
             {warningIconColor && (
               <TokenOptionWarningBadge
                 currencyInfo={currencyInfo}

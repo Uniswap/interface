@@ -13,11 +13,13 @@ export function BuyNativeTokenButton({
   onPress,
   usesStaticText,
   usesStaticTheme,
+  usesNetworkColors = true,
 }: {
   nativeCurrencyInfo: CurrencyInfo
   onPress?: () => void
   usesStaticText?: boolean
   usesStaticTheme?: boolean
+  usesNetworkColors?: boolean
 }): JSX.Element | null {
   const { t } = useTranslation()
   const { foreground, background } = useNetworkColors(nativeCurrencyInfo.currency.chainId)
@@ -44,8 +46,9 @@ export function BuyNativeTokenButton({
 
   const isDisabled = isLoading || !fiatOnRampCurrency
   const useStaticEmphasis = usesStaticTheme || isDisabled
-  const backgroundColor = useStaticEmphasis ? undefined : backgroundColorFromChain
-  const textColor = useStaticEmphasis ? undefined : textColorFromChain
+  const useChainColors = !useStaticEmphasis && usesNetworkColors
+  const backgroundColor = useChainColors ? backgroundColorFromChain : undefined
+  const textColor = useChainColors ? textColorFromChain : undefined
   const emphasis = useStaticEmphasis ? 'secondary' : 'primary'
 
   return (

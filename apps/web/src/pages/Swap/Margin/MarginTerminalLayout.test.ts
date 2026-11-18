@@ -3,7 +3,6 @@ import {
   clampMarginChartBlockHeight,
   defaultMarginChartBlockHeight,
   isMarginTerminalReady,
-  marginTableMaxHeight,
   MARGIN_CHART_BLOCK_MIN_HEIGHT,
   resolveMarginChartBlockHeights,
 } from '~/pages/Swap/Margin/MarginTerminalLayout'
@@ -74,17 +73,6 @@ describe('resolveMarginChartBlockHeights', () => {
     const { height, split } = resolveMarginChartBlockHeights({ ...base, rowHeight: 600, paneContentHeight: 900 })
     expect(height).toBe(split)
     expect(height).toBe(MARGIN_CHART_BLOCK_MIN_HEIGHT)
-  })
-})
-
-describe('marginTableMaxHeight', () => {
-  // A column of rows under the 106px pane chrome, plus the app header that Table subtracts back out.
-  it('budgets the body at the column height less the pane chrome', () => {
-    expect(marginTableMaxHeight({ columnHeight: 800, appHeaderHeight: 72 })).toBe(72 + 800 - 106)
-  })
-
-  it('is undefined until the column is measured', () => {
-    expect(marginTableMaxHeight({ columnHeight: 0, appHeaderHeight: 72 })).toBeUndefined()
   })
 })
 

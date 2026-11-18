@@ -146,22 +146,6 @@ export function resolveMarginChartBlockHeights({
   return { height: split ?? saved, split }
 }
 
-/**
- * The positions table's `maxHeight` in the terminal. The chart block's height is fixed, so more
- * positions scroll the whole column (the rail stays put); the table body may grow to a full column of
- * rows and only scrolls itself past that. `Table`'s maxHeight subtracts the app header height (its
- * sticky offset), so that is added back. Undefined until the column is measured.
- */
-export function marginTableMaxHeight({
-  columnHeight,
-  appHeaderHeight,
-}: {
-  columnHeight: number
-  appHeaderHeight: number
-}): number | undefined {
-  return columnHeight > 0 ? Math.round(appHeaderHeight + columnHeight - MARGIN_TABLE_PANE_CHROME) : undefined
-}
-
 // The view cross-fades as one unit (useMarginViewTransition on the view root); there are no per-element
 // entrance animations here. The chart just needs a stable block to mount into so it doesn't resize as it
 // appears (see chartBlockReady / morphSettled below).
@@ -251,9 +235,6 @@ export function MarginTerminalLayout({
   // is final when the row measures; the default split when the pane measures.
   const chartBlockReady = !hasPositionsPane || chartBlockHeight !== undefined
   const morphSettled = isTerminal && chartBlockReady
-  const tableMaxHeight = hasPositionsPane
-    ? marginTableMaxHeight({ columnHeight: rowHeight, appHeaderHeight: headerHeight })
-    : undefined
   const onResizeChartBlock = useEvent((wanted: number): void => {
     // Clamped on write as well as read: storing raw travel would bank phantom pixels past a bound
     // that the user would then have to drag back through before anything moved.
@@ -290,7 +271,7 @@ export function MarginTerminalLayout({
         {/* Conditional siblings keep positional slots ({cond && ...} renders a hole, not a
             reorder), so the SwapModuleWrapper child below never changes tree position. */}
         {!isTerminal && nonTerminalChartAnimator}
-        <MarginMorphProvider morphSettled={morphSettled} tableMaxHeight={tableMaxHeight}>
+        <MarginMorphProvider morphSettled={morphSettled}>
           {isTerminal && chartPane ? (
             // Left column: chart block over the positions pane, one width; the form rail sits to the
             // right and the table never extends under it.

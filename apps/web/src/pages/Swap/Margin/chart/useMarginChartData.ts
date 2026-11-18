@@ -1,4 +1,9 @@
+import type { PlainMessage } from '@bufbuild/protobuf'
 import { useQuery } from '@tanstack/react-query'
+import type {
+  GetTokenHistoryOHLCResponse,
+  GetTokenHistoryPriceResponse,
+} from '@uniswap/client-data-api/dist/data/v2/api_pb'
 import { UniverseChainId } from '@universe/chains'
 import { UTCTimestamp } from 'lightweight-charts'
 import { useEffect, useMemo, useRef } from 'react'
@@ -52,6 +57,8 @@ export interface MarginChartData {
   candlesUnavailable: boolean
   stats24h: { changePct?: number; high?: number; low?: number }
   loading: boolean
+  // The candles shown are another window's or market's, held while this one's load.
+  isPlaceholderData: boolean
   error?: Error
   refetch: () => void
 }
@@ -64,6 +71,16 @@ export function volatileLeg({ market }: { market: MarginMarket }): MarginTokenIn
 // Sorted first: toStrictlyAscendingByTime drops an out-of-order bar rather than reordering it.
 function sortedAscendingCandles(candles: readonly PriceChartData[]): PriceChartData[] {
   return toStrictlyAscendingByTime([...candles].sort((a, b) => (a.time as number) - (b.time as number)))
+}
+
+const EMPTY_CANDLES: PriceChartData[] = []
+
+function selectSortedOhlcCandles(data: PlainMessage<GetTokenHistoryOHLCResponse> | undefined): PriceChartData[] {
+  return sortedAscendingCandles(selectOhlcChartData(data))
+}
+
+function selectSortedPriceCandles(data: PlainMessage<GetTokenHistoryPriceResponse> | undefined): PriceChartData[] {
+  return sortedAscendingCandles(selectPriceChartData(data))
 }
 
 export function ohlcToCandles({ ohlc }: { ohlc: ReadonlyArray<TimestampedOhlcLike | null> }): PriceChartData[] {
@@ -134,17 +151,16 @@ function useMarginDayCandles({
   enabled: boolean
   refetchInterval: number | undefined
 }): { candles: PriceChartData[]; refetch: () => Promise<unknown> } {
-  const dayQuery = useQuery({
+  const { data: candles = EMPTY_CANDLES, refetch } = useQuery({
     ...getGetTokenHistoryOHLCQueryOptions({
       params: { target, duration: toRestHistoryDuration(HistoryDuration.Day) },
       enabled: enabled && !!target,
       keepPreviousData: true,
-      select: selectOhlcChartData,
+      select: selectSortedOhlcCandles,
     }),
     refetchInterval,
   })
-  const candles = useMemo(() => sortedAscendingCandles(dayQuery.data ?? []), [dayQuery.data])
-  return { candles, refetch: dayQuery.refetch }
+  return { candles, refetch }
 }
 
 /**
@@ -229,11 +245,11 @@ export function useMarginChartData({
       duration,
       enabled: commonEnabled && needsFallback,
       keepPreviousData: true,
-      select: selectPriceChartData,
+      select: selectSortedPriceCandles,
     }),
   )
   const fallbackLoading = isQueryLoading(fallbackQuery)
-  const fallbackCandles = useMemo(() => sortedAscendingCandles(fallbackQuery.data ?? []), [fallbackQuery.data])
+  const fallbackCandles = fallbackQuery.data ?? EMPTY_CANDLES
 
   // Hook B: pinned-DAY OHLC for 24h stats, whatever the window. Polls at Hook A's cadence so the 24h
   // stats stay live.
@@ -263,6 +279,7 @@ export function useMarginChartData({
     prevVisibleRef.current = isVisible
   }, [isVisible, refetch])
 
+  const { isPlaceholderData } = mainQuery
   const mainError = mainQuery.error ?? undefined
   const fallbackError = fallbackQuery.error ?? undefined
 
@@ -278,6 +295,7 @@ export function useMarginChartData({
       candlesUnavailable: needsFallback,
       stats24h: deriveStats24h({ dayCandles: dayCandlesRaw }),
       loading: mainLoading || (needsFallback && fallbackLoading),
+      isPlaceholderData,
       error: mainError ?? (needsFallback ? fallbackError : undefined),
       refetch,
     }
@@ -290,6 +308,7 @@ export function useMarginChartData({
     duration,
     mainLoading,
     fallbackLoading,
+    isPlaceholderData,
     mainError,
     fallbackError,
     refetch,

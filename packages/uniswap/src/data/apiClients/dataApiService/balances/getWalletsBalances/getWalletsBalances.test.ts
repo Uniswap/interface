@@ -1,20 +1,5 @@
-import { WalletBalanceCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import type { GetWalletsBalancesResponse, WalletBalance } from '@uniswap/client-data-api/dist/data/v1/api_pb.d'
-import { FeatureFlags } from '@universe/gating'
-import { getWalletBalancesIncludeCategories } from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances'
 import { selectTotalsByRequestedAddress } from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletsBalances/getWalletsBalances'
-
-const mockGetFeatureFlag = vi.fn()
-
-vi.mock('@universe/gating', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('@universe/gating')>()),
-  getFeatureFlag: (...args: unknown[]): boolean => mockGetFeatureFlag(...args) as boolean,
-  getFeatureFlagWithExposureLoggingDisabled: (...args: unknown[]): boolean => mockGetFeatureFlag(...args) as boolean,
-}))
-
-function enableFlags(...enabledFlags: FeatureFlags[]): void {
-  mockGetFeatureFlag.mockImplementation((flag: FeatureFlags) => enabledFlags.includes(flag))
-}
 
 const CHECKSUMMED_ADDRESS = '0xE0554a476A092703abdB3Ef35c80e0D76d32939F'
 const LOWERCASE_ADDRESS = CHECKSUMMED_ADDRESS.toLowerCase()
@@ -73,20 +58,5 @@ describe('selectTotalsByRequestedAddress', () => {
     expect(selectTotalsByRequestedAddress([CHECKSUMMED_ADDRESS])(response)).toEqual({
       [CHECKSUMMED_ADDRESS]: 0,
     })
-  })
-})
-
-describe('getWalletBalancesIncludeCategories', () => {
-  it('returns [POOLS, EARN_VAULTS] when the pools balances flag is enabled', () => {
-    enableFlags(FeatureFlags.PortfolioPoolsBalances)
-    expect(getWalletBalancesIncludeCategories()).toEqual([
-      WalletBalanceCategory.POOLS,
-      WalletBalanceCategory.EARN_VAULTS,
-    ])
-  })
-
-  it('always includes EARN_VAULTS even with no flags enabled', () => {
-    enableFlags()
-    expect(getWalletBalancesIncludeCategories()).toEqual([WalletBalanceCategory.EARN_VAULTS])
   })
 })

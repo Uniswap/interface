@@ -1,3 +1,4 @@
+import type { ChallengeType } from '@uniswap/client-platform-service/dist/uniswap/platformservice/v1/sessionService_pb'
 import type { ChallengeSolverService } from '@universe/sessions/src/challenge-solvers/types'
 import type { PerformanceTracker } from '@universe/sessions/src/performance/types'
 import {
@@ -51,6 +52,12 @@ function createSessionInitializationService(ctx: {
   getSessionService: () => SessionService
   challengeSolverService: ChallengeSolverService
   /**
+   * Challenge to ask the server for. Unset, the server picks — Turnstile on web.
+   * Set it where Turnstile cannot succeed: a rejected solution blocks the
+   * session rather than falling back.
+   */
+  preferredChallengeType?: ChallengeType
+  /**
    * Required: Performance tracker for timing measurements.
    * Must be injected - no implicit dependency on globalThis.performance.
    */
@@ -66,7 +73,11 @@ function createSessionInitializationService(ctx: {
     const startTime = flowStartTime ?? ctx.performanceTracker.now()
     const maxRetries = ctx.maxChallengeRetries ?? 3
 
-    const challenge = await ctx.getSessionService().requestChallenge()
+    const challenge = await ctx
+      .getSessionService()
+      .requestChallenge(
+        ctx.preferredChallengeType === undefined ? undefined : { challengeType: ctx.preferredChallengeType },
+      )
 
     log?.debug('createSessionInitializationService', 'handleChallengeFlow', 'Requesting challenge', {
       challenge,

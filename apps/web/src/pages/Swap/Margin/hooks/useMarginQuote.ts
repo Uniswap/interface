@@ -124,7 +124,10 @@ export function useMarginQuote({
   enabled = true,
 }: UseMarginQuoteParams): MarginQuoteResult {
   const key = marginQuoteKey({ funding, targetLeverageX18, paymentToken })
-  const [debouncedKey, isDebouncing] = useDebounceWithStatus({ value: key, delay: MARGIN_DEBOUNCE_MS })
+  const [debouncedKey, isDebounceTimerRunning] = useDebounceWithStatus({ value: key, delay: MARGIN_DEBOUNCE_MS })
+  // The debounce reports busy for a full delay after mount too, with nothing changed; counted as an edit,
+  // that reads as a pending quote and flashes the before/after skeleton every time a modal opens.
+  const isDebouncing = isDebounceTimerRunning && key !== debouncedKey
 
   const positionId = position.positionId
   const direction = position.direction

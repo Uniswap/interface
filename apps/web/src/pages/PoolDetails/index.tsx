@@ -11,10 +11,11 @@ import {
   Separator,
 } from '@universe/mycelium'
 import { useQueryState } from 'nuqs'
-import { forwardRef, useEffect, useMemo, useState } from 'react'
+import { forwardRef, type ReactNode, useEffect, useMemo, useState } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { useTranslation } from 'react-i18next'
-import { useNavigate, useParams } from 'react-router'
+import { useLocation, useNavigate, useParams } from 'react-router'
+import { useResolvePoolCategories } from 'uniswap/src/data/apiClients/dataApiService/categories/useResolvePoolCategories'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { type ParsedToken, v2TokenToCurrency, v2UnwrapToken } from 'uniswap/src/features/dataApi/utils/parsedToken'
 import { getPoolName } from 'uniswap/src/features/pools/names'
@@ -27,11 +28,13 @@ import type { PoolData } from '~/data/pools/poolData'
 import { useLiquidityServicePoolData } from '~/data/pools/useLiquidityServicePoolData'
 import { LpIncentivesPoolDetailsRewardsDistribution } from '~/features/Liquidity/LPIncentives/LpIncentivesPoolDetailsRewardsDistribution'
 import { toPoolRewardAprEntries } from '~/features/Liquidity/LPIncentives/utils'
+import type { PoolBrowserLinkState } from '~/features/Liquidity/poolBrowserEntry'
 import { useColor } from '~/hooks/useColor'
 import { useScrollCompact } from '~/hooks/useScrollCompact'
-import { useDynamicMetatags } from '~/pages/metatags'
 import { ChartSection } from '~/pages/PoolDetails/components/ChartSection'
-import { OrderBook } from '~/pages/PoolDetails/components/ChartSection/OrderBook'
+import { PoolOrderBook } from '~/pages/PoolDetails/components/ChartSection/OrderBook'
+import { PdpDepositPanel } from '~/pages/PoolDetails/components/LiquidityPanel/PdpDepositPanel'
+import { PdpLiquidityProvider } from '~/pages/PoolDetails/components/LiquidityPanel/PdpLiquidityProvider'
 import { PdpPoolStats, PdpPoolTokens } from '~/pages/PoolDetails/components/PdpPoolInfo'
 import { PdpWalletPositions } from '~/pages/PoolDetails/components/PdpWalletPositions'
 import { PoolDetailsBreadcrumb } from '~/pages/PoolDetails/components/PoolDetailsHeader/PoolDetailsBreadcrumb'
@@ -40,7 +43,9 @@ import { PoolDetailsLink } from '~/pages/PoolDetails/components/PoolDetailsLink'
 import { PoolDetailsStats } from '~/pages/PoolDetails/components/PoolDetailsStats'
 import { PoolDetailsStatsButtons } from '~/pages/PoolDetails/components/PoolDetailsStatsButtons'
 import { PoolDetailsTableTab } from '~/pages/PoolDetails/components/PoolDetailsTable'
+import { RelatedPoolsSection } from '~/pages/PoolDetails/components/relatedPools/RelatedPoolsSection'
 import { getPoolDetailPageTitle } from '~/pages/PoolDetails/utils'
+import { useDynamicMetatags } from '~/pages/routes/metatags'
 import { ExploreTab } from '~/types/explore'
 import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
 
@@ -116,6 +121,30 @@ const TokenDetailsHeader = forwardRef<HTMLElement, TextCompatProps>(function Tok
   return <Text ref={ref} width="100%" fontSize={24} fontWeight="$book" lineHeight={32} {...props} />
 })
 
+const PDP_REVAMP_PANEL_WIDTH = 400
+
+function MaybePdpLiquidityProvider({
+  enabled,
+  poolData,
+  chainId,
+  priceInverted,
+  children,
+}: {
+  enabled: boolean
+  poolData?: PoolData
+  chainId: UniverseChainId
+  priceInverted: boolean
+  children: ReactNode
+}): JSX.Element {
+  return enabled ? (
+    <PdpLiquidityProvider poolData={poolData} chainId={chainId} priceInverted={priceInverted}>
+      {children}
+    </PdpLiquidityProvider>
+  ) : (
+    <>{children}</>
+  )
+}
+
 const LinksContainer = forwardRef<HTMLDivElement, FlexCompatProps>(function LinksContainer(props, ref) {
   return <Flex ref={ref} gap="$gap16" width="100%" {...props} />
 })
@@ -147,6 +176,10 @@ export function PoolDetailsPage() {
   const chainInfo = urlChain ? getChainInfo(urlChain) : undefined
   const isPdpRevampEnabled = useFeatureFlag(FeatureFlags.PdpRevamp)
   const [chartParam] = useQueryState('chart')
+  const location = useLocation()
+  const poolBrowserHref = isPdpRevampEnabled
+    ? (location.state as PoolBrowserLinkState | null)?.poolBrowserHref
+    : undefined
   const showOrderBook = chartParam?.toLowerCase() === 'depth'
   const { data: poolData, loading: poolLoading } = useLiquidityServicePoolData({
     poolIdOrAddress: normalizeAddress(poolAddress ?? '', AddressStringFormat.Lowercase),
@@ -173,13 +206,6 @@ export function PoolDetailsPage() {
   // GetPool serves the fee tier and the protocol fee on the same row, so they always pair.
   const protocolFeePips = poolData?.protocolFeePips
   const feeTier = poolData?.feeTier
-  const [orderBookCurrencyA, orderBookCurrencyB] = useMemo(
-    () => [
-      poolData?.token0 ? v2TokenToCurrency(poolData.token0) : undefined,
-      poolData?.token1 ? v2TokenToCurrency(poolData.token1) : undefined,
-    ],
-    [poolData?.token0, poolData?.token1],
-  )
 
   const navigate = useNavigate()
 
@@ -197,6 +223,10 @@ export function PoolDetailsPage() {
 
   const isInvalidPool = !poolAddress || !chainInfo
   const loading = poolLoading
+  const { categories: poolCategories, isLoading: isPoolCategoriesLoading } = useResolvePoolCategories({
+    categoryIds: poolData?.categoryIds,
+    isLoading: loading,
+  })
   const poolNotFound = (!poolLoading && !poolData) || isInvalidPool
 
   const metatagProperties = useMemo(() => {
@@ -281,13 +311,54 @@ export function PoolDetailsPage() {
     </>
   )
 
+  const poolTransactions = (
+    <PoolDetailsTableTab
+      poolAddress={poolAddress}
+      chainId={chainInfo.id}
+      baseToken={baseToken}
+      quoteToken={quoteToken}
+      isPoolDataLoading={poolLoading}
+      showWalletPositions={!isPdpRevampEnabled}
+    />
+  )
+
+  const relatedPools = (
+    <RelatedPoolsSection
+      categories={poolCategories}
+      isLoading={isPoolCategoriesLoading}
+      chainId={chainInfo.id}
+      poolId={poolAddress}
+    />
+  )
+
   // The PDP revamp moves these under the chart, leaving the side column to the pool actions and the wallet's positions.
   const pdpPoolInfoSections = (
     <>
       {rewardsDistribution}
       <PdpPoolStats poolData={poolData} loading={loading} rewards={poolRewards} />
       <PdpPoolTokens tokens={[baseToken, quoteToken]} chainId={chainInfo.id} loading={loading} />
+      {relatedPools}
+      {poolTransactions}
     </>
+  )
+
+  const poolStatsButtons = (
+    <PoolDetailsStatsButtons
+      chainId={chainInfo.id}
+      poolIdOrAddress={poolAddress}
+      baseToken={baseToken}
+      quoteToken={quoteToken}
+      feeTier={feeTier?.feeAmount}
+      tickSpacing={feeTier?.tickSpacing}
+      hookAddress={poolData?.hookAddress}
+      isDynamic={feeTier?.isDynamic}
+      protocolVersion={poolData?.protocolVersion}
+      loading={loading}
+    />
+  )
+
+  const orderBook = showOrderBook && poolData && (
+    <PoolOrderBook poolData={poolData} isReversed={isReversed} chainId={chainInfo.id} />
   )
 
   return (
@@ -324,6 +395,7 @@ export function PoolDetailsPage() {
           baseToken={baseToken}
           quoteToken={quoteToken}
           loading={loading}
+          poolBrowserHref={poolBrowserHref}
         />
         <StickyCollapsibleHeader isCompact={isCompact}>
           <PoolDetailsHeader
@@ -339,80 +411,61 @@ export function PoolDetailsPage() {
             currentLpFeePips={poolData?.currentLpFeePips}
             hookAddress={poolData?.hookAddress}
             protocolVersion={poolData?.protocolVersion}
-            categoryIds={poolData?.categoryIds}
+            categories={poolCategories}
+            isCategoriesLoading={isPoolCategoriesLoading}
             toggleReversed={toggleReversed}
             loading={loading}
             isCompact={isCompact}
           />
         </StickyCollapsibleHeader>
-        <PageWrapper>
-          <LeftColumn>
-            <Flex gap="$spacing20">
-              <ChartSection
-                poolData={poolData}
-                loading={loading}
-                isReversed={isReversed}
-                chainId={chainInfo.id}
-                tokenAColor={color0}
-                tokenBColor={color1}
-              />
+        <MaybePdpLiquidityProvider
+          enabled={isPdpRevampEnabled}
+          poolData={poolData}
+          chainId={chainInfo.id}
+          priceInverted={isReversed}
+        >
+          {/* Side by side only: the stacked ($xl) layout keeps its own gap. */}
+          <PageWrapper {...(isPdpRevampEnabled && { gap: '$spacing48' })}>
+            <LeftColumn>
+              <Flex gap="$spacing20">
+                <ChartSection
+                  poolData={poolData}
+                  loading={loading}
+                  isReversed={isReversed}
+                  chainId={chainInfo.id}
+                  tokenAColor={color0}
+                  tokenBColor={color1}
+                />
+              </Flex>
+              {isPdpRevampEnabled ? (
+                <Flex gap={40}>{pdpPoolInfoSections}</Flex>
+              ) : (
+                <>
+                  <Separator />
+                  {relatedPools}
+                  {poolTransactions}
+                </>
+              )}
+            </LeftColumn>
+            <Flex
+              gap="$spacing24"
+              width={isPdpRevampEnabled ? PDP_REVAMP_PANEL_WIDTH : 360}
+              flexShrink={0}
+              $lg={{ width: '100%', mt: 44, minWidth: 'unset' }}
+              $xl={{ width: '100%', mt: 44, minWidth: 'unset' }}
+            >
+              <Flex gap="$spacing24" min-height="fit-content">
+                {isPdpRevampEnabled ? <PdpDepositPanel fallback={poolStatsButtons} /> : poolStatsButtons}
+                {orderBook}
+              </Flex>
+              {isPdpRevampEnabled ? (
+                <PdpWalletPositions poolAddress={poolAddress} chainId={chainInfo.id} />
+              ) : (
+                legacyPoolInfoSections
+              )}
             </Flex>
-            {isPdpRevampEnabled ? pdpPoolInfoSections : <Separator />}
-            <PoolDetailsTableTab
-              poolAddress={poolAddress}
-              chainId={chainInfo.id}
-              baseToken={baseToken}
-              quoteToken={quoteToken}
-              isPoolDataLoading={poolLoading}
-              showWalletPositions={!isPdpRevampEnabled}
-            />
-          </LeftColumn>
-          <Flex
-            gap="$spacing24"
-            width={360}
-            flexShrink={0}
-            $lg={{ width: '100%', mt: 44, minWidth: 'unset' }}
-            $xl={{ width: '100%', mt: 44, minWidth: 'unset' }}
-          >
-            <Flex gap="$spacing24" min-height="fit-content">
-              <PoolDetailsStatsButtons
-                chainId={chainInfo.id}
-                poolIdOrAddress={poolAddress}
-                baseToken={baseToken}
-                quoteToken={quoteToken}
-                feeTier={feeTier?.feeAmount}
-                tickSpacing={feeTier?.tickSpacing}
-                hookAddress={poolData?.hookAddress}
-                isDynamic={feeTier?.isDynamic}
-                protocolVersion={poolData?.protocolVersion}
-                loading={loading}
-              />
-              {showOrderBook &&
-                poolData &&
-                poolData.protocolVersion !== RestProtocolVersion.V2 &&
-                feeTier &&
-                orderBookCurrencyA &&
-                orderBookCurrencyB && (
-                  <OrderBook
-                    tokenA={orderBookCurrencyA}
-                    tokenB={orderBookCurrencyB}
-                    feeTier={Number(feeTier.feeAmount)}
-                    isReversed={isReversed}
-                    chainId={chainInfo.id}
-                    version={poolData.protocolVersion ?? RestProtocolVersion.V3}
-                    hooks={poolData.hookAddress}
-                    poolId={poolData.idOrAddress}
-                    height={356}
-                  />
-                )}
-            </Flex>
-            {isPdpRevampEnabled ? (
-              <PdpWalletPositions poolAddress={poolAddress} chainId={chainInfo.id} />
-            ) : (
-              legacyPoolInfoSections
-            )}
-          </Flex>
-        </PageWrapper>
+          </PageWrapper>
+        </MaybePdpLiquidityProvider>
       </Trace>
     </>
   )

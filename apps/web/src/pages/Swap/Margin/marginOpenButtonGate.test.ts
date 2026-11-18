@@ -13,27 +13,19 @@ function fetchErrorWith(data: unknown): FetchError {
 
 describe('isMarginOpenLoading', () => {
   it('is not loading when every flag is clear', () => {
-    expect(
-      isMarginOpenLoading({ isQuoteLoading: false, isDebouncing: false, isFetching: false, isPlaceholderData: false }),
-    ).toBe(false)
+    expect(isMarginOpenLoading({ isQuoteLoading: false, isDebouncing: false, isPlaceholderData: false })).toBe(false)
   })
 
   // NEW-FE-2: RQ-v5's isLoading (isQuoteLoading here) is false during a placeholder-bridged refetch —
-  // isFetching/isPlaceholderData must independently gate the CTA, or a slider-then-click races a
+  // isPlaceholderData must independently gate the CTA, or a slider-then-click races a
   // guaranteed MARGIN_BOUNDS_ECHO_MISMATCH 400 against the stale echo.
   it('is loading during a placeholder-bridged refetch even though isQuoteLoading is false', () => {
-    expect(
-      isMarginOpenLoading({ isQuoteLoading: false, isDebouncing: false, isFetching: true, isPlaceholderData: true }),
-    ).toBe(true)
+    expect(isMarginOpenLoading({ isQuoteLoading: false, isDebouncing: false, isPlaceholderData: true })).toBe(true)
   })
 
   it('is loading on isQuoteLoading or isDebouncing alone', () => {
-    expect(
-      isMarginOpenLoading({ isQuoteLoading: true, isDebouncing: false, isFetching: false, isPlaceholderData: false }),
-    ).toBe(true)
-    expect(
-      isMarginOpenLoading({ isQuoteLoading: false, isDebouncing: true, isFetching: false, isPlaceholderData: false }),
-    ).toBe(true)
+    expect(isMarginOpenLoading({ isQuoteLoading: true, isDebouncing: false, isPlaceholderData: false })).toBe(true)
+    expect(isMarginOpenLoading({ isQuoteLoading: false, isDebouncing: true, isPlaceholderData: false })).toBe(true)
   })
 })
 

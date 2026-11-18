@@ -304,9 +304,15 @@ vi.mock('react-native-reanimated', () => {
   // host components need testID translated to data-testid (React drops unknown testID attrs)
   const makeAnimatedHost = (tag: string, displayName: string): any => {
     const Host = React.forwardRef((props: any, ref: any) => {
-      const { testID, 'data-testid': dataTestId, ...rest } = props
+      const { testID, 'data-testid': dataTestId, style, ...rest } = props
       const id = testID ?? dataTestId
-      return React.createElement(tag, { ...rest, ...(id === undefined ? {} : { 'data-testid': id }), ref })
+      // jsdom rejects React DOM's indexed writes for an RN-style array `style`, so flatten it first.
+      return React.createElement(tag, {
+        ...rest,
+        style: flattenStyle(style),
+        ...(id === undefined ? {} : { 'data-testid': id }),
+        ref,
+      })
     })
     Host.displayName = displayName
     return Host
@@ -552,3 +558,13 @@ vi.mock('react-native-device-info', () => ({
     isTablet: vi.fn(() => false),
   },
 }))
+
+function flattenStyle(style: unknown): Record<string, unknown> | undefined {
+  if (!Array.isArray(style)) {
+    return typeof style === 'object' && style !== null ? (style as Record<string, unknown>) : undefined
+  }
+  return style.reduce<Record<string, unknown> | undefined>((merged, entry) => {
+    const flat = flattenStyle(entry)
+    return flat ? { ...merged, ...flat } : merged
+  }, undefined)
+}

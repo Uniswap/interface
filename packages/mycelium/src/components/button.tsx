@@ -88,17 +88,18 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         <span className="button-loading-text inline-flex items-center gap-2" data-loading={showIndicator || undefined}>
           {children}
         </span>
-        {/* TODO(INFRA-4589): the spinner stays in the accessibility tree while hidden, so every idle button is
-            named "<label> Loading" and carries a status live region. Render it only while loading. */}
+        {/* The indicators stay mounted for the crossfade; hidden ones would otherwise add "Loading" to the name. */}
         <span
           className="button-state-spinner absolute inset-0 flex items-center justify-center"
           data-visible={isLoading || undefined}
+          aria-hidden={!isLoading || undefined}
         >
           <Spinner className="size-4" />
         </span>
         <span
           className="button-state-success absolute inset-0 flex items-center justify-center"
           data-visible={isSuccess || undefined}
+          aria-hidden={!isSuccess || undefined}
         >
           <Check className="size-4" />
         </span>

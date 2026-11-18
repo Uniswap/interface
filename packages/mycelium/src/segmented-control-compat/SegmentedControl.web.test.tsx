@@ -84,7 +84,7 @@ describe('SegmentedControl (web)', () => {
     vi.restoreAllMocks()
   })
 
-  it('renders each option as a <button type="button" role="button"> inside the tablist', () => {
+  it('renders each option as a <button type="button" role="tab"> inside the tablist', () => {
     renderControl()
     const tablist = screen.getByRole('tablist')
     expect(tablist.getAttribute('aria-orientation')).toBe('horizontal')
@@ -92,17 +92,40 @@ describe('SegmentedControl (web)', () => {
       const option = getOption(value)
       expect(option.tagName).toBe('BUTTON')
       expect(option.getAttribute('type')).toBe('button')
-      expect(option.getAttribute('role')).toBe('button')
-      expect(option.tabIndex).toBe(0)
+      expect(option.getAttribute('role')).toBe('tab')
     }
     expect(getOption('one').getAttribute('aria-selected')).toBe('true')
     expect(getOption('two').getAttribute('aria-selected')).toBe('false')
+  })
+
+  it('makes only the selected option a tab stop, falling back to the first enabled one', () => {
+    const { rerender } = renderControl({ selectedOption: 'two' })
+    expect(getOption('one').tabIndex).toBe(-1)
+    expect(getOption('two').tabIndex).toBe(0)
+
+    rerender(
+      <SegmentedControl
+        options={[{ value: 'one', disabled: true }, { value: 'two' }, { value: 'three' }]}
+        selectedOption="one"
+        onSelectOption={() => undefined}
+      />,
+    )
+    expect(getOption('one').tabIndex).toBe(-1)
+    expect(getOption('two').tabIndex).toBe(0)
+    expect(getOption('three').tabIndex).toBe(-1)
   })
 
   it('resets the UA border on every option', () => {
     renderControl()
     for (const { value } of OPTIONS) {
       expect(getOption(value).className).toContain('border-0')
+    }
+  })
+
+  it('shows a focus ring on keyboard focus only', () => {
+    renderControl()
+    for (const { value } of OPTIONS) {
+      expect(getOption(value).className).toContain('focus-visible:outline-neutral1')
     }
   })
 
@@ -144,7 +167,7 @@ describe('SegmentedControl (web)', () => {
     expect(onSelectOption).not.toHaveBeenCalled()
   })
 
-  it('renders href options as anchors with link semantics and select-not-navigate clicks', () => {
+  it('renders href options as anchor tabs with select-not-navigate clicks', () => {
     const onSelectOption = vi.fn()
     renderControl({
       onSelectOption,
@@ -153,13 +176,12 @@ describe('SegmentedControl (web)', () => {
     const anchor = getOption('two')
     expect(anchor.tagName).toBe('A')
     expect(anchor.getAttribute('href')).toBe('/two')
-    expect(anchor.getAttribute('role')).toBe('link')
+    expect(anchor.getAttribute('role')).toBe('tab')
     expect(anchor.className).toContain('no-underline')
 
-    // Disabled anchor: href dropped, role falls back to button (legacy).
     const disabledAnchor = getOption('three')
     expect(disabledAnchor.getAttribute('href')).toBeNull()
-    expect(disabledAnchor.getAttribute('role')).toBe('button')
+    expect(disabledAnchor.getAttribute('aria-disabled')).toBe('true')
 
     const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true })
     anchor.dispatchEvent(clickEvent)
@@ -280,6 +302,13 @@ describe('SegmentedControl (web)', () => {
     expect(getIndicator().className).toContain('bg-surface3-hovered')
     fireEvent.mouseLeave(getIndicator())
     expect(getIndicator().className).not.toContain('bg-surface3-hovered')
+  })
+
+  it('fills the indicator with indicatorColor in place of the neutral fill and its hover', () => {
+    renderControl({ indicatorColor: '$statusSuccess2' })
+    fireEvent.mouseEnter(getIndicator())
+    expect(getIndicator().className).toContain('bg-success-secondary')
+    expect(getIndicator().className).not.toMatch(/bg-surface3/)
   })
 
   it('drops the hover fill when the pill leaves under the pointer, so a remount paints unhovered (native parity)', () => {

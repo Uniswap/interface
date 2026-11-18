@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query'
-import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { useListCategoriesQuery } from 'uniswap/src/data/apiClients/dataApiService/categories/useListCategoriesQuery'
 import { getCategoryCardTokensQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/tokens/categoryCardTokens'
 import type { RankedTokenCardItem } from 'uniswap/src/data/apiClients/dataApiService/utils/rankedTokenCardItem'
@@ -18,14 +17,10 @@ export function useExploreTokensModule(selectedCategoryId: string): {
   tokens: RankedTokenCardItem[]
   isLoading: boolean
 } {
-  const tokenCategoriesEnabled = useIsTokenCategoriesEnabled()
   const { data: allCategories } = useListCategoriesQuery()
   const { chains: chainIds } = useEnabledChains()
 
-  // With categories off there are no chips, and Trending is fetched by its known id.
-  const categories = tokenCategoriesEnabled
-    ? MODULE_CATEGORY_IDS.flatMap((id) => allCategories?.find((category) => category.id === id) ?? [])
-    : []
+  const categories = MODULE_CATEGORY_IDS.flatMap((id) => allCategories?.find((category) => category.id === id) ?? [])
 
   const activeCategory = categories.find((category) => category.id === selectedCategoryId)
   const activeCategoryId = activeCategory?.id ?? EXPLORE_TOKENS_MODULE_DEFAULT_CATEGORY_ID

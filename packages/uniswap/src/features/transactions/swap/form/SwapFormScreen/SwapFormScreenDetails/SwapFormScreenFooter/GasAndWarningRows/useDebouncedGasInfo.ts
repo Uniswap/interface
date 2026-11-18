@@ -7,7 +7,7 @@ import {
 import type { GasInfo } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/types'
 import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { useSwapTxStore } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/useSwapTxStore'
-import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { getDisplayableSponsorshipInfo, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { usePrevious } from 'utilities/src/react/hooks'
 
@@ -57,7 +57,9 @@ export function useDebouncedGasInfo(): GasInfo {
   const isLoading = tradeLoadingOrRefetching || gasLoading || amountChanged || tradeChanged
 
   const tradeQuote = trade.trade?.quote
-  const sponsorshipInfo = tradeQuote && 'sponsorshipInfo' in tradeQuote ? tradeQuote.sponsorshipInfo : undefined
+  const sponsorshipInfo = getDisplayableSponsorshipInfo(
+    tradeQuote && 'sponsorshipInfo' in tradeQuote ? tradeQuote.sponsorshipInfo : undefined,
+  )
 
   return useMemo(
     () => ({

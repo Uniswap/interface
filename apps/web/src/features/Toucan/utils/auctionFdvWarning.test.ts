@@ -1,4 +1,4 @@
-import type { EnrichedAuction } from '~/features/Toucan/hooks/useTopAuctions/useTopAuctions'
+import type { EnrichedAuction } from '~/features/Toucan/hooks/useTopAuctions/useEnrichedAuctions'
 import { getAuctionThresholdMet } from '~/features/Toucan/utils/auctionFdvWarning'
 
 function createAuction(fields: {

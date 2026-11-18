@@ -15,7 +15,7 @@ import { Mocks } from '~/playwright/mocks/mocks'
 
 const test = getTest({ withAnvil: true })
 
-const UNISWAP_X_ORDERS_ENDPOINT = `https://interface.gateway.uniswap.org/v2/orders?swapper=${TEST_WALLET_ADDRESS}&orderHashes=${ZERO_ADDRESS}`
+const UNISWAP_X_ORDERS_ENDPOINT = `https://api.uniswap.org/v2/orders?swapper=${TEST_WALLET_ADDRESS}&orderHashes=${ZERO_ADDRESS}`
 
 test.describe(
   'UniswapX',
@@ -83,7 +83,7 @@ test.describe(
       // GETs the trading API /orders; the mocked 20-byte ZERO_ADDRESS hash draws a live 400
       // (32-byte hashes required), aborting onConfirm before the cancel tx is sent — serve it an
       // open order. (2) After broadcast, the dialog flips to "Cancellation successful" only when
-      // the interface-gateway /v2/orders poller returns a FINAL status for the orderHash
+      // the /v2/orders poller returns a FINAL status for the orderHash
       // (updateOrders never lets a Cancelling order exit on non-final statuses, and the flag-on
       // receipt path only fires after the 120s cancel deadline). The live poller 400s on the same
       // 20-byte hash, so the order stays Cancelling forever. Statefully mock it: open until the

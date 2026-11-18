@@ -1,6 +1,7 @@
 import { Flex, Text } from '@universe/mycelium'
 import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFilled'
-import type { InfoContainer, SlippageDisplay } from '@universe/transactions-ui/src/swap/types'
+import type { SlippageDisplay } from '@universe/transactions-ui/src/common/types'
+import type { InfoContainer } from '@universe/transactions-ui/src/swap/types'
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 

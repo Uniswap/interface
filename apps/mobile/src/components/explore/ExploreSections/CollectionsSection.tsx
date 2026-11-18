@@ -1,4 +1,4 @@
-import { DynamicConfigs, useIsTokenCategoriesEnabled } from '@universe/gating'
+import { DynamicConfigs } from '@universe/gating'
 import { Flex, Loader, spacing, Text } from '@universe/mycelium'
 import { ArrowRight } from '@universe/mycelium/icons/ArrowRight'
 import { memo, useCallback } from 'react'
@@ -42,7 +42,6 @@ function ViewAllPill({ onPress }: { onPress: () => void }): JSX.Element {
 export const CollectionsSection = memo(function CollectionsSection(): JSX.Element | null {
   const { t } = useTranslation()
   const navigation = useExploreStackNavigation()
-  const tokenCategoriesEnabled = useIsTokenCategoriesEnabled()
   const { data: categories, isLoading } = useListCategoriesQuery()
   const orderedCategories = useCategoryOrder({
     categories: categories ?? EMPTY_CATEGORIES,
@@ -68,10 +67,6 @@ export const CollectionsSection = memo(function CollectionsSection(): JSX.Elemen
     ),
     [navigation],
   )
-
-  if (!tokenCategoriesEnabled) {
-    return null
-  }
 
   // Reserve the section's space during the initial fetch so it doesn't push content down post-paint.
   if (isLoading && orderedCategories.length === 0) {

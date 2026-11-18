@@ -12,7 +12,6 @@ interface UsePoolsOutageBannerParams {
   evmAddress?: string
   svmAddress?: string
   chainId?: UniverseChainId
-  enabled: boolean
 }
 
 interface PoolsOutageBanner {
@@ -26,7 +25,6 @@ export function usePoolsOutageBanner({
   evmAddress,
   svmAddress,
   chainId,
-  enabled,
 }: UsePoolsOutageBannerParams): PoolsOutageBanner {
   const { t } = useTranslation()
   const dispatch = useDispatch()
@@ -35,7 +33,6 @@ export function usePoolsOutageBanner({
     evmAddress,
     svmAddress,
     chainId,
-    enabled,
   })
   const hasFailedChains = failedChainIds.length > 0
 

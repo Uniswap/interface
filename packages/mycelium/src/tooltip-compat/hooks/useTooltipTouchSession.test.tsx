@@ -132,14 +132,8 @@ function Harness({
   )
 }
 
-/**
- * jsdom 20 has no PointerEvent, so fireEvent's bare-Event fallback DROPS
- * `pointerType` — attach it explicitly so the hook's mouse guard sees it.
- */
 function firePointerDown(target: Element, pointerType: 'mouse' | 'touch' = 'touch'): void {
-  const event = new Event('pointerdown', { bubbles: true, cancelable: true })
-  Object.defineProperty(event, 'pointerType', { value: pointerType })
-  fireEvent(target, event)
+  fireEvent.pointerDown(target, { pointerType })
 }
 
 function tap(target: Element, pointerType: 'mouse' | 'touch' = 'touch'): void {

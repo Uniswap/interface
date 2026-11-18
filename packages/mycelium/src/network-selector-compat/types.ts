@@ -42,6 +42,8 @@ export interface NetworkSelectorChainDisplayCompat {
 
 /** Host-injected i18n strings with English defaults (ledgered). */
 export interface NetworkSelectorLabelsCompat {
+  /** Names the network list popup; defaults to a translated "Network". */
+  title?: string
   searchPlaceholder?: string
   allNetworks?: string
   withBalances?: string

@@ -14,7 +14,7 @@
  * INFRA-3285 rebuild lane retires the Tamagui baseline.
  */
 import * as DialogPrimitive from '@radix-ui/react-dialog'
-import { act, cleanup, fireEvent, render, type RenderResult, screen } from '@testing-library/react'
+import { act, cleanup, fireEvent, render, type RenderResult, screen, waitFor } from '@testing-library/react'
 import { OVERLAY_PORTAL_CONTAINER_ATTRIBUTE } from '@universe/mycelium/popover-compat'
 import { type ReactNode, useContext } from 'react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
@@ -173,13 +173,6 @@ function renderPopover({
   )
 }
 
-/**
- * jsdom 20 has no PointerEvent, so testing-library's fireEvent falls back to the bare
- * Event constructor, which silently DROPS `pointerType` — a plain
- * `fireEvent.pointerDown(el, { pointerType })` reaches every handler as `undefined`.
- * Attach the field explicitly so Base UI's pointerType bookkeeping sees the real
- * device kind.
- */
 function firePointerEvent({
   target,
   type,
@@ -189,9 +182,7 @@ function firePointerEvent({
   type: 'pointerdown' | 'pointerup'
   pointerType: 'mouse' | 'touch'
 }): void {
-  const event = new Event(type, { bubbles: true, cancelable: true })
-  Object.defineProperty(event, 'pointerType', { value: pointerType })
-  fireEvent(target, event)
+  fireEvent(target, new PointerEvent(type, { bubbles: true, cancelable: true, pointerType }))
 }
 
 function popupStyle(): CSSStyleDeclaration {
@@ -298,8 +289,8 @@ describe('Popover.Content — legacy PopperContentFrame styled defaults', () => 
       expect(style.paddingBottom).toBe('8px')
       expect(style.paddingLeft).toBe('8px')
       expect(style.paddingRight).toBe('8px')
-      // radius.true = borderRadii.none = 0 (jsdom keeps the unitless zero).
-      expect(style['borderRadius']).toBe('0')
+      // radius.true = borderRadii.none = 0.
+      expect(style['borderRadius']).toBe('0px')
       expect(style['alignItems']).toBe('center')
       expect(style.flexDirection).toBe('column')
       expect(style.display).toBe('flex')
@@ -698,14 +689,15 @@ describe('Popover.Content — portal containment inside a focus-trapping host (S
     expect(positioner.style.position).toBe('fixed')
   })
 
-  it('keeps the document.body portal and the default position method for an unmarked host', () => {
+  it('keeps the document.body portal and the default position method for an unmarked host', async () => {
     renderInDialog({ markContainer: false })
 
     const positioner = document.querySelector(POSITIONER_SELECTOR) as HTMLElement
     expect(markedHostOf(positioner)).toBeNull()
     expect(document.body.contains(positioner)).toBe(true)
     expect(screen.getByTestId('dialog-content').contains(positioner)).toBe(false)
-    expect(positioner.style.position).toBe('absolute')
+    // Base UI parks an unpositioned popup at `fixed` until Floating UI reports a position.
+    await waitFor(() => expect(positioner.style.position).toBe('absolute'))
   })
 
   it('keeps the document.body portal with no marked ancestor at all', () => {

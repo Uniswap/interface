@@ -100,7 +100,7 @@ exports[`renders wallet preview card 1`] = `
           stroke="currentColor"
           stroke-linecap="round"
           stroke-width="6"
-          style="width: 20px; height: 20px;"
+          style="color: var(--accent1); width: 20px; height: 20px;"
           viewBox="0 0 48 48"
         >
           <line

@@ -7,11 +7,12 @@
  * inside the web-app import graph — see the filter-select exclusions
  * ledger).
  *
- * Forwards unknown props/ref to the root element so overlay engines
- * (Base UI Menu.Trigger / Popover.Trigger via `render`) can compose it.
+ * Renders a native `<button type="button">` and forwards unknown props/ref to it, so overlay engines
+ * (Base UI Menu.Trigger / Popover.Trigger via `render`, with `nativeButton`) can compose it.
  */
-// oxlint-disable react/forbid-elements -- the compat components ARE the raw DOM boundary (no Tamagui Flex here)
+import { useButton } from '@base-ui/react/internals/use-button'
 import * as React from 'react'
+import { useComposedRefs } from 'utilities/src/react/composeRefs'
 import { cn } from '../cn'
 import {
   TRIGGER_BUTTON_BASE_CLASS_NAME,
@@ -22,7 +23,7 @@ import {
 } from './compile'
 import type { TriggerButtonCompatProps } from './types'
 
-type RootDivProps = Omit<React.HTMLAttributes<HTMLDivElement>, keyof TriggerButtonCompatProps>
+type RootButtonProps = Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, keyof TriggerButtonCompatProps | 'type'>
 
 /** Chevron-down glyph (rotates 180° while expanded), currentColor-driven. */
 function ChevronGlyph({ size, expanded }: { size: number; expanded: boolean }): React.JSX.Element {
@@ -42,7 +43,7 @@ function ChevronGlyph({ size, expanded }: { size: number; expanded: boolean }): 
   )
 }
 
-export const TriggerButtonCompat = React.forwardRef<HTMLDivElement, TriggerButtonCompatProps & RootDivProps>(
+export const TriggerButtonCompat = React.forwardRef<HTMLButtonElement, TriggerButtonCompatProps & RootButtonProps>(
   function TriggerButtonCompat(props, ref) {
     const {
       isExpanded,
@@ -63,25 +64,27 @@ export const TriggerButtonCompat = React.forwardRef<HTMLDivElement, TriggerButto
 
     const isActive = active ?? (isExpanded && outlined)
 
-    const handlePress = (event: React.MouseEvent<HTMLDivElement>): void => {
+    const handlePress = (event: React.MouseEvent<HTMLButtonElement>): void => {
       onPress?.()
       onClick?.(event)
     }
 
+    // Base UI's button hook sets `type` and `disabled` and yields to a Base UI trigger that renders this element.
+    const { getButtonProps, buttonRef } = useButton({ disabled: disabled === true })
+    // Base UI types its ref for any HTMLElement; a callback accepting that also accepts the button.
+    const composedRef = useComposedRefs<HTMLButtonElement>(ref, buttonRef as React.Ref<HTMLButtonElement>)
+    const buttonProps: React.ButtonHTMLAttributes<HTMLButtonElement> = getButtonProps({ ...rest, onClick: handlePress })
+
     return (
-      // oxlint-disable-next-line jsx-a11y/click-events-have-key-events -- TODO: drop once compat buttons get Enter/Space activation
-      <div
-        ref={ref}
-        role="button"
-        tabIndex={disabled === true ? undefined : 0}
-        {...rest}
+      <button
+        ref={composedRef}
+        {...buttonProps}
         data-slot="trigger-button-compat"
         data-testid={testID}
         aria-expanded={isExpanded}
-        aria-disabled={disabled === true ? true : undefined}
-        // GATED tooltip stand-in (ledgered): native browser tooltip until #36951 lands.
+        // GATED tooltip stand-in (ledgered): native browser tooltip until #36951 lands. Only a title, so the
+        // visible text names the button; the title names an icon-only trigger.
         title={tooltipLabel}
-        aria-label={tooltipLabel}
         className={cn(
           TRIGGER_BUTTON_BASE_CLASS_NAME,
           outlined ? TRIGGER_BUTTON_VARIANT_CLASS_NAMES.outlined : TRIGGER_BUTTON_VARIANT_CLASS_NAMES.plain,
@@ -90,11 +93,10 @@ export const TriggerButtonCompat = React.forwardRef<HTMLDivElement, TriggerButto
           disabled === true && TRIGGER_BUTTON_VARIANT_CLASS_NAMES.disabled,
           className,
         )}
-        onClick={disabled === true ? undefined : handlePress}
       >
         {children}
         {hideChevron !== true && <ChevronGlyph size={chevronSize} expanded={isExpanded} />}
-      </div>
+      </button>
     )
   },
 )

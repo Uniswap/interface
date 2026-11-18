@@ -9,13 +9,13 @@ import {
 import { RWA_CATEGORY_IDS } from 'uniswap/src/features/tokenCategories/rwaCategoryBridge'
 import { useSelectedVolumeOrderBy } from '~/features/Explore/hooks/useSelectedVolumeOrderBy'
 import { useExploreTablesFilterStore } from '~/features/Explore/state/exploreTablesFilterStore'
-import { toSearchQueryParam } from '~/features/Explore/utils/toSearchQueryParam'
 import { RwaExploreTableShell } from '~/pages/Explore/rwa/table/RwaExploreTableShell'
 import { stocksSortMethodToOrderBy } from '~/pages/Explore/rwa/table/stocksSortMethodToOrderBy'
 import {
   StocksTableSortStoreContextProvider,
   useStocksTableSortSelection,
 } from '~/pages/Explore/rwa/table/stocksTableSortStore'
+import { toSearchQueryParam } from '~/utils/listRequestParams'
 import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
 
 /**
@@ -68,17 +68,8 @@ function SortableRwaCategoryTable(props: Omit<RwaCategoryTableProps, 'enableSort
     () => ({ orderBy: stocksSortMethodToOrderBy({ sortMethod, volumeOrderBy }), ascending: sortAscending }),
     [sortMethod, sortAscending, volumeOrderBy],
   )
-  const {
-    rows,
-    rowsKey,
-    isLoading,
-    isError,
-    hasNextPage,
-    isFetchingNextPage,
-    fetchNextPage,
-    isSortedByServer,
-    isSearchedByServer,
-  } = useRwaCategoryTableRows({ ...props, sort })
+  const { rows, rowsKey, isLoading, isError, hasNextPage, isFetchingNextPage, fetchNextPage, isSortedByServer } =
+    useRwaCategoryTableRows({ ...props, sort })
 
   return (
     <RwaExploreTableShell
@@ -91,7 +82,7 @@ function SortableRwaCategoryTable(props: Omit<RwaCategoryTableProps, 'enableSort
       fetchNextPage={fetchNextPage}
       categoryId={RWA_CATEGORY_IDS[props.category]}
       isSortedByServer={isSortedByServer}
-      isSearchedByServer={isSearchedByServer}
+      isSearchedByServer
       enableSorting
       sortMethod={sortMethod}
       sortAscending={sortAscending}
@@ -101,7 +92,7 @@ function SortableRwaCategoryTable(props: Omit<RwaCategoryTableProps, 'enableSort
 }
 
 function NonSortableRwaCategoryTable(props: Omit<RwaCategoryTableProps, 'enableSorting'>): JSX.Element {
-  const { rows, rowsKey, isLoading, isError, hasNextPage, isFetchingNextPage, fetchNextPage, isSearchedByServer } =
+  const { rows, rowsKey, isLoading, isError, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useRwaCategoryTableRows(props)
 
   return (
@@ -114,7 +105,7 @@ function NonSortableRwaCategoryTable(props: Omit<RwaCategoryTableProps, 'enableS
       isFetchingNextPage={isFetchingNextPage}
       fetchNextPage={fetchNextPage}
       categoryId={RWA_CATEGORY_IDS[props.category]}
-      isSearchedByServer={isSearchedByServer}
+      isSearchedByServer
     />
   )
 }

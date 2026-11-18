@@ -1,8 +1,5 @@
 import { useFeatureFlag } from '@universe/gating'
-import {
-  type NewUserOnboardingState,
-  useNewUserOnboardingState,
-} from 'uniswap/src/features/onboarding/useNewUserOnboardingState'
+import { useNewUserOnboardingState } from 'uniswap/src/features/onboarding/useNewUserOnboardingState'
 import { useWebNewUserOnboardingState } from '~/features/newUserOnboarding/useWebNewUserOnboardingState'
 import { useEmbeddedWalletBackupStatus } from '~/features/wallet/components/AccountDrawer/PasskeyMenu/hooks/useEmbeddedWalletBackupStatus'
 import { mocked } from '~/test-utils/mocked'
@@ -15,7 +12,7 @@ vi.mock('@universe/gating', async (importOriginal) => ({
 vi.mock('uniswap/src/features/onboarding/useNewUserOnboardingState')
 vi.mock('~/features/wallet/components/AccountDrawer/PasskeyMenu/hooks/useEmbeddedWalletBackupStatus')
 
-const FUNDED_AND_SWAPPED: NewUserOnboardingState = {
+const FUNDED_AND_SWAPPED: ReturnType<typeof useNewUserOnboardingState> = {
   isActive: true,
   isReturningUser: true,
   showOnboardingNudges: false,
@@ -23,6 +20,8 @@ const FUNDED_AND_SWAPPED: NewUserOnboardingState = {
   isFunded: true,
   hasSwapped: true,
   hasDismissedGuidedSwap: false,
+  address: '0xabc',
+  walletHistory: undefined,
 }
 
 function renderState({

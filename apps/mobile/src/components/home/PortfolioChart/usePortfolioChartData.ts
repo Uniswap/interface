@@ -1,10 +1,10 @@
 import { type PlainMessage } from '@bufbuild/protobuf'
-import { ChartPeriod, type ChartPoint, WalletBalanceCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
+import { ChartPeriod, type ChartPoint } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import { useEffect, useMemo } from 'react'
 import { type ChartData } from 'src/components/charts/SparklineChart'
 import { useGetPortfolioHistoricalValueChartQuery } from 'uniswap/src/data/apiClients/dataApiService/balances/getPortfolioChart'
-import { useWalletBalancesIncludeCategories } from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances'
+import { WALLET_BALANCES_INCLUDE_CATEGORIES } from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances'
 import { useRestPortfolioValueModifier } from 'uniswap/src/features/dataApi/balances/useRestPortfolioValueModifier'
 import { getUnavailableChartCategories } from 'uniswap/src/features/portfolio/getUnavailableChartCategories'
 import { logger } from 'utilities/src/logger/logger'
@@ -41,7 +41,6 @@ export function usePortfolioChartData({
   chartColor: string
 } {
   const colors = useSporeColors()
-  const includeCategories = useWalletBalancesIncludeCategories()
   const portfolioValueModifier = useRestPortfolioValueModifier(evmAddress)
 
   const {
@@ -54,14 +53,12 @@ export function usePortfolioChartData({
       evmAddress,
       chartPeriod,
       chainIds,
-      includeCategories,
+      includeCategories: WALLET_BALANCES_INCLUDE_CATEGORIES,
       includeOverrides: portfolioValueModifier?.includeOverrides,
       excludeOverrides: portfolioValueModifier?.excludeOverrides,
       includeSpamTokens: portfolioValueModifier?.includeSpamTokens,
-      ...(includeCategories.includes(WalletBalanceCategory.POOLS) && {
-        poolIncludeOverrides: portfolioValueModifier?.poolIncludeOverrides,
-        poolExcludeOverrides: portfolioValueModifier?.poolExcludeOverrides,
-      }),
+      poolIncludeOverrides: portfolioValueModifier?.poolIncludeOverrides,
+      poolExcludeOverrides: portfolioValueModifier?.poolExcludeOverrides,
     },
     enabled: enabled && !!evmAddress,
   })
@@ -83,8 +80,11 @@ export function usePortfolioChartData({
   const isUnavailable = useMemo(
     () =>
       (!!error && !chartResponse) ||
-      getUnavailableChartCategories({ chartData: chartResponse, requestedCategories: includeCategories }).length > 0,
-    [error, chartResponse, includeCategories],
+      getUnavailableChartCategories({
+        chartData: chartResponse,
+        requestedCategories: WALLET_BALANCES_INCLUDE_CATEGORIES,
+      }).length > 0,
+    [error, chartResponse],
   )
 
   const first = data[0]

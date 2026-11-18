@@ -2,9 +2,9 @@ import userEvent from '@testing-library/user-event'
 import { UniverseChainId } from '@universe/chains'
 import { useIsPoolCategoriesEnabled } from '@universe/gating'
 import { TestID } from '@universe/test'
-import { useResolvePoolCategories } from 'uniswap/src/data/apiClients/dataApiService/categories/useResolvePoolCategories'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import type { PoolCategory } from 'uniswap/src/features/tokenCategories/types'
 import { poolCategory } from 'uniswap/src/test/fixtures/poolCategory'
 import { PoolDetailsHeaderCategoryChips } from '~/pages/PoolDetails/components/PoolDetailsHeader/PoolDetailsHeaderCategoryChips'
 import { mocked } from '~/test-utils/mocked'
@@ -13,9 +13,6 @@ import { render, screen } from '~/test-utils/render'
 vi.mock('@universe/gating', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@universe/gating')>()),
   useIsPoolCategoriesEnabled: vi.fn(),
-}))
-vi.mock('uniswap/src/data/apiClients/dataApiService/categories/useResolvePoolCategories', () => ({
-  useResolvePoolCategories: vi.fn(),
 }))
 vi.mock('uniswap/src/features/telemetry/send', () => ({ sendAnalyticsEvent: vi.fn() }))
 
@@ -30,11 +27,14 @@ const POOL_ADDRESS = '0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640'
 const STABLES = poolCategory({ id: 'stable-pools', name: 'Stables' })
 const CORRELATED = poolCategory({ id: 'correlated', name: 'Correlated' })
 
-function renderChips(categoryIds: string[] | undefined = ['stable-pools', 'correlated']): void {
+function renderChips({
+  categories = [STABLES, CORRELATED],
+  isLoading = false,
+}: { categories?: PoolCategory[]; isLoading?: boolean } = {}): void {
   render(
     <PoolDetailsHeaderCategoryChips
-      categoryIds={categoryIds}
-      poolLoading={false}
+      categories={categories}
+      isLoading={isLoading}
       chainId={UniverseChainId.Mainnet}
       poolAddress={POOL_ADDRESS}
       poolName="USDC / ETH"
@@ -46,7 +46,6 @@ describe('PoolDetailsHeaderCategoryChips', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     mocked(useIsPoolCategoriesEnabled).mockReturnValue(true)
-    mocked(useResolvePoolCategories).mockReturnValue({ categories: [STABLES, CORRELATED], isLoading: false })
     window.history.pushState({}, '', PDP_PATHNAME)
   })
 
@@ -81,14 +80,12 @@ describe('PoolDetailsHeaderCategoryChips', () => {
   })
 
   it('reserves the row with a skeleton only while a tagged pool is still resolving', () => {
-    mocked(useResolvePoolCategories).mockReturnValue({ categories: [], isLoading: true })
-    renderChips()
+    renderChips({ categories: [], isLoading: true })
     expect(screen.getByTestId(TestID.PoolDetailsCollections)).toBeInTheDocument()
   })
 
   it('renders nothing for a pool with no categories', () => {
-    mocked(useResolvePoolCategories).mockReturnValue({ categories: [], isLoading: false })
-    renderChips([])
+    renderChips({ categories: [] })
     expect(screen.queryByTestId(TestID.PoolDetailsCollections)).not.toBeInTheDocument()
   })
 })

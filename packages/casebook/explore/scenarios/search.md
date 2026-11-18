@@ -286,7 +286,7 @@ priority: medium
 severity: medium
 # provenance
 source: uniswap
-sourceNote: "Consumer Engagement search QA plan (Notion, 2026-10-08), verified against packages/uniswap/src/features/search/SearchModal/SearchModalNoQueryList.tsx, SearchModalResultsList.tsx and viewAll/ on disk. Section assembly is unit-covered in hooks/useSectionsForSearchResultsUtils.test.ts; the rendered counts and View all navigation have no e2e. The resting-state View all buttons depend on the token_categories flag."
+sourceNote: "Consumer Engagement search QA plan (Notion, 2026-10-08), verified against packages/uniswap/src/features/search/SearchModal/SearchModalNoQueryList.tsx, SearchModalResultsList.tsx and viewAll/ on disk. Section assembly is unit-covered in hooks/useSectionsForSearchResultsUtils.test.ts; the rendered counts and View all navigation have no e2e."
 # scope
 chains:
   - ethereum
@@ -309,7 +309,7 @@ automationRefs: []
 
 **Given** the web search modal on the All tab
 **When** no query is entered
-**Then** each section (excluding recent searches) shows 3 results with a "View all" button under it when the `token_categories` flag is on
+**Then** each section (excluding recent searches) shows 3 results with a "View all" button under it
 **And** when a query is typed, each section shows 6 results followed by a "View all" button that opens the matching tab of search
 
 ---

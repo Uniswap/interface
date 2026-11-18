@@ -1,6 +1,7 @@
 import { createColumnHelper, type Row } from '@tanstack/react-table'
 import { Button, Flex as MyceliumFlex, SpinningLoader, iconSizes } from '@universe/mycelium'
 import { Flex, Text, TouchableArea } from '@universe/mycelium'
+import { Switch } from '@universe/mycelium/components'
 import { HeightAnimator } from '@universe/mycelium/height-animator'
 import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFilled'
 import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
@@ -52,6 +53,7 @@ import {
   marginAmountLabel,
   resolveMarketForPosition,
 } from '~/features/margin/utils/marginPositionDisplay'
+import { marginPositionDisplayIds } from '~/features/margin/utils/marginPositionDisplayIds'
 import {
   hasMarginOpenedAt,
   hasMarginPositionBasis,
@@ -60,8 +62,11 @@ import {
   marginCurrentLeverage,
   marginPositionDebt,
   marginPositionTokens,
+  marginPositionVenue,
 } from '~/features/margin/utils/marginPositionRow'
 import { marginFallbackPairLabel, marginPairLabel, marginPairLegs } from '~/features/margin/utils/marginTokenDisplay'
+import { useMarginChartPrefs } from '~/pages/Swap/Margin/chart/marginChartPrefsStore'
+import { positionsForMarket } from '~/pages/Swap/Margin/chart/useMarginChartOverlays'
 import { MarginActionModals } from '~/pages/Swap/Margin/components/MarginActionModals'
 import { MarginPositionActionsMenu } from '~/pages/Swap/Margin/components/MarginPositionActionsMenu'
 import {
@@ -77,24 +82,26 @@ import {
   useMarginPnlCopy,
 } from '~/pages/Swap/Margin/components/shared/MarginExplainer'
 import { MarginLiquidationPill } from '~/pages/Swap/Margin/components/shared/MarginLiquidationPill'
+import { heldPlan } from '~/pages/Swap/Margin/hooks/marginExecutionGuards'
 import { useMarginPlanExecution } from '~/pages/Swap/Margin/hooks/marginPlanExecutionStore'
 import { useExecuteMarginPlan } from '~/pages/Swap/Margin/hooks/useExecuteMarginPlan'
 import { buildMarginActiveRows, type MarginTableRow } from '~/pages/Swap/Margin/marginActiveRows'
-import { useMarginMorph } from '~/pages/Swap/Margin/MarginMorphContext'
 import { buildMarginRealizedLines } from '~/pages/Swap/Margin/marginPnlExplainer'
 import { formatAge } from '~/pages/Swap/Margin/marginPositionsMath'
 import { MARGIN_ACTIVE_COLUMN, MARGIN_TABLE_ROW_HEIGHT } from '~/pages/Swap/Margin/marginTableConstants'
 import { marginPositionMark, marginRawUsdToNumber } from '~/pages/Swap/Margin/marginUsdPnl'
 
 const LOADING_ROWS = 3
+const PINNED_COLUMNS = [MARGIN_ACTIVE_COLUMN.displayId, MARGIN_ACTIVE_COLUMN.pair]
 
 type MarginTableTab = 'active' | 'completed'
 // `cards` re-flows each row into a card for phone widths, where the table's columns cannot fit; a tapped
 // card opens `renderPositionSheet` rather than an inline drawer. The sheet is a render prop because it
 // carries the chart, which this module (also in desktop's bundle) must not import.
-type MarginPositionsTableProps =
+type MarginPositionsTableProps = (
   | { layout?: 'table' }
   | { layout: 'cards'; renderPositionSheet: (args: MarginPositionSheetArgs) => JSX.Element }
+) & { stickyToScrollContainer?: boolean }
 type CellAlign = 'flex-start' | 'flex-end'
 // Which management modal a row's menu requests; positionId keys the (freshest) position object.
 type MarginModalRequest = { action: MarginManageAction; positionId: string }
@@ -123,18 +130,15 @@ function PairIdentity({
   fallbackTokens,
   currencyInfos,
   subtitle,
-  trailing,
 }: {
   market: MarginMarket | undefined
   fallbackTokens: { collateralToken: string; debtToken: string }
   currencyInfos: Map<string, CurrencyInfo>
   subtitle?: ReactNode
-  trailing?: JSX.Element
 }): JSX.Element {
   // An unresolvable market costs the LOGO and the resolved pair label, and nothing else: `subtitle`
-  // (direction + leverage) and `trailing` (the liquidation pill) are composed by the caller from the
-  // ROW, so dropping them here would silently discard data the row still has — on the Closed tab,
-  // which carries no status column, that turns a liquidation into an ordinary close.
+  // (direction + leverage) is composed by the caller from the ROW, so dropping it here would silently
+  // discard data the row still has.
   return (
     <Flex row alignItems="center" gap="$gap8">
       {market ? (
@@ -148,12 +152,9 @@ function PairIdentity({
         />
       ) : null}
       <Flex>
-        <Flex row alignItems="center" gap="$gap8">
-          <Text variant="body3" color="$neutral1">
-            {market ? marginPairLabel({ market }) : marginFallbackPairLabel({ ...fallbackTokens, currencyInfos })}
-          </Text>
-          {trailing}
-        </Flex>
+        <Text variant="body3" color="$neutral1">
+          {market ? marginPairLabel({ market }) : marginFallbackPairLabel({ ...fallbackTokens, currencyInfos })}
+        </Text>
         {typeof subtitle === 'string' ? (
           <Text variant="body4" color="$neutral2">
             {subtitle}
@@ -165,6 +166,11 @@ function PairIdentity({
     </Flex>
   )
 }
+
+// Token figures compact past these, so the widest full figure still fits its column: Size and Margin keep
+// five figures, the signed PnL four. Dollar figures compact from $1M (FiatTokenPrice's own threshold).
+const COMPACT_AMOUNT_FROM = 1e5
+const COMPACT_PNL_FROM = 1e4
 
 const PairCell = memo(function PairCell({
   row,
@@ -196,20 +202,23 @@ const PairCell = memo(function PairCell({
   // A still-open position that was liquidated is only partially liquidated (collateral remains).
   const liquidationBadge = getMarginLiquidationBadge({ liquidated: position.liquidated, status: 'open' })
   const leverage = marginCurrentLeverage(position)
+  // The pill fits neither beside the pair label nor under it beside the logo, so it takes its own line.
   return (
-    <PairIdentity
-      market={market}
-      fallbackTokens={marginPositionTokens(position)}
-      currencyInfos={currencyInfos}
-      // Direction + CURRENT leverage, so an adjusted position reads what it holds now; leverage at open
-      // lives in the drawer.
-      subtitle={
-        <Text variant="body4" color={directionStyle.color}>
-          {leverage === undefined ? directionLabel : `${directionLabel} ${formatLeverage(leverage)}`}
-        </Text>
-      }
-      trailing={liquidationBadge ? <MarginLiquidationPill badge={liquidationBadge} /> : undefined}
-    />
+    <Flex gap="$gap4" alignItems="flex-start">
+      <PairIdentity
+        market={market}
+        fallbackTokens={marginPositionTokens(position)}
+        currencyInfos={currencyInfos}
+        // Direction + CURRENT leverage, so an adjusted position reads what it holds now; leverage at open
+        // lives in the drawer.
+        subtitle={
+          <Text variant="body4" color={directionStyle.color}>
+            {leverage === undefined ? directionLabel : `${directionLabel} ${formatLeverage(leverage)}`}
+          </Text>
+        }
+      />
+      {liquidationBadge ? <MarginLiquidationPill badge={liquidationBadge} /> : null}
+    </Flex>
   )
 })
 
@@ -260,7 +269,10 @@ function AmountFigure({
       </Text>
       {usd === undefined ? null : (
         <Text variant="body4" color="$neutral2">
-          {formatNumberOrString({ value: usd, type: NumberType.FiatStandard })}
+          {formatNumberOrString({
+            value: usd,
+            type: Math.abs(usd) >= 1e6 ? NumberType.FiatTokenPrice : NumberType.FiatStandard,
+          })}
         </Text>
       )}
     </Flex>
@@ -282,7 +294,14 @@ const SizeCell = memo(function SizeCell({
   const market = resolveMarketForPosition({ position, resolveMarket })
   return (
     <AmountFigure
-      label={marginAmountLabel({ raw: position.size, position, market, currencyInfos, formatNumberOrString })}
+      label={marginAmountLabel({
+        raw: position.size,
+        position,
+        market,
+        currencyInfos,
+        formatNumberOrString,
+        compactFrom: COMPACT_AMOUNT_FROM,
+      })}
       usd={marginAmountUsd({ raw: position.size, position })}
       align={align}
     />
@@ -413,6 +432,7 @@ const PnlCell = memo(function PnlCell({
           currencyInfos,
           formatNumberOrString,
           signed: true,
+          compactFrom: COMPACT_PNL_FROM,
         })}
       </Text>
       {/* The arrow carries the sign, so the percent shows its magnitude. */}
@@ -463,6 +483,7 @@ const MarginEquityCell = memo(function MarginEquityCell({
         market,
         currencyInfos,
         formatNumberOrString,
+        compactFrom: COMPACT_AMOUNT_FROM,
       })}
       usd={marginAmountUsd({ raw: position.equity, leg: 'collateral', position })}
       align={align}
@@ -490,17 +511,19 @@ const HistoryPairCell = memo(function HistoryPairCell({
   const directionStyle = getMarginDirectionStyle(direction)
   const directionLabel = direction === MarginDirection.SHORT ? t('margin.side.short') : t('margin.side.long')
   return (
-    <PairIdentity
-      market={market}
-      fallbackTokens={marginPositionTokens(row)}
-      currencyInfos={currencyInfos}
-      subtitle={
-        <Text variant="body4" color={directionStyle.color}>
-          {directionLabel}
-        </Text>
-      }
-      trailing={liquidationBadge ? <MarginLiquidationPill badge={liquidationBadge} /> : undefined}
-    />
+    <Flex gap="$gap8" alignItems="flex-start">
+      <PairIdentity
+        market={market}
+        fallbackTokens={marginPositionTokens(row)}
+        currencyInfos={currencyInfos}
+        subtitle={
+          <Text variant="body4" color={directionStyle.color}>
+            {directionLabel}
+          </Text>
+        }
+      />
+      {liquidationBadge ? <MarginLiquidationPill badge={liquidationBadge} /> : null}
+    </Flex>
   )
 })
 
@@ -540,7 +563,7 @@ const HistoryPnlCell = memo(function HistoryPnlCell({
 })
 
 function marginClosedDateLabel({ row, locale }: { row: MarginTerminalPosition; locale: string }): string {
-  return new Date(Number(row.closedAt) * 1000).toLocaleDateString(locale)
+  return new Date(Number(row.closedAt) * 1000).toLocaleString(locale, { dateStyle: 'short', timeStyle: 'short' })
 }
 
 // Entry → exit for a closed row. Same gate the realized-PnL and current-price cells use: an untradable
@@ -614,7 +637,6 @@ export function MarginPositionsTable(props: MarginPositionsTableProps = {}): JSX
   const locale = useCurrentLocale()
   const currencyInfos = useMarginCurrencyInfos()
   const [tab, setTab] = useState<MarginTableTab>('active')
-  const { tableMaxHeight } = useMarginMorph()
 
   const plan = useMarginPlanExecution((s) => s.plan)
   const isModalOpen = useMarginPlanExecution((s) => s.isModalOpen)
@@ -650,13 +672,8 @@ export function MarginPositionsTable(props: MarginPositionsTableProps = {}): JSX
     () => terminalQuery.data?.pages.flatMap((page) => page.positions).filter(isMarginTerminalPosition) ?? [],
     [terminalQuery.data],
   )
-  const loadMore = useEvent(({ onComplete }: { onComplete?: () => void } = {}) => {
-    if (visibleQuery.hasNextPage && !visibleQuery.isFetchingNextPage) {
-      void visibleQuery.fetchNextPage().finally(() => onComplete?.())
-    } else {
-      onComplete?.()
-    }
-  })
+  // One sentinel pages both the table and the cards: the table flows in the column's own scroll (no
+  // inner scroller), and an IntersectionObserver sees that scroll where Table's window listener can't.
   const { sentinelRef } = useInfiniteScroll({
     onLoadMore: async () => {
       await visibleQuery.fetchNextPage()
@@ -666,17 +683,38 @@ export function MarginPositionsTable(props: MarginPositionsTableProps = {}): JSX
   })
   const resolverPositions = useMemo(() => [...(activePositions ?? []), ...historyRows], [activePositions, historyRows])
   const resolveMarket = useResolveMarginMarket({ positions: resolverPositions })
+  // The numbers the chart's avatar badges wear; the column shows only while those avatars do.
+  const showPositionOnChart = useMarginChartPrefs((s) => s.showPosition)
+  const setChartPrefs = useMarginChartPrefs((s) => s.setChartPrefs)
+  const onToggleShowPosition = useEvent((showPosition: boolean) => setChartPrefs({ showPosition }))
+  const displayIds = useMemo(() => marginPositionDisplayIds(activePositions ?? []), [activePositions])
+  // Shown, like the badges, only once some chart holds several positions.
+  const hasSharedMarket = useMemo(() => {
+    const positions = activePositions ?? []
+    return positions.some((position) => {
+      const { collateralToken, debtToken } = marginPositionTokens(position)
+      const market = {
+        venue: marginPositionVenue(position) ?? 'MORPHO',
+        collateral: { address: collateralToken },
+        debt: { address: debtToken },
+      }
+      return positionsForMarket({ positions, market, anyVenue: true }).length > 1
+    })
+  }, [activePositions])
+  const showsIdColumn = showPositionOnChart && hasSharedMarket
 
   const activeRows = useMemo<MarginTableRow[]>(
     () =>
       buildMarginActiveRows({
-        positions: activePositions,
+        positions: activePositions?.toSorted(
+          (a, b) => (displayIds.get(b.positionId) ?? 0) - (displayIds.get(a.positionId) ?? 0),
+        ),
         plan,
         isModalOpen,
         isExecuting,
         t,
       }),
-    [activePositions, plan, isModalOpen, isExecuting, t],
+    [activePositions, displayIds, plan, isModalOpen, isExecuting, t],
   )
 
   // A row menu's modal request, keyed by positionId — the only per-position identifier that
@@ -684,7 +722,14 @@ export function MarginPositionsTable(props: MarginPositionsTableProps = {}): JSX
   // re-resolves the LATEST position object from query data each render so it stays fresh across polls; if
   // the position disappears (closed elsewhere) the modal closes itself.
   const [activeModal, setActiveModal] = useState<MarginModalRequest | null>(null)
-  const onRequestModal = useEvent((request: MarginModalRequest) => setActiveModal(request))
+  const heldPlanId = useMarginPlanExecution((s) => heldPlan(s)?.planId)
+  const onRequestModal = useEvent((request: MarginModalRequest) => {
+    if (heldPlanId) {
+      void resumePlan({ planId: heldPlanId })
+    } else {
+      setActiveModal(request)
+    }
+  })
   const closeActiveModal = useEvent(() => setActiveModal(null))
 
   // Position rows expand into the drawer; a plain row-body click toggles it. When expanded, the row +
@@ -708,8 +753,8 @@ export function MarginPositionsTable(props: MarginPositionsTableProps = {}): JSX
           borderRadius="$rounded16"
           borderWidth={isExpanded ? 1 : 0}
           borderColor="$surface3"
-          backgroundColor={isExpanded ? '$surface1' : undefined}
-          overflow="hidden"
+          backgroundColor={isExpanded ? '$surface2' : undefined}
+          $platform-web={{ overflow: 'clip', minWidth: 'fit-content' }}
         >
           <TouchableArea onPress={onToggleRow}>{renderTableRow()}</TouchableArea>
           <HeightAnimator open={isExpanded} unmountChildrenWhenCollapsed>
@@ -732,11 +777,31 @@ export function MarginPositionsTable(props: MarginPositionsTableProps = {}): JSX
 
   const activeColumns = useMemo(() => {
     const columnHelper = createColumnHelper<MarginTableRow>()
+    const idColumn = columnHelper.display({
+      id: MARGIN_ACTIVE_COLUMN.displayId,
+      size: 40,
+      header: () => (
+        <HeaderCell justifyContent="flex-start">
+          <HeaderText label={t('margin.table.id')} />
+        </HeaderCell>
+      ),
+      cell: (info) => (
+        <Cell loading={showLoadingSkeleton} justifyContent="flex-start">
+          {hasRow<MarginTableRow>(info) && info.row.original.kind === 'position' && (
+            <Text variant="body3" color="$neutral2">
+              {displayIds.get(info.row.original.position.positionId) ?? ''}
+            </Text>
+          )}
+        </Cell>
+      ),
+    })
     return [
+      ...(showsIdColumn ? [idColumn] : []),
       columnHelper.display({
         id: MARGIN_ACTIVE_COLUMN.pair,
-        // Room for the stacked pair logo beside a "cbBTC / USDC" label.
-        size: 187,
+        // Room for the stacked pair logo beside a "cbBTC / USDC" label. This and Mark / Entry give up the ID
+        // column's 40px so the table stays inside its card.
+        size: showsIdColumn ? 165 : 187,
         header: () => (
           <HeaderCell justifyContent="flex-start">
             <HeaderText label={t('margin.table.position')} />
@@ -752,7 +817,7 @@ export function MarginPositionsTable(props: MarginPositionsTableProps = {}): JSX
       }),
       columnHelper.display({
         id: MARGIN_ACTIVE_COLUMN.markEntry,
-        size: 155,
+        size: showsIdColumn ? 137 : 155,
         header: () => (
           <HeaderCell justifyContent="flex-start">
             <HeaderText label={t('margin.table.markEntry')} />
@@ -890,7 +955,7 @@ export function MarginPositionsTable(props: MarginPositionsTableProps = {}): JSX
         ),
       }),
     ]
-  }, [t, showLoadingSkeleton, currencyInfos, resolveMarket, onRequestModal])
+  }, [t, showLoadingSkeleton, currencyInfos, resolveMarket, onRequestModal, displayIds, showsIdColumn])
 
   const completedColumns = useMemo(() => {
     const columnHelper = createColumnHelper<MarginTerminalPosition>()
@@ -970,7 +1035,7 @@ export function MarginPositionsTable(props: MarginPositionsTableProps = {}): JSX
       }),
       columnHelper.display({
         id: 'closedAt',
-        size: 120,
+        size: 140,
         header: () => (
           <HeaderCell>
             <HeaderText label={t('margin.table.closed')} />
@@ -1044,7 +1109,7 @@ export function MarginPositionsTable(props: MarginPositionsTableProps = {}): JSX
   const isCompletedEmpty = !showLoadingSkeleton && historyRows.length === 0
   const isCards = props.layout === 'cards'
 
-  const renderPositionSheet = (): JSX.Element | null => {
+  const renderPositionSheet = (actionModal: ReactNode): JSX.Element | null => {
     const position = sheetPositionId ? activePositions?.find((p) => p.positionId === sheetPositionId) : undefined
     if (props.layout !== 'cards' || !position) {
       return null
@@ -1078,10 +1143,23 @@ export function MarginPositionsTable(props: MarginPositionsTableProps = {}): JSX
         ),
       },
       onRequestModal,
+      actionModal,
     })
   }
 
-  const renderCardsPageEnd = (): JSX.Element => (
+  const actionModals = (
+    <MarginActionModals
+      request={activeModal}
+      positions={activePositions}
+      resolveMarket={resolveMarket}
+      onClose={closeActiveModal}
+    />
+  )
+  // An open position sheet hosts the modal so it stacks over the sheet; with no sheet (table layout, or the
+  // position is gone) it mounts here, which keeps MarginActionModals' self-close toast for a vanished position.
+  const positionSheet = renderPositionSheet(actionModals)
+
+  const renderPageEnd = (): JSX.Element => (
     <>
       <Flex ref={sentinelRef} height={1} />
       {visibleQuery.isFetchingNextPage && (
@@ -1161,7 +1239,7 @@ export function MarginPositionsTable(props: MarginPositionsTableProps = {}): JSX
             />
           )
         })}
-        {renderCardsPageEnd()}
+        {renderPageEnd()}
       </Flex>
     )
   }
@@ -1217,14 +1295,14 @@ export function MarginPositionsTable(props: MarginPositionsTableProps = {}): JSX
             />
           )
         })}
-        {renderCardsPageEnd()}
+        {renderPageEnd()}
       </Flex>
     )
   }
 
   return (
     <Flex gap="$spacing12" width="100%">
-      <Flex row gap="$spacing16">
+      <Flex row gap="$spacing16" alignItems="center">
         <TouchableArea onPress={showActiveTab}>
           <Text variant="subheading2" color={tab === 'active' ? '$neutral1' : '$neutral2'}>
             {t('margin.table.tab.active')}
@@ -1235,6 +1313,12 @@ export function MarginPositionsTable(props: MarginPositionsTableProps = {}): JSX
             {t('margin.table.closed')}
           </Text>
         </TouchableArea>
+        <Flex row ml="auto" alignItems="center" gap="$spacing8">
+          <Text variant="body4" color="$neutral2">
+            {t('margin.table.showOnChart')}
+          </Text>
+          <Switch size="lg" variant="neutral" checked={showPositionOnChart} onCheckedChange={onToggleShowPosition} />
+        </Flex>
       </Flex>
       {showError ? (
         <Flex gap="$spacing8" p="$spacing12">
@@ -1269,12 +1353,13 @@ export function MarginPositionsTable(props: MarginPositionsTableProps = {}): JSX
           renderActiveCards()
         ) : (
           <Table
+            // Its memoized rows re-render for new data, not new columns: remount as the ID column comes or goes.
+            key={showsIdColumn ? 'with-ids' : 'without-ids'}
             columns={activeColumns}
             data={activeRows}
             loading={showLoadingSkeleton}
             error={false}
             getRowId={activeRowId}
-            loadMore={activeQuery.hasNextPage ? loadMore : undefined}
             getSubRows={getMarginTableSubRows}
             renderUnifiedExpandableRow={renderDrawerRow}
             singleExpandedRow
@@ -1282,7 +1367,9 @@ export function MarginPositionsTable(props: MarginPositionsTableProps = {}): JSX
             loadingRowsCount={LOADING_ROWS}
             rowHeight={MARGIN_TABLE_ROW_HEIGHT}
             compactRowHeight={MARGIN_TABLE_ROW_HEIGHT}
-            maxHeight={tableMaxHeight}
+            stickyToScrollContainer={props.stickyToScrollContainer}
+            defaultPinnedColumns={PINNED_COLUMNS}
+            forcePinning
           />
         )
       ) : isCompletedEmpty ? (
@@ -1309,20 +1396,16 @@ export function MarginPositionsTable(props: MarginPositionsTableProps = {}): JSX
           loading={showLoadingSkeleton}
           error={false}
           getRowId={historyRowId}
-          loadMore={terminalQuery.hasNextPage ? loadMore : undefined}
           loadingRowsCount={LOADING_ROWS}
           rowHeight={MARGIN_TABLE_ROW_HEIGHT}
           compactRowHeight={MARGIN_TABLE_ROW_HEIGHT}
-          maxHeight={tableMaxHeight}
+          stickyToScrollContainer={props.stickyToScrollContainer}
+          defaultPinnedColumns={PINNED_COLUMNS}
+          forcePinning
         />
       )}
-      {renderPositionSheet()}
-      <MarginActionModals
-        request={activeModal}
-        positions={activePositions}
-        resolveMarket={resolveMarket}
-        onClose={closeActiveModal}
-      />
+      {isCards ? null : renderPageEnd()}
+      {positionSheet ?? actionModals}
     </Flex>
   )
 }

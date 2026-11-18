@@ -1,5 +1,7 @@
 appId: com.uniswap.mobile.dev
 jsEngine: graaljs
+tags:
+  - flow-portfolio-chart-happy-path
 env:
   E2E_RECOVERY_PHRASE: ${E2E_RECOVERY_PHRASE}
   DATADOG_API_KEY: ${DATADOG_API_KEY}

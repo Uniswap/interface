@@ -1,4 +1,4 @@
-import { Button, Flex, Text, TouchableArea } from '@universe/mycelium'
+import { Button, Flex, Text, TouchableArea, useMedia } from '@universe/mycelium'
 import { CandlestickChart } from '@universe/mycelium/icons/CandlestickChart'
 import { TestID, type TestIDType } from '@universe/test'
 import { useState } from 'react'
@@ -8,6 +8,7 @@ import { useAccount } from '~/connection/hooks/useAccount'
 import { MarginChartSheet } from '~/pages/Swap/Margin/components/MarginChartSheet'
 import { MarginMarketStatsRow } from '~/pages/Swap/Margin/components/MarginMarketStatsRow'
 import { MarginPositionSheet, type MarginPositionSheetArgs } from '~/pages/Swap/Margin/components/MarginPositionSheet'
+import { MarginChartPane } from '~/pages/Swap/Margin/MarginChartPane'
 import { MarginForm } from '~/pages/Swap/Margin/MarginForm'
 import { MarginPositionsTable } from '~/pages/Swap/Margin/MarginPositionsTable'
 import { useAccountDrawer } from '~/state/accountDrawer/hooks'
@@ -19,6 +20,7 @@ const MOBILE_TABS: { value: MarginMobileTab; labelKey: 'common.trade' | 'pool.po
   { value: 'positions', labelKey: 'pool.positions', testID: TestID.MarginMobileTabPositions },
 ]
 const TAB_UNDERLINE_HEIGHT = 2
+const INLINE_CHART_HEIGHT = 'min(360px, 40dvh)'
 
 const renderPositionSheet = (args: MarginPositionSheetArgs): JSX.Element => <MarginPositionSheet {...args} />
 
@@ -26,21 +28,29 @@ const renderPositionSheet = (args: MarginPositionSheetArgs): JSX.Element => <Mar
  * Margin below the tablet breakpoint: Trade / Positions tabs instead of a form with a table under it,
  * whose columns cannot fit a phone. Trade is the open form, with a "View chart" button beside the market
  * card that raises the chart as a bottom sheet; Positions lists the account's positions as cards, each
- * opening its own sheet.
+ * opening its own sheet. Between the phone and terminal breakpoints a shortened chart sits above the tabs
+ * instead of the "View chart" button.
  */
 export function MarginMobileLayout(): JSX.Element {
   const [tab, setTab] = useState<MarginMobileTab>('trade')
   const [isChartOpen, setIsChartOpen] = useState(false)
   const openChart = useEvent(() => setIsChartOpen(true))
   const closeChart = useEvent(() => setIsChartOpen(false))
+  const media = useMedia()
+  const showInlineChart = !media.lg
 
   return (
     <Flex width="100%" gap="$spacing12">
+      {showInlineChart ? (
+        <Flex height={INLINE_CHART_HEIGHT}>
+          <MarginChartPane />
+        </Flex>
+      ) : null}
       <MarginMobileTabRow tab={tab} onSelectTab={setTab} />
       {tab === 'trade' ? (
         <MarginForm
           showInlinePositions={false}
-          marketSelectorTrailing={<ViewChartButton onPress={openChart} />}
+          marketSelectorTrailing={showInlineChart ? undefined : <ViewChartButton onPress={openChart} />}
           marketSelectorFooter={<MarginMarketStatsRow />}
         />
       ) : (

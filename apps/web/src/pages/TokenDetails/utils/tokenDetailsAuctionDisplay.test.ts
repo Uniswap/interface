@@ -15,7 +15,6 @@ import {
   resolveTokenDetailsAuctionDisplay,
   shouldReserveAuctionBannerSpace,
   shouldShowAuctionBanner,
-  toSeconds,
 } from '~/pages/TokenDetails/utils/tokenDetailsAuctionDisplay'
 import type { TokenPoolState } from '~/types/tokenPool'
 
@@ -239,12 +238,5 @@ describe('resolveTokenDetailsAuctionDisplay', () => {
   it('has no countdown target once ended or without an end estimate', () => {
     expect(resolve({ currentBlock: { status: 'success', blockNumber: 250n } }).phaseEndsAtMs).toBeUndefined()
     expect(resolve({ auction: { ...AUCTION, estimatedEndTime: undefined } }).phaseEndsAtMs).toBeUndefined()
-  })
-})
-
-describe('toSeconds', () => {
-  it('converts a timestamp to whole seconds', () => {
-    expect(toSeconds({ seconds: 1_002_000n, nanos: 0 })).toBe(1_002_000n)
-    expect(toSeconds(undefined)).toBeUndefined()
   })
 })

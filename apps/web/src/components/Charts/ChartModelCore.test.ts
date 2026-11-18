@@ -56,6 +56,53 @@ describe('ChartModel.updateOptions', () => {
   })
 })
 
+describe('ChartModel pinch zoom', () => {
+  afterEach(() => {
+    vi.mocked(createChart).mockReset()
+  })
+
+  it('zooms around the bar under the cursor, not the center of the range', () => {
+    const setVisibleLogicalRange = vi.fn()
+    vi.mocked(createChart).mockReturnValue({
+      applyOptions: vi.fn(),
+      subscribeCrosshairMove: vi.fn(),
+      priceScale: () => ({ width: () => 0 }),
+      timeScale: () => ({
+        getVisibleLogicalRange: () => ({ from: 40, to: 100 }),
+        coordinateToLogical: (x: number) => 40 + x / 10,
+        setVisibleLogicalRange,
+      }),
+    } as unknown as IChartApi)
+    const container = document.createElement('div')
+    new TestChartModel(container, params).updateOptions(params)
+
+    // x = 500 → bar 90, toward the right of the 40–100 range; deltaY < 0 zooms in by 1.1.
+    container.dispatchEvent(new WheelEvent('wheel', { ctrlKey: true, deltaY: -1, clientX: 500 }))
+
+    const { from, to } = setVisibleLogicalRange.mock.lastCall?.[0]
+    expect((90 - from) / (to - from)).toBeCloseTo((90 - 40) / (100 - 40))
+    expect(to - from).toBeCloseTo(60 / 1.1)
+  })
+
+  it('passes horizontal wheel to the chart to pan, and keeps mostly-vertical wheel from it', () => {
+    vi.mocked(createChart).mockReturnValue({
+      applyOptions: vi.fn(),
+      subscribeCrosshairMove: vi.fn(),
+    } as unknown as IChartApi)
+    const container = document.createElement('div')
+    const chartWheel = vi.fn()
+    container.appendChild(document.createElement('canvas')).addEventListener('wheel', chartWheel)
+    new TestChartModel(container, params).updateOptions(params)
+    const canvas = container.firstElementChild as HTMLCanvasElement
+
+    canvas.dispatchEvent(new WheelEvent('wheel', { deltaX: 2, deltaY: 30, cancelable: true }))
+    expect(chartWheel).not.toHaveBeenCalled()
+
+    canvas.dispatchEvent(new WheelEvent('wheel', { deltaX: 30, deltaY: 2, cancelable: true }))
+    expect(chartWheel).toHaveBeenCalledTimes(1)
+  })
+})
+
 /** A 2D context whose drawing calls are no-ops: jsdom has no canvas implementation. */
 function createNoopCanvasContext(): CanvasRenderingContext2D {
   const state: Record<PropertyKey, unknown> = {}
@@ -105,7 +152,7 @@ describe('ChartModel sizing', () => {
     // setupTests already mocks getComputedStyle, and spying on a mock returns that same mock.
     const getComputedStyle =
       vi.mocked(window.getComputedStyle).getMockImplementation() ??
-      ((): CSSStyleDeclaration => new CSSStyleDeclaration())
+      ((): CSSStyleDeclaration => document.createElement('div').style)
     vi.spyOn(window, 'getComputedStyle').mockImplementation((element, pseudoElement) => {
       const computed = getComputedStyle(element, pseudoElement)
       const inlineColor = element instanceof HTMLElement ? element.style.color : ''

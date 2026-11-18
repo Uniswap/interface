@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
 import { isAndroid } from '@universe/environment'
-import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { Flex, Text, AnimatedFlex } from '@universe/mycelium'
 import GraphCurve from '@universe/mycelium/assets/backgrounds/graph-curve.svg'
 import { SegmentedControl } from '@universe/mycelium/segmented-control-compat'
@@ -220,9 +219,8 @@ const PriceExplorerContent = memo(function PriceExplorerContentInner(): JSX.Elem
     // oxlint-disable-next-line react/exhaustive-deps -- biome-parity: oxlint is stricter here
   }, [data])
 
-  const tokenCategoriesEnabled = useIsTokenCategoriesEnabled()
   const { data: categoryIds } = useQuery(getTokenCategoryIdsQueryOptions(currencyId))
-  const isStablecoin = getIsStablecoin({ tokenCategoriesEnabled, categoryIds }) === true
+  const isStablecoin = getIsStablecoin(categoryIds) === true
 
   // Zoom out y-axis for low variance assets
   const shouldZoomOut = useMemo(() => {

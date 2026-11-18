@@ -2,6 +2,7 @@ import { UniverseChainId } from '@universe/chains'
 import { Flex } from '@universe/mycelium'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
+import { forwardRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter/NetworkFilter'
@@ -77,7 +78,10 @@ interface PortfolioHeaderProps {
   isCompact?: boolean
 }
 
-export function PortfolioHeader({ enableScrollCompact = false, isCompact: isCompactProp }: PortfolioHeaderProps) {
+export const PortfolioHeader = forwardRef<HTMLDivElement, PortfolioHeaderProps>(function PortfolioHeader(
+  { enableScrollCompact = false, isCompact: isCompactProp },
+  ref,
+) {
   const scrollCompact = useScrollCompact({})
   const isCompact = isCompactProp ?? (enableScrollCompact && scrollCompact)
   const { t } = useTranslation()
@@ -136,6 +140,7 @@ export function PortfolioHeader({ enableScrollCompact = false, isCompact: isComp
 
   return (
     <Flex
+      ref={ref}
       testID={TestID.PortfolioHeader}
       backgroundColor="$surface1"
       mt="$spacing8"
@@ -182,4 +187,4 @@ export function PortfolioHeader({ enableScrollCompact = false, isCompact: isComp
       </Flex>
     </Flex>
   )
-}
+})

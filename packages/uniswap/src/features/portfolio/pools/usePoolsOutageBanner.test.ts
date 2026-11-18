@@ -32,7 +32,7 @@ describe('usePoolsOutageBanner', () => {
   it('shows a dismissible network banner for a partial outage', () => {
     mockFailedNetworks({ failedChainIds: [UniverseChainId.Base] })
 
-    const { result } = renderHookWithProviders(() => usePoolsOutageBanner({ enabled: true }))
+    const { result } = renderHookWithProviders(() => usePoolsOutageBanner({}))
 
     expect(result.current.isVisible).toBe(true)
     expect(result.current.message).not.toBe('')
@@ -42,7 +42,7 @@ describe('usePoolsOutageBanner', () => {
   it('shows a non-dismissible generic banner for a full outage', () => {
     mockFailedNetworks({ isPoolsUnavailable: true })
 
-    const { result } = renderHookWithProviders(() => usePoolsOutageBanner({ enabled: true }))
+    const { result } = renderHookWithProviders(() => usePoolsOutageBanner({}))
 
     expect(result.current.isVisible).toBe(true)
     expect(result.current.onDismiss).toBeUndefined()
@@ -51,7 +51,7 @@ describe('usePoolsOutageBanner', () => {
   it('is hidden when pools are healthy', () => {
     mockFailedNetworks({})
 
-    const { result } = renderHookWithProviders(() => usePoolsOutageBanner({ enabled: true }))
+    const { result } = renderHookWithProviders(() => usePoolsOutageBanner({}))
 
     expect(result.current.isVisible).toBe(false)
   })
@@ -59,7 +59,7 @@ describe('usePoolsOutageBanner', () => {
   it('hides and persists the dismissal when the partial banner is dismissed', () => {
     mockFailedNetworks({ failedChainIds: [UniverseChainId.Base] })
 
-    const { result, store } = renderHookWithProviders(() => usePoolsOutageBanner({ enabled: true }))
+    const { result, store } = renderHookWithProviders(() => usePoolsOutageBanner({}))
 
     act(() => result.current.onDismiss?.())
 
@@ -70,7 +70,7 @@ describe('usePoolsOutageBanner', () => {
   it('stays hidden for an ongoing partial outage that was already dismissed', () => {
     mockFailedNetworks({ failedChainIds: [UniverseChainId.Base] })
 
-    const { result } = renderHookWithProviders(() => usePoolsOutageBanner({ enabled: true }), {
+    const { result } = renderHookWithProviders(() => usePoolsOutageBanner({}), {
       preloadedState: { uniswapBehaviorHistory: { hasDismissedPoolsOutageBanner: true } },
     })
 
@@ -80,7 +80,7 @@ describe('usePoolsOutageBanner', () => {
   it('keeps the dismissal while the breakdown is still loading on a fresh visit', () => {
     mockFailedNetworks({ hasResolved: false })
 
-    const { rerender, store } = renderHookWithProviders(() => usePoolsOutageBanner({ enabled: true }), {
+    const { rerender, store } = renderHookWithProviders(() => usePoolsOutageBanner({}), {
       preloadedState: { uniswapBehaviorHistory: { hasDismissedPoolsOutageBanner: true } },
     })
 
@@ -94,7 +94,7 @@ describe('usePoolsOutageBanner', () => {
   it('resets the dismissal once the outage clears so a later outage shows again', () => {
     mockFailedNetworks({ failedChainIds: [UniverseChainId.Base] })
 
-    const { result, rerender, store } = renderHookWithProviders(() => usePoolsOutageBanner({ enabled: true }), {
+    const { result, rerender, store } = renderHookWithProviders(() => usePoolsOutageBanner({}), {
       preloadedState: { uniswapBehaviorHistory: { hasDismissedPoolsOutageBanner: true } },
     })
     expect(result.current.isVisible).toBe(false)

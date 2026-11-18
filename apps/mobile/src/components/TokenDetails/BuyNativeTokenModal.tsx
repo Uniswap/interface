@@ -15,6 +15,7 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useCurrencyInfo, useNativeCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { BridgeTokenButton } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/BridgeTokenButton'
 import { BuyNativeTokenButton } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/BuyNativeTokenButton'
+import { preventOrphanWord } from 'utilities/src/primitives/string'
 import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 
 export function BuyNativeTokenModal({
@@ -49,10 +50,12 @@ export function BuyNativeTokenModal({
         <Flex centered gap="$spacing16">
           <CurrencyLogo currencyInfo={nativeCurrencyInfo} size={iconSizes.icon48} />
           <Flex centered gap="$spacing8">
-            <Text variant="subheading1">
-              {isMainnet
-                ? t('token.zeroNativeBalance.title.mainnet', { nativeTokenName })
-                : t('token.zeroNativeBalance.title.otherChains', { nativeTokenName, chainName })}
+            <Text textAlign="center" variant="subheading1">
+              {preventOrphanWord(
+                isMainnet
+                  ? t('token.zeroNativeBalance.title.mainnet', { nativeTokenName })
+                  : t('token.zeroNativeBalance.title.otherChains', { nativeTokenName, chainName }),
+              )}
             </Text>
             <Text color="$neutral2" textAlign="center" variant="body3" px="$spacing8">
               {t('token.zeroNativeBalance.subtitle', { tokenSymbol })}
@@ -76,6 +79,7 @@ export function BuyNativeTokenModal({
         <Flex centered gap="$spacing8" width="100%">
           {bridgingTokenWithHighestBalance && (
             <BridgeTokenButton
+              usesNeutralTheme
               inputToken={bridgingTokenWithHighestBalance.currencyInfo}
               outputToken={nativeCurrencyInfo}
               outputNetworkName={chainName}
@@ -84,7 +88,7 @@ export function BuyNativeTokenModal({
           )}
           <BuyNativeTokenButton
             usesStaticText
-            usesStaticTheme={false}
+            usesNetworkColors={false}
             nativeCurrencyInfo={nativeCurrencyInfo}
             onPress={onClose}
           />

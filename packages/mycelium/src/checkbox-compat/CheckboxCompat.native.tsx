@@ -64,6 +64,7 @@ export const CheckboxCompat = React.forwardRef<View, CheckboxCompatProps>(functi
     onCheckedChange,
     className,
     style,
+    'aria-label': ariaLabel,
   } = props
 
   const [hovered, setHovered] = React.useState(false)
@@ -93,6 +94,7 @@ export const CheckboxCompat = React.forwardRef<View, CheckboxCompatProps>(functi
         ref={ref}
         accessibilityRole="checkbox"
         accessibilityState={{ checked, disabled: disabled || undefined }}
+        aria-label={ariaLabel}
         disabled={disabled}
         // `id` is the one of the four Tamagui form/focus props legacy honours on
         // device; `name`/`value`/`required` are web-only there — see

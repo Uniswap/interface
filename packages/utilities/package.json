@@ -6,6 +6,7 @@
     "@amplitude/analytics-core": "0.11.0",
     "@amplitude/analytics-react-native": "1.5.2",
     "@amplitude/analytics-types": "0.13.0",
+    "@connectrpc/connect": "1.5.0",
     "@datadog/browser-logs": "6.10.1",
     "@datadog/browser-rum": "6.10.1",
     "@datadog/mobile-react-native": "3.9.0",

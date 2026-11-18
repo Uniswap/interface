@@ -9,7 +9,7 @@ import {
   getPinnedColumnWidthCss,
 } from '~/components/Table/PinnedColumns/collapse/utils'
 import type { TableColumnMeta } from '~/components/Table/types'
-import { render, screen } from '~/test-utils/render'
+import { act, fireEvent, render, screen } from '~/test-utils/render'
 
 type Row = { name: string; value: number }
 
@@ -94,10 +94,9 @@ describe('Table collapsiblePinnedColumnId', () => {
     )
 
     // The header and body cells render the content directly, so the text match is the cell itself.
-    // jsdom drops the calc() width (see resolveCollapsiblePinnedColumn for its value), so losing the
-    // tanstack size stands in for the merged meta reaching both tables' cells.
-    expect(screen.getByText('Name').style.width).toBe('')
-    expect(screen.getByText('Alpha').style.width).toBe('')
+    const width = getPinnedColumnWidthCss({ expandedWidth: 190, collapsedWidth: DEFAULT_COLLAPSED_COLUMN_WIDTH })
+    expect(screen.getByText('Name').style.width).toBe(width)
+    expect(screen.getByText('Alpha').style.width).toBe(width)
   })
 
   it('renders the column untouched without the prop', () => {
@@ -170,5 +169,35 @@ describe('CollapsiblePinnedColumnScope', () => {
 
     rerender(<ScopedTables tableCount={0} />)
     expect(getCollapseRoots()).toEqual([])
+  })
+})
+
+describe('Table hiddenRows and loadMore', () => {
+  it('counts hidden rows toward load-more growth only while they are shown', () => {
+    const completions: (() => void)[] = []
+    const loadMore = vi.fn(({ onComplete }: { onComplete?: () => void }) => {
+      completions.push(() => onComplete?.())
+    })
+    const complete = () => act(() => completions.shift()?.())
+    const hidden = (count: number): Row[] =>
+      Array.from({ length: count }, (_, i) => ({ name: `Hidden ${i}`, value: 0 }))
+
+    // jsdom reports no scroll height, so the table reads as shorter than the viewport and fetches on mount.
+    const view = render(<Table columns={columns} data={data} loadMore={loadMore} hiddenRows={hidden(1)} />)
+    expect(loadMore).toHaveBeenCalledTimes(1)
+    complete()
+    expect(loadMore).toHaveBeenCalledTimes(2)
+    complete()
+    expect(loadMore).toHaveBeenCalledTimes(2)
+
+    view.rerender(<Table columns={columns} data={data} loadMore={loadMore} hiddenRows={hidden(2)} />)
+    expect(loadMore).toHaveBeenCalledTimes(2)
+
+    fireEvent.click(screen.getByText('Show hidden rows'))
+    expect(loadMore).toHaveBeenCalledTimes(3)
+    complete()
+
+    view.rerender(<Table columns={columns} data={data} loadMore={loadMore} hiddenRows={hidden(3)} />)
+    expect(loadMore).toHaveBeenCalledTimes(4)
   })
 })

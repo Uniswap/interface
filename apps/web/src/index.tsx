@@ -1,6 +1,5 @@
 // Ordering is intentional and must be preserved: sideEffects followed by functionality.
 import '~/sideEffects'
-import { PrivyProvider } from '@privy-io/react-auth'
 import { ApiInit, getEntryGatewayUrl, provideSessionService } from '@universe/api'
 import { ComplianceClientProvider } from '@universe/compliance'
 import { isDevEnv, isE2eTestEnv, isTestEnv, localDevDatadogEnabled } from '@universe/environment'
@@ -25,7 +24,7 @@ import {
 // oxlint-disable-next-line import/default, no-restricted-imports -- Vite ?worker&url virtual module; linter can't resolve the default export
 import hashcashWorkerUrl from '@universe/sessions/src/challenge-solvers/hashcash/worker/hashcash.worker.ts?worker&url'
 import { NuqsAdapter } from 'nuqs/adapters/react-router/v7'
-import type { PropsWithChildren, ReactNode } from 'react'
+import type { PropsWithChildren } from 'react'
 import { lazy, StrictMode, Suspense, useMemo } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Helmet, HelmetProvider } from 'react-helmet-async/lib/index'
@@ -46,16 +45,17 @@ import { useAccount } from 'wagmi'
 import { App } from '~/App'
 import { AccountsStoreProvider } from '~/app/AccountsStoreProvider'
 import { useAmplitudeDeviceId } from '~/app/bootstrap/useAmplitudeDeviceId'
+import { WalletCapabilitiesEffects } from '~/app/bootstrap/WalletCapabilitiesEffects'
 import { WebUniswapProvider } from '~/app/WebUniswapContext'
 import { QueryClientPersistProvider } from '~/components/PersistQueryClient'
-import { createWeb3Provider, WalletCapabilitiesEffects } from '~/components/Web3Provider/createWeb3Provider'
-import { getConfig, getPrivyConfig } from '~/config'
+import { getConfig } from '~/config'
 import { AccountsStoreDevTool } from '~/connection/accounts/devtools'
+import { createWeb3Provider } from '~/connection/createWeb3Provider'
 import { ExternalWalletProvider } from '~/connection/ExternalWalletProvider'
 import { ConnectWalletMutationProvider } from '~/connection/hooks/useConnectWalletMutation'
 import { wagmiConfig } from '~/connection/wagmiConfig'
 import { TransactionWatcherProvider } from '~/features/transactions/TransactionWatcherProvider'
-import { isPrivyConfigured } from '~/features/wallet/hooks/useMaybePrivy'
+import { MaybePrivyProvider } from '~/features/wallet/privy/MaybePrivyProvider'
 import { useDeferredComponent } from '~/hooks/useDeferredComponent'
 import { LanguageProvider } from '~/i18n/LanguageProvider'
 import { BlockNumberProvider } from '~/lib/hooks/useBlockNumber'
@@ -223,18 +223,6 @@ function StatsigProvider({ children }: PropsWithChildren) {
     <StatsigProviderWrapper user={statsigUser} onInit={onStatsigInit}>
       {children}
     </StatsigProviderWrapper>
-  )
-}
-
-function MaybePrivyProvider({ children }: { children: ReactNode }) {
-  if (!isPrivyConfigured()) {
-    return <>{children}</>
-  }
-  const { appId, clientId } = getPrivyConfig(false)
-  return (
-    <PrivyProvider appId={appId} clientId={clientId} config={{ loginMethods: ['email', 'google', 'apple'] }}>
-      {children}
-    </PrivyProvider>
   )
 }
 

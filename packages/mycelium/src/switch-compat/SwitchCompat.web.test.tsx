@@ -125,7 +125,8 @@ describe('SwitchCompat (web) behavior', () => {
     expect(track.style.pointerEvents).toBe('none')
   })
 
-  it('focus ring: both ring layers appear on focus and clear on blur', () => {
+  it('focus ring: both ring layers appear on keyboard focus and clear on blur', async () => {
+    const user = userEvent.setup()
     const ringCases: { props: SwitchCompatProps; outer: ThemeColorName }[] = [
       // accent1Hovered only for checked+branded
       { props: { checked: true, variant: 'branded' }, outer: 'accent1Hovered' },
@@ -140,7 +141,9 @@ describe('SwitchCompat (web) behavior', () => {
       expect(outerRing.style.borderColor, 'outer ring at rest').toBe('transparent')
       expect(innerRing.style.borderColor, 'inner ring at rest').toBe('transparent')
 
-      act(() => track.focus())
+      // A Tab focus, so `:focus-visible` matches regardless of the pointer events earlier tests fired.
+      await user.tab()
+      expect(document.activeElement).toBe(track)
       expect(outerRing.style.borderColor, `outer ring ${JSON.stringify(props)}`).toBe(
         cssBorderColor(LIGHT_THEME_COLORS[outer]),
       )

@@ -21,7 +21,7 @@ export type HorizontalLiquidityChartState = {
   renderedBuckets?: BucketChartEntry[]
   hoveredTick?: ChartEntry
   hoveredX?: number
-  /** The hovered segment's tick range - used for highlighting all buckets in the same segment */
+  /** The hovered bar's tick range, highlighted: a grouped bar's bucket, else its segment (every bar in it) */
   hoveredSegment?: { startTick: number; endTick: number }
   isChartHovered?: boolean
 }
@@ -63,6 +63,10 @@ export type HorizontalLiquidityRenderingContext = {
   protocolVersion: ProtocolVersion
   /** Ephemeral state for smoothing the liquidity height-scale during scroll (see HorizontalLiquidityBarsRenderer). */
   liquidityScaleSmoothing: HorizontalLiquidityScaleSmoothing
+  /** Groups ticks into `DESIRED_BUCKETS` bars; off draws one bar per tick spacing (full granularity). */
+  groupTicks: boolean
+  /** A grouped bar's hover, highlight and amounts cover its whole bucket rather than its segment. */
+  bucketScopedBars: boolean
 }
 
 /**

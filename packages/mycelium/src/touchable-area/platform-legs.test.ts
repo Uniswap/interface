@@ -109,6 +109,29 @@ describe('native prop forwarding (INFRA-3492)', () => {
     mounted.unmount()
   })
 
+  it('folds aria-label and aria state into the accessibility props RNGH reads', async () => {
+    const mounted = await renderNative({ 'aria-label': 'Close', 'aria-expanded': true })
+    expect(mounted.host().props).toMatchObject({
+      accessibilityLabel: 'Close',
+      accessibilityState: { expanded: true },
+    })
+    mounted.unmount()
+  })
+
+  it('keeps an explicit accessibilityLabel and accessibilityState over the aria aliases', async () => {
+    const mounted = await renderNative({
+      'aria-label': 'aria',
+      accessibilityLabel: 'label',
+      'aria-expanded': true,
+      accessibilityState: { expanded: false },
+    })
+    expect(mounted.host().props).toMatchObject({
+      accessibilityLabel: 'label',
+      accessibilityState: { expanded: false },
+    })
+    mounted.unmount()
+  })
+
   it('keeps the explicit props over the pass-through: resolved hit-slop and the role default win', async () => {
     // An explicit call-site null must still disable touch expansion — the
     // pass-through carries `hitSlop` verbatim, so the leg's resolved value

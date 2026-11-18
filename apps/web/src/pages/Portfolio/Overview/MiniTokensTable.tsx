@@ -1,5 +1,4 @@
 import { UniverseChainId } from '@universe/chains'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Flex } from '@universe/mycelium'
 import { TestID } from '@universe/test'
 import { memo } from 'react'
@@ -35,7 +34,6 @@ interface MiniTokensTableProps {
 
 export const MiniTokensTable = memo(function MiniTokensTable({ maxTokens = 8, chainId }: MiniTokensTableProps) {
   const { t } = useTranslation()
-  const portfolioPoolsBalancesEnabled = useFeatureFlag(FeatureFlags.PortfolioPoolsBalances)
   const { externalAddress, chainId: routeChainId } = usePortfolioRoutes()
   const portfolioAddresses = usePortfolioAddresses()
   const { chains: enabledChains } = useEnabledChains()
@@ -76,7 +74,6 @@ export const MiniTokensTable = memo(function MiniTokensTable({ maxTokens = 8, ch
   const { count: _count, ...sectionTotalValue } = usePortfolioSectionTotalValue({
     part: PortfolioBalancePart.Tokens,
     chainId,
-    enabled: portfolioPoolsBalancesEnabled,
   })
 
   return (

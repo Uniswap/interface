@@ -1,6 +1,6 @@
 import { UniverseChainId } from '@universe/chains'
 import { isMobileWeb } from '@universe/environment'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useWalletNfts } from 'uniswap/src/data/apiClients/dataApiService/nfts/useWalletNfts'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -70,6 +70,17 @@ export function useNftListRenderData({
     allPagesFetched: !hasNextPage,
   })
 
+  // The hidden row only renders once every page is fetched, so a page of only hidden NFTs leaves nothing
+  // to scroll and onEndReached never fires. Keep paging until something is shown or pages run out.
+  const isPagingForShownNfts = !skip && numShown === 0 && hasNextPage
+  const shouldFetchNextPage = isPagingForShownNfts && !isFetchingMore && !isError
+  useEffect(() => {
+    if (shouldFetchNextPage) {
+      void fetchNextPage()
+    }
+    // A fast page can land without isFetchingMore ever rendering true, so re-check on every new page
+  }, [shouldFetchNextPage, fetchNextPage, nftDataItems])
+
   return {
     nfts,
     numHidden,
@@ -83,8 +94,8 @@ export function useNftListRenderData({
     setHiddenNftsExpanded,
     isError,
     // A skipped query stays pending forever, so suppress loading/error states for it
-    isPending: !skip && isPending,
-    isErrorState: !skip && nftDataItems.length === 0 && isError,
+    isPending: (!skip && isPending) || (isPagingForShownNfts && !isError),
+    isErrorState: !skip && (nftDataItems.length === 0 || isPagingForShownNfts) && isError,
     hasNextPage: Boolean(hasNextPage),
     shouldAddInLoadingItem: isFetchingMore && numShown % 2 === 1,
   }

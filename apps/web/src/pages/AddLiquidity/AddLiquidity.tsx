@@ -5,7 +5,7 @@ import { Button, Flex, Text, SpinningLoader } from '@universe/mycelium'
 import { Plus } from '@universe/mycelium/icons/Plus'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { useQueryState, useQueryStates } from 'nuqs'
-import { type Dispatch, type SetStateAction, useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Navigate, useLocation, useNavigate, useParams } from 'react-router'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
@@ -14,22 +14,17 @@ import { orderPoolDataByQuoteToken } from 'uniswap/src/features/pools/quoteToken
 import type { FeeData } from 'uniswap/src/features/positions/types'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { LPTransactionSettingsStoreContextProvider } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/LPTransactionSettingsStoreContextProvider'
 import { STICKY_HEADER_TOP_GAP } from '~/components/Table/constants'
 import type { PoolData } from '~/data/pools/poolData'
 import { useLiquidityServicePoolData } from '~/data/pools/useLiquidityServicePoolData'
 import { PageLayout } from '~/features/Liquidity/Create/Container'
-import {
-  CreateLiquidityContextProvider,
-  useCreateLiquidityContext,
-} from '~/features/Liquidity/Create/CreateLiquidityContextProvider'
+import { useCreateLiquidityContext } from '~/features/Liquidity/Create/CreateLiquidityContextProvider'
 import { CreatePositionHeader } from '~/features/Liquidity/Create/CreatePositionHeader'
-import { CreatePositionTxContextProvider } from '~/features/Liquidity/Create/CreatePositionTxContext'
+import { ExistingPoolLiquidityProvider } from '~/features/Liquidity/Create/ExistingPoolLiquidityProvider'
 import { getNextFlowStep } from '~/features/Liquidity/Create/flowSteps'
 import { FormStepsWrapper } from '~/features/Liquidity/Create/FormWrapper'
 import { useEntryPointBreadcrumb } from '~/features/Liquidity/Create/hooks/useEntryPointBreadcrumb'
 import { useLiquidityUrlState } from '~/features/Liquidity/Create/hooks/useLiquidityUrlState'
-import { useLPSlippageValue } from '~/features/Liquidity/Create/hooks/useLPSlippageValues'
 import { usePoolProgressSteps } from '~/features/Liquidity/Create/hooks/usePoolProgressSteps'
 import { SharedCreateModals } from '~/features/Liquidity/Create/SharedCreateModals'
 import { PositionFlowStep } from '~/features/Liquidity/Create/types'
@@ -40,15 +35,13 @@ import {
   PoolProgressIndicatorHeader,
   SIDEBAR_WIDTH,
 } from '~/features/Liquidity/PoolProgressIndicator/PoolProgressIndicator'
-import { canUnwrapCurrency, getCurrencyWithOptionalUnwrap } from '~/features/Liquidity/utils/currency'
+import { PoolTableStoreContextProvider } from '~/features/Liquidity/PoolsTable/state/poolTableStore'
+import { getCurrencyWithUnwrap } from '~/features/Liquidity/utils/currency'
 import { getProtocolVersionFromLabel } from '~/features/Liquidity/utils/protocolVersion'
 import { AddLiquidityGeoRestrictionModal } from '~/pages/AddLiquidity/AddLiquidityGeoRestrictionModal'
 import { type FlowState, resolveAddLiquidityRenderGuard } from '~/pages/AddLiquidity/addLiquidityRenderGuard'
 import { PoolBrowser } from '~/pages/AddLiquidity/PoolBrowser'
 import { useCreatePoolHrefFromSelection } from '~/pages/AddLiquidity/useCreatePoolHrefFromSelection'
-import { useSeedPositionFromPool } from '~/pages/AddLiquidity/useSeedPositionFromPool'
-import { PoolTableStoreContextProvider } from '~/pages/Explore/tables/Pools/poolTableStore'
-import { MultichainContextProvider } from '~/state/multichain/MultichainContext'
 import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
 import { ADD_LIQUIDITY_PATH } from '~/utils/params/poolLinkParams'
 
@@ -116,16 +109,8 @@ function AddLiquidityContent(): JSX.Element {
       ? [v2TokenToCurrency(poolData.token0), v2TokenToCurrency(poolData.token1)]
       : [urlToken0, urlToken1]
     return {
-      token0:
-        getCurrencyWithOptionalUnwrap({
-          currency: rawToken0,
-          shouldUnwrap: canUnwrapCurrency(rawToken0, protocolVersion),
-        }) ?? undefined,
-      token1:
-        getCurrencyWithOptionalUnwrap({
-          currency: rawToken1,
-          shouldUnwrap: canUnwrapCurrency(rawToken1, protocolVersion),
-        }) ?? undefined,
+      token0: getCurrencyWithUnwrap(rawToken0, protocolVersion) ?? undefined,
+      token1: getCurrencyWithUnwrap(rawToken1, protocolVersion) ?? undefined,
     }
   }, [poolData, protocolVersion, urlToken0, urlToken1])
   const [baseToken, quoteToken] = orderPoolDataByQuoteToken({
@@ -297,77 +282,46 @@ function AddLiquidityFormContent({
       creatingPoolOrPair: false,
     })
 
-  const [currencyInputs, setCurrencyInputs] = useState<{ tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }>({
-    tokenA: token0,
-    tokenB: token1,
-  })
-
   const [urlState] = useQueryStates({
     priceRangeState: parseAsPriceRangeState,
     depositState: parseAsDepositState,
   })
 
-  const fee = poolData?.feeTier ?? urlFee
-  const hook = poolData?.hookAddress ?? urlHook
-
-  const autoSlippageTolerance = useLPSlippageValue({
-    version: protocolVersion,
-    currencyA: token0,
-    currencyB: token1,
-  })
-
   const media = useMedia()
 
   return (
-    <MultichainContextProvider initialChainId={chainId}>
-      <LPTransactionSettingsStoreContextProvider autoSlippageTolerance={autoSlippageTolerance}>
-        <CreateLiquidityContextProvider
-          currencyInputs={currencyInputs}
-          setCurrencyInputs={setCurrencyInputs}
-          initialPositionState={{
-            fee: fee ?? undefined,
-            hook: hook ?? undefined,
-            protocolVersion,
-          }}
-          initialPriceRangeState={urlState.priceRangeState}
-          initialDepositState={urlState.depositState}
-          initialFlowStep={initialFlowStep}
-        >
-          <CreatePositionTxContextProvider>
-            {media.xl && <FormProgressIndicatorHeader />}
-            {/* gap matches the legacy FormWrapper so the pool-info card and the form steps don't touch */}
-            <Flex gap="$spacing24">
-              <AddLiquidityPoolForm
-                currencyInputs={currencyInputs}
-                setCurrencyInputs={setCurrencyInputs}
-                poolData={poolData}
-              />
-            </Flex>
-            <SharedCreateModals onDeclineHookReview={onLeavePool} />
-            <AddLiquidityGeoRestrictionModal />
-          </CreatePositionTxContextProvider>
-        </CreateLiquidityContextProvider>
-      </LPTransactionSettingsStoreContextProvider>
-    </MultichainContextProvider>
+    <ExistingPoolLiquidityProvider
+      chainId={chainId}
+      poolData={poolData}
+      token0={token0}
+      token1={token1}
+      protocolVersion={protocolVersion}
+      fee={poolData?.feeTier ?? urlFee}
+      hook={poolData?.hookAddress ?? urlHook}
+      initialFlowStep={initialFlowStep}
+      initialPriceRangeState={urlState.priceRangeState}
+      initialDepositState={urlState.depositState}
+    >
+      {media.xl && <FormProgressIndicatorHeader />}
+      {/* gap matches the legacy FormWrapper so the pool-info card and the form steps don't touch */}
+      <Flex gap="$spacing24">
+        <AddLiquidityPoolForm poolData={poolData} />
+      </Flex>
+      <SharedCreateModals onDeclineHookReview={onLeavePool} />
+      <AddLiquidityGeoRestrictionModal />
+    </ExistingPoolLiquidityProvider>
   )
 }
 
-function AddLiquidityPoolForm({
-  currencyInputs,
-  setCurrencyInputs,
-  poolData,
-}: {
-  currencyInputs: { tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }
-  setCurrencyInputs: Dispatch<SetStateAction<{ tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }>>
-  poolData?: PoolData
-}) {
+function AddLiquidityPoolForm({ poolData }: { poolData?: PoolData }) {
   const {
     positionState: { protocolVersion },
     creatingPoolOrPair,
     step,
     setStep,
+    currencyInputs,
+    setCurrencyInputs,
   } = useCreateLiquidityContext()
-  useSeedPositionFromPool(poolData)
 
   const handleContinue = useCallback(() => {
     setStep(getNextFlowStep({ currentStep: step, protocolVersion, creatingPoolOrPair: Boolean(creatingPoolOrPair) }))

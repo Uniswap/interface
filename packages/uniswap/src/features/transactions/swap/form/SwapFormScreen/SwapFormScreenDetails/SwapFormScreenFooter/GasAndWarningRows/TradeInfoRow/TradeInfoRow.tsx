@@ -1,13 +1,9 @@
 import type { UniverseChainId } from '@universe/chains'
 import { isMobileApp, isWebApp } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { Flex, Text } from '@universe/mycelium'
-import { Accordion } from '@universe/mycelium'
-import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFilled'
-import { ChevronsIn } from '@universe/mycelium/icons/ChevronsIn'
-import { ChevronsOut } from '@universe/mycelium/icons/ChevronsOut'
-import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAlertColor'
+import { GasRow, WarningLine } from '@universe/transactions-ui'
 import type { Warning } from 'uniswap/src/components/modals/WarningModal/types'
+import { toWarningLevel } from 'uniswap/src/components/modals/WarningModal/utils'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useEnableCustomGasFeeEntry } from 'uniswap/src/features/gas/hooks/useEnableCustomGasFeeEntry'
 import { SwapRateRatio } from 'uniswap/src/features/transactions/swap/components/SwapRateRatio'
@@ -16,7 +12,10 @@ import { GasInfoRow } from 'uniswap/src/features/transactions/swap/form/SwapForm
 import { GasInfoRowWithCustomGasEnabled } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/TradeInfoRow/GasInfoRowWithCustomGasEnabled'
 import { TradeWarning } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/TradeInfoRow/TradeWarning'
 import { useDebouncedTrade } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/TradeInfoRow/useDebouncedTrade'
-import type { GasInfo } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/types'
+import type {
+  DetailsExpandedProps,
+  GasInfo,
+} from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/types'
 import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 
 // TradeInfoRow take `gasInfo` as a prop (rather than directly using useDebouncedGasInfo) because on mobile,
@@ -25,14 +24,15 @@ export function TradeInfoRow({
   bridgeChainId,
   gasInfo,
   warning,
+  detailsExpanded,
+  onDetailsExpandedChange,
 }: {
   bridgeChainId?: UniverseChainId
   gasInfo: GasInfo
   warning?: Warning
-}): JSX.Element | null {
+} & DetailsExpandedProps): JSX.Element | null {
   // Debounce the trade to prevent flickering on input
   const debouncedTrade = useDebouncedTrade()
-  const { text: warningTextColor } = getAlertColor(warning?.severity)
   const { isTestnetModeEnabled } = useEnabledChains()
 
   const derivedSwapInfo = useSwapFormStoreDerivedSwapInfo((s) => s)
@@ -61,52 +61,27 @@ export function TradeInfoRow({
   const showCanonicalBridge = isWebApp && bridgeChainId !== undefined
 
   return (
-    <Flex centered row>
-      <Flex fill>
-        {debouncedTrade && !warning && (
+    <GasRow
+      leading={
+        warning ? (
+          <TradeWarning warning={warning}>
+            <WarningLine layout="start" level={toWarningLevel(warning.severity)} message={warning.title} />
+          </TradeWarning>
+        ) : debouncedTrade ? (
           <SwapRateRatio
             initialInverse={true}
             styling="secondary"
             trade={debouncedTrade}
             derivedSwapInfo={derivedSwapInfo}
           />
-        )}
-
-        {warning && (
-          <TradeWarning warning={warning}>
-            <Flex row centered gap="$gap8">
-              <AlertTriangleFilled color={warningTextColor} size="$icon.20" />
-              <Text color={warningTextColor} variant="body3">
-                {warning.title}
-              </Text>
-            </Flex>
-          </TradeWarning>
-        )}
-      </Flex>
-
-      {showCanonicalBridge ? (
-        <CanonicalBridgeLinkBanner chainId={bridgeChainId} />
-      ) : debouncedTrade ? (
-        <Accordion.Trigger
-          p="$none"
-          style={{ background: '$surface1' }}
-          focusStyle={{ background: '$surface1' }}
-          hoverStyle={{ background: '$surface1' }}
-        >
-          {({ open }: { open: boolean }) => (
-            <Flex row gap="$spacing4" alignItems="center">
-              <GasInfoRow gasInfo={gasInfo} hidden={open} />
-              {open ? (
-                <ChevronsIn size="$icon.20" color="$neutral2" />
-              ) : (
-                <ChevronsOut size="$icon.20" color="$neutral2" />
-              )}
-            </Flex>
-          )}
-        </Accordion.Trigger>
-      ) : (
-        <GasInfoRow gasInfo={gasInfo} />
-      )}
-    </Flex>
+        ) : undefined
+      }
+      // The gas hides while the details are open; they repeat it as the network cost row.
+      gasSummary={<GasInfoRow gasInfo={gasInfo} hidden={debouncedTrade ? detailsExpanded : undefined} />}
+      trailing={showCanonicalBridge ? <CanonicalBridgeLinkBanner chainId={bridgeChainId} /> : undefined}
+      expanded={detailsExpanded}
+      // No trade, no details to show: the gas renders without the toggle.
+      onExpandedChange={debouncedTrade ? onDetailsExpandedChange : undefined}
+    />
   )
 }

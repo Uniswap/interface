@@ -2,41 +2,9 @@ import { type PlainMessage } from '@bufbuild/protobuf'
 import { type Query } from '@tanstack/react-query'
 import { type GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { SharedQueryClient } from '@universe/api'
-import { Platform, areAddressesEqual } from '@universe/chains'
+import { type Platform } from '@universe/chains'
+import { doesGetPortfolioQueryMatchAddress } from '@universe/data-api'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
-
-/**
- * Checks if a `GetPortfolio` query key matches the given address and platform.
- * Used to find active queries that need to be updated after a transaction.
- * Query key format (from api package): [GetPortfolio, { evmAddress?, svmAddress? }, queryCacheInputs]
- */
-export function doesGetPortfolioQueryMatchAddress({
-  queryKey,
-  address,
-  platform,
-}: {
-  queryKey: readonly unknown[]
-  address: string
-  platform: Platform
-}): boolean {
-  const [key, addressKey] = queryKey
-
-  if (key !== ReactQueryCacheKey.GetPortfolio || typeof addressKey !== 'object' || addressKey === null) {
-    return false
-  }
-
-  const keyWithAddresses = addressKey as { evmAddress?: string; svmAddress?: string }
-  const queryAddress = platform === Platform.EVM ? keyWithAddresses.evmAddress : keyWithAddresses.svmAddress
-
-  if (!queryAddress) {
-    return false
-  }
-
-  return areAddressesEqual({
-    addressInput1: { address, platform },
-    addressInput2: { address: queryAddress, platform },
-  })
-}
 
 /**
  * Finds all active `GetPortfolio` queries that match the given address and platform.

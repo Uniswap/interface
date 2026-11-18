@@ -11,6 +11,7 @@ import {
 import type { PositionInfo } from 'uniswap/src/features/positions/types'
 import { getPositionKey } from 'uniswap/src/features/positions/utils'
 import { usePositionVisibilityCheck } from 'uniswap/src/features/visibility/hooks/usePositionVisibilityCheck'
+import { noop } from 'utilities/src/react/noop'
 import { v2StatusFilterToRequestStatuses, type V2PositionStatusFilter } from '~/features/Liquidity/constants'
 import { useIdentityStabilizer } from '~/features/Liquidity/hooks/useIdentityStabilizer'
 import { positionSortToRequest } from '~/features/Liquidity/hooks/usePositionSort'
@@ -74,6 +75,7 @@ export interface UseWalletPositionsWebParams {
   // Server-side search; maps to the GetWalletPositions search field (token symbol/name, token
   // address, pool address/id).
   searchText?: string
+  enabled?: boolean
 }
 
 type ForwardedFromWalletPositions = Pick<
@@ -86,6 +88,9 @@ export interface UseWalletPositionsWebResult extends ForwardedFromWalletPosition
   hiddenPositions: PositionInfo[]
   isLoadingPositions: boolean
   hasErrorWithoutData: boolean
+  // The hidden set's first page; not part of isLoadingPositions so the table never waits on it.
+  isLoadingHiddenPositions: boolean
+  hasHiddenErrorWithoutData: boolean
   loadMorePositions: (options?: { onComplete?: () => void }) => void
 }
 
@@ -97,6 +102,7 @@ export function useWalletPositionsWeb({
   v2StatusFilter,
   sort,
   searchText,
+  enabled = true,
 }: UseWalletPositionsWebParams): UseWalletPositionsWebResult {
   const isPositionVisible = usePositionVisibilityCheck()
   // Every refetch re-parses positions into brand-new PositionInfo objects, so without stabilizing
@@ -149,9 +155,15 @@ export function useWalletPositionsWeb({
     liquiditySearch: searchText,
     autoFetchAllPages: false,
     pageSize: PAGE_SIZE,
+    disabled: !enabled,
   })
 
-  const { allPositions: hiddenBEPositions } = useWalletPositions({
+  const {
+    allPositions: hiddenBEPositions,
+    isLoading: isLoadingHidden,
+    hasData: hasHiddenData,
+    error: hiddenError,
+  } = useWalletPositions({
     account: address ?? '',
     chainIds,
     protocolVersions: versionFilter,
@@ -165,7 +177,7 @@ export function useWalletPositionsWeb({
     liquiditySearch: searchText,
     autoFetchAllPages: true,
     pageSize: PAGE_SIZE,
-    disabled: !address,
+    disabled: !address || !enabled,
   })
 
   const allBEPositions = useMemo(
@@ -173,8 +185,11 @@ export function useWalletPositionsWeb({
     [visibleBEPositions, hiddenBEPositions],
   )
 
-  const isLoadingPositions = !!address && (isLoading || !hasData) && !error
+  const isLoadingPositions = enabled && !!address && (isLoading || !hasData) && !error
   const hasErrorWithoutData = !!error && !hasData
+  // First page only: the hidden query drains every page, but one page settles whether any exist.
+  const isLoadingHiddenPositions = enabled && !!address && (isLoadingHidden || !hasHiddenData) && !hiddenError
+  const hasHiddenErrorWithoutData = !!hiddenError && !hasHiddenData
 
   const { visiblePositions, hiddenPositions } = useMemo(() => {
     const dedupedById = new Map<string, PositionInfo>()
@@ -212,7 +227,8 @@ export function useWalletPositionsWeb({
     return { visiblePositions: stabilizeVisible(visible), hiddenPositions: stabilizeHidden(hidden) }
   }, [allBEPositions, hiddenBEPositions, isPositionVisible, stabilizeVisible, stabilizeHidden])
 
-  usePendingLPTransactionsChangeListener(refetch)
+  // TanStack's refetch ignores `enabled`, so a disabled observer must not subscribe it.
+  usePendingLPTransactionsChangeListener(enabled ? refetch : noop)
 
   const loadMorePositions = useCallback(
     (options?: { onComplete?: () => void }) => {
@@ -233,6 +249,8 @@ export function useWalletPositionsWeb({
     hasNextPage,
     isLoadingPositions,
     hasErrorWithoutData,
+    isLoadingHiddenPositions,
+    hasHiddenErrorWithoutData,
     refetch,
     loadMorePositions,
     pagesLoaded,

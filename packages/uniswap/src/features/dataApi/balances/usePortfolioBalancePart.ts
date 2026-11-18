@@ -7,7 +7,7 @@ import {
   selectPortfolioBalanceBreakdown,
   selectorForPart,
   useGetWalletBalancesQuery,
-  useWalletBalancesIncludeCategories,
+  WALLET_BALANCES_INCLUDE_CATEGORIES,
   type PortfolioBalanceBreakdown,
 } from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -52,7 +52,6 @@ function usePortfolioBalanceQueryConfig({
   enabled = true,
   chainIds,
 }: UsePortfolioTotalValueParams): PortfolioBalanceQueryConfig {
-  const includeCategories = useWalletBalancesIncludeCategories()
   const walletAddress = evmAddress ?? svmAddress
   const queryEnabled = !!walletAddress && enabled
 
@@ -71,8 +70,14 @@ function usePortfolioBalanceQueryConfig({
   const modifier = useRestPortfolioValueModifier(walletAddress)
 
   return {
-    requestedCategories: includeCategories,
-    queryInput: { evmAddress, svmAddress, chainIds: effectiveChainIds, includeCategories, modifier },
+    requestedCategories: WALLET_BALANCES_INCLUDE_CATEGORIES,
+    queryInput: {
+      evmAddress,
+      svmAddress,
+      chainIds: effectiveChainIds,
+      includeCategories: WALLET_BALANCES_INCLUDE_CATEGORIES,
+      modifier,
+    },
     walletBalancesQueryEnabled: queryEnabled,
     refetchInterval: internalPollInterval,
   }

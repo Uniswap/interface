@@ -55,7 +55,7 @@ needs a coordination note on the issue before you move it.
 ## Step 2: design the props (the one creative step; reviewed hardest)
 
 Props use the package vocabulary in `packages/transactions-ui/src/types/` (`TokenDisplay`,
-`AmountDisplay`, `SwapWarningDisplay`, ...). Rules:
+`AmountDisplay`, `WarningLevel`, ...). Rules:
 
 - **Data arrives display-ready.** Formatted strings, booleans, small enums. The
   aggregates never cross: no `DerivedSwapInfo`, no `CurrencyInfo`, no `GasFeeResult`,

@@ -5,12 +5,12 @@ import type {
   GetWalletsBalancesResponse,
   WalletBalance,
 } from '@uniswap/client-data-api/dist/data/v1/api_pb.d'
+import { areEvmAddressesEqual } from '@universe/chains'
 import {
   fetchWalletsBalances as fetchWalletsBalancesWithClient,
   getGetWalletsBalancesQueryOptions,
   type WithoutWalletAccounts,
-} from '@universe/api'
-import { areEvmAddressesEqual } from '@universe/chains'
+} from '@universe/data-api'
 import { dataApiServiceClientV1 } from 'uniswap/src/data/apiClients/dataApiService/clients/DataApiClient'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { type QueryOptionsResult } from 'utilities/src/reactQuery/queryOptions'

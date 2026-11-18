@@ -5,7 +5,7 @@ import { mapRwaTokenList } from 'uniswap/src/data/apiClients/dataApiService/rwa/
 import type { Rwa } from 'uniswap/src/data/apiClients/dataApiService/rwa/types'
 
 /**
- * Flat Commodities rows from v1 ListRwaTokens, for the flag-off Explore table only. With token categories on,
+ * Flat Commodities rows from v1 ListRwaTokens, for the static-fallback Explore table only. A fetched
  * Commodities is a BE-flat category and renders through the standard category-filtered token table instead.
  */
 export function useExploreRwaTokens({

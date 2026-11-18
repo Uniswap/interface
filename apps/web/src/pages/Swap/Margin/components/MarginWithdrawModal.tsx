@@ -1,18 +1,24 @@
+import { CurrencyAmount } from '@uniswap/sdk-core'
 import { Text } from '@universe/mycelium'
 import { TestID } from '@universe/test'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { CurrencyInputPanel } from 'uniswap/src/components/CurrencyInputPanel/CurrencyInputPanel'
 import { type MarginActivePosition } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
-import { NumberType } from 'utilities/src/format/types'
+import { CurrencyField } from 'uniswap/src/types/currency'
+import { currencyId } from 'uniswap/src/utils/currencyId'
 import { useEvent } from 'utilities/src/react/hooks'
-import { formatUnits, parseUnits } from '~/chains'
+import { parseUnits } from '~/chains'
 import { type MarginMarket } from '~/constants/margin'
 import { getMarginCurrencyInfo, useMarginCurrencyInfos } from '~/features/margin/hooks/useMarginCurrencyInfos'
-import { marginAssetCurrencyId, marginTokenCurrencyId } from '~/features/margin/utils/marginCurrencies'
-import { collateralUsdValue } from '~/features/margin/utils/marginFormat'
+import {
+  getMarginEquityCurrency,
+  marginAssetCurrencyId,
+  marginTokenCurrencyId,
+} from '~/features/margin/utils/marginCurrencies'
 import { marginPositionDebt } from '~/features/margin/utils/marginPositionRow'
 import { marginUnwrapSymbol } from '~/features/margin/utils/marginTokenDisplay'
 import { MarginAdjustBeforeAfterSection } from '~/pages/Swap/Margin/components/MarginAdjustBeforeAfterRows'
@@ -20,13 +26,12 @@ import { MarginAdjustQuoteRows } from '~/pages/Swap/Margin/components/MarginAdju
 import { MarginAdjustShowMoreSection } from '~/pages/Swap/Margin/components/MarginAdjustShowMoreSection'
 import { MarginActionFooterMessage } from '~/pages/Swap/Margin/components/shared/MarginActionFooterMessage'
 import { MarginActionModalShell } from '~/pages/Swap/Margin/components/shared/MarginActionModalShell'
-import { MarginAmountField } from '~/pages/Swap/Margin/components/shared/MarginAmountField'
 import { MarginExcludedVenueNotice } from '~/pages/Swap/Margin/components/shared/MarginExcludedVenueNotice'
 import { MarginPairHeading } from '~/pages/Swap/Margin/components/shared/MarginPairHeading'
+import { useMarginAdjustAmountInput } from '~/pages/Swap/Margin/hooks/useMarginAdjustAmountInput'
 import { useMarginAdjustController } from '~/pages/Swap/Margin/hooks/useMarginAdjustController'
 import { useMarginPositionMarkIsStale } from '~/pages/Swap/Margin/hooks/useMarginPositionMarkIsStale'
 import type { AdjustFunding } from '~/pages/Swap/Margin/hooks/useMarginQuote'
-import { marginPositionMark } from '~/pages/Swap/Margin/marginUsdPnl'
 
 // computeMaxWithdrawable returns the amount that lands health EXACTLY on the floor, so requesting it
 // verbatim rounds a hair under and the server rejects the quote outright (measured on mainnet: a
@@ -52,9 +57,14 @@ export function MarginWithdrawModal({
   onClose: () => void
 }): JSX.Element {
   const { t } = useTranslation()
-  const { formatNumberOrString } = useLocalizationContext()
   const currencyInfos = useMarginCurrencyInfos()
-  const [amount, setAmount] = useState('')
+  // The payout token itself: a withdrawal pays out in the collateral, so a WETH position pays WETH.
+  const collateralCurrency = useMemo(
+    () => getMarginEquityCurrency({ ...market, shouldUseNativeEquity: false }),
+    [market],
+  )
+  const collateralCurrencyInfo = useCurrencyInfo(currencyId(collateralCurrency))
+  const { tokenAmount: amount, panelProps } = useMarginAdjustAmountInput(collateralCurrency)
   const [expandedOverride, setExpandedOverride] = useState<boolean | undefined>(undefined)
 
   const collateralDecimals = market.collateral.decimals
@@ -91,34 +101,13 @@ export function MarginWithdrawModal({
   const hasCeiling = maxWithdrawableRaw !== undefined
   const nothingAvailable = hasCeiling && BigInt(maxWithdrawableRaw) === 0n
 
-  const onFillMax = useEvent(() => {
-    if (maxWithdrawableRaw !== undefined) {
-      const ceiling = BigInt(maxWithdrawableRaw)
-      setAmount(formatUnits((ceiling * (BPS_DENOM - MAX_FILL_HAIRCUT_BPS)) / BPS_DENOM, collateralDecimals))
-    }
-  })
   // With nothing withdrawable the amount field is suppressed entirely, leaving no visible reason why.
   // Borrowing — one tap away in every other state — is that reason, so open the section by default here.
   // Still an override, not a lock: the user can collapse it.
   const isExpanded = expandedOverride ?? nothingAvailable
   const toggleExpanded = useEvent(() => setExpandedOverride(!isExpanded))
 
-  // Through the guarded decoder: '0' is the wire's "no price", and a LONG's collateral USD value is
-  // amount x mark, so the raw value captioned every amount the user typed as "$0.00" — on a sheet that
-  // stays fully submittable, since its ceiling is the server's `maxWithdrawable` and never this read.
-  // A SHORT's collateral is the stable leg and needs no mark, which is why it keeps its caption.
-  const usableMark = marginPositionMark({ position })
   const direction = position.direction
-  // Number('Infinity') is truthy, and formatting a non-finite value throws inside the formatter.
-  const amountHuman = Number(amount)
-  const amountUsd =
-    usableMark === undefined && direction !== MarginDirection.SHORT
-      ? undefined
-      : collateralUsdValue({
-          collateralAmount: Number.isFinite(amountHuman) ? amountHuman : 0,
-          mark: usableMark ?? 0,
-          direction,
-        })
 
   const collateralLogoUrl = getMarginCurrencyInfo({ currencyInfos, currencyId: marginAssetCurrencyId(market) })?.logoUrl
   const debtLogoUrl = getMarginCurrencyInfo({ currencyInfos, currencyId: marginTokenCurrencyId(market.debt) })?.logoUrl
@@ -159,38 +148,29 @@ export function MarginWithdrawModal({
       <MarginExcludedVenueNotice venue={market.venue} />
       {/* A live input above a dead max reads as usable; with no headroom there is nothing to type. */}
       {nothingAvailable ? null : (
-        <MarginAmountField
-          inputAriaLabel={t('margin.withdraw.amountLabel')}
-          value={amount}
-          onChangeText={setAmount}
-          maxDecimals={collateralDecimals}
-          // The payout token itself: a withdrawal pays out in the collateral, so a WETH position pays WETH.
-          chip={{ kind: 'static', symbol: market.collateral.symbol, logoUrl: collateralLogoUrl ?? undefined }}
-          usdCaption={
-            amountUsd === undefined
-              ? undefined
-              : formatNumberOrString({ value: amountUsd, type: NumberType.FiatStandard })
-          }
-          trailing={
+        <CurrencyInputPanel
+          {...panelProps}
+          currencyField={CurrencyField.INPUT}
+          currencyInfo={collateralCurrencyInfo}
+          currencyBalance={
             hasCeiling
-              ? {
-                  kind: 'action',
-                  label: t('margin.withdraw.available', {
-                    amount: `${formatNumberOrString({
-                      value: Number(formatUnits(BigInt(maxWithdrawableRaw), collateralDecimals)),
-                      type: NumberType.TokenNonTx,
-                    })} ${market.collateral.symbol}`,
-                  }),
-                  ariaLabel: t('margin.withdraw.useMax'),
-                  onPress: onFillMax,
-                }
+              ? CurrencyAmount.fromRawAmount(
+                  collateralCurrency,
+                  ((BigInt(maxWithdrawableRaw) * (BPS_DENOM - MAX_FILL_HAIRCUT_BPS)) / BPS_DENOM).toString(),
+                )
               : undefined
           }
-          // The server always reserves a dust remainder, so Adjust can never empty the position.
-          helperCaption={hasDebt ? undefined : t('margin.withdraw.fullExitHint')}
+          showFiatToggleIcon
+          customPanelStyle={{ backgroundColor: '$surface2' }}
         />
       )}
-      {controller.quoteErrorResult ? (
+      {/* The server always reserves a dust remainder, so Adjust can never empty the position. */}
+      {nothingAvailable || hasDebt ? null : (
+        <Text variant="body4" color="$neutral3">
+          {t('margin.withdraw.fullExitHint')}
+        </Text>
+      )}
+      {controller.quoteErrorResult && !controller.overMax ? (
         <Text variant="body3" color="$statusCritical">
           {controller.quoteErrorResult.message}
         </Text>

@@ -1,6 +1,6 @@
 import { Experiments, getOverrideAdapter, LayerProperties, Layers, useExperiment, useLayer } from '@universe/gating'
 import { Flex, Input, Switch, Text } from '@universe/mycelium'
-import { useCallback } from 'react'
+import { memo, useCallback } from 'react'
 
 export function useLayerValue(
   layerName: Layers,
@@ -23,7 +23,7 @@ export function useLayerValue(
   return { value, overrideValue }
 }
 
-export function LayerRow({
+export const LayerRow = memo(function LayerRow({
   value: layerName,
   layerDefault = false,
 }: {
@@ -32,9 +32,9 @@ export function LayerRow({
 }): JSX.Element {
   const { value, overrideValue } = useLayerValue(layerName, layerDefault)
   return <Row target={layerName} values={value} overrideValue={overrideValue} />
-}
+})
 
-export function ExperimentRow({
+export const ExperimentRow = memo(function ExperimentRow({
   value: experimentName,
   hideTarget = false,
 }: {
@@ -51,7 +51,7 @@ export function ExperimentRow({
   )
 
   return <Row target={experimentName} values={value} overrideValue={overrideValue} hideTarget={hideTarget} />
-}
+})
 
 function Row({
   target,

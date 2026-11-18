@@ -2,7 +2,9 @@ import {
   chunkString,
   concatStrings,
   escapeRegExp,
+  matchesAllWords,
   normalizeTextInput,
+  preventOrphanWord,
   trimToLength,
 } from 'utilities/src/primitives/string'
 
@@ -97,5 +99,43 @@ describe(chunkString, () => {
 
   it('returns one chunk per character when size is 1', () => {
     expect(chunkString('abc', 1)).toEqual(['a', 'b', 'c'])
+  })
+})
+
+describe(matchesAllWords, () => {
+  it('matches everything for an empty or whitespace query', () => {
+    expect(matchesAllWords('', 'anything')).toBe(true)
+    expect(matchesAllWords('   ', 'anything')).toBe(true)
+  })
+
+  it('matches case-insensitively', () => {
+    expect(matchesAllWords('SWAP', 'swap-confirmation')).toBe(true)
+  })
+
+  it('requires every word to appear', () => {
+    expect(matchesAllWords('swap wait', 'swap-confirmation', 'wait_times')).toBe(true)
+    expect(matchesAllWords('swap buffer', 'swap-confirmation', 'wait_times')).toBe(false)
+  })
+
+  it('ignores undefined targets', () => {
+    expect(matchesAllWords('flag', undefined, 'flag-name')).toBe(true)
+  })
+})
+
+describe(preventOrphanWord, () => {
+  it('joins the last two words with a non-breaking space', () => {
+    expect(preventOrphanWord('You need ETH on Robinhood Chain')).toBe('You need ETH on Robinhood\u00A0Chain')
+  })
+
+  it('returns a single word unchanged', () => {
+    expect(preventOrphanWord('Chain')).toBe('Chain')
+  })
+
+  it('returns an empty string unchanged', () => {
+    expect(preventOrphanWord('')).toBe('')
+  })
+
+  it('leaves text with trailing whitespace unchanged', () => {
+    expect(preventOrphanWord('Robinhood Chain ')).toBe('Robinhood Chain ')
   })
 })

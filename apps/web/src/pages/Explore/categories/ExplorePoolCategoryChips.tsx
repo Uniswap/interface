@@ -3,8 +3,11 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { PoolCategory } from 'uniswap/src/features/tokenCategories/types'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '~/constants/breakpoints'
+import {
+  deriveCategoryChipOptions,
+  useFlexSlotCategoryId,
+} from '~/features/Explore/categories/exploreCategoryChipOptions'
 import { CategoryChipRow } from '~/pages/Explore/categories/CategoryChipRow'
-import { deriveCategoryChipOptions, useFlexSlotCategoryId } from '~/pages/Explore/categories/exploreCategoryChipOptions'
 
 // Pool chips keep empty categories for now; the More dropdown still disables them.
 const KEEP_EMPTY_POOL_CATEGORIES = (): boolean => false

@@ -1,4 +1,4 @@
-import { REFRESH_FRAME_HIDDEN_CLASS, REFRESH_FRAME_REVEAL_CLASSES } from '@universe/mycelium/refresh-button-compat'
+import { REFRESH_FRAME_REVEAL_CLASSES } from '@universe/mycelium/refresh-button-compat'
 import { TestID } from '@universe/test'
 import { PortfolioBalancePart } from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances'
 import { PortfolioBalance } from 'uniswap/src/features/portfolio/PortfolioBalance/PortfolioBalance'
@@ -51,7 +51,6 @@ describe('PortfolioBalance refresh button hover reveal', () => {
     const { frame } = renderBalance()
 
     expect(frame.classList.contains('opacity-0')).toBe(true)
-    expect(frame.classList.contains(REFRESH_FRAME_HIDDEN_CLASS)).toBe(false)
     for (const cls of REFRESH_FRAME_REVEAL_CLASSES.split(' ')) {
       expect(frame.classList.contains(cls)).toBe(true)
     }

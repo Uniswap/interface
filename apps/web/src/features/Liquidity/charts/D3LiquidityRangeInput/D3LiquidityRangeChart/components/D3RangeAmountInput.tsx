@@ -5,7 +5,7 @@ import { useSporeColors } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
 import { AmountInput } from 'uniswap/src/components/AmountInput/AmountInput'
-import { numericInputRegex } from 'uniswap/src/components/AmountInput/utils/numericInputEnforcer'
+import { numericInputEnforcerWithInfinity } from 'uniswap/src/components/AmountInput/utils/numericInputEnforcer'
 import { useCreateLiquidityContext } from '~/features/Liquidity/Create/CreateLiquidityContextProvider'
 import { RangeAmountInputPriceMode } from '~/features/Liquidity/Create/types'
 import { getBaseAndQuoteCurrencies } from '~/features/Liquidity/utils/currency'
@@ -13,10 +13,6 @@ import { getBaseAndQuoteCurrencies } from '~/features/Liquidity/utils/currency'
 enum RangeSelectionInput {
   MIN = 0,
   MAX = 1,
-}
-
-function numericInputEnforcerWithInfinity(value?: string): boolean {
-  return !value || numericInputRegex.test(value) || value === '∞'
 }
 
 export function D3RangeAmountInput({

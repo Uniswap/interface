@@ -1,5 +1,5 @@
+import { WarningLine } from '@universe/transactions-ui'
 import { useTranslation } from 'react-i18next'
-import { WarningMessage } from 'uniswap/src/components/WarningMessage/WarningMessage'
 import { WARNING_DEADLINE_TOLERANCE } from 'uniswap/src/constants/transactions'
 import { useTransactionSettingsStore } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
 
@@ -12,7 +12,7 @@ export function DeadlineWarning(): JSX.Element | null {
   }
 
   if (customDeadline >= WARNING_DEADLINE_TOLERANCE) {
-    return <WarningMessage warningMessage={t('swap.settings.deadline.warning')} color="$statusWarning" />
+    return <WarningLine message={t('swap.settings.deadline.warning')} level="warning" />
   }
 
   return null

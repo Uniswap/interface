@@ -1,4 +1,3 @@
-import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { Flex, Text } from '@universe/mycelium'
 import { TestID } from '@universe/test'
 import { useState } from 'react'
@@ -18,7 +17,6 @@ export function MoreWaysToTrade(): JSX.Element | null {
   const rwaMatch = useTDPRWAMatch()
   const subject = useTDPRWASubject()
   const { otherIssuerTokens, getMarketData } = useMoreRwaTokens({ rwaMatch, subject })
-  const plainTokenNames = useIsTokenCategoriesEnabled()
   const onToggleExpanded = useExpandRWASiblingHandler({
     rwaMatch,
     variantCount: otherIssuerTokens.length,
@@ -54,7 +52,6 @@ export function MoreWaysToTrade(): JSX.Element | null {
               primaryName={getIssuerTokenPrimaryName({
                 tokenName: token.name,
                 fallbackName: companyName,
-                plainTokenNames,
               })}
               marketData={getMarketData(token)}
             />

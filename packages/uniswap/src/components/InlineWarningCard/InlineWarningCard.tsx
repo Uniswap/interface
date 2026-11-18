@@ -156,6 +156,7 @@ export function InlineWarningCard({
       }
       iconBackgroundColor={heroIcon ? backgroundColor : undefined}
       iconColor={color}
+      ctaButtonLabel={t('common.button.learn')}
       onPressCtaButton={onPressCtaButton}
     />
   )

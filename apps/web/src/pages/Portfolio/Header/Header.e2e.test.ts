@@ -50,6 +50,7 @@ test.describe(
       test('should display all portfolio tabs', async ({ page }) => {
         await expect(page.getByTestId(TestID.PortfolioTabOverview)).toBeVisible()
         await expect(page.getByTestId(TestID.PortfolioTabTokens)).toBeVisible()
+        await expect(page.getByTestId(TestID.PortfolioTabPools)).toBeVisible()
         await expect(page.getByTestId(TestID.PortfolioTabNfts)).toBeVisible()
         await expect(page.getByTestId(TestID.PortfolioTabActivity)).toBeVisible()
       })
@@ -57,6 +58,11 @@ test.describe(
       test('should navigate to Tokens tab', async ({ page }) => {
         await page.getByTestId(TestID.PortfolioTabTokens).click()
         await expect(page).toHaveURL(/\/portfolio\/tokens/)
+      })
+
+      test('should navigate to Pools tab', async ({ page }) => {
+        await page.getByTestId(TestID.PortfolioTabPools).click()
+        await expect(page).toHaveURL(/\/portfolio\/pools/)
       })
 
       test('should navigate to NFTs tab', async ({ page }) => {
@@ -76,7 +82,7 @@ test.describe(
 
         // Then navigate back to Overview
         await page.getByTestId(TestID.PortfolioTabOverview).click()
-        await expect(page).toHaveURL(/\/portfolio(?!\/tokens|\/nfts|\/activity|\/defi)/)
+        await expect(page).toHaveURL(/\/portfolio(?!\/tokens|\/pools|\/nfts|\/activity|\/defi)/)
       })
     })
 

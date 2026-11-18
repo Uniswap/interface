@@ -1,14 +1,11 @@
 import { nearestUsableTick, TickMath } from '@uniswap/v3-sdk'
 import * as d3 from 'd3'
 import { logger } from 'utilities/src/logger/logger'
-import { CHART_BEHAVIOR, CHART_DIMENSIONS } from '~/features/Liquidity/charts/D3LiquidityChartShared/constants'
+import { CHART_DIMENSIONS } from '~/features/Liquidity/charts/D3LiquidityChartShared/constants'
+import { buildBarPathsByOpacity } from '~/features/Liquidity/charts/D3LiquidityChartShared/utils/barPaths'
 import { getOpacityForTick } from '~/features/Liquidity/charts/D3LiquidityChartShared/utils/colorUtils'
+import { createBucketEntriesBuilder } from '~/features/Liquidity/charts/D3LiquidityChartShared/utils/liquidityBucketing/createBucketEntriesBuilder'
 import type { BucketChartEntry } from '~/features/Liquidity/charts/D3LiquidityChartShared/utils/liquidityBucketing/liquidityBucketing'
-import {
-  buildBucketChartEntries,
-  buildBuckets,
-  buildSegmentsFromRawTicks,
-} from '~/features/Liquidity/charts/D3LiquidityChartShared/utils/liquidityBucketing/liquidityBucketing'
 import type {
   ChartActions,
   ChartState,
@@ -41,6 +38,12 @@ export function createLiquidityBarsRenderer({
 
   // Persisted across the per-frame renderer re-init via the shared rendering context.
   const smoothing = context.liquidityScaleSmoothing
+  const buildEntries = createBucketEntriesBuilder({
+    rawTicks: context.rawTicks,
+    liquidityData: context.liquidityData,
+    tickSpacing: context.tickSpacing,
+    groupTicks: context.groupTicks,
+  })
 
   const cancelSettleFrame = (): void => {
     if (smoothing.settleFrameId !== undefined) {
@@ -99,10 +102,10 @@ export function createLiquidityBarsRenderer({
         liquidityData,
         token0Color,
         token1Color,
-        rawTicks,
         tickScale,
         currentTick,
         tickSpacing,
+        groupTicks,
         dimensions: contextDimensions,
       } = context
       const {
@@ -120,14 +123,6 @@ export function createLiquidityBarsRenderer({
         return
       }
 
-      // Build segments
-      const segments = buildSegmentsFromRawTicks(rawTicks)
-
-      // If no segments were built (no liquidityNet data), nothing to render
-      if (segments.length === 0) {
-        return
-      }
-
       // Calculate the VISIBLE tick range based on current zoom/pan state
       // yToTick(0) = highest visible tick (top of viewport)
       // yToTick(height) = lowest visible tick (bottom of viewport)
@@ -138,29 +133,21 @@ export function createLiquidityBarsRenderer({
         nearestUsableTick(TickMath.MIN_TICK, tickSpacing),
       ) // Bottom of viewport = lowest visible tick
 
-      // Build buckets for the VISIBLE range on a fixed grid, so each bar keeps the same tick range
-      // as you scroll and translates smoothly with the pan instead of jittering vertically.
-      const buckets = buildBuckets({
-        segments,
+      // Buckets for the VISIBLE range on a fixed grid, so each bar keeps the same tick range as you scroll and
+      // translates smoothly with the pan instead of jittering vertically. Amounts are summed per bucket's
+      // max-liquidity segment (see buildBucketChartEntries).
+      const renderedBuckets = buildEntries({
         visibleMinTick,
         visibleMaxTick,
-        desiredBars: CHART_BEHAVIOR.DESIRED_BUCKETS,
-        tickSpacing,
-        fixedGrid: true,
-      })
-
-      // Convert to chart data with segment tracking
-      // Sum locked amounts from all entries within the bucket's tick range.
-      // For sparse pools (few initialized ticks), a bucket may contain no entries
-      // even though it overlaps a segment — fall back to segment-based lookup.
-      const renderedBuckets: BucketChartEntry[] = buildBucketChartEntries({
-        buckets,
-        liquidityData,
+        ticksPerPixel: Math.abs(tickScale.axisToTick(0) - tickScale.axisToTick(chartHeight)) / chartHeight,
         baseCurrency,
         quoteCurrency,
         priceInverted,
         protocolVersion,
       })
+      if (!renderedBuckets) {
+        return
+      }
 
       // Store rendered buckets in state for overlay hover detection
       getActions().setChartState({ renderedBuckets })
@@ -241,6 +228,32 @@ export function createLiquidityBarsRenderer({
         .attr('y', dotY)
         .attr('width', dimensions.width + CHART_DIMENSIONS.LIQUIDITY_CHART_WIDTH)
         .attr('height', Math.max(0, chartHeight - dotY))
+
+      if (!groupTicks) {
+        // Full granularity: bars abut with no gap, one path per opacity, so the profile reads as a smooth shape.
+        const getRect = (d: BucketChartEntry) => {
+          const y = tickScale.tickToAxis(d.endTick)
+          const height = tickScale.tickToAxis(d.startTick) - y
+          return y > chartHeight || y + height < 0 ? undefined : { x: getBarX(d), y, width: getBarWidth(d), height }
+        }
+        const paths = buildBarPathsByOpacity({ bars: renderedBuckets, getOpacity: getBarOpacity, getRect })
+        for (const [clip, color] of [
+          ['above', token0Color],
+          ['below', token1Color],
+        ] as const) {
+          barsGroup
+            .append('g')
+            .attr('clip-path', `url(#${chartId}-bars-clip-${clip})`)
+            .selectAll('path')
+            .data(paths)
+            .join('path')
+            .attr('class', `liquidity-bar liquidity-bar-${clip}`)
+            .attr('d', (p) => p.d)
+            .attr('opacity', (p) => p.opacity)
+            .attr('fill', color)
+        }
+        return
+      }
 
       // Draw bars above dotY (token0 zone)
       barsGroup

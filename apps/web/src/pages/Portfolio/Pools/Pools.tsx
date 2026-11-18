@@ -1,10 +1,6 @@
 import { Platform } from '@universe/chains'
 import { parseOptionalHex } from '@universe/encoding'
-import {
-  FeatureFlags,
-  SynchronizedHeartbeatsConfigKey,
-  useFeatureFlagWithExposureLoggingDisabled,
-} from '@universe/gating'
+import { SynchronizedHeartbeatsConfigKey } from '@universe/gating'
 import { Flex } from '@universe/mycelium'
 import { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -23,6 +19,8 @@ import { EmptyPositionsView } from '~/features/Liquidity/components/emptyStates/
 import { ErrorPositionsView } from '~/features/Liquidity/components/emptyStates/ErrorPositionsView'
 import { PoolsUnavailableOnSolanaView } from '~/features/Liquidity/components/emptyStates/PoolsUnavailableOnSolanaView'
 import {
+  DEFAULT_LP_POSITION_STATUS_FILTER,
+  DEFAULT_V2_POSITION_STATUS_FILTER,
   deriveActiveRangeFilter,
   deriveLifecycleFilter,
   LP_POSITION_PROTOCOL_VERSIONS,
@@ -64,13 +62,11 @@ export function PortfolioPools() {
   const { evmAddress: resolvedEvmAddress, svmAddress: resolvedSvmAddress } = useResolvedAddresses()
   const { chainId, externalAddress } = usePortfolioRoutes()
   const showDemoView = useShowDemoView()
-  const portfolioPoolsBalancesEnabled = useFeatureFlagWithExposureLoggingDisabled(FeatureFlags.PortfolioPoolsBalances)
   const isSynchronizedHeartbeatsEnabled = useIsSynchronizedHeartbeatEnabled(
     SynchronizedHeartbeatsConfigKey.PortfolioPollIntervalSeconds,
-    usePortfolioHeartbeatEnabled({ tab: PortfolioTab.Pools, poolsEnabled: portfolioPoolsBalancesEnabled }),
+    usePortfolioHeartbeatEnabled(),
   )
-  const outageBanner = usePoolsOutageBanner({ evmAddress, chainId, enabled: portfolioPoolsBalancesEnabled })
-  const showBalanceHeader = portfolioPoolsBalancesEnabled
+  const outageBanner = usePoolsOutageBanner({ evmAddress, chainId })
 
   const { search, versionFilter, statusFilter, v2StatusFilter, sort, onSort, positionsTableControlBarProps } =
     usePortfolioPoolsFilters({
@@ -148,11 +144,33 @@ export function PortfolioPools() {
   )
   const walletHasAnyPositions = visiblePositions.length > 0 || hiddenPositions.length > 0
   const hasActiveV2Filter = hasActiveControlBarFilter(positionsTableControlBarProps)
-  // An active filter (the Hidden toggle included) must keep the table+control bar mounted, otherwise
-  // it unmounts with no way back. The route chain scope is the same trap: a chain with no positions
-  // must show the no-results table (whose Clear filters widens back to all networks), not the bare
-  // empty view.
-  const showEmptyState = hasLoadedPositions && !walletHasAnyPositions && !hasActiveV2Filter
+  // An empty filtered list defers to the default view (all networks, open, both ranges, no search).
+  // If that is empty too, the wallet has nothing to show and gets the empty view; otherwise filters
+  // are hiding positions, so the table stays with its Clear filters action. The user's own lifecycle
+  // choice is counted too: a closed-only wallet that picked Closed and saw rows must keep the
+  // control bar when a search or network then empties the list.
+  const defaultViewLifecycle = useMemo(
+    () => [...new Set([...DEFAULT_V2_POSITION_STATUS_FILTER, ...v2StatusFilter])],
+    [v2StatusFilter],
+  )
+  const defaultViewPositions = useWalletPositionsWeb({
+    address: evmAddress,
+    chainFilter: null,
+    versionFilter: LP_POSITION_PROTOCOL_VERSIONS,
+    statusFilter: DEFAULT_LP_POSITION_STATUS_FILTER,
+    v2StatusFilter: defaultViewLifecycle,
+    sort,
+    searchText: '',
+    enabled: hasActiveV2Filter && hasLoadedPositions && !walletHasAnyPositions,
+  })
+  const isCheckingDefaultView = defaultViewPositions.isLoadingPositions || defaultViewPositions.isLoadingHiddenPositions
+  const isDefaultViewEmpty =
+    !isCheckingDefaultView &&
+    !defaultViewPositions.hasErrorWithoutData &&
+    !defaultViewPositions.hasHiddenErrorWithoutData &&
+    defaultViewPositions.visiblePositions.length === 0 &&
+    defaultViewPositions.hiddenPositions.length === 0
+  const showEmptyState = hasLoadedPositions && !walletHasAnyPositions && (!hasActiveV2Filter || isDefaultViewEmpty)
 
   const portfolioPoolsUrl = buildPortfolioUrl({
     tab: PortfolioTab.Pools,
@@ -165,7 +183,7 @@ export function PortfolioPools() {
     if (hasErrorWithoutData) {
       return <ErrorPositionsView onRetry={refetch} />
     }
-    if (isLoadingPositions) {
+    if (isLoadingPositions || isCheckingDefaultView) {
       return <PositionsTableLoader {...positionsTableControlBarProps} />
     }
     return (
@@ -196,17 +214,15 @@ export function PortfolioPools() {
     return (
       <Flex gap="$spacing24">
         <Flex gap="$spacing24">
-          {showBalanceHeader && (
-            <PortfolioBalance
-              evmOwner={evmAddress}
-              chainIds={balanceChainIds}
-              endText={hasLoadedBalance ? <PoolsPositionCountIndicator count={poolsPositionCount} /> : undefined}
-              part={PortfolioBalancePart.Pools}
-              // The heartbeat refetches balances on its tick — avoid a second overlapping schedule
-              disablePolling={isSynchronizedHeartbeatsEnabled}
-              disableRefresh={showDemoView}
-            />
-          )}
+          <PortfolioBalance
+            evmOwner={evmAddress}
+            chainIds={balanceChainIds}
+            endText={hasLoadedBalance ? <PoolsPositionCountIndicator count={poolsPositionCount} /> : undefined}
+            part={PortfolioBalancePart.Pools}
+            // The heartbeat refetches balances on its tick — avoid a second overlapping schedule
+            disablePolling={isSynchronizedHeartbeatsEnabled}
+            disableRefresh={showDemoView}
+          />
           <PositionsSummaryChips
             walletAddress={parseOptionalHex(evmAddress)}
             showActions={!isExternalWallet && isEvmConnected}

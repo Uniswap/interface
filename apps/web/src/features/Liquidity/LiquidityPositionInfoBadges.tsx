@@ -1,15 +1,8 @@
 import { ProtocolVersion as RestProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import type { UniverseChainId } from '@universe/chains'
-import { Flex, Text, type TextCompatProps, Tooltip } from '@universe/mycelium'
+import { Flex, Text, Tooltip } from '@universe/mycelium'
 import { DocumentList } from '@universe/mycelium/icons/DocumentList'
-import {
-  forwardRef,
-  type ForwardRefExoticComponent,
-  type ReactNode,
-  type RefAttributes,
-  useMemo,
-  useState,
-} from 'react'
+import { type ReactNode, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CopyHelper } from 'uniswap/src/components/CopyHelper/CopyHelper'
 import { FeeDisplay } from 'uniswap/src/components/FeeDisplay/FeeDisplay'
@@ -24,59 +17,13 @@ import { useUniswapHookProvenance } from 'uniswap/src/features/poolHooks/hooks/u
 import type { FeeData } from 'uniswap/src/features/positions/types'
 import { shortenAddress } from 'utilities/src/addresses'
 import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
-import { Portal } from '~/components/Popups/Portal'
+import { InfoBadge, infoBadgePlacement } from '~/components/Badge/InfoBadge'
+import { Portal } from '~/components/Portal/Portal'
 import { DynamicFeeIcon, DynamicFeeTooltipContent, useDynamicFeeLabel } from '~/features/Liquidity/DynamicFee'
 import { HookDetailsModal } from '~/features/Liquidity/HookDetailsModal'
 import { HookTooltip } from '~/features/Liquidity/HookTooltip'
 import { isDynamicFeeTier } from '~/features/Liquidity/utils/feeTiers'
 import { getProtocolVersionFromLabel, getProtocolVersionLabel } from '~/features/Liquidity/utils/protocolVersion'
-
-type BadgeSize = 'default' | 'small' | 'compact'
-type BadgePlacement = 'start' | 'middle' | 'end' | 'only'
-
-const BADGE_SIZE_PROPS: Record<BadgeSize, TextCompatProps> = {
-  default: { variant: 'body3' },
-  small: { variant: 'body4' },
-  // Smaller than `small`: 12px text plus tighter chip padding. Used on mWeb pool header.
-  compact: { variant: 'body4', py: '$spacing1', px: '$spacing4' },
-}
-
-const BADGE_PLACEMENT_PROPS: Record<BadgePlacement, TextCompatProps> = {
-  start: { borderTopLeftRadius: '$rounded4', borderBottomLeftRadius: '$rounded4' },
-  middle: {},
-  end: { borderTopRightRadius: '$rounded4', borderBottomRightRadius: '$rounded4' },
-  only: { borderRadius: '$rounded4' },
-}
-
-type PositionInfoBadgeProps = TextCompatProps & { size?: BadgeSize; placement?: BadgePlacement }
-
-// Explicit return type: forwardRef's inferred type isn't nameable under declaration emit (TS2883).
-const PositionInfoBadge: ForwardRefExoticComponent<PositionInfoBadgeProps & RefAttributes<HTMLElement>> = forwardRef<
-  HTMLElement,
-  PositionInfoBadgeProps
->(function PositionInfoBadge({ size, placement, ...rest }, ref) {
-  return (
-    <Text
-      ref={ref}
-      display="flex"
-      flexDirection="row"
-      alignItems="center"
-      gap="$spacing2"
-      variant="body3"
-      color="$neutral2"
-      backgroundColor="$surface3"
-      py="$spacing2"
-      px="$padding6"
-      {...(size ? BADGE_SIZE_PROPS[size] : {})}
-      {...(placement ? BADGE_PLACEMENT_PROPS[placement] : {})}
-      {...rest}
-    />
-  )
-})
-
-function getPlacement(index: number, length: number): 'start' | 'middle' | 'end' | 'only' {
-  return length === 1 ? 'only' : index === 0 ? 'start' : index === length - 1 ? 'end' : 'middle'
-}
 
 interface BadgeData {
   label: string
@@ -232,11 +179,11 @@ export function LiquidityPositionInfoBadges({
         const displayLabel = isEVMAddress(label) ? shortenAddress({ address: label }) : label
         const key = label + index
         const content = (
-          <PositionInfoBadge
+          <InfoBadge
             gap="$spacing4"
             cursor={copyable || badge.onPress ? 'pointer' : 'unset'}
             color={badge.onPress ? '$neutral1' : '$neutral2'}
-            placement={getPlacement(index, badges.length)}
+            placement={infoBadgePlacement(index, badges.length)}
             size={size}
             onPress={
               badge.onPress
@@ -274,7 +221,7 @@ export function LiquidityPositionInfoBadges({
               </FeeDisplay>
             )}
             {iconAfter}
-          </PositionInfoBadge>
+          </InfoBadge>
         )
 
         // A truncating badge has to be able to shrink below its 160px label cap, or a narrow row (mWeb pool

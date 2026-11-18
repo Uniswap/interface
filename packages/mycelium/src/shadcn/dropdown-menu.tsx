@@ -45,8 +45,12 @@ function DropdownMenu({ ...props }: MenuPrimitive.Root.Props): React.JSX.Element
   return <MenuPrimitive.Root data-slot="dropdown-menu" {...props} />
 }
 
+// Base UI mounts a nested portal inside its parent overlay's portal, and a host modal's portal target is
+// a gapped flex column: a boxed wrapper there would be a new flex item and resize the modal on every open.
+const PORTAL_WRAPPER_STYLE: React.CSSProperties = { display: 'contents' }
+
 function DropdownMenuPortal({ ...props }: MenuPrimitive.Portal.Props): React.JSX.Element {
-  return <MenuPrimitive.Portal data-slot="dropdown-menu-portal" {...props} />
+  return <MenuPrimitive.Portal data-slot="dropdown-menu-portal" style={PORTAL_WRAPPER_STYLE} {...props} />
 }
 
 function DropdownMenuTrigger({ ...props }: MenuPrimitive.Trigger.Props): React.JSX.Element {
@@ -75,7 +79,7 @@ function DropdownMenuContent({
     unstyled?: boolean
   }): React.JSX.Element {
   return (
-    <MenuPrimitive.Portal>
+    <MenuPrimitive.Portal style={PORTAL_WRAPPER_STYLE}>
       <MenuPrimitive.Positioner
         data-slot="dropdown-menu-positioner"
         className={DROPDOWN_MENU_RECIPE_CLASS_NAMES.positioner}

@@ -10,7 +10,7 @@ exports[`SettingsToggle > Updates value on click 1`] = `
       style="--c-max-w: 80%; --cC-max-w: 70%;"
     >
       <div
-        class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+        class="flex flex-col items-stretch box-border relative min-h-[0px] min-w-[0px] shrink-0 grow basis-[0px]"
       >
         <span
           class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:20px] [font-weight:485] [color:var(--stext-neutral1)]"
@@ -28,7 +28,7 @@ exports[`SettingsToggle > Updates value on click 1`] = `
       aria-checked="false"
       data-testid="testId"
       role="switch"
-      style="appearance: none; margin: 0px; outline: none; position: relative; box-sizing: border-box; display: flex; flex-direction: row; align-items: center; justify-content: flex-start; height: 32px; width: 60px; min-height: 32px; min-width: 60px; flex-shrink: 0; padding: 4px; border-radius: 9999px; background-color: rgba(19, 19, 19, 0.35); cursor: pointer; pointer-events: auto; transition: background-color 80ms ease-in-out;"
+      style="appearance: none; -webkit-appearance: none; border: medium; margin: 0px; outline: none; font: inherit; position: relative; box-sizing: border-box; display: flex; flex-direction: row; align-items: center; justify-content: flex-start; height: 32px; width: 60px; min-height: 32px; min-width: 60px; flex-shrink: 0; padding: 4px; border-radius: 9999px; background-color: rgba(19, 19, 19, 0.35); cursor: pointer; pointer-events: auto; transition: background-color 80ms ease-in-out;"
       type="button"
     >
       <span
@@ -92,7 +92,7 @@ exports[`SettingsToggle > renders with icon 1`] = `
         fill="none"
         focusable="false"
         stroke-width="8"
-        style="width: 24px; height: 24px;"
+        style="color: var(--neutral2); width: 24px; height: 24px;"
         viewBox="0 0 20 20"
       >
         <path
@@ -101,7 +101,7 @@ exports[`SettingsToggle > renders with icon 1`] = `
         />
       </svg>
       <div
-        class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
+        class="flex flex-col items-stretch box-border relative min-h-[0px] min-w-[0px] shrink-0 grow basis-[0px]"
       >
         <span
           class="[display:inline] box-border m-0 [word-wrap:break-word] whitespace-pre-wrap [font-family:var(--stext-font-book)] text-[16px] [line-height:20px] [font-weight:485] [color:var(--stext-neutral1)]"
@@ -113,7 +113,7 @@ exports[`SettingsToggle > renders with icon 1`] = `
     <button
       aria-checked="true"
       role="switch"
-      style="appearance: none; margin: 0px; outline: none; position: relative; box-sizing: border-box; display: flex; flex-direction: row; align-items: center; justify-content: flex-start; height: 32px; width: 60px; min-height: 32px; min-width: 60px; flex-shrink: 0; padding: 4px; border-radius: 9999px; background-color: rgb(255, 55, 199); cursor: pointer; pointer-events: auto; transition: background-color 80ms ease-in-out;"
+      style="appearance: none; -webkit-appearance: none; border: medium; margin: 0px; outline: none; font: inherit; position: relative; box-sizing: border-box; display: flex; flex-direction: row; align-items: center; justify-content: flex-start; height: 32px; width: 60px; min-height: 32px; min-width: 60px; flex-shrink: 0; padding: 4px; border-radius: 9999px; background-color: rgb(255, 55, 199); cursor: pointer; pointer-events: auto; transition: background-color 80ms ease-in-out;"
       type="button"
     >
       <span

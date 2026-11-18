@@ -4,8 +4,8 @@ import { selectRowCategoryTag } from 'uniswap/src/features/tokenCategories/selec
 import { TokenCategoryTag } from 'uniswap/src/features/tokenCategories/TokenCategoryTag'
 import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
 
-/** RWA rows keep the ListRwas-derived tag so it renders while `token_categories` is off; every other row
- *  resolves its first BE-ranked id against `categories` (the cached ListCategories list). */
+/** RWA rows keep the ListRwas-derived tag; every other row resolves its first BE-ranked id against
+ *  `categories` (the cached ListCategories list). */
 export function getRowCategoryTag({
   rwaCategory,
   categoryIds,

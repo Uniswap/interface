@@ -16,10 +16,10 @@ compliance    | rwa-tdp-geoblocked-cta-hidden                | RWA TDP hides act
 explore       | rwa-explore-category-routing                 | Explore RWA category param and URL routing re… | medium   | yes       | yes      | pr-unit      | existing-unit
 explore       | rwa-explore-expandable-issuer-rows           | Multi-issuer Stocks rows expand and route to … | medium   | no        | yes      | none         | testlio      
 explore       | rwa-explore-grouped-category-resolution      | Category grouping (Stocks/ETFs issuer rows) i… | medium   | yes       | yes      | pr-unit      | existing-unit
-explore       | rwa-explore-legal-disclaimer                 | Legal disclaimer shows only on Stocks and ETF… | low      | no        | yes      | none         | uniswap      
+explore       | rwa-explore-legal-disclaimer                 | Legal disclaimer shows only on the Stocks and… | low      | no        | yes      | none         | uniswap      
 explore       | rwa-explore-stocks-shelf-and-chips           | Explore shows featured Stocks shelf and RWA c… | high     | no        | yes      | none         | testlio      
 explore       | rwa-explore-stocks-table-and-filters         | Stocks table loads with chain filter, search,… | high     | no        | yes      | none         | testlio      
-explore       | rwa-issuer-identity-plain-token-names        | Issuer rows and cards honor the token-categor… | medium   | yes       | yes      | pr-unit      | existing-unit
+explore       | rwa-issuer-identity-plain-token-names        | Issuer rows and cards show the token's own na… | medium   | yes       | yes      | pr-unit      | existing-unit
 explore       | rwa-mobile-category-details-grouping         | Mobile Category Details screen groups Stocks/… | medium   | no        | yes      | none         | uniswap      
 search        | rwa-search-stocks-section                    | Search groups and tags stocks via the RWA ind… | medium   | yes       | yes      | pr-unit      | existing-unit
 swap-selector | rwa-is-rwa-token-identification              | RWA token identification matches the ListRwas… | medium   | yes       | yes      | pr-unit      | existing-unit

@@ -1,5 +1,4 @@
 import { SharedEventName } from '@uniswap/analytics-events'
-import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { Flex, iconSizes, spacing, Text, TouchableArea } from '@universe/mycelium'
 import { TestID, type TestIDType } from '@universe/test'
 import { memo, type ReactNode } from 'react'
@@ -25,12 +24,7 @@ const SKELETON_CHIP_WIDTHS = [82, 114, 78]
 
 /** One chip per category the token belongs to, in canonical order; each links to the Category Details page. */
 export const TokenDetailsHeaderCategoryChips = memo(function TokenDetailsHeaderCategoryChips(): JSX.Element | null {
-  const tokenCategoriesEnabled = useIsTokenCategoriesEnabled()
   const { categories, isLoading } = useTDPTokenCategories()
-
-  if (!tokenCategoriesEnabled) {
-    return null
-  }
 
   if (categories.length > 0) {
     return <CategoryChipRow categories={categories} />
@@ -141,6 +135,7 @@ const CategoryChip = memo(function CategoryChip({
         borderRadius="$roundedFull"
         hoverStyle={{ backgroundColor: '$surface2' }}
         modifierPressHref={getCategoryDetailsURL(category.id)}
+        testID={`${TestID.TokenDetailsCategoryChipPrefix}${category.id}`}
         onPress={onPressChip}
         onModifierPress={onModifierPressChip}
       >

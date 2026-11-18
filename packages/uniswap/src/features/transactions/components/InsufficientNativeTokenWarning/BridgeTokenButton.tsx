@@ -13,17 +13,20 @@ export function BridgeTokenButton({
   outputToken,
   outputNetworkName,
   onPress,
+  usesNeutralTheme = false,
 }: {
   inputToken: CurrencyInfo
   outputToken: CurrencyInfo
   outputNetworkName: string
   onPress?: () => void
+  usesNeutralTheme?: boolean
 }): JSX.Element {
   const { t } = useTranslation()
   const { foreground } = useNetworkColors(outputToken.currency.chainId)
   const primaryColor = validColor(foreground)
   // The hover border is the runtime network color, so it rides a custom property (web only: RN has no CSS vars or hover).
-  const hoverBorderStyle = isWebPlatform ? ({ '--bridge-hover-border': primaryColor } as CSSProperties) : undefined
+  const hoverBorderStyle =
+    isWebPlatform && !usesNeutralTheme ? ({ '--bridge-hover-border': primaryColor } as CSSProperties) : undefined
 
   const { navigateToSwapFlow } = useUniswapContext()
 
@@ -45,16 +48,16 @@ export function BridgeTokenButton({
     <Trace logPress element={ElementName.BuyNativeTokenButton}>
       <Flex row alignSelf="stretch">
         <Button
-          backgroundColor="$accent1"
+          backgroundColor={usesNeutralTheme ? undefined : '$accent1'}
           borderColor="$transparent"
-          className="hover:border-(color:--bridge-hover-border)"
+          className={usesNeutralTheme ? undefined : 'hover:border-(color:--bridge-hover-border)'}
           style={hoverBorderStyle}
           size="medium"
-          emphasis="text-only"
+          emphasis={usesNeutralTheme ? 'secondary' : 'text-only'}
           primary-color={primaryColor}
           onPress={onPressBridgeToken}
         >
-          <Button.Text color="$white">
+          <Button.Text color={usesNeutralTheme ? undefined : '$white'}>
             {t('swap.warning.insufficientGas.button.bridge', {
               tokenSymbol: outputToken.currency.symbol,
               networkName: outputNetworkName,

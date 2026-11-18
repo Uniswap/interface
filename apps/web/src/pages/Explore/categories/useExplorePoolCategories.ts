@@ -3,7 +3,7 @@ import { useMemo } from 'react'
 import { useListPoolCategoriesQuery } from 'uniswap/src/data/apiClients/dataApiService/categories/useListPoolCategoriesQuery'
 import type { PoolCategory } from 'uniswap/src/features/tokenCategories/types'
 import { useCategoryOrder } from 'uniswap/src/features/tokenCategories/useCategoryOrder'
-import { ExploreCategory } from '~/pages/Explore/categories/useExploreCategory'
+import { ExploreCategory } from '~/features/Explore/categories/useExploreCategory'
 
 const EMPTY_CATEGORIES: PoolCategory[] = []
 const EMPTY_IDS: ReadonlySet<string> = new Set()

@@ -7,12 +7,12 @@ import { useTranslation } from 'react-i18next'
 import { SelectWalletsSkeleton } from 'src/app/components/loading/SelectWalletSkeleton'
 import { OnboardingScreen } from 'src/app/features/onboarding/OnboardingScreen'
 import { useOnboardingSteps } from 'src/app/features/onboarding/OnboardingSteps'
-import { useSubmitOnEnter } from 'src/app/features/onboarding/utils'
 import { Trans } from 'ui/src'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExtensionOnboardingFlow, ExtensionOnboardingScreens } from 'uniswap/src/types/screens/extension'
 import { openUri } from 'uniswap/src/utils/linking'
+import { useGlobalShortcut } from 'utilities/src/device/keyboard/useGlobalShortcut'
 import { useEvent } from 'utilities/src/react/hooks'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { queryWithoutCache } from 'utilities/src/reactQuery/queryOptions'
@@ -58,7 +58,8 @@ export function SelectWallets({ flow }: { flow: ExtensionOnboardingFlow }): JSX.
 
   const title = showError ? t('onboarding.selectWallets.title.error') : t('onboarding.selectWallets.title.default')
 
-  useSubmitOnEnter(showError ? refetch : onSubmit)
+  // Enter continues only while nothing is focused; a focused wallet row or button owns its own Enter.
+  useGlobalShortcut({ key: 'Enter', onTrigger: showError ? refetch : onSubmit, onlyWhenNothingFocused: true })
 
   const belowFrameContent = useMemo(
     () => (smartWalletEnabled ? <SmartWalletTooltip /> : undefined),

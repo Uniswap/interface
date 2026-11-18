@@ -19,19 +19,19 @@ exports[`BackupScreen > renders backup options when none are completed 1`] = `
         >
           <div
             class="css-view-175oi2r"
-            style="gap: 8px; margin: 12px 12px 12px 12px;"
+            style="gap: 8px; margin: 12px;"
           >
             <div
               class="css-text-146c3p1"
               dir="auto"
-              style="padding-top: 0px; font-size: 19px; line-height: 24px; font-family: Basel Grotesk; font-weight: 400;"
+              style="padding-top: 0px; font-size: 19px; line-height: 24px; font-family: "Basel Grotesk"; font-weight: 400;"
             >
               onboarding.backup.title.new
             </div>
             <div
               class="css-text-146c3p1"
               dir="auto"
-              style="font-size: 15px; line-height: 18px; font-family: Basel Grotesk; font-weight: 400;"
+              style="font-size: 15px; line-height: 18px; font-family: "Basel Grotesk"; font-weight: 400;"
             >
               onboarding.backup.subtitle
             </div>
@@ -105,19 +105,19 @@ exports[`BackupScreen > renders backup options when none are completed 1`] = `
                                   <div
                                     class="css-text-146c3p1"
                                     dir="auto"
-                                    style="font-size: 17px; line-height: 22px; font-family: Basel Grotesk; font-weight: 400;"
+                                    style="font-size: 17px; line-height: 22px; font-family: "Basel Grotesk"; font-weight: 400;"
                                   >
                                     onboarding.backup.option.cloud.title
                                   </div>
                                 </div>
                                 <div
                                   class="css-view-175oi2r"
-                                  style="padding: 2px 6px 2px 6px; max-width: 30%; border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-bottom-left-radius: 8px;"
+                                  style="padding: 2px 6px; max-width: 30%; border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-bottom-left-radius: 8px;"
                                 >
                                   <div
                                     class="css-text-146c3p1"
                                     dir="auto"
-                                    style="font-size: 15px; line-height: 17.25px; font-family: Basel Grotesk; font-weight: 500;"
+                                    style="font-size: 15px; line-height: 17.25px; font-family: "Basel Grotesk"; font-weight: 500;"
                                   >
                                     onboarding.backup.option.badge.quick
                                   </div>
@@ -126,7 +126,7 @@ exports[`BackupScreen > renders backup options when none are completed 1`] = `
                               <div
                                 class="css-text-146c3p1"
                                 dir="auto"
-                                style="font-size: 15px; line-height: 18px; font-family: Basel Grotesk; font-weight: 400;"
+                                style="font-size: 15px; line-height: 18px; font-family: "Basel Grotesk"; font-weight: 400;"
                               >
                                 onboarding.backup.option.cloud.description
                               </div>
@@ -179,7 +179,7 @@ exports[`BackupScreen > renders backup options when none are completed 1`] = `
                                   <div
                                     class="css-text-146c3p1"
                                     dir="auto"
-                                    style="font-size: 17px; line-height: 22px; font-family: Basel Grotesk; font-weight: 400;"
+                                    style="font-size: 17px; line-height: 22px; font-family: "Basel Grotesk"; font-weight: 400;"
                                   >
                                     onboarding.backup.option.manual.title
                                   </div>
@@ -188,7 +188,7 @@ exports[`BackupScreen > renders backup options when none are completed 1`] = `
                               <div
                                 class="css-text-146c3p1"
                                 dir="auto"
-                                style="font-size: 15px; line-height: 18px; font-family: Basel Grotesk; font-weight: 400;"
+                                style="font-size: 15px; line-height: 18px; font-family: "Basel Grotesk"; font-weight: 400;"
                               >
                                 onboarding.backup.option.manual.description
                               </div>
@@ -224,7 +224,7 @@ exports[`BackupScreen > renders backup options when none are completed 1`] = `
                   <div
                     class="css-text-146c3p1"
                     dir="auto"
-                    style="font-size: 17px; line-height: 22px; font-family: Basel Grotesk; font-weight: 400;"
+                    style="font-size: 17px; line-height: 22px; font-family: "Basel Grotesk"; font-weight: 400;"
                   >
                     onboarding.tooltip.recoveryPhrase.trigger
                   </div>
@@ -237,7 +237,7 @@ exports[`BackupScreen > renders backup options when none are completed 1`] = `
     </div>
     <div
       class="css-view-175oi2r"
-      style="padding-right: 16px; padding-left: 16px; top: 0px; right: 0px; left: 0px; z-index: 1020; pointer-events: box-none;"
+      style="padding-right: 16px; padding-left: 16px; top: 0px; right: 0px; left: 0px; z-index: 1020;"
     >
       <button
         accessibilityactions="[object Object]"
@@ -294,19 +294,19 @@ exports[`BackupScreen > renders backup options when some are completed 1`] = `
         >
           <div
             class="css-view-175oi2r"
-            style="gap: 8px; margin: 12px 12px 12px 12px;"
+            style="gap: 8px; margin: 12px;"
           >
             <div
               class="css-text-146c3p1"
               dir="auto"
-              style="padding-top: 0px; font-size: 19px; line-height: 24px; font-family: Basel Grotesk; font-weight: 400;"
+              style="padding-top: 0px; font-size: 19px; line-height: 24px; font-family: "Basel Grotesk"; font-weight: 400;"
             >
               onboarding.backup.title.new
             </div>
             <div
               class="css-text-146c3p1"
               dir="auto"
-              style="font-size: 15px; line-height: 18px; font-family: Basel Grotesk; font-weight: 400;"
+              style="font-size: 15px; line-height: 18px; font-family: "Basel Grotesk"; font-weight: 400;"
             >
               onboarding.backup.subtitle
             </div>
@@ -380,19 +380,19 @@ exports[`BackupScreen > renders backup options when some are completed 1`] = `
                                   <div
                                     class="css-text-146c3p1"
                                     dir="auto"
-                                    style="font-size: 17px; line-height: 22px; font-family: Basel Grotesk; font-weight: 400;"
+                                    style="font-size: 17px; line-height: 22px; font-family: "Basel Grotesk"; font-weight: 400;"
                                   >
                                     onboarding.backup.option.cloud.title
                                   </div>
                                 </div>
                                 <div
                                   class="css-view-175oi2r"
-                                  style="padding: 2px 6px 2px 6px; max-width: 30%; border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-bottom-left-radius: 8px;"
+                                  style="padding: 2px 6px; max-width: 30%; border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-bottom-left-radius: 8px;"
                                 >
                                   <div
                                     class="css-text-146c3p1"
                                     dir="auto"
-                                    style="font-size: 15px; line-height: 17.25px; font-family: Basel Grotesk; font-weight: 500;"
+                                    style="font-size: 15px; line-height: 17.25px; font-family: "Basel Grotesk"; font-weight: 500;"
                                   >
                                     onboarding.backup.option.badge.quick
                                   </div>
@@ -401,7 +401,7 @@ exports[`BackupScreen > renders backup options when some are completed 1`] = `
                               <div
                                 class="css-text-146c3p1"
                                 dir="auto"
-                                style="font-size: 15px; line-height: 18px; font-family: Basel Grotesk; font-weight: 400;"
+                                style="font-size: 15px; line-height: 18px; font-family: "Basel Grotesk"; font-weight: 400;"
                               >
                                 onboarding.backup.option.cloud.description
                               </div>
@@ -454,7 +454,7 @@ exports[`BackupScreen > renders backup options when some are completed 1`] = `
                                   <div
                                     class="css-text-146c3p1"
                                     dir="auto"
-                                    style="font-size: 17px; line-height: 22px; font-family: Basel Grotesk; font-weight: 400;"
+                                    style="font-size: 17px; line-height: 22px; font-family: "Basel Grotesk"; font-weight: 400;"
                                   >
                                     onboarding.backup.option.manual.title
                                   </div>
@@ -463,7 +463,7 @@ exports[`BackupScreen > renders backup options when some are completed 1`] = `
                               <div
                                 class="css-text-146c3p1"
                                 dir="auto"
-                                style="font-size: 15px; line-height: 18px; font-family: Basel Grotesk; font-weight: 400;"
+                                style="font-size: 15px; line-height: 18px; font-family: "Basel Grotesk"; font-weight: 400;"
                               >
                                 onboarding.backup.option.manual.description
                               </div>
@@ -499,7 +499,7 @@ exports[`BackupScreen > renders backup options when some are completed 1`] = `
                   <div
                     class="css-text-146c3p1"
                     dir="auto"
-                    style="font-size: 17px; line-height: 22px; font-family: Basel Grotesk; font-weight: 400;"
+                    style="font-size: 17px; line-height: 22px; font-family: "Basel Grotesk"; font-weight: 400;"
                   >
                     onboarding.tooltip.recoveryPhrase.trigger
                   </div>
@@ -512,7 +512,7 @@ exports[`BackupScreen > renders backup options when some are completed 1`] = `
     </div>
     <div
       class="css-view-175oi2r"
-      style="padding-right: 16px; padding-left: 16px; top: 0px; right: 0px; left: 0px; z-index: 1020; pointer-events: box-none;"
+      style="padding-right: 16px; padding-left: 16px; top: 0px; right: 0px; left: 0px; z-index: 1020;"
     >
       <button
         accessibilityactions="[object Object]"

@@ -15,6 +15,7 @@ import {
   applyLabelCollision,
   composeMarginChartOverlays,
   leverageTierColor,
+  marginChartLeadPosition,
   nearestOverlay,
   positionsForMarket,
   estimateLiqPrice,
@@ -179,6 +180,12 @@ describe('positionsForMarket', () => {
     expect(
       positionsForMarket({ positions: [keep, otherVenue, mirrored, noBasis], market }).map((p) => p.positionId),
     ).toEqual(['keep'])
+    // The charted pair and side: another venue's position counts too.
+    expect(
+      positionsForMarket({ positions: [keep, otherVenue, mirrored, noBasis], market, anyVenue: true }).map(
+        (p) => p.positionId,
+      ),
+    ).toEqual(['keep', 'aave'])
   })
 })
 
@@ -195,19 +202,20 @@ describe('composeMarginChartOverlays focused position', () => {
       role: 'entry',
       priority: 1,
       price: 1800,
-      color: '#00ff00',
+      color: COLORS.neutral1,
       lineStyle: LineStyle.Dashed,
-      axisLabelTextColor: '#ffffff',
-      lineWidth: 2,
+      axisLabelTextColor: COLORS.surface1,
+      lineWidth: 1,
       title: 'margin.chart.line.entry',
     })
+    // Health factor 2 is the healthy tier.
     expect(out.priceLines.find((l) => l.id === 'liq')).toMatchObject({
       role: 'liq',
       priority: 0,
       price: 1500,
-      color: '#ff0000',
-      lineStyle: LineStyle.Dashed,
-      lineWidth: 2,
+      color: COLORS.statusSuccess,
+      lineStyle: LineStyle.Solid,
+      lineWidth: 1,
       title: 'margin.chart.line.liqDistance',
     })
     // Measured against the position's own mark (2000): −25%.
@@ -458,6 +466,10 @@ describe('readableTextColor', () => {
     expect(readableTextColor({ background: '#0d0d0d', colors: COLORS })).toBe(COLORS.white)
     expect(readableTextColor({ background: 'not-a-color', colors: COLORS })).toBe(COLORS.white)
   })
+
+  it('prefers white on a mid tone that still clears 3:1, like light mode success green', () => {
+    expect(readableTextColor({ background: '#0c8911', colors: COLORS })).toBe(COLORS.white)
+  })
 })
 
 describe('composeMarginChartOverlays preview without a quote', () => {
@@ -707,5 +719,45 @@ describe('showsMarginOpenPreview', () => {
         focusedPosition: undefined,
       }),
     ).toBe(false)
+  })
+})
+
+describe(marginChartLeadPosition, () => {
+  const a = mkPos({ positionId: 'a' })
+  const b = mkPos({ positionId: 'b' })
+
+  it.each([
+    {
+      name: 'a lone position draws no lines at rest',
+      positions: [a],
+      hovered: undefined,
+      focused: undefined,
+      lead: undefined,
+    },
+    { name: 'a lone position leads while hovered', positions: [a], hovered: a.positionId, focused: undefined, lead: a },
+    {
+      name: 'several show only avatars at rest',
+      positions: [a, b],
+      hovered: undefined,
+      focused: undefined,
+      lead: undefined,
+    },
+    { name: 'a hovered avatar leads', positions: [a, b], hovered: 'b', focused: undefined, lead: b },
+    { name: 'the focused position wins', positions: [a, b], hovered: 'b', focused: a, lead: a },
+  ])('$name', ({ positions, hovered, focused, lead }) => {
+    expect(marginChartLeadPosition({ focusedPosition: focused, positions, emphasizedPositionId: hovered })).toBe(lead)
+  })
+})
+
+describe('composeMarginChartOverlays avatar hover', () => {
+  it('keeps the bounds still while a hover draws a position’s levels and hides the preview', () => {
+    const rest = composeMarginChartOverlays(mkInput({ quote: mkQuote(), avatarPrices: [1800] }))
+    const hovered = composeMarginChartOverlays(
+      mkInput({ quote: mkQuote(), avatarPrices: [1800], position: mkPos(), hidePreview: true }),
+    )
+    expect(rest.priceLines.map((l) => l.role)).toContain('previewLiq')
+    expect(hovered.priceLines.map((l) => l.role)).toEqual(expect.arrayContaining(['entry', 'liq']))
+    expect(hovered.priceLines.map((l) => l.role)).not.toContain('previewLiq')
+    expect(hovered.autoscaleBounds).toEqual(rest.autoscaleBounds)
   })
 })

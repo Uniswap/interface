@@ -280,7 +280,7 @@ describe('getExpandableAssetRowMetrics', () => {
     expect(metrics.priceUsd).toBe(aggregates.priceUsd)
     expect(metrics.priceChange1hPct).toBe(aggregates.priceChange1hPct)
     expect(metrics.priceChange24hPct).toBe(aggregates.priceChange24hPct)
-    expect(metrics.marketCapUsd).toBe(aggregates.marketCapUsd)
+    expect(metrics.fdvUsd).toBe(aggregates.fdvUsd)
     expect(metrics.volume24hUsd).toBe(aggregates.volume24hUsd)
     expect(metrics.sparkline).toBe(aggregates.sparkline1d)
   })
@@ -300,7 +300,7 @@ describe('getExpandableAssetRowMetrics', () => {
     const metrics = getExpandableAssetRowMetrics(issuerRow)
     expect(metrics.priceUsd).toBe(issuerRow.issuer.priceUsd)
     expect(metrics.priceChange1hPct).toBe(issuerRow.issuer.priceChange1hPct)
-    expect(metrics.marketCapUsd).toBe(issuerRow.issuer.marketCapUsd)
+    expect(metrics.fdvUsd).toBe(issuerRow.issuer.fdvUsd)
   })
 
   it('matches primary issuer price on parent row', () => {

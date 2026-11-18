@@ -5,7 +5,6 @@ import { Flex, iconSizes, spacing, Text, TouchableArea } from '@universe/myceliu
 import { TestID, type TestIDType } from '@universe/test'
 import { memo, type ReactNode } from 'react'
 import { useNavigate } from 'react-router'
-import { useResolvePoolCategories } from 'uniswap/src/data/apiClients/dataApiService/categories/useResolvePoolCategories'
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { getCategoryIcon } from 'uniswap/src/features/tokenCategories/categoryIcons'
@@ -23,9 +22,10 @@ const CHIP_HEIGHT = iconSizes.icon16 + 2 * spacing.spacing6
 const SKELETON_CHIP_WIDTHS = [82, 114, 78]
 
 interface PoolDetailsHeaderCategoryChipsProps {
-  /** `PoolSummary.category_ids` in BE precedence order; undefined while the pool is still loading. */
-  categoryIds: string[] | undefined
-  poolLoading: boolean
+  /** The pool's categories in canonical order, resolved by the page. */
+  categories: PoolCategory[]
+  /** A tagged pool's categories are still resolving. */
+  isLoading: boolean
   chainId: UniverseChainId | undefined
   poolAddress: string | undefined
   /** Breadcrumb label on the category page, e.g. "USDC / ETH". */
@@ -34,14 +34,13 @@ interface PoolDetailsHeaderCategoryChipsProps {
 
 /** One chip per category the pool belongs to, in canonical order; each links to the pool category page. */
 export const PoolDetailsHeaderCategoryChips = memo(function PoolDetailsHeaderCategoryChips({
-  categoryIds,
-  poolLoading,
+  categories,
+  isLoading,
   chainId,
   poolAddress,
   poolName,
 }: PoolDetailsHeaderCategoryChipsProps): JSX.Element | null {
   const poolCategoriesEnabled = useIsPoolCategoriesEnabled()
-  const { categories, isLoading } = useResolvePoolCategories({ categoryIds, isLoading: poolLoading })
 
   if (!poolCategoriesEnabled) {
     return null
@@ -51,8 +50,7 @@ export const PoolDetailsHeaderCategoryChips = memo(function PoolDetailsHeaderCat
     return <CategoryChipRow categories={categories} chainId={chainId} poolAddress={poolAddress} poolName={poolName} />
   }
 
-  // A pool with no ids reserves nothing; only an unresolved lookup for a tagged pool shows the skeleton.
-  if (!isLoading || (categoryIds !== undefined && categoryIds.length === 0)) {
+  if (!isLoading) {
     return null
   }
 

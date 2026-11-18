@@ -14,7 +14,7 @@ import { useDerivedMarginInfo } from '~/pages/Swap/Margin/hooks/useDerivedMargin
 
 const MARKET_ID = '0x1cc83f2e3e44cd44fadedc9ee43109ffafc5609a46097183de1f53abcfc91733'
 const MARKET = { ...getDefaultMarginMarket(), marketId: MARKET_ID, maxLeverage: 5 }
-// The same pair at a second venue: dearer, but carries more leverage.
+// The same pair at a second venue, listed second: the server's headline market.
 const AAVE_MARKET_ID = '0x7d25d9a4127437970c901ef507e7593c79e5c3d329b5504fbe4f1d6c293855b2'
 const AAVE_MARKET = {
   ...MARKET,
@@ -22,6 +22,16 @@ const AAVE_MARKET = {
   venue: 'AAVE_V3' as const,
   marketId: AAVE_MARKET_ID,
   maxLeverage: 10,
+  isHeadline: true,
+}
+// A third venue with a higher cap than MARKET and no headline flag.
+const COMPOUND_MARKET_ID = '0x4f3a8e0c2b6d9a1e7c5f3b8d2a6e4c1f9b7d5a3e8c2f6b4d1a9e7c5b3f8d2a6e'
+const COMPOUND_MARKET = {
+  ...MARKET,
+  key: `${MARKET.key}-compound`,
+  venue: 'COMPOUND_V3' as const,
+  marketId: COMPOUND_MARKET_ID,
+  maxLeverage: 8,
 }
 const allowedMarketsRef = { current: [MARKET] as (typeof MARKET)[] }
 
@@ -38,20 +48,12 @@ vi.mock('uniswap/src/features/portfolio/balances/hooks', () => ({
   usePortfolioBalances: () => ({ data: undefined, loading: false }),
 }))
 vi.mock('uniswap/src/features/tokens/useCurrencyInfo', () => ({ useCurrencyInfo: () => undefined }))
-vi.mock('uniswap/src/features/transactions/hooks/useUSDCPrice', () => ({
-  useUSDCValue: () => undefined,
-  useUSDCPrice: () => ({ price: undefined }),
-}))
+vi.mock('uniswap/src/features/transactions/hooks/useUSDCPrice', () => ({ useUSDCValue: () => undefined }))
 vi.mock('~/pages/Swap/Margin/hooks/useMarginVenueAllowlist', () => ({
   useMarginVenueAllowlist: () => ({
     allowedMarkets: allowedMarketsRef.current,
     allowedVenues: allowedMarketsRef.current.map((m) => m.venue),
     excludedCount: 0,
-  }),
-}))
-vi.mock('~/features/margin/hooks/useMarginMarkets', () => ({
-  useMarginMarkets: () => ({
-    getLive: (key: string) => ({ borrowApyBps: key === MARKET.key ? 300 : 500 }),
   }),
 }))
 vi.mock('~/pages/Swap/Margin/hooks/useMarginVenueRoutedAnalytics', () => ({
@@ -147,19 +149,24 @@ describe('useDerivedMarginInfo — quote debounce', () => {
     expect(JSON.stringify(last.params)).toContain(`"marketId":"${MARKET_ID}"`)
   })
 
-  // Past the cheaper market's ceiling the open moves to the market that carries it, and the previous
-  // quote stays bridged so the size block (and the leverage popover in it) does not unmount mid-drag.
-  it('moves the open to the market that carries the leverage and keeps the quote bridged', () => {
+  // Auto opens on the headline market whatever the leverage. A pin narrowing the allowlist moves the
+  // open off it, and the previous quote stays bridged so the receipt does not unmount mid-pick.
+  it('opens on the headline market, and keeps the quote bridged when a pin moves it', () => {
     allowedMarketsRef.current = [MARKET, AAVE_MARKET]
-    const store = createMarginFormStore({ initialState: { marginAmount: '1', leverage: 4 } })
+    const store = createMarginFormStore({ initialState: { marginAmount: '1', leverage: 2 } })
     renderDerived(store)
     act(() => {
       vi.advanceTimersByTime(MARGIN_DEBOUNCE_MS)
     })
-    const before = mockUseMarginQuoteQuery.mock.calls.at(-1)?.[0] as { params?: MarginQuoteRequest }
-    expect(JSON.stringify(before.params)).toContain(`"marketId":"${MARKET_ID}"`)
-
     act(() => store.getState().actions.setMarginFormState({ leverage: 6 }))
+    act(() => {
+      vi.advanceTimersByTime(MARGIN_DEBOUNCE_MS)
+    })
+    const before = mockUseMarginQuoteQuery.mock.calls.at(-1)?.[0] as { params?: MarginQuoteRequest }
+    expect(JSON.stringify(before.params)).toContain(`"marketId":"${AAVE_MARKET_ID}"`)
+
+    allowedMarketsRef.current = [MARKET]
+    act(() => store.getState().actions.setMarginFormState({ leverage: 3 }))
     act(() => {
       vi.advanceTimersByTime(MARGIN_DEBOUNCE_MS)
     })
@@ -167,10 +174,24 @@ describe('useDerivedMarginInfo — quote debounce', () => {
       params?: MarginQuoteRequest
       placeholderData: (previousData: unknown, previousQuery: { queryKey: unknown[] }) => unknown
     }
-    expect(JSON.stringify(after.params)).toContain(`"marketId":"${AAVE_MARKET_ID}"`)
+    expect(JSON.stringify(after.params)).toContain(`"marketId":"${MARKET_ID}"`)
     const previousQuote = { requestId: 'previous' }
     expect(after.placeholderData(previousQuote, { queryKey: [...MARGIN_QUOTE_QUERY_KEY, before.params] })).toBe(
       previousQuote,
     )
+  })
+
+  // The slider cap is the max over every allowed market, so without the headline the open must go to a
+  // market that carries the leverage, not the first one listed: /margin/quote refuses above its cap.
+  it('opens on a market that carries the leverage when the headline is excluded', () => {
+    allowedMarketsRef.current = [MARKET, COMPOUND_MARKET]
+    const store = createMarginFormStore({ initialState: { marginAmount: '1', leverage: 7 } })
+    const result = renderDerived(store)
+    act(() => {
+      vi.advanceTimersByTime(MARGIN_DEBOUNCE_MS)
+    })
+    expect(result.current.maxLeverage).toBe(8)
+    const last = mockUseMarginQuoteQuery.mock.calls.at(-1)?.[0] as { params?: MarginQuoteRequest }
+    expect(JSON.stringify(last.params)).toContain(`"marketId":"${COMPOUND_MARKET_ID}"`)
   })
 })

@@ -4,7 +4,7 @@ import { ChevronsOut } from '@universe/mycelium/icons/ChevronsOut'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { spacing } from '@universe/mycelium/tokens'
 import { forwardRef, RefObject, useCallback, useRef } from 'react'
-import { Portal } from '~/components/Popups/Portal'
+import { Portal } from '~/components/Portal/Portal'
 import { useOnClickOutside } from '~/hooks/useOnClickOutside'
 import { MWEB_BOTTOM_INSET } from '~/utils/mwebBottomInset'
 

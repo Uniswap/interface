@@ -115,6 +115,16 @@ seed phrase may ever be added to this suite. This approach:
 - Works identically in CI and local development
 - No manual setup required
 
+## What a PR runs
+
+PR runs select the specs the change can reach (`scripts/e2e-affected.ts` with
+`TARGET=extension`, rules in `e2e-affected.json` next to this file): a rule match
+runs the specs it names, extension code no rule names runs the whole suite, and a
+change that cannot reach the extension bundle runs nothing. Scheduled and dispatch
+runs always run everything. The job's step summary says what was selected and why.
+Editing a spec always runs it, so a fix to a spec listed as `unstable` proves itself
+on its own PR.
+
 ## CI Integration
 
-Tests run automatically on PRs that affect the extension or its dependencies using GitHub Actions.
+On a PR the `E2E (WXT)` job runs the specs the selector above picks; the scheduled runs and `workflow_dispatch` run the whole suite.

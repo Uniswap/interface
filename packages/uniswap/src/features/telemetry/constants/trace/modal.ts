@@ -164,6 +164,7 @@ export const ModalName = {
   NotFound: 'not-found',
   NotificationsOSSettings: 'notifications-os-settings-modal',
   OffchainActivity: 'offchain-activity-modal',
+  OnboardingChecklist: 'onboarding-checklist-modal',
   OnDeviceRecoveryConfirmation: 'on-device-recovery-confirmation',
   OtpInputExpired: 'otp-input-expired',
   OtpScanInput: 'otp-scan-input',

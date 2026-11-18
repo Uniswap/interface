@@ -91,7 +91,7 @@ exports[`AccountCardItem > renders correctly 1`] = `
                     class="css-text-146c3p1 r-maxWidth-dnmrzs r-overflow-1udh08x r-textOverflow-1udbk01 r-whiteSpace-3s2u2q r-wordWrap-1iln25a"
                     data-testid="address-display/name/undefined"
                     dir="auto"
-                    style="flex-shrink: 1; font-size: 19px; line-height: 24px; font-family: Basel Grotesk; font-weight: 400;"
+                    style="flex-shrink: 1; font-size: 19px; line-height: 24px; font-family: "Basel Grotesk"; font-weight: 400;"
                   />
                 </div>
               </div>
@@ -100,12 +100,12 @@ exports[`AccountCardItem > renders correctly 1`] = `
               >
                 <div
                   class="css-view-175oi2r"
-                  style="margin-top: 0px; padding: 0px 0px 0px 0px; border-top-left-radius: 999999px; border-top-right-radius: 999999px; border-bottom-right-radius: 999999px; border-bottom-left-radius: 999999px;"
+                  style="margin-top: 0px; padding: 0px; border-top-left-radius: 999999px; border-top-right-radius: 999999px; border-bottom-right-radius: 999999px; border-bottom-left-radius: 999999px;"
                 >
                   <div
                     class="css-text-146c3p1"
                     dir="auto"
-                    style="font-size: 15px; line-height: 18px; font-family: Basel Grotesk; font-weight: 400;"
+                    style="font-size: 15px; line-height: 18px; font-family: "Basel Grotesk"; font-weight: 400;"
                   >
                     0x​82D56A...373Fa6
                   </div>
@@ -117,7 +117,7 @@ exports[`AccountCardItem > renders correctly 1`] = `
         <div
           class="css-text-146c3p1"
           dir="auto"
-          style="font-size: 17px; line-height: 20px; font-family: Basel Grotesk; font-weight: 400;"
+          style="font-size: 17px; line-height: 20px; font-family: "Basel Grotesk"; font-weight: 400;"
         >
           $100.00
         </div>

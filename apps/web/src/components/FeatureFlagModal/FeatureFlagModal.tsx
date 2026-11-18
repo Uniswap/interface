@@ -33,6 +33,7 @@ import { ComplianceOverrides } from 'uniswap/src/components/gating/ComplianceOve
 import { useLayerValue } from 'uniswap/src/components/gating/Rows'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { matchesAllWords } from 'utilities/src/primitives/string'
 import { useEvent } from 'utilities/src/react/hooks'
 import { FeatureFlagSelector } from '~/components/FeatureFlagModal/FeatureFlagSelector'
 import {
@@ -83,15 +84,6 @@ const TouchableCenteredRow = forwardRef<HTMLElement, TouchableAreaCompatProps>(
 const FlagInfo = forwardRef<HTMLDivElement, FlexCompatProps>(function FlagInfo(props, ref) {
   return <Flex ref={ref} flexShrink={1} {...props} />
 })
-
-function fuzzyMatch(query: string, ...targets: (string | undefined)[]): boolean {
-  if (!query.trim()) {
-    return true
-  }
-  const words = query.toLowerCase().split(/\s+/).filter(Boolean)
-  const combined = targets.join(' ').toLowerCase()
-  return words.every((word) => combined.includes(word))
-}
 
 interface GatingRowContentProps {
   title: string
@@ -426,12 +418,12 @@ export function FeatureFlagModal(): JSX.Element {
             const groups = sortedFlagGroups.map((group) => {
               const extraItems: readonly ExtraItemDef[] = group.extraItems ?? []
               const matchingFlags = isSearching
-                ? group.flags.filter(({ flag, label }) => fuzzyMatch(searchQuery, getFeatureFlagName(flag), label))
+                ? group.flags.filter(({ flag, label }) => matchesAllWords(searchQuery, getFeatureFlagName(flag), label))
                 : group.flags
               const matchingExtraItems = isSearching
-                ? extraItems.filter(({ name, searchText }) => fuzzyMatch(searchQuery, name, searchText))
+                ? extraItems.filter(({ name, searchText }) => matchesAllWords(searchQuery, name, searchText))
                 : extraItems
-              const groupNameMatches = isSearching && fuzzyMatch(searchQuery, group.name)
+              const groupNameMatches = isSearching && matchesAllWords(searchQuery, group.name)
 
               if (matchingFlags.length === 0 && matchingExtraItems.length === 0 && !groupNameMatches) {
                 return null

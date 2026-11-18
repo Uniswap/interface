@@ -6,22 +6,20 @@ export function getExpandableAssetHeaderDescription({
   t,
   category,
   networkName,
-  volumeTimeframeSelectable = false,
 }: {
   t: TFunction
   category: StocksSortMethod
   networkName?: string
-  volumeTimeframeSelectable?: boolean
 }): ReactNode | undefined {
   switch (category) {
     case StocksSortMethod.PRICE:
       return networkName
         ? t('explore.tokens.table.column.price.network.tooltip', { network: networkName })
         : t('explore.tokens.table.column.price.allNetworks.tooltip')
-    case StocksSortMethod.MARKET_CAP:
-      return t('explore.rwa.table.column.marketCap.tooltip')
+    case StocksSortMethod.FDV:
+      return t('stats.fdv.description')
     case StocksSortMethod.VOLUME:
-      return volumeTimeframeSelectable ? t('stats.volume.description') : t('explore.rwa.table.column.volume.tooltip')
+      return t('stats.volume.description')
     case StocksSortMethod.HOUR_CHANGE:
     case StocksSortMethod.DAY_CHANGE:
       return undefined

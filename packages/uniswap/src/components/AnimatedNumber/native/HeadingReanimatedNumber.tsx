@@ -124,12 +124,11 @@ export const HeadingReanimatedNumber = ({
                 ...(alignRight ? { right: 0 } : { left: 0 }),
                 flexDirection: 'row',
                 alignItems: 'flex-start',
-                backgroundColor: colors.surface1.val,
-                borderRadius: 4,
+                ...(useHeadingTypography ? { backgroundColor: colors.surface1.val, borderRadius: 4 } : {}),
               },
             ]}
           >
-            <TopAndBottomGradient height={digitHeight} />
+            {useHeadingTypography && <TopAndBottomGradient height={digitHeight} />}
             <CharRow
               baseColor={baseColor}
               charDelays={charDelays}

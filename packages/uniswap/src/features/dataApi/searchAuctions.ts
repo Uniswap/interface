@@ -4,7 +4,6 @@ import type { AuctionWithStats } from '@uniswap/client-launches/dist/data/v1/auc
 import { type UniverseChainId, Platform } from '@universe/chains'
 import { useMemo } from 'react'
 import { type AuctionOption, OnchainItemListOptionType } from 'uniswap/src/components/lists/items/types'
-import { timestampToMs } from 'uniswap/src/data/apiClients/dataApiService/utils/protoTimestamp'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { isTestnetChain } from 'uniswap/src/features/chains/utils'
 import { getAuctionLaunchMethod, toLaunchProvenance } from 'uniswap/src/features/dataApi/launchProvenance'
@@ -15,6 +14,7 @@ import { isHiddenAuction } from 'uniswap/src/features/toucan/hiddenAuctions'
 import { useVerifiedAuctionIds } from 'uniswap/src/features/toucan/useVerifiedAuctionIds'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { parseFiniteNumber } from 'utilities/src/primitives/number'
+import { timestampToMs } from 'utilities/src/time/protoTimestamp'
 
 /** Plain data.v2 auction shape, the canonical type for search auction results. */
 export type SearchAuctionResult = PlainMessage<SearchAuction>
@@ -48,7 +48,7 @@ function getAuctionAddressFromAuctionId(auctionId: string): string | undefined {
   return getValidEvmAddress(auctionAddress)
 }
 
-function getSearchAuctionAddress(auction: SearchAuctionResult): string {
+export function getSearchAuctionAddress(auction: SearchAuctionResult): string {
   const auctionAddress = getValidEvmAddress(auction.auctionAddress)
   if (auctionAddress) {
     return auctionAddress

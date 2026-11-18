@@ -18,11 +18,16 @@
  * callback with `finished=false`, like real Reanimated.
  */
 import { createElement, forwardRef, useRef, type ComponentType, type ReactNode } from 'react'
+import { flattenCompatStyle } from '../../compat/compose'
+import type { CompatStyleProp } from '../../compat/props'
 
 type HostProps = Record<string, unknown> & { children?: ReactNode }
 
 function host(type: string): ComponentType<HostProps> {
-  const Host = forwardRef<unknown, HostProps>((props, ref) => createElement(type, { ...props, ref }))
+  // jsdom rejects React DOM's indexed writes for an RN-style array `style`, so flatten it first.
+  const Host = forwardRef<unknown, HostProps>((props, ref) =>
+    createElement(type, { ...props, style: flattenCompatStyle(props['style'] as CompatStyleProp | undefined), ref }),
+  )
   Host.displayName = type
   return Host as unknown as ComponentType<HostProps>
 }

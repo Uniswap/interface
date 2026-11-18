@@ -9,7 +9,6 @@ interface UsePoolsFailedNetworksParams {
   evmAddress?: string
   svmAddress?: string
   chainId?: UniverseChainId
-  enabled: boolean
 }
 
 interface PoolsFailedNetworks {
@@ -22,7 +21,6 @@ export function usePoolsFailedNetworks({
   evmAddress,
   svmAddress,
   chainId,
-  enabled,
 }: UsePoolsFailedNetworksParams): PoolsFailedNetworks {
   const { chains } = useEnabledChains()
 
@@ -30,13 +28,13 @@ export function usePoolsFailedNetworks({
     evmAddress,
     svmAddress,
     chainIds: chainId ? [chainId] : undefined,
-    enabled,
   })
 
-  const hasResolved = enabled && breakdown !== undefined
-  const rawFailedChainIds = enabled ? breakdown?.failedChainIds : undefined
-  const isPoolsUnavailable =
-    enabled && getUnavailableCategories({ breakdown, requestedCategories }).includes(WalletBalanceCategory.POOLS)
+  const hasResolved = breakdown !== undefined
+  const rawFailedChainIds = breakdown?.failedChainIds
+  const isPoolsUnavailable = getUnavailableCategories({ breakdown, requestedCategories }).includes(
+    WalletBalanceCategory.POOLS,
+  )
 
   return useMemo(() => {
     const enabledChainIds = new Set<number>(chains)

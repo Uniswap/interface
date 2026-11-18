@@ -56,10 +56,7 @@ describe('useTabsContent', () => {
     vi.clearAllMocks()
     window.history.pushState({}, '', '/')
     isHooksExploreEnabled = false
-    mocked(useFeatureFlag).mockImplementation(
-      (flag) =>
-        flag === FeatureFlags.PortfolioPoolsBalances || (isHooksExploreEnabled && flag === FeatureFlags.HooksExplore),
-    )
+    mocked(useFeatureFlag).mockImplementation((flag) => isHooksExploreEnabled && flag === FeatureFlags.HooksExplore)
     mocked(usePortfolioRoutes).mockReturnValue({
       tab: PortfolioTab.Overview,
       chainId: undefined,

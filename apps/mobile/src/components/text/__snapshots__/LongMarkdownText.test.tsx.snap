@@ -26,7 +26,7 @@ exports[`LongMarkdownText > renders without error 1`] = `
             >
               <span
                 class="css-textHasAncestor-1jxf684"
-                style="color: rgb(19, 19, 19); font-family: Basel Grotesk; font-size: 17px; line-height: 22px;"
+                style="color: rgb(19, 19, 19); font-family: "Basel Grotesk"; font-size: 17px; line-height: 22px;"
               >
                 .
               </span>
@@ -46,7 +46,7 @@ exports[`LongMarkdownText > renders without error 1`] = `
           >
             <span
               class="css-textHasAncestor-1jxf684"
-              style="color: rgb(19, 19, 19); font-family: Basel Grotesk; font-size: 17px; line-height: 22px;"
+              style="color: rgb(19, 19, 19); font-family: "Basel Grotesk"; font-size: 17px; line-height: 22px;"
             >
               Some very long text
             </span>
@@ -58,7 +58,7 @@ exports[`LongMarkdownText > renders without error 1`] = `
       class="css-text-146c3p1 r-cursor-1loqt21"
       data-testid="read-more-button"
       dir="auto"
-      style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-size: 17px; line-height: 19.549999999999997px; font-family: Basel Grotesk; font-weight: 500; color: rgba(19, 19, 19, 0.63);"
+      style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-size: 17px; line-height: 19.549999999999997px; font-family: "Basel Grotesk"; font-weight: 500; color: rgba(19, 19, 19, 0.63);"
     >
       common.longText.button.more
     </div>

@@ -5,28 +5,20 @@
  * Structure mirrors legacy: a pressable container (legacy `TouchableArea`)
  * wrapping a centered row (legacy `<Flex row alignItems="center" gap px py>`)
  * holding the checkbox and, when `text` is present, a `grow shrink` label
- * wrapper. The same press handler is attached to BOTH the container and the
- * checkbox, and it calls `preventDefault()` + `stopPropagation()` first, exactly
- * like legacy, so a press on the checkbox does not
- * also fire the container.
+ * wrapper. The press handler sits on the checkbox and calls `preventDefault()` +
+ * `stopPropagation()` first, like legacy.
  *
  * `onCheckPressed` receives the PRE-TOGGLE state — `checked` as it is at press
  * time, not the next value. Call sites invert it
  * themselves.
  *
- * A11y: the container reproduces legacy's outer interactive role rather than
- * flattening it. Legacy's `TouchableAreaFrame` is `styled(YStack, { tag: 'div',
- * role: 'button' })` and rendered
- * `<div role="button" tabindex="0">` around the inner `role="checkbox"`, so
- * that nested pair — button-wrapping-checkbox, container in the tab order — is
- * what all 15 call sites announce today. A compat primitive's premise is that
- * nothing changes but the import line, so the tree is matched exactly, down to
- * `tabIndex`. Legacy binds no key handler to that container (verified: Enter
- * and Space on the legacy container fire nothing; only the inner `<button
- * role="checkbox">` activates from the keyboard, natively), so none is bound
- * here either — adding one would be a behaviour change, not parity. Whether
- * the nesting should exist at all is a Spore question, and changing it here
- * would change it for every consumer silently.
+ * A11y: the checkbox is the one control. Its `text`, string or element, names
+ * it through `aria-labelledby`. The row is a `<label>` around the checkbox and
+ * its text, so a click anywhere on it clicks the checkbox: a larger mouse target
+ * with no handler, role or tab stop of its own. Legacy's `role="button"` wrapper
+ * bound no key handler, so it only added a dead tab stop and a button that nested
+ * the checkbox (axe nested-interactive, button-name). Keyboard users reach and
+ * toggle the checkbox itself, natively, with Space.
  */
 // oxlint-disable react/forbid-elements -- the compat components ARE the raw DOM
 // boundary. FlexCompat is deliberately not used here: it has no native leg yet
@@ -75,6 +67,7 @@ export const LabeledCheckboxCompat = React.forwardRef<HTMLDivElement, LabeledChe
     // Legacy `hoverable={!!hoverStyle}`: hover styling is opt-in.
     const hoverable = hoverStyle !== undefined
     const [hovered, setHovered] = React.useState(false)
+    const textId = React.useId()
 
     const handlePress = React.useCallback(
       (event: { preventDefault: () => void; stopPropagation: () => void }): void => {
@@ -103,30 +96,34 @@ export const LabeledCheckboxCompat = React.forwardRef<HTMLDivElement, LabeledChe
       ...(hoverable && hovered ? (resolvedHoverStyle as React.CSSProperties) : undefined),
     }
 
-    const checkbox = <CheckboxCompat checked={checked} size={size} variant={variant} onPress={handlePress} />
+    const checkbox = (
+      <CheckboxCompat
+        aria-labelledby={textShape === 'absent' ? undefined : textId}
+        checked={checked}
+        size={size}
+        variant={variant}
+        onPress={handlePress}
+      />
+    )
 
     return (
-      // oxlint-disable-next-line jsx-a11y/click-events-have-key-events -- legacy parity, see the a11y note in the file header
       <div
         ref={ref}
         className={containerClasses}
-        // Legacy's nested interactive container, tab stop included — see the
-        // a11y note in the file header before flattening either.
-        // TODO(INFRA-4589): the label text never names the inner checkbox, which is unnamed inside this button
-        // (button-name, nested-interactive). Name the checkbox with the text and drop this role.
-        role="button"
         style={mergedContainerStyle}
-        tabIndex={0}
-        onClick={handlePress}
         onMouseEnter={hoverable ? () => setHovered(true) : undefined}
         onMouseLeave={hoverable ? () => setHovered(false) : undefined}
         {...domTestId(testID)}
       >
-        <div className={labeledRowClassName({ gap, px, py })} style={labeledRowStyle({ gap, px, py })}>
+        <label className={labeledRowClassName({ gap, px, py })} style={labeledRowStyle({ gap, px, py })}>
           {checkboxPosition === 'start' ? checkbox : null}
-          {textShape !== 'absent' ? <div className={LABELED_TEXT_WRAPPER_CLASSES}>{label}</div> : null}
+          {textShape !== 'absent' ? (
+            <span id={textId} className={LABELED_TEXT_WRAPPER_CLASSES}>
+              {label}
+            </span>
+          ) : null}
           {checkboxPosition === 'end' ? checkbox : null}
-        </div>
+        </label>
       </div>
     )
   },

@@ -173,10 +173,9 @@ export default defineConfig(({ mode, command, isPreview }) => {
     overrideProcessEnv: true,
   })
 
-  // Log environment loading for CI verification
-  console.log(
-    `ENV_LOADED: mode=${mode} UNISWAP_GATEWAY_DNS=${env.UNISWAP_GATEWAY_DNS ?? env.REACT_APP_UNISWAP_GATEWAY_DNS}`,
-  )
+  // Log environment loading for CI verification (scripts/build-and-test-env.sh). ENV_CANARY exists
+  // only to prove the remote config scope loaded: `production` in the production scope.
+  console.log(`ENV_LOADED: mode=${mode} ENV_CANARY=${env.ENV_CANARY}`)
 
   const isProduction = mode === 'production'
   const isEcsDeploy = DEPLOY_TARGET === 'ecs'

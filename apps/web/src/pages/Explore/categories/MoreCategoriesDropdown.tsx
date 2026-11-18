@@ -17,7 +17,7 @@ import { useEvent } from 'utilities/src/react/hooks'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { AdaptiveDropdown } from '~/components/Dropdowns/AdaptiveDropdown'
 import { InternalMenuItem } from '~/components/Dropdowns/Dropdown'
-import { ExploreFilterChip } from '~/pages/Explore/categories/ExploreCategoryChips'
+import { ExploreFilterChip } from '~/features/Explore/categories/ExploreCategoryChips'
 import {
   type CategoryRowStats,
   isEmptyCategoryStats,
@@ -128,6 +128,7 @@ export function MoreCategoriesDropdown<K extends CategoryKind>({
       // The trigger lives inside the chip row's overflow-x scroller, which would clip an inline-absolute menu.
       positionFixed
       adaptToSheet
+      title={t('explore.categories.title')}
       allowFlip
       dropdownTestId={TestID.ExploreMoreCategoriesDropdown}
       dropdownStyle={{ maxHeight: DROPDOWN_MAX_HEIGHT, width: DROPDOWN_WIDTH, py: '$spacing16' }}
@@ -140,6 +141,7 @@ export function MoreCategoriesDropdown<K extends CategoryKind>({
           renderTrailingIcon={(color) => (
             <RotatableChevron color={color} direction={isOpen ? 'up' : 'down'} size="$icon.16" />
           )}
+          testID={TestID.ExploreMoreCategoriesButton}
           onPress={onToggleOpen}
         />
       }

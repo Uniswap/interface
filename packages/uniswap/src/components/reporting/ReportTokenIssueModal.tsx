@@ -1,5 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
-import { TokenReportEventType } from '@universe/api'
+import { TokenReportEventType } from '@universe/data-api'
 import { isProdEnv } from '@universe/environment'
 import { Flag } from '@universe/mycelium/icons/Flag'
 import { atom } from 'jotai'

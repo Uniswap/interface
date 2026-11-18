@@ -1,25 +1,22 @@
 import { useCallback, useMemo } from 'react'
 import { buildTokenMarketPriceKey } from '~/features/Toucan/hooks/tokenMarketPriceKeys'
 import { useAuctionTokenPrices } from '~/features/Toucan/hooks/useTopAuctions/useAuctionTokenPrices'
-import {
-  auctionCommittedVolumeComparator,
-  type EnrichedAuction,
-  useTopAuctions,
-} from '~/features/Toucan/hooks/useTopAuctions/useTopAuctions'
+import type { EnrichedAuction } from '~/features/Toucan/hooks/useTopAuctions/useEnrichedAuctions'
+import { auctionCommittedVolumeComparator, useTopAuctions } from '~/features/Toucan/hooks/useTopAuctions/useTopAuctions'
 
 const MAX_VERIFIED_AUCTIONS = 4
 
 /**
  * Selects the top verified auctions to surface as chips: ongoing auctions first (sorted by committed
  * volume), then completed ones to fill any remaining slots. Shared by the Explore section and the
- * Positions empty state so both render the same set.
+ * Positions empty state so both render the same set. Custom-only, matching the Explore table's query.
  */
 export function useTopVerifiedAuctions(): {
   auctions: EnrichedAuction[]
   isLoading: boolean
   getAuctionTokenUsdPrice: (auction: EnrichedAuction) => number | undefined
 } {
-  const { auctions: allAuctions, isLoading } = useTopAuctions()
+  const { auctions: allAuctions, isLoading } = useTopAuctions({ customOnly: true })
   const { priceMap: auctionTokenPriceMap } = useAuctionTokenPrices(allAuctions)
 
   const verifiedAuctions = useMemo(

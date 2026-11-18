@@ -35,6 +35,7 @@ exports[`KeyManagementModal > renders correctly 1`] = `
         class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 ml-[auto]"
       >
         <div
+          aria-label="Close"
           class="[container-name:true] flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 [container-type:normal] rounded-[12px] [cursor:pointer] bg-transparent [transition:transform_80ms_ease-in-out,_opacity_80ms_ease-in-out] active:opacity-[0.75] active:[transform:scale(0.98)] focus-visible:[transform:scaleX(0.98)_scaleY(0.98)] focus-visible:[outline-offset:1px] focus-visible:[outline-style:solid] focus-visible:[outline-width:1px] focus-visible:[outline-color:var(--neutral3)] group"
           role="button"
           tabindex="0"
@@ -69,7 +70,7 @@ exports[`KeyManagementModal > renders correctly 1`] = `
             fill="none"
             focusable="false"
             stroke-width="8"
-            style="width: 24px; height: 24px;"
+            style="color: var(--neutral1); width: 24px; height: 24px;"
             viewBox="0 0 24 24"
           >
             <path
@@ -129,7 +130,7 @@ exports[`KeyManagementModal > renders correctly 1`] = `
       href="https://www.privy.io/user-help-center"
       rel="noopener noreferrer"
       role="link"
-      style="--ch-opacity: 0.6; --ca-opacity: 0.4; transition: opacity 100ms cubic-bezier(0.17, 0.67, 0.45, 1); stroke: none;"
+      style="--ch-opacity: 0.6; --ca-opacity: 0.4; color: var(--stext-accent1); transition: opacity 100ms cubic-bezier(0.17, 0.67, 0.45, 1); stroke: none;"
       target="_blank"
     >
       <div
@@ -141,7 +142,7 @@ exports[`KeyManagementModal > renders correctly 1`] = `
           fill="none"
           focusable="false"
           stroke-width="8"
-          style="width: 63px; height: 63px;"
+          style="color: var(--neutral1); width: 63px; height: 63px;"
           viewBox="0 0 63 14"
         >
           <path

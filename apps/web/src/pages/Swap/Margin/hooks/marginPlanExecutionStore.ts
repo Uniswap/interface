@@ -4,6 +4,7 @@ import type {
   MarginActionKey,
   MarginCreatePlanRequest,
   MarginPlanResponse,
+  MarginQuoteResponse,
 } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
 import type { MarginManageAction } from 'uniswap/src/features/transactions/margin/types'
 import { useStore } from 'zustand'
@@ -41,6 +42,7 @@ export interface MarginPlanExecutionState {
   // the surface, while every remaining step of the run still has to name what was quoted. Same
   // lifetime as lastManageAction — cleared by reset, never by a stash clear.
   lastQuotedAction?: MarginActionKey
+  lastQuote?: MarginQuoteResponse
   // Which user action minted the current/last run. Add margin, Withdraw margin and Change leverage all
   // send intent: 'ADJUST', so the plan cannot name what the user did — the completion toast reads this.
   lastManageAction?: MarginManageAction
@@ -81,6 +83,7 @@ const INITIAL = {
   executingPlanId: undefined,
   lastCreateRequest: undefined,
   lastQuotedAction: undefined,
+  lastQuote: undefined,
   lastManageAction: undefined,
 }
 
@@ -119,12 +122,16 @@ export const marginPlanExecutionStore = createStore<MarginPlanExecutionState>()(
           // Stamped together, dropped apart: clearing the stash must not take the quoted key with it.
           set(
             request
-              ? { lastCreateRequest: request, lastQuotedAction: request.marginQuote?.action }
+              ? {
+                  lastCreateRequest: request,
+                  lastQuotedAction: request.marginQuote?.action,
+                  lastQuote: request.marginQuote,
+                }
               : { lastCreateRequest: undefined },
           )
         },
         setLastManageAction: (lastManageAction) => set({ lastManageAction }),
-        clearLastQuotedAction: () => set({ lastQuotedAction: undefined }),
+        clearLastQuotedAction: () => set({ lastQuotedAction: undefined, lastQuote: undefined }),
         tryAcquireExecution: ({ planId }) => {
           const { executingPlanId, epoch } = get()
           if (executingPlanId !== undefined) {

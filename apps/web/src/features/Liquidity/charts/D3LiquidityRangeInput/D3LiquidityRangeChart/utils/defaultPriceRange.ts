@@ -1,3 +1,8 @@
+import type { Currency } from '@uniswap/sdk-core'
+import type { PriceChartData } from '~/components/Charts/PriceChart'
+import { getCandlestickPriceBounds } from '~/components/Charts/PriceChart/utils'
+import { tryParseV4Tick } from '~/features/Liquidity/utils/priceRangeInfo'
+
 /**
  * Computes the default lower/upper prices for the range: the middle 60% (20%–80%) of a viewport
  * that is centered on the current price and fits the historical price bounds.
@@ -38,5 +43,46 @@ export function calculateDefaultPriceRange({
   return {
     minPrice: Math.exp(minVisibleLogPrice + viewportRange * 0.2),
     maxPrice: Math.exp(minVisibleLogPrice + viewportRange * 0.8),
+  }
+}
+
+/**
+ * The range chart's default range as ticks, from the price history it draws (the last entry being the
+ * current price). Both ticks collapse to the current price when there is no usable history, which callers
+ * treat as "fall back to the stable strategy".
+ */
+export function getDefaultRangeTicks({
+  priceData,
+  tickSpacing,
+  baseCurrency,
+  quoteCurrency,
+}: {
+  priceData: PriceChartData[]
+  tickSpacing: number
+  baseCurrency: Maybe<Currency>
+  quoteCurrency: Maybe<Currency>
+}): { defaultMinTick: number | undefined; defaultMaxTick: number | undefined } {
+  const { min: priceDataMin, max: priceDataMax } = getCandlestickPriceBounds(priceData)
+  const currentPrice = priceData[priceData.length - 1]?.value || 0
+
+  // Default the range to the middle 60% of a viewport centered on the current price. Computed in
+  // log/ratio space so the lower bound can't collapse to MIN_TICK for volatile pairs — see
+  // calculateDefaultPriceRange. When there is no usable price history the prices fall back to the
+  // current price, leaving the range degenerate (min === max) so the stable strategy takes over.
+  const defaultPriceRange = calculateDefaultPriceRange({ priceDataMin, priceDataMax, currentPrice })
+
+  return {
+    defaultMinTick: tryParseV4Tick({
+      baseToken: baseCurrency,
+      quoteToken: quoteCurrency,
+      value: String(defaultPriceRange?.minPrice ?? currentPrice),
+      tickSpacing,
+    }),
+    defaultMaxTick: tryParseV4Tick({
+      baseToken: baseCurrency,
+      quoteToken: quoteCurrency,
+      value: String(defaultPriceRange?.maxPrice ?? currentPrice),
+      tickSpacing,
+    }),
   }
 }

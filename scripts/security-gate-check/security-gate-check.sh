@@ -2117,10 +2117,17 @@ evaluate_review_integrity() {
   elif [ "$ri_decl_rc" -eq 2 ]; then
     ri_state="failure"; ri_desc="Cannot verify the CODEOWNERS approval requirement — failing closed."
   elif [ "$ri_bot_authored" = "1" ] && [ "$BOT_APPROVALS_COUNT" = "1" ]; then
+    # Name the shortfall in PEOPLE whenever the counting bots have all approved, because then
+    # only a human can close it. The old text ("yours counts (bot-authored, +2 for CODEOWNER)")
+    # never said so, and +2 is the bot pad, not anything CODEOWNERS adds: backend#13657 sat at
+    # 3/4 with one human and read as a stuck check rather than a missing reviewer.
+    # Humans required = ri_req - ri_pad, the same arithmetic as the baseline above.
     if [ "$ri_counting" -ge "$ri_req" ]; then
-      ri_state="success"; ri_desc="$ri_counting/$ri_req approvals (bot-authored, +$ri_pad for CODEOWNER)."
+      ri_state="success"; ri_desc="$ri_counting/$ri_req approvals (bot-authored PR, humans: $ri_human)."
+    elif [ $((ri_counting - ri_human)) -ge "$ri_pad" ]; then
+      ri_state="pending"; ri_desc="$ri_counting/$ri_req approvals — $((ri_req - ri_counting)) more needed from a human (bot-authored PR: $((ri_req - ri_pad)) humans required, yours counts)."
     else
-      ri_state="pending"; ri_desc="$ri_counting/$ri_req approvals — $((ri_req - ri_counting)) more needed, yours counts (bot-authored, +$ri_pad for CODEOWNER)."
+      ri_state="pending"; ri_desc="$ri_counting/$ri_req approvals — $((ri_req - ri_counting)) more needed (bot-authored PR: $((ri_req - ri_pad)) humans + $ri_pad bot approvals, yours counts)."
     fi
   elif [ "$ri_bot_authored" = "1" ]; then
     # BOT_APPROVALS_COUNT=0: the emergency override, where bot approvals count for nothing and

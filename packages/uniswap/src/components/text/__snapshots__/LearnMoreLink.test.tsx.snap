@@ -4,7 +4,7 @@ exports[`LearnMoreLink > renders without error 1`] = `
 <DocumentFragment>
   <div
     class="[container-name:true] flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 [container-type:normal] [cursor:pointer] bg-transparent rounded-[0px] [outline-style:none] [transition:transform_80ms_ease-in-out,_opacity_80ms_ease-in-out] active:[transform:var(--ca-tr)] focus-visible:bg-transparent focus-visible:border-transparent focus-visible:[transform:scaleX(1)_scaleY(1)] focus-visible:[outline-offset:1px] focus-visible:[outline-style:solid] focus-visible:[outline-width:1px] focus-visible:[outline-color:var(--neutral3)] group"
-    role="button"
+    role="none"
     style="--ca-tr: scale(1);"
     tabindex="-1"
   >

@@ -1,7 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query'
+import { NFT_QUERY_KEY_PREFIX } from '@universe/data-api'
 import { HomeTab } from 'src/screens/HomeScreen/portfolio/types'
 import { useHeartbeatCoordinator } from 'src/utils/useHeartbeatCoordinator'
-import { NFT_QUERY_KEY_PREFIX } from 'uniswap/src/data/apiClients/dataApiService/nfts/queries'
 import { WALLET_POSITIONS_QUERY_KEY_PREFIX } from 'uniswap/src/data/apiClients/liquidityService/queryKeys'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 

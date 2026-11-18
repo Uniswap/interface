@@ -1,10 +1,10 @@
 import { isWebApp, isWebPlatform } from '@universe/environment'
-import { AnimatedFlex, Flex, Text } from '@universe/mycelium'
+import { AnimatedFlex, Flex } from '@universe/mycelium'
 import { cn } from '@universe/mycelium/cn'
 import { ENTER_PRESET_CLASSES } from '@universe/mycelium/compat'
-import { Gas } from '@universe/mycelium/icons/Gas'
 import { withSporeCurve } from '@universe/tailwind/animations/reanimated'
 import { TestID } from '@universe/test'
+import { GasSummary } from '@universe/transactions-ui'
 import { useEffect } from 'react'
 import { useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
 import { SponsoredFee, SponsoredFeeWithModal, UniswapXFee } from 'uniswap/src/components/gas/NetworkFee'
@@ -12,29 +12,34 @@ import { NetworkFeeWarning } from 'uniswap/src/components/gas/NetworkFeeWarning'
 import type { GasInfo } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/types'
 import { isZero } from 'uniswap/src/utils/number'
 
-function NetworkFeeWarningContent({ gasInfo }: { gasInfo?: GasInfo }): JSX.Element | null {
+/** The tooltip trigger: GasSummary for a plain cost; sponsored and UniswapX costs keep their own content. */
+function NetworkFeeWarningTrigger({ gasInfo }: { gasInfo?: GasInfo }): JSX.Element {
   const sponsorMetadata = gasInfo?.sponsorshipInfo?.sponsorMetadata
-  if (sponsorMetadata) {
-    return <SponsoredFee sponsorMetadata={sponsorMetadata} preSavingsGasFee={gasInfo.fiatPriceFormatted} />
+  const uniswapXSavings = gasInfo?.uniswapXGasFeeInfo?.preSavingsGasFeeFormatted
+
+  if (gasInfo?.fiatPriceFormatted && !sponsorMetadata && !uniswapXSavings) {
+    return (
+      <GasSummary
+        gasText={gasInfo.fiatPriceFormatted}
+        // Avoid high gas UI on interface
+        isHighRelativeToValue={gasInfo.isHighRelativeToValue && !isWebApp}
+        testID={TestID.GasInfoRow}
+      />
+    )
   }
 
-  if (!gasInfo?.fiatPriceFormatted) {
-    return null
-  }
-
-  const color = gasInfo.isHighRelativeToValue && !isWebApp ? '$statusCritical' : '$neutral2' // Avoid high gas UI on interface
-  const uniswapXSavings = gasInfo.uniswapXGasFeeInfo?.preSavingsGasFeeFormatted
-  const isGasFeeFree = gasInfo.gasFee.value !== undefined && isZero(gasInfo.gasFee.value)
-
-  return uniswapXSavings ? (
-    <UniswapXFee gasFee={gasInfo.fiatPriceFormatted} isFree={isGasFeeFree} preSavingsGasFee={uniswapXSavings} />
-  ) : (
-    <>
-      <Gas color={color} size="$icon.16" />
-      <Text color={color} variant="body3">
-        {gasInfo.fiatPriceFormatted}
-      </Text>
-    </>
+  return (
+    <Flex centered row gap="$spacing4" testID={TestID.GasInfoRow}>
+      {sponsorMetadata ? (
+        <SponsoredFee sponsorMetadata={sponsorMetadata} preSavingsGasFee={gasInfo.fiatPriceFormatted} />
+      ) : gasInfo?.fiatPriceFormatted && uniswapXSavings ? (
+        <UniswapXFee
+          gasFee={gasInfo.fiatPriceFormatted}
+          isFree={gasInfo.gasFee.value !== undefined && isZero(gasInfo.gasFee.value)}
+          preSavingsGasFee={uniswapXSavings}
+        />
+      ) : null}
+    </Flex>
   )
 }
 
@@ -101,11 +106,7 @@ export function GasInfoRow({ gasInfo, hidden }: { gasInfo: GasInfo; hidden?: boo
       <NetworkFeeWarning
         gasFeeHighRelativeToValue={gasInfo.isHighRelativeToValue}
         placement={isWebApp ? 'top' : 'bottom'}
-        tooltipTrigger={
-          <Flex centered row gap="$spacing4" testID={TestID.GasInfoRow}>
-            <NetworkFeeWarningContent gasInfo={hidden ? undefined : gasInfo} />
-          </Flex>
-        }
+        tooltipTrigger={<NetworkFeeWarningTrigger gasInfo={hidden ? undefined : gasInfo} />}
         disabled={hidden}
         uniswapXGasFeeInfo={gasInfo.uniswapXGasFeeInfo}
         chainId={gasInfo.chainId}

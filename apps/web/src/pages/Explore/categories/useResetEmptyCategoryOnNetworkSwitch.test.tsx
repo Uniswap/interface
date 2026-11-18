@@ -2,12 +2,12 @@ import { act, renderHook } from '@testing-library/react'
 import { UniverseChainId } from '@universe/chains'
 import type { ReactNode } from 'react'
 import { tokenCategory } from 'uniswap/src/test/fixtures/tokenCategory'
+import { ExploreCategory } from '~/features/Explore/categories/useExploreCategory'
 import {
   ExploreTablesFilterStoreContextProvider,
   useExploreTablesFilterStore,
   useExploreTablesFilterStoreActions,
 } from '~/features/Explore/state/exploreTablesFilterStore'
-import { ExploreCategory } from '~/pages/Explore/categories/useExploreCategory'
 import { useResetEmptyCategoryOnNetworkSwitch } from '~/pages/Explore/categories/useResetEmptyCategoryOnNetworkSwitch'
 import { mocked } from '~/test-utils/mocked'
 import { useChainIdFromUrlParam } from '~/utils/params/chainParams'

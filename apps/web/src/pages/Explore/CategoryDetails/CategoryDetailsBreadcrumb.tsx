@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router'
 import type { CategoryKind } from 'uniswap/src/features/tokenCategories/types'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from '~/components/BreadcrumbNav'
-import { getExplorePoolsURL, getExploreTokensURL } from '~/pages/Explore/categories/useExploreCategory'
+import { getExplorePoolsURL, getExploreTokensURL } from '~/features/Explore/categories/useExploreCategory'
 import { parseCategoryDetailsNavState } from '~/utils/categoryDetailsEntryPoint'
 
 export function CategoryDetailsBreadcrumb({

@@ -1,98 +1,29 @@
 import { TradeType } from '@uniswap/sdk-core'
-import { isWebPlatform } from '@universe/environment'
-import { Flex, Text, TouchableArea, AnimatedFlex, useSporeColors, fonts, iconSizes, spacing } from '@universe/mycelium'
-import type { ColorTokens } from '@universe/mycelium'
-import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFilled'
-import { useMemo } from 'react'
+import { SlippageScreen } from '@universe/transactions-ui'
 import { useTranslation } from 'react-i18next'
 import { BottomSheetTextInput } from 'uniswap/src/components/modals/Modal'
-import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
-import { MAX_CUSTOM_SLIPPAGE_TOLERANCE, SLIPPAGE_CRITICAL_TOLERANCE } from 'uniswap/src/constants/transactions'
+import { MAX_CUSTOM_SLIPPAGE_TOLERANCE } from 'uniswap/src/constants/transactions'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
-import {
-  PlusMinusButton,
-  PlusMinusButtonType,
-} from 'uniswap/src/features/transactions/components/settings/PlusMinusButton'
+import { PlusMinusButtonType } from 'uniswap/src/features/transactions/components/settings/PlusMinusButton'
 import { useSlippageSettings } from 'uniswap/src/features/transactions/components/settings/settingsConfigurations/slippage/useSlippageSettings'
 import { useFormatSlippageAmount } from 'uniswap/src/features/transactions/swap/components/MaxSlippageRow/SlippageInfo/useFormatSlippageAmount'
 import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
-import type { TradeWithSlippage } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isBridge } from 'uniswap/src/features/transactions/swap/utils/routing'
-import { getSlippageWarningColor } from 'uniswap/src/features/transactions/swap/utils/styleHelpers'
+import { getSlippageWarningLevel } from 'uniswap/src/features/transactions/swap/utils/styleHelpers'
+import { openUri } from 'uniswap/src/utils/linking'
 
-function SlippageMessage({
-  inputWarning,
-  trade,
-  showSlippageWarning,
-  showEmpty = true,
-  color = '$statusWarning',
-}: {
-  inputWarning?: string
-  trade: TradeWithSlippage | null
-  showSlippageWarning: boolean
-  showEmpty?: boolean
-  color?: ColorTokens
-}): JSX.Element | null {
-  const { t } = useTranslation()
-
-  const formattedSlippageAmount = useFormatSlippageAmount(trade)
-
-  if (inputWarning) {
-    return <WarningMessage showAlert text={inputWarning} color={color} />
-  }
-
-  return trade ? (
-    <Flex centered gap="$spacing8" py="$spacing4">
-      <Text color="$neutral2" textAlign="center" variant="body2">
-        {[TradeType.EXACT_INPUT, 'EXACT_INPUT'].includes(trade.tradeType)
-          ? t('swap.settings.slippage.input.receive.title')
-          : t('swap.settings.slippage.output.spend.title')}{' '}
-        {formattedSlippageAmount}
-      </Text>
-      {showSlippageWarning ? (
-        <Flex centered row gap="$spacing8">
-          <AlertTriangleFilled color={color} size="$icon.16" />
-          <Text color="$statusWarning" variant="body2">
-            {t('swap.settings.slippage.warning.message')}
-          </Text>
-        </Flex>
-      ) : null}
-    </Flex>
-  ) : showEmpty ? (
-    <Flex height={fonts.body2.lineHeight} />
-  ) : null
-}
-
-function WarningMessage({
-  text,
-  color,
-  showAlert = false,
-}: {
-  text: string
-  color: ColorTokens
-  showAlert?: boolean
-}): JSX.Element {
-  return (
-    <Flex row centered px="$spacing12" gap="$spacing8" height={fonts.body3.lineHeight * 2 + spacing.spacing8}>
-      {showAlert && <AlertTriangleFilled color={color} size="$icon.16" />}
-      <Text color={color} textAlign="center" variant="body3">
-        {text}
-      </Text>
-    </Flex>
-  )
-}
+// LearnMoreLink's TouchableTextLink opened the article outside the app, with Linking.openURL.
+const onPressLearnMore = (): Promise<void> =>
+  openUri({ uri: UniswapHelpUrls.articles.swapSlippage, openExternalBrowser: true })
 
 export function SlippageScreenNative(): JSX.Element {
   const { t } = useTranslation()
-  const colors = useSporeColors()
   const trade = useSwapFormStoreDerivedSwapInfo((s) => s.trade).trade
 
   const isBridgeTrade = Boolean(trade && isBridge(trade))
   const tradeWithSlippage = trade && !isBridge(trade) ? trade : null
 
   const {
-    isEditingSlippage,
-    showSlippageWarning,
     inputSlippageTolerance,
     inputWarning,
     autoSlippageTolerance,
@@ -105,102 +36,48 @@ export function SlippageScreenNative(): JSX.Element {
     onPressPlusMinusButton,
   } = useSlippageSettings({ isZeroSlippage: isBridgeTrade })
 
-  const inputValueTextColor = useMemo(
-    () =>
-      getSlippageWarningColor({
-        customSlippageValue: currentSlippageTolerance,
-        autoSlippageTolerance,
-      }),
-    [currentSlippageTolerance, autoSlippageTolerance],
-  )
+  const formattedSlippageAmount = useFormatSlippageAmount(tradeWithSlippage)
 
-  const slippageMessage = useMemo(() => {
-    if (isBridgeTrade) {
-      return <WarningMessage text={t('swap.slippage.bridging')} color="$neutral2" />
-    } else {
-      return (
-        <SlippageMessage
-          inputWarning={inputWarning}
-          showSlippageWarning={showSlippageWarning}
-          trade={tradeWithSlippage}
-          color={inputValueTextColor}
-        />
-      )
-    }
-  }, [inputWarning, isBridgeTrade, showSlippageWarning, t, tradeWithSlippage, inputValueTextColor])
+  // Paints the typed value, the input warning and the "higher than necessary" line, as
+  // getSlippageWarningColor did for each of them.
+  const warningLevel = getSlippageWarningLevel({
+    customSlippageValue: currentSlippageTolerance,
+    autoSlippageTolerance,
+  })
+
+  const amount = tradeWithSlippage
+    ? {
+        isExactInput: [TradeType.EXACT_INPUT, 'EXACT_INPUT'].includes(tradeWithSlippage.tradeType),
+        formattedAmount: formattedSlippageAmount,
+      }
+    : undefined
+
+  function onPressIncrement(): void {
+    onPressPlusMinusButton(PlusMinusButtonType.Plus)
+  }
+
+  function onPressDecrement(): void {
+    onPressPlusMinusButton(PlusMinusButtonType.Minus)
+  }
 
   return (
-    <Flex centered gap="$spacing16">
-      {!isBridgeTrade && (
-        <Text color="$neutral2" textAlign="center" variant="body2">
-          {t('swap.settings.slippage.description')}
-        </Text>
-      )}
-      {!isBridgeTrade && <LearnMoreLink url={UniswapHelpUrls.articles.swapSlippage} />}
-      <Flex gap="$spacing12">
-        <Flex centered row gap="$spacing16" mt="$spacing12">
-          <PlusMinusButton
-            disabled={currentSlippageTolerance === 0 || isBridgeTrade}
-            type={PlusMinusButtonType.Minus}
-            onPress={onPressPlusMinusButton}
-          />
-          <AnimatedFlex
-            row
-            alignItems="center"
-            backgroundColor={isEditingSlippage || isBridgeTrade ? '$surface2' : '$surface1'}
-            borderColor="$surface3"
-            borderRadius="$roundedFull"
-            borderWidth="$spacing1"
-            gap="$spacing12"
-            p="$spacing16"
-            style={inputAnimatedStyle}
-          >
-            <TouchableArea onPress={isBridgeTrade ? undefined : onPressAutoSlippage}>
-              <Text color="$accent1" variant="buttonLabel2">
-                {t('swap.settings.slippage.control.auto')}
-              </Text>
-            </TouchableArea>
-            {isBridgeTrade ? (
-              <Text color="$neutral2" textAlign="center" variant="subheading1">
-                0.00
-              </Text>
-            ) : (
-              <BottomSheetTextInput
-                keyboardType="numeric"
-                style={{
-                  color:
-                    currentSlippageTolerance >= SLIPPAGE_CRITICAL_TOLERANCE
-                      ? colors.statusCritical.val
-                      : colors.neutral1.val,
-                  fontSize: fonts.subheading1.fontSize,
-                  width: fonts.subheading1.fontSize * 4,
-                  padding: spacing.none,
-                  ...(!isWebPlatform && {
-                    fontFamily: fonts.subheading1.family,
-                  }),
-                }}
-                textAlign="center"
-                value={inputSlippageTolerance}
-                onBlur={onBlurSlippageInput}
-                onChangeText={onChangeSlippageInput}
-                onFocus={onFocusSlippageInput}
-              />
-            )}
-
-            <Flex width={iconSizes.icon28}>
-              <Text color="$neutral2" textAlign="center" variant="subheading1">
-                %
-              </Text>
-            </Flex>
-          </AnimatedFlex>
-          <PlusMinusButton
-            disabled={currentSlippageTolerance === MAX_CUSTOM_SLIPPAGE_TOLERANCE || isBridgeTrade}
-            type={PlusMinusButtonType.Plus}
-            onPress={onPressPlusMinusButton}
-          />
-        </Flex>
-        {slippageMessage}
-      </Flex>
-    </Flex>
+    <SlippageScreen
+      value={inputSlippageTolerance}
+      warningLevel={warningLevel}
+      errorMessage={inputWarning}
+      amount={amount}
+      noSlippageReason={isBridgeTrade ? t('swap.slippage.bridging') : undefined}
+      isAtMinimum={currentSlippageTolerance === 0}
+      isAtMaximum={currentSlippageTolerance === MAX_CUSTOM_SLIPPAGE_TOLERANCE}
+      TextInputComponent={BottomSheetTextInput}
+      shakeStyle={inputAnimatedStyle}
+      onChangeValue={onChangeSlippageInput}
+      onFocus={onFocusSlippageInput}
+      onBlur={onBlurSlippageInput}
+      onPressAuto={onPressAutoSlippage}
+      onPressIncrement={onPressIncrement}
+      onPressDecrement={onPressDecrement}
+      onPressLearnMore={onPressLearnMore}
+    />
   )
 }

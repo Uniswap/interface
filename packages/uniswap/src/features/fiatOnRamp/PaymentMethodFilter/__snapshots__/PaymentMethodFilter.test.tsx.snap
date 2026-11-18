@@ -55,7 +55,7 @@ exports[`PaymentMethodFilter > Shared Components > renders PaymentMethodItem cor
         fill="none"
         focusable="false"
         stroke-width="8"
-        style="width: 20px; height: 20px;"
+        style="color: var(--neutral1); width: 20px; height: 20px;"
         viewBox="0 0 20 20"
       >
         <path
@@ -105,7 +105,7 @@ exports[`PaymentMethodFilter > Shared Components > renders PaymentMethodItem whe
         fill="none"
         focusable="false"
         stroke-width="8"
-        style="width: 20px; height: 20px;"
+        style="color: var(--neutral1); width: 20px; height: 20px;"
         viewBox="0 0 24 24"
       >
         <path

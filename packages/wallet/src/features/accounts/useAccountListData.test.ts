@@ -10,11 +10,6 @@ vi.mock('uniswap/src/data/apiClients/dataApiService/balances/getWalletsBalances/
   useGetWalletsBalancesQuery: vi.fn(),
 }))
 
-vi.mock('uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances', async () => ({
-  ...(await vi.importActual('uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances')),
-  useWalletBalancesIncludeCategories: vi.fn().mockReturnValue([]),
-}))
-
 vi.mock('uniswap/src/features/dataApi/balances/useRestPortfolioValueModifier', () => ({
   useRestPortfolioValueModifiers: vi.fn().mockReturnValue(undefined),
 }))

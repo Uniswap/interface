@@ -2,6 +2,10 @@ import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes
 import { Currency } from '@uniswap/sdk-core'
 import { nearestUsableTick, TickMath } from '@uniswap/v3-sdk'
 import { logger } from 'utilities/src/logger/logger'
+import {
+  searchSortedTick,
+  sumAmountsOverTicks,
+} from '~/features/Liquidity/charts/D3LiquidityChartShared/utils/liquidityBucketing/sumAmountsOverTicks'
 import { ChartEntry } from '~/features/Liquidity/charts/LiquidityRangeInput/types'
 import { TickData } from '~/features/Liquidity/types/ticks'
 import { getDisplayPriceFromTick } from '~/features/Liquidity/utils/getTickToPrice'
@@ -86,6 +90,43 @@ export function buildSegmentsFromRawTicks(ticks: TickData[]): LiquiditySegment[]
   return segments
 }
 
+// Dwarfs the floating-point noise in axis-derived tick spans (~1e-12) yet is far smaller than any genuine step
+// change, so a step quantized from such a span stays put frame-to-frame. See getBucketBoundaries.
+const STEP_ROUNDING_EPSILON = 1e-9
+
+/**
+ * Boundaries every `step` ticks, anchored to multiples of `step` from tick 0 so they don't drift as the view
+ * pans, extended one step past each edge so bars are fully formed as they scroll into view, and clamped into
+ * the valid tick range — boundaries flow into TickMath downstream, which throws on out-of-range ticks
+ * ("Invariant failed: TICK").
+ */
+function getFixedGridBoundaries({
+  visibleMinTick,
+  visibleMaxTick,
+  step,
+  tickSpacing,
+}: {
+  visibleMinTick: number
+  visibleMaxTick: number
+  step: number
+  tickSpacing: number
+}): number[] {
+  const minUsableTick = nearestUsableTick(TickMath.MIN_TICK, tickSpacing)
+  const maxUsableTick = nearestUsableTick(TickMath.MAX_TICK, tickSpacing)
+  const gridStart = Math.max(minUsableTick, Math.floor(visibleMinTick / step) * step - step)
+  const gridEnd = Math.min(maxUsableTick, Math.ceil(visibleMaxTick / step) * step + step)
+
+  const boundaries: number[] = []
+  for (let tick = gridStart; tick < gridEnd; tick += step) {
+    boundaries.push(tick)
+  }
+  // Ensure the final boundary reaches gridEnd (which may be clamped and not step-aligned).
+  if (boundaries[boundaries.length - 1] !== gridEnd) {
+    boundaries.push(gridEnd)
+  }
+  return boundaries
+}
+
 /**
  * Step 2: Choose bucket boundaries aligned to tick spacing
  */
@@ -121,28 +162,8 @@ function getBucketBoundaries({
     // horizontal jitter seen while scrolling. Bias the half-way case up by an epsilon that dwarfs
     // the FP noise (~1e-12) yet is far smaller than any genuine step change, so the step is stable
     // frame-to-frame and only ever changes on a real zoom.
-    const STEP_ROUNDING_EPSILON = 1e-9
     const step = Math.max(tickSpacing, Math.round(rawStep / tickSpacing + STEP_ROUNDING_EPSILON) * tickSpacing)
-
-    // Align to multiples of `step` from the global origin (so boundaries don't drift as you pan),
-    // extend one bucket past each edge so bars are fully formed as they scroll into view, and clamp
-    // into the valid tick range — boundaries flow into TickMath downstream, which throws on
-    // out-of-range ticks ("Invariant failed: TICK").
-    const minUsableTick = nearestUsableTick(TickMath.MIN_TICK, tickSpacing)
-    const maxUsableTick = nearestUsableTick(TickMath.MAX_TICK, tickSpacing)
-    const gridStart = Math.max(minUsableTick, Math.floor(visibleMinTick / step) * step - step)
-    const gridEnd = Math.min(maxUsableTick, Math.ceil(visibleMaxTick / step) * step + step)
-
-    const boundaries: number[] = []
-    for (let tick = gridStart; tick < gridEnd; tick += step) {
-      boundaries.push(tick)
-    }
-    // Ensure the final boundary reaches gridEnd (which may be clamped and not step-aligned).
-    if (boundaries[boundaries.length - 1] !== gridEnd) {
-      boundaries.push(gridEnd)
-    }
-
-    return boundaries
+    return getFixedGridBoundaries({ visibleMinTick, visibleMaxTick, step, tickSpacing })
   }
 
   // Snap min/max to valid tick boundaries
@@ -221,15 +242,47 @@ export function buildBuckets({
   }
 
   const boundaries = getBucketBoundaries({ visibleMinTick, visibleMaxTick, desiredBars, tickSpacing, fixedGrid })
+  return fillBuckets({ segments, boundaries })
+}
 
+/** Liquidity of each [boundaries[j], boundaries[j + 1]) bucket: its max-liquidity overlapping segment. */
+function fillBuckets({
+  segments,
+  boundaries,
+}: {
+  segments: LiquiditySegment[]
+  boundaries: number[]
+}): LiquidityBucket[] {
   const buckets: LiquidityBucket[] = []
+  // Segments come sorted from the ticks, which lets one forward sweep serve every bucket (boundaries ascend)
+  // instead of scanning all segments per bucket — that's thousands of buckets × segments per frame at full
+  // granularity. Same picks as the scan: the first segment, in order, with the strictly highest liquidity.
+  const canSweep = segments.every((segment, i) => i === 0 || segments[i - 1].startTick <= segment.startTick)
+  let cursor = 0
 
   for (let j = 0; j < boundaries.length - 1; j++) {
     const startTick = boundaries[j]
     const endTick = boundaries[j + 1]
 
-    // Find max liquidity among overlapping segments and track which segment it came from
-    const { maxLiquidity, segment } = findMaxLiquidityInBucket({ segments, startTick, endTick })
+    let maxLiquidity = 0n
+    let segment: LiquiditySegment | undefined
+    if (canSweep) {
+      // Buckets ascend, so a segment that ends at or before this one's start can't reach a later one either.
+      while (cursor < segments.length && segments[cursor].endTick <= startTick) {
+        cursor++
+      }
+      for (let k = cursor; k < segments.length && segments[k].startTick < endTick; k++) {
+        const candidate = segments[k]
+        if (candidate.endTick > startTick && candidate.liquidityActive > maxLiquidity) {
+          maxLiquidity = candidate.liquidityActive
+          segment = candidate
+        }
+      }
+    } else {
+      const found = findMaxLiquidityInBucket({ segments, startTick, endTick })
+      maxLiquidity = found.maxLiquidity
+      segment = found.segment
+    }
 
     buckets.push({
       startTick,
@@ -244,6 +297,49 @@ export function buildBuckets({
 }
 
 /**
+ * Bucket size for full tick granularity: one tick spacing per bar, or as few whole spacings as keep a bar at
+ * least `minBarPx` along the tick axis when more spacings are in view than pixels.
+ * `ticksPerPixel` comes from the zoom alone, so the step only changes on a zoom, never on a pan.
+ */
+export function getFullGranularityStep({
+  tickSpacing,
+  ticksPerPixel,
+  minBarPx = 1,
+}: {
+  tickSpacing: number
+  ticksPerPixel: number
+  minBarPx?: number
+}): number {
+  const spacingsPerBar = Math.ceil((ticksPerPixel * minBarPx) / tickSpacing - STEP_ROUNDING_EPSILON)
+  return Math.max(1, spacingsPerBar) * tickSpacing
+}
+
+/**
+ * Buckets at full tick granularity (see getFullGranularityStep) for the visible range, on the same fixed grid
+ * as `buildBuckets({ fixedGrid: true })` so bars translate with a pan instead of re-tiling.
+ */
+export function buildFullGranularityBuckets({
+  segments,
+  visibleMinTick,
+  visibleMaxTick,
+  tickSpacing,
+  ticksPerPixel,
+}: {
+  segments: LiquiditySegment[]
+  visibleMinTick: number
+  visibleMaxTick: number
+  tickSpacing: number
+  ticksPerPixel: number
+}): LiquidityBucket[] {
+  if (segments.length === 0) {
+    return []
+  }
+  const step = getFullGranularityStep({ tickSpacing, ticksPerPixel })
+  const boundaries = getFixedGridBoundaries({ visibleMinTick, visibleMaxTick, step, tickSpacing })
+  return fillBuckets({ segments, boundaries })
+}
+
+/**
  * Step 4: Create bucket chart entries with locked amounts
  *
  * - For each bucket, find the liquidity data entries inside the bucket's max-liquidity segment
@@ -255,6 +351,9 @@ export function buildBuckets({
  * width. A bucket that merges several segments (whenever more than DESIRED_BUCKETS segments
  * are in view) would otherwise sum USD across all of them while the tooltip divides by one
  * segment's width, inflating $/bps independently of bar height (LP-288).
+ *
+ * With `amountScope: 'bucket'` the amounts are the whole bucket's instead, for a tooltip that shows and divides
+ * by the bucket's own range (see TickTooltipContent's `priceSpan`).
  */
 export function buildBucketChartEntries({
   buckets,
@@ -263,6 +362,8 @@ export function buildBucketChartEntries({
   quoteCurrency,
   priceInverted,
   protocolVersion,
+  getPrice0,
+  amountScope = 'segment',
 }: {
   buckets: LiquidityBucket[]
   liquidityData: ChartEntry[]
@@ -270,9 +371,26 @@ export function buildBucketChartEntries({
   quoteCurrency: Maybe<Currency>
   priceInverted: boolean
   protocolVersion: ProtocolVersion
+  /** Display price at a bucket's start tick; the SDK's by default, which is too slow for thousands of buckets. */
+  getPrice0?: (tick: number) => number | undefined
+  /** What the amounts cover: the bucket's max-liquidity segment, or the whole bucket. */
+  amountScope?: 'segment' | 'bucket'
 }): BucketChartEntry[] {
-  const bucketData: BucketChartEntry[] = buckets.map((b) => {
-    let entries = liquidityData.filter((e) => e.tick >= b.segmentStartTick && e.tick < b.segmentEndTick)
+  // Binary search when the entries ascend by tick (they do as built); the linear scans below otherwise.
+  const isSortedByTick = liquidityData.every((e, i) => i === 0 || liquidityData[i - 1].tick <= e.tick)
+  const getSegmentEntries = (b: LiquidityBucket): ChartEntry[] => {
+    if (isSortedByTick) {
+      const entries = liquidityData.slice(
+        searchSortedTick({ entries: liquidityData, tick: b.segmentStartTick, atOrPast: true }),
+        searchSortedTick({ entries: liquidityData, tick: b.segmentEndTick - 1 }),
+      )
+      if (entries.length > 0) {
+        return entries
+      }
+      const floorIndex = searchSortedTick({ entries: liquidityData, tick: b.segmentStartTick }) - 1
+      return floorIndex >= 0 ? [liquidityData[floorIndex]] : []
+    }
+    const entries = liquidityData.filter((e) => e.tick >= b.segmentStartTick && e.tick < b.segmentEndTick)
     // Floor lookup: the segment's covering entry may start before segmentStartTick (e.g. the
     // synthetic active-tick entry replaces the initialized tick at the segment start).
     if (entries.length === 0) {
@@ -285,31 +403,76 @@ export function buildBucketChartEntries({
         }
       }
       if (floor) {
-        entries = [floor]
+        return [floor]
       }
     }
-    const amount0Locked = entries.reduce((sum, e) => sum + (e.amount0Locked ?? 0), 0)
-    const amount1Locked = entries.reduce((sum, e) => sum + (e.amount1Locked ?? 0), 0)
+    return entries
+  }
 
-    const price0 = getDisplayPriceFromTick({
-      tick: b.startTick,
-      baseCurrency,
-      quoteCurrency,
-      protocolVersion,
-      priceInverted,
-    })
+  // Amounts depend only on the segment, which runs of adjacent buckets share at full granularity.
+  const amountsBySegment = new Map<string, { amount0Locked: number; amount1Locked: number }>()
+  const getSegmentAmounts = (b: LiquidityBucket): { amount0Locked: number; amount1Locked: number } => {
+    const key = `${b.segmentStartTick}:${b.segmentEndTick}`
+    const cached = amountsBySegment.get(key)
+    if (cached) {
+      return cached
+    }
+    const entries = getSegmentEntries(b)
+    const amounts = {
+      amount0Locked: entries.reduce((sum, e) => sum + (e.amount0Locked ?? 0), 0),
+      amount1Locked: entries.reduce((sum, e) => sum + (e.amount1Locked ?? 0), 0),
+    }
+    amountsBySegment.set(key, amounts)
+    return amounts
+  }
 
+  const sortedData = isSortedByTick ? liquidityData : [...liquidityData].sort((a, b) => a.tick - b.tick)
+
+  const priceAtTick =
+    getPrice0 ??
+    ((tick: number) => getDisplayPriceFromTick({ tick, baseCurrency, quoteCurrency, protocolVersion, priceInverted }))
+
+  return buckets.map((b) => {
+    const { amount0Locked, amount1Locked } =
+      amountScope === 'bucket'
+        ? sumAmountsOverTicks({ entries: sortedData, startTick: b.startTick, endTick: b.endTick })
+        : getSegmentAmounts(b)
     return {
       startTick: b.startTick,
       endTick: b.endTick,
       liquidityActive: b.liquidityActive,
-      price0,
+      price0: priceAtTick(b.startTick),
       amount0Locked,
       amount1Locked,
       segmentStartTick: b.segmentStartTick,
       segmentEndTick: b.segmentEndTick,
     }
   })
+}
 
-  return bucketData
+/**
+ * The display price at a tick, as `getDisplayPriceFromTick` gives it (8 significant digits), in closed form:
+ * the SDK prices tick 0 (a power of ten, exact at 8 digits) and tick 1, for the decimals and orientation, and
+ * every other tick is 1.0001^±tick from there. Thousands of buckets a frame can't afford the SDK's big-number math.
+ */
+export function createDisplayPriceAtTick({
+  baseCurrency,
+  quoteCurrency,
+  priceInverted,
+  protocolVersion,
+}: {
+  baseCurrency: Maybe<Currency>
+  quoteCurrency: Maybe<Currency>
+  priceInverted: boolean
+  protocolVersion: ProtocolVersion
+}): (tick: number) => number | undefined {
+  const priceAt = (tick: number) =>
+    getDisplayPriceFromTick({ tick, baseCurrency, quoteCurrency, priceInverted, protocolVersion })
+  const priceAtZero = priceAt(0)
+  const priceAtOne = priceAt(1)
+  if (priceAtZero === undefined || priceAtOne === undefined || priceAtZero <= 0) {
+    return priceAt
+  }
+  const direction = priceAtOne >= priceAtZero ? 1 : -1
+  return (tick: number) => Number((priceAtZero * 1.0001 ** (direction * tick)).toPrecision(8))
 }

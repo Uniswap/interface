@@ -157,6 +157,23 @@ describe('submitAuctionLaunch', () => {
     expect(params.onFailure).not.toHaveBeenCalled()
   })
 
+  it('labels every approval step with the launch token, including the Permit2 approval sent to Permit2', () => {
+    const permit2ApproveTx = { ...approveTx(), to: '0x000000000022D473030F116dDEE9F6B43aC78BA3' }
+    const params = makeParams({ transactions: [approveTx(), permit2ApproveTx, tx(1)] })
+    const gen = submitAuctionLaunch(params)
+    gen.next() // call(selectChain)
+    gen.next(true) // chain switched -> select(atomic support)
+    gen.next(() => false) // atomic NOT supported -> call(populateGasServiceParams) for the ERC20 approval
+    const erc20Approval = asCallEffect(gen.next(approveTx()).value) // -> handleApprovalTransactionStep
+    gen.next(undefined) // approval confirmed -> call(populateGasServiceParams) for the Permit2 approval
+    const permit2Approval = asCallEffect(gen.next(permit2ApproveTx).value) // -> handleApprovalTransactionStep
+
+    for (const effect of [erc20Approval, permit2Approval]) {
+      const { step } = effect.payload.args[0] as { step: { tokenAddress: string } }
+      expect(step.tokenAddress).toBe(info.predictedTokenAddress)
+    }
+  })
+
   it('submits the launch step with the gas params merged by the gas service', () => {
     const launchTx = tx(1)
     const params = makeParams({ transactions: [launchTx] })

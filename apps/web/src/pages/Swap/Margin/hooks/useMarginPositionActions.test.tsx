@@ -91,15 +91,12 @@ describe('useMarginPositionActions', () => {
     expect(result.current.every((item) => item.disabled)).toBe(true)
   })
 
-  it('replaces the subheader with the in-flight reason while a plan is running', () => {
+  it('keeps every action pressable and points it at the pending plan while one is running', () => {
     mockUseIsPlanInFlight.mockReturnValue(true)
     const { result } = renderActions()
     expect(result.current).toHaveLength(4)
-    expect(result.current.every((item) => item.disabled)).toBe(true)
-    expect(result.current.every((item) => item.subheader === 'Another action is in progress')).toBe(true)
-    // The destructive item must grey out too — getMenuItemColor tests destructive BEFORE disabled.
-    expect(result.current.find((item) => item.action === 'close')?.iconColor).toBe('$neutral2')
-    expect(result.current.find((item) => item.action === 'close')?.textColor).toBe('$neutral2')
+    expect(result.current.every((item) => !item.disabled)).toBe(true)
+    expect(result.current.every((item) => item.subheader === 'Tap to finish your pending action')).toBe(true)
   })
 
   it('keeps close red while it is still actionable', () => {

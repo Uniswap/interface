@@ -26,7 +26,7 @@ export interface NetworkFilterProps {
   forceAllNetworksLabel?: boolean
   footer?: ReactNode
   showSearchInput?: boolean
-  /** Names the outer trigger and makes it the only tab stop; inner trigger content becomes presentational. */
+  /** Names the trigger in place of the displayed network. */
   triggerLabel?: string
   trigger?: NetworkFilterTriggerConfig
   placement?: 'bottom-start' | 'bottom-end'

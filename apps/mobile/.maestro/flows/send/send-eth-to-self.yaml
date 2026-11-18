@@ -3,6 +3,7 @@ jsEngine: graaljs
 tags:
   - send
   - language-agnostic
+  - flow-send-eth-to-self
 env:
   E2E_RECOVERY_PHRASE: ${E2E_RECOVERY_PHRASE}
 ---

@@ -5,7 +5,7 @@ import {
 } from '~/features/Toucan/Auction/utils/fixedPointFdv'
 import { isUsableAuctionTokenMetadata } from '~/features/Toucan/Auction/utils/tokenMetadata'
 import { hasTokenTotalSupply } from '~/features/Toucan/Auction/utils/tokenTotalSupply'
-import type { EnrichedAuction } from '~/features/Toucan/hooks/useTopAuctions/useTopAuctions'
+import type { EnrichedAuction } from '~/features/Toucan/hooks/useTopAuctions/useEnrichedAuctions'
 
 /** Auction token decimals from the auction API, or undefined when the metadata is unusable — see isUsableAuctionTokenMetadata */
 function getUsableApiTokenDecimals(auction: {

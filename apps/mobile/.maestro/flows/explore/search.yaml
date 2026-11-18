@@ -2,6 +2,7 @@ appId: com.uniswap.mobile.dev
 jsEngine: graaljs
 tags:
   - language-agnostic
+  - flow-search
 env:
   E2E_RECOVERY_PHRASE: ${E2E_RECOVERY_PHRASE}
   DATADOG_API_KEY: ${DATADOG_API_KEY}

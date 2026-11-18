@@ -1,5 +1,6 @@
 import {
   initialUniswapBehaviorHistoryState,
+  setNewUserOnboardingChecklistExpanded,
   setNewUserOnboardingWalletFlag,
   uniswapBehaviorHistoryReducer,
   type UniswapBehaviorHistoryState,
@@ -50,6 +51,9 @@ describe('new user onboarding behavior history', () => {
       setNewUserOnboardingWalletFlag({ address: ADDRESS, flag: 'hasBeenFunded' }),
       setNewUserOnboardingWalletFlag({ address: ADDRESS, flag: 'hasCompletedSwap' }),
       setNewUserOnboardingWalletFlag({ address: ADDRESS, flag: 'guidedSwapDismissed' }),
+      setNewUserOnboardingWalletFlag({ address: ADDRESS, flag: 'checklistSeen' }),
+      setNewUserOnboardingChecklistExpanded({ address: ADDRESS, isExpanded: true }),
+      setNewUserOnboardingWalletFlag({ address: ADDRESS, flag: 'checklistCompleted' }),
     ])
 
     expect(state.newUserOnboarding?.byWallet).toEqual({
@@ -57,8 +61,19 @@ describe('new user onboarding behavior history', () => {
         hasBeenFunded: true,
         hasCompletedSwap: true,
         guidedSwapDismissed: true,
+        checklistSeen: true,
+        checklistExpanded: true,
+        checklistCompleted: true,
       },
     })
+  })
+
+  it('clears the expanded flag on collapse', () => {
+    const state = reduce([
+      setNewUserOnboardingChecklistExpanded({ address: ADDRESS, isExpanded: true }),
+      setNewUserOnboardingChecklistExpanded({ address: ADDRESS, isExpanded: false }),
+    ])
+    expect(state.newUserOnboarding?.byWallet[ADDRESS_KEY]).toEqual({ checklistExpanded: false })
   })
 
   it('creates the record for state persisted before the field existed', () => {

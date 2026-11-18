@@ -7,20 +7,13 @@ import { vi } from 'vitest'
 
 // ─── Ports of apps/mobile/__mocks__ (jest auto-mocks for node modules) ───
 
-// uniwind: its web ESM build boots a CSS listener at import time (CSSRuleList over
-// document.styleSheets) that jsdom doesn't provide. Unit tests only consume the theme surface the
-// ui/src theme hooks read — 'light', matching the Tamagui default these mounts used
-// before. uniwind's real pipeline stays covered by the resolved-styles tests, which load its Metro
+// uniwind: unit tests only consume the theme surface that the ui/src theme hooks and
+// @universe/mycelium's *.native.* legs (Shimmer.native, ButtonCompat.native,
+// theme-hooks-compat) read — pinned to 'light', the Tamagui default these mounts used before.
+// uniwind's real pipeline stays covered by the resolved-styles tests, which load its Metro
 // transformer directly ('uniwind/metro' path, not this module).
 //
-// Also reached through @universe/mycelium's *.native.* files (Shimmer.native,
-// ButtonCompat.native, theme-hooks-compat), which mobile's native-first extension
-// resolution picks up. Loading it for real breaks twice over: externalized, its dist
-// ESM imports bare "react-native" (Flow "typeof" source outside the react-native-web
-// alias); inlined, its web entry's import-time CSSOM listener needs CSSRuleList,
-// which jsdom 20 doesn't implement. Mock the hook surface mycelium uses too.
-//
-// A single vi.mock factory covers both call sites — two separate registrations for the
+// A single vi.mock factory covers every call site — two separate registrations for the
 // same module race on hoisting/resolution order, and whichever wins can shadow exports
 // the other one adds.
 vi.mock('uniwind', () => ({

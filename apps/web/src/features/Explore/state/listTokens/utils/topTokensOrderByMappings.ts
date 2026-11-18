@@ -1,5 +1,5 @@
 import { TokensOrderBy } from '@uniswap/client-data-api/dist/data/v2/types_pb'
-import type { VolumeOrderBy } from 'uniswap/src/data/apiClients/dataApiService/utils/tokenRankStatsVolume'
+import type { VolumeOrderBy } from '@universe/data-api'
 import { TokenSortMethod } from '~/components/Tokens/constants'
 import { TimePeriod } from '~/data/util'
 

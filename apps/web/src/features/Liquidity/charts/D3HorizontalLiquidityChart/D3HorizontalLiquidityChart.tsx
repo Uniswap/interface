@@ -36,6 +36,9 @@ function D3HorizontalLiquidityChartInner({
   protocolVersion,
   height = DEFAULT_HEIGHT,
   topInset = 0,
+  groupTicks = true,
+  bucketScopedBars = false,
+  detailedTooltip = false,
   onActionsReady,
 }: {
   liquidityData: ChartEntry[]
@@ -51,6 +54,12 @@ function D3HorizontalLiquidityChartInner({
   height?: number
   /** Vertical space (px) kept clear at the top of the chart for an overlaid header; bars draw below it. */
   topInset?: number
+  /** Off draws a bar per tick spacing (full granularity) instead of grouping ticks into a few buckets. */
+  groupTicks?: boolean
+  /** A grouped bar stands for its whole bucket: hover, highlight and amounts cover the bucket, not its segment. */
+  bucketScopedBars?: boolean
+  /** The tooltip lists the bar's token amounts with native symbols, and its price span as "low – high". */
+  detailedTooltip?: boolean
   onActionsReady?: (actions: { zoomIn: () => void; zoomOut: () => void; resetView: () => void }) => void
 }) {
   const colors = useSporeColors()
@@ -173,18 +182,22 @@ function D3HorizontalLiquidityChartInner({
 
       if (bucket) {
         const bucketChanged = bucket.startTick !== lastBucketStartTickRef.current
+        // The hovered bar: a bucket-scoped grouped bar is its bucket; otherwise its segment (the run of bars at
+        // one height), which is also what reads as a bar at full granularity, where a bar is a pixel.
+        const barSpan =
+          groupTicks && bucketScopedBars
+            ? { startTick: bucket.startTick, endTick: bucket.endTick }
+            : { startTick: bucket.segmentStartTick, endTick: bucket.segmentEndTick }
         const prevSegment = lastSegmentRef.current
         const segmentChanged =
-          !prevSegment ||
-          prevSegment.startTick !== bucket.segmentStartTick ||
-          prevSegment.endTick !== bucket.segmentEndTick
+          !prevSegment || prevSegment.startTick !== barSpan.startTick || prevSegment.endTick !== barSpan.endTick
 
         if (bucketChanged) {
           lastEntryRef.current = createEntryFromBucket({ bucket, tick: bucket.startTick })
           lastBucketStartTickRef.current = bucket.startTick
         }
         if (segmentChanged) {
-          lastSegmentRef.current = { startTick: bucket.segmentStartTick, endTick: bucket.segmentEndTick }
+          lastSegmentRef.current = barSpan
         }
 
         setChartState(
@@ -213,7 +226,7 @@ function D3HorizontalLiquidityChartInner({
         scheduleDraw()
       }
     },
-    [renderedBuckets, tickScale, setChartState, scheduleDraw],
+    [renderedBuckets, tickScale, groupTicks, bucketScopedBars, setChartState, scheduleDraw],
   )
 
   const handleMouseLeave = useCallback(() => {
@@ -288,6 +301,8 @@ function D3HorizontalLiquidityChartInner({
       priceInverted,
       protocolVersion,
       liquidityScaleSmoothing: smoothing,
+      groupTicks,
+      bucketScopedBars,
     }
 
     initializeRenderers({ g, context: renderingContext })
@@ -310,6 +325,8 @@ function D3HorizontalLiquidityChartInner({
     quoteCurrency,
     priceInverted,
     protocolVersion,
+    groupTicks,
+    bucketScopedBars,
   ])
 
   // Redraw when zoom/pan changes (tickScale pushed to store above triggers draw via drawAll)
@@ -345,7 +362,8 @@ function D3HorizontalLiquidityChartInner({
         onMouseLeave={handleMouseLeave}
       />
       {showTooltip && (
-        <Flex ref={tooltipRef} position="absolute" left={tooltipX} top={tooltipY}>
+        // Off the pointer's path: under the cursor it would take the svg's hover and hide itself.
+        <Flex ref={tooltipRef} position="absolute" left={tooltipX} top={tooltipY} pointerEvents="none">
           <TickTooltipContent
             currentPrice={currentPrice}
             hoveredTick={hoveredTick}
@@ -355,6 +373,9 @@ function D3HorizontalLiquidityChartInner({
             tickSpacing={tickSpacing}
             priceInverted={priceInverted}
             protocolVersion={protocolVersion}
+            showTokenAmounts={detailedTooltip}
+            priceSpan={detailedTooltip ? (groupTicks && bucketScopedBars ? 'bucket' : 'segment') : undefined}
+            unwrapSymbols={detailedTooltip}
           />
         </Flex>
       )}

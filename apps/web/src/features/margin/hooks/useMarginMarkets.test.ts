@@ -149,7 +149,7 @@ function rowFixture({
   venue: MarginVenue
   direction: MarginDirection
   // One row now covers a whole pair; pass several to exercise the per-venue expansion.
-  venues?: Array<{ venue: MarginVenue; maxLeverage: string; marketId?: string }>
+  venues?: Array<{ venue: MarginVenue; maxLeverage: string; marketId?: string; availableBorrowLiquidity?: string }>
 }): MarginMarketRow {
   const exposure = direction === MarginDirection.SHORT ? debt : collateral
   const counter = direction === MarginDirection.SHORT ? collateral : debt
@@ -166,7 +166,7 @@ function rowFixture({
       adapter: '0x0000000000000000000000000000000000000001',
       maxLeverage: entry.maxLeverage,
       lltv: '860000000000000000',
-      availableBorrowLiquidity: '1000000000',
+      availableBorrowLiquidity: entry.availableBorrowLiquidity ?? '1000000000',
       feeBps: 5,
       marketId: entry.marketId,
     })),
@@ -348,6 +348,33 @@ describe('useMarginMarkets', () => {
       ['AAVE_V3', '0x7d25'],
       ['MORPHO', '0x1cc8'],
     ])
+  })
+
+  // Auto opens on the headline, so it holds its venue's one slot against deeper markets on either side.
+  it('marks the headline market and keeps it over deeper markets at the same venue', () => {
+    mockRows([
+      {
+        ...rowFixture({
+          collateral: WETH,
+          debt: USDC,
+          venue: 'MORPHO',
+          direction: MarginDirection.LONG,
+          venues: [
+            { venue: 'MORPHO', maxLeverage: '3', marketId: '0x94b8', availableBorrowLiquidity: '9000000000' },
+            { venue: 'MORPHO', maxLeverage: '6', marketId: '0x1cc8', availableBorrowLiquidity: '1' },
+            { venue: 'MORPHO', maxLeverage: '2', marketId: '0x5e1f', availableBorrowLiquidity: '90000000000' },
+            { venue: 'AAVE_V3', maxLeverage: '5', marketId: '0x7d25' },
+          ],
+        }),
+        headlineMarketId: '0x1cc8',
+      },
+    ])
+    const { result } = renderHook(() => useMarginMarkets())
+    expect(result.current.markets.map((m) => [m.venue, m.marketId, m.isHeadline])).toEqual([
+      ['AAVE_V3', '0x7d25', false],
+      ['MORPHO', '0x1cc8', true],
+    ])
+    expect(result.current.groups[0]?.pairs.find((pair) => pair.isHeadline)?.venue).toBe('MORPHO')
   })
 
   it("exposes a pair's venues venue-free, in registry order", () => {

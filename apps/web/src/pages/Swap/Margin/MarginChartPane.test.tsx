@@ -1,6 +1,7 @@
 import { act, fireEvent, screen } from '@testing-library/react'
 import { TestID } from '@universe/test'
 import type { ReactNode } from 'react'
+import { parseUnits } from '~/chains'
 import { PriceChartData } from '~/components/Charts/PriceChart'
 import type { MarginMarket } from '~/constants/margin'
 import { getDefaultMarginMarket } from '~/pages/Swap/Margin/__fixtures__/marginCatalog'
@@ -137,6 +138,7 @@ function chartData(overrides: Partial<MarginChartData>): MarginChartData {
     candlesUnavailable: false,
     stats24h: {},
     loading: false,
+    isPlaceholderData: false,
     error: undefined,
     refetch,
     ...overrides,
@@ -224,7 +226,7 @@ describe('MarginChartPane time windows, OHLC legend and volume pane', () => {
 
   afterEach(() => {
     act(() => setMarginChartHoveredCandle(undefined))
-    vi.mocked(useMarginVolume).mockImplementation(() => ({ volumeBars: [] }))
+    vi.mocked(useMarginVolume).mockImplementation(() => ({ volumeBars: [], isPlaceholderData: false }))
   })
 
   it('offers 4H/1D/1W/1M/1Y, opens on 1D, and refetches for the picked window', () => {
@@ -241,6 +243,17 @@ describe('MarginChartPane time windows, OHLC legend and volume pane', () => {
 
     expect(vi.mocked(useMarginChartData)).toHaveBeenLastCalledWith(expect.objectContaining({ timeWindow: '1M' }))
     expect(vi.mocked(useMarginVolume)).toHaveBeenLastCalledWith(expect.objectContaining({ timeWindow: '1M' }))
+  })
+
+  it('shows the skeleton over the last range’s bars until the picked range loads', () => {
+    mockChart(chartData({ candles: [up] }))
+    render(<MarginChartPane />)
+    expect(screen.getByTestId('margin-chart-mock')).toBeInTheDocument()
+
+    mockChart(chartData({ candles: [up], isPlaceholderData: true }))
+    fireEvent.click(screen.getByText('1M'))
+    expect(screen.queryByTestId('margin-chart-mock')).not.toBeInTheDocument()
+    expect(screen.getByTestId(TestID.MarginChartSkeleton)).toBeInTheDocument()
   })
 
   it('reads the latest candle in the OHLC legend, then follows the crosshair', () => {
@@ -270,6 +283,7 @@ describe('MarginChartPane time windows, OHLC legend and volume pane', () => {
   it('carves the volume pane out of the same box when there are bars', () => {
     vi.mocked(useMarginVolume).mockImplementation(() => ({
       volumeBars: [{ time: up.time, value: 1_000 }],
+      isPlaceholderData: false,
     }))
     mockChart(chartData({ candles: [up], loading: false }))
     render(<MarginChartPane />)
@@ -489,10 +503,9 @@ describe('MarginChartPane when the market cannot be resolved', () => {
   })
 })
 
-// The strip's venue-level numbers (borrow APY, liquidity, LLTV) belong to ONE venue. Before a quote
-// exists the pair group is all that is known, so it stays on the pair's first market; once the quote
-// names the venue it actually routed to, the strip has to follow it or it advertises terms the
-// position will not get.
+// The strip's venue-level number (liquidity) belongs to ONE venue. Before a quote exists the pair group
+// is all that is known, so it stays on the pair's first market; once the quote names the venue it
+// actually routed to, the strip has to follow it or it advertises depth the position will not get.
 describe('MarginStatsStrip venue keying', () => {
   const MORPHO = getDefaultMarginMarket()
   const AAVE: MarginMarket = { ...MORPHO, key: 'weth-usdc-AAVE_V3', venue: 'AAVE_V3', maxLeverage: 3 }
@@ -503,10 +516,21 @@ describe('MarginStatsStrip venue keying', () => {
     mockChart(chartData({ candles: [candle()] }))
     mockPairMarkets.current = [MORPHO, AAVE]
     mockLiveByKey.current = new Map([
-      [MORPHO.key, { borrowApyBps: 420, availableBorrowLiquidity: '0', markPriceX18: '0', lltvWad: MORPHO.lltvWad }],
+      [
+        MORPHO.key,
+        {
+          borrowApyBps: 420,
+          availableBorrowLiquidity: parseUnits('1000', MORPHO.debt.decimals).toString(),
+          markPriceX18: '0',
+        },
+      ],
       [
         AAVE.key,
-        { borrowApyBps: 510, availableBorrowLiquidity: '0', markPriceX18: '0', lltvWad: '770000000000000000' },
+        {
+          borrowApyBps: 510,
+          availableBorrowLiquidity: parseUnits('2000', MORPHO.debt.decimals).toString(),
+          markPriceX18: '0',
+        },
       ],
     ])
   })
@@ -519,18 +543,14 @@ describe('MarginStatsStrip venue keying', () => {
   it('keys the pair group before a quote names a venue', () => {
     render(<MarginChartPane />)
 
-    expect(screen.getByText('Borrow APY 4.20%')).toBeInTheDocument()
-    expect(screen.getByText('LLTV 86% · Max 5x')).toBeInTheDocument()
+    expect(screen.getByText(/^1,000 /)).toBeInTheDocument()
   })
 
   it('keys the quoted venue once the quote has one', () => {
     mockOverlays({ priceLines: [], routedVenue: 'AAVE_V3' })
     render(<MarginChartPane />)
 
-    expect(screen.getByText('Borrow APY 5.10%')).toBeInTheDocument()
-    // The LLTV follows the routed venue; the ceiling still maxes over every allowed venue, since the
-    // slider it has to agree with is not venue-pinned either.
-    expect(screen.getByText('LLTV 77% · Max 5x')).toBeInTheDocument()
+    expect(screen.getByText(/^2,000 /)).toBeInTheDocument()
   })
 
   // A venue the pair no longer offers (a stale quote across a market switch) must not blank the strip.
@@ -538,6 +558,6 @@ describe('MarginStatsStrip venue keying', () => {
     mockOverlays({ priceLines: [], routedVenue: 'AAVE_V4' })
     render(<MarginChartPane />)
 
-    expect(screen.getByText('Borrow APY 4.20%')).toBeInTheDocument()
+    expect(screen.getByText(/^1,000 /)).toBeInTheDocument()
   })
 })

@@ -1,6 +1,7 @@
 // oxlint-disable-next-line no-restricted-imports -- feature-flag fixture needs direct Playwright imports
 import { test as base } from '@playwright/test'
 import {
+  type DynamicConfigs,
   FeatureFlagClient,
   FeatureFlags,
   getFeatureFlagName,
@@ -32,16 +33,23 @@ type FeatureFlagsFixture = {
    * Statsig bootstrap never completes.
    */
   pinnedFeatureFlags: Partial<Record<FeatureFlags, boolean>>
+  /**
+   * Per-spec dynamic config pins, keyed by config name with the full config value. Set via
+   * `test.use({ pinnedDynamicConfigs: ... })`. Seeded alongside the gate pins, so a config whose
+   * default leaves UI empty (e.g. an empty id list) can be pinned to a known value.
+   */
+  pinnedDynamicConfigs: Partial<Record<DynamicConfigs, Record<string, unknown>>>
   seedPinnedFeatureFlags: void
 }
 
 export const test = base.extend<FeatureFlagsFixture>({
   pinnedFeatureFlags: [{}, { option: true }],
+  pinnedDynamicConfigs: [{}, { option: true }],
   // Seeds the merged pins into Statsig's LocalOverrideAdapter localStorage slot before any page
   // script runs. The app's override adapter loads persisted overrides in its constructor, so the
   // pins take precedence over live Statsig values for the whole test.
   seedPinnedFeatureFlags: [
-    async ({ page, pinnedFeatureFlags }, use) => {
+    async ({ page, pinnedFeatureFlags, pinnedDynamicConfigs }, use) => {
       const gate: Record<string, boolean> = {}
       for (const [flag, value] of Object.entries({ ...PINNED_FEATURE_FLAGS, ...pinnedFeatureFlags })) {
         gate[getFeatureFlagName(Number(flag) as FeatureFlags, FeatureFlagClient.Web)] = value
@@ -52,7 +60,10 @@ export const test = base.extend<FeatureFlagsFixture>({
       // must survive the next navigation. Pins are spread last so they still win.
       await page.addInitScript(
         (seed) => {
-          let store: Record<string, unknown> & { gate: Record<string, boolean> } = {
+          let store: Record<string, unknown> & {
+            gate: Record<string, boolean>
+            dynamicConfig: Record<string, Record<string, unknown>>
+          } = {
             gate: {},
             dynamicConfig: {},
             experiment: {},
@@ -67,6 +78,7 @@ export const test = base.extend<FeatureFlagsFixture>({
             // corrupt slot: start from a fresh store
           }
           store.gate = { ...store.gate, ...seed.gate }
+          store.dynamicConfig = { ...store.dynamicConfig, ...seed.dynamicConfig }
           window.localStorage.setItem(seed.storageKey, JSON.stringify(store))
         },
         {
@@ -74,6 +86,7 @@ export const test = base.extend<FeatureFlagsFixture>({
           // TEST_STATSIG_SDK_KEY (not the real client key) — seed the matching storage slot.
           storageKey: getLocalOverridesStorageKey(TEST_STATSIG_SDK_KEY),
           gate,
+          dynamicConfig: pinnedDynamicConfigs,
         },
       )
 

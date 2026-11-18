@@ -1,5 +1,4 @@
 import { UniverseChainId } from '@universe/chains'
-import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { Flex, Text } from '@universe/mycelium'
 import { memo, useCallback, useMemo, useState } from 'react'
 import { useDispatch } from 'react-redux'
@@ -151,7 +150,6 @@ const TokenOptionItem = memo(function TokenOptionItemInner({
   }, [onPress, showWarningModal, showBridgedAssetWarningModal, shouldShowBridgedAssetWarningModalOnPress])
 
   const hasBalance = Boolean(tokenOption.quantity && tokenOption.quantity !== 0)
-  const showIssuerTag = useIsTokenCategoriesEnabled()
   // Categories come from the list: a per-row query observer made every row mount notify the whole query cache.
   const categoryTag = useMemo(
     () =>
@@ -212,10 +210,9 @@ const TokenOptionItem = memo(function TokenOptionItemInner({
 
   return (
     <SharedTokenOptionItem
+      showIssuerTag
       option={tokenOption}
-      displayName={tokenOption.rwaName}
       issuer={tokenOption.rwaIssuer}
-      showIssuerTag={showIssuerTag}
       showTokenAddress={showTokenAddress}
       contextMenuVariant={TokenContextMenuVariant.TokenSelector}
       categoryTag={hasBalance ? undefined : categoryTag}
@@ -261,11 +258,7 @@ function TokenSelectorListInner({
   const wrapTokenRow = useTokenSelectorHoverConfig()
 
   const rwaIndex = useRwaIndex()
-  const plainTokenNames = useIsTokenCategoriesEnabled()
-  const taggedSections = useMemo(
-    () => tagRwaTokenSelectorSections({ sections, rwaIndex, plainTokenNames }),
-    [sections, rwaIndex, plainTokenNames],
-  )
+  const taggedSections = useMemo(() => tagRwaTokenSelectorSections({ sections, rwaIndex }), [sections, rwaIndex])
   const { categories } = useAllTokenCategories()
 
   usePerformanceLogger(DDRumManualTiming.TokenSelectorListRender, [chainFilter])

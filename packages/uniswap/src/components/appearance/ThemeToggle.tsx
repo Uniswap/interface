@@ -27,6 +27,7 @@ export function ThemeToggle(): JSX.Element {
     },
     {
       value: AppearanceSettingType.Light,
+      'aria-label': t('settings.setting.appearance.option.light.title'),
       display: (
         <Flex testID={TestID.ThemeLight}>
           {/* Use getter, as $neutral2 does not refresh color after changing theme */}
@@ -36,6 +37,7 @@ export function ThemeToggle(): JSX.Element {
     },
     {
       value: AppearanceSettingType.Dark,
+      'aria-label': t('settings.setting.appearance.option.dark.title'),
       display: (
         <Flex testID={TestID.ThemeDark}>
           <Moon size="$icon.20" color={colors.neutral2.get()} />

@@ -23,6 +23,7 @@
  */
 // oxlint-disable react/forbid-elements -- the compat components ARE the raw DOM boundary (no Tamagui Flex here)
 import * as React from 'react'
+import { useTranslation } from 'react-i18next'
 import { SearchableOptionListCompat } from '../option-list-compat/SearchableOptionList'
 import type { OptionListItemCompat, OptionListSectionCompat } from '../option-list-compat/types'
 import { AdaptiveWebPopoverContentCompat } from '../popover-compat/AdaptiveWebPopoverContentCompat'
@@ -58,6 +59,7 @@ export function NetworkSelectorCompat<TChainId extends number = number>({
   triggerTooltipLabel,
   testID,
 }: NetworkSelectorCompatProps<TChainId>): React.JSX.Element {
+  const { t } = useTranslation()
   const [isOpen, setIsOpen] = React.useState(false)
 
   const display = (chainId: TChainId): NetworkSelectorChainDisplayCompat =>
@@ -150,8 +152,6 @@ export function NetworkSelectorCompat<TChainId extends number = number>({
       offset={{ mainAxis: NETWORK_SELECTOR_DROPDOWN_OFFSET }}
       onOpenChange={handleOpenChange}
     >
-      {/* TODO(INFRA-4589): the trigger's role="button" wraps TriggerButton's own role="button" (nested-interactive).
-          Render one button. */}
       <PopoverCompat.Trigger>
         {/* The legacy trigger: logo + rotating chevron, no pill chrome. */}
         <TriggerButtonCompat
@@ -169,10 +169,9 @@ export function NetworkSelectorCompat<TChainId extends number = number>({
         </TriggerButtonCompat>
       </PopoverCompat.Trigger>
 
-      {/* TODO(INFRA-4589): the popup is a role="dialog" with no name, and the selector has no prop to pass one
-          (aria-dialog-name). Name it, for example from the search placeholder or a title label. */}
       <AdaptiveWebPopoverContentCompat
         {...NETWORK_SELECTOR_POPOVER_CONTENT_PROPS_COMPAT}
+        aria-label={labels?.title ?? t('common.network')}
         isOpen={isOpen}
         placement="bottom-end"
         // GATED sheet leg: accepted-but-inert until the Sheet/Dialog track

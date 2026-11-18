@@ -2,11 +2,11 @@ import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes
 import { normalizeTokenAddressForCache } from '@universe/chains'
 import { useEffect, useMemo } from 'react'
 import type { MultichainTokenEntry } from 'uniswap/src/components/MultichainTokenDetails/useOrderedMultichainEntries'
+import { useInfiniteLoadMore } from '~/components/Table/hooks/useInfiniteLoadMore'
 import { PoolTableSortState } from '~/data/pools/poolStats'
 import { OrderDirection } from '~/data/util'
-import { useInfiniteLoadMore } from '~/features/Explore/hooks/useInfiniteLoadMore'
+import { useListPoolsAsPoolStats } from '~/features/Liquidity/hooks/useListPoolsAsPoolStats'
 import { poolSortFieldToOrderBy } from '~/features/Liquidity/utils/convertPoolToPoolStat'
-import { useListPoolsAsPoolStats } from '~/pages/Explore/hooks/useListPoolsAsPoolStats'
 import type { PoolStat } from '~/types/explore'
 import { getMultichainTokenListPoolsParams } from '~/utils/getTokenListPoolsParams'
 

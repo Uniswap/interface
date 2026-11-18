@@ -202,6 +202,7 @@ export function RelativeChangeText({
           <RelativeChange
             shouldAnimate
             absoluteChange={fiatDelta.idleNumericDelta}
+            formattedAbsoluteChange={fiatDelta.idleFormatted}
             change={spotRelativeChangeIdle}
             color="$neutral2"
             variant="body1"

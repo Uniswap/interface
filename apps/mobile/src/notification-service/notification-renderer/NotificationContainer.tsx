@@ -109,12 +109,15 @@ export const NotificationContainer = memo(function NotificationContainer({
   onNotificationClick,
   onNotificationShown,
   onCardsChange,
+  suppressIntroCards = false,
   store = mobileNotificationStore,
 }: {
   onRenderFailed?: (notificationId: string) => void
   onNotificationClick?: (notificationId: string, target: NotificationClickTarget) => void
   onNotificationShown?: (notificationId: string) => void
   onCardsChange?: (hasCards: boolean) => void
+  /** Held back, not dropped: they aren't marked shown and appear once suppression ends. */
+  suppressIntroCards?: boolean
   store?: UseBoundStore<StoreApi<NotificationState>>
 }): JSX.Element {
   const activeNotifications = store((state) => state.activeNotifications)
@@ -156,7 +159,9 @@ export const NotificationContainer = memo(function NotificationContainer({
       } else if (notification.content?.style === ContentStyle.SYSTEM_BANNER) {
         systemBanners.push(notification)
       } else if (shouldRenderAsIntroCard(notification)) {
-        introCards.push(notification)
+        if (!suppressIntroCards) {
+          introCards.push(notification)
+        }
       } else if (isLocalTriggerNotification(notification.id)) {
         localTriggers.push(notification)
       } else {
@@ -171,7 +176,7 @@ export const NotificationContainer = memo(function NotificationContainer({
       forceUpgradeNotifications: forceUpgrades,
       otherNotifications: others,
     }
-  }, [activeNotifications])
+  }, [activeNotifications, suppressIntroCards])
 
   // Render system banners through the portal at the app root level
   // This ensures position: absolute + bottom: 0 works correctly

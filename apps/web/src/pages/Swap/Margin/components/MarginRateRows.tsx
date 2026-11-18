@@ -1,13 +1,10 @@
-import { type ColorTokens, Flex, Text, Tooltip, TouchableArea } from '@universe/mycelium'
+import { type ColorTokens, Flex, Text, Tooltip } from '@universe/mycelium'
 import { ENTER_PRESET_CLASSES } from '@universe/mycelium/compat'
 import { HeightAnimator } from '@universe/mycelium/height-animator'
-import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
-import { Settings } from '@universe/mycelium/icons/Settings'
 import { TestID } from '@universe/test'
 import type { ReactNode } from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Popover } from 'ui/src'
 import AnimatedNumber, { type AnimatedNumberProps } from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import type { MarginQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -19,71 +16,21 @@ import { MarginVenueLogo } from '~/features/margin/components/MarginVenueLogo'
 import { findMarginTokenInfoInMarkets, useMarginMarkets } from '~/features/margin/hooks/useMarginMarkets'
 import { formatLiqDistanceSuffix, getMarginHealthStatus, marginVenueLabel } from '~/features/margin/utils/marginFormat'
 import { marginUnwrapSymbol } from '~/features/margin/utils/marginTokenDisplay'
+import { MarginMarketRow } from '~/pages/Swap/Margin/components/MarginMarketRow'
 import { MarginPriceImpactRow } from '~/pages/Swap/Margin/components/MarginPriceImpactRow'
-import { MarginRouteRow } from '~/pages/Swap/Margin/components/MarginRouteRow'
-import { MarginSizeReceiptValue } from '~/pages/Swap/Margin/components/MarginSizeBlock'
-import { MarginSlippageControl } from '~/pages/Swap/Margin/components/MarginSlippageControl'
-import { MarginVenuePickerButton } from '~/pages/Swap/Margin/components/MarginVenuePickerButton'
+import { MarginDepositValue, MarginPaymentSwapValue } from '~/pages/Swap/Margin/components/MarginReceiptDepositValues'
+import { useMarginReceiptDetails } from '~/pages/Swap/Margin/components/MarginReceiptEstimate'
 import {
-  MarginVenuePreferencesModal,
-  MarginVenueSettingsRow,
-  useActiveMarginPairGroup,
-} from '~/pages/Swap/Margin/components/MarginVenuePreferences'
+  formatSignedPct,
+  MarginEntryTooltip,
+  MarginLeveragedRateTooltip,
+  MarginLiquidationTooltip,
+} from '~/pages/Swap/Margin/components/MarginReceiptTooltips'
+import { MarginRouteRow } from '~/pages/Swap/Margin/components/MarginRouteRow'
 import { MarginDetailRow } from '~/pages/Swap/Margin/components/shared/MarginDetailRow'
 import { MarginShowMoreToggle } from '~/pages/Swap/Margin/components/shared/MarginShowMoreToggle'
-import type { DerivedMarginInfo } from '~/pages/Swap/Margin/hooks/useDerivedMarginInfo'
-import { deriveMarginReceiptFigures } from '~/pages/Swap/Margin/marginReceiptFigures'
+import { type DerivedMarginInfo, quoteRefetchPulseClass } from '~/pages/Swap/Margin/hooks/useDerivedMarginInfo'
 import { buildMarginRouteSteps } from '~/pages/Swap/Margin/marginRouteSteps'
-
-// Tab-row ⚙︎ for the Margin tab: a small margin-scoped popover (NOT the swap-wide settings UI). Also
-// the venue opt-out sheet's second entry point — the first is the market picker's per-pair cell.
-export function MarginSettingsPopover(): JSX.Element {
-  const { t } = useTranslation()
-  const group = useActiveMarginPairGroup()
-  const [isPopoverOpen, setIsPopoverOpen] = useState(false)
-  const [isVenuesOpen, setIsVenuesOpen] = useState(false)
-
-  // Closes the panel on the way out: the popover would otherwise sit behind the modal it launched.
-  const openVenues = useEvent(() => {
-    setIsPopoverOpen(false)
-    setIsVenuesOpen(true)
-  })
-  const closeVenues = useEvent(() => setIsVenuesOpen(false))
-
-  return (
-    <>
-      <Popover placement="bottom-end" stayInFrame allowFlip open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
-        <Popover.Trigger cursor="pointer">
-          <Flex p="$spacing4" borderRadius="$roundedFull" hoverStyle={{ backgroundColor: '$surface2' }}>
-            <Settings size="$icon.20" color="$neutral2" />
-          </Flex>
-        </Popover.Trigger>
-        <Popover.Content
-          backgroundColor="$surface1"
-          borderWidth={1}
-          borderColor="$surface3"
-          borderRadius="$rounded16"
-          p="$spacing12"
-          elevate
-          enterStyle={{ scale: 0.95, opacity: 0 }}
-          exitStyle={{ scale: 0.95, opacity: 0 }}
-        >
-          <Flex gap="$spacing12" minWidth={280}>
-            {group ? <MarginVenueSettingsRow group={group} onPress={openVenues} /> : null}
-            <Flex gap="$spacing8">
-              <Text variant="body3" color="$neutral2">
-                {t('margin.fees.maxSlippage')}
-              </Text>
-              <MarginSlippageControl />
-            </Flex>
-          </Flex>
-        </Popover.Content>
-      </Popover>
-      {/* Outside the popover, whose content unmounts on the very close that opens this. */}
-      {isVenuesOpen && group ? <MarginVenuePreferencesModal group={group} isOpen onClose={closeVenues} /> : null}
-    </>
-  )
-}
 
 const RECEIPT_ROW_HEIGHT = 32
 
@@ -91,7 +38,7 @@ const RECEIPT_ROW_HEIGHT = 32
 function ReceiptRow({ label, value, tooltip }: { label: string; value: ReactNode; tooltip?: ReactNode }): JSX.Element {
   return (
     <Flex height={RECEIPT_ROW_HEIGHT} justifyContent="center">
-      <MarginDetailRow label={label} value={value} tooltip={tooltip} />
+      <MarginDetailRow label={label} value={value} tooltip={tooltip} tooltipTrigger="row" />
     </Flex>
   )
 }
@@ -154,68 +101,23 @@ function BorrowVenueLogo({
   )
 }
 
-// Where the position borrows, at what rate, and what that costs per day.
-function MarketValue({
-  venue,
-  borrowApyPct,
-  borrowPerDayUsd,
-}: {
-  venue: MarginVenue | undefined
-  borrowApyPct: number | undefined
-  borrowPerDayUsd: number | undefined
-}): JSX.Element {
-  const { t } = useTranslation()
-  const { formatNumberOrString } = useLocalizationContext()
-  if (venue === undefined) {
-    return (
-      <Text variant="body3" color="$neutral1">
-        {t('margin.route.autoBest')}
-      </Text>
-    )
-  }
-  return (
-    <Flex row alignItems="center" gap="$spacing6">
-      <MarginVenueLogo venue={venue} size="$icon.16" />
-      <Text variant="body3" color="$neutral1">
-        {marginVenueLabel(venue)}
-      </Text>
-      {borrowApyPct === undefined ? null : (
-        <Text variant="body3" color="$neutral1">
-          {borrowApyPct.toFixed(1)}%
-        </Text>
-      )}
-      {borrowPerDayUsd === undefined ? null : (
-        <AnimatedNumber
-          value={t('margin.receipt.perDay', {
-            amount: formatNumberOrString({ value: borrowPerDayUsd, type: NumberType.FiatTokenPrice }),
-          })}
-          numericValue={borrowPerDayUsd}
-          textVariant="$body3"
-          color="$neutral2"
-        />
-      )}
-    </Flex>
-  )
-}
-
 // The explicit color turns off AnimatedNumber's up-is-green flash, which reads backwards on a receipt: a
 // higher liquidation price, more borrowing or more gas is not good news.
 function ReceiptFigure(props: Omit<AnimatedNumberProps, 'textVariant' | 'color'>): JSX.Element {
   return <AnimatedNumber {...props} textVariant="$body3" color="$neutral1" />
 }
 
-// Flat receipt under the CTA: Entry price, Liquidation price and Borrowing always visible, then an
-// arrow-only show-more with Swapping, Market, Break-even, price impact, Route, Max slippage and Network
-// cost. Rows stagger in when the first quote lands and their values roll as the quote moves.
+// Flat receipt under the CTA: the headline rows always visible, the rest under an arrow-only show-more.
+// Rows stagger in when the first quote lands and their values roll as the quote moves.
 export function MarginRateRows({ derivedMarginInfo }: { derivedMarginInfo: DerivedMarginInfo }): JSX.Element | null {
   // Above the quote gate: a venue pin blanks the quote for one fetch, and the receipt must not
   // remount collapsed, hiding the row the user just picked from.
   const [isExpanded, setIsExpanded] = useState(false)
   const toggleExpanded = useEvent(() => setIsExpanded((prev) => !prev))
-  const { quote } = derivedMarginInfo
-  // The receipt mounts only once there is a quote to price, so the rows' CSS enter animation plays
-  // exactly when it first appears.
-  if (!quote) {
+  const { quote, hasEnteredAmount } = derivedMarginInfo
+  // The receipt mounts once there is something to price, so the rows' CSS enter animation plays
+  // exactly when it first appears. Without a quote it shows the estimate.
+  if (!quote && !hasEnteredAmount) {
     return null
   }
   return (
@@ -228,6 +130,29 @@ export function MarginRateRows({ derivedMarginInfo }: { derivedMarginInfo: Deriv
   )
 }
 
+// The last settled impact holds while a requote is in flight (the fill is withheld until it settles), so
+// the Entry suffix doesn't blink on every keystroke.
+function useSettledImpactPct({ impactPct, hasQuote }: { impactPct?: number; hasQuote: boolean }): number | undefined {
+  const [settled, setSettled] = useState(impactPct)
+  if (impactPct !== undefined && impactPct !== settled) {
+    setSettled(impactPct)
+  }
+  return impactPct ?? (hasQuote ? settled : undefined)
+}
+
+function LeveragedRateValue({ ratePct, empty }: { ratePct?: number; empty: JSX.Element }): JSX.Element {
+  const { t } = useTranslation()
+  if (ratePct === undefined) {
+    return empty
+  }
+  return (
+    <Text variant="body3" color="$neutral2">
+      {`${t('margin.receipt.leveragedRate.youPay')} `}
+      <Text variant="body3" color="$neutral1">{`${ratePct.toFixed(2)}%`}</Text>
+    </Text>
+  )
+}
+
 function MarginReceipt({
   derivedMarginInfo,
   quote,
@@ -235,7 +160,7 @@ function MarginReceipt({
   onToggleExpanded,
 }: {
   derivedMarginInfo: DerivedMarginInfo
-  quote: MarginQuoteResponse
+  quote: MarginQuoteResponse | undefined
   isExpanded: boolean
   onToggleExpanded: () => void
 }): JSX.Element {
@@ -243,15 +168,14 @@ function MarginReceipt({
   const { formatNumberOrString } = useLocalizationContext()
   const { markets } = useMarginMarkets()
   const slippageToleranceBps = useMarginFormStore((s) => s.slippageToleranceBps)
-  const [isSlippageOpen, setIsSlippageOpen] = useState(false)
 
-  const toggleSlippage = useEvent(() => setIsSlippageOpen((prev) => !prev))
-
-  const { market, direction, isPlaceholderData } = derivedMarginInfo
+  const { market, isPlaceholderData } = derivedMarginInfo
   // useDerivedMarginInfo's placeholderData contract: a bridged quote's venue (and so its rate) is
   // provisional. No fallback to the form's market either — that names a venue the quote never routed to.
-  const routedVenue = isPlaceholderData ? undefined : quote.legs.at(0)?.venue
-  const figures = deriveMarginReceiptFigures({ quote, market, direction })
+  const routedVenue = isPlaceholderData ? undefined : quote?.legs.at(0)?.venue
+  const { figures, details, equity, borrowRatePct } = useMarginReceiptDetails({ derivedMarginInfo, routedVenue })
+  // What the borrow bought waits for a settled quote: a debounced or bridged one answers an old input.
+  const bought = derivedMarginInfo.isDebouncing || isPlaceholderData ? undefined : figures.collateralBought
 
   const debtSymbol = marginUnwrapSymbol(market.debt)
   const collateralSymbol = marginUnwrapSymbol(market.collateral)
@@ -263,10 +187,10 @@ function MarginReceipt({
     </Text>
   )
 
+  // The tooltip's Price impact line, net of the fee it lists beside it, so the two never disagree.
+  const impactPct = useSettledImpactPct({ impactPct: details.entry.impactPct, hasQuote: quote !== undefined })
   const entryImpactSuffix =
-    figures.entryImpactPct === undefined ? undefined : (
-      <SuffixText text={formatLiqDistanceSuffix(figures.entryImpactPct)} color="$neutral2" />
-    )
+    impactPct === undefined ? undefined : <SuffixText text={`(${formatSignedPct(impactPct)})`} color="$neutral2" />
   const entryValue =
     figures.entryPrice === undefined ? (
       empty
@@ -299,36 +223,18 @@ function MarginReceipt({
         endElementGap={0}
       />
     )
-  const liqTooltip = (
-    <Flex gap="$spacing2" maxWidth={240}>
-      {figures.oraclePrice === undefined ? null : (
-        <Text variant="body4" color="$neutral1">
-          {t('margin.receipt.oraclePrice', { price: fiat(figures.oraclePrice) })}
-        </Text>
-      )}
-      <Text variant="body4" color="$neutral2">
-        {t('margin.receipt.liquidationPriceTooltip')}
-      </Text>
-    </Flex>
-  )
-
   const borrowingValue =
     figures.borrowing === undefined ? (
       empty
     ) : (
       <Flex row alignItems="center" gap="$spacing6">
         <BorrowVenueLogo venue={routedVenue} borrowApyPct={figures.borrowApyPct} />
-        <ReceiptFigure value={`${token(figures.borrowing)} ${debtSymbol}`} numericValue={figures.borrowing} />
+        {/* Folds in the leverage swap: "1,200 USDC → 0.49 ETH". */}
+        <ReceiptFigure
+          value={`${token(figures.borrowing)} ${debtSymbol}${bought === undefined ? '' : ` → ${token(bought)} ${collateralSymbol}`}`}
+          numericValue={bought === undefined ? figures.borrowing : undefined}
+        />
       </Flex>
-    )
-
-  const swappingValue =
-    figures.borrowing === undefined || figures.collateralBought === undefined ? (
-      empty
-    ) : (
-      <ReceiptFigure
-        value={`${token(figures.borrowing)} ${debtSymbol} → ${token(figures.collateralBought)} ${collateralSymbol}`}
-      />
     )
 
   const breakEvenValue =
@@ -347,70 +253,93 @@ function MarginReceipt({
 
   // Slippage applies per leg; with a pre-swap the effective total compounds: (1+s)² − 1 ≈ 2s.
   const slippageFraction = slippageToleranceBps / 10_000
-  const slippagePercentDisplay = quote.paymentSwap
+  const slippagePercentDisplay = quote?.paymentSwap
     ? `${(((1 + slippageFraction) ** 2 - 1) * 100).toFixed(2)}%`
     : `${(slippageFraction * 100).toFixed(2)}%`
 
-  const routeSteps = buildMarginRouteSteps({
-    quote,
-    market,
-    paymentTokenSymbol: derivedMarginInfo.paymentToken.symbol,
-    resolveSymbol: (address) => {
-      const info = findMarginTokenInfoInMarkets({ markets, address })
-      return info ? marginUnwrapSymbol(info) : undefined
-    },
-  })
-
-  const slippageValue = (
-    <TouchableArea onPress={toggleSlippage}>
-      <Flex row alignItems="center" gap="$spacing4">
-        <Text variant="body3" color="$neutral1">
-          {slippagePercentDisplay}
-        </Text>
-        <RotatableChevron direction={isSlippageOpen ? 'up' : 'down'} size="$icon.16" color="$neutral3" />
-      </Flex>
-    </TouchableArea>
-  )
+  const routeSteps = !quote
+    ? []
+    : buildMarginRouteSteps({
+        quote,
+        market,
+        paymentTokenSymbol: derivedMarginInfo.paymentToken.symbol,
+        resolveSymbol: (address) => {
+          const info = findMarginTokenInfoInMarkets({ markets, address })
+          return info ? marginUnwrapSymbol(info) : undefined
+        },
+      })
 
   return (
-    <Flex px="$spacing8" testID={TestID.MarginReceipt}>
+    <Flex px="$spacing8" testID={TestID.MarginReceipt} className={quoteRefetchPulseClass(derivedMarginInfo)}>
+      <StaggerIn index={0}>
+        <MarginMarketRow routedVenue={routedVenue} quotedRatePct={figures.borrowApyPct} />
+      </StaggerIn>
       <StaggerIn index={0}>
         <ReceiptRow
-          label={t('margin.size.label')}
-          value={<MarginSizeReceiptValue derivedMarginInfo={derivedMarginInfo} />}
+          label={t('margin.receipt.margin')}
+          tooltip={t('margin.receipt.marginTooltip')}
+          value={
+            <MarginDepositValue
+              derivedMarginInfo={derivedMarginInfo}
+              mark={figures.oraclePrice ?? figures.entryPrice}
+            />
+          }
+        />
+      </StaggerIn>
+      {derivedMarginInfo.isPaymentDifferentFromCollateral ? (
+        <StaggerIn index={0}>
+          <ReceiptRow
+            label={t('margin.receipt.swapping')}
+            tooltip={t('margin.receipt.swappingTooltip')}
+            value={<MarginPaymentSwapValue derivedMarginInfo={derivedMarginInfo} equity={equity} />}
+          />
+        </StaggerIn>
+      ) : null}
+      <StaggerIn index={0}>
+        <ReceiptRow
+          label={t('margin.fees.entryPrice')}
+          tooltip={<MarginEntryTooltip entry={details.entry} />}
+          value={entryValue}
         />
       </StaggerIn>
       <StaggerIn index={1}>
-        <ReceiptRow label={t('margin.fees.entryPrice')} value={entryValue} />
+        <ReceiptRow
+          label={t('margin.receipt.liquidationPrice')}
+          tooltip={<MarginLiquidationTooltip liquidation={details.liquidation} collateralSymbol={collateralSymbol} />}
+          value={liqValue}
+        />
       </StaggerIn>
       <StaggerIn index={2}>
-        <ReceiptRow label={t('margin.receipt.liquidationPrice')} tooltip={liqTooltip} value={liqValue} />
+        <ReceiptRow
+          label={t('margin.receipt.leveragedRate.label')}
+          tooltip={
+            <MarginLeveragedRateTooltip
+              ratePct={details.leveragedRatePct}
+              borrowRatePct={borrowRatePct}
+              leverage={derivedMarginInfo.leverage}
+              debtSymbol={debtSymbol}
+              collateralSymbol={collateralSymbol}
+            />
+          }
+          value={<LeveragedRateValue ratePct={details.leveragedRatePct} empty={empty} />}
+        />
       </StaggerIn>
-      <StaggerIn index={3}>
+      <StaggerIn index={2}>
         <ReceiptRow label={t('margin.size.borrowing')} value={borrowingValue} />
       </StaggerIn>
-      <StaggerIn index={4}>
-        <Flex py="$spacing4">
-          <MarginShowMoreToggle isExpanded={isExpanded} onToggle={onToggleExpanded} hideLabel />
-        </Flex>
+      <StaggerIn index={3}>
+        {quote ? (
+          <Flex py="$spacing4">
+            <MarginShowMoreToggle isExpanded={isExpanded} onToggle={onToggleExpanded} hideLabel />
+          </Flex>
+        ) : (
+          <Text variant="body4" color="$neutral3" pt="$spacing4">
+            {t('margin.receipt.estimated')}
+          </Text>
+        )}
       </StaggerIn>
-      <HeightAnimator open={isExpanded}>
+      <HeightAnimator open={isExpanded && quote !== undefined}>
         <Flex pb="$spacing2">
-          <ReceiptRow label={t('margin.receipt.swapping')} value={swappingValue} />
-          <ReceiptRow
-            label={t('margin.receipt.market')}
-            tooltip={t('margin.receipt.marketTooltip')}
-            value={
-              <Flex row alignItems="center" gap="$spacing6">
-                <MarketValue
-                  venue={routedVenue}
-                  borrowApyPct={figures.borrowApyPct}
-                  borrowPerDayUsd={figures.borrowPerDayUsd}
-                />
-                <MarginVenuePickerButton />
-              </Flex>
-            }
-          />
           <ReceiptRow
             label={t('margin.receipt.breakEven')}
             tooltip={t('margin.receipt.breakEvenTooltip')}
@@ -420,31 +349,11 @@ function MarginReceipt({
           <Flex minHeight={RECEIPT_ROW_HEIGHT} justifyContent="center">
             <MarginRouteRow steps={routeSteps} />
           </Flex>
-          {/* Single no-gap child: a collapsed HeightAnimator sibling would add phantom height between the
-              slippage and network-cost rows. */}
-          <Flex>
-            <Flex height={RECEIPT_ROW_HEIGHT} row justifyContent="space-between" alignItems="center" gap="$spacing12">
-              <Text variant="body3" color="$neutral2">
-                {t('margin.fees.maxSlippage')}
-              </Text>
-              {quote.paymentSwap ? (
-                <Tooltip placement="top" delay={{ open: 200, close: 0 }}>
-                  <Tooltip.Content>
-                    <Tooltip.Arrow />
-                    <Text variant="body4">{t('margin.fees.slippageCompoundedTooltip')}</Text>
-                  </Tooltip.Content>
-                  <Tooltip.Trigger>{slippageValue}</Tooltip.Trigger>
-                </Tooltip>
-              ) : (
-                slippageValue
-              )}
-            </Flex>
-            <HeightAnimator open={isSlippageOpen}>
-              <Flex pt="$spacing4" pb="$spacing8">
-                <MarginSlippageControl />
-              </Flex>
-            </HeightAnimator>
-          </Flex>
+          <ReceiptRow
+            label={t('margin.fees.maxSlippage')}
+            tooltip={quote?.paymentSwap ? t('margin.fees.slippageCompoundedTooltip') : undefined}
+            value={slippagePercentDisplay}
+          />
           <ReceiptRow
             label={t('margin.fees.networkCost')}
             value={

@@ -21,14 +21,15 @@ echo "🧪 Testing production environment variable loading..."
 # Run production build and capture output
 BUILD_OUTPUT=$(NODE_OPTIONS="--max-old-space-size=16384" bun run build:production 2>&1)
 
-# Check that the production gateway (a production-only value from the remote config) is loaded
-if echo "$BUILD_OUTPUT" | grep -q "ENV_LOADED:.*mode=production.*UNISWAP_GATEWAY_DNS=https://interface\.gateway\.uniswap\.org"; then
-    echo "✅ Production gateway loaded correctly"
+# Check that the production remote config scope is loaded: ENV_CANARY is set to `production`
+# there and nowhere else, and exists only for this check
+if echo "$BUILD_OUTPUT" | grep -q "ENV_LOADED:.*mode=production.*ENV_CANARY=production$"; then
+    echo "✅ Production config scope loaded correctly"
     echo "✅ Environment loading test PASSED"
     exit 0
 else
     echo "❌ Production environment variables not loaded correctly"
-    echo "Expected: mode=production with UNISWAP_GATEWAY_DNS=https://interface.gateway.uniswap.org"
+    echo "Expected: mode=production with ENV_CANARY=production (Mission Control: web, production scope)"
     echo "Build output:"
     echo "$BUILD_OUTPUT" | grep "ENV_LOADED:" || echo "No ENV_LOADED found"
     echo "❌ Environment loading test FAILED"

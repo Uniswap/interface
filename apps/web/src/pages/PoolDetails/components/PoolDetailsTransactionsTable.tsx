@@ -22,6 +22,8 @@ import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { TOKEN_AMOUNT_DISPLAY_FLOOR } from 'utilities/src/format/localeBasedFormats'
 import { NumberType } from 'utilities/src/format/types'
+import { WalletHoverCard } from '~/components/HoverCard/WalletHoverCard/WalletHoverCard'
+import { InternalLink } from '~/components/InternalLink'
 import { Table } from '~/components/Table'
 import { Cell } from '~/components/Table/Cell'
 import { Filter } from '~/components/Table/Filter'
@@ -35,15 +37,9 @@ import {
   PoolTableTransactionType,
   usePoolTransactions,
 } from '~/features/Explore/state/transactions/usePoolTransactions'
-import { ExternalLink, type ExternalLinkProps } from '~/theme/components/Links'
+import { buildPortfolioUrl } from '~/hooks/usePortfolioRoutes/utils'
 import { formatPriceWithSubscript } from '~/utils/formatPriceWithSubscript'
 import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
-
-// `stroke` has no compat style prop (it exists only to tint the inline external-link glyph),
-// so it rides the arbitrary-property class escape hatch.
-function StyledExternalLink(props: ExternalLinkProps): JSX.Element {
-  return <ExternalLink color="$neutral2" className="[stroke:var(--neutral2)]" {...props} />
-}
 
 function TableWrapper(props: ViewCompatProps): JSX.Element {
   return <View minHeight={256} {...props} />
@@ -280,19 +276,19 @@ export function PoolDetailsTransactionsTable({
             </Text>
           </Cell>
         ),
-        cell: (makerAddress) => (
-          <Cell loading={showLoadingSkeleton} justifyContent="flex-end" grow>
-            <StyledExternalLink
-              href={getExplorerLink({
-                chainId,
-                data: makerAddress.getValue?.(),
-                type: ExplorerDataType.ADDRESS,
-              })}
-            >
-              <TableText>{shortenAddress({ address: makerAddress.getValue?.(), chars: 4, charsEnd: 4 })}</TableText>
-            </StyledExternalLink>
-          </Cell>
-        ),
+        cell: (makerAddress) => {
+          const address = makerAddress.getValue?.()
+
+          return (
+            <Cell loading={showLoadingSkeleton} justifyContent="flex-end" grow>
+              <WalletHoverCard address={address} chainId={chainId}>
+                <InternalLink to={buildPortfolioUrl({ externalAddress: address })}>
+                  <TableText>{shortenAddress({ address, chars: 4, charsEnd: 4 })}</TableText>
+                </InternalLink>
+              </WalletHoverCard>
+            </Cell>
+          )
+        },
       }),
     ]
   }, [

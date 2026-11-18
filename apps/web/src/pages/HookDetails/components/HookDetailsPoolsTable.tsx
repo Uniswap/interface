@@ -4,22 +4,21 @@ import { AddressStringFormat, normalizeAddress } from '@universe/chains'
 import { Flex, Text, useMedia } from '@universe/mycelium'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { LIVE_POOL_VOLUME_PERIODS } from '~/components/Charts/timeLabels'
+import { useInfiniteLoadMore } from '~/components/Table/hooks/useInfiniteLoadMore'
 import { PoolSortFields } from '~/data/pools/poolStats'
 import { useEffectiveVolumeTimePeriod } from '~/features/Explore/hooks/useEffectiveVolumeTimePeriod'
-import { useInfiniteLoadMore } from '~/features/Explore/hooks/useInfiniteLoadMore'
-import { EXPLORE_API_PAGE_SIZE } from '~/features/Explore/state/constants'
-import { LIVE_POOL_VOLUME_PERIODS } from '~/features/Explore/timeLabels'
 import { VolumeTimeFrameSelector } from '~/features/Explore/VolumeTimeFrameSelector'
 import { HookResultsPagination } from '~/features/Hooks/components/HookResultsPagination'
 import { hookPoolsFixtureQueryOptions } from '~/features/Hooks/poolQueries'
 import type { HookDeployment } from '~/features/Hooks/types'
+import { useListPoolsAsPoolStats } from '~/features/Liquidity/hooks/useListPoolsAsPoolStats'
+import { PoolsTable } from '~/features/Liquidity/PoolsTable/PoolsTable'
+import { PoolTableStoreContextProvider, usePoolTableStore } from '~/features/Liquidity/PoolsTable/state/poolTableStore'
+import { getPoolSortMethodForPeriod } from '~/features/Liquidity/PoolsTable/utils/poolVolumePeriods'
 import { poolSortFieldToOrderBy } from '~/features/Liquidity/utils/convertPoolToPoolStat'
 import { getPoolsListParams } from '~/features/Liquidity/utils/getPoolsListParams'
-// TODO(CONS-4015): import from features/Explore once the pools table moves out of pages/Explore
-import { useListPoolsAsPoolStats } from '~/pages/Explore/hooks/useListPoolsAsPoolStats'
-import { PoolsTable } from '~/pages/Explore/tables/Pools/PoolTable'
-import { PoolTableStoreContextProvider, usePoolTableStore } from '~/pages/Explore/tables/Pools/poolTableStore'
-import { getPoolSortMethodForPeriod } from '~/pages/Explore/tables/Pools/poolVolumePeriods'
+import { LIST_API_PAGE_SIZE } from '~/utils/listRequestParams'
 
 const HIDDEN_COLUMNS = [PoolSortFields.RewardApr]
 const COLUMN_ORDER = ['poolDescription', 'tvl', 'apr'] as const
@@ -65,13 +64,13 @@ function HookDetailsPoolsTableContent({
       sortMethod: effectiveSortMethod,
       sortAscending,
       period,
-      pageSize: EXPLORE_API_PAGE_SIZE,
+      pageSize: LIST_API_PAGE_SIZE,
     }),
     enabled: isFixture,
   })
   const live = useListPoolsAsPoolStats({
     params,
-    pageSize: EXPLORE_API_PAGE_SIZE,
+    pageSize: LIST_API_PAGE_SIZE,
     enabled: !isFixture,
     persist: false,
     keepPreviousRows: true,

@@ -4,8 +4,12 @@
  * (dimmed + disabled once everything is selected), neutral Clear (hidden
  * until something is filtered). Labels are host-injected i18n with English
  * defaults (ledgered).
+ *
+ * Menu hosts only: a menu may hold only items, groups and separators, so the
+ * row is a Base UI `Menu.Group` of two `Menu.Item`s. Both join the menu's
+ * arrow-key order, ahead of the options, and keep it open when pressed.
  */
-// oxlint-disable react/forbid-elements -- the compat components ARE the raw DOM boundary (no Tamagui Flex here)
+import { Menu as MenuPrimitive } from '@base-ui/react/menu'
 import type * as React from 'react'
 import { SELECT_ALL_CLEAR_HEADER_CLASS_NAMES } from './compile'
 import type { SelectAllClearHeaderCompatProps } from './types'
@@ -19,20 +23,24 @@ export function SelectAllClearHeaderCompat({
   showClear = true,
 }: SelectAllClearHeaderCompatProps): React.JSX.Element {
   return (
-    <div data-slot="select-all-clear-header" className={SELECT_ALL_CLEAR_HEADER_CLASS_NAMES.frame}>
-      <button
-        type="button"
+    <MenuPrimitive.Group data-slot="select-all-clear-header" className={SELECT_ALL_CLEAR_HEADER_CLASS_NAMES.frame}>
+      <MenuPrimitive.Item
+        closeOnClick={false}
         disabled={selectAllDisabled === true}
         className={SELECT_ALL_CLEAR_HEADER_CLASS_NAMES.selectAll}
         onClick={onSelectAll}
       >
         {selectAllLabel}
-      </button>
+      </MenuPrimitive.Item>
       {showClear && (
-        <button type="button" className={SELECT_ALL_CLEAR_HEADER_CLASS_NAMES.clear} onClick={onClear}>
+        <MenuPrimitive.Item
+          closeOnClick={false}
+          className={SELECT_ALL_CLEAR_HEADER_CLASS_NAMES.clear}
+          onClick={onClear}
+        >
           {clearLabel}
-        </button>
+        </MenuPrimitive.Item>
       )}
-    </div>
+    </MenuPrimitive.Group>
   )
 }

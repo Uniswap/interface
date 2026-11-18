@@ -19,6 +19,7 @@ import { PercentageBars } from '~/components/PercentageAllocationChart/Percentag
 import type { PercentageAllocationItem } from '~/components/PercentageAllocationChart/types'
 import { useChartHover } from '~/components/PercentageAllocationChart/useChartHover'
 import { TimePeriod } from '~/data/util'
+import { useNavigateToTokenDetails } from '~/hooks/useNavigateToTokenDetails'
 import { useTopNetworkBarColors } from '~/pages/Explore/tables/Tokens/VolumeByNetworkPopover/useTopNetworkBarColors'
 import {
   getPercentageDisplay,
@@ -31,7 +32,6 @@ import {
   VolumeBreakdownRowLabel,
   type VolumeHoverSource,
 } from '~/pages/Explore/tables/Tokens/VolumeByNetworkPopover/VolumeBreakdownRow'
-import { useNavigateToTokenDetails } from '~/pages/Portfolio/Tokens/hooks/useNavigateToTokenDetails'
 
 const MAX_VISIBLE_NETWORKS = 3
 const POPOVER_MIN_WIDTH = 300
@@ -152,12 +152,13 @@ export function VolumeByNetworkPopover({
       offset={{ mainAxis: 10 }}
       onOpenChange={onOpenChange}
     >
-      <PopoverCompat.Trigger>
+      <PopoverCompat.Trigger openOnClick={false}>
         <Flex cursor="default" flex={1} minWidth={0} {...stopPropagationPressProps}>
           {children}
         </Flex>
       </PopoverCompat.Trigger>
       <AdaptiveWebPopoverContentCompat
+        aria-label={getVolumeLabelForTimePeriod(t, timePeriod)}
         isOpen
         // Legacy `Popover.Content` carried no `Popover.Adapt`, so it never became a bottom
         // sheet; the compat content adapts at `media.sm` unless opted out.

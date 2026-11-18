@@ -72,6 +72,7 @@ import { useFeatureFlag } from '@universe/gating'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router'
 import { DAI, USDC_MAINNET } from 'uniswap/src/constants/tokens'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { LPTransactionSettingsStoreContextProvider } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/LPTransactionSettingsStoreContextProvider'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { createMockEVMAccountDetails } from 'uniswap/src/test/fixtures/account'
@@ -410,6 +411,40 @@ describe('CreatePositionModal', () => {
       })
 
       expect(mockSetTransactionError).toHaveBeenCalledWith(false)
+    })
+  })
+
+  describe('after the position is created', () => {
+    const createAndSucceed = () => {
+      mockUseWallet.mockReturnValue({ evmAccount: { accountType: AccountType.SignerMnemonic, address: '0x123' } })
+      const { getByRole } = render(<Container {...defaultProps} />)
+      act(() => {
+        fireEvent.click(getByRole('button', { name: /Create/i }))
+      })
+      const [{ onSuccess }] = vi.mocked(liquiditySaga.actions.trigger).mock.calls[0]
+      act(() => {
+        onSuccess()
+      })
+    }
+
+    it('navigates to /positions by default', () => {
+      createAndSucceed()
+
+      expect(mockOnClose).toHaveBeenCalled()
+      expect(mockNavigate).toHaveBeenCalledWith('/positions')
+    })
+
+    it('clears the deposit and calls onPositionCreated instead of navigating when the surface provides one', () => {
+      const onPositionCreated = vi.fn()
+      const resetDeposit = vi.fn()
+      mockUseCreateLiquidityContext.mockReturnValue({ ...mockContextValue, onPositionCreated, resetDeposit })
+
+      createAndSucceed()
+
+      expect(mockOnClose).toHaveBeenCalled()
+      expect(resetDeposit).toHaveBeenCalled()
+      expect(onPositionCreated).toHaveBeenCalled()
+      expect(mockNavigate).not.toHaveBeenCalled()
     })
   })
 

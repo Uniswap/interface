@@ -41,7 +41,7 @@ export function BridgingOptionsScreen(): JSX.Element {
       <OptionRow
         alignItems="flex-start"
         active={isAll}
-        title={t('common.all')}
+        title={t('common.default')}
         description={t('swap.settings.bridgingOptions.option.all.description')}
         elementName={ElementName.SwapBridgingOptionsAll}
         cantDisable={false}

@@ -1,6 +1,5 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { UniverseChainId } from '@universe/chains'
-import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { Flex, Text, iconSizes } from '@universe/mycelium'
 import { Lock } from '@universe/mycelium/icons/Lock'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
@@ -14,7 +13,6 @@ import { ReportTokenIssueModalPropsAtom } from 'uniswap/src/components/reporting
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useTokenMetadata } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { PermissionedTokenTooltip } from 'uniswap/src/features/permissionedTokens/PermissionedTokenTooltip'
-import { getRWAHeaderIdentity } from 'uniswap/src/features/rwa/getRWAHeaderIdentity'
 import { useRwaIssuer } from 'uniswap/src/features/rwa/hooks/useRwaIssuer'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -97,7 +95,6 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
   const isRwaMatchLoading = useIsTDPRWAMatchLoading()
   const { issuer: rwaIssuer } = useRwaIssuer({ rwaMatch, currencyId: currencyId(effectiveCurrency) })
   const heldRwaIssuer = isRwaMatchLoading ? undefined : rwaIssuer
-  const plainTokenNames = useIsTokenCategoriesEnabled()
 
   const { data: metadata } = useTokenMetadata(currencyId(effectiveCurrency))
 
@@ -140,13 +137,8 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
   })
 
   const tokenSymbol = metadata?.symbol ?? effectiveCurrency.symbol ?? t('tdp.symbolNotFound')
-  const fallbackTokenName = metadata?.name ?? effectiveCurrency.name ?? t('tdp.nameNotFound')
-  const { name: tokenName, logoUrl: tokenLogoUrl } = getRWAHeaderIdentity({
-    rwaMatch,
-    fallbackName: fallbackTokenName,
-    logoUrl: metadata?.logoUrl,
-    plainTokenNames,
-  })
+  const tokenName = metadata?.name ?? effectiveCurrency.name ?? t('tdp.nameNotFound')
+  const tokenLogoUrl = metadata?.logoUrl
   const showAddressCopy = getShowAddressCopy({ isNative, isMultiChainAsset, selectedChainId })
   const headerLaunchpad = useTokenDetailsHeaderLaunchpad()
 

@@ -17,9 +17,9 @@ import { getCurrencyAddressForAnalytics } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { currentTimeInSeconds } from 'utilities/src/time/time'
-import { getConfig } from '~/config'
 import { useAccount } from '~/connection/hooks/useAccount'
 import { useEthersWeb3Provider } from '~/connection/hooks/useEthersProvider'
+import { UNISWAPX_API_URL } from '~/constants/uniswapx'
 import { useTotalBalancesUsdForAnalytics } from '~/features/Swap/hooks/useTotalBalancesUsdForAnalytics'
 import { formatSwapSignedAnalyticsEventProperties } from '~/lib/utils/analytics'
 import { useMultichainContext } from '~/state/multichain/useMultichainContext'
@@ -57,8 +57,6 @@ function isV2DutchAuctionOrderSuccess(response: any): response is V2DutchAuction
 const isErrorResponse = (res: Response, order: DutchAuctionOrderResponse): order is DutchAuctionOrderError =>
   res.status < 200 || res.status > 202
 
-const UNISWAP_GATEWAY_DNS_URL = getConfig().uniswapGatewayDns
-
 // getUpdatedNonce queries the UniswapX service for the most up-to-date nonce for a user.
 // The `nonce` exists as part of the Swap quote response already, but if a user submits back-to-back
 // swaps without refreshing the quote (and therefore uses the same nonce), then the subsequent swaps will fail.
@@ -67,7 +65,7 @@ async function getUpdatedNonce(swapper: string, chainId: number): Promise<BigNum
   try {
     // endpoint fetches current nonce
     const res = await fetch(
-      `${UNISWAP_GATEWAY_DNS_URL}/nonce?address=${getValidAddress({ address: swapper, chainId, withEVMChecksum: false })}&chainId=${chainId}`,
+      `${UNISWAPX_API_URL}/nonce?address=${getValidAddress({ address: swapper, chainId, withEVMChecksum: false })}&chainId=${chainId}`,
     )
 
     const { nonce } = await res.json()
@@ -299,7 +297,7 @@ export function useUniswapXSwapCallback({
         }
       }
 
-      const res = await fetch(`${UNISWAP_GATEWAY_DNS_URL}/${endpoint}`, {
+      const res = await fetch(`${UNISWAPX_API_URL}/${endpoint}`, {
         method: 'POST',
         body: JSON.stringify(body),
       })

@@ -26,10 +26,12 @@ import {
 // union enforces it so a consumer can't reach for a direction subtitle without one.
 type MarginPairHeadingProps =
   | { market: MarginMarket; variant: 'venue' }
+  | { market: MarginMarket; variant: 'pair' }
   | { market: MarginMarket; variant: 'direction'; position: MarginActivePosition }
 
 // Pair logo + "ETH / USDC" pair title with a subtitle: the lending venue + LLTV, or the position's
-// direction + opened leverage in the direction color. Shared by the review + action modals.
+// direction + opened leverage in the direction color. 'pair' is the open review's larger, bare title.
+// Shared by the review + action modals.
 export function MarginPairHeading(props: MarginPairHeadingProps): JSX.Element {
   const { market, variant } = props
   const { t } = useTranslation()
@@ -41,7 +43,7 @@ export function MarginPairHeading(props: MarginPairHeadingProps): JSX.Element {
     <Flex row alignItems="center" gap="$spacing12">
       <SplitLogo
         orientation="stacked"
-        size={32}
+        size={variant === 'pair' ? 36 : 32}
         chainId={MARGIN_CHAIN_ID}
         inputCurrencyInfo={null}
         outputCurrencyInfo={null}
@@ -50,10 +52,10 @@ export function MarginPairHeading(props: MarginPairHeadingProps): JSX.Element {
       {/* Flex defaults flexShrink 0, so the three-part direction subtitle would overflow the 420px
           sheet on a long symbol instead of wrapping. */}
       <Flex gap="$spacing2" flexShrink={1} minWidth={0}>
-        <Text variant="subheading1" color="$neutral1">
+        <Text variant={variant === 'pair' ? 'heading3' : 'subheading1'} color="$neutral1">
           {marginPairLabel({ market })}
         </Text>
-        {variant === 'venue' ? (
+        {variant === 'pair' ? null : variant === 'venue' ? (
           <Flex row alignItems="center" gap="$spacing6">
             <MarginVenueLogo venue={market.venue} size="$icon.16" />
             <Text variant="body3" color="$neutral2">

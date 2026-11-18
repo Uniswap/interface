@@ -70,6 +70,11 @@ export const TextCompat = React.forwardRef<Text, TextCompatProps>(function TextC
 
   const element = (
     <Text
+      // RN 0.86 on iOS reuses text frames measured at the old scale after a live
+      // Dynamic Type change, which clips text and drops adjustsFontSizeToFit to
+      // 4pt. A remount measures at the new scale.
+      // TODO: remove on RN 0.87, which has the fix (facebook/react-native#57246).
+      key={fontScale}
       ref={ref}
       {...nativeCompatProps(styleProps)}
       // RN Text has built-in pressability, so the behavioral press props

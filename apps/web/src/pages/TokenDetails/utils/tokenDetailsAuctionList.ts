@@ -1,8 +1,8 @@
 import type { PlainMessage } from '@bufbuild/protobuf'
 import type { Auction } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { areEvmAddressesEqual } from '@universe/chains'
-import { timestampToMs } from 'uniswap/src/data/apiClients/dataApiService/utils/protoTimestamp'
 import { AuctionTimePhase, getAuctionTimePhase } from 'uniswap/src/features/toucan/auctionTimePhase'
+import { timestampToMs } from 'utilities/src/time/protoTimestamp'
 
 const PHASE_ORDER: Record<AuctionTimePhase, number> = {
   [AuctionTimePhase.Live]: 0,

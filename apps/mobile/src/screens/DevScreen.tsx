@@ -111,8 +111,8 @@ export function DevScreen(): JSX.Element {
     dispatch(resetWallet())
   }
 
-  // Re-shows the one-time, persisted pools-balance coachmark (still needs the PortfolioPoolsBalances
-  // flag on and a wallet with a pools balance) so it can be tested repeatedly.
+  // Re-shows the one-time, persisted pools-balance coachmark (still needs a wallet with a pools balance)
+  // so it can be tested repeatedly.
   const onPressShowPoolsBalanceCoachmark = (): void => {
     dispatch(setPoolsBalanceCoachmarkDismissed(false))
   }

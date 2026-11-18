@@ -30,6 +30,8 @@ export type { PopoverCompatOffset, PopoverCompatPlacement }
  * (see `parity/popover/type-parity.ts`).
  */
 export type WebBottomSheetCompatProps = Omit<FlexCompatProps, 'children'> & {
+  /** Names the sheet's dialog; defaults to the popover content's `aria-label`. */
+  title?: string
   onClose?: () => void
   /** Legacy default true: adapt into a bottom sheet on small viewports. */
   adaptToSheet?: boolean
@@ -147,6 +149,14 @@ export interface AdaptiveWebPopoverContentOwnProps {
 }
 
 /**
+ * Names the popup's dialog, and the bottom sheet it becomes on small screens: a translated `aria-label`, or
+ * `aria-labelledby` pointing at a heading inside the content.
+ */
+type AdaptiveWebPopoverContentNameProps =
+  | { 'aria-label': string; 'aria-labelledby'?: never }
+  | { 'aria-labelledby': string; 'aria-label'?: never }
+
+/**
  * The full compat surface: the legacy component's own props + the leaked
  * Tamagui Popover.Content surface (YStack style props via the Flex compat
  * contract + the popover plumbing above). `zIndex` and `children` are managed
@@ -156,7 +166,8 @@ export type AdaptiveWebPopoverContentCompatProps = Omit<FlexCompatProps, 'childr
   PopoverContentInertProps &
   PopoverContentStyledVariantProps &
   PopoverContentFocusScopeCompatProps &
-  AdaptiveWebPopoverContentOwnProps
+  AdaptiveWebPopoverContentOwnProps &
+  AdaptiveWebPopoverContentNameProps
 
 /** The popover root surface the compat supports (the subset consumers drive today). */
 export interface PopoverCompatRootProps {
@@ -181,9 +192,15 @@ export interface PopoverCompatRootProps {
 }
 
 export interface PopoverCompatTriggerProps {
-  'aria-label'?: string
-  children?: React.ReactNode
-  className?: string
+  /** The trigger itself; it must forward its ref and props to its root element. */
+  children: React.ReactElement
+  /** Default true: the child renders a native `<button>`. Set false only for a child that can't be one. */
+  nativeButton?: boolean
+  /**
+   * Set false for a hover-only popover, so a click on the trigger doesn't pin it open. The trigger is then a
+   * plain hover region (no button role or tab stop), and `nativeButton` doesn't apply.
+   */
+  openOnClick?: boolean
   /**
    * Forwarded to the rendered trigger element, like the legacy Tamagui
    * trigger (`TamaguiElement` = `HTMLElement` on web) — consumers hold a
@@ -191,7 +208,4 @@ export interface PopoverCompatTriggerProps {
    * constrained dropdown heights), so this is deliberately not `HTMLDivElement`.
    */
   ref?: React.Ref<HTMLElement>
-  onMouseDown?: (event: React.MouseEvent<HTMLDivElement>) => void
-  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void
-  onContextMenu?: (event: React.MouseEvent<HTMLDivElement>) => void
 }

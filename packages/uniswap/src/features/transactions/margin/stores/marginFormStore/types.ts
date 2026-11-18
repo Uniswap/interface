@@ -11,6 +11,9 @@ export interface MarginFormState {
   side: MarginDirection
   // Raw user-entered payment amount, in payment-token display units.
   marginAmount: string
+  // The deposit's figure in the app's fiat currency. A pair or side switch clears marginAmount (old pay
+  // token's units) and the form re-enters this.
+  depositFiat?: string
   leverage: number
   isSubmitting: boolean
   // undefined = market default (collateral / native ETH).

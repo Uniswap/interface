@@ -2,18 +2,15 @@
  * Web leg of the RefreshButton compat (INFRA-3489) — the drop-in Tailwind
  * twin of the deleted legacy `ui/src` `RefreshButton` composite: a
  * hover-revealed refresh icon that spins one full turn per press, wrapped in
- * the compat tooltip showing the localized label plus the `R` keycap, with the
- * same window-level `R` keyboard shortcut.
+ * the compat tooltip showing the localized label.
  *
  * Behavior mirrored from legacy, deliberately:
  * - a press mid-spin restarts the one-second spin window and still refetches;
- * - the keyboard shortcut fires WITHOUT the spin and is not gated on
- *   `isLoading` — only `disabled` blocks it (and unregisters the listener);
  * - while loading, presses are ignored but the button stays hover-revealed
  *   (the in-flight spin remains visible) and the icon keeps its base color;
- * - `disabled` hides the button entirely (see `compile.ts`).
+ * - `disabled` keeps the button, announced as disabled, revealed on hover at reduced opacity (see `compile.ts`).
  *
- * Deliberate deltas, both visible in the type contract or ledgered in
+ * Deliberate deltas, visible in the type contract or ledgered in
  * `compile.ts`:
  * - `tooltipLabel` is a required prop (mycelium has no i18n runtime — see
  *   `props.ts`);
@@ -26,12 +23,11 @@ import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { cn } from '../cn'
 import { markMyceliumPrimitive } from '../compat/primitive-marker'
 import { RotateRight } from '../components/icons/RotateRight'
-import { FlexCompat } from '../flex-compat/FlexCompat'
 import { TextCompat } from '../text-compat/TextCompat'
 import { TooltipCompat } from '../tooltip-compat/TooltipCompat'
 import { TouchableAreaCompat } from '../touchable-area/TouchableAreaCompat'
 import { refreshButtonFrameClassName, refreshIconFrameClassName } from './compile'
-import { REFRESH_ICON_SIZE, REFRESH_SHORTCUT_KEYS, type RefreshButtonCompatProps } from './props'
+import { REFRESH_ICON_SIZE, type RefreshButtonCompatProps } from './props'
 
 /**
  * The legacy `RefreshButtonIcon`: the pressable frame + the spinning icon.
@@ -46,7 +42,8 @@ function RefreshButtonIconCompat({
   onPress,
   isLoading,
   disabled,
-}: Omit<RefreshButtonCompatProps, 'tooltipLabel'>): JSX.Element {
+  tooltipLabel,
+}: RefreshButtonCompatProps): JSX.Element {
   const [isAnimating, setIsAnimating] = useState(false)
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -80,10 +77,10 @@ function RefreshButtonIconCompat({
   }, [])
 
   return (
-    // TODO(INFRA-4589): the tooltip label doesn't name this icon-only button, so it's announced as an unnamed
-    // button (aria-command-name). Use the label as its aria-label.
     <TouchableAreaCompat
       className={refreshButtonFrameClassName({ isLoading, disabled })}
+      // The tooltip only shows on hover, so the label also names the icon-only button.
+      aria-label={tooltipLabel}
       disabled={isLoading || disabled}
       // Opts out of the injected animation, as legacy `RefreshButtonIcon` does; without it
       // the default and the frame's own `transition-opacity duration-100` both survive
@@ -113,51 +110,19 @@ export function RefreshButtonCompat({
   disabled,
   tooltipLabel,
 }: RefreshButtonCompatProps): JSX.Element {
-  useEffect(() => {
-    if (disabled) {
-      return undefined
-    }
-
-    const handleKeyDown = (e: KeyboardEvent): void => {
-      const target = e.target as HTMLElement
-      const isTypingInField = ['INPUT', 'TEXTAREA'].includes(target.tagName) || target.isContentEditable
-
-      if (REFRESH_SHORTCUT_KEYS.includes(e.key) && !isTypingInField) {
-        onPress()
-      }
-    }
-
-    // TODO(INFRA-4589): a single-key shortcut on the whole window fails WCAG 2.1.4: it fires on any "r" outside a
-    // text field, and users can't turn it off or remap it. Scope it to focus, or add a modifier.
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [onPress, disabled])
-
   return (
     <TooltipCompat delay={0} restMs={0} placement="bottom">
       <TooltipCompat.Trigger>
-        <RefreshButtonIconCompat disabled={disabled} isLoading={isLoading} onPress={onPress} />
+        <RefreshButtonIconCompat
+          disabled={disabled}
+          isLoading={isLoading}
+          tooltipLabel={tooltipLabel}
+          onPress={onPress}
+        />
       </TooltipCompat.Trigger>
       <TooltipCompat.Content>
         <TooltipCompat.Arrow />
-        <FlexCompat row gap="$gap8">
-          <TextCompat variant="body4">{tooltipLabel}</TextCompat>
-          <FlexCompat
-            centered
-            width="$spacing16"
-            height="$spacing16"
-            p="$spacing2"
-            borderRadius="$rounded4"
-            borderWidth="$spacing1"
-            borderColor="$neutral3"
-            shadowColor="$neutral3"
-            shadowOffset={{ height: 1, width: 0 }}
-          >
-            <TextCompat variant="body4" color="$neutral2">
-              R
-            </TextCompat>
-          </FlexCompat>
-        </FlexCompat>
+        <TextCompat variant="body4">{tooltipLabel}</TextCompat>
       </TooltipCompat.Content>
     </TooltipCompat>
   )

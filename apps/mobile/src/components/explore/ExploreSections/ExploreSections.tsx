@@ -1,10 +1,8 @@
 import { useScrollToTop } from '@react-navigation/native'
 import type { UniverseChainId } from '@universe/chains'
-import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import {
   Flex,
   Loader,
-  Text,
   UniversalList,
   type UniversalListRef,
   type UniversalListScrollEvent,
@@ -316,8 +314,6 @@ const ListHeader = memo(function ListHeader({
   onOrderByChange,
 }: ListHeaderProps): JSX.Element {
   const { t } = useTranslation()
-  // Flag off keeps the legacy Top tokens header; on switches to the standardized header treatment.
-  const tokenCategoriesEnabled = useIsTokenCategoriesEnabled()
 
   return (
     <Sortable.Layer>
@@ -326,25 +322,14 @@ const ListHeader = memo(function ListHeader({
         <StartEarningSection />
         <TrendingSection />
         <CollectionsSection />
-        {tokenCategoriesEnabled ? (
-          <ExploreSectionHeader
-            title={t('explore.tokens.top.title')}
-            rightElement={
-              <Flex flexShrink={1}>
-                <SortButton orderBy={orderBy} onOrderByChange={onOrderByChange} />
-              </Flex>
-            }
-          />
-        ) : (
-          <Flex row alignItems="center" justifyContent="space-between" px="$spacing12">
-            <Text color="$neutral2" flexShrink={0} paddingEnd="$spacing8" variant="subheading1">
-              {t('explore.tokens.top.title')}
-            </Text>
+        <ExploreSectionHeader
+          title={t('explore.tokens.top.title')}
+          rightElement={
             <Flex flexShrink={1}>
               <SortButton orderBy={orderBy} onOrderByChange={onOrderByChange} />
             </Flex>
-          </Flex>
-        )}
+          }
+        />
       </Flex>
     </Sortable.Layer>
   )

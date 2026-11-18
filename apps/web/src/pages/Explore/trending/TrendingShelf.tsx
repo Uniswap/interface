@@ -15,8 +15,11 @@ import { TokenCardCarousel } from '~/components/TokenCardCarousel/TokenCardCarou
 import { useCarouselLayout } from '~/components/TokenCardCarousel/useCarouselLayout'
 import { useHorizontalSnapCarousel } from '~/components/TokenCardCarousel/useHorizontalSnapCarousel'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '~/constants/breakpoints'
-import { getExploreTrendingTableURL, scrollToExploreTokenSection } from '~/pages/Explore/categories/useExploreCategory'
-import { AssetShelfHeader } from '~/pages/Explore/rwa/shelf/AssetShelfHeader'
+import {
+  getExploreTrendingTableURL,
+  scrollToExploreTokenSection,
+} from '~/features/Explore/categories/useExploreCategory'
+import { AssetShelfHeader } from '~/features/Explore/rwa/shelf/AssetShelfHeader'
 import { TrendingShelfTokenCard } from '~/pages/Explore/trending/TrendingShelfTokenCard'
 import {
   TRENDING_CAROUSEL_TOKEN_COUNT,
@@ -85,7 +88,13 @@ export function TrendingShelf(): JSX.Element | null {
   }
 
   return (
-    <Flex width="100%" maxWidth={MAX_WIDTH_MEDIA_BREAKPOINT} mx="auto" gap="$spacing12">
+    <Flex
+      width="100%"
+      maxWidth={MAX_WIDTH_MEDIA_BREAKPOINT}
+      mx="auto"
+      gap="$spacing12"
+      testID={TestID.ExploreTrendingShelf}
+    >
       <AssetShelfHeader
         title={t('common.trending')}
         badge={

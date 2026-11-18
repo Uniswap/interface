@@ -59,6 +59,14 @@ export type ExperimentProperties = {
   [Experiments.SwapConfirmation]: SwapConfirmationProperties
 }
 
+// Runtime mirror of ExperimentProperties, for dev menus that list or search experiment params.
+export const ExperimentPropertyNames: Record<Experiments, string[]> = {
+  [Experiments.EmbeddedWalletOnboarding]: Object.values(EmbeddedWalletOnboardingProperties),
+  [Experiments.EthAsErc20UniswapX]: Object.values(EthAsErc20UniswapXProperties),
+  [Experiments.NativeTokenPercentageBuffer]: Object.values(NativeTokenPercentageBufferProperties),
+  [Experiments.SwapConfirmation]: Object.values(SwapConfirmationProperties),
+}
+
 // will be a spread of all experiment properties in that layer
 export const LayerProperties: Record<Layers, string[]> = {
   [Layers.SwapPage]: Object.values(SwapLayerProperties),

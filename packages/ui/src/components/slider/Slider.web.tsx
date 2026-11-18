@@ -20,6 +20,7 @@ export function Slider({
   trackColor = '$surface3',
   activeColor = '$accent1',
   thumbColor = '$neutral1',
+  thumbBorderColor,
   trackHeight = 4,
   thumbSize = 16,
   height = 24,
@@ -121,6 +122,8 @@ export function Slider({
         height={thumbSize}
         borderRadius="$roundedFull"
         backgroundColor={thumbColor}
+        borderWidth={thumbBorderColor ? 1 : 0}
+        borderColor={thumbBorderColor}
         pointerEvents="none"
         style={{ left: thumbLeft, top: '50%', transform: 'translate(-50%, -50%)' }}
       />

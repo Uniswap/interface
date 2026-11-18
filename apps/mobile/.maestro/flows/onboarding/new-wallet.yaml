@@ -2,6 +2,7 @@ appId: com.uniswap.mobile.dev
 jsEngine: graaljs
 tags:
   - language-agnostic
+  - flow-new-wallet
 env:
   DATADOG_API_KEY: ${DATADOG_API_KEY}
   PLATFORM: ${PLATFORM}

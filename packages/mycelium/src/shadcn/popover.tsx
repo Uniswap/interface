@@ -73,6 +73,10 @@ function PopoverClose({ ...props }: PopoverPrimitive.Close.Props): React.JSX.Ele
   return <PopoverPrimitive.Close data-slot="popover-close" {...props} />
 }
 
+// Base UI mounts a nested portal inside its parent overlay's portal, and a host modal's portal target is
+// a gapped flex column: a boxed wrapper there would be a new flex item and resize the modal on every open.
+const PORTAL_WRAPPER_STYLE: React.CSSProperties = { display: 'contents' }
+
 function PopoverContent({
   align = 'center',
   alignOffset = 0,
@@ -102,7 +106,7 @@ function PopoverContent({
   }): React.JSX.Element {
   const contextAnchor = useContext(PopoverAnchorContext)?.anchor
   return (
-    <PopoverPrimitive.Portal container={portalContainer}>
+    <PopoverPrimitive.Portal container={portalContainer} style={PORTAL_WRAPPER_STYLE}>
       <PopoverPrimitive.Positioner
         data-slot="popover-positioner"
         className={POPOVER_RECIPE_CLASS_NAMES.positioner}

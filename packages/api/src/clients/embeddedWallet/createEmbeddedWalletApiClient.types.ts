@@ -1,10 +1,4 @@
-import { type CallOptions, type PromiseClient } from '@connectrpc/connect'
-import { EmbeddedWalletService as OldEmbeddedWalletService } from '@uniswap/client-embeddedwallet/dist/uniswap/embeddedwallet/v1/service_connect'
-import {
-  type Action as OldAction,
-  type AuthenticationTypes as OldAuthenticationTypes,
-  type SecuredChallengeResponse,
-} from '@uniswap/client-embeddedwallet/dist/uniswap/embeddedwallet/v1/service_pb'
+import { type CallOptions } from '@connectrpc/connect'
 import {
   type AddAuthenticatorResponse,
   type ChallengeResponse,
@@ -73,7 +67,6 @@ export interface EmbeddedWalletClientContext {
       options?: CallOptions,
     ) => Promise<ExportSeedPhraseResponse>
   }
-  legacyRpcClient?: PromiseClient<typeof OldEmbeddedWalletService>
 }
 
 export type ChallengeRequestParams = {
@@ -145,11 +138,6 @@ export interface EmbeddedWalletApiClient {
     credential?: string
     deviceAuth?: { deviceSignature: string; walletId: string; signingPayload?: string }
   }) => Promise<ListAuthenticatorsResponse>
-  fetchSecuredChallengeRequest: (params: {
-    type: OldAuthenticationTypes
-    action: OldAction
-    b64EncryptionPublicKey: string
-  }) => Promise<SecuredChallengeResponse>
   fetchExportSeedPhraseRequest: (params: ExportSeedPhraseParams) => Promise<ExportSeedPhraseResponse>
   fetchExportEncryptedSeedPhraseRequest: (params: ExportSeedPhraseParams) => Promise<ExportSeedPhraseResponse>
   fetchStartAuthenticatedSessionRequest: (params: {

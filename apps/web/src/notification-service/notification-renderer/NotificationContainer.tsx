@@ -89,12 +89,14 @@ export function NotificationContainer({
   onRenderFailed,
   onNotificationShown,
   onNotificationClick,
+  suppressLowerLeftBanners = false,
   store = useNotificationStore,
 }: {
   currentLocation: Pick<Location, 'pathname' | 'search' | 'hash'>
   onRenderFailed?: (notificationId: string) => void
   onNotificationShown?: (notificationId: string) => void
   onNotificationClick?: (notificationId: string, target: NotificationClickTarget) => void
+  suppressLowerLeftBanners?: boolean
   store?: UseBoundStore<StoreApi<NotificationState>>
 }) {
   const activeNotifications = store((state) => state.activeNotifications)
@@ -130,7 +132,9 @@ export function NotificationContainer({
       }
 
       if (style === ContentStyle.LOWER_LEFT_BANNER) {
-        lowerLeftBanners.push(notification)
+        if (!suppressLowerLeftBanners) {
+          lowerLeftBanners.push(notification)
+        }
       } else {
         others.push(notification)
       }
@@ -141,7 +145,7 @@ export function NotificationContainer({
       systemBannerNotifications: systemBanners,
       otherNotifications: others,
     }
-  }, [activeNotifications, currentLocation])
+  }, [activeNotifications, currentLocation, suppressLowerLeftBanners])
 
   return (
     <>

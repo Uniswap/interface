@@ -4,7 +4,7 @@ exports[`AccountSwitcher > renders correctly 1`] = `
 <DocumentFragment>
   <div
     class="css-view-175oi2r"
-    style="padding-bottom: 16px; max-height: -36px;"
+    style="padding-bottom: 16px;"
   >
     <div
       class="css-view-175oi2r"
@@ -78,7 +78,7 @@ exports[`AccountSwitcher > renders correctly 1`] = `
                 class="css-text-146c3p1 r-maxWidth-dnmrzs r-overflow-1udh08x r-textOverflow-1udbk01 r-whiteSpace-3s2u2q r-wordWrap-1iln25a"
                 data-testid="address-display/name/undefined"
                 dir="auto"
-                style="flex-shrink: 1; font-size: 19px; line-height: 24px; font-family: Basel Grotesk; font-weight: 400;"
+                style="flex-shrink: 1; font-size: 19px; line-height: 24px; font-family: "Basel Grotesk"; font-weight: 400;"
               />
             </div>
           </div>
@@ -87,14 +87,14 @@ exports[`AccountSwitcher > renders correctly 1`] = `
           >
             <div
               class="css-view-175oi2r"
-              style="margin-top: 0px; padding: 0px 0px 0px 0px; border-top-left-radius: 999999px; border-top-right-radius: 999999px; border-bottom-right-radius: 999999px; border-bottom-left-radius: 999999px;"
+              style="margin-top: 0px; padding: 0px; border-top-left-radius: 999999px; border-top-right-radius: 999999px; border-bottom-right-radius: 999999px; border-bottom-left-radius: 999999px;"
             >
               <button
                 accessibilityactions="[object Object]"
                 android_ripple="[object Object]"
                 data-testid="copy"
                 role="button"
-                style="background-color: transparent; gap: 4px;"
+                style="background-color: transparent; gap: 4px; color: inherit;"
               >
                 <div
                   class="css-view-175oi2r"
@@ -103,7 +103,7 @@ exports[`AccountSwitcher > renders correctly 1`] = `
                   <div
                     class="css-text-146c3p1"
                     dir="auto"
-                    style="font-size: 17px; line-height: 20px; font-family: Basel Grotesk; font-weight: 400;"
+                    style="font-size: 17px; line-height: 20px; font-family: "Basel Grotesk"; font-weight: 400;"
                   >
                     0x​82D56A...373Fa6
                   </div>
@@ -140,12 +140,11 @@ exports[`AccountSwitcher > renders correctly 1`] = `
           data-testid="wallet-settings"
           dd-action-name="account.wallet.button.manage"
           role="button"
-          style="transform: [object Object];"
         >
           <div
             class="css-text-146c3p1 r-maxWidth-dnmrzs r-overflow-1udh08x r-textOverflow-1udbk01 r-whiteSpace-3s2u2q r-wordWrap-1iln25a"
             dir="auto"
-            style="font-family: Basel Grotesk; font-weight: 500;"
+            style="font-family: "Basel Grotesk"; font-weight: 500;"
           >
             account.wallet.button.manage
           </div>
@@ -154,7 +153,6 @@ exports[`AccountSwitcher > renders correctly 1`] = `
     </div>
     <div
       class="css-view-175oi2r"
-      style="max-height: -18px;"
     >
       <div
         class="css-view-175oi2r"
@@ -177,7 +175,7 @@ exports[`AccountSwitcher > renders correctly 1`] = `
       >
         <div
           class="css-view-175oi2r"
-          style="box-shadow: 0px 0px 10px rgba(0,0,0,1.00); padding: 8px 8px 8px 8px; width: 32px; height: 32px; border-top-left-radius: 999999px; border-top-right-radius: 999999px; border-bottom-right-radius: 999999px; border-bottom-left-radius: 999999px; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px;"
+          style="box-shadow: 0px 0px 10px rgba(0,0,0,1.00); padding: 8px; width: 32px; height: 32px; border-top-left-radius: 999999px; border-top-right-radius: 999999px; border-bottom-right-radius: 999999px; border-bottom-left-radius: 999999px; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px;"
         >
           <div
             fill="none"
@@ -194,7 +192,7 @@ exports[`AccountSwitcher > renders correctly 1`] = `
         <div
           class="css-text-146c3p1 r-maxWidth-dnmrzs r-overflow-1udh08x r-textOverflow-1udbk01 r-whiteSpace-3s2u2q r-wordWrap-1iln25a"
           dir="auto"
-          style="width: 100%; font-size: 17px; line-height: 19.549999999999997px; font-family: Basel Grotesk; font-weight: 500;"
+          style="width: 100%; font-size: 17px; line-height: 19.549999999999997px; font-family: "Basel Grotesk"; font-weight: 500;"
         >
           account.wallet.button.add
         </div>

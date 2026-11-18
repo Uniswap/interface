@@ -2,7 +2,7 @@ import { UniverseChainId } from '@universe/chains'
 import { PoolTableSortState } from '~/data/pools/poolStats'
 import { useExploreTablesFilterStore } from '~/features/Explore/state/exploreTablesFilterStore'
 import { useExploreQueryLatencyTracking } from '~/features/Explore/state/useExploreQueryLatencyTracking'
-import { useV2ListPools } from '~/pages/Explore/hooks/useV2ListPools'
+import { useV2ListPools } from '~/features/Liquidity/hooks/useV2ListPools'
 import type { PoolStat } from '~/types/explore'
 import type { PoolsFilterState } from '~/types/poolsFilter'
 

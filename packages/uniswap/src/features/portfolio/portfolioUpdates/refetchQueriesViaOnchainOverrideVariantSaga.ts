@@ -4,20 +4,20 @@ import { Balance } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import { Portfolio } from '@uniswap/client-data-api/dist/data/v1/types_pb.d'
 import { SharedQueryClient } from '@universe/api'
 import { chainIdToPlatform } from '@universe/chains'
-import { all, call, delay, put } from 'typed-redux-saga'
-import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import {
   doesGetPortfolioQueryMatchAddress,
-  getPortfolioQueriesToUpdate,
-} from 'uniswap/src/data/apiClients/dataApiService/balances/getPortfolioQueryUtils'
+  doesProfitLossQueryMatchAddress,
+  NFT_QUERY_KEY_PREFIX,
+} from '@universe/data-api'
+import { all, call, delay, put } from 'typed-redux-saga'
+import { getNativeAddress } from 'uniswap/src/constants/addresses'
+import { getPortfolioQueriesToUpdate } from 'uniswap/src/data/apiClients/dataApiService/balances/getPortfolioQueryUtils'
 import { doesGetWalletBalancesQueryMatchAddress } from 'uniswap/src/data/apiClients/dataApiService/balances/getWalletBalances/getWalletBalances'
 import {
   type BalanceOverrideSnapshots,
   getBalanceOverrideStateForAddress,
   storeBalanceOverrideSnapshots,
 } from 'uniswap/src/data/apiClients/dataApiService/balances/portfolioBalanceOverrides'
-import { NFT_QUERY_KEY_PREFIX } from 'uniswap/src/data/apiClients/dataApiService/nfts/queries'
-import { doesProfitLossQueryMatchAddress } from 'uniswap/src/data/apiClients/dataApiService/performance/profitLossQueryUtils'
 import {
   fetchOnChainBalances,
   type OnChainMap,

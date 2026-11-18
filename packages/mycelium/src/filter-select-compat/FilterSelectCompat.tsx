@@ -103,7 +103,6 @@ export function FilterSelectCompat({
   return (
     <DropdownMenu open={isOpen} onOpenChange={handleOpenChange} modal={false}>
       <DropdownMenuTrigger
-        nativeButton={false}
         render={
           <TriggerButtonCompat
             isExpanded={isOpen}

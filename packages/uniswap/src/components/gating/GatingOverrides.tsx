@@ -3,12 +3,14 @@ import { isExtensionApp, isMobileApp } from '@universe/environment'
 import {
   DynamicConfigs,
   EmbeddedWalletConfigKey,
+  ExperimentPropertyNames,
   Experiments,
   ExtensionBiometricUnlockConfigKey,
   FeatureFlags,
   ForceUpgradeConfigKey,
   getFeatureFlagName,
   getOverrideAdapter,
+  LayerProperties,
   Layers,
   useDynamicConfigValue,
   useFeatureFlagWithExposureLoggingDisabled,
@@ -17,7 +19,7 @@ import {
 import { Flex, Text, Switch, Separator } from '@universe/mycelium'
 import { Accordion } from '@universe/mycelium'
 import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
-import React, { PropsWithChildren, useCallback } from 'react'
+import React, { memo, PropsWithChildren, useCallback, useDeferredValue, useState } from 'react'
 import { ComplianceOverrides } from 'uniswap/src/components/gating/ComplianceOverrides'
 import {
   DynamicConfigDropdown,
@@ -33,37 +35,59 @@ import { ExperimentRow, LayerRow } from 'uniswap/src/components/gating/Rows'
 import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
 import { useForceUpgradeStatus } from 'uniswap/src/features/forceUpgrade/hooks/useForceUpgradeStatus'
 import { useForceUpgradeTranslations } from 'uniswap/src/features/forceUpgrade/hooks/useForceUpgradeTranslations'
+import { SearchTextInput } from 'uniswap/src/features/search/SearchTextInput'
+import { matchesAllWords } from 'utilities/src/primitives/string'
 import { useEvent } from 'utilities/src/react/hooks'
 
-export function GatingOverrides(): JSX.Element {
-  const featureFlagRows: JSX.Element[] = []
-  const sortedFlags = Array.from(WALLET_FEATURE_FLAG_NAMES.entries()).sort(([, nameA], [, nameB]) =>
-    nameA.localeCompare(nameB),
+const SORTED_WALLET_FLAGS = Array.from(WALLET_FEATURE_FLAG_NAMES.entries()).sort(([, nameA], [, nameB]) =>
+  nameA.localeCompare(nameB),
+)
+const ALL_EXPERIMENTS = Object.values(Experiments)
+const ALL_LAYERS = Object.values(Layers)
+
+function renderFeatureFlagRow([flag, flagName]: [FeatureFlags, string]): JSX.Element {
+  return <FeatureFlagRow key={flagName} flag={flag} />
+}
+
+function renderExperimentRow(experiment: Experiments): JSX.Element {
+  return (
+    <Flex key={experiment} gap="$gap8">
+      <Separator />
+      <ExperimentRow value={experiment} />
+    </Flex>
   )
+}
 
-  for (const [flag, flagName] of sortedFlags) {
-    featureFlagRows.push(<FeatureFlagRow key={flagName} flag={flag} />)
-  }
+function renderLayerRow(layer: Layers): JSX.Element {
+  return (
+    <Flex key={layer} gap="$gap8">
+      <Separator />
+      <LayerRow value={layer} />
+    </Flex>
+  )
+}
 
-  const experimentRows: JSX.Element[] = []
-  for (const experiment of Object.values(Experiments)) {
-    experimentRows.push(
-      <Flex key={experiment} gap="$gap8">
-        <Separator />
-        <ExperimentRow key={experiment} value={experiment} />
-      </Flex>,
-    )
-  }
+export function GatingOverrides(): JSX.Element {
+  const [searchQuery, setSearchQuery] = useState('')
+  // Filtering mounts/unmounts dozens of rows; deferring it keeps the controlled input responsive.
+  const deferredQuery = useDeferredValue(searchQuery)
+  const isSearching = deferredQuery.trim().length > 0
 
-  const layerRows: JSX.Element[] = []
-  for (const layer of Object.values(Layers)) {
-    layerRows.push(
-      <Flex key={layer} gap="$gap8">
-        <Separator />
-        <LayerRow key={layer} value={layer} />
-      </Flex>,
-    )
-  }
+  const featureFlagRows = SORTED_WALLET_FLAGS.map(renderFeatureFlagRow)
+  const experimentRows = ALL_EXPERIMENTS.map(renderExperimentRow)
+  const layerRows = ALL_LAYERS.map(renderLayerRow)
+
+  const matchingFeatureFlagRows = isSearching
+    ? SORTED_WALLET_FLAGS.filter(([, flagName]) => matchesAllWords(deferredQuery, flagName)).map(renderFeatureFlagRow)
+    : []
+  const matchingExperimentRows = isSearching
+    ? ALL_EXPERIMENTS.filter((experiment) =>
+        matchesAllWords(deferredQuery, experiment, ...ExperimentPropertyNames[experiment]),
+      ).map(renderExperimentRow)
+    : []
+  const matchingLayerRows = isSearching
+    ? ALL_LAYERS.filter((layer) => matchesAllWords(deferredQuery, layer, ...LayerProperties[layer])).map(renderLayerRow)
+    : []
 
   const onClearAllLocalFeatureGateOverrides = useEvent(() => {
     WALLET_FEATURE_FLAG_NAMES.forEach((flag) => {
@@ -97,9 +121,46 @@ export function GatingOverrides(): JSX.Element {
     clearComplianceOverrides()
   })
 
+  const embeddedWalletBaseUrl = useDynamicConfigValue({
+    config: DynamicConfigs.EmbeddedWalletConfig,
+    key: EmbeddedWalletConfigKey.BaseUrl,
+    defaultValue: UNISWAP_WEB_URL,
+  })
+  const forceUpgradeStatus = useForceUpgradeStatus()
+  const forceUpgradeTranslations = useForceUpgradeTranslations()
+
+  const searchInput = (
+    <SearchTextInput
+      placeholder="Search flags, experiments, layers"
+      py="$spacing8"
+      value={searchQuery}
+      onChangeText={setSearchQuery}
+    />
+  )
+
+  const hasResults =
+    matchingFeatureFlagRows.length > 0 || matchingExperimentRows.length > 0 || matchingLayerRows.length > 0
+  // Accordion sections start collapsed, so results are listed flat instead of inside them.
+  const searchResults = (
+    <Flex gap="$spacing12" mt="$spacing12">
+      <SearchResultsSection title="⛳️ Feature Flags">{matchingFeatureFlagRows}</SearchResultsSection>
+      <SearchResultsSection title="🔬 Experiments">{matchingExperimentRows}</SearchResultsSection>
+      <SearchResultsSection title="💇 Layers">{matchingLayerRows}</SearchResultsSection>
+      {!hasResults && (
+        <Text variant="body2" color="$neutral3" py="$spacing16" textAlign="center">
+          No results
+        </Text>
+      )}
+    </Flex>
+  )
+
+  // The accordion stays mounted (just hidden) while searching, so clearing the search doesn't rebuild an open
+  // section's rows. searchInput must keep its tree position, or it remounts and drops focus on each keystroke.
   return (
     <>
-      <Flex flexDirection="column">
+      {searchInput}
+      {isSearching && searchResults}
+      <Flex flexDirection="column" display={isSearching ? 'none' : 'flex'}>
         <Accordion.Item value="feature-flags">
           <AccordionHeader title="⛳️ Feature Flags" />
 
@@ -176,11 +237,7 @@ export function GatingOverrides(): JSX.Element {
                   configKey={EmbeddedWalletConfigKey.BaseUrl}
                   label="Base URL"
                   options={EMBEDDED_WALLET_BASE_URL_OPTIONS}
-                  selected={useDynamicConfigValue({
-                    config: DynamicConfigs.EmbeddedWalletConfig,
-                    key: EmbeddedWalletConfigKey.BaseUrl,
-                    defaultValue: UNISWAP_WEB_URL,
-                  })}
+                  selected={embeddedWalletBaseUrl}
                 />
               </DynamicConfigGroup>
 
@@ -190,7 +247,7 @@ export function GatingOverrides(): JSX.Element {
                   configKey={ForceUpgradeConfigKey.Status}
                   label="Status"
                   options={FORCE_UPGRADE_STATUS_OPTIONS}
-                  selected={useForceUpgradeStatus()}
+                  selected={forceUpgradeStatus}
                 />
 
                 <DynamicConfigDropdown
@@ -198,7 +255,7 @@ export function GatingOverrides(): JSX.Element {
                   configKey={ForceUpgradeConfigKey.Translations}
                   label="Translations"
                   options={FORCE_UPGRADE_TRANSLATIONS_OPTIONS}
-                  selected={JSON.stringify(useForceUpgradeTranslations())}
+                  selected={JSON.stringify(forceUpgradeTranslations)}
                 />
               </DynamicConfigGroup>
             </Flex>
@@ -240,7 +297,7 @@ export function AccordionHeader({ title, testId }: { title: React.ReactNode; tes
   )
 }
 
-function FeatureFlagRow({ flag }: { flag: FeatureFlags }): JSX.Element {
+const FeatureFlagRow = memo(function FeatureFlagRow({ flag }: { flag: FeatureFlags }): JSX.Element {
   const status = useFeatureFlagWithExposureLoggingDisabled(flag)
   const name = getFeatureFlagName(flag)
   const onCheckedChange = useCallback(
@@ -260,6 +317,18 @@ function FeatureFlagRow({ flag }: { flag: FeatureFlags }): JSX.Element {
       <Flex minWidth={52}>
         <Switch checked={status} variant="branded" onCheckedChange={onCheckedChange} />
       </Flex>
+    </Flex>
+  )
+})
+
+function SearchResultsSection({ title, children }: { title: string; children: JSX.Element[] }): JSX.Element | null {
+  if (children.length === 0) {
+    return null
+  }
+  return (
+    <Flex gap="$spacing12">
+      <Text variant="subheading1">{title}</Text>
+      {children}
     </Flex>
   )
 }

@@ -5,6 +5,7 @@ import type { EthTransactionParams } from '@universe/embedded-wallet/src/feature
 import { hexToNumber, isValidHexString } from '@universe/encoding'
 import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { transformTradingApiUserOpToRpcUserOp } from 'uniswap/src/features/smartWallet/userOp/transformTradingApiUserOp'
+import { GasSponsorshipNotAppliedError } from 'uniswap/src/features/transactions/swap/errors'
 import { toTradingApiSupportedChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 
 /**
@@ -27,6 +28,8 @@ export interface WalletSendCallsRequest {
  *  1. Sponsored (paymaster present) → encode as ERC-4337 PackedUserOperation
  *     via Trading API `encode_4337`, sign with the provider's `signUserOp`,
  *     submit to the EntryGateway bundler. Batch id = bundler-issued `userOpHash`.
+ *     Throws `GasSponsorshipNotAppliedError` if the paymaster did not sponsor the
+ *     UserOp; it never falls back to an unsponsored one.
  *  2. Non-sponsored, ANY number of calls → encode as a Calibur multicall via
  *     `sendTransaction` (which maps all calls into `encode_7702`).
  *     Batch id = on-chain `transactionHash`.
@@ -111,6 +114,12 @@ export async function sendEmbeddedWalletCalls(ctx: {
     })
 
     const rpcUserOp = transformTradingApiUserOpToRpcUserOp(encoded.userOperation)
+    // The caller asked for sponsorship, so the user was shown a sponsored ("Free") fee. When the
+    // paymaster refuses, encode_4337 still returns an unsponsored UserOp; signing it would prefund
+    // and charge gas from the user's balance. Fail closed instead (SWAP-3839).
+    if (encoded.gasSponsored !== true || !rpcUserOp.paymaster) {
+      throw new GasSponsorshipNotAppliedError(encoded.gasSponsorshipRejectionReason)
+    }
     const signedUserOp = await signUserOp(rpcUserOp)
     const userOpHash = await sendUserOperationToBundler(signedUserOp, chainId)
     return { id: userOpHash }

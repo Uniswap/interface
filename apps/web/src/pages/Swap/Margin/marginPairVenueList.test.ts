@@ -5,10 +5,10 @@ import { MARGIN_CHAIN_ID, type MarginPairGroup, USDC, USDT, WETH } from '~/const
 import {
   buildMarginPairRows,
   filterMarginPairRows,
-  marginAssetFilterOptions,
-  marginDebtFilterOptions,
-  marginPairCategoryIds,
+  marginPairDeepestVenue,
+  marginPairLowestBorrowRateBps,
   marginPairMaxLeverage,
+  mergeMarginPairSides,
 } from '~/pages/Swap/Margin/marginPairVenueList'
 
 const CBBTC = { address: '0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf', symbol: 'cbBTC', decimals: 8 } as const
@@ -122,6 +122,33 @@ describe('marginPairMaxLeverage', () => {
   })
 })
 
+describe('marginPairLowestBorrowRateBps', () => {
+  it('is the cheapest rate among the venues not opted out, undefined while none carries one', () => {
+    const [all] = buildMarginPairRows({ groups: [ETH_USDC_LONG], excludedVenues: [] })
+    expect(marginPairLowestBorrowRateBps(all)).toBe(420)
+    const [withoutMorpho] = buildMarginPairRows({ groups: [ETH_USDC_LONG], excludedVenues: ['MORPHO'] })
+    expect(marginPairLowestBorrowRateBps(withoutMorpho)).toBe(510)
+    const [unrated] = buildMarginPairRows({ groups: [ETH_USDT_LONG], excludedVenues: [] })
+    expect(marginPairLowestBorrowRateBps(unrated)).toBeUndefined()
+  })
+})
+
+describe('marginPairDeepestVenue', () => {
+  it('is the venue with the most borrowable liquidity, skipping venues without a figure', () => {
+    const group: MarginPairGroup = {
+      ...ETH_USDC_LONG,
+      pairs: ETH_USDC_LONG.pairs.map((pair, index) => ({
+        ...pair,
+        availableBorrowLiquidity: [undefined, '900000000', '45000000'][index],
+      })),
+    }
+    const [row] = buildMarginPairRows({ groups: [group], excludedVenues: [] })
+    expect(marginPairDeepestVenue(row)?.venue).toBe('AAVE_V3')
+    const [unknown] = buildMarginPairRows({ groups: [ETH_USDT_LONG], excludedVenues: [] })
+    expect(marginPairDeepestVenue(unknown)).toBeUndefined()
+  })
+})
+
 describe('filterMarginPairRows', () => {
   const rows = buildMarginPairRows({ groups: ALL_GROUPS, excludedVenues: [] })
   const keys = (filtered: ReturnType<typeof filterMarginPairRows>): string[] => filtered.map((row) => row.group.key)
@@ -150,57 +177,25 @@ describe('filterMarginPairRows', () => {
     expect(search('zzz')).toEqual([])
   })
 
-  // Data API category ids, keyed by lowercase address. USDC carries one too, to prove the stable leg never
-  // puts a pair in a category.
-  const categoryIdsByToken = new Map<string, readonly string[]>([
-    [WETH.address.toLowerCase(), ['majors']],
-    [CBBTC.address.toLowerCase(), ['majors']],
-    [WSTETH.address.toLowerCase(), ['defi']],
-    [USDC.address.toLowerCase(), ['stablecoins']],
-  ])
-
-  it('narrows to a backend category by the traded token alone', () => {
-    const inCategory = (categoryId: string): string[] =>
-      keys(filterMarginPairRows({ rows, direction: MarginDirection.LONG, categoryId, categoryIdsByToken, tokenName }))
-    expect(inCategory('defi')).toEqual(['wsteth-usdc-long'])
-    expect(inCategory('majors')).toEqual(['eth-usdc-long', 'eth-usdt-long', 'cbbtc-usdc-long'])
-    expect(inCategory('stablecoins')).toEqual([])
-  })
-
-  it('matches nothing in a category when no token carries category data', () => {
-    expect(keys(filterMarginPairRows({ rows, categoryId: 'majors', tokenName }))).toEqual([])
-  })
-
-  it('offers only the categories the listed traded tokens carry', () => {
-    const shortRows = filterMarginPairRows({ rows, direction: MarginDirection.SHORT, tokenName })
-    expect([...marginPairCategoryIds({ rows, categoryIdsByToken })].sort()).toEqual(['defi', 'majors'])
-    expect([...marginPairCategoryIds({ rows: shortRows, categoryIdsByToken })]).toEqual(['majors'])
-    expect(marginPairCategoryIds({ rows, categoryIdsByToken: new Map() }).size).toBe(0)
-  })
-
-  it('filters by long asset and by debt asset, which is the traded token on a short', () => {
-    expect(keys(filterMarginPairRows({ rows, asset: CBBTC.address.toLowerCase(), tokenName }))).toEqual([
-      'cbbtc-usdc-long',
+  it('filters by quote token, which both sides of a pair share', () => {
+    expect(keys(filterMarginPairRows({ rows, quote: USDT.address.toLowerCase(), tokenName }))).toEqual([
+      'eth-usdt-long',
     ])
-    expect(keys(filterMarginPairRows({ rows, debt: WETH.address.toLowerCase(), tokenName }))).toEqual([
+    expect(keys(filterMarginPairRows({ rows, quote: USDC.address.toLowerCase(), tokenName }))).toEqual([
+      'eth-usdc-long',
+      'cbbtc-usdc-long',
+      'wsteth-usdc-long',
       'eth-usdc-short',
     ])
-    expect(keys(filterMarginPairRows({ rows, debt: USDT.address.toLowerCase(), tokenName }))).toEqual(['eth-usdt-long'])
   })
 })
 
-describe('filter options', () => {
-  const longRows = filterMarginPairRows({
-    rows: buildMarginPairRows({ groups: ALL_GROUPS, excludedVenues: [] }),
-    direction: MarginDirection.LONG,
-    tokenName,
-  })
-
-  it('lists each traded token once, in pair order', () => {
-    expect(marginAssetFilterOptions(longRows).map((option) => option.token.symbol)).toEqual(['WETH', 'cbBTC', 'wstETH'])
-  })
-
-  it('lists each borrowed token once', () => {
-    expect(marginDebtFilterOptions(longRows).map((option) => option.token.symbol)).toEqual(['USDC', 'USDT'])
+describe('mergeMarginPairSides', () => {
+  it('folds a pair’s long and short into one entry, Long first, pairs in first-seen order', () => {
+    const rows = buildMarginPairRows({ groups: [ETH_USDC_SHORT, ETH_USDT_LONG, ETH_USDC_LONG], excludedVenues: [] })
+    expect(mergeMarginPairSides(rows).map((sides) => sides.map((side) => side.group.key))).toEqual([
+      ['eth-usdc-long', 'eth-usdc-short'],
+      ['eth-usdt-long'],
+    ])
   })
 })

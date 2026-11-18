@@ -1,44 +1,22 @@
-import { useAuthorizationSignature, useLoginWithEmail, useLoginWithOAuth, usePrivy } from '@privy-io/react-auth'
 import { renderHook } from '@testing-library/react'
-import { getPrivyConfig } from '~/config'
 import {
   useMaybeAuthorizationSignature,
   useMaybeLoginWithEmail,
   useMaybeLoginWithOAuth,
   useMaybePrivy,
 } from '~/features/wallet/hooks/useMaybePrivy'
-
-vi.mock('@privy-io/react-auth', () => ({
-  usePrivy: vi.fn(),
-  useLoginWithOAuth: vi.fn(),
-  useLoginWithEmail: vi.fn(),
-  useAuthorizationSignature: vi.fn(),
-}))
-
-vi.mock('~/config', () => ({
-  getPrivyConfig: vi.fn(),
-}))
-
-const setConfigured = (configured: boolean): void => {
-  vi.mocked(getPrivyConfig).mockReturnValue(
-    configured ? { appId: 'app-id', clientId: 'client-id' } : { appId: '', clientId: '' },
-  )
-}
+import { OAUTH_EVENT_FANOUT } from '~/features/wallet/privy/privyRuntimeStore'
+import { publishTestPrivyRuntime, resetPrivyRuntime } from '~/test-utils/privyRuntime'
 
 describe('useMaybePrivy hooks', () => {
-  beforeEach(() => {
-    vi.clearAllMocks()
+  afterEach(() => {
+    resetPrivyRuntime()
   })
 
-  describe('when Privy is not configured', () => {
-    beforeEach(() => {
-      setConfigured(false)
-    })
-
-    it('useMaybePrivy returns safe defaults without calling usePrivy', async () => {
+  describe('before the Privy runtime publishes', () => {
+    it('useMaybePrivy returns logged-out defaults', async () => {
       const { result } = renderHook(() => useMaybePrivy())
 
-      expect(usePrivy).not.toHaveBeenCalled()
       expect(result.current.ready).toBe(false)
       expect(result.current.authenticated).toBe(false)
       expect(result.current.user).toBeNull()
@@ -46,78 +24,52 @@ describe('useMaybePrivy hooks', () => {
       await expect(result.current.logout()).resolves.toBeUndefined()
     })
 
-    it('useMaybeLoginWithOAuth returns safe defaults without calling useLoginWithOAuth', async () => {
-      const { result } = renderHook(() => useMaybeLoginWithOAuth())
+    it('useMaybeLoginWithOAuth and useMaybeLoginWithEmail are no-ops', async () => {
+      const oauth = renderHook(() => useMaybeLoginWithOAuth()).result.current
+      const email = renderHook(() => useMaybeLoginWithEmail()).result.current
 
-      expect(useLoginWithOAuth).not.toHaveBeenCalled()
-      expect(result.current.loading).toBe(false)
-      await expect(result.current.initOAuth({ provider: 'google' })).resolves.toBeUndefined()
-    })
-
-    it('useMaybeLoginWithEmail returns safe defaults without calling useLoginWithEmail', async () => {
-      const { result } = renderHook(() => useMaybeLoginWithEmail())
-
-      expect(useLoginWithEmail).not.toHaveBeenCalled()
-      await expect(result.current.sendCode({ email: 'a@b.com' })).resolves.toBeUndefined()
-      await expect(result.current.loginWithCode({ code: '123456' })).resolves.toBeUndefined()
+      expect(oauth.loading).toBe(false)
+      await expect(oauth.initOAuth({ provider: 'google' })).resolves.toBeUndefined()
+      await expect(email.sendCode({ email: 'a@b.com' })).resolves.toBeUndefined()
+      await expect(email.loginWithCode({ code: '123456' })).resolves.toBeUndefined()
     })
 
     it('useMaybeAuthorizationSignature rejects rather than fabricating a signature', async () => {
       const { result } = renderHook(() => useMaybeAuthorizationSignature())
 
-      expect(useAuthorizationSignature).not.toHaveBeenCalled()
-      await expect(result.current.generateAuthorizationSignature({} as never)).rejects.toThrow(
-        'Privy is not configured',
-      )
+      await expect(result.current.generateAuthorizationSignature({} as never)).rejects.toThrow('Privy is not available')
     })
   })
 
-  describe('when Privy is configured', () => {
-    beforeEach(() => {
-      setConfigured(true)
+  it('serves what the runtime publishes and re-renders on later publishes', () => {
+    const { result } = renderHook(() => useMaybePrivy())
+    expect(result.current.ready).toBe(false)
+
+    publishTestPrivyRuntime({ privy: { ready: true, authenticated: true } })
+
+    expect(result.current.ready).toBe(true)
+    expect(result.current.authenticated).toBe(true)
+  })
+
+  it('forwards OAuth events to the latest callbacks of every mounted consumer until unmount', () => {
+    const first = vi.fn()
+    const replaced = vi.fn()
+    const other = vi.fn()
+    const { rerender, unmount } = renderHook(({ onError }) => useMaybeLoginWithOAuth({ onError }), {
+      initialProps: { onError: first },
     })
+    renderHook(() => useMaybeLoginWithOAuth({ onError: other }))
 
-    it('useMaybePrivy returns the real usePrivy result', () => {
-      const value = { ready: true } as unknown as ReturnType<typeof usePrivy>
-      vi.mocked(usePrivy).mockReturnValue(value)
+    rerender({ onError: replaced })
+    OAUTH_EVENT_FANOUT.onError?.('denied' as never)
 
-      const { result } = renderHook(() => useMaybePrivy())
+    expect(first).not.toHaveBeenCalled()
+    expect(replaced).toHaveBeenCalledWith('denied')
+    expect(other).toHaveBeenCalledWith('denied')
 
-      expect(usePrivy).toHaveBeenCalled()
-      expect(result.current).toBe(value)
-    })
-
-    it('useMaybeLoginWithOAuth forwards callbacks to the real hook', () => {
-      const value = { initOAuth: vi.fn(), loading: true } as unknown as ReturnType<typeof useLoginWithOAuth>
-      vi.mocked(useLoginWithOAuth).mockReturnValue(value)
-      const callbacks = { onError: vi.fn() }
-
-      const { result } = renderHook(() => useMaybeLoginWithOAuth(callbacks))
-
-      expect(useLoginWithOAuth).toHaveBeenCalledWith(callbacks)
-      expect(result.current).toBe(value)
-    })
-
-    it('useMaybeLoginWithEmail returns the real hook result', () => {
-      const value = { sendCode: vi.fn(), loginWithCode: vi.fn() } as unknown as ReturnType<typeof useLoginWithEmail>
-      vi.mocked(useLoginWithEmail).mockReturnValue(value)
-
-      const { result } = renderHook(() => useMaybeLoginWithEmail())
-
-      expect(useLoginWithEmail).toHaveBeenCalled()
-      expect(result.current).toBe(value)
-    })
-
-    it('useMaybeAuthorizationSignature returns the real hook result', () => {
-      const value = {
-        generateAuthorizationSignature: vi.fn(),
-      } as unknown as ReturnType<typeof useAuthorizationSignature>
-      vi.mocked(useAuthorizationSignature).mockReturnValue(value)
-
-      const { result } = renderHook(() => useMaybeAuthorizationSignature())
-
-      expect(useAuthorizationSignature).toHaveBeenCalled()
-      expect(result.current).toBe(value)
-    })
+    unmount()
+    OAUTH_EVENT_FANOUT.onError?.('again' as never)
+    expect(replaced).toHaveBeenCalledTimes(1)
+    expect(other).toHaveBeenCalledTimes(2)
   })
 })

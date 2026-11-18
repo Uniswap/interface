@@ -1,6 +1,7 @@
 import { Flex, Text, TouchableArea, useIsTouchDevice, WebBottomSheet } from '@universe/mycelium'
 import { MoreHorizontal } from '@universe/mycelium/icons/MoreHorizontal'
 import { TestID } from '@universe/test'
+import { useTranslation } from 'react-i18next'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { Dropdown } from '~/components/Dropdowns/Dropdown'
 import { ActionButtonStyle } from '~/components/StickyCollapsibleHeader/HeaderActions/ActionButtonStyle'
@@ -25,6 +26,7 @@ export function MobileHeaderActions({
   actionSections,
   presentation = 'dropdown',
 }: MobileHeaderActionsProps): JSX.Element {
+  const { t } = useTranslation()
   const { value: isOpen, setTrue: open, setFalse: close, setValue: setIsOpen } = useBooleanState(false)
   const isTouchDevice = useIsTouchDevice()
   const isSheet = presentation === 'sheet'
@@ -109,12 +111,13 @@ export function MobileHeaderActions({
       <TouchableArea
         {...ActionButtonStyle}
         testID={TestID.HeaderActionsMoreButton}
+        aria-label={t('common.moreOptions')}
         onPress={open}
         justifyContent="center"
       >
         {moreIcon}
       </TouchableArea>
-      <WebBottomSheet isOpen={isOpen} onClose={close}>
+      <WebBottomSheet isOpen={isOpen} title={t('common.moreOptions')} onClose={close}>
         <Flex gap="$spacing24" mx="$spacing24" mb="$spacing24">
           {sections}
         </Flex>

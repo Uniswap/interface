@@ -4,13 +4,13 @@ import type { FormEvent } from 'react'
 import { Route, Routes } from 'react-router'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { LIVE_POOL_VOLUME_PERIODS } from '~/components/Charts/timeLabels'
 import { TimePeriod } from '~/data/util'
 import {
   ExploreTablesFilterStoreContextProvider,
   useExploreTablesFilterStore,
   useExploreTablesFilterStoreActions,
 } from '~/features/Explore/state/exploreTablesFilterStore'
-import { LIVE_POOL_VOLUME_PERIODS } from '~/features/Explore/timeLabels'
 import { VolumeTimeFrameSelector } from '~/features/Explore/VolumeTimeFrameSelector'
 import { mockMediaSize } from '~/test-utils/mockMediaSize'
 import { fireEvent, render, screen, waitFor } from '~/test-utils/render'

@@ -83,7 +83,6 @@ import { StatsigProviderWrapper } from 'uniswap/src/features/gating/StatsigProvi
 import { mapLanguageToLocale } from 'uniswap/src/features/language/constants'
 import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
 import { clearNotificationQueue } from 'uniswap/src/features/notifications/slice/slice'
-import { usePoolsBalanceCoachmarkStateInit } from 'uniswap/src/features/portfolio/PortfolioBalance/usePoolsBalanceCoachmarkStateInit'
 import { RemotePriceProvider } from 'uniswap/src/features/prices/RemotePriceProvider'
 import { selectCurrentLanguage } from 'uniswap/src/features/settings/selectors'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
@@ -433,7 +432,6 @@ function DataUpdaters(): JSX.Element {
   useLastBalancesReporter({ isOnboarded: !!finishedOnboarding })
   useTestnetModeForLoggingAndAnalytics()
   useSyncWidgetUserDefaults()
-  usePoolsBalanceCoachmarkStateInit()
 
   return (
     <>

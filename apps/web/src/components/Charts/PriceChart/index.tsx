@@ -1,4 +1,5 @@
-export { MAX_PLOTTABLE_VALUE, PriceChartModel } from '~/components/Charts/PriceChart/PriceChartModel'
 export { type PriceChartData } from '~/utils/charts'
+export { MAX_PLOTTABLE_VALUE } from '~/components/Charts/PriceChart/lowPriceScale'
+export { PriceChartModel } from '~/components/Charts/PriceChart/PriceChartModel'
 export { PriceChartBody } from '~/components/Charts/PriceChart/PriceChartBody'
 export { PriceChart } from '~/components/Charts/PriceChart/PriceChart'

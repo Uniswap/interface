@@ -1,22 +1,17 @@
 import type { UniverseChainId } from '@universe/chains'
-import { DynamicConfigs, useIsTokenCategoriesEnabled } from '@universe/gating'
 import { Flex, ScrollView, Text, TouchableArea, useMedia, ModalCloseIcon } from '@universe/mycelium'
 import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
 import { AdaptiveWebPopoverContentCompat, PopoverCompat as Popover } from '@universe/mycelium/popover-compat'
-import { fonts } from '@universe/mycelium/tokens'
+import { useShadowPropsMedium } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
 import { type ReactNode, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter/NetworkFilter'
-import { useAllTokenCategories } from 'uniswap/src/data/apiClients/dataApiService/categories/useAllTokenCategories'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { SearchTextInput } from 'uniswap/src/features/search/SearchTextInput'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
-import { useCategoryOrder } from 'uniswap/src/features/tokenCategories/useCategoryOrder'
-import { type RestTokens, useRestTokensQuery } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import {
   useMarginFormStore,
   useMarginFormStoreActions,
@@ -24,7 +19,6 @@ import {
 import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { useEvent } from 'utilities/src/react/hooks'
 import { MARGIN_CHAIN_ID, type MarginTokenInfo } from '~/constants/margin'
-import { MarginVenueLogo } from '~/features/margin/components/MarginVenueLogo'
 import {
   getMarginCurrencyInfo,
   getMarginPairLogoProps,
@@ -32,35 +26,28 @@ import {
 } from '~/features/margin/hooks/useMarginCurrencyInfos'
 import { useMarginMarkets } from '~/features/margin/hooks/useMarginMarkets'
 import { marginTokenCurrencyId } from '~/features/margin/utils/marginCurrencies'
-import { getMarginDirectionStyle, lltvToPercent, marginVenueLabel } from '~/features/margin/utils/marginFormat'
+import { getMarginDirectionStyle } from '~/features/margin/utils/marginFormat'
 import {
   marginMarketDirection,
   marginPairLabel,
   marginPairLegs,
   marginUnwrapName,
 } from '~/features/margin/utils/marginTokenDisplay'
-import { MarginCategoryChips, MarginTokenFilter } from '~/pages/Swap/Margin/components/MarginMarketSelectorFilters'
+import { MarginSideFilter, MarginTokenFilter } from '~/pages/Swap/Margin/components/MarginMarketSelectorFilters'
 import { MarginPairRow, PairColumnHeader } from '~/pages/Swap/Margin/components/MarginMarketSelectorRows'
-import { MarginSideToggle } from '~/pages/Swap/Margin/components/MarginSideToggle'
 import { useMarginSupportedChainIds } from '~/pages/Swap/Margin/hooks/useMarginSupportedChainIds'
 import {
   buildMarginPairRows,
   filterMarginPairRows,
-  marginAssetFilterOptions,
-  marginDebtFilterOptions,
-  marginPairCategoryIds,
   type MarginPairRowData,
-  marginTokenKey,
+  marginQuoteFilterOptions,
+  mergeMarginPairSides,
 } from '~/pages/Swap/Margin/marginPairVenueList'
 
-// Wide enough for the chips and both token filters on one row.
 const PANEL_WIDTH = 760
 const LIST_MAX_HEIGHT = 448
-// Below this the token filters wrap under the category chips instead of squeezing them.
-const CATEGORY_ROW_MIN_WIDTH = 240
-const SIDE_TOGGLE_WIDTH = 128
-const SEARCH_HEIGHT = 40
-const NO_CATEGORIES: TokenCategory[] = []
+// Below this the search takes its own line and the filters wrap under it.
+const SEARCH_MIN_WIDTH = 280
 
 function tokenDisplayName({
   token,
@@ -73,8 +60,8 @@ function tokenDisplayName({
   return marginUnwrapName({ address: token.address, name: info?.currency.name ?? token.symbol })
 }
 
-// Collapsed pair header: dual token icons, "<base> / <quote>", a Long/Short badge, the venue +
-// LLTV, and a chevron. Tapping it opens the selector modal.
+// Collapsed pair header: dual token icons, "<base> / <quote>", a Long/Short badge and a chevron. No venue or
+// LLTV: both depend on the market the quote routes to. Tapping it opens the selector modal.
 function PairHeaderButton({
   onPress,
   currencyInfos,
@@ -148,17 +135,6 @@ function PairHeaderButton({
               </Flex>
             )}
           </Flex>
-          <Flex row alignItems="center" gap="$spacing6">
-            <MarginVenueLogo venue={market.venue} size="$icon.16" />
-            <Text variant="body4" color="$neutral2" numberOfLines={1} flexShrink={1}>
-              {market.lltvWad !== '0'
-                ? t('margin.market.venueLltv', {
-                    venue: marginVenueLabel(market.venue),
-                    lltv: lltvToPercent(market.lltvWad).toFixed(0),
-                  })
-                : marginVenueLabel(market.venue)}
-            </Text>
-          </Flex>
         </Flex>
         <RotatableChevron direction="right" size="$icon.20" color="$neutral2" />
       </Flex>
@@ -184,9 +160,6 @@ function SelectorTitleRow({ onClose, showClose }: { onClose: () => void; showClo
         <Text variant="subheading1" color="$neutral1">
           {t('margin.selector.title')}
         </Text>
-      </Flex>
-      <Flex width={SIDE_TOGGLE_WIDTH}>
-        <MarginSideToggle />
       </Flex>
       {showClose ? <ModalCloseIcon onClose={onClose} /> : null}
     </Flex>
@@ -218,80 +191,36 @@ function MarketSelectorContent({ onClose, isSheet }: { onClose: () => void; isSh
   const compact = media.md
   const { setMarginFormState } = useMarginFormStoreActions()
   const direction = useMarginFormStore((s) => s.side)
+  const currentPairKey = useMarginFormStore((s) => s.pairKey)
   const excludedVenues = useMarginFormStore((s) => s.excludedVenues)
   const currencyInfos = useMarginCurrencyInfos()
 
   const [query, setQuery] = useState('')
-  const [categoryId, setCategoryId] = useState<string | undefined>(undefined)
-  const [assetFilter, setAssetFilter] = useState<string | undefined>(undefined)
-  const [debtFilter, setDebtFilter] = useState<string | undefined>(undefined)
+  const [quoteFilter, setQuoteFilter] = useState<string | undefined>(undefined)
   const [chainFilter, setChainFilter] = useState<UniverseChainId | null>(null)
+  const [sideFilter, setSideFilter] = useState<MarginDirection | undefined>(undefined)
 
   const { groups, isLoading } = useMarginMarkets()
   const allRows = useMemo(() => buildMarginPairRows({ groups, excludedVenues }), [groups, excludedVenues])
+  // Nothing to filter while every pair is on one network.
+  const isMultiChain = new Set(allRows.map((row) => row.chainId)).size > 1
 
   // A plain callback, not useEvent: the filters below must recompute when currency names resolve.
   const tokenName = useCallback((token: MarginTokenInfo) => tokenDisplayName({ token, currencyInfos }), [currencyInfos])
 
-  // Category chips are the data API's own token taxonomy (the token selector's chips), matched on each
-  // pair's traded token; with categories off, or no listed token tagged, there are no chips.
-  const isTokenCategoriesEnabled = useIsTokenCategoriesEnabled()
-  const baseTokens = useMemo(
-    () => [...new Map(groups.map((group) => [marginTokenKey(group.base), group.base])).values()],
-    [groups],
+  const chainRows = useMemo(
+    () => filterMarginPairRows({ rows: allRows, chainId: chainFilter ?? undefined, tokenName }),
+    [allRows, chainFilter, tokenName],
   )
-  const baseCurrencyIds = useMemo(() => baseTokens.map((token) => marginTokenCurrencyId(token)), [baseTokens])
-  // Positional: the response lines up with the request, and WETH is requested as native ETH, so keying
-  // by the response's own address would miss it.
-  const selectCategoryIdsByToken = useCallback(
-    (tokens: RestTokens) =>
-      new Map(baseTokens.map((token, index) => [marginTokenKey(token), tokens[index]?.categoryIds ?? []])),
-    [baseTokens],
-  )
-  const { data: categoryIdsByToken } = useRestTokensQuery(baseCurrencyIds, {
-    skip: !isTokenCategoriesEnabled,
-    select: selectCategoryIdsByToken,
-  })
-  const { categories } = useAllTokenCategories()
-  const orderedCategories = useCategoryOrder({ categories, config: DynamicConfigs.TokenCategoriesOrder })
-
-  const directionRows = useMemo(
-    () => filterMarginPairRows({ rows: allRows, direction, chainId: chainFilter ?? undefined, tokenName }),
-    [allRows, direction, chainFilter, tokenName],
-  )
-  const chipCategories = useMemo(() => {
-    if (!categoryIdsByToken) {
-      return NO_CATEGORIES
-    }
-    const present = marginPairCategoryIds({ rows: directionRows, categoryIdsByToken })
-    return orderedCategories.filter((category) => present.has(category.id))
-  }, [categoryIdsByToken, directionRows, orderedCategories])
-  const activeCategoryId = chipCategories.some((category) => category.id === categoryId) ? categoryId : undefined
-
-  const sideRows = useMemo(
-    () => filterMarginPairRows({ rows: directionRows, categoryId: activeCategoryId, categoryIdsByToken, tokenName }),
-    [directionRows, activeCategoryId, categoryIdsByToken, tokenName],
-  )
-  // A token filter the current side has no pair for (cbBTC longs but never shorts; a long's USDC debt
-  // is never a short's) stands down rather than emptying the list after a side flip.
-  const activeAsset = sideRows.some((row) => marginTokenKey(row.group.base) === assetFilter) ? assetFilter : undefined
-  const activeDebt = marginDebtFilterOptions(sideRows).some((option) => option.address === debtFilter)
-    ? debtFilter
-    : undefined
-
-  const rows = useMemo(
-    () => filterMarginPairRows({ rows: sideRows, query, asset: activeAsset, debt: activeDebt, tokenName }),
-    [sideRows, query, activeAsset, activeDebt, tokenName],
-  )
-  // Faceted: the asset menu lists only what the chosen debt asset trades against and vice versa, so a
-  // pick is never a dead end.
-  const assetOptions = useMemo(
-    () => marginAssetFilterOptions(filterMarginPairRows({ rows: sideRows, debt: activeDebt, tokenName })),
-    [sideRows, activeDebt, tokenName],
-  )
-  const debtOptions = useMemo(
-    () => marginDebtFilterOptions(filterMarginPairRows({ rows: sideRows, asset: activeAsset, tokenName })),
-    [sideRows, activeAsset, tokenName],
+  const quoteOptions = useMemo(() => marginQuoteFilterOptions(chainRows), [chainRows])
+  // A quote the network has no pair for stands down rather than emptying the list.
+  const activeQuote = quoteOptions.some((option) => option.address === quoteFilter) ? quoteFilter : undefined
+  const pairs = useMemo(
+    () =>
+      mergeMarginPairSides(
+        filterMarginPairRows({ rows: chainRows, query, direction: sideFilter, quote: activeQuote, tokenName }),
+      ),
+    [chainRows, query, sideFilter, activeQuote, tokenName],
   )
 
   // Pair and direction in one write. Any venue pin is cleared so routing picks the pair's market, and any
@@ -302,97 +231,74 @@ function MarketSelectorContent({ onClose, isSheet }: { onClose: () => void; isSh
       paymentToken: undefined,
       side: group.direction,
       pinnedVenue: undefined,
+      // A new pair remounts the form, which re-enters the deposit's fiat figure (depositFiat).
+      ...(group.pairKey === currentPairKey ? {} : { marginAmount: '' }),
     })
     onClose()
   })
 
-  const isFiltered = Boolean(query.trim() || chainFilter || activeCategoryId || activeAsset || activeDebt)
-  const emptyCopy = isFiltered
-    ? t('margin.selector.empty')
-    : direction === MarginDirection.SHORT
-      ? t('margin.selector.emptySideShort')
-      : t('margin.selector.emptySideLong')
+  const isFiltered = Boolean(query.trim() || chainFilter || activeQuote || sideFilter)
+  const emptyCopy = isFiltered ? t('margin.selector.empty') : t('margin.market.empty')
 
   return (
     <Flex p={isSheet ? '$spacing4' : '$spacing20'} gap="$spacing16" width="100%">
       <SelectorTitleRow showClose={!isSheet} onClose={onClose} />
-      <SearchTextInput
-        borderColor="$surface3"
-        borderWidth={1}
-        placeholder={t('margin.selector.searchPlaceholder')}
-        px="$spacing12"
-        py="$none"
-        minHeight={SEARCH_HEIGHT}
-        fontSize={fonts.body2.fontSize}
-        lineHeight={fonts.body2.fontSize}
-        value={query}
-        endAdornment={
-          <NetworkFilter
-            includeAllNetworks
-            dropdownOnMobile
-            showSearchInput={false}
-            chainIds={supportedChainIds}
-            selectedChain={chainFilter}
-            onPressChain={setChainFilter}
-          />
-        }
-        onChangeText={setQuery}
-      />
-      {/* Raised so an open token-filter menu drops over the list below. */}
-      <Flex row alignItems="center" flexWrap="wrap" gap="$spacing8" zIndex={1}>
-        <Flex flexGrow={1} flexShrink={1} flexBasis={0} minWidth={CATEGORY_ROW_MIN_WIDTH}>
-          <MarginCategoryChips
-            categories={chipCategories}
-            categoryId={activeCategoryId}
-            onSelectCategory={setCategoryId}
+      {/* Raised so an open filter menu drops over the list below. */}
+      <Flex row flexWrap="wrap" alignItems="center" gap="$spacing8" zIndex={1}>
+        <Flex flexGrow={1} flexShrink={1} flexBasis={SEARCH_MIN_WIDTH} minWidth={0}>
+          {/* The token selector's search field. */}
+          <SearchTextInput
+            backgroundColor="$surface2"
+            placeholder={t('margin.selector.searchPlaceholder')}
+            px="$spacing16"
+            py="$none"
+            value={query}
+            endAdornment={
+              isMultiChain ? (
+                <NetworkFilter
+                  includeAllNetworks
+                  dropdownOnMobile
+                  showSearchInput={false}
+                  chainIds={supportedChainIds}
+                  selectedChain={chainFilter}
+                  onPressChain={setChainFilter}
+                />
+              ) : null
+            }
+            onChangeText={setQuery}
           />
         </Flex>
         <Flex row alignItems="center" gap="$spacing8">
           <MarginTokenFilter
-            label={
-              direction === MarginDirection.SHORT
-                ? t('margin.selector.assetFilter.short')
-                : t('margin.selector.assetFilter.long')
-            }
-            anyLabel={
-              direction === MarginDirection.SHORT
-                ? t('margin.selector.assetFilter.anyShort')
-                : t('margin.selector.assetFilter.anyLong')
-            }
+            label={t('margin.selector.quoteFilter.label')}
+            anyLabel={t('margin.selector.quoteFilter.any')}
             currencyInfos={currencyInfos}
-            options={assetOptions}
-            selected={activeAsset}
-            testID={TestID.MarginAssetFilter}
-            optionTestIdPrefix={TestID.MarginAssetFilterOptionPrefix}
-            onSelect={setAssetFilter}
-          />
-          <MarginTokenFilter
-            label={t('margin.selector.debtFilter.label')}
-            anyLabel={t('margin.selector.debtFilter.any')}
-            currencyInfos={currencyInfos}
-            options={debtOptions}
-            selected={activeDebt}
-            testID={TestID.MarginDebtFilter}
-            optionTestIdPrefix={TestID.MarginDebtFilterOptionPrefix}
+            options={quoteOptions}
+            selected={activeQuote}
+            testID={TestID.MarginQuoteFilter}
+            optionTestIdPrefix={TestID.MarginQuoteFilterOptionPrefix}
             alignRight
-            onSelect={setDebtFilter}
+            onSelect={setQuoteFilter}
           />
+          <MarginSideFilter selected={sideFilter} onSelect={setSideFilter} />
         </Flex>
       </Flex>
       <Flex>
         <PairColumnHeader compact={compact} />
         <ScrollView maxHeight={LIST_MAX_HEIGHT} showsVerticalScrollIndicator={false}>
           <Flex gap="$spacing4">
-            {rows.map((row) => (
+            {pairs.map((sides) => (
               <MarginPairRow
-                key={row.group.key}
-                row={row}
+                key={sides[0].group.key}
+                // A press lands on the form's side when the pair trades it, else on the side it has.
+                row={sides.find((side) => side.group.direction === direction) ?? sides[0]}
+                sides={sides}
                 currencyInfos={currencyInfos}
                 compact={compact}
                 onSelect={onSelectPair}
               />
             ))}
-            {rows.length === 0 ? <ListStatus isLoading={isLoading} emptyCopy={emptyCopy} /> : null}
+            {pairs.length === 0 ? <ListStatus isLoading={isLoading} emptyCopy={emptyCopy} /> : null}
           </Flex>
         </ScrollView>
       </Flex>
@@ -425,7 +331,9 @@ export function MarginMarketSelectorAnchor({
   compact: boolean
   children: (isOpen: boolean) => ReactNode
 }): JSX.Element {
+  const { t } = useTranslation()
   const media = useMedia()
+  const shadowProps = useShadowPropsMedium()
   const [isOpen, setIsOpen] = useState(false)
   const toggle = useEvent(() => setIsOpen((open) => !open))
   const close = useEvent(() => setIsOpen(false))
@@ -448,11 +356,12 @@ export function MarginMarketSelectorAnchor({
     <Popover open={isOpen} placement="bottom-start" strategy="fixed" offset={8} allowFlip onOpenChange={setIsOpen}>
       {/* No onPress: the compat trigger wires the open interaction itself and reports via onOpenChange. */}
       <Popover.Trigger>
-        <TouchableArea flexShrink={1} minWidth={0}>
+        <TouchableArea tag="button" flexShrink={1} minWidth={0}>
           {triggerContent}
         </TouchableArea>
       </Popover.Trigger>
       <AdaptiveWebPopoverContentCompat
+        aria-label={t('margin.selector.title')}
         isOpen={isOpen}
         adaptWhen={media.md}
         testID={TestID.MarginMarketSelectorPanel}
@@ -462,6 +371,7 @@ export function MarginMarketSelectorAnchor({
         borderRadius="$rounded16"
         borderWidth="$spacing1"
         borderColor="$surface3"
+        {...shadowProps}
       >
         <MarketSelectorContent isSheet={media.md} onClose={close} />
       </AdaptiveWebPopoverContentCompat>

@@ -1,4 +1,4 @@
-import { DynamicConfigs, useIsTokenCategoriesEnabled } from '@universe/gating'
+import { DynamicConfigs } from '@universe/gating'
 import { useEffect, useMemo, useState } from 'react'
 import type { TokenOption } from 'uniswap/src/components/lists/items/types'
 import { type OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
@@ -38,13 +38,12 @@ export function useCategoryFilterChips({
   isLoading: boolean
   isBalancesOnlySearch: boolean
 }): CategoryFilterChipsState {
-  const enabled = useIsTokenCategoriesEnabled()
   const { categories, isLoading: isCategoriesLoading } = useAllTokenCategories()
   const orderedCategories = useCategoryOrder({ categories, config: DynamicConfigs.TokenCategoriesOrder })
   const [selectedIds, setSelectedIds] = useState<string[]>(NO_IDS)
 
   const chips = useMemo(() => {
-    if (!enabled || !sections) {
+    if (!sections) {
       return NO_CHIPS
     }
     // Hidden (spam) balances would otherwise add a chip on expand that vanishes on collapse.
@@ -54,7 +53,7 @@ export function useCategoryFilterChips({
     const derived = deriveCategoryFilterChips({ options, categories: orderedCategories })
     // Every balances-only row is already the user's token, so "My tokens" would filter nothing.
     return isBalancesOnlySearch ? derived.filter((chip) => chip.id !== MY_TOKENS_CHIP_ID) : derived
-  }, [enabled, sections, orderedCategories, isBalancesOnlySearch])
+  }, [sections, orderedCategories, isBalancesOnlySearch])
 
   const activeIds = useMemo(() => resolveActiveChipIds({ selectedIds, chips }), [selectedIds, chips])
   // Prune state too so a departed chip comes back inactive; skip the empty loading frame every new query passes through.
@@ -82,7 +81,7 @@ export function useCategoryFilterChips({
   // Balances-only rows filter local portfolio data, which may carry no categories at all, so a placeholder could sit
   // over a chip row that never fills.
   const showSkeleton =
-    enabled && !isBalancesOnlySearch && chips.length === 0 && ((isLoading && !sections?.length) || isCategoriesLoading)
+    !isBalancesOnlySearch && chips.length === 0 && ((isLoading && !sections?.length) || isCategoriesLoading)
 
   return {
     chips,

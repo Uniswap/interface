@@ -1,5 +1,5 @@
 import { EXPANDABLE_ASSET_TABLE_SHELL_PADDING_PX } from 'uniswap/src/features/expandableAsset/expandableAssetLayout'
-import { getTokenDescriptionColumnSize } from '~/pages/Explore/tables/Tokens/TokenDescription'
+import { getTokenDescriptionColumnSize } from '~/features/Explore/components/TokenDescription'
 
 export const EXPANDABLE_ASSET_TABLE_ROW_HEIGHT = 64
 

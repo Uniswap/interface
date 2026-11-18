@@ -9,10 +9,12 @@ import {
   useIsShortMobileDevice,
   iconSizes,
 } from '@universe/mycelium'
+import { type WarningLevel, WarningLine } from '@universe/transactions-ui'
 import { memo, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { WarningLabel, type WarningWithStyle } from 'uniswap/src/components/modals/WarningModal/types'
+import { toWarningLevel } from 'uniswap/src/components/modals/WarningModal/utils'
 import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
 import { InsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
 import { useInsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/useInsufficientNativeTokenWarning'
@@ -143,7 +145,7 @@ export const GasAndWarningRows = memo(function GasAndWarningRows(): JSX.Element 
         {showFormWarning && (
           <FormWarning
             Icon={formScreenWarning.Icon}
-            textColor={formScreenWarning.color.text}
+            level={toWarningLevel(formScreenWarning.warning.severity)}
             warningTitle={formScreenWarning.warning.title}
             showResetGas={showResetGas}
             onSwapWarningClick={onSwapWarningClick}
@@ -170,14 +172,14 @@ export const GasAndWarningRows = memo(function GasAndWarningRows(): JSX.Element 
 // If you modify this component, make sure you don't pass complex objects as props that would change on every render.
 const FormWarning = memo(function FormWarning({
   Icon,
-  textColor,
+  level,
   warningTitle,
   showResetGas,
   onSwapWarningClick,
   onResetGas,
 }: {
-  Icon?: WarningWithStyle['Icon']
-  textColor: WarningWithStyle['color']['text']
+  Icon: WarningWithStyle['Icon']
+  level?: WarningLevel
   warningTitle: WarningWithStyle['warning']['title']
   showResetGas: boolean
   onSwapWarningClick: () => void
@@ -187,14 +189,7 @@ const FormWarning = memo(function FormWarning({
 
   return (
     <AnimatedFlex centered entering={FadeIn} exiting={FadeOut} gap="$spacing4" px="$spacing24">
-      <TouchableArea onPress={onSwapWarningClick}>
-        <Flex centered row gap="$spacing8">
-          {Icon && <Icon color={textColor} size="$icon.16" strokeWidth={1.5} />}
-          <Text color={textColor} textAlign="center" variant="body3">
-            {warningTitle}
-          </Text>
-        </Flex>
-      </TouchableArea>
+      <WarningLine Icon={Icon} layout="center" level={level} message={warningTitle} onPress={onSwapWarningClick} />
       {showResetGas && (
         <TouchableArea testID="gas-info-row-reset-gas" onPress={onResetGas}>
           <Text color="$accent1" textAlign="center" variant="body3">

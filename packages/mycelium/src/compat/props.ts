@@ -366,10 +366,10 @@ export interface CompatEventProps {
   onTouchCancel?(this: void, event: React.TouchEvent<HTMLElement>): void
   onTouchEndCapture?(this: void, event: React.TouchEvent<HTMLElement>): void
   onPointerOut?(this: void, event: React.PointerEvent<HTMLElement>): void
-  // Raw DOM handlers with no Tamagui composed equivalent, forwarded verbatim.
-  // `onScroll` lives on `FlexCompatOwnEventProps` instead, since ScrollViewCompat
-  // already owns a differently-shaped `onScroll` on this shared surface.
+  // Raw DOM handlers with no Tamagui composed equivalent, forwarded verbatim. `onScroll` lives on
+  // `FlexCompatOwnEventProps` instead: ScrollViewCompat owns a differently-shaped one on this surface.
   onKeyDown?(this: void, event: React.KeyboardEvent<HTMLElement>): void
+  onKeyUp?(this: void, event: React.KeyboardEvent<HTMLElement>): void
   onAnimationEnd?(this: void, event: React.AnimationEvent<HTMLElement>): void
   onTransitionEnd?(this: void, event: React.TransitionEvent<HTMLElement>): void
 }

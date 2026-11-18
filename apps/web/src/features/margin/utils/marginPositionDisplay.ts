@@ -54,7 +54,7 @@ export function isShortCollateral({
 // leg; with none it falls back to the wire's own exposure/counter token, whose decimals are always
 // present — rendering the raw integer instead would misstate the figure by orders of magnitude. The
 // fallback symbol is best-effort: a token outside the markets registry has none, and the pair column
-// already carries the fallback label.
+// already carries the fallback label. Past `compactFrom` it takes the one-decimal compact form ("453.4K").
 export function marginAmountLabel({
   raw,
   leg = 'exposure',
@@ -63,6 +63,7 @@ export function marginAmountLabel({
   currencyInfos,
   formatNumberOrString,
   signed = false,
+  compactFrom = Number.POSITIVE_INFINITY,
 }: {
   raw: string
   leg?: MarginAmountLeg
@@ -71,6 +72,7 @@ export function marginAmountLabel({
   currencyInfos: Map<string, CurrencyInfo>
   formatNumberOrString: FormatNumberOrString
   signed?: boolean
+  compactFrom?: number
 }): string {
   const marketLeg = market
     ? leg === 'collateral'
@@ -82,7 +84,11 @@ export function marginAmountLabel({
   const symbol = marketLeg
     ? marginUnwrapSymbol(marketLeg)
     : resolveMarginFallbackSymbol({ address: wireToken.address, currencyInfos })
-  const format = (value: number): string => formatNumberOrString({ value, type: NumberType.TokenNonTx })
+  const format = (value: number): string =>
+    formatNumberOrString({
+      value,
+      type: Math.abs(value) >= compactFrom ? NumberType.TokenQuantityStats : NumberType.TokenNonTx,
+    })
   const value = rawToNumber({ raw, decimals })
   const amount = signed ? formatSignedFiat({ value, format }) : format(value)
   return symbol ? `${amount} ${symbol}` : amount

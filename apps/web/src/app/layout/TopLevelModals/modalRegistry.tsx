@@ -12,7 +12,9 @@ const PendingWalletConnectionModal = createLazyNoReload(
   () => import('~/features/wallet/components/WalletModal/PendingWalletConnectionModal/PendingWalletConnectionModal'),
 )
 const UniwalletModal = createLazyNoReload(() => import('~/features/wallet/components/AccountDrawer/UniwalletModal'))
-const OffchainActivityModal = createLazyNoReload(() => import('~/components/modals/OffchainActivityModal'))
+const OffchainActivityModal = createLazyNoReload(
+  () => import('~/features/transactions/components/OffchainActivityModal/OffchainActivityModal'),
+)
 const TransactionDetailsModalDispatcher = createLazyNoReload(() =>
   import('~/app/layout/TopLevelModals/TransactionDetailsModalDispatcher').then((module) => ({
     default: module.TransactionDetailsModalDispatcher,
@@ -89,7 +91,7 @@ const ReportTokenDataModal = createLazy(() =>
 )
 
 const DataApiOutageModal = createLazy(() =>
-  import('~/components/DataApiOutageModal').then((module) => ({ default: module.DataApiOutageModal })),
+  import('~/app/layout/TopLevelModals/DataApiOutageModal').then((module) => ({ default: module.DataApiOutageModal })),
 )
 
 const AddBackupLoginModal = createLazy(() =>

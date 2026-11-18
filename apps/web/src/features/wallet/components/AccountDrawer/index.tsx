@@ -2,8 +2,10 @@ import { isMobileWeb } from '@universe/environment'
 import { Flex, zIndexes } from '@universe/mycelium'
 import { TestID } from '@universe/test'
 import { useAtom } from 'jotai'
-import { useEffect, useMemo } from 'react'
+import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { RemoveScroll } from 'ui/src'
+import { useDismissLayer } from 'utilities/src/react/useDismissLayer'
 import { AdaptiveDropdown } from '~/components/Dropdowns/AdaptiveDropdown'
 import { DefaultMenu } from '~/features/wallet/components/AccountDrawer/DefaultMenu'
 import { WebNotificationToastWrapper } from '~/features/wallet/components/AccountDrawer/WebNotificationToastWrapper'
@@ -14,6 +16,7 @@ import { useAccountDrawer } from '~/state/accountDrawer/hooks'
 export const MODAL_WIDTH = '368px'
 
 function Drawer({ children }: { children: JSX.Element | JSX.Element[] }): JSX.Element {
+  const { t } = useTranslation()
   const accountDrawer = useAccountDrawer()
   const headerHeight = useAppHeaderHeight()
   const [web3StatusRef] = useAtom(Web3StatusRef)
@@ -40,6 +43,7 @@ function Drawer({ children }: { children: JSX.Element | JSX.Element[] }): JSX.El
         isOpen={accountDrawer.isOpen}
         toggleOpen={(open: boolean) => (open ? accountDrawer.open() : accountDrawer.close())}
         adaptToSheet
+        title={t('common.wallet.label')}
         ignoredNodes={ignoredNodes}
         ignoreDialogClicks
         dropdownStyle={{
@@ -60,21 +64,8 @@ function Drawer({ children }: { children: JSX.Element | JSX.Element[] }): JSX.El
 export function AccountDrawer(): JSX.Element {
   const accountDrawer = useAccountDrawer()
 
-  // close on escape keypress
-  useEffect(() => {
-    const escapeKeyDownHandler = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && accountDrawer.isOpen) {
-        event.preventDefault()
-        accountDrawer.close()
-      }
-    }
-
-    document.addEventListener('keydown', escapeKeyDownHandler)
-
-    return () => {
-      document.removeEventListener('keydown', escapeKeyDownHandler)
-    }
-  }, [accountDrawer])
+  // Escape closes the drawer only while it is the top open layer (a dialog or menu above it keeps the key).
+  useDismissLayer({ isOpen: accountDrawer.isOpen, onClose: accountDrawer.close })
 
   return (
     <RemoveScroll enabled={accountDrawer.isOpen && isMobileWeb}>

@@ -22,6 +22,7 @@
     "@universe/chains": "workspace:^",
     "@universe/compliance": "workspace:^",
     "@universe/config": "workspace:^",
+    "@universe/data-api": "workspace:^",
     "@universe/embedded-wallet": "workspace:^",
     "@universe/encoding": "workspace:^",
     "@universe/gating": "workspace:^",
@@ -84,7 +85,7 @@
     "dotenv": "16.0.3",
     "jest-chrome": "0.8.0",
     "jest-extended": "4.0.2",
-    "jsdom": "20.0.3",
+    "jsdom": "30.1.3",
     "ms": "2.1.3",
     "vitest": "5.0.5",
     "vitest-presets": "workspace:^"

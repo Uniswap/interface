@@ -12,7 +12,6 @@ const breakdown = (tokensUSD: number | undefined, poolsUSD: number | undefined):
 const NO_SCRUB = { total: undefined, tokens: undefined, pools: undefined, earn: undefined }
 
 const baseInput = {
-  poolsEnabled: true,
   poolsUnavailable: false,
   chartUnavailable: false,
   breakdown: breakdown(8368, 7373),
@@ -33,16 +32,11 @@ const baseInput = {
 }
 
 describe('getBreakdownCardProps', () => {
-  it('hides the card when the pools flag is off and there is no earn balance', () => {
-    expect(getBreakdownCardProps({ ...baseInput, poolsEnabled: false })).toBeUndefined()
-  })
-
-  it('shows Earn while omitting pools when the pools flag is off', () => {
+  it('shows Earn while omitting pools when the wallet has no pools balance', () => {
     const result = getBreakdownCardProps({
       ...baseInput,
-      poolsEnabled: false,
       breakdown: {
-        ...breakdown(8368, 7373),
+        ...breakdown(8368, 0),
         earn: { balanceUSD: 3259, percentChange: 2.2, absoluteChangeUSD: 70 },
       },
     })
@@ -143,7 +137,6 @@ describe('getBreakdownCardProps', () => {
   it('uses Earn values from the scrubbed timestamp and selected period', () => {
     const result = getBreakdownCardProps({
       ...baseInput,
-      poolsEnabled: false,
       breakdown: {
         ...breakdown(60, undefined),
         total: { balanceUSD: 110, percentChange: 2.2, absoluteChangeUSD: 2.4 },

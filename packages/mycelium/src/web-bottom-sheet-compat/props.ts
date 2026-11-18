@@ -19,6 +19,8 @@ export const WEB_BOTTOM_SHEET_OVERLAY_TEST_ID = 'mycelium-web-bottom-sheet-overl
 export type WebBottomSheetProps = Omit<FlexCompatProps, 'children'> &
   React.PropsWithChildren<{
     isOpen: boolean
+    /** Names the sheet's dialog for assistive tech; visually hidden. A translated heading for what the sheet holds. */
+    title: string
     onClose?: () => void
     /** Accepted for `ModalProps` drop-in compatibility; the standalone sheet is always a sheet. */
     adaptToSheet?: boolean

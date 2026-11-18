@@ -37,10 +37,9 @@ export function isUnroutablePaymentTokenError(error: unknown): boolean {
 export function isMarginOpenLoading(input: {
   isQuoteLoading: boolean
   isDebouncing: boolean
-  isFetching: boolean
   isPlaceholderData: boolean
 }): boolean {
-  return input.isQuoteLoading || input.isDebouncing || input.isFetching || input.isPlaceholderData
+  return input.isQuoteLoading || input.isDebouncing || input.isPlaceholderData
 }
 
 // The slider ceiling: a client max() over the server-authored `venues[].maxLeverage` of the markets

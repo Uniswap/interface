@@ -10,6 +10,8 @@ import { NumberType } from 'utilities/src/format/types'
 interface RelativeChangeProps {
   change?: number
   absoluteChange?: number
+  /** Shown for `absoluteChange` in place of the default balance formatting, e.g. a chart's price delta. */
+  formattedAbsoluteChange?: string
   variant?: keyof typeof fonts
   semanticColor?: boolean // If true, entire % change text will render green or red
   positiveChangeColor?: ColorTokens
@@ -24,6 +26,7 @@ interface RelativeChangeProps {
 export function RelativeChange(props: RelativeChangeProps): JSX.Element {
   const {
     absoluteChange,
+    formattedAbsoluteChange,
     change,
     variant = 'subheading2',
     semanticColor,
@@ -48,11 +51,12 @@ export function RelativeChange(props: RelativeChangeProps): JSX.Element {
 
   const formattedChange = formatPercent(change !== undefined ? Math.abs(change) : change)
   const formattedAbsChange = absoluteChange
-    ? `${formatNumberOrString({
+    ? (formattedAbsoluteChange ??
+      formatNumberOrString({
         value: Math.abs(absoluteChange),
         type: NumberType.PortfolioBalance,
         currencyCode: currency.code,
-      })}`
+      }))
     : ''
 
   // `absoluteChange` and `change` can each be shown alone or combined as `absChange (change%)`.

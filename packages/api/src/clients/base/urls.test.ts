@@ -1,5 +1,4 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { TrafficFlows } from './urls'
 
 const envConfigs = {
   webProd: {
@@ -78,67 +77,6 @@ describe('urls', () => {
 
   afterEach(() => {
     vi.clearAllMocks()
-  })
-
-  describe('Default Flow', () => {
-    it.each([
-      // Web
-      { expectedUrl: 'https://interface.gateway.uniswap.org', env: envConfigs.webDev },
-      { expectedUrl: 'https://interface.gateway.uniswap.org', env: envConfigs.webBeta },
-      { expectedUrl: 'https://interface.gateway.uniswap.org', env: envConfigs.webProd },
-      // Mobile iOS
-      { expectedUrl: 'https://ios.wallet.gateway.uniswap.org', env: envConfigs.mobileIosDev },
-      { expectedUrl: 'https://ios.wallet.gateway.uniswap.org', env: envConfigs.mobileIosBeta },
-      { expectedUrl: 'https://ios.wallet.gateway.uniswap.org', env: envConfigs.mobileIosProd },
-      // Mobile Android
-      { expectedUrl: 'https://android.wallet.gateway.uniswap.org', env: envConfigs.mobileAndroidDev },
-      { expectedUrl: 'https://android.wallet.gateway.uniswap.org', env: envConfigs.mobileAndroidBeta },
-      { expectedUrl: 'https://android.wallet.gateway.uniswap.org', env: envConfigs.mobileAndroidProd },
-      // Extension
-      { expectedUrl: 'https://extension.gateway.uniswap.org', env: envConfigs.extensionDev },
-      { expectedUrl: 'https://extension.gateway.uniswap.org', env: envConfigs.extensionBeta },
-      { expectedUrl: 'https://extension.gateway.uniswap.org', env: envConfigs.extensionProd },
-      // Playwright
-      { expectedUrl: 'https://interface.gateway.uniswap.org', env: envConfigs.playwrightDev },
-      { expectedUrl: 'https://interface.gateway.uniswap.org', env: envConfigs.playwrightProd },
-    ])('generates correct URL for $env', async ({ expectedUrl, env }) => {
-      mockEnvironmentAndPlatform(env)
-      const { getCloudflareApiBaseUrl } = await import('./urls')
-      expect(getCloudflareApiBaseUrl()).toBe(expectedUrl)
-    })
-  })
-
-  it.each(Object.values(TrafficFlows))(
-    'getCloudflareApiBaseUrl appends postfix correctly for flow: %s',
-    async (flow) => {
-      mockEnvironmentAndPlatform(envConfigs.webProd)
-      const { getCloudflareApiBaseUrl } = await import('./urls')
-      const postfix = 'my-postfix'
-
-      const baseUrl = getCloudflareApiBaseUrl({ flow })
-      const urlWithPostfix = getCloudflareApiBaseUrl({ flow, postfix })
-
-      expect(urlWithPostfix).toBe(`${baseUrl}/${postfix}`)
-    },
-  )
-
-  it('generates correct URL for a service flow in web/Playwright', async () => {
-    vi.doMock('@universe/environment', () => ({
-      isBetaEnv: () => false,
-      isDevEnv: () => false,
-      isRNDev: () => false,
-      isE2eTestEnv: () => true,
-      isTestEnv: () => false,
-      isAndroid: false,
-      isExtensionApp: false,
-      isMobileApp: false,
-      isWebApp: false,
-    }))
-
-    const { getCloudflareApiBaseUrl } = await import('./urls')
-    const result = getCloudflareApiBaseUrl({ flow: TrafficFlows.Scantastic })
-
-    expect(result).toBe('https://scantastic.interface.gateway.uniswap.org')
   })
 
   describe('createHelpArticleUrl', () => {

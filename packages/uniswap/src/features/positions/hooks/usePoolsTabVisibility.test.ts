@@ -2,22 +2,9 @@ import { renderHook } from '@testing-library/react'
 import { PositionStatus } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { usePoolsTabVisibility } from 'uniswap/src/features/positions/hooks/usePoolsTabVisibility'
 
-const { mockUseFeatureFlag, mockUsePortfolioBalancePart, mockUseWalletPositions, mockGetFeatureFlag } = vi.hoisted(
-  () => ({
-    mockUseFeatureFlag: vi.fn(),
-    mockUsePortfolioBalancePart: vi.fn(),
-    mockUseWalletPositions: vi.fn(),
-    mockGetFeatureFlag: vi.fn(),
-  }),
-)
-
-vi.mock('@universe/gating', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('@universe/gating')>()),
-  useFeatureFlag: mockUseFeatureFlag,
-  // Visibility reads the flag via the exposure-disabled variant; the exposure itself is logged
-  // separately via getFeatureFlag (spied to assert it fires only once the tab is visible).
-  useFeatureFlagWithExposureLoggingDisabled: mockUseFeatureFlag,
-  getFeatureFlag: mockGetFeatureFlag,
+const { mockUsePortfolioBalancePart, mockUseWalletPositions } = vi.hoisted(() => ({
+  mockUsePortfolioBalancePart: vi.fn(),
+  mockUseWalletPositions: vi.fn(),
 }))
 
 vi.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
@@ -50,18 +37,8 @@ const positionsResult = (overrides: {
 describe('usePoolsTabVisibility', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    mockUseFeatureFlag.mockReturnValue(true)
     mockUsePortfolioBalancePart.mockReturnValue({ data: undefined })
     mockUseWalletPositions.mockReturnValue(positionsResult({}))
-  })
-
-  it('hides the tab when the feature flag is disabled, even if positions exist', () => {
-    mockUseFeatureFlag.mockReturnValue(false)
-    mockUseWalletPositions.mockReturnValue(positionsResult({ positions: [position()] }))
-
-    const { result } = renderHook(() => usePoolsTabVisibility('0xabc'))
-
-    expect(result.current.shouldShowPoolsTab).toBe(false)
   })
 
   it('shows the tab when the balances pools count is positive', () => {
@@ -96,7 +73,7 @@ describe('usePoolsTabVisibility', () => {
     expect(result.current.shouldShowPoolsTab).toBe(true)
   })
 
-  it('hides the tab when enabled but there is no count, positions, or error', () => {
+  it('hides the tab when there is no count, positions, or error', () => {
     const { result } = renderHook(() => usePoolsTabVisibility('0xabc'))
 
     expect(result.current.shouldShowPoolsTab).toBe(false)
@@ -117,16 +94,5 @@ describe('usePoolsTabVisibility', () => {
     const { result } = renderHook(() => usePoolsTabVisibility('0xabc'))
 
     expect(result.current.openPoolPositionsCount).toBe(2)
-  })
-
-  it('logs an exposure only once the Pools tab becomes visible', () => {
-    // Flag on but no count/positions/error -> tab hidden -> no exposure.
-    const { rerender } = renderHook(() => usePoolsTabVisibility('0xabc'))
-    expect(mockGetFeatureFlag).not.toHaveBeenCalled()
-
-    // Positions arrive -> tab becomes visible -> exposure logged.
-    mockUsePortfolioBalancePart.mockReturnValue({ data: { count: 1 } })
-    rerender()
-    expect(mockGetFeatureFlag).toHaveBeenCalled()
   })
 })

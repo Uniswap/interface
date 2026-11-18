@@ -28,7 +28,9 @@ vi.mock('uniswap/src/features/transactions/swap/stores/swapFormStore/SwapFormSto
 
 vi.mock('~/pages/Swap', () => {
   return {
-    Swap: () => <div>Swap Component</div>,
+    Swap: ({ hideChart }: { hideChart?: boolean }) => (
+      <div data-hide-chart={String(Boolean(hideChart))}>Swap Component</div>
+    ),
   }
 })
 
@@ -163,6 +165,13 @@ describe('PoolDetailsStatsButton', () => {
     await userEvent.click(screen.getByTestId(TestID.PoolDetailsSwapButton))
     expect(screen.getByTestId('pool-details-swap-modal')).toBeVisible()
     expect(screen.getByTestId('pool-details-close-button')).toBeVisible()
+  })
+
+  it('hides the swap chart toggle inside the swap modal', async () => {
+    render(<PoolDetailsStatsButtons {...mockProps} />)
+
+    await userEvent.click(screen.getByTestId(TestID.PoolDetailsSwapButton))
+    expect(screen.getByText('Swap Component')).toHaveAttribute('data-hide-chart', 'true')
   })
 
   it('clicking add liquidity goes to correct url with default fee tier', async () => {

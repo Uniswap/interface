@@ -1,53 +1,23 @@
 import { isExtensionApp, isMobileWeb, isWebApp } from '@universe/environment'
-import { Text, type IconSizeTokens } from '@universe/mycelium'
-import type { ColorTokens } from '@universe/mycelium'
-import { Settings } from '@universe/mycelium/icons/Settings'
-import { SettingsWarning } from '@universe/mycelium/icons/SettingsWarning'
-import { useMemo } from 'react'
+import { SettingsTrigger } from '@universe/transactions-ui'
 import { useTranslation } from 'react-i18next'
-import { SLIPPAGE_CRITICAL_TOLERANCE } from 'uniswap/src/constants/transactions'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { SLIPPAGE_LOW_TOLERANCE_LP } from 'uniswap/src/features/transactions/components/settings/settingsConfigurations/slippage/SlippageLPWarning'
+import { TransactionSettingsModalId } from 'uniswap/src/features/transactions/components/settings/stores/TransactionSettingsModalStore/createTransactionSettingsModalStore'
+import { useModalVisibility } from 'uniswap/src/features/transactions/components/settings/stores/TransactionSettingsModalStore/useTransactionSettingsModalStore'
 import { useTransactionSettingsStore } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
-import { TransactionSettingsButtonWithTooltip } from 'uniswap/src/features/transactions/components/settings/TransactionSettingsButton'
-import { getSlippageWarningColor } from 'uniswap/src/features/transactions/swap/utils/styleHelpers'
+import type { TransactionSettingsTriggerProps } from 'uniswap/src/features/transactions/components/settings/TransactionSettings'
+import { getSlippageWarningLevel } from 'uniswap/src/features/transactions/swap/utils/styleHelpers'
 
-const getSettingsIconBackgroundColor = ({
-  autoSlippageTolerance,
-  slippageTolerance,
-  warnLowSlippage,
-}: {
-  autoSlippageTolerance: number
-  slippageTolerance?: number
-  warnLowSlippage?: boolean
-}): ColorTokens => {
-  if (!slippageTolerance) {
-    return '$transparent'
-  }
-  if (slippageTolerance >= SLIPPAGE_CRITICAL_TOLERANCE) {
-    return '$statusCritical2'
-  }
-  if (slippageTolerance > autoSlippageTolerance) {
-    return '$statusWarning2'
-  }
-  if (warnLowSlippage && slippageTolerance < SLIPPAGE_LOW_TOLERANCE_LP) {
-    return '$statusWarning2'
-  }
-  return '$surface3'
-}
-
-interface TransactionSettingsButtonProps {
-  iconColor?: ColorTokens
-  iconSize?: IconSizeTokens
-  customSlippageTolerance?: number
+interface TransactionSettingsButtonProps extends TransactionSettingsTriggerProps {
   autoSlippageTolerance: number
   isZeroSlippage?: boolean
   warnLowSlippage?: boolean
 }
 
 export function TransactionSettingsButtonWithSlippage({
-  iconColor = '$neutral2',
-  iconSize,
+  onPress,
+  testID,
   autoSlippageTolerance,
   isZeroSlippage,
   warnLowSlippage,
@@ -55,6 +25,7 @@ export function TransactionSettingsButtonWithSlippage({
   const { t } = useTranslation()
   const { formatPercent } = useLocalizationContext()
   const customSlippageTolerance = useTransactionSettingsStore((s) => s.customSlippageTolerance)
+  const isTransactionSettingsModalVisible = useModalVisibility(TransactionSettingsModalId.TransactionSettings)
 
   const shouldShowCustomSlippage = customSlippageTolerance && !isZeroSlippage
 
@@ -65,44 +36,31 @@ export function TransactionSettingsButtonWithSlippage({
 
   const shouldShowSettingsIconTooltip = meetsPlatformConditions && (exceedsSlippageTolerance || belowLowTolerance)
 
-  const { backgroundColor, contentColor, IconComponent } = useMemo(() => {
-    const iconBackgroundColor = getSettingsIconBackgroundColor({
-      autoSlippageTolerance,
-      slippageTolerance: customSlippageTolerance,
-      warnLowSlippage,
-    })
-    const fillColor = getSlippageWarningColor({
-      customSlippageValue: customSlippageTolerance ?? 0,
-      autoSlippageTolerance,
-      fallbackColorValue: iconColor,
-      warnLowSlippage,
-    })
-    const SettingsIconComponent =
-      customSlippageTolerance && customSlippageTolerance > SLIPPAGE_CRITICAL_TOLERANCE ? SettingsWarning : Settings
+  // getSettingsIconBackgroundColor and getSlippageWarningColor made the same comparisons for the
+  // tint and the content color. From 20% the gear is also the warning gear; it used to swap only
+  // above 20%.
+  const warningLevel = getSlippageWarningLevel({
+    customSlippageValue: customSlippageTolerance ?? 0,
+    autoSlippageTolerance,
+    warnLowSlippage,
+  })
 
-    return { backgroundColor: iconBackgroundColor, contentColor: fillColor, IconComponent: SettingsIconComponent }
-  }, [customSlippageTolerance, iconColor, autoSlippageTolerance, warnLowSlippage])
+  const tooltip =
+    shouldShowSettingsIconTooltip && !isTransactionSettingsModalVisible
+      ? belowLowTolerance
+        ? t('swap.settings.slippage.warning.low.lp')
+        : t('swap.settings.slippage.warning.hover')
+      : undefined
 
   return (
-    <TransactionSettingsButtonWithTooltip
-      iconSize={iconSize}
-      contentColor={contentColor}
-      backgroundColor={backgroundColor}
-      CustomIconComponent={IconComponent}
-      Tooltip={
-        shouldShowSettingsIconTooltip && (
-          <Text variant="body4">
-            {belowLowTolerance ? t('swap.settings.slippage.warning.low.lp') : t('swap.settings.slippage.warning.hover')}
-          </Text>
-        )
-      }
-      IconLabel={
-        shouldShowCustomSlippage && (
-          <Text color={contentColor} variant="buttonLabel3">
-            {formatPercent(customSlippageTolerance, 4)}
-          </Text>
-        )
-      }
+    <SettingsTrigger
+      isCustom={Boolean(customSlippageTolerance)}
+      customValue={shouldShowCustomSlippage ? formatPercent(customSlippageTolerance, 4) : undefined}
+      warningLevel={warningLevel}
+      tooltip={tooltip}
+      fixedHeight={isWebApp}
+      testID={testID}
+      onPress={onPress}
     />
   )
 }

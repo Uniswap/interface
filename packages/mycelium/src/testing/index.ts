@@ -15,4 +15,6 @@ export { MyceliumThemeTestWrapper, type MyceliumThemeTestWrapperProps } from './
  */
 export { MockVirtualList as UniversalListTestDouble } from '../components/UniversalList/internal/MockVirtualList'
 
-export { AXE_TAGS, createAxeMatcher, runAxe } from './axe'
+export { AXE_EXCLUDE, AXE_TAGS, createAxeMatcher, runAxe } from './axe'
+
+export { initMyceliumTestI18n } from './i18n'

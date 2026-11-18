@@ -111,10 +111,8 @@ describe('usePortfolioHeartbeatCoordinator', () => {
   })
 
   describe('Overview tab', () => {
-    it('refetches balances, prices, chart, P&L, and limit orders; skips positions when poolsEnabled is false', async () => {
-      renderHook(() =>
-        usePortfolioHeartbeatCoordinator(makeParams({ tab: PortfolioTab.Overview, poolsEnabled: false })),
-      )
+    it('refetches balances, prices, chart, P&L, limit orders, and positions', async () => {
+      renderHook(() => usePortfolioHeartbeatCoordinator(makeParams({ tab: PortfolioTab.Overview })))
 
       const [callback] = mockUseInterval.mock.calls[0]!
       await act(async () => {
@@ -136,17 +134,6 @@ describe('usePortfolioHeartbeatCoordinator', () => {
       expect(mockRefetchQueries).toHaveBeenCalledWith(
         expect.objectContaining({ queryKey: [ReactQueryCacheKey.ListTransactions] }),
       )
-      expect(mockRefetchQueries).toHaveBeenCalledTimes(5)
-    })
-
-    it('also refetches positions when poolsEnabled', async () => {
-      renderHook(() => usePortfolioHeartbeatCoordinator(makeParams({ tab: PortfolioTab.Overview, poolsEnabled: true })))
-
-      const [callback] = mockUseInterval.mock.calls[0]!
-      await act(async () => {
-        await callback()
-      })
-
       expect(mockRefetchQueries).toHaveBeenCalledWith(
         expect.objectContaining({ queryKey: WALLET_POSITIONS_QUERY_KEY_PREFIX }),
       )
@@ -177,8 +164,8 @@ describe('usePortfolioHeartbeatCoordinator', () => {
   })
 
   describe('Pools tab', () => {
-    it('refetches wallet balances and positions when poolsEnabled', async () => {
-      renderHook(() => usePortfolioHeartbeatCoordinator(makeParams({ tab: PortfolioTab.Pools, poolsEnabled: true })))
+    it('refetches wallet balances and positions', async () => {
+      renderHook(() => usePortfolioHeartbeatCoordinator(makeParams({ tab: PortfolioTab.Pools })))
 
       const [callback] = mockUseInterval.mock.calls[0]!
       await act(async () => {
@@ -192,17 +179,6 @@ describe('usePortfolioHeartbeatCoordinator', () => {
         expect.objectContaining({ queryKey: WALLET_POSITIONS_QUERY_KEY_PREFIX }),
       )
       expect(mockRefetchQueries).toHaveBeenCalledTimes(2)
-    })
-
-    it('issues no refetches when poolsEnabled is false', async () => {
-      renderHook(() => usePortfolioHeartbeatCoordinator(makeParams({ tab: PortfolioTab.Pools, poolsEnabled: false })))
-
-      const [callback] = mockUseInterval.mock.calls[0]!
-      await act(async () => {
-        await callback()
-      })
-
-      expect(mockRefetchQueries).not.toHaveBeenCalled()
     })
   })
 

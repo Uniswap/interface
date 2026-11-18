@@ -140,7 +140,7 @@ export function useSectionsForNoQuerySearch({
 
   const { sections: recentSearchSection, skeletonPillCount } = useRecentSearchSection({ chainFilter, activeTab })
 
-  // Spotlit categories replace the Trending + Stocks shelves on the All/Tokens tabs; flag off leaves them untouched.
+  // Spotlit categories replace the Trending + Stocks shelves on the All/Tokens tabs; an empty spotlight config leaves them untouched.
   const isTokenTab = activeTab === SearchTab.Tokens || activeTab === SearchTab.All
   const spotlit = useSpotlitCategorySections({
     chainFilter,

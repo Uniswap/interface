@@ -1,9 +1,10 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import type { ReactNode } from 'react'
 import { Navigate } from 'react-router'
 import { BetaPasscodeModal } from '~/pages/Beta/BetaPasscodeModal'
-import { Landing } from '~/pages/Landing'
 
-export function BetaPage(): JSX.Element {
+/** The passcode gate over `page` (the route table passes the Landing page). */
+export function BetaPage({ page }: { page: ReactNode }): JSX.Element {
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
 
   if (isEmbeddedWalletEnabled) {
@@ -12,7 +13,7 @@ export function BetaPage(): JSX.Element {
 
   return (
     <>
-      <Landing />
+      {page}
       <BetaPasscodeModal />
     </>
   )

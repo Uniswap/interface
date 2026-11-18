@@ -112,6 +112,8 @@ export const TouchableTextLinkCompat = React.forwardRef<HTMLElement, TouchableTe
         // unstyled variant's scale 1; no press opacity), no radius.
         hoverable={false}
         focusable={false}
+        // oxlint-disable-next-line jsx-a11y/no-interactive-element-to-noninteractive-role -- unfocusable frame; the anchor is the control, and a button role would nest it
+        role="none"
         scaleTo={1}
         activeOpacity={0}
         borderRadius="$none"

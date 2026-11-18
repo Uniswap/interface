@@ -8,7 +8,6 @@ import { usePortfolioAddresses } from '~/pages/Portfolio/hooks/usePortfolioAddre
 interface UsePortfolioSectionTotalValueParams {
   part: PortfolioBalancePart.Tokens | PortfolioBalancePart.Pools
   chainId?: UniverseChainId
-  enabled: boolean
 }
 
 interface PortfolioSectionTotalValue {
@@ -22,7 +21,6 @@ interface PortfolioSectionTotalValue {
 export function usePortfolioSectionTotalValue({
   part,
   chainId,
-  enabled,
 }: UsePortfolioSectionTotalValueParams): PortfolioSectionTotalValue {
   const { convertFiatAmountFormatted } = useLocalizationContext()
   const portfolioAddresses = usePortfolioAddresses()
@@ -31,17 +29,16 @@ export function usePortfolioSectionTotalValue({
     evmAddress: portfolioAddresses.evmAddress,
     svmAddress: portfolioAddresses.svmAddress,
     chainIds: chainId ? [chainId] : undefined,
-    enabled,
   })
 
-  const partBreakdown = enabled ? portfolioBreakdown?.[part] : undefined
+  const partBreakdown = portfolioBreakdown?.[part]
   const balanceUSD = partBreakdown?.balanceUSD
 
   return {
     totalValueFormatted:
       balanceUSD !== undefined ? convertFiatAmountFormatted(balanceUSD, NumberType.PortfolioBalance) : undefined,
     totalValueNumeric: balanceUSD,
-    totalValueLoading: enabled && loading && balanceUSD === undefined,
+    totalValueLoading: loading && balanceUSD === undefined,
     count: partBreakdown?.count,
   }
 }

@@ -1,5 +1,6 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import type { Currency } from '@uniswap/sdk-core'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Button, Flex, useMedia } from '@universe/mycelium'
 import { Plus } from '@universe/mycelium/icons/Plus'
 import { createSerializer, useQueryStates } from 'nuqs'
@@ -17,8 +18,13 @@ import { OrderDirection } from '~/data/util'
 import { getNextFlowStep } from '~/features/Liquidity/Create/flowSteps'
 import { PositionFlowStep } from '~/features/Liquidity/Create/types'
 import { CurrencySelector } from '~/features/Liquidity/CurrencySelector'
+import { useV2ListPools } from '~/features/Liquidity/hooks/useV2ListPools'
+import { getPoolBrowserPdpUrl } from '~/features/Liquidity/poolBrowserEntry'
 import { usePoolsAprRange } from '~/features/Liquidity/PoolsFilter/aprRange'
 import { PoolsFilter } from '~/features/Liquidity/PoolsFilter/PoolsFilter'
+import { PoolsTable } from '~/features/Liquidity/PoolsTable/PoolsTable'
+import { usePoolTableStore } from '~/features/Liquidity/PoolsTable/state/poolTableStore'
+import type { PoolLinkData } from '~/features/Liquidity/PoolsTable/types'
 import { getProtocolVersionFromLabel } from '~/features/Liquidity/utils/protocolVersion'
 import { edgeFadeMaskStyle, useHorizontalScrollFades } from '~/hooks/useHorizontalScrollFades'
 import {
@@ -26,10 +32,6 @@ import {
   useCreatePoolHrefFromSelection,
   useResolvedBrowserSelection,
 } from '~/pages/AddLiquidity/useCreatePoolHrefFromSelection'
-import { useV2ListPools } from '~/pages/Explore/hooks/useV2ListPools'
-import type { PoolLinkData } from '~/pages/Explore/tables/Pools/PoolTable'
-import { PoolsTable } from '~/pages/Explore/tables/Pools/PoolTable'
-import { usePoolTableStore } from '~/pages/Explore/tables/Pools/poolTableStore'
 import type { PoolsFilterState } from '~/types/poolsFilter'
 import { getChainUrlParam, useChainIdFromUrlParam } from '~/utils/params/chainParams'
 import { buildPoolSearchParams } from '~/utils/params/poolLinkParams'
@@ -163,8 +165,14 @@ export function PoolBrowser(): JSX.Element {
     },
   })
 
+  // The PDP revamp deposits from the pool's own page, so a row opens it with the range editor ready.
+  const isPdpRevampEnabled = useFeatureFlag(FeatureFlags.PdpRevamp)
+
   const getPoolLink = useCallback(
     (pool: PoolLinkData) => {
+      if (isPdpRevampEnabled) {
+        return getPoolBrowserPdpUrl({ poolIdOrHash: pool.poolIdOrHash, chainId: pool.chainId })
+      }
       const base = `/positions/add/${getChainUrlParam(pool.chainId)}/${pool.poolIdOrHash}`
       const params = buildPoolSearchParams({
         currencyA: pool.token0Address ?? NATIVE_CHAIN_ID,
@@ -185,7 +193,7 @@ export function PoolBrowser(): JSX.Element {
       // Carry over the active table filter so selecting a pool doesn't reset it.
       return `${base}${serializeBrowserFilters(params, browserUrlState)}`
     },
-    [browserUrlState],
+    [browserUrlState, isPdpRevampEnabled],
   )
 
   const createPoolHref = useCreatePoolHrefFromSelection()
@@ -269,7 +277,13 @@ export function PoolBrowser(): JSX.Element {
         hiddenColumns={[PoolSortFields.VolOverTvl, PoolSortFields.Volume30D]}
         hideIndex
         getLink={getPoolLink}
-        linkState={entryPoint ? { entryPoint } : undefined}
+        linkState={
+          isPdpRevampEnabled
+            ? { entryPoint, poolBrowserHref: `${location.pathname}${location.search}` }
+            : entryPoint
+              ? { entryPoint }
+              : undefined
+        }
         selectedPoolId={selectedPoolId}
         selectedPoolChainId={selectedPoolChainId}
         // The list's chain filter (network/advanced filter, else a selected token's chain); undefined = all networks

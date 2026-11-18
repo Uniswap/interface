@@ -1,11 +1,12 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import {
   type NewUserOnboardingState,
+  type NewUserOnboardingWallet,
   useNewUserOnboardingState,
 } from 'uniswap/src/features/onboarding/useNewUserOnboardingState'
 import { useEmbeddedWalletBackupStatus } from '~/features/wallet/components/AccountDrawer/PasskeyMenu/hooks/useEmbeddedWalletBackupStatus'
 
-export interface WebNewUserOnboardingState extends NewUserOnboardingState {
+export interface WebNewUserOnboardingState extends NewUserOnboardingState, NewUserOnboardingWallet {
   isEmbeddedWallet: boolean
   /** `undefined` when the status can't be read without a passkey prompt. */
   hasBackupLogin: boolean | undefined
@@ -16,7 +17,7 @@ export interface WebNewUserOnboardingState extends NewUserOnboardingState {
 export function useWebNewUserOnboardingState(): WebNewUserOnboardingState {
   const isNewUserUxEnabled = useFeatureFlag(FeatureFlags.NewUserUx)
   const state = useNewUserOnboardingState()
-  const backup = useEmbeddedWalletBackupStatus()
+  const backup = useEmbeddedWalletBackupStatus({ skip: !isNewUserUxEnabled })
   const isBackupLoading = isNewUserUxEnabled && backup.isLoading
 
   return {

@@ -66,7 +66,9 @@ export const useOpeningKeyboardShortCut = (shortCutPressed: boolean): KeyboardKe
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent): void => dispatch({ type: 'keyDown', key: event.key.toLowerCase() })
     const keyUpHandler = (event: KeyboardEvent): void => dispatch({ type: 'keyUp', key: event.key.toLowerCase() })
+    // oxlint-disable-next-line eslint-js/no-restricted-syntax -- a passive visualizer of the held keys; it never acts on them
     window.addEventListener('keydown', keyDownHandler)
+    // oxlint-disable-next-line eslint-js/no-restricted-syntax -- same passive visualizer
     window.addEventListener('keyup', keyUpHandler)
 
     return () => {

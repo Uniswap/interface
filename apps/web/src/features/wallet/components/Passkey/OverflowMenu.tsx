@@ -25,14 +25,15 @@ export function OverflowMenu({ onRemove, testID }: { onRemove: () => void; testI
     <Flex ml="auto">
       <Popover open={isOpen} onOpenChange={setIsOpen} placement="bottom-end" allowFlip strategy="fixed" offset={4}>
         <Popover.Trigger>
-          {/* No onPress here: the compat trigger wires the open interaction onto its
-              own wrapper and reports through onOpenChange — a child toggle would be a
+          {/* No onPress here: the compat trigger wires the open interaction onto this
+              TouchableArea and reports through onOpenChange — a toggle here would be a
               second, coincident write to the same state. */}
-          <TouchableArea testID={testID}>
+          <TouchableArea tag="button" aria-label={t('common.moreOptions')} testID={testID}>
             <MoreHorizontal size="$icon.20" color="$neutral2" />
           </TouchableArea>
         </Popover.Trigger>
         <AdaptiveWebPopoverContentCompat
+          aria-label={t('common.moreOptions')}
           isOpen={isOpen}
           // `p`, not `padding`: the compat popup frame's own 8px default (Tamagui
           // PopperContentFrame parity) is keyed as `p`, and the two padding aliases

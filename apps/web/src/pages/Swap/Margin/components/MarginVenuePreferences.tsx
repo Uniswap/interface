@@ -1,15 +1,16 @@
 import { Flex, Text, TouchableArea, Switch, Separator, ModalCloseIcon } from '@universe/mycelium'
-import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
+import { HeightAnimator } from '@universe/mycelium/height-animator'
 import { TestID } from '@universe/test'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { isDefaultMarginVenues } from 'uniswap/src/features/transactions/margin/stores/marginFormStore/marginVenuePreferences'
 import { useMarginFormStore } from 'uniswap/src/features/transactions/margin/stores/marginFormStore/useMarginFormStore'
 import { useResetMarginVenues } from 'uniswap/src/features/transactions/margin/stores/marginFormStore/useResetMarginVenues'
 import { useToggleMarginVenue } from 'uniswap/src/features/transactions/margin/stores/marginFormStore/useToggleMarginVenue'
+import { OptionRow } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/OptionRow'
 import { useEvent } from 'utilities/src/react/hooks'
 import { MARGIN_SELECTOR_MODAL_MAX_WIDTH, type MarginPairGroup } from '~/constants/margin'
 import { MarginVenueLogo } from '~/features/margin/components/MarginVenueLogo'
@@ -176,39 +177,41 @@ export function MarginVenuePreferencesModal({
   )
 }
 
-// The ⚙︎-popover entry: current preference on the right. Press-handling and the sheet itself belong
-// to the popover — it has to close itself before the modal it launches opens over it.
-export function MarginVenueSettingsRow({
-  group,
-  onPress,
-}: {
-  group: MarginPairGroup
-  onPress: () => void
-}): JSX.Element {
+/**
+ * Margin's ⚙︎ Market options page, modelled on Swap's Trade options: an "All" switch whose OFF reveals the
+ * venue switches. `isAll` is local, as Trade options' default is: turning it off changes nothing until a
+ * venue is. Exclusions are a GLOBAL preference; the rows show the active pair's venues.
+ */
+export function MarginMarketOptionsScreen(): JSX.Element {
   const { t } = useTranslation()
+  const group = useActiveMarginPairGroup()
   const excludedVenues = useMarginFormStore((s) => s.excludedVenues)
-  // Counted off the same builder the sheet renders, so "N of M" cannot drift from the live switches.
-  const enabled = useMemo(
-    () => buildMarginVenueOptOutRows({ pairs: group.pairs, excludedVenues }).filter((row) => row.isEnabled).length,
-    [group.pairs, excludedVenues],
-  )
-
+  const resetVenues = useResetMarginVenues()
+  const [isAll, setIsAll] = useState(() => isDefaultMarginVenues({ excludedVenues }))
+  const onToggleAll = useEvent(() => {
+    if (!isAll) {
+      resetVenues()
+    }
+    setIsAll(!isAll)
+  })
   return (
-    <TouchableArea testID={TestID.MarginVenuesSettingsEntry} onPress={onPress}>
-      <Flex row alignItems="center" justifyContent="space-between" gap="$spacing12">
-        <Text variant="body3" color="$neutral2">
-          {t('margin.venues.title')}
-        </Text>
-        <Flex row alignItems="center" gap="$spacing4">
-          <Text variant="body3" color="$neutral1">
-            {isDefaultMarginVenues({ excludedVenues })
-              ? t('margin.venues.default')
-              : t('margin.venues.enabledOfTotal', { enabled, total: group.pairs.length })}
-          </Text>
-          <RotatableChevron direction="right" size="$icon.16" color="$neutral3" />
-        </Flex>
-      </Flex>
-    </TouchableArea>
+    <Flex my="$spacing16">
+      <OptionRow
+        active={isAll}
+        cantDisable={false}
+        elementName={ElementName.MarginMarketOptionsAll}
+        title={t('common.all')}
+        description={t('margin.settings.marketOptions.allDescription')}
+        onSelect={onToggleAll}
+      />
+      <HeightAnimator open={!isAll} unmountChildrenWhenCollapsed>
+        {group
+          ? buildMarginVenueOptOutRows({ pairs: group.pairs, excludedVenues }).map((row) => (
+              <VenueRow key={row.pair.key} row={row} />
+            ))
+          : null}
+      </HeightAnimator>
+    </Flex>
   )
 }
 

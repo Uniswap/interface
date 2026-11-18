@@ -1,83 +1,52 @@
-/* oxlint-disable react-hooks/rules-of-hooks -- Every hook in this file conditionally calls a Privy hook, and only when Privy is configured. `getPrivyConfig` reads the cached startup config, so each branch is constant for the app's lifetime. It mirrors MaybePrivyProvider, which mounts <PrivyProvider> on the exact same condition, so the Privy hooks only ever run when the provider is in the tree. */
-/* oxlint-disable no-restricted-imports -- this module is the canonical home for the gated Privy hooks; everywhere else in the web app must use the `useMaybe*` wrappers below. */
-import {
-  type PrivyInterface,
-  useAuthorizationSignature,
-  useLoginWithEmail,
-  useLoginWithOAuth,
-  usePrivy,
-} from '@privy-io/react-auth'
+import { useEffect, useSyncExternalStore } from 'react'
+import { useEvent } from 'utilities/src/react/hooks'
 import { getPrivyConfig } from '~/config'
+import {
+  getPrivyRuntimeSnapshot,
+  type LoginWithOAuthCallbacks,
+  type MaybeAuthorizationSignature,
+  type MaybeLoginWithEmail,
+  type MaybeLoginWithOAuth,
+  type MaybePrivy,
+  type PrivyRuntimeSnapshot,
+  registerLoginWithOAuthCallbacks,
+  subscribeToPrivyRuntime,
+} from '~/features/wallet/privy/privyRuntimeStore'
 
 /**
- * Whether Privy is configured (PRIVY_APP_ID + PRIVY_CLIENT_ID are set). This is the single
- * source of truth shared by `MaybePrivyProvider` (which only mounts `<PrivyProvider>` when it's
- * true) and the `useMaybe*` hooks below. Privy hooks read provider-backed React contexts at
- * render time and throw when the provider is absent, so each hook is gated on this condition and
- * returns safe, non-throwing defaults when Privy is off. Use the wrappers instead of the raw hooks.
+ * Whether Privy is configured (PRIVY_APP_ID + PRIVY_CLIENT_ID). `MaybePrivyProvider` loads the
+ * Privy runtime only when this is true; the hooks below serve inactive defaults until it publishes.
  */
 export function isPrivyConfigured(): boolean {
   const { appId, clientId } = getPrivyConfig(false)
   return Boolean(appId && clientId)
 }
 
-const noop = async (): Promise<void> => {}
-
-// ── usePrivy ──────────────────────────────────────────────────────────
-type MaybePrivy = Pick<PrivyInterface, 'ready' | 'authenticated' | 'user' | 'logout' | 'getAccessToken'>
-
-const UNCONFIGURED_PRIVY: MaybePrivy = {
-  ready: false,
-  authenticated: false,
-  user: null,
-  logout: noop,
-  getAccessToken: async () => null,
+function usePrivyRuntimeSnapshot(): PrivyRuntimeSnapshot {
+  return useSyncExternalStore(subscribeToPrivyRuntime, getPrivyRuntimeSnapshot)
 }
 
 export function useMaybePrivy(): MaybePrivy {
-  if (!isPrivyConfigured()) {
-    return UNCONFIGURED_PRIVY
-  }
-  return usePrivy()
+  return usePrivyRuntimeSnapshot().privy
 }
 
-// ── useLoginWithOAuth ─────────────────────────────────────────────────
-type MaybeLoginWithOAuth = Pick<ReturnType<typeof useLoginWithOAuth>, 'initOAuth' | 'loading'>
+export function useMaybeLoginWithOAuth(callbacks?: LoginWithOAuthCallbacks): MaybeLoginWithOAuth {
+  const onComplete = useEvent((...args: Parameters<NonNullable<LoginWithOAuthCallbacks['onComplete']>>) =>
+    callbacks?.onComplete?.(...args),
+  )
+  const onError = useEvent((...args: Parameters<NonNullable<LoginWithOAuthCallbacks['onError']>>) =>
+    callbacks?.onError?.(...args),
+  )
 
-const UNCONFIGURED_LOGIN_WITH_OAUTH: MaybeLoginWithOAuth = { initOAuth: noop, loading: false }
+  useEffect(() => registerLoginWithOAuthCallbacks({ onComplete, onError }), [onComplete, onError])
 
-export function useMaybeLoginWithOAuth(callbacks?: Parameters<typeof useLoginWithOAuth>[0]): MaybeLoginWithOAuth {
-  if (!isPrivyConfigured()) {
-    return UNCONFIGURED_LOGIN_WITH_OAUTH
-  }
-  return useLoginWithOAuth(callbacks)
+  return usePrivyRuntimeSnapshot().loginWithOAuth
 }
 
-// ── useLoginWithEmail ─────────────────────────────────────────────────
-type MaybeLoginWithEmail = Pick<ReturnType<typeof useLoginWithEmail>, 'sendCode' | 'loginWithCode'>
-
-const UNCONFIGURED_LOGIN_WITH_EMAIL: MaybeLoginWithEmail = { sendCode: noop, loginWithCode: noop }
-
-export function useMaybeLoginWithEmail(callbacks?: Parameters<typeof useLoginWithEmail>[0]): MaybeLoginWithEmail {
-  if (!isPrivyConfigured()) {
-    return UNCONFIGURED_LOGIN_WITH_EMAIL
-  }
-  return useLoginWithEmail(callbacks)
-}
-
-// ── useAuthorizationSignature ─────────────────────────────────────────
-type MaybeAuthorizationSignature = Pick<ReturnType<typeof useAuthorizationSignature>, 'generateAuthorizationSignature'>
-
-const UNCONFIGURED_AUTHORIZATION_SIGNATURE: MaybeAuthorizationSignature = {
-  // Unreachable without Privy; fail loudly rather than fabricate a signature.
-  generateAuthorizationSignature: async () => {
-    throw new Error('Privy is not configured: cannot generate an authorization signature')
-  },
+export function useMaybeLoginWithEmail(): MaybeLoginWithEmail {
+  return usePrivyRuntimeSnapshot().loginWithEmail
 }
 
 export function useMaybeAuthorizationSignature(): MaybeAuthorizationSignature {
-  if (!isPrivyConfigured()) {
-    return UNCONFIGURED_AUTHORIZATION_SIGNATURE
-  }
-  return useAuthorizationSignature()
+  return usePrivyRuntimeSnapshot().authorizationSignature
 }

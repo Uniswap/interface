@@ -1,32 +1,25 @@
-import { PlainMessage, toPlainMessage } from '@bufbuild/protobuf'
-import { useQueries, useQuery } from '@tanstack/react-query'
+import type { PlainMessage } from '@bufbuild/protobuf'
+import { useInfiniteQuery, useQueries, type UseQueryResult } from '@tanstack/react-query'
 import {
-  AuctionWithStats,
+  type Auction,
+  type AuctionStatusFilter,
+  type AuctionWithStats,
   GetAuctionRequest,
-  ListTopAuctionsRequest,
+  type GetAuctionResponse,
+  TopAuctionsOrder,
 } from '@uniswap/client-launches/dist/data/v1/auction_pb'
-import { EVMUniverseChainId, UniverseChainId } from '@universe/chains'
+import type { UniverseChainId } from '@universe/chains'
 import { useMemo } from 'react'
-import { useSelector } from 'react-redux'
 import { auctionQueries } from 'uniswap/src/data/apiClients/dataApiService/auctions/auctionQueries'
-import { isTestnetChain } from 'uniswap/src/features/chains/utils'
-// oxlint-disable-next-line no-restricted-imports -- Direct selector access needed for auction testnet filtering
-import { selectIsTestnetModeEnabled } from 'uniswap/src/features/settings/selectors'
-import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { isHiddenAuction } from 'uniswap/src/features/toucan/hiddenAuctions'
 import { useVerifiedAuctionIds } from 'uniswap/src/features/toucan/useVerifiedAuctionIds'
-import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { computePreBidEndBlock } from '~/features/Toucan/Auction/utils/emissionStartBlock'
+import { useInfiniteLoadMore } from '~/components/Table/hooks/useInfiniteLoadMore'
 import { approximateNumberFromRaw } from '~/features/Toucan/Auction/utils/fixedPointFdv'
-import { isAuctionCompleted } from '~/features/Toucan/hooks/useTopAuctions/isAuctionCompleted'
-import {
-  BlockTimestampRequest,
-  useGetBlockTimestamps,
-  useMultiChainBlockInfo,
-} from '~/features/Toucan/hooks/useTopAuctions/useMultiChainBlockInfo'
+import { type EnrichedAuction, useEnrichedAuctions } from '~/features/Toucan/hooks/useTopAuctions/useEnrichedAuctions'
+import { isQuickLaunchAuctionData } from '~/features/Toucan/utils/quickLaunchClassification'
 import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
 
-export const AUCTION_LIST_API_PAGE_SIZE = 200
+/** ListTopAuctions caps page_size at 100. */
+export const AUCTION_LIST_API_PAGE_SIZE = 100
 
 /** Descending comparator that sorts rows without a sort value to the end. */
 export function compareDescendingMissingLast(a: number | undefined, b: number | undefined): number {
@@ -60,110 +53,79 @@ export function auctionCommittedVolumeComparator(a: EnrichedAuction, b: Enriched
   return compareDescendingMissingLast(getBidTokenVolume(a.auction), getBidTokenVolume(b.auction))
 }
 
-export type EnrichedAuction = PlainMessage<AuctionWithStats> & {
-  verified: boolean
-  logoUrl: Maybe<string>
-  timeRemaining: {
-    isCompleted: boolean
-    startBlockTimestamp: bigint | undefined
-    endBlockTimestamp: bigint | undefined
-    /** When pre-bidding ends (first token-emitting auction step). Equals start when there's no pre-bid window. */
-    preBidEndBlockTimestamp: bigint | undefined
-  }
-}
-
-type Auction = NonNullable<PlainMessage<AuctionWithStats>['auction']>
-type CurrencyInfo = ReturnType<typeof useCurrencyInfos>[number]
-type GetBlockTimestamp = ReturnType<typeof useGetBlockTimestamps>
-type BlocksByChain = ReturnType<typeof useMultiChainBlockInfo>
-
-function getAuctionCurrencyId(auction: Auction | undefined): string | undefined {
-  return auction ? buildCurrencyId(auction.chainId, auction.tokenAddress) : undefined
-}
-
-function getAuctionTimeRemaining({
-  auction,
-  blocksByChain,
-  getBlockTimestamp,
-}: {
-  auction: Auction | undefined
-  blocksByChain: BlocksByChain
-  getBlockTimestamp: GetBlockTimestamp
-}): EnrichedAuction['timeRemaining'] {
-  const startBlockTimestamp =
-    auction?.startBlock && auction.chainId ? getBlockTimestamp(auction.chainId, auction.startBlock) : undefined
-
-  const endBlockTimestamp =
-    auction && auction.chainId && auction.endBlock ? getBlockTimestamp(auction.chainId, auction.endBlock) : undefined
-
-  const preBidEndBlock = auction ? computePreBidEndBlock(auction.parsedAuctionSteps, auction.startBlock) : undefined
-  const preBidEndBlockTimestamp =
-    auction?.chainId && preBidEndBlock && preBidEndBlock !== auction.startBlock
-      ? getBlockTimestamp(auction.chainId, preBidEndBlock)
-      : startBlockTimestamp
-
+function combineVerifiedLookups(results: UseQueryResult<PlainMessage<GetAuctionResponse>>[]): {
+  auctions: PlainMessage<Auction>[]
+  isLoading: boolean
+} {
   return {
-    startBlockTimestamp,
-    endBlockTimestamp,
-    preBidEndBlockTimestamp,
-    isCompleted: isAuctionCompleted({
-      endBlock: auction?.endBlock,
-      blockNumber: auction?.chainId ? blocksByChain.get(auction.chainId)?.number : undefined,
+    auctions: results.flatMap(({ data }) => {
+      const auction = data?.auctions[0]
+      return auction ? [auction] : []
     }),
-  }
-}
-
-function getAuctionWithCurrencyInfo({
-  auction,
-  currencyInfo,
-}: {
-  auction: Auction | undefined
-  currencyInfo: CurrencyInfo | undefined
-}): PlainMessage<AuctionWithStats>['auction'] {
-  if (auction === undefined) {
-    return undefined
-  }
-
-  return {
-    ...toPlainMessage(auction),
-    tokenName: currencyInfo?.currency.name ?? auction.tokenName,
-    tokenSymbol: currencyInfo?.currency.symbol ?? auction.tokenSymbol,
+    isLoading: results.some((result) => result.isLoading),
   }
 }
 
 /**
- * Hook that fetches and filters top auctions with chain and search filtering.
- * - Chain filtering: Backend (via ListTopAuctionsRequest chainIds parameter)
- *
  * `chainId` overrides the URL-derived chain for surfaces without an /explore chain param (e.g. the
  * /launches Live-auctions view, which drives chain from local state instead of the URL).
  */
 export function useTopAuctions({
   chainId: chainIdOverride,
   liveOnly = false,
+  customOnly,
+  statusFilter,
   pageSize = AUCTION_LIST_API_PAGE_SIZE,
-}: { chainId?: UniverseChainId; liveOnly?: boolean; pageSize?: number } = {}): {
+  enabled = true,
+}: {
+  chainId?: UniverseChainId
+  liveOnly?: boolean
+  customOnly?: boolean
+  statusFilter?: AuctionStatusFilter
+  pageSize?: number
+  enabled?: boolean
+} = {}): {
   auctions: EnrichedAuction[]
   isLoading: boolean
   isError: boolean
+  loadMore: (({ onComplete }: { onComplete?: () => void }) => void) | undefined
 } {
   const urlChainId = useChainIdFromUrlParam()
   const chainId = chainIdOverride ?? urlChainId
-  const isTestnetModeEnabled = useSelector(selectIsTestnetModeEnabled)
-
   const verifiedAuctionIds = useVerifiedAuctionIds()
 
-  const params = useMemo(
-    () =>
-      new ListTopAuctionsRequest({
+  const { data, isLoading, isError, hasNextPage, isFetchingNextPage, fetchNextPage } = useInfiniteQuery({
+    ...auctionQueries.listTopAuctionsPages({
+      params: {
         pageSize,
         chainIds: chainId ? [chainId] : [], // Empty array = all chains
         liveOnly, // Server drops auctions past their end block, keeping in-progress + upcoming.
-      }),
-    [chainId, liveOnly, pageSize],
-  )
+        excludeUnsafeTokens: true,
+        order: TopAuctionsOrder.LIFECYCLE,
+        customOnly,
+        statusFilter,
+      },
+    }),
+    enabled,
+  })
 
-  const { data: topAuctions, isLoading, isError } = useQuery(auctionQueries.listTopAuctions({ params }))
+  // Offset cursors: an auction that changes lifecycle group between page fetches can appear on two pages
+  // (deduped here) or be skipped until the next refetch; a single short-lived skip is tolerated.
+  const topAuctions = useMemo(() => {
+    const seenAuctionIds = new Set<string>()
+    return (data?.pages ?? [])
+      .flatMap((page) => page.auctions)
+      .filter((auctionWithStats) => {
+        const auctionId = auctionWithStats.auction?.auctionId
+        if (auctionId === undefined || seenAuctionIds.has(auctionId)) {
+          return false
+        }
+        seenAuctionIds.add(auctionId)
+        return true
+      })
+  }, [data?.pages])
+
+  const loadMore = useInfiniteLoadMore({ fetchNextPage, hasNextPage, isFetchingNextPage })
 
   // Parse verified IDs ("chainId_address") and filter by URL chain when present.
   // GetAuction is used as a fallback so verified auctions outside the top-N (e.g. not-yet-started
@@ -189,173 +151,39 @@ export function useTopAuctions({
   )
 
   const topAuctionIdSet = useMemo(
-    () =>
-      new Set(
-        (topAuctions?.auctions ?? []).map((a) => a.auction?.auctionId).filter((id): id is string => id !== undefined),
-      ),
-    [topAuctions?.auctions],
+    () => new Set(topAuctions.map((a) => a.auction?.auctionId).filter((id): id is string => id !== undefined)),
+    [topAuctions],
   )
 
-  // GetAuction ignores live_only, so under liveOnly we skip the fallback entirely: the Verified
-  // quick filter then filters only the live-only auctions we already fetched.
+  // GetAuction ignores live_only, so the liveOnly view skips the fallback. A status filter keeps it:
+  // filterAuctions status-matches the extras client-side along with the loaded rows.
   const missingVerifiedParams = useMemo(
-    () => (liveOnly ? [] : verifiedAuctionParams.filter((p) => !topAuctionIdSet.has(`${p.chainId}_${p.address}`))),
-    [verifiedAuctionParams, topAuctionIdSet, liveOnly],
-  )
-
-  const missingVerifiedQueries = useQueries({
-    queries: missingVerifiedParams.map((p) => auctionQueries.getAuction({ params: new GetAuctionRequest(p) })),
-  })
-
-  // Merge ListTopAuctions results with any verified auctions fetched individually via GetAuction.
-  // The verified-only entries are appended with empty totalBidVolume so they sort to the end via
-  // auctionCommittedVolumeComparator (USD volume missing/zero).
-  const mergedAuctions = useMemo<PlainMessage<AuctionWithStats>[]>(() => {
-    const base = topAuctions?.auctions ?? []
-    const extras: PlainMessage<AuctionWithStats>[] = []
-    for (const q of missingVerifiedQueries) {
-      const auction = q.data?.auctions[0]
-      if (auction) {
-        extras.push(new AuctionWithStats({ auction, totalBidVolume: '' }))
-      }
-    }
-    return extras.length > 0 ? [...base, ...extras] : base
-  }, [topAuctions?.auctions, missingVerifiedQueries])
-
-  const verifiedFallbackLoading = missingVerifiedQueries.some((q) => q.isLoading)
-
-  const currencyIds = useMemo(
     () =>
-      mergedAuctions
-        .map((auction) =>
-          auction.auction ? buildCurrencyId(auction.auction.chainId, auction.auction.tokenAddress) : undefined,
-        )
-        .filter((id): id is string => id !== undefined),
-    [mergedAuctions],
+      !enabled || liveOnly
+        ? []
+        : verifiedAuctionParams.filter((p) => !topAuctionIdSet.has(`${p.chainId}_${p.address}`)),
+    [verifiedAuctionParams, topAuctionIdSet, enabled, liveOnly],
   )
-  const currencyInfos = useCurrencyInfos(currencyIds, {
-    skip: mergedAuctions.length === 0,
+
+  const { auctions: verifiedFallbackAuctions, isLoading: isVerifiedFallbackLoading } = useQueries({
+    queries: missingVerifiedParams.map((p) => auctionQueries.getAuction({ params: new GetAuctionRequest(p) })),
+    combine: combineVerifiedLookups,
   })
 
-  // Build a lookup map from currencyId → currencyInfo to avoid index misalignment
-  // (currencyIds filters out null-auction entries, so its indices don't match topAuctions.auctions)
-  const currencyInfoByCurrencyId = useMemo(() => {
-    const map = new Map<string, (typeof currencyInfos)[number]>()
-    currencyIds.forEach((id, i) => {
-      if (currencyInfos[i]) {
-        map.set(id, currencyInfos[i])
-      }
-    })
-    return map
-  }, [currencyIds, currencyInfos])
+  const mergedAuctions = useMemo<PlainMessage<AuctionWithStats>[]>(() => {
+    const extras = verifiedFallbackAuctions
+      .filter((auction) => !(customOnly && isQuickLaunchAuctionData(auction)))
+      .map((auction) => ({ auction, totalBidVolume: '', recentBids: [] }))
+    return extras.length > 0 ? [...topAuctions, ...extras] : topAuctions
+  }, [topAuctions, verifiedFallbackAuctions, customOnly])
 
-  // Extract unique chain IDs from auctions to minimize RPC calls
-  const auctionChainIds = useMemo(() => {
-    return new Set(
-      mergedAuctions.map((a) => a.auction?.chainId).filter((id): id is EVMUniverseChainId => id !== undefined),
-    )
-  }, [mergedAuctions])
-
-  // Fetch current block numbers and timestamps for chains that have auctions
-  const blocksByChain = useMultiChainBlockInfo(auctionChainIds)
-
-  const areBlocksLoaded = useMemo(
-    // oxlint-disable-next-line no-shadow
-    () => [...auctionChainIds].every((chainId) => blocksByChain.has(chainId)),
-    [auctionChainIds, blocksByChain],
-  )
-
-  // Build requests for block timestamps - extract endBlock values from auctions
-  const blockTimestampRequests = useMemo<BlockTimestampRequest[]>(() => {
-    return mergedAuctions
-      .map((auctionWithStats) => {
-        const auction = auctionWithStats.auction
-        // Only create request if both chainId and endBlock are valid
-        if (!auction || !auction.chainId) {
-          return null
-        }
-
-        const requests: BlockTimestampRequest[] = []
-        if (auction.startBlock) {
-          requests.push({
-            chainId: auction.chainId,
-            blockNumber: auction.startBlock,
-          })
-        }
-
-        if (auction.endBlock) {
-          requests.push({
-            chainId: auction.chainId,
-            blockNumber: auction.endBlock,
-          })
-        }
-
-        const preBidEndBlock = computePreBidEndBlock(auction.parsedAuctionSteps, auction.startBlock)
-        if (preBidEndBlock && preBidEndBlock !== auction.startBlock) {
-          requests.push({
-            chainId: auction.chainId,
-            blockNumber: preBidEndBlock,
-          })
-        }
-
-        return requests
-      })
-      .flat()
-      .filter((req): req is BlockTimestampRequest => req !== null)
-  }, [mergedAuctions])
-
-  const getBlockTimestamp = useGetBlockTimestamps(blockTimestampRequests, blocksByChain)
-
-  const auctionsWithCurrencyInfo = useMemo<EnrichedAuction[]>(() => {
-    if (mergedAuctions.length === 0) {
-      return []
-    }
-
-    const verifiedSet = new Set(verifiedAuctionIds)
-
-    return mergedAuctions
-      .map((auction) => {
-        const coreAuction = auction.auction
-        const currencyId = getAuctionCurrencyId(coreAuction)
-        const currencyInfo = currencyId ? currencyInfoByCurrencyId.get(currencyId) : undefined
-
-        // Image precedence (mirrors the auction detail page): API image (creator upload or
-        // backend override) -> indexed currency logo -> TokenLogo placeholder. Centralized here
-        // so the table cell and chip stay consistent.
-        const timeRemaining = getAuctionTimeRemaining({ auction: coreAuction, blocksByChain, getBlockTimestamp })
-        const auctionWithCurrency = getAuctionWithCurrencyInfo({ auction: coreAuction, currencyInfo })
-
-        return {
-          ...auction,
-          verified: coreAuction ? verifiedSet.has(coreAuction.auctionId) : false,
-          // `||` (not `??`) so an empty-string API image is treated as absent and doesn't
-          // suppress the indexed logo, independent of the backend's unset-vs-"".
-          logoUrl: coreAuction?.tokenImageUrl || currencyInfo?.logoUrl,
-          timeRemaining,
-          auction: auctionWithCurrency,
-        }
-      })
-      .filter((auctionWithInfo) => {
-        if (isHiddenAuction({ auctionId: auctionWithInfo.auction?.auctionId })) {
-          return false
-        }
-        // Filter out testnet chains when testnet mode is not enabled
-        // oxlint-disable-next-line no-shadow
-        const chainId = auctionWithInfo.auction?.chainId
-        return chainId !== undefined && (isTestnetModeEnabled || !isTestnetChain(chainId))
-      })
-  }, [
-    mergedAuctions,
-    verifiedAuctionIds,
-    isTestnetModeEnabled,
-    getBlockTimestamp,
-    currencyInfoByCurrencyId,
-    blocksByChain,
-  ])
+  const { auctions, areBlocksSettled } = useEnrichedAuctions(mergedAuctions)
 
   return {
-    auctions: auctionsWithCurrencyInfo,
-    isLoading: isLoading || verifiedFallbackLoading || !areBlocksLoaded,
-    isError,
+    auctions,
+    // Only the first page waits on block info as a whole, so the table never drops back to a skeleton mid-scroll.
+    isLoading: isLoading || isVerifiedFallbackLoading || (!areBlocksSettled && (data?.pages.length ?? 0) <= 1),
+    isError: isError && data === undefined,
+    loadMore: hasNextPage ? loadMore : undefined,
   }
 }

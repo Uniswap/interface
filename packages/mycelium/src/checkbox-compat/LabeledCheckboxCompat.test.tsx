@@ -49,11 +49,11 @@ describe('onCheckPressed receives the PRE-TOGGLE state', () => {
   it('fires from a press on the row too, with the same pre-toggle argument', () => {
     const onCheckPressed = vi.fn()
     render(<LabeledCheckboxCompat checked text="Label" testID="labeled" onCheckPressed={onCheckPressed} />)
-    fireEvent.click(container())
+    fireEvent.click(row())
     expect(onCheckPressed).toHaveBeenCalledWith(true)
   })
 
-  it('a press on the checkbox stops propagation, so the container does not double-fire', () => {
+  it('a press on the checkbox fires once, not again through the row label', () => {
     const onCheckPressed = vi.fn()
     render(<LabeledCheckboxCompat checked={false} text="Label" testID="labeled" onCheckPressed={onCheckPressed} />)
     fireEvent.click(checkbox())
@@ -64,10 +64,10 @@ describe('onCheckPressed receives the PRE-TOGGLE state', () => {
 describe('checkedColor is accepted and ignored, exactly like legacy', () => {
   it('produces byte-identical markup with and without it', () => {
     const without = render(<LabeledCheckboxCompat checked text="Label" testID="labeled" />)
-    const baseline = container().outerHTML
+    const baseline = withoutGeneratedIds(container().outerHTML)
     without.unmount()
     render(<LabeledCheckboxCompat checked checkedColor="$neutral1" text="Label" testID="labeled" />)
-    expect(container().outerHTML).toBe(baseline)
+    expect(withoutGeneratedIds(container().outerHTML)).toBe(baseline)
   })
 
   it('does not leak the token into any class or inline style', () => {
@@ -192,7 +192,7 @@ describe('hoverStyle is opt-in (legacy `hoverable={!!hoverStyle}`)', () => {
 describe('containerStyle and testID', () => {
   it('applies containerStyle to the container (PositionsHeader passes {flex: 1})', () => {
     render(<LabeledCheckboxCompat checked={false} containerStyle={{ flex: 1 }} testID="labeled" />)
-    expect(container().style.flex).toBe('1')
+    expect(container().style.flex).toBe('1 1 0%')
   })
 
   it('merges hoverStyle over containerStyle while hovered', () => {
@@ -205,7 +205,7 @@ describe('containerStyle and testID', () => {
       />,
     )
     fireEvent.mouseEnter(container())
-    expect(container().style.flex).toBe('1')
+    expect(container().style.flex).toBe('1 1 0%')
     expect(container().style.opacity).toBe('0.8')
   })
 
@@ -218,7 +218,7 @@ describe('containerStyle and testID', () => {
   // silently — no warning, no style attribute at all — where RN flattens it.
   it('flattens an ARRAY containerStyle instead of dropping it', () => {
     render(<LabeledCheckboxCompat checked={false} containerStyle={[{ flex: 1 }, { opacity: 0.5 }]} testID="labeled" />)
-    expect(container().style.flex).toBe('1')
+    expect(container().style.flex).toBe('1 1 0%')
     expect(container().style.opacity).toBe('0.5')
   })
 
@@ -233,14 +233,14 @@ describe('containerStyle and testID', () => {
     render(
       <LabeledCheckboxCompat checked={false} containerStyle={[false, null, { flex: 1 }, undefined]} testID="labeled" />,
     )
-    expect(container().style.flex).toBe('1')
+    expect(container().style.flex).toBe('1 1 0%')
   })
 
   it('flattens NESTED arrays', () => {
     render(
       <LabeledCheckboxCompat checked={false} containerStyle={[[{ flex: 1 }], [[{ opacity: 0.5 }]]]} testID="labeled" />,
     )
-    expect(container().style.flex).toBe('1')
+    expect(container().style.flex).toBe('1 1 0%')
     expect(container().style.opacity).toBe('0.5')
   })
 
@@ -254,7 +254,7 @@ describe('containerStyle and testID', () => {
       />,
     )
     fireEvent.mouseEnter(container())
-    expect(container().style.flex).toBe('1')
+    expect(container().style.flex).toBe('1 1 0%')
     expect(container().style.opacity).toBe('0.8')
   })
 })
@@ -340,30 +340,34 @@ describe('size and variant thread through to the checkbox', () => {
   })
 })
 
-describe("a11y: the container keeps legacy's nested interactive role", () => {
-  it('the container is announced as a button', () => {
+describe('a11y: the checkbox is the one control, named by the text', () => {
+  it('the container has no role and no tab stop', () => {
     render(<LabeledCheckboxCompat checked={false} text="Label" testID="labeled" />)
-    expect(container().getAttribute('role')).toBe('button')
-    expect(screen.getByRole('button')).toBe(container())
+    expect(container().getAttribute('role')).toBeNull()
+    expect(container().getAttribute('tabindex')).toBeNull()
+    expect(screen.queryByRole('button')).toBeNull()
   })
 
-  it('the container is in the tab order, exactly as legacy is', () => {
-    render(<LabeledCheckboxCompat checked={false} text="Label" testID="labeled" />)
-    expect(container().getAttribute('tabindex')).toBe('0')
-  })
-
-  it('the checkbox stays nested INSIDE that button, keeping its own role and checked state', () => {
+  it('string text names the checkbox', () => {
     render(<LabeledCheckboxCompat checked text="Label" testID="labeled" />)
-    const button = screen.getByRole('button')
-    const box = screen.getByRole('checkbox')
-    expect(button.contains(box)).toBe(true)
-    expect(box).not.toBe(button)
+    const box = screen.getByRole('checkbox', { name: 'Label' })
     expect(box.getAttribute('aria-checked')).toBe('true')
   })
 
-  it('announces exactly one button and one checkbox — no extra roles, no flattening', () => {
-    render(<LabeledCheckboxCompat checked={false} text="Label" testID="labeled" />)
-    expect(screen.getAllByRole('button').length).toBe(1)
-    expect(screen.getAllByRole('checkbox').length).toBe(1)
+  it('element text names the checkbox too', () => {
+    render(<LabeledCheckboxCompat checked={false} text={<strong>Don't show again</strong>} testID="labeled" />)
+    expect(screen.getByRole('checkbox', { name: "Don't show again" })).toBeTruthy()
+  })
+
+  it('a click on the text toggles through the row label, for a larger mouse target', () => {
+    const onCheckPressed = vi.fn()
+    render(<LabeledCheckboxCompat checked={false} text="Label" testID="labeled" onCheckPressed={onCheckPressed} />)
+    fireEvent.click(screen.getByText('Label'))
+    expect(onCheckPressed).toHaveBeenCalledWith(false)
   })
 })
+
+/** Each render's `useId` differs, and the text's id links it to the checkbox. */
+function withoutGeneratedIds(html: string): string {
+  return html.replace(/_r_\w+_/g, '<id>')
+}

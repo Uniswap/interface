@@ -21,13 +21,13 @@ import { TokenCardCarousel } from '~/components/TokenCardCarousel/TokenCardCarou
 import { useCarouselLayout } from '~/components/TokenCardCarousel/useCarouselLayout'
 import { useHorizontalSnapCarousel } from '~/components/TokenCardCarousel/useHorizontalSnapCarousel'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '~/constants/breakpoints'
+import { AssetShelfHeader } from '~/features/Explore/rwa/shelf/AssetShelfHeader'
 import {
   LaunchItem,
   POOLS_LAUNCHPAD_GROUP_ID,
   POOLS_LAUNCHPAD_MECHANISM_IDS,
   toLaunchItems,
 } from '~/features/Toucan/utils/launchesModel'
-import { AssetShelfHeader } from '~/pages/Explore/rwa/shelf/AssetShelfHeader'
 import { useAuctionAddressByToken } from '~/pages/Launches/data/useAuctionAddressByToken'
 import { useLaunches } from '~/pages/Launches/data/useLaunches'
 import { useLaunchpads } from '~/pages/Launches/data/useLaunchpads'
@@ -37,8 +37,8 @@ import { LaunchFilterBar, LaunchQuickSelects } from '~/pages/Launches/LaunchFilt
 import { LaunchTable } from '~/pages/Launches/LaunchTable'
 import { TrendingLaunchCard } from '~/pages/Launches/TrendingLaunchCard'
 import { LaunchQuickFilter, toLaunchesRequestParams, useLaunchesFilters } from '~/pages/Launches/useLaunchesList'
-import { preloadTokenDetailsChunk } from '~/pages/Launches/usePrefetchLaunchTokenDetails'
 import { useTrendingMarquee } from '~/pages/Launches/useTrendingMarquee'
+import { preloadTokenDetailsChunk } from '~/pages/routes/routeChunkPreloads'
 
 const TRENDING_COUNT = 10
 // Chains the launches surface covers when Statsig doesn't override them.

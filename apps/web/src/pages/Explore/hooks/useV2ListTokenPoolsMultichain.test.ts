@@ -1,12 +1,12 @@
 import { UniverseChainId } from '@universe/chains'
 import { PoolSortFields } from '~/data/pools/poolStats'
 import { OrderDirection } from '~/data/util'
-import { useListPoolsAsPoolStats } from '~/pages/Explore/hooks/useListPoolsAsPoolStats'
+import { useListPoolsAsPoolStats } from '~/features/Liquidity/hooks/useListPoolsAsPoolStats'
 import { useV2ListTokenPoolsMultichain } from '~/pages/Explore/hooks/useV2ListTokenPoolsMultichain'
 import { renderHook } from '~/test-utils/render'
 import type { PoolStat } from '~/types/explore'
 
-vi.mock('~/pages/Explore/hooks/useListPoolsAsPoolStats')
+vi.mock('~/features/Liquidity/hooks/useListPoolsAsPoolStats')
 
 const mockUseListPoolsAsPoolStats = vi.mocked(useListPoolsAsPoolStats)
 

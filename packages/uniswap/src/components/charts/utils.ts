@@ -81,15 +81,9 @@ export function getSparklineValueDomain({
   return [mid - span / 2, mid + span / 2]
 }
 
-/** Undefined with Token Categories off or until the token's category tags are known. */
-export function getIsStablecoin({
-  tokenCategoriesEnabled,
-  categoryIds,
-}: {
-  tokenCategoriesEnabled: boolean
-  categoryIds: readonly string[] | undefined
-}): boolean | undefined {
-  return tokenCategoriesEnabled ? categoryIds?.includes(STABLECOINS_CATEGORY_ID) : undefined
+/** Undefined until the token's category tags are known. */
+export function getIsStablecoin(categoryIds: readonly string[] | undefined): boolean | undefined {
+  return categoryIds?.includes(STABLECOINS_CATEGORY_ID)
 }
 
 // A range is "low variance" once it spans less than this fraction of its own magnitude.

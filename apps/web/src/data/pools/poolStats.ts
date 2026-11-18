@@ -1,4 +1,4 @@
-import { ProtocolVersion } from '@universe/api'
+import { ProtocolVersion } from '@universe/data-api'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import { feeAmountToBps } from 'uniswap/src/features/fees/feeUnits'
 import { getFeeBreakdown } from 'uniswap/src/features/fees/getFeeBreakdown'

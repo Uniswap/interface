@@ -16,7 +16,6 @@ import {
 import { marginPositionDebt } from '~/features/margin/utils/marginPositionRow'
 import { MarginBeforeAfterRow } from '~/pages/Swap/Margin/components/shared/MarginBeforeAfterRow'
 import { MarginDetailRow } from '~/pages/Swap/Margin/components/shared/MarginDetailRow'
-import { MarginHealthValue } from '~/pages/Swap/Margin/components/shared/MarginHealthValue'
 
 // Leverage and Liquidates-at are the pair that carries the meaning of a funding-only change; Size
 // moves too, but as a consequence. 'liquidationSecond' sits them adjacent for Add/Withdraw margin.
@@ -155,26 +154,6 @@ export function MarginAdjustBeforeAfterRows({
       />
     )
 
-  // A debt-free position reports the wire's "0" health sentinel, which would paint a false "At risk".
-  const hasDebt = BigInt(marginPositionDebt(position)) !== 0n
-  const healthBefore = hasDebt ? scaledE18ToNumber(position.healthFactor) : Number.POSITIVE_INFINITY
-  // Same sentinel on the projection, gated the same way the before side is: a full deleverage projects
-  // zero debt, so the wire's "0" would paint a de-risking action as moving into danger. Substituting on
-  // "0" ALONE would be the opposite inversion — a venue reporting "0" for any other reason (x18
-  // rounding, an insolvent projection) would render ∞/healthy.
-  // The equity-only keys (Add/Withdraw margin) report no debt at all, so an undefined projection means
-  // "debt unchanged": on a debt-free position that is still zero, and without this arm the sentinel
-  // would render the very inversion the before side already guards against.
-  const projectedDebt = projectedDebtAmount({ quote, mark: scaledE18ToNumber(position.oraclePrice) })
-  const projectsZeroDebt = projectedDebt === 0 || (projectedDebt === undefined && !hasDebt)
-  const healthAfter =
-    quote.display.healthFactor === undefined
-      ? undefined
-      : BigInt(quote.display.healthFactor) === 0n && projectsZeroDebt
-        ? Number.POSITIVE_INFINITY
-        : scaledE18ToNumber(quote.display.healthFactor)
-  const healthLabel = t('margin.risk.health')
-
   return (
     <Flex gap="$spacing12">
       {hasLeverageControl ? null : (
@@ -184,17 +163,11 @@ export function MarginAdjustBeforeAfterRows({
           after={formatLeverageX(leverageOf(quote.display.leverage))}
         />
       )}
-      {rowOrder === 'liquidationSecond' ? [liquidationRow, sizeRow] : [sizeRow, liquidationRow]}
-      <MarginDetailRow
-        label={healthLabel}
-        value={
-          healthAfter === undefined ? (
-            <MarginHealthValue before={healthBefore} />
-          ) : (
-            <MarginHealthValue label={healthLabel} before={healthBefore} after={healthAfter} />
-          )
-        }
-      />
+      {hasLeverageControl
+        ? liquidationRow
+        : rowOrder === 'liquidationSecond'
+          ? [liquidationRow, sizeRow]
+          : [sizeRow, liquidationRow]}
     </Flex>
   )
 }
@@ -254,8 +227,8 @@ export function MarginAdjustBeforeAfterSection({
     )
   }
   if (showInitialSkeleton) {
-    // Size, Liquidates at, Health — plus Leverage wherever no control already shows it.
-    return <MarginAdjustBeforeAfterRowsSkeleton rowCount={hasLeverageControl ? 3 : 4} />
+    // Liquidates at — plus Leverage and Size where the sheet has no leverage control.
+    return <MarginAdjustBeforeAfterRowsSkeleton rowCount={hasLeverageControl ? 1 : 3} />
   }
   return null
 }

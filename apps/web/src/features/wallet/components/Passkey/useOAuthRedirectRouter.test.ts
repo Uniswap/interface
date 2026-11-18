@@ -1,20 +1,14 @@
-import { usePrivy } from '@privy-io/react-auth'
 import { renderHook } from '@testing-library/react'
 import { useDispatch } from 'react-redux'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useOAuthRedirectRouter } from '~/features/wallet/components/Passkey/useOAuthRedirectRouter'
+import { useMaybePrivy } from '~/features/wallet/hooks/useMaybePrivy'
 import { useAccountDrawer } from '~/state/accountDrawer/hooks'
 import { MenuStateVariant, useSetMenu } from '~/state/accountDrawer/menuState'
 import { setOpenModal } from '~/state/application/reducer'
 
-vi.mock('@privy-io/react-auth', () => ({
-  usePrivy: vi.fn(),
-}))
-
-// `useMaybePrivy` only calls the (mocked) `usePrivy` when Privy is configured, so mark it configured here.
-vi.mock('~/config', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('~/config')>()),
-  getPrivyConfig: () => ({ appId: 'test-privy-app-id', clientId: 'test-privy-client-id' }),
+vi.mock('~/features/wallet/hooks/useMaybePrivy', () => ({
+  useMaybePrivy: vi.fn(),
 }))
 
 vi.mock('react-redux', () => ({
@@ -39,7 +33,7 @@ const mockOpen = vi.fn()
 const mockSetMenu = vi.fn()
 
 function setupMocks({ ready = true }: { ready?: boolean } = {}) {
-  vi.mocked(usePrivy).mockReturnValue({ ready } as unknown as ReturnType<typeof usePrivy>)
+  vi.mocked(useMaybePrivy).mockReturnValue({ ready } as unknown as ReturnType<typeof useMaybePrivy>)
   vi.mocked(useDispatch).mockReturnValue(mockDispatch)
   vi.mocked(useAccountDrawer).mockReturnValue({ open: mockOpen } as unknown as ReturnType<typeof useAccountDrawer>)
   vi.mocked(useSetMenu).mockReturnValue(mockSetMenu)
@@ -100,7 +94,7 @@ describe('useOAuthRedirectRouter', () => {
 
   it('leaves privy_oauth_* URL params in place for the headless code exchange', () => {
     // Regression (INFRA-3555): the router used to strip these params in the same effect that opens
-    // the modal — before the modal's useLoginWithOAuth could mount and run the code exchange that
+    // the modal — before the modal's useMaybeLoginWithOAuth could mount and run the code exchange that
     // reads them from window.location.search. The flow then died silently.
     window.history.replaceState(
       {},
@@ -129,7 +123,7 @@ describe('useOAuthRedirectRouter', () => {
 
     expect(mockDispatch).not.toHaveBeenCalled()
 
-    vi.mocked(usePrivy).mockReturnValue({ ready: true } as unknown as ReturnType<typeof usePrivy>)
+    vi.mocked(useMaybePrivy).mockReturnValue({ ready: true } as unknown as ReturnType<typeof useMaybePrivy>)
     rerender()
 
     expect(mockDispatch).toHaveBeenCalledWith(setOpenModal({ name: ModalName.RecoverWallet }))

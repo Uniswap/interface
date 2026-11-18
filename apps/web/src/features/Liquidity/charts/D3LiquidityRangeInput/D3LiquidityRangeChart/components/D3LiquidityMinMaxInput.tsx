@@ -1,5 +1,3 @@
-import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
-import { Token } from '@uniswap/sdk-core'
 import { Flex } from '@universe/mycelium'
 import { useCallback, useMemo, useState } from 'react'
 import { LiquidityEventName } from 'uniswap/src/features/telemetry/constants'
@@ -22,8 +20,8 @@ import { useCreateLiquidityContext } from '~/features/Liquidity/Create/CreateLiq
 import { RangeSelectionInput } from '~/features/Liquidity/Create/RangeAmountInput'
 import { RangeAmountInputPriceMode } from '~/features/Liquidity/Create/types'
 import { getBaseAndQuoteCurrencies } from '~/features/Liquidity/utils/currency'
-import { getTicksAtLimit, tryParseV4Tick } from '~/features/Liquidity/utils/priceRangeInfo'
-import { tryParseTick } from '~/state/mint/v3/utils'
+import { getTicksAtLimit } from '~/features/Liquidity/utils/priceRangeInfo'
+import { tryParseRangeTick } from '~/features/Liquidity/utils/tryParseRangeTick'
 
 // Convert user input to price based on the input mode
 function usePercentageToPrice() {
@@ -188,22 +186,14 @@ export function D3LiquidityMinMaxInput() {
         return
       }
 
-      let tickToSet: number | undefined
-      if (positionState.protocolVersion === ProtocolVersion.V4) {
-        tickToSet = tryParseV4Tick({
-          baseToken: tickNavigationParams.baseCurrency,
-          quoteToken: tickNavigationParams.quoteCurrency,
-          value,
-          tickSpacing: tickNavigationParams.tickSpacing,
-        })
-      } else {
-        tickToSet = tryParseTick({
-          baseToken: tickNavigationParams.baseCurrency as Token,
-          quoteToken: tickNavigationParams.quoteCurrency as Token,
-          value,
-          feeAmount: tickNavigationParams.feeAmount,
-        })
-      }
+      const tickToSet = tryParseRangeTick({
+        protocolVersion: positionState.protocolVersion,
+        baseToken: tickNavigationParams.baseCurrency,
+        quoteToken: tickNavigationParams.quoteCurrency,
+        value,
+        tickSpacing: tickNavigationParams.tickSpacing,
+        feeAmount: tickNavigationParams.feeAmount,
+      })
 
       const previousTick = input === RangeSelectionInput.MIN ? priceRangeState.minTick : priceRangeState.maxTick
 

@@ -314,6 +314,7 @@ describe(useFavoriteCurrencies, () => {
         data: output.data,
         error: output.error ?? null,
         isLoading: false,
+        isPlaceholderData: false,
         refetch: expect.any(Function),
       })
     })

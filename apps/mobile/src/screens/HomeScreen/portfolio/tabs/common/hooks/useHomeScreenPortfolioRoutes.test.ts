@@ -31,7 +31,7 @@ describe('useHomeScreenPortfolioRoutes', () => {
     })
 
     it('shows only the Explore tab for an empty wallet even if pools would otherwise be visible', () => {
-      // Empty-wallet state takes precedence over the pools flag.
+      // Empty-wallet state takes precedence over Pools tab visibility.
       expect(routeKeys(true, true)).toEqual([HomeTab.Explore])
     })
   })

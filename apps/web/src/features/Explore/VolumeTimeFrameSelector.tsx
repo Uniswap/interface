@@ -9,17 +9,17 @@ import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { InternalMenuItem } from '~/components/Dropdowns/Dropdown'
-import { TimePeriod } from '~/data/util'
-import { useEffectiveVolumeTimePeriod } from '~/features/Explore/hooks/useEffectiveVolumeTimePeriod'
-import { useExploreParams } from '~/features/Explore/hooks/useExploreParams'
-import { useExploreTablesFilterStoreActions } from '~/features/Explore/state/exploreTablesFilterStore'
 import {
   getDayBasedTimePeriodLabel,
   getTimePeriodLabel,
   ORDERED_TIMES,
   SOLANA_ORDERED_TIMES,
-} from '~/features/Explore/timeLabels'
+} from '~/components/Charts/timeLabels'
+import { InternalMenuItem } from '~/components/Dropdowns/Dropdown'
+import { TimePeriod } from '~/data/util'
+import { useEffectiveVolumeTimePeriod } from '~/features/Explore/hooks/useEffectiveVolumeTimePeriod'
+import { useExploreParams } from '~/features/Explore/hooks/useExploreParams'
+import { useExploreTablesFilterStoreActions } from '~/features/Explore/state/exploreTablesFilterStore'
 import { useAppHeaderHeight } from '~/hooks/useAppHeaderHeight'
 import { getChainIdFromChainUrlParam } from '~/utils/params/chainParams'
 
@@ -70,12 +70,13 @@ export function VolumeTimeFrameSelector({
     <Flex>
       <DropdownMenu open={isMenuOpen} onOpenChange={setIsMenuOpen} modal={false}>
         <DropdownMenuTrigger
-          nativeButton={false}
           render={
             <TriggerButtonCompat
               isExpanded={isMenuOpen}
               testID={TestID.TimeSelector}
               tooltipLabel={isLargeScreen ? undefined : activeLabel}
+              // The narrow trigger shows only the period ("1D"), so the name always carries the full label.
+              aria-label={activeLabel}
               className="h-[40px] w-max pl-[14px]"
             />
           }

@@ -5,10 +5,13 @@ import { persist } from 'zustand/middleware'
 // Chart display preferences (spec F14). Persisted so a trader's chart style survives reloads.
 export interface MarginChartPrefs {
   chartStyle: 'candles' | 'line'
+  // The positions table's "Show positions on chart" switch: entry avatars and their levels.
+  showPosition: boolean
 }
 
 export const DEFAULT_MARGIN_CHART_PREFS: MarginChartPrefs = {
   chartStyle: 'candles',
+  showPosition: true,
 }
 
 interface MarginChartPrefsState extends MarginChartPrefs {

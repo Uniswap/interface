@@ -173,6 +173,7 @@ function RecentlyConnectedModalUI({
 
   return (
     <AdaptiveWebPopoverContentCompat
+      aria-label={displayName}
       isOpen={isOpen}
       id="recently-connected-modal"
       backgroundColor="transparent"

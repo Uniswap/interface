@@ -1,12 +1,14 @@
 import { KycVerificationStatus } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/types_pb'
 import { UniverseChainId } from '@universe/chains'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   buildVerifyWalletParams,
+  KycProvider,
   toLegacyVerifyWalletResponse,
   useVerifyWalletQuery,
 } from 'uniswap/src/data/apiClients/dataApiService/auctions/useVerifyWallet'
+import { useZkPassportMint } from '~/features/Toucan/ZkPassport/useZkPassportMint'
 
 interface UseAuctionKycStatusParams {
   /**
@@ -44,6 +46,8 @@ export interface AuctionKycStatus {
   auctionNeedsVerification: boolean
   /** The current status of the KYC verification */
   status: KycVerificationStatus
+  /** Who verifies identity, when the auction requires it; for display only, the states above are the same */
+  kycProvider?: KycProvider
   /** Block at which the allowlist-only restriction lifts and general sale opens */
   allowlistEndBlock?: number
   /**
@@ -63,9 +67,12 @@ export function useAuctionKycStatus({
   currentBlockNumber,
 }: UseAuctionKycStatusParams): AuctionKycStatus {
   const { t } = useTranslation()
-  const { data, isLoading, isError } = useVerifyWalletQuery(
+  // The wallet that opened ZKPassport, so switching to another wallet stops polling for a credential it isn't minting.
+  const [zkPassportMintWallet, setZkPassportMintWallet] = useState<string | undefined>()
+  const awaitingZkPassportCredential = zkPassportMintWallet !== undefined && zkPassportMintWallet === walletAddress
+  const { data, isLoading, isError, refetch } = useVerifyWalletQuery(
     buildVerifyWalletParams({ walletAddress, auctionAddress, chainId }),
-    currentBlockNumber,
+    { currentBlockNumber, awaitingZkPassportCredential },
   )
 
   // Settled successfully with an empty array: everything the backend knows about this
@@ -87,6 +94,28 @@ export function useAuctionKycStatus({
       window.open(legacyData.redirectUrl, '_blank')
     }
   }, [legacyData?.redirectUrl])
+
+  const refetchVerification = useCallback(() => {
+    void refetch()
+  }, [refetch])
+  const mintZkPassportCredential = useZkPassportMint({
+    policyId: legacyData?.zkPassportPolicyId,
+    chainId,
+    walletAddress,
+    onSettled: refetchVerification,
+  })
+  const startZkPassportMint = useMemo(
+    () =>
+      mintZkPassportCredential &&
+      (() => {
+        // A closed popup may still have minted, so this stays set: polling stops once the credential shows up.
+        setZkPassportMintWallet(walletAddress)
+        mintZkPassportCredential()
+      }),
+    [mintZkPassportCredential, walletAddress],
+  )
+  // Predicate verifies on its own site; ZKPassport mints a credential to the wallet from its app.
+  const startVerification = legacyData?.kycProvider === KycProvider.ZkPassport ? startZkPassportMint : redirectToKyc
 
   return useMemo(() => {
     // Still loading
@@ -146,6 +175,7 @@ export function useAuctionKycStatus({
         auctionHasPresale,
         auctionNeedsVerification,
         status: legacyData.status,
+        kycProvider: legacyData.kycProvider,
         allowlistEndBlock,
         hasNoRecognizedValidations,
       }
@@ -164,6 +194,7 @@ export function useAuctionKycStatus({
         auctionHasPresale,
         auctionNeedsVerification,
         status: legacyData.status,
+        kycProvider: legacyData.kycProvider,
         allowlistEndBlock,
         hasNoRecognizedValidations,
       }
@@ -176,13 +207,14 @@ export function useAuctionKycStatus({
         kycButtonLabel: t('toucan.kyc.verificationInProgress'),
         whitelistLabel,
         kycButtonDisabled: false,
-        onKycAction: redirectToKyc,
+        onKycAction: startVerification,
         isLoading: false,
         isError: false,
         isAllowlisted,
         auctionHasPresale,
         auctionNeedsVerification,
         status: legacyData.status,
+        kycProvider: legacyData.kycProvider,
         allowlistEndBlock,
         hasNoRecognizedValidations,
       }
@@ -195,13 +227,14 @@ export function useAuctionKycStatus({
         kycButtonLabel: t('toucan.kyc.verificationRetry'),
         whitelistLabel,
         kycButtonDisabled: false,
-        onKycAction: redirectToKyc,
+        onKycAction: startVerification,
         isLoading: false,
         isError: false,
         isAllowlisted,
         auctionHasPresale,
         auctionNeedsVerification,
         status: legacyData.status,
+        kycProvider: legacyData.kycProvider,
         allowlistEndBlock,
         hasNoRecognizedValidations,
       }
@@ -221,6 +254,7 @@ export function useAuctionKycStatus({
         auctionHasPresale,
         auctionNeedsVerification,
         status: legacyData.status,
+        kycProvider: legacyData.kycProvider,
         allowlistEndBlock,
         hasNoRecognizedValidations,
       }
@@ -231,14 +265,15 @@ export function useAuctionKycStatus({
         canBid: false,
         kycButtonLabel: t('toucan.kyc.verifyIdentity'),
         whitelistLabel,
-        kycButtonDisabled: false,
-        onKycAction: redirectToKyc,
+        kycButtonDisabled: !startVerification,
+        onKycAction: startVerification,
         isLoading: false,
         isError: false,
         isAllowlisted,
         auctionHasPresale,
         auctionNeedsVerification,
         status: legacyData.status,
+        kycProvider: legacyData.kycProvider,
         allowlistEndBlock,
         hasNoRecognizedValidations,
       }
@@ -257,6 +292,7 @@ export function useAuctionKycStatus({
         auctionHasPresale,
         auctionNeedsVerification,
         status: legacyData.status,
+        kycProvider: legacyData.kycProvider,
         allowlistEndBlock,
         hasNoRecognizedValidations,
       }
@@ -277,5 +313,5 @@ export function useAuctionKycStatus({
       allowlistEndBlock,
       hasNoRecognizedValidations,
     }
-  }, [legacyData, isLoading, isError, t, redirectToKyc, hasNoRecognizedValidations])
+  }, [legacyData, isLoading, isError, t, startVerification, hasNoRecognizedValidations])
 }

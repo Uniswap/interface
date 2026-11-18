@@ -8,7 +8,7 @@ exports[`GenericImportForm > renders a placeholder when there is no value 1`] = 
   >
     <div
       class="css-view-175oi2r"
-      style="padding: 16px 24px 16px 24px; width: 100%; min-height: 120px; border-top-left-radius: 20px; border-top-right-radius: 20px; border-bottom-right-radius: 20px; border-bottom-left-radius: 20px; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px;"
+      style="padding: 16px 24px; width: 100%; min-height: 120px; border-top-left-radius: 20px; border-top-right-radius: 20px; border-bottom-right-radius: 20px; border-bottom-left-radius: 20px; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px;"
     >
       <div
         class="css-view-175oi2r"
@@ -22,7 +22,7 @@ exports[`GenericImportForm > renders a placeholder when there is no value 1`] = 
           dir="auto"
           enterkeyhint="done"
           spellcheck="false"
-          style="--placeholderTextColor: rgba(19, 19, 19, 0.35); border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; background-color: rgba(0, 0, 0, 0); color: rgb(19, 19, 19); border-top-color: rgba(0,0,0,0.00); border-right-color: rgba(0,0,0,0.00); border-bottom-color: rgba(0,0,0,0.00); border-left-color: rgba(0,0,0,0.00); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; height: auto; min-width: 0px; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; font-family: Basel Grotesk; font-size: 17px; font-weight: 500; flex-shrink: 1; text-align: left; line-height: 20.4px; padding: 0px 0px 0px 0px;"
+          style="--placeholderTextColor: rgba(19, 19, 19, 0.35); border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; background-color: rgba(0, 0, 0, 0); color: rgb(19, 19, 19); border-top-color: rgba(0, 0, 0, 0); border-right-color: rgba(0, 0, 0, 0); border-bottom-color: rgba(0, 0, 0, 0); border-left-color: rgba(0, 0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; height: auto; min-width: 0px; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; font-family: "Basel Grotesk"; font-size: 17px; font-weight: 500; flex-shrink: 1; text-align: left; line-height: 20.4px; padding: 0px;"
           virtualkeyboardpolicy="auto"
         />
       </div>
@@ -33,7 +33,7 @@ exports[`GenericImportForm > renders a placeholder when there is no value 1`] = 
         <div
           class="css-text-146c3p1"
           dir="auto"
-          style="pointer-events: none; font-size: 17px; line-height: 20.4px; font-family: Basel Grotesk; font-weight: 400;"
+          style="pointer-events: none; font-size: 17px; line-height: 20.4px; font-family: "Basel Grotesk"; font-weight: 400;"
         >
           seed phrase
         </div>
@@ -58,7 +58,7 @@ exports[`GenericImportForm > renders a placeholder when there is no value 1`] = 
               <div
                 class="css-text-146c3p1"
                 dir="auto"
-                style="font-size: 15px; line-height: 17.25px; font-family: Basel Grotesk; font-weight: 500;"
+                style="font-size: 15px; line-height: 17.25px; font-family: "Basel Grotesk"; font-weight: 500;"
               >
                 common.button.paste
               </div>

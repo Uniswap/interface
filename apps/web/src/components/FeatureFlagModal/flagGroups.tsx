@@ -103,8 +103,6 @@ export function buildFlagGroups(extras: {
     {
       name: 'Consumer Engagement',
       flags: [
-        { flag: FeatureFlags.PortfolioPoolsBalances, label: 'Enable Portfolio Pools Balances' },
-        { flag: FeatureFlags.TokenCategories, label: 'Enable Token Categories' },
         { flag: FeatureFlags.PoolCategories, label: 'Enable Pool Categories' },
         { flag: FeatureFlags.HooksExplore, label: 'Enable Hooks Explore UX' },
         { flag: FeatureFlags.NewUserUx, label: 'Enable New User UX' },

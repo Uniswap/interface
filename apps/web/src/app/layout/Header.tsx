@@ -8,8 +8,8 @@ import { Navbar } from '~/app/layout/NavBar/index'
 import {
   MobileAppPromoBanner,
   useMobileAppPromoBannerEligible,
-} from '~/components/TopLevelBanners/MobileAppPromoBanner'
-import { UkBanner, useRenderUkBanner } from '~/components/TopLevelBanners/UkBanner'
+} from '~/app/layout/TopLevelBanners/MobileAppPromoBanner'
+import { UkBanner, useRenderUkBanner } from '~/app/layout/TopLevelBanners/UkBanner'
 import { isPoolDiscoveryListRoute } from '~/features/Explore/poolArea/utils/poolAreaUrls'
 import { PageType, useIsPage } from '~/hooks/useIsPage'
 import { useScroll } from '~/hooks/useScroll'

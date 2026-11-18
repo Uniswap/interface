@@ -2,70 +2,39 @@ import { Button, Flex, Text, Separator } from '@universe/mycelium'
 import { type ReactNode, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CurrencyInputPanel } from 'uniswap/src/components/CurrencyInputPanel/CurrencyInputPanel'
-import type { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { marginPairKey } from 'uniswap/src/features/transactions/margin/marginPairKey'
 import {
   useMarginFormStore,
   useMarginFormStoreActions,
 } from 'uniswap/src/features/transactions/margin/stores/marginFormStore/useMarginFormStore'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useAbbreviatedTimeString } from '~/components/Table/utils/useAbbreviatedTimeString'
 import { useAccount } from '~/connection/hooks/useAccount'
 import type { MarginMarket } from '~/constants/margin'
 import { useMarginMarkets } from '~/features/margin/hooks/useMarginMarkets'
-import { conversionCaptionEquity } from '~/features/margin/utils/marginFormat'
+import { MarginFiatPresets } from '~/pages/Swap/Margin/components/MarginFiatPresets'
 import { MarginFormMarketsState } from '~/pages/Swap/Margin/components/MarginFormMarketsState'
-import { MarginLeverageSection } from '~/pages/Swap/Margin/components/MarginLeverageSection'
+import { MarginFormSideToggle } from '~/pages/Swap/Margin/components/MarginFormSideToggle'
 import { MarginMarketSelector } from '~/pages/Swap/Margin/components/MarginMarketSelector'
 import { MarginOpenButton } from '~/pages/Swap/Margin/components/MarginOpenButton'
 import { MarginOpenReviewModal } from '~/pages/Swap/Margin/components/MarginOpenReviewModal'
 import { MarginPayWith } from '~/pages/Swap/Margin/components/MarginPayWith'
 import { MarginRateRows } from '~/pages/Swap/Margin/components/MarginRateRows'
-import { type DerivedMarginInfo, useDerivedMarginInfo } from '~/pages/Swap/Margin/hooks/useDerivedMarginInfo'
+import { MarginSizeBlock } from '~/pages/Swap/Margin/components/MarginSizeBlock'
+import { MarginLeverageSection } from '~/pages/Swap/Margin/components/MarginSizeLeverageBox'
+import { useDerivedMarginInfo } from '~/pages/Swap/Margin/hooks/useDerivedMarginInfo'
 import { useMarginEquityInput } from '~/pages/Swap/Margin/hooks/useMarginEquityInput'
 import { useClearMarginVenuePinOnQuoteError } from '~/pages/Swap/Margin/hooks/useMarginVenueAllowlist'
+import { MARGIN_INPUT_FONT_SIZES } from '~/pages/Swap/Margin/marginFormConstants'
 import { MarginPositionsTable } from '~/pages/Swap/Margin/MarginPositionsTable'
 import { useAccountDrawer } from '~/state/accountDrawer/hooks'
-
-// legs[0].bounds.increase.expectedEquityDelta (raw collateral units) → display units for the conversion line.
-/**
- * The open form's adapter onto `conversionCaptionEquity` — the shared rule for this caption, which the
- * add sheet reads too. Only the formatting is local: this surface renders the figure into a
- * translated sentence beside app-formatted numbers, so it takes the app locale rather than the
- * browser's.
- */
-export function marginConversionEquity({
-  info,
-  formatNumberOrString,
-}: {
-  info: Pick<
-    DerivedMarginInfo,
-    'isPaymentDifferentFromCollateral' | 'isDebouncing' | 'isPlaceholderData' | 'quote' | 'market'
-  >
-  // The app's shared formatter, not a raw toLocaleString: at `maximumFractionDigits: 6` a dust equity
-  // (4e-7 WETH) rounds to "0" and the caption reads "≈0 ETH margin" — reintroducing, at the formatting
-  // step, the exact "≈ 0 reads as the answer" failure the guard below exists to close. TokenTx renders
-  // "<0.00001" instead, and it carries the app locale, so this drops the second locale source.
-  formatNumberOrString: LocalizationContextState['formatNumberOrString']
-}): string | undefined {
-  const equity = conversionCaptionEquity({
-    equityInRaw: info.quote?.legs[0]?.bounds.increase?.expectedEquityDelta,
-    decimals: info.market.collateral.decimals,
-    isPaymentTokenCollateral: !info.isPaymentDifferentFromCollateral,
-    isQuoteStale: info.isDebouncing || info.isPlaceholderData,
-  })
-  return equity === undefined ? undefined : formatNumberOrString({ value: equity, type: NumberType.TokenTx })
-}
 
 // The market-dependent half of the form: everything below CurrencyInputPanel needs a resolved
 // market, so it only mounts once MarginFormContent's gate confirms one. Every hook here must stay
 // unconditional within this component — the gate itself lives one level up.
 function MarginFormBody({ market }: { market: MarginMarket }): JSX.Element {
   const { t } = useTranslation()
-  const { formatNumberOrString } = useLocalizationContext()
   // The reporting mount for venue-routed telemetry: this is where a venue is actually chosen. Other
   // surfaces mount the same hook to read a derived field and stay silent — see its `reportVenueRouted`.
   const derivedMarginInfo = useDerivedMarginInfo({ market, reportVenueRouted: true })
@@ -74,15 +43,11 @@ function MarginFormBody({ market }: { market: MarginMarket }): JSX.Element {
     quoteError: derivedMarginInfo.quoteError,
     hasQuote: derivedMarginInfo.quote !== undefined,
   })
-  const marginAmount = useMarginFormStore((s) => s.marginAmount)
   const equityInput = useMarginEquityInput({ derivedMarginInfo })
   const [isReviewOpen, setIsReviewOpen] = useState(false)
-  const conversionEquity = marginConversionEquity({ info: derivedMarginInfo, formatNumberOrString })
   const openReview = useEvent(() => setIsReviewOpen(true))
   const closeReview = useEvent(() => setIsReviewOpen(false))
-
-  // Fiat entry mode is not supported for the margin equity input.
-  const onToggleIsFiatMode = useEvent(() => {})
+  const onSelectMax = useEvent(() => equityInput.onSetPresetValue('', 'max'))
 
   return (
     <Flex gap="$spacing8">
@@ -91,38 +56,38 @@ function MarginFormBody({ market }: { market: MarginMarket }): JSX.Element {
           currencyField={CurrencyField.INPUT}
           currencyInfo={equityInput.equityCurrencyInfo}
           currencyAmount={equityInput.currencyAmount}
-          currencyBalance={equityInput.balance}
-          // The balance is already spendable: gas is reserved from a native pay balance before it is
-          // restated, and a collateral figure restated from another token has none to reserve.
-          isGasCovered
+          // No balance line: Pay with states the pay token's balance in its own units.
+          currencyBalance={undefined}
+          hideBalance
+          showFiatToggleIcon
           // Same dollars either way: the pay amount is the margin restated in the pay token.
           usdValue={derivedMarginInfo.paymentUsdValue}
           value={equityInput.value}
+          isFiatMode={equityInput.isFiatMode}
           headerLabel={t('margin.payment.header')}
+          fontSizeOptions={MARGIN_INPUT_FONT_SIZES}
+          headerAccessory={
+            <MarginFiatPresets
+              canEnterFiat={equityInput.canEnterFiat}
+              canMax={equityInput.canMax}
+              onSelectFiat={equityInput.onSetFiatPreset}
+              onSelectMax={onSelectMax}
+            />
+          }
           onSetExactAmount={equityInput.onSetExactAmount}
           onSetPresetValue={equityInput.onSetPresetValue}
-          onToggleIsFiatMode={onToggleIsFiatMode}
+          onToggleIsFiatMode={equityInput.onToggleIsFiatMode}
         />
         <Separator />
         <MarginLeverageSection derivedMarginInfo={derivedMarginInfo} />
       </Flex>
+      <MarginSizeBlock derivedMarginInfo={derivedMarginInfo} />
       <MarginPayWith derivedMarginInfo={derivedMarginInfo} onSelectPaymentToken={equityInput.selectPaymentToken} />
-      {conversionEquity !== undefined ? (
-        <Text variant="body4" color="$neutral2" px="$spacing16">
-          {t('margin.payment.conversion', {
-            paymentAmount: marginAmount,
-            paymentSymbol: derivedMarginInfo.paymentToken.symbol,
-            equity: conversionEquity,
-            collateralSymbol: derivedMarginInfo.market.displaySymbol,
-          })}
-        </Text>
-      ) : null}
       <MarginOpenButton derivedMarginInfo={derivedMarginInfo} onRequestReview={openReview} />
       {/* The receipt sits under the CTA: the figures the button commits to, read after deciding. */}
       <MarginRateRows derivedMarginInfo={derivedMarginInfo} />
       <MarginOpenReviewModal derivedMarginInfo={derivedMarginInfo} isOpen={isReviewOpen} onClose={closeReview} />
-      <Separator mt="$spacing8" />
-      <Text variant="body4" color="$neutral3">
+      <Text variant="body4" color="$neutral3" mt="$spacing8">
         {t('margin.disclaimer')}
       </Text>
     </Flex>
@@ -188,6 +153,7 @@ function MarginFormContent({
 
   return (
     <Flex gap="$spacing8">
+      {displayMarket ? <MarginFormSideToggle market={displayMarket} /> : null}
       {showMarketSelector ? <MarginMarketSelector trailing={marketSelectorTrailing} /> : null}
       {showMarketSelector ? marketSelectorFooter : null}
       {displayMarket ? (

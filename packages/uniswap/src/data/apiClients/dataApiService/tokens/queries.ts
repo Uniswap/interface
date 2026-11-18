@@ -1,185 +1,48 @@
-import { type Message, type PartialMessage, type PlainMessage, toPlainMessage } from '@bufbuild/protobuf'
-import { Code, ConnectError } from '@connectrpc/connect'
-import { keepPreviousData } from '@tanstack/react-query'
-import {
-  type GetTokenHistoryOHLCRequest,
-  type GetTokenHistoryOHLCResponse,
-  type GetTokenHistoryPriceRequest,
-  type GetTokenHistoryPriceResponse,
-  type GetTokenHistoryTVLRequest,
-  type GetTokenHistoryTVLResponse,
-  type GetTokenHistoryVolumeRequest,
-  type GetTokenHistoryVolumeResponse,
-  type GetTokenMarketsMultiChainRequest,
-  type GetTokenMarketsMultiChainResponse,
-  type GetTokenMarketsRequest,
-  type GetTokenMarketsResponse,
-  type GetTokenMultiChainRequest,
-  type GetTokenMultiChainResponse,
-  type GetTokenRequest,
-  type GetTokenResponse,
-  type GetTokensMultiChainRequest,
-  type GetTokensMultiChainResponse,
-  type GetTokensRequest,
-  type GetTokensResponse,
-  type ListTokensRequest,
-  type ListTokensResponse,
+import { type PlainMessage } from '@bufbuild/protobuf'
+import type {
+  GetTokenBuySellStatsResponse,
+  GetTokenHistoryOHLCResponse,
+  GetTokenHistoryPriceResponse,
+  GetTokenHistoryTVLResponse,
+  GetTokenHistoryVolumeResponse,
+  GetTokenMarketsMultiChainResponse,
+  GetTokenMarketsResponse,
+  GetTokenMultiChainResponse,
+  GetTokenResponse,
+  GetTokensMultiChainResponse,
+  GetTokensResponse,
+  ListTokensResponse,
 } from '@uniswap/client-data-api/dist/data/v2/api_pb'
 import type { UniverseChainId } from '@universe/chains'
+import {
+  getGetTokenBuySellStatsQueryOptions as getGetTokenBuySellStatsQueryOptionsWithClient,
+  getGetTokenHistoryOHLCQueryOptions as getGetTokenHistoryOHLCQueryOptionsWithClient,
+  getGetTokenHistoryPriceQueryOptions as getGetTokenHistoryPriceQueryOptionsWithClient,
+  getGetTokenHistoryTVLQueryOptions as getGetTokenHistoryTVLQueryOptionsWithClient,
+  getGetTokenHistoryVolumeQueryOptions as getGetTokenHistoryVolumeQueryOptionsWithClient,
+  getGetTokenMarketsMultiChainQueryOptions as getGetTokenMarketsMultiChainQueryOptionsWithClient,
+  getGetTokenMarketsQueryOptions as getGetTokenMarketsQueryOptionsWithClient,
+  getGetTokenMultiChainQueryOptions as getGetTokenMultiChainQueryOptionsWithClient,
+  getGetTokenQueryOptions as getGetTokenQueryOptionsWithClient,
+  getGetTokensMultiChainQueryOptions as getGetTokensMultiChainQueryOptionsWithClient,
+  getGetTokensQueryOptions as getGetTokensQueryOptionsWithClient,
+  getListTokensQueryOptions as getListTokensQueryOptionsWithClient,
+  type GetTokenBuySellStatsInput,
+  type GetTokenHistoryOHLCInput,
+  type GetTokenHistoryPriceInput,
+  type GetTokenHistoryTVLInput,
+  type GetTokenHistoryVolumeInput,
+  type GetTokenInput,
+  type GetTokenMarketsInput,
+  type GetTokenMarketsMultiChainInput,
+  type GetTokenMultiChainInput,
+  type GetTokensInput,
+  type GetTokensMultiChainInput,
+  type ListTokensInput,
+} from '@universe/data-api'
 import { dataApiServiceClientV2 } from 'uniswap/src/data/apiClients/dataApiService/clients/DataApiClientV2'
 import { getFeatureFlaggedChainIds } from 'uniswap/src/features/chains/hooks/useFeatureFlaggedChainIds'
 import { getEnabledChains } from 'uniswap/src/features/chains/utils'
-import { logger } from 'utilities/src/logger/logger'
-import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
-import { persistableQueryOptions } from 'utilities/src/reactQuery/persistableQueryOptions'
-import { type QueryOptionsResult } from 'utilities/src/reactQuery/queryOptions'
-import { ONE_MINUTE_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
-
-type DataApiV2Input<TRequest extends Message<TRequest>, TResponse extends Message<TResponse>, TSelectData> = {
-  params?: PartialMessage<TRequest>
-  enabled?: boolean
-  /**
-   * Serve the previous key's data while a new key loads (react-query `keepPreviousData`). Turn off
-   * where a key change is a different view, e.g. a chart period switch that should show its skeleton.
-   */
-  keepPreviousData?: boolean
-  select?: (data: PlainMessage<TResponse> | undefined) => TSelectData
-}
-
-type DataApiV2QueryKey<TName extends string, TRequest extends Message<TRequest>> = readonly [
-  ReactQueryCacheKey.DataApiService,
-  TName,
-  PartialMessage<TRequest> | undefined,
-]
-
-export type GetTokenInput<TSelectData = PlainMessage<GetTokenResponse>> = DataApiV2Input<
-  GetTokenRequest,
-  GetTokenResponse,
-  TSelectData
->
-
-export type GetTokensInput<TSelectData = PlainMessage<GetTokensResponse>> = DataApiV2Input<
-  GetTokensRequest,
-  GetTokensResponse,
-  TSelectData
->
-
-export type GetTokenMultiChainInput<TSelectData = PlainMessage<GetTokenMultiChainResponse>> = DataApiV2Input<
-  GetTokenMultiChainRequest,
-  GetTokenMultiChainResponse,
-  TSelectData
->
-
-export type GetTokensMultiChainInput<TSelectData = PlainMessage<GetTokensMultiChainResponse>> = DataApiV2Input<
-  GetTokensMultiChainRequest,
-  GetTokensMultiChainResponse,
-  TSelectData
->
-
-export type GetTokenMarketsInput<TSelectData = PlainMessage<GetTokenMarketsResponse>> = DataApiV2Input<
-  GetTokenMarketsRequest,
-  GetTokenMarketsResponse,
-  TSelectData
->
-
-export type GetTokenMarketsMultiChainInput<TSelectData = PlainMessage<GetTokenMarketsMultiChainResponse>> =
-  DataApiV2Input<GetTokenMarketsMultiChainRequest, GetTokenMarketsMultiChainResponse, TSelectData>
-
-export type GetTokenHistoryPriceInput<TSelectData = PlainMessage<GetTokenHistoryPriceResponse>> = DataApiV2Input<
-  GetTokenHistoryPriceRequest,
-  GetTokenHistoryPriceResponse,
-  TSelectData
->
-
-export type GetTokenHistoryOHLCInput<TSelectData = PlainMessage<GetTokenHistoryOHLCResponse>> = DataApiV2Input<
-  GetTokenHistoryOHLCRequest,
-  GetTokenHistoryOHLCResponse,
-  TSelectData
->
-
-export type GetTokenHistoryVolumeInput<TSelectData = PlainMessage<GetTokenHistoryVolumeResponse>> = DataApiV2Input<
-  GetTokenHistoryVolumeRequest,
-  GetTokenHistoryVolumeResponse,
-  TSelectData
->
-
-export type GetTokenHistoryTVLInput<TSelectData = PlainMessage<GetTokenHistoryTVLResponse>> = DataApiV2Input<
-  GetTokenHistoryTVLRequest,
-  GetTokenHistoryTVLResponse,
-  TSelectData
->
-
-export type ListTokensInput<TSelectData = PlainMessage<ListTokensResponse>> = DataApiV2Input<
-  ListTokensRequest,
-  ListTokensResponse,
-  TSelectData
->
-
-type GetQueryOptionsPolicy = {
-  refetchInterval?: number
-  staleTime?: number
-}
-
-// Builds a `getXQueryOptions` function for a non-paginated DataApiServiceV2 endpoint. All such
-// endpoints share the same shape: params required to run, keepPreviousData while refetching (callers
-// can opt out), and a query key of [DataApiService, name, params]. `policy` lets each endpoint opt
-// into its own refetchInterval/staleTime — there's no shared default since freshness needs differ
-// per endpoint.
-function createGetQueryOptions<
-  TName extends string,
-  TRequest extends Message<TRequest>,
-  TResponse extends Message<TResponse>,
->({
-  name,
-  fetch,
-  policy,
-}: {
-  name: TName
-  fetch: (params: PartialMessage<TRequest>) => Promise<TResponse>
-  policy?: GetQueryOptionsPolicy
-}) {
-  return function getQueryOptions<TSelectData = PlainMessage<TResponse>>({
-    params,
-    enabled = true,
-    keepPreviousData: keepPrevious = true,
-    select,
-  }: DataApiV2Input<TRequest, TResponse, TSelectData>): QueryOptionsResult<
-    PlainMessage<TResponse> | undefined,
-    Error,
-    TSelectData,
-    DataApiV2QueryKey<TName, TRequest>
-  > {
-    return persistableQueryOptions({
-      queryKey: [ReactQueryCacheKey.DataApiService, name, params] as const,
-      queryFn: async (): Promise<PlainMessage<TResponse> | undefined> => {
-        if (!params) {
-          return undefined
-        }
-        return toPlainMessage(await fetch(params))
-      },
-      enabled: enabled && !!params,
-      placeholderData: keepPrevious ? keepPreviousData : undefined,
-      select,
-      ...policy,
-    })
-  }
-}
-
-// Price-bearing queries stay fresh at the 30s poll cadence; list/stats/history data holds for a minute.
-const PRICE_STALE_TIME_MS = 30 * ONE_SECOND_MS
-const STATS_STALE_TIME_MS = ONE_MINUTE_MS
-
-export const getGetTokenQueryOptions = createGetQueryOptions({
-  name: 'getToken',
-  fetch: (params: PartialMessage<GetTokenRequest>) => dataApiServiceClientV2.getToken(params),
-  policy: { staleTime: PRICE_STALE_TIME_MS },
-})
-
-export const getGetTokensQueryOptions = createGetQueryOptions({
-  name: 'getTokens',
-  fetch: (params: PartialMessage<GetTokensRequest>) => dataApiServiceClientV2.getTokens(params),
-  policy: { staleTime: STATS_STALE_TIME_MS },
-})
 
 function getMultichainChainIds(): UniverseChainId[] {
   // Metadata spans every chain the app can render, regardless of testnet mode.
@@ -190,109 +53,90 @@ function getMultichainChainIds(): UniverseChainId[] {
   }).chains
 }
 
-const getTokenMultiChainQueryOptions = createGetQueryOptions({
-  name: 'getTokenMultiChain',
-  // No single-chain fallback needed: the backend serves tokens outside the multichain index as a
-  // single-entry response itself, so a NotFound here means the token is unknown to it entirely.
-  fetch: (params: PartialMessage<GetTokenMultiChainRequest>) => dataApiServiceClientV2.getTokenMultiChain(params),
-  policy: { staleTime: PRICE_STALE_TIME_MS },
-})
+export function getGetTokenQueryOptions<TSelectData = PlainMessage<GetTokenResponse>>(
+  input: GetTokenInput<TSelectData>,
+): ReturnType<typeof getGetTokenQueryOptionsWithClient<TSelectData>> {
+  return getGetTokenQueryOptionsWithClient(dataApiServiceClientV2, input)
+}
+
+export function getGetTokensQueryOptions<TSelectData = PlainMessage<GetTokensResponse>>(
+  input: GetTokensInput<TSelectData>,
+): ReturnType<typeof getGetTokensQueryOptionsWithClient<TSelectData>> {
+  return getGetTokensQueryOptionsWithClient(dataApiServiceClientV2, input)
+}
 
 export function getGetTokenMultiChainQueryOptions<TSelectData = PlainMessage<GetTokenMultiChainResponse>>(
   input: GetTokenMultiChainInput<TSelectData>,
-): ReturnType<typeof getTokenMultiChainQueryOptions<TSelectData>> {
-  return getTokenMultiChainQueryOptions({
+): ReturnType<typeof getGetTokenMultiChainQueryOptionsWithClient<TSelectData>> {
+  return getGetTokenMultiChainQueryOptionsWithClient(dataApiServiceClientV2, {
     ...input,
-    params: input.params ? { ...input.params, chainIds: getMultichainChainIds() } : undefined,
+    params: input.params
+      ? {
+          ...input.params,
+          chainIds: getMultichainChainIds(),
+        }
+      : undefined,
   })
 }
-
-const getTokensMultiChainQueryOptions = createGetQueryOptions({
-  name: 'getTokensMultiChain',
-  fetch: (params: PartialMessage<GetTokensMultiChainRequest>) => dataApiServiceClientV2.getTokensMultiChain(params),
-  policy: { staleTime: STATS_STALE_TIME_MS },
-})
 
 export function getGetTokensMultiChainQueryOptions<TSelectData = PlainMessage<GetTokensMultiChainResponse>>(
   input: GetTokensMultiChainInput<TSelectData>,
-): ReturnType<typeof getTokensMultiChainQueryOptions<TSelectData>> {
-  return getTokensMultiChainQueryOptions({
+): ReturnType<typeof getGetTokensMultiChainQueryOptionsWithClient<TSelectData>> {
+  return getGetTokensMultiChainQueryOptionsWithClient(dataApiServiceClientV2, {
     ...input,
-    params: input.params ? { ...input.params, chainIds: getMultichainChainIds() } : undefined,
+    params: input.params
+      ? {
+          ...input.params,
+          chainIds: getMultichainChainIds(),
+        }
+      : undefined,
   })
 }
 
-export const getGetTokenMarketsQueryOptions = createGetQueryOptions({
-  name: 'getTokenMarkets',
-  fetch: (params: PartialMessage<GetTokenMarketsRequest>) => dataApiServiceClientV2.getTokenMarkets(params),
-  policy: { staleTime: STATS_STALE_TIME_MS },
-})
-
-/**
- * A chain id the data API doesn't recognize in `chainIds` fails the whole request
- * (invalid_argument, "Unrecognized chainId: ..."), which would blank market stats on every
- * multichain TDP if a chain ever ships app-side before data-api onboarding. Fall back to the
- * unfiltered aggregate: over-inclusive for the unknown chain beats no stats at all. If the
- * backend's error shape changes, the fallback stops firing and behavior is unchanged.
- */
-async function fetchTokenMarketsMultiChainWithChainIdFallback(
-  params: PartialMessage<GetTokenMarketsMultiChainRequest>,
-): Promise<GetTokenMarketsMultiChainResponse> {
-  try {
-    return await dataApiServiceClientV2.getTokenMarketsMultiChain(params)
-  } catch (error) {
-    const isUnrecognizedChainId =
-      error instanceof ConnectError && error.code === Code.InvalidArgument && error.rawMessage.includes('chainId')
-    if (isUnrecognizedChainId && params.chainIds?.length) {
-      logger.error(error, {
-        tags: { file: 'queries.ts', function: 'fetchTokenMarketsMultiChainWithChainIdFallback' },
-        extra: { chainIds: params.chainIds },
-      })
-      return dataApiServiceClientV2.getTokenMarketsMultiChain({ ...params, chainIds: undefined })
-    }
-    throw error
-  }
+export function getGetTokenMarketsQueryOptions<TSelectData = PlainMessage<GetTokenMarketsResponse>>(
+  input: GetTokenMarketsInput<TSelectData>,
+): ReturnType<typeof getGetTokenMarketsQueryOptionsWithClient<TSelectData>> {
+  return getGetTokenMarketsQueryOptionsWithClient(dataApiServiceClientV2, input)
 }
 
-export const getGetTokenMarketsMultiChainQueryOptions = createGetQueryOptions({
-  name: 'getTokenMarketsMultiChain',
-  fetch: fetchTokenMarketsMultiChainWithChainIdFallback,
-  policy: { staleTime: STATS_STALE_TIME_MS },
-})
+export function getGetTokenMarketsMultiChainQueryOptions<TSelectData = PlainMessage<GetTokenMarketsMultiChainResponse>>(
+  input: GetTokenMarketsMultiChainInput<TSelectData>,
+): ReturnType<typeof getGetTokenMarketsMultiChainQueryOptionsWithClient<TSelectData>> {
+  return getGetTokenMarketsMultiChainQueryOptionsWithClient(dataApiServiceClientV2, input)
+}
 
-export const getGetTokenHistoryPriceQueryOptions = createGetQueryOptions({
-  name: 'getTokenHistoryPrice',
-  fetch: (params: PartialMessage<GetTokenHistoryPriceRequest>) => dataApiServiceClientV2.getTokenHistoryPrice(params),
-  // Refetched on the TDP 30s price tick alongside getTokenMultiChain, not the config-cadence full tick.
-  policy: { staleTime: PRICE_STALE_TIME_MS },
-})
+export function getGetTokenHistoryPriceQueryOptions<TSelectData = PlainMessage<GetTokenHistoryPriceResponse>>(
+  input: GetTokenHistoryPriceInput<TSelectData>,
+): ReturnType<typeof getGetTokenHistoryPriceQueryOptionsWithClient<TSelectData>> {
+  return getGetTokenHistoryPriceQueryOptionsWithClient(dataApiServiceClientV2, input)
+}
 
-export const getGetTokenHistoryOHLCQueryOptions = createGetQueryOptions({
-  name: 'getTokenHistoryOHLC',
-  fetch: (params: PartialMessage<GetTokenHistoryOHLCRequest>) => dataApiServiceClientV2.getTokenHistoryOHLC(params),
-  // Refetched on the TDP 30s price tick alongside getTokenMultiChain, not the config-cadence full tick.
-  policy: { staleTime: PRICE_STALE_TIME_MS },
-})
+export function getGetTokenHistoryOHLCQueryOptions<TSelectData = PlainMessage<GetTokenHistoryOHLCResponse>>(
+  input: GetTokenHistoryOHLCInput<TSelectData>,
+): ReturnType<typeof getGetTokenHistoryOHLCQueryOptionsWithClient<TSelectData>> {
+  return getGetTokenHistoryOHLCQueryOptionsWithClient(dataApiServiceClientV2, input)
+}
 
-export const getGetTokenHistoryVolumeQueryOptions = createGetQueryOptions({
-  name: 'getTokenHistoryVolume',
-  fetch: (params: PartialMessage<GetTokenHistoryVolumeRequest>) => dataApiServiceClientV2.getTokenHistoryVolume(params),
-  policy: { staleTime: STATS_STALE_TIME_MS },
-})
+export function getGetTokenHistoryVolumeQueryOptions<TSelectData = PlainMessage<GetTokenHistoryVolumeResponse>>(
+  input: GetTokenHistoryVolumeInput<TSelectData>,
+): ReturnType<typeof getGetTokenHistoryVolumeQueryOptionsWithClient<TSelectData>> {
+  return getGetTokenHistoryVolumeQueryOptionsWithClient(dataApiServiceClientV2, input)
+}
 
-export const getGetTokenHistoryTVLQueryOptions = createGetQueryOptions({
-  name: 'getTokenHistoryTVL',
-  fetch: (params: PartialMessage<GetTokenHistoryTVLRequest>) => dataApiServiceClientV2.getTokenHistoryTVL(params),
-  policy: { staleTime: STATS_STALE_TIME_MS },
-})
+export function getGetTokenHistoryTVLQueryOptions<TSelectData = PlainMessage<GetTokenHistoryTVLResponse>>(
+  input: GetTokenHistoryTVLInput<TSelectData>,
+): ReturnType<typeof getGetTokenHistoryTVLQueryOptionsWithClient<TSelectData>> {
+  return getGetTokenHistoryTVLQueryOptionsWithClient(dataApiServiceClientV2, input)
+}
 
-/**
- * Single page of ListTokens for callers that only want the top `params.page.pageSize` rows (a
- * "trending tokens" shelf, for instance) and never page further. Explore-style tables that page
- * forward use `useExploreListTokens` instead.
- */
-export const getListTokensQueryOptions = createGetQueryOptions({
-  name: 'listTokens',
-  fetch: (params: PartialMessage<ListTokensRequest>) => dataApiServiceClientV2.listTokens(params),
-  policy: { staleTime: STATS_STALE_TIME_MS },
-})
+export function getGetTokenBuySellStatsQueryOptions<TSelectData = PlainMessage<GetTokenBuySellStatsResponse>>(
+  input: GetTokenBuySellStatsInput<TSelectData>,
+): ReturnType<typeof getGetTokenBuySellStatsQueryOptionsWithClient<TSelectData>> {
+  return getGetTokenBuySellStatsQueryOptionsWithClient(dataApiServiceClientV2, input)
+}
+
+export function getListTokensQueryOptions<TSelectData = PlainMessage<ListTokensResponse>>(
+  input: ListTokensInput<TSelectData>,
+): ReturnType<typeof getListTokensQueryOptionsWithClient<TSelectData>> {
+  return getListTokensQueryOptionsWithClient(dataApiServiceClientV2, input)
+}

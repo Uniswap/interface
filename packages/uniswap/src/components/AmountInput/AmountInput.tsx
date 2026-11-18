@@ -1,18 +1,11 @@
 import { isMobileApp } from '@universe/environment'
 import { Input, Text, fonts } from '@universe/mycelium'
-import { forwardRef, type ForwardRefExoticComponent, type RefAttributes, useCallback, useEffect, useMemo } from 'react'
-import { getNumberFormatSettings } from 'react-native-localize'
+import { forwardRef, type ForwardRefExoticComponent, type RefAttributes, useMemo } from 'react'
 // mycelium's `fonts` is the flat web table; ui's applies the native +1 ramp this default depends on
+import { useAmountInputText } from 'uniswap/src/components/AmountInput/useAmountInputText'
 import { useTextWidth } from 'uniswap/src/components/AmountInput/useTextWidth'
-import { numericInputEnforcer } from 'uniswap/src/components/AmountInput/utils/numericInputEnforcer'
-import { parseValue } from 'uniswap/src/components/AmountInput/utils/parseValue'
-import { replaceSeparators } from 'uniswap/src/components/AmountInput/utils/replaceSeparators'
 import { TextInput, TextInputProps } from 'uniswap/src/components/input/TextInput'
-import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { FiatCurrencyInfo } from 'uniswap/src/features/fiatOnRamp/types'
-import { useOnMobileAppState } from 'utilities/src/device/appState'
-import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
-import { noop } from 'utilities/src/react/noop'
 
 // Default font size when not explicitly provided (matches heading2)
 const DEFAULT_FONT_SIZE = fonts.heading2.fontSize
@@ -35,52 +28,18 @@ export const AmountInput: ForwardRefExoticComponent<Props & RefAttributes<Input>
       showSoftInputOnFocus,
       maxDecimals,
       fiatCurrencyInfo,
-      inputEnforcer = numericInputEnforcer,
+      inputEnforcer,
       ...rest
     },
     ref,
   ) {
-    const appFiatCurrencyInfo = useAppFiatCurrencyInfo()
-    const targetFiatCurrencyInfo = fiatCurrencyInfo || appFiatCurrencyInfo
-    const { groupingSeparator, decimalSeparator } = targetFiatCurrencyInfo
-    const { decimalSeparator: nativeKeyboardDecimalSeparator } = getNumberFormatSettings()
-
-    useEffect(() => {
-      // Resets input if non-numeric value is passed
-      if (!inputEnforcer(value)) {
-        onChangeText?.('')
-      }
-    }, [inputEnforcer, onChangeText, value])
-
-    const handleChange = useCallback(
-      (val: string) => {
-        onChangeText?.(
-          parseValue({
-            value: val,
-            decimalSeparator,
-            groupingSeparator,
-            showSoftInputOnFocus,
-            nativeKeyboardDecimalSeparator,
-            maxDecimals,
-          }),
-        )
-      },
-      [
-        decimalSeparator,
-        groupingSeparator,
-        maxDecimals,
-        nativeKeyboardDecimalSeparator,
-        onChangeText,
-        showSoftInputOnFocus,
-      ],
-    )
-
-    const formattedValue = replaceSeparators({
-      value: value ?? '',
-      groupingSeparator: ',',
-      decimalSeparator: '.',
-      groupingOverride: '',
-      decimalOverride: decimalSeparator,
+    const { formattedValue, onChangeFormattedText: handleChange } = useAmountInputText({
+      value,
+      onChangeText,
+      showSoftInputOnFocus,
+      maxDecimals,
+      fiatCurrencyInfo,
+      inputEnforcer,
     })
 
     // Estimate width to prevent overflown input on web
@@ -110,9 +69,6 @@ export const AmountInput: ForwardRefExoticComponent<Props & RefAttributes<Input>
       }),
       [ref, value, dimTextColor, formattedValue, handleChange, rest, width, adjustWidthToContent, fontSize],
     )
-
-    // Dismiss keyboard when mobile app is foregrounded (showSoftInputOnFocus doesn't work when the app activates from the background)
-    useOnMobileAppState('active', showSoftInputOnFocus ? noop : dismissNativeKeyboard)
 
     // break down into two different components depending on value of showSoftInputOnFocus
     // when showSoftInputOnFocus value changes from false to true, React does not remount the component

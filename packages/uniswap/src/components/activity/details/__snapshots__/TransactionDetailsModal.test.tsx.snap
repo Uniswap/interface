@@ -44,7 +44,7 @@ exports[`TransactionDetails Components > renders TransactionDetailsHeader withou
             <div
               class="flex flex-col basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 items-center justify-center overflow-hidden z-[var(--c-z)]"
               data-testid="network-logo-8453"
-              style="--c-z: 10; width: 19.2px; height: 19.2px; border-radius: 5.76px; border-width: 1.6px;"
+              style="--c-z: 10; width: 19.2px; height: 19.2px; border-radius: 5.76px; border-width: 1.6px; border-color: var(--surface1);"
             >
               <div
                 class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -52,7 +52,7 @@ exports[`TransactionDetails Components > renders TransactionDetailsHeader withou
               >
                 <div
                   class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
-                  style="background-image: url(mock-asset-BASE_LOGO.png);"
+                  style="background-image: url("mock-asset-BASE_LOGO.png");"
                 />
                 <img
                   alt=""
@@ -94,7 +94,7 @@ exports[`TransactionDetails Components > renders TransactionDetailsHeader withou
         data-slot="ui-popover-trigger"
         id="base-ui-_r_1_"
         role="button"
-        style="align-items: stretch; box-sizing: border-box; display: flex; flex-basis: auto; flex-direction: column; flex-shrink: 0; margin: 0px; min-height: 0; min-width: 0; padding: 0px; position: relative;"
+        style="align-items: stretch; box-sizing: border-box; display: flex; flex-basis: auto; flex-direction: column; flex-shrink: 0; margin: 0px; min-height: 0px; min-width: 0px; padding: 0px; position: relative;"
         tabindex="0"
       >
         <div>
@@ -106,7 +106,7 @@ exports[`TransactionDetails Components > renders TransactionDetailsHeader withou
               fill="none"
               focusable="false"
               stroke-width="8"
-              style="width: 20px; height: 20px;"
+              style="color: var(--neutral2); width: 20px; height: 20px;"
               viewBox="0 0 18 4"
             >
               <path
@@ -158,7 +158,7 @@ exports[`TransactionDetails Components > renders TransactionDetailsInfoRows with
         <div
           class="flex flex-col basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 items-center justify-center overflow-hidden z-[var(--c-z)]"
           data-testid="network-logo-8453"
-          style="--c-z: 10; width: 16px; height: 16px; border-radius: 4.8px; border-width: 0px;"
+          style="--c-z: 10; width: 16px; height: 16px; border-radius: 4.8px; border-width: 0px; border-color: var(--surface1);"
         >
           <div
             class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -166,7 +166,7 @@ exports[`TransactionDetails Components > renders TransactionDetailsInfoRows with
           >
             <div
               class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
-              style="background-image: url(mock-asset-BASE_LOGO.png);"
+              style="background-image: url("mock-asset-BASE_LOGO.png");"
             />
             <img
               alt=""
@@ -208,7 +208,7 @@ exports[`TransactionDetails Components > renders TransactionDetailsInfoRows with
             fill="none"
             focusable="false"
             stroke-width="8"
-            style="width: 16px; height: 16px;"
+            style="color: var(--neutral3); width: 16px; height: 16px;"
             viewBox="0 0 24 24"
           >
             <path
@@ -260,7 +260,7 @@ exports[`TransactionDetails Components > renders TransactionDetailsInfoRows with
         <div
           class="flex flex-col basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 items-center justify-center overflow-hidden z-[var(--c-z)]"
           data-testid="network-logo-8453"
-          style="--c-z: 10; width: 16px; height: 16px; border-radius: 4.8px; border-width: 0px;"
+          style="--c-z: 10; width: 16px; height: 16px; border-radius: 4.8px; border-width: 0px; border-color: var(--surface1);"
         >
           <div
             class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -268,7 +268,7 @@ exports[`TransactionDetails Components > renders TransactionDetailsInfoRows with
           >
             <div
               class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
-              style="background-image: url(mock-asset-BASE_LOGO.png);"
+              style="background-image: url("mock-asset-BASE_LOGO.png");"
             />
             <img
               alt=""
@@ -310,7 +310,7 @@ exports[`TransactionDetails Components > renders TransactionDetailsInfoRows with
             fill="none"
             focusable="false"
             stroke-width="8"
-            style="width: 16px; height: 16px;"
+            style="color: var(--neutral3); width: 16px; height: 16px;"
             viewBox="0 0 24 24"
           >
             <path

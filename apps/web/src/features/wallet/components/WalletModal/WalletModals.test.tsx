@@ -1,4 +1,3 @@
-import { useLoginWithOAuth } from '@privy-io/react-auth'
 import { Platform } from '@universe/chains'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { TestID } from '@universe/test'
@@ -12,6 +11,7 @@ import { EmbeddedWalletConnectionsModal } from '~/features/wallet/components/Wal
 import { OtherWalletsModal } from '~/features/wallet/components/WalletModal/OtherWalletsModal'
 import { StandardWalletModal } from '~/features/wallet/components/WalletModal/StandardWalletModal'
 import { SwitchWalletModal } from '~/features/wallet/components/WalletModal/SwitchWalletModal'
+import { useMaybeLoginWithOAuth } from '~/features/wallet/hooks/useMaybePrivy'
 import { useSignInWithPasskey } from '~/features/wallet/hooks/useSignInWithPasskey'
 import { MenuStateVariant, useMenuState, useSetMenu } from '~/state/accountDrawer/menuState'
 import { useEmbeddedWalletLoginViewStore } from '~/state/embeddedWallet/loginViewStore'
@@ -20,16 +20,10 @@ import { fireEvent, render, screen } from '~/test-utils/render'
 
 const mockInitOAuth = vi.fn()
 
-vi.mock('@privy-io/react-auth', async (importOriginal) => ({
+vi.mock('~/features/wallet/hooks/useMaybePrivy', async (importOriginal) => ({
   ...(await importOriginal()),
-  useLoginWithOAuth: vi.fn(() => ({ initOAuth: mockInitOAuth, loading: false })),
-  usePrivy: vi.fn(() => ({ ready: true })),
-}))
-
-// `useMaybePrivy` only calls the (mocked) `usePrivy` when Privy is configured, so mark it configured here.
-vi.mock('~/config', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('~/config')>()),
-  getPrivyConfig: () => ({ appId: 'test-privy-app-id', clientId: 'test-privy-client-id' }),
+  useMaybeLoginWithOAuth: vi.fn(() => ({ initOAuth: mockInitOAuth, loading: false })),
+  useMaybePrivy: vi.fn(() => ({ ready: true })),
 }))
 
 vi.mock('@universe/gating', async (importOriginal) => ({
@@ -198,14 +192,15 @@ describe('EmbeddedWalletConnectionsModal', () => {
     })
 
     it('disables email button during OAuth loading', () => {
-      mocked(useLoginWithOAuth).mockReturnValue({ initOAuth: mockInitOAuth, loading: true } as unknown as ReturnType<
-        typeof useLoginWithOAuth
-      >)
+      mocked(useMaybeLoginWithOAuth).mockReturnValue({
+        initOAuth: mockInitOAuth,
+        loading: true,
+      } as unknown as ReturnType<typeof useMaybeLoginWithOAuth>)
 
       goToLoginView()
 
       // The email OptionRow should be disabled when oauthLoading is true and oauthProvider is set
-      // (provider gets set on click, but loading starts from useLoginWithOAuth)
+      // (provider gets set on click, but loading starts from useMaybeLoginWithOAuth)
       expect(screen.getByText('Email')).toBeDefined()
     })
   })

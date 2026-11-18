@@ -70,3 +70,12 @@ export function FocusedRow({
   const isFocused = useIsRowFocused(rowIndex)
   return <>{children(isFocused)}</>
 }
+
+/**
+ * Whether a list-nav key press may act on the highlighted row. A focused button or link activates itself
+ * (TouchableArea handles Enter), so only keys pressed elsewhere, in the search input or on the body after a
+ * click on modal whitespace, drive the highlight.
+ */
+export function isListNavKeyEvent(event: KeyboardEvent): boolean {
+  return !(event.target instanceof HTMLElement && event.target.closest('button, a, [role="button"]'))
+}

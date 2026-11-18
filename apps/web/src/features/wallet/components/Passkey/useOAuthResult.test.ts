@@ -1,15 +1,9 @@
-import { usePrivy } from '@privy-io/react-auth'
 import { act, renderHook } from '@testing-library/react'
 import { useOAuthResult } from '~/features/wallet/components/Passkey/useOAuthResult'
+import { useMaybePrivy } from '~/features/wallet/hooks/useMaybePrivy'
 
-vi.mock('@privy-io/react-auth', () => ({
-  usePrivy: vi.fn(),
-}))
-
-// `useMaybePrivy` only calls the (mocked) `usePrivy` when Privy is configured, so mark it configured here.
-vi.mock('~/config', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('~/config')>()),
-  getPrivyConfig: () => ({ appId: 'test-privy-app-id', clientId: 'test-privy-client-id' }),
+vi.mock('~/features/wallet/hooks/useMaybePrivy', () => ({
+  useMaybePrivy: vi.fn(),
 }))
 
 vi.mock('~/features/wallet/components/Passkey/OAuthRedirectContext', () => ({
@@ -29,11 +23,11 @@ describe('useOAuthResult', () => {
   })
 
   it('returns idle state when no sessionStorage key is set', () => {
-    vi.mocked(usePrivy).mockReturnValue({
+    vi.mocked(useMaybePrivy).mockReturnValue({
       ready: true,
       authenticated: false,
       user: null,
-    } as unknown as ReturnType<typeof usePrivy>)
+    } as unknown as ReturnType<typeof useMaybePrivy>)
 
     const { result } = renderHook(() => useOAuthResult(TEST_KEY))
 
@@ -47,11 +41,11 @@ describe('useOAuthResult', () => {
   it('returns pending: true when key is set but Privy not yet authenticated', () => {
     sessionStorage.setItem(TEST_KEY, 'google')
 
-    vi.mocked(usePrivy).mockReturnValue({
+    vi.mocked(useMaybePrivy).mockReturnValue({
       ready: false,
       authenticated: false,
       user: null,
-    } as unknown as ReturnType<typeof usePrivy>)
+    } as unknown as ReturnType<typeof useMaybePrivy>)
 
     const { result } = renderHook(() => useOAuthResult(TEST_KEY))
 
@@ -62,11 +56,11 @@ describe('useOAuthResult', () => {
   it('returns provider and email when key is set and Privy authenticated (Google)', () => {
     sessionStorage.setItem(TEST_KEY, 'google')
 
-    vi.mocked(usePrivy).mockReturnValue({
+    vi.mocked(useMaybePrivy).mockReturnValue({
       ready: true,
       authenticated: true,
       user: { google: { email: 'user@gmail.com' } },
-    } as unknown as ReturnType<typeof usePrivy>)
+    } as unknown as ReturnType<typeof useMaybePrivy>)
 
     const { result } = renderHook(() => useOAuthResult(TEST_KEY))
 
@@ -80,11 +74,11 @@ describe('useOAuthResult', () => {
   it('returns provider and email when key is set and Privy authenticated (Apple)', () => {
     sessionStorage.setItem(TEST_KEY, 'apple')
 
-    vi.mocked(usePrivy).mockReturnValue({
+    vi.mocked(useMaybePrivy).mockReturnValue({
       ready: true,
       authenticated: true,
       user: { apple: { email: 'user@icloud.com' } },
-    } as unknown as ReturnType<typeof usePrivy>)
+    } as unknown as ReturnType<typeof useMaybePrivy>)
 
     const { result } = renderHook(() => useOAuthResult(TEST_KEY))
 
@@ -98,11 +92,11 @@ describe('useOAuthResult', () => {
   it('stays pending when ready but not yet authenticated (Privy code exchange in flight)', () => {
     sessionStorage.setItem(TEST_KEY, 'google')
 
-    vi.mocked(usePrivy).mockReturnValue({
+    vi.mocked(useMaybePrivy).mockReturnValue({
       ready: true,
       authenticated: false,
       user: null,
-    } as unknown as ReturnType<typeof usePrivy>)
+    } as unknown as ReturnType<typeof useMaybePrivy>)
 
     const { result } = renderHook(() => useOAuthResult(TEST_KEY))
 
@@ -114,11 +108,11 @@ describe('useOAuthResult', () => {
   it('stays pending when authenticated but linked account has not synced yet', () => {
     sessionStorage.setItem(TEST_KEY, 'google')
 
-    vi.mocked(usePrivy).mockReturnValue({
+    vi.mocked(useMaybePrivy).mockReturnValue({
       ready: true,
       authenticated: true,
       user: { google: undefined },
-    } as unknown as ReturnType<typeof usePrivy>)
+    } as unknown as ReturnType<typeof useMaybePrivy>)
 
     const { result } = renderHook(() => useOAuthResult(TEST_KEY))
 
@@ -130,11 +124,11 @@ describe('useOAuthResult', () => {
   it('clears sessionStorage after detection', () => {
     sessionStorage.setItem(TEST_KEY, 'google')
 
-    vi.mocked(usePrivy).mockReturnValue({
+    vi.mocked(useMaybePrivy).mockReturnValue({
       ready: true,
       authenticated: true,
       user: { google: { email: 'user@gmail.com' } },
-    } as unknown as ReturnType<typeof usePrivy>)
+    } as unknown as ReturnType<typeof useMaybePrivy>)
 
     renderHook(() => useOAuthResult(TEST_KEY))
 
@@ -145,11 +139,11 @@ describe('useOAuthResult', () => {
     vi.useFakeTimers()
     sessionStorage.setItem(TEST_KEY, 'google')
 
-    vi.mocked(usePrivy).mockReturnValue({
+    vi.mocked(useMaybePrivy).mockReturnValue({
       ready: true,
       authenticated: false,
       user: null,
-    } as unknown as ReturnType<typeof usePrivy>)
+    } as unknown as ReturnType<typeof useMaybePrivy>)
 
     const { result } = renderHook(() => useOAuthResult(TEST_KEY))
 
@@ -168,11 +162,11 @@ describe('useOAuthResult', () => {
     vi.useFakeTimers()
     sessionStorage.setItem(TEST_KEY, 'google')
 
-    vi.mocked(usePrivy).mockReturnValue({
+    vi.mocked(useMaybePrivy).mockReturnValue({
       ready: true,
       authenticated: true,
       user: { google: { email: 'user@gmail.com' } },
-    } as unknown as ReturnType<typeof usePrivy>)
+    } as unknown as ReturnType<typeof useMaybePrivy>)
 
     const { result } = renderHook(() => useOAuthResult(TEST_KEY))
 

@@ -1,4 +1,3 @@
-import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { type MouseEvent, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
@@ -19,7 +18,6 @@ export function ExpandableAssetMetricHeaderTooltip({
 }): JSX.Element {
   const { t } = useTranslation()
   const { chainName } = useExploreParams()
-  const volumeTimeframeSelectable = useIsTokenCategoriesEnabled()
 
   const networkName = useMemo(() => {
     if (category !== StocksSortMethod.PRICE || !chainName) {
@@ -30,8 +28,8 @@ export function ExpandableAssetMetricHeaderTooltip({
   }, [category, chainName])
 
   const tooltipContent = useMemo(
-    () => getExpandableAssetHeaderDescription({ t, category, networkName, volumeTimeframeSelectable }),
-    [t, category, networkName, volumeTimeframeSelectable],
+    () => getExpandableAssetHeaderDescription({ t, category, networkName }),
+    [t, category, networkName],
   )
 
   const handleTooltipClick = useCallback(

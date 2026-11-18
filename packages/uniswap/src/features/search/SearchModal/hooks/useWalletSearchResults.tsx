@@ -53,9 +53,12 @@ export function useWalletSearchResults(
     loading: ensLoading,
   } = useENS({ nameOrAddress: querySkippedIfValidAddress, autocompleteDomain: false })
 
+  // Unitags are always lowercase and useUnitagsUsernameQuery skips the request for uppercase input (claim-flow validation)
+  const lowercasedQuery = query.toLowerCase()
+
   // Search for matching Unitag by name
   const { data: unitagByName, isLoading: unitagLoading } = useUnitagsUsernameQuery({
-    params: query ? { username: query } : undefined,
+    params: lowercasedQuery ? { username: lowercasedQuery } : undefined,
   })
 
   // Search for matching Unitag by address (try user input address, then resolved ENS address, then autocompleted ENS address)
@@ -76,7 +79,7 @@ export function useWalletSearchResults(
   // Consider when to show sections
 
   // Only consider queries with the .eth suffix as an exact ENS match
-  const exactENSMatch = dotEthName?.toLowerCase() === query.toLowerCase() && query.includes(ENS_SUFFIX)
+  const exactENSMatch = dotEthName?.toLowerCase() === lowercasedQuery && query.includes(ENS_SUFFIX)
 
   const results: WalletOption[] = []
 
@@ -97,7 +100,7 @@ export function useWalletSearchResults(
   //    b) AND the query isn't an exact ENS match, excluding .uni.eth queries (don't show unitag if query explicitly searches for X.eth, EXCEPT if it's X.uni.eth)
   const showUnitagOverEns = !exactENSMatch || dotEthName.endsWith(UNITAG_SUFFIX)
   const addressMatch = unitagByAddress?.address === validAddress
-  const nameMatch = unitagByAddress?.username && query.startsWith(unitagByAddress.username)
+  const nameMatch = unitagByAddress?.username && lowercasedQuery.startsWith(unitagByAddress.username)
   const addressOrNameMatch = addressMatch || (nameMatch && showUnitagOverEns)
   const showUnitagByAddress =
     !unitagByName?.address && unitagByAddress?.address && unitagByAddress.username && addressOrNameMatch

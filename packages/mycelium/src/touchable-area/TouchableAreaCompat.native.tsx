@@ -263,7 +263,7 @@ export const TouchableAreaCompat = React.forwardRef<View, TouchableAreaCompatPro
         // by wrappers — e.g. RNGH GestureDetector's collapsable={false} — never
         // reach the Pressable (INFRA-3492). Spread first: the explicit props
         // below (resolved hit-slop, gated handlers, composed style) must win.
-        {...nativeCompatProps(props)}
+        {...rnghAccessibilityProps(nativeCompatProps(props))}
         // INFRA-3507: pin the Android ripple to fully transparent rather than
         // RNGH's own default-color logic — the frame's press feedback is the
         // JS-driven scale/opacity pool above, not a native ripple, so nothing
@@ -298,3 +298,26 @@ export const TouchableAreaCompat = React.forwardRef<View, TouchableAreaCompatPro
 // Matches the web leg: opts the wrapper out of the legacy wrappers' color
 // injection (compat/primitive-marker.ts).
 markMyceliumPrimitive(TouchableAreaCompat)
+
+/**
+ * RNGH's native button reads only the `accessibility*` props, not the `aria-*` aliases RN core's `View`
+ * resolves, so a bare `aria-label` or `aria-expanded` never reached VoiceOver. Fold them in; an explicit
+ * `accessibility*` value still wins.
+ */
+function rnghAccessibilityProps(forwarded: Record<string, unknown>): Record<string, unknown> {
+  const state = {
+    busy: forwarded['aria-busy'],
+    checked: forwarded['aria-checked'],
+    disabled: forwarded['aria-disabled'],
+    expanded: forwarded['aria-expanded'],
+    selected: forwarded['aria-selected'],
+  }
+  const definedState = Object.fromEntries(Object.entries(state).filter(([, value]) => value !== undefined))
+  return {
+    ...forwarded,
+    accessibilityLabel: forwarded['accessibilityLabel'] ?? forwarded['aria-label'],
+    ...(Object.keys(definedState).length > 0 && {
+      accessibilityState: { ...definedState, ...(forwarded['accessibilityState'] as object | undefined) },
+    }),
+  }
+}

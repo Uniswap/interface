@@ -143,6 +143,28 @@ describe('computeTokenMarketStats', () => {
     expect(result.low52w).toBe(55)
   })
 
+  it('should resolve the all-time high from market', () => {
+    expect(computeTokenMarketStats({ market: { priceAllTimeHighUsd: 4_800 } }).priceAllTimeHighUsd).toBe(4_800)
+    expect(
+      computeTokenMarketStats({ currentPrice: 3_000, market: { priceAllTimeHighUsd: 4_800 } }).priceAllTimeHighUsd,
+    ).toBe(4_800)
+  })
+
+  it('should clamp the all-time high to at least the current price', () => {
+    expect(
+      computeTokenMarketStats({ currentPrice: 5_000, market: { priceAllTimeHighUsd: 4_800 } }).priceAllTimeHighUsd,
+    ).toBe(5_000)
+    expect(
+      computeTokenMarketStats({ market: { priceUsd: 5_100, priceAllTimeHighUsd: 4_800 } }).priceAllTimeHighUsd,
+    ).toBe(5_100)
+  })
+
+  it('should leave the all-time high undefined when the market has none (current price does not fill in)', () => {
+    expect(
+      computeTokenMarketStats({ currentPrice: 5_000, market: { priceUsd: 5_000 } }).priceAllTimeHighUsd,
+    ).toBeUndefined()
+  })
+
   it('should return all undefined when given no inputs', () => {
     expect(computeTokenMarketStats({})).toEqual({
       marketCap: undefined,
@@ -150,6 +172,7 @@ describe('computeTokenMarketStats', () => {
       volume: undefined,
       high52w: undefined,
       low52w: undefined,
+      priceAllTimeHighUsd: undefined,
       tvl: undefined,
       poolsTvl: undefined,
     })

@@ -1,7 +1,6 @@
 import { keepPreviousData, useQuery, type UseQueryResult } from '@tanstack/react-query'
 import { CategoryKind } from '@uniswap/client-data-api/dist/data/v2/categories_pb'
 import type { UniverseChainId } from '@universe/chains'
-import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { useCallback } from 'react'
 import {
   localizeCategory,
@@ -18,7 +17,6 @@ export function useListCategoriesQuery({
   chainIds: chainIdsOverride,
   enabled = true,
 }: { chainIds?: UniverseChainId[]; enabled?: boolean } = {}): UseQueryResult<TokenCategory[]> {
-  const tokenCategoriesEnabled = useIsTokenCategoriesEnabled()
   const { chains: enabledChainIds } = useEnabledChains()
   const chainIds = chainIdsOverride ?? enabledChainIds
   const language = useCurrentLanguage()
@@ -35,7 +33,7 @@ export function useListCategoriesQuery({
       (categories: TokenCategory[]) => categories.map((category) => localizeCategory(category, language)),
       [language],
     ),
-    enabled: enabled && tokenCategoriesEnabled,
+    enabled,
     // The key includes chainIds, so a testnet-mode toggle would otherwise drop data mid-session
     // and transiently collapse the chip row back to the static set.
     placeholderData: keepPreviousData,

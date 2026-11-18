@@ -1,5 +1,5 @@
 import { useQueryClient, type InfiniteData, type Query } from '@tanstack/react-query'
-import { GET_PROTOCOL_STATS_QUERY_KEY_PREFIX } from 'uniswap/src/data/apiClients/dataApiService/explore/useGetProtocolStatsQuery'
+import { GET_PROTOCOL_STATS_QUERY_KEY_PREFIX } from '@universe/data-api'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { useFixedIntervalHeartbeatCoordinator } from '~/lib/hooks/useHeartbeatCoordinator'
 import { ExploreTab } from '~/types/explore'

@@ -9,14 +9,10 @@ import { tokenCategory } from 'uniswap/src/test/fixtures/tokenCategory'
 import { currencyInfo } from 'uniswap/src/test/fixtures/wallet/currencies'
 import { act, fireEvent, render } from 'uniswap/src/test/test-utils'
 
-const { mockIsTokenCategoriesEnabled, mockUsePortfolioTokenOptions } = vi.hoisted(() => ({
-  mockIsTokenCategoriesEnabled: vi.fn(),
-  mockUsePortfolioTokenOptions: vi.fn(),
-}))
+const { mockUsePortfolioTokenOptions } = vi.hoisted(() => ({ mockUsePortfolioTokenOptions: vi.fn() }))
 
 vi.mock('@universe/gating', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@universe/gating')>()),
-  useIsTokenCategoriesEnabled: () => mockIsTokenCategoriesEnabled(),
   useDynamicConfigValue: ({ defaultValue }: { defaultValue: unknown }) => defaultValue,
 }))
 vi.mock('uniswap/src/data/apiClients/dataApiService/categories/useAllTokenCategories', () => ({
@@ -80,7 +76,6 @@ function renderSwitch(variation: TokenSelectorVariation): ReturnType<typeof rend
 
 describe('TokenSelectorListSwitch category chips with no search query', () => {
   beforeEach(() => {
-    mockIsTokenCategoriesEnabled.mockReturnValue(true)
     mockUsePortfolioTokenOptions.mockReturnValue({
       data: [balance('usdc', ['stablecoins']), balance('pepe', ['memes']), balance('eth', [])],
       hiddenTokens: undefined,
@@ -103,14 +98,6 @@ describe('TokenSelectorListSwitch category chips with no search query', () => {
       fireEvent.press(getByTestId(`${TestID.TokenSelectorCategoryFilterChipPrefix}memes`))
     })
     expect(getByText('pepe')).toBeTruthy()
-  })
-
-  it('shows no chip row in Send when the token categories flag is off', () => {
-    mockIsTokenCategoriesEnabled.mockReturnValue(false)
-    const { getByText, queryByTestId } = renderSwitch(TokenSelectorVariation.BalancesOnly)
-
-    expect(queryByTestId(TestID.TokenSelectorCategoryFilterChipRow)).toBeNull()
-    expect(getByText('usdc,pepe,eth')).toBeTruthy()
   })
 
   it('shows no chip row in Send when no balance has a category', () => {

@@ -37,6 +37,11 @@ export interface NewUserOnboardingState {
   hasDismissedGuidedSwap: boolean
 }
 
+export interface NewUserOnboardingWallet {
+  address: string | undefined
+  walletHistory: NewUserOnboardingWalletHistory | undefined
+}
+
 // Enough rows that a few failed or unfilled attempts don't hide a completed swap behind them
 const SWAP_HISTORY_PAGE_SIZE = 10
 
@@ -115,7 +120,7 @@ export function getNewUserOnboardingState({
  * Single source of truth for where the active wallet is in the new user onboarding. Reads the
  * `new_user_ux` flag, so surfaces don't check it themselves.
  */
-export function useNewUserOnboardingState(): NewUserOnboardingState {
+export function useNewUserOnboardingState(): NewUserOnboardingState & NewUserOnboardingWallet {
   const dispatch = useDispatch()
   const isNewUserUxEnabled = useFeatureFlag(FeatureFlags.NewUserUx)
   const { isTestnetModeEnabled, chains } = useEnabledChains()
@@ -175,13 +180,17 @@ export function useNewUserOnboardingState(): NewUserOnboardingState {
     }
   }, [address, dispatch, shouldPersistSwapped])
 
-  return getNewUserOnboardingState({
-    isActive,
+  return {
+    ...getNewUserOnboardingState({
+      isActive,
+      walletHistory,
+      isTestnetModeEnabled,
+      balanceUSD,
+      isBalanceLoading: isBalancePending || !!isBalancePlaceholder,
+      hasRemoteSwap,
+      isSwapHistoryLoading: isSwapHistoryPending || isSwapHistoryPlaceholder,
+    }),
+    address,
     walletHistory,
-    isTestnetModeEnabled,
-    balanceUSD,
-    isBalanceLoading: isBalancePending || !!isBalancePlaceholder,
-    hasRemoteSwap,
-    isSwapHistoryLoading: isSwapHistoryPending || isSwapHistoryPlaceholder,
-  })
+  }
 }

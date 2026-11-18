@@ -1,5 +1,5 @@
-import { type PlainMessage, toPlainMessage } from '@bufbuild/protobuf'
-import { QueryKey, queryOptions } from '@tanstack/react-query'
+import { type PartialMessage, type PlainMessage, toPlainMessage } from '@bufbuild/protobuf'
+import { type InfiniteData, infiniteQueryOptions, QueryKey, queryOptions } from '@tanstack/react-query'
 import {
   GetAuctionActivityRequest,
   GetAuctionActivityResponse,
@@ -191,6 +191,38 @@ function getListTopAuctionsQueryOptions(
   })
 }
 
+type ListTopAuctionsPagesParams = Omit<PartialMessage<ListTopAuctionsRequest>, 'pageToken'>
+
+type ListTopAuctionsPagesQueryKey = readonly [
+  ReactQueryCacheKey.AuctionApi,
+  'listTopAuctionsPages',
+  ListTopAuctionsPagesParams,
+]
+
+type ListTopAuctionsPagesQueryOptions = ReturnType<
+  typeof infiniteQueryOptions<
+    PlainMessage<ListTopAuctionsResponse>,
+    Error,
+    InfiniteData<PlainMessage<ListTopAuctionsResponse>, string>,
+    ListTopAuctionsPagesQueryKey,
+    string
+  >
+>
+
+function getListTopAuctionsPagesQueryOptions(
+  client: AuctionServiceClient,
+  { params }: { params: ListTopAuctionsPagesParams },
+): ListTopAuctionsPagesQueryOptions {
+  // Not persisted: a restored infinite query refetches every page in sequence on mount.
+  return infiniteQueryOptions({
+    queryKey: [ReactQueryCacheKey.AuctionApi, 'listTopAuctionsPages', params] as const,
+    queryFn: async ({ pageParam }: { pageParam: string }): Promise<PlainMessage<ListTopAuctionsResponse>> =>
+      toPlainMessage(await client.listTopAuctions(new ListTopAuctionsRequest({ ...params, pageToken: pageParam }))),
+    initialPageParam: '',
+    getNextPageParam: (lastPage: PlainMessage<ListTopAuctionsResponse>) => lastPage.nextPageToken || undefined,
+  })
+}
+
 function provideAuctionQueries(client: AuctionServiceClient): {
   getAuction: (
     input: UseQueryApiHelperHookArgs<GetAuctionRequest, PlainMessage<GetAuctionResponse>>,
@@ -231,6 +263,7 @@ function provideAuctionQueries(client: AuctionServiceClient): {
   listTopAuctions: (
     input: UseQueryApiHelperHookArgs<ListTopAuctionsRequest, PlainMessage<ListTopAuctionsResponse>>,
   ) => QueryOptionsResult<PlainMessage<ListTopAuctionsResponse>, Error, PlainMessage<ListTopAuctionsResponse>, QueryKey>
+  listTopAuctionsPages: (input: { params: ListTopAuctionsPagesParams }) => ListTopAuctionsPagesQueryOptions
 } {
   return {
     getAuction: (input) => getAuctionQueryOptions(client, input),
@@ -241,6 +274,7 @@ function provideAuctionQueries(client: AuctionServiceClient): {
     getLatestCheckpoint: (input) => getLatestCheckpointQueryOptions(client, input),
     getTickDetails: (input) => getTickDetailsQueryOptions(client, input),
     listTopAuctions: (input) => getListTopAuctionsQueryOptions(client, input),
+    listTopAuctionsPages: (input) => getListTopAuctionsPagesQueryOptions(client, input),
   }
 }
 

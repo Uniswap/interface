@@ -10,28 +10,42 @@ import { useCurrencyInfo } from '~/hooks/currency/useCurrencyInfo'
 import { DepositInfo } from '~/types/liquidity'
 import { PositionField } from '~/types/position'
 
-const INPUT_BORDER_RADIUS = '$rounded20'
-const sharedPanelStyle = {
-  borderTopLeftRadius: INPUT_BORDER_RADIUS,
-  borderTopRightRadius: INPUT_BORDER_RADIUS,
-  backgroundColor: '$surface2',
+type Radius = '$rounded4' | '$rounded16' | '$rounded20'
+type PanelRadii = { top: Radius; bottom: Radius }
+
+// `cards` is two separate rounded cards; `stacked` joins them into one block with tight inner corners.
+const PANEL_RADII: Record<'cards' | 'stacked', [PanelRadii, PanelRadii]> = {
+  cards: [
+    { top: '$rounded20', bottom: '$rounded20' },
+    { top: '$rounded20', bottom: '$rounded20' },
+  ],
+  stacked: [
+    { top: '$rounded16', bottom: '$rounded4' },
+    { top: '$rounded4', bottom: '$rounded16' },
+  ],
 }
 
 // The styles flow into CurrencyInputPanel's own (Tamagui-typed) prop, so the
 // annotation derives from the consumer rather than importing ui/src here.
-function borderRadiusStyles(component?: ReactNode): ComponentProps<typeof CurrencyInputPanel>['customPanelStyle'] {
+function panelStyle(
+  radii: PanelRadii,
+  underCard?: ReactNode,
+): ComponentProps<typeof CurrencyInputPanel>['customPanelStyle'] {
   return {
-    borderBottomLeftRadius: component ? '$none' : INPUT_BORDER_RADIUS,
-    borderBottomRightRadius: component ? '$none' : INPUT_BORDER_RADIUS,
+    backgroundColor: '$surface2',
+    borderTopLeftRadius: radii.top,
+    borderTopRightRadius: radii.top,
+    borderBottomLeftRadius: underCard ? '$none' : radii.bottom,
+    borderBottomRightRadius: underCard ? '$none' : radii.bottom,
   }
 }
 
-function UnderCardComponent({ children }: { children: ReactNode }) {
+function UnderCardComponent({ children, radius }: { children: ReactNode; radius: Radius }) {
   return (
     <Flex
       backgroundColor="$surface2"
-      borderBottomLeftRadius="$rounded20"
-      borderBottomRightRadius="$rounded20"
+      borderBottomLeftRadius={radius}
+      borderBottomRightRadius={radius}
       py="$spacing8"
       px="$spacing16"
     >
@@ -53,6 +67,12 @@ type InputFormProps = {
   amount1Loading: boolean
   autofocus?: boolean
   actualGasFee?: string
+  variant?: 'cards' | 'stacked'
+  /**
+   * Shows a side the range doesn't take as a locked panel reading 0, rather than removing it, so the form
+   * keeps its shape as the range moves.
+   */
+  keepDisabledFieldsVisible?: boolean
 } & DepositInfo
 
 export function DepositInputForm({
@@ -72,7 +92,10 @@ export function DepositInputForm({
   amount1Loading,
   autofocus = true,
   actualGasFee,
+  variant = 'cards',
+  keepDisabledFieldsVisible = false,
 }: InputFormProps) {
+  const [token0Radii, token1Radii] = PANEL_RADII[variant]
   // refs must be used to control input focus rather than the focus prop because if the focus prop is used and the amounts are updated,
   // the focus will be stolen and brought back to the deposit form
   const token0InputRef = useRef<CurrencyInputPanelRef>(null)
@@ -110,16 +133,25 @@ export function DepositInputForm({
     }
   }
 
+  // A locked side shows no amount, so it falls back to the input's muted 0 placeholder. Without a balance
+  // it also drops the presets and Max that would set one; hidePresets would take the token pill with them.
+  const lockedPanelProps = {
+    disabled: true,
+    value: '',
+    currencyAmount: undefined,
+    currencyBalance: undefined,
+    usdValue: undefined,
+  }
+  const token0Locked = keepDisabledFieldsVisible && deposit0Disabled
+  const token1Locked = keepDisabledFieldsVisible && deposit1Disabled
+
   return (
     <Flex gap="$gap4">
-      {!deposit0Disabled && (
+      {(!deposit0Disabled || token0Locked) && (
         <Flex gap={2}>
           <CurrencyInputPanel
             ref={token0InputRef}
-            customPanelStyle={{
-              ...sharedPanelStyle,
-              ...borderRadiusStyles(token0UnderCardComponent),
-            }}
+            customPanelStyle={panelStyle(token0Radii, token0UnderCardComponent)}
             currencyInfo={token0CurrencyInfo}
             currencyField={CurrencyField.INPUT}
             currencyAmount={currencyAmounts?.[PositionField.TOKEN0]}
@@ -132,19 +164,18 @@ export function DepositInputForm({
             onPressIn={() => token0InputRef.current?.textInputRef.current?.focus()}
             isLoading={amount0Loading}
             actualGasFee={token0?.isNative ? actualGasFee : undefined}
+            {...(token0Locked && lockedPanelProps)}
           />
-          {token0UnderCardComponent && <UnderCardComponent>{token0UnderCardComponent}</UnderCardComponent>}
+          {token0UnderCardComponent && (
+            <UnderCardComponent radius={token0Radii.bottom}>{token0UnderCardComponent}</UnderCardComponent>
+          )}
         </Flex>
       )}
-      {!deposit1Disabled && (
+      {(!deposit1Disabled || token1Locked) && (
         <Flex gap={2}>
           <CurrencyInputPanel
             ref={token1InputRef}
-            customPanelStyle={{
-              ...sharedPanelStyle,
-              py: '$spacing16',
-              ...borderRadiusStyles(token1UnderCardComponent),
-            }}
+            customPanelStyle={{ ...panelStyle(token1Radii, token1UnderCardComponent), py: '$spacing16' }}
             currencyInfo={token1CurrencyInfo}
             currencyField={CurrencyField.INPUT}
             currencyAmount={currencyAmounts?.[PositionField.TOKEN1]}
@@ -157,8 +188,11 @@ export function DepositInputForm({
             onPressIn={() => token1InputRef.current?.textInputRef.current?.focus()}
             isLoading={amount1Loading}
             actualGasFee={token1?.isNative ? actualGasFee : undefined}
+            {...(token1Locked && lockedPanelProps)}
           />
-          {token1UnderCardComponent && <UnderCardComponent>{token1UnderCardComponent}</UnderCardComponent>}
+          {token1UnderCardComponent && (
+            <UnderCardComponent radius={token1Radii.bottom}>{token1UnderCardComponent}</UnderCardComponent>
+          )}
         </Flex>
       )}
     </Flex>

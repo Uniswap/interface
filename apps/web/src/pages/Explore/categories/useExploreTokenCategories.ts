@@ -1,23 +1,23 @@
-import { DynamicConfigs, useIsTokenCategoriesEnabledWithLoading } from '@universe/gating'
-import { useEffect, useMemo, useState } from 'react'
+import { DynamicConfigs } from '@universe/gating'
+import { useMemo } from 'react'
 import { useListCategoriesQuery } from 'uniswap/src/data/apiClients/dataApiService/categories/useListCategoriesQuery'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
 import { useCategoryOrder } from 'uniswap/src/features/tokenCategories/useCategoryOrder'
+import { ExploreCategory } from '~/features/Explore/categories/useExploreCategory'
 import { GROUPED_EXPLORE_CATEGORIES } from '~/pages/Explore/categories/exploreGroupedCategory'
-import { ExploreCategory } from '~/pages/Explore/categories/useExploreCategory'
 
 const EMPTY_CATEGORIES: TokenCategory[] = []
 
-/** Valid `?category=` values for the flag-off (and failed-fetch) static chip set. */
+/** Valid `?category=` values for the static chip set a failed fetch falls back to. */
 const STATIC_CATEGORY_IDS: ReadonlySet<string> = new Set(GROUPED_EXPLORE_CATEGORIES)
 const NO_CATEGORY_IDS: ReadonlySet<string> = new Set()
 
 /**
  * The ordered category list backing the Explore chip row, plus the ids that are valid `?category=`
  * values (every fetched category — non-spotlit ones are reachable via deep link and the More dropdown;
- * All is the paramless default). `dynamicChipsEnabled` is false while the flag is off or
- * ListCategories is unresolved/empty, in which case the static chip set applies.
+ * All is the paramless default). `dynamicChipsEnabled` is false while ListCategories is
+ * unresolved/empty, in which case the static chip set applies.
  */
 export function useExploreTokenCategories(): {
   orderedCategories: TokenCategory[]
@@ -27,22 +27,12 @@ export function useExploreTokenCategories(): {
   /** True while the first ListCategories attempt is in flight, so a `?category=` id can't be validated yet. */
   categoriesPending: boolean
   /**
-   * True until the chip set is known: Statsig hasn't reported the flag for the first time yet, or the first
-   * ListCategories attempt is in flight. Render a skeleton rather than the static set, which would pop to
-   * the fetched one.
+   * True until the chip set is known, i.e. while the first ListCategories attempt is in flight. Render a
+   * skeleton rather than the static set, which would pop to the fetched one.
    */
   categoriesLoading: boolean
 } {
-  const { value: tokenCategoriesEnabled, isLoading: flagLoading } = useIsTokenCategoriesEnabledWithLoading()
   const { isTestnetModeEnabled } = useEnabledChains()
-  // Statsig re-enters Loading on every updateUserAsync (wallet connect/switch), which must not collapse a
-  // rendered chip row back to the skeleton: only the first report counts as "flag unknown".
-  const [flagSettled, setFlagSettled] = useState(!flagLoading)
-  useEffect(() => {
-    if (!flagLoading) {
-      setFlagSettled(true)
-    }
-  }, [flagLoading])
   const { data: categories, isFetching, failureCount } = useListCategoriesQuery()
   // A backend category reusing the frontend default id would collide with the paramless default.
   const backendCategories = useMemo(
@@ -55,9 +45,9 @@ export function useExploreTokenCategories(): {
   })
 
   return useMemo(() => {
-    const dynamicChipsEnabled = tokenCategoriesEnabled && orderedCategories.length > 0
+    const dynamicChipsEnabled = orderedCategories.length > 0
     // Only the first attempt counts: retries would otherwise hold an unverified deep link open for the whole backoff.
-    const categoriesPending = tokenCategoriesEnabled && categories === undefined && isFetching && failureCount === 0
+    const categoriesPending = categories === undefined && isFetching && failureCount === 0
     // Static ids stay valid even when dynamic — a response missing one (e.g. dropped by the
     // unmapped-class filter) must not degrade existing static deep links to All.
     const exploreCategoriesEnabled = !isTestnetModeEnabled
@@ -70,16 +60,7 @@ export function useExploreTokenCategories(): {
       dynamicChipsEnabled,
       exploreCategoriesEnabled,
       categoriesPending,
-      categoriesLoading: (flagLoading && !flagSettled) || categoriesPending,
+      categoriesLoading: categoriesPending,
     }
-  }, [
-    tokenCategoriesEnabled,
-    isTestnetModeEnabled,
-    flagLoading,
-    flagSettled,
-    orderedCategories,
-    categories,
-    isFetching,
-    failureCount,
-  ])
+  }, [isTestnetModeEnabled, orderedCategories, categories, isFetching, failureCount])
 }

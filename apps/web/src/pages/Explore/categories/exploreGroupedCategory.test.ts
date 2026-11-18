@@ -1,11 +1,7 @@
 import { RwaCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { TokenCategory, TokenCategoryClass } from 'uniswap/src/features/tokenCategories/types'
 import { describe, expect, it } from 'vitest'
-import {
-  resolveGroupedRwaCategory,
-  resolveRwaDisclaimerCategory,
-  showsVolumeTimeFrameSelector,
-} from '~/pages/Explore/categories/exploreGroupedCategory'
+import { resolveGroupedRwaCategory } from '~/pages/Explore/categories/exploreGroupedCategory'
 
 function makeCategory(id: string, categoryClass: TokenCategoryClass, grouped = false): TokenCategory {
   return {
@@ -72,30 +68,5 @@ describe('resolveGroupedRwaCategory', () => {
     expect(resolveGroupedRwaCategory({ categoryId: 'all', categories: [] })).toBe(RwaCategory.UNSPECIFIED)
     expect(resolveGroupedRwaCategory({ categoryId: 'all', categories: CATEGORIES })).toBe(RwaCategory.UNSPECIFIED)
     expect(resolveGroupedRwaCategory({ categoryId: 'gaming', categories: [] })).toBe(RwaCategory.UNSPECIFIED)
-  })
-})
-
-describe('resolveRwaDisclaimerCategory', () => {
-  it('keys the disclaimer on the category id alone', () => {
-    expect(resolveRwaDisclaimerCategory('stocks')).toBe(RwaCategory.STOCKS)
-    expect(resolveRwaDisclaimerCategory('etfs')).toBe(RwaCategory.ETFS)
-    expect(resolveRwaDisclaimerCategory('commodities')).toBe(RwaCategory.COMMODITIES)
-    expect(resolveRwaDisclaimerCategory('defi')).toBe(RwaCategory.UNSPECIFIED)
-  })
-})
-
-describe('showsVolumeTimeFrameSelector', () => {
-  it('always shows for flat categories', () => {
-    expect(showsVolumeTimeFrameSelector({ rwaCategory: RwaCategory.UNSPECIFIED, tokenCategoriesEnabled: false })).toBe(
-      true,
-    )
-  })
-
-  it('shows for grouped categories only when token categories are on', () => {
-    expect(showsVolumeTimeFrameSelector({ rwaCategory: RwaCategory.STOCKS, tokenCategoriesEnabled: false })).toBe(false)
-    expect(showsVolumeTimeFrameSelector({ rwaCategory: RwaCategory.STOCKS, tokenCategoriesEnabled: true })).toBe(true)
-    expect(showsVolumeTimeFrameSelector({ rwaCategory: RwaCategory.COMMODITIES, tokenCategoriesEnabled: true })).toBe(
-      true,
-    )
   })
 })

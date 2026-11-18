@@ -89,6 +89,7 @@ export function ProtocolFilterDropdown({
       containerStyle={filterContainerStyle({ fullWidth, fitContent })}
       alignRight={alignRight}
       adaptToSheet
+      title={t('common.protocol')}
       buttonStyle={{ ...POSITION_FILTER_BUTTON_STYLE, width: fullWidth ? '100%' : undefined }}
     >
       {LP_POSITION_PROTOCOL_VERSIONS.map((version) => (
@@ -161,6 +162,7 @@ export function StatusFilterDropdown({
       containerStyle={filterContainerStyle({ fullWidth, fitContent })}
       alignRight={alignRight}
       adaptToSheet
+      title={t('common.status')}
       buttonStyle={{ ...POSITION_FILTER_BUTTON_STYLE, width: fullWidth ? '100%' : undefined }}
     >
       <>

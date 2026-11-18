@@ -109,7 +109,7 @@ export function PreferenceSettings({
             key={`${label}_${index}`}
           >
             {label && (
-              <Flex row gap="$gap4" alignItems="center">
+              <Flex row shrink gap="$gap4" alignItems="center">
                 <Text variant="body3" color="$neutral1" textAlign="left">
                   {label}
                 </Text>

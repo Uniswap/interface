@@ -19,6 +19,7 @@ import {
   RangeAmountInputPriceMode,
 } from '~/features/Liquidity/Create/types'
 import { useSelectedFeeBreakdown } from '~/features/Liquidity/hooks/useSelectedFeeBreakdown'
+import { invertPriceRangeState, toDisplayTick } from '~/features/Liquidity/utils/displayTicks'
 import { getPriceRangeInfo } from '~/features/Liquidity/utils/priceRangeInfo'
 import type { DepositState } from '~/types/liquidity'
 import { PositionField } from '~/types/position'
@@ -80,6 +81,10 @@ interface BaseCreateLiquidityState {
 
   // From DepositContext
   depositState: DepositState
+
+  currencyInputs: { tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }
+  /** Overrides the review modal's default post-create navigation to /positions. */
+  onPositionCreated?: () => void
 }
 
 interface CreateV2LiquidityState extends BaseCreateLiquidityState {
@@ -153,6 +158,9 @@ export function CreateLiquidityContextProvider({
   initialPriceRangeState,
   initialDepositState,
   initialFlowStep,
+  onStepChange,
+  onPositionCreated,
+  priceInverted,
 }: {
   children: React.ReactNode
   currencyInputs: { tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }
@@ -162,6 +170,17 @@ export function CreateLiquidityContextProvider({
   initialPriceRangeState?: Partial<PriceRangeState>
   initialDepositState?: Partial<DepositState>
   initialFlowStep: PositionFlowStep
+  /**
+   * Where step changes go. Defaults to the `?step` URL param, which the routes read back into
+   * `initialFlowStep`; a surface embedding the flow off those routes keeps the step itself.
+   */
+  onStepChange?: (step: PositionFlowStep | null) => void
+  onPositionCreated?: () => void
+  /**
+   * The price orientation, held by the surface that embeds the flow and flippable at any time. The flow
+   * follows it, carrying its range over to the other orientation. Unset, the flow keeps its own.
+   */
+  priceInverted?: boolean
 }) {
   const [positionState, setPositionState] = useState<PositionState>(() => ({
     ...DEFAULT_POSITION_STATE,
@@ -188,7 +207,14 @@ export function CreateLiquidityContextProvider({
     ...DEFAULT_PRICE_RANGE_STATE,
     fullRange: initialFullRange,
     ...initialPriceRangeState,
+    ...(priceInverted !== undefined && { priceInverted }),
   }))
+  useEffect(() => {
+    if (priceInverted === undefined) {
+      return
+    }
+    setPriceRangeState((prev) => (prev.priceInverted === priceInverted ? prev : invertPriceRangeState(prev)))
+  }, [priceInverted])
 
   // Initialize deposit state
   const [depositState, setDepositState] = useState<DepositState>({
@@ -215,6 +241,7 @@ export function CreateLiquidityContextProvider({
 
   // Get URL sync function from consolidated hook
   const { setHistoryState, syncToUrl } = useLiquidityUrlState()
+  const setStep = onStepChange ?? setHistoryState
 
   // Single sync effect with batched updates
   useEffect(() => {
@@ -247,7 +274,7 @@ export function CreateLiquidityContextProvider({
       followedPreset: priceRangeState.followedPreset,
       minTick: priceRangeState.minTick,
       maxTick: priceRangeState.maxTick,
-      currentTick: priceRangeState.priceInverted ? -pool.tickCurrent : pool.tickCurrent,
+      currentTick: toDisplayTick(pool.tickCurrent, priceRangeState.priceInverted),
       tickSpacing: pool.tickSpacing,
     })
     return followedTicks ? { ...priceRangeState, ...followedTicks } : priceRangeState
@@ -298,7 +325,7 @@ export function CreateLiquidityContextProvider({
       tokenB: undefined,
     })
     setReviewModalStep(undefined)
-    setHistoryState(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
+    setStep(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
   })
 
   const resetPriceRange = useEvent(() => {
@@ -370,11 +397,13 @@ export function CreateLiquidityContextProvider({
     dynamicFeeTierSpeedbumpData,
     priceRangeState,
     depositState,
+    currencyInputs,
+    onPositionCreated,
     // Transaction info
     refetch,
     // Setters
     setPositionState,
-    setStep: setHistoryState,
+    setStep,
     setCurrentTransactionStep,
     setIsReviewModalOpen,
     setFeeTierSearchModalOpen,

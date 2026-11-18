@@ -20,6 +20,12 @@ const PAY = `${MARGIN_NATIVE_TOKEN_ADDRESS}:${MARGIN_CHAIN_ID}`
 // Resolved en-US; `render` runs setupi18n() so raw keys never reach the DOM.
 const LEVERAGE_LABEL = 'Leverage'
 
+function typeLeverage(value: string): void {
+  fireEvent.click(screen.getByLabelText(LEVERAGE_LABEL))
+  fireEvent.change(screen.getByLabelText(LEVERAGE_LABEL), { target: { value } })
+  fireEvent.blur(screen.getByLabelText(LEVERAGE_LABEL))
+}
+
 const { SWAPPER, SUB_ID, mockUseMarginQuote, mockExecutePlan, mockUseIsPlanInFlight, mockSpendableBalanceRaw } =
   vi.hoisted(() => ({
     SWAPPER: '0x00000000000000000000000000000000000000A1',
@@ -190,7 +196,7 @@ describe('MarginChangeLeverageModal', () => {
 
   it('opens in drift mode, anchored on the position current leverage, with the CTA dead', () => {
     renderModal()
-    expect(screen.getByLabelText(LEVERAGE_LABEL)).toHaveValue('2.00')
+    expect(screen.getByTestId(TestID.MarginLeverageReadout)).toHaveTextContent('2x')
     expect(lastQuoteArgs().targetLeverageX18).toBeUndefined()
     expect(screen.getByTestId(TestID.MarginChangeLeverageCta)).toBeDisabled()
   })
@@ -206,8 +212,7 @@ describe('MarginChangeLeverageModal', () => {
       }),
     )
     renderModal()
-    fireEvent.change(screen.getByLabelText(LEVERAGE_LABEL), { target: { value: '3' } })
-    fireEvent.blur(screen.getByLabelText(LEVERAGE_LABEL))
+    typeLeverage('3')
     // Assert the quote INPUT too, not just the request — a fixture-only assertion would test itself.
     expect(lastQuoteArgs().targetLeverageX18).toBe(targetX18)
 
@@ -225,8 +230,7 @@ describe('MarginChangeLeverageModal', () => {
   // A sub-dust leverage change 200s on quote but 400s at plan-create (MARGIN_ADJUST_NO_CHANGE).
   it('disables the CTA when leverage has not moved past the min delta', () => {
     renderModal()
-    fireEvent.change(screen.getByLabelText(LEVERAGE_LABEL), { target: { value: '2.02' } })
-    fireEvent.blur(screen.getByLabelText(LEVERAGE_LABEL))
+    typeLeverage('2.02')
     expect(lastQuoteArgs().targetLeverageX18).toBeUndefined()
     expect(screen.getByTestId(TestID.MarginChangeLeverageCta)).toBeDisabled()
   })
@@ -259,7 +263,43 @@ describe('MarginChangeLeverageModal', () => {
   it('reports a real over-cap leverage rather than the ceiling, until the user drags', () => {
     const overCap = positionFixture({ leverage: '9' })
     render(<MarginChangeLeverageModal position={overCap} market={MARKET} isOpen onClose={vi.fn()} />)
-    expect(screen.getByLabelText(LEVERAGE_LABEL)).toHaveValue('9.00')
+    expect(screen.getByTestId(TestID.MarginLeverageReadout)).toHaveTextContent('9x')
+  })
+
+  // Opening the type-in seeds it with the uncapped readout. Blurring it untouched must not commit that
+  // figure: it clamps to the ceiling and would quote a deleverage the user never asked for.
+  it('keeps an over-cap position in drift mode when the type-in is opened and blurred untouched', () => {
+    const overCap = positionFixture({ leverage: '9' })
+    render(<MarginChangeLeverageModal position={overCap} market={MARKET} isOpen onClose={vi.fn()} />)
+    fireEvent.click(screen.getByLabelText(LEVERAGE_LABEL))
+    expect(screen.getByLabelText(LEVERAGE_LABEL)).toHaveValue('9')
+    fireEvent.blur(screen.getByLabelText(LEVERAGE_LABEL))
+
+    expect(lastQuoteArgs().targetLeverageX18).toBeUndefined()
+    expect(screen.getByTestId(TestID.MarginLeverageReadout)).toHaveTextContent('9x')
+    expect(screen.getByTestId(TestID.MarginChangeLeverageCta)).toBeDisabled()
+  })
+
+  // The untouched check compares against the figure the type-in opened with, not the live readout: a
+  // poll moving the position mid-edit must not turn the stale seed into an explicit target.
+  it('keeps drift mode when a poll moves the position while the type-in is open but untouched', () => {
+    const { rerender } = renderModal()
+    fireEvent.click(screen.getByLabelText(LEVERAGE_LABEL))
+    expect(screen.getByLabelText(LEVERAGE_LABEL)).toHaveValue('2')
+
+    rerender(
+      <MarginChangeLeverageModal
+        position={positionFixture({ leverage: '3' })}
+        market={MARKET}
+        isOpen
+        onClose={vi.fn()}
+      />,
+    )
+    fireEvent.blur(screen.getByLabelText(LEVERAGE_LABEL))
+
+    expect(lastQuoteArgs().targetLeverageX18).toBeUndefined()
+    expect(screen.getByTestId(TestID.MarginLeverageReadout)).toHaveTextContent('3x')
+    expect(screen.getByTestId(TestID.MarginChangeLeverageCta)).toBeDisabled()
   })
 
   // A markets poll can lower the ceiling under an open sheet. The readout re-clamps on render, but the

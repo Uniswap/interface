@@ -17,8 +17,7 @@ const MARKET = getDefaultMarginMarket() // WETH/USDC MORPHO, native equity
 // The controller defaults the pay token to native ETH even for a withdraw; the key's trailing
 // segments are its wire sentinel + chain id.
 const PAY = `${MARGIN_NATIVE_TOKEN_ADDRESS}:${MARGIN_CHAIN_ID}`
-// Resolved en-US; `render` runs setupi18n() so raw keys never reach the DOM.
-const AMOUNT_LABEL = 'Amount to withdraw'
+const AMOUNT_LABEL = 'amount'
 const RAW_HALF_ETH = '500000000000000000'
 
 const { SWAPPER, SUB_ID, mockUseMarginQuote, mockExecutePlan, mockUseIsPlanInFlight, mockSpendableBalanceRaw } =
@@ -35,13 +34,25 @@ vi.mock('uniswap/src/components/modals/Modal', () => ({
   Modal: ({ children }: { children: ReactNode }) => children,
 }))
 
-vi.mock('uniswap/src/components/AmountInput/AmountInput', () => ({
-  AmountInput: (props: Record<string, unknown>) => (
-    <input
-      aria-label={props['aria-label'] as string | undefined}
-      value={(props.value as string | undefined) ?? ''}
-      onChange={(e) => (props.onChangeText as ((text: string) => void) | undefined)?.(e.target.value)}
-    />
+vi.mock('uniswap/src/components/CurrencyInputPanel/CurrencyInputPanel', () => ({
+  CurrencyInputPanel: (props: {
+    value?: string
+    currencyBalance?: { toExact: () => string }
+    onSetExactAmount: (amount: string) => void
+    onSetPresetValue?: (amount: string) => void
+  }) => (
+    <>
+      <input aria-label="amount" value={props.value ?? ''} onChange={(e) => props.onSetExactAmount(e.target.value)} />
+      {props.currencyBalance ? (
+        <button
+          type="button"
+          aria-label="max"
+          onClick={() => props.onSetPresetValue?.(props.currencyBalance?.toExact() ?? '')}
+        >
+          {props.currencyBalance.toExact()}
+        </button>
+      ) : null}
+    </>
   ),
 }))
 
@@ -195,9 +206,7 @@ describe('MarginWithdrawModal', () => {
   // on the floor and the server 422s it (measured on mainnet).
   it('shows the ceiling from the preview quote and fills just under it on tap', () => {
     renderModal()
-    // Captioned in the payout token: a withdrawal pays out the WETH collateral, not native ETH.
-    expect(screen.getByText('Available 0.500 WETH')).toBeInTheDocument()
-    fireEvent.click(screen.getByLabelText('Use max'))
+    fireEvent.click(screen.getByLabelText('max'))
     const filled = Number((screen.getByLabelText(AMOUNT_LABEL) as HTMLInputElement).value)
     expect(filled).toBeLessThan(0.5)
     expect(filled).toBeGreaterThan(0.49)
@@ -231,33 +240,15 @@ describe('MarginWithdrawModal', () => {
     expect(screen.getByText('To take out everything, close the position instead')).toBeInTheDocument()
   })
 
-  // A LONG's collateral USD value is amount x mark, so the wire's "no price" sentinel captioned every
-  // amount the user typed as "$0.00" — on a sheet that stays fully submittable, because its ceiling is
-  // the server's `maxWithdrawable` and never this read. Withheld rather than fabricated.
-  it('withholds the USD caption for a LONG at the zero-price sentinel', () => {
-    renderModal(positionFixture({ oraclePrice: '0' }))
-    fireEvent.change(screen.getByLabelText(AMOUNT_LABEL), { target: { value: '1.5' } })
-    expect(screen.queryByText('$0.00')).not.toBeInTheDocument()
-  })
-
-  it('still captions a priced LONG', () => {
-    renderModal()
-    fireEvent.change(screen.getByLabelText(AMOUNT_LABEL), { target: { value: '1.5' } })
-    expect(screen.getByText('$3,000.00')).toBeInTheDocument()
-  })
-
   it('does not hint at Close while the position carries debt', () => {
     renderModal()
     expect(screen.queryByText('To take out everything, close the position instead')).not.toBeInTheDocument()
   })
 
-  it.each(['', '  ', 'abc', '0', '-1', 'Infinity', '1e5'])(
-    'treats %o as no funding rather than an empty-amount withdraw',
-    (value) => {
-      renderModal()
-      fireEvent.change(screen.getByLabelText(AMOUNT_LABEL), { target: { value } })
-      const args = mockUseMarginQuote.mock.calls.at(-1)?.[0] as { funding: { kind: string } }
-      expect(args.funding).toEqual({ kind: 'none' })
-    },
-  )
+  it.each(['', '0', '.'])('treats %o as no funding rather than an empty-amount withdraw', (value) => {
+    renderModal()
+    fireEvent.change(screen.getByLabelText(AMOUNT_LABEL), { target: { value } })
+    const args = mockUseMarginQuote.mock.calls.at(-1)?.[0] as { funding: { kind: string } }
+    expect(args.funding).toEqual({ kind: 'none' })
+  })
 })

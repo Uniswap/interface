@@ -12,6 +12,13 @@ const MOBILE_GROUP_BY: datadog.types.input.RumMetricGroupBy[] = [
 ]
 
 export const APP_START_TTI_METRIC = 'mobile.app_start.tti_ms'
+// Counted by the SDK's session tracking, independent of the custom-action path app_start_tti uses.
+export const MOBILE_SESSIONS_METRIC = 'mobile.sessions'
+
+// app_start_tti fires on cold starts only, so a healthy version reports 0.55–0.75 per session.
+const MIN_EVENTS_PER_SESSION = 0.3
+// Missing events beyond MIN_EVENTS_PER_SESSION before alerting: a silent version alerts past ~200 sessions in 12h.
+const MISSING_EVENTS_THRESHOLD = 60
 
 export const platformInfraRumMetrics: Record<string, datadog.RumMetricArgs> = {
   [APP_START_TTI_METRIC]: {
@@ -29,30 +36,41 @@ export const platformInfraRumMetrics: Record<string, datadog.RumMetricArgs> = {
     filter: { query: `${APP_START_FILTER} @context.js_boot_time_ms:<60000` },
     groupBies: MOBILE_GROUP_BY,
   },
+  [MOBILE_SESSIONS_METRIC]: {
+    name: MOBILE_SESSIONS_METRIC,
+    eventType: 'session',
+    compute: { aggregationType: 'count' },
+    filter: { query: 'service:com.uniswap.mobile env:prod @session.type:user' },
+    groupBies: [{ path: 'version', tagName: 'version' }],
+    // Sessions update until they end; count each one once, when it starts.
+    uniqueness: { when: 'match' },
+  },
 }
 
 export const platformInfraAppStartMonitors: MonitorDefinition[] = [
   {
     id: 'mobile_app_start_telemetry_missing',
-    name: '[Mobile] App-start telemetry is missing for most sessions',
+    name: '[Mobile] App-start telemetry is missing on {{version.name}}',
     type: 'query alert',
-    // Per-session ratio, not a no-data check: an SDK upgrade that breaks only new versions leaves old versions reporting.
-    query: `sum(last_4h):count:${APP_START_TTI_METRIC}{*}.as_count() / sum:mobile.session.count{*}.as_count() < 0.5`,
+    // Per version: a release that stops emitting alerts while older versions keep reporting.
+    query:
+      `sum(last_12h):${MIN_EVENTS_PER_SESSION} * sum:${MOBILE_SESSIONS_METRIC}{*} by {version}.as_count() - ` +
+      `count:${APP_START_TTI_METRIC}{*} by {version}.as_count() > ${MISSING_EVENTS_THRESHOLD}`,
     alertBody:
-      'Fewer than half of mobile sessions report an `app_start_tti` RUM action (normal: ~0.75 per session). ' +
-      'App-start timing has likely stopped emitting on a recent release: check that `reportAppStartTiming` is still ' +
-      'called from `onReportPrepared` in apps/mobile/src/app/App.tsx and that the Datadog RN SDK still delivers custom actions. ' +
+      'Version {{version.name}} reported far fewer `app_start_tti` RUM actions than its sessions over the last 12h ' +
+      '(healthy versions report 0.55–0.75 per session). App-start timing has likely stopped emitting on this release: ' +
+      'check that `reportAppStartTiming` is still called from `onReportPrepared` in apps/mobile/src/app/App.tsx and ' +
+      'that the Datadog RN SDK still delivers custom actions. ' +
       OWNER_MENTIONS,
     team: TEAM,
     priority: 4,
-    // Recovery band stops Warn/OK flapping while the 4h ratio hovers at the warning line.
-    thresholds: { critical: 0.5, warning: 0.65, warningRecovery: 0.72 },
+    thresholds: { critical: MISSING_EVENTS_THRESHOLD },
     logQuery: 'service:com.uniswap.mobile',
     runbookUrl: `${CODE_URL}/apps/mobile/src/app/App.tsx`,
     readmeUrl: `${CODE_URL}/packages/utilities/src/logger/datadog/reportAppStartTiming.native.ts`,
     dashboards: [],
-    notifyNoData: true,
-    noDataTimeframe: 1440,
+    // Old versions go quiet as users upgrade; a per-version no-data alert would only report that.
+    notifyNoData: false,
     // Telemetry health, not user-facing: Slack only.
     enablePaging: false,
     includeIncidentWebhook: false,

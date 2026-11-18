@@ -10,7 +10,7 @@ exports[`ContextMenu > renders without error 1`] = `
     data-slot="ui-popover-trigger"
     id="base-ui-_r_1_"
     role="button"
-    style="align-items: stretch; box-sizing: border-box; display: flex; flex-basis: auto; flex-direction: column; flex-shrink: 0; margin: 0px; min-height: 0; min-width: 0; padding: 0px; position: relative;"
+    style="align-items: stretch; box-sizing: border-box; display: flex; flex-basis: auto; flex-direction: column; flex-shrink: 0; margin: 0px; min-height: 0px; min-width: 0px; padding: 0px; position: relative;"
     tabindex="0"
   >
     <div>

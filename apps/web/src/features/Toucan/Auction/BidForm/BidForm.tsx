@@ -364,6 +364,7 @@ export function BidForm({ onInputChange, onBidSubmitted }: BidFormProps): JSX.El
         isOpen={isKycInterstitialModalOpen}
         onClose={() => setIsKycInterstitialModalOpen(false)}
         onContinue={kycStatus.onKycAction}
+        kycProvider={kycStatus.kycProvider}
       />
       <KycFailedModal isOpen={isKycFailedModalOpen} onClose={() => setIsKycFailedModalOpen(false)} />
       {shouldShowTokenWarning && token && (

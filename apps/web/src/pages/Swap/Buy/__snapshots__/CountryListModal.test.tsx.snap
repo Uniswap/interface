@@ -38,7 +38,7 @@ exports[`CountryListModal > should render options and call select callback 1`] =
         data-state="open"
         id="radix-_r_0_"
         role="dialog"
-        style="--c-w: calc(100vw - 32px); --c-max-w: 420px; --c-max-h: 700px; --cE-p: 0px; --cE-h: 100%; --cE-max-h: calc(100dvh - 72px); pointer-events: auto;"
+        style="--c-w: calc(100vw - 32px); --c-max-w: 420px; --c-max-h: 700px; --cE-p: 0px; --cE-h: 100%; --cE-max-h: calc(100dvh - 72px); scrollbar-width: thin; scrollbar-color: rgba(19, 19, 19, 0.08) transparent; overscroll-behavior: contain; pointer-events: auto;"
         tabindex="-1"
       >
         <h2
@@ -61,6 +61,7 @@ exports[`CountryListModal > should render options and call select callback 1`] =
                 Select your region
               </span>
               <div
+                aria-label="Close"
                 class="[container-name:true] flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 [container-type:normal] rounded-[12px] [cursor:pointer] bg-transparent [transition:transform_80ms_ease-in-out,_opacity_80ms_ease-in-out] active:opacity-[0.75] active:[transform:scale(0.98)] focus-visible:[transform:scaleX(0.98)_scaleY(0.98)] focus-visible:[outline-offset:1px] focus-visible:[outline-style:solid] focus-visible:[outline-width:1px] focus-visible:[outline-color:var(--neutral3)] group"
                 data-testid="CountryListModal-close"
                 role="button"
@@ -92,7 +93,7 @@ exports[`CountryListModal > should render options and call select callback 1`] =
                   fill="none"
                   focusable="false"
                   stroke-width="8"
-                  style="width: 20px; height: 20px;"
+                  style="color: var(--neutral3); width: 20px; height: 20px;"
                   viewBox="0 0 26 26"
                 >
                   <path
@@ -108,7 +109,7 @@ exports[`CountryListModal > should render options and call select callback 1`] =
                 data-uds-placeholder=""
                 dir="auto"
                 placeholder="Search by country or region"
-                style="box-sizing: border-box; margin: 0px; padding: 16px 16px 16px 40px; border-width: 1px; border-style: solid; appearance: none; resize: none; outline-width: 0; outline-style: solid; background-color: rgb(249, 249, 249); color: rgb(19, 19, 19); border-color: rgba(19, 19, 19, 0.08); outline-color: transparent; height: 40px; min-width: 0; border-radius: 12px; font-family: Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 500; line-height: 22px; align-items: center; white-space: nowrap; width: 100%; --uds-input-placeholder: rgba(19, 19, 19, 0.35);"
+                style="box-sizing: border-box; margin: 0px; padding: 16px 16px 16px 40px; border-width: 1px; border-style: solid; appearance: none; resize: none; outline-width: 0px; outline-style: solid; background-color: rgb(249, 249, 249); color: rgb(19, 19, 19); border-color: rgba(19, 19, 19, 0.08); outline-color: transparent; height: 40px; min-width: 0px; border-radius: 12px; font-family: Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 500; line-height: 22px; align-items: center; white-space: nowrap; width: 100%; -webkit-appearance: none; --uds-input-placeholder: rgba(19, 19, 19, 0.35);"
                 value=""
                 virtualkeyboardpolicy="auto"
               />
@@ -155,7 +156,7 @@ exports[`CountryListModal > should render options and call select callback 1`] =
                     stroke="currentColor"
                     stroke-linecap="round"
                     stroke-width="8"
-                    style="width: 24px; height: 24px;"
+                    style="color: var(--neutral1); width: 24px; height: 24px;"
                     viewBox="0 0 48 48"
                   >
                     <line

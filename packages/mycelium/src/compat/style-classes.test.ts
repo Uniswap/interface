@@ -308,6 +308,17 @@ describe('px transform token resolution', () => {
   it('leaves non-px transform entries alone', () => {
     expect(has(flexCompatClassName({ transform: [{ translateX: '50vw' }] }), '[transform:translateX(50vw)]')).toBe(true)
   })
+
+  // A unitless translateY(-8) is invalid CSS and voids the whole declaration — the hover-reveal presets
+  // (AmountInputPresets) pass exactly this RN-keyed array.
+  it('gives numeric translateX / translateY array entries px, like x / y', () => {
+    expect(
+      has(
+        flexCompatClassName({ transform: [{ translateY: -8 }, { scale: 0.95 }] }),
+        '[transform:translateY(-8px)_scale(0.95)]',
+      ),
+    ).toBe(true)
+  })
 })
 
 describe('non-token legacy value family (INFRA-3258)', () => {

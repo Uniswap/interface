@@ -1,9 +1,4 @@
 import {
-  type Action as OldAction,
-  type AuthenticationTypes as OldAuthenticationTypes,
-  type SecuredChallengeResponse,
-} from '@uniswap/client-embeddedwallet/dist/uniswap/embeddedwallet/v1/service_pb'
-import {
   type AddAuthenticatorResponse,
   type ChallengeResponse,
   type CheckRecoveryAvailabilityResponse,
@@ -72,10 +67,7 @@ export type {
   SignAuth,
 } from './createEmbeddedWalletApiClient.types'
 
-export function createEmbeddedWalletApiClient({
-  rpcClient,
-  legacyRpcClient,
-}: EmbeddedWalletClientContext): EmbeddedWalletApiClient {
+export function createEmbeddedWalletApiClient({ rpcClient }: EmbeddedWalletClientContext): EmbeddedWalletApiClient {
   const inflightRequests = new Map<string, Promise<unknown>>()
 
   function requireSingle<T>(items: T[], label: string): T {
@@ -191,22 +183,6 @@ export function createEmbeddedWalletApiClient({
 
     inflightRequests.set(cacheKey, request)
     return request
-  }
-
-  async function fetchSecuredChallengeRequest({
-    type,
-    action,
-    b64EncryptionPublicKey,
-  }: {
-    type: OldAuthenticationTypes
-    action: OldAction
-    b64EncryptionPublicKey: string
-    walletId?: string
-  }): Promise<SecuredChallengeResponse> {
-    if (!legacyRpcClient) {
-      throw new Error('SecuredChallenge not supported in new API - legacy client required')
-    }
-    return await legacyRpcClient.securedChallenge({ type, action, b64EncryptionPublicKey })
   }
 
   const fetchExportSeedPhraseRequest = (params: ExportSeedPhraseParams): Promise<ExportSeedPhraseResponse> =>
@@ -384,7 +360,6 @@ export function createEmbeddedWalletApiClient({
 
   return {
     fetchChallengeRequest,
-    fetchSecuredChallengeRequest,
     fetchCreateWalletRequest,
     fetchWalletSigninRequest,
     fetchSignMessagesRequest,

@@ -9,7 +9,7 @@ import { useEvent } from 'utilities/src/react/hooks'
 import { useAccount } from '~/connection/hooks/useAccount'
 import { MARGIN_CHAIN_ID } from '~/constants/margin'
 import { MarginVenueEmptyNotice } from '~/pages/Swap/Margin/components/MarginVenuePreferences'
-import { decideOpenAction, heldPlan } from '~/pages/Swap/Margin/hooks/marginExecutionGuards'
+import { decideOpenAction, heldPlan, openQuoteKey } from '~/pages/Swap/Margin/hooks/marginExecutionGuards'
 import { marginPlanExecutionStore, useMarginPlanExecution } from '~/pages/Swap/Margin/hooks/marginPlanExecutionStore'
 import type { DerivedMarginInfo } from '~/pages/Swap/Margin/hooks/useDerivedMarginInfo'
 import { useExecuteMarginPlan } from '~/pages/Swap/Margin/hooks/useExecuteMarginPlan'
@@ -60,7 +60,6 @@ export function MarginOpenButton({
     quote,
     quoteError,
     isQuoteLoading,
-    isFetching,
     isPlaceholderData,
     isDebouncing,
     paymentCurrency,
@@ -74,8 +73,11 @@ export function MarginOpenButton({
     // Form is truth: the CTA opens what the form shows. Only re-focus an OPEN the executor still
     // holds in memory; a plan held under a foreign intent blocks. A plan stranded by a reload is
     // not in memory, so it neither resumes nor blocks here; Activity's Continue resumes it instead.
-    const existing = heldPlan(marginPlanExecutionStore.getState())
-    const action = decideOpenAction({ existing })
+    const state = marginPlanExecutionStore.getState()
+    const action = decideOpenAction({
+      existing: heldPlan(state),
+      matchesForm: openQuoteKey(state.lastQuote) === openQuoteKey(quote),
+    })
     if (action.kind === 'resume') {
       void resumePlan({ planId: action.planId })
       return
@@ -90,6 +92,7 @@ export function MarginOpenButton({
   // Subscribed at render, not just read in the handler: a blocked action has to reach the label, or
   // the CTA stays enabled and swallows the press with nothing said.
   const existingPlan = useMarginPlanExecution(heldPlan)
+  const lastQuoteKey = useMarginPlanExecution((s) => openQuoteKey(s.lastQuote))
 
   if (!account.address) {
     return (
@@ -102,8 +105,8 @@ export function MarginOpenButton({
   }
 
   const cap = Math.max(maxLeverage ?? MIN_LEVERAGE, MIN_LEVERAGE)
-  const loading = isMarginOpenLoading({ isQuoteLoading, isDebouncing, isFetching, isPlaceholderData })
-  const openAction = decideOpenAction({ existing: existingPlan })
+  const loading = isMarginOpenLoading({ isQuoteLoading, isDebouncing, isPlaceholderData })
+  const openAction = decideOpenAction({ existing: existingPlan, matchesForm: lastQuoteKey === openQuoteKey(quote) })
 
   let label = direction === MarginDirection.SHORT ? t('margin.cta.openShort') : t('margin.cta.openLong')
   let disabled = false

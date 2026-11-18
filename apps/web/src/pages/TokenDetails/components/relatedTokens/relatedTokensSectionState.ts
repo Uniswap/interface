@@ -1,29 +1,16 @@
 import type { TFunction } from 'i18next'
 import { getRelatedTokensTitle } from 'uniswap/src/features/tokenCategories/getRelatedTokensTitle'
 import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
+import {
+  deriveRelatedSectionState,
+  type RelatedSectionState,
+  selectRelatedCategory,
+} from '~/components/TokenCardCarousel/relatedSectionState'
 
-export interface RelatedTokensSectionState {
-  selectedCategory: TokenCategory
-  showChips: boolean
-  isListEmpty: boolean
-  title: string
-}
+export type RelatedTokensSectionState = RelatedSectionState<TokenCategory>
 
-/** Falls back to the first category whenever the pick is stale (token changed, categories reordered). */
-export function selectRelatedTokensCategory({
-  categories,
-  pickedCategoryId,
-}: {
-  categories: TokenCategory[]
-  pickedCategoryId: string | undefined
-}): TokenCategory | undefined {
-  return categories.find((category) => category.id === pickedCategoryId) ?? categories.at(0)
-}
+export const selectRelatedTokensCategory = selectRelatedCategory<TokenCategory>
 
-/**
- * Keeps a chipped section mounted on an empty or failed category so the user can switch away, and
- * hides a chipless section with nothing to show.
- */
 export function deriveRelatedTokensSectionState({
   categories,
   pickedCategoryId,
@@ -39,17 +26,13 @@ export function deriveRelatedTokensSectionState({
   tokenCount: number
   t: TFunction
 }): RelatedTokensSectionState | undefined {
-  const selectedCategory = selectRelatedTokensCategory({ categories, pickedCategoryId })
-  if (!selectedCategory) {
-    return undefined
-  }
-
-  const showChips = categories.length > 1
-  const isListEmpty = !isLoading && (isError || tokenCount === 0)
-  if (isListEmpty && !showChips) {
-    return undefined
-  }
-
-  const title = showChips ? t('tdp.relatedTokens.header') : getRelatedTokensTitle({ t, category: selectedCategory })
-  return { selectedCategory, showChips, isListEmpty, title }
+  return deriveRelatedSectionState({
+    categories,
+    pickedCategoryId,
+    isLoading,
+    isError,
+    itemCount: tokenCount,
+    headerTitle: t('tdp.relatedTokens.header'),
+    singleTitle: (category) => getRelatedTokensTitle({ t, category }),
+  })
 }

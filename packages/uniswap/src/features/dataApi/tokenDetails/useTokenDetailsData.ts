@@ -220,6 +220,7 @@ function mapRestTokenMarketStats(stats: PlainMessage<RestTokenMarketStats> | und
     volumeUsd: stats.volumeUsd,
     priceHigh52wUsd: stats.priceHigh52wUsd,
     priceLow52wUsd: stats.priceLow52wUsd,
+    priceAllTimeHighUsd: stats.priceAllTimeHighUsd,
     marketCapUsd: stats.marketCapUsd,
     fullyDilutedValuationUsd: stats.fullyDilutedValuationUsd,
     totalValueLockedUsd: stats.totalValueLockedUsd,
@@ -274,7 +275,7 @@ export function useTokenMarketStats(
   const isMultichainAggregation = isMultichainAggregateView ?? false
   const enableQueries = !skip
 
-  // on-chain market stats (TVL/volume/52w) from GetTokenMarkets, or from
+  // on-chain market stats (TVL/volume/52w/ATH) from GetTokenMarkets, or from
   // GetTokenMarketsMultiChain (summed across chains) when showing the all-networks aggregate.
   // Without a currencyId (e.g. a hover card whose token hasn't resolved yet) both queries stay disabled.
   const restTokenIdentifier = useMemo(

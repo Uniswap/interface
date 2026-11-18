@@ -1,3 +1,4 @@
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import {
   HistoryDuration as LiquidityHistoryDuration,
   PoolProtocol,
@@ -42,4 +43,29 @@ export function versionFromVars({ isV2, isV3, isV4 }: PDPChartQueryVars): PoolPr
     return PoolProtocol.V2
   }
   return undefined
+}
+
+/** The history query vars for a pool, its protocol flags set from its version; undefined until the pool is known. */
+export function getPoolHistoryQueryVars({
+  addressOrId,
+  chainId,
+  protocolVersion,
+  duration,
+}: {
+  addressOrId?: string
+  chainId?: UniverseChainId
+  protocolVersion?: ProtocolVersion
+  duration: HistoryDuration
+}): PDPChartQueryVars | undefined {
+  if (!addressOrId || !chainId || protocolVersion === undefined) {
+    return undefined
+  }
+  return {
+    addressOrId,
+    chainId,
+    duration,
+    isV2: protocolVersion === ProtocolVersion.V2,
+    isV3: protocolVersion === ProtocolVersion.V3,
+    isV4: protocolVersion === ProtocolVersion.V4,
+  }
 }

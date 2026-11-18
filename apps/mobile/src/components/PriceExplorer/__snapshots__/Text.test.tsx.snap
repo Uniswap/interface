@@ -15,7 +15,7 @@ exports[`DatetimeText > renders without error 1`] = `
       readonly=""
       rows="1"
       spellcheck="true"
-      style="color: rgba(19, 19, 19, 0.63); font-family: Basel Grotesk; font-size: 15px; font-weight: 400; line-height: 18px;"
+      style="color: rgba(19, 19, 19, 0.63); font-family: "Basel Grotesk"; font-size: 15px; font-weight: 400; line-height: 18px;"
       value="10/31/2023, 8:00:00 PM"
       virtualkeyboardpolicy="auto"
     />
@@ -43,7 +43,7 @@ exports[`PriceText > renders loading state 1`] = `
       readonly=""
       rows="1"
       spellcheck="true"
-      style="font-family: Basel Grotesk; font-weight: 400; line-height: 50px; color: rgb(19, 19, 19); font-size: 0px;"
+      style="font-family: "Basel Grotesk"; font-weight: 400; line-height: 50px; color: rgb(19, 19, 19); font-size: 0px;"
       value="-"
       virtualkeyboardpolicy="auto"
     />
@@ -71,7 +71,7 @@ exports[`PriceText > renders without error 1`] = `
       readonly=""
       rows="1"
       spellcheck="true"
-      style="font-family: Basel Grotesk; font-weight: 400; line-height: 50px; color: rgb(19, 19, 19); font-size: 0px;"
+      style="font-family: "Basel Grotesk"; font-weight: 400; line-height: 50px; color: rgb(19, 19, 19); font-size: 0px;"
       value="$55"
       virtualkeyboardpolicy="auto"
     />
@@ -85,7 +85,7 @@ exports[`PriceText > renders without error 1`] = `
       readonly=""
       rows="1"
       spellcheck="true"
-      style="font-family: Basel Grotesk; font-weight: 400; line-height: 50px; color: rgba(19, 19, 19, 0.35); font-size: 0px;"
+      style="font-family: "Basel Grotesk"; font-weight: 400; line-height: 50px; color: rgba(19, 19, 19, 0.35); font-size: 0px;"
       value=".00"
       virtualkeyboardpolicy="auto"
     />
@@ -113,7 +113,7 @@ exports[`PriceText > renders without error less than a dollar 1`] = `
       readonly=""
       rows="1"
       spellcheck="true"
-      style="font-family: Basel Grotesk; font-weight: 400; line-height: 50px; color: rgb(19, 19, 19); font-size: 0px;"
+      style="font-family: "Basel Grotesk"; font-weight: 400; line-height: 50px; color: rgb(19, 19, 19); font-size: 0px;"
       value="$0"
       virtualkeyboardpolicy="auto"
     />
@@ -127,7 +127,7 @@ exports[`PriceText > renders without error less than a dollar 1`] = `
       readonly=""
       rows="1"
       spellcheck="true"
-      style="font-family: Basel Grotesk; font-weight: 400; line-height: 50px; color: rgba(19, 19, 19, 0.35); font-size: 0px;"
+      style="font-family: "Basel Grotesk"; font-weight: 400; line-height: 50px; color: rgba(19, 19, 19, 0.35); font-size: 0px;"
       value=".0500"
       virtualkeyboardpolicy="auto"
     />
@@ -161,7 +161,7 @@ exports[`RelativeChangeText > renders loading state 1`] = `
           <div
             class="css-text-146c3p1"
             dir="auto"
-            style="opacity: 0; font-size: 19px; line-height: 24px; font-family: Basel Grotesk; font-weight: 400;"
+            style="opacity: 0; font-size: 19px; line-height: 24px; font-family: "Basel Grotesk"; font-weight: 400;"
           >
             00.00%
           </div>
@@ -182,7 +182,7 @@ exports[`RelativeChangeText > renders loading state 1`] = `
         <div
           fill="none"
           stroke-width="2"
-          style="color: rgb(225, 15, 15); width: 16px; height: 16px; transform: [object Object];"
+          style="color: rgb(225, 15, 15); width: 16px; height: 16px;"
           viewbox="0 0 24 24"
         >
           <div
@@ -194,7 +194,7 @@ exports[`RelativeChangeText > renders loading state 1`] = `
           class="css-text-146c3p1"
           data-testid="relative-change-text"
           dir="auto"
-          style="font-size: 19px; line-height: 24px; font-family: Basel Grotesk; font-weight: 400;"
+          style="font-size: 19px; line-height: 24px; font-family: "Basel Grotesk"; font-weight: 400;"
         >
           10.00%
         </div>
@@ -225,7 +225,7 @@ exports[`RelativeChangeText > renders without error 1`] = `
         <div
           fill="none"
           stroke-width="2"
-          style="color: rgb(225, 15, 15); width: 16px; height: 16px; transform: [object Object];"
+          style="color: rgb(225, 15, 15); width: 16px; height: 16px;"
           viewbox="0 0 24 24"
         >
           <div
@@ -237,7 +237,7 @@ exports[`RelativeChangeText > renders without error 1`] = `
           class="css-text-146c3p1"
           data-testid="relative-change-text"
           dir="auto"
-          style="font-size: 19px; line-height: 24px; font-family: Basel Grotesk; font-weight: 400;"
+          style="font-size: 19px; line-height: 24px; font-family: "Basel Grotesk"; font-weight: 400;"
         >
           10.00%
         </div>

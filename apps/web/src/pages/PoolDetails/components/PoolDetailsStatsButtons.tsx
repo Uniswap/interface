@@ -242,6 +242,7 @@ export function PoolDetailsStatsButtons({
         <Flex gap="$gap24" data-testid="pool-details-swap-modal">
           <Swap
             syncTabToUrl={false}
+            hideChart
             initialInputChainId={chainId}
             initialInputCurrency={baseCurrency}
             initialOutputCurrency={quoteCurrency}

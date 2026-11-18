@@ -422,7 +422,7 @@ describe('ButtonCompat — link form tag="a" + href (INFRA-3478)', () => {
   // withheld the anchor lost its tab stop and implicit link role, so
   // onDisabledPress was mouse-only where the disabled button stays keyboard-
   // reachable. The parity set restores focus, role, and Enter activation.
-  it('a disabled-interactive anchor stays focusable with a link role, and Enter fires onDisabledPress', () => {
+  it('a disabled-interactive anchor stays focusable with a link role, and Enter and Space fire onDisabledPress', () => {
     const onDisabledPress = vi.fn()
     const { container } = render(
       <ButtonCompat disabled href="/x" tag="a" onDisabledPress={onDisabledPress}>
@@ -441,6 +441,11 @@ describe('ButtonCompat — link form tag="a" + href (INFRA-3478)', () => {
       fireEvent.keyDown(anchor, { key: 'Enter' })
     }
     expect(onDisabledPress).toHaveBeenCalledTimes(1)
+    if (anchor) {
+      fireEvent.keyDown(anchor, { key: ' ' })
+      fireEvent.keyUp(anchor, { key: ' ' })
+    }
+    expect(onDisabledPress).toHaveBeenCalledTimes(2)
   })
 
   it('a disabled anchor without onDisabledPress keeps the link role but stays out of the tab order', () => {

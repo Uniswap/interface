@@ -1161,8 +1161,28 @@ describe('bot-authored PRs require two humans', () => {
     // excluded" because there the author IS the person.
     const { calls } = runGate(botPr([GA, SG, ALICE]))
     expect(statusFor(calls, 'review-integrity')?.description).toBe(
-      '3/4 approvals — 1 more needed, yours counts (bot-authored, +2 for CODEOWNER).',
+      '3/4 approvals — 1 more needed from a human (bot-authored PR: 2 humans required, yours counts).',
     )
+  })
+
+  test('the status names a missing HUMAN once both bots have approved', () => {
+    // backend#13657: 3/4 with one human read as a stuck check, not a missing reviewer. With every
+    // counting bot in, only a person can close the gap, so the visible part of the message has
+    // to say so. It must not mention CODEOWNERS: the +2 was the bot pad, never an owner rule.
+    const { calls } = runGate(botPr([GA, SG, ALICE]))
+    const d = statusFor(calls, 'review-integrity')?.description as string
+    expect(d.slice(0, 50)).toContain('from a human')
+    expect(d).not.toContain('CODEOWNER')
+  })
+
+  test('while a bot approval is still missing, the status does not claim a human is needed', () => {
+    // Two humans and one bot: the gap may well be the bot that has not run yet, so asking for
+    // another person would be wrong.
+    const { calls } = runGate(botPr([SG, ALICE, BOB]))
+    expect(statusFor(calls, 'review-integrity')).toMatchObject({
+      description: '3/4 approvals — 1 more needed (bot-authored PR: 2 humans + 2 bot approvals, yours counts).',
+      state: 'pending',
+    })
   })
 
   test('human-authored PRs still say self-approval EXCLUDED', () => {
@@ -1200,7 +1220,7 @@ describe('bot-authored PRs require two humans', () => {
     // quietly buy back a human.
     const { calls } = runGate(botPr([SG, ALICE, BOB], { COUNTING_BOTS: 'uniswap-security-gate' }))
     expect(statusFor(calls, 'review-integrity')).toMatchObject({
-      description: expect.stringContaining('3/3 approvals (bot-authored, +1 for CODEOWNER)'),
+      description: '3/3 approvals (bot-authored PR, humans: 2).',
       state: 'success',
     })
   })
@@ -1239,7 +1259,7 @@ describe('status description fits the visible budget', () => {
     expect(d).not.toStartWith('Awaiting review')
     expect(d.slice(0, VISIBLE)).toContain('1/4')
     expect(d.slice(0, VISIBLE)).toContain('more needed')
-    expect(d.slice(0, VISIBLE)).toContain('yours counts')
+    expect(d).toContain('yours counts')
     expect(d.length).toBeLessThanOrEqual(140)
   })
 })

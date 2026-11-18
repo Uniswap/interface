@@ -3,9 +3,9 @@ import * as DialogPrimitive from '@radix-ui/react-dialog'
 import { isWebApp } from '@universe/environment'
 import * as React from 'react'
 import { useDisableBodyScroll } from 'utilities/src/react/useDisableBodyScroll'
+import { markRadixEscapePreventedBySheet, useDismissLayer } from 'utilities/src/react/useDismissLayer'
 import { useInjectSingleStylesheet } from 'utilities/src/react/useInjectSingleStylesheet'
 import { useIsMounted } from 'utilities/src/react/useIsMounted'
-import { markRadixEscapePreventedBySheet, useSheetEscapeToClose } from 'utilities/src/react/useSheetEscapeToClose'
 import { cn } from '../cn'
 import { mergeCompatStyle } from '../compat/compose'
 import { domProps } from '../compat/dom'
@@ -35,12 +35,13 @@ const stopPropagation = (event: React.SyntheticEvent): void => event.stopPropaga
  * replacement for `ui/src`'s Radix-based `WebBottomSheet.web.tsx`, rendering
  * the same chrome through the Flex compat emission and coordinating with the
  * legacy sheet through the shared Escape stack in
- * `utilities/src/react/useSheetEscapeToClose`. Stacking rides the mycelium
+ * `utilities/src/react/useDismissLayer`. Stacking rides the mycelium
  * overlay z-index bridge (`EffectiveOverlayZIndexContext`) like every other
  * compat overlay.
  */
 export function WebBottomSheet({
   isOpen,
+  title,
   onClose,
   children,
   gap,
@@ -70,7 +71,7 @@ export function WebBottomSheet({
   // drag/freeze effects (a ref read inside them would silently never attach on first open).
   const [frameNode, setFrameNode] = React.useState<HTMLDivElement | null>(null)
   useSheetDrag({ isOpen, onClose, frame: frameNode })
-  useSheetEscapeToClose({ isOpen, onClose })
+  useDismissLayer({ isOpen, onClose })
   // Strict Tamagui Sheet parity: fit mode measures the frame once at open and
   // freezes it there; percent mode is owned by the snap point.
   useSheetFitHeightFreeze({
@@ -142,7 +143,7 @@ export function WebBottomSheet({
     },
     [canDismissOnOverlayPress, isOpen, onClose],
   )
-  // Escape is owned by useSheetEscapeToClose (open-scoped, own stack): Radix's Escape dismissal
+  // Escape is owned by useDismissLayer (open-scoped, own stack): Radix's Escape dismissal
   // arbitrates across ALL mounted DismissableLayers, and force-mounted closed sheets would make
   // the last-mounted sheet swallow Escape for every open one. preventDefault here keeps Radix's
   // path inert for sheets in both states.
@@ -284,9 +285,7 @@ export function WebBottomSheet({
           onPointerDownOutside={preventOutsideDismiss}
           onFocusOutside={preventOutsideDismiss}
         >
-          {/* TODO(INFRA-4589): always empty, so the dialog's aria-labelledby points at nothing and it has no
-              accessible name (aria-dialog-name, empty-heading). Take a title prop for it. */}
-          <DialogPrimitive.Title style={VISUALLY_HIDDEN_STYLE} />
+          <DialogPrimitive.Title style={VISUALLY_HIDDEN_STYLE}>{title}</DialogPrimitive.Title>
           {!hideHandlebar && (
             <div data-sheet-handle className={handleEmission.className} style={handleEmission.style}>
               <div className={handleBarEmission.className} style={handleBarEmission.style} />

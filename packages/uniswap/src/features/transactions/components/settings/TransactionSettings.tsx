@@ -1,9 +1,8 @@
 import { isMobileApp, isWebApp } from '@universe/environment'
-import type { ColorTokens, FlexProps } from '@universe/mycelium'
-import { Flex, TouchableArea, type IconSizeTokens } from '@universe/mycelium'
-import type { GeneratedIcon } from '@universe/mycelium/icons'
-import { Settings } from '@universe/mycelium/icons/Settings'
+import type { FlexProps } from '@universe/mycelium'
+import { Flex } from '@universe/mycelium'
 import { TestID } from '@universe/test'
+import { SettingsTrigger, type SettingsTriggerProps } from '@universe/transactions-ui'
 import type { ReactNode } from 'react'
 import { Popover } from 'ui/src'
 import { AccountType } from 'uniswap/src/features/accounts/types'
@@ -13,7 +12,6 @@ import {
   useModalShow,
   useModalVisibility,
 } from 'uniswap/src/features/transactions/components/settings/stores/TransactionSettingsModalStore/useTransactionSettingsModalStore'
-import { TransactionSettingsButton } from 'uniswap/src/features/transactions/components/settings/TransactionSettingsButton'
 import { TransactionSettingsModal } from 'uniswap/src/features/transactions/components/settings/TransactionSettingsModal/TransactionSettingsModal'
 import type { TransactionSettingConfig } from 'uniswap/src/features/transactions/components/settings/types'
 import { ViewOnlyButton } from 'uniswap/src/features/transactions/components/settings/ViewOnlyButton'
@@ -22,20 +20,18 @@ import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { useEvent } from 'utilities/src/react/hooks'
 
+/** What TransactionSettings hands its trigger: the press that opens and closes the settings, and the test id. */
+export type TransactionSettingsTriggerProps = Required<Pick<SettingsTriggerProps, 'onPress' | 'testID'>>
+
 export interface TransactionSettingsProps {
   settings: TransactionSettingConfig[]
   adjustTopAlignment?: boolean
   adjustRightAlignment?: boolean
   position?: FlexProps['position']
-  iconColor?: ColorTokens
-  backgroundColor?: ColorTokens
-  iconSize?: IconSizeTokens
   defaultTitle?: string
-  shouldShowSettingsIconTooltip?: boolean
-  IconLabel?: ReactNode
-  CustomIconComponent?: GeneratedIcon
   testID?: string
-  CustomSettingsButton?: ReactNode
+  /** Renders the settings gear, e.g. TransactionSettingsButtonWithSlippage. Defaults to the plain gear. */
+  renderTrigger?: (triggerProps: TransactionSettingsTriggerProps) => ReactNode
   onClose?: () => void
 }
 
@@ -45,17 +41,11 @@ export function TransactionSettings({
   adjustRightAlignment = true,
   position = 'absolute',
   defaultTitle,
-  CustomSettingsButton,
+  renderTrigger,
   testID,
-  CustomIconComponent,
-  iconColor = '$neutral2',
-  backgroundColor,
-  iconSize,
-  IconLabel,
   onClose,
 }: TransactionSettingsProps): JSX.Element {
   const account = useWallet().evmAccount
-  const IconComponent = CustomIconComponent ?? Settings
 
   const isTransactionSettingsModalVisible = useModalVisibility(TransactionSettingsModalId.TransactionSettings)
   const handleShowTransactionSettingsModal = useModalShow(TransactionSettingsModalId.TransactionSettings)
@@ -98,6 +88,11 @@ export function TransactionSettings({
     ? { crossAxis: adjustRightAlignment ? 0 : 8, mainAxis: adjustTopAlignment ? 0 : 8 }
     : undefined
 
+  const triggerProps: TransactionSettingsTriggerProps = {
+    onPress: onPressTransactionSettings,
+    testID: testID ?? TestID.TransactionSettings,
+  }
+
   return (
     <>
       <ViewOnlyModal isOpen={isViewOnlyModalVisible} onDismiss={handleHideViewOnlyModal} />
@@ -113,17 +108,11 @@ export function TransactionSettings({
           >
             <Flex>
               <Popover.Trigger>
-                <TouchableArea testID={testID ?? TestID.TransactionSettings} onPress={onPressTransactionSettings}>
-                  {CustomSettingsButton ?? (
-                    <TransactionSettingsButton
-                      contentColor={iconColor}
-                      backgroundColor={backgroundColor}
-                      CustomIconComponent={IconComponent}
-                      iconSize={iconSize}
-                      IconLabel={IconLabel}
-                    />
-                  )}
-                </TouchableArea>
+                {renderTrigger ? (
+                  renderTrigger(triggerProps)
+                ) : (
+                  <SettingsTrigger {...triggerProps} fixedHeight={isWebApp} />
+                )}
               </Popover.Trigger>
               <TransactionSettingsModal
                 settings={settings}

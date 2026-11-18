@@ -5,7 +5,7 @@ import { deriveRwaAggregates } from 'uniswap/src/data/apiClients/dataApiService/
 import type { ExploreStockShelfItem, Rwa } from 'uniswap/src/data/apiClients/dataApiService/rwa/types'
 import { useExploreRwaRows } from 'uniswap/src/data/apiClients/dataApiService/rwa/useExploreRwaRows'
 
-export const EXPLORE_STOCK_SHELF_COUNT = 12
+const EXPLORE_STOCK_SHELF_COUNT = 12
 
 export function useExploreStocks(
   chainIds: number[] = [],

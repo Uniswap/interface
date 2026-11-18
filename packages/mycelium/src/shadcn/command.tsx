@@ -15,7 +15,8 @@
  *   (`optionMatchesSearchQuery` — the legacy NetworkFilterV2 port); empty
  *   query matches everything; `filter` prop overrides;
  * - groups hide (heading included) when every child item is filtered out;
- * - CommandEmpty renders only while no item is visible;
+ * - CommandEmpty renders only while no item is visible; the list then drops its listbox role and the input
+ *   reports `aria-expanded="false"`, since a listbox may hold only options and groups;
  * - ArrowUp/Down move the active option without wrapping, Home/End jump,
  *   Enter selects the active option and is a no-op without one; the active
  *   option resets when the query changes;
@@ -167,7 +168,7 @@ function CommandInput({
   wrapperClassName?: string
   showSearchIcon?: boolean
 }): React.JSX.Element {
-  const { listId, query, setQuery, activeId, setActiveId, itemsRef } = useCommandContext('CommandInput')
+  const { listId, query, setQuery, activeId, setActiveId, itemsRef, visibleCount } = useCommandContext('CommandInput')
 
   const moveActive = (position: 'next' | 'prev' | 'first' | 'last'): void => {
     const entries = orderedVisibleEntries(itemsRef)
@@ -250,7 +251,8 @@ function CommandInput({
         data-slot="command-input"
         type="text"
         role="combobox"
-        aria-expanded="true"
+        // With no matches the list isn't a listbox (see CommandList), so the combobox reports it closed.
+        aria-expanded={visibleCount > 0}
         aria-controls={listId}
         aria-activedescendant={activeId}
         aria-autocomplete="list"
@@ -264,13 +266,23 @@ function CommandInput({
   )
 }
 
-function CommandList({ className, ...props }: React.ComponentProps<'div'>): React.JSX.Element {
-  const { listId } = useCommandContext('CommandList')
+function CommandList({
+  className,
+  'aria-label': ariaLabel,
+  'aria-labelledby': ariaLabelledBy,
+  ...props
+}: React.ComponentProps<'div'>): React.JSX.Element {
+  const { listId, visibleCount } = useCommandContext('CommandList')
+  // A listbox may only hold options and groups; with none visible it holds just CommandEmpty's text. Its name goes
+  // with the role: a role-less div can't carry one.
+  const isListbox = visibleCount > 0
   return (
     <div
       id={listId}
       data-slot="command-list"
-      role="listbox"
+      role={isListbox ? 'listbox' : undefined}
+      aria-label={isListbox ? ariaLabel : undefined}
+      aria-labelledby={isListbox ? ariaLabelledBy : undefined}
       className={cn(COMMAND_RECIPE_CLASS_NAMES.list, className)}
       {...props}
     />
@@ -463,7 +475,8 @@ function CommandSeparator({ className, ...props }: React.ComponentProps<'div'>):
   return (
     <div
       data-slot="command-separator"
-      role="separator"
+      // A listbox may only own options and groups, so the rule is decoration (aria-required-children).
+      aria-hidden="true"
       className={cn(COMMAND_RECIPE_CLASS_NAMES.separator, className)}
       {...props}
     />

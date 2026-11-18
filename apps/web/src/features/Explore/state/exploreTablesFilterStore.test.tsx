@@ -1,21 +1,27 @@
 import { describe, expect, it } from 'vitest'
 import { TimePeriod } from '~/data/util'
-import { AuctionQuickFilter, createExploreTablesFilterStore } from '~/features/Explore/state/exploreTablesFilterStore'
+import { createExploreTablesFilterStore } from '~/features/Explore/state/exploreTablesFilterStore'
+import { AuctionQuickFilter, AuctionStatus } from '~/types/auctionFilters'
 
 describe('exploreTablesFilterStore', () => {
-  it('starts with empty filterString, DAY timePeriod, and All quick filter', () => {
+  it('starts with empty filterString, DAY timePeriod, and All auction filters', () => {
     const store = createExploreTablesFilterStore()
     const state = store.getState()
 
     expect(state.filterString).toBe('')
     expect(state.timePeriod).toBe(TimePeriod.DAY)
     expect(state.quickFilter).toBe(AuctionQuickFilter.All)
+    expect(state.statusFilter).toBe(AuctionStatus.All)
   })
 
-  it('seeds the quick filter when an initial value is provided', () => {
-    const store = createExploreTablesFilterStore(AuctionQuickFilter.Verified)
+  it('seeds each auction filter independently', () => {
+    const store = createExploreTablesFilterStore({ statusFilter: AuctionStatus.Upcoming })
 
-    expect(store.getState().quickFilter).toBe(AuctionQuickFilter.Verified)
+    expect(store.getState().quickFilter).toBe(AuctionQuickFilter.All)
+    expect(store.getState().statusFilter).toBe(AuctionStatus.Upcoming)
+
+    store.getState().actions.setQuickFilter(AuctionQuickFilter.Verified)
+    expect(store.getState().statusFilter).toBe(AuctionStatus.Upcoming)
   })
 
   it('starts with no pools APR range and holds whatever the pools table publishes', () => {

@@ -1,5 +1,5 @@
 import { normalizeTokenAddressForCache, type UniverseChainId } from '@universe/chains'
-import type { MarginDirection, MarginVenue } from 'uniswap/src/features/transactions/margin/types'
+import { MarginDirection, type MarginVenue } from 'uniswap/src/features/transactions/margin/types'
 import { MARGIN_CHAIN_ID, type MarginPair, type MarginPairGroup, type MarginTokenInfo } from '~/constants/margin'
 import { marginPairGroupLabel, marginUnwrapSymbol } from '~/features/margin/utils/marginTokenDisplay'
 
@@ -21,12 +21,6 @@ export interface MarginTokenFilterOption {
 // Casing-insensitive identity for a token; every filter here compares addresses in this form.
 export function marginTokenKey(token: { address: string }): string {
   return normalizeTokenAddressForCache(token.address)
-}
-
-// A pair's debt leg: the stable on a long, the traded token on a short. Every venue of a pair borrows
-// the same token, so the first one speaks for the group.
-function groupDebtToken(group: MarginPairGroup): MarginTokenInfo | undefined {
-  return group.pairs.at(0)?.debt
 }
 
 // One row per pair with at least one venue the user has not opted out of. The opt-outs are what the
@@ -52,6 +46,37 @@ export function buildMarginPairRows({
 export function marginPairMaxLeverage(row: MarginPairRowData): number | undefined {
   const leverages = row.venues.flatMap((pair) => (pair.maxLeverage === undefined ? [] : [pair.maxLeverage]))
   return leverages.length > 0 ? Math.max(...leverages) : undefined
+}
+
+// The cheapest borrow rate among the pair's eligible venues. Undefined while no venue carries one yet.
+export function marginPairLowestBorrowRateBps(row: MarginPairRowData): number | undefined {
+  const rates = row.venues.flatMap((pair) => (pair.borrowRateBps === undefined ? [] : [pair.borrowRateBps]))
+  return rates.length > 0 ? Math.min(...rates) : undefined
+}
+
+// The eligible venue with the most borrowable liquidity. One side of one pair borrows a single debt
+// token, so raw amounts compare directly.
+export function marginPairDeepestVenue(row: MarginPairRowData): MarginPair | undefined {
+  return row.venues.reduce<MarginPair | undefined>(
+    (deepest, pair) =>
+      pair.availableBorrowLiquidity !== undefined &&
+      (deepest?.availableBorrowLiquidity === undefined ||
+        Number(pair.availableBorrowLiquidity) > Number(deepest.availableBorrowLiquidity))
+        ? pair
+        : deepest,
+    undefined,
+  )
+}
+
+// A pair's long and short folded into one list entry, Long first, pairs in first-seen order.
+export function mergeMarginPairSides(rows: MarginPairRowData[]): MarginPairRowData[][] {
+  const byPair = new Map<string, MarginPairRowData[]>()
+  for (const row of rows) {
+    const key = `${row.chainId}-${marginTokenKey(row.group.base)}-${marginTokenKey(row.group.quote)}`
+    byPair.set(key, [...(byPair.get(key) ?? []), row])
+  }
+  const isShort = (row: MarginPairRowData): number => Number(row.group.direction === MarginDirection.SHORT)
+  return [...byPair.values()].map((sides) => sides.sort((a, b) => isShort(a) - isShort(b)))
 }
 
 // Whitespace- and slash-insensitive form, so "eth/usdc", "eth / usdc" and "ethusdc" all match.
@@ -87,10 +112,7 @@ export function filterMarginPairRows({
   query = '',
   direction,
   chainId,
-  categoryId,
-  categoryIdsByToken,
-  asset,
-  debt,
+  quote,
   tokenName,
 }: {
   rows: MarginPairRowData[]
@@ -98,14 +120,8 @@ export function filterMarginPairRows({
   direction?: MarginDirection
   // Network filter; undefined is All networks.
   chainId?: UniverseChainId
-  // Backend token category the traded (base) token must carry — the stable leg never decides one.
-  categoryId?: string
-  // Category ids per marginTokenKey(), from the data API's token payloads.
-  categoryIdsByToken?: ReadonlyMap<string, readonly string[]>
-  // Long/short-asset filter: the token the pair goes long or short on.
-  asset?: string
-  // Debt-asset filter: the token the pair borrows.
-  debt?: string
+  // Quote filter: the pair's quote token, the same on both of its sides.
+  quote?: string
   tokenName: (token: MarginTokenInfo) => string
 }): MarginPairRowData[] {
   const normalizedQuery = query.trim().toLowerCase()
@@ -117,31 +133,11 @@ export function filterMarginPairRows({
     if (chainId !== undefined && row.chainId !== chainId) {
       return false
     }
-    const baseKey = marginTokenKey(group.base)
-    if (categoryId !== undefined && !categoryIdsByToken?.get(baseKey)?.includes(categoryId)) {
-      return false
-    }
-    if (asset !== undefined && baseKey !== asset) {
-      return false
-    }
-    const debtToken = groupDebtToken(group)
-    if (debt !== undefined && (!debtToken || marginTokenKey(debtToken) !== debt)) {
+    if (quote !== undefined && marginTokenKey(group.quote) !== quote) {
       return false
     }
     return !normalizedQuery || rowMatchesQuery({ row, query: normalizedQuery, tokenName })
   })
-}
-
-// The category ids carried by the listed pairs' traded tokens, so a chip is offered only when it would
-// match something.
-export function marginPairCategoryIds({
-  rows,
-  categoryIdsByToken,
-}: {
-  rows: MarginPairRowData[]
-  categoryIdsByToken: ReadonlyMap<string, readonly string[]>
-}): Set<string> {
-  return new Set(rows.flatMap((row) => categoryIdsByToken.get(marginTokenKey(row.group.base)) ?? []))
 }
 
 // Distinct tokens in first-seen order, which is the registry's own pair order.
@@ -156,12 +152,6 @@ function distinctTokens(tokens: MarginTokenInfo[]): MarginTokenFilterOption[] {
   return [...byAddress.values()]
 }
 
-export function marginAssetFilterOptions(rows: MarginPairRowData[]): MarginTokenFilterOption[] {
-  return distinctTokens(rows.map((row) => row.group.base))
-}
-
-export function marginDebtFilterOptions(rows: MarginPairRowData[]): MarginTokenFilterOption[] {
-  return distinctTokens(
-    rows.map((row) => groupDebtToken(row.group)).filter((token): token is MarginTokenInfo => token !== undefined),
-  )
+export function marginQuoteFilterOptions(rows: MarginPairRowData[]): MarginTokenFilterOption[] {
+  return distinctTokens(rows.map((row) => row.group.quote))
 }

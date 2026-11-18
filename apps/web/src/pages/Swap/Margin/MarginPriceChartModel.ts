@@ -2,7 +2,6 @@
 import {
   CrosshairMode,
   HistogramSeries,
-  LineStyle,
   type AreaSeriesPartialOptions,
   type CandlestickData,
   type IPriceLine,
@@ -13,6 +12,7 @@ import {
 import type { ChartHoverData } from '~/components/Charts/ChartModel'
 import { PriceChartModel, type PriceChartData } from '~/components/Charts/PriceChart'
 import type { RoundedCandleSeriesOptions } from '~/components/Charts/PriceChart/RoundedCandlestickSeries/rounded-candles-series'
+import type { MarginAvatarMarker, MarginAvatarPoint } from '~/pages/Swap/Margin/chart/MarginEntryAvatarOverlay'
 import { computeOverlaysReconcileKey } from '~/pages/Swap/Margin/chart/overlayReconcileKey'
 import { scaleOverlaysForRender, toScaledPrice, unscaleVisibleRange } from '~/pages/Swap/Margin/chart/overlayScaling'
 import { PriceZonePrimitive } from '~/pages/Swap/Margin/chart/PriceZonePrimitive'
@@ -26,13 +26,17 @@ import {
 import { alignVolumeToCandles, colorVolumeBars, type MarginVolumeBar } from '~/pages/Swap/Margin/chart/useMarginVolume'
 import { zoomedPriceRange } from '~/pages/Swap/Margin/chart/verticalZoom'
 import { withOpacity } from '~/pages/Swap/Margin/chart/withOpacity'
-import { marginVolumePaneHeight } from '~/pages/Swap/Margin/marginChartLayout'
+import { MARGIN_TIME_AXIS_HEIGHT, marginVolumePaneHeight } from '~/pages/Swap/Margin/marginChartLayout'
 
 // PriceChartModelParams isn't exported from the PriceChart barrel — mirror the ctor param
 // contract structurally (ChartModelParams<PriceChartData> & extras) and extend with overlays.
 type MarginPriceChartModelParams = ConstructorParameters<typeof PriceChartModel>[1] & {
   overlays: MarginChartOverlays
   onVisibleRangeChange?: (range?: { min: number; max: number }) => void
+  // Entry avatars for the pane's DOM layer: published in price-pane pixels, culled to the pane, after
+  // any repaint that moves them.
+  avatarMarkers?: MarginAvatarMarker[]
+  onAvatarPointsChange?: (points: MarginAvatarPoint[]) => void
   volumeBars?: MarginVolumeBar[]
   // The chart box's measured height: sizes the volume pane (marginVolumePaneHeight), and a change re-runs
   // updateOptions, which re-pins that height after lightweight-charts rescales the panes on a resize.
@@ -76,6 +80,10 @@ export class MarginPriceChartModel extends PriceChartModel {
   private pointerInVolumePane = false
   private onVisibleRangeChange: ((range?: { min: number; max: number }) => void) | undefined
   private lastRangePublishMs = 0
+  private avatarMarkers: MarginAvatarMarker[] = []
+  private onAvatarPointsChange: ((points: MarginAvatarPoint[]) => void) | undefined
+  private avatarPublishRaf: number | undefined
+  private lastAvatarPointsKey: string | undefined
   // Memo of the last applied vertical-autoscale inputs (scaled bounds + step + factor + series
   // identity). Reinstalling the provider only on change keeps steady-state updateOptions calls
   // (positions polls) free and re-targets a swap-recreated series.
@@ -84,8 +92,6 @@ export class MarginPriceChartModel extends PriceChartModel {
     | undefined
   // Pending post-paint visible-range republish (see applyVerticalAutoscale).
   private rangeRepublishRaf: number | undefined
-  // Pending next-frame re-assert of the volume pane height (see reconcileVolume).
-  private volumePaneRaf: number | undefined
   // Hover hit-test inputs (T14b). rawChartData mirrors params.data — the base keeps its raw
   // original-data copy private, and the hovered/emitted items must be RAW while the series renders
   // scaled. currentOverlays keeps the composer's RAW output for hit-testing.
@@ -113,12 +119,24 @@ export class MarginPriceChartModel extends PriceChartModel {
   // Stable handle for subscribe/unsubscribe. Only ever invoked post-ctor (subscribed in the
   // ctor body, after field initializers ran), so no wipe hazard.
   private readonly handleVisibleLogicalRangeChange = (): void => {
+    this.scheduleAvatarPublish()
     const now = Date.now()
     if (now - this.lastRangePublishMs < VISIBLE_RANGE_PUBLISH_THROTTLE_MS) {
       return
     }
     this.lastRangePublishMs = now
     this.publishVisibleRange(this.onVisibleRangeChange)
+  }
+
+  // At most once a frame. Pan, zoom, a price-axis drag and autoscale all move the avatars, and only the
+  // time-scale ones have a public subscription, so this hangs off the series' repaint instead.
+  private readonly scheduleAvatarPublish = (): void => {
+    if (this.avatarPublishRaf === undefined) {
+      this.avatarPublishRaf = requestAnimationFrame(() => {
+        this.avatarPublishRaf = undefined
+        this.publishAvatarPoints()
+      })
+    }
   }
 
   constructor(chartDiv: HTMLDivElement, params: MarginPriceChartModelParams) {
@@ -131,11 +149,18 @@ export class MarginPriceChartModel extends PriceChartModel {
     const chartElement = this.api.chartElement()
     chartElement.style.width = '100%'
     chartElement.style.height = '100%'
+    this.api.panes()[0]?.setPreserveEmptyPane(true)
     this.priceLinesReady = true
     this.lastSeries = this.series
     this.onVisibleRangeChange = params.onVisibleRangeChange
     this.rawChartData = params.data
     this.currentOverlays = params.overlays
+    this.avatarMarkers = params.avatarMarkers ?? []
+    this.onAvatarPointsChange = params.onAvatarPointsChange
+    // A primitive that draws nothing: lightweight-charts calls updateAllViews on every repaint.
+    const repaintNotifier: ISeriesPrimitive<Time> = { updateAllViews: this.scheduleAvatarPublish }
+    this.attachedPrimitives.push(repaintNotifier)
+    this.series.attachPrimitive(repaintNotifier)
     this.reconcileOverlays({ overlays: params.overlays, colors: params.colors })
     this.applyVerticalAutoscale({ overlays: params.overlays, step: params.verticalZoomStep ?? 0 })
     this.reconcileVolume({
@@ -154,11 +179,13 @@ export class MarginPriceChartModel extends PriceChartModel {
     this.onVisibleRangeChange = params.onVisibleRangeChange
     this.rawChartData = params.data
     this.currentOverlays = params.overlays
+    this.avatarMarkers = params.avatarMarkers ?? []
+    this.onAvatarPointsChange = params.onAvatarPointsChange
     const seriesSwapped = shouldForceOverlayRebuild({ prevSeries: this.lastSeries, nextSeries: this.series })
     this.lastSeries = this.series
 
     // Terminal styling layered on the base PriceChart defaults: tighter y-margins so candles fill
-    // the pane, faint horizontal gridlines for price levels, axis hairlines, and crosshair read-off
+    // the pane, no gridlines (the pane draws a dot grid), axis hairlines, and crosshair read-off
     // tags (the pane uses a bare <Chart> with no ChartHeader to show the hovered price/time).
     const { colors } = params
     this.api.applyOptions({
@@ -172,14 +199,7 @@ export class MarginPriceChartModel extends PriceChartModel {
         borderColor: colors.surface3.val,
       },
       timeScale: { borderVisible: true, borderColor: colors.surface3.val },
-      grid: {
-        horzLines: {
-          visible: true,
-          color: withOpacity({ amount: 8, color: colors.neutral3.val }),
-          style: LineStyle.Solid,
-        },
-        vertLines: { visible: false },
-      },
+      grid: { horzLines: { visible: false }, vertLines: { visible: false } },
       crosshair: {
         mode: CrosshairMode.Magnet,
         horzLine: { labelVisible: true, labelBackgroundColor: colors.surface3Solid.val },
@@ -209,20 +229,22 @@ export class MarginPriceChartModel extends PriceChartModel {
         colors: params.colors,
         boxHeight: params.boxHeight,
       })
+      // New markers needn't repaint the canvas.
+      this.scheduleAvatarPublish()
     }
     this.publishVisibleRange(params.onVisibleRangeChange)
   }
 
   override remove(): void {
+    this.onAvatarPointsChange = undefined
+    if (this.avatarPublishRaf !== undefined) {
+      cancelAnimationFrame(this.avatarPublishRaf)
+    }
     this.clearDwell()
     this.chartDiv.removeEventListener('pointermove', this.handlePointerMove, { capture: true })
     if (this.rangeRepublishRaf !== undefined) {
       cancelAnimationFrame(this.rangeRepublishRaf)
       this.rangeRepublishRaf = undefined
-    }
-    if (this.volumePaneRaf !== undefined) {
-      cancelAnimationFrame(this.volumePaneRaf)
-      this.volumePaneRaf = undefined
     }
     this.api.timeScale().unsubscribeVisibleLogicalRangeChange(this.handleVisibleLogicalRangeChange)
     super.remove()
@@ -333,6 +355,28 @@ export class MarginPriceChartModel extends PriceChartModel {
   // edges. Either edge unresolvable (no layout/data yet) publishes undefined so consumers fall
   // back to render-everything. coordinateToPrice reads SCALED series space (base low-price-range
   // workaround) — unscale so the composer keeps operating in raw prices.
+  // RAW prices are scaled before priceToCoordinate, as for the canvas overlays. Value-compared, so a
+  // repaint that moved nothing (a crosshair move) never reaches React.
+  private publishAvatarPoints(): void {
+    const publish = this.onAvatarPointsChange
+    if (!publish) {
+      return
+    }
+    const pane = this.api.paneSize(0)
+    const points = this.avatarMarkers.flatMap(({ time, price, ...marker }): MarginAvatarPoint[] => {
+      const x = this.api.timeScale().timeToCoordinate(time)
+      const y = this.series.priceToCoordinate(toScaledPrice({ price, factor: this.lowPriceRangeScaleFactor }))
+      return x === null || y === null || x < 0 || x > pane.width || y < 0 || y > pane.height
+        ? []
+        : [{ ...marker, x, y }]
+    })
+    const key = JSON.stringify(points)
+    if (key !== this.lastAvatarPointsKey) {
+      this.lastAvatarPointsKey = key
+      publish(points)
+    }
+  }
+
   private publishVisibleRange(cb?: (range?: { min: number; max: number }) => void): void {
     if (!cb) {
       return
@@ -393,7 +437,9 @@ export class MarginPriceChartModel extends PriceChartModel {
       this.attachedPrimitives.push(this.zonePrimitive)
       this.series.attachPrimitive(this.zonePrimitive)
     }
-    this.zonePrimitive.update({ zone: scaled.zone, color: colors.statusCritical.val })
+    // Tinted like the liq line it fades out from.
+    const zoneColor = scaled.priceLines.find((line) => line.role === 'liq')?.color ?? colors.statusCritical.val
+    this.zonePrimitive.update({ zone: scaled.zone, color: zoneColor })
   }
 
   // Single writer of the series autoscaleInfoProvider. createPriceLine markers do NOT extend
@@ -462,8 +508,8 @@ export class MarginPriceChartModel extends PriceChartModel {
   // every bar under its candle and the crosshair spans both. One bar per candle
   // (alignVolumeToCandles), colored by that candle's direction at 40% alpha. Lazily created on
   // the first non-empty bars, setData on every call (idempotent), and removed when there are no
-  // bars — lightweight-charts drops the emptied pane with it. It rides no price series, so the
-  // base's chart-type swap leaves it untouched. Teardown is via
+  // bars — lightweight-charts drops the emptied pane with it. The price pane is preserved when empty
+  // (see ctor), so the base's chart-type swap leaves this pane at its index and height. Teardown is via
   // api.remove(), so remove() does not removeSeries this handle.
   private reconcileVolume({
     bars,
@@ -483,44 +529,24 @@ export class MarginPriceChartModel extends PriceChartModel {
       }
       return
     }
-    const justCreated = !this.volumeSeries
-    if (!this.volumeSeries) {
-      this.volumeSeries = this.api.addSeries(
-        HistogramSeries,
-        {
-          priceScaleId: 'right',
-          lastValueVisible: false,
-          priceLineVisible: false,
-        },
-        VOLUME_PANE_INDEX,
-      )
-    }
+    this.volumeSeries ??= this.api.addSeries(
+      HistogramSeries,
+      { priceScaleId: 'right', lastValueVisible: false, priceLineVisible: false },
+      VOLUME_PANE_INDEX,
+    )
     // Re-asserted on every pass, not just at creation. `rightPriceScale` applied at chart level (the base
     // and this model both do, on every update) lands on EVERY pane's right scale, so the price pane's
     // margins would otherwise lift the volume base 12% off the floor. Bars grow from 0 at the pane's
     // bottom, autoscaled 0→max of the visible bars.
     this.volumeSeries.priceScale().applyOptions({ autoScale: true, scaleMargins: VOLUME_SCALE_MARGINS })
-    // Fixed height: on a resize lightweight-charts rescales panes proportionally, which would grow
-    // the volume pane along with the chart box instead of handing the room to price.
-    const volumePane = this.volumeSeries.getPane()
+    // Fixed px height via stretch factors set to the target heights: unlike setHeight, which sizes off the
+    // current (stale, for a just-added pane) layout, they hold from the first paint and across resizes.
     const volumeHeight = marginVolumePaneHeight(boxHeight)
-    if (volumePane.getHeight() !== volumeHeight) {
-      volumePane.setHeight(volumeHeight)
-    }
-    if (justCreated) {
-      // The setHeight above is overwritten by lightweight-charts' first ~50/50 pane layout, so without
-      // this the volume pane only reaches its real height on the next updateOptions (~130ms later),
-      // shrinking the price pane as the chart reveals. Re-assert next frame so it lands in ~2 frames.
-      if (this.volumePaneRaf !== undefined) {
-        cancelAnimationFrame(this.volumePaneRaf)
-      }
-      const createdSeries = this.volumeSeries
-      this.volumePaneRaf = requestAnimationFrame(() => {
-        this.volumePaneRaf = undefined
-        if (this.volumeSeries === createdSeries) {
-          createdSeries.getPane().setHeight(marginVolumePaneHeight(boxHeight))
-        }
-      })
+    const priceHeight = Math.max(1, (boxHeight ?? 0) - MARGIN_TIME_AXIS_HEIGHT - volumeHeight)
+    const [pricePane, volumePane] = this.api.panes()
+    if (pricePane.getStretchFactor() !== priceHeight || volumePane.getStretchFactor() !== volumeHeight) {
+      pricePane.setStretchFactor(priceHeight)
+      volumePane.setStretchFactor(volumeHeight)
     }
     this.volumeSeries.setData(
       colorVolumeBars({

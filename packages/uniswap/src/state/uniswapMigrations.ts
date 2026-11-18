@@ -300,8 +300,7 @@ export function removeUniswapWrapped2025BehaviorHistory(state: any): any {
 // Extension: 34
 // Web: 64
 // Marks installs that predate the pools-balances launch as coachmark-eligible (`false`), overwriting
-// the old always-`true` default. Fresh state created after this version has no value and is instead
-// classified at startup by `initializePoolsBalanceCoachmarkDismissed` from the flag.
+// the old always-`true` default. Fresh state created after this version has no value and never shows it.
 export function markPoolsBalanceCoachmarkEligible(state: any): any {
   if (!state?.uniswapBehaviorHistory) {
     return state

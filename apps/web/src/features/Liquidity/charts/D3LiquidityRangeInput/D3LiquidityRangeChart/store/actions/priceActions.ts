@@ -471,12 +471,14 @@ export const createPriceActions = ({
   },
 
   syncIsFullRangeFromParent: (isFullRange: boolean) => {
-    const { actions, isFullRange: currentIsFullRange } = get()
+    const { actions, isFullRange: currentIsFullRange, minTick, maxTick } = get()
     if (currentIsFullRange === isFullRange) {
       return
     }
 
     set((state) => ({ ...state, isFullRange }))
-    actions.reset({ animate: false })
+    // Leaving full range keeps the range the parent has just synced in, if it set one; with none (as on the
+    // create page, where the ticks are cleared on full range) reset falls back to the default range.
+    actions.reset({ animate: false, minTick, maxTick })
   },
 })

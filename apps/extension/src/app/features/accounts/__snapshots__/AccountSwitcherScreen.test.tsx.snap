@@ -21,7 +21,7 @@ exports[`AccountSwitcherScreen > renders correctly 1`] = `
               fill="none"
               focusable="false"
               stroke-width="8"
-              style="width: 24px; height: 24px;"
+              style="color: var(--neutral2); width: 24px; height: 24px;"
               viewBox="0 0 16 16"
             >
               <path
@@ -49,7 +49,7 @@ exports[`AccountSwitcherScreen > renders correctly 1`] = `
               data-slot="ui-popover-trigger"
               id="base-ui-_r_e_"
               role="button"
-              style="align-items: stretch; box-sizing: border-box; display: flex; flex-basis: auto; flex-direction: column; flex-shrink: 0; margin: 0px; min-height: 0; min-width: 0; padding: 0px; position: relative;"
+              style="align-items: stretch; box-sizing: border-box; display: flex; flex-basis: auto; flex-direction: column; flex-shrink: 0; margin: 0px; min-height: 0px; min-width: 0px; padding: 0px; position: relative;"
               tabindex="0"
             >
               <div>
@@ -63,7 +63,7 @@ exports[`AccountSwitcherScreen > renders correctly 1`] = `
                     fill="none"
                     focusable="false"
                     stroke-width="8"
-                    style="width: 20px; height: 20px;"
+                    style="color: var(--neutral2); width: 20px; height: 20px;"
                     viewBox="0 0 18 4"
                   >
                     <path
@@ -188,6 +188,7 @@ exports[`AccountSwitcherScreen > renders correctly 1`] = `
                         class="[container-name:true] flex basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 [container-type:normal] rounded-[12px] [cursor:pointer] bg-transparent flex-row items-center gap-[4px] relative [transition:transform_80ms_ease-in-out,_opacity_80ms_ease-in-out] active:opacity-[0.75] active:[transform:scale(0.98)] focus-visible:[transform:scaleX(0.98)_scaleY(0.98)] focus-visible:[outline-offset:1px] focus-visible:[outline-style:solid] focus-visible:[outline-width:1px] focus-visible:[outline-color:var(--neutral3)] group"
                         data-testid="copy"
                         role="button"
+                        style="color: inherit;"
                         tabindex="0"
                       >
                         <div
@@ -247,7 +248,7 @@ exports[`AccountSwitcherScreen > renders correctly 1`] = `
               data-slot="ui-popover-trigger"
               id="base-ui-_r_g_"
               role="button"
-              style="align-items: stretch; box-sizing: border-box; display: flex; flex-basis: auto; flex-direction: column; flex-shrink: 0; margin: 0px; min-height: 0; min-width: 0; padding: 0px; position: relative;"
+              style="align-items: stretch; box-sizing: border-box; display: flex; flex-basis: auto; flex-direction: column; flex-shrink: 0; margin: 0px; min-height: 0px; min-width: 0px; padding: 0px; position: relative;"
               tabindex="0"
             >
               <div
@@ -262,7 +263,7 @@ exports[`AccountSwitcherScreen > renders correctly 1`] = `
                     fill="none"
                     focusable="false"
                     stroke-width="2"
-                    style="width: 36px; height: 36px;"
+                    style="color: var(--neutral2); width: 36px; height: 36px;"
                     viewBox="0 0 24 24"
                   >
                     <path
@@ -300,7 +301,7 @@ exports[`AccountSwitcherScreen > renders correctly 1`] = `
             fill="none"
             focusable="false"
             stroke-width="8"
-            style="width: 24px; height: 24px;"
+            style="color: var(--neutral2); width: 24px; height: 24px;"
             viewBox="0 0 16 16"
           >
             <path
@@ -328,7 +329,7 @@ exports[`AccountSwitcherScreen > renders correctly 1`] = `
             data-slot="ui-popover-trigger"
             id="base-ui-_r_e_"
             role="button"
-            style="align-items: stretch; box-sizing: border-box; display: flex; flex-basis: auto; flex-direction: column; flex-shrink: 0; margin: 0px; min-height: 0; min-width: 0; padding: 0px; position: relative;"
+            style="align-items: stretch; box-sizing: border-box; display: flex; flex-basis: auto; flex-direction: column; flex-shrink: 0; margin: 0px; min-height: 0px; min-width: 0px; padding: 0px; position: relative;"
             tabindex="0"
           >
             <div>
@@ -342,7 +343,7 @@ exports[`AccountSwitcherScreen > renders correctly 1`] = `
                   fill="none"
                   focusable="false"
                   stroke-width="8"
-                  style="width: 20px; height: 20px;"
+                  style="color: var(--neutral2); width: 20px; height: 20px;"
                   viewBox="0 0 18 4"
                 >
                   <path
@@ -467,6 +468,7 @@ exports[`AccountSwitcherScreen > renders correctly 1`] = `
                       class="[container-name:true] flex basis-auto box-border min-h-[0px] min-w-[0px] shrink-0 [container-type:normal] rounded-[12px] [cursor:pointer] bg-transparent flex-row items-center gap-[4px] relative [transition:transform_80ms_ease-in-out,_opacity_80ms_ease-in-out] active:opacity-[0.75] active:[transform:scale(0.98)] focus-visible:[transform:scaleX(0.98)_scaleY(0.98)] focus-visible:[outline-offset:1px] focus-visible:[outline-style:solid] focus-visible:[outline-width:1px] focus-visible:[outline-color:var(--neutral3)] group"
                       data-testid="copy"
                       role="button"
+                      style="color: inherit;"
                       tabindex="0"
                     >
                       <div
@@ -526,7 +528,7 @@ exports[`AccountSwitcherScreen > renders correctly 1`] = `
             data-slot="ui-popover-trigger"
             id="base-ui-_r_g_"
             role="button"
-            style="align-items: stretch; box-sizing: border-box; display: flex; flex-basis: auto; flex-direction: column; flex-shrink: 0; margin: 0px; min-height: 0; min-width: 0; padding: 0px; position: relative;"
+            style="align-items: stretch; box-sizing: border-box; display: flex; flex-basis: auto; flex-direction: column; flex-shrink: 0; margin: 0px; min-height: 0px; min-width: 0px; padding: 0px; position: relative;"
             tabindex="0"
           >
             <div
@@ -541,7 +543,7 @@ exports[`AccountSwitcherScreen > renders correctly 1`] = `
                   fill="none"
                   focusable="false"
                   stroke-width="2"
-                  style="width: 36px; height: 36px;"
+                  style="color: var(--neutral2); width: 36px; height: 36px;"
                   viewBox="0 0 24 24"
                 >
                   <path

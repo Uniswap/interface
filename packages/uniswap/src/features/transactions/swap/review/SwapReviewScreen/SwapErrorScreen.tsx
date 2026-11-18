@@ -1,15 +1,15 @@
+import { SharedEventName } from '@uniswap/analytics-events'
 import { TradingApi } from '@universe/api'
 import { isWebPlatform } from '@universe/environment'
-import { Button, Flex, IconButton, Text, AnimatedFlex } from '@universe/mycelium'
+import { Button, Flex, IconButton, AnimatedFlex } from '@universe/mycelium'
 import { HelpCenter } from '@universe/mycelium/icons/HelpCenter'
 import { X } from '@universe/mycelium/icons/X'
 import { createSlideFadePresence } from '@universe/tailwind/animations/slide-fade-presence'
+import { ErrorView } from '@universe/transactions-ui'
 import { useTranslation } from 'react-i18next'
-import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
-import { WarningModalContent } from 'uniswap/src/components/modals/WarningModal/WarningModal'
-import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import {
   useTransactionSettingsActions,
   useTransactionSettingsStore,
@@ -19,6 +19,7 @@ import { useTransactionModalContext } from 'uniswap/src/features/transactions/co
 import { getErrorContent, TransactionStepFailedError } from 'uniswap/src/features/transactions/errors'
 import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { openUri } from 'uniswap/src/utils/linking'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 // Native (Reanimated) and web (Tamagui CSS transition) legs of the legacy Tamagui 'quick'
 // mount-in/out fade (enterStyle/exitStyle opacity 0), bundled by the shared helper so the two
@@ -44,6 +45,7 @@ export function SwapErrorScreen({
     selectedProtocols: s.selectedProtocols,
   }))
   const { setSelectedProtocols } = useTransactionSettingsActions()
+  const trace = useTrace()
 
   const { title, message, supportArticleURL, buttonText } = getErrorContent(t, submissionError)
 
@@ -66,24 +68,28 @@ export function SwapErrorScreen({
       resubmitSwap()
     }
     setSubmissionError(undefined)
+
+    // Same event WarningModalContent's Trace sent for this button. Native only, like before: on web
+    // and extension the ui/src Button frame keeps onPress over Trace's injected onClick, so the old
+    // button never logged there.
+    if (!isWebPlatform) {
+      sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+        ...trace,
+        modal: ModalName.SwapError,
+        element: ElementName.BackButton,
+      })
+    }
   }
 
   const onPressGetHelp = async (): Promise<void> => {
     await openUri({ uri: supportArticleURL ?? UniswapHelpUrls.baseUrl })
   }
 
-  const caption = supportArticleURL ? (
-    <Flex gap="$spacing8" alignItems="center">
-      <Text color="$neutral2" textAlign="center" variant="body3">
-        {message}
-      </Text>
-      <LearnMoreLink url={supportArticleURL} />
-    </Flex>
-  ) : (
-    <Text color="$neutral2" textAlign="center" variant="body3">
-      {message}
-    </Text>
-  )
+  // LearnMoreLink's TouchableTextLink opened the article outside the app: Linking.openURL on native,
+  // a new tab on web.
+  const onPressLearnMore = supportArticleURL
+    ? (): Promise<void> => openUri({ uri: supportArticleURL, openExternalBrowser: true })
+    : undefined
 
   return (
     <TransactionModalInnerContainer bottomSheetViewStyles={bottomSheetViewStyles} fullscreen={false}>
@@ -97,13 +103,11 @@ export function SwapErrorScreen({
           </Flex>
         )}
         <AnimatedFlex {...fadeQuickProps}>
-          <WarningModalContent
-            modalName={ModalName.SwapError}
+          <ErrorView
+            message={message}
+            primaryAction={{ label: buttonText ?? t('common.button.tryAgain'), onPress: handleTryAgain }}
             title={title}
-            captionComponent={caption}
-            severity={WarningSeverity.Low}
-            rejectText={buttonText ?? t('common.button.tryAgain')}
-            onReject={handleTryAgain}
+            onPressLearnMore={onPressLearnMore}
           />
         </AnimatedFlex>
       </Flex>

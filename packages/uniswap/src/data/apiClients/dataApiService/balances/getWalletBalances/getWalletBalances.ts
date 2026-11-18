@@ -7,14 +7,8 @@ import type {
   GetWalletBalancesResponse,
   WalletBalance,
 } from '@uniswap/client-data-api/dist/data/v1/api_pb.d'
-import { getGetWalletBalancesQueryOptions, type WithoutWalletAccount } from '@universe/api'
 import { areAddressesEqual, Platform } from '@universe/chains'
-import {
-  FeatureFlags,
-  getFeatureFlagWithExposureLoggingDisabled,
-  useFeatureFlagWithExposureLoggingDisabled,
-} from '@universe/gating'
-import { useMemo } from 'react'
+import { getGetWalletBalancesQueryOptions, type WithoutWalletAccount } from '@universe/data-api'
 import { dataApiServiceClientV1 } from 'uniswap/src/data/apiClients/dataApiService/clients/DataApiClient'
 import { type PortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/buildPortfolioBalance'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
@@ -37,35 +31,14 @@ export type PortfolioBalanceBreakdown = {
   earn: PortfolioTotalValue
 }
 
-function toIncludeCategories({
-  portfolioPoolsBalancesEnabled,
-}: {
-  portfolioPoolsBalancesEnabled: boolean
-}): WalletBalanceCategory[] {
-  const categories: WalletBalanceCategory[] = [WalletBalanceCategory.EARN_VAULTS]
-  if (portfolioPoolsBalancesEnabled) {
-    // unshift, not push: order is part of the React Query cache key — [POOLS, EARN_VAULTS] matches existing entries
-    categories.unshift(WalletBalanceCategory.POOLS)
-  }
-  return categories
-}
-
 /**
- * Resolves the opt-in `include_categories` to send with `GetWalletBalances`. Both the read hooks and
- * the optimistic cache writers use this so every caller produces the same query key.
+ * The opt-in `include_categories` sent with `GetWalletBalances`. The read hooks and the optimistic
+ * cache writers all send this one array so every caller produces the same query key (order included).
  */
-export function useWalletBalancesIncludeCategories(): WalletBalanceCategory[] {
-  // Pools is read without logging; its exposure is logged only where the feature is actually shown.
-  const portfolioPoolsBalancesEnabled = useFeatureFlagWithExposureLoggingDisabled(FeatureFlags.PortfolioPoolsBalances)
-  return useMemo(() => toIncludeCategories({ portfolioPoolsBalancesEnabled }), [portfolioPoolsBalancesEnabled])
-}
-
-/** Non-hook variant of {@link useWalletBalancesIncludeCategories} for imperative request paths. */
-export function getWalletBalancesIncludeCategories(): WalletBalanceCategory[] {
-  return toIncludeCategories({
-    portfolioPoolsBalancesEnabled: getFeatureFlagWithExposureLoggingDisabled(FeatureFlags.PortfolioPoolsBalances),
-  })
-}
+export const WALLET_BALANCES_INCLUDE_CATEGORIES: WalletBalanceCategory[] = [
+  WalletBalanceCategory.POOLS,
+  WalletBalanceCategory.EARN_VAULTS,
+]
 
 type PortfolioValueSlice = {
   [K in keyof PortfolioBalanceBreakdown]: PortfolioBalanceBreakdown[K] extends PortfolioTotalValue ? K : never

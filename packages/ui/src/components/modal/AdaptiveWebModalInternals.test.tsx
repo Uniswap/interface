@@ -626,8 +626,8 @@ describe('sheet escape coordination is the shared utilities module (INFRA-3329)'
     // open instances, or a closed force-mounted sheet from one family swallows Escape for an
     // open sheet from the other while both coexist during the migration.
     const legacy = await import('ui/src/components/modal/AdaptiveWebModalInternals.web')
-    const shared = await import('utilities/src/react/useSheetEscapeToClose.web')
-    expect(legacy.useSheetEscapeToClose).toBe(shared.useSheetEscapeToClose)
+    const shared = await import('utilities/src/react/useDismissLayer.web')
+    expect(legacy.useDismissLayer).toBe(shared.useDismissLayer)
     expect(legacy.markRadixEscapePreventedBySheet).toBe(shared.markRadixEscapePreventedBySheet)
   })
 })

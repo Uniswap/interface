@@ -1,11 +1,10 @@
 import type { RankedMultichainToken } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { areAddressesEqual, type UniverseChainId } from '@universe/chains'
+import { RELATED_TOKENS_MAX_COUNT } from '@universe/data-api'
 import {
   rankedTokenToCardItem,
   type RankedTokenCardItem,
 } from 'uniswap/src/data/apiClients/dataApiService/utils/rankedTokenCardItem'
-
-export const RELATED_TOKENS_MAX_COUNT = 16
 
 export interface RelatedTokensSubject {
   chainId: UniverseChainId

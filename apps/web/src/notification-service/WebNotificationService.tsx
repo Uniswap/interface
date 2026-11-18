@@ -25,6 +25,7 @@ import { useLocation, useNavigate } from 'react-router'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { mapLocaleToBackendLocale } from 'uniswap/src/features/language/constants'
 import { getLocale } from 'uniswap/src/features/language/navigatorLocale'
+import { useOnboardingChecklistStore } from 'uniswap/src/features/onboarding/checklist/onboardingChecklistStore'
 import { selectCurrentLanguage } from 'uniswap/src/features/settings/selectors'
 import { AVERAGE_L1_BLOCK_TIME_MS } from 'uniswap/src/features/transactions/hooks/usePollingIntervalByChain'
 import { getLogger } from 'utilities/src/logger/logger'
@@ -184,6 +185,7 @@ function getNotificationServiceQueryOptions(ctx: {
 export function WebNotificationServiceManager(): JSX.Element | null {
   const location = useLocation()
   const navigate = useNavigate()
+  const shouldSuppressFeatureAnnouncements = useOnboardingChecklistStore((state) => state.isVisible)
 
   // Hook values that need to be passed to system alerts data source
   const { swapInputChainId } = useUniswapContext()
@@ -253,6 +255,7 @@ export function WebNotificationServiceManager(): JSX.Element | null {
       onRenderFailed={notificationService.onRenderFailed}
       onNotificationShown={notificationService.onNotificationShown}
       onNotificationClick={notificationService.onNotificationClick}
+      suppressLowerLeftBanners={shouldSuppressFeatureAnnouncements}
     />
   )
 }

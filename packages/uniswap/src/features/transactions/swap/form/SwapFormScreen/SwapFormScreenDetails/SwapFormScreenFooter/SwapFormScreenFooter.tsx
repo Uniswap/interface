@@ -5,13 +5,17 @@ import { memo } from 'react'
 import { useSwapFormScreenStore } from 'uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/useSwapFormScreenStore'
 import { ExactOutputUnavailableWarningRow } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/ExactOutputUnavailableWarningRow'
 import { GasAndWarningRows } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/GasAndWarningRows'
+import type { DetailsExpandedProps } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/types'
 
 /**
  * IMPORTANT: If you modify the footer layout, you must test this on a small device and verify that the `DecimalPad`
  *            is able to properly calculate the correct height and it does not change its height when the gas and
  *            warning rows are shown/hidden, or when moving from the review screen back to the form screen.
  */
-export const SwapFormScreenFooter = memo(function SwapFormScreenFooter(): JSX.Element | null {
+export const SwapFormScreenFooter = memo(function SwapFormScreenFooter({
+  detailsExpanded,
+  onDetailsExpandedChange,
+}: DetailsExpandedProps): JSX.Element | null {
   const isShortMobileDevice = useIsShortMobileDevice()
   const {
     outputTokenHasBuyTax,
@@ -60,8 +64,10 @@ export const SwapFormScreenFooter = memo(function SwapFormScreenFooter(): JSX.El
           />
         )}
       </Presence>
-      {/* Accordion.Toggle is nested in GasAndWarningRows */}
-      {showGasAndWarningRows && <GasAndWarningRows />}
+      {/* The details toggle is nested in GasAndWarningRows (web) */}
+      {showGasAndWarningRows && (
+        <GasAndWarningRows detailsExpanded={detailsExpanded} onDetailsExpandedChange={onDetailsExpandedChange} />
+      )}
     </Flex>
   )
 })

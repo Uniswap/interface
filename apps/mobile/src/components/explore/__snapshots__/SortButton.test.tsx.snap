@@ -21,7 +21,7 @@ exports[`SortButton > renders without error 1`] = `
         <div
           class="css-text-146c3p1 r-maxWidth-dnmrzs r-overflow-1udh08x r-textOverflow-1udbk01 r-whiteSpace-3s2u2q r-wordWrap-1iln25a"
           dir="auto"
-          style="flex-shrink: 1; font-size: 15px; line-height: 17.25px; font-family: Basel Grotesk; font-weight: 500;"
+          style="flex-shrink: 1; font-size: 15px; line-height: 17.25px; font-family: "Basel Grotesk"; font-weight: 500;"
         >
           explore.tokens.sort.label.volume
         </div>

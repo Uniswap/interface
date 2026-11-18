@@ -14,8 +14,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "Apple",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -31,8 +31,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "Google",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -116,8 +116,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "{{amount}} UNI",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -326,6 +326,23 @@
       }
     ],
     [
+      "zh-TW:i18next-json:chart.groupTicks",
+      {
+        "unitId": "chart.groupTicks",
+        "providerId": "i18next-json",
+        "locale": "zh-TW",
+        "domain": "product-ui",
+        "sourceHash": "c83686ea75e475eab9db64992d4d19d306eeee24cdf5856747f14e5630867393",
+        "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
+        "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
+        "translation": "分組 Tick",
+        "status": "clean",
+        "agentRunId": "zh-TW-2026-11-10T21-08-39Z",
+        "approvedAt": "2026-11-10T21:08:39.590Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "zh-TW:i18next-json:chart.noData.price.title",
       {
         "unitId": "chart.noData.price.title",
@@ -405,8 +422,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "Beta",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -428,6 +445,40 @@
       }
     ],
     [
+      "zh-TW:i18next-json:common.chart.candlestick",
+      {
+        "unitId": "common.chart.candlestick",
+        "providerId": "i18next-json",
+        "locale": "zh-TW",
+        "domain": "product-ui",
+        "sourceHash": "516cc7a4f340017f478080879747fb79bdf76a3161ef9300f08b89ca822c6cfc",
+        "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
+        "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
+        "translation": "K 線圖",
+        "status": "clean",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-TW:i18next-json:common.chart.line",
+      {
+        "unitId": "common.chart.line",
+        "providerId": "i18next-json",
+        "locale": "zh-TW",
+        "domain": "product-ui",
+        "sourceHash": "22089151613fba5e5af6d9452f5ba47f12317e2b063ac66fce634fff2adbee04",
+        "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
+        "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
+        "translation": "折線圖",
+        "status": "clean",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "zh-TW:i18next-json:common.inactive",
       {
         "unitId": "common.inactive",
@@ -445,6 +496,23 @@
       }
     ],
     [
+      "zh-TW:i18next-json:common.moreOptions",
+      {
+        "unitId": "common.moreOptions",
+        "providerId": "i18next-json",
+        "locale": "zh-TW",
+        "domain": "product-ui",
+        "sourceHash": "bc79cdffbaa8df096f0ea0dbdf03575b6d4fa3f90f783d3795d01aa9a7a1c926",
+        "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
+        "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
+        "translation": "更多選項",
+        "status": "clean",
+        "agentRunId": "zh-TW-2026-11-06T18-38-52Z",
+        "approvedAt": "2026-11-06T18:38:52.803Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "zh-TW:i18next-json:common.permit",
       {
         "unitId": "common.permit",
@@ -456,8 +524,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "Permit",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -507,8 +575,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "Uniswap v2",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -524,8 +592,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "Uniswap v3",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -541,8 +609,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "Uniswap v4",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -983,8 +1051,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "{{apy}} APY",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -1000,8 +1068,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "Earn",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -1017,8 +1085,42 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "{{apy}} APY",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-TW:i18next-json:explore.pools.empty",
+      {
+        "unitId": "explore.pools.empty",
+        "providerId": "i18next-json",
+        "locale": "zh-TW",
+        "domain": "product-ui",
+        "sourceHash": "d6ea3d16d649cbb99185342ab556a2cc5299ccb91e798cb0d2e9472a411419c9",
+        "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
+        "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
+        "translation": "找不到流動性池",
+        "status": "clean",
+        "agentRunId": "zh-TW-2026-11-10T21-00-35Z",
+        "approvedAt": "2026-11-10T21:00:35.032Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-TW:i18next-json:explore.pools.error",
+      {
+        "unitId": "explore.pools.error",
+        "providerId": "i18next-json",
+        "locale": "zh-TW",
+        "domain": "product-ui",
+        "sourceHash": "cee34f8e5ad4c3c1d4a24ff86214a1b2f49fe0c22cc0f8b4a65b004946303244",
+        "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
+        "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
+        "translation": "無法載入流動性池",
+        "status": "clean",
+        "agentRunId": "zh-TW-2026-11-10T21-00-35Z",
+        "approvedAt": "2026-11-10T21:00:35.032Z",
         "approvedBy": "agent"
       }
     ],
@@ -1068,8 +1170,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "Venmo",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -2140,8 +2242,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "afterAddLiquidity",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -2174,8 +2276,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "afterAddLiquidityReturnDelta",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -2208,8 +2310,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "afterDonate",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -2242,8 +2344,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "afterInitialize",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -2276,8 +2378,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "afterRemoveLiquidity",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -2310,8 +2412,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "afterRemoveLiquidityReturnDelta",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -2344,8 +2446,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "afterSwap",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -2378,8 +2480,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "afterSwapReturnDelta",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -2412,8 +2514,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "beforeAddLiquidity",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -2446,8 +2548,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "beforeDonate",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -2480,8 +2582,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "beforeInitialize",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -2514,8 +2616,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "beforeRemoveLiquidity",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -2548,8 +2650,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "beforeSwap",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -2582,8 +2684,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "beforeSwapReturnDelta",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -3024,8 +3126,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "API",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -3126,8 +3228,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "APR",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -3444,13 +3546,25 @@
         "providerId": "i18next-json",
         "locale": "zh-TW",
         "domain": "product-ui",
-        "sourceHash": "d782c587907119c4c3bd3a171ee092446b7b4c766069b28e84475a1a7e382eaa",
+        "sourceHash": "1c1731364b533eb1b136b41e36c6d3bd4f2f7b2d6621c9635f5c11328443af87",
         "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
-        "translation": "更新槓桿",
-        "status": "clean",
-        "agentRunId": "zh-TW-2026-10-13T21-33-47Z",
-        "approvedAt": "2026-10-13T21:33:47.267Z",
+        "translation": "更新部位規模",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "accuracy",
+            "severity": "major",
+            "detail": "Mistranslation: 'position size' rendered as 槓桿 (leverage). The app distinguishes 'Change position size' (resize) from leverage/margin actions (e.g. i=1679 'Lower your leverage and risk' vs i=1681 'Resize without adding funds'); calling this screen title 更新槓桿 misleads the user about which action they are performing. Note the same wrong rendering is in the shipped set — it should be fixed, not propagated.",
+            "evidence": {
+              "sourceSpan": "Update position size",
+              "targetSpan": "更新槓桿"
+            },
+            "alternative": "更新部位規模"
+          }
+        ],
+        "agentRunId": "zh-TW-2026-11-10T21-08-39Z",
+        "approvedAt": "2026-11-10T21:08:39.590Z",
         "approvedBy": "agent"
       }
     ],
@@ -3461,13 +3575,25 @@
         "providerId": "i18next-json",
         "locale": "zh-TW",
         "domain": "product-ui",
-        "sourceHash": "c4c9b26473b38936b30ce0e9bda428157e2df3dff810b648cb3c42c75cd6dd20",
+        "sourceHash": "8f35893d766d2eea1c3124329ae6af1abaf83f9995f7cc576c5d00469db5b16b",
         "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
-        "translation": "變更槓桿",
-        "status": "clean",
-        "agentRunId": "zh-TW-2026-10-13T21-33-47Z",
-        "approvedAt": "2026-10-13T21:33:47.267Z",
+        "translation": "變更部位規模",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "accuracy",
+            "severity": "major",
+            "detail": "Same mistranslation as i=1613: 'Change position size' rendered as 變更槓桿 (change leverage), a different action in this UI.",
+            "evidence": {
+              "sourceSpan": "Change position size",
+              "targetSpan": "變更槓桿"
+            },
+            "alternative": "變更部位規模"
+          }
+        ],
+        "agentRunId": "zh-TW-2026-11-10T21-08-39Z",
+        "approvedAt": "2026-11-10T21:08:39.590Z",
         "approvedBy": "agent"
       }
     ],
@@ -4773,13 +4899,25 @@
         "providerId": "i18next-json",
         "locale": "zh-TW",
         "domain": "product-ui",
-        "sourceHash": "3fd105e03769f69152b8f041096f198f1df4884a75ef4fcdfd8b20d2acc83c72",
+        "sourceHash": "1a7f13a741752236cb2d0131cbf484c25f9eb379d3813502f3e3f494d18bf287",
         "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
-        "translation": "此槓桿會使部位過於接近清算 — 請調低槓桿或新增保證金。",
-        "status": "clean",
-        "agentRunId": "zh-TW-2026-10-13T21-33-47Z",
-        "approvedAt": "2026-10-13T21:33:47.267Z",
+        "translation": "這會使部位過於接近清算。請嘗試較小的變更幅度。",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "accuracy",
+            "severity": "major",
+            "detail": "Mistranslation + addition: source says the attempted change would move the position too close to liquidation and advises 'Try a smaller change'. The translation asserts the cause is 此槓桿 ('this leverage') and replaces the advice with 請調低槓桿或新增保證金 ('lower leverage or add margin') — instructions not in the source, and wrong for non-leverage adjustments (e.g. margin withdrawal) that route to this error.",
+            "evidence": {
+              "sourceSpan": "Try a smaller change.",
+              "targetSpan": "請調低槓桿或新增保證金"
+            },
+            "alternative": "這會使部位過於接近清算。請嘗試較小的變更幅度。"
+          }
+        ],
+        "agentRunId": "zh-TW-2026-11-10T21-08-39Z",
+        "approvedAt": "2026-11-10T21:08:39.590Z",
         "approvedBy": "agent"
       }
     ],
@@ -4886,6 +5024,23 @@
       }
     ],
     [
+      "zh-TW:i18next-json:margin.error.adjust.priceImpact",
+      {
+        "unitId": "margin.error.adjust.priceImpact",
+        "providerId": "i18next-json",
+        "locale": "zh-TW",
+        "domain": "product-ui",
+        "sourceHash": "44d8c245bce97cc2fc9694c08ad0c3737c555e25bf112576afbc44a575e23bd4",
+        "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
+        "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
+        "translation": "此規模的價格影響過高。請嘗試較小的金額。",
+        "status": "clean",
+        "agentRunId": "zh-TW-2026-11-10T21-08-39Z",
+        "approvedAt": "2026-11-10T21:08:39.590Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "zh-TW:i18next-json:margin.error.adjust.priceMoved",
       {
         "unitId": "margin.error.adjust.priceMoved",
@@ -4899,6 +5054,23 @@
         "status": "clean",
         "agentRunId": "zh-TW-2026-10-13T21-33-47Z",
         "approvedAt": "2026-10-13T21:33:47.267Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-TW:i18next-json:margin.error.adjust.underwater",
+      {
+        "unitId": "margin.error.adjust.underwater",
+        "providerId": "i18next-json",
+        "locale": "zh-TW",
+        "domain": "product-ui",
+        "sourceHash": "ae510b3b398570ed062c307e0db1ac269c4f0e1357f0f1e03c59eb785976e893",
+        "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
+        "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
+        "translation": "此部位已無保證金可供調整。",
+        "status": "clean",
+        "agentRunId": "zh-TW-2026-11-10T21-08-39Z",
+        "approvedAt": "2026-11-10T21:08:39.590Z",
         "approvedBy": "agent"
       }
     ],
@@ -5317,13 +5489,25 @@
         "providerId": "i18next-json",
         "locale": "zh-TW",
         "domain": "product-ui",
-        "sourceHash": "c4c9b26473b38936b30ce0e9bda428157e2df3dff810b648cb3c42c75cd6dd20",
+        "sourceHash": "8f35893d766d2eea1c3124329ae6af1abaf83f9995f7cc576c5d00469db5b16b",
         "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
-        "translation": "變更槓桿",
-        "status": "clean",
-        "agentRunId": "zh-TW-2026-10-13T21-33-47Z",
-        "approvedAt": "2026-10-13T21:33:47.267Z",
+        "translation": "變更部位規模",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "accuracy",
+            "severity": "major",
+            "detail": "Same mistranslation as i=1613/1614: 'Change position size' → 變更槓桿. Its own subtitle (i=1681 'Resize without adding funds') confirms the action is resizing, distinct from leverage/margin actions.",
+            "evidence": {
+              "sourceSpan": "Change position size",
+              "targetSpan": "變更槓桿"
+            },
+            "alternative": "變更部位規模"
+          }
+        ],
+        "agentRunId": "zh-TW-2026-11-10T21-08-39Z",
+        "approvedAt": "2026-11-10T21:08:39.590Z",
         "approvedBy": "agent"
       }
     ],
@@ -5456,6 +5640,23 @@
         "status": "clean",
         "agentRunId": "zh-TW-2026-10-13T21-33-47Z",
         "approvedAt": "2026-10-13T21:33:47.267Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-TW:i18next-json:margin.manage.resumePending",
+      {
+        "unitId": "margin.manage.resumePending",
+        "providerId": "i18next-json",
+        "locale": "zh-TW",
+        "domain": "product-ui",
+        "sourceHash": "f6fdf0540f738bb20bd2e4869eacf23e12ba6ea0a1fde28ffafeb2cded0633e1",
+        "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
+        "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
+        "translation": "點按以完成待處理的操作",
+        "status": "clean",
+        "agentRunId": "zh-TW-2026-11-10T21-08-39Z",
+        "approvedAt": "2026-11-10T21:08:39.590Z",
         "approvedBy": "agent"
       }
     ],
@@ -5607,8 +5808,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "{{venue}} · {{lltv}}% LLTV",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -5643,6 +5844,23 @@
         "status": "clean",
         "agentRunId": "zh-TW-2026-10-27T20-05-36Z",
         "approvedAt": "2026-10-27T20:05:36.755Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-TW:i18next-json:margin.mobile.positionDetails",
+      {
+        "unitId": "margin.mobile.positionDetails",
+        "providerId": "i18next-json",
+        "locale": "zh-TW",
+        "domain": "product-ui",
+        "sourceHash": "bd979f4a69c7c3e1f17621eef8f3de808319a926743a7d5e0be63cc4927d9db4",
+        "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
+        "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
+        "translation": "部位詳情",
+        "status": "clean",
+        "agentRunId": "zh-TW-2026-11-06T18-38-52Z",
+        "approvedAt": "2026-11-06T18:38:52.803Z",
         "approvedBy": "agent"
       }
     ],
@@ -6584,13 +6802,25 @@
         "providerId": "i18next-json",
         "locale": "zh-TW",
         "domain": "product-ui",
-        "sourceHash": "a1a4f24aad89fe7c7c419c46458dc108c59dd2f804d5887e24c604000e048378",
+        "sourceHash": "bdc31208641dc8a834cf2a1f3ea554e25dbaba6ffdff22c7979ba8cf474d186b",
         "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
-        "translation": "降低槓桿",
-        "status": "clean",
-        "agentRunId": "zh-TW-2026-10-27T20-05-36Z",
-        "approvedAt": "2026-10-27T20:05:36.755Z",
+        "translation": "縮小部位規模",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "accuracy",
+            "severity": "major",
+            "detail": "Mistranslation: \"降低槓桿\" means \"decrease leverage\", but the source action is \"Decrease position size\". Resizing a position and lowering leverage are distinct actions in this margin UI (the app offers both — cf. i=1681 \"Lower your leverage and risk\" vs i=1683 \"Resize without adding funds\"), so a user could trigger the wrong operation.",
+            "evidence": {
+              "sourceSpan": "Decrease position size",
+              "targetSpan": "降低槓桿"
+            },
+            "alternative": "縮小部位規模"
+          }
+        ],
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -6601,13 +6831,25 @@
         "providerId": "i18next-json",
         "locale": "zh-TW",
         "domain": "product-ui",
-        "sourceHash": "a9d8c8a3b24b084830d7162805a1e5d8f5a418bb1101b7628ae3f49b2fa9d0db",
+        "sourceHash": "a518c0b8e0196758dc0558c83b4e25a51474d018cbd46f3879aa8bf57165ae6a",
         "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
-        "translation": "提高槓桿",
-        "status": "clean",
-        "agentRunId": "zh-TW-2026-10-27T20-05-36Z",
-        "approvedAt": "2026-10-27T20:05:36.755Z",
+        "translation": "擴大部位規模",
+        "status": "finalized",
+        "judgeIssues": [
+          {
+            "category": "accuracy",
+            "severity": "major",
+            "detail": "Mistranslation: \"提高槓桿\" means \"increase leverage\", but the source action is \"Increase position size\". These are different operations in the margin flow; labeling the resize action as a leverage change can cause an unintended risk increase of the wrong kind.",
+            "evidence": {
+              "sourceSpan": "Increase position size",
+              "targetSpan": "提高槓桿"
+            },
+            "alternative": "擴大部位規模"
+          }
+        ],
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -7968,6 +8210,23 @@
       }
     ],
     [
+      "zh-TW:i18next-json:margin.review.borrowingTooltip",
+      {
+        "unitId": "margin.review.borrowingTooltip",
+        "providerId": "i18next-json",
+        "locale": "zh-TW",
+        "domain": "product-ui",
+        "sourceHash": "b36e08921511589860e18027add23d759be9a643058eaaa808c88c800fdcdd8c",
+        "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
+        "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
+        "translation": "為達到你的槓桿而借入的金額。部位持倉期間會持續產生利息。",
+        "status": "clean",
+        "agentRunId": "zh-TW-2026-11-05T22-20-56Z",
+        "approvedAt": "2026-11-05T22:20:56.893Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "zh-TW:i18next-json:margin.review.leverageInline",
       {
         "unitId": "margin.review.leverageInline",
@@ -7981,6 +8240,23 @@
         "status": "clean",
         "agentRunId": "zh-TW-2026-10-13T21-33-47Z",
         "approvedAt": "2026-10-13T21:33:47.267Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-TW:i18next-json:margin.review.liqExplainer",
+      {
+        "unitId": "margin.review.liqExplainer",
+        "providerId": "i18next-json",
+        "locale": "zh-TW",
+        "domain": "product-ui",
+        "sourceHash": "85ba49c80722148e07e7fcb115dc83d36fe0a992525c671df0aab0d55a542d5f",
+        "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
+        "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
+        "translation": "如果 {{symbol}} 的價格達到清算價格，你將被全額清算，最終權益為 {{equity}}。",
+        "status": "clean",
+        "agentRunId": "zh-TW-2026-11-05T22-20-56Z",
+        "approvedAt": "2026-11-05T22:20:56.893Z",
         "approvedBy": "agent"
       }
     ],
@@ -8079,6 +8355,23 @@
         "status": "clean",
         "agentRunId": "zh-TW-2026-10-13T21-33-47Z",
         "approvedAt": "2026-10-13T21:33:47.267Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-TW:i18next-json:margin.review.yourPosition",
+      {
+        "unitId": "margin.review.yourPosition",
+        "providerId": "i18next-json",
+        "locale": "zh-TW",
+        "domain": "product-ui",
+        "sourceHash": "85897f2a011a6d403f696f5bb1d8efd2f97da9bea5b5ddba3561de87571ef8d9",
+        "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
+        "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
+        "translation": "你的部位",
+        "status": "clean",
+        "agentRunId": "zh-TW-2026-11-05T22-20-56Z",
+        "approvedAt": "2026-11-05T22:20:56.893Z",
         "approvedBy": "agent"
       }
     ],
@@ -8471,13 +8764,13 @@
         "providerId": "i18next-json",
         "locale": "zh-TW",
         "domain": "product-ui",
-        "sourceHash": "18f80225d5a4ab19d1f0c922d3fc7f56f8f2fa956c4325e637fcd41177c2055b",
+        "sourceHash": "93c91c851e7acc17d881c9b89ea954be1183070254014be03a93d169cf52dbbd",
         "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
-        "translation": "標記價格",
+        "translation": "價格",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-10-27T20-05-36Z",
-        "approvedAt": "2026-10-27T20:05:36.755Z",
+        "agentRunId": "zh-TW-2026-11-10T21-08-39Z",
+        "approvedAt": "2026-11-10T21:08:39.590Z",
         "approvedBy": "agent"
       }
     ],
@@ -9380,8 +9673,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "ID",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -10242,6 +10535,278 @@
       }
     ],
     [
+      "zh-TW:i18next-json:onboarding.checklist.card.addFunds.description",
+      {
+        "unitId": "onboarding.checklist.card.addFunds.description",
+        "providerId": "i18next-json",
+        "locale": "zh-TW",
+        "domain": "product-ui",
+        "sourceHash": "6c037a5e61cc823e7d8a1087721da1147daaaacd966202daa50baf2ec474065d",
+        "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
+        "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
+        "translation": "存入或以現金購買",
+        "status": "clean",
+        "agentRunId": "zh-TW-2026-11-06T22-29-17Z",
+        "approvedAt": "2026-11-06T22:29:17.097Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-TW:i18next-json:onboarding.checklist.card.backupWallet.description",
+      {
+        "unitId": "onboarding.checklist.card.backupWallet.description",
+        "providerId": "i18next-json",
+        "locale": "zh-TW",
+        "domain": "product-ui",
+        "sourceHash": "d5cefb0d3fca85c5a48e0d3e27533495a8f3bd99faedab68a833d18a5f946ca0",
+        "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
+        "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
+        "translation": "設定復原方案",
+        "status": "clean",
+        "agentRunId": "zh-TW-2026-11-06T22-29-17Z",
+        "approvedAt": "2026-11-06T22:29:17.097Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-TW:i18next-json:onboarding.checklist.card.claimUsername.description",
+      {
+        "unitId": "onboarding.checklist.card.claimUsername.description",
+        "providerId": "i18next-json",
+        "locale": "zh-TW",
+        "domain": "product-ui",
+        "sourceHash": "16cb2f7f964e65d26f64e8b177bd19c696192c4f9cc492ecc4f6df62c1aaedda",
+        "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
+        "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
+        "translation": "個人化你的錢包",
+        "status": "clean",
+        "agentRunId": "zh-TW-2026-11-06T22-29-17Z",
+        "approvedAt": "2026-11-06T22:29:17.097Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-TW:i18next-json:onboarding.checklist.card.completeSwap.description",
+      {
+        "unitId": "onboarding.checklist.card.completeSwap.description",
+        "providerId": "i18next-json",
+        "locale": "zh-TW",
+        "domain": "product-ui",
+        "sourceHash": "e36d0335638981152d16ebed1b7e9caaa66c7e860b72b807a428257c9b828845",
+        "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
+        "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
+        "translation": "將一種代幣兌換成另一種",
+        "status": "clean",
+        "agentRunId": "zh-TW-2026-11-06T22-29-17Z",
+        "approvedAt": "2026-11-06T22:29:17.097Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-TW:i18next-json:onboarding.checklist.collapse",
+      {
+        "unitId": "onboarding.checklist.collapse",
+        "providerId": "i18next-json",
+        "locale": "zh-TW",
+        "domain": "product-ui",
+        "sourceHash": "0ea7a361701c49367f14add3b23f6eee6f93c16f5791791a9cffa2cabc27be13",
+        "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
+        "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
+        "translation": "隱藏檢查清單",
+        "status": "clean",
+        "agentRunId": "zh-TW-2026-11-06T22-29-17Z",
+        "approvedAt": "2026-11-06T22:29:17.097Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-TW:i18next-json:onboarding.checklist.expand",
+      {
+        "unitId": "onboarding.checklist.expand",
+        "providerId": "i18next-json",
+        "locale": "zh-TW",
+        "domain": "product-ui",
+        "sourceHash": "312fb80eb782ff8fd26406c688230e0fc583bb0fafda95ab65ed0e5ea1ced98b",
+        "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
+        "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
+        "translation": "顯示檢查清單",
+        "status": "clean",
+        "agentRunId": "zh-TW-2026-11-06T22-29-17Z",
+        "approvedAt": "2026-11-06T22:29:17.097Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-TW:i18next-json:onboarding.checklist.step.addBackupLogin",
+      {
+        "unitId": "onboarding.checklist.step.addBackupLogin",
+        "providerId": "i18next-json",
+        "locale": "zh-TW",
+        "domain": "product-ui",
+        "sourceHash": "c85db9119c6b96c6242a0ff05801dee6ffbb01fa8e76387175be4689568ee54c",
+        "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
+        "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
+        "translation": "新增備份登入方式",
+        "status": "clean",
+        "agentRunId": "zh-TW-2026-11-06T22-29-17Z",
+        "approvedAt": "2026-11-06T22:29:17.097Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-TW:i18next-json:onboarding.checklist.step.addFunds",
+      {
+        "unitId": "onboarding.checklist.step.addFunds",
+        "providerId": "i18next-json",
+        "locale": "zh-TW",
+        "domain": "product-ui",
+        "sourceHash": "e826c600400e4b183d06a8b88fad3d230da756e923193479b7cf07ba77c8f4ec",
+        "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
+        "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
+        "translation": "新增資金",
+        "status": "clean",
+        "agentRunId": "zh-TW-2026-11-06T22-29-17Z",
+        "approvedAt": "2026-11-06T22:29:17.097Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-TW:i18next-json:onboarding.checklist.step.backupWallet",
+      {
+        "unitId": "onboarding.checklist.step.backupWallet",
+        "providerId": "i18next-json",
+        "locale": "zh-TW",
+        "domain": "product-ui",
+        "sourceHash": "52a7a389ef84accfe66ee131f8d15314f46f275266f4358be528a0a570a50423",
+        "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
+        "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
+        "translation": "備份你的錢包",
+        "status": "clean",
+        "agentRunId": "zh-TW-2026-11-06T22-29-17Z",
+        "approvedAt": "2026-11-06T22:29:17.097Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-TW:i18next-json:onboarding.checklist.step.claimUsername",
+      {
+        "unitId": "onboarding.checklist.step.claimUsername",
+        "providerId": "i18next-json",
+        "locale": "zh-TW",
+        "domain": "product-ui",
+        "sourceHash": "2e2b46f0aa11af164e1c1a84410cff1194f47bcedfb61253aec624df723f9ee2",
+        "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
+        "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
+        "translation": "領取你的使用者名稱",
+        "status": "clean",
+        "agentRunId": "zh-TW-2026-11-06T22-29-17Z",
+        "approvedAt": "2026-11-06T22:29:17.097Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-TW:i18next-json:onboarding.checklist.step.completeSwap",
+      {
+        "unitId": "onboarding.checklist.step.completeSwap",
+        "providerId": "i18next-json",
+        "locale": "zh-TW",
+        "domain": "product-ui",
+        "sourceHash": "63e84bbb2fb21ca379a6c68f7d76023dda485a0fe134863a261a1493aa519584",
+        "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
+        "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
+        "translation": "完成一筆兌換",
+        "status": "clean",
+        "agentRunId": "zh-TW-2026-11-06T22-29-17Z",
+        "approvedAt": "2026-11-06T22:29:17.097Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-TW:i18next-json:onboarding.checklist.step.createAccount",
+      {
+        "unitId": "onboarding.checklist.step.createAccount",
+        "providerId": "i18next-json",
+        "locale": "zh-TW",
+        "domain": "product-ui",
+        "sourceHash": "798ca2ce18bf2038bc13aaa33ebfe6db7020df5b4bba40f68e21462a9207db3d",
+        "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
+        "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
+        "translation": "建立帳戶",
+        "status": "clean",
+        "agentRunId": "zh-TW-2026-11-06T22-29-17Z",
+        "approvedAt": "2026-11-06T22:29:17.097Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-TW:i18next-json:onboarding.checklist.step.fundWallet",
+      {
+        "unitId": "onboarding.checklist.step.fundWallet",
+        "providerId": "i18next-json",
+        "locale": "zh-TW",
+        "domain": "product-ui",
+        "sourceHash": "7fe393b30a23c9b79a7404573840fdb7cb48bdc7830c2c51811e8aa814f6493e",
+        "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
+        "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
+        "translation": "為錢包注入資金",
+        "status": "clean",
+        "agentRunId": "zh-TW-2026-11-06T22-29-17Z",
+        "approvedAt": "2026-11-06T22:29:17.097Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-TW:i18next-json:onboarding.checklist.title",
+      {
+        "unitId": "onboarding.checklist.title",
+        "providerId": "i18next-json",
+        "locale": "zh-TW",
+        "domain": "product-ui",
+        "sourceHash": "831d0f72d242b7d12d4ef15123d43145e97e95be5aba57cd150e434159aae202",
+        "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
+        "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
+        "translation": "開始使用",
+        "status": "clean",
+        "agentRunId": "zh-TW-2026-11-06T22-29-17Z",
+        "approvedAt": "2026-11-06T22:29:17.097Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-TW:i18next-json:pdp.relatedPools.header",
+      {
+        "unitId": "pdp.relatedPools.header",
+        "providerId": "i18next-json",
+        "locale": "zh-TW",
+        "domain": "product-ui",
+        "sourceHash": "cb2087738281aab988ffe101cdcef29fb139eede88ca7322628be2a51c25251c",
+        "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
+        "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
+        "translation": "相關流動性池",
+        "status": "clean",
+        "agentRunId": "zh-TW-2026-11-10T21-00-35Z",
+        "approvedAt": "2026-11-10T21:00:35.032Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-TW:i18next-json:pdp.relatedPools.single",
+      {
+        "unitId": "pdp.relatedPools.single",
+        "providerId": "i18next-json",
+        "locale": "zh-TW",
+        "domain": "product-ui",
+        "sourceHash": "f08a8e68bc1590701e708d74657b153b7244a6448f3f20aec469db3bd7b6106c",
+        "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
+        "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
+        "translation": "更多 {{category}} 流動性池",
+        "status": "clean",
+        "agentRunId": "zh-TW-2026-11-10T21-00-35Z",
+        "approvedAt": "2026-11-10T21:00:35.032Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "zh-TW:i18next-json:pool.apr",
       {
         "unitId": "pool.apr",
@@ -10253,8 +10818,25 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "APR",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-TW:i18next-json:pool.card.tvl",
+      {
+        "unitId": "pool.card.tvl",
+        "providerId": "i18next-json",
+        "locale": "zh-TW",
+        "domain": "product-ui",
+        "sourceHash": "5ac4d655aeffb61a8fa46b96da49de836e99b4ec47103a5be46357b4893d57a8",
+        "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
+        "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
+        "translation": "{{tvl}} TVL",
+        "status": "clean",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -10272,6 +10854,210 @@
         "status": "clean",
         "agentRunId": "zh-TW-2026-10-15T16-30-02Z",
         "approvedAt": "2026-10-15T16:30:02.598Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-TW:i18next-json:pool.liquidityPanel.preset.full",
+      {
+        "unitId": "pool.liquidityPanel.preset.full",
+        "providerId": "i18next-json",
+        "locale": "zh-TW",
+        "domain": "product-ui",
+        "sourceHash": "008dacb6d1e85bd8c0ae9661c4472810ef75537f690dd75d77fc74ca62f78fec",
+        "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
+        "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
+        "translation": "全範圍",
+        "status": "clean",
+        "agentRunId": "zh-TW-2026-11-10T18-38-40Z",
+        "approvedAt": "2026-11-10T18:38:40.745Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-TW:i18next-json:pool.liquidityPanel.preset.full.description",
+      {
+        "unitId": "pool.liquidityPanel.preset.full.description",
+        "providerId": "i18next-json",
+        "locale": "zh-TW",
+        "domain": "product-ui",
+        "sourceHash": "cdcfe5f4e44924cf9f468f72af9d51cb110d4806479cb4fc785567e364045970",
+        "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
+        "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
+        "translation": "在任何價格都能賺取費用",
+        "status": "clean",
+        "agentRunId": "zh-TW-2026-11-10T18-38-40Z",
+        "approvedAt": "2026-11-10T18:38:40.745Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-TW:i18next-json:pool.liquidityPanel.preset.sellOnDrop",
+      {
+        "unitId": "pool.liquidityPanel.preset.sellOnDrop",
+        "providerId": "i18next-json",
+        "locale": "zh-TW",
+        "domain": "product-ui",
+        "sourceHash": "b7f0b55ace377b3a582b2b6177e5ecf8af5d98e30c27440728bde9dbe703e3d6",
+        "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
+        "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
+        "translation": "價格下跌時賣出",
+        "status": "clean",
+        "agentRunId": "zh-TW-2026-11-10T18-38-40Z",
+        "approvedAt": "2026-11-10T18:38:40.745Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-TW:i18next-json:pool.liquidityPanel.preset.sellOnDrop.description",
+      {
+        "unitId": "pool.liquidityPanel.preset.sellOnDrop.description",
+        "providerId": "i18next-json",
+        "locale": "zh-TW",
+        "domain": "product-ui",
+        "sourceHash": "2afc167b196144c3f94f1e894f43cf00c0249b7c1800480a82d77d185298992f",
+        "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
+        "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
+        "translation": "僅存入 {{sell}}。當價格跌穿你的範圍時，將賣出換成 {{buy}}。",
+        "status": "clean",
+        "agentRunId": "zh-TW-2026-11-10T18-38-40Z",
+        "approvedAt": "2026-11-10T18:38:40.745Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-TW:i18next-json:pool.liquidityPanel.preset.sellOnRise",
+      {
+        "unitId": "pool.liquidityPanel.preset.sellOnRise",
+        "providerId": "i18next-json",
+        "locale": "zh-TW",
+        "domain": "product-ui",
+        "sourceHash": "4113385842ecc621b7bd60b3bbb1babfa3edd989980ee2e0fba8d27b09323c28",
+        "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
+        "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
+        "translation": "價格上漲時賣出",
+        "status": "clean",
+        "agentRunId": "zh-TW-2026-11-10T18-38-40Z",
+        "approvedAt": "2026-11-10T18:38:40.745Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-TW:i18next-json:pool.liquidityPanel.preset.sellOnRise.description",
+      {
+        "unitId": "pool.liquidityPanel.preset.sellOnRise.description",
+        "providerId": "i18next-json",
+        "locale": "zh-TW",
+        "domain": "product-ui",
+        "sourceHash": "53a50bbc2154b7e5efd1955d713af50ddbbf44e2bcdb4f4e55776c7077c8ea50",
+        "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
+        "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
+        "translation": "僅存入 {{sell}}。當價格漲穿你的範圍時，將賣出換成 {{buy}}。",
+        "status": "clean",
+        "agentRunId": "zh-TW-2026-11-10T18-38-40Z",
+        "approvedAt": "2026-11-10T18:38:40.745Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-TW:i18next-json:pool.liquidityPanel.preset.suggested",
+      {
+        "unitId": "pool.liquidityPanel.preset.suggested",
+        "providerId": "i18next-json",
+        "locale": "zh-TW",
+        "domain": "product-ui",
+        "sourceHash": "93b63bab4c3a28d73a8bb83bcdfdcc5f6ddecfc8fc702296ca159d94c5dc6e53",
+        "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
+        "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
+        "translation": "建議",
+        "status": "clean",
+        "agentRunId": "zh-TW-2026-11-10T18-38-40Z",
+        "approvedAt": "2026-11-10T18:38:40.745Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-TW:i18next-json:pool.liquidityPanel.preset.suggested.description",
+      {
+        "unitId": "pool.liquidityPanel.preset.suggested.description",
+        "providerId": "i18next-json",
+        "locale": "zh-TW",
+        "domain": "product-ui",
+        "sourceHash": "774fd3448e90a8d84cbfea4dfbdab8f471d10a3a92c7852ddeee49d1f17aab19",
+        "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
+        "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
+        "translation": "根據資金池過去 30 天的價格",
+        "status": "clean",
+        "agentRunId": "zh-TW-2026-11-10T18-38-40Z",
+        "approvedAt": "2026-11-10T18:38:40.745Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-TW:i18next-json:pool.liquidityPanel.priceRange",
+      {
+        "unitId": "pool.liquidityPanel.priceRange",
+        "providerId": "i18next-json",
+        "locale": "zh-TW",
+        "domain": "product-ui",
+        "sourceHash": "24f01895dde5938da068bae40798172026d53cf0575bba88f5b04921098cba17",
+        "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
+        "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
+        "translation": "價格範圍",
+        "status": "clean",
+        "agentRunId": "zh-TW-2026-11-09T22-37-43Z",
+        "approvedAt": "2026-11-09T22:37:43.277Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-TW:i18next-json:pool.liquidityPanel.rangeEdge.decrease",
+      {
+        "unitId": "pool.liquidityPanel.rangeEdge.decrease",
+        "providerId": "i18next-json",
+        "locale": "zh-TW",
+        "domain": "product-ui",
+        "sourceHash": "e206baf0905859f00f73d24638abcca41d70d1f23a062f8db85058e24885d059",
+        "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
+        "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
+        "translation": "降低 {{edge}}",
+        "status": "clean",
+        "agentRunId": "zh-TW-2026-11-10T21-00-35Z",
+        "approvedAt": "2026-11-10T21:00:35.032Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-TW:i18next-json:pool.liquidityPanel.rangeEdge.increase",
+      {
+        "unitId": "pool.liquidityPanel.rangeEdge.increase",
+        "providerId": "i18next-json",
+        "locale": "zh-TW",
+        "domain": "product-ui",
+        "sourceHash": "89cabe5ebc25ae3046a7b93f7328996ff6462e43ca2cd5bed20308f4051d1c64",
+        "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
+        "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
+        "translation": "提高 {{edge}}",
+        "status": "clean",
+        "agentRunId": "zh-TW-2026-11-10T21-00-35Z",
+        "approvedAt": "2026-11-10T21:00:35.032Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
+      "zh-TW:i18next-json:pool.liquidityPanel.timeInRange",
+      {
+        "unitId": "pool.liquidityPanel.timeInRange",
+        "providerId": "i18next-json",
+        "locale": "zh-TW",
+        "domain": "product-ui",
+        "sourceHash": "31c1fa145ef2c83c741ddb8a74b82091f5cb0a75638b3fb6b6fdf1d3d1da3b7d",
+        "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
+        "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
+        "translation": "過去 30 天有 {{percent}} 在範圍內",
+        "status": "clean",
+        "agentRunId": "zh-TW-2026-11-09T22-37-43Z",
+        "approvedAt": "2026-11-09T22:37:43.277Z",
         "approvedBy": "agent"
       }
     ],
@@ -10355,8 +11141,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "DeFi",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -10576,8 +11362,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "$TICKER",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -10797,8 +11583,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "Crowd Launch",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -10814,8 +11600,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "Instant Launch",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -10848,8 +11634,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "Crowd",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -10865,8 +11651,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "Instant",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -10933,8 +11719,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "{{apr}} APR",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -10950,8 +11736,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "{{apy}} APY",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -10997,8 +11783,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "ENS",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -11167,8 +11953,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "Uniswap API",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -12048,6 +12834,23 @@
       }
     ],
     [
+      "zh-TW:i18next-json:token.stats.volume.1d.description",
+      {
+        "unitId": "token.stats.volume.1d.description",
+        "providerId": "i18next-json",
+        "locale": "zh-TW",
+        "domain": "product-ui",
+        "sourceHash": "aff27f796482b0401f5b7652b9255e3e6feb8387bb9b686e49611980a129a38a",
+        "glossaryHash": "e9ee5218060a002c70ee04477bba62e643a77fb5fe3280abaa0cf303c5a04ba6",
+        "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
+        "translation": "1天交易量是該資產過去 24 小時內在 Uniswap 上或 Solana 生態系內的交易總量。",
+        "status": "clean",
+        "agentRunId": "zh-TW-2026-11-09T19-15-28Z",
+        "approvedAt": "2026-11-09T19:15:28.068Z",
+        "approvedBy": "agent"
+      }
+    ],
+    [
       "zh-TW:i18next-json:tokens.selector.categoryFilter.clear_one",
       {
         "unitId": "tokens.selector.categoryFilter.clear_one",
@@ -12263,8 +13066,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "<value>{{fdv}}</value> FDV",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -12463,8 +13266,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "100% → 0.3% v4 LP",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -12735,8 +13538,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "$TICKER",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -12786,8 +13589,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "Crowd Launch",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -12905,8 +13708,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "Instant Launch",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -12973,8 +13776,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "Pools.xyz",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -13494,8 +14297,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "<icon /> <gradient>UniswapX</gradient> <info />",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ],
@@ -13511,8 +14314,8 @@
         "styleHash": "e76ac01a861b657ab8174325ca855911f81cb2e7a00b0fd2f1d0deeea234443a",
         "translation": "yourname",
         "status": "clean",
-        "agentRunId": "zh-TW-2026-11-05T22-06-09Z",
-        "approvedAt": "2026-11-05T22:06:09.011Z",
+        "agentRunId": "zh-TW-2026-11-10T23-48-02Z",
+        "approvedAt": "2026-11-10T23:48:02.899Z",
         "approvedBy": "agent"
       }
     ]

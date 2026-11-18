@@ -99,7 +99,7 @@ export function isSameMarginQuoteSubject({
     // blank frame when a retarget crosses 1:1 and flips between the increase and decrease keys.
     marginRequestActionKey(previous) === marginRequestActionKey(next) &&
     marginRequestPositionId(previous) === marginRequestPositionId(next) &&
-    // Not `open.marketId`: the client re-picks it as leverage crosses a market's ceiling, and every
+    // Not `open.marketId`: a venue pick moves the open to another market on the pair, and every
     // market on a pair shares its denomination. The routed-venue rows gate on `isPlaceholderData`.
     previous.exposureToken === next.exposureToken &&
     previous.counterToken === next.counterToken &&

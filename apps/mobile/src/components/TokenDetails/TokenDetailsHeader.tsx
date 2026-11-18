@@ -1,5 +1,4 @@
 import { chainIdToPlatform } from '@universe/chains'
-import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { Flex, FlexLoader, flexStyles, iconSizes, Shine, Text, TouchableArea } from '@universe/mycelium'
 import { CopyAlt } from '@universe/mycelium/icons/CopyAlt'
 import { Lock } from '@universe/mycelium/icons/Lock'
@@ -16,7 +15,6 @@ import { EM_DASH } from 'ui/src'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { selectHasViewedContractAddressExplainer } from 'uniswap/src/features/behaviorHistory/selectors'
 import { useTokenMetadata } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
-import { getRWAHeaderIdentity } from 'uniswap/src/features/rwa/getRWAHeaderIdentity'
 import { useRwaIssuer } from 'uniswap/src/features/rwa/hooks/useRwaIssuer'
 import { isDefaultNativeAddress } from 'uniswap/src/utils/currencyId'
 
@@ -41,19 +39,14 @@ export const TokenDetailsHeader = memo(function TokenDetailsHeaderInner(): JSX.E
   const rwaMatch = useTokenDetailsRWAMatch()
   const isRwaMatchLoading = useIsTokenDetailsRWAMatchLoading()
   const { issuer: rwaIssuer } = useRwaIssuer({ rwaMatch, currencyId })
-  const plainTokenNames = useIsTokenCategoriesEnabled()
   const { data: metadata, isLoading: isMetadataLoading } = useTokenMetadata(currencyId)
   // The group match resolves after the token metadata; hold the title rather than paint the plain
   // token name and then flip it.
   const isIdentityLoading = isMetadataLoading || isRwaMatchLoading
 
   const isMultichainToken = initialIsMultichainAsset || hasMultichainAddresses
-  const { name: tokenName, logoUrl } = getRWAHeaderIdentity({
-    rwaMatch,
-    fallbackName: metadata?.name ?? undefined,
-    logoUrl: metadata?.logoUrl ?? undefined,
-    plainTokenNames,
-  })
+  const tokenName = metadata?.name ?? undefined
+  const logoUrl = metadata?.logoUrl ?? undefined
 
   const hasNonNativeAddress = !!address && !isDefaultNativeAddress({ address, platform: chainIdToPlatform(chainId) })
 

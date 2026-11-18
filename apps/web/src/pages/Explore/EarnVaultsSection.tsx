@@ -1,36 +1,51 @@
 import { Platform } from '@universe/chains'
 import { Flex, Text, useMedia, iconSizes } from '@universe/mycelium'
+import { styled } from '@universe/mycelium/styled'
 import { TestID } from '@universe/test'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Coachmark } from 'ui/src'
+import { tokenCardShellProps } from 'uniswap/src/components/TokenCard/constants'
 import { EarnAnalyticsSurface, EarnEntryPoint } from 'uniswap/src/features/earn/analytics'
-import {
-  EARN_VAULT_CHIP_FRAME_PROPS,
-  EARN_VAULT_CHIP_MAX_WIDTH,
-  EarnVaultChip,
-} from 'uniswap/src/features/earn/EarnVaultChip'
+import { EARN_VAULT_CHIP_FRAME_PROPS, EarnVaultChip } from 'uniswap/src/features/earn/EarnVaultChip'
 import { useEarnVaults } from 'uniswap/src/features/earn/hooks/useEarnVaults'
 import { useLogEarnSurfaceViewed } from 'uniswap/src/features/earn/hooks/useLogEarnSurfaceViewed'
 import type { EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import { getEarnVaultsSortedForExplore } from 'uniswap/src/features/earn/utils'
-import { CAROUSEL_FADE_WIDTH_SMALL } from '~/components/TokenCardCarousel/constants'
+import { CAROUSEL_CARD_GAP, CAROUSEL_FADE_WIDTH_SMALL } from '~/components/TokenCardCarousel/constants'
 import { TokenCardCarousel } from '~/components/TokenCardCarousel/TokenCardCarousel'
+import { useCarouselLayout } from '~/components/TokenCardCarousel/useCarouselLayout'
 import { useHorizontalSnapCarousel } from '~/components/TokenCardCarousel/useHorizontalSnapCarousel'
 import { LoadingBubble } from '~/components/Tokens/loading'
 import { useActiveAddress } from '~/connection/accounts/hooks'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '~/constants/breakpoints'
+import { APP_BODY_MOBILE_GUTTER_PX } from '~/constants/layout'
 import { EarnVaultModal } from '~/features/earn/EarnVaultModal'
 import { useEarnVaultConnectFlow } from '~/features/earn/hooks/useEarnVaultConnectFlow'
 import { useEarnVaultModalState } from '~/features/earn/hooks/useEarnVaultModalState'
+import { EXPLORE_HEADING_SIZE_CLASSES } from '~/pages/Explore/exploreHeadingStyles'
 import { useExploreEarnDeepLink } from '~/pages/Explore/hooks/useExploreEarnDeepLink'
 
 const EARN_VAULT_CHIP_SKELETON_COUNT = 3
-const EARN_VAULT_CHIP_GRID_MIN_WIDTH = 220
 const EARN_VAULT_CHIP_SKELETON_TITLE_HEIGHT = 18
 const EARN_VAULT_CHIP_SKELETON_SUBTITLE_HEIGHT = 16
 const EARN_COACHMARK_WIDTH = 215
-const EARN_VAULT_CAROUSEL_CARD_WIDTH = 120
+// Two full cards plus a teaser of the third at rest on mobile web.
+const EARN_VAULT_CAROUSEL_CARDS_PER_VIEW = 2.3
+const EARN_VAULT_CAROUSEL_MIN_CARD_WIDTH = 120
+
+// Not a Text variant: a responsive `$md` variant on Text re-keys the base font too.
+const EarnTitle = styled('h3', {
+  platform: 'web',
+  base: 'm-0 text-neutral1 [font-weight:485] [font-family:var(--stext-font-book)]',
+})
+
+/** `containerWidth` is the section's content width; the full-bleed carousel also shows the right-hand gutter. */
+function getEarnVaultCarouselCardWidth(containerWidth: number): number {
+  const visibleWidth = containerWidth + APP_BODY_MOBILE_GUTTER_PX
+  const width = Math.floor((visibleWidth - 2 * CAROUSEL_CARD_GAP) / EARN_VAULT_CAROUSEL_CARDS_PER_VIEW)
+  return Math.max(width, EARN_VAULT_CAROUSEL_MIN_CARD_WIDTH)
+}
 
 export function EarnVaultsSection() {
   const { t } = useTranslation()
@@ -40,8 +55,11 @@ export function EarnVaultsSection() {
   const exploreVaults = useMemo(() => getEarnVaultsSortedForExplore(vaults), [vaults])
   const { closeModal, openModal, selectedVaultState } = useEarnVaultModalState()
   const media = useMedia()
+  const layoutRef = useRef<HTMLDivElement>(null)
+  const { cardWidth, containerWidth } = useCarouselLayout(layoutRef)
+  const carouselCardWidth = getEarnVaultCarouselCardWidth(containerWidth)
   const carousel = useHorizontalSnapCarousel({
-    cardWidth: EARN_VAULT_CAROUSEL_CARD_WIDTH,
+    cardWidth: carouselCardWidth,
     itemCount: exploreVaults.length,
     isLoading: isLoadingVaults,
   })
@@ -67,15 +85,18 @@ export function EarnVaultsSection() {
   return (
     <>
       <Flex
+        ref={layoutRef}
         width="100%"
         my="$spacing24"
         $md={{ my: '$spacing12' }}
         maxWidth={MAX_WIDTH_MEDIA_BREAKPOINT}
         mx="auto"
         row
+        flexWrap="wrap"
         alignItems="center"
         gap="$spacing16"
-        $xl={{ row: false, flexDirection: 'column', alignItems: 'flex-start' }}
+        // A wrapping column sizes its line to the content, which would stop the full-bleed carousel stretching.
+        $xl={{ row: false, flexDirection: 'column', alignItems: 'flex-start', flexWrap: 'nowrap' }}
       >
         <Flex ref={earnSectionRef} minWidth={200} gap="$spacing4" $xl={{ width: '100%' }}>
           <Coachmark
@@ -88,51 +109,62 @@ export function EarnVaultsSection() {
             width={EARN_COACHMARK_WIDTH}
             testID={TestID.ExploreEarnCoachmark}
           >
-            <Text variant="heading3" $md={{ variant: 'subheading1' }} color="$neutral1">
-              {t('explore.earn.title')}
-            </Text>
+            <EarnTitle className={EXPLORE_HEADING_SIZE_CLASSES}>{t('explore.earn.title')}</EarnTitle>
           </Coachmark>
           <Text variant="body3" color="$neutral2" whiteSpace="nowrap">
             {t('explore.earn.subtitle')}
           </Text>
         </Flex>
         {media.md ? (
-          <Flex width="100%">
+          // Bleeds through the app body gutter so cards scroll to the viewport edges.
+          <Flex alignSelf="stretch" mx={-APP_BODY_MOBILE_GUTTER_PX}>
             <TokenCardCarousel
               items={exploreVaults}
               getItemKey={(vault) => vault.id}
               renderItem={(vault) => (
-                <Flex width={EARN_VAULT_CAROUSEL_CARD_WIDTH}>
-                  <EarnVaultChip layout="vertical" vault={vault} onPress={() => openModal(vault)} />
-                </Flex>
+                <EarnVaultChip
+                  layout="vertical"
+                  vault={vault}
+                  width={carouselCardWidth}
+                  borderRadius={tokenCardShellProps.borderRadius}
+                  onPress={() => openModal(vault)}
+                />
               )}
               isLoading={isLoadingVaults}
               skeletonCount={EARN_VAULT_CHIP_SKELETON_COUNT}
               skeletonLayout="vertical"
               carousel={carousel}
-              cardWidth={EARN_VAULT_CAROUSEL_CARD_WIDTH}
+              cardWidth={carouselCardWidth}
               fadeWidth={CAROUSEL_FADE_WIDTH_SMALL}
               showArrowButtons={false}
+              edgeInset={APP_BODY_MOBILE_GUTTER_PX}
+              edgeFade="mask"
             />
           </Flex>
         ) : (
           <Flex
+            row
+            flexWrap="wrap"
             flex={1}
-            gap="$spacing12"
+            gap={CAROUSEL_CARD_GAP}
             justifyContent="flex-end"
-            $platform-web={{
-              display: 'grid',
-              gridTemplateColumns: `repeat(auto-fill, minmax(${EARN_VAULT_CHIP_GRID_MIN_WIDTH}px, ${EARN_VAULT_CHIP_MAX_WIDTH}px))`,
-              justifyContent: 'flex-end',
-            }}
-            $xl={{ width: '100%', '$platform-web': { justifyContent: 'flex-start' } }}
+            $xl={{ width: '100%', justifyContent: 'flex-start' }}
           >
             {isLoadingVaults
               ? Array.from({ length: EARN_VAULT_CHIP_SKELETON_COUNT }, (_, index) => (
-                  <EarnVaultChipSkeleton key={index} index={index} />
+                  <Flex key={index} flexShrink={0}>
+                    <EarnVaultChipSkeleton index={index} width={cardWidth} />
+                  </Flex>
                 ))
               : exploreVaults.map((vault) => (
-                  <EarnVaultChip key={vault.id} vault={vault} onPress={() => openModal(vault)} />
+                  <Flex key={vault.id} flexShrink={0}>
+                    <EarnVaultChip
+                      vault={vault}
+                      width={cardWidth}
+                      borderRadius={tokenCardShellProps.borderRadius}
+                      onPress={() => openModal(vault)}
+                    />
+                  </Flex>
                 ))}
           </Flex>
         )}
@@ -150,11 +182,16 @@ export function EarnVaultsSection() {
   )
 }
 
-function EarnVaultChipSkeleton({ index }: { index: number }): JSX.Element {
+function EarnVaultChipSkeleton({ index, width }: { index: number; width: number }): JSX.Element {
   const delay = `${index * 0.1}s`
 
   return (
-    <Flex {...EARN_VAULT_CHIP_FRAME_PROPS}>
+    <Flex
+      {...EARN_VAULT_CHIP_FRAME_PROPS}
+      width={width}
+      maxWidth={width}
+      borderRadius={tokenCardShellProps.borderRadius}
+    >
       <LoadingBubble
         round
         height={iconSizes.icon32}

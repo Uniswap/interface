@@ -1,11 +1,11 @@
+import type { EnrichedAuction } from '~/features/Toucan/hooks/useTopAuctions/useEnrichedAuctions'
 import {
   auctionCommittedVolumeComparator,
   compareDescendingMissingLast,
-  type EnrichedAuction,
 } from '~/features/Toucan/hooks/useTopAuctions/useTopAuctions'
 
 // Comparator-level tests for the USD -> bid-token sort fallback. Table-level ordering
-// (grouping, ascending toggle, stability) is covered in TopAuctionsTable.test.ts.
+// (grouping, ascending toggle, stability) is covered in sortAuctions.test.ts.
 
 function createEnrichedAuction({
   totalBidVolumeUsd,

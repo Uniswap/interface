@@ -59,6 +59,8 @@ export const CheckboxCompat = React.forwardRef<HTMLButtonElement, CheckboxCompat
       onCheckedChange,
       className,
       style,
+      'aria-label': ariaLabel,
+      'aria-labelledby': ariaLabelledBy,
     } = props
 
     const [hovered, setHovered] = React.useState(false)
@@ -97,6 +99,8 @@ export const CheckboxCompat = React.forwardRef<HTMLButtonElement, CheckboxCompat
           ref={ref}
           aria-checked={checked}
           aria-disabled={disabled || undefined}
+          aria-label={ariaLabel}
+          aria-labelledby={ariaLabelledBy}
           // `required` is not a <button> attribute; the ARIA form is the web
           // equivalent of the legacy Tamagui/Radix `required` prop.
           aria-required={required || undefined}

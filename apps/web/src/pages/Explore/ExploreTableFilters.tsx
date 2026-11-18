@@ -5,12 +5,12 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useSearchParams } from 'react-router'
 import { useEvent } from 'utilities/src/react/hooks'
+import { LIVE_POOL_VOLUME_PERIODS } from '~/components/Charts/timeLabels'
 import { WIDE_SEARCH_WIDTH } from '~/components/ExpandableSearchInput/ExpandableSearchInput'
 import {
   useExploreTablesFilterStore,
   useExploreTablesFilterStoreActions,
 } from '~/features/Explore/state/exploreTablesFilterStore'
-import { LIVE_POOL_VOLUME_PERIODS } from '~/features/Explore/timeLabels'
 import { buildExploreUrl } from '~/features/Explore/utils/buildExploreUrl'
 import { VolumeTimeFrameSelector } from '~/features/Explore/VolumeTimeFrameSelector'
 import { PoolsFilter, type PoolsFilterLayout } from '~/features/Liquidity/PoolsFilter/PoolsFilter'

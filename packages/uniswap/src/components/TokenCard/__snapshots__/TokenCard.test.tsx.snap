@@ -66,7 +66,7 @@ exports[`TokenCard > renders a spacer instead of a sparkline for fewer than 2 po
             fill="none"
             focusable="false"
             stroke-width="2"
-            style="width: 12px; height: 12px; transform: rotate(180deg);"
+            style="color: var(--success); width: 12px; height: 12px; transform: rotate(180deg);"
             viewBox="0 0 24 24"
           >
             <path
@@ -144,7 +144,7 @@ exports[`TokenCard > renders the horizontal layout without a price 1`] = `
             fill="none"
             focusable="false"
             stroke-width="2"
-            style="width: 12px; height: 12px; transform: rotate(180deg);"
+            style="color: var(--success); width: 12px; height: 12px; transform: rotate(180deg);"
             viewBox="0 0 24 24"
           >
             <path
@@ -304,7 +304,7 @@ exports[`TokenCard > renders the vertical layout with a negative delta and no is
             fill="none"
             focusable="false"
             stroke-width="2"
-            style="width: 12px; height: 12px; transform: rotate(0deg);"
+            style="color: var(--critical); width: 12px; height: 12px; transform: rotate(0deg);"
             viewBox="0 0 24 24"
           >
             <path
@@ -350,7 +350,7 @@ exports[`TokenCard > renders the vertical layout with price, issuer label and po
         />
         <div
           data-testid="img-token-image"
-          style="box-sizing: border-box; display: flex; flex-direction: column; flex-shrink: 0; min-width: 0;"
+          style="box-sizing: border-box; display: flex; flex-direction: column; flex-shrink: 0; min-width: 0px;"
         >
           <img
             alt=""
@@ -433,7 +433,7 @@ exports[`TokenCard > renders the vertical layout with price, issuer label and po
             fill="none"
             focusable="false"
             stroke-width="2"
-            style="width: 12px; height: 12px; transform: rotate(180deg);"
+            style="color: var(--success); width: 12px; height: 12px; transform: rotate(180deg);"
             viewBox="0 0 24 24"
           >
             <path

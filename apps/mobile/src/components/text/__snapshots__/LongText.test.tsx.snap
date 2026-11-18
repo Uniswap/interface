@@ -9,7 +9,7 @@ exports[`LongText > renders without error 1`] = `
     <div
       class="css-text-146c3p1"
       dir="auto"
-      style="font-size: 17px; line-height: 22px; font-family: Basel Grotesk; font-weight: 400; color: rgb(19, 19, 19);"
+      style="font-size: 17px; line-height: 22px; font-family: "Basel Grotesk"; font-weight: 400; color: rgb(19, 19, 19);"
     >
       Some very long text
     </div>

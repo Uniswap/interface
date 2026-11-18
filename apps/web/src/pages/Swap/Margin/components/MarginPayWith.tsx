@@ -1,22 +1,17 @@
-import type { Currency } from '@uniswap/sdk-core'
 import { Flex, Text } from '@universe/mycelium'
 import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
 import { SelectTokenButton } from 'uniswap/src/components/CurrencyInputPanel/SelectTokenButton'
-import { TokenSelectorModal } from 'uniswap/src/components/TokenSelector/TokenSelector'
-import { TokenSelectorFlow, TokenSelectorVariation } from 'uniswap/src/components/TokenSelector/types'
-import { useActiveAddresses } from 'uniswap/src/features/accounts/store/hooks'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import {
   useMarginFormStore,
   useMarginFormStoreActions,
 } from 'uniswap/src/features/transactions/margin/stores/marginFormStore/useMarginFormStore'
 import type { MarginPaymentToken } from 'uniswap/src/features/transactions/margin/types'
-import { CurrencyField } from 'uniswap/src/types/currency'
+import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
-import { MARGIN_PAYMENT_SOURCE_CHAIN_IDS } from '~/constants/margin'
-import { resolveMarginPaymentTokenPick } from '~/pages/Swap/Margin/components/MarginPaymentTokenSelector'
+import { MarginPaymentTokenSelector } from '~/pages/Swap/Margin/components/MarginPaymentTokenSelector'
 import type { DerivedMarginInfo } from '~/pages/Swap/Margin/hooks/useDerivedMarginInfo'
-import { toMarginPaymentToken } from '~/pages/Swap/Margin/hooks/useMarginPaymentTokens'
 
 // The wallet token that funds the margin, picked in the app's shared token selector. BalancesOnly
 // over the payment source chains matches what margin accepts: any holding there, with the quote as
@@ -30,16 +25,13 @@ export function MarginPayWith({
   onSelectPaymentToken: (token: MarginPaymentToken | undefined) => void
 }): JSX.Element {
   const { t } = useTranslation()
-  const addresses = useActiveAddresses()
+  const { formatCurrencyAmount } = useLocalizationContext()
+  const { balance } = derivedMarginInfo
   const isSelectorOpen = useMarginFormStore((s) => s.selectingPaymentToken)
   const { setMarginFormState } = useMarginFormStoreActions()
   const openSelector = useEvent(() => setMarginFormState({ selectingPaymentToken: true }))
   const closeSelector = useEvent(() => setMarginFormState({ selectingPaymentToken: false }))
-  const onSelectCurrency = useEvent(({ currency }: { currency: Currency }) => {
-    const paymentToken = resolveMarginPaymentTokenPick({
-      token: toMarginPaymentToken(currency),
-      market: derivedMarginInfo.market,
-    })
+  const onSelect = useEvent((paymentToken: MarginPaymentToken | undefined) => {
     setMarginFormState({ selectingPaymentToken: false })
     onSelectPaymentToken(paymentToken)
   })
@@ -55,24 +47,30 @@ export function MarginPayWith({
         borderRadius="$rounded20"
         backgroundColor="$surface2"
       >
-        <Text variant="subheading2" color="$neutral2">
-          {t('margin.payment.selector.title')}
-        </Text>
+        <Flex gap="$spacing2" flexShrink={1}>
+          <Text variant="subheading2" color="$neutral2">
+            {t('margin.payment.selector.title')}
+          </Text>
+          {/* The Deposit box above shows no balance: it reads in dollars, restated from this token. */}
+          {balance ? (
+            <Text variant="body3" color="$neutral2" numberOfLines={1}>
+              {t('margin.payment.available', {
+                balance: formatCurrencyAmount({ value: balance, type: NumberType.TokenNonTx }),
+              })}
+            </Text>
+          ) : null}
+        </Flex>
         <SelectTokenButton
           testID={TestID.MarginPayWith}
           selectedCurrencyInfo={derivedMarginInfo.paymentCurrencyInfo}
           onPress={openSelector}
         />
       </Flex>
-      <TokenSelectorModal
-        isModalOpen={isSelectorOpen}
-        addresses={addresses}
-        chainIds={MARGIN_PAYMENT_SOURCE_CHAIN_IDS}
-        currencyField={CurrencyField.INPUT}
-        flow={TokenSelectorFlow.Swap}
-        variation={TokenSelectorVariation.BalancesOnly}
+      <MarginPaymentTokenSelector
+        isOpen={isSelectorOpen}
+        market={derivedMarginInfo.market}
         onClose={closeSelector}
-        onSelectCurrency={onSelectCurrency}
+        onSelect={onSelect}
       />
     </>
   )

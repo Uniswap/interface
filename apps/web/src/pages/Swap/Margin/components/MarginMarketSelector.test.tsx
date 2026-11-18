@@ -1,6 +1,6 @@
-import { act, fireEvent } from '@testing-library/react'
+import { fireEvent } from '@testing-library/react'
 import { Token } from '@uniswap/sdk-core'
-import { UniverseChainId } from '@universe/chains'
+import type { UniverseChainId } from '@universe/chains'
 import { TestID } from '@universe/test'
 import type { PropsWithChildren } from 'react'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
@@ -23,11 +23,6 @@ vi.mock('uniswap/src/components/modals/Modal', () => ({
 // Echo the venue prop; the venue→logo mapping itself is covered by MarginVenueLogo.test.tsx.
 vi.mock('~/features/margin/components/MarginVenueLogo', () => ({
   MarginVenueLogo: ({ venue }: { venue: string }) => <div data-testid={TestID.MarginVenueLogo} data-venue={venue} />,
-}))
-
-// The side toggle reads the form store and the registry; stub it out so the list renders hermetically.
-vi.mock('~/pages/Swap/Margin/components/MarginSideToggle', () => ({
-  MarginSideToggle: () => null,
 }))
 
 // The shared network filter's own menu is covered by its tests; this suite drives the props it is given.
@@ -243,41 +238,6 @@ vi.mock('~/pages/Swap/Margin/chart/useMarginChartData', () => ({
 
 const SEARCH_PLACEHOLDER = 'Search tokens or pairs'
 
-// Data API token categories: cbBTC is tagged "Majors" and WETH "DeFi", so each chip isolates one long row.
-const CATEGORY_IDS_BY_ADDRESS: Record<string, string[]> = {
-  [CBBTC.address.toLowerCase()]: ['majors'],
-  // WETH is requested as native ETH (marginTokenCurrencyId), so the response is keyed by position only.
-  native: ['defi'],
-}
-vi.mock('@universe/gating', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('@universe/gating')>()),
-  useIsTokenCategoriesEnabled: () => true,
-}))
-vi.mock('uniswap/src/features/tokens/useCurrencyInfo', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('uniswap/src/features/tokens/useCurrencyInfo')>()),
-  useRestTokensQuery: (currencyIds: string[], { select }: { select: (tokens: unknown[]) => unknown }) => ({
-    data: select(
-      currencyIds.map((id) => {
-        const address = id.split('-')[1]?.toLowerCase() ?? ''
-        return { categoryIds: CATEGORY_IDS_BY_ADDRESS[address] ?? CATEGORY_IDS_BY_ADDRESS.native }
-      }),
-    ),
-  }),
-}))
-vi.mock('uniswap/src/data/apiClients/dataApiService/categories/useAllTokenCategories', () => ({
-  useAllTokenCategories: () => ({
-    categories: [
-      { id: 'majors', name: 'Majors' },
-      { id: 'defi', name: 'DeFi' },
-      { id: 'meme', name: 'Meme' },
-    ],
-    isLoading: false,
-  }),
-}))
-vi.mock('uniswap/src/features/tokenCategories/useCategoryOrder', () => ({
-  useCategoryOrder: ({ categories }: { categories: unknown[] }) => categories,
-}))
-
 beforeEach(() => {
   mockGroups.current = DEFAULT_GROUPS
 })
@@ -298,8 +258,9 @@ describe('MarginMarketSelector', () => {
   it('labels a direction-less short market as Short in the collapsed trigger', () => {
     const defaultMarket = getDefaultMarginMarket()
     mockMarket.current = { ...defaultMarket, collateral: defaultMarket.debt, debt: defaultMarket.collateral }
-    const { getByText } = render(<MarginMarketSelector />)
-    expect(getByText('Short')).toBeTruthy()
+    const { getAllByText } = render(<MarginMarketSelector />)
+    // The trigger's badge, beside the side filter's own "Short" and the ETH / USDC row's side badge.
+    expect(getAllByText('Short')).toHaveLength(3)
   })
 
   // MarginFormMarketsState owns the markets error surface; the collapsed trigger renders nothing
@@ -312,15 +273,7 @@ describe('MarginMarketSelector', () => {
     expect(queryByTestId(TestID.MarginMarketsError)).toBeNull()
   })
 
-  it('shows the venue ghost wired to the market venue in the collapsed trigger (Site A)', () => {
-    const { getAllByTestId } = render(<MarginMarketSelector />)
-    // Only the trigger renders a venue ghost at the pair step (pair rows carry none).
-    const logos = getAllByTestId(TestID.MarginVenueLogo)
-    expect(logos).toHaveLength(1)
-    expect(logos[0]?.getAttribute('data-venue')).toBe('AAVE_V4')
-  })
-
-  it('renders one row per pair on the selected side', () => {
+  it('renders one row per pair, its long and short merged', () => {
     const { getAllByTestId, getAllByText } = render(<MarginMarketSelector />)
     expect(getAllByTestId(TestID.MarginPairRow)).toHaveLength(2)
     // The collapsed trigger also labels ETH / USDC, so the row is not the only match.
@@ -328,26 +281,26 @@ describe('MarginMarketSelector', () => {
     expect(getAllByText('cbBTC / USDC').length).toBeGreaterThan(0)
   })
 
-  // The venue is routed, so a pair shows pair-level figures only. Its leverage ceiling is the one
-  // venue-derived figure.
+  // The venue is routed, so a pair shows pair-level figures only: its lowest rate, deepest liquidity
+  // and leverage ceiling across venues, never one venue's own.
   it('renders no venue economics or venue identity on a pair', () => {
     const { getAllByTestId, queryAllByTestId } = render(<MarginMarketSelector />)
     const rowText = getAllByTestId(TestID.MarginPairRow)
       .map((row) => row.textContent)
       .join('|')
-    for (const venueFigure of ['3x', '4.2%', '5.1%', 'LLTV', 'Morpho', 'Aave', '12.3M']) {
+    for (const venueFigure of ['3x', '5.1%', '450,000', 'LLTV', 'Morpho', 'Aave']) {
       expect(rowText).not.toContain(venueFigure)
     }
-    // Only the collapsed trigger carries a venue logo.
-    expect(queryAllByTestId(TestID.MarginVenueLogo)).toHaveLength(1)
+    // Nor does the collapsed trigger: the venue is the quote's to pick.
+    expect(queryAllByTestId(TestID.MarginVenueLogo)).toHaveLength(0)
   })
 
   it('renders the pair list', () => {
     const { getAllByTestId } = render(<MarginMarketSelector />)
     expect(getAllByTestId(TestID.MarginPairRow).map((row) => row.textContent)).toMatchInlineSnapshot(`
       [
-        "ETHUSDETH / USDC$2,345.672.50%5x",
-        "cbBUSDcbBTC / USDC$2,345.672.50%4x",
+        "ETHUSDETH / USDC2 marketsLongShort4.2%12.3M USDC$2,345.672.50%5x",
+        "cbBUSDcbBTC / USDC1 marketLong3.8%—$2,345.672.50%4x",
       ]
     `)
   })
@@ -372,23 +325,10 @@ describe('MarginMarketSelector', () => {
     ])
   })
 
-  it('offers the network the markets are fetched for, All networks by default, and filters rows by it', () => {
-    const { getAllByTestId, getByTestId } = render(<MarginMarketSelector />)
-    expect(networkFilterProps.current?.chainIds).toEqual([MARGIN_CHAIN_ID])
-    expect(networkFilterProps.current?.selectedChain).toBeNull()
-    act(() => networkFilterProps.current?.onPressChain(MARGIN_CHAIN_ID))
-    expect(getAllByTestId(TestID.MarginPairRow)).toHaveLength(2)
-    act(() => networkFilterProps.current?.onPressChain(UniverseChainId.Base))
-    expect(getByTestId(TestID.MarginMarketsEmpty).textContent).toBe('No markets found')
-    act(() => networkFilterProps.current?.onPressChain(null))
-    expect(getAllByTestId(TestID.MarginPairRow)).toHaveLength(2)
-  })
-
-  it('titles a short row with the base leg, never the stablecoin first', () => {
-    mockSide.current = MarginDirection.SHORT
-    const { getAllByTestId } = render(<MarginMarketSelector />)
-    expect(getAllByTestId(TestID.MarginPairRow)).toHaveLength(1)
-    expect(getAllByTestId(TestID.MarginPairRow)[0]?.textContent).toContain('ETH / USDC')
+  it('offers no network filter while every pair is on one network', () => {
+    networkFilterProps.current = undefined
+    render(<MarginMarketSelector />)
+    expect(networkFilterProps.current).toBeUndefined()
   })
 
   it('matches a pair by its unwrapped symbol, resolved name and slash-free pair string', () => {
@@ -407,33 +347,13 @@ describe('MarginMarketSelector', () => {
     expect(getByTestId(TestID.MarginMarketsEmpty).textContent).toBe('No markets found')
   })
 
-  it('offers a chip per backend category the listed tokens carry, and narrows by it', () => {
-    const { getAllByTestId, getByText, queryByText } = render(<MarginMarketSelector />)
-    // Meme is a real category, but no listed token carries it.
-    expect(queryByText('Meme')).toBeNull()
-    fireEvent.click(getByText('Majors'))
-    expect(getAllByTestId(TestID.MarginPairRow).map((row) => row.textContent)).toEqual([
-      expect.stringContaining('cbBTC / USDC'),
-    ])
-    fireEvent.click(getByText('DeFi'))
-    expect(getAllByTestId(TestID.MarginPairRow).map((row) => row.textContent)).toEqual([
-      expect.stringContaining('ETH / USDC'),
-    ])
-    fireEvent.click(getByText('All'))
-    expect(getAllByTestId(TestID.MarginPairRow)).toHaveLength(2)
-  })
-
-  it('narrows by the long-asset filter, naming the chosen token on the trigger', () => {
-    const { getAllByTestId, getByTestId } = render(<MarginMarketSelector />)
-    expect(getByTestId(TestID.MarginAssetFilter).textContent).toBe('Long asset')
-    expect(getByTestId(TestID.MarginDebtFilter).textContent).toBe('Debt asset')
-    fireEvent.click(getByTestId(TestID.MarginAssetFilter))
-    // AdaptiveDropdown also mounts a hidden measuring copy of the menu; the first is the live one.
-    fireEvent.click(getAllByTestId(`${TestID.MarginAssetFilterOptionPrefix}${CBBTC.address.toLowerCase()}`)[0]!)
-    expect(getAllByTestId(TestID.MarginPairRow).map((row) => row.textContent)).toEqual([
-      expect.stringContaining('cbBTC / USDC'),
-    ])
-    expect(getByTestId(TestID.MarginAssetFilter).textContent).toContain('cbBTC')
+  it('names each venue’s borrow rate per side on hovering the sides line', async () => {
+    const { getAllByTestId, findByText } = render(<MarginMarketSelector />)
+    const trigger = getAllByTestId(TestID.MarginPairSides)[0]!.closest('[data-slot="tooltip-compat-trigger"]')!
+    fireEvent.mouseEnter(trigger)
+    fireEvent.mouseMove(trigger)
+    expect(await findByText('Long 5.1% · Short —')).toBeTruthy()
+    expect(await findByText('Long 4.2%')).toBeTruthy()
   })
 
   it('distinguishes a fruitless search from a side with no markets at all', () => {
@@ -442,13 +362,10 @@ describe('MarginMarketSelector', () => {
     expect(getByTestId(TestID.MarginMarketsEmpty).textContent).toBe('No markets found')
   })
 
-  it('names the empty side rather than blaming the search when a side has no markets', () => {
+  it('says no markets are available, not blaming the search, when there are none', () => {
     mockGroups.current = []
-    const { getByTestId, rerender } = render(<MarginMarketSelector />)
-    expect(getByTestId(TestID.MarginMarketsEmpty).textContent).toBe('No long markets available')
-    mockSide.current = MarginDirection.SHORT
-    rerender(<MarginMarketSelector />)
-    expect(getByTestId(TestID.MarginMarketsEmpty).textContent).toBe('No short markets available')
+    const { getByTestId } = render(<MarginMarketSelector />)
+    expect(getByTestId(TestID.MarginMarketsEmpty).textContent).toBe('No markets available')
   })
 
   it('reads as loading, not as empty, before the markets query resolves', () => {
@@ -472,7 +389,7 @@ describe('MarginMarketSelector', () => {
 
   it('labels each column once in the list header, with no venue-only columns', () => {
     const { getAllByText, queryByText } = render(<MarginMarketSelector />)
-    for (const label of ['Pair', 'Mark price', '24h', 'Max lev.']) {
+    for (const label of ['Pair', 'Lowest rate', 'Max liq.', 'Price', '24h', 'Max lev.']) {
       expect(getAllByText(label)).toHaveLength(1)
     }
     expect(queryByText('Borrow rate')).toBeNull()
@@ -488,10 +405,11 @@ describe('MarginMarketSelector', () => {
       paymentToken: undefined,
       side: MarginDirection.LONG,
       pinnedVenue: undefined,
+      marginAmount: '',
     })
   })
 
-  it('writes a short pair’s reversed key and side from the group, not the pair', () => {
+  it('lands a press on the form’s side, writing a short’s reversed key and side from the group', () => {
     mockSide.current = MarginDirection.SHORT
     const { getAllByTestId } = render(<MarginMarketSelector />)
     // SHORT_ETH_USDC's only pair carries no `direction`, so reading the pair would write LONG.
@@ -501,6 +419,7 @@ describe('MarginMarketSelector', () => {
       paymentToken: undefined,
       side: MarginDirection.SHORT,
       pinnedVenue: undefined,
+      marginAmount: '',
     })
   })
 })

@@ -13,7 +13,7 @@ exports[`PoolDetailsStatsButton > loading skeleton shown correctly 1`] = `
       <div
         aria-busy="true"
         class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-        style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+        style="flex-direction: row; width: 100%; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
       >
         <div
           class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[24px] rounded-[12px] [background:var(--c-b)]"
@@ -31,7 +31,7 @@ exports[`PoolDetailsStatsButton > loading skeleton shown correctly 1`] = `
       <div
         aria-busy="true"
         class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0"
-        style="flex-direction: row; width: 100%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
+        style="flex-direction: row; width: 100%; -webkit-mask-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.5) 30%, rgb(0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 70%); -webkit-mask-size: 200%; animation-name: myc-shimmer; animation-timing-function: linear; animation-iteration-count: infinite; animation-duration: 1s;"
       >
         <div
           class="flex flex-col items-stretch basis-auto box-border relative min-h-[0px] min-w-[0px] shrink-0 w-[var(--c-w)] h-[24px] rounded-[12px] [background:var(--c-b)]"
@@ -69,7 +69,7 @@ exports[`PoolDetailsStatsButton > renders both buttons correctly 1`] = `
               fill="none"
               focusable="false"
               stroke-width="8"
-              style="color: currentColor; width: 20.7px; height: 20.7px;"
+              style="color: currentcolor; width: 20.7px; height: 20.7px;"
               viewBox="0 0 24 24"
             >
               <path
@@ -98,7 +98,7 @@ exports[`PoolDetailsStatsButton > renders both buttons correctly 1`] = `
               fill="none"
               focusable="false"
               stroke-width="8"
-              style="color: currentColor; width: 20.7px; height: 20.7px;"
+              style="color: currentcolor; width: 20.7px; height: 20.7px;"
               viewBox="0 0 24 24"
             >
               <path

@@ -6,19 +6,22 @@ import { UniverseChainId } from '@universe/chains'
 import { useMedia } from '@universe/mycelium'
 import type { ComponentProps } from 'react'
 import i18n from 'uniswap/src/i18n'
+import { LIVE_POOL_VOLUME_PERIODS } from '~/components/Charts/timeLabels'
 import { PoolSortFields } from '~/data/pools/poolStats'
 import { TimePeriod } from '~/data/util'
 import { createExploreTablesFilterStore } from '~/features/Explore/state/exploreTablesFilterStore'
-import { LIVE_POOL_VOLUME_PERIODS } from '~/features/Explore/timeLabels'
 import { VolumeTimeFrameSelector } from '~/features/Explore/VolumeTimeFrameSelector'
 import { hookPoolsFixtureQueryOptions } from '~/features/Hooks/poolQueries'
-import { type ListPoolsAsPoolStatsResult, useListPoolsAsPoolStats } from '~/pages/Explore/hooks/useListPoolsAsPoolStats'
-import { PoolsTable } from '~/pages/Explore/tables/Pools/PoolTable'
+import {
+  type ListPoolsAsPoolStatsResult,
+  useListPoolsAsPoolStats,
+} from '~/features/Liquidity/hooks/useListPoolsAsPoolStats'
+import { PoolsTable } from '~/features/Liquidity/PoolsTable/PoolsTable'
 import {
   PoolTableStoreContextProvider,
   usePoolTableStore,
   usePoolTableStoreActions,
-} from '~/pages/Explore/tables/Pools/poolTableStore'
+} from '~/features/Liquidity/PoolsTable/state/poolTableStore'
 import { HookDetailsPoolsTable } from '~/pages/HookDetails/components/HookDetailsPoolsTable'
 import { act, render, screen } from '~/test-utils/render'
 import type { PoolStat } from '~/types/explore'
@@ -31,7 +34,7 @@ vi.mock('@universe/mycelium', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@universe/mycelium')>()),
   useMedia: vi.fn(),
 }))
-vi.mock('~/pages/Explore/hooks/useListPoolsAsPoolStats', () => ({ useListPoolsAsPoolStats: vi.fn() }))
+vi.mock('~/features/Liquidity/hooks/useListPoolsAsPoolStats', () => ({ useListPoolsAsPoolStats: vi.fn() }))
 vi.mock('~/features/Hooks/poolQueries', () => ({
   hookPoolsFixtureQueryOptions: vi.fn((args: Parameters<typeof hookPoolsFixtureQueryOptions>[0]) => ({
     queryKey: ['hook-pools-test', args],
@@ -45,7 +48,7 @@ vi.mock('~/features/Explore/state/exploreTablesFilterStore', async (importOrigin
 vi.mock('~/features/Explore/VolumeTimeFrameSelector', () => ({
   VolumeTimeFrameSelector: vi.fn(() => null),
 }))
-vi.mock('~/pages/Explore/tables/Pools/PoolTable', () => ({
+vi.mock('~/features/Liquidity/PoolsTable/PoolsTable', () => ({
   PoolsTable: vi.fn(function MockPoolsTable({ pools }: ComponentProps<typeof PoolsTable>) {
     const { setSort } = usePoolTableStoreActions()
 

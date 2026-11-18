@@ -7,9 +7,9 @@ import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import { getListTransactionsQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/transactions/queries'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { isNativeParsedToken, type ParsedToken } from 'uniswap/src/features/dataApi/utils/parsedToken'
+import { useInfiniteLoadMore } from '~/components/Table/hooks/useInfiniteLoadMore'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { parseUniswapTransaction, type PoolTransaction } from '~/data/transactions/poolTransaction'
-import { useInfiniteLoadMore } from '~/features/Explore/hooks/useInfiniteLoadMore'
 import {
   getPoolTableTransactionTypeTranslation,
   PoolTableTransaction,

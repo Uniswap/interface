@@ -1,8 +1,8 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { Flex, Text, TouchableArea } from '@universe/mycelium'
+import { Flex } from '@universe/mycelium'
 import { InfoCircleFilled } from '@universe/mycelium/icons/InfoCircleFilled'
-import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
-import { PropsWithChildren, ReactNode, useCallback, useState } from 'react'
+import { SettingsRow } from '@universe/transactions-ui'
+import { PropsWithChildren, useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { InfoTooltip } from 'uniswap/src/components/tooltip/InfoTooltip'
@@ -29,64 +29,44 @@ export function TransactionSettingRow({ setting, setSelectedSetting }: Transacti
 
   const [showInfoModal, setShowInfoModal] = useState(false)
 
-  const onPressControl = useCallback(() => {
-    // If the setting has a screen, navigate to it, else inline control will handle the interaction.
-    if (Screen) {
-      setSelectedSetting(setting)
-    }
-  }, [Screen, setting, setSelectedSetting])
+  // Inline controls handle their own interaction; only a setting with a screen navigates.
+  const onPressControl = useCallback(() => setSelectedSetting(setting), [setting, setSelectedSetting])
+  const onPressInfo = useCallback(() => setShowInfoModal(true), [])
+  const onCloseInfoModal = useCallback(() => setShowInfoModal(false), [])
 
-  const InfoIcon = <InfoCircleFilled color="$neutral3" size="$icon.16" />
+  const settingsRow = (
+    <SettingsRow
+      label={renderTitle(t)}
+      description={Description ? <Description /> : undefined}
+      infoTooltip={
+        renderTooltip ? (
+          <InfoTooltip
+            trigger={<InfoCircleFilled color="$neutral3" size="$icon.16" />}
+            text={renderTooltip(t)}
+            button={
+              tooltipLearnMoreUrl ? (
+                <LearnMoreLink url={tooltipLearnMoreUrl} textVariant="buttonLabel4" textColor="$neutral1" />
+              ) : undefined
+            }
+          />
+        ) : undefined
+      }
+      warning={Warning ? <Warning /> : undefined}
+      value={<Control />}
+      onPress={Screen ? onPressControl : undefined}
+      onPressInfo={InfoModal ? onPressInfo : undefined}
+    />
+  )
 
-  const row = (
-    <>
-      <Flex>
-        <Flex centered row columnGap="$spacing16" justifyContent="space-between">
-          <Flex flexGrow={1} flexShrink={1} minWidth={0}>
-            <TouchableAreaWrapper isTouchable={!!InfoModal} onPress={(): void => setShowInfoModal(true)}>
-              <Flex gap="$spacing2" justifyContent="center" minHeight={48}>
-                <Flex row alignItems="center" gap="$spacing4" minWidth={0}>
-                  <Text color="$neutral1" flexShrink={1} variant="subheading2" whiteSpace="initial">
-                    {renderTitle(t)}
-                  </Text>
-                  {InfoModal && InfoIcon}
-                  {!!renderTooltip && (
-                    <InfoTooltip
-                      trigger={InfoIcon}
-                      text={renderTooltip(t)}
-                      button={
-                        tooltipLearnMoreUrl ? (
-                          <LearnMoreLink url={tooltipLearnMoreUrl} textVariant="buttonLabel4" textColor="$neutral1" />
-                        ) : undefined
-                      }
-                    />
-                  )}
-                </Flex>
-                {Description && (
-                  <Text color="$neutral2" variant="body3">
-                    <Description />
-                  </Text>
-                )}
-                {Warning && <Warning />}
-              </Flex>
-            </TouchableAreaWrapper>
-          </Flex>
-          <TouchableArea
-            group
-            flexDirection="row"
-            alignItems="center"
-            gap="$spacing4"
-            justifyContent="flex-end"
-            flexShrink={1}
-            onPress={onPressControl}
-          >
-            <Control />
-            {Screen && <RotatableChevron color="$neutral3" direction="right" size="$icon.24" />}
-          </TouchableArea>
-        </Flex>
-        {InfoModal && <InfoModal isOpen={showInfoModal} onClose={(): void => setShowInfoModal(false)} />}
-      </Flex>
-    </>
+  // The info modal stays inside the row's frame, as before: a closed web Modal still renders an
+  // empty wrapper for a moment, which the list's gap would space out.
+  const row = InfoModal ? (
+    <Flex>
+      {settingsRow}
+      <InfoModal isOpen={showInfoModal} onClose={onCloseInfoModal} />
+    </Flex>
+  ) : (
+    settingsRow
   )
 
   // Conditional wrapper logic is needed to follow rules of hooks due to optional feature flag
@@ -103,12 +83,4 @@ function GateWrapper({ featureFlag, children }: PropsWithChildren<{ featureFlag:
     return null
   }
   return <>{children}</>
-}
-
-function TouchableAreaWrapper({
-  isTouchable,
-  onPress,
-  children,
-}: PropsWithChildren<{ isTouchable: boolean; onPress: () => void }>): ReactNode {
-  return isTouchable ? <TouchableArea onPress={onPress}>{children}</TouchableArea> : children
 }

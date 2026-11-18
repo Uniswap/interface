@@ -1,27 +1,44 @@
-import { Flex, Text, TouchableArea } from '@universe/mycelium'
+import { Flex, Text, Tooltip, TouchableArea } from '@universe/mycelium'
 import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
+import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
 import { useEvent } from 'utilities/src/react/hooks'
+import { InfoBadge, infoBadgePlacement } from '~/components/Badge/InfoBadge'
 import type { MarginMarket } from '~/constants/margin'
 import { getMarginPairLogoProps } from '~/features/margin/hooks/useMarginCurrencyInfos'
 import { useMarginMarkets } from '~/features/margin/hooks/useMarginMarkets'
-import { formatMaxLeverage, scaledE18ToNumber } from '~/features/margin/utils/marginFormat'
-import { marginPairGroupLabel } from '~/features/margin/utils/marginTokenDisplay'
+import {
+  formatBorrowRate,
+  formatMarginDebtUnits,
+  formatMaxLeverage,
+  marginVenueLabel,
+  scaledE18ToNumber,
+} from '~/features/margin/utils/marginFormat'
+import { marginPairGroupLabel, marginUnwrapSymbol } from '~/features/margin/utils/marginTokenDisplay'
 import { useMarginStats24h } from '~/pages/Swap/Margin/chart/useMarginChartData'
 import {
   CHANGE_COL_WIDTH,
   columnGap,
   COMPACT_PRICE_COL_WIDTH,
+  FigureCell,
   HeaderCell,
+  LOWEST_RATE_COL_WIDTH,
   MARK_PRICE_COL_WIDTH,
   MAX_LEV_COL_WIDTH,
+  MAX_LIQUIDITY_COL_WIDTH,
   PAIR_LOGO_SIZE,
   PriceCells,
   ROW_PADDING_X,
 } from '~/pages/Swap/Margin/components/MarginMarketSelectorCells'
-import { marginPairMaxLeverage, type MarginPairRowData } from '~/pages/Swap/Margin/marginPairVenueList'
+import {
+  marginPairDeepestVenue,
+  marginPairLowestBorrowRateBps,
+  marginPairMaxLeverage,
+  type MarginPairRowData,
+} from '~/pages/Swap/Margin/marginPairVenueList'
 
 const PAIR_ROW_HEIGHT = 56
 
@@ -51,18 +68,66 @@ export function PairColumnHeader({ compact }: { compact: boolean }): JSX.Element
         <HeaderCell label={t('margin.selector.columnMarkPrice')} width={COMPACT_PRICE_COL_WIDTH} />
       ) : (
         <>
+          <HeaderCell label={t('margin.selector.columnLowestRate')} width={LOWEST_RATE_COL_WIDTH} />
+          <HeaderCell label={t('margin.selector.columnMaxLiquidity')} width={MAX_LIQUIDITY_COL_WIDTH} />
           <HeaderCell label={t('margin.selector.columnMarkPrice')} width={MARK_PRICE_COL_WIDTH} />
           <HeaderCell label={t('margin.selector.columnChange24h')} width={CHANGE_COL_WIDTH} />
-          <HeaderCell label={t('margin.selector.columnMaxLeverage')} width={MAX_LEV_COL_WIDTH} />
         </>
       )}
+      <HeaderCell label={t('margin.selector.columnMaxLeverage')} width={MAX_LEV_COL_WIDTH} />
     </Flex>
   )
 }
 
-// Pressing a row selects only the pair; the venue is routed.
+// "2 markets · Long · Short" as the pools fee-tier chips: the pair's distinct venues, then the sides it
+// trades. Hovering lists each venue's borrow rate per side, venues sorted by id: a group's pairs are
+// ordered by live rate, which would reshuffle on every poll.
+function PairSides({ sides }: { sides: MarginPairRowData[] }): JSX.Element {
+  const { t } = useTranslation()
+  const sideLabel = ({ group }: MarginPairRowData): string =>
+    group.direction === MarginDirection.SHORT ? t('margin.side.short') : t('margin.side.long')
+  const venues = [...new Set(sides.flatMap((side) => side.venues.map((pair) => pair.venue)))].sort()
+  const labels = [t('margin.selector.marketCount', { count: venues.length }), ...sides.map(sideLabel)]
+  return (
+    <Tooltip placement="bottom-start" delay={{ open: 200, close: 0 }}>
+      <Tooltip.Trigger>
+        <Flex row gap="$spacing2" testID={TestID.MarginPairSides}>
+          {labels.map((label, index) => (
+            <InfoBadge key={label} size="small" placement={infoBadgePlacement(index, labels.length)}>
+              {label}
+            </InfoBadge>
+          ))}
+        </Flex>
+      </Tooltip.Trigger>
+      <Tooltip.Content>
+        <Tooltip.Arrow />
+        <Flex gap="$spacing4">
+          <Text variant="body4" color="$neutral2">
+            {t('margin.route.column.borrowRate')}
+          </Text>
+          {venues.map((venue) => (
+            <Flex key={venue} row justifyContent="space-between" gap="$spacing16">
+              <Text variant="body4">{marginVenueLabel(venue)}</Text>
+              <Text variant="body4">
+                {sides
+                  .flatMap((side) => {
+                    const pair = side.venues.find((candidate) => candidate.venue === venue)
+                    return pair ? [`${sideLabel(side)} ${formatBorrowRate(pair.borrowRateBps)}`] : []
+                  })
+                  .join(' · ')}
+              </Text>
+            </Flex>
+          ))}
+        </Flex>
+      </Tooltip.Content>
+    </Tooltip>
+  )
+}
+
+// One row per pair, both sides folded in. `row` is the side a press selects; the venue is routed.
 function PairRowContent({
   row,
+  sides,
   currencyInfos,
   mark,
   changePct,
@@ -70,14 +135,16 @@ function PairRowContent({
   onSelect,
 }: {
   row: MarginPairRowData
+  sides: MarginPairRowData[]
   currencyInfos: Map<string, CurrencyInfo>
   mark?: number
   changePct?: number
   compact: boolean
   onSelect: (row: MarginPairRowData) => void
 }): JSX.Element {
-  const { t } = useTranslation()
+  const locale = useCurrentLocale()
   const maxLeverage = formatMaxLeverage(marginPairMaxLeverage(row))
+  const deepest = marginPairDeepestVenue(row)
   const onPress = useEvent(() => onSelect(row))
   return (
     <TouchableArea
@@ -100,34 +167,51 @@ function PairRowContent({
           outputCurrencyInfo={null}
           {...getMarginPairLogoProps({ base: row.group.base, quote: row.group.quote, currencyInfos })}
         />
-        <Flex shrink minWidth={0}>
+        <Flex shrink minWidth={0} gap="$spacing2">
           <Text variant="body2" color="$neutral1" numberOfLines={1}>
             {marginPairGroupLabel({ group: row.group })}
           </Text>
-          {compact ? (
-            <Text variant="body4" color="$neutral2" numberOfLines={1}>
-              {t('margin.stats.maxLeverage', { max: maxLeverage })}
-            </Text>
-          ) : null}
+          <PairSides sides={sides} />
         </Flex>
       </Flex>
+      {compact
+        ? null
+        : [
+            <FigureCell
+              key="rate"
+              value={formatBorrowRate(marginPairLowestBorrowRateBps(row))}
+              width={LOWEST_RATE_COL_WIDTH}
+            />,
+            <FigureCell
+              key="liquidity"
+              value={
+                deepest?.availableBorrowLiquidity === undefined
+                  ? '—'
+                  : formatMarginDebtUnits({
+                      raw: deepest.availableBorrowLiquidity,
+                      decimals: deepest.debt.decimals,
+                      symbol: marginUnwrapSymbol(deepest.debt),
+                      locale,
+                    })
+              }
+              width={MAX_LIQUIDITY_COL_WIDTH}
+            />,
+          ]}
       <PriceCells mark={mark} changePct={changePct} compact={compact} />
-      {compact ? null : (
-        <Text width={MAX_LEV_COL_WIDTH} flexShrink={0} textAlign="right" variant="body3" color="$neutral1">
-          {maxLeverage}
-        </Text>
-      )}
+      <FigureCell value={maxLeverage} width={MAX_LEV_COL_WIDTH} />
     </TouchableArea>
   )
 }
 
 export function MarginPairRow({
   row,
+  sides,
   currencyInfos,
   compact,
   onSelect,
 }: {
   row: MarginPairRowData
+  sides: MarginPairRowData[]
   currencyInfos: Map<string, CurrencyInfo>
   compact: boolean
   onSelect: (row: MarginPairRowData) => void
@@ -135,9 +219,16 @@ export function MarginPairRow({
   const { getPairMarket } = useMarginMarkets()
   const market = getPairMarket(row.group.pairKey)
   return market ? (
-    <PricedPairRow row={row} market={market} currencyInfos={currencyInfos} compact={compact} onSelect={onSelect} />
+    <PricedPairRow
+      row={row}
+      sides={sides}
+      market={market}
+      currencyInfos={currencyInfos}
+      compact={compact}
+      onSelect={onSelect}
+    />
   ) : (
-    <PairRowContent row={row} currencyInfos={currencyInfos} compact={compact} onSelect={onSelect} />
+    <PairRowContent row={row} sides={sides} currencyInfos={currencyInfos} compact={compact} onSelect={onSelect} />
   )
 }
 
@@ -146,6 +237,7 @@ function PricedPairRow({
   ...props
 }: {
   row: MarginPairRowData
+  sides: MarginPairRowData[]
   market: MarginMarket
   currencyInfos: Map<string, CurrencyInfo>
   compact: boolean

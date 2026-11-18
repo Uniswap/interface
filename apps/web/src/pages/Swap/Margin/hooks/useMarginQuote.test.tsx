@@ -230,6 +230,13 @@ describe('useMarginQuote — combined-key debouncing', () => {
     expect(leverageTargetOf(lastParams())).toBe('2.5')
   })
 
+  it('is not debouncing on mount, before any edit', () => {
+    const { result } = renderHook((props: UseMarginQuoteParams) => useMarginQuote(props), {
+      initialProps: baseProps({ funding: { kind: 'none' }, targetLeverageX18: undefined }),
+    })
+    expect(result.current.isDebouncing).toBe(false)
+  })
+
   it('exposes the combined key for visible-matches-submitted checks', () => {
     const { result, rerender } = renderHook((props: UseMarginQuoteParams) => useMarginQuote(props), {
       initialProps: baseProps({ funding: { kind: 'withdraw', withdrawAmountRaw: '10' }, targetLeverageX18: '20' }),

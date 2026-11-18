@@ -2,7 +2,7 @@
 import { createColumnHelper } from '@tanstack/react-table'
 import type { RankedMultichainToken } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { UniverseChainId } from '@universe/chains'
-import { useIsTokenCategoriesEnabled } from '@universe/gating'
+import { multichainTokenKey } from '@universe/data-api'
 import { Flex, Text } from '@universe/mycelium'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
@@ -13,7 +13,6 @@ import { getIsStablecoin } from 'uniswap/src/components/charts/utils'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useFeatureFlaggedChainIds } from 'uniswap/src/features/chains/hooks/useFeatureFlaggedChainIds'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { getRWAHeaderIdentity } from 'uniswap/src/features/rwa/getRWAHeaderIdentity'
 import { useRWAWhitelist } from 'uniswap/src/features/rwa/useRWAWhitelist'
 import { ElementName, SectionName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -41,10 +40,10 @@ import {
 import { TokenSortMethod } from '~/components/Tokens/constants'
 import { SparklineMap } from '~/data/types'
 import { getTokenDetailsURL, OrderDirection, unwrapToken } from '~/data/util'
+import { getTokenDescriptionColumnSize, TokenDescription } from '~/features/Explore/components/TokenDescription'
 import { useExploreParams } from '~/features/Explore/hooks/useExploreParams'
 import { useExploreTablesFilterStore } from '~/features/Explore/state/exploreTablesFilterStore'
 import { getExploreMultichainExpandRowMetrics } from '~/features/Explore/state/listTokens/utils/getExploreMultichainExpandRowMetrics'
-import { multichainTokenKey } from '~/features/Explore/state/listTokens/utils/multichainTokenKey'
 import {
   getChainIdsByVolume,
   getVolumeForTimePeriod,
@@ -53,7 +52,6 @@ import {
 import { LivePriceCell } from '~/pages/Explore/tables/Tokens/LivePriceCell'
 import { getNativeBrandingChainId } from '~/pages/Explore/tables/Tokens/nativeBrandingChainId'
 import { resolveRankedTokenIssuer } from '~/pages/Explore/tables/Tokens/rankedTokenIssuer'
-import { getTokenDescriptionColumnSize, TokenDescription } from '~/pages/Explore/tables/Tokens/TokenDescription'
 import { TokenTableHeader } from '~/pages/Explore/tables/Tokens/TokenTableHeader'
 import { useTokenTableSortStore } from '~/pages/Explore/tables/Tokens/tokenTableSortStore'
 import type { TokenTableValue } from '~/pages/Explore/tables/Tokens/tokenTableTypes'
@@ -101,7 +99,6 @@ export function TokenTable({
   const exploreChainId = chainFilter ? getChainIdFromChainUrlParam(chainFilter) : undefined
   const featureFlaggedChainIds = useFeatureFlaggedChainIds()
   const rwaWhitelist = useRWAWhitelist()
-  const tokenCategoriesEnabled = useIsTokenCategoriesEnabled()
 
   const { lg: isLg } = useMedia()
   const textVariant = isLg ? '$body3' : '$body2'
@@ -143,12 +140,7 @@ export function TokenTable({
         )
         const chainIdsByVolume =
           getChainIdsByVolume({ rankedToken, timePeriod, allowedChainIds: featureFlaggedChainIds }) ?? []
-        const { rwaMatch, issuer } = resolveRankedTokenIssuer({ multichainToken: mc, rwaWhitelist })
-        const { name } = getRWAHeaderIdentity({
-          rwaMatch,
-          fallbackName: unwrappedToken.name,
-          plainTokenNames: tokenCategoriesEnabled,
-        })
+        const { issuer } = resolveRankedTokenIssuer({ multichainToken: mc, rwaWhitelist })
         // Count and TDP link mode derive from the same filtered set as the "N networks" label,
         // or a flag-disabled leg desyncs them. The volume cell's info affordance gates separately
         // on the visible breakdown (hasVolumeBreakdown), matching the popover's own condition.
@@ -172,7 +164,7 @@ export function TokenTable({
               <TokenDescription
                 chainFilterId={exploreChainId}
                 chainIdsByVolume={chainIdsByVolume}
-                name={name}
+                name={unwrappedToken.name}
                 symbol={unwrappedToken.symbol}
                 address={unwrappedToken.address}
                 chainId={chainId}
@@ -207,7 +199,7 @@ export function TokenTable({
                 multichainId={rowKey}
                 pricePercentChange={delta1d}
                 sparklineMap={sparklines}
-                isStablecoin={getIsStablecoin({ tokenCategoriesEnabled, categoryIds: mc.categoryIds }) === true}
+                isStablecoin={getIsStablecoin(mc.categoryIds) === true}
               />
             ),
             link: getTokenDetailsURL({
@@ -243,7 +235,6 @@ export function TokenTable({
       filterString,
       formatPercent,
       rwaWhitelist,
-      tokenCategoriesEnabled,
       sparklines,
       timePeriod,
       tokenSortRank,

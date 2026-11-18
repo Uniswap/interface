@@ -1,13 +1,13 @@
 /**
- * Web leg of `CloseIconWithHover`: a DOM Flex with mouse hover and Enter/Space
- * handling. Lives under `internal/` because the `./icons/*` exports map takes
- * an icon's `.tsx` file literally (a per-icon `.native.tsx` twin is never
- * resolved), and the icon generator's census treats every top-level `.tsx` in
- * `icons/` as an icon component.
+ * Web leg of `CloseIconWithHover`: a TouchableArea (so it has a tab stop and Enter/Space activation
+ * like every other icon-only button) with a hover color. Lives under `internal/` because the
+ * `./icons/*` exports map takes an icon's `.tsx` file literally (a per-icon `.native.tsx` twin is
+ * never resolved), and the icon generator's census treats every top-level `.tsx` in `icons/` as an
+ * icon component.
  */
 import { useState } from 'react'
-import type { KeyboardEvent, ReactElement } from 'react'
-import { FlexCompat as Flex } from '../../../flex-compat/FlexCompat'
+import type { ReactElement } from 'react'
+import { TouchableAreaCompat as TouchableArea } from '../../../touchable-area/TouchableAreaCompat'
 import type { CloseIconProps } from '../CloseIconWithHover'
 import { X } from '../X'
 
@@ -19,32 +19,27 @@ export function CloseIconFrame({
   hoverColor = 'var(--neutral2-hovered, var(--neutral2))',
   testId,
   role,
+  'aria-label': ariaLabel,
 }: CloseIconProps): ReactElement {
   const [hovered, setHovered] = useState(false)
 
-  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>): void => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault()
-      onClose()
-    }
-  }
+  const handleHoverIn = (): void => setHovered(true)
+  const handleHoverOut = (): void => setHovered(false)
 
   return (
-    <Flex
+    <TouchableArea
       justifyContent="flex-start"
       flexDirection="column"
-      // TODO(INFRA-4589): no prop names this role="button", so it's announced as an unnamed button
-      // (aria-command-name). Accept an aria-label, defaulting to "Close".
+      // The X takes its colour from the hover state here, not from the pressable's colour injection.
+      shouldAutomaticallyInjectColors={false}
       role={role}
-      tabIndex={0}
-      data-testid={testId}
-      style={{ cursor: 'pointer' }}
-      onClick={onClose}
-      onKeyDown={handleKeyDown}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      aria-label={ariaLabel}
+      testID={testId}
+      onPress={onClose}
+      onHoverIn={handleHoverIn}
+      onHoverOut={handleHoverOut}
     >
       <X size={size} color={hovered ? hoverColor : color} />
-    </Flex>
+    </TouchableArea>
   )
 }

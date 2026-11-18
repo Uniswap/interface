@@ -14,6 +14,7 @@ export function MarginLeverageSlider({
   trackColor = '$statusSuccess',
   inactiveTrackColor = '$surface3',
   thumbColor = '$neutral1',
+  thumbBorderColor,
   tickColor = '$neutral2',
   trackHeight = 4,
 }: {
@@ -25,23 +26,29 @@ export function MarginLeverageSlider({
   trackColor?: string
   inactiveTrackColor?: string
   thumbColor?: string
+  thumbBorderColor?: string
   tickColor?: string
   trackHeight?: number
 }): JSX.Element {
   const { t } = useTranslation()
-  // Integer marks 1x..⌊cap⌋x at their true track fraction, plus Max at 100%. Drop any integer that would
-  // collide with the Max label near the right edge. Each tick carries its exact value for the label press:
+  // Integer marks 1x..⌊cap⌋x at their true track fraction, plus the real cap at 100%. Drop any integer
+  // that would collide with the cap's label near the right edge. Each tick carries its exact value for the label press:
   // recovering it from the fraction drifts on a fractional cap (5.7 cap, 4x → 3.9999999999999996).
   const sliderTicks = [
     ...Array.from({ length: Math.floor(cap) }, (_, index) => ({
       label: `${index + 1}x`,
       value: index + 1,
       fraction: index / (cap - 1),
-    })).filter((tick) => tick.fraction <= 0.9),
-    { label: t('common.max'), value: cap, fraction: 1 },
+    })).filter((tick) => tick.fraction <= 0.88),
+    { label: `${Number(cap.toFixed(2))}x`, value: cap, fraction: 1 },
   ]
-  // Dots sit only on the inactive track segment (ahead of the thumb), matching the design.
+  // Dots sit only on the inactive track segment (ahead of the thumb), matching the design: a major dot
+  // per integer mark and a smaller, fainter one halfway between consecutive integers.
   const thumbFraction = (Math.min(value, cap) - 1) / (cap - 1)
+  const dots = Array.from({ length: Math.floor((cap - 1) * 2) }, (_, index) => {
+    const at = 1.5 + index / 2
+    return { at, major: Number.isInteger(at), fraction: (at - 1) / (cap - 1) }
+  }).filter((dot) => dot.fraction > thumbFraction && dot.fraction < 1)
 
   return (
     <Flex gap="$spacing8" width="100%">
@@ -55,26 +62,25 @@ export function MarginLeverageSlider({
           trackColor={inactiveTrackColor}
           activeColor={trackColor}
           thumbColor={thumbColor}
+          thumbBorderColor={thumbBorderColor}
           trackHeight={trackHeight}
           thumbSize={16}
           ariaLabel={t('margin.leverage.sliderLabel')}
           ariaValueText={`${Math.min(value, cap).toFixed(2)}x`}
         />
-        {sliderTicks
-          .filter((tick) => tick.fraction > thumbFraction && tick.fraction < 1)
-          .map((tick) => (
-            <Flex
-              key={`dot-${tick.label}`}
-              position="absolute"
-              width={4}
-              height={4}
-              borderRadius="$roundedFull"
-              backgroundColor={tickColor}
-              opacity={0.6}
-              pointerEvents="none"
-              style={{ left: `${tick.fraction * 100}%`, top: '50%', transform: 'translate(-50%, -50%)' }}
-            />
-          ))}
+        {dots.map((dot) => (
+          <Flex
+            key={`dot-${dot.at}`}
+            position="absolute"
+            width={dot.major ? 4 : 2}
+            height={dot.major ? 4 : 2}
+            borderRadius="$roundedFull"
+            backgroundColor={tickColor}
+            opacity={dot.major ? 0.6 : 0.35}
+            pointerEvents="none"
+            style={{ left: `${dot.fraction * 100}%`, top: '50%', transform: 'translate(-50%, -50%)' }}
+          />
+        ))}
       </Flex>
       <Flex height={16} width="100%" position="relative">
         {sliderTicks.map((tick) => {

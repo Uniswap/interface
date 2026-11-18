@@ -1,15 +1,6 @@
 import { Flex } from '@universe/mycelium'
 import { ExploreCategoryTablesSection } from '~/pages/Explore/categories/ExploreCategoryTablesSection'
-import { AssetShelf } from '~/pages/Explore/rwa/shelf/AssetShelf'
 import { TrendingShelf } from '~/pages/Explore/trending/TrendingShelf'
-
-export function ExploreAssetShelfSection(): JSX.Element {
-  return (
-    <Flex mt="$spacing48" mb="$spacing24" $md={{ mt: '$spacing32', mb: '$spacing20' }}>
-      <AssetShelf />
-    </Flex>
-  )
-}
 
 export function ExploreTrendingShelfSection(): JSX.Element {
   return (

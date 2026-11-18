@@ -1,4 +1,4 @@
-import { Flex, iconSizes, Skeleton, Text, TouchableArea } from '@universe/mycelium'
+import { Flex, type FlexProps, iconSizes, Skeleton, Text, TouchableArea } from '@universe/mycelium'
 import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
@@ -6,7 +6,7 @@ import type { EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 
-export const EARN_VAULT_CHIP_MAX_WIDTH = 240
+const EARN_VAULT_CHIP_MAX_WIDTH = 240
 export const EARN_VAULT_CHIP_FRAME_PROPS = {
   row: true,
   alignItems: 'center',
@@ -35,10 +35,15 @@ export function EarnVaultChip({
   onPress,
   vault,
   layout = 'horizontal',
+  width,
+  borderRadius,
 }: {
   vault: EarnVaultInfo
   onPress: () => void
   layout?: 'horizontal' | 'vertical'
+  /** Fixed chip width, replacing the default max width. */
+  width?: number
+  borderRadius?: FlexProps['borderRadius']
 }): JSX.Element {
   const { t } = useTranslation()
   const { formatPercent } = useLocalizationContext()
@@ -49,6 +54,8 @@ export function EarnVaultChip({
     <TouchableArea
       {...EARN_VAULT_CHIP_FRAME_PROPS}
       {...(layout === 'vertical' ? EARN_VAULT_CHIP_VERTICAL_PROPS : undefined)}
+      {...(width !== undefined && { width, maxWidth: width })}
+      {...(borderRadius !== undefined && { borderRadius })}
       hoverStyle={{ backgroundColor: '$surface2' }}
       testID={`${TestID.EarnVaultChipPrefix}${currency?.symbol}`}
       onPress={onPress}

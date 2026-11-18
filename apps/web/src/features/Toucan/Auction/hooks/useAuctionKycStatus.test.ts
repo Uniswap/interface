@@ -1,11 +1,13 @@
-import { renderHook } from '@testing-library/react'
+import { act, renderHook } from '@testing-library/react'
 import { VerifyWalletResponse } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/auction_pb'
 import {
   AuctionValidation,
   KycVerificationStatus,
   ValidationType,
+  ZkPassportVerificationData,
 } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/types_pb'
 import { UniverseChainId } from '@universe/chains'
+import { KycProvider } from 'uniswap/src/data/apiClients/dataApiService/auctions/useVerifyWallet'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { useAuctionKycStatus } from '~/features/Toucan/Auction/hooks/useAuctionKycStatus'
 
@@ -25,6 +27,12 @@ vi.mock('uniswap/src/data/apiClients/dataApiService/auctions/useVerifyWallet', a
     useVerifyWalletQuery: (...args: unknown[]) => mockUseVerifyWalletQuery(...args),
   }
 })
+
+const mockUseZkPassportMint = vi.fn()
+
+vi.mock('~/features/Toucan/ZkPassport/useZkPassportMint', () => ({
+  useZkPassportMint: (...args: unknown[]) => mockUseZkPassportMint(...args),
+}))
 
 interface MockValidationParams {
   status?: KycVerificationStatus
@@ -209,6 +217,7 @@ describe('useAuctionKycStatus', () => {
 
       expect(result.current).toEqual({
         auctionNeedsVerification: true,
+        kycProvider: KycProvider.Predicate,
         auctionHasPresale: false,
         isAllowlisted: false,
         canBid: true,
@@ -239,6 +248,7 @@ describe('useAuctionKycStatus', () => {
 
       expect(result.current).toEqual({
         auctionNeedsVerification: true,
+        kycProvider: KycProvider.Predicate,
         auctionHasPresale: true,
         isAllowlisted: true,
         canBid: true,
@@ -269,6 +279,7 @@ describe('useAuctionKycStatus', () => {
 
       expect(result.current).toEqual({
         auctionNeedsVerification: true,
+        kycProvider: KycProvider.Predicate,
         auctionHasPresale: true,
         isAllowlisted: false,
         canBid: false,
@@ -296,6 +307,7 @@ describe('useAuctionKycStatus', () => {
 
       expect(result.current).toEqual({
         auctionNeedsVerification: true,
+        kycProvider: KycProvider.Predicate,
         auctionHasPresale: false,
         isAllowlisted: false,
         canBid: false,
@@ -323,6 +335,7 @@ describe('useAuctionKycStatus', () => {
 
       expect(result.current).toEqual({
         auctionNeedsVerification: true,
+        kycProvider: KycProvider.Predicate,
         auctionHasPresale: false,
         isAllowlisted: false,
         canBid: false,
@@ -350,6 +363,7 @@ describe('useAuctionKycStatus', () => {
 
       expect(result.current).toEqual({
         auctionNeedsVerification: true,
+        kycProvider: KycProvider.Predicate,
         auctionHasPresale: false,
         isAllowlisted: false,
         canBid: false,
@@ -473,6 +487,116 @@ describe('useAuctionKycStatus', () => {
       mockUseVerifyWalletQuery.mockReturnValue(createMockQueryResult({ isLoading: true }))
       const { result } = renderHook(() => useAuctionKycStatus(defaultParams))
       expect(result.current.hasNoRecognizedValidations).toBe(false)
+    })
+  })
+
+  describe('ZKPassport', () => {
+    const POLICY_ID = `0x${'1'.padStart(64, '0')}`
+
+    function mockZkPassportGate({ passed, policyId = POLICY_ID }: { passed: boolean; policyId?: string }): void {
+      mockUseVerifyWalletQuery.mockReturnValue({
+        data: {
+          validations: [
+            new AuctionValidation({
+              validationType: ValidationType.ZKPASSPORT_VERIFICATION,
+              validationPassed: passed,
+              data: {
+                case: 'zkPassportVerificationData',
+                value: new ZkPassportVerificationData({
+                  status: KycVerificationStatus.VERIFICATION_STATUS_NOT_STARTED,
+                  policyId,
+                }),
+              },
+            }),
+          ],
+        },
+        isLoading: false,
+        isError: false,
+      })
+    }
+
+    it('asks for verification like any KYC, minting the credential instead of redirecting', () => {
+      const mint = vi.fn()
+      mockUseZkPassportMint.mockReturnValue(mint)
+      mockZkPassportGate({ passed: false })
+
+      const { result } = renderHook(() => useAuctionKycStatus(defaultParams))
+
+      expect(result.current.kycProvider).toBe(KycProvider.ZkPassport)
+      expect(result.current.auctionNeedsVerification).toBe(true)
+      expect(result.current.canBid).toBe(false)
+      expect(result.current.kycButtonLabel).toBe('toucan.kyc.verifyIdentity')
+      expect(result.current.kycButtonDisabled).toBe(false)
+      expect(mockUseZkPassportMint).toHaveBeenCalledWith(
+        expect.objectContaining({ policyId: POLICY_ID, chainId: defaultParams.chainId }),
+      )
+      act(() => result.current.onKycAction?.())
+      expect(mint).toHaveBeenCalledTimes(1)
+    })
+
+    it('polls for the credential only once the wallet opens ZKPassport', () => {
+      mockUseZkPassportMint.mockReturnValue(vi.fn())
+      mockZkPassportGate({ passed: false })
+
+      const { result } = renderHook(() => useAuctionKycStatus(defaultParams))
+
+      expect(mockUseVerifyWalletQuery).toHaveBeenLastCalledWith(expect.anything(), {
+        currentBlockNumber: undefined,
+        awaitingZkPassportCredential: false,
+      })
+      act(() => result.current.onKycAction?.())
+      expect(mockUseVerifyWalletQuery).toHaveBeenLastCalledWith(expect.anything(), {
+        currentBlockNumber: undefined,
+        awaitingZkPassportCredential: true,
+      })
+    })
+
+    it('stops polling when the user switches to another wallet', () => {
+      mockUseZkPassportMint.mockReturnValue(vi.fn())
+      mockZkPassportGate({ passed: false })
+
+      const { result, rerender } = renderHook((params: typeof defaultParams) => useAuctionKycStatus(params), {
+        initialProps: defaultParams,
+      })
+      act(() => result.current.onKycAction?.())
+      rerender({ ...defaultParams, walletAddress: '0x456' })
+
+      expect(mockUseVerifyWalletQuery).toHaveBeenLastCalledWith(expect.anything(), {
+        currentBlockNumber: undefined,
+        awaitingZkPassportCredential: false,
+      })
+    })
+
+    it('keeps the verify button disabled until ZKPassport can open', () => {
+      mockUseZkPassportMint.mockReturnValue(undefined)
+      mockZkPassportGate({ passed: false })
+
+      const { result } = renderHook(() => useAuctionKycStatus(defaultParams))
+
+      expect(result.current.kycButtonDisabled).toBe(true)
+      expect(result.current.onKycAction).toBeUndefined()
+    })
+
+    it('offers nothing to mint for an auction never registered with the hook', () => {
+      mockUseZkPassportMint.mockReturnValue(undefined)
+      mockZkPassportGate({ passed: false, policyId: '' })
+
+      const { result } = renderHook(() => useAuctionKycStatus(defaultParams))
+
+      expect(mockUseZkPassportMint).toHaveBeenCalledWith(expect.objectContaining({ policyId: undefined }))
+      expect(result.current.canBid).toBe(false)
+      expect(result.current.kycButtonDisabled).toBe(true)
+    })
+
+    it('lets a wallet holding the credential bid, reading as verified', () => {
+      mockUseZkPassportMint.mockReturnValue(undefined)
+      mockZkPassportGate({ passed: true })
+
+      const { result } = renderHook(() => useAuctionKycStatus(defaultParams))
+
+      expect(result.current.canBid).toBe(true)
+      expect(result.current.status).toBe(KycVerificationStatus.VERIFICATION_STATUS_COMPLETED)
+      expect(result.current.kycButtonLabel).toBeUndefined()
     })
   })
 })

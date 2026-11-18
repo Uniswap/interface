@@ -1,15 +1,18 @@
+import type { Currency, Price } from '@uniswap/sdk-core'
 /* oxlint-disable max-lines */
 import { areEvmAddressesEqual } from '@universe/chains'
-import { Flex, Text, TouchableArea } from '@universe/mycelium'
+import { Flex, Separator, Text, TouchableArea } from '@universe/mycelium'
+import { ArrowDown } from '@universe/mycelium/icons/ArrowDown'
 import { Gas } from '@universe/mycelium/icons/Gas'
 import { TestID } from '@universe/test'
 import type { ReactNode } from 'react'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import type { MarginQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { useUSDCPrice } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { MarginDirection, type MarginVenue } from 'uniswap/src/features/transactions/margin/types'
 import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -18,10 +21,17 @@ import { MARGIN_CHAIN_ID, type MarginMarket } from '~/constants/margin'
 import { MarginVenueLogo } from '~/features/margin/components/MarginVenueLogo'
 import { getMarginCurrencyInfo, useMarginCurrencyInfos } from '~/features/margin/hooks/useMarginCurrencyInfos'
 import { useMarginMarkets } from '~/features/margin/hooks/useMarginMarkets'
-import { marginAssetCurrencyId, marginTokenCurrencyId } from '~/features/margin/utils/marginCurrencies'
 import {
+  getMarginEquityCurrency,
+  marginAssetCurrencyId,
+  marginTokenCurrencyId,
+} from '~/features/margin/utils/marginCurrencies'
+import {
+  conversionCaptionEquity,
   exposureUsdValue,
+  formatLeverageX,
   formatLiqDistanceSuffix,
+  getMarginDirectionStyle,
   getMarginHealthStatus,
   marginPriceUnitSymbol,
   marginVenueLabel,
@@ -43,6 +53,8 @@ import { useExecuteMarginPlan } from '~/pages/Swap/Margin/hooks/useExecuteMargin
 import { useIsPlanInFlight } from '~/pages/Swap/Margin/hooks/useIsPlanInFlight'
 import { useMarginMarketsStaleTick } from '~/pages/Swap/Margin/hooks/useMarginMarketsStaleTick'
 import { MarginSwapSide, marginPriceImpactBps } from '~/pages/Swap/Margin/marginPriceImpact'
+import { deriveMarginReceiptDetails } from '~/pages/Swap/Margin/marginReceiptDetails'
+import { deriveMarginReceiptFigures } from '~/pages/Swap/Margin/marginReceiptFigures'
 import { resolveReviewVenuePin } from '~/pages/Swap/Margin/marginReviewVenuePin'
 import {
   displayMarkPriceX18,
@@ -57,22 +69,26 @@ function AmountSection({
   usd,
   logoUrl,
   symbol,
+  chainId,
   trailing,
 }: {
-  label: string
+  label?: string
   value: string
   usd?: string
   logoUrl?: string
   symbol: string
+  chainId?: number
   trailing?: ReactNode
 }): JSX.Element {
   return (
     <Flex row justifyContent="space-between" alignItems="center" gap="$spacing12">
       <Flex gap="$spacing2" flexShrink={1}>
-        <Text variant="body3" color="$neutral2">
-          {label}
-        </Text>
-        <Text variant="heading2" color="$neutral1">
+        {label ? (
+          <Text variant="body3" color="$neutral2">
+            {label}
+          </Text>
+        ) : null}
+        <Text variant="heading3" color="$neutral1">
           {value}
         </Text>
         <Flex row alignItems="center" gap="$spacing6">
@@ -84,9 +100,52 @@ function AmountSection({
           {trailing}
         </Flex>
       </Flex>
-      <TokenLogo size={36} url={logoUrl} symbol={symbol} chainId={MARGIN_CHAIN_ID} hideNetworkLogo />
+      <TokenLogo
+        size={36}
+        url={logoUrl}
+        symbol={symbol}
+        chainId={chainId ?? MARGIN_CHAIN_ID}
+        hideNetworkLogo={!chainId}
+      />
     </Flex>
   )
+}
+
+// Only a full liquidation has a final equity to name; a venue that liquidates in part gets no sentence.
+function LiquidationExplainer({
+  keptUsd,
+  symbol,
+}: {
+  keptUsd: number | undefined
+  symbol: string
+}): JSX.Element | null {
+  const { t } = useTranslation()
+  const { formatNumberOrString } = useLocalizationContext()
+  if (keptUsd === undefined) {
+    return null
+  }
+  const kept = formatNumberOrString({ value: keptUsd, type: NumberType.FiatStandard })
+  // The amount is split back out of the translated sentence so it reads brighter wherever it lands.
+  const [lead, tail] = t('margin.review.liqExplainer', { symbol, equity: kept }).split(kept)
+  return (
+    <Text variant="body4" color="$neutral2">
+      {lead}
+      <Text variant="body4" color="$neutral1">
+        {kept}
+        {tail}
+      </Text>
+    </Text>
+  )
+}
+
+function usdValueAt({
+  amount,
+  price,
+}: {
+  amount: number | undefined
+  price: Price<Currency, Currency> | undefined
+}): number | undefined {
+  return amount !== undefined && price ? amount * Number(price.toSignificant(18)) : undefined
 }
 
 // notionalUsd is computed here, not a wire field: the quote publishes no mark for a non-close action,
@@ -107,11 +166,13 @@ function MarginReviewAmounts({
   quote: MarginQuoteResponse
 }): JSX.Element {
   const { t } = useTranslation()
-  const { formatNumberOrString } = useLocalizationContext()
+  const { formatNumberOrString, convertFiatAmountFormatted } = useLocalizationContext()
   const currencyInfos = useMarginCurrencyInfos()
   const { direction, leverage, paymentCurrency, paymentCurrencyInfo, paymentCurrencyAmount, paymentUsdValue } =
     derivedMarginInfo
+  const { isPaymentDifferentFromCollateral } = derivedMarginInfo
   const market = pinnedMarket
+  const figures = deriveMarginReceiptFigures({ quote, market, direction })
 
   const collateralLogoUrl = getMarginCurrencyInfo({ currencyInfos, currencyId: marginAssetCurrencyId(market) })?.logoUrl
   const debtLogoUrl = getMarginCurrencyInfo({ currencyInfos, currencyId: marginTokenCurrencyId(market.debt) })?.logoUrl
@@ -137,52 +198,133 @@ function MarginReviewAmounts({
     notional !== undefined && markPrice !== undefined
       ? exposureUsdValue({ exposureAmount: notional, mark: markPrice })
       : undefined
-  // Recovered from the projection (the quote publishes no debt figure), in debt-token units.
-  const borrowing = projectedDebtAmount({ quote })
 
   const paymentSymbol = paymentCurrency.symbol ?? ''
-  const fiat = (value?: number): string | undefined =>
-    value !== undefined ? formatNumberOrString({ value, type: NumberType.FiatStandard }) : undefined
+  const paid = Number(paymentCurrencyAmount?.toExact() ?? 0)
+  const collateralSymbol = marginUnwrapSymbol(market.collateral)
+  // The deposit in collateral units: as paid, else what the pay-in swap is expected to land.
+  const equity = isPaymentDifferentFromCollateral
+    ? conversionCaptionEquity({
+        equityInRaw: quote.legs[0]?.bounds.increase?.expectedEquityDelta,
+        decimals: market.collateral.decimals,
+        isPaymentTokenCollateral: false,
+        isQuoteStale: false,
+      })
+    : paid
   const tokenAmount = (value: number, symbol: string): string =>
     `${formatNumberOrString({ value, type: NumberType.TokenTx })} ${symbol}`
+  const paymentUsd = paymentUsdValue
+    ? convertFiatAmountFormatted(paymentUsdValue.toExact(), NumberType.FiatStandard)
+    : undefined
+  // At the collateral's own price, so the pay-in swap's cost shows against the Depositing row; hidden
+  // rather than borrowing the payment's figure when the collateral has no price.
+  const collateralCurrency = useMemo(() => getMarginEquityCurrency(market), [market])
+  const { price: collateralUsdPrice } = useUSDCPrice(collateralCurrency)
+  const collateralUsd = convertFiatAmountFormatted(
+    usdValueAt({ amount: equity, price: collateralUsdPrice }),
+    NumberType.FiatStandard,
+    '',
+  )
 
-  // Leverage multiplies the EXPOSURE. A long's exposure is its total size, so the chip belongs there.
-  // A short's exposure is the leg it borrows — its collateral total is margin plus sale proceeds, one
-  // turn larger — so on a short the chip sits on Borrowing or it contradicts the number beside it.
   // Off the PINNED quote, like every other figure here. `derivedMarginInfo.leverage` is the live form
   // store, which MarginLeverageSection's clamp effect can still lower behind the open sheet (a markets
   // refetch dropping maxLeverage) — the chip would move while the quote Confirm sends does not.
   const pinnedLeverage = quote.display.leverage === undefined ? leverage : Number(quote.display.leverage)
-  const leverageChip = (
-    <Text variant="body3" color="$statusSuccess">
-      {t('margin.review.leverageInline', { leverage: pinnedLeverage.toFixed(2) })}
-    </Text>
-  )
+  const directionStyle = getMarginDirectionStyle(direction)
+
+  // The volatile leg, which the prices and the liquidation explainer are quoted in.
+  const unitSymbol = marginPriceUnitSymbol({ collateral: market.collateral, debt: market.debt, direction })
+  const unitPrice = (value: number): string =>
+    `1 ${unitSymbol} = ${formatNumberOrString({ value, type: NumberType.FiatTokenPrice })}`
+  const liqColor = figures.healthFactor ? getMarginHealthStatus(figures.healthFactor).color : '$neutral1'
+  // Off the ORACLE mark, not the fill: liquidation triggers off the oracle, and an open's fill is adverse
+  // to it, so the fill would overstate the buffer by roughly the impact.
+  const liqDistancePct = quoteLiqDistanceSignedPct({
+    liquidationPriceX18: quote.display.liquidationPrice,
+    markPriceX18,
+  })
+  const { liquidation } = deriveMarginReceiptDetails({
+    figures,
+    isFillSettled: true,
+    poolFeeBps: undefined,
+    direction,
+    equity,
+    isPaymentCollateral: !isPaymentDifferentFromCollateral,
+    slippageBps: 0,
+    leverage: pinnedLeverage,
+    venue: quote.legs.at(0)?.venue,
+    borrowRatePct: undefined,
+  })
 
   return (
     <>
       <AmountSection
-        label={t('margin.review.margin')}
-        value={tokenAmount(Number(paymentCurrencyAmount?.toExact() ?? 0), paymentSymbol)}
-        usd={paymentUsdValue ? fiat(Number(paymentUsdValue.toExact())) : undefined}
-        logoUrl={paymentCurrencyInfo.logoUrl ?? undefined}
-        symbol={paymentSymbol}
-      />
-      <AmountSection
-        label={t('margin.size.borrowing')}
-        value={borrowing === undefined ? '—' : tokenAmount(borrowing, marginUnwrapSymbol(market.debt))}
-        logoUrl={debtLogoUrl ?? undefined}
-        symbol={marginUnwrapSymbol(market.debt)}
-        trailing={direction === MarginDirection.SHORT ? leverageChip : undefined}
-      />
-      <AmountSection
-        label={t('margin.review.totalSize')}
+        label={t('margin.review.yourPosition')}
         value={notional !== undefined ? tokenAmount(notional, exposureSymbol) : '—'}
-        usd={fiat(notionalUsd)}
+        usd={convertFiatAmountFormatted(notionalUsd, NumberType.FiatStandard, '')}
         logoUrl={exposureLogoUrl ?? undefined}
         symbol={exposureSymbol}
-        trailing={direction === MarginDirection.SHORT ? undefined : leverageChip}
+        trailing={
+          <Flex px="$spacing6" py="$spacing2" borderRadius="$rounded6" backgroundColor={directionStyle.backgroundColor}>
+            <Text variant="body4" color={directionStyle.color}>
+              {t('margin.review.directionLeverage', {
+                direction: direction === MarginDirection.SHORT ? t('margin.side.short') : t('margin.side.long'),
+                leverage: formatLeverageX(pinnedLeverage),
+              })}
+            </Text>
+          </Flex>
+        }
       />
+      <Separator />
+      <Flex gap="$spacing16">
+        <AmountSection
+          label={t('common.depositing')}
+          value={tokenAmount(paid, paymentSymbol)}
+          usd={paymentUsd}
+          logoUrl={paymentCurrencyInfo.logoUrl ?? undefined}
+          symbol={paymentSymbol}
+          chainId={paymentCurrency.chainId}
+        />
+        {/* Paying with the collateral deposits it as-is, so there is no conversion to show. */}
+        {isPaymentDifferentFromCollateral ? (
+          <>
+            <ArrowDown size="$icon.20" color="$neutral3" />
+            <AmountSection
+              value={equity === undefined ? '—' : tokenAmount(equity, collateralSymbol)}
+              usd={collateralUsd}
+              logoUrl={collateralLogoUrl ?? undefined}
+              symbol={collateralSymbol}
+            />
+          </>
+        ) : null}
+      </Flex>
+      <Flex gap="$spacing12" p="$spacing16" borderRadius="$rounded12" backgroundColor="$surface2">
+        {figures.entryPrice === undefined ? null : (
+          <MarginDetailRow label={t('margin.fees.entryPrice')} value={unitPrice(figures.entryPrice)} />
+        )}
+        {/* The PRICE comes off the quote and needs no mark; only the distance suffix does. Gating the row
+            on the distance hid where the position liquidates whenever the venue published no usable
+            mark — on the last screen before a leveraged open, with Confirm still armed. */}
+        {figures.liquidationPrice === undefined ? null : (
+          <MarginDetailRow
+            label={t('margin.size.liquidatesAt')}
+            value={
+              <Text variant="body3" color="$neutral1">
+                {unitPrice(figures.liquidationPrice)}{' '}
+                {liqDistancePct === undefined ? null : (
+                  <Text variant="body3" color={liqColor}>
+                    {formatLiqDistanceSuffix(liqDistancePct)}
+                  </Text>
+                )}
+              </Text>
+            }
+          />
+        )}
+        <LiquidationExplainer
+          keptUsd={liquidation.style === 'full' ? liquidation.keptUsd : undefined}
+          symbol={unitSymbol}
+        />
+      </Flex>
     </>
   )
 }
@@ -190,7 +332,6 @@ function MarginReviewAmounts({
 function MarginReviewDetails({
   derivedMarginInfo,
   pinnedMarket,
-  markPriceX18,
   impactMark,
   quote,
 }: {
@@ -199,10 +340,6 @@ function MarginReviewDetails({
   // re-route those name different venues. Only pair-level facts are read off it (symbols, decimals),
   // which are venue-independent, so the caller's fallback is safe here.
   pinnedMarket: MarginMarket
-  // The pinned VENUE's oracle mark, resolved by the caller and undefined when the registry has no
-  // exact entry for it OR the markets poll has aged out. Passed in rather than looked up here so the
-  // "never price a fill against another venue's mark" rule has one owner in this file.
-  markPriceX18: string | undefined
   // The same mark WITHOUT the freshness bound, for the impact row only, carrying its own `isStale` so
   // the row SAYS the price is delayed rather than quietly measuring against it — see its use below.
   impactMark: MarginResolvedMark
@@ -214,7 +351,7 @@ function MarginReviewDetails({
 
   // The impact otherwise only renders inside the form's fee list, which is collapsed by default —
   // so the default path to Confirm never showed it. The row hides itself below the warning threshold,
-  // so a healthy fill is unaffected. Takes the UNBOUNDED mark, unlike the risk figures below: impact
+  // so a healthy fill is unaffected. Takes the UNBOUNDED mark, unlike the risk figures above: impact
   // IS mark-vs-fill and cannot fall back to the fill, so withholding an aged mark hides the row on the
   // confirm screen while `canConfirm` carries no freshness term — see the `allowStale` docstring.
   const priceImpactBps = marginPriceImpactBps({
@@ -224,29 +361,12 @@ function MarginReviewDetails({
     direction: direction ?? MarginDirection.LONG,
   })
 
-  const health = quote.display.healthFactor
-    ? getMarginHealthStatus(scaledE18ToNumber(quote.display.healthFactor))
+  const venue = quote.legs.at(0)?.venue
+  const borrowRate = quote.display.borrowRate
+    ? `${(scaledE18ToNumber(quote.display.borrowRate) * 100).toFixed(2)}%`
     : undefined
-  const liqColor = health?.color ?? '$neutral1'
-  const liqPriceDisplay = quote.display.liquidationPrice
-    ? formatNumberOrString({
-        value: scaledE18ToNumber(quote.display.liquidationPrice),
-        type: NumberType.FiatTokenPrice,
-      })
-    : undefined
-  const liqUnitSymbol = marginPriceUnitSymbol({
-    collateral: pinnedMarket.collateral,
-    debt: pinnedMarket.debt,
-    direction,
-  })
-  // The ORACLE mark, not the quote's fill price: liquidation triggers off the oracle, and an open's
-  // fill is adverse to it — anchoring on the fill would overstate the buffer by roughly the impact,
-  // worst exactly when the impact row beside it is firing. Also what the positions table measures
-  // against, so the figure does not jump the moment the position opens.
-  const liqDistancePct = quoteLiqDistanceSignedPct({
-    liquidationPriceX18: quote.display.liquidationPrice,
-    markPriceX18,
-  })
+  // Recovered from the projection (the quote publishes no debt figure), in debt-token units.
+  const borrowing = projectedDebtAmount({ quote })
 
   // Through usablePriceX18, not a bare `!== undefined`: the wire sends '0' where it means "could not
   // price", and rendering that as $0.00 would suppress the real ETH figure one branch down.
@@ -265,24 +385,34 @@ function MarginReviewDetails({
 
   return (
     <Flex gap="$spacing12">
-      {/* The PRICE comes off the quote and needs no mark; only the distance suffix does. Gating the row
-          on the distance hid where the position liquidates whenever the venue published no usable
-          mark — on the last screen before a leveraged open, with Confirm still armed. */}
-      {liqPriceDisplay ? (
+      {venue === undefined ? null : (
         <MarginDetailRow
-          label={t('margin.size.liquidatesAt')}
+          label={t('margin.receipt.market')}
+          tooltip={
+            borrowRate && t('margin.receipt.borrowRateTooltip', { venue: marginVenueLabel(venue), rate: borrowRate })
+          }
           value={
-            <Text variant="body3" color="$neutral1">
-              1 {liqUnitSymbol} = {liqPriceDisplay}{' '}
-              {liqDistancePct === undefined ? null : (
-                <Text variant="body3" color={liqColor}>
-                  {formatLiqDistanceSuffix(liqDistancePct)}
-                </Text>
-              )}
-            </Text>
+            <Flex row alignItems="center" gap="$spacing6">
+              <MarginVenueLogo venue={venue} size="$icon.16" />
+              <Text variant="body3" color="$neutral2">
+                {marginVenueLabel(venue)}
+              </Text>
+              <Text variant="body3" color="$neutral1">
+                {borrowRate}
+              </Text>
+            </Flex>
           }
         />
-      ) : null}
+      )}
+      <MarginDetailRow
+        label={t('margin.size.borrowing')}
+        tooltip={t('margin.review.borrowingTooltip')}
+        value={
+          borrowing === undefined
+            ? '—'
+            : `${formatNumberOrString({ value: borrowing, type: NumberType.TokenTx })} ${marginUnwrapSymbol(pinnedMarket.debt)}`
+        }
+      />
       <MarginPriceImpactRow impactBps={priceImpactBps} markIsStale={impactMark.isStale} />
       <MarginDetailRow
         label={t('margin.fees.networkCost')}
@@ -467,6 +597,7 @@ function MarginOpenReviewSheet({
     <MarginActionModalShell
       modalName={ModalName.MarginOpenReview}
       title={title}
+      isTitleMuted
       isOpen
       onClose={onClose}
       // This modal's body gap differs from the other two; normalizing it would be an unrequested
@@ -508,7 +639,7 @@ function MarginOpenReviewSheet({
       }
       onConfirm={onConfirm}
     >
-      <MarginPairHeading market={pinnedMarket} variant="venue" />
+      <MarginPairHeading market={pinnedMarket} variant="pair" />
       {pinnedQuote ? (
         <>
           <MarginReviewAmounts
@@ -522,7 +653,6 @@ function MarginOpenReviewSheet({
             <MarginReviewDetails
               derivedMarginInfo={derivedMarginInfo}
               pinnedMarket={pinnedMarket}
-              markPriceX18={pinnedMarkPriceX18}
               impactMark={impactMark}
               quote={pinnedQuote}
             />

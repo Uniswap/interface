@@ -4,12 +4,7 @@ import type { ListTokensResponse } from '@uniswap/client-data-api/dist/data/v2/a
 import { HistoryDuration, TokensOrderBy } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import type { UniverseChainId } from '@universe/chains'
 import { GatedFeature, useIsFeatureGated } from '@universe/compliance'
-import {
-  DynamicConfigs,
-  TokenCategoriesSearchSpotlightConfigKey,
-  useDynamicConfigValue,
-  useIsTokenCategoriesEnabled,
-} from '@universe/gating'
+import { DynamicConfigs, TokenCategoriesSearchSpotlightConfigKey, useDynamicConfigValue } from '@universe/gating'
 import { useMemo } from 'react'
 import type { SearchModalOption } from 'uniswap/src/components/lists/items/types'
 import { OnchainItemSectionName, type OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
@@ -99,7 +94,6 @@ export function useSpotlitCategorySections({
   tokenCount: number
   skip: boolean
 }): SpotlitCategorySectionsResult {
-  const tokenCategoriesEnabled = useIsTokenCategoriesEnabled()
   const spotlitCategoryIds = useDynamicConfigValue({
     config: DynamicConfigs.TokenCategoriesSearchSpotlight,
     key: TokenCategoriesSearchSpotlightConfigKey.SpotlitCategoryIds,
@@ -119,7 +113,7 @@ export function useSpotlitCategorySections({
       ),
     [spotlitCategoryIds, allCategories, rwaBlocked],
   )
-  const configured = tokenCategoriesEnabled && spotlitCategoryIds.length > 0
+  const configured = spotlitCategoryIds.length > 0
   const shelfConfigured = configured && (categoriesLoading || categories.length > 0)
   const fetchEnabled = shelfConfigured && !skip
 

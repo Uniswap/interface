@@ -30,7 +30,7 @@ exports[`ConfirmSwapModal/Head > should render correctly for a Limit order 1`] =
             aria-hidden="true"
             focusable="false"
             stroke-width="8"
-            style="width: 16px; height: 16px;"
+            style="color: var(--neutral1); width: 16px; height: 16px;"
             viewBox="0 0 16 16"
           >
             <path
@@ -99,7 +99,7 @@ exports[`ConfirmSwapModal/Head > should render correctly for a classic swap 1`] 
             aria-hidden="true"
             focusable="false"
             stroke-width="8"
-            style="width: 16px; height: 16px;"
+            style="color: var(--neutral1); width: 16px; height: 16px;"
             viewBox="0 0 16 16"
           >
             <path

@@ -26,7 +26,7 @@ import { prepareSwapFormState } from 'uniswap/src/features/transactions/types/tr
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
-const MIN_BUTTON_WIDTH = 102
+export const QUICK_ACTION_BUTTON_WIDTH = 102
 
 type IconComponent =
   | typeof CoinConvert
@@ -173,7 +173,7 @@ export function HomeScreenQuickActions(): JSX.Element {
     ({ item: { eventName, name, label, Icon, onPress } }: ListRenderItemInfo<ActionItem>) => (
       <Trace key={name} logPress element={name} eventOnTrigger={eventName}>
         <TouchableArea
-          width={MIN_BUTTON_WIDTH}
+          width={QUICK_ACTION_BUTTON_WIDTH}
           mr="$spacing8"
           scaleTo={activeScale}
           dd-action-name={name}

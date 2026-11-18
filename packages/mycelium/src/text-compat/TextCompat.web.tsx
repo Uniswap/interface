@@ -57,7 +57,10 @@ function TextCompatPlaceholder({ children }: React.PropsWithChildren<unknown>): 
   return (
     <div className={`${VIEW_CLASSES} flex-row items-center`} data-testid="text-placeholder">
       <div className={`${VIEW_CLASSES} flex-row items-center`}>
-        <div className={VIEW_CLASSES}>{children}</div>
+        {/* The placeholder text only sizes the bar and is already invisible; screen readers skip it too. */}
+        <div className={VIEW_CLASSES} aria-hidden>
+          {children}
+        </div>
         <div className={cn(VIEW_CLASSES, TEXT_PLACEHOLDER_OVERLAY_CLASSES)} />
       </div>
     </div>

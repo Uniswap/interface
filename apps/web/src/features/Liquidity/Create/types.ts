@@ -105,6 +105,9 @@ export type PriceDifference = {
   warning?: WarningSeverity
 }
 
+/** A tick range, in the display tick space the range state uses (ticks negated when the price is inverted). */
+export type TickRange = { minTick: number; maxTick: number }
+
 export interface PriceRangeState {
   priceInverted: boolean
   fullRange: boolean
@@ -115,7 +118,7 @@ export interface PriceRangeState {
   maxTick?: number
   inputMode?: RangeAmountInputPriceMode
   /** The preset that wrote minTick/maxTick. While they still match, an existing pool's range follows its live tick. */
-  followedPreset?: { strategy: DefaultPriceStrategy; minTick: number; maxTick: number }
+  followedPreset?: { strategy: DefaultPriceStrategy } & TickRange
 }
 
 type BasePriceRangeInfo = {

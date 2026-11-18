@@ -1,11 +1,27 @@
 import type { PlainMessage } from '@bufbuild/protobuf'
 import { useQuery } from '@tanstack/react-query'
+import type { ListLaunchpadsResponse } from '@uniswap/client-launches/dist/launches/v1/api_pb'
 import type { Launchpad } from '@uniswap/client-launches/dist/launches/v1/types_pb'
-import { useMemo } from 'react'
 import { getListLaunchpadsQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/launches/queries'
 import { resolveIpfsGatewayUrl } from 'utilities/src/format/gatewayUrls'
 
-const EMPTY_LAUNCHPADS: PlainMessage<Launchpad>[] = []
+type LaunchpadRegistry = {
+  launchpads: PlainMessage<Launchpad>[]
+  launchpadById: Map<string, PlainMessage<Launchpad>>
+}
+
+const EMPTY_REGISTRY: LaunchpadRegistry = { launchpads: [], launchpadById: new Map() }
+
+function selectLaunchpadRegistry(data: PlainMessage<ListLaunchpadsResponse> | undefined): LaunchpadRegistry {
+  if (!data?.launchpads) {
+    return EMPTY_REGISTRY
+  }
+  const launchpads = data.launchpads.map((launchpad) => ({
+    ...launchpad,
+    logoUrl: resolveIpfsGatewayUrl(launchpad.logoUrl),
+  }))
+  return { launchpads, launchpadById: new Map(launchpads.map((launchpad) => [launchpad.id, launchpad])) }
+}
 
 /**
  * Fetches the launchpad registry backing the Launches surface (launches.v1.LaunchService ListLaunchpads).
@@ -18,17 +34,12 @@ export function useLaunchpads(): {
   isError: boolean
   error: Error | null
 } {
-  const { data, isLoading, isError, error } = useQuery(getListLaunchpadsQueryOptions({ params: {} }))
-
-  const launchpads = useMemo(
-    () =>
-      data?.launchpads
-        ? data.launchpads.map((launchpad) => ({ ...launchpad, logoUrl: resolveIpfsGatewayUrl(launchpad.logoUrl) }))
-        : EMPTY_LAUNCHPADS,
-    [data],
-  )
-
-  const launchpadById = useMemo(() => new Map(launchpads.map((launchpad) => [launchpad.id, launchpad])), [launchpads])
+  const {
+    data: { launchpads, launchpadById } = EMPTY_REGISTRY,
+    isLoading,
+    isError,
+    error,
+  } = useQuery(getListLaunchpadsQueryOptions({ params: {}, select: selectLaunchpadRegistry }))
 
   return { launchpads, launchpadById, isLoading, isError, error }
 }

@@ -1,13 +1,8 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { screen, waitFor } from '@testing-library/react'
-import { MARGIN_POSITION_ACTIVITY_WIRE_DECREASED } from 'uniswap/src/data/apiClients/tradingApi/__fixtures__/marginPositionActivityWire'
+import { screen } from '@testing-library/react'
 import { MARGIN_POSITIONS_WIRE_PNL_ACTIVE } from 'uniswap/src/data/apiClients/tradingApi/__fixtures__/marginPositionsWirePnl'
-import { type MarginActivePosition, MarginApiClient } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
-import {
-  toMarginPositionActivityView,
-  toMarginPositionsView,
-} from 'uniswap/src/data/apiClients/tradingApi/marginPositionsView'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { type MarginActivePosition } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
+import { toMarginPositionsView } from 'uniswap/src/data/apiClients/tradingApi/marginPositionsView'
+import { describe, expect, it, vi } from 'vitest'
 import { isMarginActivePosition } from '~/features/margin/utils/marginPositionRow'
 import { getDefaultMarginMarket } from '~/pages/Swap/Margin/__fixtures__/marginCatalog'
 import { type MarginDrawerColumn, MarginPositionDrawer } from '~/pages/Swap/Margin/components/MarginPositionDrawer'
@@ -112,67 +107,5 @@ describe('MarginPositionDrawer', () => {
       <MarginPositionDrawer position={{ ...wireMorphoRow(), healthFactor: '1050000000000000000' }} columns={COLUMNS} />,
     )
     expect(screen.getByText(/close to liquidation/i)).toBeInTheDocument()
-  })
-
-  describe('partial decreases, from the position’s activity', () => {
-    const ACTIVITY_ID = '0xe46e3d4677aa8b9e32efd10fff8e84d93bb414bd2d54f5bb19b9541beffe6e01'
-
-    afterEach(() => {
-      vi.restoreAllMocks()
-    })
-
-    // A client of its own, without retries, so a failed read settles inside the test.
-    function renderDrawer(position: MarginActivePosition): QueryClient {
-      const client = new QueryClient({ defaultOptions: { queries: { retry: false } } })
-      render(
-        <QueryClientProvider client={client}>
-          <MarginPositionDrawer position={position} columns={COLUMNS} />
-        </QueryClientProvider>,
-      )
-      return client
-    }
-
-    it('lists each decrease with the debt repaid, collateral sold and fill price, and nothing for the other events', async () => {
-      const fetchActivity = vi
-        .spyOn(MarginApiClient, 'fetchMarginPositionActivity')
-        .mockResolvedValue(toMarginPositionActivityView([MARGIN_POSITION_ACTIVITY_WIRE_DECREASED]))
-      renderDrawer({ ...wireMorphoRow(), activityId: ACTIVITY_ID })
-      expect(await screen.findByText('Reduced — repaid 2.71 USDC · sold 0.001 ETH @ $2,376.85')).toBeInTheDocument()
-      expect(screen.getAllByText(/^Reduced/)).toHaveLength(1)
-      expect(fetchActivity).toHaveBeenCalledWith({ activityId: ACTIVITY_ID })
-    })
-
-    it('dashes the price of a decrease that carries no fill', async () => {
-      const unpriced = toMarginPositionActivityView([MARGIN_POSITION_ACTIVITY_WIRE_DECREASED]).map((event) => ({
-        ...event,
-        price: undefined,
-      }))
-      vi.spyOn(MarginApiClient, 'fetchMarginPositionActivity').mockResolvedValue(unpriced)
-      renderDrawer({ ...wireMorphoRow(), activityId: ACTIVITY_ID })
-      expect(await screen.findByText('Reduced — repaid 2.71 USDC · sold 0.001 ETH @ —')).toBeInTheDocument()
-    })
-
-    it('still renders the drawer, without decrease lines, when the activity read fails', async () => {
-      vi.spyOn(MarginApiClient, 'fetchMarginPositionActivity').mockRejectedValue(new Error('upstream 503'))
-      const client = renderDrawer({ ...wireMorphoRow(), activityId: ACTIVITY_ID })
-      await waitFor(() =>
-        expect(
-          client
-            .getQueryCache()
-            .getAll()
-            .map((query) => query.state.status),
-        ).toEqual(['error']),
-      )
-      expect(screen.getByText('Borrowing')).toBeInTheDocument()
-      expect(screen.getByText('2.52 USDC')).toBeInTheDocument()
-      expect(screen.queryByText(/^Reduced/)).not.toBeInTheDocument()
-    })
-
-    it('does not ask for activity a row has no activityId for', () => {
-      const fetchActivity = vi.spyOn(MarginApiClient, 'fetchMarginPositionActivity')
-      renderDrawer(wireMorphoRow())
-      expect(screen.getByText('Borrowing')).toBeInTheDocument()
-      expect(fetchActivity).not.toHaveBeenCalled()
-    })
   })
 })

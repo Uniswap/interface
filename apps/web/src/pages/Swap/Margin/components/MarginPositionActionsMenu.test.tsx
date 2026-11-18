@@ -80,7 +80,7 @@ describe('MarginPositionActionsMenu', () => {
     pressTrigger()
     expect(screen.getByText('Add margin')).toBeInTheDocument()
     expect(screen.getByText('Withdraw margin')).toBeInTheDocument()
-    expect(screen.getByText('Change leverage')).toBeInTheDocument()
+    expect(screen.getByText('Change position size')).toBeInTheDocument()
     expect(screen.getByText('Close position')).toBeInTheDocument()
   })
 
@@ -115,15 +115,13 @@ describe('MarginPositionActionsMenu', () => {
     await waitFor(() => {})
   })
 
-  // The subheader swap alone is not proof: dropping isPlanInFlight from the `disabled` calc while
-  // leaving the note intact would keep every item clickable and still pass a text-only assertion.
-  it('renders every item disabled while a plan is in flight, and swallows the click', () => {
+  it('keeps items pressable while a plan is in flight, so the caller can resume it', () => {
     mockUseIsPlanInFlight.mockReturnValue(true)
     const onSelect = vi.fn()
     render(<Harness onSelect={onSelect} />)
     pressTrigger()
-    expect(screen.getAllByText('Another action is in progress')).toHaveLength(4)
+    expect(screen.getAllByText('Tap to finish your pending action')).toHaveLength(4)
     fireEvent.click(screen.getByText('Add margin'))
-    expect(onSelect).not.toHaveBeenCalled()
+    expect(onSelect).toHaveBeenCalledWith({ action: 'add', positionId: POSITION.positionId })
   })
 })

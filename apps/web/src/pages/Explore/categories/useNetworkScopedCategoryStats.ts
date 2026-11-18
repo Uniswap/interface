@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react'
 import { useListCategoriesQuery } from 'uniswap/src/data/apiClients/dataApiService/categories/useListCategoriesQuery'
 import { useListPoolCategoriesQuery } from 'uniswap/src/data/apiClients/dataApiService/categories/useListPoolCategoriesQuery'
 import type { Category, CategoryKind } from 'uniswap/src/features/tokenCategories/types'
-import { isCategoryUnsupportedChain } from '~/pages/Explore/categories/useExploreCategory'
+import { isCategoryUnsupportedChain } from '~/features/Explore/categories/useExploreCategory'
 import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
 
 /** A category's member count and 24h change: tokens show price change, pools TVL change. */

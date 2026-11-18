@@ -1,4 +1,5 @@
 import { fireEvent, screen } from '@testing-library/react'
+import { type Currency, Price, Token } from '@uniswap/sdk-core'
 import { TestID } from '@universe/test'
 import type { ReactNode } from 'react'
 import type { MarginQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
@@ -36,6 +37,12 @@ vi.mock('~/pages/Swap/Margin/hooks/useExecuteMarginPlan', () => ({
 }))
 
 vi.mock('~/pages/Swap/Margin/hooks/useIsPlanInFlight', () => ({ useIsPlanInFlight: mockUseIsPlanInFlight }))
+
+const usdPrices = vi.hoisted(() => ({ collateral: undefined as Price<Currency, Currency> | undefined }))
+vi.mock('uniswap/src/features/transactions/hooks/useUSDCPrice', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('uniswap/src/features/transactions/hooks/useUSDCPrice')>()),
+  useUSDCPrice: () => ({ price: usdPrices.collateral, isLoading: false }),
+}))
 
 vi.mock('~/features/margin/hooks/useMarginCurrencyInfos', async (importOriginal) => ({
   ...(await importOriginal<typeof import('~/features/margin/hooks/useMarginCurrencyInfos')>()),
@@ -129,6 +136,7 @@ describe('MarginOpenReviewModal venue pin', () => {
     mockUseIsPlanInFlight.mockReturnValue(false)
     registry.venues = ['MORPHO', 'AAVE_V3']
     registry.markPriceX18 = undefined
+    usdPrices.collateral = undefined
   })
 
   // Every canConfirm term that can fail on its own must say so: a greyed Confirm with an empty footer
@@ -178,7 +186,7 @@ describe('MarginOpenReviewModal venue pin', () => {
 
   it('names the venue the quote routed to, not the form’s pair-first market', () => {
     renderReview(AAVE_QUOTE)
-    expect(screen.getByText('Aave v3 · 77% LLTV')).toBeInTheDocument()
+    expect(screen.getByText('Aave v3')).toBeInTheDocument()
     expect(cta()).not.toBeDisabled()
   })
 
@@ -274,6 +282,50 @@ describe('MarginOpenReviewModal venue pin', () => {
     expect(screen.getByText('0.00100 ETH')).toBeInTheDocument()
   })
 
+  // Paying with the collateral itself deposits it as-is: no arrow, no converted amount below it.
+  it.each([
+    { label: 'hides the conversion when paying with the collateral', differs: false },
+    { label: 'shows what another payment token converts into', differs: true },
+  ])('$label', ({ differs }) => {
+    const [leg] = MORPHO_QUOTE.legs
+    const quote = {
+      ...MORPHO_QUOTE,
+      legs: [{ ...leg, bounds: { increase: { expectedEquityDelta: `${5n * 10n ** 17n}` } } }],
+    } as unknown as MarginQuoteResponse
+    const info = { ...derivedFixture(quote), isPaymentDifferentFromCollateral: differs }
+    render(<MarginOpenReviewModal derivedMarginInfo={info} isOpen onClose={vi.fn()} />)
+    expect(screen.queryByText(/^0\.50* ETH$/) !== null).toBe(differs)
+  })
+
+  function renderConversion(): void {
+    const [leg] = MORPHO_QUOTE.legs
+    const quote = {
+      ...MORPHO_QUOTE,
+      legs: [{ ...leg, bounds: { increase: { expectedEquityDelta: `${5n * 10n ** 17n}` } } }],
+    } as unknown as MarginQuoteResponse
+    const info = {
+      ...derivedFixture(quote),
+      isPaymentDifferentFromCollateral: true,
+      paymentUsdValue: { toExact: () => '1600' },
+    } as unknown as DerivedMarginInfo
+    render(<MarginOpenReviewModal derivedMarginInfo={info} isOpen onClose={vi.fn()} />)
+  }
+
+  // The pay-in swap costs something, so the converted collateral is worth less than what was paid.
+  it('prices the converted collateral at its own USD price, not the payment’s', () => {
+    const usdc = new Token(1, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC')
+    const eth = new Token(1, MORPHO_MARKET.collateral.address, 18, 'ETH')
+    usdPrices.collateral = new Price(eth, usdc, `${10n ** 18n}`, `${3000n * 10n ** 6n}`) // $3,000
+    renderConversion()
+    expect(screen.getByText('$1,600.00')).toBeInTheDocument()
+    expect(screen.getByText('$1,500.00')).toBeInTheDocument()
+  })
+
+  it('leaves the converted collateral unpriced rather than repeating the payment’s figure', () => {
+    renderConversion()
+    expect(screen.getAllByText('$1,600.00')).toHaveLength(1)
+  })
+
   it('lets same-venue polls update the figures in place', () => {
     const { rerender } = renderReview(MORPHO_QUOTE)
     rerenderWith({ rerender, quote: quoteFixture({ venue: 'MORPHO', gasFeeUsd: `${999n * 10n ** 16n}` }) })
@@ -294,7 +346,7 @@ describe('MarginOpenReviewModal venue pin', () => {
       reroute()
       expect(screen.getByText('$1.11')).toBeInTheDocument()
       expect(screen.queryByText('$9.99')).toBeNull()
-      expect(screen.getByText('Morpho · 86% LLTV')).toBeInTheDocument()
+      expect(screen.getByText('Morpho')).toBeInTheDocument()
     })
 
     it('closes Confirm and offers the new route instead', () => {
@@ -315,7 +367,7 @@ describe('MarginOpenReviewModal venue pin', () => {
       fireEvent.click(screen.getByTestId(TestID.MarginReviewRouteChanged))
 
       expect(screen.getByText('$9.99')).toBeInTheDocument()
-      expect(screen.getByText('Aave v3 · 77% LLTV')).toBeInTheDocument()
+      expect(screen.getByText('Aave v3')).toBeInTheDocument()
       expect(screen.queryByTestId(TestID.MarginReviewRouteChanged)).toBeNull()
       expect(cta()).not.toBeDisabled()
     })
@@ -375,7 +427,7 @@ describe('MarginOpenReviewModal venue pin', () => {
     expect(screen.queryByRole('button', { name: 'Open long position' })).toBeNull()
 
     rerenderWith({ rerender, quote: AAVE_QUOTE })
-    expect(screen.getByText('Aave v3 · 77% LLTV')).toBeInTheDocument()
+    expect(screen.getByText('Aave v3')).toBeInTheDocument()
     expect(cta()).not.toBeDisabled()
   })
 

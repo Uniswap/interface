@@ -1,4 +1,5 @@
 import { Flex, Text } from '@universe/mycelium'
+import { DetailRow } from '@universe/transactions-ui/src/common/DetailRow/DetailRow'
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -10,14 +11,7 @@ export interface RoutingInfoRowProps {
 }
 
 export function RoutingInfoRow({ info, label }: RoutingInfoRowProps): JSX.Element {
-  return (
-    <Flex row alignItems="center" justifyContent="space-between">
-      {info}
-      <Flex row shrink justifyContent="flex-end">
-        {label}
-      </Flex>
-    </Flex>
-  )
+  return <DetailRow label={info} value={label} />
 }
 
 export interface BestRouteLabelProps {

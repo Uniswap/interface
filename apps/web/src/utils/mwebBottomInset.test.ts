@@ -43,7 +43,7 @@ const CASES: ReadonlyArray<readonly [string, string, typeof env, string]> = [
     'MetaMask on Android',
     'Mozilla/5.0 (Linux; Android 13; SM-G991B Build/TP1A.220624.014; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/120.0.6099.230 Mobile Safari/537.36 MetaMaskMobile',
     ANDROID,
-    CHROME_INSET,
+    '',
   ],
   [
     'Chrome for Android',

@@ -1,4 +1,3 @@
-import { useIsTokenCategoriesEnabledWithLoading } from '@universe/gating'
 import { useListCategoriesQuery } from 'uniswap/src/data/apiClients/dataApiService/categories/useListCategoriesQuery'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { TokenCategory, TokenCategoryClass } from 'uniswap/src/features/tokenCategories/types'
@@ -8,7 +7,6 @@ import { renderHook } from '~/test-utils/render'
 
 vi.mock('@universe/gating', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@universe/gating')>()),
-  useIsTokenCategoriesEnabledWithLoading: vi.fn(() => ({ value: true, isLoading: false })),
   useDynamicConfigValue: ({ defaultValue }: { defaultValue: unknown }) => defaultValue,
 }))
 
@@ -48,13 +46,8 @@ function mockTestnetMode(isTestnetModeEnabled: boolean): void {
   ;(useEnabledChains as Mock).mockReturnValue({ chains: [], isTestnetModeEnabled })
 }
 
-function mockFlag({ value, isLoading = false }: { value: boolean; isLoading?: boolean }): void {
-  ;(useIsTokenCategoriesEnabledWithLoading as Mock).mockReturnValue({ value, isLoading })
-}
-
 describe('useExploreTokenCategories', () => {
   beforeEach(() => {
-    mockFlag({ value: true })
     mockTestnetMode(false)
   })
 
@@ -63,31 +56,6 @@ describe('useExploreTokenCategories', () => {
     const { result } = renderHook(() => useExploreTokenCategories())
     expect(result.current.orderedCategories).toEqual([DEFI])
     expect(result.current.validCategoryIds.has('all')).toBe(false)
-  })
-
-  it('is loading while Statsig has not reported the flag yet', () => {
-    mockFlag({ value: false, isLoading: true })
-    mockQuery({ data: undefined })
-    const { result } = renderHook(() => useExploreTokenCategories())
-    expect(result.current.categoriesLoading).toBe(true)
-    expect(result.current.categoriesPending).toBe(false)
-    expect(result.current.dynamicChipsEnabled).toBe(false)
-  })
-
-  it('ignores Statsig re-entering loading after the flag has reported once', () => {
-    mockFlag({ value: false, isLoading: true })
-    mockQuery({ data: [DEFI] })
-    const { result, rerender } = renderHook(() => useExploreTokenCategories())
-    expect(result.current.categoriesLoading).toBe(true)
-
-    mockFlag({ value: true })
-    rerender()
-    expect(result.current.categoriesLoading).toBe(false)
-
-    mockFlag({ value: true, isLoading: true })
-    rerender()
-    expect(result.current.categoriesLoading).toBe(false)
-    expect(result.current.dynamicChipsEnabled).toBe(true)
   })
 
   it('is loading and pending while the first ListCategories attempt is in flight', () => {
@@ -112,17 +80,8 @@ describe('useExploreTokenCategories', () => {
     expect(result.current.validCategoryIds.has('defi')).toBe(true)
   })
 
-  it('is not loading when the flag is off', () => {
-    mockFlag({ value: false })
-    mockQuery({ data: undefined })
-    const { result } = renderHook(() => useExploreTokenCategories())
-    expect(result.current.categoriesLoading).toBe(false)
-    expect(result.current.dynamicChipsEnabled).toBe(false)
-  })
-
   it('drops the static RWA categories in testnet mode', () => {
     mockTestnetMode(true)
-    mockFlag({ value: false })
     mockQuery({ data: undefined })
     const { result } = renderHook(() => useExploreTokenCategories())
     expect(result.current.exploreCategoriesEnabled).toBe(false)

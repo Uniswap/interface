@@ -1,6 +1,8 @@
 import { TradingApi } from '@universe/api'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { Accordion, Flex, Text } from '@universe/mycelium'
+import { Flex } from '@universe/mycelium'
+import { HeightAnimator } from '@universe/mycelium/height-animator'
+import { DetailRow } from '@universe/transactions-ui'
 import { useTranslation } from 'react-i18next'
 import { useEnableCustomGasFeeEntry } from 'uniswap/src/features/gas/hooks/useEnableCustomGasFeeEntry'
 import { useIsCustomGasFlowAvailable } from 'uniswap/src/features/gas/hooks/useIsCustomGasFlowAvailable'
@@ -18,6 +20,7 @@ import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/
 import { useSwapTxStore } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/useSwapTxStore'
 import { getSwapFeeUsdFromDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/utils/getSwapFeeUsd'
 import {
+  getDisplayableSponsorshipInfo,
   isMultiChainGasQuote,
   isSwapRouting,
   isUniswapX,
@@ -26,7 +29,8 @@ import {
 import { TransactionDetails } from 'uniswap/src/features/transactions/TransactionDetails/TransactionDetails'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
-export function ExpandableRows(): JSX.Element | null {
+/** The web form's details below the footer. `expanded` is shared with the gas toggle in TradeInfoRow. */
+export function ExpandableRows({ expanded }: { expanded: boolean }): JSX.Element | null {
   const { t } = useTranslation()
   const { gasFee, gasFeeBreakdown, txRequests } = useSwapTxStore((s) => {
     if (isUniswapX(s)) {
@@ -68,7 +72,9 @@ export function ExpandableRows(): JSX.Element | null {
   const inputCurrencyChainId = trade.trade.inputAmount.currency.chainId
   const isUniswapXTrade = isUniswapX({ routing: trade.trade.routing })
 
-  const sponsorshipInfo = 'sponsorshipInfo' in trade.trade.quote ? trade.trade.quote.sponsorshipInfo : undefined
+  const sponsorshipInfo = getDisplayableSponsorshipInfo(
+    'sponsorshipInfo' in trade.trade.quote ? trade.trade.quote.sponsorshipInfo : undefined,
+  )
 
   // Only render the tappable row when the user has opted into custom entry
   // AND the trade is EVM. UniswapX has no editable EVM tx (txRequests is
@@ -80,52 +86,53 @@ export function ExpandableRows(): JSX.Element | null {
       <FormNetworkCostRow gasFee={gasFee} tx={txRequests?.[0]} chainId={inputCurrencyChainId} />
     ) : undefined
 
+  const rateInfo = showPriceImpactWarning ? (
+    <DetailRow
+      label={t('swap.details.rate')}
+      value={<SwapRateRatio trade={trade.trade} derivedSwapInfo={derivedSwapInfo} />}
+    />
+  ) : undefined
+  const isBridge = trade.trade.routing === TradingApi.Routing.BRIDGE
+
   return (
-    <Accordion.HeightAnimator animation="fast" mt="$spacing8">
-      <Accordion.Content p="$none">
-        <TransactionDetails
-          showExpandedChildren
-          isSwap={isSwapRouting(trade.trade)}
-          routingType={trade.trade.routing}
-          chainId={inputCurrencyChainId}
-          gasFee={gasFee}
-          NetworkCostRowSlot={NetworkCostRowSlot}
-          swapFee={trade.trade.swapFee}
-          swapFeeUsd={swapFeeUsd}
-          indicative={trade.trade.indicative}
-          feeOnTransferProps={feeOnTransferProps}
-          showGasFeeError={false}
-          showSeparatorToggle={false}
-          showNetworkLogo={!isMultiChainGasQuote(trade.trade.quote)}
-          outputCurrency={trade.trade.outputAmount.currency}
-          transactionUSDValue={derivedSwapInfo.currencyAmountsUSDValue[CurrencyField.OUTPUT]}
-          uniswapXGasBreakdown={gasFeeBreakdown}
-          sponsorshipInfo={sponsorshipInfo}
-          RateInfo={
-            showPriceImpactWarning ? (
-              <Flex row alignItems="center" justifyContent="space-between">
-                <Text color="$neutral2" variant="body3">
-                  {t('swap.details.rate')}
-                </Text>
-                <Flex row shrink justifyContent="flex-end">
-                  <SwapRateRatio trade={trade.trade} derivedSwapInfo={derivedSwapInfo} />
-                </Flex>
-              </Flex>
-            ) : undefined
-          }
-        >
-          {trade.trade.routing !== TradingApi.Routing.BRIDGE && (
-            <MaxSlippageRow
-              acceptedDerivedSwapInfo={derivedSwapInfo}
-              autoSlippageTolerance={autoSlippageTolerance}
-              customSlippageTolerance={customSlippageTolerance}
-            />
-          )}
-          {trade.trade.routing !== TradingApi.Routing.BRIDGE && !isWrap(trade.trade) && (
-            <RoutingInfo trade={trade.trade} gasFee={gasFee} chainId={chainId} />
-          )}
-        </TransactionDetails>
-      </Accordion.Content>
-    </Accordion.HeightAnimator>
+    <Flex mt="$spacing8">
+      <HeightAnimator animation="fast" open={expanded}>
+        {/* HeightAnimator keeps children mounted while collapsed, so the rows mount only while open. The surface1
+          frame matches the accordion content these rows used to sit in. */}
+        {expanded ? (
+          <Flex backgroundColor="$surface1">
+            <TransactionDetails
+              showExpandedChildren
+              isSwap={isSwapRouting(trade.trade)}
+              routingType={trade.trade.routing}
+              chainId={inputCurrencyChainId}
+              gasFee={gasFee}
+              NetworkCostRowSlot={NetworkCostRowSlot}
+              swapFee={trade.trade.swapFee}
+              swapFeeUsd={swapFeeUsd}
+              indicative={trade.trade.indicative}
+              feeOnTransferProps={feeOnTransferProps}
+              showGasFeeError={false}
+              showSeparatorToggle={false}
+              showNetworkLogo={!isMultiChainGasQuote(trade.trade.quote)}
+              outputCurrency={trade.trade.outputAmount.currency}
+              transactionUSDValue={derivedSwapInfo.currencyAmountsUSDValue[CurrencyField.OUTPUT]}
+              uniswapXGasBreakdown={gasFeeBreakdown}
+              sponsorshipInfo={sponsorshipInfo}
+              RateInfo={rateInfo}
+            >
+              {!isBridge && (
+                <MaxSlippageRow
+                  acceptedDerivedSwapInfo={derivedSwapInfo}
+                  autoSlippageTolerance={autoSlippageTolerance}
+                  customSlippageTolerance={customSlippageTolerance}
+                />
+              )}
+              {!isWrap(trade.trade) && <RoutingInfo trade={trade.trade} gasFee={gasFee} chainId={chainId} />}
+            </TransactionDetails>
+          </Flex>
+        ) : null}
+      </HeightAnimator>
+    </Flex>
   )
 }

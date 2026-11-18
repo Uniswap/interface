@@ -1,3 +1,4 @@
+import { screen } from '@testing-library/react'
 import type { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
 import { marginPairKey } from 'uniswap/src/features/transactions/margin/marginPairKey'
 import { MarginDirection } from 'uniswap/src/features/transactions/margin/types'
@@ -5,7 +6,7 @@ import { NumberType } from 'utilities/src/format/types'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { MarginMarket } from '~/constants/margin'
 import type { DerivedMarginInfo } from '~/pages/Swap/Margin/hooks/useDerivedMarginInfo'
-import { MarginForm, marginConversionEquity } from '~/pages/Swap/Margin/MarginForm'
+import { MarginForm } from '~/pages/Swap/Margin/MarginForm'
 import { render } from '~/test-utils/render'
 
 // MarginFormBody's own children are irrelevant here — the SHORT-market case below resolves a
@@ -25,7 +26,12 @@ vi.mock('~/pages/Swap/Margin/hooks/useDerivedMarginInfo', () => ({
 vi.mock('~/pages/Swap/Margin/hooks/useMarginEquityInput', () => ({ useMarginEquityInput: () => ({}) }))
 vi.mock('uniswap/src/components/CurrencyInputPanel/CurrencyInputPanel', () => ({ CurrencyInputPanel: () => null }))
 vi.mock('~/pages/Swap/Margin/components/MarginPayWith', () => ({ MarginPayWith: () => null }))
-vi.mock('~/pages/Swap/Margin/components/MarginLeverageSection', () => ({ MarginLeverageSection: () => null }))
+vi.mock('~/pages/Swap/Margin/components/MarginSizeLeverageBox', () => ({
+  MarginLeverageSection: () => <span data-testid="leverage-section" />,
+}))
+vi.mock('~/pages/Swap/Margin/components/MarginSizeBlock', () => ({
+  MarginSizeBlock: () => <span data-testid="size-block" />,
+}))
 vi.mock('~/pages/Swap/Margin/components/MarginRateRows', () => ({
   MarginRateRows: () => null,
 }))
@@ -132,61 +138,16 @@ describe('MarginForm adopt-first-market effect', () => {
   })
 })
 
-describe('marginConversionEquity', () => {
-  // WETH collateral; the caption reads "<payment> ≈ <this> ETH".
-  const quote = { legs: [{ bounds: { increase: { expectedEquityDelta: '1500000000000000000' } } }] }
-  const FRESH = {
-    isPaymentDifferentFromCollateral: true,
-    isDebouncing: false,
-    isPlaceholderData: false,
-    quote,
-    market: { collateral: { decimals: 18 } },
-  } as unknown as Parameters<typeof marginConversionEquity>[0]['info']
-
-  // Records the NumberType it is handed. The dust behaviour belongs to the real formatter, not to a
-  // stub — asserting a stub's own branch would leave the suite green after swapping TokenTx for
-  // FiatTokenPrice, which is the choice this caption actually makes.
-  const seenTypes: (NumberType | undefined)[] = []
-  const formatNumberOrString: LocalizationContextState['formatNumberOrString'] = ({ value, type }) => {
-    seenTypes.push(type)
-    return String(value)
-  }
-
-  const withInfo = (overrides: Record<string, unknown>): string | undefined =>
-    marginConversionEquity({ info: { ...FRESH, ...overrides } as typeof FRESH, formatNumberOrString })
-
-  it('states the quoted collateral when the quote answers the current input', () => {
-    expect(marginConversionEquity({ info: FRESH, formatNumberOrString })).toBe('1.5')
+describe('MarginForm Size and Leverage layout', () => {
+  afterEach(() => {
+    mockMarkets.current = []
   })
 
-  // The guard withholds a ZERO, but a dust figure is a real answer that rounds to one: at six fraction
-  // digits `toLocaleString` wrote "0", putting "≈0 ETH margin" back on screen through the formatting
-  // step. TokenTx is what renders "<0.00001" instead — pinned as the type actually requested, since a
-  // stub asserting its own branch would stay green after a swap to any other NumberType.
-  it('formats the caption as a token amount (TokenTx), which floors dust instead of rounding to zero', () => {
-    seenTypes.length = 0
-    expect(withInfo({ quote: { legs: [{ bounds: { increase: { expectedEquityDelta: '400000000000' } } }] } })).toBe(
-      '4e-7',
-    )
-    expect(seenTypes).toEqual([NumberType.TokenTx])
-  })
+  it('renders the Leverage row and a separate Size box', () => {
+    mockMarkets.current = [SHORT_MARKET]
+    render(<MarginForm showInlinePositions={false} />)
 
-  // The payment half of the sentence is the LIVE input. Pairing it with a quote that answered an
-  // earlier one prints a conversion that was never quoted.
-  it.each(['isDebouncing', 'isPlaceholderData'])('withholds the line while %s', (flag) => {
-    expect(withInfo({ [flag]: true })).toBeUndefined()
-  })
-
-  // No `increase` bounds means the conversion was never priced. "≈ 0" would read as the answer.
-  it('withholds the line when the leg carries no increase bounds', () => {
-    expect(withInfo({ quote: { legs: [{ bounds: {} }] } })).toBeUndefined()
-  })
-
-  it('withholds the line when the zero sentinel arrives in place of a figure', () => {
-    expect(withInfo({ quote: { legs: [{ bounds: { increase: { expectedEquityDelta: '0' } } }] } })).toBeUndefined()
-  })
-
-  it('renders nothing when the payment token IS the collateral', () => {
-    expect(withInfo({ isPaymentDifferentFromCollateral: false })).toBeUndefined()
+    expect(screen.getByTestId('leverage-section')).toBeInTheDocument()
+    expect(screen.getByTestId('size-block')).toBeInTheDocument()
   })
 })

@@ -5,16 +5,16 @@ import {
   type RankedMultichainToken,
   type TokenListFilter,
 } from '@uniswap/client-data-api/dist/data/v2/types_pb'
+import { multichainTokenKey } from '@universe/data-api'
 import { dataApiServiceClientV2 } from 'uniswap/src/data/apiClients/dataApiService/clients/DataApiClientV2'
 import { TokenSortMethod } from '~/components/Tokens/constants'
 import type { PricePoint } from '~/data/util'
 import { UseListTokensOptions, type RankedMultichainTokensResult } from '~/features/Explore/state/listTokens/types'
-import { multichainTokenKey } from '~/features/Explore/state/listTokens/utils/multichainTokenKey'
 import {
   timePeriodToVolumeOrderBy,
   tokenSortMethodToOrderBy,
 } from '~/features/Explore/state/listTokens/utils/topTokensOrderByMappings'
-import { toSearchQueryParam } from '~/features/Explore/utils/toSearchQueryParam'
+import { toSearchQueryParam } from '~/utils/listRequestParams'
 
 interface ListTokensParams {
   chainIds: number[]

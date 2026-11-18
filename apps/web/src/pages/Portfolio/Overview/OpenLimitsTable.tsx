@@ -21,11 +21,12 @@ import { NumberType } from 'utilities/src/format/types'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { getDurationRemainingString } from 'utilities/src/time/duration'
 import { useOpenLimitOrders } from '~/components/Activity/hooks'
-import { useOpenOffchainActivityModal, useOrderAmounts } from '~/components/modals/OffchainActivityModal'
 import { Table } from '~/components/Table'
 import { Cell } from '~/components/Table/Cell'
 import { HeaderCell } from '~/components/Table/styled'
 import { hasRow } from '~/components/Table/utils/hasRow'
+import { useOpenOffchainActivityModal } from '~/features/transactions/hooks/useOpenOffchainActivityModal'
+import { useOrderAmounts } from '~/features/transactions/hooks/useOrderAmounts'
 import {
   HEADERLESS_MINI_TABLE_CONTENT_GAP,
   HEADERLESS_MINI_TABLE_ROW_HEIGHT,

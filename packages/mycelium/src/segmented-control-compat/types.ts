@@ -1,4 +1,5 @@
 import type * as React from 'react'
+import type { ColorTokens } from '../compat/color-tokens'
 import type { SegmentedControlGapToken } from './tokens'
 
 /**
@@ -15,6 +16,8 @@ export interface SegmentedControlOption<T extends string = string> {
   displayText?: string
   // Optional custom display element
   display?: React.JSX.Element
+  // Accessible name; required in practice when `display` has no text (an icon-only option)
+  'aria-label'?: string
   // Optional wrapper around the display element
   wrapper?: React.JSX.Element
   // Disable the specific option
@@ -39,4 +42,5 @@ export interface SegmentedControlProps<T extends string = string> {
   outlined?: boolean
   gap?: SegmentedControlGapToken
   animateIndicator?: boolean
+  indicatorColor?: ColorTokens
 }

@@ -33,3 +33,13 @@
 :root {
   --background: var(--surface1);
 }
+
+@theme {
+  --animate-margin-refetch-pulse: margin-refetch-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes margin-refetch-pulse {
+  50% {
+    opacity: 0.5;
+  }
+}

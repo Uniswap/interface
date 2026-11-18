@@ -1,19 +1,15 @@
-import type { SwapWarningDisplay, SwapWarningSeverity } from '@universe/transactions-ui'
-import { type Warning, WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
+import type { WarningLevel } from '@universe/transactions-ui'
+import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 
-const SEVERITY_TO_DISPLAY: Record<WarningSeverity, SwapWarningSeverity> = {
-  [WarningSeverity.None]: 'none',
-  [WarningSeverity.Low]: 'low',
-  [WarningSeverity.Medium]: 'medium',
-  [WarningSeverity.High]: 'high',
+const SEVERITY_TO_LEVEL: Record<WarningSeverity, WarningLevel | undefined> = {
+  [WarningSeverity.None]: undefined,
+  [WarningSeverity.Low]: 'info',
+  [WarningSeverity.Medium]: 'warning',
+  [WarningSeverity.High]: 'critical',
   [WarningSeverity.Blocked]: 'blocked',
 }
 
-export function toSwapWarningSeverity(severity: WarningSeverity): SwapWarningSeverity {
-  return SEVERITY_TO_DISPLAY[severity]
-}
-
-/** Decomposes a uniswap Warning into the swap-ui display shape. Only what a view renders crosses. */
-export function toSwapWarningDisplay(warning: Warning): SwapWarningDisplay {
-  return { severity: toSwapWarningSeverity(warning.severity) }
+/** Maps a uniswap severity onto the transactions-ui level. None has no level: views render their neutral color. */
+export function toWarningLevel(severity: WarningSeverity): WarningLevel | undefined {
+  return SEVERITY_TO_LEVEL[severity]
 }

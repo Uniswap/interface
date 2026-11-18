@@ -1,15 +1,6 @@
 import { isWebPlatform } from '@universe/environment'
-import {
-  Flex,
-  type FlexCompatProps as FlexProps,
-  iconSizes,
-  ModalCloseIcon,
-  Text,
-  validColor,
-  Loader,
-} from '@universe/mycelium'
-import { ArrowDown } from '@universe/mycelium/icons/ArrowDown'
-import { useMedia } from '@universe/mycelium/theme-hooks-compat'
+import { iconSizes, validColor } from '@universe/mycelium'
+import { type ReviewAmount, ReviewSummary } from '@universe/transactions-ui'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
@@ -24,12 +15,9 @@ import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/typ
 import { getTradeAmounts } from 'uniswap/src/features/transactions/swap/utils/getTradeAmounts'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { useNetworkColors } from 'uniswap/src/utils/colors'
-import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { buildCurrencyId, currencyAddress } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
-
-const SHORT_GAP: FlexProps['$short'] = { gap: '$spacing8' }
 
 export function TransactionAmountsReview({
   acceptedDerivedSwapInfo,
@@ -122,59 +110,37 @@ export function TransactionAmountsReview({
     )
   }
 
+  const input = useReviewAmount({
+    currencyInfo: currencyInInfo,
+    formattedTokenAmount: formattedTokenAmountIn,
+    formattedFiatAmount: formattedFiatAmountIn,
+    indicative: isInputIndicative,
+    shouldDim: shouldDimInput,
+    isAmountLoading: isInputAmountLoading,
+    isCrossChainSwap,
+  })
+  const output = useReviewAmount({
+    currencyInfo: currencyOutInfo,
+    formattedTokenAmount: formattedTokenAmountOut,
+    formattedFiatAmount: formattedFiatAmountOut,
+    indicative: isOutputIndicative,
+    shouldDim: shouldDimOutput,
+    isAmountLoading: isOutputAmountLoading,
+    isCrossChainSwap,
+  })
+
   return (
-    <Flex $short={SHORT_GAP} gap="$spacing16" ml="$spacing12" mr="$spacing12">
-      <Flex row alignItems="center">
-        <Flex fill>
-          <Text color="$neutral2" variant="body2">
-            {t('swap.review.summary')}
-          </Text>
-        </Flex>
-        {isWebPlatform && (
-          <Flex row centered gap="$spacing12">
-            <ModalCloseIcon size="$icon.20" onClose={onClose} />
-          </Flex>
-        )}
-      </Flex>
-
-      {!currencyInInfo ? (
-        <CurrencyValueWithIconSkeleton />
-      ) : (
-        <CurrencyValueWithIcon
-          currencyInfo={currencyInInfo}
-          formattedFiatAmount={formattedFiatAmountIn}
-          formattedTokenAmount={formattedTokenAmountIn}
-          indicative={isInputIndicative}
-          shouldDim={shouldDimInput}
-          isAmountLoading={isInputAmountLoading}
-          isCrossChainSwap={isCrossChainSwap}
-        />
-      )}
-
-      <ArrowDown color="$neutral3" size="$icon.20" />
-
-      {!currencyOutInfo ? (
-        <CurrencyValueWithIconSkeleton />
-      ) : (
-        <CurrencyValueWithIcon
-          currencyInfo={currencyOutInfo}
-          formattedFiatAmount={formattedFiatAmountOut}
-          formattedTokenAmount={formattedTokenAmountOut}
-          indicative={isOutputIndicative}
-          shouldDim={shouldDimOutput}
-          isAmountLoading={isOutputAmountLoading}
-          isCrossChainSwap={isCrossChainSwap}
-        />
-      )}
-    </Flex>
+    <ReviewSummary
+      input={input}
+      output={output}
+      title={t('swap.review.summary')}
+      onClose={isWebPlatform ? onClose : undefined}
+    />
   )
 }
 
-function CurrencyValueWithIconSkeleton(): JSX.Element {
-  return <Loader.Box height={60} />
-}
-
-function CurrencyValueWithIcon({
+/** Maps one side of the trade onto ReviewSummary. `null` (no currency info) renders the skeleton row. */
+function useReviewAmount({
   currencyInfo,
   formattedFiatAmount,
   formattedTokenAmount,
@@ -183,64 +149,36 @@ function CurrencyValueWithIcon({
   isAmountLoading,
   isCrossChainSwap,
 }: {
-  currencyInfo: CurrencyInfo
+  currencyInfo: Maybe<CurrencyInfo>
   formattedFiatAmount: string
   formattedTokenAmount: string
   shouldDim: boolean
   indicative: boolean
   isAmountLoading: boolean
   isCrossChainSwap: boolean
-}): JSX.Element {
+}): ReviewAmount | null {
   const { defaultChainId } = useEnabledChains()
-  const amountColor = indicative ? '$neutral2' : shouldDim ? '$neutral3' : '$neutral1'
-  const fiatColor = indicative || shouldDim ? '$neutral3' : '$neutral2'
-
-  const chainId = toSupportedChainId(currencyInfo.currency.chainId) ?? defaultChainId
+  const chainId = toSupportedChainId(currencyInfo?.currency.chainId) ?? defaultChainId
   const networkColors = useNetworkColors(chainId)
-  const networkLabel = getChainLabel(chainId)
-  const networkColor = validColor(networkColors.foreground)
-  const media = useMedia()
 
-  const symbolDisplayText = useMemo(
-    () => getSymbolDisplayText(currencyInfo.currency.symbol),
-    [currencyInfo.currency.symbol],
-  )
+  if (!currencyInfo) {
+    return null
+  }
 
-  // If you modify this UI, make sure to also modify the height of `CurrencyValueWithIconSkeleton`.
-  return (
-    <Flex centered grow row>
-      <Flex grow gap="$spacing4">
-        {isCrossChainSwap && (
-          <Flex row mt={media.sm ? '$spacing8' : undefined} gap="$spacing4" alignItems="center">
-            <NetworkLogo chainId={currencyInfo.currency.chainId} size={iconSizes.icon16} />
-            <Text color={networkColor} variant="buttonLabel3">
-              {networkLabel}
-            </Text>
-          </Flex>
-        )}
-        {isAmountLoading ? (
-          <Flex row alignItems="center" gap="$spacing8">
-            <Loader.Box height={28} width={96} />
-            <Text color={amountColor} variant="heading3">
-              {symbolDisplayText}
-            </Text>
-          </Flex>
-        ) : (
-          <Text color={amountColor} variant="heading3">
-            {formattedTokenAmount} {symbolDisplayText}
-          </Text>
-        )}
-
-        {isAmountLoading ? (
-          <Loader.Box height={18} width={72} />
-        ) : (
-          <Text color={fiatColor} variant="body2">
-            {formattedFiatAmount}
-          </Text>
-        )}
-      </Flex>
-
-      <CurrencyLogo currencyInfo={currencyInfo} size={iconSizes.icon40} />
-    </Flex>
-  )
+  return {
+    amount: formattedTokenAmount,
+    // Raw symbol: ReviewSummary truncates it by width. An empty string renders no symbol.
+    symbol: currencyInfo.currency.symbol ?? '',
+    fiat: formattedFiatAmount,
+    logo: <CurrencyLogo currencyInfo={currencyInfo} size={iconSizes.icon40} />,
+    state: indicative ? 'indicative' : shouldDim ? 'dimmed' : 'default',
+    isAmountLoading,
+    network: isCrossChainSwap
+      ? {
+          label: getChainLabel(chainId),
+          color: validColor(networkColors.foreground),
+          logo: <NetworkLogo chainId={currencyInfo.currency.chainId} size={iconSizes.icon16} />,
+        }
+      : undefined,
+  }
 }

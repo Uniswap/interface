@@ -149,7 +149,11 @@ test.describe(
     })
 
     test.describe('in-app browser bottom chrome on the explore network filter', () => {
-      test.use({ userAgent: IN_APP_BROWSER_USER_AGENT, hasTouch: true, viewport: { width: 449, height: 900 } })
+      test.use({
+        userAgent: IN_APP_BROWSER_USER_AGENT,
+        hasTouch: true,
+        viewport: { width: 449, height: 900 },
+      })
 
       test('keeps the last network option above the chrome band', async ({ page }) => {
         await page.goto('/explore/tokens/ethereum')
@@ -157,13 +161,16 @@ test.describe(
         const content = openSheetContent(page)
         await expect(content).toHaveCSS('padding-bottom', `${IN_APP_BROWSER_CHROME_PX}px`)
 
-        await scrollEveryScrollerToEnd(content)
         const lastOption = content.locator(`[data-testid^="${ElementName.NetworkButton}-"]`).last()
-        const { bottom, innerHeight } = await lastOption.evaluate((el) => ({
-          bottom: el.getBoundingClientRect().bottom,
-          innerHeight: window.innerHeight,
-        }))
-        expect(bottom).toBeLessThanOrEqual(innerHeight - IN_APP_BROWSER_CHROME_PX)
+        // Retried because the sheet may still be sliding up, which puts the option below its resting spot.
+        await expect(async () => {
+          await scrollEveryScrollerToEnd(content)
+          const { bottom, innerHeight } = await lastOption.evaluate((el) => ({
+            bottom: el.getBoundingClientRect().bottom,
+            innerHeight: window.innerHeight,
+          }))
+          expect(bottom).toBeLessThanOrEqual(innerHeight - IN_APP_BROWSER_CHROME_PX)
+        }).toPass()
       })
     })
 

@@ -15,7 +15,7 @@ exports[`SplitLogo > inline > renders inline button 1`] = `
         fill="none"
         focusable="false"
         stroke-width="8"
-        style="width: 16px; height: 16px;"
+        style="color: var(--neutral2); width: 16px; height: 16px;"
         viewBox="0 0 16 16"
       >
         <path
@@ -53,7 +53,7 @@ exports[`SplitLogo > renders without error 1`] = `
         fill="currentColor"
         focusable="false"
         stroke-width="8"
-        style="width: 16px; height: 16px;"
+        style="color: var(--accent1); width: 16px; height: 16px;"
         viewBox="0 0 16 16"
       >
         <path

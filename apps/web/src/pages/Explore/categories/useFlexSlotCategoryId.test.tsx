@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react'
 import { type Category, TokenCategory, TokenCategoryClass } from 'uniswap/src/features/tokenCategories/types'
 import { describe, expect, it } from 'vitest'
+import { useFlexSlotCategoryId } from '~/features/Explore/categories/exploreCategoryChipOptions'
+import { ExploreCategory } from '~/features/Explore/categories/useExploreCategory'
 import { ExploreTablesFilterStoreContextProvider } from '~/features/Explore/state/exploreTablesFilterStore'
-import { useFlexSlotCategoryId } from '~/pages/Explore/categories/exploreCategoryChipOptions'
-import { ExploreCategory } from '~/pages/Explore/categories/useExploreCategory'
 
 function makeCategory(id: string): TokenCategory {
   return {

@@ -1,6 +1,4 @@
-import { Flex, Text, TouchableArea } from '@universe/mycelium'
-import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFilled'
-import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
+import { NetworkCostRow as NetworkCostRowView } from '@universe/transactions-ui'
 import { useTranslation } from 'react-i18next'
 
 export interface NetworkCostRowProps {
@@ -54,41 +52,19 @@ export function NetworkCostRow({
   const showAutoPill = enableCustomGasFeeEntry && !hasOverrides
   const showWarning = enableCustomGasFeeEntry && hasOverrides && hasWarning
 
-  const content = (
-    <Flex gap="$spacing4">
-      <Flex row alignItems="center" justifyContent="space-between">
-        <Text variant="body3" color="$neutral2">
-          {t('gas.override.title')}
-        </Text>
-        <Flex row alignItems="center" gap="$spacing6">
-          {showAutoPill && (
-            <Flex centered backgroundColor="$surface3" borderRadius="$rounded6" height={20} px="$spacing8">
-              <Text color="$neutral1" variant="buttonLabel4" lineHeight={16}>
-                {t('common.auto')}
-              </Text>
-            </Flex>
-          )}
-          {showWarning && (
-            <AlertTriangleFilled testID="network-cost-warning-icon" color="$statusWarning" size="$icon.16" />
-          )}
-          <Text variant="body3" color={showWarning ? '$statusWarning' : '$neutral1'}>
-            {gasFeeUsd ?? '—'}
-          </Text>
-          {pressable && <RotatableChevron color="$neutral3" direction="right" size="$icon.16" />}
-        </Flex>
-      </Flex>
-      {includesDelegation && (
-        <Text color="$neutral3" variant="body4">
-          {includesDelegationUpgrade
-            ? t('swap.warning.networkFee.includesSmartWalletUpdate')
-            : t('swap.warning.networkFee.includesDelegation')}
-        </Text>
-      )}
-    </Flex>
-  )
+  const delegationCaption = includesDelegation
+    ? includesDelegationUpgrade
+      ? t('swap.warning.networkFee.includesSmartWalletUpdate')
+      : t('swap.warning.networkFee.includesDelegation')
+    : undefined
 
-  if (!pressable) {
-    return content
-  }
-  return <TouchableArea onPress={onPress}>{content}</TouchableArea>
+  return (
+    <NetworkCostRowView
+      caption={delegationCaption}
+      hasWarning={showWarning}
+      isAuto={showAutoPill}
+      value={gasFeeUsd}
+      onPress={pressable ? onPress : undefined}
+    />
+  )
 }

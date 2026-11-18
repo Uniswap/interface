@@ -61,7 +61,6 @@ export function Dropdown({
         outlined={isTriggerStyled}
         onPress={() => toggleOpen(!isOpen)}
         active={isOpen && isTriggerStyled}
-        aria-label={dataTestId}
         data-testid={dataTestId}
         {...buttonStyle}
         transition={transition}

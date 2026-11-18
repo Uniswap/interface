@@ -10,6 +10,7 @@ import { TransactionSettingsModalStoreContextProvider } from 'uniswap/src/featur
 import {
   TransactionSettings,
   TransactionSettingsProps,
+  type TransactionSettingsTriggerProps,
 } from 'uniswap/src/features/transactions/components/settings/TransactionSettings'
 import { TransactionSettingsButtonWithSlippage } from 'uniswap/src/features/transactions/components/settings/TransactionSettingsButtonWithSlippage'
 import type { TransactionSettingConfig } from 'uniswap/src/features/transactions/components/settings/types'
@@ -50,15 +51,21 @@ function LPSettingsInner({ isNativePool = false, ...props }: LPSettingsProps): J
     [props.settings, isNativePool],
   )
 
+  const renderTrigger = (triggerProps: TransactionSettingsTriggerProps): JSX.Element => (
+    <TransactionSettingsButtonWithSlippage
+      {...triggerProps}
+      autoSlippageTolerance={autoSlippageTolerance}
+      warnLowSlippage
+    />
+  )
+
   return (
     <>
       <SlippageWarningModal isOpen={isSlippageWarningModalVisible} onClose={handleHideSlippageWarningModalWithSeen} />
       <TransactionSettings
         {...props}
         settings={lpSettings}
-        CustomSettingsButton={
-          <TransactionSettingsButtonWithSlippage autoSlippageTolerance={autoSlippageTolerance} warnLowSlippage />
-        }
+        renderTrigger={renderTrigger}
         onClose={onCloseSettingsModal}
       />
     </>

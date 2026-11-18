@@ -7,6 +7,8 @@
  * `--radius-*` tokens, colors onto the shared semantic tokens.
  */
 import { cn } from '../cn'
+import type { ColorTokens } from '../compat/color-tokens'
+import { colorClasses } from '../compat/style-classes'
 import { GAP_CLASS_BY_TOKEN, type SegmentedControlGapToken } from './tokens'
 import type { SegmentedControlSize } from './types'
 
@@ -187,7 +189,10 @@ export function getOptionTextColorClass({
  * control retires. Light mode already flattens to the same bytes as
  * bg-surface3 (rgb(236,236,236)), so it stays on the token.
  */
-export function indicatorPillClasses({ hovered }: { hovered: boolean }): string {
+export function indicatorPillClasses({ hovered, color }: { hovered: boolean; color?: ColorTokens }): string {
+  if (color) {
+    return cn('h-full w-full rounded-full', colorClasses('bg', color))
+  }
   return cn('h-full w-full rounded-full', hovered ? 'bg-surface3-hovered' : 'bg-surface3 dark:bg-[#ffffff1e]')
 }
 

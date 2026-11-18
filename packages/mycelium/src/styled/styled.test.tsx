@@ -295,14 +295,10 @@ describe('styled() hover lane', () => {
     expect(captured.className).toBe('bg-surface3-hovered')
     act(() => captured.onHoverOut?.())
     // DOM seam: a touch-derived pointerenter is ignored; mouse applies.
-    // jsdom has no PointerEvent, so RTL's fireEvent drops pointerType —
-    // dispatch a pointerover (React's onPointerEnter source event) carrying
-    // the property explicitly.
+    // React's onPointerEnter listens for pointerover.
     function firePointerEnter(element: HTMLElement, pointerType: string): void {
-      const event = new MouseEvent('pointerover', { bubbles: true, cancelable: true })
-      Object.defineProperty(event, 'pointerType', { value: pointerType })
       act(() => {
-        element.dispatchEvent(event)
+        element.dispatchEvent(new PointerEvent('pointerover', { bubbles: true, cancelable: true, pointerType }))
       })
     }
     const Dom = styled('div', { base: 'bg-surface2', hover: [{ class: 'bg-surface2-hovered' }] })

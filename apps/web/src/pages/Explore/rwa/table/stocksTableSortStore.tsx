@@ -11,7 +11,7 @@ export enum StocksSortMethod {
   VOLUME = 'Volume',
   HOUR_CHANGE = '1 hour',
   DAY_CHANGE = '1 day',
-  MARKET_CAP = 'Market cap',
+  FDV = 'FDV',
 }
 
 interface StocksTableSortState {

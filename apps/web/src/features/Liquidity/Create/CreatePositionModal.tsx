@@ -55,6 +55,8 @@ export function CreatePositionModal({
     setCurrentTransactionStep,
     poolOrPair,
     ticks,
+    onPositionCreated,
+    resetDeposit,
   } = useCreateLiquidityContext()
   const initialPriceAcceptance = useInitialPriceAcceptance()
   const { t } = useTranslation()
@@ -77,8 +79,14 @@ export function CreatePositionModal({
     setSteps([])
     setCurrentTransactionStep(undefined)
     onClose()
-    navigate('/positions')
-  }, [setCurrentTransactionStep, onClose, navigate])
+    if (onPositionCreated) {
+      // The surface keeps the user here, so clear the amounts they just deposited.
+      resetDeposit()
+      onPositionCreated()
+    } else {
+      navigate('/positions')
+    }
+  }, [setCurrentTransactionStep, onClose, onPositionCreated, resetDeposit, navigate])
 
   const handleCreate = useCallback(() => {
     setTransactionError(false)

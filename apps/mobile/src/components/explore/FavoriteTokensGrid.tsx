@@ -1,4 +1,3 @@
-import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { AnimatedFlex, Flex, getTokenValue } from '@universe/mycelium'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -31,8 +30,6 @@ type FavoriteTokensGridProps = {
 /** Renders the favorite tokens section on the Explore tab */
 export function FavoriteTokensGrid({ showLoading, listRef, ...rest }: FavoriteTokensGridProps): JSX.Element | null {
   const { t } = useTranslation()
-  // Standardized Explore section title; flag off keeps the legacy "Favorite tokens" heading.
-  const tokenCategoriesEnabled = useIsTokenCategoriesEnabled()
   const { hapticFeedback } = useHapticFeedback()
   const dispatch = useDispatch()
   // Pull multichain rankings independent of the Explore network filter so badge visibility and the
@@ -113,7 +110,7 @@ export function FavoriteTokensGrid({ showLoading, listRef, ...rest }: FavoriteTo
         disabled={showLoading}
         editingTitle={t('explore.tokens.favorite.title.edit')}
         isEditing={isEditing}
-        title={tokenCategoriesEnabled ? t('explore.section.favorites') : t('explore.tokens.favorite.title.default')}
+        title={t('explore.section.favorites')}
         onPress={toggleEditing}
       />
 

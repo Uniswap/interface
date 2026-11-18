@@ -1,6 +1,6 @@
 import { isMobileWeb, isWebPlatform } from '@universe/environment'
+import { WarningLine } from '@universe/transactions-ui'
 import { useTranslation } from 'react-i18next'
-import { WarningMessage } from 'uniswap/src/components/WarningMessage/WarningMessage'
 import { SLIPPAGE_CRITICAL_TOLERANCE } from 'uniswap/src/constants/transactions'
 import { useSlippageSettings } from 'uniswap/src/features/transactions/components/settings/settingsConfigurations/slippage/useSlippageSettings'
 import {
@@ -22,10 +22,10 @@ export function SlippageWarning(): JSX.Element | null {
   }
 
   return (
-    <WarningMessage
-      warningMessage={isCriticalSlippage ? t('swap.settings.slippage.warning') : t('swap.settings.slippage.alert')}
-      tooltipText={isWebPlatform && !isMobileWeb ? t('swap.settings.slippage.warning.hover') : undefined}
-      color={isCriticalSlippage ? '$statusCritical' : '$statusWarning'}
+    <WarningLine
+      message={isCriticalSlippage ? t('swap.settings.slippage.warning') : t('swap.settings.slippage.alert')}
+      tooltip={isWebPlatform && !isMobileWeb ? t('swap.settings.slippage.warning.hover') : undefined}
+      level={isCriticalSlippage ? 'critical' : 'warning'}
     />
   )
 }

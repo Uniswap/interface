@@ -1,5 +1,5 @@
 /**
- * Bottom chrome an Android in-app browser (Trust Wallet, MetaMask, Telegram, …) draws over the WebView:
+ * Bottom chrome an Android in-app browser (Trust Wallet, Telegram, …) draws over the WebView:
  * its own toolbar plus the OS navigation bar beneath it. Measured at 90-130px on an Android Trust Wallet
  * session; 144 clears the upper end with a margin. iOS in-app browsers do not overlay the WebView.
  *

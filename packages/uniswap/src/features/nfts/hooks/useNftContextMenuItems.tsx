@@ -1,6 +1,6 @@
 import { ConnectError } from '@connectrpc/connect'
-import { TokenReportEventType } from '@universe/api'
 import type { UniverseChainId } from '@universe/chains'
+import { TokenReportEventType } from '@universe/data-api'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { CopySheets } from '@universe/mycelium/icons/CopySheets'
 import { Eye } from '@universe/mycelium/icons/Eye'

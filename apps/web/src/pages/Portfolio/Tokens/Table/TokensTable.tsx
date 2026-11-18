@@ -8,8 +8,8 @@ import { InlineExpandoRow } from 'uniswap/src/components/ExpandoRow/InlineExpand
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
+import { useSimplePagination } from '~/components/Table/hooks/useSimplePagination'
 import { CollapsiblePinnedColumnScope } from '~/components/Table/PinnedColumns/collapse/CollapsiblePinnedColumnScope'
-import { useSimplePagination } from '~/pages/Explore/hooks/useSimplePagination'
 import { TokenData } from '~/pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
 import {
   PortfolioTokenSortMethod,

@@ -1,5 +1,4 @@
 import { createPromiseClient, type Transport } from '@connectrpc/connect'
-import { EmbeddedWalletService as OldEmbeddedWalletService } from '@uniswap/client-embeddedwallet/dist/uniswap/embeddedwallet/v1/service_connect'
 import { EmbeddedWalletService as NewEmbeddedWalletService } from '@uniswap/client-privy-embedded-wallet/dist/uniswap/privy-embedded-wallet/v1/service_connect'
 import type { EmbeddedWalletClientContext } from '@universe/api'
 import { createEmbeddedWalletApiClient, getTransport } from '@universe/api'
@@ -22,8 +21,6 @@ function createEmbeddedWalletTransport(): Transport {
 
 const embeddedWalletTransport = createEmbeddedWalletTransport()
 
-const oldEmbeddedWalletRpcClient = createPromiseClient(OldEmbeddedWalletService, embeddedWalletTransport)
-
 const newRpcClient = createPromiseClient(
   NewEmbeddedWalletService,
   embeddedWalletTransport,
@@ -31,5 +28,4 @@ const newRpcClient = createPromiseClient(
 
 export const EmbeddedWalletApiClient = createEmbeddedWalletApiClient({
   rpcClient: newRpcClient,
-  legacyRpcClient: oldEmbeddedWalletRpcClient,
 })

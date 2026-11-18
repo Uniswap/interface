@@ -10,7 +10,7 @@ import {
   MODAL_STYLESHEET,
   getSheetHeightStyles,
   stripConsumerHeightForFit,
-  useSheetEscapeToClose,
+  useDismissLayer,
   useSheetFitHeightFreeze,
   type OutsideInteractionEvent,
   useSheetDrag,
@@ -48,7 +48,7 @@ export function WebBottomSheet({
   // drag/freeze effects (a ref read inside them would silently never attach on first open).
   const [frameNode, setFrameNode] = useState<HTMLDivElement | null>(null)
   useSheetDrag({ isOpen, onClose, frame: frameNode })
-  useSheetEscapeToClose({ isOpen, onClose })
+  useDismissLayer({ isOpen, onClose })
   // Ratchet the tallest height. `content` shrinks; percent mode is snap-owned.
   useSheetFitHeightFreeze({
     isOpen,
@@ -116,7 +116,7 @@ export function WebBottomSheet({
     },
     [canDismissOnOverlayPress, isOpen, onClose],
   )
-  // Escape is owned by useSheetEscapeToClose (open-scoped, own stack): Radix's Escape dismissal
+  // Escape is owned by useDismissLayer (open-scoped, own stack): Radix's Escape dismissal
   // arbitrates across ALL mounted DismissableLayers, and force-mounted closed sheets would make
   // the last-mounted sheet swallow Escape for every open one. preventDefault here keeps Radix's
   // path inert for sheets in both states.

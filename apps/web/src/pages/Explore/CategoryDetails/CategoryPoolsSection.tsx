@@ -11,17 +11,21 @@ import type { PoolCategory } from 'uniswap/src/features/tokenCategories/types'
 import { useEvent } from 'utilities/src/react/hooks'
 import { OrderDirection } from '~/data/util'
 import {
+  getExplorePoolsURL,
+  isCategoryUnsupportedChain,
+  scrollToExploreTokenSection,
+} from '~/features/Explore/categories/useExploreCategory'
+import {
   ExploreTablesFilterStoreContextProvider,
   useExploreTablesFilterStore,
   useExploreTablesFilterStoreActions,
 } from '~/features/Explore/state/exploreTablesFilterStore'
 import { usePoolsAprRange } from '~/features/Liquidity/PoolsFilter/aprRange'
 import { PoolsFilter } from '~/features/Liquidity/PoolsFilter/PoolsFilter'
-import { getExplorePoolsURL, isCategoryUnsupportedChain } from '~/pages/Explore/categories/useExploreCategory'
+import { PoolsTable } from '~/features/Liquidity/PoolsTable/PoolsTable'
+import { PoolTableStoreContextProvider, usePoolTableStore } from '~/features/Liquidity/PoolsTable/state/poolTableStore'
 import { useListPools } from '~/pages/Explore/hooks/useListPools'
 import { SearchBar } from '~/pages/Explore/SearchBar'
-import { PoolsTable } from '~/pages/Explore/tables/Pools/PoolTable'
-import { PoolTableStoreContextProvider, usePoolTableStore } from '~/pages/Explore/tables/Pools/poolTableStore'
 import { ExploreTab } from '~/types/explore'
 import type { PoolsFilterState } from '~/types/poolsFilter'
 import { getChainFilterFromSearchParams, withChainSearchParam } from '~/utils/params/chainQueryParam'
@@ -73,6 +77,7 @@ function CategoryPoolsTable({
       surface="category-details"
       scopedCategoryId={categoryId}
       filterString={filterString}
+      onSort={scrollToExploreTokenSection}
       virtualized
     />
   )

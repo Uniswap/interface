@@ -4,7 +4,6 @@ import { useEffect, useLayoutEffect } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { Navigate, useLocation } from 'react-router'
 import { initializeScrollWatcher } from 'uniswap/src/components/modals/ScrollLock'
-import { usePoolsBalanceCoachmarkStateInit } from 'uniswap/src/features/portfolio/PortfolioBalance/usePoolsBalanceCoachmarkStateInit'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ResetPageScrollEffect } from '~/app/bootstrap/ResetPageScroll'
 import { ResetPortfolioChainOnEntryEffect } from '~/app/bootstrap/ResetPortfolioChainOnEntry'
@@ -14,8 +13,8 @@ import { AppLayout } from '~/app/layout/Layout'
 import { ErrorBoundary } from '~/components/ErrorBoundary'
 import { useFeatureFlagUrlOverrides } from '~/featureFlags/useFeatureFlagUrlOverrides'
 import { DatadogContextUpdater } from '~/features/datadog/DatadogContextUpdater'
-import { useDynamicMetatags } from '~/pages/metatags'
-import { findRouteByPath } from '~/pages/RouteDefinitions'
+import { useDynamicMetatags } from '~/pages/routes/metatags'
+import { findRouteByPath } from '~/pages/routes/RouteDefinitions'
 import { useEmbedSession } from '~/pages/Swap/embedContext'
 import { getSwapCapabilities } from '~/pages/Swap/swapCapabilities'
 import { isPathBlocked } from '~/utils/blockedPaths'
@@ -35,7 +34,6 @@ export function App() {
   const { embedded, view: embedView } = useEmbedSession()
 
   useFeatureFlagUrlOverrides()
-  usePoolsBalanceCoachmarkStateInit()
 
   useEffect(() => {
     initializeScrollWatcher()

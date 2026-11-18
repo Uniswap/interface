@@ -3,7 +3,7 @@ import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
 import { useTranslation } from 'react-i18next'
 
 // Centered divider toggle (design): Separator — "Show more/less ⌄" — Separator. Collapses/expands the
-// modals' detail rows.
+// modals' detail rows. The whole line is the button, separators included.
 export function MarginShowMoreToggle({
   isExpanded,
   onToggle,
@@ -17,19 +17,24 @@ export function MarginShowMoreToggle({
   const { t } = useTranslation()
   const labelText = isExpanded ? t('common.button.showLess') : t('common.button.showMore')
   return (
-    <Flex row alignItems="center" gap="$spacing12">
+    <TouchableArea
+      row
+      alignItems="center"
+      gap="$spacing12"
+      onPress={onToggle}
+      aria-expanded={isExpanded}
+      aria-label={labelText}
+    >
       <Separator style={{ flex: 1 }} />
-      <TouchableArea onPress={onToggle} aria-expanded={isExpanded} aria-label={labelText}>
-        <Flex row alignItems="center" gap="$spacing4">
-          {!hideLabel && (
-            <Text variant="buttonLabel3" color="$neutral2">
-              {labelText}
-            </Text>
-          )}
-          <RotatableChevron direction={isExpanded ? 'up' : 'down'} size="$icon.16" color="$neutral2" />
-        </Flex>
-      </TouchableArea>
+      <Flex row alignItems="center" gap="$spacing4">
+        {!hideLabel && (
+          <Text variant="buttonLabel3" color="$neutral2">
+            {labelText}
+          </Text>
+        )}
+        <RotatableChevron direction={isExpanded ? 'up' : 'down'} size="$icon.16" color="$neutral2" />
+      </Flex>
       <Separator style={{ flex: 1 }} />
-    </Flex>
+    </TouchableArea>
   )
 }

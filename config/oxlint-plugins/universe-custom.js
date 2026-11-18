@@ -960,7 +960,10 @@ const noPlatformGateInChainFlags = {
 //     import itself (`~/features/wallet/`, or bare `~/features/wallet`).
 //   siblingIsolation — a file under importerRootMarker (e.g. `/apps/web/src/pages/`) may import its
 //     own top-level folder but not a sibling's. Allowed: importers that are files at the layer root
-//     (the route table imports every page), targets named in allowedSiblings, and, with
+//     (the route table imports every page), importers inside a folder named in
+//     exemptImporterSiblings (`pages/routes/`, where the route table lives), targets named in
+//     allowedSiblings, targets named in allowedSiblingEntries when imported as the bare folder only
+//     (`~/pages/Swap`, the embeddable widget; `~/pages/Swap/Limit/...` still reports), and, with
 //     allowRootFiles, targets that resolve to a file at the layer root (`~/pages/paths`). A bare
 //     folder import (`~/pages/Swap` -> `pages/Swap/index.tsx`) is a sibling import, so root files are
 //     checked on disk rather than by counting slashes.
@@ -1053,6 +1056,18 @@ function loadImportBoundaries() {
           `import-boundaries.json: boundary "${id}" (siblingIsolation) "allowedSiblings" must be an array of non-empty strings`,
         )
       }
+      const allowedSiblingEntries = b.allowedSiblingEntries ?? []
+      if (!Array.isArray(allowedSiblingEntries) || !allowedSiblingEntries.every((n) => typeof n === 'string' && n)) {
+        throw new Error(
+          `import-boundaries.json: boundary "${id}" (siblingIsolation) "allowedSiblingEntries" must be an array of non-empty strings`,
+        )
+      }
+      const exemptImporterSiblings = b.exemptImporterSiblings ?? []
+      if (!Array.isArray(exemptImporterSiblings) || !exemptImporterSiblings.every((n) => typeof n === 'string' && n)) {
+        throw new Error(
+          `import-boundaries.json: boundary "${id}" (siblingIsolation) "exemptImporterSiblings" must be an array of non-empty strings`,
+        )
+      }
       if (b.allowRootFiles !== undefined && typeof b.allowRootFiles !== 'boolean') {
         throw new Error(
           `import-boundaries.json: boundary "${id}" (siblingIsolation) "allowRootFiles" must be a boolean`,
@@ -1066,6 +1081,8 @@ function loadImportBoundaries() {
         importPrefixes: b.importPrefixes,
         bareModuleSources: b.bareModuleSources,
         allowedSiblings,
+        allowedSiblingEntries,
+        exemptImporterSiblings,
         allowRootFiles: b.allowRootFiles ?? false,
       }
     }
@@ -1134,11 +1151,17 @@ function isSiblingImport(physicalPath, suffix, boundary) {
     return false
   }
   const importerSibling = importerRest.split('/')[0]
+  if (boundary.exemptImporterSiblings.includes(importerSibling)) {
+    return false
+  }
   const targetSibling = suffix.split('/')[0]
   if (targetSibling === '') {
     return !boundary.allowRootFiles
   }
   if (targetSibling === importerSibling || boundary.allowedSiblings.includes(targetSibling)) {
+    return false
+  }
+  if (suffix === targetSibling && boundary.allowedSiblingEntries.includes(targetSibling)) {
     return false
   }
   if (

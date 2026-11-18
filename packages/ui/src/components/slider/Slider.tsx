@@ -12,6 +12,7 @@ export interface SliderProps {
   trackColor?: string
   activeColor?: string
   thumbColor?: string
+  thumbBorderColor?: string
   trackHeight?: number
   thumbSize?: number
   // Height of the hit/interaction area around the thin visual track.

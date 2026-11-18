@@ -49,7 +49,6 @@ describe('deriveMarginReceiptFigures', () => {
     expect(figures.oraclePrice).toBe(2985)
     // $3,000 fill against the $2,985 mark: 15 / 2985 = 50.25 bps, floored.
     expect(figures.priceImpactBps).toBe(50)
-    expect(figures.entryImpactPct).toBe(-0.5)
     expect(figures.liquidationPrice).toBe(1800)
     // (1800 − 2985) / 2985.
     expect(figures.liqDistancePct).toBeCloseTo(-39.7, 1)
@@ -77,7 +76,6 @@ describe('deriveMarginReceiptFigures', () => {
     expect(figures.oraclePrice).toBeUndefined()
     expect(figures.priceImpactBps).toBeUndefined()
     expect(figures.liqDistancePct).toBeUndefined()
-    expect(figures.entryImpactPct).toBeUndefined()
     expect(figures.breakEvenPrice).toBeUndefined()
   })
 
@@ -90,7 +88,6 @@ describe('deriveMarginReceiptFigures', () => {
       direction: MarginDirection.LONG,
     })
     expect(figures.priceImpactBps).toBe(0)
-    expect(figures.entryImpactPct).toBeUndefined()
   })
 
   // A leg with no increase group (and the '0' sentinels) must hide figures, not throw mid-render.

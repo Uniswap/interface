@@ -8,9 +8,12 @@
  * can compose it via its `render` prop inside `ContextMenuCompat`.
  */
 // oxlint-disable react/forbid-elements -- the compat components ARE the raw DOM boundary (no Tamagui Flex here)
+import { useButton } from '@base-ui/react/internals/use-button'
 import * as React from 'react'
+import { useComposedRefs } from 'utilities/src/react/composeRefs'
 import { cn } from '../cn'
 import { mergeCompatStyle } from '../compat/compose'
+import { isCompositeItemRole } from '../compat/composite-role'
 import { CheckCircleFilled } from '../components/icons/CheckCircleFilled'
 import { ExternalLink } from '../components/icons/ExternalLink'
 import {
@@ -73,6 +76,28 @@ export const DropdownMenuSheetItemCompat = React.forwardRef<
     event.stopPropagation()
   }
 
+  const interactionProps: React.HTMLAttributes<HTMLDivElement> = {
+    role,
+    // `disabled` detaches the composed interaction surface, like TouchableArea.
+    onClick: disabled === true ? undefined : handlePress,
+    onPointerDown: disabled === true ? undefined : (onPointerDown ?? stopPointerPropagation),
+    onPointerUp: disabled === true ? undefined : (onPointerUp ?? stopPointerPropagation),
+  }
+  // Base UI's button hook gives an interactive item its tab stop and Enter/Space activation, and yields to
+  // a Base UI Menu.Item that renders this element once it has handled the key. A presentational row (the
+  // standalone MenuContentCompat shape) keeps the legacy markup: no tab stop, no key handling.
+  const interactive = role !== 'none' && role !== 'presentation'
+  const { getButtonProps, buttonRef } = useButton({
+    disabled: disabled === true,
+    native: false,
+    composite: isCompositeItemRole(role) || undefined,
+  })
+  // Base UI types its ref for any HTMLElement; a callback accepting that also accepts the div.
+  const composedRef = useComposedRefs<HTMLDivElement>(ref, buttonRef as React.Ref<HTMLDivElement>)
+  const rootProps: React.HTMLAttributes<HTMLDivElement> = interactive
+    ? getButtonProps({ ...rest, ...interactionProps })
+    : { ...rest, ...interactionProps }
+
   // Web sizes; the native leg sizes the icon from the `$icon` tokens instead.
   const externalLinkSize = subheader !== undefined ? 16 : 12
 
@@ -89,20 +114,14 @@ export const DropdownMenuSheetItemCompat = React.forwardRef<
   })
 
   return (
-    // oxlint-disable-next-line react/forbid-elements jsx-a11y/no-static-element-interactions jsx-a11y/click-events-have-key-events -- the compat item IS the raw DOM boundary (no Tamagui TouchableArea here); `role` defaults to button and the rule cannot read a dynamic role; TODO: drop once compat buttons get Enter/Space activation
+    // oxlint-disable-next-line react/forbid-elements -- the compat item IS the raw DOM boundary (no Tamagui TouchableArea here)
     <div
-      ref={ref}
-      {...rest}
+      ref={composedRef}
+      {...rootProps}
       data-slot="dropdown-menu-sheet-item-compat"
-      // TODO(INFRA-4589): no tabIndex, so Tab never reaches the item and keyboard users can't select it.
-      role={role}
       aria-disabled={disabled === true ? true : undefined}
       className={cn(frameEmission.className, className)}
       style={mergeCompatStyle(frameEmission.style, rest.style)}
-      // `disabled` detaches the composed interaction surface, like TouchableArea.
-      onClick={disabled === true ? undefined : handlePress}
-      onPointerDown={disabled === true ? undefined : (onPointerDown ?? stopPointerPropagation)}
-      onPointerUp={disabled === true ? undefined : (onPointerUp ?? stopPointerPropagation)}
     >
       <div className="flex min-w-0 flex-shrink flex-grow flex-row items-center">
         {icon !== undefined && icon !== null && <div className="flex flex-shrink-0">{icon}</div>}

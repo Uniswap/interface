@@ -725,54 +725,6 @@
         }
       }
     },
-    "/limit_order_quote": {
-      "post": {
-        "tags": [
-          "swapping"
-        ],
-        "summary": "Get a limit order quote",
-        "description": "Get a quote for a limit order according to the provided configuration.",
-        "operationId": "get_limit_order_quote",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/agentInfoHeader"
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LimitOrderQuoteRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/LimitOrderQuoteSuccess200"
-          },
-          "400": {
-            "$ref": "#/components/responses/BadRequest400"
-          },
-          "401": {
-            "$ref": "#/components/responses/Unauthorized401"
-          },
-          "404": {
-            "$ref": "#/components/responses/QuoteNotFound404"
-          },
-          "429": {
-            "$ref": "#/components/responses/RateLimitedErr429"
-          },
-          "500": {
-            "$ref": "#/components/responses/InternalErr500"
-          },
-          "504": {
-            "$ref": "#/components/responses/Timeout504"
-          }
-        },
-        "x-internal": true
-      }
-    },
     "/lp/check_approval": {
       "servers": [
         {
@@ -2603,16 +2555,6 @@
                 }
               },
               "permitTransaction": null
-            }
-          }
-        }
-      },
-      "LimitOrderQuoteSuccess200": {
-        "description": "Limit Order Quote request successful.",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/LimitOrderQuoteResponse"
             }
           }
         }
@@ -4519,32 +4461,6 @@
           "gasSponsored"
         ]
       },
-      "LimitOrderQuoteResponse": {
-        "type": "object",
-        "properties": {
-          "requestId": {
-            "$ref": "#/components/schemas/RequestId"
-          },
-          "quote": {
-            "$ref": "#/components/schemas/DutchQuote"
-          },
-          "routing": {
-            "type": "string",
-            "enum": [
-              "LIMIT_ORDER"
-            ]
-          },
-          "permitData": {
-            "$ref": "#/components/schemas/NullablePermit"
-          }
-        },
-        "required": [
-          "routing",
-          "quote",
-          "permitData",
-          "requestId"
-        ]
-      },
       "QuoteRequest": {
         "type": "object",
         "properties": {
@@ -4640,47 +4556,6 @@
           "tokenIn",
           "tokenOut",
           "swapper"
-        ]
-      },
-      "LimitOrderQuoteRequest": {
-        "type": "object",
-        "properties": {
-          "swapper": {
-            "$ref": "#/components/schemas/receiverWalletAddress"
-          },
-          "limitPrice": {
-            "type": "string"
-          },
-          "amount": {
-            "$ref": "#/components/schemas/tokenAmount"
-          },
-          "orderDeadline": {
-            "type": "number"
-          },
-          "type": {
-            "$ref": "#/components/schemas/TradeType"
-          },
-          "tokenIn": {
-            "$ref": "#/components/schemas/inputToken"
-          },
-          "tokenOut": {
-            "$ref": "#/components/schemas/outputToken"
-          },
-          "tokenInChainId": {
-            "$ref": "#/components/schemas/ChainId"
-          },
-          "tokenOutChainId": {
-            "$ref": "#/components/schemas/ChainId"
-          }
-        },
-        "required": [
-          "swapper",
-          "type",
-          "amount",
-          "tokenIn",
-          "tokenOut",
-          "tokenInChainId",
-          "tokenOutChainId"
         ]
       },
       "GetOrdersResponse": {

@@ -38,7 +38,7 @@ exports[`NewAddressSpeedBumpModal > should not render AccountIcon if account has
         data-state="open"
         id="radix-_r_0_"
         role="dialog"
-        style="--c-w: calc(100vw - 32px); --c-max-w: 420px; --c-max-h: calc(100vh - 32px); --cE-p: 12px; --cE-h: max-content; --cE-max-h: calc(100dvh - 72px); pointer-events: auto;"
+        style="--c-w: calc(100vw - 32px); --c-max-w: 420px; --c-max-h: calc(100vh - 32px); --cE-p: 12px; --cE-h: max-content; --cE-max-h: calc(100dvh - 72px); scrollbar-width: thin; scrollbar-color: rgba(19, 19, 19, 0.08) transparent; overscroll-behavior: contain; pointer-events: auto;"
         tabindex="-1"
       >
         <h2
@@ -64,7 +64,7 @@ exports[`NewAddressSpeedBumpModal > should not render AccountIcon if account has
                   aria-hidden="true"
                   focusable="false"
                   stroke-width="8"
-                  style="width: 16px; height: 16px;"
+                  style="color: var(--neutral1); width: 16px; height: 16px;"
                   viewBox="0 0 16 16"
                 >
                   <path
@@ -111,7 +111,7 @@ exports[`NewAddressSpeedBumpModal > should not render AccountIcon if account has
               fill="none"
               focusable="false"
               stroke-width="8"
-              style="width: 28px; height: 28px;"
+              style="color: var(--neutral2); width: 28px; height: 28px;"
               viewBox="0 0 24 24"
             >
               <path

@@ -1,5 +1,5 @@
 import type { RankedMultichainToken } from '@uniswap/client-data-api/dist/data/v2/types_pb'
-import { multichainTokenKey } from '~/features/Explore/state/listTokens/utils/multichainTokenKey'
+import { multichainTokenKey } from '@universe/data-api'
 
 /**
  * Builds a rank map from ranked multichain tokens (multichainTokenKey -> 1-based rank).

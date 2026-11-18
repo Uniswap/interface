@@ -2,12 +2,10 @@ import type { PlainMessage } from '@bufbuild/protobuf'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { LaunchesOrderBy, LaunchWindow, type Launch } from '@uniswap/client-launches/dist/launches/v1/types_pb'
 import type { UniverseChainId } from '@universe/chains'
+import { type ListLaunchesParams } from '@universe/data-api'
 import { useMemo } from 'react'
 import { PollingInterval } from 'uniswap/src/constants/misc'
-import {
-  getListLaunchesQueryOptions,
-  type ListLaunchesParams,
-} from 'uniswap/src/data/apiClients/dataApiService/launches/queries'
+import { getListLaunchesQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/launches/queries'
 import { useEvent } from 'utilities/src/react/hooks'
 
 export const LAUNCHES_API_PAGE_SIZE = 25

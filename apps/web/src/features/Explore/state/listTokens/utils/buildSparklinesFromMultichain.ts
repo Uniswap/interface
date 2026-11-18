@@ -1,7 +1,7 @@
 import type { RankedMultichainToken } from '@uniswap/client-data-api/dist/data/v2/types_pb'
+import { multichainTokenKey } from '@universe/data-api'
 import type { SparklineMap } from '~/data/types'
 import type { PricePoint } from '~/data/util'
-import { multichainTokenKey } from '~/features/Explore/state/listTokens/utils/multichainTokenKey'
 
 /**
  * Builds a sparklines map (multichainId -> priceHistory) for the given tokens from the

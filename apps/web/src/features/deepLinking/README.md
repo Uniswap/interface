@@ -267,8 +267,8 @@ This section provides technical details for developers integrating these URLs in
 
 **Routing System:**
 
-- Route definitions: `apps/web/src/pages/RouteDefinitions.tsx`
-- All supported paths: `apps/web/src/pages/paths.ts`
+- Route definitions: `apps/web/src/pages/routes/RouteDefinitions.tsx`
+- All supported paths: `apps/web/src/pages/routes/paths.ts`
 - React Router with `matchPath()` for parameter extraction
 
 **Query Parameter Processing:**

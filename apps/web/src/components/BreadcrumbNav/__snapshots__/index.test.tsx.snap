@@ -57,7 +57,7 @@ exports[`BreadcrumbNav > renders hover components correctly 1`] = `
             fill="none"
             focusable="false"
             stroke-width="8"
-            style="width: 16px; height: 16px;"
+            style="color: var(--success); width: 16px; height: 16px;"
             viewBox="0 0 17 18"
           >
             <path

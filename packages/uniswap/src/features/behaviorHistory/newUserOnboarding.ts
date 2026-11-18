@@ -10,6 +10,10 @@ export interface NewUserOnboardingWalletHistory {
   hasCompletedSwap?: boolean
   /** Sticky: a wallet that spends down to $0 shouldn't see the funding step again. */
   hasBeenFunded?: boolean
+  checklistSeen?: boolean
+  checklistExpanded?: boolean
+  /** Sticky, so an unreadable backup status can't bring the checklist back. */
+  checklistCompleted?: boolean
   /** Hides only the guided swap coachmarks; the checklist and other nudges stay. */
   guidedSwapDismissed?: boolean
 }

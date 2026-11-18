@@ -28,7 +28,6 @@ import { useSelectedColorScheme } from 'uniswap/src/features/appearance/hooks'
 import { useCurrentLanguage } from 'uniswap/src/features/language/hooks'
 import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
 import { getLocale } from 'uniswap/src/features/language/navigatorLocale'
-import { usePoolsBalanceCoachmarkStateInit } from 'uniswap/src/features/portfolio/PortfolioBalance/usePoolsBalanceCoachmarkStateInit'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import i18n, { changeLanguage } from 'uniswap/src/i18n'
 import { getLogger } from 'utilities/src/logger/logger'
@@ -107,7 +106,6 @@ function BaseAppContainerInner({ children }: PropsWithChildren): JSX.Element {
               <TraceUserProperties />
               <DatadogContextUpdater />
               <StatsigUserIdentifiersUpdater />
-              <PoolsBalanceCoachmarkStateInit />
               <ApiInit getSessionInitService={provideSessionInitializationService} />
               {children}
             </LocalizationContextProvider>
@@ -129,11 +127,6 @@ export function BaseAppContainer({
       </ExtensionStatsigProvider>
     </Trace>
   )
-}
-
-function PoolsBalanceCoachmarkStateInit(): null {
-  usePoolsBalanceCoachmarkStateInit()
-  return null
 }
 
 function LanguageSync(): null {

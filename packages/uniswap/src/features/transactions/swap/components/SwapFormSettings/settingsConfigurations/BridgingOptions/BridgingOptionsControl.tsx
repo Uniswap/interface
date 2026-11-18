@@ -16,7 +16,7 @@ export function BridgingOptionsControl(): JSX.Element {
         color: '$neutral2Hovered',
       }}
     >
-      {isAllBridgeProviders(selectedBridgeProviders) ? t('common.all') : t('common.custom')}
+      {isAllBridgeProviders(selectedBridgeProviders) ? t('common.default') : t('common.custom')}
     </Text>
   )
 }

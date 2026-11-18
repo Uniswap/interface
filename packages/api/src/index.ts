@@ -30,9 +30,6 @@ export {
   DEV_RPC_HOST,
   ENTRY_GATEWAY_API_BASE_URLS,
   ENTRY_GATEWAY_HOSTS,
-  getCloudflareApiBaseUrl,
-  getCloudflarePrefix,
-  getServicePrefix,
   helpUrl,
   PROD_ENTRY_GATEWAY_API_BASE_URL,
   PROD_ENTRY_GATEWAY_HOST,
@@ -43,7 +40,6 @@ export {
   STAGING_ENTRY_GATEWAY_HOST,
   STAGING_RPC_API_BASE_URL,
   STAGING_RPC_HOST,
-  TrafficFlows,
 } from './clients/base/urls'
 
 // Auth
@@ -180,57 +176,7 @@ export type {
   EstimateGasFeeResponse as GasServiceEstimateResponse,
 } from '@uniswap/client-unirpc-v2/dist/uniswap/unirpc/v2/service_pb'
 
-// Data API Service
-export {
-  createDataApiServiceClient,
-  type DataApiServiceClient,
-  type DataApiServiceClientContext,
-} from './clients/dataApi/createDataApiServiceClient'
-export {
-  getGetPortfolioQueryOptions,
-  type GetPortfolioQueryParams,
-} from './clients/dataApi/getGetPortfolioQueryOptions'
-export {
-  getGetWalletBalancesQueryOptions,
-  type GetWalletBalancesQueryParams,
-} from './clients/dataApi/getGetWalletBalancesQueryOptions'
-export {
-  fetchWalletsBalances,
-  getGetWalletsBalancesQueryOptions,
-  type GetWalletsBalancesQueryParams,
-} from './clients/dataApi/getGetWalletsBalancesQueryOptions'
-export {
-  getGetWalletProfitLossQueryOptions,
-  type GetWalletProfitLossQueryParams,
-} from './clients/dataApi/getGetWalletProfitLossQueryOptions'
-export {
-  getGetWalletTokenProfitLossQueryOptions,
-  type GetWalletTokenProfitLossQueryParams,
-} from './clients/dataApi/getGetWalletTokenProfitLossQueryOptions'
-export {
-  getGetWalletTokensProfitLossQueryOptions,
-  type GetWalletTokensProfitLossQueryParams,
-} from './clients/dataApi/getGetWalletTokensProfitLossQueryOptions'
-export { type WalletAddressKey } from './clients/dataApi/walletAddressKey'
-export {
-  type BalanceComponent,
-  type GetPortfolioRequest,
-  type GetPortfolioResponse,
-  type GetWalletBalancesRequest,
-  type GetWalletBalancesResponse,
-  type WalletBalance,
-} from '@uniswap/client-data-api/dist/data/v1/api_pb'
-export { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
-export { type Token as DataApiToken, TokenReportEventType } from '@uniswap/client-data-api/dist/data/v1/types_pb'
-
-// Data API Service V2
-export {
-  createDataApiServiceClientV2,
-  type DataApiServiceClientV2,
-} from './clients/dataApi/createDataApiServiceClientV2'
-
 // Launch Service (launches.v1)
-export { createLaunchServiceClient, type LaunchServiceClient } from './clients/launches/createLaunchServiceClient'
 
 // Notifications API
 export { createNotificationsApiClient } from './clients/notifications/createNotificationsApiClient'
@@ -330,14 +276,6 @@ export {
 
 // ConnectRPC API
 export { ALL_NETWORKS_ARG, createConnectTransportWithDefaults, type ConnectRpcContext } from './connectRpc/base'
-export {
-  parseRestProtocolVersion,
-  transformInput,
-  transformWalletsInput,
-  type WithoutWalletAccount,
-  type WithoutWalletAccounts,
-} from './connectRpc/utils'
-export { getConnectQueryRetryDelay, isConnectUnavailableError, shouldRetryConnectQuery } from './connectRpc/retry'
 
 // Conversion Tracking API
 export * as ConversionTrackingApi from './clients/conversionTracking'

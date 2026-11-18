@@ -1,19 +1,17 @@
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { TransactionEventType } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { isSVMChain, UniverseChainId, areAddressesEqual, normalizeTokenAddressForCache } from '@universe/chains'
+import { type ListTransactionsTokenScope } from '@universe/data-api'
 import { useCallback, useMemo, useRef } from 'react'
 import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
-import {
-  getListTransactionsQueryOptions,
-  type ListTransactionsTokenScope,
-} from 'uniswap/src/data/apiClients/dataApiService/transactions/queries'
+import { getListTransactionsQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/transactions/queries'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import type { ParsedToken } from 'uniswap/src/features/dataApi/utils/parsedToken'
 import { isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
+import { useInfiniteLoadMore } from '~/components/Table/hooks/useInfiniteLoadMore'
 import { parseUniswapTransaction, type PoolTransaction } from '~/data/transactions/poolTransaction'
-import { useInfiniteLoadMore } from '~/features/Explore/hooks/useInfiniteLoadMore'
 
 const TRANSACTIONS_PAGE_SIZE = 25
 

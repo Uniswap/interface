@@ -30,6 +30,7 @@ import {
   useTransactionModalContext,
 } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import { ExpectedFailureBanner } from 'uniswap/src/features/transactions/TransactionDetails/ExpectedFailureBanner'
 import { TransactionDetails } from 'uniswap/src/features/transactions/TransactionDetails/TransactionDetails'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { currencyAddress } from 'uniswap/src/utils/currencyId'
@@ -161,6 +162,9 @@ export function SendReviewDetails({
   const [isErc20ContractAddressWarningChecked, setIsErc20ContractAddressWarningChecked] = useState(false)
   const { isERC20ContractAddress, loading: erc20ContractLoading } = useIsErc20Contract(recipient, chainId)
   const shouldBlockERC20Send = !isErc20ContractAddressWarningChecked && isERC20ContractAddress && !erc20ContractLoading
+  // A reverting transfer (e.g. native currency to a token contract) resolves gas with no value, which keeps
+  // the button disabled whatever the checkbox says, so don't offer the override in that state.
+  const isGasEstimateMissing = !gasFee.isLoading && !gasFee.value
 
   const actionButtonDisabled =
     !!blockingWarning ||
@@ -319,13 +323,14 @@ export function SendReviewDetails({
       />
 
       {isERC20ContractAddress && (
-        <Flex pt="$spacing8">
+        <Flex gap="$spacing8" pt="$spacing8">
+          {isGasEstimateMissing && !gasFee.error && <ExpectedFailureBanner isSwap={false} />}
           <InlineWarningCard
             hideCtaIcon
             severity={WarningSeverity.High}
             heading={t('send.warning.erc20.checkbox.heading')}
             description={t('send.warning.erc20.checkbox.description')}
-            checkboxLabel={t('common.button.understand')}
+            checkboxLabel={isGasEstimateMissing ? undefined : t('common.button.understand')}
             checked={isErc20ContractAddressWarningChecked}
             setChecked={setIsErc20ContractAddressWarningChecked}
             Icon={AlertTriangleFilled}

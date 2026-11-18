@@ -1,4 +1,6 @@
+import type { PlainMessage } from '@bufbuild/protobuf'
 import { useQuery } from '@tanstack/react-query'
+import type { GetTokenHistoryPriceResponse } from '@uniswap/client-data-api/dist/data/v2/api_pb'
 import { HistoryDuration } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { areEvmAddressesEqual, normalizeTokenAddressForCache } from '@universe/chains'
 import { Flex, Shimmer, Text } from '@universe/mycelium'
@@ -25,6 +27,17 @@ import { ToucanActionButton } from '~/features/Toucan/Shared/ToucanActionButton'
 
 const SPARKLINE_HEIGHT = 111
 const SPARKLINE_KEY = 'auction-token'
+
+type SparklinePoint = { timestamp: number; value: number }
+
+const EMPTY_SPARKLINE_POINTS: SparklinePoint[] = []
+
+function selectSparklinePoints(data: PlainMessage<GetTokenHistoryPriceResponse> | undefined): SparklinePoint[] {
+  return (
+    data?.points.map((point) => ({ timestamp: Number(point.timestamp), value: point.priceUsd })) ??
+    EMPTY_SPARKLINE_POINTS
+  )
+}
 
 export function NowTradingCard(): JSX.Element | null {
   const { t } = useTranslation()
@@ -57,7 +70,7 @@ export function NowTradingCard(): JSX.Element | null {
     refetchInterval: PollingInterval.KindaFast,
   })
   const {
-    data: priceHistory,
+    data: sparklinePoints = EMPTY_SPARKLINE_POINTS,
     isLoading: historyLoading,
     isFetched: historyFetched,
   } = useQuery({
@@ -69,6 +82,7 @@ export function NowTradingCard(): JSX.Element | null {
           }
         : undefined,
       enabled: isVisible,
+      select: selectSparklinePoints,
     }),
     placeholderData: undefined,
     refetchInterval: PollingInterval.KindaFast,
@@ -80,10 +94,6 @@ export function NowTradingCard(): JSX.Element | null {
       areEvmAddressesEqual(market.address, tokenIdentifier.address),
   )?.stats
 
-  const sparklinePoints = useMemo(
-    () => priceHistory?.points.map((point) => ({ timestamp: Number(point.timestamp), value: point.priceUsd })) ?? [],
-    [priceHistory?.points],
-  )
   const sparklineMap = useMemo(() => ({ [SPARKLINE_KEY]: sparklinePoints }), [sparklinePoints])
 
   if (!mayBecomeVisible || !auctionDetails) {

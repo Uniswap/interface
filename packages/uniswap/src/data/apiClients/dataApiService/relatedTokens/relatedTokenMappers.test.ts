@@ -1,7 +1,7 @@
 import { UniverseChainId } from '@universe/chains'
+import { RELATED_TOKENS_MAX_COUNT } from '@universe/data-api'
 import {
   isSubjectToken,
-  RELATED_TOKENS_MAX_COUNT,
   toRelatedTokens,
 } from 'uniswap/src/data/apiClients/dataApiService/relatedTokens/relatedTokenMappers'
 import { rankedTokenToCardItem } from 'uniswap/src/data/apiClients/dataApiService/utils/rankedTokenCardItem'

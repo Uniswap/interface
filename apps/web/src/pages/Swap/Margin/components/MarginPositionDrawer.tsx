@@ -1,10 +1,8 @@
-import { useQuery } from '@tanstack/react-query'
 import { Flex, Text } from '@universe/mycelium'
 import { AlertTriangleFilled } from '@universe/mycelium/icons/AlertTriangleFilled'
 import { type CSSProperties, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { type MarginActivePosition } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
-import { marginPositionActivityQueryOptions } from 'uniswap/src/data/apiClients/tradingApi/useMarginPositionsQuery'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 import { Cell } from '~/components/Table/Cell'
@@ -58,52 +56,6 @@ function spanBorrowingColumns(columns: MarginDrawerColumn[]): MarginDrawerColumn
     },
   }
   return [...columns.slice(0, index), spanned, ...columns.slice(index + 2)]
-}
-
-// The position's partial decreases, read off its lifecycle events. Fetched only while the drawer is open;
-// a failed or absent read leaves the lines out and the rest of the drawer as it is.
-function DecreaseActivityLines({
-  position,
-  market,
-}: {
-  position: MarginActivePosition
-  market: MarginMarket
-}): JSX.Element | null {
-  const { t } = useTranslation()
-  const { formatNumberOrString } = useLocalizationContext()
-  const { data: activity } = useQuery(marginPositionActivityQueryOptions(position.activityId))
-  const decreases = (activity ?? []).flatMap(({ kind, txHash, debtRepaid, collateralSold, price }) =>
-    kind === 'MARGIN_ACTIVITY_KIND_DECREASE' && debtRepaid !== undefined && collateralSold !== undefined
-      ? [{ txHash, debtRepaid, collateralSold, price }]
-      : [],
-  )
-  if (decreases.length === 0) {
-    return null
-  }
-  return (
-    <Flex gap="$spacing4">
-      {decreases.map((decrease) => (
-        <Text key={decrease.txHash} variant="body4" color="$neutral2">
-          {t('margin.drawer.reducedActivity', {
-            debt: `${formatNumberOrString({
-              value: rawToNumber({ raw: decrease.debtRepaid, decimals: market.debt.decimals }),
-              type: NumberType.TokenNonTx,
-            })} ${marginUnwrapSymbol(market.debt)}`,
-            collateral: `${formatNumberOrString({
-              value: rawToNumber({ raw: decrease.collateralSold, decimals: market.collateral.decimals }),
-              type: NumberType.TokenNonTx,
-            })} ${market.displaySymbol}`,
-            price: decrease.price
-              ? formatNumberOrString({
-                  value: scaledE18ToNumber(decrease.price),
-                  type: NumberType.FiatTokenPrice,
-                })
-              : '—',
-          })}
-        </Text>
-      ))}
-    </Flex>
-  )
 }
 
 // A $neutral2 label over its value. A string value gets the default style; a node renders as-is.
@@ -261,9 +213,6 @@ export function MarginPositionDrawer({
             </CellContainer>
           )
         })}
-      </Flex>
-      <Flex px="$spacing12">
-        <DecreaseActivityLines position={position} market={market} />
       </Flex>
     </Flex>
   )

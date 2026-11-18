@@ -227,9 +227,9 @@ describe('isSameMarginQuoteSubject', () => {
   })
 
   // The market rides inside the `open` action, so it needs an open-shaped pair rather than the
-  // position-shaped `base` the table above uses. A leverage move across one market's ceiling re-picks
-  // the market, and blanking there would unmount the leverage popover mid-drag.
-  it('bridges a leverage move that switches the market on the same pair', () => {
+  // position-shaped `base` the table above uses. A venue pick moves the open to another market on the
+  // pair, and blanking there would unmount the receipt the pick was made in.
+  it('bridges a move to another market on the same pair', () => {
     const previous = req({ ...BASE_REQUEST, open: { leverageTarget: '4', marketId: MORPHO_MARKET_ID } })
     const next = req({ ...BASE_REQUEST, open: { leverageTarget: '6', marketId: AAVE_V3_MARKET_ID } })
     expect(isSameMarginQuoteSubject({ previous, next })).toBe(true)

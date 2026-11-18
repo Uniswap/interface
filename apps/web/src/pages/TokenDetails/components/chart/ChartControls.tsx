@@ -7,7 +7,9 @@ import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { InterfaceEventName, InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { AdvancedPriceChartToggle } from '~/components/Charts/AdvancedPriceChartToggle'
 import { refitChartContentAtom } from '~/components/Charts/ChartModel'
+import { getPillTimeSelectorOptions } from '~/components/Charts/timeLabels'
 import {
   DropdownSelector,
   type SelectOption,
@@ -17,8 +19,6 @@ import {
 import { TimePeriod } from '~/data/util'
 import { ChartActionsContainer } from '~/features/Explore/chart/ChartActionsContainer'
 import { ChartTypeToggle, getChartTypeLabel } from '~/features/Explore/chart/ChartTypeToggle'
-import { getPillTimeSelectorOptions } from '~/features/Explore/timeLabels'
-import { AdvancedPriceChartToggle } from '~/pages/TokenDetails/components/chart/AdvancedPriceChartToggle'
 import { usePrefetchTDPChartHistory } from '~/pages/TokenDetails/components/chart/hooks/usePrefetchTDPChartHistory'
 import {
   getDisplayPriceChartType,

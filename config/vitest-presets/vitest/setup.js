@@ -1,4 +1,5 @@
 // Sets up global.chrome in vitest environment
+import './jsdom-shims'
 import { vi } from 'vitest'
 
 // required polyfill for rtk-query baseQueryFn

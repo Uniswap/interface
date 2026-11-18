@@ -1,7 +1,7 @@
 import * as DialogPrimitive from '@radix-ui/react-dialog'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import * as React from 'react'
-import { markRadixEscapePreventedBySheet } from 'utilities/src/react/useSheetEscapeToClose'
+import { markRadixEscapePreventedBySheet } from 'utilities/src/react/useDismissLayer'
 import { sleep } from 'utilities/src/time/timing'
 import { describe, expect, it, vi } from 'vitest'
 import type { WebBottomSheetCompatProps } from '../popover-compat/props'
@@ -59,7 +59,7 @@ function getOpenOverlay(): Element {
 describe('WebBottomSheet compat', () => {
   it('force-mounts children while closed (Tamagui Sheet parity) with hidden closed-state chrome', () => {
     render(
-      <WebBottomSheet isOpen={false}>
+      <WebBottomSheet title="Sheet" isOpen={false}>
         <span data-testid="sheet-child">child</span>
       </WebBottomSheet>,
     )
@@ -70,7 +70,7 @@ describe('WebBottomSheet compat', () => {
 
   it('marks frame and overlay open and injects the sheet stylesheet', () => {
     render(
-      <WebBottomSheet isOpen onClose={vi.fn()}>
+      <WebBottomSheet title="Sheet" isOpen onClose={vi.fn()}>
         <span>content</span>
       </WebBottomSheet>,
     )
@@ -90,7 +90,7 @@ describe('WebBottomSheet compat', () => {
     try {
       const onClose = vi.fn()
       render(
-        <WebBottomSheet isOpen onClose={onClose}>
+        <WebBottomSheet title="Sheet" isOpen onClose={onClose}>
           <span>content</span>
         </WebBottomSheet>,
       )
@@ -121,7 +121,7 @@ describe('WebBottomSheet compat', () => {
   it('dismisses on a touch tap on its own scrim', async () => {
     const onClose = vi.fn()
     render(
-      <WebBottomSheet isOpen onClose={onClose}>
+      <WebBottomSheet title="Sheet" isOpen onClose={onClose}>
         <span>content</span>
       </WebBottomSheet>,
     )
@@ -139,10 +139,10 @@ describe('WebBottomSheet compat', () => {
     const onClose = vi.fn()
     render(
       <>
-        <WebBottomSheet isOpen onClose={onClose}>
+        <WebBottomSheet title="Sheet" isOpen onClose={onClose}>
           <span>open sheet</span>
         </WebBottomSheet>
-        <WebBottomSheet isOpen={false} onClose={vi.fn()}>
+        <WebBottomSheet title="Sheet" isOpen={false} onClose={vi.fn()}>
           <span>closed sheet mounted later</span>
         </WebBottomSheet>
       </>,
@@ -158,7 +158,7 @@ describe('WebBottomSheet compat', () => {
 
   it('omits the handlebar when hideHandlebar is set', () => {
     render(
-      <WebBottomSheet isOpen hideHandlebar>
+      <WebBottomSheet title="Sheet" isOpen hideHandlebar>
         <span>content</span>
       </WebBottomSheet>,
     )
@@ -168,7 +168,7 @@ describe('WebBottomSheet compat', () => {
   it('closes on Escape only while open', () => {
     const onClose = vi.fn()
     const { rerender } = render(
-      <WebBottomSheet isOpen={false} onClose={onClose}>
+      <WebBottomSheet title="Sheet" isOpen={false} onClose={onClose}>
         <span>content</span>
       </WebBottomSheet>,
     )
@@ -176,7 +176,7 @@ describe('WebBottomSheet compat', () => {
     expect(onClose).not.toHaveBeenCalled()
 
     rerender(
-      <WebBottomSheet isOpen onClose={onClose}>
+      <WebBottomSheet title="Sheet" isOpen onClose={onClose}>
         <span>content</span>
       </WebBottomSheet>,
     )
@@ -189,10 +189,10 @@ describe('WebBottomSheet compat', () => {
     const onCloseTop = vi.fn()
     render(
       <>
-        <WebBottomSheet isOpen onClose={onCloseBottom}>
+        <WebBottomSheet title="Sheet" isOpen onClose={onCloseBottom}>
           <span>bottom</span>
         </WebBottomSheet>
-        <WebBottomSheet isOpen onClose={onCloseTop}>
+        <WebBottomSheet title="Sheet" isOpen onClose={onCloseTop}>
           <span>top</span>
         </WebBottomSheet>
       </>,
@@ -205,7 +205,7 @@ describe('WebBottomSheet compat', () => {
   it('still closes when sheet chrome itself preventDefaulted the Escape (closed higher sheet layer)', () => {
     const onClose = vi.fn()
     render(
-      <WebBottomSheet isOpen onClose={onClose}>
+      <WebBottomSheet title="Sheet" isOpen onClose={onClose}>
         <span>content</span>
       </WebBottomSheet>,
     )
@@ -221,7 +221,7 @@ describe('WebBottomSheet compat', () => {
     function Host({ dialogOpen }: { dialogOpen: boolean }): React.JSX.Element {
       return (
         <>
-          <WebBottomSheet isOpen onClose={sheetOnClose}>
+          <WebBottomSheet title="Sheet" isOpen onClose={sheetOnClose}>
             <span>outer sheet body</span>
           </WebBottomSheet>
           {/* Mounted after the sheet => the highest Radix layer, like a context menu / dialog
@@ -251,7 +251,7 @@ describe('WebBottomSheet compat', () => {
   it('ignores IME composition-cancel Escapes', () => {
     const onClose = vi.fn()
     render(
-      <WebBottomSheet isOpen onClose={onClose}>
+      <WebBottomSheet title="Sheet" isOpen onClose={onClose}>
         <span>ime sheet body</span>
       </WebBottomSheet>,
     )
@@ -269,7 +269,7 @@ describe('WebBottomSheet compat', () => {
     // values, so the DOM style property cannot be asserted here (same caveat as the legacy
     // ui/src sheet tests).
     render(
-      <WebBottomSheet isOpen snapPointsMode="percent" snapPoints={[60]} onClose={vi.fn()}>
+      <WebBottomSheet title="Sheet" isOpen snapPointsMode="percent" snapPoints={[60]} onClose={vi.fn()}>
         <span>content</span>
       </WebBottomSheet>,
     )
@@ -278,14 +278,14 @@ describe('WebBottomSheet compat', () => {
 
   it('locks and restores root scroll while open', () => {
     const { rerender, unmount } = render(
-      <WebBottomSheet isOpen>
+      <WebBottomSheet title="Sheet" isOpen>
         <span>content</span>
       </WebBottomSheet>,
     )
     expect(document.documentElement.style.overflow).toBe('hidden')
     expect(document.documentElement.style.scrollbarGutter).toBe('stable')
     rerender(
-      <WebBottomSheet isOpen={false}>
+      <WebBottomSheet title="Sheet" isOpen={false}>
         <span>content</span>
       </WebBottomSheet>,
     )
@@ -295,7 +295,7 @@ describe('WebBottomSheet compat', () => {
 
   it('skips the scroll lock for self-locking callers (disableRemoveScroll)', () => {
     render(
-      <WebBottomSheet isOpen disableRemoveScroll>
+      <WebBottomSheet title="Sheet" isOpen disableRemoveScroll>
         <span>content</span>
       </WebBottomSheet>,
     )
@@ -309,7 +309,7 @@ describe('WebBottomSheet compat', () => {
       return null
     }
     render(
-      <WebBottomSheet isOpen zIndex="$overlay">
+      <WebBottomSheet title="Sheet" isOpen zIndex="$overlay">
         <Probe />
       </WebBottomSheet>,
     )
@@ -325,7 +325,7 @@ describe('WebBottomSheet compat', () => {
       return null
     }
     render(
-      <WebBottomSheet isOpen zIndex={1234}>
+      <WebBottomSheet title="Sheet" isOpen zIndex={1234}>
         <Probe />
       </WebBottomSheet>,
     )
@@ -334,7 +334,7 @@ describe('WebBottomSheet compat', () => {
 
   it('appends a consumer className to the frame emission classes (the FlexCompat merge norm)', () => {
     render(
-      <WebBottomSheet isOpen className="consumer-probe">
+      <WebBottomSheet title="Sheet" isOpen className="consumer-probe">
         <span>content</span>
       </WebBottomSheet>,
     )
@@ -347,7 +347,7 @@ describe('WebBottomSheet compat', () => {
 
   it('pads the content scroller by --mweb-bottom-inset regardless of the frame pb', () => {
     render(
-      <WebBottomSheet isOpen pb="$spacing24">
+      <WebBottomSheet title="Sheet" isOpen pb="$spacing24">
         <span>inset</span>
       </WebBottomSheet>,
     )
@@ -361,13 +361,13 @@ describe('WebBottomSheet compat', () => {
   it('accepts the popover-compat webBottomSheetProps call-site shape', () => {
     // Compile-time coverage: the NetworkFilterV2-style call site
     // (`webBottomSheetProps={{ onClose, snapPoints: [60], snapPointsMode: 'percent' }}`)
-    // must be assignable onto this component once `isOpen` is added.
+    // must be assignable onto this component once `isOpen` and `title` are added.
     const compat: WebBottomSheetCompatProps = {
       onClose: (): void => {},
       snapPoints: [60],
       snapPointsMode: 'percent',
     }
-    const props: WebBottomSheetProps = { ...compat, isOpen: true }
+    const props: WebBottomSheetProps = { ...compat, isOpen: true, title: 'Sheet' }
     expect(props.snapPointsMode).toBe('percent')
   })
 })

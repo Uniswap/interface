@@ -17,13 +17,13 @@ describe('MarginLeverageSlider tick labels', () => {
     expect(onChange).toHaveBeenLastCalledWith(4)
   })
 
-  it.each([2.3, 5.38, 6.94, 9.46, 11.36, 19.95])('passes Max and every integer tick exactly at cap %s', (cap) => {
+  it.each([2.3, 5.38, 6.94, 9.46, 11.36, 19.95])('passes the cap and every integer tick exactly at cap %s', (cap) => {
     const onChange = renderSlider(cap)
-    fireEvent.click(screen.getByText('Max'))
+    fireEvent.click(screen.getByText(`${cap}x`))
     expect(onChange).toHaveBeenLastCalledWith(cap)
-    // Integers that would crowd the Max label are not rendered.
+    // Integers that would crowd the cap's label are not rendered.
     const marks = Array.from({ length: Math.floor(cap) }, (_, index) => index + 1).filter(
-      (mark) => (mark - 1) / (cap - 1) <= 0.9,
+      (mark) => (mark - 1) / (cap - 1) <= 0.82,
     )
     for (const mark of marks) {
       fireEvent.click(screen.getByText(`${mark}x`))

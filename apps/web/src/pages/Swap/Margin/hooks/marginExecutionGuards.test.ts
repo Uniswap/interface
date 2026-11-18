@@ -1,9 +1,10 @@
-import type { MarginPlanStep } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
+import type { MarginPlanStep, MarginQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
 import { MARGIN_NATIVE_TOKEN_ADDRESS } from 'uniswap/src/data/apiClients/tradingApi/MarginApiClient'
 import { describe, expect, it } from 'vitest'
 import { MARGIN_ROUTER_ADDRESS } from '~/constants/margin'
 import {
   isOpenCollateralBalanceInsufficient,
+  openQuoteKey,
   resolveOpenWalletPull,
 } from '~/pages/Swap/Margin/hooks/marginExecutionGuards'
 
@@ -158,5 +159,38 @@ describe('isOpenCollateralBalanceInsufficient', () => {
   it('blocks an unpriced pull only when the wallet is empty', () => {
     expect(isOpenCollateralBalanceInsufficient({ balance: 0n, pull: { kind: 'unpriced', token: USDC } })).toBe(true)
     expect(isOpenCollateralBalanceInsufficient({ balance: 1n, pull: { kind: 'unpriced', token: USDC } })).toBe(false)
+  })
+})
+
+describe('openQuoteKey', () => {
+  function openQuote({
+    venue = 'MORPHO',
+    marketId = '0xmarket-a',
+    slippageTolerance = 0.5,
+  }: { venue?: string; marketId?: string; slippageTolerance?: number } = {}): MarginQuoteResponse {
+    return {
+      action: 'open',
+      direction: 'LONG',
+      exposureToken: { address: WETH, chainId: 1, decimals: 18 },
+      counterToken: { address: USDC, chainId: 1, decimals: 6 },
+      leverageTarget: '3',
+      slippageTolerance,
+      swapConfig: { token: USDC, amount: '1000000' },
+      legs: [{ venue }],
+      execution: { legs: [{ venue, marketId, operations: [] }] },
+    } as unknown as MarginQuoteResponse
+  }
+
+  it('is equal for identical inputs', () => {
+    expect(openQuoteKey(openQuote())).toBe(openQuoteKey(openQuote()))
+  })
+
+  it('differs when only the venue market differs', () => {
+    expect(openQuoteKey(openQuote({ venue: 'AAVE_V3', marketId: '0xmarket-b' }))).not.toBe(openQuoteKey(openQuote()))
+    expect(openQuoteKey(openQuote({ marketId: '0xmarket-b' }))).not.toBe(openQuoteKey(openQuote()))
+  })
+
+  it('differs when only the slippage differs', () => {
+    expect(openQuoteKey(openQuote({ slippageTolerance: 1 }))).not.toBe(openQuoteKey(openQuote()))
   })
 })

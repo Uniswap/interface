@@ -1,7 +1,7 @@
 import type { PlainMessage, Timestamp } from '@bufbuild/protobuf'
 import { LaunchMethod, type TokenLaunchProvenance } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import { type Auction, AuctionType } from '@uniswap/client-launches/dist/data/v1/auction_pb'
-import { timestampToMs } from 'uniswap/src/data/apiClients/dataApiService/utils/protoTimestamp'
+import { timestampToMs } from 'utilities/src/time/protoTimestamp'
 
 export enum LaunchProvenanceMethod {
   CustomAuction = 'CUSTOM_AUCTION',

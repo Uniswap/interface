@@ -1,5 +1,5 @@
 import { UniverseChainId } from '@universe/chains'
-import type { EnrichedAuction } from '~/features/Toucan/hooks/useTopAuctions/useTopAuctions'
+import type { EnrichedAuction } from '~/features/Toucan/hooks/useTopAuctions/useEnrichedAuctions'
 import { isQuickLaunchAuction } from '~/features/Toucan/utils/quickLaunchClassification'
 import { getChainUrlParam } from '~/utils/params/chainParams'
 

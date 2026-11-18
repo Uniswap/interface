@@ -56,11 +56,17 @@ const BASE_USDC_PAY: MarginPaymentToken = {
 
 const idOf = (token: MarginPaymentToken): string => currencyId(getPaymentCurrency(token))
 
-const { servicePrices, rawBalances } = vi.hoisted(() => ({
+const { servicePrices, rawBalances, appFiat } = vi.hoisted(() => ({
   // currencyId → the price service's whole-dollar USD figure.
   servicePrices: new Map<string, number>(),
   // currencyId → raw wallet balance.
   rawBalances: new Map<string, string>(),
+  // The app's fiat currency per US dollar.
+  appFiat: { perUsd: 1 },
+}))
+
+vi.mock('uniswap/src/features/language/LocalizationContext', () => ({
+  useLocalizationContext: () => ({ convertFiatAmount: (amount: number) => ({ amount: amount * appFiat.perUsd }) }),
 }))
 
 // The shape useUSDCPrice returns: a Price of the currency in its own chain's primary stablecoin.
@@ -95,7 +101,7 @@ function setUsdPrices(prices: [MarginPaymentToken, number][]): void {
 
 // Mirrors what useDerivedMarginInfo hands the hook: the stored pay token (or the market default), its
 // currency, and its wallet balance.
-function useHarness(market: MarginMarket) {
+function useHarness(market: MarginMarket, initialFiatMode: boolean) {
   const { storedPaymentToken, marginAmount } = useMarginFormStore((s) => ({
     storedPaymentToken: s.paymentToken,
     marginAmount: s.marginAmount,
@@ -112,6 +118,7 @@ function useHarness(market: MarginMarket) {
       balance: raw === undefined ? undefined : CurrencyAmount.fromRawAmount(paymentCurrency, raw),
       isPaymentDifferentFromCollateral: isPaymentTokenDifferentFromCollateral({ token: paymentToken, market }),
     },
+    initialFiatMode,
   })
   return { input, marginAmount, setMarginFormState }
 }
@@ -119,17 +126,64 @@ function useHarness(market: MarginMarket) {
 function renderInput({
   market = ETH_MARKET,
   paymentToken,
-}: { market?: MarginMarket; paymentToken?: MarginPaymentToken } = {}) {
+  fiat = false,
+  depositFiat,
+}: { market?: MarginMarket; paymentToken?: MarginPaymentToken; fiat?: boolean; depositFiat?: string } = {}) {
   const wrapper = ({ children }: PropsWithChildren) => (
-    <MarginFormStoreContextProvider initialState={{ paymentToken }}>{children}</MarginFormStoreContextProvider>
+    <MarginFormStoreContextProvider initialState={{ paymentToken, depositFiat }}>
+      {children}
+    </MarginFormStoreContextProvider>
   )
-  return renderHook(() => useHarness(market), { wrapper })
+  return renderHook(() => useHarness(market, fiat), { wrapper })
 }
 
 describe('useMarginEquityInput', () => {
   afterEach(() => {
     servicePrices.clear()
     rawBalances.clear()
+    appFiat.perUsd = 1
+  })
+
+  // Fiat mode (the form's default) prices dollars through the pay token's own USD price.
+  it('writes a typed or preset dollar figure as its pay-token amount', () => {
+    setUsdPrices([[ETH_PAY, 4000]])
+    const { result } = renderInput({ fiat: true })
+
+    act(() => result.current.input.onSetExactAmount('100'))
+    expect(result.current.marginAmount).toBe('0.025')
+    expect(result.current.input.value).toBe('100')
+
+    act(() => result.current.input.onSetFiatPreset(500))
+    expect(result.current.marginAmount).toBe('0.125')
+    expect(result.current.input.currencyAmount?.toExact()).toBe('0.125')
+  })
+
+  // The panel and the preset pills read in the app's currency; prices quote US dollars.
+  it('restates a typed or preset figure in a non-USD app currency as dollars', () => {
+    appFiat.perUsd = 150
+    setUsdPrices([[ETH_PAY, 4000]])
+    const { result } = renderInput({ fiat: true })
+
+    // ¥15,000 is $100, 0.025 ETH at $4,000.
+    act(() => result.current.input.onSetExactAmount('15000'))
+    expect(result.current.marginAmount).toBe('0.025')
+    expect(result.current.input.value).toBe('15000')
+
+    act(() => result.current.input.onSetFiatPreset(30000))
+    expect(result.current.marginAmount).toBe('0.05')
+    // Restated from the stored amount (a toggle there and back drops the typed text), still in yen.
+    act(() => result.current.input.onToggleIsFiatMode())
+    act(() => result.current.input.onToggleIsFiatMode())
+    expect(result.current.input.value).toBe('30000')
+  })
+
+  // A pair or side switch clears the amount and remounts the form with the dollar figure still stored.
+  it('re-enters a carried dollar figure in the new pay token', () => {
+    setUsdPrices([[ETH_PAY, 4000]])
+    const { result } = renderInput({ fiat: true, depositFiat: '200' })
+
+    expect(result.current.marginAmount).toBe('0.05')
+    expect(result.current.input.value).toBe('200')
   })
 
   it('passes the typed amount straight through when paying with the collateral', () => {

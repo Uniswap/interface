@@ -1,5 +1,5 @@
 import { SharedEventName } from '@uniswap/analytics-events'
-import { AcceptNewQuoteRow as AcceptNewQuoteRowView } from '@universe/transactions-ui'
+import { AcceptQuoteRow } from '@universe/transactions-ui'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
@@ -11,13 +11,14 @@ import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
-function calculatePercentageDifference({
+/** The price change since the accepted quote, like `(+0.52%)`. Undefined when either amount is missing. */
+export function getPriceChangeText({
   derivedSwapInfo,
   acceptedDerivedSwapInfo,
 }: {
-  derivedSwapInfo: DerivedSwapInfo<CurrencyInfo, CurrencyInfo>
-  acceptedDerivedSwapInfo: DerivedSwapInfo<CurrencyInfo, CurrencyInfo>
-}): string | null {
+  derivedSwapInfo: Pick<DerivedSwapInfo<CurrencyInfo, CurrencyInfo>, 'currencyAmounts' | 'exactCurrencyField'>
+  acceptedDerivedSwapInfo: Pick<DerivedSwapInfo<CurrencyInfo, CurrencyInfo>, 'currencyAmounts'>
+}): string | undefined {
   const derivedCurrencyField =
     derivedSwapInfo.exactCurrencyField === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
 
@@ -26,15 +27,15 @@ function calculatePercentageDifference({
   const acceptedAmount = acceptedDerivedSwapInfo.currencyAmounts[derivedCurrencyField]?.asFraction
 
   if (!newAmount || !acceptedAmount) {
-    return null
+    return undefined
   }
 
   const percentage = newAmount.subtract(acceptedAmount).divide(acceptedAmount).multiply(100)
 
-  return `${percentage.greaterThan(0) ? '+' : ''}${percentage.toFixed(2)}`
+  return `(${percentage.greaterThan(0) ? '+' : ''}${percentage.toFixed(2)}%)`
 }
 
-/** Adapter: maps the two swap infos onto the swap-ui view and logs the accept press. */
+/** Adapter: maps the two swap infos onto AcceptQuoteRow and logs the accept press. */
 export function AcceptNewQuoteRow({
   acceptedDerivedSwapInfo,
   derivedSwapInfo,
@@ -57,7 +58,7 @@ export function AcceptNewQuoteRow({
     type: NumberType.TokenTx,
   })
 
-  const percentageDifference = calculatePercentageDifference({
+  const changeText = getPriceChangeText({
     derivedSwapInfo,
     acceptedDerivedSwapInfo,
   })
@@ -70,10 +71,9 @@ export function AcceptNewQuoteRow({
   })
 
   return (
-    <AcceptNewQuoteRowView
-      amount={formattedDerivedAmount}
-      symbol={derivedSymbol ?? undefined}
-      percentageDifference={percentageDifference ?? undefined}
+    <AcceptQuoteRow
+      changeText={changeText}
+      value={`${formattedDerivedAmount} ${derivedSymbol ?? ''}`}
       onAccept={onAccept}
     />
   )

@@ -59,6 +59,23 @@ describe('host element and a11y', () => {
  * on a component that never emitted the attribute in the first place passes
  * vacuously and guards nothing.
  */
+describe('naming', () => {
+  it('aria-label names the checkbox', () => {
+    render(<CheckboxCompat aria-label="Accept terms" checked={false} />)
+    expect(screen.getByRole('checkbox', { name: 'Accept terms' })).toBeTruthy()
+  })
+
+  it('aria-labelledby names it from visible text', () => {
+    render(
+      <>
+        <span id="terms-label">Accept terms</span>
+        <CheckboxCompat aria-labelledby="terms-label" checked={false} />
+      </>,
+    )
+    expect(screen.getByRole('checkbox', { name: 'Accept terms' })).toBeTruthy()
+  })
+})
+
 describe('form/focus props from the Tamagui spread', () => {
   it('id reaches the control (legacy honours it on BOTH legs) and is absent when unset', () => {
     const withId = render(<CheckboxCompat checked={false} id="terms-box" />)
@@ -372,7 +389,7 @@ describe('style is flattened, not cast', () => {
   it('flattens an ARRAY style instead of dropping it', () => {
     render(<CheckboxCompat checked={false} style={[{ flex: 1 }, { opacity: 0.5 }]} />)
     expect(inlineStyle(), 'the control emits no inline style at all — the array style was dropped').toBeTypeOf('string')
-    expect(box().style.flex).toBe('1')
+    expect(box().style.flex).toBe('1 1 0%')
     expect(box().style.opacity).toBe('0.5')
   })
 
@@ -385,13 +402,13 @@ describe('style is flattened, not cast', () => {
   it('skips falsy array entries, exactly as StyleSheet.flatten does', () => {
     render(<CheckboxCompat checked={false} style={[false, null, { flex: 1 }, undefined]} />)
     expect(inlineStyle(), 'the control emits no inline style at all — the array style was dropped').toBeTypeOf('string')
-    expect(box().style.flex).toBe('1')
+    expect(box().style.flex).toBe('1 1 0%')
   })
 
   it('flattens NESTED arrays', () => {
     render(<CheckboxCompat checked={false} style={[[{ flex: 1 }], [[{ opacity: 0.5 }]]]} />)
     expect(inlineStyle(), 'the control emits no inline style at all — the array style was dropped').toBeTypeOf('string')
-    expect(box().style.flex).toBe('1')
+    expect(box().style.flex).toBe('1 1 0%')
     expect(box().style.opacity).toBe('0.5')
   })
 })

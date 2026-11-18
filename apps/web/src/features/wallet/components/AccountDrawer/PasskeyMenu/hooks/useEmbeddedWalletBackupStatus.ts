@@ -1,7 +1,12 @@
+import { useQueryClient } from '@tanstack/react-query'
 import { hasActiveNeckKey as checkHasActiveNeckKey, useEmbeddedWalletState } from '@universe/embedded-wallet'
+import { useEvent } from 'utilities/src/react/hooks'
 import { getPrivyAppId } from '~/config'
 import { useIsEmbeddedWallet } from '~/connection/hooks/useIsEmbeddedWallet'
-import { useListAuthenticatorsQuery } from '~/features/wallet/components/AccountDrawer/PasskeyMenu/hooks/useListAuthenticatorsQuery'
+import {
+  getListAuthenticatorsQueryOptions,
+  useListAuthenticatorsQuery,
+} from '~/features/wallet/components/AccountDrawer/PasskeyMenu/hooks/useListAuthenticatorsQuery'
 
 export interface EmbeddedWalletBackupStatus {
   isEmbeddedWallet: boolean
@@ -36,11 +41,11 @@ export function getHasBackupLogin({
   return hasPrivyAppId ? false : undefined
 }
 
-export function useEmbeddedWalletBackupStatus(): EmbeddedWalletBackupStatus {
+export function useEmbeddedWalletBackupStatus({ skip = false }: { skip?: boolean } = {}): EmbeddedWalletBackupStatus {
   const isEmbeddedWallet = useIsEmbeddedWallet()
   const { walletId } = useEmbeddedWalletState()
   // listAuthenticators prompts for a passkey without an active NECK key
-  const isQueryEnabled = isEmbeddedWallet && !!walletId && checkHasActiveNeckKey(walletId)
+  const isQueryEnabled = !skip && isEmbeddedWallet && !!walletId && checkHasActiveNeckKey(walletId)
   const { data: authData, isLoading, isError } = useListAuthenticatorsQuery({ skip: !isQueryEnabled })
 
   return {
@@ -54,4 +59,24 @@ export function useEmbeddedWalletBackupStatus(): EmbeddedWalletBackupStatus {
     }),
     isLoading: isQueryEnabled && isLoading,
   }
+}
+
+/** Prompts for a passkey if no NECK key is active. */
+export function useCheckHasBackupLogin(): () => Promise<boolean | undefined> {
+  const queryClient = useQueryClient()
+  const { walletId } = useEmbeddedWalletState()
+
+  return useEvent(async () => {
+    if (!walletId) {
+      return undefined
+    }
+    const authData = await queryClient.fetchQuery(getListAuthenticatorsQueryOptions(walletId))
+    return getHasBackupLogin({
+      isQueryEnabled: true,
+      isLoading: false,
+      isError: false,
+      authData,
+      hasPrivyAppId: !!getPrivyAppId(),
+    })
+  })
 }

@@ -11,17 +11,10 @@
  * `onCheckPressed` receives the PRE-TOGGLE state, identically to the web leg
  * and to legacy.
  *
- * A11y: the container deliberately carries NO `accessibilityRole`, because
- * legacy carries none on native either. The role is asymmetric across legacy's
- * own platform legs: the web frame is `styled(YStack, { tag: 'div', role:
- * 'button' })`, but the native frame was
- * `styled(AnimatedPressable, …)` with no `role` and no `accessibilityRole`
- * anywhere in it. Rendering legacy
- * `LabeledCheckbox` under react-test-renderer confirmed it: the container host
- * is an `RNGHPressable` with `accessibilityRole === undefined`, and the only
- * announced role in the tree is the checkbox's. So adding
- * `accessibilityRole="button"` here to mirror the web leg would CREATE a
- * deviation from legacy on device, not remove one.
+ * A11y: the container is the checkbox. An accessible `Pressable` merges its
+ * children into one element, so VoiceOver reads the text (string or element)
+ * as its name; giving the inner checkbox a name too would read it twice, and
+ * leaving the container without a role (as legacy did) announces a plain group.
  *
  * The string-`text` label is an RN `Text` with the shared typography classes.
  * Legacy's `$short={{ variant: 'buttonLabel4' }}` height-media downgrade is not
@@ -87,11 +80,19 @@ export const LabeledCheckboxCompat = React.forwardRef<View, LabeledCheckboxCompa
     const containerClasses = cn(LABELED_CONTAINER_CLASSES, className)
     const resolvedHoverStyle = resolveHoverStyle(hoverStyle)
 
-    const checkbox = <CheckboxCompat checked={checked} size={size} variant={variant} onPress={handlePress} />
+    const checkbox = (
+      // The row is the checkbox for assistive tech, so the inner one is hidden: TalkBack would otherwise reach
+      // it as a second, unnamed checkbox. It still takes touches.
+      <View accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+        <CheckboxCompat checked={checked} size={size} variant={variant} onPress={handlePress} />
+      </View>
+    )
 
     return (
       <Pressable
         ref={ref}
+        accessibilityRole="checkbox"
+        accessibilityState={{ checked }}
         className={containerClasses}
         style={[
           flattenStyleProp(containerStyle) as ViewStyle,

@@ -83,7 +83,6 @@ describe('applyServerTokenGroupsToSearchOptions', () => {
       groups: [tesla],
       searchQuery: 'tsl',
       isAddressSearch: false,
-      plainTokenNames: true,
     })
 
     expect(out).toHaveLength(2)
@@ -99,7 +98,6 @@ describe('applyServerTokenGroupsToSearchOptions', () => {
       groups: [novo],
       searchQuery: 'nvo',
       isAddressSearch: false,
-      plainTokenNames: true,
     })
 
     expect(out).toHaveLength(1)
@@ -117,7 +115,6 @@ describe('applyServerTokenGroupsToSearchOptions', () => {
       groups: [novo],
       searchQuery: 'nvo',
       isAddressSearch: false,
-      plainTokenNames: true,
     })
 
     expect(out).toHaveLength(2)
@@ -134,7 +131,6 @@ describe('applyServerTokenGroupsToSearchOptions', () => {
       groups: [tesla],
       searchQuery: 'ondo',
       isAddressSearch: false,
-      plainTokenNames: true,
     })
 
     expect(out).toHaveLength(2)
@@ -164,7 +160,6 @@ describe('applyServerTokenGroupsToSearchOptions', () => {
       groups,
       searchQuery: 'a',
       isAddressSearch: false,
-      plainTokenNames: true,
     })
 
     expect(out.map((option) => isCollection(option) && option.rwa.symbol)).toEqual(['AAPL', 'AMZN', 'AMD'])
@@ -187,7 +182,6 @@ describe('applyServerTokenGroupsToSearchOptions', () => {
       groups: [booking],
       searchQuery: 'b',
       isAddressSearch: false,
-      plainTokenNames: true,
     })
 
     expect(out[0]).toBe(boomer)
@@ -203,7 +197,6 @@ describe('applyServerTokenGroupsToSearchOptions', () => {
       groups: [tesla],
       searchQuery: 'tsl',
       isAddressSearch: false,
-      plainTokenNames: true,
     })
 
     expect(out[0]).toBe(busy)
@@ -217,7 +210,6 @@ describe('applyServerTokenGroupsToSearchOptions', () => {
       groups: [tesla],
       searchQuery: '0xa',
       isAddressSearch: true,
-      plainTokenNames: true,
     })
 
     expect(out).toHaveLength(1)
@@ -233,7 +225,6 @@ describe('applyServerTokenGroupsToSearchOptions', () => {
         groups: [],
         searchQuery: 'ftr',
         isAddressSearch: false,
-        plainTokenNames: true,
       }),
     ).toBe(options)
   })

@@ -1,0 +1,42 @@
+/*
+ * Storybook only: Tailwind's hover, focus and focus-visible variants also match the classes the
+ * pseudo-states addon puts on the story root (`parameters.pseudo`), so a story can render every
+ * element hovered or focused and the a11y check sees those colours. The addon's own runtime rewrite
+ * stops at 1000 selectors per stylesheet, far short of the compiled utilities, so the selectors are
+ * emitted at build time instead. `:is()` keeps the specificity of the real pseudo-class.
+ *
+ * Import it from a Storybook's Tailwind entry, after `tailwindcss`.
+ */
+@custom-variant hover {
+  @media (hover: hover) {
+    &:hover {
+      @slot;
+    }
+  }
+  &:is(.pseudo-hover, .pseudo-hover-all *) {
+    @slot;
+  }
+}
+
+@custom-variant focus {
+  &:focus {
+    @slot;
+  }
+  &:is(.pseudo-focus, .pseudo-focus-all *) {
+    @slot;
+  }
+}
+
+@custom-variant focus-visible {
+  &:focus-visible {
+    @slot;
+  }
+  &:is(.pseudo-focus-visible, .pseudo-focus-visible-all *) {
+    @slot;
+  }
+}
+
+/* A colour transition would leave axe reading a mid-transition value. */
+:is(.pseudo-hover-all, .pseudo-focus-all, .pseudo-focus-visible-all) * {
+  transition: none !important;
+}

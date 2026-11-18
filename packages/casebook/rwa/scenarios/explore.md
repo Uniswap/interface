@@ -242,17 +242,17 @@ automationRefs:
 **Given** a fetched `TokenCategory` carries the BE's `grouped` boolean
 **When** `getGroupedRwaCategory` / `resolveGroupedRwaCategory` resolve which table it renders
 **Then** a category flagged grouped with a known RWA mapping (Stocks, ETFs) renders its grouped (issuer-beneath) table, and a category flagged grouped with no FE-supported grouped table falls back to the flat list and logs a warning once per category id
-**And** a category not yet in the fetched list (flag off, still loading, static deep link) falls back to the static grouped set so today's rendering holds
+**And** a category not yet in the fetched list (still loading, static deep link) falls back to the static grouped set so today's rendering holds
 
 ---
 id: rwa-explore-legal-disclaimer
-title: Legal disclaimer shows only on Stocks and ETFs explore tabs
+title: Legal disclaimer shows only on the Stocks and ETFs Category Detail Pages
 # importance
 priority: low
 severity: low
 # provenance
 source: uniswap
-sourceNote: "Derived from apps/web/src/pages/Explore/categories/ExploreRwaDisclaimer.tsx (verified on disk). Which category the disclaimer keys on now resolves via resolveRwaDisclaimerCategory in exploreGroupedCategory.ts — deliberately id-based and decoupled from the BE `grouped` flag so a BE grouping change can never silently drop the legal copy; that resolver has unit coverage (exploreGroupedCategory.test.ts), but full disclaimer placement across tab switches is still e2e-only and untested. Category Detail Page coverage added from the Consumer Engagement token-categories QA plan (Notion, 2026-10-08)."
+sourceNote: "Category Detail Page coverage from the Consumer Engagement token-categories QA plan (Notion, 2026-10-08). The disclaimer moved off the Explore category tabs onto the Category Detail Page header when token categories shipped; placement is e2e-only and untested."
 # scope
 chains:
   - ethereum
@@ -269,8 +269,6 @@ testLevel: e2e
 runFrequency: release
 # coverage
 code_paths:
-  - apps/web/src/pages/Explore/categories/ExploreRwaDisclaimer.tsx
-  - apps/web/src/pages/Explore/categories/exploreGroupedCategory.ts
   - apps/web/src/pages/Explore/CategoryDetails/
   - packages/uniswap/src/features/tokenCategories/RwaDisclaimerText.tsx
 automationRefs: []
@@ -279,20 +277,20 @@ automationRefs: []
 > **low · e2e · release · gap** · chains: ethereum
 
 **Given** the RWA explore surfaces are enabled
-**When** the user switches between the Popular, Stocks, Commodities, and ETFs tabs
-**Then** the legal disclaimer with a "Learn more" link renders below the Stocks table (stocks copy) and below the ETFs table (ETFs copy)
-**And** no disclaimer is shown on the Popular or Commodities tabs
-**And** the Stocks and ETFs Category Detail Pages show the same RWA disclaimer, while Commodities and non-RWA category pages do not
+**When** the user opens the Stocks or ETFs Category Detail Page
+**Then** the legal disclaimer with a "Learn more" link renders in the page header (stocks copy on Stocks, ETFs copy on ETFs)
+**And** Commodities and non-RWA category pages show no disclaimer
+**And** no disclaimer is shown under the tables on the Explore category tabs
 
 ---
 id: rwa-issuer-identity-plain-token-names
-title: Issuer rows and cards honor the token-categories plain-name and BE issuer-label overrides
+title: Issuer rows and cards show the token's own name and the BE issuer label
 # importance
 priority: medium
 severity: medium
 # provenance
 source: existing-unit
-sourceNote: "Backed by packages/uniswap/src/features/rwa/getIssuerTokenPrimaryName.test.ts (all cases), packages/uniswap/src/features/expandableAsset/ExpandableIssuerIdentity.test.tsx ('prefers the BE issuer display name over the formatted slug when served', 'shows the issuer token name unmodified on flat rows when token categories are on'), and packages/uniswap/src/data/apiClients/dataApiService/tokenGroups/mapRankedTokenGroup.test.ts ('falls back to the ticker when the group has no display name'). Gated by the token-categories flag (`useIsTokenCategoriesEnabled`, @universe/gating). Added per review: getIssuerTokenPrimaryName and getIssuerTokenLabel are shared by the Explore expandable Stocks rows, the Explore Stocks shelf, and the mobile 'Other stocks' carousel, none of whose existing cases' code_paths covered this shared naming rule."
+sourceNote: "Backed by packages/uniswap/src/features/rwa/getIssuerTokenPrimaryName.test.ts (all cases), packages/uniswap/src/features/expandableAsset/ExpandableIssuerIdentity.test.tsx ('prefers the BE issuer display name over the formatted slug when served', 'shows the issuer token name unmodified on flat rows'), and packages/uniswap/src/data/apiClients/dataApiService/tokenGroups/mapRankedTokenGroup.test.ts ('falls back to the ticker when the group has no display name'). Added per review: getIssuerTokenPrimaryName and getIssuerTokenLabel are shared by the Explore expandable Stocks rows, the Explore Stocks shelf, and the mobile 'Other stocks' carousel, none of whose existing cases' code_paths covered this shared naming rule."
 # scope
 platforms:
   - web
@@ -314,7 +312,7 @@ code_paths:
   - packages/uniswap/src/data/apiClients/dataApiService/tokenGroups/mapRankedTokenGroup.ts
 automationRefs:
   - path: packages/uniswap/src/features/rwa/getIssuerTokenPrimaryName.test.ts
-    testName: getIssuerTokenPrimaryName > shows the token name when plainTokenNames is on
+    testName: getIssuerTokenPrimaryName > shows the token name
   - path: packages/uniswap/src/features/rwa/getIssuerTokenPrimaryName.test.ts
     testName: getIssuerTokenPrimaryName > falls back to the asset name for an empty token name
   - path: packages/uniswap/src/features/expandableAsset/ExpandableIssuerIdentity.test.tsx
@@ -326,7 +324,7 @@ automationRefs:
 > **medium · unit · pr-check · automated**
 
 **Given** an RWA row or card on the Explore expandable Stocks table, the Explore Stocks shelf, or the mobile "Other stocks" carousel
-**When** the token-categories flag is ON
+**When** it renders
 **Then** the primary label shows the issuer token's own on-chain/BE name (falling back to the clean asset name only when the token name is empty) instead of the shared group asset name
 **And** the issuer brand label prefers the backend-served issuer display name (v2 `ListTokenGroups`) over the label derived from the issuer slug when one is served
 **And** a grouped asset with an empty BE display name falls back to its ticker instead of rendering blank

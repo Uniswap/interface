@@ -1,19 +1,19 @@
-import { FeatureFlags, useFeatureFlag, useStatsigClientStatus } from '@universe/gating'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import React, { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router'
 // oxlint-disable-next-line universe-custom/import-boundary -- route-wiring test renders the app shell on purpose
 import { Body } from '~/app/layout/Body'
+import { LIVE_POOL_VOLUME_PERIODS } from '~/components/Charts/timeLabels'
 import { TimePeriod } from '~/data/util'
 import { useEffectiveVolumeTimePeriod } from '~/features/Explore/hooks/useEffectiveVolumeTimePeriod'
 import { useExploreParams } from '~/features/Explore/hooks/useExploreParams'
 import {
-  AuctionQuickFilter,
   useExploreTablesFilterStore,
   useExploreTablesFilterStoreActions,
 } from '~/features/Explore/state/exploreTablesFilterStore'
-import { LIVE_POOL_VOLUME_PERIODS } from '~/features/Explore/timeLabels'
-import { useSyncAuctionQuickFilterParam } from '~/pages/Explore/hooks/useAuctionQuickFilterParam'
+import { useSyncAuctionFilterParams } from '~/pages/Explore/hooks/useAuctionFilterParams'
 import { fireEvent, render, screen, waitFor } from '~/test-utils/render'
+import { AuctionQuickFilter, AuctionStatus } from '~/types/auctionFilters'
 import { ExploreTab } from '~/types/explore'
 
 vi.mock('~/pages/Swap', () => ({
@@ -59,13 +59,14 @@ function PeriodProbe({
 
 function AuctionProbe(): JSX.Element {
   const quickFilter = useExploreTablesFilterStore((state) => state.quickFilter)
-  const [initialQuickFilter] = useState(quickFilter)
-  useSyncAuctionQuickFilterParam()
+  const statusFilter = useExploreTablesFilterStore((state) => state.statusFilter)
+  const [initialFilters] = useState({ quickFilter, statusFilter })
+  useSyncAuctionFilterParams()
 
   return (
     <>
-      <output aria-label="Initial auction filter">{initialQuickFilter}</output>
-      <output aria-label="Auction filter">{quickFilter}</output>
+      <output aria-label="Initial auction filter">{initialFilters.quickFilter}</output>
+      <output aria-label="Initial auction status">{initialFilters.statusFilter}</output>
     </>
   )
 }
@@ -92,7 +93,6 @@ function NavigationProbe(): JSX.Element {
       <Link to="/explore/pools/optimism?category=lending">Optimism pools</Link>
       <Link to="/explore/hooks/optimism?category=lending">Optimism hooks</Link>
       <Link to="/explore/hooks/base/0x2222222222222222222222222222222222222222">Base hook detail</Link>
-      <Link to="/explore/auctions?filter=verified&category=lending">Verified auctions</Link>
       <button onClick={() => navigate(-1)}>Browser back</button>
       <button onClick={() => navigate(1)}>Browser forward</button>
     </>
@@ -204,42 +204,14 @@ describe('Explore route filter lifetime', () => {
     expect(screen.getByLabelText('Current URL')).toHaveTextContent(`/explore/tokens/base/${tokenAddress}`)
   })
 
-  it.each([
-    { filter: AuctionQuickFilter.Verified, ready: true, enabled: false, expected: AuctionQuickFilter.Verified },
-    { filter: AuctionQuickFilter.QuickLaunch, ready: false, enabled: false, expected: AuctionQuickFilter.QuickLaunch },
-    { filter: AuctionQuickFilter.QuickLaunch, ready: true, enabled: false, expected: AuctionQuickFilter.All },
-    { filter: AuctionQuickFilter.QuickLaunch, ready: true, enabled: true, expected: AuctionQuickFilter.QuickLaunch },
-  ])(
-    'seeds $filter before the first auction render (ready=$ready, enabled=$enabled)',
-    async ({ filter, ready, enabled, expected }) => {
-      vi.mocked(useFeatureFlag).mockImplementation(
-        (flag) => flag === FeatureFlags.HooksExplore || (flag === FeatureFlags.QuickLaunch && enabled),
-      )
-      vi.mocked(useStatsigClientStatus).mockReturnValue({
-        isStatsigReady: ready,
-        isStatsigLoading: !ready,
-        isStatsigUninitialized: false,
-      })
-      renderAt(`/explore/auctions?filter=${filter}&category=lending`)
+  it('seeds the auction filter and status before the first auction render', async () => {
+    renderAt('/explore/auctions?filter=verified&status=upcoming&category=lending')
 
-      expect(await screen.findByLabelText('Initial auction filter')).toHaveTextContent(filter)
-      await waitFor(() => expect(screen.getByLabelText('Auction filter')).toHaveTextContent(expected))
-      const params = new URLSearchParams(window.location.search)
-      expect(params.get('category')).toBe('lending')
-      expect(params.get('filter')).toBe(expected === AuctionQuickFilter.All ? null : expected)
-    },
-  )
-
-  it('adopts an explicit auction filter when navigating within an already-mounted Explore owner', async () => {
-    renderAt('/explore/tokens/ethereum')
-    await screen.findByText('Existing Explore')
-    fireEvent.click(screen.getByRole('button', { name: 'Select 1H' }))
-
-    fireEvent.click(screen.getByRole('link', { name: 'Verified auctions' }))
-
-    await screen.findByLabelText('Auction filter')
-    await waitFor(() => expect(screen.getByLabelText('Auction filter')).toHaveTextContent(AuctionQuickFilter.Verified))
-    expect(screen.getByLabelText('Raw period')).toHaveTextContent(TimePeriod.HOUR)
-    expect(new URLSearchParams(window.location.search).get('filter')).toBe('verified')
+    expect(await screen.findByLabelText('Initial auction filter')).toHaveTextContent(AuctionQuickFilter.Verified)
+    expect(screen.getByLabelText('Initial auction status')).toHaveTextContent(AuctionStatus.Upcoming)
+    const params = new URLSearchParams(window.location.search)
+    expect(params.get('category')).toBe('lending')
+    expect(params.get('filter')).toBe('verified')
+    expect(params.get('status')).toBe('upcoming')
   })
 })

@@ -1,4 +1,5 @@
 /* oxlint-disable max-lines */
+import '../../../config/vitest-presets/vitest/jsdom-shims'
 import '@testing-library/jest-dom' // jest custom assertions
 import '~/polyfills' // add polyfills
 
@@ -135,7 +136,11 @@ globalThis.origin = 'https://app.uniswap.org'
   window.scrollTo = vi.fn()
   // Implementation lives here, not just in the `beforeEach` below, so a test's `vi.restoreAllMocks()`
   // resets to it rather than to `undefined` — floating-ui destructures the result outside any test.
-  window.getComputedStyle = vi.fn(() => new CSSStyleDeclaration())
+  window.getComputedStyle = vi.fn(createEmptyStyleDeclaration)
+
+  // Like disableNetConnect for HTTP: no real sockets. Wallet SDKs (Binance's w3w-core) connect at import,
+  // and jsdom's undici WebSocket throws on the open event once the handshake succeeds.
+  globalThis.WebSocket = createOfflineWebSocket() as unknown as typeof globalThis.WebSocket
 
   if (typeof globalThis.TextEncoder === 'undefined') {
     globalThis.ReadableStream = Readable as unknown as typeof globalThis.ReadableStream
@@ -529,8 +534,6 @@ vi.mock('@universe/gating', async (importOriginal) => {
     getDynamicConfigValue: vi.fn((args) => args?.defaultValue),
     getExperimentValueFromLayer: vi.fn(),
     useExperimentValueFromLayer: vi.fn(),
-    useIsTokenCategoriesEnabled: vi.fn(() => false),
-    useIsTokenCategoriesEnabledWithLoading: vi.fn(() => ({ value: false, isLoading: false })),
     checkTypeGuard: vi.fn(),
     useStatsigClientStatus: vi.fn(() => ({
       isStatsigLoading: false,
@@ -569,7 +572,7 @@ const originalConsoleDebug = console.debug
 beforeEach(() => {
   // Mock window.getComputedStyle, because it is otherwise too computationally expensive to unit test.
   // Not mocking this results in multi-second tests when using popper.js.
-  mocked(window.getComputedStyle).mockImplementation(() => new CSSStyleDeclaration())
+  mocked(window.getComputedStyle).mockImplementation(createEmptyStyleDeclaration)
 
   // Mock useWeb3React to return a chainId of 1 by default.
   mocked(useWeb3React).mockReturnValue({ chainId: 1 } as ReturnType<typeof useWeb3React>)
@@ -615,3 +618,41 @@ vi.mock('./components/Table/TableSizeProvider', async (importOriginal) => ({
     left: 0,
   })),
 }))
+
+// jsdom 27+ makes CSSStyleDeclaration's constructor illegal, so borrow a detached element's empty one.
+function createEmptyStyleDeclaration(): CSSStyleDeclaration {
+  return document.createElement('div').style
+}
+
+/** A WebSocket that stays CONNECTING forever. */
+function createOfflineWebSocket(): new (url: string) => EventTarget {
+  return class OfflineWebSocket extends EventTarget {
+    static readonly CONNECTING = 0
+    static readonly OPEN = 1
+    static readonly CLOSING = 2
+    static readonly CLOSED = 3
+    readonly CONNECTING = 0
+    readonly OPEN = 1
+    readonly CLOSING = 2
+    readonly CLOSED = 3
+    readyState = OfflineWebSocket.CONNECTING
+    binaryType: BinaryType = 'blob'
+    bufferedAmount = 0
+    extensions = ''
+    protocol = ''
+    onopen: ((event: Event) => void) | null = null
+    onmessage: ((event: MessageEvent) => void) | null = null
+    onerror: ((event: Event) => void) | null = null
+    onclose: ((event: CloseEvent) => void) | null = null
+
+    constructor(readonly url: string) {
+      super()
+    }
+
+    send(): void {}
+
+    close(): void {
+      this.readyState = OfflineWebSocket.CLOSED
+    }
+  }
+}

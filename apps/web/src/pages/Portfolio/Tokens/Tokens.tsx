@@ -20,7 +20,6 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { parseChainFromTokenSearchQuery } from 'uniswap/src/utils/search/parseChainFromTokenSearchQuery'
 import { SearchInput } from '~/components/SearchInput/SearchInput'
-import { PortfolioTab } from '~/hooks/usePortfolioRoutes/types'
 import { usePortfolioRoutes } from '~/hooks/usePortfolioRoutes/usePortfolioRoutes'
 import { useIsSynchronizedHeartbeatEnabled } from '~/lib/hooks/useHeartbeatCoordinator'
 import { PortfolioBalanceCountIndicator } from '~/pages/Portfolio/components/PortfolioBalanceCountIndicator'
@@ -52,7 +51,7 @@ export const PortfolioTokens = memo(function PortfolioTokens() {
   const { t } = useTranslation()
   const isSynchronizedHeartbeatsEnabled = useIsSynchronizedHeartbeatEnabled(
     SynchronizedHeartbeatsConfigKey.PortfolioPollIntervalSeconds,
-    usePortfolioHeartbeatEnabled({ tab: PortfolioTab.Tokens }),
+    usePortfolioHeartbeatEnabled(),
   )
   const [search, setSearch] = useState('')
   const { chains: enabledChains } = useEnabledChains()

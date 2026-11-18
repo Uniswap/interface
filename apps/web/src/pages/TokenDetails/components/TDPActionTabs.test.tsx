@@ -182,7 +182,7 @@ describe('TDPActionTabs — permissioned gating', () => {
     // Inline style, not a class: ButtonCompat's custom-style lane (getCustomStyle) carries
     // dynamic colors. jsdom's CSSOM normalizes the hex to rgb.
     expect(buyButton?.style.backgroundColor).toBe('rgb(252, 114, 255)')
-    expect(buyButton?.style.borderColor).toBe('#fc72ff')
+    expect(buyButton?.style.borderColor).toBe('rgb(252, 114, 255)')
   })
 
   it('renders normal Buy tab when no wallet is connected (connect-wallet UX defers)', () => {

@@ -2,7 +2,6 @@ import { useQuery } from '@tanstack/react-query'
 import { SharedEventName } from '@uniswap/analytics-events'
 import type { Currency } from '@uniswap/sdk-core'
 import type { UniverseChainId } from '@universe/chains'
-import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { Flex, type FlexCompatProps, iconSizes, Text, TouchableArea, Loader } from '@universe/mycelium'
 import { ArrowsExpand } from '@universe/mycelium/icons/ArrowsExpand'
 import { useShadowPropsShort, useSporeColors } from '@universe/mycelium/theme-hooks-compat'
@@ -31,9 +30,9 @@ import { PriceChartDelta } from '~/components/Charts/PriceChart/PriceChartDelta'
 import { TimePeriod, toHistoryDuration } from '~/data/util'
 import { useSwapAndLimitContext } from '~/features/Swap/state/useSwapContext'
 import { useColor } from '~/hooks/useColor'
+import { useNavigateToTokenDetails } from '~/hooks/useNavigateToTokenDetails'
 import type { TokenPriceChartQueryVariables } from '~/hooks/useTokenPriceChartData'
 import { useTokenPriceChartPanel } from '~/hooks/useTokenPriceChartPanel'
-import { useNavigateToTokenDetails } from '~/pages/Portfolio/Tokens/hooks/useNavigateToTokenDetails'
 import { useSlideoutChartCardCurrencies } from '~/pages/Swap/Swap/SlideoutChartCard/useSlideoutChartCardCurrencies'
 import { ChartType, PriceChartType } from '~/utils/charts'
 import { getNativeTokenDBAddress } from '~/utils/nativeTokens'
@@ -171,7 +170,6 @@ function SlideoutChartCardBody({
   })
 
   const selectedCurrencyId = currencyId(selectedCurrency)
-  const tokenCategoriesEnabled = useIsTokenCategoriesEnabled()
   const { data: categoryIds } = useQuery(getTokenCategoryIdsQueryOptions(selectedCurrencyId))
 
   const { entries, loading } = priceQuery
@@ -298,7 +296,7 @@ function SlideoutChartCardBody({
             hideYAxis
             hideXAxis
             hideMinMaxLines
-            isStablecoin={getIsStablecoin({ tokenCategoriesEnabled, categoryIds }) === true}
+            isStablecoin={getIsStablecoin(categoryIds) === true}
           />
         )}
       </Flex>

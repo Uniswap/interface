@@ -1,4 +1,5 @@
 import { Flex, fonts, Text } from '@universe/mycelium'
+import { TestID } from '@universe/test'
 import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
 import { UniswapHelpUrls } from 'uniswap/src/constants/urls'
 import { CategoryDescriptionText } from 'uniswap/src/features/tokenCategories/CategoryDescriptionText'
@@ -20,7 +21,7 @@ export function CategoryDetailsHeader({ category }: { category: Category }): JSX
   const change24hPct = category.kind === 'pool' ? category.stats?.tvlChange24hPct : category.stats?.priceChange24hPct
 
   return (
-    <Flex row gap="$spacing16" alignItems="flex-start" width="100%">
+    <Flex row gap="$spacing16" alignItems="flex-start" width="100%" testID={TestID.CategoryDetailsHeader}>
       <Flex
         centered
         flexShrink={0}

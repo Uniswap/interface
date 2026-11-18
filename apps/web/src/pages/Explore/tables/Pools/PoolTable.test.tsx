@@ -31,9 +31,10 @@ import {
   useExploreTablesFilterStoreActions,
 } from '~/features/Explore/state/exploreTablesFilterStore'
 import { toRewardAprEntries } from '~/features/Liquidity/LPIncentives/utils'
+import { PoolsTable } from '~/features/Liquidity/PoolsTable/PoolsTable'
+import { PoolTableStoreContextProvider } from '~/features/Liquidity/PoolsTable/state/poolTableStore'
 import { useListPools } from '~/pages/Explore/hooks/useListPools'
-import { ExploreTopPoolTable, PoolsTable } from '~/pages/Explore/tables/Pools/PoolTable'
-import { PoolTableStoreContextProvider } from '~/pages/Explore/tables/Pools/poolTableStore'
+import { ExploreTopPoolTable } from '~/pages/Explore/tables/Pools/PoolTable'
 import { mocked } from '~/test-utils/mocked'
 import { validRestPoolToken0, validRestPoolToken1 } from '~/test-utils/pools/fixtures'
 import { fireEvent, render, screen, waitFor } from '~/test-utils/render'

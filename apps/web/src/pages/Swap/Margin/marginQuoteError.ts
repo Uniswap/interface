@@ -50,6 +50,9 @@ export function getMappedMarginErrorMessage({
     return t('margin.error.adjust.priceMoved')
   }
   switch (errorCode) {
+    case 'MARGIN_INTENT_MISMATCH':
+      return detail?.endsWith(': close') ? t('margin.error.adjust.fullExit') : t('margin.error.adjust.noChange')
+    case 'MARGIN_LEVERAGE_EXCEEDS_MAX':
     case 'MARGIN_ADJUST_HEALTH_FLOOR':
       return t('margin.error.adjust.healthFloor')
     case 'MARGIN_INVALID_LEVERAGE':
@@ -59,10 +62,16 @@ export function getMappedMarginErrorMessage({
       return t('margin.error.adjust.insufficientLiquidity')
     case 'MARGIN_WITHDRAW_OVER_MAX':
       return t('margin.error.adjust.withdrawOverMax')
+    case 'MARGIN_SWAP_PRICE_IMPACT':
+      return t('margin.error.adjust.priceImpact')
+    case 'MARGIN_POSITION_UNDERWATER':
+      return t('margin.error.adjust.underwater')
     case 'MARGIN_MARKET_NOT_SUPPORTED':
+    case 'MARGIN_NO_ELIGIBLE_VENUE':
     case 'MARGIN_MIRRORED_READING':
       return t('margin.error.adjust.marketNotSupported')
     case 'MARGIN_ADJUST_NO_POSITION':
+    case 'MARGIN_POSITION_NOT_FOUND':
       return t('margin.error.adjust.noPosition')
     case 'MARGIN_WITHDRAW_FULL_EXIT':
     case 'MARGIN_ADJUST_FULL_EXIT':
@@ -106,6 +115,7 @@ export function getMarginQuoteErrorMessage({ error, t }: { error: unknown; t: TF
   if (mapped !== undefined) {
     return { message: mapped }
   }
-  const message = data.detail ?? generic
-  return errorCode.startsWith('MARGIN_') ? { message, unrecognizedCode: errorCode } : { message }
+  return errorCode.startsWith('MARGIN_')
+    ? { message: generic, unrecognizedCode: errorCode }
+    : { message: data.detail ?? generic }
 }

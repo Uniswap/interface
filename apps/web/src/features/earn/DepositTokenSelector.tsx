@@ -28,6 +28,7 @@ export function DepositTokenSelector({
   onSelectSourceCurrency,
   unsupportedOptions,
 }: DepositTokenSelectorProps): JSX.Element | null {
+  const { t } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
   const [showUnsupportedOptions, setShowUnsupportedOptions] = useState(false)
 
@@ -75,6 +76,7 @@ export function DepositTokenSelector({
       isOpen={isOpen}
       toggleOpen={setIsOpen}
       adaptToSheet
+      title={t('common.selectToken.label')}
       allowFlip
       positionFixed
       matchTriggerWidth

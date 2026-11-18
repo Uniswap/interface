@@ -1,0 +1,228 @@
+{
+  "_readme": "Path → spec rules for scripts/e2e-affected.ts (the PR e2e tier). Co-location is automatic: a change under apps/web/src/{pages,components,features}/<Area>/ already selects every spec under that area (a directory with no spec is not an area: it is web code nothing narrows). Add a rule only for code that lives elsewhere — shared packages, cross-area web code — and name the spec prefixes (relative to apps/web/src) it can break; a rule replaces co-location for the paths it names, so a rule on an area dir must list that area's specs too. A changed path that matches no rule and no area, but can still reach web (the rest of apps/web, any package web depends on, root files), runs the full suite; keep rules narrow and honest, since a rule that is too narrow hides a regression and one that is too wide only costs minutes. `exclude` lists specs that have their own job. `ignore` lists paths that cannot reach the web bundle Playwright runs against (catalogs, docs, agent config, CI and tooling scripts, labs, Cloudflare functions, the ECS Dockerfile, locale files, English included: a changed string can only break a spec that asserts on the old text, which is a test to update, not a product regression, and the scheduled suite reports it the same day); `**/name` ignores that basename at any depth. `unstable` lists specs withheld from this tier because they are flaky on the scheduled record (fail some runs, pass others); `broken` lists specs red on main on every scheduled run, withheld the same way but named in every summary as debt with an owner to find. Both stay in the scheduled suites and still run here when the PR edits them; the [e2e] Tier lists refresh workflow rewrites both lists weekly from the scheduled runs' merged reports (`release-e2e tier-lists`: broken = at least five reports, no clean pass, at least one outright failure; unstable = at least five reports, two or more bad runs, not broken; anything else is stable and comes off the list, and a spec fewer than five reports mention keeps its list) and opens a PR with the diff; `pinned` names entries it must never remove because the reason is one the scheduled record cannot see, each with its reason stated here (none today); an entry that matches no spec fails the selector so a rename cannot leave it stale. The selector, its tests and this file are never ignored: changing them runs the full suite.",
+  "exclude": ["pages/App.smoketest.e2e.test.ts"],
+  "broken": [],
+  "pinned": [],
+  "unstable": [
+    "app/layout/NavBar/SearchBar/SearchBar.e2e.test.ts",
+    "features/earn/EarnVault.anvil.e2e.test.ts",
+    "pages/CreatePosition/CreatePosition.anvil.e2e.test.ts",
+    "pages/IncreaseLiquidity/IncreaseLiquidity.anvil.e2e.test.ts",
+    "pages/Landing/Landing.e2e.test.ts",
+    "pages/NavBar.e2e.test.ts",
+    "pages/PoolDetails/PoolDetails.e2e.test.ts",
+    "pages/Positions/ClaimFees.anvil.e2e.test.ts",
+    "pages/Positions/ClaimFees.embeddedWallet.anvil.e2e.test.ts",
+    "pages/Redirects.e2e.test.ts",
+    "pages/Swap/Swap/Fees.e2e.test.ts",
+    "pages/Swap/Swap/Swap.anvil.e2e.test.ts",
+    "pages/Swap/Swap/TokenSelector.e2e.test.ts",
+    "pages/Swap/Swap/TokenSelectorV2.e2e.test.ts",
+    "pages/Swap/Swap/Wrap.anvil.e2e.test.ts",
+    "pages/TokenDetails/components/TokenDetailsSwap.e2e.test.ts"
+  ],
+  "ignore": [
+    ".github/",
+    ".claude/",
+    ".agents/",
+    ".i18n/",
+    "docs/",
+    "labs/",
+    "scripts/",
+    "packages/casebook/",
+    "**/README.md",
+    "**/CLAUDE.md",
+    "**/AGENTS.md",
+    ".gitignore",
+    "dangerfile.ts",
+    "oxlint.config.ts",
+    "knip.json",
+    "apps/web/Dockerfile",
+    "apps/web/functions/",
+    "apps/web/public/images/",
+    "packages/uniswap/src/i18n/locales/translations/",
+    "packages/uniswap/src/i18n/locales/source/en-US.json",
+    "packages/mycelium/platform-legs.json",
+    "packages/mycelium/src/assets/"
+  ],
+  "rules": [
+    {
+      "paths": [
+        "packages/uniswap/src/features/transactions/swap/",
+        "packages/uniswap/src/features/transactions/steps/",
+        "packages/uniswap/src/features/transactions/components/",
+        "packages/uniswap/src/features/transactions/modals/",
+        "packages/uniswap/src/components/ConfirmSwapModal/",
+        "packages/uniswap/src/components/CurrencyInputPanel/",
+        "packages/uniswap/src/components/RoutingDiagram/",
+        "packages/transactions-ui/"
+      ],
+      "specs": [
+        "pages/Swap/Swap/",
+        "pages/Swap/Limit/",
+        "pages/Swap/PermissionedPools.e2e.test.ts",
+        "pages/TokenDetails/components/TokenDetailsSwap.e2e.test.ts",
+        "pages/TokenDetails/components/TokenDetailsSwap.anvil.e2e.test.ts"
+      ]
+    },
+    {
+      "paths": ["packages/uniswap/src/components/TokenSelector/", "packages/uniswap/src/components/TokenSelectorV2/"],
+      "specs": [
+        "pages/Swap/Swap/TokenSelector.e2e.test.ts",
+        "pages/Swap/Swap/TokenSelectorV2.e2e.test.ts",
+        "pages/Swap/Swap/Swap.e2e.test.ts"
+      ]
+    },
+    {
+      "paths": ["packages/uniswap/src/features/transactions/send/", "packages/uniswap/src/features/send/"],
+      "specs": ["pages/Swap/Send/"]
+    },
+    {
+      "paths": ["packages/uniswap/src/features/fiatOnRamp/"],
+      "specs": ["pages/Swap/Buy/"]
+    },
+    {
+      "paths": [
+        "packages/uniswap/src/features/transactions/liquidity/",
+        "packages/uniswap/src/features/positions/",
+        "packages/uniswap/src/features/poolHooks/"
+      ],
+      "specs": [
+        "pages/CreatePosition/",
+        "pages/IncreaseLiquidity/",
+        "pages/RemoveLiquidity/",
+        "pages/Migrate/",
+        "pages/Positions/",
+        "pages/PoolDetails/",
+        "pages/Portfolio/Pools/"
+      ]
+    },
+    {
+      "paths": [
+        "packages/uniswap/src/features/portfolio/",
+        "packages/uniswap/src/features/activity/",
+        "packages/uniswap/src/features/nfts/",
+        "packages/uniswap/src/components/portfolio/",
+        "packages/uniswap/src/components/activity/"
+      ],
+      "specs": ["pages/Portfolio/", "features/wallet/components/AccountDrawer/"]
+    },
+    {
+      "paths": [
+        "packages/uniswap/src/features/explore/",
+        "packages/uniswap/src/features/search/",
+        "packages/uniswap/src/features/tokens/",
+        "packages/uniswap/src/features/tokenCategories/",
+        "packages/uniswap/src/features/rwa/",
+        "packages/uniswap/src/components/tokenDetails/",
+        "packages/uniswap/src/components/MultichainTokenDetails/"
+      ],
+      "specs": ["pages/Explore/", "pages/TokenDetails/", "app/layout/NavBar/SearchBar/", "pages/Launches/"]
+    },
+    {
+      "paths": ["packages/uniswap/src/features/earn/"],
+      "specs": ["features/earn/"]
+    },
+    {
+      "paths": [
+        "packages/embedded-wallet/",
+        "packages/uniswap/src/features/accounts/",
+        "packages/uniswap/src/features/wallet/",
+        "packages/uniswap/src/features/auth/",
+        "packages/uniswap/src/features/smartWallet/"
+      ],
+      "specs": [
+        "features/wallet/components/AccountDrawer/",
+        "features/wallet/components/WalletModal/",
+        "app/WalletConnection.e2e.test.ts",
+        "pages/Swap/Swap/Swap.embeddedWallet.anvil.e2e.test.ts",
+        "pages/Swap/Swap/SponsoredSwap.embeddedWallet.anvil.e2e.test.ts",
+        "pages/Swap/Swap/Wrap.embeddedWallet.anvil.e2e.test.ts",
+        "pages/Swap/Limit/Limit.embeddedWallet.anvil.e2e.test.ts",
+        "pages/Positions/ClaimFees.embeddedWallet.anvil.e2e.test.ts"
+      ]
+    },
+    {
+      "paths": ["packages/uniswap/src/features/chains/", "packages/chains/"],
+      "specs": [
+        "components/NetworkFilter/",
+        "pages/Explore/",
+        "pages/Swap/Swap/Swap.e2e.test.ts",
+        "pages/Swap/Swap/Swap.anvil.e2e.test.ts"
+      ]
+    },
+    {
+      "paths": ["apps/web/src/app/layout/NavBar/"],
+      "specs": ["pages/NavBar.e2e.test.ts", "app/layout/NavBar/"]
+    },
+    {
+      "paths": ["apps/web/src/connection/"],
+      "specs": [
+        "app/WalletConnection.e2e.test.ts",
+        "features/wallet/components/AccountDrawer/",
+        "features/wallet/components/WalletModal/"
+      ]
+    },
+    {
+      "paths": ["apps/web/src/pages/routes/RouteDefinitions.tsx"],
+      "specs": [
+        "pages/Redirects.e2e.test.ts",
+        "pages/NavBar.e2e.test.ts",
+        "pages/Errors.e2e.test.ts",
+        "pages/Errors.anvil.e2e.test.ts",
+        "pages/Landing/"
+      ]
+    },
+    {
+      "paths": ["apps/web/src/pages/TokenDetails/"],
+      "specs": ["pages/TokenDetails/", "pages/Explore/TokenExplore.e2e.test.ts"]
+    },
+    {
+      "paths": ["packages/uniswap/src/components/lists/", "packages/uniswap/src/features/expandableAsset/"],
+      "specs": [
+        "pages/Swap/Swap/TokenSelector.e2e.test.ts",
+        "pages/Swap/Swap/TokenSelectorV2.e2e.test.ts",
+        "pages/Swap/Swap/Swap.e2e.test.ts",
+        "app/layout/NavBar/SearchBar/",
+        "pages/Explore/",
+        "pages/TokenDetails/"
+      ]
+    },
+    {
+      "paths": [
+        "packages/uniswap/src/features/toucan/",
+        "apps/web/src/state/sagas/toucan/",
+        "apps/web/src/state/sagas/createAuction/"
+      ],
+      "specs": ["pages/Launches/", "pages/TokenDetails/", "pages/Explore/"]
+    },
+    {
+      "paths": ["apps/web/src/state/sagas/liquidity/", "apps/web/src/state/sagas/lp_incentives/"],
+      "specs": [
+        "pages/CreatePosition/",
+        "pages/IncreaseLiquidity/",
+        "pages/RemoveLiquidity/",
+        "pages/Migrate/",
+        "pages/Positions/",
+        "pages/PoolDetails/",
+        "pages/Portfolio/Pools/"
+      ]
+    },
+    {
+      "paths": ["apps/web/src/state/sagas/transactions/"],
+      "specs": [
+        "pages/Swap/",
+        "pages/TokenDetails/components/",
+        "features/earn/",
+        "features/wallet/claim/",
+        "pages/CreatePosition/",
+        "pages/IncreaseLiquidity/",
+        "pages/RemoveLiquidity/",
+        "pages/Migrate/",
+        "pages/Positions/",
+        "pages/PoolDetails/",
+        "pages/Portfolio/Pools/"
+      ]
+    }
+  ]
+}

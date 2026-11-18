@@ -40,13 +40,23 @@ function candle({
   return { time: time as UTCTimestamp, value: close, open, high, low, close }
 }
 
+// Runs the hook's own `select` over a raw OHLC response, so its candle sorting stays under test.
 function mockDayQuery(result: { data?: PriceChartData[]; error?: Error }): void {
-  useQueryMock.mockReturnValue({
-    data: result.data,
+  const response = result.data && {
+    candles: result.data.map((c) => ({
+      timestamp: c.time,
+      openUsd: c.open,
+      highUsd: c.high,
+      lowUsd: c.low,
+      closeUsd: c.close,
+    })),
+  }
+  useQueryMock.mockImplementation(((options: { select: (data: unknown) => unknown }) => ({
+    data: response && options.select(response),
     error: result.error ?? null,
     isError: result.error !== undefined,
     refetch: vi.fn(),
-  } as unknown as ReturnType<typeof useQuery>)
+  })) as unknown as typeof useQuery)
 }
 
 describe('useMarginStats24h', () => {

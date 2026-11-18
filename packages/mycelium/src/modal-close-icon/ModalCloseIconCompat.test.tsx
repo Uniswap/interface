@@ -69,6 +69,21 @@ describe('legacy prop surface', () => {
     render(<ModalCloseIconCompat testId="defaulted" onClose={(): void => {}} />)
     expect(screen.getByTestId('defaulted').getAttribute('role')).toBe('button')
   })
+
+  it('names the icon-only button with the translated "Close" by default', () => {
+    render(<ModalCloseIconCompat onClose={(): void => {}} />)
+    expect(screen.getByRole('button', { name: 'common.button.close' })).toBeTruthy()
+  })
+
+  it('takes a caller aria-label over the default', () => {
+    render(<ModalCloseIconCompat aria-label="Dismiss" onClose={(): void => {}} />)
+    expect(screen.getByRole('button', { name: 'Dismiss' })).toBeTruthy()
+  })
+
+  it('has no name of its own with role="none"', () => {
+    render(<ModalCloseIconCompat role="none" testId="inner" onClose={(): void => {}} />)
+    expect(screen.getByTestId('inner').getAttribute('aria-label')).toBeNull()
+  })
 })
 
 describe('the X glyph', () => {

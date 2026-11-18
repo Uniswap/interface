@@ -95,7 +95,7 @@ exports[`AccountHeader > renders correctly 1`] = `
                   <div
                     class="css-text-146c3p1 r-maxWidth-dnmrzs r-overflow-1udh08x r-textOverflow-1udbk01 r-whiteSpace-3s2u2q r-wordWrap-1iln25a"
                     dir="auto"
-                    style="flex-shrink: 1; z-index: 2; font-size: 19px; line-height: 24px; font-family: Basel Grotesk; font-weight: 400;"
+                    style="flex-shrink: 1; z-index: 2; font-size: 19px; line-height: 24px; font-family: "Basel Grotesk"; font-weight: 400;"
                   >
                     Test Account
                   </div>
@@ -116,7 +116,7 @@ exports[`AccountHeader > renders correctly 1`] = `
                 <div
                   class="css-text-146c3p1 r-maxWidth-dnmrzs r-overflow-1udh08x r-textOverflow-1udbk01 r-whiteSpace-3s2u2q r-wordWrap-1iln25a"
                   dir="auto"
-                  style="font-size: 17px; line-height: 22px; font-family: Basel Grotesk; font-weight: 400;"
+                  style="font-size: 17px; line-height: 22px; font-family: "Basel Grotesk"; font-weight: 400;"
                 >
                   0x​82D5...3Fa6
                 </div>
@@ -165,7 +165,7 @@ exports[`AccountHeader > renders correctly 1`] = `
         </button>
         <div
           data-testid="account-header-settings-icon"
-          style="transform: [object Object],[object Object]; opacity: 1; justify-content: center;"
+          style="opacity: 1; justify-content: center;"
         >
           <div
             fill="none"

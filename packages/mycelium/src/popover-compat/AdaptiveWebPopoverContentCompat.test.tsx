@@ -6,6 +6,7 @@
 import * as DialogPrimitive from '@radix-ui/react-dialog'
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { type JSX, useState } from 'react'
+import { sleep } from 'utilities/src/time/timing'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { AdaptiveWebPopoverContentCompat } from './AdaptiveWebPopoverContentCompat'
 import { PopoverCompat } from './PopoverCompat'
@@ -66,7 +67,7 @@ function DialogWithNetworkSearchPopover({ markContainer = false }: { markContain
                   Open networks
                 </button>
               </PopoverCompat.Trigger>
-              <AdaptiveWebPopoverContentCompat isOpen={isOpen} placement="bottom-end">
+              <AdaptiveWebPopoverContentCompat aria-label="Networks" isOpen={isOpen} placement="bottom-end">
                 <input aria-label="Search networks" />
                 <button type="button" aria-label="Select network" onClick={() => setIsOpen(false)}>
                   Select network
@@ -100,7 +101,7 @@ function MarkedDialogWithUncontrolledPopover({ defaultOpen = false }: { defaultO
             <PopoverCompat.Trigger>
               <button type="button">Open networks</button>
             </PopoverCompat.Trigger>
-            <AdaptiveWebPopoverContentCompat isOpen placement="bottom-end">
+            <AdaptiveWebPopoverContentCompat aria-label="Networks" isOpen placement="bottom-end">
               <input aria-label="Search networks" />
             </AdaptiveWebPopoverContentCompat>
           </PopoverCompat>
@@ -134,6 +135,7 @@ function SheetAdaptedNetworkPopover(): JSX.Element {
         </button>
       </PopoverCompat.Trigger>
       <AdaptiveWebPopoverContentCompat
+        aria-label="Networks"
         isSheet
         isOpen={isOpen}
         webBottomSheetProps={{ onClose: () => setIsOpen(false) }}
@@ -142,6 +144,25 @@ function SheetAdaptedNetworkPopover(): JSX.Element {
         <button type="button" aria-label="Select network" onClick={() => setIsOpen(false)}>
           Select network
         </button>
+      </AdaptiveWebPopoverContentCompat>
+    </PopoverCompat>
+  )
+}
+
+function LabelledByPopover({ isSheet }: { isSheet: boolean }): JSX.Element {
+  return (
+    <PopoverCompat open placement="bottom-end">
+      <PopoverCompat.Trigger>
+        <button type="button">Open networks</button>
+      </PopoverCompat.Trigger>
+      <AdaptiveWebPopoverContentCompat
+        aria-labelledby="networks-title"
+        isSheet={isSheet}
+        adaptWhen={isSheet}
+        isOpen
+        webBottomSheetProps={{ onClose: () => {} }}
+      >
+        <h2 id="networks-title">Networks</h2>
       </AdaptiveWebPopoverContentCompat>
     </PopoverCompat>
   )
@@ -240,6 +261,28 @@ describe('AdaptiveWebPopoverContentCompat', () => {
     })
   })
 
+  it('names the sheet with the popup aria-label', async () => {
+    render(<SheetAdaptedNetworkPopover />)
+    fireEvent.click(await screen.findByText('Open networks'))
+
+    expect(await screen.findByRole('dialog', { name: 'Networks' })).toBeTruthy()
+  })
+
+  it('names the sheet and the popup with aria-labelledby', async () => {
+    const { rerender } = render(<LabelledByPopover isSheet />)
+    expect(await screen.findByRole('dialog', { name: 'Networks' })).toBeTruthy()
+
+    rerender(<LabelledByPopover isSheet={false} />)
+    expect(await screen.findByRole('dialog', { name: 'Networks' })).toBeTruthy()
+  })
+
+  it('names the popup with its aria-label', async () => {
+    render(<DialogWithNetworkSearchPopover />)
+    fireEvent.click(await screen.findByText('Open networks'))
+
+    expect(await screen.findByRole('dialog', { name: 'Networks' })).toBeTruthy()
+  })
+
   it('still closes the sheet-adapted content through the consumer close path', async () => {
     render(<SheetAdaptedNetworkPopover />)
     const trigger = await screen.findByText('Open networks')
@@ -249,6 +292,51 @@ describe('AdaptiveWebPopoverContentCompat', () => {
     fireEvent.click(screen.getByLabelText('Select network'))
     await waitFor(() => {
       expect(trigger.getAttribute('aria-expanded')).toBe('false')
+    })
+  })
+})
+
+describe('PopoverCompat.Trigger', () => {
+  it('makes an openOnClick={false} trigger a hover region that ignores clicks', async () => {
+    const onOpenChange = vi.fn()
+    render(
+      <PopoverCompat placement="bottom-end" hoverable onOpenChange={onOpenChange}>
+        <PopoverCompat.Trigger openOnClick={false}>
+          <span>Volume</span>
+        </PopoverCompat.Trigger>
+        <AdaptiveWebPopoverContentCompat aria-label="Breakdown" isOpen adaptWhen={false}>
+          <span>breakdown</span>
+        </AdaptiveWebPopoverContentCompat>
+      </PopoverCompat>,
+    )
+    const trigger = screen.getByText('Volume')
+    expect(screen.queryByRole('button')).toBeNull()
+    for (const attribute of ['role', 'tabindex', 'aria-expanded', 'aria-haspopup']) {
+      expect(trigger.hasAttribute(attribute)).toBe(false)
+    }
+    fireEvent.click(trigger)
+    await sleep(50)
+    expect(onOpenChange).not.toHaveBeenCalled()
+  })
+
+  it('makes the child button the trigger instead of nesting it in one', async () => {
+    render(
+      <PopoverCompat placement="bottom-end">
+        <PopoverCompat.Trigger>
+          <button type="button">Open networks</button>
+        </PopoverCompat.Trigger>
+        <AdaptiveWebPopoverContentCompat aria-label="Networks" isOpen adaptWhen={false}>
+          <input aria-label="Search networks" />
+        </AdaptiveWebPopoverContentCompat>
+      </PopoverCompat>,
+    )
+    const trigger = screen.getByRole('button', { name: 'Open networks' })
+    expect(screen.getAllByRole('button')).toHaveLength(1)
+    expect(trigger.getAttribute('aria-expanded')).toBe('false')
+
+    fireEvent.click(trigger)
+    await waitFor(() => {
+      expect(trigger.getAttribute('aria-expanded')).toBe('true')
     })
   })
 })

@@ -21,11 +21,15 @@ import { TableText } from '~/components/Table/shared/TableText'
 import { HeaderCell } from '~/components/Table/styled'
 import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
 import { APP_BODY_MOBILE_GUTTER_PX } from '~/constants/layout'
+import { getTokenDescriptionColumnSize, TokenDescription } from '~/features/Explore/components/TokenDescription'
+import {
+  LAUNCHPAD_COLUMN_META,
+  LAUNCHPAD_COLUMN_WIDTH,
+  LaunchpadCellContent,
+} from '~/features/Toucan/Shared/LaunchpadCell'
 import { LaunchItem } from '~/features/Toucan/utils/launchesModel'
-import { getTokenDescriptionColumnSize, TokenDescription } from '~/pages/Explore/tables/Tokens/TokenDescription'
 import { CollapsibleTokenCell } from '~/pages/Launches/CollapsibleTokenCell'
 import { formatDurationShort } from '~/pages/Launches/launchFormat'
-import { LAUNCHPAD_COLUMN_META, LAUNCHPAD_COLUMN_WIDTH, LaunchpadCellContent } from '~/pages/Launches/LaunchpadCell'
 import { usePrefetchLaunchTokenDetails } from '~/pages/Launches/usePrefetchLaunchTokenDetails'
 
 interface LaunchTableValue {

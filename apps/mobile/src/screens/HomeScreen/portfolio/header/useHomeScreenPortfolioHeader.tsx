@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
 import { OnboardingIntroCardStack } from 'src/components/home/introCards/OnboardingIntroCardStack'
+import { OnboardingChecklist } from 'src/components/home/onboardingChecklist/OnboardingChecklist'
 import { PortfolioOverview } from 'src/components/home/PortfolioChart/PortfolioOverview'
 import { MobileNotificationServiceManager } from 'src/notification-service/MobileNotificationServiceManager'
 import { HomeScreenQuickActions } from 'src/screens/HomeScreen/HomeScreenQuickActions'
@@ -16,6 +17,7 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { DataApiOutageBanner } from 'uniswap/src/features/dataApi/outage/DataApiOutageBanner'
 import { DataApiOutageModalContent } from 'uniswap/src/features/dataApi/outage/DataApiOutageModalContent'
+import { useOnboardingChecklistStore } from 'uniswap/src/features/onboarding/checklist/onboardingChecklistStore'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useEvent } from 'utilities/src/react/hooks'
 import { HomeScreenEarningSection } from 'wallet/src/features/earn/HomeScreenEarningSection'
@@ -41,6 +43,8 @@ export function useHomeScreenPortfolioHeader({
   const { chains } = useEnabledChains()
   const { showEmptyWalletState, isTabsDataLoaded } = useHomeScreenState()
   const [hasIntroCards, setHasIntroCards] = useState(false)
+  const isChecklistVisible = useOnboardingChecklistStore((state) => state.isVisible)
+  const isChecklistLoading = useOnboardingChecklistStore((state) => state.isLoading)
 
   const isNotificationServiceEnabledFlag = useFeatureFlag(FeatureFlags.NotificationService)
   const isNotificationServiceEnabled =
@@ -71,26 +75,46 @@ export function useHomeScreenPortfolioHeader({
   const { isLoading: isUnitagEligibilityLoading } = useCanActiveAddressClaimUnitag()
   const isEarnRevealReady = isFocused && isTabsDataLoaded && !isUnitagEligibilityLoading
 
-  const promoBanner = useMemo(
-    () =>
-      isNotificationServiceEnabled ? (
-        <MobileNotificationServiceManager isLoading={!isTabsDataLoaded} onCardsChange={handleIntroCardsChange} />
-      ) : (
-        <OnboardingIntroCardStack
-          isLoading={!isTabsDataLoaded}
-          showEmptyWalletState={showEmptyWalletState}
+  const promoBanner = useMemo(() => {
+    // The checklist takes the intro cards' slot, so they wait until it knows whether it will show
+    const isPromoLoading = !isTabsDataLoaded || isChecklistLoading
+    if (isNotificationServiceEnabled) {
+      // Stays mounted under the checklist for force upgrades, system banners and reminders
+      return (
+        <MobileNotificationServiceManager
+          isLoading={isPromoLoading}
+          suppressIntroCards={isChecklistVisible}
           onCardsChange={handleIntroCardsChange}
         />
-      ),
-    [showEmptyWalletState, isTabsDataLoaded, isNotificationServiceEnabled, handleIntroCardsChange],
-  )
+      )
+    }
+    if (isChecklistVisible) {
+      return null
+    }
+    return (
+      <OnboardingIntroCardStack
+        isLoading={isPromoLoading}
+        showEmptyWalletState={showEmptyWalletState}
+        onCardsChange={handleIntroCardsChange}
+      />
+    )
+  }, [
+    showEmptyWalletState,
+    isTabsDataLoaded,
+    isNotificationServiceEnabled,
+    isChecklistVisible,
+    isChecklistLoading,
+    handleIntroCardsChange,
+  ])
+
+  const showIntroCards = hasIntroCards && !isChecklistVisible
 
   const header = useMemo(
     () => (
       <Flex
         pointerEvents="box-none"
         backgroundColor="$surface1"
-        pb={hasIntroCards ? '$none' : showEmptyWalletState ? '$spacing8' : '$spacing16'}
+        pb={showIntroCards ? '$none' : showEmptyWalletState ? '$spacing8' : '$spacing16'}
         px="$none"
       >
         {portfolioError && <DataApiOutageBanner onPress={handleOutageBannerPress} />}
@@ -108,19 +132,21 @@ export function useHomeScreenPortfolioHeader({
           </TouchableArea>
         )}
         {promoBanner}
+        <OnboardingChecklist mt="$spacing20" />
         <HomeScreenEarningSection
           evmAddress={activeAccount.address}
           earnCardExpansionRequestId={earnCardExpansionRequestId}
           isRevealReady={isEarnRevealReady}
-          mb={hasIntroCards ? '$spacing8' : undefined}
-          mt="$spacing16"
+          mb={showIntroCards ? '$spacing8' : undefined}
+          mt={isChecklistVisible ? '$spacing20' : '$spacing16'}
           mx="$spacing20"
           onEarnCardExpansionRequestHandled={onEarnCardExpansionRequestHandled}
         />
       </Flex>
     ),
     [
-      hasIntroCards,
+      showIntroCards,
+      isChecklistVisible,
       showEmptyWalletState,
       chains,
       activeAccount.address,

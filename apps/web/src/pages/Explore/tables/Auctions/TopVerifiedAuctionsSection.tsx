@@ -8,9 +8,9 @@ import { TokenCardCarousel } from '~/components/TokenCardCarousel/TokenCardCarou
 import { useCarouselLayout } from '~/components/TokenCardCarousel/useCarouselLayout'
 import { useHorizontalSnapCarousel } from '~/components/TokenCardCarousel/useHorizontalSnapCarousel'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '~/constants/breakpoints'
-import type { EnrichedAuction } from '~/features/Toucan/hooks/useTopAuctions/useTopAuctions'
+import { AuctionChip } from '~/features/Toucan/AuctionDiscovery/AuctionChip'
+import type { EnrichedAuction } from '~/features/Toucan/hooks/useTopAuctions/useEnrichedAuctions'
 import { useTopVerifiedAuctions } from '~/features/Toucan/hooks/useTopAuctions/useTopVerifiedAuctions'
-import { AuctionChip } from '~/pages/Explore/tables/Auctions/AuctionChip'
 
 export function TopVerifiedAuctionsSection() {
   const { t } = useTranslation()

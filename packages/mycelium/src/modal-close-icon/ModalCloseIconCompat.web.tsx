@@ -16,6 +16,7 @@
  */
 import { isWebApp } from '@universe/environment'
 import { useState, type JSX } from 'react'
+import { useTranslation } from 'react-i18next'
 import { X } from '../components/icons/X'
 import { useMedia, useSporeColors } from '../theme-hooks-compat'
 import { TouchableAreaCompat } from '../touchable-area/TouchableAreaCompat'
@@ -35,7 +36,9 @@ export function ModalCloseIconCompat({
   hoverColor = DEFAULT_CLOSE_ICON_HOVER_COLOR,
   testId,
   role = DEFAULT_CLOSE_ICON_ROLE,
+  'aria-label': ariaLabel,
 }: ModalCloseIconProps): JSX.Element {
+  const { t } = useTranslation()
   const media = useMedia()
   const colors = useSporeColors()
   const [hovered, setHovered] = useState(false)
@@ -47,9 +50,13 @@ export function ModalCloseIconCompat({
   }
 
   return (
-    // TODO(INFRA-4589): no prop names this icon-only button, so it's announced as an unnamed button
-    // (aria-command-name). Accept an aria-label, defaulting to "Close".
-    <TouchableAreaCompat role={role} testID={testId} shouldAutomaticallyInjectColors={false} onPress={onClose}>
+    <TouchableAreaCompat
+      role={role}
+      aria-label={role === 'none' ? undefined : (ariaLabel ?? t('common.button.close'))}
+      testID={testId}
+      shouldAutomaticallyInjectColors={false}
+      onPress={onClose}
+    >
       <X
         size={size}
         color={resolveCloseIconColor(hovered ? hoverColor : color, colors)}

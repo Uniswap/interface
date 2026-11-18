@@ -5,7 +5,10 @@
 @import "@universe/mycelium/text-compat.css";
 @import "@universe/mycelium/shimmer.css";
 @import "@universe/mycelium/button-compat.css";
+@import "storybook-presets/pseudo-states.css";
+@import "../src/text-compat/text-compat.pseudo-states.css";
 
 :root {
   --background: var(--surface1);
 }
+

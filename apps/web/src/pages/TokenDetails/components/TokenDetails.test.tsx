@@ -43,12 +43,12 @@ vi.mock('~/pages/TokenDetails/hooks/useTDPTokenWarningDisplay', () => ({
 vi.mock('~/pages/TokenDetails/components/swap/TDPSwapComponent', () => ({
   TDPSwapComponent: ({ warningCard }: { warningCard?: ReactNode }) => <>Token swap{warningCard}</>,
 }))
-vi.mock('~/pages/TokenDetails/components/skeleton/Skeleton', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('~/pages/TokenDetails/components/skeleton/Skeleton')>()
+vi.mock('~/features/Explore/layout/TwoPanelLayout', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('~/features/Explore/layout/TwoPanelLayout')>()
   return {
     ...actual,
-    TokenDetailsLayout: (props: ComponentProps<typeof actual.TokenDetailsLayout>) => (
-      <actual.TokenDetailsLayout {...props} testID="tdp-layout" />
+    TwoPanelLayout: (props: ComponentProps<typeof actual.TwoPanelLayout>) => (
+      <actual.TwoPanelLayout {...props} testID="tdp-layout" />
     ),
   }
 })
@@ -246,7 +246,6 @@ vi.mock('~/pages/TokenDetails/components/activity/ActivitySection', () => ({
   ActivitySection: () => <div>Token activity</div>,
 }))
 vi.mock('~/pages/TokenDetails/components/rwa/MoreWaysToTrade', () => ({ MoreWaysToTrade: () => null }))
-vi.mock('~/pages/TokenDetails/components/rwa/RelatedTokens', () => ({ RelatedTokens: () => null }))
 vi.mock('~/pages/TokenDetails/components/earn/TokenDetailsEarnSection', () => ({ TokenDetailsEarnSection: () => null }))
 vi.mock('~/pages/TokenDetails/components/performance/TokenPerformance', () => ({ TokenPerformance: () => null }))
 vi.mock('~/components/MobileBottomBar/MobileBottomBar', () => ({

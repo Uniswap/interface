@@ -1,13 +1,12 @@
 import { PartialMessage, PlainMessage } from '@bufbuild/protobuf'
 import { ConnectError } from '@connectrpc/connect'
-import { useQuery } from '@connectrpc/connect-query'
-import { UseQueryResult } from '@tanstack/react-query'
+import { useQuery, UseQueryResult } from '@tanstack/react-query'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
-import { search } from '@uniswap/client-data-api/dist/data/v2/search-SearchService_connectquery'
 import { SearchRequest, SearchResponse } from '@uniswap/client-data-api/dist/data/v2/search_pb'
 import { RankedPool } from '@uniswap/client-data-api/dist/data/v2/types_pb'
+import { getSearchQueryOptions } from '@universe/data-api'
+import { searchServiceClient } from 'uniswap/src/data/apiClients/dataApiService/clients/SearchServiceClient'
 import { normalizeBackendNativeAddress } from 'uniswap/src/data/apiClients/dataApiService/utils/dataApiMultichainToken'
-import { entryGatewayProdPostTransport } from 'uniswap/src/data/transport'
 import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import { PoolSearchResult, PoolSearchStats } from 'uniswap/src/features/dataApi/types'
 import { isToken0Quote } from 'uniswap/src/features/pools/quoteToken'
@@ -30,11 +29,7 @@ export function useSearchQuery<TSelectType>({
   enabled?: boolean
   select?: ((data: SearchResponse) => TSelectType) | undefined
 }): UseQueryResult<TSelectType, ConnectError> {
-  return useQuery(search, input, {
-    transport: entryGatewayProdPostTransport,
-    enabled: !!input && enabled,
-    select,
-  })
+  return useQuery(getSearchQueryOptions(searchServiceClient, { params: input, enabled, select }))
 }
 
 function buildPoolSearchStats(rankedPool: RankedPool | PlainMessage<RankedPool>): PoolSearchStats | undefined {

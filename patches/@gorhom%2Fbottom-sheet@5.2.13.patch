@@ -5,7 +5,28 @@ diff --git a/src/components/bottomSheet/BottomSheet.tsx b/src/components/bottomS
 index 4ff4142222473696351fa7180aba8187972916c3..b8285dafb6265b72ff8df3f21e46f5ce03cf193c 100644
 --- a/src/components/bottomSheet/BottomSheet.tsx
 +++ b/src/components/bottomSheet/BottomSheet.tsx
-@@ -1783,6 +1783,32 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
+@@ -971,7 +971,19 @@
+            * override with mount animation
+            */
+           if (animationStatus === ANIMATION_STATUS.RUNNING) {
+-            return;
++            /**
++             * A mount animation whose destination went stale (detents changed
++             * mid-flight, e.g. dynamic content grew) is re-targeted below;
++             * any other running animation is left alone.
++             */
++            const { source: runningSource, nextPosition: runningNextPosition } =
++              animatedAnimationState.get();
++            if (
++              runningSource !== ANIMATION_SOURCE.MOUNT ||
++              runningNextPosition === proposedPosition
++            ) {
++              return;
++            }
+           }
+           /**
+            * if animate on mount is set to true, then we animate to the propose position,
+@@ -1783,6 +1795,32 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
  
        handleSnapToIndex(_providedIndex);
      }, [animateOnMount, _providedIndex, didAnimateOnMount, handleSnapToIndex]);

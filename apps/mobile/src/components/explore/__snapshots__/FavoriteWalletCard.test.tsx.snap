@@ -4,18 +4,18 @@ exports[`FavoriteWalletCard > renders without error 1`] = `
 <DocumentFragment>
   <div
     class="css-view-175oi2r"
-    style="border-top-left-radius: 16px; border-top-right-radius: 16px; border-bottom-right-radius: 16px; border-bottom-left-radius: 16px;"
+    style="border-top-left-radius: 16px; border-top-right-radius: 16px; border-bottom-right-radius: 16px; border-bottom-left-radius: 16px; margin: 4px;"
   >
     <button
       accessibilityactions="[object Object]"
       android_ripple="[object Object]"
       data-testid="favorite-wallet-card"
       role="button"
-      style="background-color: transparent; margin: 4px; border-radius: 16px; overflow: hidden;"
+      style="background-color: transparent; border-radius: 16px; overflow: hidden;"
     >
       <div
         class="css-view-175oi2r"
-        style="gap: 4px; padding: 12px 12px 12px 12px; border-top-left-radius: 16px; border-top-right-radius: 16px; border-bottom-right-radius: 16px; border-bottom-left-radius: 16px; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px;"
+        style="gap: 4px; padding: 12px; border-top-left-radius: 16px; border-top-right-radius: 16px; border-bottom-right-radius: 16px; border-bottom-left-radius: 16px; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px;"
       >
         <div
           class="css-view-175oi2r"
@@ -71,7 +71,7 @@ exports[`FavoriteWalletCard > renders without error 1`] = `
             <div
               class="css-text-146c3p1 r-maxWidth-dnmrzs r-overflow-1udh08x r-textOverflow-1udbk01 r-whiteSpace-3s2u2q r-wordWrap-1iln25a"
               dir="auto"
-              style="flex-shrink: 1; font-size: 19px; line-height: 24px; font-family: Basel Grotesk; font-weight: 400;"
+              style="flex-shrink: 1; font-size: 19px; line-height: 24px; font-family: "Basel Grotesk"; font-weight: 400;"
             >
               0x​82D5...3Fa6
             </div>

@@ -1,7 +1,7 @@
 import type { RankedMultichainToken } from '@uniswap/client-data-api/dist/data/v2/types_pb'
 import type { UniverseChainId } from '@universe/chains'
+import { multichainTokenKey } from '@universe/data-api'
 import { buildTokenSortRankFromMultichain } from '~/features/Explore/state/listTokens/utils/buildTokenSortRankFromMultichain'
-import { multichainTokenKey } from '~/features/Explore/state/listTokens/utils/multichainTokenKey'
 import { getAllowedAddressChainIds } from '~/features/Explore/state/listTokens/utils/multichainVolume'
 
 // BE should be grouping multichain assets already, this is a defensive guard.

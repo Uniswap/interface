@@ -1,5 +1,7 @@
+import '../../config/vitest-presets/vitest/jsdom-shims'
 import { expect } from 'vitest'
 import { createAxeMatcher } from './src/testing/axe'
+import { initMyceliumTestI18n } from './src/testing/i18n'
 
 // Runtime __DEV__ global (mirrors config/vitest-presets/vitest/setup.js and
 // packages/tailwind/vitest-native-setup.ts): a runtime global rather than a
@@ -9,3 +11,5 @@ const globalWithDev = globalThis as { __DEV__?: boolean }
 globalWithDev.__DEV__ ??= true
 
 expect.extend(createAxeMatcher())
+
+initMyceliumTestI18n()

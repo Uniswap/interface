@@ -11,6 +11,7 @@
  *   legs, and unused exactly as legacy leaves it unused on device.
  */
 import { type JSX } from 'react'
+import { useTranslation } from 'react-i18next'
 import { X } from '../components/icons/X'
 import { useSporeColors } from '../theme-hooks-compat'
 import { TouchableAreaCompat } from '../touchable-area/TouchableAreaCompat'
@@ -28,12 +29,20 @@ export function ModalCloseIconCompat({
   color = DEFAULT_CLOSE_ICON_COLOR,
   testId,
   role = DEFAULT_CLOSE_ICON_ROLE,
+  'aria-label': ariaLabel,
 }: ModalCloseIconProps): JSX.Element {
+  const { t } = useTranslation()
   const colors = useSporeColors()
   const px = closeIconSizePx(size)
 
   return (
-    <TouchableAreaCompat role={role} testID={testId} shouldAutomaticallyInjectColors={false} onPress={onClose}>
+    <TouchableAreaCompat
+      role={role}
+      aria-label={role === 'none' ? undefined : (ariaLabel ?? t('common.button.close'))}
+      testID={testId}
+      shouldAutomaticallyInjectColors={false}
+      onPress={onClose}
+    >
       <X color={resolveCloseIconColor(color, colors)} size={px} />
     </TouchableAreaCompat>
   )

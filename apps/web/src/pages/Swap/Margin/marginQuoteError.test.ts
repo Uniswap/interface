@@ -154,19 +154,32 @@ describe('getMarginQuoteErrorMessage', () => {
   it('flags a detail-borne MARGIN_ code this map does not know, without leaking a non-code detail as one', () => {
     const unknown = fetchErrorWith({ status: 400, errorCode: 'BadRequest', detail: 'MARGIN_DUST_DEBT' })
     expect(getMarginQuoteErrorMessage({ error: unknown, t: mockT })).toEqual({
-      message: 'MARGIN_DUST_DEBT',
+      message: 'margin.error.quoteFailed',
       unrecognizedCode: 'MARGIN_DUST_DEBT',
     })
     const prose = fetchErrorWith({ status: 400, errorCode: 'BadRequest', detail: 'MARGINAL request' })
     expect(getMarginQuoteErrorMessage({ error: prose, t: mockT })).toEqual({ message: 'MARGINAL request' })
   })
 
-  it('degrades to detail + flags drift for a MARGIN_-prefixed code this map does not recognize', () => {
+  it('degrades to generic copy + flags drift for a MARGIN_-prefixed code this map does not recognize', () => {
     const error = fetchErrorWith({ status: 422, errorCode: 'MARGIN_SOME_FUTURE_CODE', detail: 'server detail' })
     expect(getMarginQuoteErrorMessage({ error, t: mockT })).toEqual({
-      message: 'server detail',
+      message: 'margin.error.quoteFailed',
       unrecognizedCode: 'MARGIN_SOME_FUTURE_CODE',
     })
+  })
+
+  it.each([
+    ['MARGIN_INTENT_MISMATCH: close', 'margin.error.adjust.fullExit'],
+    ['MARGIN_INTENT_MISMATCH', 'margin.error.adjust.noChange'],
+    ['MARGIN_LEVERAGE_EXCEEDS_MAX', 'margin.error.adjust.healthFloor'],
+    ['MARGIN_SWAP_PRICE_IMPACT', 'margin.error.adjust.priceImpact'],
+    ['MARGIN_POSITION_UNDERWATER', 'margin.error.adjust.underwater'],
+    ['MARGIN_POSITION_NOT_FOUND', 'margin.error.adjust.noPosition'],
+    ['MARGIN_NO_ELIGIBLE_VENUE', 'margin.error.adjust.marketNotSupported'],
+  ])('maps the trading API refusal %s to readable copy', (detail, message) => {
+    const error = fetchErrorWith({ status: 422, errorCode: 'UnprocessableEntity', detail })
+    expect(getMarginQuoteErrorMessage({ error, t: mockT })).toEqual({ message })
   })
 
   it('degrades to detail with NO drift flag for a coarse (non-MARGIN_) ErrorType — expected, not drift', () => {
@@ -211,11 +224,11 @@ describe('getMarginQuoteErrorMessage', () => {
     expect(getMarginQuoteErrorMessage({ error, t: mockT }).message).toBe('margin.error.adjust.priceMoved')
   })
 
-  it('still surfaces the backend detail for other coarse error types', () => {
+  it('never shows a raw MARGIN_ code from a coarse error type', () => {
     const error = new FetchError({
       response: { status: 422 } as Response,
       data: { errorCode: 'UnprocessableEntity', detail: 'MARGIN_MARK_UNAVAILABLE_ERROR' },
     })
-    expect(getMarginQuoteErrorMessage({ error, t: mockT }).message).toBe('MARGIN_MARK_UNAVAILABLE_ERROR')
+    expect(getMarginQuoteErrorMessage({ error, t: mockT }).message).toBe('margin.error.quoteFailed')
   })
 })

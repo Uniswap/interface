@@ -1,6 +1,5 @@
 import { chainIdToPlatform } from '@universe/chains'
-import type { IconSizeTokens } from '@universe/mycelium'
-import type { ColorTokens, FlexProps } from '@universe/mycelium'
+import type { FlexProps } from '@universe/mycelium'
 import { TestID } from '@universe/test'
 import { useEffect } from 'react'
 import { useTransactionSettingsWithSlippage } from 'uniswap/src/features/transactions/components/settings/hooks/useTransactionSettingsWithSlippage'
@@ -15,7 +14,10 @@ import {
   useSetTransactionSettingsAutoSlippageTolerance,
   useTransactionSettingsStore,
 } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
-import { TransactionSettings as BaseTransactionSettings } from 'uniswap/src/features/transactions/components/settings/TransactionSettings'
+import {
+  TransactionSettings as BaseTransactionSettings,
+  type TransactionSettingsTriggerProps,
+} from 'uniswap/src/features/transactions/components/settings/TransactionSettings'
 import { TransactionSettingsButtonWithSlippage } from 'uniswap/src/features/transactions/components/settings/TransactionSettingsButtonWithSlippage'
 import type { TransactionSettingConfig } from 'uniswap/src/features/transactions/components/settings/types'
 import {
@@ -30,8 +32,6 @@ export interface SwapFormSettingsProps {
   adjustTopAlignment?: boolean
   adjustRightAlignment?: boolean
   position?: FlexProps['position']
-  iconColor?: ColorTokens
-  iconSize?: IconSizeTokens
   defaultTitle?: string
 }
 
@@ -83,14 +83,20 @@ export function SwapFormSettingsInner({
   adjustTopAlignment = true,
   adjustRightAlignment = true,
   position = 'absolute',
-  iconColor = '$neutral2',
-  iconSize,
   defaultTitle,
   isZeroSlippage,
 }: SwapFormSettingsInnerProps): JSX.Element {
   const { isSlippageWarningModalVisible, handleHideSlippageWarningModalWithSeen, onCloseSettingsModal } =
     useTransactionSettingsWithSlippage()
   const { autoSlippageTolerance } = useSlippageSettings()
+
+  const renderTrigger = (triggerProps: TransactionSettingsTriggerProps): JSX.Element => (
+    <TransactionSettingsButtonWithSlippage
+      {...triggerProps}
+      autoSlippageTolerance={autoSlippageTolerance}
+      isZeroSlippage={isZeroSlippage}
+    />
+  )
 
   return (
     <>
@@ -100,18 +106,9 @@ export function SwapFormSettingsInner({
         adjustTopAlignment={adjustTopAlignment}
         adjustRightAlignment={adjustRightAlignment}
         position={position}
-        iconColor={iconColor}
-        iconSize={iconSize}
         defaultTitle={defaultTitle}
         testID={TestID.SwapSettings}
-        CustomSettingsButton={
-          <TransactionSettingsButtonWithSlippage
-            autoSlippageTolerance={autoSlippageTolerance}
-            isZeroSlippage={isZeroSlippage}
-            iconColor={iconColor}
-            iconSize={iconSize}
-          />
-        }
+        renderTrigger={renderTrigger}
         onClose={onCloseSettingsModal}
       />
     </>

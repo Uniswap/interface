@@ -50,6 +50,8 @@ export interface MarginMarketLive {
   // LONG for the collateral/debt pair as-is; SHORT for the reversed pair. Absent → derive from the
   // pair's token identity (marginMarketDirection).
   direction?: MarginDirection
+  // The leverage swap's LP pool fee at this venue, bps.
+  feeBps?: number
 }
 
 function toLive({ row, venue }: { row: MarginMarketRow; venue: MarginMarketVenue }): MarginMarketLive {
@@ -61,6 +63,7 @@ function toLive({ row, venue }: { row: MarginMarketRow; venue: MarginMarketVenue
     markPriceX18: row.oraclePrice,
     lltvWad: venue.lltv,
     direction: row.direction,
+    feeBps: venue.feeBps,
   }
 }
 
@@ -105,6 +108,7 @@ function buildDynamicMarket({
     lltvWad: venue.lltv,
     maxLeverage: Number(venue.maxLeverage),
     marketId: venue.marketId,
+    isHeadline: venue.marketId !== undefined && venue.marketId === row.headlineMarketId,
     shouldUseNativeEquity,
   }
 }
@@ -215,6 +219,7 @@ export function groupMarketsIntoPairs({
       maxLeverage: market.maxLeverage,
       borrowRateBps: live?.borrowApyBps,
       availableBorrowLiquidity: live?.availableBorrowLiquidity,
+      isHeadline: market.isHeadline,
     }
     const existing = byKey.get(key)
     if (existing) {
@@ -315,8 +320,18 @@ export function useMarginMarkets(options?: { enabled?: boolean; poll?: boolean }
       for (const venue of row.venueMarkets) {
         const { collateralToken, debtToken } = marginMarketRowTokens(row)
         const key = marginMarketKey({ collateralToken, debtToken, venue: venue.venue })
+        // A venue can list several markets for one pair (Morpho); the key holds one: the headline, which
+        // Auto opens on, else the deepest, since an empty market would otherwise stand for the venue with
+        // a rate nothing can be borrowed at.
+        const depth = (live?: MarginMarketLive): number => Number(live?.availableBorrowLiquidity ?? 0)
+        const market = buildDynamicMarket({ row, venue, currencyInfoById })
+        const isOutranked =
+          marketByKey.get(key)?.isHeadline || depth(liveByKey.get(key)) > depth(toLive({ row, venue }))
+        if (!market.isHeadline && isOutranked) {
+          continue
+        }
         liveByKey.set(key, toLive({ row, venue }))
-        marketByKey.set(key, buildDynamicMarket({ row, venue, currencyInfoById }))
+        marketByKey.set(key, market)
       }
     }
 

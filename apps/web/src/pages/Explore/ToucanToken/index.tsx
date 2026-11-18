@@ -60,9 +60,9 @@ import { ToucanActionButton } from '~/features/Toucan/Shared/ToucanActionButton'
 import { ToucanContainer } from '~/features/Toucan/Shared/ToucanContainer'
 import { ToucanIntroModal } from '~/features/Toucan/ToucanIntroModal'
 import { useScrollCompact } from '~/hooks/useScrollCompact'
-import { useDynamicMetatags } from '~/pages/metatags'
+import { AuctionLayout, AuctionLeftPanel, AuctionRightPanel } from '~/pages/Explore/ToucanToken/AuctionLayout'
 import { NotFound } from '~/pages/NotFound'
-import { LeftPanel, RightPanel, TokenDetailsLayout } from '~/pages/TokenDetails/components/skeleton/Skeleton'
+import { useDynamicMetatags } from '~/pages/routes/metatags'
 import { formatAuctionMetatagTitleName } from '~/shared-cloud/metatags'
 import { useAppDispatch, useAppSelector } from '~/state/hooks'
 import { useStateRehydrated } from '~/state/useStateRehydrated'
@@ -321,8 +321,8 @@ function ToucanTokenContent({ isModalOpen, onCloseModal }: { isModalOpen: boolea
         {isTokenProvenanceEnabled && <AuctionIntroBanner onLearnMorePress={handleDetailsModal} />}
         {isQuickLaunch ? <QuickLaunchStatsRow /> : <AuctionStatsBanner />}
         <BiddingClosedStrip />
-        <TokenDetailsLayout toucan topSpacing={isProvenanceAuctionEnded ? '16' : undefined}>
-          <LeftPanel clamped>
+        <AuctionLayout topSpacing={isProvenanceAuctionEnded ? '16' : undefined}>
+          <AuctionLeftPanel>
             {/* On mobile/tablet ($xl), surface the post-auction panel above the chart once the auction ends */}
             {isAuctionEnded && <PostAuctionPanel inline />}
             <AuctionChartContainer
@@ -340,9 +340,9 @@ function ToucanTokenContent({ isModalOpen, onCloseModal }: { isModalOpen: boolea
             <AuctionStatsGrid onViewAllStats={handleDetailsModal} />
             <ActivitySection />
             <AuctionInfo />
-          </LeftPanel>
+          </AuctionLeftPanel>
 
-          <RightPanel toucan>
+          <AuctionRightPanel>
             {isAuctionEnded ? (
               <PostAuctionPanel inline={false} />
             ) : (
@@ -352,8 +352,8 @@ function ToucanTokenContent({ isModalOpen, onCloseModal }: { isModalOpen: boolea
               </Flex>
             )}
             {hasUserBids && <Bids />}
-          </RightPanel>
-        </TokenDetailsLayout>
+          </AuctionRightPanel>
+        </AuctionLayout>
       </ToucanContainer>
       {/* Fixed bottom button - $sm only - show Place Bid, Withdraw, or (once concluded) a disabled
           "Auction Concluded" trigger. The concluded bid form never renders as a full inline box on

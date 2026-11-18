@@ -2,7 +2,7 @@
 
 ## Overview
 
-We've instrumented our Maestro E2E tests to collect performance metrics across three runtime environments: local development, DeviceCloud (CI), and Maestro Cloud. This comprehensive instrumentation enables us to track test execution times, identify performance regressions, and monitor the health of our test suite across all deployment scenarios.
+We've instrumented our Maestro E2E tests to collect performance metrics in two runtime environments: local development and Maestro Cloud (CI). This comprehensive instrumentation enables us to track test execution times, identify performance regressions, and monitor the health of our test suite across all deployment scenarios.
 
 ## Architecture
 

@@ -2,10 +2,19 @@ import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes
 import { Currency, Price, Token } from '@uniswap/sdk-core'
 import { nearestUsableTick, TickMath } from '@uniswap/v3-sdk'
 import { ChartEntry } from '~/features/Liquidity/charts/LiquidityRangeInput/types'
+import type { TickRange } from '~/features/Liquidity/Create/types'
 import { getTickToPrice, getV4TickToPrice } from '~/features/Liquidity/utils/getTickToPrice'
 
 function clampToTickRange(tick: number): number {
   return Math.max(TickMath.MIN_TICK, Math.min(TickMath.MAX_TICK, tick))
+}
+
+/** The pool's lowest and highest ticks on the spacing: an edge at one is open, a price of zero or infinity. */
+export function getUsableTickBounds(tickSpacing: number): TickRange {
+  return {
+    minTick: nearestUsableTick(TickMath.MIN_TICK, tickSpacing),
+    maxTick: nearestUsableTick(TickMath.MAX_TICK, tickSpacing),
+  }
 }
 
 /**

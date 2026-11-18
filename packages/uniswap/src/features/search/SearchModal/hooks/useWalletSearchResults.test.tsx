@@ -84,6 +84,26 @@ describe('useWalletSearchResults', () => {
     expect(result.current.exactUnitagMatch).toBe(true)
   })
 
+  it('lowercases the query before the unitag username lookup', () => {
+    renderHook(() => useWalletSearchResults('Bufo', UniverseChainId.Mainnet))
+
+    expect(mockUseUnitagsUsernameQuery).toHaveBeenCalledWith({ params: { username: 'bufo' } })
+  })
+
+  it('returns the unitag when the query is mixed case', () => {
+    mockUseUnitagsUsernameQuery.mockImplementation(({ params }: { params?: { username: string } }) => ({
+      data: params?.username === 'bufo' ? { address: OTHER_ADDRESS, username: 'bufo' } : undefined,
+      isLoading: false,
+    }))
+
+    const { result } = renderHook(() => useWalletSearchResults('Bufo', UniverseChainId.Mainnet))
+
+    expect(result.current.wallets[0]).toEqual(
+      expect.objectContaining({ type: OnchainItemListOptionType.Unitag, address: OTHER_ADDRESS, unitag: 'bufo' }),
+    )
+    expect(result.current.exactUnitagMatch).toBe(true)
+  })
+
   it('reports loading while ENS is in flight', () => {
     mockUseENS.mockReturnValue({ address: null, name: null, loading: true })
 

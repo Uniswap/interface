@@ -1,4 +1,4 @@
-import { ProtocolVersion } from '@universe/api'
+import { ProtocolVersion } from '@universe/data-api'
 import { calculate24hLpFeesUsd } from '~/data/pools/poolStats'
 
 describe('calculate24hLpFeesUsd', () => {

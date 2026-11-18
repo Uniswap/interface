@@ -11,8 +11,8 @@ function getSortValue(rwa: Rwa, sortMethod: StocksSortMethod): number | undefine
       return metrics.priceChange1hPct
     case StocksSortMethod.DAY_CHANGE:
       return metrics.priceChange24hPct
-    case StocksSortMethod.MARKET_CAP:
-      return metrics.marketCapUsd
+    case StocksSortMethod.FDV:
+      return metrics.fdvUsd
     case StocksSortMethod.VOLUME:
       return metrics.volume24hUsd
     default:

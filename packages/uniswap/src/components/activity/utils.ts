@@ -8,8 +8,6 @@ import { AssetType } from 'uniswap/src/entities/assets'
 import { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
 import {
   INFINITE_APPROVAL_AMOUNT,
-  INFINITE_APPROVAL_NUMBER,
-  INFINITE_APPROVAL_NUMBER_PERMIT2,
   REVOKE_APPROVAL_AMOUNT,
   TransactionType,
   TransactionTypeInfo,
@@ -45,9 +43,14 @@ export function getActivityItemType(item: ActivityItem): string {
   }
 }
 
+// Max approvals arrive as uint96, uint160 or uint256 max scaled by the token's decimals, so no single
+// sentinel matches them all; any decimal-adjusted amount above this is shown as unlimited.
+const UNLIMITED_APPROVAL_THRESHOLD = 1e9
+
 /**
  * Formats an approval amount for display.
- * Returns "unlimited" for infinite approvals, "Max approve" for very large amounts (>999T), formatted number for regular approvals, or empty string for revokes.
+ * Returns "Unlimited" for infinite approvals or amounts above 1B, a formatted number for regular approvals,
+ * or an empty string for revokes.
  */
 export function formatApprovalAmount({
   approvalAmount,
@@ -58,17 +61,12 @@ export function formatApprovalAmount({
   formatNumberOrString: LocalizationContextState['formatNumberOrString']
   t: (key: string) => string
 }): string {
-  if (
-    approvalAmount === INFINITE_APPROVAL_AMOUNT ||
-    approvalAmount === INFINITE_APPROVAL_NUMBER ||
-    approvalAmount === INFINITE_APPROVAL_NUMBER_PERMIT2
-  ) {
+  if (approvalAmount === INFINITE_APPROVAL_AMOUNT || Number(approvalAmount) > UNLIMITED_APPROVAL_THRESHOLD) {
     return t('transaction.amount.unlimited')
   }
 
   if (approvalAmount && approvalAmount !== REVOKE_APPROVAL_AMOUNT) {
-    const formatted = formatNumberOrString({ value: approvalAmount, type: NumberType.TokenNonTx })
-    return formatted
+    return formatNumberOrString({ value: approvalAmount, type: NumberType.TokenNonTx })
   }
 
   return ''

@@ -1,5 +1,7 @@
 appId: com.uniswap.mobile.dev
 jsEngine: graaljs
+tags:
+  - flow-restore-missing-seed
 env:
   DATADOG_API_KEY: ${DATADOG_API_KEY}
   PLATFORM: ${PLATFORM}

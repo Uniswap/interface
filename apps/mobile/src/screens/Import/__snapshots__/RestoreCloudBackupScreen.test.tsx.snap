@@ -19,19 +19,19 @@ exports[`RestoreCloudBackupScreen > renders correctly 1`] = `
         >
           <div
             class="css-view-175oi2r"
-            style="gap: 8px; margin: 12px 12px 12px 12px;"
+            style="gap: 8px; margin: 12px;"
           >
             <div
               class="css-text-146c3p1"
               dir="auto"
-              style="padding-top: 0px; font-size: 19px; line-height: 24px; font-family: Basel Grotesk; font-weight: 400;"
+              style="padding-top: 0px; font-size: 19px; line-height: 24px; font-family: "Basel Grotesk"; font-weight: 400;"
             >
               account.cloud.backup.title
             </div>
             <div
               class="css-text-146c3p1"
               dir="auto"
-              style="font-size: 15px; line-height: 18px; font-family: Basel Grotesk; font-weight: 400;"
+              style="font-size: 15px; line-height: 18px; font-family: "Basel Grotesk"; font-weight: 400;"
             >
               account.cloud.backup.subtitle
             </div>
@@ -102,13 +102,13 @@ exports[`RestoreCloudBackupScreen > renders correctly 1`] = `
                         <div
                           class="css-text-146c3p1"
                           dir="auto"
-                          style="font-size: 19px; line-height: 24px; font-family: Basel Grotesk; font-weight: 400;"
+                          style="font-size: 19px; line-height: 24px; font-family: "Basel Grotesk"; font-weight: 400;"
                         />
                       </div>
                       <div
                         class="css-text-146c3p1"
                         dir="auto"
-                        style="font-size: 15px; line-height: 18px; font-family: Basel Grotesk; font-weight: 400;"
+                        style="font-size: 15px; line-height: 18px; font-family: "Basel Grotesk"; font-weight: 400;"
                       >
                         Nov 8, 55840 5:30 PM
                       </div>
@@ -201,13 +201,13 @@ exports[`RestoreCloudBackupScreen > renders correctly 1`] = `
                         <div
                           class="css-text-146c3p1"
                           dir="auto"
-                          style="font-size: 19px; line-height: 24px; font-family: Basel Grotesk; font-weight: 400;"
+                          style="font-size: 19px; line-height: 24px; font-family: "Basel Grotesk"; font-weight: 400;"
                         />
                       </div>
                       <div
                         class="css-text-146c3p1"
                         dir="auto"
-                        style="font-size: 15px; line-height: 18px; font-family: Basel Grotesk; font-weight: 400;"
+                        style="font-size: 15px; line-height: 18px; font-family: "Basel Grotesk"; font-weight: 400;"
                       >
                         Nov 8, 55840 5:13 PM
                       </div>
@@ -244,7 +244,7 @@ exports[`RestoreCloudBackupScreen > renders correctly 1`] = `
     </div>
     <div
       class="css-view-175oi2r"
-      style="padding-right: 16px; padding-left: 16px; top: 0px; right: 0px; left: 0px; z-index: 1020; pointer-events: box-none;"
+      style="padding-right: 16px; padding-left: 16px; top: 0px; right: 0px; left: 0px; z-index: 1020;"
     >
       <button
         accessibilityactions="[object Object]"

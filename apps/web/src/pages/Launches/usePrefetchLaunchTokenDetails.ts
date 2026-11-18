@@ -1,8 +1,8 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { useCallback, useEffect, useRef } from 'react'
-import { noop } from 'utilities/src/react/noop'
 import { usePrefetchTokenDetailsAuction } from '~/features/Toucan/hooks/usePrefetchTokenDetailsAuction'
 import { type LaunchItem, UNISWAP_CCA_LAUNCHPAD_ID } from '~/features/Toucan/utils/launchesModel'
+import { preloadAuctionChunk, preloadTokenDetailsChunk } from '~/pages/routes/routeChunkPreloads'
 import { getInitialTokenPriceHistoryQueryOptions, getTokenMultiChainQueryOptions } from '~/utils/tokenQueryOptions'
 
 // Only the token detail page shares these query keys — live CCA quick launches route to
@@ -13,15 +13,6 @@ const AUCTION_PATH_PREFIX = '/explore/auctions/'
 // deliberate hover warms the cache. Mirrors Explore's hover-card open intent, which is what makes
 // Explore→TDP navigations feel instant while cold Launches→TDP navigations don't.
 const HOVER_PREFETCH_DELAY_MS = 120
-
-// Same paths as RouteDefinitions, so this warms the route's own chunk. Failures are ignored; the route retries itself.
-export function preloadTokenDetailsChunk(): void {
-  void import('~/pages/TokenDetails/TokenDetailsPage').catch(noop)
-}
-
-function preloadAuctionChunk(): void {
-  void import('~/pages/Explore/ToucanToken').catch(noop)
-}
 
 /**
  * Prefetches what a cold navigation to the detail page waits on: the route chunk, the token

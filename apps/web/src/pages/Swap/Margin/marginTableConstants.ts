@@ -16,5 +16,7 @@ export const MARGIN_ACTIVE_COLUMN = {
   margin: 'margin',
   opened: 'opened',
   utility: 'utility',
+  // Leftmost, and only while the chart's avatars show. Key order here is not column order.
+  displayId: 'displayId',
 } as const
 export type MarginActiveColumnId = (typeof MARGIN_ACTIVE_COLUMN)[keyof typeof MARGIN_ACTIVE_COLUMN]

@@ -1,4 +1,7 @@
+import { useButton } from '@base-ui/react/internals/use-button'
 import * as React from 'react'
+import { useComposedRefs } from 'utilities/src/react/composeRefs'
+import { isCompositeItemRole } from '../compat/composite-role'
 import { type CompatDomProps, createCompatComponent } from '../compat/dom'
 import { isMyceliumPrimitive, markMyceliumPrimitive } from '../compat/primitive-marker'
 import { THEME_COLOR_TOKENS } from '../text-compat/theme-tokens.generated'
@@ -13,8 +16,9 @@ import type { TouchableAreaCompatEvent, TouchableAreaCompatProps } from './props
  * `packages/tailwind/src/parity/touchable-area` proves the CSS equivalence
  * per prop pool, value, scope (pseudo/media/group), and theme; this file
  * carries the runtime semantics the legacy wrapper adds: role/tabindex
- * defaults, press propagation gating, modifier-press navigation, minimum
- * touch-target measurement, and Spore child color injection.
+ * defaults, keyboard activation (Base UI's button hook), press propagation
+ * gating, modifier-press navigation, minimum touch-target measurement, and
+ * Spore child color injection.
  *
  * Native rendering (Pressable semantics) is the `.native.tsx` split.
  */
@@ -25,8 +29,11 @@ const MIN_DIMENSION = 24
 /**
  * The roles legacy Tamagui (`@tamagui/web` getSplitStyles) grants a default
  * `tabIndex=0` — non-interactive roles (e.g. `role="none"`) must not be tab stops.
+ * `tab` is added so a tablist built on TouchableArea is reachable at all.
  */
-const TABBABLE_ROLES: ReadonlySet<string> = new Set(['button', 'checkbox', 'link', 'radio', 'textbox', 'switch'])
+const TABBABLE_ROLES: ReadonlySet<string> = new Set(['button', 'checkbox', 'link', 'radio', 'textbox', 'switch', 'tab'])
+
+type KeyHandlers = Pick<CompatDomProps, 'onKeyDown' | 'onKeyUp'>
 
 /** The wrapper normalizes the nullable press family before the DOM layer sees it. */
 type TouchableAreaFrameProps = TouchableAreaCompatProps & CompatDomProps
@@ -114,6 +121,8 @@ export const TouchableAreaCompat = React.forwardRef<HTMLElement, TouchableAreaCo
       onPressIn,
       onPressOut,
       onLayout,
+      onKeyDown,
+      onKeyUp,
       ...rest
     } = props
 
@@ -170,11 +179,27 @@ export const TouchableAreaCompat = React.forwardRef<HTMLElement, TouchableAreaCo
 
     const anchorMode = modifierPressHref !== undefined
     const tag = anchorMode ? 'a' : props.tag
-    // TODO(INFRA-4589): role="button" is focusable but doesn't activate on Enter or Space: compat/dom.tsx wires
-    // onPress to onClick only. Every TouchableArea-based control inherits this.
+    const nativeButton = tag === 'button'
     const role = props.role ?? (anchorMode ? 'link' : 'button')
     const unfocusable = props.disabled === true || props.focusable === false
     const tabIndex = props.tabIndex ?? (unfocusable ? -1 : anchorMode || !TABBABLE_ROLES.has(role) ? undefined : 0)
+
+    // Base UI's button hook owns keyboard activation: Enter (keydown) and Space (keyup) dispatch a real
+    // click on the element, so the composed click path runs unchanged; a native <button> or a link is
+    // left to the browser; a Base UI trigger or menu item rendering this element runs its handler first
+    // and this one yields to it. Only the key handlers are taken: role, tabIndex and aria-disabled keep
+    // the legacy rules above, and `disabled` detaches the click handler instead of preventing it. Base UI
+    // drops the caller's key handlers while disabled; the raw DOM handlers keep forwarding like any other.
+    const disabled = props.disabled === true
+    const { getButtonProps, buttonRef } = useButton({
+      disabled,
+      native: nativeButton,
+      composite: isCompositeItemRole(role) || undefined,
+    })
+    const { onKeyDown: activationKeyDown, onKeyUp: activationKeyUp }: KeyHandlers = disabled
+      ? { onKeyDown, onKeyUp }
+      : getButtonProps({ onKeyDown, onKeyUp })
+    const composedRef = useComposedRefs<HTMLElement>(ref, buttonRef)
 
     const frameProps: TouchableAreaFrameProps = {
       ...rest,
@@ -185,6 +210,7 @@ export const TouchableAreaCompat = React.forwardRef<HTMLElement, TouchableAreaCo
         enabled: shouldAutomaticallyInjectColors,
       }),
       tag,
+      type: nativeButton ? (props.type ?? 'button') : props.type,
       role,
       tabIndex,
       href: anchorMode ? modifierPressHref : props.href,
@@ -193,10 +219,12 @@ export const TouchableAreaCompat = React.forwardRef<HTMLElement, TouchableAreaCo
       onLongPress: rest.onLongPress ?? undefined,
       onPressIn: gated(onPressIn),
       onPressOut: gated(onPressOut),
+      onKeyDown: activationKeyDown,
+      onKeyUp: activationKeyUp,
       ...(shouldConsiderMinimumDimensions ? { width: minDimensions.width, height: minDimensions.height } : undefined),
     }
 
-    return <TouchableAreaFrame {...frameProps} ref={ref} />
+    return <TouchableAreaFrame {...frameProps} ref={composedRef} />
   },
 )
 

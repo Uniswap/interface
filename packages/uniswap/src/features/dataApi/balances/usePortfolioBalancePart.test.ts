@@ -1,6 +1,5 @@
 import { WalletBalanceCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { UniverseChainId } from '@universe/chains'
-import { FeatureFlags } from '@universe/gating'
 import {
   getWalletBalancesQuery,
   PortfolioBalancePart,
@@ -20,7 +19,6 @@ const {
   mockUseHideSmallBalancesSetting,
   mockUseHideSpamTokensSetting,
   mockUsePlatformBasedFetchPolicy,
-  mockUseFeatureFlag,
 } = vi.hoisted(() => ({
   mockUseEnabledChains: vi.fn(),
   mockUseCurrencyIdToVisibility: vi.fn(),
@@ -28,7 +26,6 @@ const {
   mockUseHideSmallBalancesSetting: vi.fn(),
   mockUseHideSpamTokensSetting: vi.fn(),
   mockUsePlatformBasedFetchPolicy: vi.fn(),
-  mockUseFeatureFlag: vi.fn(),
 }))
 
 vi.mock(
@@ -58,13 +55,6 @@ vi.mock('uniswap/src/features/transactions/selectors', async (importOriginal) =>
 
 vi.mock('uniswap/src/utils/usePlatformBasedFetchPolicy', () => ({
   usePlatformBasedFetchPolicy: mockUsePlatformBasedFetchPolicy,
-}))
-
-vi.mock('@universe/gating', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('@universe/gating')>()),
-  useFeatureFlag: mockUseFeatureFlag,
-  // useWalletBalancesIncludeCategories reads the pools flag via the exposure-disabled variant.
-  useFeatureFlagWithExposureLoggingDisabled: mockUseFeatureFlag,
 }))
 
 // `useGetWalletBalancesQuery` returns a shape compatible with `UseQueryResult`. The hook reads
@@ -121,41 +111,7 @@ describe(usePortfolioBalancePart, () => {
     })
   })
 
-  describe('pools flag off (default)', () => {
-    beforeEach(() => {
-      mockUseFeatureFlag.mockReturnValue(false)
-    })
-
-    it('always uses GetWalletBalances (no GetPortfolio fallback)', () => {
-      renderHookWithProviders(() => usePortfolioBalancePart({ part: PortfolioBalancePart.Tokens, evmAddress: '0x123' }))
-
-      expect(mockUseGetWalletBalancesQuery).toHaveBeenCalledWith(expect.objectContaining({ enabled: true }))
-    })
-
-    it('sends include_categories=[EARN_VAULTS] (earn is always included)', () => {
-      renderHookWithProviders(() => usePortfolioBalancePart({ part: PortfolioBalancePart.Total, evmAddress: '0x123' }))
-
-      const input = mockUseGetWalletBalancesQuery.mock.calls.at(-1)?.[0]?.input
-      expect(input?.includeCategories).toEqual([WalletBalanceCategory.EARN_VAULTS])
-    })
-
-    it.each([
-      PortfolioBalancePart.Total,
-      PortfolioBalancePart.Tokens,
-      PortfolioBalancePart.Pools,
-      PortfolioBalancePart.Earn,
-    ])('resolves part="%s" to the matching GetWalletBalances part', (part) => {
-      const { result } = renderHookWithProviders(() => usePortfolioBalancePart({ part, evmAddress: '0x123' }))
-
-      expect(result.current.data).toEqual(WALLET_BALANCES_BY_PART[part])
-    })
-  })
-
-  describe('pools opted in (flag on)', () => {
-    beforeEach(() => {
-      mockUseFeatureFlag.mockImplementation((flag) => flag === FeatureFlags.PortfolioPoolsBalances)
-    })
-
+  describe('GetWalletBalances request', () => {
     it('sends include_categories=[POOLS, EARN_VAULTS]', () => {
       renderHookWithProviders(() => usePortfolioBalancePart({ part: PortfolioBalancePart.Total, evmAddress: '0x123' }))
 
@@ -235,7 +191,6 @@ describe(usePortfolioBalancePart, () => {
   })
 
   it('passes the network/error/refetch metadata through unchanged', () => {
-    mockUseFeatureFlag.mockImplementation((flag) => flag === FeatureFlags.PortfolioPoolsBalances)
     mockUseGetWalletBalancesQuery.mockReturnValue({
       data: undefined,
       isFetching: false,
@@ -255,10 +210,6 @@ describe(usePortfolioBalancePart, () => {
   })
 
   describe('query contract preservation', () => {
-    beforeEach(() => {
-      mockUseFeatureFlag.mockReturnValue(false)
-    })
-
     const EXPECTED_MAINNET_MODIFIER = {
       address: '0x123',
       includeOverrides: [],
@@ -280,7 +231,7 @@ describe(usePortfolioBalancePart, () => {
             evmAddress: '0x123',
             svmAddress: 'svm456',
             chainIds: [UniverseChainId.Mainnet],
-            includeCategories: [WalletBalanceCategory.EARN_VAULTS],
+            includeCategories: [WalletBalanceCategory.POOLS, WalletBalanceCategory.EARN_VAULTS],
             modifier: EXPECTED_MAINNET_MODIFIER,
           },
         }),
@@ -411,7 +362,6 @@ describe(usePortfolioTotalValue, () => {
     mockUseCurrencyIdToVisibility.mockReturnValue({})
     mockUseHideSmallBalancesSetting.mockReturnValue(false)
     mockUseHideSpamTokensSetting.mockReturnValue(false)
-    mockUseFeatureFlag.mockReturnValue(false)
     mockUseGetWalletBalancesQuery.mockReturnValue(makeQueryResult(undefined))
   })
 
@@ -461,9 +411,7 @@ describe(usePortfolioBalanceBreakdown, () => {
     earn: { balanceUSD: 200, percentChange: 4, absoluteChangeUSD: 20 },
   }
 
-  it('enables the query and returns the full breakdown with [POOLS, EARN_VAULTS] in requestedCategories when the pools flag is on', () => {
-    mockUseFeatureFlag.mockImplementation((flag) => flag === FeatureFlags.PortfolioPoolsBalances)
-
+  it('enables the query and returns the full breakdown with [POOLS, EARN_VAULTS] in requestedCategories', () => {
     const { result } = renderHookWithProviders(() => usePortfolioBalanceBreakdown({ evmAddress: '0x123' }))
 
     expect(mockUseGetWalletBalancesQuery).toHaveBeenCalledWith(expect.objectContaining({ enabled: true }))
@@ -471,27 +419,13 @@ describe(usePortfolioBalanceBreakdown, () => {
     expect(result.current.requestedCategories).toEqual([WalletBalanceCategory.POOLS, WalletBalanceCategory.EARN_VAULTS])
   })
 
-  it('still enables the query and returns data with [EARN_VAULTS] in requestedCategories when the pools flag is off', () => {
-    mockUseFeatureFlag.mockReturnValue(false)
-
-    const { result } = renderHookWithProviders(() => usePortfolioBalanceBreakdown({ evmAddress: '0x123' }))
-
-    expect(mockUseGetWalletBalancesQuery).toHaveBeenCalledWith(expect.objectContaining({ enabled: true }))
-    expect(result.current.data).toEqual(EXPECTED_BREAKDOWN)
-    expect(result.current.requestedCategories).toEqual([WalletBalanceCategory.EARN_VAULTS])
-  })
-
   it('disables the query when no evm/svm address is provided', () => {
-    mockUseFeatureFlag.mockImplementation((flag) => flag === FeatureFlags.PortfolioPoolsBalances)
-
     renderHookWithProviders(() => usePortfolioBalanceBreakdown({}))
 
     expect(mockUseGetWalletBalancesQuery).toHaveBeenCalledWith(expect.objectContaining({ enabled: false }))
   })
 
   it('passes the same input shape as usePortfolioBalancePart so query keys stay aligned', () => {
-    mockUseFeatureFlag.mockImplementation((flag) => flag === FeatureFlags.PortfolioPoolsBalances)
-
     renderHookWithProviders(() =>
       usePortfolioBalancePart({ part: PortfolioBalancePart.Total, evmAddress: '0x123', svmAddress: 'svm456' }),
     )
@@ -511,7 +445,6 @@ describe(usePortfolioBalanceBreakdown, () => {
   })
 
   it('passes through query metadata (loading/error/refetch) from the underlying query', () => {
-    mockUseFeatureFlag.mockImplementation((flag) => flag === FeatureFlags.PortfolioPoolsBalances)
     const refetch = vi.fn()
     mockUseGetWalletBalancesQuery.mockReturnValue({
       data: undefined,

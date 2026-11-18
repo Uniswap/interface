@@ -1,6 +1,6 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import type { Currency } from '@uniswap/sdk-core'
-import { parseRestProtocolVersion } from '@universe/api'
+import { parseRestProtocolVersion } from '@universe/data-api'
 import { cn, Flex as FlexCompat, type FlexCompatProps, zIndexes } from '@universe/mycelium'
 import { Button, Flex, Text, TouchableArea } from '@universe/mycelium'
 import { RotateLeft } from '@universe/mycelium/icons/RotateLeft'
@@ -188,6 +188,7 @@ const Toolbar = () => {
           buttonStyle={{ py: '$spacing8', px: '$spacing12' }}
           dropdownStyle={{ width: 200, borderRadius: '$rounded16', zIndex: zIndexes.popover }}
           adaptToSheet
+          title={t('common.protocol')}
           menuLabel={
             <Text variant="buttonLabel3" lineHeight="16px" whiteSpace="nowrap">
               {t('position.protocol', { protocol: getProtocolVersionLabel(protocolVersion) ?? '' })}
@@ -213,8 +214,6 @@ const Toolbar = () => {
             adjustRightAlignment={false}
             adjustTopAlignment={false}
             settings={[Slippage, Deadline]}
-            iconColor="$neutral1"
-            iconSize="$icon.16"
             isNativePool={Boolean(currencies.sdk.TOKEN0?.isNative || currencies.sdk.TOKEN1?.isNative)}
           />
         </Flex>

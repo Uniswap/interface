@@ -2,7 +2,6 @@ import type { PlainMessage } from '@bufbuild/protobuf'
 import { useQuery } from '@tanstack/react-query'
 import type { GetTokenMarketsResponse } from '@uniswap/client-data-api/dist/data/v2/api_pb'
 import type { UniverseChainId } from '@universe/chains'
-import { useMemo } from 'react'
 import { getGetTokenMarketsQueryOptions } from 'uniswap/src/data/apiClients/dataApiService/tokens/queries'
 import { useTDPPerChainMarketsParams } from '~/pages/TokenDetails/hooks/useTDPPerChainMarketsParams'
 
@@ -32,10 +31,16 @@ export function getLowLiquidityChainIds(tvlByChain: TvlByChain): UniverseChainId
   return [...tvlByChain].filter(([, tvl]) => tvl < LOW_LIQUIDITY_TVL_USD).map(([chainId]) => chainId)
 }
 
+function selectLowLiquidityChainIds(data: PlainMessage<GetTokenMarketsResponse> | undefined): UniverseChainId[] {
+  return getLowLiquidityChainIds(selectTvlByChain(data))
+}
+
 export function useTDPLowLiquidityChainIds(): UniverseChainId[] {
   const params = useTDPPerChainMarketsParams()
 
-  const { data: tvlByChain } = useQuery(getGetTokenMarketsQueryOptions({ params, select: selectTvlByChain }))
+  const { data = EMPTY_CHAIN_IDS } = useQuery(
+    getGetTokenMarketsQueryOptions({ params, select: selectLowLiquidityChainIds }),
+  )
 
-  return useMemo(() => (tvlByChain ? getLowLiquidityChainIds(tvlByChain) : EMPTY_CHAIN_IDS), [tvlByChain])
+  return data
 }

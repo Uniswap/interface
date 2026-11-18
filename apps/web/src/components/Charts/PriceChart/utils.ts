@@ -1,7 +1,8 @@
-import { CandlestickData } from 'lightweight-charts'
+import { CandlestickData, TickMarkType, type UTCTimestamp } from 'lightweight-charts'
 import { getFiatCurrencyCode } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
+import { formatTickMarks } from '~/components/Charts/utils'
 import { PricePoint } from '~/data/util'
 
 /**
@@ -90,4 +91,21 @@ export function formatPriceAxisLabel({
     }).format(amount)
   }
   return format.convertFiatAmountFormatted(price, NumberType.FiatTokenPrice)
+}
+
+/**
+ * `formatTickMarks`, but a month or year mark that's still in the previous month or year locally reads as its day.
+ * lightweight-charts picks marks by UTC date while the labels are local, so west of UTC the bar opening a UTC month
+ * (say Nov 1 00:00 UTC, Oct 31 evening locally) would otherwise be labelled with the month that's ending.
+ */
+// oxlint-disable-next-line max-params -- lightweight-charts' TickMarkFormatter signature
+export function formatPriceChartTickMark(time: UTCTimestamp, tickMarkType: TickMarkType, locale: string): string {
+  const date = new Date(time * 1000)
+  const isLocalBoundary =
+    tickMarkType === TickMarkType.Year
+      ? date.getFullYear() === date.getUTCFullYear()
+      : tickMarkType === TickMarkType.Month
+        ? date.getMonth() === date.getUTCMonth()
+        : true
+  return formatTickMarks(time, isLocalBoundary ? tickMarkType : TickMarkType.DayOfMonth, locale)
 }

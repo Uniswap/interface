@@ -1,13 +1,5 @@
 import { Environment } from '@universe/config'
-import {
-  isAndroid,
-  isDevPortalApp,
-  isExtensionApp,
-  isMobileApp,
-  isWebApp,
-  isE2eTestEnv,
-  isTestEnv,
-} from '@universe/environment'
+import { isExtensionApp, isMobileApp } from '@universe/environment'
 import {
   DEV_ENTRY_GATEWAY_API_BASE_URL,
   DEV_ENTRY_GATEWAY_HOST,
@@ -20,41 +12,7 @@ import {
   STAGING_RPC_API_BASE_URL,
 } from './entryGatewayUrls'
 
-export enum TrafficFlows {
-  Scantastic = 'scantastic',
-}
-
 export const helpUrl = 'https://support.uniswap.org/hc/en-us'
-
-export function getCloudflarePrefix(): string {
-  if (isMobileApp) {
-    return `${isAndroid ? 'android' : 'ios'}.wallet`
-  }
-
-  if (isExtensionApp) {
-    return 'extension'
-  }
-
-  if (isE2eTestEnv() || isWebApp || isDevPortalApp) {
-    return 'interface'
-  }
-
-  if (isTestEnv()) {
-    return 'wallet'
-  }
-
-  throw new Error('Could not determine app to generate Cloudflare prefix')
-}
-
-export function getServicePrefix(flow?: TrafficFlows): string {
-  return flow ? `${flow}.` : ''
-}
-
-export function getCloudflareApiBaseUrl(params?: { flow?: TrafficFlows; postfix?: string }): string {
-  const { flow, postfix } = params ?? {}
-  const baseUrl = `https://${getServicePrefix(flow)}${getCloudflarePrefix()}.gateway.uniswap.org`
-  return postfix ? `${baseUrl}/${postfix}` : baseUrl
-}
 
 export function createHelpArticleUrl(resourceId: string, options?: { path?: string; section?: string }): string {
   const { path = 'articles', section } = options ?? {}

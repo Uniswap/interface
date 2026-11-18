@@ -9,7 +9,7 @@
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import {
-  REFRESH_FRAME_HIDDEN_CLASS,
+  REFRESH_FRAME_DISABLED_REVEAL_CLASSES,
   REFRESH_FRAME_REVEAL_CLASSES,
   REFRESH_ICON_HOVER_CLASSES,
   REFRESH_SPIN_CLASS,
@@ -46,6 +46,11 @@ function iconWrapper(button: HTMLElement): HTMLElement {
 }
 
 describe('RefreshButtonCompat — press behavior (legacy RefreshButtonIcon contract)', () => {
+  it('names the icon-only button with the tooltip label', () => {
+    renderButton()
+    expect(screen.getByRole('button', { name: 'Refresh', hidden: true })).toBeTruthy()
+  })
+
   it('press calls onPress and spins the icon for exactly one second', () => {
     vi.useFakeTimers()
     const { onPress, button } = renderButton()
@@ -103,9 +108,16 @@ describe('RefreshButtonCompat — press behavior (legacy RefreshButtonIcon contr
     }
   })
 
-  it('disabled hides the frame entirely and ignores presses (legacy display none)', () => {
+  it('disabled stays announced as disabled, reveals dimmed on hover, and ignores presses', () => {
     const { onPress, button } = renderButton({ disabled: true })
-    expect(button.className).toContain(REFRESH_FRAME_HIDDEN_CLASS)
+    expect(button.getAttribute('aria-disabled')).toBe('true')
+    expect(button.className).toContain('opacity-0')
+    for (const cls of REFRESH_FRAME_DISABLED_REVEAL_CLASSES.split(' ')) {
+      expect(button.className).toContain(cls)
+    }
+    for (const cls of REFRESH_FRAME_REVEAL_CLASSES.split(' ')) {
+      expect(button.className).not.toContain(cls)
+    }
     fireEvent.click(button)
     expect(onPress).not.toHaveBeenCalled()
   })
@@ -126,64 +138,16 @@ describe('RefreshButtonCompat — press behavior (legacy RefreshButtonIcon contr
   })
 })
 
-describe('RefreshButtonCompat — `R` keyboard shortcut (legacy RefreshButton.web contract)', () => {
-  it.each(['r', 'R'])('fires onPress on window keydown "%s", without the spin', (key) => {
-    const { onPress, button } = renderButton()
-    fireEvent.keyDown(window, { key })
-    expect(onPress).toHaveBeenCalledTimes(1)
-    // The shortcut refetches without triggering the press spin (legacy).
-    expect(iconWrapper(button).className).not.toContain(REFRESH_SPIN_CLASS)
-  })
-
-  it('still fires while loading (legacy gates the shortcut on disabled only)', () => {
-    const { onPress } = renderButton({ isLoading: true })
-    fireEvent.keyDown(window, { key: 'r' })
-    expect(onPress).toHaveBeenCalledTimes(1)
-  })
-
-  it('does not fire when disabled', () => {
-    const { onPress } = renderButton({ disabled: true })
-    fireEvent.keyDown(window, { key: 'r' })
-    expect(onPress).not.toHaveBeenCalled()
-  })
-
-  it.each(['INPUT', 'TEXTAREA'] as const)('does not fire while typing in a %s', (tag) => {
+describe('RefreshButtonCompat — no page-wide shortcut', () => {
+  it.each(['r', 'R'])('ignores a document keydown "%s"', (key) => {
     const { onPress } = renderButton()
-    const field = document.createElement(tag)
-    document.body.appendChild(field)
-    fireEvent.keyDown(field, { key: 'r' })
-    expect(onPress).not.toHaveBeenCalled()
-    field.remove()
-  })
-
-  it('does not fire while typing in a contenteditable element', () => {
-    const { onPress } = renderButton()
-    const editable = document.createElement('div')
-    // jsdom does not compute isContentEditable from the attribute alone.
-    Object.defineProperty(editable, 'isContentEditable', { value: true })
-    document.body.appendChild(editable)
-    fireEvent.keyDown(editable, { key: 'r' })
-    expect(onPress).not.toHaveBeenCalled()
-    editable.remove()
-  })
-
-  it('unregisters the listener on unmount', () => {
-    const onPress = vi.fn()
-    const { unmount } = render(<RefreshButtonCompat isLoading={false} tooltipLabel="Refresh" onPress={onPress} />)
-    unmount()
-    fireEvent.keyDown(window, { key: 'r' })
-    expect(onPress).not.toHaveBeenCalled()
-  })
-
-  it('ignores unrelated keys', () => {
-    const { onPress } = renderButton()
-    fireEvent.keyDown(window, { key: 'x' })
+    fireEvent.keyDown(document.body, { key })
     expect(onPress).not.toHaveBeenCalled()
   })
 })
 
 describe('RefreshButtonCompat — tooltip (legacy delay 0 / restMs 0 / placement bottom)', () => {
-  it('opens immediately on hover with the label and the R keycap', () => {
+  it('opens immediately on hover with only the label', () => {
     vi.useFakeTimers()
     renderButton()
     const trigger = document.querySelector('[data-slot="tooltip-compat-trigger"]') as HTMLElement
@@ -195,8 +159,7 @@ describe('RefreshButtonCompat — tooltip (legacy delay 0 / restMs 0 / placement
     })
     const popup = document.querySelector('[data-slot="tooltip-compat-popup"]') as HTMLElement
     expect(popup).toBeTruthy()
-    expect(popup.textContent).toContain('Refresh')
-    expect(popup.textContent).toContain('R')
+    expect(popup.textContent).toBe('Refresh')
     // Placement bottom rides the positioner side attribute.
     const positioner = document.querySelector('[data-slot="tooltip-compat-positioner"]') as HTMLElement
     expect(positioner).toBeTruthy()

@@ -58,11 +58,12 @@ export function PortfolioMoreMenu({ size = 'medium', transition }: PortfolioMore
           ...moreMenuButtonStyle,
           height: size === 'small' ? 32 : 40,
         }}
-        dropdownStyle={{ minWidth: DROPDOWN_MIN_WIDTH }}
+        dropdownStyle={{ width: 'max-content', minWidth: DROPDOWN_MIN_WIDTH }}
         alignRight
+        positionFixed
       >
         <InternalMenuItem onPress={onReportPress}>
-          <Flex row alignItems="center" gap="$gap12">
+          <Flex row shrink alignItems="center" gap="$gap12">
             <ChartBarCrossed size={iconSizes.icon16} color="$neutral1" />
             <Text variant="buttonLabel3">{t('reporting.portfolio.data.title')}</Text>
           </Flex>

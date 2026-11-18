@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'node:url'
 import { storybookTest } from '@storybook/addon-vitest/vitest-plugin'
 import { playwright } from '@vitest/browser-playwright'
 import { createStorybookViteConfig } from 'storybook-presets/viteConfig'
@@ -35,6 +36,7 @@ export function createStorybookVitestConfig({
           test: {
             name: `storybook:${theme}`,
             exclude,
+            setupFiles: [fileURLToPath(new URL('./a11yIncompleteSetup.ts', import.meta.url))],
             browser: {
               enabled: true,
               headless: true,

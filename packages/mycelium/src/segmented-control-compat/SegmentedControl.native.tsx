@@ -73,6 +73,7 @@ export function SegmentedControl<T extends string = string>({
   outlined = true,
   gap,
   animateIndicator = true,
+  indicatorColor,
 }: SegmentedControlProps<T>): React.JSX.Element {
   assert(options.length >= 2 && options.length <= 6, 'Segmented control must have between 2 and 6 options, inclusive.')
 
@@ -210,6 +211,7 @@ export function SegmentedControl<T extends string = string>({
           const optionElement = (
             <Pressable
               key={value}
+              accessibilityLabel={option['aria-label']}
               accessibilityRole={!itemDisabled && href ? 'link' : 'button'}
               accessibilityState={{ selected: selectedOption === value, disabled: itemDisabled || undefined }}
               className={optionClasses({
@@ -292,7 +294,7 @@ export function SegmentedControl<T extends string = string>({
           >
             <Pressable
               accessible={false}
-              className={indicatorPillClasses({ hovered: indicatorHovered })}
+              className={indicatorPillClasses({ hovered: indicatorHovered, color: indicatorColor })}
               onHoverIn={() => setIndicatorHovered(true)}
               onHoverOut={() => setIndicatorHovered(false)}
             />

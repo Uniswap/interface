@@ -1,6 +1,5 @@
 import { RwaCategory } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { Platform, type UniverseChainId } from '@universe/chains'
-import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { Flex, Text } from '@universe/mycelium'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
 import { useMemo } from 'react'
@@ -13,14 +12,13 @@ import { getGroupedRwaCategory } from 'uniswap/src/features/tokenCategories/grou
 import type { TokenCategory } from 'uniswap/src/features/tokenCategories/types'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useNetworkFilterChainIds } from '~/components/NetworkFilter/useFilteredChains'
+import { isCategoryUnsupportedChain } from '~/features/Explore/categories/useExploreCategory'
 import {
   ExploreTablesFilterStoreContextProvider,
   useExploreTablesFilterStore,
 } from '~/features/Explore/state/exploreTablesFilterStore'
 import { useListTokens } from '~/features/Explore/state/listTokens/useListTokens'
 import { VolumeTimeFrameSelector } from '~/features/Explore/VolumeTimeFrameSelector'
-import { showsVolumeTimeFrameSelector } from '~/pages/Explore/categories/exploreGroupedCategory'
-import { isCategoryUnsupportedChain } from '~/pages/Explore/categories/useExploreCategory'
 import { RwaCategoryTable } from '~/pages/Explore/rwa/table/RwaCategoryTable'
 import { SearchBar } from '~/pages/Explore/SearchBar'
 import { TokenTable } from '~/pages/Explore/tables/Tokens/TokensTable'
@@ -104,8 +102,6 @@ export function CategoryTokensSection({ category }: { category: TokenCategory })
   )
   const tokenCount = category.stats?.tokenCount
   const rwaCategory = getGroupedRwaCategory(category)
-  const tokenCategoriesEnabled = useIsTokenCategoriesEnabled()
-  const showVolumeTimeFrameSelector = showsVolumeTimeFrameSelector({ rwaCategory, tokenCategoriesEnabled })
 
   return (
     <ExploreTablesFilterStoreContextProvider>
@@ -123,7 +119,7 @@ export function CategoryTokensSection({ category }: { category: TokenCategory })
               {tokenCount !== undefined && t('categoryDetails.tokenCount', { count: tokenCount })}
             </Text>
             <Flex row gap="$spacing8" alignItems="center" $md={{ width: '100%' }}>
-              {showVolumeTimeFrameSelector && <VolumeTimeFrameSelector />}
+              <VolumeTimeFrameSelector />
               <NetworkFilter
                 trigger={{ variant: 'pill' }}
                 forceAllNetworksLabel

@@ -22,9 +22,11 @@ import { getLogger } from 'utilities/src/logger/logger'
 export function MobileNotificationServiceManager({
   isLoading = false,
   onCardsChange,
+  suppressIntroCards,
 }: {
   isLoading?: boolean
   onCardsChange?: (hasCards: boolean) => void
+  suppressIntroCards?: boolean
 }): React.JSX.Element | null {
   const isNotificationServiceEnabledFlag = useFeatureFlag(FeatureFlags.NotificationService)
   const isNotificationServiceEnabled =
@@ -74,6 +76,7 @@ export function MobileNotificationServiceManager({
 
   return (
     <NotificationContainer
+      suppressIntroCards={suppressIntroCards}
       onRenderFailed={notificationService.onRenderFailed}
       onNotificationClick={notificationService.onNotificationClick}
       onNotificationShown={notificationService.onNotificationShown}

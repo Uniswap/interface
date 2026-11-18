@@ -1,5 +1,4 @@
 import { UniverseChainId } from '@universe/chains'
-import { useIsTokenCategoriesEnabled } from '@universe/gating'
 import { Flex, Text } from '@universe/mycelium'
 import type { GeneratedIcon } from '@universe/mycelium/icons'
 import { Person } from '@universe/mycelium/icons/Person'
@@ -56,8 +55,6 @@ export const SearchModalNoQueryList = memo(function SearchModalNoQueryListInner(
 }: SearchModalNoQueryListProps): JSX.Element {
   const { t } = useTranslation()
 
-  const isTokenCategoriesEnabled = useIsTokenCategoriesEnabled()
-
   const {
     data: sections,
     isLoading,
@@ -90,12 +87,11 @@ export const SearchModalNoQueryList = memo(function SearchModalNoQueryListInner(
     if (activeTab !== SearchTab.All) {
       return sections
     }
-    const withFooters =
-      isTokenCategoriesEnabled && onViewAll
-        ? withViewAllFooters({ sections, truncatedSectionKeys: 'all', onViewAll, onViewAllCategory })
-        : sections
+    const withFooters = onViewAll
+      ? withViewAllFooters({ sections, truncatedSectionKeys: 'all', onViewAll, onViewAllCategory })
+      : sections
     return withSectionGaps(withFooters)
-  }, [isTokenCategoriesEnabled, onViewAll, onViewAllCategory, activeTab, sections])
+  }, [onViewAll, onViewAllCategory, activeTab, sections])
 
   // Element and object props are memoized so SearchModalList's memo isn't busted every render.
   const loadingElement = useMemo(() => <SearchModalListSkeleton pillCount={skeletonPillCount} />, [skeletonPillCount])

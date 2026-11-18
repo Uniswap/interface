@@ -1,8 +1,8 @@
 import type { PlainMessage } from '@bufbuild/protobuf'
 import type { GetTokenHistoryPriceResponse } from '@uniswap/client-data-api/dist/data/v2/api_pb'
 import type { UniverseChainId } from '@universe/chains'
+import { type GetTokenHistoryPriceInput } from '@universe/data-api'
 import {
-  type GetTokenHistoryPriceInput,
   getGetTokenHistoryPriceQueryOptions,
   getGetTokenMultiChainQueryOptions,
 } from 'uniswap/src/data/apiClients/dataApiService/tokens/queries'
@@ -24,6 +24,14 @@ export const DEFAULT_TOKEN_CHART_TIME_PERIOD = TimePeriod.DAY
  * useTokenPriceChartData) and any prefetcher warming it ahead of navigation build their keys through
  * these helpers, so a warmed key can never silently drift from the one the page actually requests.
  */
+
+/**
+ * Currency id for a chart target's live spot-price and market-stat queries. A native token has no DB address on
+ * most chains (`address` is undefined), so it resolves to the native currency id instead of leaving them disabled.
+ */
+export function getChartCurrencyId({ chainId, address }: { chainId: UniverseChainId; address?: string }): string {
+  return address ? buildCurrencyId(chainId, address) : buildNativeCurrencyId(chainId)
+}
 
 /** Multichain metadata query that gates the TDP skeleton. */
 export function getTokenMultiChainQueryOptions({

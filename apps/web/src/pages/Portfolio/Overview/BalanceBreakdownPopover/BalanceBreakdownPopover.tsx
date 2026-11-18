@@ -3,6 +3,7 @@ import { AdaptiveWebPopoverContentCompat, PopoverCompat } from '@universe/myceli
 import { useMedia, useShadowPropsMedium } from '@universe/mycelium/theme-hooks-compat'
 import { TestID } from '@universe/test'
 import { ReactNode, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import type { PortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/buildPortfolioBalance'
 import {
   BalanceBreakdownRow,
@@ -75,6 +76,7 @@ export function BalanceBreakdownPopover({
   children,
   disabled,
 }: BalanceBreakdownPopoverProps): JSX.Element {
+  const { t } = useTranslation()
   const media = useMedia()
   const shadowProps = useShadowPropsMedium()
 
@@ -99,11 +101,12 @@ export function BalanceBreakdownPopover({
       offset={{ mainAxis: 8 }}
     >
       <PopoverCompat.Trigger>
-        <Flex cursor="default" testID={TestID.BalanceBreakdownPopover}>
+        <Flex tag="button" cursor="default" testID={TestID.BalanceBreakdownPopover}>
           {children}
         </Flex>
       </PopoverCompat.Trigger>
       <AdaptiveWebPopoverContentCompat
+        aria-label={t('portfolio.tokens.table.balances')}
         isOpen
         adaptWhen={false}
         role="tooltip"

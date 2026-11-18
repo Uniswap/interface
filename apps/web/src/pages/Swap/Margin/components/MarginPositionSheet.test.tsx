@@ -75,6 +75,7 @@ function renderSheet(overrides: { market?: MarginMarket | undefined } = {}) {
       market={'market' in overrides ? overrides.market : MARKET}
       figures={FIGURES}
       onRequestModal={onRequestModal}
+      actionModal={<div data-testid="action-modal-stub" />}
     />,
   )
   return { onClose, onRequestModal }
@@ -122,17 +123,19 @@ describe('MarginPositionSheet', () => {
     }
   })
 
-  it('reveals the position actions under Modify, and hands a pick to the action modals after closing', () => {
+  it('opens the position actions in a sheet from Modify, hosting the action modal, and keeps the sheets open on a pick', () => {
     const { onClose, onRequestModal } = renderSheet()
     expect(screen.queryByText('Add margin')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('action-modal-stub')).not.toBeInTheDocument()
 
     fireEvent.click(screen.getByTestId(TestID.MarginPositionSheetModify))
     expect(screen.getByText('Add margin')).toBeInTheDocument()
     expect(screen.getByText('Withdraw margin')).toBeInTheDocument()
     expect(screen.getByText('Close position')).toBeInTheDocument()
+    expect(screen.getByTestId('action-modal-stub')).toBeInTheDocument()
 
     fireEvent.click(screen.getByText('Close position'))
-    expect(onClose).toHaveBeenCalledTimes(1)
+    expect(onClose).not.toHaveBeenCalled()
     expect(onRequestModal).toHaveBeenCalledWith({ action: 'close', positionId: POSITION.positionId })
   })
 

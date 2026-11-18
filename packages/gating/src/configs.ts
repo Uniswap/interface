@@ -98,7 +98,6 @@ export enum DynamicConfigs {
   LiquidityGasPreEstimation = 'liquidity_gas_pre_estimation',
   LPConfig = 'lp_config',
   Margin = 'margin_config',
-  RWAIssuerLogos = 'rwa_issuer_logos',
   SynchronizedHeartbeats = 'synchronized_heartbeats',
   UniswapBuiltHookAddresses = 'uniswap_built_hook_addresses',
   VerifiedAuctions = 'verified_auctions',
@@ -305,10 +304,6 @@ export enum EmbeddedWalletBetaPassphrasesKey {
   Passphrases = 'passphrases',
 }
 
-export enum RWAIssuerLogosConfigKey {
-  Logos = 'logos',
-}
-
 /** EIP-7702 delegate contracts whose ERC-1271 validation rejects raw Permit2 ECDSA signatures. */
 export enum Permit2MismatchDelegatesConfigKey {
   DelegateAddresses = 'delegateAddresses',
@@ -354,17 +349,7 @@ export type DynamicConfigKeys = {
   [DynamicConfigs.LiquidityGasPreEstimation]: LiquidityGasPreEstimationConfigKey
   [DynamicConfigs.LPConfig]: LPConfigKey
   [DynamicConfigs.Margin]: MarginConfigKey
-  [DynamicConfigs.RWAIssuerLogos]: RWAIssuerLogosConfigKey
   [DynamicConfigs.SynchronizedHeartbeats]: SynchronizedHeartbeatsConfigKey
   [DynamicConfigs.UniswapBuiltHookAddresses]: UniswapBuiltHookAddressesConfigKey
   [DynamicConfigs.VerifiedAuctions]: VerifiedAuctionsConfigKey
 }
-
-// This type must match the format in the statsig dynamic config for rwa_issuer_logos.
-// Per-issuer light/dark URLs because remote SVGs can't be recolored by theme.
-export type RWAIssuerLogo = {
-  light?: string
-  dark?: string
-}
-
-export type RWAIssuerLogosMap = Record<string, RWAIssuerLogo>

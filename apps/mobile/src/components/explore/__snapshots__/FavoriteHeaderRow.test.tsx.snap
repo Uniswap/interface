@@ -10,7 +10,7 @@ exports[`FavoriteHeaderRow > when editing > renders without error 1`] = `
     <div
       class="css-text-146c3p1"
       dir="auto"
-      style="font-size: 17px; line-height: 20px; font-family: Basel Grotesk; font-weight: 400;"
+      style="font-size: 19px; line-height: 24px; font-family: "Basel Grotesk"; font-weight: 400;"
     >
       Editing Title
     </div>
@@ -25,7 +25,7 @@ exports[`FavoriteHeaderRow > when editing > renders without error 1`] = `
         class="css-text-146c3p1"
         data-testid="done"
         dir="auto"
-        style="font-size: 17px; line-height: 19.549999999999997px; font-family: Basel Grotesk; font-weight: 500;"
+        style="font-size: 17px; line-height: 19.549999999999997px; font-family: "Basel Grotesk"; font-weight: 500;"
       >
         common.button.done
       </div>
@@ -48,7 +48,7 @@ exports[`FavoriteHeaderRow > when not editing > renders without error 1`] = `
     <div
       class="css-text-146c3p1"
       dir="auto"
-      style="font-size: 17px; line-height: 20px; font-family: Basel Grotesk; font-weight: 400;"
+      style="font-size: 19px; line-height: 24px; font-family: "Basel Grotesk"; font-weight: 400;"
     >
       Title
     </div>

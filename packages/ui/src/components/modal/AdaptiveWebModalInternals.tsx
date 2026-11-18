@@ -56,8 +56,8 @@ export function stripConsumerHeightForFit<T extends { height?: unknown; $md?: ob
   throw new PlatformSplitStubError('stripConsumerHeightForFit')
 }
 
-export function useSheetEscapeToClose(_options: { isOpen: boolean; onClose?: () => void }): void {
-  throw new PlatformSplitStubError('useSheetEscapeToClose')
+export function useDismissLayer(_options: { isOpen: boolean; onClose?: () => void }): void {
+  throw new PlatformSplitStubError('useDismissLayer')
 }
 
 export function useSheetFitHeightFreeze(_options: {

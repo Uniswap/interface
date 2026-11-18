@@ -18,7 +18,7 @@ export function MarginChartSheet({ isOpen, onClose }: { isOpen: boolean; onClose
   const { t } = useTranslation()
   return (
     <Trace logImpression={isOpen} modal={ModalName.MarginChartSheet}>
-      <WebBottomSheet isOpen={isOpen} onClose={onClose} px="$spacing12" pb="$spacing16">
+      <WebBottomSheet isOpen={isOpen} title={t('common.chart')} onClose={onClose} px="$spacing12" pb="$spacing16">
         {/* WebBottomSheet keeps its children mounted while closed; gating on isOpen keeps a second
             lightweight-charts instance from running behind the Trade tab. */}
         {isOpen ? (

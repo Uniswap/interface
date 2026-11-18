@@ -1,5 +1,5 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { Flex, type FlexCompatProps, Text, type TextCompatProps } from '@universe/mycelium'
+import { Flex, type FlexCompatProps, Text, type TextCompatProps, TouchableArea } from '@universe/mycelium'
 import { type ComponentRef, type CSSProperties, forwardRef } from 'react'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
@@ -135,17 +135,14 @@ export function CurrencyRow({
   const tokenBalance = balance ? balance.toExact() : cachedBalance
 
   const row = (
-    // oxlint-disable-next-line react/forbid-elements -- the row needs DOM props (onKeyDown, onClick, tabIndex) for a11y; MenuItem is a compat Flex and doesn't type them
-    <div
-      role="button"
-      tabIndex={0}
+    // The row is the button (Enter and Space activate it); MenuItem is a compat Flex with no press surface.
+    <TouchableArea
       className={`token-item-${key}`}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter') {
-          onSelect(warningSeverity === WarningSeverity.None)
-        }
-      }}
-      onClick={() => onSelect(warningSeverity === WarningSeverity.None)}
+      // The Trace wrapper above logs the press from the bubbled click.
+      shouldStopPropagation={false}
+      // MenuItem owns its colors; the injector would tint the row text on hover.
+      shouldAutomaticallyInjectColors={false}
+      onPress={() => onSelect(warningSeverity === WarningSeverity.None)}
       style={{ outline: 'none', display: 'contents' }}
     >
       <MenuItem
@@ -193,7 +190,7 @@ export function CurrencyRow({
           ) : null}
         </Flex>
       </MenuItem>
-    </div>
+    </TouchableArea>
   )
 
   // only show add or remove buttons if not on selected list

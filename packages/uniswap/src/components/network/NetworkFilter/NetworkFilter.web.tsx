@@ -8,7 +8,7 @@ import { iconSizes } from '@universe/mycelium/tokens'
 import { TriggerButtonCompat, type TriggerButtonCompatSize } from '@universe/mycelium/trigger-button-compat'
 import { TestID } from '@universe/test'
 import isEqual from 'lodash/isEqual'
-import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
+import { type ComponentProps, useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import type { NetworkFilterProps } from 'uniswap/src/components/network/NetworkFilter/NetworkFilter'
@@ -60,29 +60,28 @@ function NetworkFilterPillTrigger({
   displayedChainId,
   label,
   isOpen,
-  onPress,
   size = 'medium',
   showLabel = false,
   transition,
-  singleTabStop,
-}: {
+  'aria-label': ariaLabel,
+  ...rest
+}: Omit<ComponentProps<typeof TriggerButtonCompat>, 'size' | 'children' | 'isExpanded'> & {
   displayedChainId: UniverseChainId | null
   label: string
   isOpen: boolean
-  onPress: () => void
   size?: TriggerButtonCompatSize
   showLabel?: boolean
   transition?: string
-  singleTabStop?: boolean
 }): JSX.Element {
   return (
     <TriggerButtonCompat
-      role={singleTabStop ? 'presentation' : undefined}
-      tabIndex={singleTabStop ? -1 : undefined}
       isExpanded={isOpen}
       size={size}
       testID={TestID.TokensNetworkFilterTrigger}
-      onPress={onPress}
+      // Named even when only the logo shows.
+      aria-label={ariaLabel ?? label}
+      // The popover trigger's ref, handlers and aria attributes.
+      {...rest}
     >
       <NetworkLogo chainId={displayedChainId} size={PILL_LOGO_SIZES[size]} transition={transition} />
       {showLabel && (
@@ -170,10 +169,6 @@ export function NetworkFilter({
     handleClose()
   })
 
-  const handleToggleOpen = useEvent(() => {
-    setIsOpen(!isOpen)
-  })
-
   // Base UI's collision handling re-decides every scroll frame and swings the menu sideways when neither
   // side fits, so the layout is only decided on open, resize and scroll settle.
   useLayoutEffect(() => {
@@ -245,7 +240,7 @@ export function NetworkFilter({
       offset={{ mainAxis: DROPDOWN_OFFSET }}
       onOpenChange={handleOpenChange}
     >
-      <PopoverCompat.Trigger ref={triggerRef} aria-label={triggerLabel}>
+      <PopoverCompat.Trigger ref={triggerRef}>
         {trigger.variant === 'pill' ? (
           <NetworkFilterPillTrigger
             displayedChainId={displayedChainId}
@@ -253,20 +248,19 @@ export function NetworkFilter({
             isOpen={isOpen}
             size={trigger.size}
             showLabel={trigger.showLabel}
-            singleTabStop={triggerLabel !== undefined}
             transition={trigger.transition}
-            onPress={handleToggleOpen}
+            aria-label={triggerLabel}
           />
         ) : (
           <NetworkFilterTrigger
+            tag="button"
             displayedChainId={displayedChainId}
             isOpen={isOpen}
-            focusable={triggerLabel === undefined ? undefined : false}
+            aria-label={triggerLabel}
             tooltipLabel={isTouchable ? undefined : displayedLabel}
             content={trigger.variant === 'custom' ? trigger.content : undefined}
             outlined={trigger.variant === 'icon' && trigger.outlined}
             chevronSize={trigger.variant === 'icon' ? trigger.chevronSize : undefined}
-            onPress={handleToggleOpen}
           />
         )}
       </PopoverCompat.Trigger>

@@ -49,7 +49,7 @@ describe('usePoolsFailedNetworks', () => {
   it('is unresolved while the breakdown is still loading', () => {
     mockBreakdown({ loaded: false })
 
-    const { result } = renderHookWithProviders(() => usePoolsFailedNetworks({ enabled: true }))
+    const { result } = renderHookWithProviders(() => usePoolsFailedNetworks({}))
 
     expect(result.current.hasResolved).toBe(false)
     expect(result.current.failedChainIds).toEqual([])
@@ -59,7 +59,7 @@ describe('usePoolsFailedNetworks', () => {
   it('is resolved with failures once the breakdown returns failed chains', () => {
     mockBreakdown({ failedChainIds: [UniverseChainId.Mainnet] })
 
-    const { result } = renderHookWithProviders(() => usePoolsFailedNetworks({ enabled: true }))
+    const { result } = renderHookWithProviders(() => usePoolsFailedNetworks({}))
 
     expect(result.current.hasResolved).toBe(true)
     expect(result.current.failedChainIds).toEqual([UniverseChainId.Mainnet])
@@ -68,7 +68,7 @@ describe('usePoolsFailedNetworks', () => {
   it('is resolved with no failures when the breakdown returns an empty list', () => {
     mockBreakdown({ failedChainIds: [] })
 
-    const { result } = renderHookWithProviders(() => usePoolsFailedNetworks({ enabled: true }))
+    const { result } = renderHookWithProviders(() => usePoolsFailedNetworks({}))
 
     expect(result.current.hasResolved).toBe(true)
     expect(result.current.failedChainIds).toEqual([])
@@ -78,7 +78,7 @@ describe('usePoolsFailedNetworks', () => {
     mockEnabledChains([UniverseChainId.Mainnet])
     mockBreakdown({ failedChainIds: [UniverseChainId.Mainnet, UniverseChainId.Optimism, 99999999] })
 
-    const { result } = renderHookWithProviders(() => usePoolsFailedNetworks({ enabled: true }))
+    const { result } = renderHookWithProviders(() => usePoolsFailedNetworks({}))
 
     expect(result.current.failedChainIds).toEqual([UniverseChainId.Mainnet])
   })
@@ -86,7 +86,7 @@ describe('usePoolsFailedNetworks', () => {
   it('reports pools unavailable when the pools balance is undefined', () => {
     mockBreakdown({ poolsBalanceUSD: undefined })
 
-    const { result } = renderHookWithProviders(() => usePoolsFailedNetworks({ enabled: true }))
+    const { result } = renderHookWithProviders(() => usePoolsFailedNetworks({}))
 
     expect(result.current.isPoolsUnavailable).toBe(true)
   })
@@ -94,18 +94,8 @@ describe('usePoolsFailedNetworks', () => {
   it('does not report pools unavailable when the pools balance is present', () => {
     mockBreakdown({ poolsBalanceUSD: 100 })
 
-    const { result } = renderHookWithProviders(() => usePoolsFailedNetworks({ enabled: true }))
+    const { result } = renderHookWithProviders(() => usePoolsFailedNetworks({}))
 
-    expect(result.current.isPoolsUnavailable).toBe(false)
-  })
-
-  it('is unresolved when disabled even if the shared breakdown cache is populated', () => {
-    mockBreakdown({ failedChainIds: [UniverseChainId.Mainnet], poolsBalanceUSD: undefined })
-
-    const { result } = renderHookWithProviders(() => usePoolsFailedNetworks({ enabled: false }))
-
-    expect(result.current.hasResolved).toBe(false)
-    expect(result.current.failedChainIds).toEqual([])
     expect(result.current.isPoolsUnavailable).toBe(false)
   })
 })

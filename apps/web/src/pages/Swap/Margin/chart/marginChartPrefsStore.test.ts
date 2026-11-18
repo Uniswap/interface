@@ -22,7 +22,7 @@ describe('marginChartPrefsStore', () => {
   })
 
   it('defaults to candles', () => {
-    expect(DEFAULT_MARGIN_CHART_PREFS).toStrictEqual({ chartStyle: 'candles' })
+    expect(DEFAULT_MARGIN_CHART_PREFS).toStrictEqual({ chartStyle: 'candles', showPosition: true })
     expect(useMarginChartPrefs.getState()).toMatchObject(DEFAULT_MARGIN_CHART_PREFS)
   })
 
@@ -48,8 +48,8 @@ describe('marginChartPrefsStore', () => {
     await useMarginChartPrefs.persist.rehydrate()
 
     const state = useMarginChartPrefs.getState()
-    expect(state.chartStyle).toBe('line')
-    for (const key of ['showPosition', 'liqZone', 'breakEven', 'markers', 'summaryChip', 'previewLines', 'volume']) {
+    expect(state).toMatchObject({ chartStyle: 'line', showPosition: false })
+    for (const key of ['liqZone', 'breakEven', 'markers', 'summaryChip', 'previewLines', 'volume']) {
       expect(key in state).toBe(false)
     }
   })

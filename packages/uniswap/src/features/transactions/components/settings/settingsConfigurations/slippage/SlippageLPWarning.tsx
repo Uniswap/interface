@@ -1,5 +1,5 @@
+import { WarningLine } from '@universe/transactions-ui'
 import { useTranslation } from 'react-i18next'
-import { WarningMessage } from 'uniswap/src/components/WarningMessage/WarningMessage'
 import { SlippageWarning } from 'uniswap/src/features/transactions/components/settings/settingsConfigurations/slippage/SlippageWarning'
 import {
   useTransactionSettingsAutoSlippageToleranceStore,
@@ -47,10 +47,10 @@ export function SlippageLPWarning({ isNativePool }: SlippageLPWarningProps): JSX
 
   if (isLowSlippageWarning) {
     return (
-      <WarningMessage
-        warningMessage={t('swap.settings.slippage.alert.low')}
-        tooltipText={t('swap.settings.slippage.warning.low.lp')}
-        color="$statusWarning"
+      <WarningLine
+        message={t('swap.settings.slippage.alert.low')}
+        tooltip={t('swap.settings.slippage.warning.low.lp')}
+        level="warning"
       />
     )
   }

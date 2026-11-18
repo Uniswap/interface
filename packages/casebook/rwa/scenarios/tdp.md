@@ -17,7 +17,7 @@ priority: high
 severity: high
 # provenance
 source: testlio
-sourceNote: "Blueprint Testlio suite 'Tokenized Assets - TDP Page'. Header mapping logic is unit-covered by packages/uniswap/src/features/rwa/getRWAHeaderIdentity.test.ts ('shows the underlying asset name for an RWA match', 'keeps the matched token logo (not the shared group icon) for an RWA match', 'falls back to the asset symbol when the RWA asset name is empty', 'keeps the token name for an RWA match with plainTokenNames'); no e2e-level RWA TDP automation exists (verified against apps/web TokenDetails e2e specs), so this e2e case renders as a gap."
+sourceNote: "Blueprint Testlio suite 'Tokenized Assets - TDP Page'. No e2e-level RWA TDP automation exists (verified against apps/web TokenDetails e2e specs), so this e2e case renders as a gap."
 testlioRef: Tokenized Assets - TDP Page
 # scope
 chains:
@@ -38,7 +38,6 @@ code_paths:
   - apps/web/src/pages/TokenDetails/components/header/RWAIssuerHeaderDetails.tsx
   - apps/web/src/pages/TokenDetails/components/header/TokenDetailsHeader.tsx
   - apps/mobile/src/components/TokenDetails/rwa/RWAIssuerHeaderDetails.tsx
-  - packages/uniswap/src/features/rwa/getRWAHeaderIdentity.ts
   - packages/uniswap/src/features/rwa/hooks/useRwaGroupMatch.ts
 automationRefs: []
 ---
@@ -46,11 +45,9 @@ automationRefs: []
 > **high · e2e · release · gap** · chains: ethereum
 
 **Given** the user opens the TDP for an RWA asset
-**When** the header renders via `getRWAHeaderIdentity`
-**Then** the header shows the ticker with the token issuer displayed below the asset name, using the matched token logo (not the shared group icon)
+**When** the header renders
+**Then** the header shows the token's own on-chain/project name and ticker with the token issuer displayed below, using the token's own logo (not the shared group icon)
 **And** the issuer logo renders next to the issuer when the backend issuer logo set has one; when no logo is available the issuer text still renders cleanly with no broken image
-**And** the asset symbol is used as a clean fallback when the RWA asset name is empty
-**And** with the token-categories flag on, the header keeps the token's own on-chain/project name instead of the registry asset name
 **And** while the RWA identity is still resolving, the title and issuer row hold a loading skeleton instead of painting the plain token name and then flipping to the RWA identity
 **And** when no issuer label can be resolved for the matched token, the issuer row does not render at all (not even without a logo)
 
@@ -62,7 +59,7 @@ priority: high
 severity: medium
 # provenance
 source: testlio
-sourceNote: "Blueprint Testlio suite 'Tokenized Assets - TDP Page'. The sibling market-data mapping is unit-covered by packages/uniswap/src/features/rwa/useRWAIssuerMarketData.test.ts ('buildRWAIssuerMarketDataMap > resolves market data for an EVM token regardless of address checksum casing'); the primary-name resolution is unit-covered by packages/uniswap/src/features/rwa/getIssuerTokenPrimaryName.test.ts; the card layout, dot separator, expand/collapse >2 rule, and tap navigation have no e2e automation, so this e2e case renders as a gap. Carousel gating and the 'Other stocks' fallback rule added from the Consumer Engagement token-categories QA plan (Notion, 2026-10-08)."
+sourceNote: "Blueprint Testlio suite 'Tokenized Assets - TDP Page'. The primary-name resolution is unit-covered by packages/uniswap/src/features/rwa/getIssuerTokenPrimaryName.test.ts; the card layout, dot separator, expand/collapse >2 rule, and tap navigation have no e2e automation, so this e2e case renders as a gap. Carousel gating and the 'Other stocks' fallback rule added from the Consumer Engagement token-categories QA plan (Notion, 2026-10-08)."
 testlioRef: Tokenized Assets - TDP Page
 # scope
 chains:
@@ -94,7 +91,7 @@ automationRefs: []
 **Then** it lists the sibling issuer tokens (excluding the currently viewed issuer), each card showing market cap and 1D volume on one line with a dot separator
 **And** the expand/collapse control appears only when there are more than 2 sibling tokens
 **And** tapping a sibling opens the correct issuer token's TDP
-**And** each card's primary label is the sibling's own on-chain/BE token name with the token-categories flag on (falling back to the asset name for an empty token name), or the asset name — falling back to the asset symbol when that is empty — with the flag off
+**And** each card's primary label is the sibling's own on-chain/BE token name, falling back to the asset name for an empty token name
 **And** the section heading uses the asset symbol as a fallback when the RWA asset name is empty
 **And** a sibling card's issuer line does not render when no issuer label can be resolved for that token
 **And** tokens whose category is not issuer-grouped skip the "More <Asset> tokens" carousel entirely

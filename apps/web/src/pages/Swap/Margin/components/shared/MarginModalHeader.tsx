@@ -7,11 +7,24 @@ import { useEvent } from 'utilities/src/react/hooks'
 // reusing GetHelpHeader for its close-icon + telemetry parity. Link defaults to the Uniswap help center
 // (GetHelpHeader's baseUrl). width="auto" overrides GetHelpHeader's internal full-width so the title keeps
 // its space in the row.
-export function MarginModalHeader({ title, onClose }: { title: string; onClose: () => void }): JSX.Element {
+export function MarginModalHeader({
+  title,
+  isTitleMuted = false,
+  onClose,
+}: {
+  title: string
+  // The open review leads with its pair heading, so the title steps back to a quiet label.
+  isTitleMuted?: boolean
+  onClose: () => void
+}): JSX.Element {
   const closeModal = useEvent(onClose)
   return (
     <Flex row alignItems="center" justifyContent="space-between" gap="$spacing12" width="100%">
-      <Text variant="subheading1" color="$neutral1" testID={TestID.MarginModalTitle}>
+      <Text
+        variant={isTitleMuted ? 'body2' : 'subheading1'}
+        color={isTitleMuted ? '$neutral2' : '$neutral1'}
+        testID={TestID.MarginModalTitle}
+      >
         {title}
       </Text>
       <Flex flexShrink={0}>

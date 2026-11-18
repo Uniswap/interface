@@ -12,6 +12,13 @@ export function normalizeTextInput(input: string, toLowerCase = true): string {
   return toLowerCase ? trimmed.toLowerCase() : trimmed
 }
 
+/** True when every whitespace-separated word of `query` appears, case-insensitively, in at least one target. An empty query matches. */
+export function matchesAllWords(query: string, ...targets: (string | undefined)[]): boolean {
+  const words = normalizeTextInput(query).split(' ').filter(Boolean)
+  const combined = targets.join(' ').toLowerCase()
+  return words.every((word) => combined.includes(word))
+}
+
 export function escapeRegExp(string: string): string {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // $& means the whole matched string
 }
@@ -49,6 +56,10 @@ export function containsNonPrintableChars(msg: string): boolean {
  * unintentionally in the code. This makes its explicit.
  */
 export const SPACE_STRING = ' '
+
+export function preventOrphanWord(text: string): string {
+  return text.replace(/ (?=\S+$)/, '\u00A0')
+}
 
 export function chunkString(value: string, size: number): string[] {
   const chunks: string[] = []

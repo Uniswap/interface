@@ -1,0 +1,89 @@
+{
+  "tokens": [
+    {
+      "multichainToken": {
+        "multichainId": "7c2d1a3e-5a8f-4b9d-9e21-3f6b1c0d4a55",
+        "addresses": {
+          "1": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+        },
+        "symbol": "USDC",
+        "decimals": 6,
+        "name": "USD Coin",
+        "type": "TOKEN_TYPE_ERC20",
+        "price": {
+          "spotUsd": 1,
+          "percentChange1d": 0,
+          "percentChange1h": 0,
+          "price24hAgoUsd": 1
+        },
+        "safety": {
+          "isVerified": true,
+          "verdict": "Benign"
+        },
+        "fees": {
+          "buyFee": 0,
+          "sellFee": 0,
+          "transferFee": 0
+        },
+        "project": {
+          "logoUrl": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+        },
+        "fdv": 60000000000,
+        "canonicalChainId": 1,
+        "deployments": {
+          "1": {
+            "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+            "decimals": 6
+          }
+        },
+        "categoryIds": ["stablecoins"]
+      },
+      "stats": {
+        "volume1d": 5000000000
+      }
+    },
+    {
+      "multichainToken": {
+        "multichainId": "4295bf14-1259-4acc-9cbd-0d8075afc8e2",
+        "addresses": {
+          "1": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984"
+        },
+        "symbol": "UNI",
+        "decimals": 18,
+        "name": "Uniswap",
+        "type": "TOKEN_TYPE_ERC20",
+        "price": {
+          "spotUsd": 8.70226607528079,
+          "percentChange1d": -4.210543969841519,
+          "percentChange1h": 0.5165211168119449,
+          "price24hAgoUsd": 9.084784939733822
+        },
+        "safety": {
+          "isVerified": true,
+          "verdict": "Benign"
+        },
+        "fees": {
+          "buyFee": 0,
+          "sellFee": 0,
+          "transferFee": 0
+        },
+        "project": {
+          "logoUrl": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/logo.png"
+        },
+        "fdv": 7546608146.336292,
+        "canonicalChainId": 1,
+        "deployments": {
+          "1": {
+            "address": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
+            "decimals": 18
+          }
+        },
+        "categoryIds": ["defi"]
+      },
+      "stats": {
+        "volume1d": 9632837.188154079
+      }
+    }
+  ],
+  "suppressedTokens": []
+}

@@ -1,7 +1,6 @@
 import {
   createHelpArticleUrl,
   DEV_ENTRY_GATEWAY_API_BASE_URL,
-  getCloudflareApiBaseUrl,
   getEntryGatewayUrl,
   getForApiUrl,
   helpUrl,
@@ -9,7 +8,6 @@ import {
   PROD_RPC_API_BASE_URL,
   RPC_API_BASE_URLS,
   STAGING_ENTRY_GATEWAY_API_BASE_URL,
-  TrafficFlows,
 } from '@universe/api'
 import { Environment } from '@universe/config'
 import { getCurrentEnv, isWebApp, isBetaEnv, isDevEnv, isE2eTestEnv } from '@universe/environment'
@@ -209,7 +207,6 @@ export const UniswapStaticUrls = {
  */
 export interface UniswapUrlOverrides {
   amplitudeProxyUrlOverride?: string
-  apiBaseUrlOverride?: string
   apiBaseUrlV2Override?: string
   forApiUrlOverride?: string
   liquidityServiceUrlOverride?: string
@@ -224,7 +221,6 @@ export interface UniswapUrlOverrides {
 
 export interface UniswapServiceUrls {
   amplitudeProxyUrl: string
-  apiBaseUrl: string
   apiBaseUrlV2: string
   embeddedWalletHostname: string
   embeddedWalletUrl: string
@@ -254,8 +250,6 @@ export function getUniswapServiceUrls(overrides: UniswapUrlOverrides): UniswapSe
     // Analytics always goes to the prod gateway: it picks the test Amplitude project from the
     // client's x-application-build header, not from which gateway env serves the request.
     amplitudeProxyUrl: overrides.amplitudeProxyUrlOverride || `${PROD_RPC_API_BASE_URL}/v1/amplitude-proxy`,
-
-    apiBaseUrl: overrides.apiBaseUrlOverride || getCloudflareApiBaseUrl(),
 
     // The Entry Gateway's front door. It routes data-api and session services unversioned
     // (`/data.v1.DataApiService/...`), so there is no `/v2`; the field name predates the move.
@@ -296,9 +290,9 @@ export function getUniswapServiceUrls(overrides: UniswapUrlOverrides): UniswapSe
       ? 'https://auth.privy.io/api/v1/encrypted_authorization_keys'
       : `https://privy.${embeddedWalletHostname}/api/v1/encrypted_authorization_keys`,
 
-    scantasticApiUrl:
-      overrides.scantasticApiUrlOverride ||
-      getCloudflareApiBaseUrl({ flow: TrafficFlows.Scantastic, postfix: 'v2/scantastic' }),
+    // Always the prod gateway: every gateway env proxies to the one prod scantastic backend, and the
+    // extension and phone pairing a session must both reach it, whatever build each one runs.
+    scantasticApiUrl: overrides.scantasticApiUrlOverride || `${PROD_RPC_API_BASE_URL}/v2/scantastic`,
 
     // On web, proxy through same-origin "/config" — the BFF (Hono) rewrites to the prod gateway.
     statsigProxyUrl:

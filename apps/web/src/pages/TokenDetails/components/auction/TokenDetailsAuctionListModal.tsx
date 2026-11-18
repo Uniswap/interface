@@ -7,7 +7,6 @@ import { TestID } from '@universe/test'
 import { useTranslation } from 'react-i18next'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { timestampToMs } from 'uniswap/src/data/apiClients/dataApiService/utils/protoTimestamp'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { AuctionEventName, ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -18,6 +17,7 @@ import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 import { parseFiniteNumber } from 'utilities/src/primitives/number'
 import { useEvent } from 'utilities/src/react/hooks'
+import { timestampToMs, timestampToSeconds } from 'utilities/src/time/protoTimestamp'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useSharedMachineTimeMs } from 'utilities/src/time/useSharedMachineTimeMs'
 import { useAuctionDisplayDataSources } from '~/features/Toucan/Auction/hooks/useAuctionDisplayDataSources'
@@ -30,7 +30,6 @@ import {
 import { getAuctionDestination } from '~/features/Toucan/utils/auctionDestination'
 import { showAuctionOpenFailedPopup, useNavigateToAuctionDetails } from '~/hooks/useNavigateToAuctionDetails'
 import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
-import { toSeconds } from '~/pages/TokenDetails/utils/tokenDetailsAuctionDisplay'
 import { sortTokenDetailsAuctions } from '~/pages/TokenDetails/utils/tokenDetailsAuctionList'
 
 function useAuctionListRowResult({
@@ -69,8 +68,8 @@ function AuctionListRow({
   const { t } = useTranslation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
   const { phase, timeString, progressPercentage } = useAuctionTimeRemaining({
-    startBlockTimestamp: toSeconds(auction.estimatedStartTime),
-    endBlockTimestamp: toSeconds(auction.estimatedEndTime),
+    startBlockTimestamp: timestampToSeconds(auction.estimatedStartTime),
+    endBlockTimestamp: timestampToSeconds(auction.estimatedEndTime),
   })
   const isUpcoming = phase === 'notStarted'
   const isEnded = phase === 'completed'

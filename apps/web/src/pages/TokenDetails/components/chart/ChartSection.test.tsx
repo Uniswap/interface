@@ -1,6 +1,6 @@
 import { Auction } from '@uniswap/client-launches/dist/data/v1/auction_pb'
 import { UniverseChainId } from '@universe/chains'
-import type { ReactNode } from 'react'
+import { type ReactNode, useEffect } from 'react'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { LaunchProvenanceMethod } from 'uniswap/src/features/dataApi/launchProvenance'
 import { AuctionEventName } from 'uniswap/src/features/telemetry/constants'
@@ -48,7 +48,7 @@ vi.mock('~/pages/TokenDetails/components/chart/TDPChartStateContext', () => ({
 const mockStore = {
   currency: USDC_MAINNET,
   currencyChainId: UniverseChainId.Mainnet,
-  pathTokenDbAddress: USDC_MAINNET.address,
+  pathTokenDbAddress: USDC_MAINNET.address as string | undefined,
 }
 vi.mock('~/pages/TokenDetails/context/useTDPStore', () => ({
   useTDPStore: (selector: (state: typeof mockStore) => unknown) => selector(mockStore),
@@ -159,6 +159,40 @@ describe('ChartSection price-discovery impressions', () => {
     mockStore.pathTokenDbAddress = USDC_MAINNET.address
     rerender(<ChartSection />)
     expect(sendAnalyticsEvent).toHaveBeenCalledTimes(4)
+  })
+
+  it('remounts the price panel when the token changes, but not when only the time range does', () => {
+    let mounts = 0
+    vi.mocked(useTokenPriceChartPanel).mockImplementation(() => {
+      useEffect(() => {
+        mounts += 1
+      }, [])
+      return {
+        pricePercentChange: undefined,
+        priceConfidenceScore: undefined,
+        stale: false,
+        showInvalidSkeleton: true,
+        isError: false,
+        priceQuery: {
+          chartType: ChartType.PRICE,
+          entries: [],
+          loading: false,
+          dataQuality: DataQuality.INVALID,
+          disableCandlestickUI: false,
+        },
+      }
+    })
+    const { rerender } = render(<ChartSection />)
+    expect(mounts).toBe(1)
+
+    mockChartState.timePeriod = TimePeriod.WEEK
+    rerender(<ChartSection />)
+    expect(mounts).toBe(1)
+
+    // Native tokens have no DB address on mainnet
+    mockStore.pathTokenDbAddress = undefined
+    rerender(<ChartSection />)
+    expect(mounts).toBe(2)
   })
 
   it('shows the price panel during price discovery even when another type is selected', () => {

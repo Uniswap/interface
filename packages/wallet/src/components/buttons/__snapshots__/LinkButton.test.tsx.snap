@@ -20,7 +20,7 @@ exports[`LinkButton > renders without error 1`] = `
         fill="none"
         focusable="false"
         stroke-width="1.5"
-        style="width: 20px; height: 20px;"
+        style="color: var(--accent1); width: 20px; height: 20px;"
         viewBox="0 0 24 24"
       >
         <path

@@ -11,11 +11,11 @@ vi.mock('@universe/mycelium/theme-hooks-compat', async (importOriginal) => ({
 }))
 vi.mock('~/hooks/useScroll', () => ({ useScroll: vi.fn() }))
 vi.mock('~/app/layout/NavBar/index', () => ({ Navbar: () => <nav aria-label="Main navigation" /> }))
-vi.mock('~/components/TopLevelBanners/MobileAppPromoBanner', () => ({
+vi.mock('~/app/layout/TopLevelBanners/MobileAppPromoBanner', () => ({
   MobileAppPromoBanner: () => null,
   useMobileAppPromoBannerEligible: () => false,
 }))
-vi.mock('~/components/TopLevelBanners/UkBanner', () => ({
+vi.mock('~/app/layout/TopLevelBanners/UkBanner', () => ({
   UkBanner: () => null,
   useRenderUkBanner: () => false,
 }))

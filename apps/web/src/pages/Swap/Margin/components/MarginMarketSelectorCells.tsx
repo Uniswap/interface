@@ -9,6 +9,9 @@ export const ROW_PADDING_X = '$spacing12'
 export const MARK_PRICE_COL_WIDTH = 96
 export const CHANGE_COL_WIDTH = 80
 export const MAX_LEV_COL_WIDTH = 64
+// Popover only; the phone sheet has no room for them.
+export const LOWEST_RATE_COL_WIDTH = 72
+export const MAX_LIQUIDITY_COL_WIDTH = 96
 // Phone sheet: the 24h change stacks under the mark and the pair's max leverage moves under its name.
 export const COMPACT_PRICE_COL_WIDTH = 96
 
@@ -29,6 +32,14 @@ export function HeaderCell({ label, width }: { label: string; width: number }): 
   return (
     <Text width={width} flexShrink={0} textAlign="right" variant="body4" color="$neutral2" numberOfLines={1}>
       {label}
+    </Text>
+  )
+}
+
+export function FigureCell({ value, width }: { value: string; width: number }): JSX.Element {
+  return (
+    <Text width={width} flexShrink={0} textAlign="right" variant="body3" color="$neutral1" numberOfLines={1}>
+      {value}
     </Text>
   )
 }

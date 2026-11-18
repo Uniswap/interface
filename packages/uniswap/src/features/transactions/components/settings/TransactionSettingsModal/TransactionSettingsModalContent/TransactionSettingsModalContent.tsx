@@ -1,8 +1,7 @@
 import { isExtensionApp, isMobileApp, isMobileWeb, isWebAppDesktop, isWebPlatform } from '@universe/environment'
-import { Button, Flex, iconSizes, Text, TouchableArea } from '@universe/mycelium'
 import { AnimatedPager } from '@universe/mycelium/animate-presence-pager'
-import { RotatableChevron } from '@universe/mycelium/icons/RotatableChevron'
 import { useMedia } from '@universe/mycelium/theme-hooks-compat'
+import { SettingsRowList, SettingsSheet, SettingsSheetPage } from '@universe/transactions-ui'
 import { PropsWithChildren, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TransactionSettingRow } from 'uniswap/src/features/transactions/components/settings/TransactionSettingsModal/TransactionSettingsModalContent/TransactionSettingsRow'
@@ -17,7 +16,7 @@ const TopLevelSettings = ({
   setSelectedSetting: React.Dispatch<React.SetStateAction<TransactionSettingConfig | undefined>>
 }): JSX.Element => {
   return (
-    <Flex gap={isWebPlatform ? '$spacing4' : '$spacing8'} py={isWebPlatform ? '$spacing8' : '$spacing12'}>
+    <SettingsRowList>
       {settings.map((setting, index) => {
         return (
           <TransactionSettingRow
@@ -27,7 +26,7 @@ const TopLevelSettings = ({
           />
         )
       })}
-    </Flex>
+    </SettingsRowList>
   )
 }
 
@@ -61,35 +60,18 @@ const SettingsPageLayout = ({
 
   // Hide close button on desktop web
   const shouldShowCloseButton = !isWebAppDesktop && onClose
+
+  const onPressBack = useCallback((): void => setSelectedSetting(undefined), [setSelectedSetting])
+
   return (
-    <Flex gap="$spacing16">
-      {shouldShowTitle && (
-        <Flex row justifyContent="space-between" pt={isWebPlatform ? '$spacing8' : 0}>
-          <TouchableArea onPress={(): void => setSelectedSetting(undefined)}>
-            <RotatableChevron
-              color={
-                SelectedSetting === undefined || SelectedSetting === initialSelectedSetting
-                  ? '$transparent'
-                  : '$neutral3'
-              }
-              size="$icon.24"
-            />
-          </TouchableArea>
-          <Text textAlign="center" variant="body1">
-            {title}
-          </Text>
-          <Flex width={iconSizes.icon24} />
-        </Flex>
-      )}
+    <SettingsSheetPage
+      title={shouldShowTitle ? title : undefined}
+      showBackChevron={SelectedSetting !== undefined && SelectedSetting !== initialSelectedSetting}
+      onPressBack={onPressBack}
+      onClose={shouldShowCloseButton ? onClose : undefined}
+    >
       {children}
-      {shouldShowCloseButton && (
-        <Flex centered row pb={isWebSmallScreen ? '$spacing24' : '$spacing8'}>
-          <Button testID="swap-settings-close" emphasis="secondary" onPress={onClose}>
-            {t('common.button.save')}
-          </Button>
-        </Flex>
-      )}
-    </Flex>
+    </SettingsSheetPage>
   )
 }
 
@@ -120,12 +102,7 @@ export const TransactionSettingsModalContent = ({
   }, [SelectedSetting, settings])
 
   return (
-    <Flex
-      gap="$spacing16"
-      px={isWebPlatform ? '$spacing4' : '$spacing24'}
-      py={isWebPlatform ? '$spacing4' : '$spacing12'}
-      width="100%"
-    >
+    <SettingsSheet>
       {isMobileApp || isMobileWeb ? (
         // Mobile: Single page with conditional content
         <SettingsPageLayout {...layoutProps}>{renderContent()}</SettingsPageLayout>
@@ -140,6 +117,6 @@ export const TransactionSettingsModalContent = ({
           </SettingsPageLayout>
         </AnimatedPager>
       )}
-    </Flex>
+    </SettingsSheet>
   )
 }

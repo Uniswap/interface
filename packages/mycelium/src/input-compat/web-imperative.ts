@@ -17,11 +17,15 @@ export function matchesFocusVisible(el: Element): boolean {
 }
 
 /**
- * RNW TextInput's keydown, transcribed: stopPropagation on every keydown (RNW #612), the
- * IME isComposing/keyCode-229 guard, preventDefault before onSubmitEditing (Enter must not
- * submit a wrapping <form> or insert a newline), and blurOnSubmit ?? !multiline blurring.
- * Deliberate RNW divergence between the two conditions: with blurOnSubmit === false on a
- * single-line input, Enter still SUBMITS but does not blur.
+ * RNW TextInput's keydown, transcribed: the IME isComposing/keyCode-229 guard, preventDefault
+ * before onSubmitEditing (Enter must not submit a wrapping <form> or insert a newline), and
+ * blurOnSubmit ?? !multiline blurring. Deliberate RNW divergence between the two conditions: with
+ * blurOnSubmit === false on a single-line input, Enter still SUBMITS but does not blur.
+ *
+ * RNW also stopped propagation of every keydown (RNW #612) so a wrapping pressable would not
+ * react to keys typed in the field. That is dropped: pressables only act on keys from their own
+ * element, and the keydown has to reach the document for Escape to close the overlay the input
+ * sits in and for page shortcuts to yield to it.
  */
 export function createInputKeyDownHandler({
   onKeyPress,
@@ -36,7 +40,6 @@ export function createInputKeyDownHandler({
 }): (e: ReactKeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => void {
   return (e) => {
     const hostNode = e.currentTarget
-    e.stopPropagation()
     const nativeEvent = e.nativeEvent as KeyboardEvent & { text?: string }
     const isComposing = nativeEvent.isComposing || nativeEvent.keyCode === 229
     // DOM KeyboardEvent already exposes nativeEvent.key, so RN-shaped handlers read it directly.

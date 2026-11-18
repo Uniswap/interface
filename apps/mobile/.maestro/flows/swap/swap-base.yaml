@@ -3,6 +3,7 @@ jsEngine: graaljs
 tags:
   - performance-tracking
   - language-agnostic
+  - flow-swap-base
 env:
   E2E_RECOVERY_PHRASE: ${E2E_RECOVERY_PHRASE}
   DATADOG_API_KEY: ${DATADOG_API_KEY}

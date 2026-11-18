@@ -16,8 +16,10 @@ export {
   concatStrings, // join a list as "a, b and c" with trailing text
   containsNonPrintableChars, // detect control or invisible characters
   escapeRegExp,
+  matchesAllWords, // every query word appears in some target (dev-menu style search)
   normalizeTextInput, // trim, collapse whitespace, optionally lowercase
   normalizeTwitterUsername,
+  preventOrphanWord, // bind the last two words with a non-breaking space
   SPACE_STRING,
   trimToLength, // truncate with an ellipsis
 } from 'utilities/src/primitives/string'
@@ -169,6 +171,7 @@ export {
   getDurationRemainingString,
 } from 'utilities/src/time/duration'
 export { getRelativeAge } from 'utilities/src/time/relativeAge'
+export { timestampToMs, timestampToSeconds } from 'utilities/src/time/protoTimestamp' // protobuf Timestamp → ms / whole bigint seconds, undefined for unset/zero
 
 // ── Caches ───────────────────────────────────────────────────────────
 export { createLruCache } from 'utilities/src/cache/lruCache'
@@ -299,7 +302,7 @@ export {
   isInsideScroller, // is a touch target inside a scrollable child
   TOUCH_DRAG_SLOP_PX,
 } from 'utilities/src/react/sheetDrag'
-export { markRadixEscapePreventedBySheet, useSheetEscapeToClose } from 'utilities/src/react/useSheetEscapeToClose'
+export { markRadixEscapePreventedBySheet, useDismissLayer } from 'utilities/src/react/useDismissLayer' // Escape for custom overlays (sheets, drawers): one stack, the top layer closes
 export { useContainerWidth } from 'utilities/src/react/useContainerWidth'
 export { useDisableBodyScroll } from 'utilities/src/react/useDisableBodyScroll'
 export {
@@ -318,7 +321,8 @@ export {
 } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 export { KeyAction } from 'utilities/src/device/keyboard/types'
 export { useIsKeyboardOpen } from 'utilities/src/device/keyboard/useIsKeyboardOpen'
-export { useKeyDown } from 'utilities/src/device/keyboard/useKeyDown'
+export { useGlobalShortcut } from 'utilities/src/device/keyboard/useGlobalShortcut' // page-wide single-key shortcut that yields to focused controls and inputs
+export { useKeyDown } from 'utilities/src/device/keyboard/useKeyDown' // search-list arrow/Enter keyup listener; prefer useGlobalShortcut
 export { getClipboard, setClipboard, setClipboardImage } from 'utilities/src/clipboard/clipboard'
 export { useCopyClipboard } from 'utilities/src/react/useCopyClipboard'
 export { DEFAULT_LANGUAGE_CODE, DEFAULT_LANGUAGE_TAG } from 'utilities/src/device/constants'
@@ -344,6 +348,15 @@ export {
   queryWithoutCache, // queryOptions with no stale/gc caching
 } from 'utilities/src/reactQuery/queryOptions'
 export { useSessionStoragePersistedQuery } from 'utilities/src/reactQuery/useSessionStoragePersistedQuery'
+export {
+  getConnectQueryRetryDelay, // ConnectRPC retryDelay: jittered backoff honoring retry-after-ms
+  getConnectRetryAfterMs,
+  isConnectUnavailableError,
+  isTerminalConnectError, // ConnectError code that a retry can't fix
+  MAX_RETRIES_DEFAULT,
+  MAX_RETRIES_UNAVAILABLE,
+  shouldRetryConnectQuery, // react-query retry policy for ConnectRPC errors
+} from 'utilities/src/connectRpc/retry'
 
 // ── Logging, Datadog, performance timing ─────────────────────────────
 export { addErrorExtras, createLogger, getDevLogger, getLogger, logger } from 'utilities/src/logger/logger'
@@ -389,6 +402,7 @@ export { Trace } from 'utilities/src/telemetry/trace/Trace'
 export { TraceContext, useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 export { getEventHandlers } from 'utilities/src/telemetry/trace/utils'
 export { calculateElapsedTimeWithPerformanceMarkMs } from 'utilities/src/telemetry/trace/utils/calculateElapsedTimeWithPerformanceMarkMs'
+export { stripCloudFrontViewerPort } from 'utilities/src/security/cloudFrontViewerAddress'
 
 // ── Wallet secret safety ─────────────────────────────────────────────
 export {

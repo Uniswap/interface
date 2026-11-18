@@ -36,13 +36,11 @@ export const REFRESH_FRAME_BASE_CLASSES =
 export const REFRESH_FRAME_REVEAL_CLASSES = 'group-hover:opacity-100 legacy-group-hover:opacity-100'
 
 /**
- * Legacy hides the disabled button entirely (`display: 'none'`): the
- * TouchableArea disabled pool's 0.6 opacity would otherwise reveal this
- * hover-only button.
+ * Disabled keeps the button in the accessibility tree (announced as disabled) and on the same hover reveal, at
+ * the TouchableArea disabled opacity. Legacy hid it (`display: 'none'`), so screen reader users weren't told
+ * refreshing was unavailable. The frame's `opacity-0` still wins over the disabled pool's 0.6 at rest.
  */
-// TODO(INFRA-4589): hiding it removes the button from the accessibility tree, so screen reader users aren't
-// told refreshing is unavailable. Consider keeping it present and announced as disabled.
-export const REFRESH_FRAME_HIDDEN_CLASS = 'hidden'
+export const REFRESH_FRAME_DISABLED_REVEAL_CLASSES = 'group-hover:opacity-60 legacy-group-hover:opacity-60'
 
 /** Legacy sets the cursor manually so the disabled pool never breaks hover state. */
 export const REFRESH_FRAME_CURSOR_ACTIVE_CLASS = 'cursor-pointer'
@@ -74,9 +72,8 @@ export function refreshButtonFrameClassName({ isLoading, disabled }: RefreshButt
   const interactive = !isLoading && disabled !== true
   return cn(
     REFRESH_FRAME_BASE_CLASSES,
-    REFRESH_FRAME_REVEAL_CLASSES,
+    disabled === true ? REFRESH_FRAME_DISABLED_REVEAL_CLASSES : REFRESH_FRAME_REVEAL_CLASSES,
     interactive ? REFRESH_FRAME_CURSOR_ACTIVE_CLASS : REFRESH_FRAME_CURSOR_INERT_CLASS,
-    disabled === true && REFRESH_FRAME_HIDDEN_CLASS,
   )
 }
 
@@ -108,7 +105,7 @@ function splitAll(...tables: ReadonlyArray<string>): readonly string[] {
 export const REFRESH_BUTTON_COMPAT_CLASS_UNIVERSE: readonly string[] = splitAll(
   REFRESH_FRAME_BASE_CLASSES,
   REFRESH_FRAME_REVEAL_CLASSES,
-  REFRESH_FRAME_HIDDEN_CLASS,
+  REFRESH_FRAME_DISABLED_REVEAL_CLASSES,
   REFRESH_FRAME_CURSOR_ACTIVE_CLASS,
   REFRESH_FRAME_CURSOR_INERT_CLASS,
   REFRESH_ICON_FRAME_BASE_CLASSES,

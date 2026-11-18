@@ -89,19 +89,14 @@ describe('getSparklineValueDomain', () => {
 })
 
 describe('getIsStablecoin', () => {
-  it('is undefined with Token Categories off, keeping range-only behavior', () => {
-    expect(getIsStablecoin({ tokenCategoriesEnabled: false, categoryIds: ['stablecoins'] })).toBeUndefined()
-    expect(getIsStablecoin({ tokenCategoriesEnabled: false, categoryIds: ['commodities'] })).toBeUndefined()
-  })
-
   it('is undefined until tags are known', () => {
-    expect(getIsStablecoin({ tokenCategoriesEnabled: true, categoryIds: undefined })).toBeUndefined()
+    expect(getIsStablecoin(undefined)).toBeUndefined()
   })
 
   it('reports stablecoin membership from the tags', () => {
-    expect(getIsStablecoin({ tokenCategoriesEnabled: true, categoryIds: ['majors', 'stablecoins'] })).toBe(true)
-    expect(getIsStablecoin({ tokenCategoriesEnabled: true, categoryIds: ['commodities'] })).toBe(false)
-    expect(getIsStablecoin({ tokenCategoriesEnabled: true, categoryIds: [] })).toBe(false)
+    expect(getIsStablecoin(['majors', 'stablecoins'])).toBe(true)
+    expect(getIsStablecoin(['commodities'])).toBe(false)
+    expect(getIsStablecoin([])).toBe(false)
   })
 })
 

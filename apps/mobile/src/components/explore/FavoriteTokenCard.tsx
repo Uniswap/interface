@@ -147,9 +147,9 @@ function FavoriteTokenCard({
           </Flex>
           <RemoveButton visible={isEditing} onPress={onRemove} />
         </Flex>
-        <Flex gap="$spacing2">
+        <Flex alignSelf="stretch" gap="$spacing2">
           {price !== undefined ? (
-            <AnimatedNumber numericValue={price} value={priceFormatted} textVariant="$heading3" />
+            <AnimatedNumber scaleToFit numericValue={price} value={priceFormatted} textVariant="$heading3" />
           ) : (
             <Loader.Box
               height={fonts.heading3.lineHeight}

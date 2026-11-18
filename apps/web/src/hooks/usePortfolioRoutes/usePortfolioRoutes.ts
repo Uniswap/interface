@@ -56,7 +56,6 @@ export function usePortfolioRoutes(): {
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   const isPortfolioDefiTabEnabled = useFeatureFlag(FeatureFlags.PortfolioDefiTab)
-  const portfolioPoolsBalancesEnabled = useFeatureFlag(FeatureFlags.PortfolioPoolsBalances)
 
   const { potentialAddress, tabSegment } = useMemo(() => parsePortfolioPath(pathname), [pathname])
   const { evmAddress, svmAddress } = useActiveAddresses()
@@ -66,7 +65,7 @@ export function usePortfolioRoutes(): {
   const isOwnSvmAddress = svmAddress === potentialAddress
   const isExternalWallet = Boolean(externalAddress) && !isOwnEvmAddress && !isOwnSvmAddress
 
-  const urlTab = useMemo(() => {
+  const tab = useMemo(() => {
     if (isPortfolioTab(tabSegment)) {
       return tabSegment
     }
@@ -76,10 +75,6 @@ export function usePortfolioRoutes(): {
     }
     return PortfolioTab.Overview
   }, [tabSegment, potentialAddress, pathname])
-
-  // Map instead of redirecting: the flag can read false on page load before Statsig settles,
-  // and a redirect would strand treatment users on Overview.
-  const tab = urlTab === PortfolioTab.Pools && !portfolioPoolsBalancesEnabled ? PortfolioTab.Overview : urlTab
 
   const isPortfolioPath = pathname.startsWith(PageType.PORTFOLIO)
 

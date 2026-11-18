@@ -12,7 +12,6 @@ export enum ReactQueryCacheKey {
   BlockaidVerification = 'BlockaidVerification',
   BlockInfo = 'BlockInfo',
   BlockNumber = 'BlockNumber',
-  BlockTimestamp = 'BlockTimestamp',
   CameraPermission = 'CameraPermission',
   CancelPlanStepRequest = 'CancelPlanStepRequest',
   CancelTransactionRequest = 'CancelTransactionRequest',

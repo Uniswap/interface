@@ -26,7 +26,7 @@ export function SettingsToggle({
     <Flex row alignItems="center" justifyContent="space-between" py={py}>
       <Flex row gap="$gap12" alignItems="center" maxWidth="80%" $xl={{ maxWidth: '70%' }}>
         {icon}
-        <Flex>
+        <Flex grow flexBasis={0}>
           <Text variant="subheading2" color="$neutral1">
             {title}
           </Text>

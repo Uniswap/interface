@@ -2,8 +2,13 @@ import { type PartialMessage, type PlainMessage, toPlainMessage } from '@bufbuil
 import { queryOptions, type UseQueryResult, useQuery } from '@tanstack/react-query'
 import { type GetPortfolioRequest, type GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { type Balance } from '@uniswap/client-data-api/dist/data/v1/types_pb'
-import { getGetPortfolioQueryOptions, transformInput, type WithoutWalletAccount } from '@universe/api'
 import { areAddressesEqual } from '@universe/chains'
+import {
+  buildAccountAddressesByPlatform,
+  getGetPortfolioQueryOptions,
+  transformInput,
+  type WithoutWalletAccount,
+} from '@universe/data-api'
 import {
   cleanupCaughtUpOverrides,
   getBalanceOverrideStateForAddress,
@@ -13,7 +18,6 @@ import {
   storeBalanceOverrideSnapshots,
 } from 'uniswap/src/data/apiClients/dataApiService/balances/portfolioBalanceOverrides'
 import { dataApiServiceClientV1 } from 'uniswap/src/data/apiClients/dataApiService/clients/DataApiClient'
-import { buildAccountAddressesByPlatform } from 'uniswap/src/data/apiClients/dataApiService/utils/buildAccountAddressesByPlatform'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useRestPortfolioValueModifier } from 'uniswap/src/features/dataApi/balances/useRestPortfolioValueModifier'
 import { fetchAndMergeOnchainBalances } from 'uniswap/src/features/portfolio/portfolioUpdates/refetchQueriesViaOnchainOverrideVariantSaga'

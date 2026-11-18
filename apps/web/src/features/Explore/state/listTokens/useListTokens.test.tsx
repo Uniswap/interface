@@ -17,9 +17,9 @@ import { createRankedMultichainToken } from 'uniswap/src/test/fixtures/dataApi/r
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { TokenSortMethod } from '~/components/Tokens/constants'
 import { TimePeriod } from '~/data/util'
-import { EXPLORE_API_PAGE_SIZE } from '~/features/Explore/state/constants'
 import type { UseListTokensOptions } from '~/features/Explore/state/listTokens/types'
 import { useListTokens } from '~/features/Explore/state/listTokens/useListTokens'
+import { LIST_API_PAGE_SIZE } from '~/utils/listRequestParams'
 
 const USDC = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
 const BRIDGED_USDC_POLYGON = '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174'
@@ -107,7 +107,7 @@ describe('useListTokens', () => {
       const request = await renderAndGetRequest()
 
       expect(request.chainIds).toEqual(ENABLED_CHAIN_IDS)
-      expect(request.page).toEqual({ pageSize: EXPLORE_API_PAGE_SIZE, pageToken: '' })
+      expect(request.page).toEqual({ pageSize: LIST_API_PAGE_SIZE, pageToken: '' })
     })
 
     it('should narrow chainIds to the single chain when a chainId is passed', async () => {
@@ -131,7 +131,7 @@ describe('useListTokens', () => {
 
       await waitFor(() => expect(listTokens).toHaveBeenCalledTimes(2))
       expect((listTokens.mock.calls[1]?.[0] as ListTokensRequest).page).toEqual({
-        pageSize: EXPLORE_API_PAGE_SIZE,
+        pageSize: LIST_API_PAGE_SIZE,
         pageToken: 'page2',
       })
     })

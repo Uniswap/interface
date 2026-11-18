@@ -55,7 +55,7 @@ export abstract class ChartModel<TDataType extends SeriesDataItemType> {
   protected data: TDataType[]
   protected chartDiv: HTMLDivElement
   protected onCrosshairMove?: (data: TDataType | undefined, index: number | undefined) => void
-  private _hoverData?: ChartHoverData<TDataType> | undefined
+  protected _hoverData?: ChartHoverData<TDataType> | undefined
   private _lastTooltipWidth: number | null = null
 
   // Store handler reference for cleanup
@@ -66,11 +66,21 @@ export abstract class ChartModel<TDataType extends SeriesDataItemType> {
       const zoomFactor = event.deltaY > 0 ? 0.9 : 1.1
       const timeScale = this.api.timeScale()
       const visibleRange = timeScale.getVisibleLogicalRange()
-      if (visibleRange) {
-        const center = (visibleRange.from + visibleRange.to) / 2
-        const newHalfRange = ((visibleRange.to - visibleRange.from) / 2) * (1 / zoomFactor)
-        timeScale.setVisibleLogicalRange({ from: center - newHalfRange, to: center + newHalfRange })
+      const cursor = timeScale.coordinateToLogical(
+        event.clientX - this.chartDiv.getBoundingClientRect().left - this.api.priceScale('left').width(),
+      )
+      if (visibleRange && cursor !== null) {
+        // Anchor on the bar under the cursor so it stays put; clamped for a cursor over the price axis.
+        const anchor = Math.min(Math.max(cursor, visibleRange.from), visibleRange.to)
+        timeScale.setVisibleLogicalRange({
+          from: anchor + (visibleRange.from - anchor) / zoomFactor,
+          to: anchor + (visibleRange.to - anchor) / zoomFactor,
+        })
       }
+    } else if (Math.abs(event.deltaX) <= Math.abs(event.deltaY)) {
+      // Mostly-vertical scroll belongs to the page: lightweight-charts' wheel-scroll preventDefaults any
+      // wheel with horizontal drift, so keep it from ever seeing these.
+      event.stopPropagation()
     }
   }
 
@@ -116,7 +126,7 @@ export abstract class ChartModel<TDataType extends SeriesDataItemType> {
     this.onCrosshairMove = params.onCrosshairMove
     this.data = params.data
 
-    // Disable mouse wheel to allow page scrolling; pinch handled via custom wheel listener below
+    // Wheel zoom off so vertical wheel scrolls the page; horizontal wheel pans; pinch handled via custom wheel listener below
     this.api = createChart(chartDiv, {
       // Must be set at creation: without it the chart pins its overflow-hidden root to the mount-time
       // pixel size, and enabling autoSize later via applyOptions never un-pins it, so a chart that
@@ -127,11 +137,11 @@ export abstract class ChartModel<TDataType extends SeriesDataItemType> {
       // layout applyOptions deep-merge and don't reset these).
       layout: { attributionLogo: false },
       hoveredSeriesOnTop: false,
-      handleScroll: { mouseWheel: false, pressedMouseMove: true, horzTouchDrag: true, vertTouchDrag: false },
+      handleScroll: { mouseWheel: true, pressedMouseMove: true, horzTouchDrag: true, vertTouchDrag: false },
       handleScale: { mouseWheel: false, pinch: true, axisPressedMouseMove: false },
     })
 
-    // Custom wheel handler: pinch-to-zoom (Ctrl+wheel) while allowing page scroll
+    // Custom wheel handler: pinch-to-zoom (Ctrl+wheel), and vertical wheel left to the page
     chartDiv.addEventListener('wheel', this.wheelHandler, { passive: false, capture: true })
 
     this.api.subscribeCrosshairMove((param) => {
@@ -262,8 +272,8 @@ export abstract class ChartModel<TDataType extends SeriesDataItemType> {
           labelVisible: false,
         },
       },
-      // Disable mouse wheel to allow page scrolling; pinch handled by custom wheel listener
-      handleScroll: { mouseWheel: false, horzTouchDrag: true, vertTouchDrag: false },
+      // Wheel zoom off so vertical wheel scrolls the page; horizontal wheel pans; pinch via custom wheel listener
+      handleScroll: { mouseWheel: true, horzTouchDrag: true, vertTouchDrag: false },
       handleScale: { mouseWheel: false, pinch: true, axisPressedMouseMove: false },
     }
 

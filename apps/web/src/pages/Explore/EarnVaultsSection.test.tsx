@@ -55,10 +55,24 @@ vi.mock('uniswap/src/features/telemetry/send', () => ({
 
 vi.mock('uniswap/src/features/earn/EarnVaultChip', () => ({
   EARN_VAULT_CHIP_FRAME_PROPS: {},
-  EARN_VAULT_CHIP_MAX_WIDTH: 320,
-  EarnVaultChip: ({ layout = 'horizontal', vault }: { layout?: string; vault: EarnVaultInfo }): JSX.Element => (
-    <div data-testid={`chip-${vault.id}`} data-layout={layout} />
+  EarnVaultChip: ({
+    borderRadius,
+    layout = 'horizontal',
+    vault,
+    width,
+  }: {
+    borderRadius?: string
+    layout?: string
+    vault: EarnVaultInfo
+    width?: number
+  }): JSX.Element => (
+    <div data-testid={`chip-${vault.id}`} data-layout={layout} data-radius={borderRadius} data-width={width} />
   ),
+}))
+
+const mockUseCarouselLayout = vi.hoisted(() => vi.fn())
+vi.mock('~/components/TokenCardCarousel/useCarouselLayout', () => ({
+  useCarouselLayout: mockUseCarouselLayout,
 }))
 
 const mockUseMedia = vi.hoisted(() => vi.fn())
@@ -129,6 +143,12 @@ describe(EarnVaultsSection, () => {
     Element.prototype.scrollIntoView = mockScrollIntoView
     vi.clearAllMocks()
     mockUseMedia.mockReturnValue({ md: false })
+    mockUseCarouselLayout.mockReturnValue({
+      containerWidth: 1120,
+      cardWidth: 271,
+      fadeWidth: 96,
+      showArrowButtons: true,
+    })
     window.history.replaceState(null, '', '/')
     store.dispatch(setExploreEarnCoachmarkDismissed(false))
   })
@@ -159,22 +179,41 @@ describe(EarnVaultsSection, () => {
     })
   })
 
-  it('renders horizontal chips in a grid above the md breakpoint', () => {
+  // Expected values are literals on purpose: they pin the intended widths and radius, not whatever the code passes.
+  it('sizes chips like the Trending token cards above the md breakpoint', () => {
     mockUseEarnVaults.mockReturnValue(createUseEarnVaultsResult({ vaults: [VAULT] }))
 
     render(<EarnVaultsSection />)
 
-    expect(screen.getByTestId('chip-vault-a')).toHaveAttribute('data-layout', 'horizontal')
+    const chip = screen.getByTestId('chip-vault-a')
+    expect(chip).toHaveAttribute('data-layout', 'horizontal')
+    expect(chip).toHaveAttribute('data-width', '271')
+    expect(chip).toHaveAttribute('data-radius', '$rounded16')
   })
 
-  it('renders vertical chips in a carousel at the md breakpoint', () => {
-    mockUseMedia.mockReturnValue({ md: true })
-    mockUseEarnVaults.mockReturnValue(createUseEarnVaultsResult({ vaults: [VAULT] }))
+  it.each([
+    // Visible width is the container plus the 16px right gutter: (374 - 2 * 12) / 2.3 = 152.2 at a 390px viewport,
+    // (344 - 24) / 2.3 = 139.1 at 360px, (624 - 24) / 2.3 = 260.9 at 640px.
+    { containerWidth: 358, expectedWidth: '152' },
+    { containerWidth: 328, expectedWidth: '139' },
+    { containerWidth: 608, expectedWidth: '260' },
+    { containerWidth: 200, expectedWidth: '120' },
+    { containerWidth: 0, expectedWidth: '120' },
+  ])(
+    'shows two stacked chips plus a teaser in the md carousel (container $containerWidth)',
+    ({ containerWidth, expectedWidth }) => {
+      mockUseMedia.mockReturnValue({ md: true })
+      mockUseCarouselLayout.mockReturnValue({ containerWidth, cardWidth: 280, fadeWidth: 24, showArrowButtons: false })
+      mockUseEarnVaults.mockReturnValue(createUseEarnVaultsResult({ vaults: [VAULT] }))
 
-    render(<EarnVaultsSection />)
+      render(<EarnVaultsSection />)
 
-    expect(screen.getByTestId('chip-vault-a')).toHaveAttribute('data-layout', 'vertical')
-  })
+      const chip = screen.getByTestId('chip-vault-a')
+      expect(chip).toHaveAttribute('data-layout', 'vertical')
+      expect(chip).toHaveAttribute('data-width', expectedWidth)
+      expect(chip).toHaveAttribute('data-radius', '$rounded16')
+    },
+  )
 
   it('shows the Earn coachmark copy and dismisses it on click', async () => {
     mockUseEarnVaults.mockReturnValue(createUseEarnVaultsResult())

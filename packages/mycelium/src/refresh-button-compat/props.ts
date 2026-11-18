@@ -11,18 +11,15 @@
  * tooltip.
  */
 export interface RefreshButtonCompatProps {
-  /** Callback executed when the refresh button is pressed (or the `R` shortcut fires). */
+  /** Callback executed when the refresh button is pressed. */
   onPress: () => void
   /** Whether a refresh is in progress: blocks presses and freezes the icon's hover color. */
   isLoading: boolean
-  /** Blocks both the press handler and the `R` keyboard shortcut, and hides the button entirely. */
+  /** Blocks the press handler and hides the button entirely. */
   disabled?: boolean
   /** Localized tooltip label — the legacy string is `t('common.refresh')`. */
   tooltipLabel: string
 }
-
-/** Legacy `RefreshButton.web.tsx` keyboard shortcut keys. */
-export const REFRESH_SHORTCUT_KEYS: readonly string[] = ['r', 'R']
 
 /** Legacy `RefreshButtonIcon.tsx` icon size (`<RefreshIcon size={16} />`). */
 export const REFRESH_ICON_SIZE = 16

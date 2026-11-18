@@ -1,4 +1,3 @@
-import { useLoginWithEmail, useLoginWithOAuth, usePrivy } from '@privy-io/react-auth'
 import { fireEvent, waitFor } from '@testing-library/react'
 import {
   authorizeAndCompleteRecovery,
@@ -9,13 +8,14 @@ import {
 import { TestID } from '@universe/test'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { AddBackupLoginModal } from '~/features/wallet/components/Passkey/AddBackupLoginModal'
+import { useMaybeLoginWithEmail, useMaybeLoginWithOAuth, useMaybePrivy } from '~/features/wallet/hooks/useMaybePrivy'
 import { useModalState } from '~/hooks/useModalState'
 import { render, screen } from '~/test-utils/render'
 
-vi.mock('@privy-io/react-auth', () => ({
-  useLoginWithEmail: vi.fn(),
-  useLoginWithOAuth: vi.fn(),
-  usePrivy: vi.fn(),
+vi.mock('~/features/wallet/hooks/useMaybePrivy', () => ({
+  useMaybeLoginWithEmail: vi.fn(),
+  useMaybeLoginWithOAuth: vi.fn(),
+  useMaybePrivy: vi.fn(),
 }))
 
 vi.mock('~/hooks/useModalState', () => ({
@@ -57,11 +57,11 @@ function setupMocks({ oauthLoading = false }: { oauthLoading?: boolean } = {}) {
   vi.mocked(useModalState).mockReturnValue({ isOpen: true, onClose: mockOnClose } as unknown as ReturnType<
     typeof useModalState
   >)
-  vi.mocked(useLoginWithEmail).mockReturnValue({
+  vi.mocked(useMaybeLoginWithEmail).mockReturnValue({
     sendCode: mockSendCode,
     loginWithCode: mockLoginWithCode,
-  } as unknown as ReturnType<typeof useLoginWithEmail>)
-  vi.mocked(usePrivy).mockReturnValue({
+  } as unknown as ReturnType<typeof useMaybeLoginWithEmail>)
+  vi.mocked(useMaybePrivy).mockReturnValue({
     getAccessToken: mockGetAccessToken,
     user: { id: 'privy-user-123' },
     ready: true,
@@ -69,12 +69,12 @@ function setupMocks({ oauthLoading = false }: { oauthLoading?: boolean } = {}) {
     // `ensureLoggedOut` (called before sendCode / resendCode / initOAuth) awaits `logout()`
     // when `user` is truthy; tests need this to resolve or the mutation path short-circuits.
     logout: vi.fn().mockResolvedValue(undefined),
-  } as unknown as ReturnType<typeof usePrivy>)
-  vi.mocked(useLoginWithOAuth).mockReturnValue({
+  } as unknown as ReturnType<typeof useMaybePrivy>)
+  vi.mocked(useMaybeLoginWithOAuth).mockReturnValue({
     initOAuth: mockInitOAuth,
     loading: oauthLoading,
     state: { status: 'initial' },
-  } as unknown as ReturnType<typeof useLoginWithOAuth>)
+  } as unknown as ReturnType<typeof useMaybeLoginWithOAuth>)
   vi.mocked(useEmbeddedWalletState).mockReturnValue({ walletId: 'wallet-123' } as unknown as ReturnType<
     typeof useEmbeddedWalletState
   >)
@@ -326,13 +326,13 @@ describe('AddBackupLoginModal', () => {
       sessionStorage.setItem('addBackupLogin:oauthProvider', 'google')
 
       setupMocks()
-      vi.mocked(usePrivy).mockReturnValue({
+      vi.mocked(useMaybePrivy).mockReturnValue({
         ready: true,
         authenticated: true,
         user: { google: { email: 'user@gmail.com' } },
         getAccessToken: mockGetAccessToken,
         logout: vi.fn().mockResolvedValue(undefined),
-      } as unknown as ReturnType<typeof usePrivy>)
+      } as unknown as ReturnType<typeof useMaybePrivy>)
 
       render(<AddBackupLoginModal />)
 
@@ -346,12 +346,12 @@ describe('AddBackupLoginModal', () => {
       sessionStorage.setItem('addBackupLogin:oauthProvider', 'apple')
 
       setupMocks()
-      vi.mocked(usePrivy).mockReturnValue({
+      vi.mocked(useMaybePrivy).mockReturnValue({
         ready: true,
         authenticated: true,
         user: { apple: { email: 'user@icloud.com' } },
         getAccessToken: mockGetAccessToken,
-      } as unknown as ReturnType<typeof usePrivy>)
+      } as unknown as ReturnType<typeof useMaybePrivy>)
 
       render(<AddBackupLoginModal />)
 
@@ -415,7 +415,7 @@ describe('AddBackupLoginModal', () => {
 
       vi.spyOn(console, 'error').mockImplementation(() => {})
       setupMocks()
-      vi.mocked(useLoginWithOAuth).mockImplementation(oauthMockImpl as unknown as typeof useLoginWithOAuth)
+      vi.mocked(useMaybeLoginWithOAuth).mockImplementation(oauthMockImpl as unknown as typeof useMaybeLoginWithOAuth)
 
       render(<AddBackupLoginModal />)
       fireEvent.click(screen.getByText('Google'))
@@ -430,12 +430,12 @@ describe('AddBackupLoginModal', () => {
       sessionStorage.setItem('addBackupLogin:oauthProvider', 'google')
 
       setupMocks()
-      vi.mocked(usePrivy).mockReturnValue({
+      vi.mocked(useMaybePrivy).mockReturnValue({
         getAccessToken: mockGetAccessToken,
         user: { id: 'privy-user-123', google: { email: 'oauth@gmail.com' } },
         ready: true,
         authenticated: true,
-      } as unknown as ReturnType<typeof usePrivy>)
+      } as unknown as ReturnType<typeof useMaybePrivy>)
       mockGetAccessToken.mockResolvedValue('access-token')
       vi.mocked(encryptAndStoreRecovery).mockResolvedValue({
         publicKey: 'pk',
@@ -771,13 +771,13 @@ describe('AddBackupLoginModal', () => {
     it('signs out of Privy and closes the modal when Sign out is pressed', async () => {
       setupMocks()
       const logoutSpy = vi.fn().mockResolvedValue(undefined)
-      vi.mocked(usePrivy).mockReturnValue({
+      vi.mocked(useMaybePrivy).mockReturnValue({
         getAccessToken: mockGetAccessToken,
         user: { id: 'privy-user-123' },
         ready: true,
         authenticated: false,
         logout: logoutSpy,
-      } as unknown as ReturnType<typeof usePrivy>)
+      } as unknown as ReturnType<typeof useMaybePrivy>)
       vi.mocked(checkRecoveryAvailability).mockResolvedValue({ available: false })
       mockLoginWithCode.mockResolvedValue(undefined)
       render(<AddBackupLoginModal />)
