@@ -62,6 +62,8 @@ const EXPECTED_STRATEGIES: Partial<Record<SupportedChainId, { current: string; g
   [SupportedChainId.XLAYER]: { current: '0xde758D7B3202b7f4f842E8313Fc04Bf19c6Be000', generations: 3 },
   [SupportedChainId.ROBINHOOD]: { current: '0xbf1aB81f7d534b2CC0Da76fcf4d541322bB0e000', generations: 4 },
   [SupportedChainId.ARC]: { current: '0x542BCDA1015485ef0B1cD11B835DC58DF5102000', generations: 2 },
+  // Never rotated: v3.3.0 is the only LBPStrategy deployed on Ink.
+  [SupportedChainId.INK]: { current: '0x0cB98d78be96D5119E49664a9F24fDA22f83E000', generations: 1 },
   [SupportedChainId.SEPOLIA]: { current: '0x95434E898Af471945Cab33D5064d2aC1A6Ba2000', generations: 3 },
   [SupportedChainId.BASE_SEPOLIA]: { current: '0x73ad52384798AdADfBe19fCfD28ff09D2CC82000', generations: 3 },
 }

@@ -99,6 +99,7 @@ describe('SDK-derived chain lists', () => {
         UniverseChainId.ArbitrumOne,
         UniverseChainId.Avalanche,
         UniverseChainId.Robinhood,
+        UniverseChainId.Ink,
         UniverseChainId.Sepolia,
       ]),
     )

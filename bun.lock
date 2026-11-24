@@ -531,7 +531,7 @@
         "@uniswap/client-liquidity": "1.4.51",
         "@uniswap/client-unirpc-v2": "0.0.4",
         "@uniswap/client-unitag": "0.0.4",
-        "@uniswap/liquidity-launcher-sdk": "2.1.0",
+        "@uniswap/liquidity-launcher-sdk": "2.2.0",
         "@uniswap/permit2-sdk": "1.4.0",
         "@uniswap/sdk-core": "7.22.0",
         "@uniswap/universal-router-sdk": "5.13.1",
@@ -667,7 +667,7 @@
         "@uniswap/client-launches": "0.0.11",
         "@uniswap/client-liquidity": "1.4.51",
         "@uniswap/client-notification-service": "0.0.11",
-        "@uniswap/liquidity-launcher-sdk": "2.1.0",
+        "@uniswap/liquidity-launcher-sdk": "2.2.0",
         "@uniswap/permit2-sdk": "1.4.0",
         "@uniswap/router-sdk": "2.10.3",
         "@uniswap/sdk-core": "7.22.0",
@@ -5118,7 +5118,7 @@
 
     "@uniswap/lib": ["@uniswap/lib@4.0.1-alpha", "", {}, "sha512-f6UIliwBbRsgVLxIaBANF6w09tYqc6Y/qXdsrbEmXHyFA7ILiKrIwRFXe1yOg8M3cksgVsO9N7yuL2DdCGQKBA=="],
 
-    "@uniswap/liquidity-launcher-sdk": ["@uniswap/liquidity-launcher-sdk@2.1.0", "", { "dependencies": { "@uniswap/sdk-core": "^7.20.0", "@uniswap/v3-sdk": "^3.31.8", "@uniswap/v4-sdk": "^2.4.4", "jsbi": "^3.1.4", "viem": "^2.23.5" } }, "sha512-IvYaT1djW0WGCElAe+bcarwJEn2vkdNy2ElfL1qvG/MqExCX/hFbyDJ4xLJJa7nFzSdB8Vk/hymYmFBRVSMmlA=="],
+    "@uniswap/liquidity-launcher-sdk": ["@uniswap/liquidity-launcher-sdk@2.2.0", "", { "dependencies": { "@uniswap/sdk-core": "^7.22.0", "@uniswap/v3-sdk": "^3.31.11", "@uniswap/v4-sdk": "^2.4.7", "jsbi": "^3.1.4", "viem": "^2.23.5" } }, "sha512-hzbJNqkSFjvr10uanmhxcU5KIN1BSaU2/ND7B2Q4TCdXV5sEDXPOUnSujF85xHP+r6op+qA/j69RoyxpnTVzvg=="],
 
     "@uniswap/mobile": ["@uniswap/mobile@workspace:apps/mobile"],
 
